@@ -1,5 +1,4 @@
-[
-   {
+{
      $project:
       {
          name: 1,
@@ -7,4 +6,3 @@
          last: { $arrayElemAt: [ "$favorites", -1 ] }
       }
    }
-]

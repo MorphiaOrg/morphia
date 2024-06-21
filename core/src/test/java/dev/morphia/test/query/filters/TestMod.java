@@ -1,10 +1,12 @@
 package dev.morphia.test.query.filters;
 
+import dev.morphia.test.TemplatedTestBase;
+
 import org.testng.annotations.Test;
 
 import static dev.morphia.query.filters.Filters.mod;
 
-public class TestMod extends FilterTest {
+public class TestMod extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/filters/mod/example1

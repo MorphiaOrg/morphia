@@ -1,1 +1,1 @@
- [ { $unwind : "$sizes" } ] 
+{ $unwind : "$sizes" }

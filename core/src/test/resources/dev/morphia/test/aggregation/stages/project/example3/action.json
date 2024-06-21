@@ -1,1 +1,1 @@
-{ $project : { "author.first" : 0, "lastModified" : 0 } }
+{ $project : { "lastModified": 0 } }

@@ -14,24 +14,24 @@ import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.test.ServerVersion.v52;
 
 public class TestBottom extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/bottom/example1
+     * 
+     */
+    @Test(testName = "Find the Bottom ``Score``")
     public void testExample1() {
-        testPipeline(v52, false, false, (aggregation) -> aggregation
-                .pipeline(
-                        match(eq("gameId", "G1")),
-                        group(id("$gameId"))
-                                .field("playerId", bottom(
-                                        array("$playerId", "$score"),
-                                        descending("score")))));
+        testPipeline(v52, false, false, (aggregation) -> aggregation.pipeline(match(eq("gameId", "G1")),
+                group(id("$gameId")).field("playerId", bottom(array("$playerId", "$score"), descending("score")))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/bottom/example2
+     * 
+     */
+    @Test(testName = "Finding the Bottom ``Score`` Across Multiple Games")
     public void testExample2() {
         testPipeline(v52, false, false, (aggregation) -> aggregation.pipeline(
-                group(id("$gameId"))
-                        .field("playerId",
-                                bottom(array("$playerId", "$score"),
-                                        descending("score")))));
+                group(id("$gameId")).field("playerId", bottom(array("$playerId", "$score"), descending("score")))));
     }
 
 }

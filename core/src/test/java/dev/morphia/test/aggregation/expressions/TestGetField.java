@@ -14,28 +14,35 @@ import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.query.filters.Filters.expr;
 
 public class TestGetField extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/getField/example1
+     * 
+     */
+    @Test(testName = "Query Fields that Contain Periods (``.``)")
     public void testExample1() {
         minDriver = DriverVersion.v43;
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                match(expr(gt(getField("price.usd"), 200)))));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation.pipeline(match(expr(gt(getField("price.usd"), 200)))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/getField/example2
+     * 
+     */
+    @Test(testName = "Query Fields that Start with a Dollar Sign (``$``)")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                match(expr(gt(getField(literal("$price")), 200)))));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation.pipeline(match(expr(gt(getField(literal("$price")), 200)))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/getField/example3
+     * 
+     */
+    @Test(testName = "Query a Field in a Sub-document")
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                match(
-                        expr(
-                                lte(
-                                        getField(literal("$small"))
-                                                .input("$quantity"),
-                                        20)))));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
+                .pipeline(match(expr(lte(getField(literal("$small")).input("$quantity"), 20)))));
     }
 
 }

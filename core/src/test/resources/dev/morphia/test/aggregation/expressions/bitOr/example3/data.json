@@ -1,3 +1,0 @@
-{ _id: 0, a: NumberInt(0), b: NumberInt(127) },
-{ _id: 1, a: NumberInt(2), b: NumberInt(3) },
-{ _id: 2, a: NumberInt(3), b: NumberInt(5) }

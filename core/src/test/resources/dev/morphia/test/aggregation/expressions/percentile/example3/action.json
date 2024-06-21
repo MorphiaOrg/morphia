@@ -1,35 +1,13 @@
- [
-   {
-       $group: {
-          _id: null,
-          test01_percentiles: {
-             $percentile: {
-                input: "$test01",
-                p: [ 0.5, 0.75, 0.9, 0.95 ],
-                method: 'approximate'
-             }
-          },
-          test02_percentiles: {
-             $percentile: {
-                input: "$test02",
-                p: [ 0.5, 0.75, 0.9, 0.95 ],
-                method: 'approximate'
-             }
-          },
-          test03_percentiles: {
-             $percentile: {
-                input: "$test03",
-                p: [ 0.5, 0.75, 0.9, 0.95 ],
-                method: 'approximate'
-             }
-          },
-          test03_percent_alt: {
-             $percentile: {
-                input: "$test03",
-                p: [ 0.9, 0.5, 0.75, 0.95 ],
-                method: 'approximate'
-             }
-          },
-       }
-    }
-] 
+{
+      $project: {
+         _id: 0,
+         studentId: 1,
+         testPercentiles: {
+            $percentile: {
+               input: [ "$test01", "$test02", "$test03" ],
+               p: [ 0.5, 0.95 ],
+               method: 'approximate'
+            }
+         }
+      }
+   }

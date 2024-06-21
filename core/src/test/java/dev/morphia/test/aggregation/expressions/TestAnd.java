@@ -11,13 +11,14 @@ import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.test.ServerVersion.ANY;
 
 public class TestAnd extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/and/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
         testPipeline(ANY, false, true, aggregation -> aggregation.pipeline(
-                project()
-                        .include("item")
-                        .include("qty")
-                        .include("result", and(gt("$qty", 100), lt("$qty", 250)))));
+                project().include("item").include("qty").include("result", and(gt("$qty", 100), lt("$qty", 250)))));
 
     }
 }

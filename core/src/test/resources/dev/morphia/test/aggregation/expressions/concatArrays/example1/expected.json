@@ -1,4 +1,4 @@
-{ "_id" : 1, "items" : [ "chocolate", "butter", "apples" ] }
-{ "_id" : 2, "items" : null }
-{ "_id" : 3, "items" : [ "pears", "pecans", "cherries" ] }
-{ "_id" : 4, "items" : [ "ice cream" ] }
+{ _id : 1, items : [ "chocolate", "butter", "apples" ] }
+{ _id : 2, items : null }
+{ _id : 3, items : [ "pears", "pecans", "cherries" ] }
+{ _id : 4, items : [ "ice cream" ] }

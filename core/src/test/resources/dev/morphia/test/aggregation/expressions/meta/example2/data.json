@@ -1,3 +1,6 @@
-{ "item" : "abc", "price" : NumberDecimal("12"), "quantity" : 2, "type": "apparel" },
-{ "item" : "jkl", "price" : NumberDecimal("20"), "quantity" : 1, "type": "electronics" },
-{ "item" : "abc", "price" : NumberDecimal("10"), "quantity" : 5, "type": "apparel" }
+{ "_id" : 1, "title" : "cakes and ale" },
+{ "_id" : 2, "title" : "more cakes" },
+{ "_id" : 3, "title" : "bread" },
+{ "_id" : 4, "title" : "some cakes" },
+{ "_id" : 5, "title" : "two cakes to go" },
+{ "_id" : 6, "title" : "pie" }

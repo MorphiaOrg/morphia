@@ -1,17 +1,10 @@
- [
-   { _id: 1, flavor: "chocolate", salesTotal: 1580,
-     salesTrend: "up" }
-] )
-db.runCommand( {
-   aggregate: db.cakeSales.getName(),
-   pipeline: [ {
-      $merge: {
-         into: db.cakeSales.getName(),
-         let : { year: "2020" },
-         whenMatched: [ {
-            $addFields: { "salesYear": "$$year" }
-         } ]
-      }
-   } ],
-   cursor: {}
-} )
+{ "_id" : 1, employee: "Ant", dept: "A", salary: 100000, fiscal_year: 2017 },
+{ "_id" : 2, employee: "Bee", dept: "A", salary: 120000, fiscal_year: 2017 },
+{ "_id" : 3, employee: "Cat", dept: "Z", salary: 115000, fiscal_year: 2017 },
+{ "_id" : 4, employee: "Ant", dept: "A", salary: 115000, fiscal_year: 2018 },
+{ "_id" : 5, employee: "Bee", dept: "Z", salary: 145000, fiscal_year: 2018 },
+{ "_id" : 6, employee: "Cat", dept: "Z", salary: 135000, fiscal_year: 2018 },
+{ "_id" : 7, employee: "Gecko", dept: "A", salary: 100000, fiscal_year: 2018 },
+{ "_id" : 8, employee: "Ant", dept: "A", salary: 125000, fiscal_year: 2019 },
+{ "_id" : 9, employee: "Bee", dept: "Z", salary: 160000, fiscal_year: 2019 },
+{ "_id" : 10, employee: "Cat", dept: "Z", salary: 150000, fiscal_year: 2019 }

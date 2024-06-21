@@ -14,30 +14,36 @@ import static dev.morphia.aggregation.expressions.SystemVariables.*;
 import static dev.morphia.aggregation.stages.ReplaceWith.replaceWith;
 
 public class TestUnsetField extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/unsetField/example1
+     * 
+     */
+    @Test(testName = "Remove Fields that Contain Periods (``.``)")
     public void testExample1() {
         checkMinDriverVersion(DriverVersion.v43);
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                replaceWith(unsetField("price.usd", ROOT))));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation.pipeline(replaceWith(unsetField("price.usd", ROOT))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/unsetField/example2
+     * 
+     */
+    @Test(testName = "Remove Fields that Start with a Dollar Sign (``$``)")
     public void testExample2() {
         minDriver = DriverVersion.v43;
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                replaceWith(unsetField(literal("$price"), ROOT))));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation.pipeline(replaceWith(unsetField(literal("$price"), ROOT))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/unsetField/example3
+     * 
+     */
+    @Test(testName = "Remove A Subfield")
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                replaceWith(
-                        setField(
-                                "price",
-                                ROOT,
-                                unsetField(
-                                        "euro",
-                                        getField("price"))))));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
+                .pipeline(replaceWith(setField("price", ROOT, unsetField("euro", getField("price"))))));
     }
 
 }

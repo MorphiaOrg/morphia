@@ -1,5 +1,6 @@
 package dev.morphia.test.query.filters;
 
+import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
@@ -9,7 +10,7 @@ import static dev.morphia.query.filters.Filters.exists;
 import static dev.morphia.query.filters.Filters.lt;
 import static dev.morphia.query.filters.Filters.nor;
 
-public class TestNor extends FilterTest {
+public class TestNor extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/filters/nor/example1

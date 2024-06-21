@@ -1,12 +1,13 @@
 package dev.morphia.test.query.filters;
 
+import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
 import static dev.morphia.query.filters.Filters.exists;
 
-public class TestExists extends FilterTest {
+public class TestExists extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/filters/exists/example1

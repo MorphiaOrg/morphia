@@ -10,18 +10,24 @@ import static dev.morphia.aggregation.expressions.TrigonometryExpressions.radian
 import static dev.morphia.aggregation.stages.AddFields.addFields;
 
 public class TestAsinh extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/asinh/example1
+     * 
+     */
+    @Test(testName = "main :: Inverse Hyperbolic Sine in Degrees")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                addFields()
-                        .field("y-coordinate", radiansToDegrees(asinh("$x-coordinate")))));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
+                .pipeline(addFields().field("y-coordinate", radiansToDegrees(asinh("$x-coordinate")))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/asinh/example2
+     * 
+     */
+    @Test(testName = "main :: Inverse Hyperbolic Sine in Radians")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                addFields()
-                        .field("y-coordinate", asinh("$x-coordinate"))));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation.pipeline(addFields().field("y-coordinate", asinh("$x-coordinate"))));
     }
 
 }

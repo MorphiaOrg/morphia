@@ -15,35 +15,38 @@ import static dev.morphia.aggregation.stages.Sort.sort;
 import static dev.morphia.test.ServerVersion.ANY;
 
 public class TestBsonSize extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/bsonSize/example1
+     * 
+     */
+    @Test(testName = "Return Sizes of Documents")
     public void testExample1() {
-        testPipeline(ANY, false, true, aggregation -> aggregation.pipeline(
-                project()
-                        .include("name")
-                        .include("object_size",
-                                bsonSize(ROOT))));
+        testPipeline(ANY, false, true,
+                aggregation -> aggregation.pipeline(project().include("name").include("object_size", bsonSize(ROOT))));
 
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/bsonSize/example2
+     * 
+     */
+    @Test(testName = "Return Combined Size of All Documents in a Collection")
     public void testExample2() {
-        testPipeline(ANY, false, true, aggregation -> aggregation.pipeline(
-                group(id(null))
-                        .field("combined_object_size",
-                                sum(bsonSize(ROOT)))));
+        testPipeline(ANY, false, true, aggregation -> aggregation
+                .pipeline(group(id(null)).field("combined_object_size", sum(bsonSize(ROOT)))));
 
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/bsonSize/example3
+     * 
+     */
+    @Test(testName = "Return Document with Largest Specified Field")
     public void testExample3() {
-        testPipeline(ANY, false, true, aggregation -> aggregation.pipeline(
-                project()
-                        .include("name", "$name")
-                        .include("task_object_size",
-                                bsonSize("$$CURRENT")),
-                sort()
-                        .descending("task_object_size"),
-                limit(1)));
+        testPipeline(ANY, false, true,
+                aggregation -> aggregation.pipeline(
+                        project().include("name", "$name").include("task_object_size", bsonSize("$$CURRENT")),
+                        sort().descending("task_object_size"), limit(1)));
 
     }
 }

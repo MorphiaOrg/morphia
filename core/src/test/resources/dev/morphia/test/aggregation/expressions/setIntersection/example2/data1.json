@@ -1,0 +1,2 @@
+db.createUser( { user: "John", pwd: "jn008", roles: [ { role: "Marketing", db: "test" }, { role: "Development", db: "test" }, { role: "Operations", db: "test" }, { role: "read", db: "test" } ]} )
+db.createUser( { user: "Jane", pwd: "je009", roles: [ { role: "Sales", db: "test" }, { role: "Operations", db: "test" }, { role: "read", db: "test" } ]} )

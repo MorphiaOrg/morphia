@@ -10,21 +10,25 @@ import static dev.morphia.aggregation.stages.AddFields.addFields;
 import static dev.morphia.test.ServerVersion.ANY;
 
 public class TestAcosh extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/acosh/example1
+     * 
+     */
+    @Test(testName = "main :: Inverse Hyperbolic Cosine in Degrees")
     public void testExample1() {
         testPipeline(ANY, false, true, aggregation -> aggregation
-                .pipeline(addFields()
-                        .field("y-coordinate",
-                                radiansToDegrees(acosh("$x-coordinate")))));
+                .pipeline(addFields().field("y-coordinate", radiansToDegrees(acosh("$x-coordinate")))));
 
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/acosh/example2
+     * 
+     */
+    @Test(testName = "main :: Inverse Hyperbolic Cosine in Radians")
     public void testExample2() {
-        testPipeline(ANY, false, true, aggregation -> aggregation
-                .pipeline(addFields()
-                        .field("y-coordinate",
-                                acosh("$x-coordinate"))));
+        testPipeline(ANY, false, true,
+                aggregation -> aggregation.pipeline(addFields().field("y-coordinate", acosh("$x-coordinate"))));
 
     }
 }

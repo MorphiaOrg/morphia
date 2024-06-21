@@ -16,29 +16,30 @@ import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 
 public class TestIsNumber extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/isNumber/example1
+     * 
+     */
+    @Test(testName = "Use $isNumber to Check if a Field is Numeric")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                addFields()
-                        .field("isNumber", isNumber("$reading"))
-                        .field("hasType", type("$reading"))));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
+                .pipeline(addFields().field("isNumber", isNumber("$reading")).field("hasType", type("$reading"))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/isNumber/example2
+     * 
+     */
+    @Test(testName = "Conditionally Modify Fields using $isNumber")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
-                addFields()
-                        .field("points",
-                                condition(isNumber("$grade"),
-                                        "$grade",
-                                        switchExpression()
-                                                .branch(eq("$grade", "A"), 4.0)
-                                                .branch(eq("$grade", "B"), 3.0)
-                                                .branch(eq("$grade", "C"), 2.0)
-                                                .branch(eq("$grade", "D"), 1.0)
+        testPipeline(ServerVersion.ANY, false, false,
+                (aggregation) -> aggregation.pipeline(
+                        addFields().field("points",
+                                condition(isNumber("$grade"), "$grade",
+                                        switchExpression().branch(eq("$grade", "A"), 4.0).branch(eq("$grade", "B"), 3.0)
+                                                .branch(eq("$grade", "C"), 2.0).branch(eq("$grade", "D"), 1.0)
                                                 .branch(eq("$grade", "F"), 0.0))),
-                group(id("$student_id"))
-                        .field("GPA", avg("$points"))));
+                        group(id("$student_id")).field("GPA", avg("$points"))));
     }
 
 }

@@ -1,14 +1,23 @@
- [
+{
+      $setWindowFields: {
+         sortBy: { test01: 1 },
+         output: {
+            test01_median: {
+               $median: {
+                  input: "$test01",
+                  method: 'approximate'
+               },
+               window: {
+                  range: [ -3, 3 ]
+               }
+            }
+         }
+      }
+   },
    {
       $project: {
          _id: 0,
          studentId: 1,
-         testMedians: {
-            $median: {
-               input: [ "$test01", "$test02", "$test03" ],
-               method: 'approximate'
-            }
-         }
+         test01_median: 1
       }
    }
-] 

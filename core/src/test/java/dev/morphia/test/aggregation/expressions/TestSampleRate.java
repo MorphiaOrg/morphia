@@ -11,12 +11,15 @@ import static dev.morphia.aggregation.stages.Count.*;
 import static dev.morphia.aggregation.stages.Match.match;
 
 public class TestSampleRate extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/sampleRate/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
         skipDataCheck();
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                match(sampleRate(0.33)),
-                Count.count("numMatches")));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation.pipeline(match(sampleRate(0.33)), Count.count("numMatches")));
     }
 
 }

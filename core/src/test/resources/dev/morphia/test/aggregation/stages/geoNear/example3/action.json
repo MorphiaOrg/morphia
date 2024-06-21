@@ -1,18 +1,14 @@
 {
-      $lookup: {
-         from: "example_test",
-         as: "joinedField",
-         let: { pt: "$location" },
-         pipeline: [
-            {
-               $geoNear: {
-                  near: "$$pt",
-                  distanceField: "distance"
-               }
-            }
-         ]
+      "$geoNear":
+      {
+         "near":"$$pt",
+         "distanceField":"distance",
+         "maxDistance":2,
+         "query":{"category":"Parks"},
+         "includeLocs":"dist.location",
+         "spherical":true
       }
-   },
-   { 
-      $match: { name: "Sara D. Roosevelt Park" }
    }
+],
+{
+   "let":{ "pt": [ -73.99279, 40.719296 ] }

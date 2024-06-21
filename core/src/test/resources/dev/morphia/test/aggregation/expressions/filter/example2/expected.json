@@ -1,3 +1,3 @@
-{ "_id" : 0, "items" : [ { "item_id" : 2, "quantity" : 1, "price" : 240 } ]}
-{ "_id" : 1, "items" : [ { "item_id" : 23, "quantity" : 3, "price" : 110 } ]}
-{ "_id" : 2, "items" : [ ] }
+{ _id: 0, items: [ { item_id: 2, quantity: 1, price: 240, name: 'briefcase' } ] },
+{ _id: 1, items: [ { item_id: 23, quantity: 3, price: 110, name: 'notebook' } ] },
+{ _id: 2, items: [] }

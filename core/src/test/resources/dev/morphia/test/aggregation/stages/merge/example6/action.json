@@ -1,4 +1,18 @@
- [
-   { $group: { _id: { fiscal_year: "$fiscal_year", dept: "$dept" }, salaries: { $sum: "$salary" } } },
-   { $merge : { into: { db: "reporting", coll: "budgets" }, on: "_id",  whenMatched: "replace", whenNotMatched: "insert" } }
-] 
+db.cakeSales.insertOne( [
+   { _id: 1, flavor: "chocolate", salesTotal: 1580,
+     salesTrend: "up" }
+] )
+db.runCommand( {
+   aggregate: db.cakeSales.getName(),
+   pipeline: [ {
+      $merge: {
+         into: db.cakeSales.getName(),
+         let : { year: "2020" },
+         whenMatched: [ {
+            $addFields: { "salesYear": "$$year" }
+         } ]
+      }
+   } ],
+   cursor: {}
+} )
+db.cakeSales.find()

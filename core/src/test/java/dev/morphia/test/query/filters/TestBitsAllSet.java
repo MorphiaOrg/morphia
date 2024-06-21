@@ -1,10 +1,12 @@
 package dev.morphia.test.query.filters;
 
+import dev.morphia.test.TemplatedTestBase;
+
 import org.testng.annotations.Test;
 
 import static dev.morphia.query.filters.Filters.bitsAllSet;
 
-public class TestBitsAllSet extends FilterTest {
+public class TestBitsAllSet extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/bitsAllSet/example1
      * 

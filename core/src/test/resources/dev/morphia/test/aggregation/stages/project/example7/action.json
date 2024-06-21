@@ -1,1 +1,14 @@
-{ $project: { myArray: [ "$x", "$y" ] } }
+{
+         $project: {
+            title: 1,
+            isbn: {
+               prefix: { $substrBytes: [ "$isbn", 0, 3 ] },
+               group: { $substrBytes: [ "$isbn", 3, 2 ] },
+               publisher: { $substrBytes: [ "$isbn", 5, 4 ] },
+               title: { $substrBytes: [ "$isbn", 9, 3 ] },
+               checkDigit: { $substrBytes: [ "$isbn", 12, 1] }
+            },
+            lastName: "$author.last",
+            copiesSold: "$copies"
+         }
+      }

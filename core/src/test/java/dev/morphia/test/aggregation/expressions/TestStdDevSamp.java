@@ -14,24 +14,26 @@ import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 import static dev.morphia.query.Sort.*;
 
 public class TestStdDevSamp extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/stdDevSamp/example1
+     * 
+     */
+    @Test(testName = "Use in ``$group`` Stage")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                sample(100),
-                group(id(null))
-                        .field("ageStdDev", stdDevSamp("$age"))));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(sample(100),
+                group(id(null)).field("ageStdDev", stdDevSamp("$age"))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/stdDevSamp/example2
+     * 
+     */
+    @Test(testName = "Use in ``$setWindowFields`` Stage")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                setWindowFields()
-                        .partitionBy("$state")
-                        .sortBy(ascending("orderDate"))
-                        .output(output("stdDevSampQuantityForState")
-                                .operator(stdDevSamp("$quantity"))
-                                .window()
-                                .documents("unbounded", "current"))));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
+                        .sortBy(ascending("orderDate")).output(output("stdDevSampQuantityForState")
+                                .operator(stdDevSamp("$quantity")).window().documents("unbounded", "current"))));
     }
 
 }

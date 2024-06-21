@@ -20,7 +20,11 @@ import static org.bson.Document.parse;
 import static org.testng.Assert.assertEquals;
 
 public class TestAddFields extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/stages/addFields/example1
+     * 
+     */
+    @Test(testName = "Using Two ``$addFields`` Stages")
     public void testExample1() {
         List<Document> list = List.of(
                 parse("{ _id: 1, student: 'Maya', homework: [ 10, 5, 10 ],quiz: [ 10, 8 ],extraCredit: 0 }"),
@@ -29,17 +33,12 @@ public class TestAddFields extends AggregationTest {
         insert("scores", list);
 
         List<Document> result = getDs().aggregate(Score.class)
-                .addFields(addFields()
-                        .field("totalHomework", sum("$homework"))
-                        .field("totalQuiz", sum("$quiz")))
-                .addFields(addFields()
-                        .field("totalScore", add("$totalHomework",
-                                "$totalQuiz", "$extraCredit")))
-                .execute(Document.class)
-                .toList();
+                .addFields(addFields().field("totalHomework", sum("$homework")).field("totalQuiz", sum("$quiz")))
+                .addFields(addFields().field("totalScore", add("$totalHomework", "$totalQuiz", "$extraCredit")))
+                .execute(Document.class).toList();
 
-        list = List.of(
-                parse("{ '_id' : 1, 'student' : 'Maya', 'homework' : [ 10, 5, 10 ],'quiz' : [ 10, 8 ],'extraCredit' : 0, 'totalHomework' : 25,"
+        list = List.of(parse(
+                "{ '_id' : 1, 'student' : 'Maya', 'homework' : [ 10, 5, 10 ],'quiz' : [ 10, 8 ],'extraCredit' : 0, 'totalHomework' : 25,"
                         + " 'totalQuiz' : 18, 'totalScore' : 43 }"),
                 parse("{ '_id' : 2, 'student' : 'Ryan', 'homework' : [ 5, 6, 5 ],'quiz' : [ 8, 8 ],'extraCredit' : 8, 'totalHomework' : 16, "
                         + "'totalQuiz' : 16, 'totalScore' : 40 }"));
@@ -47,26 +46,34 @@ public class TestAddFields extends AggregationTest {
         assertEquals(result, list);
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/stages/addFields/example2
+     * 
+     */
+    @Test(testName = "Adding Fields to an Embedded Document")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                addFields()
-                        .field("specs.fuel_type", "unleaded")));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation.pipeline(addFields().field("specs.fuel_type", "unleaded")));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/stages/addFields/example3
+     * 
+     */
+    @Test(testName = "Overwriting an existing field")
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
-                addFields()
-                        .field("cats", 20)));
+        testPipeline(ServerVersion.ANY, false, false,
+                (aggregation) -> aggregation.pipeline(addFields().field("cats", 20)));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/stages/addFields/example4
+     * 
+     */
+    @Test(testName = "Add Element to an Array")
     public void testExample4() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                match(eq("_id", 1)),
-                addFields()
-                        .field("homework", concatArrays("$homework", array(7)))));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(match(eq("_id", 1)),
+                addFields().field("homework", concatArrays("$homework", array(7)))));
     }
 
 }

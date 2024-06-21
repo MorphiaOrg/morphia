@@ -1,5 +1,7 @@
 package dev.morphia.test.query.filters;
 
+import dev.morphia.test.TemplatedTestBase;
+
 import org.testng.annotations.Test;
 
 import static dev.morphia.query.filters.Filters.elemMatch;
@@ -7,7 +9,7 @@ import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.gte;
 import static dev.morphia.query.filters.Filters.lt;
 
-public class TestElemMatch extends FilterTest {
+public class TestElemMatch extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/elemMatch/example1
      * 

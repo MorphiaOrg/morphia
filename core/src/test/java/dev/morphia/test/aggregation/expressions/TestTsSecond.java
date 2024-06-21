@@ -9,12 +9,13 @@ import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.test.ServerVersion.v51;
 
 public class TestTsSecond extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/tsSecond/example1
+     * 
+     */
+    @Test(testName = "Obtain the Number of Seconds from a Timestamp Field")
     public void testExample1() {
         testPipeline(v51, (aggregation) -> aggregation.pipeline(
-                project()
-                        .suppressId()
-                        .include("saleTimestamp")
-                        .include("saleSeconds", tsSecond("$saleTimestamp"))));
+                project().suppressId().include("saleTimestamp").include("saleSeconds", tsSecond("$saleTimestamp"))));
     }
 }

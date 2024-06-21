@@ -20,7 +20,7 @@ import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.test.ServerVersion.v52;
 
 public class TestFirstN extends AggregationTest {
-    @Test
+    @Test(testName = "Find the First Three Player Scores for a Single Game")
     public void testExample1() {
         testPipeline(v52, false, false, (aggregation) -> aggregation.pipeline(
                 match(eq("gameId", "G1")),
@@ -30,7 +30,7 @@ public class TestFirstN extends AggregationTest {
                                 array("$playerId", "$score")))));
     }
 
-    @Test
+    @Test(testName = "Finding the First Three Player Scores Across Multiple Games")
     public void testExample2() {
         testPipeline(v52, false, false, (aggregation) -> aggregation.pipeline(
                 group(id("$gameId"))
@@ -40,7 +40,7 @@ public class TestFirstN extends AggregationTest {
 
     }
 
-    @Test
+    @Test(testName = "Using ``$sort`` With ``$firstN``")
     public void testExample3() {
         testPipeline(v52, false, false, (aggregation) -> aggregation.pipeline(
                 sort().descending("score"),
@@ -51,7 +51,7 @@ public class TestFirstN extends AggregationTest {
 
     }
 
-    @Test
+    @Test(testName = "Computing ``n`` Based on the Group Key for ``$group``")
     public void testExample4() {
         testPipeline(v52, false, false, (aggregation) -> aggregation.pipeline(
                 group(id()

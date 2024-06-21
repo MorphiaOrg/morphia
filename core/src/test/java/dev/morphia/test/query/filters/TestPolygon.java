@@ -3,13 +3,14 @@ package dev.morphia.test.query.filters;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
 
+import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
 import static dev.morphia.query.filters.Filters.polygon;
 
-public class TestPolygon extends FilterTest {
+public class TestPolygon extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/filters/polygon/example1

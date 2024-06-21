@@ -1,2 +1,4 @@
-{ $match: { type: "apparel" } },
-     { $addFields: { idxKey: { $meta: "indexKey" } } }
+db.articles.find(
+   { $text: { $search: "cake" } },
+   { score: { $meta: "textScore" } }
+)

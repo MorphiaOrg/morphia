@@ -1,0 +1,10 @@
+{
+      $setWindowFields:
+         {
+            sortBy: { time: 1 },
+            output:
+               {
+                  price: { $linearFill: "$price" }
+               }
+         }
+   }

@@ -15,33 +15,37 @@ import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 import static dev.morphia.query.Sort.ascending;
 
 public class TestMax extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/max/example1
+     * 
+     */
+    @Test(testName = "Use in ``$group`` Stage")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
-                group(id("$item"))
-                        .field("maxTotalAmount", max(multiply("$price", "$quantity")))
-                        .field("maxQuantity", max("$quantity"))));
+        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(group(id("$item"))
+                .field("maxTotalAmount", max(multiply("$price", "$quantity"))).field("maxQuantity", max("$quantity"))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/max/example2
+     * 
+     */
+    @Test(testName = "Use in ``$project`` Stage")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                project()
-                        .include("quizMax", max("$quizzes"))
-                        .include("labMax", max("$labs"))
-                        .include("examMax", max("$final", "$midterm"))));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation.pipeline(project().include("quizMax", max("$quizzes"))
+                        .include("labMax", max("$labs")).include("examMax", max("$final", "$midterm"))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/max/example3
+     * 
+     */
+    @Test(testName = "Use in ``$setWindowFields`` Stage")
     public void testExample3() {
-        testPipeline(ServerVersion.v50, false, true, (aggregation) -> aggregation.pipeline(
-                setWindowFields()
-                        .partitionBy("$state")
-                        .sortBy(ascending("orderDate"))
-                        .output(output("maximumQuantityForState")
-                                .operator(max("$quantity"))
-                                .window()
-                                .documents("unbounded", "current"))));
+        testPipeline(ServerVersion.v50, false, true,
+                (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
+                        .sortBy(ascending("orderDate")).output(output("maximumQuantityForState")
+                                .operator(max("$quantity")).window().documents("unbounded", "current"))));
     }
 
 }

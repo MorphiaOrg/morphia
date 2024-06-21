@@ -1,0 +1,3 @@
+db.players.find( { $where: function() { 
+   return (hex_md5(this.name) == "15b0a220baa16331e8d80e15367677ad") 
+} } )

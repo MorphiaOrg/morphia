@@ -1,2 +1,2 @@
-{ $match: { price: { $gte: 10 } } },
+{ $match: { type: "apparel" } },
      { $addFields: { idxKey: { $meta: "indexKey" } } }

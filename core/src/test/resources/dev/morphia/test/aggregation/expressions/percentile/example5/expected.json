@@ -1,5 +1,0 @@
-{ studentId: '2356', test01_95percentile: [ 62 ] },
-{ studentId: '2369', test01_95percentile: [ 62 ] },
-{ studentId: '2345', test01_95percentile: [ 64 ] },
-{ studentId: '2367', test01_95percentile: [ 67 ] },
-{ studentId: '2358', test01_95percentile: [ 67 ] }

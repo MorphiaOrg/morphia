@@ -1,1 +1,0 @@
-{   "_id" : 3,   "name" : "Polo Grounds",   "location": {      "type" : "Point",      "coordinates" : [ -73.9375, 40.8303 ]   },   "legacy" : [ -73.9375, 40.8303 ],   "category" : "Stadiums"}

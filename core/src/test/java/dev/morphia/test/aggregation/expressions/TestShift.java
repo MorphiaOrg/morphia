@@ -11,24 +11,28 @@ import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 import static dev.morphia.query.Sort.descending;
 
 public class TestShift extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/shift/example1
+     * 
+     */
+    @Test(testName = "Shift Using a Positive Integer")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                setWindowFields()
-                        .partitionBy("$state")
-                        .sortBy(descending("quantity"))
-                        .output(output("shiftQuantityForState")
-                                .operator(shift("$quantity", 1, "Not available")))));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation
+                        .pipeline(setWindowFields().partitionBy("$state").sortBy(descending("quantity")).output(
+                                output("shiftQuantityForState").operator(shift("$quantity", 1, "Not available")))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/shift/example2
+     * 
+     */
+    @Test(testName = "Shift Using a Negative Integer")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                setWindowFields()
-                        .partitionBy("$state")
-                        .sortBy(descending("quantity"))
-                        .output(output("shiftQuantityForState")
-                                .operator(shift("$quantity", -1, "Not available")))));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation
+                        .pipeline(setWindowFields().partitionBy("$state").sortBy(descending("quantity")).output(
+                                output("shiftQuantityForState").operator(shift("$quantity", -1, "Not available")))));
     }
 
 }

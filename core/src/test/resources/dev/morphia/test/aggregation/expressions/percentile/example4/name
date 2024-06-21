@@ -1,1 +1,1 @@
-Use |operatorName| in a ``$project`` Stage
+Use |operatorName| in a ``$setWindowField`` Stage

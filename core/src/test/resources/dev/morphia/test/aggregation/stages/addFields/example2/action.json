@@ -1,5 +1,1 @@
-{
-           $addFields: {
-              "specs.fuel_type": "unleaded"
-           }
-        }
+{ $addFields: { "specs.fuel_type": "unleaded" } }

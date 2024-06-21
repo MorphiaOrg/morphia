@@ -10,11 +10,13 @@ import static dev.morphia.test.ServerVersion.v63;
 
 public class TestBitXor extends AggregationTest {
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/bitXor/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
-        testPipeline(v63, false, true, aggregation -> aggregation
-                .pipeline(project()
-                        .include("result",
-                                bitXor("$a", "$b"))));
+        testPipeline(v63, false, true,
+                aggregation -> aggregation.pipeline(project().include("result", bitXor("$a", "$b"))));
     }
 }

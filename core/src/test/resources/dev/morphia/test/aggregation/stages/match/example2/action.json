@@ -1,1 +1,35 @@
-    [ { $match : { author : "dave" } } ]
+[
+  {
+    $match: {
+      $or: [
+        {
+          $and: [
+            {
+              "score": {
+                "$gt": 70
+              }
+            },
+            {
+              "score": {
+                "$lt": 90
+              }
+            }
+          ]
+        },
+        {
+          "views": {
+            "$gte": 1000
+          }
+        }
+      ]
+    }
+  },
+  {
+    $group: {
+      _id: null,
+      count: {
+        $sum: 1
+      }
+    }
+  }
+] 

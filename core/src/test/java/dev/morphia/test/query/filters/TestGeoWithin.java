@@ -7,13 +7,14 @@ import com.mongodb.client.model.geojson.Polygon;
 import com.mongodb.client.model.geojson.PolygonCoordinates;
 import com.mongodb.client.model.geojson.Position;
 
+import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
 import static dev.morphia.query.filters.Filters.geoWithin;
 
-public class TestGeoWithin extends FilterTest {
+public class TestGeoWithin extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/filters/geoWithin/example1

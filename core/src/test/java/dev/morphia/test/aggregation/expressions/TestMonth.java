@@ -18,20 +18,17 @@ import static dev.morphia.aggregation.expressions.DateExpressions.year;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestMonth extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/month/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                project()
-                        .include("year", year("$date"))
-                        .include("month", month("$date"))
-                        .include("day", dayOfMonth("$date"))
-                        .include("hour", hour("$date"))
-                        .include("minutes", minute("$date"))
-                        .include("seconds", second("$date"))
-                        .include("milliseconds", milliseconds("$date"))
-                        .include("dayOfYear", dayOfYear("$date"))
-                        .include("dayOfWeek", dayOfWeek("$date"))
-                        .include("week", week("$date"))));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(project()
+                .include("year", year("$date")).include("month", month("$date")).include("day", dayOfMonth("$date"))
+                .include("hour", hour("$date")).include("minutes", minute("$date")).include("seconds", second("$date"))
+                .include("milliseconds", milliseconds("$date")).include("dayOfYear", dayOfYear("$date"))
+                .include("dayOfWeek", dayOfWeek("$date")).include("week", week("$date"))));
     }
 
 }

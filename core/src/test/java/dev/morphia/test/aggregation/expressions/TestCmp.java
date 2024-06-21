@@ -9,14 +9,14 @@ import static dev.morphia.aggregation.expressions.ComparisonExpressions.cmp;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestCmp extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/cmp/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                project()
-                        .suppressId()
-                        .include("item")
-                        .include("qty")
-                        .include("cmpTo250", cmp("$qty", 250))));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
+                .pipeline(project().suppressId().include("item").include("qty").include("cmpTo250", cmp("$qty", 250))));
     }
 
 }

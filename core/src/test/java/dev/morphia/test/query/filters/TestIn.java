@@ -3,6 +3,7 @@ package dev.morphia.test.query.filters;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
@@ -10,7 +11,7 @@ import org.testng.annotations.Test;
 import static dev.morphia.query.filters.Filters.in;
 import static dev.morphia.query.updates.UpdateOperators.set;
 
-public class TestIn extends FilterTest {
+public class TestIn extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/filters/in/example1

@@ -15,43 +15,50 @@ import static dev.morphia.aggregation.stages.Unwind.unwind;
 import static dev.morphia.query.filters.Filters.gte;
 
 public class TestReplaceRoot extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/stages/replaceRoot/example1
+     * 
+     */
+    @Test(testName = "``$replaceRoot`` with an Embedded Document Field")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                replaceRoot(mergeObjects()
-                        .add(document()
-                                .field("dogs", 0)
-                                .field("cats", 0)
-                                .field("birds", 0)
-                                .field("fish", 0))
-                        .add("$pets"))));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(replaceRoot(mergeObjects()
+                .add(document().field("dogs", 0).field("cats", 0).field("birds", 0).field("fish", 0)).add("$pets"))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/stages/replaceRoot/example2
+     * 
+     */
+    @Test(testName = "``$replaceRoot`` with a Document Nested in an Array")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                unwind("grades"),
-                match(gte("grades.grade", 90)),
-                replaceRoot("$grades")));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(unwind("grades"),
+                match(gte("grades.grade", 90)), replaceRoot("$grades")));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/stages/replaceRoot/example3
+     * 
+     */
+    @Test(testName = "``$replaceRoot`` with a newly created document")
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                replaceRoot()
-                        .field("full_name", concat("$first_name", " ", "$last_name"))));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
+                .pipeline(replaceRoot().field("full_name", concat("$first_name", " ", "$last_name"))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/stages/replaceRoot/example4
+     * 
+     */
+    @Test(testName = "``$replaceRoot`` with a New Document Created from ``$$ROOT`` and a Default Document")
     public void testExample4() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                replaceRoot(mergeObjects()
-                        .add(document()
-                                .field("_id", "")
-                                .field("name", "")
-                                .field("email", "")
-                                .field("cell", "")
-                                .field("home", ""))
-                        .add(ROOT))));
+        testPipeline(
+                ServerVersion.ANY, false, true, (
+                        aggregation) -> aggregation
+                                .pipeline(
+                                        replaceRoot(
+                                                mergeObjects()
+                                                        .add(document().field("_id", "").field("name", "")
+                                                                .field("email", "").field("cell", "").field("home", ""))
+                                                        .add(ROOT))));
     }
 }

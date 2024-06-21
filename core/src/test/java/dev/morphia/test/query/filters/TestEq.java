@@ -3,13 +3,14 @@ package dev.morphia.test.query.filters;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 
-public class TestEq extends FilterTest {
+public class TestEq extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/eq/example1
      * 

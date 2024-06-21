@@ -1,2 +1,2 @@
-{ "_id" : 1, "date" : ISODate("2006-10-24T00:00:00Z"), "city" : "Boston" }
-{ "_id" : 2, "date" : ISODate("2011-08-18T00:00:00Z"), "city" : "Detroit" }
+{ _id: 1, date: ISODate("2006-10-24T00:00:00Z"), city: "Boston" },
+{ _id: 2, date: ISODate("2011-08-18T00:00:00Z"), city: "Detroit" }

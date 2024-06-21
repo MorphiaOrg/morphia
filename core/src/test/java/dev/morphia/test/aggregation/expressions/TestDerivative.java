@@ -15,17 +15,16 @@ import static dev.morphia.query.Sort.ascending;
 import static dev.morphia.query.filters.Filters.gt;
 
 public class TestDerivative extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/derivative/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, true, true, (aggregation) -> aggregation.pipeline(
-                setWindowFields()
-                        .partitionBy("$truckID")
-                        .sortBy(ascending("timeStamp"))
-                        .output(output("truckAverageSpeed")
-                                .operator(derivative("$miles")
-                                        .unit(HOUR))
-                                .window()
-                                .range(-30, 0, SECOND)),
-                match(gt("truckAverageSpeed", 50))));
+        testPipeline(ServerVersion.ANY, true, true,
+                (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$truckID")
+                        .sortBy(ascending("timeStamp")).output(output("truckAverageSpeed")
+                                .operator(derivative("$miles").unit(HOUR)).window().range(-30, 0, SECOND)),
+                        match(gt("truckAverageSpeed", 50))));
     }
 }

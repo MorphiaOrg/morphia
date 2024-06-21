@@ -1,2 +1,4 @@
-{ "_id" : ObjectId("5e98a33ceaf5e9dcf2b8dcde"), "item" : "abc", "price" : NumberDecimal("12"), "quantity" : 2, "type" : "apparel", "idxKey" : { "type" : "apparel", "item" : "abc" }}
-{ "_id" : ObjectId("5e98a33ceaf5e9dcf2b8dce0"), "item" : "abc", "price" : NumberDecimal("10"), "quantity" : 5, "type" : "apparel", "idxKey" : { "type" : "apparel", "item" : "abc" }}
+{ "_id" : 4, "title" : "some cakes", "score" : 1 }
+{ "_id" : 1, "title" : "cakes and ale", "score" : 0.75 }
+{ "_id" : 5, "title" : "two cakes to go", "score" : 0.6666666666666666 }
+{ "_id" : 2, "title" : "more cakes", "score" : 1 }

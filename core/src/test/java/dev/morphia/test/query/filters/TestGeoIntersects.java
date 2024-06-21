@@ -5,6 +5,7 @@ import com.mongodb.client.model.geojson.Polygon;
 import com.mongodb.client.model.geojson.PolygonCoordinates;
 import com.mongodb.client.model.geojson.Position;
 
+import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
@@ -12,7 +13,7 @@ import org.testng.annotations.Test;
 import static dev.morphia.query.filters.Filters.geoIntersects;
 import static java.util.List.of;
 
-public class TestGeoIntersects extends FilterTest {
+public class TestGeoIntersects extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/filters/geoIntersects/example1

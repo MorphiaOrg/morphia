@@ -9,15 +9,16 @@ import static dev.morphia.aggregation.expressions.DateExpressions.dateToParts;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestDateToParts extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/dateToParts/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                project()
-                        .include("date", dateToParts("$date"))
-                        .include("date_iso", dateToParts("$date")
-                                .iso8601(true))
-                        .include("date_timezone", dateToParts("$date")
-                                .timezone("America/New_York"))));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation.pipeline(project().include("date", dateToParts("$date"))
+                        .include("date_iso", dateToParts("$date").iso8601(true))
+                        .include("date_timezone", dateToParts("$date").timezone("America/New_York"))));
     }
 
 }

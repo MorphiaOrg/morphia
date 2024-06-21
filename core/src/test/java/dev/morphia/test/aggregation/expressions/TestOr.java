@@ -11,14 +11,14 @@ import static dev.morphia.aggregation.expressions.ComparisonExpressions.lt;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestOr extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/or/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                project()
-                        .include("item")
-                        .include("result", or(
-                                gt("$qty", 250),
-                                lt("$qty", 200)))));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
+                .pipeline(project().include("item").include("result", or(gt("$qty", 250), lt("$qty", 200)))));
     }
 
 }

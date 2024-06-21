@@ -2,6 +2,8 @@ package dev.morphia.test.query.filters;
 
 import java.util.List;
 
+import dev.morphia.test.TemplatedTestBase;
+
 import org.testng.annotations.Test;
 
 import static dev.morphia.query.filters.Filters.all;
@@ -9,7 +11,7 @@ import static dev.morphia.query.filters.Filters.elemMatch;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.gt;
 
-public class TestAll extends FilterTest {
+public class TestAll extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/all/example1
      * 

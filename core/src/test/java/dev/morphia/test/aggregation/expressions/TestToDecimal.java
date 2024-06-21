@@ -12,16 +12,16 @@ import static dev.morphia.aggregation.stages.AddFields.addFields;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestToDecimal extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/toDecimal/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                addFields()
-                        .field("convertedPrice", toDecimal("$price"))
-                        .field("convertedQty", toInt("$qty")),
-                project()
-                        .include("item")
-                        .include("totalPrice",
-                                multiply("$convertedPrice", "$convertedQty"))));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation.pipeline(
+                        addFields().field("convertedPrice", toDecimal("$price")).field("convertedQty", toInt("$qty")),
+                        project().include("item").include("totalPrice", multiply("$convertedPrice", "$convertedQty"))));
     }
 
 }

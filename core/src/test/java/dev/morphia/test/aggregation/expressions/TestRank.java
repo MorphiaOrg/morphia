@@ -12,34 +12,37 @@ import static dev.morphia.query.Sort.ascending;
 import static dev.morphia.query.Sort.descending;
 
 public class TestRank extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/rank/example1
+     * 
+     */
+    @Test(testName = "Rank Partitions by an Integer Field")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                setWindowFields()
-                        .partitionBy("$state")
-                        .sortBy(descending("quantity"))
-                        .output(output("rankQuantityForState")
-                                .operator(rank()))));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
+                        .sortBy(descending("quantity")).output(output("rankQuantityForState").operator(rank()))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/rank/example2
+     * 
+     */
+    @Test(testName = "Rank Partitions by a Date Field")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                setWindowFields()
-                        .partitionBy("$state")
-                        .sortBy(ascending("orderDate"))
-                        .output(output("rankOrderDateForState")
-                                .operator(rank()))));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
+                        .sortBy(ascending("orderDate")).output(output("rankOrderDateForState").operator(rank()))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/rank/example3
+     * 
+     */
+    @Test(testName = "Rank Partitions Containing Duplicate Values, Nulls, or Missing Data")
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                setWindowFields()
-                        .partitionBy("$state")
-                        .sortBy(descending("quantity"))
-                        .output(output("rankQuantityForState")
-                                .operator(rank()))));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
+                        .sortBy(descending("quantity")).output(output("rankQuantityForState").operator(rank()))));
     }
 
 }

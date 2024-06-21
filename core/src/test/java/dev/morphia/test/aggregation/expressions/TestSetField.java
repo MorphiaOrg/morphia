@@ -19,44 +19,64 @@ public class TestSetField extends AggregationTest {
         minDriver = DriverVersion.v43;
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/setField/example1
+     * 
+     */
+    @Test(testName = "Add Fields that Contain Periods (``.``)")
     public void testExample1() {
-        testPipeline(ServerVersion.v50, false, true, (aggregation) -> aggregation.pipeline(
-                replaceWith(setField("price.usd", ROOT, "$price")),
-                unset("price")));
+        testPipeline(ServerVersion.v50, false, true, (aggregation) -> aggregation
+                .pipeline(replaceWith(setField("price.usd", ROOT, "$price")), unset("price")));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/setField/example2
+     * 
+     */
+    @Test(testName = "Add Fields that Start with a Dollar Sign (``$``)")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                replaceWith(setField(literal("$price"), ROOT, "$price")),
-                unset("price")));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
+                .pipeline(replaceWith(setField(literal("$price"), ROOT, "$price")), unset("price")));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/setField/example3
+     * 
+     */
+    @Test(testName = "Update Fields that Contain Periods (``.``)")
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                match(eq("_id", 1)),
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(match(eq("_id", 1)),
                 replaceWith(setField("price.usd", ROOT, 49.99))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/setField/example4
+     * 
+     */
+    @Test(testName = "Update Fields that Start with a Dollar Sign (``$``)")
     public void testExample4() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                match(eq("_id", 1)),
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(match(eq("_id", 1)),
                 replaceWith(setField(literal("$price"), ROOT, 49.99))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/setField/example5
+     * 
+     */
+    @Test(testName = "Remove Fields that Contain Periods (``.``)")
     public void testExample5() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                replaceWith(setField("price.usd", ROOT, REMOVE))));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation.pipeline(replaceWith(setField("price.usd", ROOT, REMOVE))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/setField/example6
+     * 
+     */
+    @Test(testName = "Remove Fields that Start with a Dollar Sign (``$``)")
     public void testExample6() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                replaceWith(setField(literal("$price"), ROOT, REMOVE))));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation.pipeline(replaceWith(setField(literal("$price"), ROOT, REMOVE))));
     }
 
 }

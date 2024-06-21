@@ -1,13 +1,12 @@
- [
-   {
-      $group: {
-         _id: null,
-         test01_median: {
+{
+      $project: {
+         _id: 0,
+         studentId: 1,
+         testMedians: {
             $median: {
-               input: "$test01",
+               input: [ "$test01", "$test02", "$test03" ],
                method: 'approximate'
             }
          }
       }
    }
-] 

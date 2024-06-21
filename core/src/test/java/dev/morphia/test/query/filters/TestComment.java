@@ -1,5 +1,6 @@
 package dev.morphia.test.query.filters;
 
+import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
@@ -7,7 +8,7 @@ import org.testng.annotations.Test;
 import static dev.morphia.query.filters.Filters.comment;
 import static dev.morphia.query.filters.Filters.mod;
 
-public class TestComment extends FilterTest {
+public class TestComment extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/filters/comment/example1

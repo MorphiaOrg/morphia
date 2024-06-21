@@ -17,7 +17,7 @@ import static dev.morphia.test.ServerVersion.v52;
 
 public class TestLastN extends AggregationTest {
 
-    @Test
+    @Test(testName = "Find the Last Three Player Scores for a Single Game")
     public void testExample1() {
         testPipeline(v52, false, false, (aggregation) -> aggregation
                 .pipeline(
@@ -29,7 +29,7 @@ public class TestLastN extends AggregationTest {
 
     }
 
-    @Test
+    @Test(testName = "Finding the Last Three Player Scores Across Multiple Games")
     public void testExample2() {
         testPipeline(v52, false, false, (aggregation) -> aggregation
                 .pipeline(group(id("$gameId"))
@@ -39,7 +39,7 @@ public class TestLastN extends AggregationTest {
 
     }
 
-    @Test
+    @Test(testName = "Using ``$sort`` With ``$lastN``")
     public void testExample3() {
         testPipeline(v52, false, false, (aggregation) -> aggregation
                 .pipeline(
@@ -51,7 +51,7 @@ public class TestLastN extends AggregationTest {
 
     }
 
-    @Test
+    @Test(testName = "Computing ``n`` Based on the Group Key for ``$group``")
     public void testExample4() {
         testPipeline(v52, false, false, (aggregation) -> aggregation
                 .pipeline(group(id().field("gameId", "$gameId"))

@@ -13,20 +13,16 @@ import static dev.morphia.aggregation.expressions.ConditionalExpressions.switchE
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestSwitch extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/switch/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                project()
-                        .include("name")
-                        .include("summary",
-                                switchExpression()
-                                        .branch(gte(avg("$scores"), 90), "Doing great!")
-                                        .branch(and(
-                                                gte(avg("$scores"), 80),
-                                                lt(avg("$scores"), 90)), "Doing pretty well.")
-                                        .branch(
-                                                lt(avg("$scores"), 80), "Needs improvement.")
-                                        .defaultCase("No scores found."))));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(project().include("name")
+                .include("summary", switchExpression().branch(gte(avg("$scores"), 90), "Doing great!")
+                        .branch(and(gte(avg("$scores"), 80), lt(avg("$scores"), 90)), "Doing pretty well.")
+                        .branch(lt(avg("$scores"), 80), "Needs improvement.").defaultCase("No scores found."))));
     }
 
 }

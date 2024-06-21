@@ -19,56 +19,69 @@ import static dev.morphia.aggregation.stages.Sort.sort;
 import static dev.morphia.aggregation.stages.Unwind.unwind;
 
 public class TestRegexFind extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/regexFind/example1
+     * 
+     */
+    @Test(testName = "``$regexFind`` and Its Options")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
-                addFields()
-                        .field("returnObject", regexFind("$description")
-                                .pattern("line"))));
+        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation
+                .pipeline(addFields().field("returnObject", regexFind("$description").pattern("line"))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/regexFind/example2
+     * 
+     */
+    @Test(testName = "Use ``$regexFind`` to Parse Email from String")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                addFields()
-                        .field("email", regexFind("$comment")
-                                .pattern("[a-z0-9_.+-]+@[a-z0-9_.+-]+\\.[a-z0-9_.+-]+")
-                                .options("i")),
-                set()
-                        .field("email", "$email.match")));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation.pipeline(
+                        addFields().field("email", regexFind("$comment")
+                                .pattern("[a-z0-9_.+-]+@[a-z0-9_.+-]+\\.[a-z0-9_.+-]+").options("i")),
+                        set().field("email", "$email.match")));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/regexFind/example3
+     * 
+     */
+    @Test(testName = "Apply ``$regexFind`` to String Elements of an Array")
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                unwind("details"),
-                addFields()
-                        .field("regexemail", regexFind("$details")
-                                .pattern("^[a-z0-9_.+-]+@[a-z0-9_.+-]+\\.[a-z0-9_.+-]+$")
-                                .options("i"))
-                        .field("regexphone", regexFind("$details")
-                                .pattern("^[+]{0,1}[0-9]*\\-?[0-9_\\-]+$")),
-                project()
-                        .include("_id")
-                        .include("name")
-                        .include("details", document()
-                                .field("email", "$regexemail.match")
-                                .field("phone", "$regexphone.match")),
-                group(id("$_id"))
-                        .field("name", first("$name"))
-                        .field("details", mergeObjects().add("$details")),
-                sort().ascending("_id")));
+        testPipeline(
+                ServerVersion.ANY, false, true, (
+                        aggregation) -> aggregation
+                                .pipeline(unwind("details"),
+                                        addFields()
+                                                .field("regexemail",
+                                                        regexFind("$details")
+                                                                .pattern(
+                                                                        "^[a-z0-9_.+-]+@[a-z0-9_.+-]+\\.[a-z0-9_.+-]+$")
+                                                                .options("i"))
+                                                .field("regexphone",
+                                                        regexFind("$details")
+                                                                .pattern("^[+]{0,1}[0-9]*\\-?[0-9_\\-]+$")),
+                                        project().include("_id").include("name").include("details",
+                                                document().field("email", "$regexemail.match").field("phone",
+                                                        "$regexphone.match")),
+                                        group(id("$_id")).field("name", first("$name")).field("details",
+                                                mergeObjects().add("$details")),
+                                        sort().ascending("_id")));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/regexFind/example4
+     * 
+     */
+    @Test(testName = "Use Captured Groupings to Parse User Name")
     public void testExample4() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                addFields()
-                        .field("username", regexFind("$email")
-                                .pattern("^([a-z0-9_.+-]+)@[a-z0-9_.+-]+\\.[a-z0-9_.+-]+$")
-                                .options("i")),
-                set()
-                        .field("username", elementAt("$username.captures", 0))));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation
+                        .pipeline(
+                                addFields().field("username",
+                                        regexFind("$email").pattern("^([a-z0-9_.+-]+)@[a-z0-9_.+-]+\\.[a-z0-9_.+-]+$")
+                                                .options("i")),
+                                set().field("username", elementAt("$username.captures", 0))));
     }
 
 }

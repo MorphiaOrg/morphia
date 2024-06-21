@@ -1,0 +1,3 @@
+{ "_id" : ObjectId("5e98a33ceaf5e9dcf2b8dcde"), "item" : "abc", "price" : NumberDecimal("12"), "quantity" : 2, "type" : "apparel"}
+{ "_id" : ObjectId("5e98a33ceaf5e9dcf2b8dcdf"), "item" : "jkl", "price" : NumberDecimal("20"), "quantity" : 1, "type" : "electronics"}
+{ "_id" : ObjectId("5e98a33ceaf5e9dcf2b8dce0"), "item" : "abc", "price" : NumberDecimal("10"), "quantity" : 5, "type" : "apparel"}

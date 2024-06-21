@@ -10,13 +10,16 @@ import static dev.morphia.aggregation.stages.AddFields.addFields;
 import static dev.morphia.aggregation.stages.Sort.sort;
 
 public class TestToString extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/toString/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                addFields()
-                        .field("convertedZipCode", StringExpressions.toString("$zipcode")),
-                sort()
-                        .ascending("convertedZipCode")));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation.pipeline(
+                        addFields().field("convertedZipCode", StringExpressions.toString("$zipcode")),
+                        sort().ascending("convertedZipCode")));
     }
 
 }

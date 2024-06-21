@@ -10,12 +10,14 @@ import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.test.ServerVersion.ANY;
 
 public class TestCond extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/cond/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
-        testPipeline(ANY, false, true, aggregation -> aggregation.pipeline(
-                project()
-                        .include("item")
-                        .include("discount", condition(gte("$qty", 250), 30, 20))));
+        testPipeline(ANY, false, true, aggregation -> aggregation
+                .pipeline(project().include("item").include("discount", condition(gte("$qty", 250), 30, 20))));
 
     }
 }

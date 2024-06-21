@@ -10,11 +10,14 @@ import static dev.morphia.aggregation.expressions.WindowExpressions.stdDevPop;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestPow extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/pow/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                project()
-                        .include("variance", pow(stdDevPop("$scores.score"), 2))));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
+                .pipeline(project().include("variance", pow(stdDevPop("$scores.score"), 2))));
     }
 
 }

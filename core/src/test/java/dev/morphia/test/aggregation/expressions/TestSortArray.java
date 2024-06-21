@@ -14,63 +14,73 @@ import static dev.morphia.query.Sort.naturalAscending;
 import static dev.morphia.test.ServerVersion.v52;
 
 public class TestSortArray extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/sortArray/example1
+     * 
+     */
+    @Test(testName = "Sort on a Field ")
     public void testExample1() {
         testPipeline(v52, (aggregation) -> aggregation
-                .pipeline(project()
-                        .suppressId()
-                        .include("result", sortArray("$team", ascending("name")))));
+                .pipeline(project().suppressId().include("result", sortArray("$team", ascending("name")))));
 
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/sortArray/example2
+     * 
+     */
+    @Test(testName = "Sort on a Subfield")
     public void testExample2() {
         testPipeline(v52, (aggregation) -> {
             return aggregation
-                    .project(project()
-                            .suppressId()
-                            .include("result", sortArray("$team", descending("address.city"))));
+                    .project(project().suppressId().include("result", sortArray("$team", descending("address.city"))));
         });
 
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/sortArray/example3
+     * 
+     */
+    @Test(testName = "Sort on Multiple Fields")
     public void testExample3() {
         testPipeline(v52, (aggregation) -> aggregation.pipeline(
-                project()
-                        .suppressId()
-                        .include("result",
-                                sortArray("$team",
-                                        descending("age"),
-                                        ascending("name")))));
+                project().suppressId().include("result", sortArray("$team", descending("age"), ascending("name")))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/sortArray/example4
+     * 
+     */
+    @Test(testName = "Sort an Array of Integers")
     public void testExample4() {
         testPipeline(v52, (aggregation) -> {
-            return aggregation
-                    .project(project()
-                            .suppressId()
-                            .include("result", sortArray(array(1, 4, 1, 6, 12, 5),
-                                    naturalAscending())));
+            return aggregation.project(
+                    project().suppressId().include("result", sortArray(array(1, 4, 1, 6, 12, 5), naturalAscending())));
         });
 
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/sortArray/example5
+     * 
+     */
+    @Test(testName = "Sort on Mixed Type Fields")
     public void testExample5() {
-        testPipeline(v52, false, false, (aggregation) -> aggregation.pipeline(
-                project()
-                        .suppressId()
-                        .include("result", sortArray(
-                                array(20, 4,
-                                        document("a", "Free"),
-                                        6, 21, 5, "Gratis",
-                                        document("a", null),
-                                        document("a", document("sale", true).field("price", 19)),
-                                        10.23,
-                                        document("a", "On sale")),
-                                naturalAscending()))));
+        testPipeline(
+                v52, false, false, (
+                        aggregation) -> aggregation
+                                .pipeline(
+                                        project().suppressId()
+                                                .include("result",
+                                                        sortArray(
+                                                                array(20, 4, document("a", "Free"), 6, 21, 5, "Gratis",
+                                                                        document("a", null),
+                                                                        document("a",
+                                                                                document("sale", true).field("price",
+                                                                                        19)),
+                                                                        10.23, document("a", "On sale")),
+                                                                naturalAscending()))));
 
     }
 

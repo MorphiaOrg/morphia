@@ -180,7 +180,11 @@ class RstAuditor(val type: OperatorType) {
                         }
                 }
             } else {
-                Roaster.parse(outputFile) as JavaClassSource
+                try {
+                    Roaster.parse(outputFile) as JavaClassSource
+                } catch (e: Exception) {
+                    throw IllegalStateException("Can't parse $outputFile", e)
+                }
             }
         source.addTestCases(operator)
 

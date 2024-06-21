@@ -15,67 +15,56 @@ import static dev.morphia.query.filters.Filters.expr;
 import static dev.morphia.test.ServerVersion.ANY;
 
 public class TestDateAdd extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/dateAdd/example1
+     * 
+     */
+    @Test(testName = "Add a Future Date")
     public void testExample1() {
         minDriver = DriverVersion.v42;
-        testPipeline(ANY, true, true, aggregation -> aggregation.pipeline(
-                project()
-                        .include("expectedDeliveryDate",
-                                dateAdd("$purchaseDate", 3, TimeUnit.DAY))));
+        testPipeline(ANY, true, true, aggregation -> aggregation
+                .pipeline(project().include("expectedDeliveryDate", dateAdd("$purchaseDate", 3, TimeUnit.DAY))));
 
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/dateAdd/example2
+     * 
+     */
+    @Test(testName = "Filter on a Date Range")
     public void testExample2() {
-        testPipeline(ANY, false, true, aggregation -> aggregation.pipeline(
-                match(expr(
-                        gt("$deliveryDate", dateAdd("$purchaseDate", 5, TimeUnit.DAY)))),
+        testPipeline(ANY, false, true,
+                aggregation -> aggregation.pipeline(
+                        match(expr(gt("$deliveryDate", dateAdd("$purchaseDate", 5, TimeUnit.DAY)))),
 
-                project()
-                        .suppressId()
-                        .include("custId")
-                        .include("purchased", dateToString()
-                                .date("$purchaseDate")
-                                .format("%Y-%m-%d"))
-                        .include("delivery", dateToString()
-                                .date("$deliveryDate")
-                                .format("%Y-%m-%d"))
+                        project().suppressId().include("custId")
+                                .include("purchased", dateToString().date("$purchaseDate").format("%Y-%m-%d"))
+                                .include("delivery", dateToString().date("$deliveryDate").format("%Y-%m-%d"))
 
-        ));
+                ));
 
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/dateAdd/example3
+     * 
+     */
+    @Test(testName = "Adjust for Daylight Savings Time")
     public void testExample3() {
-        testPipeline(ANY, false, true, aggregation -> aggregation.pipeline(
-                project()
-                        .suppressId()
-                        .include("location")
-                        .include("start", dateToString()
-                                .date("$login")
+        testPipeline(ANY, false, true, aggregation -> aggregation.pipeline(project().suppressId().include("location")
+                .include("start", dateToString().date("$login").format("%Y-%m-%d %H:%M"))
+                .include("days",
+                        dateToString().date(dateAdd("$login", 1, TimeUnit.DAY).timezone("$location"))
                                 .format("%Y-%m-%d %H:%M"))
-                        .include("days", dateToString()
-                                .date(dateAdd("$login", 1, TimeUnit.DAY)
-                                        .timezone("$location"))
+                .include("hours",
+                        dateToString().date(dateAdd("$login", 24, TimeUnit.HOUR).timezone("$location"))
                                 .format("%Y-%m-%d %H:%M"))
-                        .include("hours", dateToString()
-                                .date(dateAdd("$login", 24, TimeUnit.HOUR)
-                                        .timezone("$location"))
-                                .format("%Y-%m-%d %H:%M"))
-                        .include("startTZInfo", dateToString()
-                                .date("$login")
-                                .format("%Y-%m-%d %H:%M")
-                                .timeZone("$location"))
-                        .include("daysTZInfo", dateToString()
-                                .date(dateAdd("$login", 1, TimeUnit.DAY)
-                                        .timezone("$location"))
-                                .format("%Y-%m-%d %H:%M")
-                                .timeZone("$location"))
-                        .include("hoursTZInfo", dateToString()
-                                .date(dateAdd("$login", 24, TimeUnit.HOUR)
-                                        .timezone("$location"))
-                                .format("%Y-%m-%d %H:%M")
-                                .timeZone("$location")))
+                .include("startTZInfo", dateToString().date("$login").format("%Y-%m-%d %H:%M").timeZone("$location"))
+                .include("daysTZInfo",
+                        dateToString().date(dateAdd("$login", 1, TimeUnit.DAY).timezone("$location"))
+                                .format("%Y-%m-%d %H:%M").timeZone("$location"))
+                .include("hoursTZInfo", dateToString().date(dateAdd("$login", 24, TimeUnit.HOUR).timezone("$location"))
+                        .format("%Y-%m-%d %H:%M").timeZone("$location")))
 
         );
 

@@ -22,20 +22,12 @@ import java.util.function.Function;
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.aggregation.model.Martian;
-import dev.morphia.test.models.User;
 import dev.morphia.test.util.Comparanator;
 
 import org.bson.Document;
 
 @SuppressWarnings({ "unused", "MismatchedQueryAndUpdateOfCollection" })
 public class AggregationTest extends TemplatedTestBase {
-
-    public AggregationTest() {
-        super(buildConfig(Martian.class, User.class)
-                .applyIndexes(true)
-                .codecProvider(new ZDTCodecProvider()));
-    }
 
     public void testPipeline(ServerVersion serverVersion,
             Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
@@ -49,6 +41,7 @@ public class AggregationTest extends TemplatedTestBase {
         checkMinServerVersion(serverVersion);
         checkMinDriverVersion(minDriver);
         var resourceName = discoverResourceName();
+        validateTestName(resourceName);
         loadData(resourceName, EXAMPLE_TEST_COLLECTION);
         loadIndex(resourceName, EXAMPLE_TEST_COLLECTION);
 

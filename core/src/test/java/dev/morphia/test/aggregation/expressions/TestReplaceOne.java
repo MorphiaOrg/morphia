@@ -9,15 +9,14 @@ import static dev.morphia.aggregation.expressions.StringExpressions.replaceOne;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestReplaceOne extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/replaceOne/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                project()
-                        .include("item",
-                                replaceOne(
-                                        "$item",
-                                        "blue paint",
-                                        "red paint"))));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
+                .pipeline(project().include("item", replaceOne("$item", "blue paint", "red paint"))));
     }
 
 }

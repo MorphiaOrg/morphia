@@ -1,5 +1,6 @@
 package dev.morphia.test.query.filters;
 
+import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
@@ -7,7 +8,7 @@ import org.testng.annotations.Test;
 import static dev.morphia.query.filters.Filters.lte;
 import static dev.morphia.query.updates.UpdateOperators.set;
 
-public class TestLte extends FilterTest {
+public class TestLte extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/filters/lte/example1

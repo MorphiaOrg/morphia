@@ -10,33 +10,34 @@ import static dev.morphia.aggregation.expressions.MathExpressions.subtract;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestSubtract extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/subtract/example1
+     * 
+     */
+    @Test(testName = "Subtract Numbers")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                project()
-                        .include("item")
-                        .include("total", subtract(
-                                add("$price", "$fee"),
-                                "$discount"))));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
+                .pipeline(project().include("item").include("total", subtract(add("$price", "$fee"), "$discount"))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/subtract/example2
+     * 
+     */
+    @Test(testName = "Subtract Two Dates")
     public void testExample2() {
         skipDataCheck();
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                project()
-                        .include("item")
-                        .include("dateDifference", subtract(
-                                "$$NOW",
-                                "$date"))));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
+                .pipeline(project().include("item").include("dateDifference", subtract("$$NOW", "$date"))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/subtract/example3
+     * 
+     */
+    @Test(testName = "Subtract Milliseconds from a Date")
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                project()
-                        .include("item")
-                        .include("dateDifference",
-                                subtract("$date", 5 * 60 * 1000))));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
+                .pipeline(project().include("item").include("dateDifference", subtract("$date", 5 * 60 * 1000))));
     }
 }

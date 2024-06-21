@@ -10,13 +10,14 @@ import static dev.morphia.aggregation.stages.AddFields.addFields;
 import static dev.morphia.aggregation.stages.Sort.sort;
 
 public class TestToLong extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/toLong/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                addFields()
-                        .field("convertedQty", toLong("$qty")),
-                sort()
-                        .descending("convertedQty")));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
+                .pipeline(addFields().field("convertedQty", toLong("$qty")), sort().descending("convertedQty")));
     }
 
 }

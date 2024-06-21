@@ -24,43 +24,54 @@ import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
 
 public class TestUnwind extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/stages/unwind/example1
+     * 
+     */
+    @Test(testName = "Unwind Array")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                unwind("sizes")));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(unwind("sizes")));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/stages/unwind/example2
+     * 
+     */
+    @Test(testName = "Missing or Non-array Values")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                unwind("sizes")));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(unwind("sizes")));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/stages/unwind/example3
+     * 
+     */
+    @Test(testName = "``preserveNullAndEmptyArrays`` and ``includeArrayIndex``")
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                unwind("sizes")
-                        .preserveNullAndEmptyArrays(true)));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation.pipeline(unwind("sizes").preserveNullAndEmptyArrays(true)));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/stages/unwind/example4
+     * 
+     */
+    @Test(testName = "Group by Unwound Values")
     public void testExample4() {
-        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
-                unwind("sizes")
-                        .preserveNullAndEmptyArrays(true),
-                group(id("$sizes"))
-                        .field("averagePrice", avg("$price")),
-                sort()
-                        .descending("averagePrice")));
+        testPipeline(ServerVersion.ANY, false, false,
+                (aggregation) -> aggregation.pipeline(unwind("sizes").preserveNullAndEmptyArrays(true),
+                        group(id("$sizes")).field("averagePrice", avg("$price")), sort().descending("averagePrice")));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/stages/unwind/example5
+     * 
+     */
+    @Test(testName = "Unwind Embedded Arrays")
     public void testExample5() {
-        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
-                unwind("items"),
+        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(unwind("items"),
                 unwind("items.tags"),
-                group(id("$items.tags"))
-                        .field("totalSalesAmount", sum(multiply("$items.price", "$items.quantity")))));
+                group(id("$items.tags")).field("totalSalesAmount", sum(multiply("$items.price", "$items.quantity")))));
     }
 
     @Test
@@ -71,11 +82,7 @@ public class TestUnwind extends AggregationTest {
                 new User("john", parse("2012-07-02", format))));
 
         Iterator<User> aggregate = getDs().aggregate(User.class)
-                .project(project()
-                        .include("name")
-                        .include("joined")
-                        .include("likes"))
-                .unwind(unwind("likes"))
+                .project(project().include("name").include("joined").include("likes")).unwind(unwind("likes"))
                 .execute(User.class);
         int count = 0;
         while (aggregate.hasNext()) {
@@ -107,14 +114,8 @@ public class TestUnwind extends AggregationTest {
             count++;
         }
 
-        aggregate = getDs().aggregate(User.class)
-                .project(project()
-                        .include("name")
-                        .include("joined")
-                        .include("likes"))
-                .unwind(unwind("likes")
-                        .preserveNullAndEmptyArrays(true))
-                .execute(User.class);
+        aggregate = getDs().aggregate(User.class).project(project().include("name").include("joined").include("likes"))
+                .unwind(unwind("likes").preserveNullAndEmptyArrays(true)).execute(User.class);
         count = 0;
         while (aggregate.hasNext()) {
             User user = aggregate.next();

@@ -1,0 +1,12 @@
+{
+      $group: {
+         _id: null,
+         test01_percentiles: {
+            $percentile: {
+               input: "$test01",
+               p: [ 0.95 ],
+               method: 'approximate'
+            }
+         },
+      }
+   }

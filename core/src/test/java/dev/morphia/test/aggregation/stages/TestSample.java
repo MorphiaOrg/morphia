@@ -8,10 +8,13 @@ import org.testng.annotations.Test;
 import static dev.morphia.aggregation.stages.Sample.sample;
 
 public class TestSample extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/stages/sample/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
         skipDataCheck(); // the results are random
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                sample(3)));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(sample(3)));
     }
 }

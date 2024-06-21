@@ -8,10 +8,13 @@ import org.testng.annotations.Test;
 import static dev.morphia.aggregation.stages.IndexStats.indexStats;
 
 public class TestIndexStats extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/stages/indexStats/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
         skipDataCheck();
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                indexStats()));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(indexStats()));
     }
 }

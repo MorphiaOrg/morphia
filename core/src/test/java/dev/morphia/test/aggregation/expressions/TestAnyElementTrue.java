@@ -9,13 +9,14 @@ import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.test.ServerVersion.ANY;
 
 public class TestAnyElementTrue extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/anyElementTrue/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
         testPipeline(ANY, false, true, aggregation -> aggregation.pipeline(
-                project()
-                        .suppressId()
-                        .include("responses")
-                        .include("isAnyTrue", anyElementTrue("$responses"))));
+                project().suppressId().include("responses").include("isAnyTrue", anyElementTrue("$responses"))));
 
     }
 }

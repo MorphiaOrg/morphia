@@ -165,7 +165,7 @@ public class TestTransactions extends AggregationTest {
         assertEquals(getDs().find(Rectangle.class).first().getWidth(), 20, 0.5);
     }
 
-    @Test
+    @Test(testName = "transactional aggregations")
     public void aggregation() {
         getDs().withTransaction(session -> {
             testPipeline(ServerVersion.ANY, false, false, aggregation -> {

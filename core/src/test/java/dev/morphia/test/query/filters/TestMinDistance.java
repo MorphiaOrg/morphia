@@ -1,8 +1,10 @@
 package dev.morphia.test.query.filters;
 
+import dev.morphia.test.TemplatedTestBase;
+
 import org.testng.annotations.Test;
 
-public class TestMinDistance extends FilterTest {
+public class TestMinDistance extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/filters/minDistance/example1

@@ -1,12 +1,11 @@
- [
-   {
+{
       $setWindowFields:
          {
             sortBy: { time: 1 },
             output:
                {
-                  price: { $linearFill: "$price" }
+                  linearFillPrice: { $linearFill: "$price" },
+                  locfPrice: { $locf: "$price" }
                }
          }
    }
-] 

@@ -9,14 +9,14 @@ import static dev.morphia.aggregation.expressions.ComparisonExpressions.ne;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestNe extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/ne/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                project()
-                        .suppressId()
-                        .include("item")
-                        .include("qty")
-                        .include("qtyNe250", ne("$qty", 250))));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
+                .pipeline(project().suppressId().include("item").include("qty").include("qtyNe250", ne("$qty", 250))));
     }
 
 }

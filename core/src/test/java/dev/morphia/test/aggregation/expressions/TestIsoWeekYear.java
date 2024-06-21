@@ -9,11 +9,14 @@ import static dev.morphia.aggregation.expressions.DateExpressions.isoWeekYear;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestIsoWeekYear extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/isoWeekYear/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                project()
-                        .include("yearNumber", isoWeekYear("$date"))));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation.pipeline(project().include("yearNumber", isoWeekYear("$date"))));
     }
 
 }

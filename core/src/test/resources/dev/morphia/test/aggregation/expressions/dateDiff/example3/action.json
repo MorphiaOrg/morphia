@@ -1,5 +1,4 @@
-   [
-      {
+{
          $project:
             {
                _id: 0,
@@ -31,7 +30,6 @@
                            unit: "week",
                            startOfWeek: "friday"
                         }
-                  },
+                  }
             }
        }
-   ]

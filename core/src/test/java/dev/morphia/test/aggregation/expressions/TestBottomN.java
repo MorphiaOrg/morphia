@@ -17,39 +17,34 @@ import static dev.morphia.query.Sort.descending;
 import static dev.morphia.test.ServerVersion.v52;
 
 public class TestBottomN extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/bottomN/example1
+     * 
+     */
+    @Test(testName = "Find the Three Lowest ``Scores``")
     public void testExample1() {
-        testPipeline(v52, false, false, (aggregation) -> aggregation
-                .pipeline(
-                        match(Filters.eq("gameId", "G1")),
-                        group(id("$gameId"))
-                                .field("playerId", bottomN(
-                                        3,
-                                        array("$playerId", "$score"),
-                                        descending("score")))));
+        testPipeline(v52, false, false, (aggregation) -> aggregation.pipeline(match(Filters.eq("gameId", "G1")),
+                group(id("$gameId")).field("playerId", bottomN(3, array("$playerId", "$score"), descending("score")))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/bottomN/example2
+     * 
+     */
+    @Test(testName = "Finding the Three Lowest Score Documents Across Multiple Games")
     public void testExample2() {
         testPipeline(v52, false, false, (aggregation) -> aggregation.pipeline(
-                group(id("$gameId"))
-                        .field("playerId", bottomN(
-                                3,
-                                array("$playerId", "$score"),
-                                descending("score")))));
+                group(id("$gameId")).field("playerId", bottomN(3, array("$playerId", "$score"), descending("score")))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/bottomN/example3
+     * 
+     */
+    @Test(testName = "Computing ``n`` Based on the Group Key for ``$group``")
     public void testExample3() {
-        testPipeline(v52, false, false, (aggregation) -> aggregation.pipeline(
-                group(id(document("gameId", "$gameId")))
-                        .field("gamescores", bottomN(
-                                condition(
-                                        eq("$gameId", "G2"),
-                                        1,
-                                        3),
-                                "$score",
-                                descending("score")))));
+        testPipeline(v52, false, false, (aggregation) -> aggregation.pipeline(group(id(document("gameId", "$gameId")))
+                .field("gamescores", bottomN(condition(eq("$gameId", "G2"), 1, 3), "$score", descending("score")))));
 
     }
 

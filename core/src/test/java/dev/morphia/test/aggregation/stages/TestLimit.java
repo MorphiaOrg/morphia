@@ -9,10 +9,13 @@ import static dev.morphia.aggregation.stages.Limit.limit;
 
 public class TestLimit extends AggregationTest {
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/stages/limit/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
         skipDataCheck();
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                limit(5)));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(limit(5)));
     }
 }

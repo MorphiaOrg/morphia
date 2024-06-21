@@ -13,16 +13,18 @@ import static dev.morphia.aggregation.stages.AddFields.addFields;
 import static dev.morphia.aggregation.stages.Match.match;
 
 public class TestToBool extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/toBool/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                addFields()
-                        .field("convertedShippedFlag",
-                                switchExpression()
-                                        .branch(eq("$shipped", "false"), false)
-                                        .branch(eq("$shipped", ""), false)
-                                        .defaultCase(toBool("$shipped"))),
-                match(Filters.eq("convertedShippedFlag", false))));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation.pipeline(
+                        addFields().field("convertedShippedFlag",
+                                switchExpression().branch(eq("$shipped", "false"), false)
+                                        .branch(eq("$shipped", ""), false).defaultCase(toBool("$shipped"))),
+                        match(Filters.eq("convertedShippedFlag", false))));
     }
 
 }

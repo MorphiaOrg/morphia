@@ -9,14 +9,14 @@ import static dev.morphia.aggregation.expressions.ComparisonExpressions.gte;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestGte extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/gte/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
         testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                project()
-                        .suppressId()
-                        .include("item")
-                        .include("qty")
-                        .include("qtyGte250", gte("$qty", 250))));
+                project().suppressId().include("item").include("qty").include("qtyGte250", gte("$qty", 250))));
     }
 
 }

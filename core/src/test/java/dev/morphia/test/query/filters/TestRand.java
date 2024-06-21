@@ -2,6 +2,7 @@ package dev.morphia.test.query.filters;
 
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.updates.UpdateOperators;
+import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
@@ -13,7 +14,7 @@ import static dev.morphia.aggregation.expressions.Miscellaneous.rand;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.expr;
 
-public class TestRand extends FilterTest {
+public class TestRand extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/filters/rand/example1

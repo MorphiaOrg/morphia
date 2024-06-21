@@ -11,18 +11,24 @@ import static dev.morphia.aggregation.expressions.TrigonometryExpressions.degree
 import static dev.morphia.aggregation.stages.AddFields.addFields;
 
 public class TestCos extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/cos/example1
+     * 
+     */
+    @Test(testName = "main :: Cosine of Value in Degrees")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                addFields()
-                        .field("side_a", multiply(cos(degreesToRadians("$angle_a")), "$hypotenuse"))));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
+                .pipeline(addFields().field("side_a", multiply(cos(degreesToRadians("$angle_a")), "$hypotenuse"))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/cos/example2
+     * 
+     */
+    @Test(testName = "main :: Cosine of Value in Radians")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                addFields()
-                        .field("side_b", multiply(cos("$angle_a"), "$hypotenuse"))));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation
+                .pipeline(addFields().field("side_b", multiply(cos("$angle_a"), "$hypotenuse"))));
     }
 
 }

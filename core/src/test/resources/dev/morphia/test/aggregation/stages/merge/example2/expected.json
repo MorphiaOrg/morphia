@@ -2,5 +2,6 @@
 { "_id" : { "fiscal_year" : 2017, "dept" : "Z" }, "salaries" : 115000 }
 { "_id" : { "fiscal_year" : 2018, "dept" : "A" }, "salaries" : 215000 }
 { "_id" : { "fiscal_year" : 2018, "dept" : "Z" }, "salaries" : 280000 }
-{ "_id" : { "fiscal_year" : 2019, "dept" : "A" }, "salaries" : 125000 }
-{ "_id" : { "fiscal_year" : 2019, "dept" : "Z" }, "salaries" : 310000 }
+{ "_id" : { "fiscal_year" : 2019, "dept" : "A" }, "salaries" : 275000 }
+{ "_id" : { "fiscal_year" : 2019, "dept" : "Z" }, "salaries" : 410000 }
+{ "_id" : { "fiscal_year" : 2020, "dept" : "Z" }, "salaries" : 240000 }

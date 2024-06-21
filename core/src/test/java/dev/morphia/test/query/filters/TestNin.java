@@ -2,6 +2,7 @@ package dev.morphia.test.query.filters;
 
 import java.util.List;
 
+import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
@@ -9,7 +10,7 @@ import org.testng.annotations.Test;
 import static dev.morphia.query.filters.Filters.nin;
 import static dev.morphia.query.updates.UpdateOperators.set;
 
-public class TestNin extends FilterTest {
+public class TestNin extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/filters/nin/example1

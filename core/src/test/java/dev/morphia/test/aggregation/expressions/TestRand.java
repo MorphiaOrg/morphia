@@ -23,25 +23,25 @@ public class TestRand extends AggregationTest {
         minDriver = DriverVersion.v43;
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/rand/example1
+     * 
+     */
+    @Test(testName = "Generate Random Data Points")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, true, false, (aggregation) -> aggregation.pipeline(
-                set()
-                        .field("amount", multiply(rand(), 100)),
-                set()
-                        .field("amount", floor("$amount")),
-                merge("donors")));
+        testPipeline(ServerVersion.ANY, true, false,
+                (aggregation) -> aggregation.pipeline(set().field("amount", multiply(rand(), 100)),
+                        set().field("amount", floor("$amount")), merge("donors")));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/rand/example2
+     * 
+     */
+    @Test(testName = "Select Random Items From a Collection")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
-                match(eq("district", 3)),
-                match(expr(lt(0.5, rand()))),
-                project()
-                        .suppressId()
-                        .include("name")
-                        .include("registered")));
+        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(match(eq("district", 3)),
+                match(expr(lt(0.5, rand()))), project().suppressId().include("name").include("registered")));
     }
 
 }

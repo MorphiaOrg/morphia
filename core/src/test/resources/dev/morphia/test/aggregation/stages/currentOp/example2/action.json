@@ -1,4 +1,2 @@
- [
-   { $currentOp: { allUsers: true, localOps: true } },
-   { $match: { desc: "query analyzer" } } 
-] 
+{ $currentOp : { allUsers: true, idleSessions: true } },
+   { $match : { active: false, transaction : { $exists: true } } }

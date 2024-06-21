@@ -23,69 +23,56 @@ public class TestDateSubtract extends AggregationTest {
         minDriver = DriverVersion.v42;
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/dateSubtract/example1
+     * 
+     */
+    @Test(testName = "Subtract A Fixed Amount")
     public void testExample1() {
-        testPipeline(v50, true, false, (aggregation) -> aggregation.pipeline(
-                match(
-                        expr(eq(year("$logout"), 2021)),
-                        expr(eq(month("$logout"), 1))),
-                project()
-                        .include("logoutTime",
-                                dateSubtract("$logout", 3, HOUR))));
+        testPipeline(v50, true, false,
+                (aggregation) -> aggregation.pipeline(
+                        match(expr(eq(year("$logout"), 2021)), expr(eq(month("$logout"), 1))),
+                        project().include("logoutTime", dateSubtract("$logout", 3, HOUR))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/dateSubtract/example2
+     * 
+     */
+    @Test(testName = "Filter by Relative Dates")
     public void testExample2() {
         // $$NOW is a little pointless
         /*
-         * testPipeline(v50, false, true, (aggregation) -> {
-         * var epochTime = LocalDate.of(2021, Month.FEBRUARY, 22)
-         * .toEpochDay();
+         * testPipeline(v50, false, true, (aggregation) -> { var epochTime =
+         * LocalDate.of(2021, Month.FEBRUARY, 22) .toEpochDay();
          * 
-         * return aggregation.pipeline(
-         * match(expr(gt(field("logoutTime"),
-         * dateSubtract(value(epochTime), 1, WEEK)))),
-         * project()
-         * .suppressId()
-         * .include("custId")
-         * .include("loggedOut", dateToString()
-         * .format("%Y-%m-%d")
-         * .date(field("logoutTime"))));
-         * });
+         * return aggregation.pipeline( match(expr(gt(field("logoutTime"),
+         * dateSubtract(value(epochTime), 1, WEEK)))), project() .suppressId()
+         * .include("custId") .include("loggedOut", dateToString() .format("%Y-%m-%d")
+         * .date(field("logoutTime")))); });
          */
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/dateSubtract/example3
+     * 
+     */
+    @Test(testName = "Adjust for Daylight Savings Time")
     public void testExample3() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                project()
-                        .suppressId()
-                        .include("location")
-                        .include("start", dateToString()
-                                .date("$login")
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(project().suppressId()
+                .include("location").include("start", dateToString().date("$login").format("%Y-%m-%d %H:%M"))
+                .include("days",
+                        dateToString().date(dateSubtract("$login", 1, DAY).timezone("$location"))
                                 .format("%Y-%m-%d %H:%M"))
-                        .include("days", dateToString()
-                                .date(dateSubtract("$login", 1, DAY)
-                                        .timezone("$location"))
+                .include("hours",
+                        dateToString().date(dateSubtract("$login", 24, HOUR).timezone("$location"))
                                 .format("%Y-%m-%d %H:%M"))
-                        .include("hours", dateToString()
-                                .date(dateSubtract("$login", 24, HOUR)
-                                        .timezone("$location"))
-                                .format("%Y-%m-%d %H:%M"))
-                        .include("startTZInfo", dateToString()
-                                .date("$login")
-                                .format("%Y-%m-%d %H:%M")
-                                .timeZone("$location"))
-                        .include("daysTZInfo", dateToString()
-                                .date(dateSubtract("$login", 1, DAY)
-                                        .timezone("$location"))
-                                .format("%Y-%m-%d %H:%M")
-                                .timeZone("$location"))
-                        .include("hoursTZInfo", dateToString()
-                                .date(dateSubtract("$login", 24, HOUR)
-                                        .timezone("$location"))
-                                .format("%Y-%m-%d %H:%M")
-                                .timeZone("$location"))));
+                .include("startTZInfo", dateToString().date("$login").format("%Y-%m-%d %H:%M").timeZone("$location"))
+                .include("daysTZInfo",
+                        dateToString().date(dateSubtract("$login", 1, DAY).timezone("$location"))
+                                .format("%Y-%m-%d %H:%M").timeZone("$location"))
+                .include("hoursTZInfo", dateToString().date(dateSubtract("$login", 24, HOUR).timezone("$location"))
+                        .format("%Y-%m-%d %H:%M").timeZone("$location"))));
     }
 
 }

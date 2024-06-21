@@ -1,6 +1,6 @@
-{ "_id" : 1, "name" : "dave123", "quiz" : 1, "score" : 85 }
-{ "_id" : 2, "name" : "dave2", "quiz" : 1, "score" : 90 }
-{ "_id" : 3, "name" : "ahn", "quiz" : 1, "score" : 71 }
-{ "_id" : 4, "name" : "li", "quiz" : 2, "score" : 96 }
-{ "_id" : 5, "name" : "annT", "quiz" : 2, "score" : 77 }
-{ "_id" : 6, "name" : "ty", "quiz" : 2, "score" : 82 }
+{ _id : 1, name : "dave123", quiz : 1, score : 85 },
+{ _id : 2, name : "dave2", quiz : 1, score : 90 },
+{ _id : 3, name : "ahn", quiz : 1, score : 71 },
+{ _id : 4, name : "li", quiz : 2, score : 96 },
+{ _id : 5, name : "annT", quiz : 2, score : 77 },
+{ _id : 6, name : "ty", quiz : 2, score : 82 }

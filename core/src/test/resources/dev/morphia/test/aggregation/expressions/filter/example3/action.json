@@ -1,14 +1,12 @@
- [
-   {
-      $project: {
-         items: {
-            $filter: {
-               input: "$items",
-               cond: { $lte: [ "$$item.price", 150] }, 
-               as: "item", 
-               limit: 2.000
+{
+         $project: {
+            items: {
+               $filter: {
+                  input: "$items",
+                  as: "item", 
+                  cond: { $gte: [ "$$item.price", 100] },
+                  limit: 5
+               }
             }
          }
       }
-   }
-] 

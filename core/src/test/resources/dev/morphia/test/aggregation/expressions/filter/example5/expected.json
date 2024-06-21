@@ -1,0 +1,3 @@
+{ _id: 0, items: [ { item_id: 43, quantity: 2, price: 10, name: 'pen' } ] },
+{ _id: 1, items: [ { item_id: 103, quantity: 4, price: 5, name: 'pen' }, { item_id: 38, quantity: 1, price: 300, name: 'printer' } ] },
+{ _id: 2, items: [ { item_id: 4, quantity: 1, price: 23, name: 'paper' } ] }

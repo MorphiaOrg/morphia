@@ -1,3 +1,1 @@
- [
-   { $project: { x: '$name', _id: 0 } },
-] 
+{ $project: { x: '$name', _id: 0 } },

@@ -8,10 +8,13 @@ import org.testng.annotations.Test;
 import static dev.morphia.aggregation.stages.Skip.skip;
 
 public class TestSkip extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/stages/skip/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
         skipDataCheck();
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                skip(5)));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(skip(5)));
     }
 }

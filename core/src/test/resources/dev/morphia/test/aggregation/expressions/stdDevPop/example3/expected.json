@@ -1,6 +1,6 @@
-{ "_id" : 4, "type" : "strawberry", "orderDate" : ISODate("2019-05-18T16:09:01Z"), "state" : "CA", "price" : 41, "quantity" : 162, "stdDevPopQuantityForState" : 0 }
-{ "_id" : 0, "type" : "chocolate", "orderDate" : ISODate("2020-05-18T14:10:30Z"), "state" : "CA", "price" : 13, "quantity" : 120, "stdDevPopQuantityForState" : 21 }
-{ "_id" : 2, "type" : "vanilla", "orderDate" : ISODate("2021-01-11T06:31:15Z"), "state" : "CA", "price" : 12, "quantity" : 145, "stdDevPopQuantityForState" : 17.249798710580816 }
-{ "_id" : 5, "type" : "strawberry", "orderDate" : ISODate("2019-01-08T06:12:03Z"), "state" : "WA", "price" : 43, "quantity" : 134, "stdDevPopQuantityForState" : 0 }
-{ "_id" : 3, "type" : "vanilla", "orderDate" : ISODate("2020-02-08T13:13:23Z"), "state" : "WA", "price" : 13, "quantity" : 104, "stdDevPopQuantityForState" : 15 }
-{ "_id" : 1, "type" : "chocolate", "orderDate" : ISODate("2021-03-20T11:30:05Z"), "state" : "WA", "price" : 14, "quantity" : 140, "stdDevPopQuantityForState" : 15.748015748023622 }
+{ _id : 4, type : "strawberry", orderDate : ISODate("2019-05-18T16:09:01Z"), state : "CA", price : 41, quantity : 162, stdDevPopQuantityForState : 0 }
+{ _id : 0, type : "chocolate", orderDate : ISODate("2020-05-18T14:10:30Z"), state : "CA", price : 13, quantity : 120, stdDevPopQuantityForState : 21 }
+{ _id : 2, type : "vanilla", orderDate : ISODate("2021-01-11T06:31:15Z"), state : "CA", price : 12, quantity : 145, stdDevPopQuantityForState : 17.249798710580816 }
+{ _id : 5, type : "strawberry", orderDate : ISODate("2019-01-08T06:12:03Z"), state : "WA", price : 43, quantity : 134, stdDevPopQuantityForState : 0 }
+{ _id : 3, type : "vanilla", orderDate : ISODate("2020-02-08T13:13:23Z"), state : "WA", price : 13, quantity : 104, stdDevPopQuantityForState : 15 }
+{ _id : 1, type : "chocolate", orderDate : ISODate("2021-03-20T11:30:05Z"), state : "WA", price : 14, quantity : 140, stdDevPopQuantityForState : 15.748015748023622 }

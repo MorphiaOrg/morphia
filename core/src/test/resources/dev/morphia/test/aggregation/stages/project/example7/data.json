@@ -1,1 +1,1 @@
-{ "_id" : ObjectId("55ad167f320c6be244eb3b95"), "x" : 1, "y" : 1 }
+{ "_id" : 1, title: "abc123", isbn: "0001122223334", author: { last: "zzz", first: "aaa" }, copies: 5}

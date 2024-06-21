@@ -1,6 +1,7 @@
 package dev.morphia.test.query.filters;
 
 import dev.morphia.query.FindOptions;
+import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
@@ -8,7 +9,7 @@ import org.testng.annotations.Test;
 import static dev.morphia.query.Meta.textScore;
 import static dev.morphia.query.filters.Filters.*;
 
-public class TestText extends FilterTest {
+public class TestText extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/filters/text/example1

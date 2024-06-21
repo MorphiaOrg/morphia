@@ -1,0 +1,1 @@
+{ "desc" : "query analyzer", "ns" : "testDb.testColl", "collUuid" : UUID("5130b4df-5966-434f-85f0-f8956b5ca74e"), "startTime" : ISODate("2023-08-08T16:15:07.427Z"), "sampledReadsCount" : NumberLong(2), "sampledReadsBytes" : NumberLong(346), "sampledWritesCount" : NumberLong(3), "sampledWritesBytes" : NumberLong(904)}

@@ -1,1 +1,2 @@
-{ _id: 0, name: [ 'Pepperoni' ] }
+db.pizzas.insert( [
+{ _id: 0, name: [ 'Pepperoni' ] },

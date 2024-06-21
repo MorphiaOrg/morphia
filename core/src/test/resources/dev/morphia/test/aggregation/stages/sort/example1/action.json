@@ -1,3 +1,1 @@
-   [
-     { $sort : { age : -1, posts: 1 } }
-   ]
+{ $sort : { age : -1, posts: 1 } }

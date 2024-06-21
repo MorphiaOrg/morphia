@@ -1,0 +1,2 @@
+{ $currentOp: { allUsers: true, localOps: true } },
+   { $match: { desc: "query analyzer" } }

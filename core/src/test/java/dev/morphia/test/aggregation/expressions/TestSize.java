@@ -11,15 +11,14 @@ import static dev.morphia.aggregation.expressions.ConditionalExpressions.conditi
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestSize extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/size/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                project()
-                        .include("item")
-                        .include("numberOfColors", condition(
-                                isArray("$colors"),
-                                size("$colors"),
-                                "NA"))));
+        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(project().include("item")
+                .include("numberOfColors", condition(isArray("$colors"), size("$colors"), "NA"))));
     }
 
 }

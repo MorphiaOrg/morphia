@@ -12,16 +12,18 @@ import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 import static dev.morphia.query.Sort.ascending;
 
 public class TestCovarianceSamp extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/covarianceSamp/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                setWindowFields()
-                        .partitionBy("$state")
-                        .sortBy(ascending("orderDate"))
-                        .output(output("covarianceSampForState")
-                                .operator(covarianceSamp(year("$orderDate"), "$quantity"))
-                                .window()
-                                .documents("unbounded", "current"))));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation
+                        .pipeline(setWindowFields().partitionBy("$state").sortBy(ascending("orderDate"))
+                                .output(output("covarianceSampForState")
+                                        .operator(covarianceSamp(year("$orderDate"), "$quantity")).window()
+                                        .documents("unbounded", "current"))));
     }
 
 }

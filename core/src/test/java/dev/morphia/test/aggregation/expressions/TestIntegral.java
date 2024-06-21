@@ -12,16 +12,17 @@ import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
 import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 
 public class TestIntegral extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/integral/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, true, true, (aggregation) -> aggregation.pipeline(
-                setWindowFields()
-                        .partitionBy("$powerMeterID")
-                        .sortBy(Sort.ascending("timeStamp"))
-                        .output(output("powerMeterKilowattHours")
-                                .operator(integral("$kilowatts").unit(HOUR))
-                                .window()
-                                .range("unbounded", "current", HOUR))));
+        testPipeline(ServerVersion.ANY, true, true,
+                (aggregation) -> aggregation
+                        .pipeline(setWindowFields().partitionBy("$powerMeterID").sortBy(Sort.ascending("timeStamp"))
+                                .output(output("powerMeterKilowattHours").operator(integral("$kilowatts").unit(HOUR))
+                                        .window().range("unbounded", "current", HOUR))));
     }
 
 }

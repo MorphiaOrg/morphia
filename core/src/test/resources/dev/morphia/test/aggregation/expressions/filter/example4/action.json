@@ -1,14 +1,11 @@
- [
-   {
-      $project: {
-         items: {
-            $filter: {
-               input: "$items",
-               cond: { $gte: [ "$$item.price", 100] }, 
-               as: "item", 
-               limit: 5
+{
+         $project: {
+            items: {
+               $filter: {
+                 input: "$items",
+                 cond: { $eq: [ "$$item.name", "pen"] },
+                 as: "item"
+               }
             }
          }
       }
-   }
-] 

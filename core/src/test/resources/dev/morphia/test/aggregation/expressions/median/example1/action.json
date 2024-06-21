@@ -1,0 +1,11 @@
+{
+      $group: {
+         _id: null,
+         test01_median: {
+            $median: {
+               input: "$test01",
+               method: 'approximate'
+            }
+         }
+      }
+   }

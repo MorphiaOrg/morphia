@@ -10,11 +10,12 @@ import static dev.morphia.test.ServerVersion.v63;
 
 public class TestBitNot extends AggregationTest {
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/bitNot/example1
+     * 
+     */
+    @Test(testName = "main")
     public void testExample1() {
-        testPipeline(v63, false, true, aggregation -> aggregation
-                .pipeline(project()
-                        .include("result",
-                                bitNot("$a"))));
+        testPipeline(v63, false, true, aggregation -> aggregation.pipeline(project().include("result", bitNot("$a"))));
     }
 }

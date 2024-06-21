@@ -16,66 +16,74 @@ import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.query.filters.Filters.eq;
 
 public class TestGeoNear extends AggregationTest {
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/stages/geoNear/example1
+     * 
+     */
+    @Test(testName = "Maximum Distance")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, true, false, (aggregation) -> aggregation.pipeline(
-                geoNear(new Point(new Position(-73.99279, 40.719296)))
-                        .distanceField("dist.calculated")
-                        .maxDistance(2)
-                        .query(eq("category", "Parks"))
-                        .includeLocs("dist.location")
-                        .spherical(true)));
+        testPipeline(ServerVersion.ANY, true, false,
+                (aggregation) -> aggregation.pipeline(geoNear(new Point(new Position(-73.99279, 40.719296)))
+                        .distanceField("dist.calculated").maxDistance(2).query(eq("category", "Parks"))
+                        .includeLocs("dist.location").spherical(true)));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/stages/geoNear/example2
+     * 
+     */
+    @Test(testName = "Minimum Distance")
     public void testExample2() {
         // this example isn't representable in morphia as is
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/stages/geoNear/example3
+     * 
+     */
+    @Test(testName = "$geoNear with the ``let`` option")
     public void testExample3() {
-        testPipeline(ServerVersion.v60, true, true, (aggregation) -> aggregation.pipeline(
-                lookup(EXAMPLE_TEST_COLLECTION)
-                        .as("joinedField")
-                        .let("pt", "$location")
-                        .pipeline(
-                                geoNear("$$pt")
-                                        .distanceField("distance")),
-                match(eq("name", "Sara D. Roosevelt Park"))));
+        // let doesn't apply to morphia
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/stages/geoNear/example4
+     *
+     */
+    @Test(testName = "$geoNear with Bound ``let`` Option")
     public void testExample4() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                geoNear(new Point(new Position(-73.98142, 40.71782)))
-                        .distanceField("dist.calculated")
-                        .key("location")
-                        .query(eq("category", "Parks")),
-                limit(5)));
+        testPipeline(ServerVersion.v60, true, false,
+                (aggregation) -> aggregation.pipeline(
+                        lookup(EXAMPLE_TEST_COLLECTION).as("joinedField").let("pt", "$location")
+                                .pipeline(geoNear("$$pt").distanceField("distance")),
+                        match(eq("name", "Sara D. Roosevelt Park"))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/stages/geoNear/example3
+     *
+     */
+    @Test(testName = "Specify Which Geospatial Index to Use")
     public void testExample5() {
         skipDataCheck();
-        getDatabase().getCollection(EXAMPLE_TEST_COLLECTION).createIndex(new Document("location", "2dsphere"));
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                lookup(EXAMPLE_TEST_COLLECTION)
-                        .as("joinedField")
-                        .let("pt", "$location")
-                        .pipeline(
-                                geoNear(new Point(new Position(-73.98142, 40.71782)))
-                                        .distanceField("distance")),
-                match(eq("name", "Sara D. Roosevelt Park"))));
+        testPipeline(ServerVersion.ANY, true, false,
+                (aggregation) -> aggregation.pipeline(geoNear(new Point(new Position(-73.98142, 40.71782)))
+                        .distanceField("dist.calculated").key("location").query(eq("category", "Parks")), limit(5)));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/stages/geoNear/example5
+     *
+     */
     public void testExample6() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                geoNear(new Point(new Position(-73.98142, 40.71782)))
-                        .distanceField("dist.calculated")
-                        .key("location")
-                        .query(eq("category", "Parks")),
-                limit(5)));
+        skipDataCheck();
+        getDatabase().getCollection(EXAMPLE_TEST_COLLECTION).createIndex(new Document("location", "2dsphere"));
+        testPipeline(ServerVersion.ANY, false, true,
+                (aggregation) -> aggregation
+                        .pipeline(
+                                lookup(EXAMPLE_TEST_COLLECTION).as("joinedField").let("pt", "$location")
+                                        .pipeline(geoNear(new Point(new Position(-73.98142, 40.71782)))
+                                                .distanceField("distance")),
+                                match(eq("name", "Sara D. Roosevelt Park"))));
     }
-
 }

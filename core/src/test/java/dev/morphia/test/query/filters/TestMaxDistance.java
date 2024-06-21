@@ -1,8 +1,10 @@
 package dev.morphia.test.query.filters;
 
+import dev.morphia.test.TemplatedTestBase;
+
 import org.testng.annotations.Test;
 
-public class TestMaxDistance extends FilterTest {
+public class TestMaxDistance extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/filters/maxDistance/example1

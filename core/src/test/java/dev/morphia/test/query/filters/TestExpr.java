@@ -1,5 +1,7 @@
 package dev.morphia.test.query.filters;
 
+import dev.morphia.test.TemplatedTestBase;
+
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.gt;
@@ -9,7 +11,7 @@ import static dev.morphia.aggregation.expressions.ConditionalExpressions.conditi
 import static dev.morphia.aggregation.expressions.MathExpressions.multiply;
 import static dev.morphia.query.filters.Filters.expr;
 
-public class TestExpr extends FilterTest {
+public class TestExpr extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/filters/expr/example1
