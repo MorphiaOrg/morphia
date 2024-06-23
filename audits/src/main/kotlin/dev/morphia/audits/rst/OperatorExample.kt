@@ -22,7 +22,8 @@ class OperatorExample(
 
     init {
         val blocks = findBlocks(input)
-        dataBlock += blocks.removeWhile { !it.isAction() }
+        indexBlock = blocks.removeWhile { it.isIndex() }.firstOrNull()
+        dataBlock += blocks.removeWhile { !it.isAction() && !it.isIndex() }
         dataBlock.forEachIndexed { index, block ->
             block.type = DATA
             if (index != 0) {
@@ -30,7 +31,6 @@ class OperatorExample(
             }
         }
         actionBlock = blocks.firstOrNull { it.isAction() }
-        indexBlock = blocks.firstOrNull { it.isIndex() }
         expectedBlock = blocks.firstOrNull { it.isExpected() }
 
         if (dataBlock.isEmpty()) {

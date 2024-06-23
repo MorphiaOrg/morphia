@@ -13,8 +13,8 @@ class QueryAuditTest : BaseAuditTest() {
 
     @Test
     fun testOperator() {
-        val name = "ne"
+        val name = "text"
         val operator = Operator(FILTER, name)
-        operator.examples.forEach { it.output(File("target/testOperator-${name}/${it.name}")) }
+        operator.examples.forEach { it.output(File("target/testOperator/${name}/${it.name}")) }
     }
 }
