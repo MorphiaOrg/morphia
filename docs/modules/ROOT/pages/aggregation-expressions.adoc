@@ -1,295 +1,295 @@
-[%header,cols="1,2"]
+[%header,cols="1,2,3"]
 |===
-|Operator|Docs
+|Operator|Docs|Test Examples
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/abs[$abs]
 | link:javadoc/dev/morphia/aggregation/expressions/MathExpressions.html#abs(java.lang.Object)[MathExpressions#abs(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestAbs.java[dev.morphia.test.aggregation.expressions.TestAbs]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/accumulator[$accumulator]
 | link:javadoc/dev/morphia/aggregation/expressions/AccumulatorExpressions.html#accumulator(java.lang.String,java.lang.String,java.util.List,java.lang.String)[AccumulatorExpressions#accumulator(String,String,List,String)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestAccumulator.java[dev.morphia.test.aggregation.expressions.TestAccumulator]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/acos[$acos]
 | link:javadoc/dev/morphia/aggregation/expressions/TrigonometryExpressions.html#acos(java.lang.Object)[TrigonometryExpressions#acos(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestAcos.java[dev.morphia.test.aggregation.expressions.TestAcos]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/acosh[$acosh]
 | link:javadoc/dev/morphia/aggregation/expressions/TrigonometryExpressions.html#acosh(java.lang.Object)[TrigonometryExpressions#acosh(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestAcosh.java[dev.morphia.test.aggregation.expressions.TestAcosh]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/add[$add]
 | link:javadoc/dev/morphia/aggregation/expressions/MathExpressions.html#add(java.lang.Object,java.lang.Object%2E%2E%2E)[MathExpressions#add(Object,Object...)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestAdd.java[dev.morphia.test.aggregation.expressions.TestAdd]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/addToSet[$addToSet]
 | link:javadoc/dev/morphia/aggregation/expressions/AccumulatorExpressions.html#addToSet(java.lang.Object)[AccumulatorExpressions#addToSet(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestAddToSet.java[dev.morphia.test.aggregation.expressions.TestAddToSet]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/allElementsTrue[$allElementsTrue]
 | link:javadoc/dev/morphia/aggregation/expressions/SetExpressions.html#allElementsTrue(java.lang.Object,java.lang.Object%2E%2E%2E)[SetExpressions#allElementsTrue(Object,Object...)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestAllElementsTrue.java[dev.morphia.test.aggregation.expressions.TestAllElementsTrue]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/and[$and]
 a| 
 
  * link:javadoc/dev/morphia/aggregation/expressions/BooleanExpressions.html#and(java.lang.Object,java.lang.Object%2E%2E%2E)[BooleanExpressions#and(Object,Object...)]
  * link:javadoc/dev/morphia/aggregation/expressions/BooleanExpressions.html#and()[BooleanExpressions#and()]
 
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestAnd.java[dev.morphia.test.aggregation.expressions.TestAnd]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/anyElementTrue[$anyElementTrue]
 | link:javadoc/dev/morphia/aggregation/expressions/SetExpressions.html#anyElementTrue(java.lang.Object,java.lang.Object%2E%2E%2E)[SetExpressions#anyElementTrue(Object,Object...)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestAnyElementTrue.java[dev.morphia.test.aggregation.expressions.TestAnyElementTrue]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/arrayElemAt[$arrayElemAt]
 | link:javadoc/dev/morphia/aggregation/expressions/ArrayExpressions.html#elementAt(java.lang.Object,java.lang.Object)[ArrayExpressions#elementAt(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestArrayElemAt.java[dev.morphia.test.aggregation.expressions.TestArrayElemAt]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/arrayToObject[$arrayToObject]
 | link:javadoc/dev/morphia/aggregation/expressions/ArrayExpressions.html#arrayToObject(java.lang.Object)[ArrayExpressions#arrayToObject(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestArrayToObject.java[dev.morphia.test.aggregation.expressions.TestArrayToObject]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/asin[$asin]
 | link:javadoc/dev/morphia/aggregation/expressions/TrigonometryExpressions.html#asin(java.lang.Object)[TrigonometryExpressions#asin(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestAsin.java[dev.morphia.test.aggregation.expressions.TestAsin]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/asinh[$asinh]
 | link:javadoc/dev/morphia/aggregation/expressions/TrigonometryExpressions.html#asinh(java.lang.Object)[TrigonometryExpressions#asinh(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestAsinh.java[dev.morphia.test.aggregation.expressions.TestAsinh]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/atan[$atan]
 | link:javadoc/dev/morphia/aggregation/expressions/TrigonometryExpressions.html#atan(java.lang.Object)[TrigonometryExpressions#atan(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestAtan.java[dev.morphia.test.aggregation.expressions.TestAtan]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/atan2[$atan2]
 | link:javadoc/dev/morphia/aggregation/expressions/TrigonometryExpressions.html#atan2(java.lang.Object,java.lang.Object)[TrigonometryExpressions#atan2(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestAtan2.java[dev.morphia.test.aggregation.expressions.TestAtan2]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/atanh[$atanh]
 | link:javadoc/dev/morphia/aggregation/expressions/TrigonometryExpressions.html#atanh(java.lang.Object)[TrigonometryExpressions#atanh(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestAtanh.java[dev.morphia.test.aggregation.expressions.TestAtanh]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/avg[$avg]
 | link:javadoc/dev/morphia/aggregation/expressions/AccumulatorExpressions.html#avg(java.lang.Object,java.lang.Object%2E%2E%2E)[AccumulatorExpressions#avg(Object,Object...)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestAvg.java[dev.morphia.test.aggregation.expressions.TestAvg]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/binarySize[$binarySize]
 | link:javadoc/dev/morphia/aggregation/expressions/DataSizeExpressions.html#binarySize(java.lang.Object)[DataSizeExpressions#binarySize(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestBinarySize.java[dev.morphia.test.aggregation.expressions.TestBinarySize]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/bitAnd[$bitAnd]
 | link:javadoc/dev/morphia/aggregation/expressions/MathExpressions.html#bitAnd(java.lang.Object,java.lang.Object)[MathExpressions#bitAnd(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestBitAnd.java[dev.morphia.test.aggregation.expressions.TestBitAnd]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/bitNot[$bitNot]
 | link:javadoc/dev/morphia/aggregation/expressions/MathExpressions.html#bitNot(java.lang.Object)[MathExpressions#bitNot(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestBitNot.java[dev.morphia.test.aggregation.expressions.TestBitNot]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/bitOr[$bitOr]
 | link:javadoc/dev/morphia/aggregation/expressions/MathExpressions.html#bitOr(java.lang.Object,java.lang.Object)[MathExpressions#bitOr(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestBitOr.java[dev.morphia.test.aggregation.expressions.TestBitOr]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/bitXor[$bitXor]
 | link:javadoc/dev/morphia/aggregation/expressions/MathExpressions.html#bitXor(java.lang.Object,java.lang.Object)[MathExpressions#bitXor(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestBitXor.java[dev.morphia.test.aggregation.expressions.TestBitXor]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/bottom[$bottom]
 | link:javadoc/dev/morphia/aggregation/expressions/AccumulatorExpressions.html#bottom(java.lang.Object,dev.morphia.query.Sort%2E%2E%2E)[AccumulatorExpressions#bottom(Object,Sort...)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestBottom.java[dev.morphia.test.aggregation.expressions.TestBottom]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/bottomN[$bottomN]
 | link:javadoc/dev/morphia/aggregation/expressions/AccumulatorExpressions.html#bottomN(java.lang.Object,java.lang.Object,dev.morphia.query.Sort%2E%2E%2E)[AccumulatorExpressions#bottomN(Object,Object,Sort...)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestBottomN.java[dev.morphia.test.aggregation.expressions.TestBottomN]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/bsonSize[$bsonSize]
 | link:javadoc/dev/morphia/aggregation/expressions/DataSizeExpressions.html#bsonSize(java.lang.Object)[DataSizeExpressions#bsonSize(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestBsonSize.java[dev.morphia.test.aggregation.expressions.TestBsonSize]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/ceil[$ceil]
 | link:javadoc/dev/morphia/aggregation/expressions/MathExpressions.html#ceil(java.lang.Object)[MathExpressions#ceil(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestCeil.java[dev.morphia.test.aggregation.expressions.TestCeil]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/cmp[$cmp]
 | link:javadoc/dev/morphia/aggregation/expressions/ComparisonExpressions.html#cmp(java.lang.Object,java.lang.Object)[ComparisonExpressions#cmp(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestCmp.java[dev.morphia.test.aggregation.expressions.TestCmp]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/concat[$concat]
 | link:javadoc/dev/morphia/aggregation/expressions/StringExpressions.html#concat(java.lang.Object,java.lang.Object%2E%2E%2E)[StringExpressions#concat(Object,Object...)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestConcat.java[dev.morphia.test.aggregation.expressions.TestConcat]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/concatArrays[$concatArrays]
 | link:javadoc/dev/morphia/aggregation/expressions/ArrayExpressions.html#concatArrays(java.lang.Object,java.lang.Object%2E%2E%2E)[ArrayExpressions#concatArrays(Object,Object...)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestConcatArrays.java[dev.morphia.test.aggregation.expressions.TestConcatArrays]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/cond[$cond]
 | link:javadoc/dev/morphia/aggregation/expressions/ConditionalExpressions.html#condition(java.lang.Object,java.lang.Object,java.lang.Object)[ConditionalExpressions#condition(Object,Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestCond.java[dev.morphia.test.aggregation.expressions.TestCond]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/convert[$convert]
 | link:javadoc/dev/morphia/aggregation/expressions/TypeExpressions.html#convert(java.lang.Object,dev.morphia.aggregation.expressions.impls.ConvertType)[TypeExpressions#convert(Object,ConvertType)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestConvert.java[dev.morphia.test.aggregation.expressions.TestConvert]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/cos[$cos]
 | link:javadoc/dev/morphia/aggregation/expressions/TrigonometryExpressions.html#cos(java.lang.Object)[TrigonometryExpressions#cos(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestCos.java[dev.morphia.test.aggregation.expressions.TestCos]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/cosh[$cosh]
 | link:javadoc/dev/morphia/aggregation/expressions/TrigonometryExpressions.html#cosh(java.lang.Object)[TrigonometryExpressions#cosh(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestCosh.java[dev.morphia.test.aggregation.expressions.TestCosh]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/count[$count]
 | link:javadoc/dev/morphia/aggregation/expressions/AccumulatorExpressions.html#count()[AccumulatorExpressions#count()]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestCount.java[dev.morphia.test.aggregation.expressions.TestCount]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/covariancePop[$covariancePop]
 | link:javadoc/dev/morphia/aggregation/expressions/WindowExpressions.html#covariancePop(java.lang.Object,java.lang.Object)[WindowExpressions#covariancePop(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestCovariancePop.java[dev.morphia.test.aggregation.expressions.TestCovariancePop]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/covarianceSamp[$covarianceSamp]
 | link:javadoc/dev/morphia/aggregation/expressions/WindowExpressions.html#covarianceSamp(java.lang.Object,java.lang.Object)[WindowExpressions#covarianceSamp(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestCovarianceSamp.java[dev.morphia.test.aggregation.expressions.TestCovarianceSamp]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/dateAdd[$dateAdd]
 | link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#dateAdd(java.lang.Object,long,dev.morphia.aggregation.expressions.TimeUnit)[DateExpressions#dateAdd(Object,long,TimeUnit)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestDateAdd.java[dev.morphia.test.aggregation.expressions.TestDateAdd]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/dateDiff[$dateDiff]
 | link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#dateDiff(java.lang.Object,java.lang.Object,dev.morphia.aggregation.expressions.TimeUnit)[DateExpressions#dateDiff(Object,Object,TimeUnit)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestDateDiff.java[dev.morphia.test.aggregation.expressions.TestDateDiff]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/dateFromParts[$dateFromParts]
 | link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#dateFromParts()[DateExpressions#dateFromParts()]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestDateFromParts.java[dev.morphia.test.aggregation.expressions.TestDateFromParts]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/dateFromString[$dateFromString]
 | link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#dateFromString()[DateExpressions#dateFromString()]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestDateFromString.java[dev.morphia.test.aggregation.expressions.TestDateFromString]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/dateSubtract[$dateSubtract]
 | link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#dateSubtract(java.lang.Object,long,dev.morphia.aggregation.expressions.TimeUnit)[DateExpressions#dateSubtract(Object,long,TimeUnit)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestDateSubtract.java[dev.morphia.test.aggregation.expressions.TestDateSubtract]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/dateToParts[$dateToParts]
 | link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#dateToParts(java.lang.Object)[DateExpressions#dateToParts(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestDateToParts.java[dev.morphia.test.aggregation.expressions.TestDateToParts]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/dateToString[$dateToString]
 | link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#dateToString()[DateExpressions#dateToString()]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestDateToString.java[dev.morphia.test.aggregation.expressions.TestDateToString]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/dateTrunc[$dateTrunc]
 | link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#dateTrunc(java.lang.Object,dev.morphia.aggregation.expressions.TimeUnit)[DateExpressions#dateTrunc(Object,TimeUnit)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestDateTrunc.java[dev.morphia.test.aggregation.expressions.TestDateTrunc]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/dayOfMonth[$dayOfMonth]
 | link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#dayOfMonth(java.lang.Object)[DateExpressions#dayOfMonth(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestDayOfMonth.java[dev.morphia.test.aggregation.expressions.TestDayOfMonth]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/dayOfWeek[$dayOfWeek]
 | link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#dayOfWeek(java.lang.Object)[DateExpressions#dayOfWeek(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestDayOfWeek.java[dev.morphia.test.aggregation.expressions.TestDayOfWeek]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/dayOfYear[$dayOfYear]
 | link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#dayOfYear(java.lang.Object)[DateExpressions#dayOfYear(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestDayOfYear.java[dev.morphia.test.aggregation.expressions.TestDayOfYear]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/degreesToRadians[$degreesToRadians]
 | link:javadoc/dev/morphia/aggregation/expressions/TrigonometryExpressions.html#degreesToRadians(java.lang.Object)[TrigonometryExpressions#degreesToRadians(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestDegreesToRadians.java[dev.morphia.test.aggregation.expressions.TestDegreesToRadians]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/denseRank[$denseRank]
 | link:javadoc/dev/morphia/aggregation/expressions/WindowExpressions.html#denseRank()[WindowExpressions#denseRank()]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestDenseRank.java[dev.morphia.test.aggregation.expressions.TestDenseRank]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/derivative[$derivative]
 | link:javadoc/dev/morphia/aggregation/expressions/WindowExpressions.html#derivative(java.lang.Object)[WindowExpressions#derivative(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestDerivative.java[dev.morphia.test.aggregation.expressions.TestDerivative]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/divide[$divide]
 | link:javadoc/dev/morphia/aggregation/expressions/MathExpressions.html#divide(java.lang.Object,java.lang.Object)[MathExpressions#divide(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestDivide.java[dev.morphia.test.aggregation.expressions.TestDivide]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/documentNumber[$documentNumber]
 | link:javadoc/dev/morphia/aggregation/expressions/WindowExpressions.html#documentNumber()[WindowExpressions#documentNumber()]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestDocumentNumber.java[dev.morphia.test.aggregation.expressions.TestDocumentNumber]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/eq[$eq]
 | link:javadoc/dev/morphia/aggregation/expressions/ComparisonExpressions.html#eq(java.lang.Object,java.lang.Object)[ComparisonExpressions#eq(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestEq.java[dev.morphia.test.aggregation.expressions.TestEq]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/exp[$exp]
 | link:javadoc/dev/morphia/aggregation/expressions/MathExpressions.html#exp(java.lang.Object)[MathExpressions#exp(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestExp.java[dev.morphia.test.aggregation.expressions.TestExp]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/expMovingAvg[$expMovingAvg]
 a| 
 
  * link:javadoc/dev/morphia/aggregation/expressions/WindowExpressions.html#expMovingAvg(java.lang.Object,int)[WindowExpressions#expMovingAvg(Object,int)]
  * link:javadoc/dev/morphia/aggregation/expressions/WindowExpressions.html#expMovingAvg(java.lang.Object,double)[WindowExpressions#expMovingAvg(Object,double)]
 
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestExpMovingAvg.java[dev.morphia.test.aggregation.expressions.TestExpMovingAvg]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/filter[$filter]
 | link:javadoc/dev/morphia/aggregation/expressions/Expressions.html#filter(java.lang.Object,java.lang.Object)[Expressions#filter(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestFilter.java[dev.morphia.test.aggregation.expressions.TestFilter]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/first[$first]
 | link:javadoc/dev/morphia/aggregation/expressions/AccumulatorExpressions.html#first(java.lang.Object)[AccumulatorExpressions#first(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestFirst.java[dev.morphia.test.aggregation.expressions.TestFirst]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/firstN[$firstN]
 | link:javadoc/dev/morphia/aggregation/expressions/AccumulatorExpressions.html#firstN(java.lang.Object,java.lang.Object)[AccumulatorExpressions#firstN(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestFirstN.java[dev.morphia.test.aggregation.expressions.TestFirstN]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/floor[$floor]
 | link:javadoc/dev/morphia/aggregation/expressions/MathExpressions.html#floor(java.lang.Object)[MathExpressions#floor(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestFloor.java[dev.morphia.test.aggregation.expressions.TestFloor]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/function[$function]
 | link:javadoc/dev/morphia/aggregation/expressions/AccumulatorExpressions.html#function(java.lang.String,java.lang.Object%2E%2E%2E)[AccumulatorExpressions#function(String,Object...)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestFunction.java[dev.morphia.test.aggregation.expressions.TestFunction]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/getField[$getField]
 a| 
 
  * link:javadoc/dev/morphia/aggregation/expressions/Miscellaneous.html#getField(java.lang.String)[Miscellaneous#getField(String)]
  * link:javadoc/dev/morphia/aggregation/expressions/Miscellaneous.html#getField(java.lang.Object)[Miscellaneous#getField(Object)]
 
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestGetField.java[dev.morphia.test.aggregation.expressions.TestGetField]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/gt[$gt]
 | link:javadoc/dev/morphia/aggregation/expressions/ComparisonExpressions.html#gt(java.lang.Object,java.lang.Object)[ComparisonExpressions#gt(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestGt.java[dev.morphia.test.aggregation.expressions.TestGt]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/gte[$gte]
 | link:javadoc/dev/morphia/aggregation/expressions/ComparisonExpressions.html#gte(java.lang.Object,java.lang.Object)[ComparisonExpressions#gte(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestGte.java[dev.morphia.test.aggregation.expressions.TestGte]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/hour[$hour]
 | link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#hour(java.lang.Object)[DateExpressions#hour(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestHour.java[dev.morphia.test.aggregation.expressions.TestHour]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/ifNull[$ifNull]
 | link:javadoc/dev/morphia/aggregation/expressions/ConditionalExpressions.html#ifNull()[ConditionalExpressions#ifNull()]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestIfNull.java[dev.morphia.test.aggregation.expressions.TestIfNull]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/in[$in]
 | link:javadoc/dev/morphia/aggregation/expressions/ArrayExpressions.html#in(java.lang.Object,java.lang.Object)[ArrayExpressions#in(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestIn.java[dev.morphia.test.aggregation.expressions.TestIn]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/indexOfArray[$indexOfArray]
 | link:javadoc/dev/morphia/aggregation/expressions/ArrayExpressions.html#indexOfArray(java.lang.Object,java.lang.Object)[ArrayExpressions#indexOfArray(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestIndexOfArray.java[dev.morphia.test.aggregation.expressions.TestIndexOfArray]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/indexOfBytes[$indexOfBytes]
 | link:javadoc/dev/morphia/aggregation/expressions/StringExpressions.html#indexOfBytes(java.lang.Object,java.lang.Object)[StringExpressions#indexOfBytes(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestIndexOfBytes.java[dev.morphia.test.aggregation.expressions.TestIndexOfBytes]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/indexOfCP[$indexOfCP]
 | link:javadoc/dev/morphia/aggregation/expressions/StringExpressions.html#indexOfCP(java.lang.Object,java.lang.Object)[StringExpressions#indexOfCP(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestIndexOfCP.java[dev.morphia.test.aggregation.expressions.TestIndexOfCP]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/integral[$integral]
 | link:javadoc/dev/morphia/aggregation/expressions/WindowExpressions.html#integral(java.lang.Object)[WindowExpressions#integral(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestIntegral.java[dev.morphia.test.aggregation.expressions.TestIntegral]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/isArray[$isArray]
 | link:javadoc/dev/morphia/aggregation/expressions/ArrayExpressions.html#isArray(java.lang.Object)[ArrayExpressions#isArray(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestIsArray.java[dev.morphia.test.aggregation.expressions.TestIsArray]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/isNumber[$isNumber]
 | link:javadoc/dev/morphia/aggregation/expressions/TypeExpressions.html#isNumber(java.lang.Object)[TypeExpressions#isNumber(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestIsNumber.java[dev.morphia.test.aggregation.expressions.TestIsNumber]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/isoDayOfWeek[$isoDayOfWeek]
 | link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#isoDayOfWeek(java.lang.Object)[DateExpressions#isoDayOfWeek(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestIsoDayOfWeek.java[dev.morphia.test.aggregation.expressions.TestIsoDayOfWeek]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/isoWeek[$isoWeek]
 | link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#isoWeek(java.lang.Object)[DateExpressions#isoWeek(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestIsoWeek.java[dev.morphia.test.aggregation.expressions.TestIsoWeek]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/isoWeekYear[$isoWeekYear]
 | link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#isoWeekYear(java.lang.Object)[DateExpressions#isoWeekYear(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestIsoWeekYear.java[dev.morphia.test.aggregation.expressions.TestIsoWeekYear]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/last[$last]
 | link:javadoc/dev/morphia/aggregation/expressions/AccumulatorExpressions.html#last(java.lang.Object)[AccumulatorExpressions#last(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestLast.java[dev.morphia.test.aggregation.expressions.TestLast]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/lastN[$lastN]
 | link:javadoc/dev/morphia/aggregation/expressions/AccumulatorExpressions.html#lastN(java.lang.Object,java.lang.Object)[AccumulatorExpressions#lastN(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestLastN.java[dev.morphia.test.aggregation.expressions.TestLastN]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/let[$let]
 | link:javadoc/dev/morphia/aggregation/expressions/VariableExpressions.html#let(dev.morphia.aggregation.expressions.impls.Expression)[VariableExpressions#let(Expression)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestLet.java[dev.morphia.test.aggregation.expressions.TestLet]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/linearFill[$linearFill]
 | link:javadoc/dev/morphia/aggregation/expressions/WindowExpressions.html#linearFill(java.lang.Object)[WindowExpressions#linearFill(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestLinearFill.java[dev.morphia.test.aggregation.expressions.TestLinearFill]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/literal[$literal]
 | link:javadoc/dev/morphia/aggregation/expressions/Expressions.html#literal(java.lang.Object)[Expressions#literal(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestLiteral.java[dev.morphia.test.aggregation.expressions.TestLiteral]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/ln[$ln]
 | link:javadoc/dev/morphia/aggregation/expressions/MathExpressions.html#ln(java.lang.Object)[MathExpressions#ln(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestLn.java[dev.morphia.test.aggregation.expressions.TestLn]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/locf[$locf]
 | link:javadoc/dev/morphia/aggregation/expressions/WindowExpressions.html#locf(java.lang.Object)[WindowExpressions#locf(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestLocf.java[dev.morphia.test.aggregation.expressions.TestLocf]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/log[$log]
 | link:javadoc/dev/morphia/aggregation/expressions/MathExpressions.html#log(java.lang.Object,java.lang.Object)[MathExpressions#log(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestLog.java[dev.morphia.test.aggregation.expressions.TestLog]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/log10[$log10]
 | link:javadoc/dev/morphia/aggregation/expressions/MathExpressions.html#log10(java.lang.Object)[MathExpressions#log10(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestLog10.java[dev.morphia.test.aggregation.expressions.TestLog10]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/lt[$lt]
 | link:javadoc/dev/morphia/aggregation/expressions/ComparisonExpressions.html#lt(java.lang.Object,java.lang.Object)[ComparisonExpressions#lt(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestLt.java[dev.morphia.test.aggregation.expressions.TestLt]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/lte[$lte]
 | link:javadoc/dev/morphia/aggregation/expressions/ComparisonExpressions.html#lte(java.lang.Object,java.lang.Object)[ComparisonExpressions#lte(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestLte.java[dev.morphia.test.aggregation.expressions.TestLte]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/ltrim[$ltrim]
 | link:javadoc/dev/morphia/aggregation/expressions/StringExpressions.html#ltrim(java.lang.Object)[StringExpressions#ltrim(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestLtrim.java[dev.morphia.test.aggregation.expressions.TestLtrim]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/map[$map]
 | link:javadoc/dev/morphia/aggregation/expressions/ArrayExpressions.html#map(java.lang.Object,java.lang.Object)[ArrayExpressions#map(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestMap.java[dev.morphia.test.aggregation.expressions.TestMap]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/max[$max]
 | link:javadoc/dev/morphia/aggregation/expressions/AccumulatorExpressions.html#max(java.lang.Object,java.lang.Object%2E%2E%2E)[AccumulatorExpressions#max(Object,Object...)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestMax.java[dev.morphia.test.aggregation.expressions.TestMax]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/maxN[$maxN]
 | link:javadoc/dev/morphia/aggregation/expressions/AccumulatorExpressions.html#maxN(java.lang.Object,java.lang.Object)[AccumulatorExpressions#maxN(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestMaxN.java[dev.morphia.test.aggregation.expressions.TestMaxN]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/median[$median]
 | link:javadoc/dev/morphia/aggregation/expressions/MathExpressions.html#median(java.lang.Object)[MathExpressions#median(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestMedian.java[dev.morphia.test.aggregation.expressions.TestMedian]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/mergeObjects[$mergeObjects]
 | link:javadoc/dev/morphia/aggregation/expressions/ObjectExpressions.html#mergeObjects()[ObjectExpressions#mergeObjects()]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestMergeObjects.java[dev.morphia.test.aggregation.expressions.TestMergeObjects]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/meta[$meta]
 a| 
 
@@ -300,261 +300,261 @@ a|
  * link:javadoc/dev/morphia/query/Meta.html#searchScore(java.lang.String)[Meta#searchScore(String)]
  * link:javadoc/dev/morphia/query/Meta.html#textScore(java.lang.String)[Meta#textScore(String)]
 
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestMeta.java[dev.morphia.test.aggregation.expressions.TestMeta]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/millisecond[$millisecond]
 | link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#milliseconds(java.lang.Object)[DateExpressions#milliseconds(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestMillisecond.java[dev.morphia.test.aggregation.expressions.TestMillisecond]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/min[$min]
 | link:javadoc/dev/morphia/aggregation/expressions/AccumulatorExpressions.html#min(java.lang.Object,java.lang.Object%2E%2E%2E)[AccumulatorExpressions#min(Object,Object...)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestMin.java[dev.morphia.test.aggregation.expressions.TestMin]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/minN[$minN]
 | link:javadoc/dev/morphia/aggregation/expressions/AccumulatorExpressions.html#minN(java.lang.Object,java.lang.Object)[AccumulatorExpressions#minN(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestMinN.java[dev.morphia.test.aggregation.expressions.TestMinN]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/minute[$minute]
 | link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#minute(java.lang.Object)[DateExpressions#minute(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestMinute.java[dev.morphia.test.aggregation.expressions.TestMinute]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/mod[$mod]
 | link:javadoc/dev/morphia/aggregation/expressions/MathExpressions.html#mod(java.lang.Object,java.lang.Object)[MathExpressions#mod(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestMod.java[dev.morphia.test.aggregation.expressions.TestMod]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/month[$month]
 | link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#month(java.lang.Object)[DateExpressions#month(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestMonth.java[dev.morphia.test.aggregation.expressions.TestMonth]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/multiply[$multiply]
 | link:javadoc/dev/morphia/aggregation/expressions/MathExpressions.html#multiply(java.lang.Object,java.lang.Object%2E%2E%2E)[MathExpressions#multiply(Object,Object...)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestMultiply.java[dev.morphia.test.aggregation.expressions.TestMultiply]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/ne[$ne]
 | link:javadoc/dev/morphia/aggregation/expressions/ComparisonExpressions.html#ne(java.lang.Object,java.lang.Object)[ComparisonExpressions#ne(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestNe.java[dev.morphia.test.aggregation.expressions.TestNe]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/not[$not]
 | link:javadoc/dev/morphia/aggregation/expressions/BooleanExpressions.html#not(java.lang.Object)[BooleanExpressions#not(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestNot.java[dev.morphia.test.aggregation.expressions.TestNot]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/objectToArray[$objectToArray]
 | link:javadoc/dev/morphia/aggregation/expressions/ArrayExpressions.html#objectToArray(java.lang.Object)[ArrayExpressions#objectToArray(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestObjectToArray.java[dev.morphia.test.aggregation.expressions.TestObjectToArray]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/or[$or]
 a| 
 
  * link:javadoc/dev/morphia/aggregation/expressions/BooleanExpressions.html#or(java.lang.Object,java.lang.Object%2E%2E%2E)[BooleanExpressions#or(Object,Object...)]
  * link:javadoc/dev/morphia/aggregation/expressions/BooleanExpressions.html#or()[BooleanExpressions#or()]
 
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestOr.java[dev.morphia.test.aggregation.expressions.TestOr]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/percentile[$percentile]
 a| 
 
  * link:javadoc/dev/morphia/aggregation/expressions/MathExpressions.html#percentile(java.lang.Object,java.util.List)[MathExpressions#percentile(Object,List)]
  * link:javadoc/dev/morphia/aggregation/expressions/MathExpressions.html#percentile(java.util.List,java.util.List)[MathExpressions#percentile(List,List)]
 
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestPercentile.java[dev.morphia.test.aggregation.expressions.TestPercentile]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/pow[$pow]
 | link:javadoc/dev/morphia/aggregation/expressions/MathExpressions.html#pow(java.lang.Object,java.lang.Object)[MathExpressions#pow(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestPow.java[dev.morphia.test.aggregation.expressions.TestPow]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/push[$push]
 a| 
 
  * link:javadoc/dev/morphia/aggregation/expressions/AccumulatorExpressions.html#push(java.lang.Object)[AccumulatorExpressions#push(Object)]
  * link:javadoc/dev/morphia/aggregation/expressions/AccumulatorExpressions.html#push()[AccumulatorExpressions#push()]
 
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestPush.java[dev.morphia.test.aggregation.expressions.TestPush]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/radiansToDegrees[$radiansToDegrees]
 | link:javadoc/dev/morphia/aggregation/expressions/TrigonometryExpressions.html#radiansToDegrees(java.lang.Object)[TrigonometryExpressions#radiansToDegrees(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestRadiansToDegrees.java[dev.morphia.test.aggregation.expressions.TestRadiansToDegrees]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/rand[$rand]
 | link:javadoc/dev/morphia/aggregation/expressions/Miscellaneous.html#rand()[Miscellaneous#rand()]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestRand.java[dev.morphia.test.aggregation.expressions.TestRand]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/range[$range]
 a| 
 
  * link:javadoc/dev/morphia/aggregation/expressions/ArrayExpressions.html#range(int,int)[ArrayExpressions#range(int,int)]
  * link:javadoc/dev/morphia/aggregation/expressions/ArrayExpressions.html#range(java.lang.Object,java.lang.Object)[ArrayExpressions#range(Object,Object)]
 
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestRange.java[dev.morphia.test.aggregation.expressions.TestRange]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/rank[$rank]
 | link:javadoc/dev/morphia/aggregation/expressions/WindowExpressions.html#rank()[WindowExpressions#rank()]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestRank.java[dev.morphia.test.aggregation.expressions.TestRank]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/reduce[$reduce]
 | link:javadoc/dev/morphia/aggregation/expressions/ArrayExpressions.html#reduce(java.lang.Object,java.lang.Object,java.lang.Object)[ArrayExpressions#reduce(Object,Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestReduce.java[dev.morphia.test.aggregation.expressions.TestReduce]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/regexFind[$regexFind]
 | link:javadoc/dev/morphia/aggregation/expressions/StringExpressions.html#regexFind(java.lang.Object)[StringExpressions#regexFind(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestRegexFind.java[dev.morphia.test.aggregation.expressions.TestRegexFind]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/regexFindAll[$regexFindAll]
 | link:javadoc/dev/morphia/aggregation/expressions/StringExpressions.html#regexFindAll(java.lang.Object)[StringExpressions#regexFindAll(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestRegexFindAll.java[dev.morphia.test.aggregation.expressions.TestRegexFindAll]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/regexMatch[$regexMatch]
 | link:javadoc/dev/morphia/aggregation/expressions/StringExpressions.html#regexMatch(java.lang.Object)[StringExpressions#regexMatch(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestRegexMatch.java[dev.morphia.test.aggregation.expressions.TestRegexMatch]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/replaceAll[$replaceAll]
 | link:javadoc/dev/morphia/aggregation/expressions/StringExpressions.html#replaceAll(java.lang.Object,java.lang.Object,java.lang.Object)[StringExpressions#replaceAll(Object,Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestReplaceAll.java[dev.morphia.test.aggregation.expressions.TestReplaceAll]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/replaceOne[$replaceOne]
 | link:javadoc/dev/morphia/aggregation/expressions/StringExpressions.html#replaceOne(java.lang.Object,java.lang.Object,java.lang.Object)[StringExpressions#replaceOne(Object,Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestReplaceOne.java[dev.morphia.test.aggregation.expressions.TestReplaceOne]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/reverseArray[$reverseArray]
 | link:javadoc/dev/morphia/aggregation/expressions/ArrayExpressions.html#reverseArray(java.lang.Object)[ArrayExpressions#reverseArray(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestReverseArray.java[dev.morphia.test.aggregation.expressions.TestReverseArray]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/round[$round]
 | link:javadoc/dev/morphia/aggregation/expressions/MathExpressions.html#round(java.lang.Object,java.lang.Object)[MathExpressions#round(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestRound.java[dev.morphia.test.aggregation.expressions.TestRound]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/rtrim[$rtrim]
 | link:javadoc/dev/morphia/aggregation/expressions/StringExpressions.html#rtrim(java.lang.Object)[StringExpressions#rtrim(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestRtrim.java[dev.morphia.test.aggregation.expressions.TestRtrim]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/sampleRate[$sampleRate]
 | link:javadoc/dev/morphia/aggregation/expressions/Miscellaneous.html#sampleRate(double)[Miscellaneous#sampleRate(double)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestSampleRate.java[dev.morphia.test.aggregation.expressions.TestSampleRate]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/second[$second]
 | link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#second(java.lang.Object)[DateExpressions#second(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestSecond.java[dev.morphia.test.aggregation.expressions.TestSecond]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/setDifference[$setDifference]
 | link:javadoc/dev/morphia/aggregation/expressions/SetExpressions.html#setDifference(java.lang.Object,java.lang.Object)[SetExpressions#setDifference(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestSetDifference.java[dev.morphia.test.aggregation.expressions.TestSetDifference]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/setEquals[$setEquals]
 | link:javadoc/dev/morphia/aggregation/expressions/SetExpressions.html#setEquals(java.lang.Object,java.lang.Object%2E%2E%2E)[SetExpressions#setEquals(Object,Object...)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestSetEquals.java[dev.morphia.test.aggregation.expressions.TestSetEquals]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/setField[$setField]
 | link:javadoc/dev/morphia/aggregation/expressions/Miscellaneous.html#setField(java.lang.Object,java.lang.Object,java.lang.Object)[Miscellaneous#setField(Object,Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestSetField.java[dev.morphia.test.aggregation.expressions.TestSetField]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/setIntersection[$setIntersection]
 | link:javadoc/dev/morphia/aggregation/expressions/SetExpressions.html#setIntersection(java.lang.Object,java.lang.Object%2E%2E%2E)[SetExpressions#setIntersection(Object,Object...)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestSetIntersection.java[dev.morphia.test.aggregation.expressions.TestSetIntersection]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/setIsSubset[$setIsSubset]
 | link:javadoc/dev/morphia/aggregation/expressions/SetExpressions.html#setIsSubset(java.lang.Object,java.lang.Object)[SetExpressions#setIsSubset(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestSetIsSubset.java[dev.morphia.test.aggregation.expressions.TestSetIsSubset]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/setUnion[$setUnion]
 | link:javadoc/dev/morphia/aggregation/expressions/SetExpressions.html#setUnion(java.lang.Object,java.lang.Object%2E%2E%2E)[SetExpressions#setUnion(Object,Object...)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestSetUnion.java[dev.morphia.test.aggregation.expressions.TestSetUnion]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/shift[$shift]
 | link:javadoc/dev/morphia/aggregation/expressions/WindowExpressions.html#shift(java.lang.Object,long,java.lang.Object)[WindowExpressions#shift(Object,long,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestShift.java[dev.morphia.test.aggregation.expressions.TestShift]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/sin[$sin]
 | link:javadoc/dev/morphia/aggregation/expressions/TrigonometryExpressions.html#sin(java.lang.Object)[TrigonometryExpressions#sin(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestSin.java[dev.morphia.test.aggregation.expressions.TestSin]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/sinh[$sinh]
 | link:javadoc/dev/morphia/aggregation/expressions/TrigonometryExpressions.html#sinh(java.lang.Object)[TrigonometryExpressions#sinh(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestSinh.java[dev.morphia.test.aggregation.expressions.TestSinh]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/size[$size]
 | link:javadoc/dev/morphia/aggregation/expressions/ArrayExpressions.html#size(java.lang.Object)[ArrayExpressions#size(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestSize.java[dev.morphia.test.aggregation.expressions.TestSize]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/slice[$slice]
 | link:javadoc/dev/morphia/aggregation/expressions/ArrayExpressions.html#slice(java.lang.Object,int)[ArrayExpressions#slice(Object,int)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestSlice.java[dev.morphia.test.aggregation.expressions.TestSlice]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/sortArray[$sortArray]
 | link:javadoc/dev/morphia/aggregation/expressions/ArrayExpressions.html#sortArray(java.lang.Object,dev.morphia.query.Sort%2E%2E%2E)[ArrayExpressions#sortArray(Object,Sort...)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestSortArray.java[dev.morphia.test.aggregation.expressions.TestSortArray]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/split[$split]
 | link:javadoc/dev/morphia/aggregation/expressions/StringExpressions.html#split(java.lang.Object,java.lang.Object)[StringExpressions#split(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestSplit.java[dev.morphia.test.aggregation.expressions.TestSplit]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/sqrt[$sqrt]
 | link:javadoc/dev/morphia/aggregation/expressions/MathExpressions.html#sqrt(java.lang.Object)[MathExpressions#sqrt(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestSqrt.java[dev.morphia.test.aggregation.expressions.TestSqrt]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/stdDevPop[$stdDevPop]
 | link:javadoc/dev/morphia/aggregation/expressions/WindowExpressions.html#stdDevPop(java.lang.Object,java.lang.Object%2E%2E%2E)[WindowExpressions#stdDevPop(Object,Object...)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestStdDevPop.java[dev.morphia.test.aggregation.expressions.TestStdDevPop]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/stdDevSamp[$stdDevSamp]
 | link:javadoc/dev/morphia/aggregation/expressions/WindowExpressions.html#stdDevSamp(java.lang.Object,java.lang.Object%2E%2E%2E)[WindowExpressions#stdDevSamp(Object,Object...)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestStdDevSamp.java[dev.morphia.test.aggregation.expressions.TestStdDevSamp]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/strLenBytes[$strLenBytes]
 | link:javadoc/dev/morphia/aggregation/expressions/StringExpressions.html#strLenBytes(java.lang.Object)[StringExpressions#strLenBytes(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestStrLenBytes.java[dev.morphia.test.aggregation.expressions.TestStrLenBytes]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/strLenCP[$strLenCP]
 | link:javadoc/dev/morphia/aggregation/expressions/StringExpressions.html#strLenCP(java.lang.Object)[StringExpressions#strLenCP(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestStrLenCP.java[dev.morphia.test.aggregation.expressions.TestStrLenCP]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/strcasecmp[$strcasecmp]
 | link:javadoc/dev/morphia/aggregation/expressions/StringExpressions.html#strcasecmp(java.lang.Object,java.lang.Object)[StringExpressions#strcasecmp(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestStrcasecmp.java[dev.morphia.test.aggregation.expressions.TestStrcasecmp]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/substrBytes[$substrBytes]
 a| 
 
  * link:javadoc/dev/morphia/aggregation/expressions/StringExpressions.html#substrBytes(java.lang.Object,int,int)[StringExpressions#substrBytes(Object,int,int)]
  * link:javadoc/dev/morphia/aggregation/expressions/StringExpressions.html#substrBytes(java.lang.Object,java.lang.Object,java.lang.Object)[StringExpressions#substrBytes(Object,Object,Object)]
 
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestSubstrBytes.java[dev.morphia.test.aggregation.expressions.TestSubstrBytes]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/substrCP[$substrCP]
 | link:javadoc/dev/morphia/aggregation/expressions/StringExpressions.html#substrCP(java.lang.Object,java.lang.Object,java.lang.Object)[StringExpressions#substrCP(Object,Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestSubstrCP.java[dev.morphia.test.aggregation.expressions.TestSubstrCP]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/subtract[$subtract]
 | link:javadoc/dev/morphia/aggregation/expressions/MathExpressions.html#subtract(java.lang.Object,java.lang.Object)[MathExpressions#subtract(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestSubtract.java[dev.morphia.test.aggregation.expressions.TestSubtract]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/sum[$sum]
 | link:javadoc/dev/morphia/aggregation/expressions/AccumulatorExpressions.html#sum(java.lang.Object,java.lang.Object%2E%2E%2E)[AccumulatorExpressions#sum(Object,Object...)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestSum.java[dev.morphia.test.aggregation.expressions.TestSum]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/switch[$switch]
 | link:javadoc/dev/morphia/aggregation/expressions/ConditionalExpressions.html#switchExpression()[ConditionalExpressions#switchExpression()]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestSwitch.java[dev.morphia.test.aggregation.expressions.TestSwitch]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/tan[$tan]
 | link:javadoc/dev/morphia/aggregation/expressions/TrigonometryExpressions.html#tan(java.lang.Object)[TrigonometryExpressions#tan(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestTan.java[dev.morphia.test.aggregation.expressions.TestTan]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/tanh[$tanh]
 | link:javadoc/dev/morphia/aggregation/expressions/TrigonometryExpressions.html#tanh(java.lang.Object)[TrigonometryExpressions#tanh(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestTanh.java[dev.morphia.test.aggregation.expressions.TestTanh]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/toBool[$toBool]
 | link:javadoc/dev/morphia/aggregation/expressions/TypeExpressions.html#toBool(java.lang.Object)[TypeExpressions#toBool(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestToBool.java[dev.morphia.test.aggregation.expressions.TestToBool]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/toDate[$toDate]
 | link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#toDate(java.lang.Object)[DateExpressions#toDate(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestToDate.java[dev.morphia.test.aggregation.expressions.TestToDate]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/toDecimal[$toDecimal]
 | link:javadoc/dev/morphia/aggregation/expressions/TypeExpressions.html#toDecimal(java.lang.Object)[TypeExpressions#toDecimal(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestToDecimal.java[dev.morphia.test.aggregation.expressions.TestToDecimal]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/toDouble[$toDouble]
 | link:javadoc/dev/morphia/aggregation/expressions/TypeExpressions.html#toDouble(java.lang.Object)[TypeExpressions#toDouble(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestToDouble.java[dev.morphia.test.aggregation.expressions.TestToDouble]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/toInt[$toInt]
 | link:javadoc/dev/morphia/aggregation/expressions/TypeExpressions.html#toInt(java.lang.Object)[TypeExpressions#toInt(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestToInt.java[dev.morphia.test.aggregation.expressions.TestToInt]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/toLong[$toLong]
 | link:javadoc/dev/morphia/aggregation/expressions/TypeExpressions.html#toLong(java.lang.Object)[TypeExpressions#toLong(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestToLong.java[dev.morphia.test.aggregation.expressions.TestToLong]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/toLower[$toLower]
 | link:javadoc/dev/morphia/aggregation/expressions/StringExpressions.html#toLower(java.lang.Object)[StringExpressions#toLower(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestToLower.java[dev.morphia.test.aggregation.expressions.TestToLower]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/toObjectId[$toObjectId]
 | link:javadoc/dev/morphia/aggregation/expressions/TypeExpressions.html#toObjectId(java.lang.Object)[TypeExpressions#toObjectId(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestToObjectId.java[dev.morphia.test.aggregation.expressions.TestToObjectId]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/toString[$toString]
 a| 
 
  * link:javadoc/dev/morphia/aggregation/expressions/StringExpressions.html#toString(java.lang.Object)[StringExpressions#toString(Object)]
  * link:javadoc/dev/morphia/aggregation/expressions/TypeExpressions.html#toString(java.lang.Object)[TypeExpressions#toString(Object)]
 
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestToString.java[dev.morphia.test.aggregation.expressions.TestToString]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/toUpper[$toUpper]
 | link:javadoc/dev/morphia/aggregation/expressions/StringExpressions.html#toUpper(java.lang.Object)[StringExpressions#toUpper(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestToUpper.java[dev.morphia.test.aggregation.expressions.TestToUpper]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/top[$top]
 | link:javadoc/dev/morphia/aggregation/expressions/AccumulatorExpressions.html#top(java.lang.Object,dev.morphia.query.Sort%2E%2E%2E)[AccumulatorExpressions#top(Object,Sort...)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestTop.java[dev.morphia.test.aggregation.expressions.TestTop]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/topN[$topN]
 | link:javadoc/dev/morphia/aggregation/expressions/AccumulatorExpressions.html#topN(java.lang.Object,java.lang.Object,dev.morphia.query.Sort%2E%2E%2E)[AccumulatorExpressions#topN(Object,Object,Sort...)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestTopN.java[dev.morphia.test.aggregation.expressions.TestTopN]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/trim[$trim]
 | link:javadoc/dev/morphia/aggregation/expressions/StringExpressions.html#trim(java.lang.Object)[StringExpressions#trim(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestTrim.java[dev.morphia.test.aggregation.expressions.TestTrim]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/trunc[$trunc]
 a| 
 
  * link:javadoc/dev/morphia/aggregation/expressions/MathExpressions.html#trunc(java.lang.Object)[MathExpressions#trunc(Object)]
  * link:javadoc/dev/morphia/aggregation/expressions/MathExpressions.html#trunc(java.lang.Object,java.lang.Object)[MathExpressions#trunc(Object,Object)]
 
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestTrunc.java[dev.morphia.test.aggregation.expressions.TestTrunc]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/tsIncrement[$tsIncrement]
 | link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#tsIncrement(java.lang.Object)[DateExpressions#tsIncrement(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestTsIncrement.java[dev.morphia.test.aggregation.expressions.TestTsIncrement]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/tsSecond[$tsSecond]
 | link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#tsSecond(java.lang.Object)[DateExpressions#tsSecond(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestTsSecond.java[dev.morphia.test.aggregation.expressions.TestTsSecond]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/type[$type]
 | link:javadoc/dev/morphia/aggregation/expressions/TypeExpressions.html#type(java.lang.Object)[TypeExpressions#type(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestType.java[dev.morphia.test.aggregation.expressions.TestType]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/unsetField[$unsetField]
 | link:javadoc/dev/morphia/aggregation/expressions/Miscellaneous.html#unsetField(java.lang.Object,java.lang.Object)[Miscellaneous#unsetField(Object,Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestUnsetField.java[dev.morphia.test.aggregation.expressions.TestUnsetField]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/week[$week]
 | link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#week(java.lang.Object)[DateExpressions#week(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestWeek.java[dev.morphia.test.aggregation.expressions.TestWeek]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/year[$year]
 | link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#year(java.lang.Object)[DateExpressions#year(Object)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestYear.java[dev.morphia.test.aggregation.expressions.TestYear]
 | http://docs.mongodb.org/manual/reference/operator/aggregation/zip[$zip]
 | link:javadoc/dev/morphia/aggregation/expressions/ArrayExpressions.html#zip(java.lang.Object%2E%2E%2E)[ArrayExpressions#zip(Object...)]
-
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestZip.java[dev.morphia.test.aggregation.expressions.TestZip]
 |===

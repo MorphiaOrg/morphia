@@ -113,9 +113,9 @@ class RstAuditor(val type: OperatorType) {
         val docRoot = File(DOC_ROOT, "modules/ROOT/pages/${type.docsName()}.adoc")
         docRoot.writeText(
             """
-                [%header,cols="1,2"]
+                [%header,cols="1,2,3"]
                 |===
-                |Operator|Docs
+                |Operator|Docs|Test Examples
                 
                 
             """
@@ -123,17 +123,31 @@ class RstAuditor(val type: OperatorType) {
         )
 
         methods.forEach {
-            val docs = docsLinks(it.value)
             val operator = it.key
             val referenceLink =
                 "http://docs.mongodb.org/manual/reference/operator/${type.root()}/${operator.substringAfter("$")}"
             docRoot.appendText("| $referenceLink[${operator}]\n")
-            docRoot.appendText(docs + "\n")
+            docRoot.appendText(docsLinks(it.value, type) + "\n")
+            docRoot.appendText("| ${githubLink(operator, type)}\n\n\n")
         }
         docRoot.appendText("|===\n")
     }
 
-    private fun docsLinks(methods: List<MethodSource<*>>): String {
+    private fun githubLink(operator: String, type: OperatorType): String {
+        val name = operator.substringAfter("$").titleCase()
+        val ref = "blob/master"
+        val location =
+            when (type) {
+                EXPRESSION -> "aggregation/expressions"
+                FILTER -> "query/filters"
+                STAGE -> "aggregation/stages"
+            }
+        val testFileName = "dev/morphia/test/$location/Test${name}"
+        val testClassName = testFileName.replace("/", ".")
+        return "https://github.com/MorphiaOrg/morphia/$ref/core/src/test/java/$testFileName.java[$testClassName]"
+    }
+
+    private fun docsLinks(methods: List<MethodSource<*>>, type: OperatorType): String {
         val lines =
             methods.map { method ->
                 val className = method.getOrigin().getName()
@@ -151,10 +165,10 @@ class RstAuditor(val type: OperatorType) {
         if (lines.size == 1) {
             line += lines[0]
         } else {
-            line = "a$line" + lines.joinToString("\n * ", "\n\n * ", "\n")
+            line = "a$line" + lines.joinToString(" +\n")
         }
 
-        return line + "\n"
+        return line
     }
 
     private fun update(operator: Operator) {

@@ -15,7 +15,8 @@ Query<Product> query = datastore.find(Product.class);
 The most significant method `filter(Filter...)`.
 This method takes a number of filters to apply to the query being built.
 The filters are added to any existing, previously defined filters so you needn't add them all at once.
-There are dozens of filters predefined in Morphia and can be found in the `dev.morphia.query.filters` package.
+There are dozens of filters predefined in Morphia and can be found in the `dev.morphia.query.filters` package.  You can find the full
+list in the <<Supported Operators>> section.
 
 The filters can be accessed via the link:javadoc/dev/morphia/query/filters/Filters.html[Filters] class.
 The method names largely match the operation name you would use querying via the mongo shell so this should help you translate queries in to Morphia's API.

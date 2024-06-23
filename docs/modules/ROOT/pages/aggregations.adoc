@@ -5,7 +5,7 @@ These pipelines can be used for analytics or they can be used to convert your da
 This guide will not go in to the details of how aggregation works, however.
 The official MongoDB {docsRef}/aggregation[documentation] has extensive tutorials on such details.
 Rather, this guide will focus on the Morphia API. The examples shown here are taken from the
-{srcRef}/morphia/src/test/java/dev/morphia/aggregation/AggregationTest.java[tests] in Morphia itself.
+{srcRef}/morphia/src/test/java/dev/morphia/aggregation/AggregationTest.java[tests] in Morphia itself. You can find the full list in the <<Supported Operators>> section.
 
 Writing an aggregation pipeline starts just like writing a standard query.
 As with querying, we start with the `Datastore`:
