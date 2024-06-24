@@ -138,11 +138,11 @@ jobs:
       java: 17
     secrets:
       GH_PUSH_TOKEN       : ${{ secrets.GH_PUSH_TOKEN }}
-      GPG_PASSPHRASE      : ${{ secrets.GPG_PASSPHRASE }}
+      MAVEN_GPG_PASSPHRASE      : ${{ secrets.MAVEN_GPG_PASSPHRASE }}
       GPG_PUBLIC_KEY      : ${{ secrets.GPG_PUBLIC_KEY }}
       GPG_PRIVATE_KEY     : ${{ secrets.GPG_PRIVATE_KEY }}
       SONATYPE_USERNAME   : ${{ secrets.SONATYPE_USERNAME }}
-      SONATYPE_PASSWORD   : ${{ secrets.SONATYPE_PASSWORD }}
+      SONATYPE_TOKEN   : ${{ secrets.SONATYPE_TOKEN }}
 
   Docs:
     name: Update Documentation
