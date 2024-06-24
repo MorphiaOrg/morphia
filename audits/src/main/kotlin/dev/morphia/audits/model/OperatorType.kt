@@ -21,6 +21,13 @@ enum class OperatorType {
         override fun taglet() = "@aggregation.stage"
 
         override fun root() = "aggregation"
+    },
+    UPDATES {
+        override fun docsName() = "update-operators"
+
+        override fun taglet() = "@update.operator"
+
+        override fun root() = "update"
     };
 
     abstract fun docsName(): String
