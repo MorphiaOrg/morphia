@@ -2,7 +2,6 @@ package dev.morphia.audits.model
 
 import dev.morphia.audits.RstAuditor
 import dev.morphia.audits.model.OperatorType.EXPRESSION
-import dev.morphia.audits.model.OperatorType.FILTER
 import dev.morphia.audits.model.OperatorType.STAGE
 import dev.morphia.audits.rst.RstDocument
 import java.io.File
@@ -19,14 +18,14 @@ class Operator private constructor(var type: OperatorType) {
     val resourceFolder by lazy {
         File(
                 RstAuditor.coreTestRoot,
-                "dev/morphia/test/${type.root()}/${subpath()}/${name.substringBefore("-")}"
+                "dev/morphia/test/${type.root()}/${type.path()}/${name.substringBefore("-")}"
             )
             .canonicalFile
     }
     val testSource by lazy {
         File(
                 RstAuditor.coreTestSourceRoot,
-                "dev/morphia/test/${type.root()}/${subpath()}/Test${name.substringBefore("-").titleCase()}.java"
+                "dev/morphia/test/${type.root()}/${type.path()}/Test${name.substringBefore("-").titleCase()}.java"
             )
             .canonicalFile
     }
@@ -35,7 +34,7 @@ class Operator private constructor(var type: OperatorType) {
     val rstAuditor = RstAuditor(type)
     val operator by lazy { "\$${name.substringBefore("-")}" }
     val url: String by lazy {
-        "https://www.mongodb.com/docs/manual/reference/operator/${type.root()}/$name/"
+        "https://www.mongodb.com/docs/manual/reference/operator/${type.docsRoot()}/$name/"
     }
     val examples by lazy { RstDocument.read(this, source).examples }
     lateinit var source: File
@@ -68,13 +67,6 @@ class Operator private constructor(var type: OperatorType) {
                 .forEach { it.output(File(resourceFolder, "example${it.ordinal + 1}")) }
         }
     }
-
-    private fun subpath() =
-        when (type) {
-            EXPRESSION -> "expressions"
-            STAGE -> "stages"
-            FILTER -> "filters"
-        }
 
     override fun toString(): String {
         return "Operator($name -> ${source.relativeTo(RstAuditor.auditRoot)})"

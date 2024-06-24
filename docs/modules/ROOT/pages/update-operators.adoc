@@ -1,0 +1,11 @@
+[%header,cols="1,2,3"]
+|===
+|Operator|Docs|Test Examples
+
+| http://docs.mongodb.org/manual/reference/operator/query/bit[$bit]
+a| link:javadoc/dev/morphia/query/updates/UpdateOperators.html#and(java.lang.String,int)[UpdateOperators#and(String,int)] +
+link:javadoc/dev/morphia/query/updates/UpdateOperators.html#or(java.lang.String,int)[UpdateOperators#or(String,int)] +
+link:javadoc/dev/morphia/query/updates/UpdateOperators.html#xor(java.lang.String,int)[UpdateOperators#xor(String,int)]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/updates/TestBit.java[dev.morphia.test.query.updates.TestBit]
+
+|===

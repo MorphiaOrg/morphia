@@ -1,0 +1,4 @@
+db.switches.updateOne(
+   { _id: 2 },
+   { $bit: { expdata: { or: NumberInt( 5 ) } } }
+)

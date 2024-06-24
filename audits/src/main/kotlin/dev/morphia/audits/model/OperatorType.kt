@@ -7,6 +7,8 @@ enum class OperatorType {
         override fun taglet() = "@aggregation.expression"
 
         override fun root() = "aggregation"
+
+        override fun path() = "expressions"
     },
     FILTER {
         override fun docsName() = "query-filters"
@@ -14,6 +16,8 @@ enum class OperatorType {
         override fun taglet() = "@query.filter"
 
         override fun root() = "query"
+
+        override fun path() = "filters"
     },
     STAGE {
         override fun docsName() = "aggregation-stages"
@@ -21,18 +25,28 @@ enum class OperatorType {
         override fun taglet() = "@aggregation.stage"
 
         override fun root() = "aggregation"
+
+        override fun path() = "stages"
     },
-    UPDATES {
+    UPDATE {
         override fun docsName() = "update-operators"
 
         override fun taglet() = "@update.operator"
 
-        override fun root() = "update"
+        override fun docsRoot() = "update"
+
+        override fun root() = "query"
+
+        override fun path() = "updates"
     };
 
     abstract fun docsName(): String
 
     abstract fun taglet(): String
 
+    open fun docsRoot() = root()
+
     abstract fun root(): String
+
+    abstract fun path(): String
 }

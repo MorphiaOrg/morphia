@@ -215,6 +215,20 @@ public final class UpdateOperators {
     }
 
     /**
+     * Multiplies the value of the field by the specified amount.
+     *
+     * @param field the field to multiply
+     * @param value the number to multiply by
+     * @return the update operator
+     * @update.operator $bit
+     * @since 3.0
+     * @mongodb.server.release 5.0
+     */
+    public static UpdateOperator bit(String field, Number value) {
+        return new UpdateOperator("$bit", field, value);
+    }
+
+    /**
      * The $bit operator performs a bitwise update of a field. The operator supports bitwise and, bitwise or, and bitwise xor (i.e.
      * exclusive or) operations.
      *

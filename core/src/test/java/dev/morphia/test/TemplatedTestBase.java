@@ -343,7 +343,7 @@ public abstract class TemplatedTestBase extends TestBase {
         if (!testOptions.skipDataCheck()) {
             var resource = loadResource(resourceName);
             query.update(new UpdateOptions().multi(resource.contains("updateMany")), first, others);
-            try (var cursor = getDs().find(EXAMPLE_TEST_COLLECTION, Document.class).iterator()) {
+            try (var cursor = query.iterator()) {
                 return cursor.toList();
             }
         } else {

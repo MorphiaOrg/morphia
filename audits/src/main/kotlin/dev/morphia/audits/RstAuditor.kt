@@ -7,6 +7,7 @@ import dev.morphia.audits.model.OperatorType
 import dev.morphia.audits.model.OperatorType.EXPRESSION
 import dev.morphia.audits.model.OperatorType.FILTER
 import dev.morphia.audits.model.OperatorType.STAGE
+import dev.morphia.audits.model.OperatorType.UPDATE
 import dev.morphia.audits.model.Results
 import dev.morphia.audits.model.titleCase
 import dev.morphia.audits.rst.OperatorExample
@@ -34,7 +35,7 @@ class RstAuditor(val type: OperatorType) {
         val includesRoot = File(auditRoot, "source")
     }
 
-    var operatorRoot = File(auditRoot, "source/reference/operator/${type.root()}")
+    var operatorRoot = File(auditRoot, "source/reference/operator/${type.docsRoot()}")
 
     fun audit(): Results {
         val methods = findMethods(type.taglet())
@@ -141,6 +142,7 @@ class RstAuditor(val type: OperatorType) {
                 EXPRESSION -> "aggregation/expressions"
                 FILTER -> "query/filters"
                 STAGE -> "aggregation/stages"
+                UPDATE -> "query/updates"
             }
         val testFileName = "dev/morphia/test/$location/Test${name}"
         val testClassName = testFileName.replace("/", ".")
@@ -182,16 +184,12 @@ class RstAuditor(val type: OperatorType) {
                     name = "Test${operator.name.titleCase()}"
                     `package` =
                         when (operator.type) {
-                            FILTER -> "dev.morphia.test.query.filters"
                             EXPRESSION -> "dev.morphia.test.aggregation.expressions"
+                            FILTER -> "dev.morphia.test.query.filters"
                             STAGE -> "dev.morphia.test.aggregation.stages"
+                            UPDATE -> "dev.morphia.test.query.updates"
                         }
-                    superType =
-                        when (operator.type) {
-                            FILTER -> "dev.morphia.test.query.filters.FilterTest"
-                            EXPRESSION -> "dev.morphia.test.aggregation.AggregationTest"
-                            STAGE -> "dev.morphia.test.aggregation.AggregationTest"
-                        }
+                    superType = "dev.morphia.test.TemplatedTestBase"
                 }
             } else {
                 try {
