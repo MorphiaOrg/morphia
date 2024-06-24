@@ -13,9 +13,6 @@ public class TestBit extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/updates/bit/example1
-     * 
-     * db.switches.updateOne( { _id: 1 }, { $bit: { expdata: { and: Int32( 10 ) } }
-     * } )
      */
     @Test(testName = "Bitwise AND")
     public void testExample1() {
@@ -26,9 +23,6 @@ public class TestBit extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/updates/bit/example2
-     * 
-     * db.switches.updateOne( { _id: 2 }, { $bit: { expdata: { or: Int32( 5 ) } } }
-     * )
      */
     @Test(testName = "Bitwise OR")
     public void testExample2() {
@@ -39,9 +33,6 @@ public class TestBit extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/updates/bit/example3
-     * 
-     * db.switches.updateOne( { _id: 3 }, { $bit: { expdata: { xor: Int32( 5 ) } } }
-     * )
      */
     @Test(testName = "Bitwise XOR")
     public void testExample3() {

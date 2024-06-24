@@ -1,0 +1,1 @@
+{ _id: 1, sku: 'abc123', quantity: 8, metrics: { orders: 3, ratings: 3.5 }}

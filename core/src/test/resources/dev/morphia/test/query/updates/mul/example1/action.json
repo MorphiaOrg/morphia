@@ -1,0 +1,9 @@
+db.products.updateOne(
+   { _id: 1 },
+   { $mul: 
+      {
+         price: NumberDecimal( "1.25" ),
+         quantity: 2
+       }
+   }
+)
