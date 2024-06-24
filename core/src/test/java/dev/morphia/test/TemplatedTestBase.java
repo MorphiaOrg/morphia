@@ -236,9 +236,9 @@ public abstract class TemplatedTestBase extends TestBase {
 
         var resourceName = prepareDatabase(options);
 
-        Query<Document> apply = function.apply(getDs().find(EXAMPLE_TEST_COLLECTION, Document.class)
+        Query<Document> query = function.apply(getDs().find(EXAMPLE_TEST_COLLECTION, Document.class)
                 .disableValidation());
-        List<Document> actual = runUpdate(options, resourceName, apply, options.findOptions(), operators);
+        List<Document> actual = runUpdate(options, resourceName, query, options.findOptions(), operators);
 
         checkExpected(options, resourceName, actual);
     }
