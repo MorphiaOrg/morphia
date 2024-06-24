@@ -89,7 +89,9 @@ new documents in to the collection.  Other options are defined on `com.mongodb.c
 === Supported Operators
 Every effort is made to provide 100% coverage of all the operators offered by MongoDB. A select handful of operators have been excluded
 for reasons of suitability in Morphia.  In short, some operators just don't make sense in Morphia.  Below is listed all the currently
-supported operators. If an operator is missing and you think it should be included, please file an https://github.com/MorphiaOrg/morphia/issues[issue] for that operator.
+supported operators.  To see an example of an operator in action, click through to see the test cases for that operator.
+
+If an operator is missing and you think it should be included, please file an https://github.com/MorphiaOrg/morphia/issues[issue] for that operator.
 
 .Stages
 include::aggregation-stages.adoc[]
