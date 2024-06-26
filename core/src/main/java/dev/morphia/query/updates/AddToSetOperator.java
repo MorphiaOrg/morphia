@@ -18,7 +18,7 @@ import org.bson.Document;
  * @morphia.internal
  */
 @MorphiaInternal
-class AddToSetOperator extends UpdateOperator {
+public class AddToSetOperator extends UpdateOperator {
     private final boolean each;
 
     /**
