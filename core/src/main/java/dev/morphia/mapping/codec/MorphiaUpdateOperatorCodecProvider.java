@@ -9,6 +9,7 @@ import dev.morphia.MorphiaDatastore;
 import dev.morphia.mapping.codec.updates.BaseOperatorCodec;
 import dev.morphia.mapping.codec.updates.PullOperatorCodec;
 import dev.morphia.mapping.codec.updates.PushOperatorCodec;
+import dev.morphia.mapping.codec.updates.UpdateOperatorCodec;
 import dev.morphia.query.filters.Filter;
 
 import org.bson.codecs.Codec;
@@ -23,6 +24,7 @@ public class MorphiaUpdateOperatorCodecProvider implements CodecProvider {
         this.datastore = datastore;
         addCodec(new PullOperatorCodec(datastore));
         addCodec(new PushOperatorCodec(datastore));
+        addCodec(new UpdateOperatorCodec(datastore));
     }
 
     @Override
