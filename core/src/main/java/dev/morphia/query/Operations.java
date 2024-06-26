@@ -14,9 +14,12 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
+import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.updates.UpdateOperator;
 
 import org.bson.Document;
+import org.bson.codecs.Codec;
+import org.bson.codecs.EncoderContext;
 
 /**
  * @morphia.internal
@@ -77,17 +80,41 @@ public class Operations {
         ops.computeIfAbsent(operator, o -> new ArrayList<>()).add(value);
     }
 
-    //    Document toDocument(MorphiaDatastore datastore) {
-    //        return toDocument();
-    /*
-    */
-    //    }
+    /**
+     * @param datastore the datastore
+     * @return the Document form of this instance
+     */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public Document toDocument(MorphiaDatastore datastore) {
+        var document = new Document();
+        updates.forEach(update -> {
+            Document encoded = encode(datastore, update);
+            encoded.forEach((key, value) -> {
+                if (!document.containsKey(key)) {
+                    document.putAll(encoded);
+                } else {
+                    Document o = (Document) document.get(key);
+                    o.putAll((Document) encoded.get(key));
+                }
+            });
+        });
+
+        return document;
+    }
+
+    private Document encode(MorphiaDatastore datastore, UpdateOperator update) {
+        var codecRegistry = datastore.getCodecRegistry();
+        var writer = new DocumentWriter(datastore.getMapper().getConfig());
+        ((Codec) codecRegistry.get(update.getClass()))
+                .encode(writer, update, EncoderContext.builder().build());
+        return writer.getDocument();
+    }
 
     /**
      * @param datastore the datastore
      * @return the Document form of this instance
      */
-    public Document toDocument(MorphiaDatastore datastore) {
+    public Document toDocumentOld(MorphiaDatastore datastore) {
         /*
          * maybe i'll come back to the codec solution
          * DocumentWriter writer = new DocumentWriter(datastore.getMapper().getConfig());

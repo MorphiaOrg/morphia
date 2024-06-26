@@ -294,7 +294,7 @@ public final class Filters {
      * @since 3.0
      */
     public static Filter gte(Object val) {
-        return new FieldLessFilter("$gte", val);
+        return new Filter("$gte", null, val);
     }
 
     /**
@@ -307,6 +307,18 @@ public final class Filters {
      */
     public static Filter in(String field, Iterable<?> val) {
         return new Filter("$in", field, val);
+    }
+
+    /**
+     * The $in operator selects the documents where the value of a field equals any value in a given array.
+     *
+     * @param val the values to check
+     * @return the filter
+     * @query.filter $in
+     * @since 3.0
+     */
+    public static Filter in(Iterable<?> val) {
+        return new Filter("$in", null, val);
     }
 
     /**
@@ -330,7 +342,7 @@ public final class Filters {
      * @since 3.0
      */
     public static Filter lt(Object val) {
-        return new FieldLessFilter("$lt", val);
+        return new Filter("$lt", null, val);
     }
 
     /**

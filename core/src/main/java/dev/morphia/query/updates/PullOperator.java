@@ -20,9 +20,10 @@ import static dev.morphia.mapping.codec.CodecHelper.document;
  *
  * @since 2.0
  * @morphia.internal
+ * @hidden
  */
 @MorphiaInternal
-class PullOperator extends UpdateOperator {
+public class PullOperator extends UpdateOperator {
     /**
      * @param field  the field
      * @param filter the filter to apply
@@ -30,8 +31,19 @@ class PullOperator extends UpdateOperator {
      * @morphia.internal
      */
     @MorphiaInternal
-    public PullOperator(String field, Filter filter) {
+    public PullOperator(String field, Filter... filter) {
         super("$pull", field, filter);
+    }
+
+    /**
+     * @param field the field
+     * @param value the value to pull
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public PullOperator(String field, Object value) {
+        super("$pull", field, value instanceof Filter ? new Filter[] { (Filter) value } : value);
     }
 
     /**
@@ -49,7 +61,7 @@ class PullOperator extends UpdateOperator {
                 DocumentWriter writer = new DocumentWriter(datastore.getMapper().getConfig());
                 CodecRegistry registry = datastore.getCodecRegistry();
                 document(writer, () -> {
-                    Filter filter = (Filter) getValue();
+                    Object filter = getValue();
                     Codec codec = registry.get(filter.getClass());
                     codec.encode(writer, filter, EncoderContext.builder().build());
                 });

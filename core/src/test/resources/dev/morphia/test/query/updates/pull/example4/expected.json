@@ -1,0 +1,2 @@
+{ _id: 1, results: [ { item: 'A', score: 5 } ] },
+{ _id: 2, results: [ { item: 'C', score: 8 }, { item: 'B', score: 4 } ]}

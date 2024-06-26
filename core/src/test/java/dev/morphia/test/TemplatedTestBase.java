@@ -5,10 +5,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -22,6 +22,7 @@ import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.AggregationImpl;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaQuery;
+import dev.morphia.query.Operations;
 import dev.morphia.query.Query;
 import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.test.util.ActionTestOptions;
@@ -35,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
+import static dev.morphia.mapping.codec.CodecHelper.coalesce;
 import static java.lang.Character.toLowerCase;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
@@ -333,15 +335,19 @@ public abstract class TemplatedTestBase extends TestBase {
         String resourceName = format("%s/%s/action.json", prefix(), pipelineTemplate);
         Document document = ((MorphiaQuery) query).toDocument();
 
-        List<Document> action = loadAction(resourceName);
-        if (!testOptions.skipActionCheck()) {
-            assertEquals(toJson(document), toJson(action.get(0)), "Should generate the same query document");
-        }
-
         var first = operators[0];
         var others = Arrays.copyOfRange(operators, 1, operators.length);
+
+        if (!testOptions.skipActionCheck()) {
+            List<Document> action = loadAction(resourceName);
+            assertEquals(toJson(document), toJson(action.get(0)), "Should generate the same query document");
+            Operations operations = new Operations(null, coalesce(first, others), false);
+            Document updates = operations.toDocument(getDs());
+            assertEquals(toJson(updates), toJson(action.get(1)), "Should generate the same update document");
+        }
+
         if (!testOptions.skipDataCheck()) {
-            var resource = loadResource(resourceName);
+            var resource = loadResource(resourceName).stream().collect(joining());
             query.update(new UpdateOptions().multi(resource.contains("updateMany")), first, others);
             try (var cursor = query.iterator()) {
                 return cursor.toList();
@@ -403,18 +409,26 @@ public abstract class TemplatedTestBase extends TestBase {
             resource.set(resource.size() - 1, line);
         }
         List<Document> docs = new ArrayList<>();
-        Iterator<String> lines = resource.iterator();
         var current = "";
-        while (lines.hasNext()) {
-            current += lines.next();
-            if (balanced(current)) {
-                try {
-                    docs.add(Document.parse(current));
-                    current = "";
-                } catch (JsonParseException | BsonInvalidOperationException e) {
-                    throw new RuntimeException("Error parsing " + current, e);
+        try (var lines = new StringReader(String.join("", resource))) {
+            int read;
+            while ((read = lines.read()) != -1) {
+                char c = (char) read;
+                if (!List.of(',', ' ', '\n').contains(c) || !current.isEmpty()) {
+
+                    current += c;
+                    if (balanced(current)) {
+                        try {
+                            docs.add(Document.parse(current));
+                            current = "";
+                        } catch (JsonParseException | BsonInvalidOperationException e) {
+                            throw new RuntimeException("Error parsing " + current, e);
+                        }
+                    }
                 }
             }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
         return docs;

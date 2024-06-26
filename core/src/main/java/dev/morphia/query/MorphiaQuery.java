@@ -197,7 +197,7 @@ public class MorphiaQuery<T> implements Query<T> {
         Operations value = new Operations(entityModel, coalesce(first, updates), validate);
 
         return datastore.operations().findOneAndUpdate(datastore.configureCollection(options, collection),
-                toDocument(), value.toDocument(datastore), options);
+                toDocument(), value.toDocumentOld(datastore), options);
     }
 
     @MorphiaInternal
@@ -229,8 +229,21 @@ public class MorphiaQuery<T> implements Query<T> {
         }
         Class<T> entityClass = getEntityClass();
         EntityModel entityModel = !entityClass.equals(Document.class) ? mapper.getEntityModel(entityClass) : null;
-        Document updateOperations = new Operations(entityModel, coalesce(first, updates), isValidate())
-                .toDocument(datastore);
+        Operations operations = new Operations(entityModel, coalesce(first, updates), isValidate());
+        Document updateOperations = operations.toDocument(datastore);
+        /*
+         * Document updateOperations = null;
+         * try {
+         * updateOperations = operations.toDocumentOld(datastore);
+         * 
+         * JsonWriterSettings build = builder()
+         * .indent(true)
+         * .build();
+         * assert updateOperationsNew.toJson(build).equals(updateOperations.toJson(build));
+         * } catch (Exception e) {
+         * LOG.error(e.getMessage(), e);
+         * }
+         */
 
         final Document queryObject = toDocument();
         if (options.isUpsert()) {

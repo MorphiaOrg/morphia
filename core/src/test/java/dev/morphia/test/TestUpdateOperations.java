@@ -1337,7 +1337,7 @@ public class TestUpdateOperations extends TestBase {
         CodecRegistry registry = getDs().getCodecRegistry();
         Operations value = new Operations(getMapper().getEntityModel(Hotel.class), List.of(params.operator), false);
 
-        var json = value.toDocument(getDs())
+        var json = value.toDocumentOld(getDs())
                 .toJson(WRITER_SETTINGS, registry.get(Document.class));
 
         String format = format("\"%s\"", params.mappedName);

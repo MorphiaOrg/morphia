@@ -18,10 +18,14 @@ public class FieldLessFilterCodec extends BaseFilterCodec<FieldLessFilter> {
     public void encode(BsonWriter writer, FieldLessFilter filter, EncoderContext encoderContext) {
         if (filter.isNot()) {
             document(writer, "$not", () -> {
-                CodecHelper.namedValue(writer, datastore, filter.getName(), filter.getValue(datastore), encoderContext);
+                document(writer, () -> {
+                    CodecHelper.namedValue(writer, datastore, filter.getName(), filter.getValue(datastore), encoderContext);
+                });
             });
         } else {
-            CodecHelper.namedValue(writer, datastore, filter.getName(), filter.getValue(datastore), encoderContext);
+            document(writer, () -> {
+                CodecHelper.namedValue(writer, datastore, filter.getName(), filter.getValue(datastore), encoderContext);
+            });
         }
     }
 

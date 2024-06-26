@@ -1,0 +1,1 @@
+try { db.profilesBulkWrite.bulkWrite( [ { insertOne: { "document": { _id: 1, votes: [ 3, 5, 6, 7, 7, 8 ] } } }, { updateOne: { "filter": { _id: 1 }, "update": { $pull: { votes: { $gte: 6 } } } } }, { updateOne: { "filter": {_id: 1}, "update": { $pull: { votes: { $lte: 3 } } } } } ] );} catch (e) { print(e);}
