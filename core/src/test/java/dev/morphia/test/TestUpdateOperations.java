@@ -36,7 +36,6 @@ import dev.morphia.query.Operations;
 import dev.morphia.query.Query;
 import dev.morphia.query.Sort;
 import dev.morphia.query.ValidationException;
-import dev.morphia.query.filters.Filters;
 import dev.morphia.query.updates.CurrentDateOperator.TypeSpecification;
 import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.test.models.Book;
@@ -67,7 +66,6 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.stages.Set.set;
 import static dev.morphia.query.filters.Filters.eq;
-import static dev.morphia.query.filters.Filters.regex;
 import static dev.morphia.query.updates.UpdateOperators.addToSet;
 import static dev.morphia.query.updates.UpdateOperators.and;
 import static dev.morphia.query.updates.UpdateOperators.currentDate;
@@ -638,42 +636,6 @@ public class TestUpdateOperations extends TestBase {
         new PathTarget(getMapper(), DumbColl.class, "fromArray.$").translatedPath();
         new PathTarget(getMapper(), DumbColl.class, "fromArray.$[]").translatedPath();
         new PathTarget(getMapper(), DumbColl.class, "fromArray.$[element]").translatedPath();
-    }
-
-    @Test
-    public void testPull() {
-        DumbColl dumbColl = new DumbColl("ID");
-        dumbColl.fromArray = List.of(new DumbArrayElement("something"), new DumbArrayElement("something else"));
-        DumbColl dumbColl2 = new DumbColl("ID2");
-        dumbColl2.fromArray = singletonList(new DumbArrayElement("something"));
-        getDs().save(asList(dumbColl, dumbColl2));
-
-        Query<DumbColl> query = getDs().find(DumbColl.class)
-                .filter(regex("opaqueId", "ID")
-                        .caseInsensitive());
-
-        assertEquals(query.first().fromArray.size(), 2);
-        query.update(pull("fromArray", Filters.eq("name", "something else")));
-        assertEquals(query.first().fromArray.size(), 1);
-    }
-
-    @Test
-    public void testPullsWithNoData() {
-        DumbColl dumbColl = new DumbColl("ID");
-        dumbColl.fromArray = singletonList(new DumbArrayElement("something"));
-        DumbColl dumbColl2 = new DumbColl("ID2");
-        dumbColl2.fromArray = singletonList(new DumbArrayElement("something"));
-        getDs().save(asList(dumbColl, dumbColl2));
-
-        getDs().find(DumbColl.class)
-                .filter(regex("opaqueId", "ID")
-                        .caseInsensitive())
-                .update(pull("fromArray", Filters.eq("whereId", "not there")));
-
-        getDs().find(DumbColl.class)
-                .filter(regex("opaqueId", "ID")
-                        .caseInsensitive())
-                .update(pullAll("fromArray", List.of(new DumbArrayElement("something"))));
     }
 
     @Test

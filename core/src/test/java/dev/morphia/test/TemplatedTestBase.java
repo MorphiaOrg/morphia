@@ -338,13 +338,7 @@ public abstract class TemplatedTestBase extends TestBase {
         var first = operators[0];
         var others = Arrays.copyOfRange(operators, 1, operators.length);
 
-        if (!testOptions.skipActionCheck()) {
-            List<Document> action = loadAction(resourceName);
-            assertEquals(toJson(document), toJson(action.get(0)), "Should generate the same query document");
-            Operations operations = new Operations(null, coalesce(first, others), false);
-            Document updates = operations.toDocument(getDs());
-            assertEquals(toJson(updates), toJson(action.get(1)), "Should generate the same update document");
-        }
+        checkAction(testOptions, resourceName, document, first, others);
 
         if (!testOptions.skipDataCheck()) {
             var resource = loadResource(resourceName).stream().collect(joining());
@@ -354,6 +348,20 @@ public abstract class TemplatedTestBase extends TestBase {
             }
         } else {
             return emptyList();
+        }
+    }
+
+    private void checkAction(ActionTestOptions testOptions,
+            String resourceName,
+            Document document,
+            UpdateOperator first,
+            UpdateOperator[] others) {
+        if (!testOptions.skipActionCheck()) {
+            List<Document> action = loadAction(resourceName);
+            assertEquals(toJson(document), toJson(action.get(0)), "Should generate the same query document");
+            Operations operations = new Operations(null, coalesce(first, others), false);
+            Document updates = operations.toDocument(getDs());
+            assertEquals(toJson(updates), toJson(action.get(1)), "Should generate the same update document");
         }
     }
 

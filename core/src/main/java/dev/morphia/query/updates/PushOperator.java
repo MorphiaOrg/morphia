@@ -2,6 +2,8 @@ package dev.morphia.query.updates;
 
 import java.util.List;
 
+import com.mongodb.lang.Nullable;
+
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
@@ -19,9 +21,13 @@ import org.bson.Document;
  * @since 2.0
  */
 public class PushOperator extends UpdateOperator {
+    @Nullable
     private Integer position;
+    @Nullable
     private Integer slice;
+    @Nullable
     private Integer sort;
+    @Nullable
     private Document sortDocument;
 
     /**
@@ -33,6 +39,11 @@ public class PushOperator extends UpdateOperator {
     @MorphiaInternal
     PushOperator(String field, List<?> values) {
         super("$push", field, values);
+    }
+
+    @Nullable
+    public Integer position() {
+        return position;
     }
 
     /**
@@ -49,6 +60,11 @@ public class PushOperator extends UpdateOperator {
         return this;
     }
 
+    @Nullable
+    public Integer slice() {
+        return slice;
+    }
+
     /**
      * Sets the slice value for the update
      *
@@ -58,6 +74,11 @@ public class PushOperator extends UpdateOperator {
     public PushOperator slice(int slice) {
         this.slice = slice;
         return this;
+    }
+
+    @Nullable
+    public Integer sort() {
+        return sort;
     }
 
     /**
@@ -89,6 +110,11 @@ public class PushOperator extends UpdateOperator {
         }
         sortDocument.put(value.getField(), value.getOrder());
         return this;
+    }
+
+    @Nullable
+    public Document sortDocument() {
+        return sortDocument;
     }
 
     /**
