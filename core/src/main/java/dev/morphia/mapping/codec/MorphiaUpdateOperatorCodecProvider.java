@@ -8,12 +8,13 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.mapping.codec.updates.AddToSetOperatorCodec;
 import dev.morphia.mapping.codec.updates.BaseOperatorCodec;
+import dev.morphia.mapping.codec.updates.BitOperatorCodec;
 import dev.morphia.mapping.codec.updates.CurrentDateOperatorCodec;
 import dev.morphia.mapping.codec.updates.PopOperatorCodec;
 import dev.morphia.mapping.codec.updates.PullOperatorCodec;
 import dev.morphia.mapping.codec.updates.PushOperatorCodec;
 import dev.morphia.mapping.codec.updates.UpdateOperatorCodec;
-import dev.morphia.query.filters.Filter;
+import dev.morphia.query.updates.UpdateOperator;
 
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
@@ -26,6 +27,7 @@ public class MorphiaUpdateOperatorCodecProvider implements CodecProvider {
     public MorphiaUpdateOperatorCodecProvider(MorphiaDatastore datastore) {
         this.datastore = datastore;
         addCodec(new AddToSetOperatorCodec(datastore));
+        addCodec(new BitOperatorCodec(datastore));
         addCodec(new CurrentDateOperatorCodec(datastore));
         addCodec(new PopOperatorCodec(datastore));
         addCodec(new PullOperatorCodec(datastore));
@@ -39,8 +41,9 @@ public class MorphiaUpdateOperatorCodecProvider implements CodecProvider {
     public <T> Codec<T> get(Class<T> clazz, CodecRegistry registry) {
         Codec<T> codec = (Codec<T>) codecs.get(clazz);
 
-        if (codec == null && Filter.class.isAssignableFrom(clazz)) {
-            throw new UnsupportedOperationException(clazz.getName() + " needs a codec");
+        if (codec == null && UpdateOperator.class.isAssignableFrom(clazz)) {
+            //            throw new UnsupportedOperationException(clazz.getName() + " needs a codec");
+            return (Codec<T>) codecs.get(UpdateOperator.class);
         }
         return codec;
     }

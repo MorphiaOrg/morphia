@@ -8,12 +8,21 @@ import dev.morphia.query.OperationTarget;
 
 import org.bson.Document;
 
-class BitOperator extends UpdateOperator {
+/**
+ * @hidden
+ * @morphia.internal
+ */
+@MorphiaInternal
+public class BitOperator extends UpdateOperator {
     private final String operation;
 
     BitOperator(String operation, String field, int value) {
         super("$bit", field, value);
         this.operation = operation;
+    }
+
+    public String operation() {
+        return operation;
     }
 
     /**

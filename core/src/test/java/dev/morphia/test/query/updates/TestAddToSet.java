@@ -1,5 +1,7 @@
 package dev.morphia.test.query.updates;
 
+import java.util.List;
+
 import dev.morphia.test.TemplatedTestBase;
 
 import org.testng.annotations.Test;
@@ -26,7 +28,9 @@ public class TestAddToSet extends TemplatedTestBase {
      */
     @Test(testName = "Value Already Exists")
     public void testExample2() {
-        testUpdate((query) -> query.filter());
+        testUpdate((query) -> query.filter(
+                eq("_id", 1)),
+                addToSet("tags", "camera"));
     }
 
     /**
@@ -37,6 +41,8 @@ public class TestAddToSet extends TemplatedTestBase {
      */
     @Test(testName = "``$each`` Modifier")
     public void testExample3() {
-        testUpdate((query) -> query.filter());
+        testUpdate((query) -> query.filter(
+                eq("_id", 2)),
+                addToSet("tags", List.of("camera", "electronics", "accessories")));
     }
 }
