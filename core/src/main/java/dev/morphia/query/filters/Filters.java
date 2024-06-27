@@ -262,6 +262,17 @@ public final class Filters {
     }
 
     /**
+     * $gt selects those documents where the value is greater than the specified value.
+     *
+     * @param val the value to check
+     * @return the filter
+     * @query.filter $gt
+     */
+    public static Filter gt(Object val) {
+        return new Filter("$gt", null, val);
+    }
+
+    /**
      * $gt selects those documents where the value of the field is greater than the specified value.
      *
      * @param field the field to check
@@ -355,6 +366,17 @@ public final class Filters {
      */
     public static Filter lt(String field, Object val) {
         return new Filter("$lt", field, val);
+    }
+
+    /**
+     * $lte selects the documents where the value is less than or equal to the specified value.
+     *
+     * @param val the value to check
+     * @return the filter
+     * @query.filter $lte
+     */
+    public static Filter lte(Object val) {
+        return new Filter("$lte", null, val);
     }
 
     /**

@@ -8,6 +8,8 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.mapping.codec.updates.AddToSetOperatorCodec;
 import dev.morphia.mapping.codec.updates.BaseOperatorCodec;
+import dev.morphia.mapping.codec.updates.CurrentDateOperatorCodec;
+import dev.morphia.mapping.codec.updates.PopOperatorCodec;
 import dev.morphia.mapping.codec.updates.PullOperatorCodec;
 import dev.morphia.mapping.codec.updates.PushOperatorCodec;
 import dev.morphia.mapping.codec.updates.UpdateOperatorCodec;
@@ -24,6 +26,8 @@ public class MorphiaUpdateOperatorCodecProvider implements CodecProvider {
     public MorphiaUpdateOperatorCodecProvider(MorphiaDatastore datastore) {
         this.datastore = datastore;
         addCodec(new AddToSetOperatorCodec(datastore));
+        addCodec(new CurrentDateOperatorCodec(datastore));
+        addCodec(new PopOperatorCodec(datastore));
         addCodec(new PullOperatorCodec(datastore));
         addCodec(new PushOperatorCodec(datastore));
         addCodec(new UpdateOperatorCodec(datastore));

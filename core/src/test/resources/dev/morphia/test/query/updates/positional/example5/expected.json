@@ -1,0 +1,1 @@
+{ "_id" : 1, "grades" : [ { "type" : "quiz", "questions" : [ 12, 10, 5 ] }, { "type" : "quiz", "questions" : [ 10, 11, 6 ] }, { "type" : "hw", "questions" : [ 5, 4, 3 ] }, { "type" : "exam", "questions" : [ 25, 10, 23, 0 ] } ]}

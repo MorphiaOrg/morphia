@@ -10,7 +10,6 @@ import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.OperationTarget;
 import dev.morphia.query.Sort;
-import dev.morphia.query.UpdateException;
 import dev.morphia.sofia.Sofia;
 
 import org.bson.Document;
@@ -53,9 +52,6 @@ public class PushOperator extends UpdateOperator {
      * @return this
      */
     public PushOperator position(int position) {
-        if (position < 0) {
-            throw new UpdateException("The position must be at least 0.");
-        }
         this.position = position;
         return this;
     }

@@ -14,7 +14,7 @@ import org.bson.Document;
  * @since 2.0
  */
 public class CurrentDateOperator extends UpdateOperator {
-    private TypeSpecification typeSpec = TypeSpecification.DATE;
+    private TypeSpecification type = TypeSpecification.DATE;
 
     /**
      * Creates an operator for a field
@@ -37,7 +37,7 @@ public class CurrentDateOperator extends UpdateOperator {
     public OperationTarget toOperationTarget(MorphiaDatastore datastore, EntityModel model, boolean validate) {
         var pathTarget = new PathTarget(datastore.getMapper(), model, field(), validate);
 
-        return new OperationTarget(pathTarget, typeSpec.toTarget());
+        return new OperationTarget(pathTarget, type.toTarget());
     }
 
     /**
@@ -47,8 +47,17 @@ public class CurrentDateOperator extends UpdateOperator {
      * @return this
      */
     public CurrentDateOperator type(TypeSpecification type) {
-        this.typeSpec = type;
+        this.type = type;
         return this;
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public TypeSpecification type() {
+        return type;
     }
 
     /**

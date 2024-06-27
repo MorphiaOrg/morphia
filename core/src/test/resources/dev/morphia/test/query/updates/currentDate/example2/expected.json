@@ -1,0 +1,1 @@
+{ "_id" : 1, "status" : "D", "lastModified" : ISODate("2020-01-22T21:02:18.994Z"), "cancellation" : { "date" : Timestamp(1579726934, 2), "reason" : "user request" }}

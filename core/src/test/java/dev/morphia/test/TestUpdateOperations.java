@@ -36,7 +36,6 @@ import dev.morphia.query.Operations;
 import dev.morphia.query.Query;
 import dev.morphia.query.Sort;
 import dev.morphia.query.ValidationException;
-import dev.morphia.query.updates.CurrentDateOperator.TypeSpecification;
 import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.test.models.Book;
 import dev.morphia.test.models.Circle;
@@ -53,7 +52,6 @@ import dev.morphia.test.query.TestQuery.CappedPic;
 import dev.morphia.test.query.TestQuery.ContainsPic;
 import dev.morphia.test.query.TestQuery.Pic;
 
-import org.bson.BsonTimestamp;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.json.JsonWriterSettings;
@@ -288,28 +286,6 @@ public class TestUpdateOperations extends TestBase {
                 .first();
 
         assertEquals(first.val, 8);
-    }
-
-    @Test
-    public void testCurrentDate() {
-        getDs().save(new DumbColl("currentDate"));
-
-        getDs().find(DumbColl.class)
-                .update(currentDate("localDateTime"));
-
-        Document document = getDatabase().getCollection(getDs().getCollection(DumbColl.class).getNamespace().getCollectionName())
-                .find()
-                .first();
-        assertNotNull(document.getDate("localDateTime"));
-
-        getDs().find(DumbColl.class)
-                .update(currentDate("localDateTime")
-                        .type(TypeSpecification.TIMESTAMP));
-
-        document = getDatabase().getCollection(getDs().getCollection(DumbColl.class).getNamespace().getCollectionName())
-                .find()
-                .first();
-        assertTrue(document.get("localDateTime") instanceof BsonTimestamp);
     }
 
     @Test

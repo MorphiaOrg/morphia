@@ -1,0 +1,1 @@
+{ _id: 5, grades: [ { grade: 80, mean: 75, std: 8 }, { grade: 85, mean: 90, std: 6 }, { grade: 90, mean: 85, std: 3 } ]}
