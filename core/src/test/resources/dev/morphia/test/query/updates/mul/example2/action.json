@@ -1,4 +1,4 @@
 db.products.updateOne(
    { _id: 2 },
-   { $mul: { price: 100 } }
+   { $mul: { price: 100.0 } }
 )

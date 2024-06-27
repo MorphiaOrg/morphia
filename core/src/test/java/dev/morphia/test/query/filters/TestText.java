@@ -14,7 +14,7 @@ public class TestText extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/text/example1
      */
-    @Test(testName = "Search for a Single Word")
+    @Test(testName = "``$text`` with a Single Word")
     public void testExample1() {
         testQuery((query) -> query.filter(text("coffee")));
     }
@@ -22,7 +22,7 @@ public class TestText extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/text/example2
      */
-    @Test(testName = "Match Any of the Search Terms")
+    @Test(testName = "Match Any of the ``$search`` Terms")
     public void testExample2() {
         testQuery(new ActionTestOptions().orderMatters(false), (query) -> query.filter(text("bake coffee cake")
 
@@ -32,7 +32,7 @@ public class TestText extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/text/example3
      */
-    @Test(testName = "Search for a Phrase")
+    @Test(testName = "``$text`` with a Phrase")
     public void testExample3() {
         testQuery(new ActionTestOptions().orderMatters(false), (query) -> query.filter(text("\"coffee shop\"")
 
@@ -52,7 +52,7 @@ public class TestText extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/text/example5
      */
-    @Test(testName = "Search a Different Language")
+    @Test(testName = "Query a Different Language")
     public void testExample5() {
         testQuery(new ActionTestOptions().orderMatters(false), (query) -> query.filter(text("leche").language("es")));
     }
@@ -60,7 +60,7 @@ public class TestText extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/text/example6
      */
-    @Test(testName = "Case and Diacritic Insensitive Search")
+    @Test(testName = "Case and Diacritic Insensitivity")
     public void testExample6() {
         testQuery(new ActionTestOptions().orderMatters(false), (query) -> query.filter(text("сы́рники CAFÉS")));
     }
@@ -68,7 +68,7 @@ public class TestText extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/text/example7
      */
-    @Test(testName = "Perform Case Sensitive Search")
+    @Test(testName = "Case Sensitivity")
     public void testExample7() {
         testQuery((query) -> query.filter(text("Coffee").caseSensitive(true)));
     }
@@ -85,7 +85,7 @@ public class TestText extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/text/example9
      */
-    @Test(testName = "Text Search Score Examples")
+    @Test(testName = "Relevance Score Examples")
     public void testExample9() {
         ActionTestOptions options = new ActionTestOptions()
                 .findOptions(new FindOptions().projection().project(textScore("score")));

@@ -19,8 +19,7 @@ public class TestPull extends TemplatedTestBase {
      */
     @Test(testName = "Remove All Items That Equal a Specified Value")
     public void testExample1() {
-        testUpdate((query) -> query.filter(),
-                pull("fruits", in(List.of("apples", "oranges"))),
+        testUpdate((query) -> query.filter(), pull("fruits", in(List.of("apples", "oranges"))),
                 pull("vegetables", "carrots"));
     }
 
@@ -29,9 +28,7 @@ public class TestPull extends TemplatedTestBase {
      */
     @Test(testName = "Remove All Items That Match a Specified ``$pull`` Condition")
     public void testExample2() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 1)),
-                pull("votes", gte(6)));
+        testUpdate((query) -> query.filter(eq("_id", 1)), pull("votes", gte(6)));
     }
 
     /**
@@ -47,8 +44,7 @@ public class TestPull extends TemplatedTestBase {
      */
     @Test(testName = "Remove Items from an Array of Documents")
     public void testExample4() {
-        testUpdate((query) -> query.filter(),
-                pull("results", eq("score", 8), eq("item", "B")));
+        testUpdate((query) -> query.filter(), pull("results", eq("score", 8), eq("item", "B")));
     }
 
     /**
@@ -56,8 +52,6 @@ public class TestPull extends TemplatedTestBase {
      */
     @Test(testName = "Remove Documents from Nested Arrays")
     public void testExample5() {
-        testUpdate((query) -> query.filter(),
-                pull("results", elemMatch("answers", eq("q", 2),
-                        gte("a", 8))));
+        testUpdate((query) -> query.filter(), pull("results", elemMatch("answers", eq("q", 2), gte("a", 8))));
     }
 }

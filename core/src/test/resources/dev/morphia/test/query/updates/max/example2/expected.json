@@ -1,1 +1,1 @@
-{ _id: 1, desc: "decorative arts", dateEntered: ISODate("2013-10-01T05:00:00Z"), dateExpired: ISODate("2013-10-01T16:38:16.163Z")}
+{ _id: 1, desc: "crafts", dateEntered: ISODate("2013-10-01T05:00:00Z"), dateExpired: ISODate("2013-10-01T16:38:16.163Z") }

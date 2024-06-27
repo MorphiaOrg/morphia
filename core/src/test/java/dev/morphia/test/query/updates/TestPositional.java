@@ -18,10 +18,7 @@ public class TestPositional extends TemplatedTestBase {
      */
     @Test(testName = "Update Values in an Array")
     public void testExample1() {
-        testUpdate(new ActionTestOptions().skipDataCheck(true),
-                (query) -> query.filter(
-                        eq("_id", 1),
-                        eq("grades", 80)),
+        testUpdate(new ActionTestOptions().skipDataCheck(true), (query) -> query.filter(eq("_id", 1), eq("grades", 80)),
                 set("grades.$", 82));
     }
 
@@ -30,10 +27,7 @@ public class TestPositional extends TemplatedTestBase {
      */
     @Test(testName = "Update Documents in an Array")
     public void testExample2() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 4),
-                eq("grades.grade", 85)),
-                set("grades.$.std", 6));
+        testUpdate((query) -> query.filter(eq("_id", 4), eq("grades.grade", 85)), set("grades.$.std", 6));
     }
 
     /**
@@ -41,9 +35,7 @@ public class TestPositional extends TemplatedTestBase {
      */
     @Test(testName = "Update Embedded Documents Using Multiple Field Matches")
     public void testExample3() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 5),
-                elemMatch("grades", lte("grade", 90), gt("mean", 80))),
+        testUpdate((query) -> query.filter(eq("_id", 5), elemMatch("grades", lte("grade", 90), gt("mean", 80))),
                 set("grades.$.std", 6));
     }
 
@@ -52,10 +44,7 @@ public class TestPositional extends TemplatedTestBase {
      */
     @Test(testName = "Update with Multiple Array Matches")
     public void testExample4() {
-        testUpdate((query) -> query.filter(
-                eq("activity_ids", 1),
-                eq("grades", 95),
-                eq("deans_list", 2021)),
+        testUpdate((query) -> query.filter(eq("activity_ids", 1), eq("grades", 95), eq("deans_list", 2021)),
                 set("deans_list.$", 2022));
     }
 

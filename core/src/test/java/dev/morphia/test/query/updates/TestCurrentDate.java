@@ -17,14 +17,9 @@ public class TestCurrentDate extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testUpdate(new ActionTestOptions().skipDataCheck(true),
-                (query) -> query.filter(
-                        eq("_id", 1)),
-                currentDate("lastModified"),
-                currentDate("cancellation.date")
-                        .type(TypeSpecification.TIMESTAMP),
-                set("cancellation.reason", "user request"),
-                set("status", "D"));
+        testUpdate(new ActionTestOptions().skipDataCheck(true), (query) -> query.filter(eq("_id", 1)),
+                currentDate("lastModified"), currentDate("cancellation.date").type(TypeSpecification.TIMESTAMP),
+                set("cancellation.reason", "user request"), set("status", "D"));
     }
 
     /**
@@ -32,6 +27,7 @@ public class TestCurrentDate extends TemplatedTestBase {
      */
     @Test(testName = "Aggregation Alternative to ``$currentDate``")
     public void testExample2() {
-        // this one isn't an operator test as such and updates with a pipeline are tested elsewhere
+        // this one isn't an operator test as such and updates with a pipeline are
+        // tested elsewhere
     }
 }

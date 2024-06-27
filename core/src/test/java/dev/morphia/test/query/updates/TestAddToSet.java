@@ -16,9 +16,7 @@ public class TestAddToSet extends TemplatedTestBase {
      */
     @Test(testName = "Add to Array")
     public void testExample1() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 1)),
-                addToSet("tags", "accessories"));
+        testUpdate((query) -> query.filter(eq("_id", 1)), addToSet("tags", "accessories"));
     }
 
     /**

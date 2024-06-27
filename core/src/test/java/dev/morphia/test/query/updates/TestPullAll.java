@@ -16,8 +16,6 @@ public class TestPullAll extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 1)),
-                pullAll("scores", List.of(0, 5)));
+        testUpdate((query) -> query.filter(eq("_id", 1)), pullAll("scores", List.of(0, 5)));
     }
 }

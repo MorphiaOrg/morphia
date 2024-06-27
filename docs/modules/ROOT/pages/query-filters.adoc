@@ -90,7 +90,8 @@ link:javadoc/dev/morphia/query/filters/Filters.html#geoWithin(java.lang.String,c
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/gt[$gt]
-| link:javadoc/dev/morphia/query/filters/Filters.html#gt(java.lang.String,java.lang.Object)[Filters#gt(String,Object)]
+a| link:javadoc/dev/morphia/query/filters/Filters.html#gt(java.lang.Object)[Filters#gt(Object)] +
+link:javadoc/dev/morphia/query/filters/Filters.html#gt(java.lang.String,java.lang.Object)[Filters#gt(String,Object)]
 | https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestGt.java[dev.morphia.test.query.filters.TestGt]
 
 
@@ -101,7 +102,8 @@ link:javadoc/dev/morphia/query/filters/Filters.html#gte(java.lang.Object)[Filter
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/in[$in]
-| link:javadoc/dev/morphia/query/filters/Filters.html#in(java.lang.String,java.lang.Iterable)[Filters#in(String,Iterable)]
+a| link:javadoc/dev/morphia/query/filters/Filters.html#in(java.lang.String,java.lang.Iterable)[Filters#in(String,Iterable)] +
+link:javadoc/dev/morphia/query/filters/Filters.html#in(java.lang.Iterable)[Filters#in(Iterable)]
 | https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestIn.java[dev.morphia.test.query.filters.TestIn]
 
 
@@ -117,7 +119,8 @@ link:javadoc/dev/morphia/query/filters/Filters.html#lt(java.lang.String,java.lan
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/lte[$lte]
-| link:javadoc/dev/morphia/query/filters/Filters.html#lte(java.lang.String,java.lang.Object)[Filters#lte(String,Object)]
+a| link:javadoc/dev/morphia/query/filters/Filters.html#lte(java.lang.Object)[Filters#lte(Object)] +
+link:javadoc/dev/morphia/query/filters/Filters.html#lte(java.lang.String,java.lang.Object)[Filters#lte(String,Object)]
 | https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestLte.java[dev.morphia.test.query.filters.TestLte]
 
 

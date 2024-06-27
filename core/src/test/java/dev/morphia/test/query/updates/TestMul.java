@@ -14,10 +14,7 @@ public class TestMul extends TemplatedTestBase {
      */
     @Test(testName = "Multiply the Value of a Field")
     public void testExample1() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 1)),
-                mul("price", 1.25),
-                mul("quantity", 2));
+        testUpdate((query) -> query.filter(eq("_id", 1)), mul("price", 1.25), mul("quantity", 2));
     }
 
     /**
@@ -25,9 +22,7 @@ public class TestMul extends TemplatedTestBase {
      */
     @Test(testName = "Apply ``$mul`` Operator to a Non-existing Field")
     public void testExample2() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 2)),
-                mul("price", 100.0));
+        testUpdate((query) -> query.filter(eq("_id", 2)), mul("price", 100.0));
     }
 
     /**
@@ -35,8 +30,6 @@ public class TestMul extends TemplatedTestBase {
      */
     @Test(testName = "Multiply Mixed Numeric Types")
     public void testExample3() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 3)),
-                mul("price", 5));
+        testUpdate((query) -> query.filter(eq("_id", 3)), mul("price", 5));
     }
 }

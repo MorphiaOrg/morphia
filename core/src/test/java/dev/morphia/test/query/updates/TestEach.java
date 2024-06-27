@@ -17,21 +17,15 @@ public class TestEach extends TemplatedTestBase {
      */
     @Test(testName = "Use ``$each``  with ``$push`` Operator")
     public void testExample1() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 1)),
-                push("scores", List.of(90, 92, 85)));
+        testUpdate((query) -> query.filter(eq("_id", 1)), push("scores", List.of(90, 92, 85)));
     }
 
     /**
      * test data: dev/morphia/test/query/updates/each/example2
-     * 
-     * db.inventory.updateOne( { _id: 2 }, { $addToSet: { tags: { $each: [ "camera",
-     * "electronics", "accessories" ] } } } )
      */
     @Test(testName = "Use ``$each``  with ``$addToSet`` Operator")
     public void testExample2() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 2)),
-                addToSet("tags", List.of("electronics", "supplies", "camera", "accessories")));
+        testUpdate((query) -> query.filter(eq("_id", 2)),
+                addToSet("tags", List.of("camera", "electronics", "accessories")));
     }
 }

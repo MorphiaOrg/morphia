@@ -19,9 +19,7 @@ public class TestPush extends TemplatedTestBase {
      */
     @Test(testName = "Append a Value to an Array")
     public void testExample1() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 1)),
-                push("scores", 89));
+        testUpdate((query) -> query.filter(eq("_id", 1)), push("scores", 89));
     }
 
     /**
@@ -30,8 +28,7 @@ public class TestPush extends TemplatedTestBase {
     @Test(testName = "Append a Value to Arrays in Multiple Documents")
     public void testExample2() {
         UpdateOptions updateOptions = new UpdateOptions().multi(true);
-        testUpdate((query) -> query.filter(),
-                push("scores", 95));
+        testUpdate((query) -> query.filter(), push("scores", 95));
     }
 
     /**
@@ -39,9 +36,7 @@ public class TestPush extends TemplatedTestBase {
      */
     @Test(testName = "Append Multiple Values to an Array")
     public void testExample3() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 1)),
-                push("scores", List.of(90, 92, 85)));
+        testUpdate((query) -> query.filter(eq("_id", 1)), push("scores", List.of(90, 92, 85)));
     }
 
     /**
@@ -49,13 +44,8 @@ public class TestPush extends TemplatedTestBase {
      */
     @Test(testName = "Use ``$push`` Operator with Multiple Modifiers")
     public void testExample4() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 5)),
-                push("quizzes", List.of(
-                        document("wk", 5).field("score", 8),
-                        document("wk", 6).field("score", 7),
-                        document("wk", 7).field("score", 6)))
-                        .sort(descending("score"))
-                        .slice(3));
+        testUpdate((query) -> query.filter(eq("_id", 5)),
+                push("quizzes", List.of(document("wk", 5).field("score", 8), document("wk", 6).field("score", 7),
+                        document("wk", 7).field("score", 6))).sort(descending("score")).slice(3));
     }
 }

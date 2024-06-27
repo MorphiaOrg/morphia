@@ -19,10 +19,7 @@ public class TestPosition extends TemplatedTestBase {
      */
     @Test(testName = "Add Elements at the Start of the Array")
     public void testExample1() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 1)),
-                push("scores", List.of(50, 60, 70))
-                        .position(0));
+        testUpdate((query) -> query.filter(eq("_id", 1)), push("scores", List.of(50, 60, 70)).position(0));
     }
 
     /**
@@ -33,10 +30,7 @@ public class TestPosition extends TemplatedTestBase {
      */
     @Test(testName = "Add Elements to the Middle of the Array")
     public void testExample2() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 2)),
-                push("scores", List.of(20, 30))
-                        .position(2));
+        testUpdate((query) -> query.filter(eq("_id", 2)), push("scores", List.of(20, 30)).position(2));
     }
 
     /**
@@ -47,9 +41,6 @@ public class TestPosition extends TemplatedTestBase {
      */
     @Test(testName = "Use a Negative Array Index (Position) to Add Elements to the Array")
     public void testExample3() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 3)),
-                push("scores", List.of(90, 80))
-                        .position(-2));
+        testUpdate((query) -> query.filter(eq("_id", 3)), push("scores", List.of(90, 80)).position(-2));
     }
 }

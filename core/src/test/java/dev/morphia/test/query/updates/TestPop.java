@@ -14,9 +14,7 @@ public class TestPop extends TemplatedTestBase {
      */
     @Test(testName = "Remove the First Item of an Array")
     public void testExample1() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 1)),
-                pop("scores").removeFirst());
+        testUpdate((query) -> query.filter(eq("_id", 1)), pop("scores").removeFirst());
     }
 
     /**
@@ -26,8 +24,6 @@ public class TestPop extends TemplatedTestBase {
      */
     @Test(testName = "Remove the Last Item of an Array")
     public void testExample2() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 10)),
-                pop("scores"));
+        testUpdate((query) -> query.filter(eq("_id", 10)), pop("scores"));
     }
 }

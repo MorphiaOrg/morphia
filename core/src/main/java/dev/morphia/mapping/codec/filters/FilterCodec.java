@@ -28,15 +28,13 @@ public class FilterCodec extends BaseFilterCodec<Filter> {
                 }
             });
         } else {
-            document(writer, () -> {
-                if (filter.isNot()) {
-                    document(writer, "$not", () -> {
-                        CodecHelper.namedValue(writer, datastore, filter.getName(), filter.getValue(datastore), encoderContext);
-                    });
-                } else {
+            if (filter.isNot()) {
+                document(writer, "$not", () -> {
                     CodecHelper.namedValue(writer, datastore, filter.getName(), filter.getValue(datastore), encoderContext);
-                }
-            });
+                });
+            } else {
+                CodecHelper.namedValue(writer, datastore, filter.getName(), filter.getValue(datastore), encoderContext);
+            }
         }
     }
 
