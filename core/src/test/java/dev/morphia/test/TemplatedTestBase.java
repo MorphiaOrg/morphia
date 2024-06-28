@@ -17,7 +17,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.UpdateOptions;
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.AggregationImpl;
 import dev.morphia.query.FindOptions;
@@ -343,7 +342,7 @@ public abstract class TemplatedTestBase extends TestBase {
 
         if (!testOptions.skipDataCheck()) {
             var resource = loadResource(resourceName).stream().collect(joining());
-            query.update(new UpdateOptions().multi(resource.contains("updateMany")), first, others);
+            query.update(testOptions.updateOptions().multi(resource.contains("updateMany")), first, others);
             try (var cursor = query.iterator()) {
                 return cursor.toList();
             }

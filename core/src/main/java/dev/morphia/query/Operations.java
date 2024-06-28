@@ -9,6 +9,7 @@ import java.util.StringJoiner;
 
 import com.mongodb.lang.Nullable;
 
+import dev.morphia.EntityAware;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
@@ -41,6 +42,10 @@ public class Operations {
     public Operations(@Nullable EntityModel model, List<UpdateOperator> updates, boolean validate) {
         this.model = model;
         this.updates = updates;
+        this.updates
+                .stream()
+                .filter(f -> f instanceof EntityAware)
+                .forEach(ea -> ((EntityAware) ea).entityModel(model));
         this.validate = validate;
     }
 

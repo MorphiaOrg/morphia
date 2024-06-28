@@ -371,8 +371,8 @@ public final class UpdateOperators {
      * @return the update operator
      * @update.operator $unset
      */
-    public static UpdateOperator unset(String field) {
-        return new UnsetOperator(field);
+    public static UpdateOperator unset(String field, String... others) {
+        return new UnsetOperator(field, others);
     }
 
     /**

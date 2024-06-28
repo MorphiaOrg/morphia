@@ -1,13 +1,14 @@
 package dev.morphia.test.query.updates;
 
 import java.util.List;
+import java.util.Map;
 
 import dev.morphia.query.filters.Filters;
 import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.Expressions.document;
 import static dev.morphia.query.updates.UpdateOperators.set;
 
 public class TestSet extends TemplatedTestBase {
@@ -17,11 +18,14 @@ public class TestSet extends TemplatedTestBase {
      */
     @Test(testName = "Set Top-Level Fields")
     public void testExample1() {
-        testUpdate((query) -> query.filter(
-                Filters.eq("_id", 100)),
+        // skip the action check because the Map order varies
+        testUpdate(new ActionTestOptions().skipActionCheck(true),
+                (query) -> query.filter(
+                        Filters.eq("_id", 100)),
                 set("quantity", 500),
-                set("details", document("model", "2600")
-                        .field("make", "Fashionaires")),
+                set("details", Map.of(
+                        "make", "Fashionaires",
+                        "model", "2600")),
                 set("tags", List.of("coats", "outerwear", "clothing")));
     }
 

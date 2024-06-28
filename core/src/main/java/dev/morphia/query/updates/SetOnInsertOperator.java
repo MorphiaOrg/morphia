@@ -3,6 +3,9 @@ package dev.morphia.query.updates;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.mongodb.lang.Nullable;
+
+import dev.morphia.EntityAware;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
@@ -18,11 +21,15 @@ import static dev.morphia.mapping.codec.CodecHelper.document;
 
 /**
  * @morphia.internal
+ * @hidden
  * @since 2.0
  */
 @MorphiaInternal
-class SetOnInsertOperator extends UpdateOperator {
+public class SetOnInsertOperator extends UpdateOperator implements EntityAware {
     private final Map<String, Object> insertValues;
+
+    @Nullable
+    private EntityModel model;
 
     /**
      * @param values the values
@@ -33,6 +40,32 @@ class SetOnInsertOperator extends UpdateOperator {
     public SetOnInsertOperator(Map<String, Object> values) {
         super("$setOnInsert", "unused", "unused");
         insertValues = new LinkedHashMap<>(values);
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @Nullable
+    @MorphiaInternal
+    public EntityModel model() {
+        return model;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends EntityAware> T entityModel(@Nullable EntityModel model) {
+        this.model = model;
+        return (T) this;
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public Map<String, Object> insertValues() {
+        return insertValues;
     }
 
     /**

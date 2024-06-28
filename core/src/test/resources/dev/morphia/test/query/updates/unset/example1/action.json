@@ -1,0 +1,4 @@
+db.products.updateOne(
+   { sku: "unknown" },
+   { $unset: { quantity: "", instock: "" } }
+)

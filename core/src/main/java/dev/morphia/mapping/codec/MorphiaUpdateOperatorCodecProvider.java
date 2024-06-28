@@ -13,6 +13,7 @@ import dev.morphia.mapping.codec.updates.CurrentDateOperatorCodec;
 import dev.morphia.mapping.codec.updates.PopOperatorCodec;
 import dev.morphia.mapping.codec.updates.PullOperatorCodec;
 import dev.morphia.mapping.codec.updates.PushOperatorCodec;
+import dev.morphia.mapping.codec.updates.SetOnInsertOperatorCodec;
 import dev.morphia.mapping.codec.updates.UpdateOperatorCodec;
 import dev.morphia.query.updates.UpdateOperator;
 
@@ -32,7 +33,9 @@ public class MorphiaUpdateOperatorCodecProvider implements CodecProvider {
         addCodec(new PopOperatorCodec(datastore));
         addCodec(new PullOperatorCodec(datastore));
         addCodec(new PushOperatorCodec(datastore));
+        addCodec(new SetOnInsertOperatorCodec(datastore));
         addCodec(new UpdateOperatorCodec(datastore));
+        addCodec(new UnsetOperatorCodec(datastore));
     }
 
     @Override

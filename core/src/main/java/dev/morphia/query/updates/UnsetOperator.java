@@ -8,20 +8,24 @@ import dev.morphia.query.OperationTarget;
 
 import org.bson.Document;
 
+import static dev.morphia.mapping.codec.CodecHelper.coalesce;
+
 /**
+ * @hidden
  * @morphia.internal
  * @since 2.0
  */
 @MorphiaInternal
-class UnsetOperator extends UpdateOperator {
+public class UnsetOperator extends UpdateOperator {
     /**
-     * @param field the field
+     * @param field  the first field
+     * @param others any other fields
      * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
-    public UnsetOperator(String field) {
-        super("$unset", field, "unused");
+    public UnsetOperator(String field, String[] others) {
+        super("$unset", "", coalesce(field, others));
     }
 
     /**
