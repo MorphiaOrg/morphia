@@ -1,0 +1,1 @@
+{ _id: 100, quantity: 500, instock: true, reorder: false, details: { model: '2600', make: 'Fashionaires' }, tags: [ 'coats', 'outerwear', 'clothing' ], ratings: [ { by: 'Customer007', rating: 4 } ]}

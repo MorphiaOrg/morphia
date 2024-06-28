@@ -1,0 +1,4 @@
+db.products.updateOne(
+   { _id: 100 },
+   { $set: { "details.make": "Kustom Kidz" } }
+)

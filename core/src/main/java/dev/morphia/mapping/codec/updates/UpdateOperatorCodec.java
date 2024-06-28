@@ -1,6 +1,7 @@
 package dev.morphia.mapping.codec.updates;
 
 import dev.morphia.MorphiaDatastore;
+import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.query.updates.UpdateOperator;
 
@@ -21,7 +22,9 @@ public class UpdateOperatorCodec extends BaseOperatorCodec<UpdateOperator> {
         document(writer, () -> {
             document(writer, operator.operator(), () -> {
                 Object value = operator.value();
-                if (value instanceof Expression) {
+                if (value instanceof DocumentExpression) {
+                    namedValue(writer, datastore, operator.field(), value, encoderContext);
+                } else if (value instanceof Expression) {
                     document(writer, operator.field(), () -> {
                         unnamedValue(writer, datastore, value, encoderContext);
                     });
