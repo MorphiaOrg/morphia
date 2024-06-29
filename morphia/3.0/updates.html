@@ -158,7 +158,7 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Morphia</span>
-    <span class="version">3.0-SNAPSHOT</span>
+    <span class="version">3.0</span>
   </div>
   <ul class="components">
     <li class="component">
@@ -183,10 +183,10 @@
     <li class="component is-current">
       <span class="title">Morphia</span>
       <ul class="versions">
-        <li class="version is-current">
-          <a href="index.html">3.0-SNAPSHOT</a>
+        <li class="version is-current is-latest">
+          <a href="index.html">3.0</a>
         </li>
-        <li class="version is-latest">
+        <li class="version">
           <a href="../2.4/index.html">2.4</a>
         </li>
         <li class="version">
@@ -220,9 +220,9 @@
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">3.0-SNAPSHOT</button>
+  <button class="version-menu-toggle" title="Show other versions of page">3.0</button>
   <div class="version-menu">
-    <a class="version is-current" href="updates.html">3.0-SNAPSHOT</a>
+    <a class="version is-current" href="updates.html">3.0</a>
     <a class="version" href="../2.4/updates.html">2.4</a>
     <a class="version" href="../2.3/updates.html">2.3</a>
     <a class="version" href="../2.2/updates.html">2.2</a>
@@ -437,13 +437,117 @@ operators. To see an example of an operator in action, click through to see the 
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://docs.mongodb.org/manual/reference/operator/query/addToSet">$addToSet</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#addToSet(java.lang.String,java.lang.Object)">UpdateOperators#addToSet(String,Object)</a><br>
+<a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#addToSet(java.lang.String,java.util.List)">UpdateOperators#addToSet(String,List)</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/updates/TestAddToSet.java">dev.morphia.test.query.updates.TestAddToSet</a></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://docs.mongodb.org/manual/reference/operator/query/bit">$bit</a></p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#and(java.lang.String,int)">UpdateOperators#and(String,int)</a><br>
+<a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#bit(java.lang.String,java.lang.Number)">UpdateOperators#bit(String,Number)</a><br>
 <a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#or(java.lang.String,int)">UpdateOperators#or(String,int)</a><br>
 <a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#xor(java.lang.String,int)">UpdateOperators#xor(String,int)</a></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/updates/TestBit.java">dev.morphia.test.query.updates.TestBit</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://docs.mongodb.org/manual/reference/operator/query/currentDate">$currentDate</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#currentDate(java.lang.String)">UpdateOperators#currentDate(String)</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/updates/TestCurrentDate.java">dev.morphia.test.query.updates.TestCurrentDate</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://docs.mongodb.org/manual/reference/operator/query/dec">$dec</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#dec(java.lang.String)">UpdateOperators#dec(String)</a><br>
+<a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#dec(java.lang.String,java.lang.Number)">UpdateOperators#dec(String,Number)</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/updates/TestDec.java">dev.morphia.test.query.updates.TestDec</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://docs.mongodb.org/manual/reference/operator/query/each">$each</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#push(java.lang.String,java.util.List)">UpdateOperators#push(String,List)</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/updates/TestEach.java">dev.morphia.test.query.updates.TestEach</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://docs.mongodb.org/manual/reference/operator/query/inc">$inc</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#inc(java.lang.String,java.lang.Number)">UpdateOperators#inc(String,Number)</a><br>
+<a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#inc(java.lang.String)">UpdateOperators#inc(String)</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/updates/TestInc.java">dev.morphia.test.query.updates.TestInc</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://docs.mongodb.org/manual/reference/operator/query/max">$max</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#max(java.lang.String,java.lang.Number)">UpdateOperators#max(String,Number)</a><br>
+<a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#max(java.lang.String,java.time.temporal.Temporal)">UpdateOperators#max(String,Temporal)</a><br>
+<a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#max(java.lang.String,java.util.Date)">UpdateOperators#max(String,Date)</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/updates/TestMax.java">dev.morphia.test.query.updates.TestMax</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://docs.mongodb.org/manual/reference/operator/query/min">$min</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#min(java.lang.String,java.lang.Number)">UpdateOperators#min(String,Number)</a><br>
+<a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#min(java.lang.String,java.time.temporal.Temporal)">UpdateOperators#min(String,Temporal)</a><br>
+<a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#min(java.lang.String,java.util.Date)">UpdateOperators#min(String,Date)</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/updates/TestMin.java">dev.morphia.test.query.updates.TestMin</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://docs.mongodb.org/manual/reference/operator/query/mul">$mul</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#mul(java.lang.String,java.lang.Number)">UpdateOperators#mul(String,Number)</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/updates/TestMul.java">dev.morphia.test.query.updates.TestMul</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://docs.mongodb.org/manual/reference/operator/query/pop">$pop</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#pop(java.lang.String)">UpdateOperators#pop(String)</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/updates/TestPop.java">dev.morphia.test.query.updates.TestPop</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://docs.mongodb.org/manual/reference/operator/query/pull">$pull</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#pull(java.lang.String,dev.morphia.query.filters.Filter%2E%2E%2E)">UpdateOperators#pull(String,Filter&#8230;&#8203;)</a><br>
+<a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#pull(java.lang.String,java.lang.Object)">UpdateOperators#pull(String,Object)</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/updates/TestPull.java">dev.morphia.test.query.updates.TestPull</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://docs.mongodb.org/manual/reference/operator/query/pullAll">$pullAll</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#pullAll(java.lang.String,java.util.List)">UpdateOperators#pullAll(String,List)</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/updates/TestPullAll.java">dev.morphia.test.query.updates.TestPullAll</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://docs.mongodb.org/manual/reference/operator/query/push">$push</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#push(java.lang.String,java.lang.Object)">UpdateOperators#push(String,Object)</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/updates/TestPush.java">dev.morphia.test.query.updates.TestPush</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://docs.mongodb.org/manual/reference/operator/query/rename">$rename</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#rename(java.lang.String,java.lang.String)">UpdateOperators#rename(String,String)</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/updates/TestRename.java">dev.morphia.test.query.updates.TestRename</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://docs.mongodb.org/manual/reference/operator/query/set">$set</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p><a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#set(java.lang.String,java.lang.Object)">UpdateOperators#set(String,Object)</a><br>
+<a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#set(java.lang.Object)">UpdateOperators#set(Object)</a></p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/updates/TestSet.java">dev.morphia.test.query.updates.TestSet</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://docs.mongodb.org/manual/reference/operator/query/setOnInsert">$setOnInsert</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#setOnInsert(java.util.Map)">UpdateOperators#setOnInsert(Map)</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/updates/TestSetOnInsert.java">dev.morphia.test.query.updates.TestSetOnInsert</a></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="http://docs.mongodb.org/manual/reference/operator/query/unset">$unset</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="javadoc/dev/morphia/query/updates/UpdateOperators.html#unset(java.lang.String,java.lang.String%2E%2E%2E)">UpdateOperators#unset(String,String&#8230;&#8203;)</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/updates/TestUnset.java">dev.morphia.test.query.updates.TestUnset</a></p></td>
 </tr>
 </tbody>
 </table>
