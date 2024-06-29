@@ -4,11 +4,7 @@ import java.util.List;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.internal.PathTarget;
-import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.query.OperationTarget;
 import dev.morphia.query.Sort;
 import dev.morphia.sofia.Sofia;
 
@@ -113,28 +109,4 @@ public class PushOperator extends UpdateOperator {
         return sortDocument;
     }
 
-    /**
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Override
-    public OperationTarget toOperationTarget(MorphiaDatastore datastore, EntityModel model, boolean validate) {
-        var pathTarget = new PathTarget(datastore.getMapper(), model, field(), validate);
-        Document document = new Document("$each", value());
-        if (position != null) {
-            document.put("$position", position);
-        }
-        if (slice != null) {
-            document.put("$slice", slice);
-        }
-        if (sort != null) {
-            document.put("$sort", sort);
-        }
-        if (sortDocument != null) {
-            document.put("$sort", sortDocument);
-        }
-
-        return new OperationTarget(pathTarget, document);
-    }
 }

@@ -16,9 +16,7 @@ public class TestRename extends TemplatedTestBase {
      */
     @Test(testName = "Rename a Field")
     public void testExample1() {
-        testUpdate(new ActionTestOptions().skipDataCheck(true),
-                (query) -> query.filter(
-                        ne("nmae", null)),
+        testUpdate(new ActionTestOptions().skipDataCheck(true), (query) -> query.filter(ne("nmae", null)),
                 rename("nmae", "name"));
     }
 
@@ -27,9 +25,7 @@ public class TestRename extends TemplatedTestBase {
      */
     @Test(testName = "Rename a Field in an Embedded Document")
     public void testExample2() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 1)),
-                rename("name.first", "name.fname"));
+        testUpdate((query) -> query.filter(eq("_id", 1)), rename("name.first", "name.fname"));
     }
 
     /**
@@ -39,8 +35,6 @@ public class TestRename extends TemplatedTestBase {
      */
     @Test(testName = "Rename a Field That Does Not Exist")
     public void testExample3() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 1)),
-                rename("wife", "spouse"));
+        testUpdate((query) -> query.filter(eq("_id", 1)), rename("wife", "spouse"));
     }
 }

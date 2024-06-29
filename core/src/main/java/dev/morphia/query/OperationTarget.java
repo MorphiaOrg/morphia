@@ -22,6 +22,7 @@ import static dev.morphia.mapping.codec.CodecHelper.value;
  * @hidden
  * @morphia.internal
  */
+@Deprecated(forRemoval = true)
 @MorphiaInternal
 public class OperationTarget {
     private final PathTarget target;

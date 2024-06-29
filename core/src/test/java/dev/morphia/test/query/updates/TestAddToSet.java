@@ -28,9 +28,7 @@ public class TestAddToSet extends TemplatedTestBase {
      */
     @Test(testName = "Value Already Exists")
     public void testExample2() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 1)),
-                addToSet("tags", "camera"));
+        testUpdate((query) -> query.filter(eq("_id", 1)), addToSet("tags", "camera"));
     }
 
     /**
@@ -41,8 +39,7 @@ public class TestAddToSet extends TemplatedTestBase {
      */
     @Test(testName = "``$each`` Modifier")
     public void testExample3() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 2)),
+        testUpdate((query) -> query.filter(eq("_id", 2)),
                 addToSet("tags", List.of("camera", "electronics", "accessories")));
     }
 }

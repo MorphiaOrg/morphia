@@ -19,13 +19,8 @@ public class TestSet extends TemplatedTestBase {
     @Test(testName = "Set Top-Level Fields")
     public void testExample1() {
         // skip the action check because the Map order varies
-        testUpdate(new ActionTestOptions().skipActionCheck(true),
-                (query) -> query.filter(
-                        Filters.eq("_id", 100)),
-                set("quantity", 500),
-                set("details", Map.of(
-                        "make", "Fashionaires",
-                        "model", "2600")),
+        testUpdate(new ActionTestOptions().skipActionCheck(true), (query) -> query.filter(Filters.eq("_id", 100)),
+                set("quantity", 500), set("details", Map.of("make", "Fashionaires", "model", "2600")),
                 set("tags", List.of("coats", "outerwear", "clothing")));
     }
 
@@ -34,9 +29,7 @@ public class TestSet extends TemplatedTestBase {
      */
     @Test(testName = "Set Fields in Embedded Documents")
     public void testExample2() {
-        testUpdate((query) -> query.filter(
-                Filters.eq("_id", 100)),
-                set("details.make", "Kustom Kidz"));
+        testUpdate((query) -> query.filter(Filters.eq("_id", 100)), set("details.make", "Kustom Kidz"));
     }
 
     /**
@@ -44,9 +37,7 @@ public class TestSet extends TemplatedTestBase {
      */
     @Test(testName = "Set Elements in Arrays")
     public void testExample3() {
-        testUpdate((query) -> query.filter(
-                Filters.eq("_id", 100)),
-                set("tags.1", "rain gear"),
+        testUpdate((query) -> query.filter(Filters.eq("_id", 100)), set("tags.1", "rain gear"),
                 set("ratings.0.rating", 2));
     }
 }

@@ -3,6 +3,7 @@ package dev.morphia.mapping.codec;
 import java.util.List;
 
 import dev.morphia.MorphiaDatastore;
+import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.codec.updates.BaseOperatorCodec;
 import dev.morphia.query.updates.UnsetOperator;
 
@@ -18,11 +19,14 @@ public class UnsetOperatorCodec extends BaseOperatorCodec<UnsetOperator> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void encode(BsonWriter writer, UnsetOperator operator, EncoderContext encoderContext) {
         document(writer, () -> {
             document(writer, operator.operator(), () -> {
-                List<String> value = (List<String>) operator.value();
-                value.forEach(field -> namedValue(writer, datastore, field, "", encoderContext));
+                for (String field : ((List<String>) operator.value())) {
+                    var target = new PathTarget(datastore.getMapper(), operator.model(), field, operator.validate()).translatedPath();
+                    namedValue(writer, datastore, target, "", encoderContext);
+                }
             });
         });
     }

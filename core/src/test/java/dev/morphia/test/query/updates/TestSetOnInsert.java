@@ -19,13 +19,8 @@ public class TestSetOnInsert extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        var options = new ActionTestOptions()
-                .skipDataCheck(true)
-                .updateOptions(new UpdateOptions()
-                        .upsert(true));
-        testUpdate(options, (query) -> query.filter(
-                Filters.eq("_id", 1)),
-                set("item", "apple"),
+        var options = new ActionTestOptions().skipDataCheck(true).updateOptions(new UpdateOptions().upsert(true));
+        testUpdate(options, (query) -> query.filter(Filters.eq("_id", 1)), set("item", "apple"),
                 setOnInsert(Map.of("defaultQty", 100)));
     }
 }

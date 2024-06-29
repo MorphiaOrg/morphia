@@ -194,10 +194,10 @@ public class MorphiaQuery<T> implements Query<T> {
     public T modify(ModifyOptions options, UpdateOperator first, UpdateOperator... updates) {
         EntityModel entityModel = mapper.getEntityModel(getEntityClass());
 
-        Operations value = new Operations(entityModel, coalesce(first, updates), validate);
+        Operations value = new Operations(datastore, entityModel, coalesce(first, updates), validate);
 
         return datastore.operations().findOneAndUpdate(datastore.configureCollection(options, collection),
-                toDocument(), value.toDocumentOld(datastore), options);
+                toDocument(), value.toDocument(datastore), options);
     }
 
     @MorphiaInternal
@@ -229,7 +229,7 @@ public class MorphiaQuery<T> implements Query<T> {
         }
         Class<T> entityClass = getEntityClass();
         EntityModel entityModel = !entityClass.equals(Document.class) ? mapper.getEntityModel(entityClass) : null;
-        Operations operations = new Operations(entityModel, coalesce(first, updates), isValidate());
+        Operations operations = new Operations(datastore, entityModel, coalesce(first, updates), isValidate());
         Document updateOperations = operations.toDocument(datastore);
 
         final Document queryObject = toDocument();

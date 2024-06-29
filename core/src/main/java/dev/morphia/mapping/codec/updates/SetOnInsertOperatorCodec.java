@@ -23,7 +23,7 @@ public class SetOnInsertOperatorCodec extends BaseOperatorCodec<SetOnInsertOpera
                 var model = operator.model();
                 var mapper = datastore.getMapper();
                 operator.insertValues().forEach((key, value) -> {
-                    PathTarget keyTarget = new PathTarget(mapper, model, key, model != null);
+                    PathTarget keyTarget = new PathTarget(mapper, model, key, operator.validate());
                     namedValue(writer, datastore, keyTarget.translatedPath(), value, encoderContext);
                 });
             });

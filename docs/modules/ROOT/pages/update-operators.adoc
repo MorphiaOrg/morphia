@@ -33,8 +33,8 @@ link:javadoc/dev/morphia/query/updates/UpdateOperators.html#dec(java.lang.String
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/inc[$inc]
-a| link:javadoc/dev/morphia/query/updates/UpdateOperators.html#inc(java.lang.String)[UpdateOperators#inc(String)] +
-link:javadoc/dev/morphia/query/updates/UpdateOperators.html#inc(java.lang.String,java.lang.Number)[UpdateOperators#inc(String,Number)]
+a| link:javadoc/dev/morphia/query/updates/UpdateOperators.html#inc(java.lang.String,java.lang.Number)[UpdateOperators#inc(String,Number)] +
+link:javadoc/dev/morphia/query/updates/UpdateOperators.html#inc(java.lang.String)[UpdateOperators#inc(String)]
 | https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/updates/TestInc.java[dev.morphia.test.query.updates.TestInc]
 
 
@@ -95,7 +95,7 @@ link:javadoc/dev/morphia/query/updates/UpdateOperators.html#set(java.lang.Object
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/unset[$unset]
-| link:javadoc/dev/morphia/query/updates/UpdateOperators.html#unset(java.lang.String)[UpdateOperators#unset(String)]
+| link:javadoc/dev/morphia/query/updates/UpdateOperators.html#unset(java.lang.String,java.lang.String%2E%2E%2E)[UpdateOperators#unset(String,String...)]
 | https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/updates/TestUnset.java[dev.morphia.test.query.updates.TestUnset]
 
 

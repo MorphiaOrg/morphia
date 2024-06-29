@@ -19,10 +19,7 @@ public class TestSlice extends TemplatedTestBase {
      */
     @Test(testName = "Slice from the End of the Array")
     public void testExample1() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 1)),
-                push("scores", List.of(80, 78, 86))
-                        .slice(-5));
+        testUpdate((query) -> query.filter(eq("_id", 1)), push("scores", List.of(80, 78, 86)).slice(-5));
     }
 
     /**
@@ -30,10 +27,7 @@ public class TestSlice extends TemplatedTestBase {
      */
     @Test(testName = "Slice from the Front of the Array")
     public void testExample2() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 2)),
-                push("scores", List.of(100, 20))
-                        .slice(3));
+        testUpdate((query) -> query.filter(eq("_id", 2)), push("scores", List.of(100, 20)).slice(3));
     }
 
     /**
@@ -41,10 +35,7 @@ public class TestSlice extends TemplatedTestBase {
      */
     @Test(testName = "Update Array Using Slice Only")
     public void testExample3() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 3)),
-                push("scores", List.of())
-                        .slice(-3));
+        testUpdate((query) -> query.filter(eq("_id", 3)), push("scores", List.of()).slice(-3));
     }
 
     /**
@@ -57,14 +48,9 @@ public class TestSlice extends TemplatedTestBase {
     @Test(testName = "Use ``$slice`` with Other ``$push`` Modifiers")
     public void testExample4() {
         // the Map order throws off structural checks
-        testUpdate(new ActionTestOptions().skipActionCheck(true),
-                (query) -> query.filter(
-                        eq("_id", 5)),
-                push("quizzes", List.of(
-                        Map.of("wk", 5, "score", 8),
-                        Map.of("wk", 6, "score", 7),
-                        Map.of("wk", 7, "score", 6)))
-                        .sort(descending("score"))
-                        .slice(3));
+        testUpdate(new ActionTestOptions().skipActionCheck(true), (query) -> query.filter(eq("_id", 5)),
+                push("quizzes",
+                        List.of(Map.of("wk", 5, "score", 8), Map.of("wk", 6, "score", 7), Map.of("wk", 7, "score", 6)))
+                        .sort(descending("score")).slice(3));
     }
 }

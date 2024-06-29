@@ -15,11 +15,7 @@ public class TestUnset extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testUpdate(new ActionTestOptions()
-                .removeIds(true)
-                .orderMatters(false),
-                (query) -> query.filter(
-                        eq("sku", "unknown")),
-                unset("quantity", "instock"));
+        testUpdate(new ActionTestOptions().removeIds(true).orderMatters(false),
+                (query) -> query.filter(eq("sku", "unknown")), unset("quantity", "instock"));
     }
 }

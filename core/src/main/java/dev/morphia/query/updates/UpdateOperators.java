@@ -65,6 +65,20 @@ public final class UpdateOperators {
     }
 
     /**
+     * Multiplies the value of the field by the specified amount.
+     *
+     * @param field the field to multiply
+     * @param value the number to multiply by
+     * @return the update operator
+     * @update.operator $bit
+     * @since 3.0
+     * @mongodb.server.release 5.0
+     */
+    public static UpdateOperator bit(String field, Number value) {
+        return new UpdateOperator("$bit", field, value);
+    }
+
+    /**
      * The $currentDate operator sets the value of a field to the current date, either as a Date or a timestamp. The default type is Date.
      *
      * @param field the field to set
@@ -104,17 +118,6 @@ public final class UpdateOperators {
     }
 
     /**
-     * Increments the value of the field by one.
-     *
-     * @param field the field to increment
-     * @return the update operator
-     * @update.operator $inc
-     */
-    public static UpdateOperator inc(String field) {
-        return inc(field, 1);
-    }
-
-    /**
      * Increments the value of the field by the specified amount.
      *
      * @param field the field to increment
@@ -124,6 +127,17 @@ public final class UpdateOperators {
      */
     public static UpdateOperator inc(String field, Number value) {
         return new UpdateOperator("$inc", field, value);
+    }
+
+    /**
+     * Increments the value of the field by one.
+     *
+     * @param field the field to increment
+     * @return the update operator
+     * @update.operator $inc
+     */
+    public static UpdateOperator inc(String field) {
+        return inc(field, 1);
     }
 
     /**
@@ -212,20 +226,6 @@ public final class UpdateOperators {
      */
     public static UpdateOperator mul(String field, Number value) {
         return new UpdateOperator("$mul", field, value);
-    }
-
-    /**
-     * Multiplies the value of the field by the specified amount.
-     *
-     * @param field the field to multiply
-     * @param value the number to multiply by
-     * @return the update operator
-     * @update.operator $bit
-     * @since 3.0
-     * @mongodb.server.release 5.0
-     */
-    public static UpdateOperator bit(String field, Number value) {
-        return new UpdateOperator("$bit", field, value);
     }
 
     /**

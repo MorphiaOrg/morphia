@@ -195,9 +195,7 @@ public interface Query<T> extends Iterable<T> {
      * @since 2.3
      */
     @Nullable
-    default T modify(ModifyOptions options, UpdateOperator first, UpdateOperator... updates) {
-        throw new UnsupportedOperationException();
-    }
+    T modify(ModifyOptions options, UpdateOperator first, UpdateOperator... updates);
 
     /**
      * Execute the query and get the results.

@@ -24,7 +24,6 @@ public class TestMax extends TemplatedTestBase {
      */
     @Test(testName = "Use ``$max`` to Compare Dates")
     public void testExample2() {
-        testUpdate((query) -> query.filter(eq("_id", 1)),
-                max("dateExpired", LocalDate.of(2013, 9, 30)));
+        testUpdate((query) -> query.filter(eq("_id", 1)), max("dateExpired", LocalDate.of(2013, 9, 30)));
     }
 }

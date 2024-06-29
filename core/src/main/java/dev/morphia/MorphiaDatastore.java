@@ -1089,7 +1089,11 @@ public class MorphiaDatastore implements Datastore {
         @Override
         public <T> UpdateResult updateOne(MongoCollection<T> collection, Document query, Document updates,
                 UpdateOptions options) {
-            return collection.updateOne(query, updates, options);
+            try {
+                return collection.updateOne(query, updates, options);
+            } catch (MongoWriteException e) {
+                throw e;
+            }
         }
 
         @Override

@@ -24,7 +24,6 @@ import dev.morphia.query.MorphiaQuery;
 import dev.morphia.query.Operations;
 import dev.morphia.query.Query;
 import dev.morphia.query.updates.UpdateOperator;
-import dev.morphia.test.TestBase.ZDTCodecProvider;
 import dev.morphia.test.util.ActionTestOptions;
 import dev.morphia.test.util.Comparanator;
 
@@ -359,7 +358,7 @@ public abstract class TemplatedTestBase extends TestBase {
         if (!testOptions.skipActionCheck()) {
             List<Document> action = loadAction(resourceName);
             assertEquals(toJson(document), toJson(action.get(0)), "Should generate the same query document");
-            Operations operations = new Operations(null, coalesce(first, others), false);
+            Operations operations = new Operations(getDs(), null, coalesce(first, others), false);
             Document updates = operations.toDocument(getDs());
             assertEquals(toJson(updates), toJson(action.get(1)), "Should generate the same update document");
         }
