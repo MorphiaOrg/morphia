@@ -1,0 +1,11 @@
+db.students.updateOne(
+   { _id: 2 },
+   {
+     $push: {
+       scores: {
+         $each: [ 100, 20 ],
+         $slice: 3
+       }
+     }
+   }
+)
