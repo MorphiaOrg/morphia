@@ -1,4 +1,4 @@
-{ _id: 0, city: "San Jose", distance: 42 }
-{ _id: 1, city: "Sacramento", distance: 88 }
-{ _id: 2, city: "Reno", distance: 218 }
+{ _id: 0, city: "San Jose", distance: 42 },
+{ _id: 1, city: "Sacramento", distance: 88 },
+{ _id: 2, city: "Reno", distance: 218 },
 { _id: 3, city: "Los Angeles", distance: 383 }

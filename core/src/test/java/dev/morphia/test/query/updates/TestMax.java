@@ -1,5 +1,7 @@
 package dev.morphia.test.query.updates;
 
+import java.time.LocalDate;
+
 import dev.morphia.test.TemplatedTestBase;
 
 import org.testng.annotations.Test;
@@ -14,9 +16,7 @@ public class TestMax extends TemplatedTestBase {
      */
     @Test(testName = "Use ``$max`` to Compare Numbers")
     public void testExample1() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 1)),
-                max("highScore", 950));
+        testUpdate((query) -> query.filter(eq("_id", 1)), max("highScore", 950));
     }
 
     /**
@@ -24,7 +24,6 @@ public class TestMax extends TemplatedTestBase {
      */
     @Test(testName = "Use ``$max`` to Compare Dates")
     public void testExample2() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 1)));
+        testUpdate((query) -> query.filter(eq("_id", 1)), max("dateExpired", LocalDate.of(2013, 9, 30)));
     }
 }

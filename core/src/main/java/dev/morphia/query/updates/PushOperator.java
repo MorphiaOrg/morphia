@@ -2,13 +2,10 @@ package dev.morphia.query.updates;
 
 import java.util.List;
 
-import dev.morphia.MorphiaDatastore;
+import com.mongodb.lang.Nullable;
+
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.internal.PathTarget;
-import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.query.OperationTarget;
 import dev.morphia.query.Sort;
-import dev.morphia.query.UpdateException;
 import dev.morphia.sofia.Sofia;
 
 import org.bson.Document;
@@ -19,9 +16,13 @@ import org.bson.Document;
  * @since 2.0
  */
 public class PushOperator extends UpdateOperator {
+    @Nullable
     private Integer position;
+    @Nullable
     private Integer slice;
+    @Nullable
     private Integer sort;
+    @Nullable
     private Document sortDocument;
 
     /**
@@ -35,6 +36,11 @@ public class PushOperator extends UpdateOperator {
         super("$push", field, values);
     }
 
+    @Nullable
+    public Integer position() {
+        return position;
+    }
+
     /**
      * Sets the position for the update
      *
@@ -42,11 +48,13 @@ public class PushOperator extends UpdateOperator {
      * @return this
      */
     public PushOperator position(int position) {
-        if (position < 0) {
-            throw new UpdateException("The position must be at least 0.");
-        }
         this.position = position;
         return this;
+    }
+
+    @Nullable
+    public Integer slice() {
+        return slice;
     }
 
     /**
@@ -58,6 +66,11 @@ public class PushOperator extends UpdateOperator {
     public PushOperator slice(int slice) {
         this.slice = slice;
         return this;
+    }
+
+    @Nullable
+    public Integer sort() {
+        return sort;
     }
 
     /**
@@ -91,28 +104,9 @@ public class PushOperator extends UpdateOperator {
         return this;
     }
 
-    /**
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Override
-    public OperationTarget toOperationTarget(MorphiaDatastore datastore, EntityModel model, boolean validate) {
-        var pathTarget = new PathTarget(datastore.getMapper(), model, field(), validate);
-        Document document = new Document("$each", value());
-        if (position != null) {
-            document.put("$position", position);
-        }
-        if (slice != null) {
-            document.put("$slice", slice);
-        }
-        if (sort != null) {
-            document.put("$sort", sort);
-        }
-        if (sortDocument != null) {
-            document.put("$sort", sortDocument);
-        }
-
-        return new OperationTarget(pathTarget, document);
+    @Nullable
+    public Document sortDocument() {
+        return sortDocument;
     }
+
 }

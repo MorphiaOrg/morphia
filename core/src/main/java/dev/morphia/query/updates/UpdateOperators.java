@@ -65,6 +65,20 @@ public final class UpdateOperators {
     }
 
     /**
+     * Multiplies the value of the field by the specified amount.
+     *
+     * @param field the field to multiply
+     * @param value the number to multiply by
+     * @return the update operator
+     * @update.operator $bit
+     * @since 3.0
+     * @mongodb.server.release 5.0
+     */
+    public static UpdateOperator bit(String field, Number value) {
+        return new UpdateOperator("$bit", field, value);
+    }
+
+    /**
      * The $currentDate operator sets the value of a field to the current date, either as a Date or a timestamp. The default type is Date.
      *
      * @param field the field to set
@@ -104,17 +118,6 @@ public final class UpdateOperators {
     }
 
     /**
-     * Increments the value of the field by one.
-     *
-     * @param field the field to increment
-     * @return the update operator
-     * @update.operator $inc
-     */
-    public static UpdateOperator inc(String field) {
-        return inc(field, 1);
-    }
-
-    /**
      * Increments the value of the field by the specified amount.
      *
      * @param field the field to increment
@@ -124,6 +127,17 @@ public final class UpdateOperators {
      */
     public static UpdateOperator inc(String field, Number value) {
         return new UpdateOperator("$inc", field, value);
+    }
+
+    /**
+     * Increments the value of the field by one.
+     *
+     * @param field the field to increment
+     * @return the update operator
+     * @update.operator $inc
+     */
+    public static UpdateOperator inc(String field) {
+        return inc(field, 1);
     }
 
     /**
@@ -215,20 +229,6 @@ public final class UpdateOperators {
     }
 
     /**
-     * Multiplies the value of the field by the specified amount.
-     *
-     * @param field the field to multiply
-     * @param value the number to multiply by
-     * @return the update operator
-     * @update.operator $bit
-     * @since 3.0
-     * @mongodb.server.release 5.0
-     */
-    public static UpdateOperator bit(String field, Number value) {
-        return new UpdateOperator("$bit", field, value);
-    }
-
-    /**
      * The $bit operator performs a bitwise update of a field. The operator supports bitwise and, bitwise or, and bitwise xor (i.e.
      * exclusive or) operations.
      *
@@ -258,13 +258,25 @@ public final class UpdateOperators {
     /**
      * The $pull operator removes from an existing array all instances of a value or values that match a specified condition.
      *
-     * @param field  the field to update
-     * @param filter the filter to apply
+     * @param field   the field to update
+     * @param filters the filters to apply
      * @return the update operator
      * @update.operator $pull
      */
-    public static UpdateOperator pull(String field, Filter filter) {
-        return new PullOperator(field, filter);
+    public static UpdateOperator pull(String field, Filter... filters) {
+        return new PullOperator(field, filters);
+    }
+
+    /**
+     * The $pull operator removes from an existing array all instances of a value or values that match a specified condition.
+     *
+     * @param field the field to update
+     * @param value the value to pull
+     * @return the update operator
+     * @update.operator $pull
+     */
+    public static UpdateOperator pull(String field, Object value) {
+        return new PullOperator(field, value);
     }
 
     /**
@@ -359,8 +371,8 @@ public final class UpdateOperators {
      * @return the update operator
      * @update.operator $unset
      */
-    public static UpdateOperator unset(String field) {
-        return new UnsetOperator(field);
+    public static UpdateOperator unset(String field, String... others) {
+        return new UnsetOperator(field, others);
     }
 
     /**

@@ -1,0 +1,4 @@
+db.inventory.updateOne(
+   { _id: 2 },
+   { $addToSet: { tags: { $each: [ "camera", "electronics", "accessories" ] } } }
+ )

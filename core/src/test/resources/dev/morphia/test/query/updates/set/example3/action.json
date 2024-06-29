@@ -1,0 +1,9 @@
+db.products.updateOne(
+   { _id: 100 },
+   { $set:
+      {
+        "tags.1": "rain gear",
+        "ratings.0.rating": 2
+      }
+   }
+)

@@ -16,7 +16,18 @@ public class FilterCodec extends BaseFilterCodec<Filter> {
 
     @Override
     public void encode(BsonWriter writer, Filter filter, EncoderContext encoderContext) {
-        document(writer, filter.path(datastore.getMapper()), () -> {
+        String path = filter.path(datastore.getMapper());
+        if (!path.equals("")) {
+            document(writer, path, () -> {
+                if (filter.isNot()) {
+                    document(writer, "$not", () -> {
+                        CodecHelper.namedValue(writer, datastore, filter.getName(), filter.getValue(datastore), encoderContext);
+                    });
+                } else {
+                    CodecHelper.namedValue(writer, datastore, filter.getName(), filter.getValue(datastore), encoderContext);
+                }
+            });
+        } else {
             if (filter.isNot()) {
                 document(writer, "$not", () -> {
                     CodecHelper.namedValue(writer, datastore, filter.getName(), filter.getValue(datastore), encoderContext);
@@ -24,7 +35,7 @@ public class FilterCodec extends BaseFilterCodec<Filter> {
             } else {
                 CodecHelper.namedValue(writer, datastore, filter.getName(), filter.getValue(datastore), encoderContext);
             }
-        });
+        }
     }
 
     @Override

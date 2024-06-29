@@ -262,6 +262,17 @@ public final class Filters {
     }
 
     /**
+     * $gt selects those documents where the value is greater than the specified value.
+     *
+     * @param val the value to check
+     * @return the filter
+     * @query.filter $gt
+     */
+    public static Filter gt(Object val) {
+        return new Filter("$gt", null, val);
+    }
+
+    /**
      * $gt selects those documents where the value of the field is greater than the specified value.
      *
      * @param field the field to check
@@ -294,7 +305,7 @@ public final class Filters {
      * @since 3.0
      */
     public static Filter gte(Object val) {
-        return new FieldLessFilter("$gte", val);
+        return new Filter("$gte", null, val);
     }
 
     /**
@@ -307,6 +318,18 @@ public final class Filters {
      */
     public static Filter in(String field, Iterable<?> val) {
         return new Filter("$in", field, val);
+    }
+
+    /**
+     * The $in operator selects the documents where the value of a field equals any value in a given array.
+     *
+     * @param val the values to check
+     * @return the filter
+     * @query.filter $in
+     * @since 3.0
+     */
+    public static Filter in(Iterable<?> val) {
+        return new Filter("$in", null, val);
     }
 
     /**
@@ -330,7 +353,7 @@ public final class Filters {
      * @since 3.0
      */
     public static Filter lt(Object val) {
-        return new FieldLessFilter("$lt", val);
+        return new Filter("$lt", null, val);
     }
 
     /**
@@ -343,6 +366,17 @@ public final class Filters {
      */
     public static Filter lt(String field, Object val) {
         return new Filter("$lt", field, val);
+    }
+
+    /**
+     * $lte selects the documents where the value is less than or equal to the specified value.
+     *
+     * @param val the value to check
+     * @return the filter
+     * @query.filter $lte
+     */
+    public static Filter lte(Object val) {
+        return new Filter("$lte", null, val);
     }
 
     /**

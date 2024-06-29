@@ -16,9 +16,7 @@ public class TestBit extends TemplatedTestBase {
      */
     @Test(testName = "Bitwise AND")
     public void testExample1() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 1)),
-                and("expdata", 10));
+        testUpdate((query) -> query.filter(eq("_id", 1)), and("expdata", 10));
     }
 
     /**
@@ -26,9 +24,7 @@ public class TestBit extends TemplatedTestBase {
      */
     @Test(testName = "Bitwise OR")
     public void testExample2() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 2)),
-                or("expdata", 5));
+        testUpdate((query) -> query.filter(eq("_id", 2)), or("expdata", 5));
     }
 
     /**
@@ -36,8 +32,6 @@ public class TestBit extends TemplatedTestBase {
      */
     @Test(testName = "Bitwise XOR")
     public void testExample3() {
-        testUpdate((query) -> query.filter(
-                eq("_id", 3)),
-                xor("expdata", 5));
+        testUpdate((query) -> query.filter(eq("_id", 3)), xor("expdata", 5));
     }
 }

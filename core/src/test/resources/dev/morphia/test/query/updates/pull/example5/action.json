@@ -1,0 +1,12 @@
+db.survey.updateMany(
+  { },
+  {
+     $pull:
+        {
+           results:
+              {
+                 answers: { $elemMatch: { q: 2, a: { $gte: 8 } } }
+              }
+        }
+  }
+)

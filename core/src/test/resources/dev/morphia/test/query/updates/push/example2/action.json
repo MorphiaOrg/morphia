@@ -1,0 +1,4 @@
+db.students.updateMany(
+   { },
+   { $push: { scores: 95 } }
+)

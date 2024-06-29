@@ -53,6 +53,7 @@ import dev.morphia.mapping.codec.MorphiaCodecProvider;
 import dev.morphia.mapping.codec.MorphiaExpressionCodecProvider;
 import dev.morphia.mapping.codec.MorphiaFilterCodecProvider;
 import dev.morphia.mapping.codec.MorphiaTypesCodecProvider;
+import dev.morphia.mapping.codec.MorphiaUpdateOperatorCodecProvider;
 import dev.morphia.mapping.codec.PrimitiveCodecRegistry;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.MergingEncoder;
@@ -169,6 +170,7 @@ public class MorphiaDatastore implements Datastore {
                 new EnumCodecProvider(),
                 new MorphiaExpressionCodecProvider(this),
                 new MorphiaFilterCodecProvider(this),
+                new MorphiaUpdateOperatorCodecProvider(this),
                 new AggregationCodecProvider(this)));
 
         providers.addAll(morphiaCodecProviders);
@@ -1087,7 +1089,11 @@ public class MorphiaDatastore implements Datastore {
         @Override
         public <T> UpdateResult updateOne(MongoCollection<T> collection, Document query, Document updates,
                 UpdateOptions options) {
-            return collection.updateOne(query, updates, options);
+            try {
+                return collection.updateOne(query, updates, options);
+            } catch (MongoWriteException e) {
+                throw e;
+            }
         }
 
         @Override

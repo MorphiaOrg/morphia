@@ -3,6 +3,8 @@ package dev.morphia.test.util;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.bson.types.Decimal128;
+
 import static dev.morphia.aggregation.expressions.MathExpressions.abs;
 import static java.lang.Math.abs;
 import static org.testng.Assert.assertEquals;
@@ -35,7 +37,7 @@ public class ObjectComparanator extends BaseComparanator {
         try {
             if (first instanceof Double firstNumber && second instanceof Double secondNumber) {
                 assertTrue(abs(firstNumber - secondNumber) < 0.001, message);
-            } else if (first instanceof Comparable firstComparable && second instanceof Comparable secondComparable) {
+            } else if (first instanceof Decimal128 firstComparable && second instanceof Decimal128 secondComparable) {
                 assertEquals(firstComparable.compareTo(secondComparable), 0, message);
             } else {
                 assertEquals(first, second, message);

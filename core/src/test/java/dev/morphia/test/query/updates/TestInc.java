@@ -14,9 +14,6 @@ public class TestInc extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testUpdate((query) -> query.filter(
-                eq("sku", "abc123")),
-                inc("quantity", -2),
-                inc("metrics.orders", 1));
+        testUpdate((query) -> query.filter(eq("sku", "abc123")), inc("quantity", -2), inc("metrics.orders", 1));
     }
 }

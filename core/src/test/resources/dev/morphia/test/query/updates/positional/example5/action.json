@@ -1,0 +1,5 @@
+db.students4.updateMany(
+   {},
+   { $inc: { "grades.$[t].questions.$[score]": 2 } },
+   { arrayFilters: [ { "t.type": "quiz" }, { "score": { $gte: 8 } } ] }
+)

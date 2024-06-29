@@ -1,5 +1,6 @@
 package dev.morphia.test.util;
 
+import dev.morphia.UpdateOptions;
 import dev.morphia.query.FindOptions;
 import dev.morphia.test.DriverVersion;
 import dev.morphia.test.ServerVersion;
@@ -20,6 +21,8 @@ public class ActionTestOptions {
     private boolean skipActionCheck;
 
     private boolean skipDataCheck = false;
+
+    private UpdateOptions updateOptions;
 
     public FindOptions findOptions() {
         return findOptions;
@@ -81,6 +84,15 @@ public class ActionTestOptions {
 
     public ActionTestOptions skipDataCheck(boolean skipDataCheck) {
         this.skipDataCheck = skipDataCheck;
+        return this;
+    }
+
+    public UpdateOptions updateOptions() {
+        return updateOptions != null ? updateOptions : new UpdateOptions();
+    }
+
+    public ActionTestOptions updateOptions(UpdateOptions updateOptions) {
+        this.updateOptions = updateOptions;
         return this;
     }
 }

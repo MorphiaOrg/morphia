@@ -1,0 +1,1 @@
+db.students.updateOne( { _id: 1 }, { $rename: { 'wife': 'spouse' } } )
