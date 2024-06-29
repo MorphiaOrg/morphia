@@ -23,15 +23,11 @@ public class PullOperatorCodec extends BaseOperatorCodec<PullOperator> {
             document(writer, operator.operator(), () -> {
                 Object value = operator.value();
                 if (value instanceof Filter[] filters) {
-                    if (filters.length == 1 && filters[0].getField().equals("")) {
-                        namedValue(writer, datastore, operator.field(), filters[0], encoderContext);
-                    } else {
-                        document(writer, operator.field(), () -> {
-                            for (Filter filter : filters) {
-                                unnamedValue(writer, datastore, filter, encoderContext);
-                            }
-                        });
-                    }
+                    document(writer, operator.field(), () -> {
+                        for (Filter filter : filters) {
+                            unnamedValue(writer, datastore, filter, encoderContext);
+                        }
+                    });
                 } else {
                     namedValue(writer, datastore, operator.field(), value, encoderContext);
                 }

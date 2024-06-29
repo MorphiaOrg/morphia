@@ -7,8 +7,6 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.OperationTarget;
-import dev.morphia.query.UpdateException;
-import dev.morphia.sofia.Sofia;
 
 /**
  * Defines an update operator
@@ -43,9 +41,6 @@ public class UpdateOperator {
      */
     @MorphiaInternal
     protected UpdateOperator(String operator, String field, List<?> values) {
-        if (values.isEmpty()) {
-            throw new UpdateException(Sofia.valuesCannotBeNullOrEmpty());
-        }
         this.operator = operator;
         this.field = field;
         this.value = values;
