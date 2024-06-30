@@ -4,129 +4,129 @@
 
 | http://docs.mongodb.org/manual/reference/operator/query/all[$all]
 | link:javadoc/dev/morphia/query/filters/Filters.html#all(java.lang.String,java.lang.Object)[Filters#all(String,Object)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestAll.java[dev.morphia.test.query.filters.TestAll]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestAll.java[TestAll]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/and[$and]
 | link:javadoc/dev/morphia/query/filters/Filters.html#and(dev.morphia.query.filters.Filter%2E%2E%2E)[Filters#and(Filter...)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestAnd.java[dev.morphia.test.query.filters.TestAnd]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestAnd.java[TestAnd]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/bitsAllClear[$bitsAllClear]
 | link:javadoc/dev/morphia/query/filters/Filters.html#bitsAllClear(java.lang.String,java.lang.Object)[Filters#bitsAllClear(String,Object)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestBitsAllClear.java[dev.morphia.test.query.filters.TestBitsAllClear]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestBitsAllClear.java[TestBitsAllClear]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/bitsAllSet[$bitsAllSet]
 | link:javadoc/dev/morphia/query/filters/Filters.html#bitsAllSet(java.lang.String,java.lang.Object)[Filters#bitsAllSet(String,Object)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestBitsAllSet.java[dev.morphia.test.query.filters.TestBitsAllSet]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestBitsAllSet.java[TestBitsAllSet]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/bitsAnyClear[$bitsAnyClear]
 | link:javadoc/dev/morphia/query/filters/Filters.html#bitsAnyClear(java.lang.String,java.lang.Object)[Filters#bitsAnyClear(String,Object)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestBitsAnyClear.java[dev.morphia.test.query.filters.TestBitsAnyClear]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestBitsAnyClear.java[TestBitsAnyClear]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/bitsAnySet[$bitsAnySet]
 | link:javadoc/dev/morphia/query/filters/Filters.html#bitsAnySet(java.lang.String,java.lang.Object)[Filters#bitsAnySet(String,Object)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestBitsAnySet.java[dev.morphia.test.query.filters.TestBitsAnySet]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestBitsAnySet.java[TestBitsAnySet]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/box[$box]
 | link:javadoc/dev/morphia/query/filters/Filters.html#box(java.lang.String,com.mongodb.client.model.geojson.Point,com.mongodb.client.model.geojson.Point)[Filters#box(String,Point,Point)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestBox.java[dev.morphia.test.query.filters.TestBox]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestBox.java[TestBox]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/center[$center]
 | link:javadoc/dev/morphia/query/filters/Filters.html#center(java.lang.String,com.mongodb.client.model.geojson.Point,double)[Filters#center(String,Point,double)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestCenter.java[dev.morphia.test.query.filters.TestCenter]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestCenter.java[TestCenter]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/centerSphere[$centerSphere]
 | link:javadoc/dev/morphia/query/filters/Filters.html#centerSphere(java.lang.String,com.mongodb.client.model.geojson.Point,double)[Filters#centerSphere(String,Point,double)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestCenterSphere.java[dev.morphia.test.query.filters.TestCenterSphere]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestCenterSphere.java[TestCenterSphere]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/comment[$comment]
 | link:javadoc/dev/morphia/query/filters/Filters.html#comment(java.lang.String)[Filters#comment(String)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestComment.java[dev.morphia.test.query.filters.TestComment]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestComment.java[TestComment]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/elemMatch[$elemMatch]
 a| link:javadoc/dev/morphia/query/filters/Filters.html#elemMatch(dev.morphia.query.filters.Filter%2E%2E%2E)[Filters#elemMatch(Filter...)] +
 link:javadoc/dev/morphia/query/filters/Filters.html#elemMatch(java.lang.String,dev.morphia.query.filters.Filter%2E%2E%2E)[Filters#elemMatch(String,Filter...)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestElemMatch.java[dev.morphia.test.query.filters.TestElemMatch]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestElemMatch.java[TestElemMatch]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/eq[$eq]
 | link:javadoc/dev/morphia/query/filters/Filters.html#eq(java.lang.String,java.lang.Object)[Filters#eq(String,Object)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestEq.java[dev.morphia.test.query.filters.TestEq]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestEq.java[TestEq]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/exists[$exists]
 | link:javadoc/dev/morphia/query/filters/Filters.html#exists(java.lang.String)[Filters#exists(String)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestExists.java[dev.morphia.test.query.filters.TestExists]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestExists.java[TestExists]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/expr[$expr]
 | link:javadoc/dev/morphia/query/filters/Filters.html#expr(dev.morphia.aggregation.expressions.impls.Expression)[Filters#expr(Expression)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestExpr.java[dev.morphia.test.query.filters.TestExpr]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestExpr.java[TestExpr]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/geoIntersects[$geoIntersects]
 | link:javadoc/dev/morphia/query/filters/Filters.html#geoIntersects(java.lang.String,com.mongodb.client.model.geojson.Geometry)[Filters#geoIntersects(String,Geometry)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestGeoIntersects.java[dev.morphia.test.query.filters.TestGeoIntersects]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestGeoIntersects.java[TestGeoIntersects]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/geoWithin[$geoWithin]
 a| link:javadoc/dev/morphia/query/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.Polygon)[Filters#geoWithin(String,Polygon)] +
 link:javadoc/dev/morphia/query/filters/Filters.html#geoWithin(java.lang.String,com.mongodb.client.model.geojson.MultiPolygon)[Filters#geoWithin(String,MultiPolygon)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestGeoWithin.java[dev.morphia.test.query.filters.TestGeoWithin]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestGeoWithin.java[TestGeoWithin]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/geometry[$geometry]
 | link:javadoc/dev/morphia/query/filters/Filters.html#geometry(java.lang.String,java.lang.Object)[Filters#geometry(String,Object)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestGeometry.java[dev.morphia.test.query.filters.TestGeometry]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestGeometry.java[TestGeometry]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/gt[$gt]
 a| link:javadoc/dev/morphia/query/filters/Filters.html#gt(java.lang.Object)[Filters#gt(Object)] +
 link:javadoc/dev/morphia/query/filters/Filters.html#gt(java.lang.String,java.lang.Object)[Filters#gt(String,Object)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestGt.java[dev.morphia.test.query.filters.TestGt]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestGt.java[TestGt]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/gte[$gte]
 a| link:javadoc/dev/morphia/query/filters/Filters.html#gte(java.lang.String,java.lang.Object)[Filters#gte(String,Object)] +
 link:javadoc/dev/morphia/query/filters/Filters.html#gte(java.lang.Object)[Filters#gte(Object)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestGte.java[dev.morphia.test.query.filters.TestGte]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestGte.java[TestGte]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/in[$in]
 a| link:javadoc/dev/morphia/query/filters/Filters.html#in(java.lang.String,java.lang.Iterable)[Filters#in(String,Iterable)] +
 link:javadoc/dev/morphia/query/filters/Filters.html#in(java.lang.Iterable)[Filters#in(Iterable)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestIn.java[dev.morphia.test.query.filters.TestIn]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestIn.java[TestIn]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/jsonSchema[$jsonSchema]
 | link:javadoc/dev/morphia/query/filters/Filters.html#jsonSchema(org.bson.Document)[Filters#jsonSchema(Document)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestJsonSchema.java[dev.morphia.test.query.filters.TestJsonSchema]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestJsonSchema.java[TestJsonSchema]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/lt[$lt]
 a| link:javadoc/dev/morphia/query/filters/Filters.html#lt(java.lang.Object)[Filters#lt(Object)] +
 link:javadoc/dev/morphia/query/filters/Filters.html#lt(java.lang.String,java.lang.Object)[Filters#lt(String,Object)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestLt.java[dev.morphia.test.query.filters.TestLt]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestLt.java[TestLt]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/lte[$lte]
 a| link:javadoc/dev/morphia/query/filters/Filters.html#lte(java.lang.Object)[Filters#lte(Object)] +
 link:javadoc/dev/morphia/query/filters/Filters.html#lte(java.lang.String,java.lang.Object)[Filters#lte(String,Object)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestLte.java[dev.morphia.test.query.filters.TestLte]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestLte.java[TestLte]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/maxDistance[$maxDistance]
 | link:javadoc/dev/morphia/query/filters/Filters.html#maxDistance(java.lang.String,java.lang.Object)[Filters#maxDistance(String,Object)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestMaxDistance.java[dev.morphia.test.query.filters.TestMaxDistance]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestMaxDistance.java[TestMaxDistance]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/meta[$meta]
@@ -134,94 +134,94 @@ a| link:javadoc/dev/morphia/query/Meta.html#indexKey(java.lang.String)[Meta#inde
 link:javadoc/dev/morphia/query/Meta.html#searchHighlights(java.lang.String)[Meta#searchHighlights(String)] +
 link:javadoc/dev/morphia/query/Meta.html#searchScore(java.lang.String)[Meta#searchScore(String)] +
 link:javadoc/dev/morphia/query/Meta.html#textScore(java.lang.String)[Meta#textScore(String)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestMeta.java[dev.morphia.test.query.filters.TestMeta]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestMeta.java[TestMeta]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/minDistance[$minDistance]
 | link:javadoc/dev/morphia/query/filters/Filters.html#minDistance(java.lang.String,java.lang.Object)[Filters#minDistance(String,Object)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestMinDistance.java[dev.morphia.test.query.filters.TestMinDistance]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestMinDistance.java[TestMinDistance]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/mod[$mod]
 a| link:javadoc/dev/morphia/query/filters/Filters.html#mod(java.lang.String,long,long)[Filters#mod(String,long,long)] +
 link:javadoc/dev/morphia/query/filters/Filters.html#mod(java.lang.String,double,double)[Filters#mod(String,double,double)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestMod.java[dev.morphia.test.query.filters.TestMod]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestMod.java[TestMod]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/ne[$ne]
 | link:javadoc/dev/morphia/query/filters/Filters.html#ne(java.lang.String,java.lang.Object)[Filters#ne(String,Object)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestNe.java[dev.morphia.test.query.filters.TestNe]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestNe.java[TestNe]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/near[$near]
 | link:javadoc/dev/morphia/query/filters/Filters.html#near(java.lang.String,com.mongodb.client.model.geojson.Point)[Filters#near(String,Point)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestNear.java[dev.morphia.test.query.filters.TestNear]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestNear.java[TestNear]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/nearSphere[$nearSphere]
 | link:javadoc/dev/morphia/query/filters/Filters.html#nearSphere(java.lang.String,com.mongodb.client.model.geojson.Point)[Filters#nearSphere(String,Point)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestNearSphere.java[dev.morphia.test.query.filters.TestNearSphere]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestNearSphere.java[TestNearSphere]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/nin[$nin]
 | link:javadoc/dev/morphia/query/filters/Filters.html#nin(java.lang.String,java.lang.Object)[Filters#nin(String,Object)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestNin.java[dev.morphia.test.query.filters.TestNin]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestNin.java[TestNin]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/nor[$nor]
 | link:javadoc/dev/morphia/query/filters/Filters.html#nor(dev.morphia.query.filters.Filter%2E%2E%2E)[Filters#nor(Filter...)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestNor.java[dev.morphia.test.query.filters.TestNor]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestNor.java[TestNor]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/not[$not]
 | link:javadoc/dev/morphia/query/filters/Filter.html#not()[Filter#not()]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestNot.java[dev.morphia.test.query.filters.TestNot]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestNot.java[TestNot]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/or[$or]
 | link:javadoc/dev/morphia/query/filters/Filters.html#or(dev.morphia.query.filters.Filter%2E%2E%2E)[Filters#or(Filter...)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestOr.java[dev.morphia.test.query.filters.TestOr]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestOr.java[TestOr]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/polygon[$polygon]
 | link:javadoc/dev/morphia/query/filters/Filters.html#polygon(java.lang.String,com.mongodb.client.model.geojson.Point%2E%2E%2E)[Filters#polygon(String,Point...)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestPolygon.java[dev.morphia.test.query.filters.TestPolygon]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestPolygon.java[TestPolygon]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/regex[$regex]
 a| link:javadoc/dev/morphia/query/filters/Filters.html#regex(java.lang.String,java.lang.String)[Filters#regex(String,String)] +
 link:javadoc/dev/morphia/query/filters/Filters.html#regex(java.lang.String,java.util.regex.Pattern)[Filters#regex(String,Pattern)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestRegex.java[dev.morphia.test.query.filters.TestRegex]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestRegex.java[TestRegex]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/size[$size]
 | link:javadoc/dev/morphia/query/filters/Filters.html#size(java.lang.String,int)[Filters#size(String,int)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestSize.java[dev.morphia.test.query.filters.TestSize]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestSize.java[TestSize]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/slice[$slice]
 | link:javadoc/dev/morphia/query/ArraySlice.html#limit(int)[ArraySlice#limit(int)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestSlice.java[dev.morphia.test.query.filters.TestSlice]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestSlice.java[TestSlice]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/text[$text]
 | link:javadoc/dev/morphia/query/filters/Filters.html#text(java.lang.String)[Filters#text(String)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestText.java[dev.morphia.test.query.filters.TestText]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestText.java[TestText]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/type[$type]
 | link:javadoc/dev/morphia/query/filters/Filters.html#type(java.lang.String,dev.morphia.query.Type%2E%2E%2E)[Filters#type(String,Type...)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestType.java[dev.morphia.test.query.filters.TestType]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestType.java[TestType]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/uniqueDocs[$uniqueDocs]
 | link:javadoc/dev/morphia/query/filters/Filters.html#uniqueDocs(java.lang.String,java.lang.Object)[Filters#uniqueDocs(String,Object)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestUniqueDocs.java[dev.morphia.test.query.filters.TestUniqueDocs]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestUniqueDocs.java[TestUniqueDocs]
 
 
 | http://docs.mongodb.org/manual/reference/operator/query/where[$where]
 | link:javadoc/dev/morphia/query/filters/Filters.html#where(java.lang.String)[Filters#where(String)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestWhere.java[dev.morphia.test.query.filters.TestWhere]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestWhere.java[TestWhere]
 
 
 |===

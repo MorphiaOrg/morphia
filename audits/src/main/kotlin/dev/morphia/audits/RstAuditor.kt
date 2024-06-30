@@ -147,8 +147,7 @@ class RstAuditor(val type: OperatorType) {
                 UPDATE -> "query/updates"
             }
         val testFileName = "dev/morphia/test/$location/Test${name}"
-        val testClassName = testFileName.replace("/", ".")
-        return "https://github.com/MorphiaOrg/morphia/$ref/core/src/test/java/$testFileName.java[$testClassName]"
+        return "https://github.com/MorphiaOrg/morphia/$ref/core/src/test/java/$testFileName.java[Test${name}]"
     }
 
     private fun docsLinks(methods: List<MethodSource<*>>, type: OperatorType): String {
