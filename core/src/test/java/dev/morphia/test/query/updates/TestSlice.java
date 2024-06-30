@@ -40,10 +40,6 @@ public class TestSlice extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/updates/slice/example4
-     * 
-     * db.students.updateOne( { _id: 5 }, { $push: { quizzes: { $each: [ { wk: 5,
-     * score: 8 }, { wk: 6, score: 7 }, { wk: 7, score: 6 } ], $sort: { score: -1 },
-     * $slice: 3 } } } )
      */
     @Test(testName = "Use ``$slice`` with Other ``$push`` Modifiers")
     public void testExample4() {

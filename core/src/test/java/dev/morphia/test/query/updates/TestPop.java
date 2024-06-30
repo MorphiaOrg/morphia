@@ -19,8 +19,6 @@ public class TestPop extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/updates/pop/example2
-     * 
-     * db.students.updateOne( { _id: 10 }, { $pop: { scores: 1 } } )
      */
     @Test(testName = "Remove the Last Item of an Array")
     public void testExample2() {

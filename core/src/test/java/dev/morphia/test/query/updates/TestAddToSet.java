@@ -13,8 +13,6 @@ public class TestAddToSet extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/updates/addToSet/example1
-     * 
-     * db.inventory.updateOne( { _id: 1 }, { $addToSet: { tags: "accessories" } } )
      */
     @Test(testName = "Add to Array")
     public void testExample1() {
@@ -23,8 +21,6 @@ public class TestAddToSet extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/updates/addToSet/example2
-     * 
-     * db.inventory.updateOne( { _id: 1 }, { $addToSet: { tags: "camera" } } )
      */
     @Test(testName = "Value Already Exists")
     public void testExample2() {
@@ -33,9 +29,6 @@ public class TestAddToSet extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/updates/addToSet/example3
-     * 
-     * db.inventory.updateOne( { _id: 2 }, { $addToSet: { tags: { $each: [ "camera",
-     * "electronics", "accessories" ] } } } )
      */
     @Test(testName = "``$each`` Modifier")
     public void testExample3() {

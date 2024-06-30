@@ -30,8 +30,6 @@ public class TestRename extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/updates/rename/example3
-     * 
-     * db.students.updateOne( { _id: 1 }, { $rename: { 'wife': 'spouse' } } )
      */
     @Test(testName = "Rename a Field That Does Not Exist")
     public void testExample3() {
