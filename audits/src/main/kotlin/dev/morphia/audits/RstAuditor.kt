@@ -97,11 +97,13 @@ class RstAuditor(val type: OperatorType) {
 
     private fun updateGH(operators: List<Operator>): List<Operator> {
         val notImplemented = operators.filter { !it.implemented }
-        return GithubProject.updateGH(
-            "aggregation operator",
-            notImplemented,
-            listOf("enhancement", "aggregation")
-        )
+        val tag =
+            if (type.root() == "aggregation") {
+                "aggregation"
+            } else {
+                "query"
+            }
+        return GithubProject.updateGH("${tag} operator", notImplemented, listOf("enhancement", tag))
     }
 
     private fun hasReleaseTag(it: Pair<Operator, List<MethodSource<*>>?>): Boolean {
