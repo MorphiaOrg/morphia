@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
-import java_cup.version;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SequenceWriter;
