@@ -108,6 +108,13 @@
                         </analysisConfigurationFiles>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <forkCount>1C</forkCount>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
