@@ -3,7 +3,6 @@ package dev.morphia.test;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.github.zafarkhaja.semver.Version;
 import com.mongodb.client.MongoClient;
 
 import dev.morphia.config.MorphiaConfig;
@@ -12,6 +11,7 @@ import dev.morphia.test.TestBase.ZDTCodecProvider;
 import dev.morphia.test.config.ManualMorphiaTestConfig;
 import dev.morphia.test.config.MorphiaTestConfig;
 
+import org.semver4j.Semver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.MongoDBContainer;
@@ -102,9 +102,9 @@ public class MorphiaTestSetup {
 
     protected void checkMinDriverVersion(DriverVersion version) {
         String property = System.getProperty("driver.version");
-        Version driverVersion = property != null ? Version.valueOf(property) : null;
+        var driverVersion = property != null ? Semver.parse(property) : null;
 
-        assumeTrue(driverVersion == null || driverVersion.greaterThanOrEqualTo(version.version()),
+        assumeTrue(driverVersion == null || driverVersion.isGreaterThanOrEqualTo(version.version()),
                 format("Server should be at least %s but found %s", version, getServerVersion()));
     }
 
@@ -117,7 +117,7 @@ public class MorphiaTestSetup {
         return getMongoHolder().getMongoClient();
     }
 
-    protected Version getServerVersion() {
+    protected Semver getServerVersion() {
         return morphiaContainer.getServerVersion();
     }
 
@@ -129,8 +129,8 @@ public class MorphiaTestSetup {
      * @param version the minimum version allowed
      * @return true if server is at least specified version
      */
-    protected boolean serverIsAtLeastVersion(Version version) {
-        return getServerVersion().greaterThanOrEqualTo(version);
+    protected boolean serverIsAtLeastVersion(Semver version) {
+        return getServerVersion().isGreaterThanOrEqualTo(version);
     }
 
     protected void withSharding(Runnable body) {

@@ -88,8 +88,8 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.zafarkhaja</groupId>
-            <artifactId>java-semver</artifactId>
+            <groupId>org.semver4j</groupId>
+            <artifactId>semver4j</artifactId>
             <scope>compile</scope>
         </dependency>
 

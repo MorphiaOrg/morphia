@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.stages;
 
-import com.github.zafarkhaja.semver.Version;
-
+import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 
 import org.testng.annotations.Test;
@@ -18,7 +17,6 @@ import static dev.morphia.aggregation.stages.UnionWith.unionWith;
 public class TestUnionWith extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/stages/unionWith/example1
-     * 
      */
     @Test(testName = "Report 1: All Sales by Year and Stores and Items")
     public void testExample1() {
@@ -33,7 +31,6 @@ public class TestUnionWith extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/aggregation/stages/unionWith/example2
-     * 
      */
     @Test(testName = "Report 2: Aggregated Sales by Items")
     public void testExample2() {
@@ -47,11 +44,10 @@ public class TestUnionWith extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/aggregation/stages/unionWith/example3
-     * 
      */
     @Test(testName = "Create a Union with Specified Documents")
     public void testExample3() {
-        assumeTrue(serverIsAtLeastVersion(Version.of(6)), "Minimum server version is 6");
+        checkMinServerVersion(ServerVersion.v60);
         testPipeline(
                 (aggregation) -> aggregation.pipeline(unionWith(documents(document("_id", 4).field("flavor", "orange"),
                         document("_id", 5).field("flavor", "vanilla").field("price", 20)))));

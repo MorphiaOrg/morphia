@@ -35,8 +35,6 @@ class TestAsmGenerator {
 
         critterClassLoader.dump("target")
 
-        //        if (1==1) return
-
         val type = generator.accessorType.className
         var accessor =
             (critterClassLoader.loadClass(type) as Class<PropertyAccessor<String>>)

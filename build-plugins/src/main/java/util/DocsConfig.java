@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SequenceWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.github.zafarkhaja.semver.Version;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
@@ -25,6 +24,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+import org.semver4j.Semver;
 
 import static java.util.List.of;
 
@@ -57,13 +57,13 @@ public class DocsConfig extends AbstractMojo {
 
             if (validateBranch(branch)) {
                 master = "master".equals(branch);
-                Version pomVersion = Version.parse(model.getVersion());
+                var pomVersion = Semver.parse(model.getVersion());
                 String url = model.getUrl();
 
                 var updated = new LinkedHashMap<String, Object>();
                 copy(updated, antora, "name");
                 copy(updated, antora, "title");
-                updated.put("version", String.format("%s.%s", pomVersion.majorVersion(), pomVersion.minorVersion()));
+                updated.put("version", String.format("%s.%s", pomVersion.getMajor(), pomVersion.getMinor()));
                 if (master) {
                     updated.put("prerelease", "-SNAPSHOT");
                 }
@@ -76,7 +76,7 @@ public class DocsConfig extends AbstractMojo {
                 if (master) {
                     path = "/blob/master";
                 } else {
-                    path = String.format("/tree/%s.%s.x", pomVersion.majorVersion(), pomVersion.minorVersion());
+                    path = String.format("/tree/%s.%s.x", pomVersion.getMajor(), pomVersion.getMinor());
                 }
                 attributes.put("srcRef", String.format("%s%s", url, path));
 
@@ -94,11 +94,11 @@ public class DocsConfig extends AbstractMojo {
         return "master".equals(branch) || pattern.matcher(branch).matches();
     }
 
-    private Object previous(Version version) {
-        Version previous = Version.of(version.majorVersion(), version.minorVersion(),
-                Math.max(version.patchVersion() - 1, 0));
+    private Object previous(Semver version) {
+        var previous = Semver.of(version.getMajor(), version.getMinor(),
+                Math.max(version.getPatch() - 1, 0));
         if (master) {
-            previous = previous.setPreReleaseVersion("SNAPSHOT");
+            previous = previous.withPreRelease("SNAPSHOT");
         }
         return previous;
     }
