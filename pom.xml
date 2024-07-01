@@ -29,7 +29,7 @@
         <driver.version>4.10.2</driver.version>
         <driver.minor.version>4.8</driver.minor.version>
         <jackson.version>2.16.2</jackson.version>
-        <json.assert.version>1.5.1</json.assert.version>
+        <json.assert.version>1.5.3</json.assert.version>
         <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
         <kotlin.version>1.8.22</kotlin.version>
         <logback.version>1.4.14</logback.version>
