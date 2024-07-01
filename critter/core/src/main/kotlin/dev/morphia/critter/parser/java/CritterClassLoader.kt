@@ -11,14 +11,6 @@ class CritterClassLoader(parent: ClassLoader?) : ChildFirst(parent, mapOf()), Cl
         typeDefinitions[name] = bytes
     }
 
-    override fun loadClass(name: String?): Class<*> {
-        return super.loadClass(name)
-    }
-
-    override fun loadClass(name: String?, resolve: Boolean): Class<*> {
-        return super.loadClass(name, resolve)
-    }
-
     override fun write(name: String, data: ByteArray) {
         register(name, data)
     }

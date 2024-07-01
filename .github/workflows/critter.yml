@@ -1,0 +1,23 @@
+name: Build Project
+
+on:
+  push:
+    branches-ignore:
+      - 'dependabot/**'
+    tags:
+      - '*'
+    paths:
+      - 'critter'
+  workflow_dispatch:
+
+jobs:
+  CodeAudits:
+    uses: evanchooly/workflows/.github/workflows/code-audits.yml@master
+    with:
+      java: 17
+
+  Build:
+    uses: evanchooly/workflows/.github/workflows/build.yml@master
+    with:
+      java: 17
+      maven-flags: -Pcritter
