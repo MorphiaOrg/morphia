@@ -16,7 +16,6 @@ class TestParsing {
         CritterParser.outputGenerated = File("target/basicClass/")
         val klass = CritterParser.parser(file)
         val newInstance = klass.newInstance()
-        println("**************** klass::class.java = ${newInstance::class.java}")
         klass.declaredMethods.forEach { method ->
             val message = method.invoke(newInstance)
             println(message)
