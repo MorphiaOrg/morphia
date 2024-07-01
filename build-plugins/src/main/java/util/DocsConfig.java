@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
+import java_cup.version;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SequenceWriter;
@@ -52,36 +54,45 @@ public class DocsConfig extends AbstractMojo {
         try {
             antora = antora();
             model = pom();
-            master = "master".equals(gitProperties().get("git.branch"));
+            String branch = gitProperties().get("git.branch").toString();
 
-            Version pomVersion = Version.parse(model.getVersion());
-            String url = model.getUrl();
+            if (validateBranch(branch)) {
+                master = "master".equals(branch);
+                Version pomVersion = Version.parse(model.getVersion());
+                String url = model.getUrl();
 
-            var updated = new LinkedHashMap<String, Object>();
-            copy(updated, antora, "name");
-            copy(updated, antora, "title");
-            updated.put("version", String.format("%s.%s", pomVersion.majorVersion(), pomVersion.minorVersion()));
-            if (master) {
-                updated.put("prerelease", "-SNAPSHOT");
+                var updated = new LinkedHashMap<String, Object>();
+                copy(updated, antora, "name");
+                copy(updated, antora, "title");
+                updated.put("version", String.format("%s.%s", pomVersion.majorVersion(), pomVersion.minorVersion()));
+                if (master) {
+                    updated.put("prerelease", "-SNAPSHOT");
+                }
+                copy(updated, antora, "nav");
+                copy(updated, antora, "asciidoc");
+                Map<String, Object> attributes = walk(antora, of("asciidoc", "attributes"));
+                attributes.put("version", previous(pomVersion).toString());
+
+                String path;
+                if (master) {
+                    path = "/blob/master";
+                } else {
+                    path = String.format("/tree/%s.%s.x", pomVersion.majorVersion(), pomVersion.minorVersion());
+                }
+                attributes.put("srcRef", String.format("%s%s", url, path));
+
+                SequenceWriter sw = objectMapper.writer().writeValues(new FileWriter(DOCS_ANTORA_YML));
+                sw.write(updated);
             }
-            copy(updated, antora, "nav");
-            copy(updated, antora, "asciidoc");
-            Map<String, Object> attributes = walk(antora, of("asciidoc", "attributes"));
-            attributes.put("version", previous(pomVersion).toString());
-
-            String path;
-            if (master) {
-                path = "/blob/master";
-            } else {
-                path = String.format("/tree/%s.%s.x", pomVersion.majorVersion(), pomVersion.minorVersion());
-            }
-            attributes.put("srcRef", String.format("%s%s", url, path));
-
-            SequenceWriter sw = objectMapper.writer().writeValues(new FileWriter(DOCS_ANTORA_YML));
-            sw.write(updated);
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
+    }
+
+    private boolean validateBranch(String branch) {
+        Pattern pattern = Pattern.compile("\\d+\\.\\d+\\.x");
+
+        return "master".equals(branch) || pattern.matcher(branch).matches();
     }
 
     private Object previous(Version version) {
