@@ -64,8 +64,8 @@ class TestParsing {
         val url = javaClass.getResource(resource) ?: throw AssertionError("$resource not found")
         return File(url.file)
     }
+}
 
-    private fun String.titleCase(): String {
-        return first().uppercase() + substring(1)
-    }
+fun String.titleCase(): String {
+    return first().uppercase() + substring(1)
 }
