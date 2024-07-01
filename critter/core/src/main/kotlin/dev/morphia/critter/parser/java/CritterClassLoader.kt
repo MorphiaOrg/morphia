@@ -3,7 +3,6 @@ package dev.morphia.critter.parser.java
 import io.quarkus.gizmo.ClassOutput
 import java.io.File
 import java.io.FileOutputStream
-import net.bytebuddy.dynamic.loading.ByteArrayClassLoader
 import net.bytebuddy.dynamic.loading.ByteArrayClassLoader.ChildFirst
 
 class CritterClassLoader(parent: ClassLoader?) : ChildFirst(parent, mapOf()), ClassOutput {
@@ -22,6 +21,5 @@ class CritterClassLoader(parent: ClassLoader?) : ChildFirst(parent, mapOf()), Cl
             println("**************** dumping '$name' to file $file")
             FileOutputStream(file).write(bytes)
         }
-
     }
 }

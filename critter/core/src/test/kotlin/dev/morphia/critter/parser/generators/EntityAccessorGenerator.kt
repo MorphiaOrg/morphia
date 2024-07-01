@@ -10,7 +10,8 @@ class EntityAccessorGenerator(host: Class<*>, val fieldName: String, fieldClass:
     val entityType: Type = Type.getType(host)
     val fieldType = Type.getType(fieldClass)
     val classWriter = ClassWriter(0)
-    val accessorName = "${host.packageName.replace('.', '/')}/__morphia/${host.simpleName}${fieldName.titleCase()}Accessor"
+    val accessorName =
+        "${host.packageName.replace('.', '/')}/__morphia/${host.simpleName}${fieldName.titleCase()}Accessor"
     val accessorType = Type.getType("L$accessorName;")
 
     fun dump(): ByteArray {
@@ -96,23 +97,32 @@ class EntityAccessorGenerator(host: Class<*>, val fieldName: String, fieldClass:
     }
 
     private fun set() {
-        val mv = classWriter.visitMethod(
-            ACC_PUBLIC, "set", "(Ljava/lang/Object;${fieldType.descriptor})V",
-            "<S:Ljava/lang/Object;>(TS;${fieldType.descriptor})V", null
-        )
+        val mv =
+            classWriter.visitMethod(
+                ACC_PUBLIC,
+                "set",
+                "(Ljava/lang/Object;${fieldType.descriptor})V",
+                "<S:Ljava/lang/Object;>(TS;${fieldType.descriptor})V",
+                null
+            )
         mv.visitCode()
         val label0 = Label()
         mv.visitLabel(label0)
         mv.visitLineNumber(13, label0)
         mv.visitVarInsn(ALOAD, 1)
         mv.visitTypeInsn(CHECKCAST, entityType.internalName)
-        mv.visitVarInsn(ALOAD, 2);
-        mv.visitMethodInsn(INVOKEVIRTUAL, entityType.internalName, "__writeName", "(${fieldType.descriptor})V",
-            false);
+        mv.visitVarInsn(ALOAD, 2)
+        mv.visitMethodInsn(
+            INVOKEVIRTUAL,
+            entityType.internalName,
+            "__writeName",
+            "(${fieldType.descriptor})V",
+            false
+        )
         val label1 = Label()
         mv.visitLabel(label1)
         mv.visitLineNumber(14, label1)
-        mv.visitInsn(RETURN);
+        mv.visitInsn(RETURN)
         val label2 = Label()
         mv.visitLabel(label2)
         mv.visitLocalVariable("this", accessorType.descriptor, null, label0, label2, 0)
@@ -137,8 +147,13 @@ class EntityAccessorGenerator(host: Class<*>, val fieldName: String, fieldClass:
         mv.visitLineNumber(8, label0)
         mv.visitVarInsn(ALOAD, 1)
         mv.visitTypeInsn(CHECKCAST, entityType.internalName)
-        mv.visitMethodInsn(INVOKEVIRTUAL, entityType.internalName, "__readName", "()${fieldType.descriptor}",
-            false);
+        mv.visitMethodInsn(
+            INVOKEVIRTUAL,
+            entityType.internalName,
+            "__readName",
+            "()${fieldType.descriptor}",
+            false
+        )
         mv.visitInsn(ARETURN)
         val label1 = Label()
         mv.visitLabel(label1)

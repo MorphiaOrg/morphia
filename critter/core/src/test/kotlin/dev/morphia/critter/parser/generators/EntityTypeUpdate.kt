@@ -14,7 +14,8 @@ import org.objectweb.asm.Opcodes.RETURN
 import org.objectweb.asm.Type
 
 class EntityTypeUpdate(val entity: String) {
-    val entityType = Type.getType("L" +entity.replace('.', '/') +";")
+    val entityType = Type.getType("L" + entity.replace('.', '/') + ";")
+
     fun update(fields: Map<String, Class<*>>): ByteArray {
         val cr = ClassReader(entity)
         val writer = ClassWriter(cr, 0)
@@ -22,19 +23,26 @@ class EntityTypeUpdate(val entity: String) {
         cr.accept(writer, 0)
 
         fields.forEach { (name, type) ->
-//            val fieldType = Type.getType(type)
+            //            val fieldType = Type.getType(type)
             read(writer, name, type.descriptorString())
             write(writer, name, type.descriptorString())
         }
 
         writer.visitEnd()
-//        val out = ClassWriter(0)
-//        classNode.accept(out)
+        //        val out = ClassWriter(0)
+        //        classNode.accept(out)
         return writer.toByteArray()
     }
 
     private fun write(classNode: ClassVisitor, field: String, fieldDescriptor: String) {
-        val mv = classNode.visitMethod(ACC_PUBLIC or ACC_SYNTHETIC, "__writeName", "(${fieldDescriptor})V", null, null)
+        val mv =
+            classNode.visitMethod(
+                ACC_PUBLIC or ACC_SYNTHETIC,
+                "__writeName",
+                "(${fieldDescriptor})V",
+                null,
+                null
+            )
         mv.visitCode()
         val label0 = Label()
         mv.visitLabel(label0)
@@ -55,8 +63,14 @@ class EntityTypeUpdate(val entity: String) {
     }
 
     private fun read(classNode: ClassVisitor, field: String, fieldDescriptor: String) {
-        val mv = classNode.visitMethod(ACC_PUBLIC or ACC_SYNTHETIC, "__readName", "()${fieldDescriptor}",
-            null, null)
+        val mv =
+            classNode.visitMethod(
+                ACC_PUBLIC or ACC_SYNTHETIC,
+                "__readName",
+                "()${fieldDescriptor}",
+                null,
+                null
+            )
         mv.visitCode()
         val label0: Label = Label()
         mv.visitLabel(label0)

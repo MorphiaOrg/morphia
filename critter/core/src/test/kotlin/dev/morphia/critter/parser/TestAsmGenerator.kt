@@ -15,15 +15,18 @@ class TestAsmGenerator {
     @Test
     fun testNestedClass() {
         val critterClassLoader = CritterClassLoader(Thread.currentThread().contextClassLoader)
-        val bytes = EntityTypeUpdate("dev.morphia.critter.sources.DummyEntity")
-            .update(mapOf("name" to String::class.java))
+        val bytes =
+            EntityTypeUpdate("dev.morphia.critter.sources.DummyEntity")
+                .update(mapOf("name" to String::class.java))
         critterClassLoader.register("dev.morphia.critter.sources.DummyEntity", bytes)
 
         critterClassLoader.dump("target")
 
-        val entity = critterClassLoader.loadClass("dev.morphia.critter.sources.DummyEntity")
-            .getConstructor()
-            .newInstance()
+        val entity =
+            critterClassLoader
+                .loadClass("dev.morphia.critter.sources.DummyEntity")
+                .getConstructor()
+                .newInstance()
 
         val generator = EntityAccessorGenerator(DummyEntity::class.java, "name", String::class.java)
         critterClassLoader.register(generator.accessorType.className, generator.dump())
@@ -32,8 +35,7 @@ class TestAsmGenerator {
 
         critterClassLoader.dump("target")
 
-//        if (1==1) return
-
+        //        if (1==1) return
 
         val type = generator.accessorType.className
         var accessor =
