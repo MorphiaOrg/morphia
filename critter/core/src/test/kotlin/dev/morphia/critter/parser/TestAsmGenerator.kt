@@ -24,8 +24,6 @@ class TestAsmGenerator {
             .getConstructor()
             .newInstance()
 
-        println("**************** entity::class.java.methods = ${entity::class.java.methods.joinToString("\n")}")
-
         val generator = EntityAccessorGenerator(DummyEntity::class.java, "name", String::class.java)
         critterClassLoader.register(generator.accessorType.className, generator.dump())
 
