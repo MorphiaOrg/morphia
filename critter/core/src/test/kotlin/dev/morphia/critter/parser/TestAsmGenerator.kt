@@ -8,7 +8,6 @@ import dev.morphia.critter.sources.DummyEntity
 import org.bson.codecs.pojo.PropertyAccessor
 import org.testng.Assert.assertEquals
 import org.testng.Assert.assertTrue
-import org.testng.Assert.fail
 import org.testng.annotations.Test
 
 class TestAsmGenerator {
@@ -30,8 +29,6 @@ class TestAsmGenerator {
 
         val generator = EntityAccessorGenerator(DummyEntity::class.java, "name", String::class.java)
         critterClassLoader.register(generator.accessorType.className, generator.dump())
-
-        fail("this should fail on GH")
 
         critterClassLoader.dump("target")
 
