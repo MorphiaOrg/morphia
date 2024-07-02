@@ -3,8 +3,6 @@ package dev.morphia.critter.parser
 import dev.morphia.critter.parser.generators.AddFieldAccessorMethods
 import dev.morphia.critter.parser.generators.EntityAccessorGenerator
 import dev.morphia.critter.parser.java.CritterClassLoader
-import dev.morphia.critter.sources.DummyEntity
-import dev.morphia.critter.sources.KotlinDummyEntity
 import org.bson.codecs.pojo.PropertyAccessor
 import org.testng.Assert.assertEquals
 import org.testng.Assert.assertTrue
@@ -17,7 +15,7 @@ class TestAsmGenerator {
     }
 
     @Test(dataProvider = "classes")
-    fun testPropertyAccessors(type: Class<*>) {
+    fun testPropertyAccessors(type: String) {
         val critterClassLoader = CritterClassLoader(Thread.currentThread().contextClassLoader)
         val testFields =
             listOf(
@@ -26,13 +24,13 @@ class TestAsmGenerator {
                 listOf("salary", java.lang.Long::class.java, 100_000L),
             )
         val bytes =
-            AddFieldAccessorMethods(type.name)
+            AddFieldAccessorMethods(type)
                 .update(testFields.map { l -> l[0] as String to l[1] as Class<*> }.toMap())
-        critterClassLoader.register(type.name, bytes)
+        critterClassLoader.register(type, bytes)
 
         critterClassLoader.dump("target")
 
-        val entity = critterClassLoader.loadClass(type.name).getConstructor().newInstance()
+        val entity = critterClassLoader.loadClass(type).getConstructor().newInstance()
 
         testFields.forEach { field ->
             testAccessor(
@@ -47,7 +45,7 @@ class TestAsmGenerator {
     }
 
     private fun testAccessor(
-        type: Class<*>,
+        type: String,
         critterClassLoader: CritterClassLoader,
         entity: Any,
         fieldName: String,
@@ -75,7 +73,10 @@ class TestAsmGenerator {
     }
 
     @DataProvider(name = "classes")
-    fun names(): Array<Class<out Any>> {
-        return arrayOf(DummyEntity::class.java, KotlinDummyEntity::class.java)
+    fun names(): Array<String> {
+        return arrayOf(
+            "dev.morphia.critter.sources.DummyEntity",
+            "dev.morphia.critter.sources.KotlinDummyEntity"
+        )
     }
 }
