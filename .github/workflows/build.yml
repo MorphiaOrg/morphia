@@ -6,9 +6,6 @@ on:
       - 'dependabot/**'
     tags:
       - '*'
-    paths-ignore:
-      - 'critter/**'
-
   workflow_dispatch:
 
 jobs:

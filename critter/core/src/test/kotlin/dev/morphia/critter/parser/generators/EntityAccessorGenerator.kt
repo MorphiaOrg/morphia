@@ -6,23 +6,14 @@ import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes.*
 import org.objectweb.asm.Type
 
-class EntityAccessorGenerator(entity: String, val fieldName: String, fieldClass: Class<*>) {
-    val entityType: Type = Type.getType("L${entity.replace('.', '/')};")
+class EntityAccessorGenerator(entity: Class<*>, val fieldName: String, fieldClass: Class<*>) {
+    val entityType: Type = Type.getType(entity)
     val fieldType = Type.getType(fieldClass)
     val wrapped = wrap(fieldType)
     val classWriter = ClassWriter(0)
-    val accessorName: String
-
-    val accessorType: Type
-
-    init {
-        val packageName = entity.substringBeforeLast(".")
-        val name = entity.substringAfterLast(".")
-        accessorName =
-            "${packageName.replace('.', '/')}/__morphia/$name${fieldName.titleCase()}Accessor"
-
-        accessorType = Type.getType("L$accessorName;")
-    }
+    val accessorName =
+        "${entity.packageName.replace('.', '/')}/__morphia/${entity.simpleName}${fieldName.titleCase()}Accessor"
+    val accessorType = Type.getType("L$accessorName;")
 
     fun dump(): ByteArray {
         classWriter.visit(
