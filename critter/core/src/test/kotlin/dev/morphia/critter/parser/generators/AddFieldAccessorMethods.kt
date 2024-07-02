@@ -15,7 +15,7 @@ import org.objectweb.asm.Opcodes.PUTFIELD
 import org.objectweb.asm.Opcodes.RETURN
 import org.objectweb.asm.Type
 
-class EntityTypeUpdate(val entity: String) {
+class AddFieldAccessorMethods(val entity: String) {
     val entityType = Type.getType("L" + entity.replace('.', '/') + ";")
 
     fun update(fields: Map<String, Class<*>>): ByteArray {
@@ -31,8 +31,6 @@ class EntityTypeUpdate(val entity: String) {
         }
 
         writer.visitEnd()
-        //        val out = ClassWriter(0)
-        //        classNode.accept(out)
         return writer.toByteArray()
     }
 

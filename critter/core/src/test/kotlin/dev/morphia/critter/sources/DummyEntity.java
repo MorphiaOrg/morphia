@@ -4,12 +4,14 @@ public class DummyEntity {
     private String name = "DummyEntity";
 
     private int age = 21;
+    private Long salary = 2L;
 
     @Override
     public String toString() {
         return "DummyEntity{" +
                "name='" + name + '\'' +
                ", age=" + age +
+               ", salary=" + salary +
                '}';
     }
 
