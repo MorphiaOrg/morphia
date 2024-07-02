@@ -1,6 +1,7 @@
 package dev.morphia.critter.sources;
 
 import dev.morphia.annotations.Entity;
+
 import org.jetbrains.annotations.NotNull;
 
 @Entity(value = "basicJava", useDiscriminator = false)
@@ -17,5 +18,7 @@ public class JavaBasicClass {
         return false;
     }
 
-    public Integer imAMethodYo(){ return 0;}
+    public Integer imAMethodYo() {
+        return 0;
+    }
 }

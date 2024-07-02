@@ -9,10 +9,10 @@ public class DummyEntity {
     @Override
     public String toString() {
         return "DummyEntity{" +
-               "name='" + name + '\'' +
-               ", age=" + age +
-               ", salary=" + salary +
-               '}';
+                "name='" + name + '\'' +
+                ", age=" + age +
+                ", salary=" + salary +
+                '}';
     }
 
     public String __readNameSample() {
@@ -31,4 +31,3 @@ public class DummyEntity {
         this.age = age;
     }
 }
-

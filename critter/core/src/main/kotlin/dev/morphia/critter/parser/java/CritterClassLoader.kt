@@ -17,7 +17,9 @@ class CritterClassLoader(parent: ClassLoader?) : ChildFirst(parent, mapOf()), Cl
     fun dump(output: String) {
         typeDefinitions.forEach { (name, bytes) ->
             val name1 = File(name.replace('.', '/')).name
-            FileOutputStream(File(output, "$name1.class")).write(bytes)
+            val file = File(output, "$name1.class")
+            println("**************** file = ${file}")
+            FileOutputStream(file).write(bytes)
         }
     }
 }
