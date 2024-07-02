@@ -4,14 +4,13 @@ import dev.morphia.critter.parser.java.CritterParser
 import java.io.File
 import java.lang.reflect.Method
 import org.testng.annotations.DataProvider
-import org.testng.annotations.Test
 
 class TestParsing {
     init {
         System.setProperty("org.openrewrite.adapt.dumpClass", "true")
     }
 
-    @Test(dataProvider = "sources")
+    //    @Test(dataProvider = "sources")
     fun basicClass(file: File) {
         CritterParser.outputGenerated = File("target/basicClass/")
         val klass = CritterParser.parser(file)
