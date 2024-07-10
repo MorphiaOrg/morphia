@@ -25,7 +25,7 @@
         <dependency>
             <groupId>io.github.dmlloyd</groupId>
             <artifactId>jdk-classfile-preview</artifactId>
-            <version>23.cr1</version>
+            <version>23.cr2</version>
         </dependency>
         <dependency>
             <groupId>io.quarkus.gizmo</groupId>
