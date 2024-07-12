@@ -1,25 +1,27 @@
 package dev.morphia.critter.parser.generators
 
-import dev.morphia.critter.parser.titleCase
-import org.objectweb.asm.ClassWriter
+import dev.morphia.critter.parser.generators.Generators.wrap
+import dev.morphia.critter.titleCase
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes.*
 import org.objectweb.asm.Type
 
-class EntityAccessorGenerator(entity: Class<*>, val fieldName: String, fieldClass: Class<*>) {
-    val entityType: Type = Type.getType(entity)
+class EntityAccessorGenerator(entity: Class<*>, val fieldName: String, fieldClass: Class<*>) :
+    BaseGenerator(entity) {
     val fieldType = Type.getType(fieldClass)
     val wrapped = wrap(fieldType)
-    val classWriter = ClassWriter(0)
     val accessorName =
-        "${entity.packageName.replace('.', '/')}/__morphia/${entity.simpleName}${fieldName.titleCase()}Accessor"
-    val accessorType = Type.getType("L$accessorName;")
+        "${critterPackage(entity)}${entity.simpleName}${fieldName.titleCase()}Accessor"
 
-    fun dump(): ByteArray {
+    init {
+        generatedType = Type.getType("L$accessorName;")
+    }
+
+    override fun emit(): ByteArray {
         classWriter.visit(
             V17,
-            ACC_PUBLIC or ACC_SUPER,
-            accessorType.internalName,
+            accessFlags(),
+            generatedType.internalName,
             "Ljava/lang/Object;Lorg/bson/codecs/pojo/PropertyAccessor<${wrap(fieldType).descriptor}>;",
             "java/lang/Object",
             arrayOf("org/bson/codecs/pojo/PropertyAccessor")
@@ -33,21 +35,6 @@ class EntityAccessorGenerator(entity: Class<*>, val fieldName: String, fieldClas
         classWriter.visitEnd()
 
         return classWriter.toByteArray()
-    }
-
-    private fun wrap(fieldType: Type): Type {
-        return when (fieldType) {
-            Type.VOID_TYPE -> Type.getType(Void::class.java)
-            Type.BOOLEAN_TYPE -> Type.getType(Boolean::class.java)
-            Type.CHAR_TYPE -> Type.getType(Char::class.java)
-            Type.BYTE_TYPE -> Type.getType(Byte::class.java)
-            Type.SHORT_TYPE -> Type.getType(Short::class.java)
-            Type.INT_TYPE -> Type.getType(Integer::class.java)
-            Type.FLOAT_TYPE -> Type.getType(Float::class.java)
-            Type.LONG_TYPE -> Type.getType(Long::class.java)
-            Type.DOUBLE_TYPE -> Type.getType(Double::class.java)
-            else -> fieldType
-        }
     }
 
     private fun getBridge() {
@@ -67,7 +54,7 @@ class EntityAccessorGenerator(entity: Class<*>, val fieldName: String, fieldClas
         methodVisitor.visitVarInsn(ALOAD, 1)
         methodVisitor.visitMethodInsn(
             INVOKEVIRTUAL,
-            accessorType.internalName,
+            generatedType.internalName,
             "get",
             "(Ljava/lang/Object;)${wrapped.descriptor}",
             false
@@ -75,7 +62,7 @@ class EntityAccessorGenerator(entity: Class<*>, val fieldName: String, fieldClas
         methodVisitor.visitInsn(ARETURN)
         val label1 = Label()
         methodVisitor.visitLabel(label1)
-        methodVisitor.visitLocalVariable("this", accessorType.descriptor, null, label0, label1, 0)
+        methodVisitor.visitLocalVariable("this", generatedType.descriptor, null, label0, label1, 0)
         methodVisitor.visitMaxs(2, 2)
         methodVisitor.visitEnd()
     }
@@ -99,7 +86,7 @@ class EntityAccessorGenerator(entity: Class<*>, val fieldName: String, fieldClas
         mv.visitTypeInsn(CHECKCAST, wrapped.internalName)
         mv.visitMethodInsn(
             INVOKEVIRTUAL,
-            accessorType.internalName,
+            generatedType.internalName,
             "set",
             "(Ljava/lang/Object;${wrapped.descriptor})V",
             false
@@ -107,7 +94,7 @@ class EntityAccessorGenerator(entity: Class<*>, val fieldName: String, fieldClas
         mv.visitInsn(RETURN)
         val label1 = Label()
         mv.visitLabel(label1)
-        mv.visitLocalVariable("this", accessorType.descriptor, null, label0, label1, 0)
+        mv.visitLocalVariable("this", generatedType.descriptor, null, label0, label1, 0)
         mv.visitMaxs(3, 3)
         mv.visitEnd()
     }
@@ -150,7 +137,7 @@ class EntityAccessorGenerator(entity: Class<*>, val fieldName: String, fieldClas
         mv.visitInsn(RETURN)
         val label2 = Label()
         mv.visitLabel(label2)
-        mv.visitLocalVariable("this", accessorType.descriptor, null, label0, label2, 0)
+        mv.visitLocalVariable("this", generatedType.descriptor, null, label0, label2, 0)
         mv.visitLocalVariable("entity", "Ljava/lang/Object;", "TS;", label0, label2, 1)
         mv.visitLocalVariable("value", fieldType.descriptor, null, label0, label2, 2)
         mv.visitMaxs(2, 3)
@@ -191,13 +178,13 @@ class EntityAccessorGenerator(entity: Class<*>, val fieldName: String, fieldClas
         mv.visitInsn(ARETURN)
         val label1 = Label()
         mv.visitLabel(label1)
-        mv.visitLocalVariable("this", accessorType.descriptor, null, label0, label1, 0)
+        mv.visitLocalVariable("this", generatedType.descriptor, null, label0, label1, 0)
         mv.visitLocalVariable("entity", "Ljava/lang/Object;", "TS;", label0, label1, 1)
         mv.visitMaxs(1, 2)
         mv.visitEnd()
     }
 
-    private fun constructor() {
+    fun constructor() {
         val methodVisitor = classWriter.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null)
         methodVisitor.visitCode()
         val label0 = Label()
@@ -208,7 +195,7 @@ class EntityAccessorGenerator(entity: Class<*>, val fieldName: String, fieldClas
         methodVisitor.visitInsn(RETURN)
         val label1 = Label()
         methodVisitor.visitLabel(label1)
-        methodVisitor.visitLocalVariable("this", accessorType.descriptor, null, label0, label1, 0)
+        methodVisitor.visitLocalVariable("this", generatedType.descriptor, null, label0, label1, 0)
         methodVisitor.visitMaxs(1, 1)
         methodVisitor.visitEnd()
     }

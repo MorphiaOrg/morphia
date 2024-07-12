@@ -1,6 +1,6 @@
 package dev.morphia.critter.parser.generators
 
-import dev.morphia.critter.parser.titleCase
+import dev.morphia.critter.titleCase
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.ClassWriter
@@ -15,11 +15,11 @@ import org.objectweb.asm.Opcodes.PUTFIELD
 import org.objectweb.asm.Opcodes.RETURN
 import org.objectweb.asm.Type
 
-class AddFieldAccessorMethods(val entity: String) {
-    val entityType = Type.getType("L" + entity.replace('.', '/') + ";")
+class AddFieldAccessorMethods(val entity: Class<*>) {
+    val entityType = Type.getType(entity)
 
     fun update(fields: Map<String, Class<*>>): ByteArray {
-        val cr = ClassReader(entity)
+        val cr = ClassReader(entity.name)
         val writer = ClassWriter(cr, 0)
 
         cr.accept(writer, 0)

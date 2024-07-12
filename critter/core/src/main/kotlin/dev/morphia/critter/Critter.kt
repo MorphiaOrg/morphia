@@ -46,3 +46,7 @@ class Critter(val root: File) {
     private fun Class<Entity>.loadPath() =
         getProtectionDomain().getCodeSource().getLocation().toURI()
 }
+
+fun String.titleCase(): String {
+    return first().uppercase() + substring(1)
+}

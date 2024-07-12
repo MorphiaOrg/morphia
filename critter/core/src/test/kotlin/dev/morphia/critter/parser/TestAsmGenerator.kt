@@ -12,26 +12,25 @@ import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
 
 class TestAsmGenerator {
+    val critterClassLoader = CritterClassLoader(Thread.currentThread().contextClassLoader)
+
     companion object {
         val EARLY = false
     }
 
     @Test(dataProvider = "classes")
     fun testPropertyAccessors(type: Class<*>) {
-        val critterClassLoader = CritterClassLoader(Thread.currentThread().contextClassLoader)
         val testFields =
             listOf(
                 listOf("name", String::class.java, "set externally"),
                 listOf("age", Int::class.java, 100),
                 listOf("salary", java.lang.Long::class.java, 100_000L),
             )
-        val bytes =
-            AddFieldAccessorMethods(type.name)
+        critterClassLoader.register(
+            type.name,
+            AddFieldAccessorMethods(type)
                 .update(testFields.map { l -> l[0] as String to l[1] as Class<*> }.toMap())
-        critterClassLoader.register(type.name, bytes)
-
-        critterClassLoader.dump("target")
-
+        )
         val entity = critterClassLoader.loadClass(type.name).getConstructor().newInstance()
 
         testFields.forEach { field ->
@@ -55,12 +54,11 @@ class TestAsmGenerator {
         testValue: Any,
     ) {
         val generator = EntityAccessorGenerator(type, fieldName, fieldType)
-        critterClassLoader.register(generator.accessorType.className, generator.dump())
+        critterClassLoader.register(generator.generatedType.className, generator.emit())
 
-        critterClassLoader.dump("target")
         if (EARLY) return
         val accessor =
-            (critterClassLoader.loadClass(generator.accessorType.className)
+            (critterClassLoader.loadClass(generator.generatedType.className)
                     as Class<PropertyAccessor<Any>>)
                 .getConstructor()
                 .newInstance()

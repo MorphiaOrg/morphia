@@ -1,6 +1,7 @@
 package dev.morphia.critter.parser
 
 import dev.morphia.critter.parser.java.CritterParser
+import dev.morphia.critter.titleCase
 import java.io.File
 import java.lang.reflect.Method
 import org.testng.annotations.DataProvider
@@ -62,8 +63,4 @@ class TestParsing {
         val url = javaClass.getResource(resource) ?: throw AssertionError("$resource not found")
         return File(url.file)
     }
-}
-
-fun String.titleCase(): String {
-    return first().uppercase() + substring(1)
 }

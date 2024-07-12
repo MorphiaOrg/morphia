@@ -21,6 +21,7 @@
         <dependency>
             <groupId>dev.morphia.morphia</groupId>
             <artifactId>morphia-core</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>io.github.dmlloyd</groupId>
@@ -58,6 +59,11 @@
             <groupId>com.google.devtools.ksp</groupId>
             <artifactId>symbol-processing-aa-embeddable</artifactId>
             <version>2.0.0-1.0.22</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.forge.roaster</groupId>
+            <artifactId>roaster-jdt</artifactId>
+            <version>2.29.0.Final</version>
         </dependency>
     </dependencies>
 

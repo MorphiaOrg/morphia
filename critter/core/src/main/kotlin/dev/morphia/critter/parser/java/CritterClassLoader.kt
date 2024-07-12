@@ -6,20 +6,31 @@ import java.io.FileOutputStream
 import net.bytebuddy.dynamic.loading.ByteArrayClassLoader.ChildFirst
 
 class CritterClassLoader(parent: ClassLoader?) : ChildFirst(parent, mapOf()), ClassOutput {
+    var debug = false
+
     fun register(name: String, bytes: ByteArray) {
         typeDefinitions[name] = bytes
+        if (debug) dump("target/critter/")
+    }
+
+    override fun findClass(name: String): Class<*> {
+        val findClass = super.findClass(name)
+        getResource(name.replace('.', '/') + ".class")?.let { resource ->
+            register(name, resource.readBytes())
+        }
+
+        return findClass
     }
 
     override fun write(name: String, data: ByteArray) {
         register(name, data)
     }
 
-    fun dump(output: String) {
+    private fun dump(output: String) {
+        File(output).mkdirs()
         typeDefinitions.forEach { (name, bytes) ->
             val name1 = File(name.replace('.', '/')).name
-            val file = File(output, "$name1.class")
-            println("**************** file = ${file}")
-            FileOutputStream(file).write(bytes)
+            FileOutputStream(File(output, "$name1.class")).write(bytes)
         }
     }
 }

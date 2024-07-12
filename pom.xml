@@ -312,6 +312,19 @@
                 <module>audits</module>
             </modules>
         </profile>
+
+        <profile>
+            <id>critter</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+                <property>
+                    <name>critter</name>
+                </property>
+            </activation>
+            <modules>
+                <module>critter</module>
+            </modules>
+        </profile>
     </profiles>
 
     <modules>
@@ -323,6 +336,5 @@
         <module>validation</module>
         <module>examples</module>
         <module>rewrite</module>
-        <module>critter</module>
     </modules>
 </project>
