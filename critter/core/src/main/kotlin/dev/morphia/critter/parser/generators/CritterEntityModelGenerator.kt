@@ -6,7 +6,6 @@ import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import java.lang.reflect.Proxy
-import org.objectweb.asm.ClassReader
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes.*
 import org.objectweb.asm.Type
@@ -17,16 +16,12 @@ class CritterEntityModelGenerator(val entity: Class<*>) : BaseGenerator(entity) 
         private val baseType = Type.getType(CritterEntityModel::class.java)
     }
 
-    private val sourceNode: ClassNode
-
     init {
-        val generatorName = "${critterPackage(entity)}Generated${entity.simpleName}EntityModel"
+        val generatorName = "${critterPackage(entity)}${entity.simpleName}EntityModel"
         generatedType = Type.getType("L${generatorName};")
-        sourceNode = ClassNode(ASM9)
     }
 
     override fun emit(): ByteArray {
-        ClassReader(entity.name).accept(sourceNode, 0)
         classWriter.visit(
             V17,
             accessFlags(),
@@ -370,7 +365,7 @@ class CritterEntityModelGenerator(val entity: Class<*>) : BaseGenerator(entity) 
         var label0 = Label()
         mv.visitLabel(label0)
         mv.visitLineNumber(135, label0)
-        mv.visitInsn(if (Modifier.isAbstract(sourceNode.access)) ICONST_1 else ICONST_0)
+        mv.visitInsn(if (Modifier.isAbstract(entity.modifiers)) ICONST_1 else ICONST_0)
         mv.visitInsn(IRETURN)
         var label1 = Label()
         mv.visitLabel(label1)

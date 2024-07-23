@@ -3,6 +3,7 @@ package dev.morphia.critter.parser
 import dev.morphia.critter.parser.generators.AddFieldAccessorMethods
 import dev.morphia.critter.parser.generators.EntityAccessorGenerator
 import dev.morphia.critter.parser.java.CritterClassLoader
+import dev.morphia.critter.parser.java.CritterParser.critterClassLoader
 import dev.morphia.critter.sources.DummyEntity
 import dev.morphia.critter.sources.KotlinDummyEntity
 import org.bson.codecs.pojo.PropertyAccessor
@@ -11,8 +12,7 @@ import org.testng.Assert.assertTrue
 import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
 
-class TestAsmGenerator {
-    val critterClassLoader = CritterClassLoader(Thread.currentThread().contextClassLoader)
+class TestAccessorsMutators {
 
     companion object {
         val EARLY = false

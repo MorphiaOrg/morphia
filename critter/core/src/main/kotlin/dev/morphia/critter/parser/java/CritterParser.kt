@@ -13,12 +13,26 @@ import io.github.dmlloyd.classfile.extras.reflect.ClassFileFormatVersion.RELEASE
 import io.quarkus.gizmo.ClassCreator
 import java.io.File
 import java.io.FileOutputStream
+import java.io.PrintWriter
+import java.io.StringWriter
 import java.lang.constant.ClassDesc
 import java.util.Optional
+import org.objectweb.asm.ClassReader
+import org.objectweb.asm.util.ASMifier
+import org.objectweb.asm.util.TraceClassVisitor
 
 object CritterParser {
     var outputGenerated: File? = null
     val critterClassLoader = CritterClassLoader(Thread.currentThread().contextClassLoader)
+
+    fun asmify(bytes: ByteArray): String {
+        val classReader = ClassReader(bytes)
+        val traceWriter = StringWriter()
+        val printWriter = PrintWriter(traceWriter)
+        val traceClassVisitor = TraceClassVisitor(null, ASMifier(), printWriter)
+        classReader.accept(traceClassVisitor, 0)
+        return traceWriter.toString()
+    }
 
     fun gizmo(input: File): Class<*> {
         val model = ClassFile.of().parse(input.readBytes())
