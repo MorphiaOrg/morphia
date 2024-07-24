@@ -42,7 +42,7 @@ public class InstanceCreatorFactoryImpl implements InstanceCreatorFactory {
                 if (constructor != null) {
                     creator = () -> new ConstructorCreator(model, constructor);
                 } else {
-                    LOG.info("using old creator approach: " + model.getType().getName());
+                    LOG.debug("using old creator approach: " + model.getType().getName());
                     try {
                         Constructor<?> declared = model.getType().getDeclaredConstructor();
                         creator = () -> new NoArgCreator(declared);

@@ -1,8 +1,11 @@
 package dev.morphia.test
 
+import dev.morphia.query.filters.Filters.eq
 import dev.morphia.test.models.DelegatedNull
 import dev.morphia.test.models.MyClass
+import dev.morphia.test.models.PlayerInfo
 import dev.morphia.test.models.VersionedDataClass
+import java.util.UUID
 import org.bson.types.ObjectId
 import org.testng.Assert.assertEquals
 import org.testng.Assert.assertFalse
@@ -13,13 +16,14 @@ import org.testng.annotations.Test
 open class TestKotlinMapping : TestBase() {
     @Test
     open fun dataClasses() {
-        val list = ds.mapper.map(MyClass::class.java)
+        val list = ds.mapper.map(MyClass::class.java, PlayerInfo::class.java)
         assertFalse(list.isEmpty())
-        val myClass = MyClass(ObjectId(), 42)
-        ds.save(myClass)
-        val loaded = ds.find(MyClass::class.java).first()
+        val myClass = ds.save(MyClass(ObjectId(), 42))
+        assertEquals(ds.find(MyClass::class.java).first(), myClass)
 
-        assertEquals(loaded, myClass)
+        val uuid = UUID.randomUUID()
+        val playerInfo = ds.save(PlayerInfo(uuid))
+        assertEquals(ds.find(PlayerInfo::class.java).filter(eq("uuid", uuid)).first(), playerInfo)
     }
 
     @Test
