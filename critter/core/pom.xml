@@ -23,14 +23,14 @@
             <artifactId>morphia-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.github.dmlloyd</groupId>
-            <artifactId>jdk-classfile-preview</artifactId>
-            <version>23.cr2</version>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-tree</artifactId>
+            <version>9.7</version>
         </dependency>
         <dependency>
-            <groupId>io.quarkus.gizmo</groupId>
-            <artifactId>gizmo</artifactId>
-            <version>1.8.0</version>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-util</artifactId>
+            <version>9.7</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>

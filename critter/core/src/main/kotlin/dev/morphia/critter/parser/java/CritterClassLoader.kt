@@ -1,7 +1,6 @@
 package dev.morphia.critter.parser.java
 
 import dev.morphia.critter.parser.java.CritterParser.asmify
-import io.quarkus.gizmo.ClassOutput
 import java.io.File
 import java.io.FileOutputStream
 import java.io.FileWriter
@@ -10,7 +9,7 @@ import org.jboss.forge.roaster.Roaster
 import org.jboss.forge.roaster.model.source.JavaClassSource
 import org.objectweb.asm.Type
 
-class CritterClassLoader(parent: ClassLoader?) : ChildFirst(parent, mapOf()), ClassOutput {
+class CritterClassLoader(parent: ClassLoader?) : ChildFirst(parent, mapOf()) {
     companion object {
         var debug = false
         var output = "target/critter"
@@ -50,9 +49,5 @@ class CritterClassLoader(parent: ClassLoader?) : ChildFirst(parent, mapOf()), Cl
         }
 
         return findClass
-    }
-
-    override fun write(name: String, data: ByteArray) {
-        register(name, data)
     }
 }

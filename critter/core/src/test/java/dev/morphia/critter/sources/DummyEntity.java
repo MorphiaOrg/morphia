@@ -1,9 +1,12 @@
 package dev.morphia.critter.sources;
 
+import dev.morphia.annotations.Property;
+
 public class DummyEntity {
     private String name = "DummyEntity";
 
     private int age = 21;
+    @Property
     private Long salary = 2L;
 
     @Override

@@ -13,11 +13,6 @@ import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
 
 class TestAccessorsMutators {
-
-    companion object {
-        val EARLY = false
-    }
-
     @Test(dataProvider = "classes")
     fun testPropertyAccessors(type: Class<*>) {
         val testFields =
@@ -28,8 +23,8 @@ class TestAccessorsMutators {
             )
         critterClassLoader.register(
             type.name,
-            AddFieldAccessorMethods(type)
-                .update(testFields.map { l -> l[0] as String to l[1] as Class<*> }.toMap())
+            AddFieldAccessorMethods(type).emit()
+            // .update(testFields.map { l -> l[0] as String to l[1] as Class<*> }.toMap())
         )
         val entity = critterClassLoader.loadClass(type.name).getConstructor().newInstance()
 
@@ -56,7 +51,6 @@ class TestAccessorsMutators {
         val generator = EntityAccessorGenerator(type, fieldName, fieldType)
         critterClassLoader.register(generator.generatedType.className, generator.emit())
 
-        if (EARLY) return
         val accessor =
             (critterClassLoader.loadClass(generator.generatedType.className)
                     as Class<PropertyAccessor<Any>>)

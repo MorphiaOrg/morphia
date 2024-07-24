@@ -5,7 +5,7 @@ import org.objectweb.asm.Opcodes.*
 import org.objectweb.asm.Type
 
 abstract class BaseGenerator(entity: Class<*>) {
-    val classWriter = ClassWriter(0)
+    var classWriter = ClassWriter(0)
     val entityType: Type = Type.getType(entity)
 
     lateinit var generatedType: Type

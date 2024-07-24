@@ -1,5 +1,6 @@
 package dev.morphia.critter.parser.generators
 
+import dev.morphia.critter.parser.java.CritterParser
 import dev.morphia.critter.titleCase
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.ClassVisitor
@@ -14,27 +15,50 @@ import org.objectweb.asm.Opcodes.IRETURN
 import org.objectweb.asm.Opcodes.PUTFIELD
 import org.objectweb.asm.Opcodes.RETURN
 import org.objectweb.asm.Type
+import org.objectweb.asm.tree.ClassNode
 
-class AddFieldAccessorMethods(val entity: Class<*>) {
-    val entityType = Type.getType(entity)
+class AddFieldAccessorMethods(entity: Class<*>) : BaseGenerator(entity) {
+    var fields: Map<String, Type>
 
-    fun update(fields: Map<String, Class<*>>): ByteArray {
+    init {
         val cr = ClassReader(entity.name)
-        val writer = ClassWriter(cr, 0)
+        classWriter = ClassWriter(cr, 0)
+        cr.accept(classWriter, 0)
 
-        cr.accept(writer, 0)
-
-        fields.forEach { (name, type) ->
-            val fieldType = Type.getType(type)
-            read(writer, name, fieldType)
-            write(writer, name, fieldType)
-        }
-
-        writer.visitEnd()
-        return writer.toByteArray()
+        fields = discoverFields()
     }
 
-    private fun write(classNode: ClassVisitor, field: String, fieldType: Type) {
+    private fun discoverFields(): Map<String, Type> {
+        val reader = ClassReader(entityType.className)
+        val classNode = ClassNode()
+        reader.accept(classNode, 0)
+
+        return classNode.fields
+            .filter { field ->
+                val annotations = field.visibleAnnotations ?: listOf()
+                annotations.isEmpty() ||
+                    annotations
+                        .map { a -> a.desc }
+                        .any { desc ->
+                            desc in CritterParser.propertyAnnotations() &&
+                                desc !in CritterParser.transientAnnotations()
+                        }
+            }
+            .map { field -> field.name to Type.getType(field.desc) }
+            .toMap()
+    }
+
+    override fun emit(): ByteArray {
+        fields.forEach { (name, type) ->
+            reader(classWriter, name, type)
+            writer(classWriter, name, type)
+        }
+
+        classWriter.visitEnd()
+        return classWriter.toByteArray()
+    }
+
+    private fun writer(classNode: ClassVisitor, field: String, fieldType: Type) {
         val mv =
             classNode.visitMethod(
                 ACC_PUBLIC or ACC_SYNTHETIC,
@@ -62,7 +86,7 @@ class AddFieldAccessorMethods(val entity: Class<*>) {
         mv.visitEnd()
     }
 
-    private fun read(classNode: ClassVisitor, field: String, fieldType: Type) {
+    private fun reader(classNode: ClassVisitor, field: String, fieldType: Type) {
         val mv =
             classNode.visitMethod(
                 ACC_PUBLIC or ACC_SYNTHETIC,
