@@ -31,6 +31,6 @@ public class PropertyAnnotationProviderConverter implements Converter<List<Prope
                     } catch (ReflectiveOperationException e) {
                         throw new MappingException(e.getMessage(), e);
                     }
-                });
+                }).toList();
     }
 }

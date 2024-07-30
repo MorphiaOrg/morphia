@@ -119,6 +119,10 @@ public final class TypeExpressions {
         return StringExpressions.toString(input);
     }
 
+    public static Expression toUuid(Object input) {
+        return new Expression("$toUUID", wrap(input));
+    }
+
     /**
      * Return the BSON data type of the field.
      *
