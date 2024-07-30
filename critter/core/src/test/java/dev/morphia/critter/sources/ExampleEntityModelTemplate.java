@@ -18,9 +18,9 @@ import dev.morphia.mapping.conventions.MorphiaDefaultsConvention;
 
 import org.bson.Document;
 
-public class ExampleEntityModel extends CritterEntityModel {
+public class ExampleEntityModelTemplate extends CritterEntityModel {
 
-    public ExampleEntityModel(Mapper mapper) {
+    public ExampleEntityModelTemplate(Mapper mapper) {
         super(mapper, Example.class);
     }
 

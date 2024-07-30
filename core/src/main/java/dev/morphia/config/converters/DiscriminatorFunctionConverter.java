@@ -1,4 +1,4 @@
-package dev.morphia.config;
+package dev.morphia.config.converters;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.DiscriminatorFunction;

@@ -1,31 +1,25 @@
 package dev.morphia.critter.parser
 
-import dev.morphia.critter.parser.generators.AddFieldAccessorMethods
 import dev.morphia.critter.parser.generators.EntityAccessorGenerator
 import dev.morphia.critter.parser.java.CritterClassLoader
 import dev.morphia.critter.parser.java.CritterParser.critterClassLoader
-import dev.morphia.critter.sources.DummyEntity
-import dev.morphia.critter.sources.KotlinDummyEntity
+import dev.morphia.critter.sources.Example
 import org.bson.codecs.pojo.PropertyAccessor
 import org.testng.Assert.assertEquals
 import org.testng.Assert.assertTrue
 import org.testng.annotations.DataProvider
 import org.testng.annotations.Test
 
-class TestAccessorsMutators {
+class TestAccessorsMutators : BaseCritterTest() {
     @Test(dataProvider = "classes")
     fun testPropertyAccessors(type: Class<*>) {
         val testFields =
             listOf(
                 listOf("name", String::class.java, "set externally"),
                 listOf("age", Int::class.java, 100),
-                listOf("salary", java.lang.Long::class.java, 100_000L),
+                listOf("salary", java.lang.Long::class.java, 100_000L)
             )
-        critterClassLoader.register(
-            type.name,
-            AddFieldAccessorMethods(type).emit()
-            // .update(testFields.map { l -> l[0] as String to l[1] as Class<*> }.toMap())
-        )
+
         val entity = critterClassLoader.loadClass(type.name).getConstructor().newInstance()
 
         testFields.forEach { field ->
@@ -68,6 +62,6 @@ class TestAccessorsMutators {
 
     @DataProvider(name = "classes")
     fun names(): Array<Class<out Any>> {
-        return arrayOf(DummyEntity::class.java, KotlinDummyEntity::class.java)
+        return arrayOf(Example::class.java /*, KotlinDummyEntity::class.java*/)
     }
 }

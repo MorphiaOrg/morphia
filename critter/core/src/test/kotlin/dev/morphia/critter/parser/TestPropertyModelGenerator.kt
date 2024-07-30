@@ -1,14 +1,10 @@
 package dev.morphia.critter.parser
 
-import dev.morphia.critter.CritterEntityModel
+import dev.morphia.critter.parser.GeneratorTest.entityModel
 import dev.morphia.critter.parser.GeneratorTest.methodNames
-import dev.morphia.critter.parser.generators.CritterEntityModelGenerator
 import dev.morphia.critter.parser.generators.CritterPropertyModelGenerator
-import dev.morphia.critter.parser.generators.Generators
-import dev.morphia.critter.parser.java.CritterClassLoader
 import dev.morphia.critter.parser.java.CritterParser.critterClassLoader
 import dev.morphia.critter.sources.Example
-import dev.morphia.mapping.Mapper
 import dev.morphia.mapping.codec.pojo.EntityModel
 import dev.morphia.mapping.codec.pojo.PropertyModel
 import dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel
@@ -20,26 +16,6 @@ import org.testng.annotations.NoInjection
 import org.testng.annotations.Test
 
 class TestPropertyModelGenerator {
-    companion object {
-        init {
-            CritterClassLoader.debug = true
-        }
-    }
-
-    val entityModel: CritterEntityModel
-    val mapper = Mapper(Generators.config)
-
-    init {
-        val generator = CritterEntityModelGenerator(Example::class.java)
-        val className = generator.generatedType.className
-        critterClassLoader.register(className, generator.emit())
-        entityModel =
-            critterClassLoader
-                .loadClass(className)
-                .getConstructor(Mapper::class.java)
-                .newInstance(mapper) as CritterEntityModel
-    }
-
     @Test(dataProvider = "properties")
     fun testProperty(control: PropertyModel, methodName: String, @NoInjection method: Method) {
         val propertyModel = generateModel(control)

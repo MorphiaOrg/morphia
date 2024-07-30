@@ -11,7 +11,6 @@ import org.objectweb.asm.Type
 
 class CritterClassLoader(parent: ClassLoader?) : ChildFirst(parent, mapOf()) {
     companion object {
-        var debug = false
         var output = "target/critter"
     }
 

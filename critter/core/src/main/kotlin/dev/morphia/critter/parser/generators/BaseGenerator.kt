@@ -14,6 +14,8 @@ abstract class BaseGenerator(entity: Class<*>) {
 
     protected open fun accessFlags() = ACC_PUBLIC or ACC_SUPER
 
-    protected fun critterPackage(entity: Class<*>) =
-        "${entity.packageName.replace('.', '/')}/__morphia/"
+    protected fun critterPackage(entity: Class<*>): String {
+        val name = "${entity.packageName}/__morphia/${entity.simpleName.lowercase()}/"
+        return name.replace('.', '/')
+    }
 }

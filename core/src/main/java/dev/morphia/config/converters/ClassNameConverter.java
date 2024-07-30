@@ -1,4 +1,4 @@
-package dev.morphia.config;
+package dev.morphia.config.converters;
 
 import com.mongodb.lang.Nullable;
 

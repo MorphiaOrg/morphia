@@ -31,9 +31,13 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     Boolean applyCaps;
     Boolean applyDocumentValidations;
     Boolean applyIndexes;
-    String database;
+
     Optional<CodecProvider> codecProvider;
+
     NamingStrategy collectionNaming;
+
+    String database;
+
     DateStorage dateStorage;
     DiscriminatorFunction discriminator;
     String discriminatorKey;
@@ -41,6 +45,7 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     Boolean ignoreFinals;
     List<String> packages;
     PropertyDiscovery propertyDiscovery;
+    List<PropertyAnnotationProvider<?>> propertyAnnotationProviders = new ArrayList<>();
     NamingStrategy propertyNaming;
     QueryFactory queryFactory;
     Boolean storeEmpties;
@@ -91,6 +96,22 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     }
 
     @Override
+    public String toString() {
+        return ("MorphiaConfig{applyCaps=%s, applyDocumentValidations=%s, applyIndexes=%s, database='%s', codecProvider=%s, " +
+                "collectionNaming=%s, dateStorage=%s, discriminator=%s, discriminatorKey='%s', enablePolymorphicQueries=%s, " +
+                "ignoreFinals=%s, packages=%s, propertyDiscovery=%s, propertyNaming=%s, queryFactory=%s, " +
+                "storeEmpties=%s, storeNulls=%s}").formatted(
+                        applyCaps(), applyDocumentValidations(), applyIndexes(), database(), codecProvider(), collectionNaming(),
+                        dateStorage(), discriminator(), discriminatorKey(), enablePolymorphicQueries(), ignoreFinals(), packages(),
+                        propertyDiscovery(), propertyNaming(), queryFactory(), storeEmpties(), storeNulls());
+    }
+
+    @Override
+    public String database() {
+        return orDefault(database, "morphia");
+    }
+
+    @Override
     public Boolean applyCaps() {
         return orDefault(applyCaps, FALSE);
     }
@@ -112,11 +133,6 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     @Override
     public NamingStrategy collectionNaming() {
         return orDefault(collectionNaming, camelCase());
-    }
-
-    @Override
-    public String database() {
-        return orDefault(database, "morphia");
     }
 
     @Override
@@ -150,6 +166,11 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     }
 
     @Override
+    public List<PropertyAnnotationProvider<?>> propertyAnnotationProviders() {
+        return propertyAnnotationProviders;
+    }
+
+    @Override
     public PropertyDiscovery propertyDiscovery() {
         return orDefault(propertyDiscovery, FIELDS);
     }
@@ -172,17 +193,6 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     @Override
     public Boolean storeNulls() {
         return orDefault(storeNulls, FALSE);
-    }
-
-    @Override
-    public String toString() {
-        return ("MorphiaConfig{applyCaps=%s, applyDocumentValidations=%s, applyIndexes=%s, database='%s', codecProvider=%s, " +
-                "collectionNaming=%s, dateStorage=%s, discriminator=%s, discriminatorKey='%s', enablePolymorphicQueries=%s, " +
-                "ignoreFinals=%s, packages=%s, propertyDiscovery=%s, propertyNaming=%s, queryFactory=%s, " +
-                "storeEmpties=%s, storeNulls=%s}").formatted(
-                        applyCaps(), applyDocumentValidations(), applyIndexes(), database(), codecProvider(), collectionNaming(),
-                        dateStorage(), discriminator(), discriminatorKey(), enablePolymorphicQueries(), ignoreFinals(), packages(),
-                        propertyDiscovery(), propertyNaming(), queryFactory(), storeEmpties(), storeNulls());
     }
 
     protected <T> T orDefault(@Nullable T localValue, T defaultValue) {

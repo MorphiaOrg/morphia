@@ -1,12 +1,10 @@
 package dev.morphia.critter.parser
 
 import dev.morphia.critter.CritterEntityModel
+import dev.morphia.critter.parser.GeneratorTest.entityModel
 import dev.morphia.critter.parser.GeneratorTest.methodNames
-import dev.morphia.critter.parser.generators.CritterEntityModelGenerator
 import dev.morphia.critter.parser.generators.Generators
-import dev.morphia.critter.parser.java.CritterClassLoader
 import dev.morphia.critter.parser.java.CritterParser.critterClassLoader
-import dev.morphia.critter.sources.Example
 import dev.morphia.mapping.Mapper
 import java.lang.reflect.Method
 import org.testng.Assert.assertEquals
@@ -15,26 +13,10 @@ import org.testng.annotations.NoInjection
 import org.testng.annotations.Test
 
 class TestEntityModelGenerator {
-    companion object {
-        init {
-            CritterClassLoader.debug = true
-        }
-    }
-
-    val entityModel: CritterEntityModel
     val control: CritterEntityModel
     val mapper = Mapper(Generators.config)
-    val generator: CritterEntityModelGenerator
 
     init {
-        generator = CritterEntityModelGenerator(Example::class.java)
-        val className = generator.generatedType.className
-        critterClassLoader.register(className, generator.emit())
-        entityModel =
-            critterClassLoader
-                .loadClass(className)
-                .getConstructor(Mapper::class.java)
-                .newInstance(mapper) as CritterEntityModel
         control =
             critterClassLoader
                 .loadClass("dev.morphia.critter.sources.ExampleEntityModel")

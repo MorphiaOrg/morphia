@@ -1,11 +1,35 @@
 package dev.morphia.critter.parser
 
+import dev.morphia.critter.CritterEntityModel
+import dev.morphia.critter.parser.generators.Generators
 import dev.morphia.critter.parser.java.CritterParser.asmify
 import dev.morphia.critter.parser.java.CritterParser.critterClassLoader
+import dev.morphia.critter.sources.Example
+import dev.morphia.mapping.Mapper
+import io.github.classgraph.ClassGraph
 import java.lang.reflect.Modifier
 import org.objectweb.asm.Type
 
 object GeneratorTest {
+    var entityModel: CritterEntityModel
+    val mapper = Mapper(Generators.config)
+    val critterGenerator = CritterGenerator(critterClassLoader, mapper)
+
+    init {
+        val classGraph = ClassGraph().addClassLoader(critterClassLoader).enableAllInfo()
+        classGraph.acceptPackages("dev.morphia.critter.sources")
+
+        classGraph.scan().use { scanResult ->
+            for (classInfo in scanResult.allClasses) {
+                try {
+                    critterClassLoader.dump(classInfo.name)
+                } catch (ignored: Throwable) {}
+            }
+        }
+
+        entityModel = critterGenerator.generate(Example::class.java)
+    }
+
     fun methodNames(clazz: Class<*>): Array<Array<Any>> {
         return methods(clazz)
             .map { arrayOf(it.name, it) }

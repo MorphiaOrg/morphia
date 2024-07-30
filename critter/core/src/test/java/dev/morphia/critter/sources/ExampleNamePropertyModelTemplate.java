@@ -9,8 +9,8 @@ import dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel;
 
 import org.bson.codecs.pojo.PropertyAccessor;
 
-public class ExampleNamePropertyModel extends CritterPropertyModel {
-    public ExampleNamePropertyModel(EntityModel entityModel) {
+public class ExampleNamePropertyModelTemplate extends CritterPropertyModel {
+    public ExampleNamePropertyModelTemplate(EntityModel entityModel) {
         super(entityModel);
     }
 

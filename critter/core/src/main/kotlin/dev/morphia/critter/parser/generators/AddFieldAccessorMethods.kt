@@ -1,10 +1,7 @@
 package dev.morphia.critter.parser.generators
 
-import dev.morphia.critter.parser.java.CritterParser
 import dev.morphia.critter.titleCase
-import org.objectweb.asm.ClassReader
 import org.objectweb.asm.ClassVisitor
-import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes.ACC_PUBLIC
 import org.objectweb.asm.Opcodes.ACC_SYNTHETIC
@@ -15,39 +12,9 @@ import org.objectweb.asm.Opcodes.IRETURN
 import org.objectweb.asm.Opcodes.PUTFIELD
 import org.objectweb.asm.Opcodes.RETURN
 import org.objectweb.asm.Type
-import org.objectweb.asm.tree.ClassNode
 
-class AddFieldAccessorMethods(entity: Class<*>) : BaseGenerator(entity) {
-    var fields: Map<String, Type>
-
-    init {
-        val cr = ClassReader(entity.name)
-        classWriter = ClassWriter(cr, 0)
-        cr.accept(classWriter, 0)
-
-        fields = discoverFields()
-    }
-
-    private fun discoverFields(): Map<String, Type> {
-        val reader = ClassReader(entityType.className)
-        val classNode = ClassNode()
-        reader.accept(classNode, 0)
-
-        return classNode.fields
-            .filter { field ->
-                val annotations = field.visibleAnnotations ?: listOf()
-                annotations.isEmpty() ||
-                    annotations
-                        .map { a -> a.desc }
-                        .any { desc ->
-                            desc in CritterParser.propertyAnnotations() &&
-                                desc !in CritterParser.transientAnnotations()
-                        }
-            }
-            .map { field -> field.name to Type.getType(field.desc) }
-            .toMap()
-    }
-
+class AddFieldAccessorMethods(entity: Class<*>, var fields: Map<String, Type>) :
+    BaseGenerator(entity) {
     override fun emit(): ByteArray {
         fields.forEach { (name, type) ->
             reader(classWriter, name, type)

@@ -50,3 +50,7 @@ class Critter(val root: File) {
 fun String.titleCase(): String {
     return first().uppercase() + substring(1)
 }
+
+fun String.firstToLowerCase(): String {
+    return first().lowercase() + substring(1)
+}

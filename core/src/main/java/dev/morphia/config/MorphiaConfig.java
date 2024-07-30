@@ -8,6 +8,12 @@ import dev.morphia.annotations.PossibleValues;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Validation;
 import dev.morphia.annotations.internal.MorphiaExperimental;
+import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.config.converters.CodecProviderConverter;
+import dev.morphia.config.converters.DiscriminatorFunctionConverter;
+import dev.morphia.config.converters.NamingStrategyConverter;
+import dev.morphia.config.converters.PropertyAnnotationProviderConverter;
+import dev.morphia.config.converters.QueryFactoryConverter;
 import dev.morphia.mapping.DateStorage;
 import dev.morphia.mapping.DiscriminatorFunction;
 import dev.morphia.mapping.NamingStrategy;
@@ -375,12 +381,57 @@ public interface MorphiaConfig {
     }
 
     /**
+     * Specifies the providers of any external annotations to use as markers for properties for Morphia to consider while mapping. This
+     * method is marked as internal only to note that, as a relatively lower level hook in to Morphia functionality, the regular
+     * guarantees about stability do not apply. This property and its underlying types and behaviors are subject to potential change
+     * based on the evolving needs of Morphia internals. Users who need it are encouraged to use it with that caveat in mind.
+     *
+     * Morphia annotations will, of course, always be used regardless of any additional types specified.
+     *
+     * @return the list of providers
+     * @since 3.0
+     * @morphia.experimental
+     * @morphia.internal
+     *
+     * @see PropertyAnnotationProvider
+     */
+    @MorphiaInternal
+    @MorphiaExperimental
+    @WithConverter(PropertyAnnotationProviderConverter.class)
+    @WithDefault("dev.morphia.config.MorphiaPropertyAnnotationProvider")
+    List<PropertyAnnotationProvider<?>> propertyAnnotationProviders();
+
+    /**
+     * Updates this configuration to include the new annotation providers for property discovery. If the default morphia provider is not
+     * included it will be added.
+     *
+     * @param list the new providers
+     *
+     * @return this
+     * @since 3.0
+     * @morphia.internal
+     * @morphia.experimental
+     * @see #propertyAnnotationProviders()
+     */
+    @MorphiaInternal
+    @MorphiaExperimental
+    default MorphiaConfig propertyAnnotationProviders(List<PropertyAnnotationProvider<?>> list) {
+        var newConfig = new ManualMorphiaConfig(this);
+        newConfig.propertyAnnotationProviders = list;
+        if (list.isEmpty() || list.stream().noneMatch(p -> p instanceof MorphiaPropertyAnnotationProvider)) {
+            newConfig.propertyAnnotationProviders.add(new MorphiaPropertyAnnotationProvider());
+        }
+        return newConfig;
+    }
+
+    /**
      * Determines how properties are discovered. The traditional value is by scanning for fields which involves a bit more reflective
      * work. Alternately, scanning can check for get/set method pairs to determine which class properties should be mapped.
      *
      * @return the discovery method to use
      * @see PropertyDiscovery
      */
+    @Deprecated
     @WithDefault("fields")
     @PossibleValues(value = { "fields", "methods" }, fqcn = false)
     PropertyDiscovery propertyDiscovery();
