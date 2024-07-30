@@ -3,7 +3,7 @@
 { "_id" : 2, "type" : "vanilla", "orderDate" : ISODate("2021-01-11T06:31:15Z"), "state" : "CA", "price" : 12, "quantity" : 145, "rankQuantityForState" : 3 }
 { "_id" : 0, "type" : "chocolate", "orderDate" : ISODate("2020-05-18T14:10:30Z"), "state" : "CA", "price" : 13, "quantity" : 120, "rankQuantityForState" : 4 }
 { "_id" : 10, "type" : "strawberry", "orderDate" : ISODate("2020-05-11T16:09:01Z"), "state" : "CA", "price" : 39, "quantity" : null, "rankQuantityForState" : 5 }
-{ "_id" : 11, "type" : "strawberry", "orderDate" : ISODate("2020-05-11T16:09:01Z"), "state" : "CA", "price" : 39, "rankQuantityForState" : 5 }
+{ "_id" : 11, "type" : "strawberry", "orderDate" : ISODate("2020-05-11T16:09:01Z"), "state" : "CA", "price" : 39, "rankQuantityForState" : 6 }
 { "_id" : 1, "type" : "chocolate", "orderDate" : ISODate("2021-03-20T11:30:05Z"), "state" : "WA", "price" : 14, "quantity" : 140, "rankQuantityForState" : 1 }
 { "_id" : 5, "type" : "strawberry", "orderDate" : ISODate("2019-01-08T06:12:03Z"), "state" : "WA", "price" : 43, "quantity" : 134, "rankQuantityForState" : 2 }
 { "_id" : 6, "type" : "strawberry", "orderDate" : ISODate("2020-01-08T06:12:03Z"), "state" : "WA", "price" : 41, "quantity" : 134, "rankQuantityForState" : 2 }
