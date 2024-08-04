@@ -3,38 +3,40 @@ package dev.morphia.critter.sources;
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Reference;
 
 @Entity
 public class Example {
-    @Property("myName")
+    @Property(value = "myName")
     @AlsoLoad({ "name1", "name2" })
     private String name;
 
+    @Reference(idOnly = true)
     private int age = 21;
     @Property
     private Long salary = 2L;
 
-    public String __readName() {
+    public String __readNameTemplate() {
         return name;
     }
 
-    public void __writeName(final String name) {
+    public void __writeNameTemplate(final String name) {
         this.name = name;
     }
 
-    public int __readAge() {
+    public int __readAgeTemplate() {
         return age;
     }
 
-    public void __writeAge(final int age) {
+    public void __writeAgeTemplate(final int age) {
         this.age = age;
     }
 
-    public Long __readSalary() {
+    public Long __readSalaryTemplate() {
         return salary;
     }
 
-    public void __writeSalary(final Long salary) {
+    public void __writeSalaryTemplate(final Long salary) {
         this.salary = salary;
     }
 

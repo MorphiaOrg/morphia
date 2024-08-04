@@ -1,28 +1,33 @@
 package dev.morphia.critter.parser.generators
 
+import dev.morphia.critter.parser.generators.Generators.critterPackage
 import dev.morphia.critter.parser.generators.Generators.wrap
 import dev.morphia.critter.titleCase
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes.*
 import org.objectweb.asm.Type
+import org.objectweb.asm.tree.FieldNode
 
-class EntityAccessorGenerator(entity: Class<*>, val fieldName: String, fieldClass: Class<*>) :
-    BaseGenerator(entity) {
-    val fieldType = Type.getType(fieldClass)
-    val wrapped = wrap(fieldType)
-    val accessorName =
-        "${critterPackage(entity)}${entity.simpleName}${fieldName.titleCase()}Accessor"
-
-    init {
+class EntityAccessorGenerator(entity: Class<*>) : BaseGenerator(entity) {
+    constructor(entity: Class<*>, field: FieldNode) : this(entity) {
+        propertyName = field.name
+        propertyType = Type.getType(field.desc)
         generatedType = Type.getType("L$accessorName;")
     }
+
+    val wrapped: Type by lazy { wrap(propertyType) }
+    val accessorName by lazy {
+        "${critterPackage(entity)}${entity.simpleName}${propertyName.titleCase()}Accessor"
+    }
+    lateinit var propertyName: String
+    lateinit var propertyType: Type
 
     override fun emit(): ByteArray {
         classWriter.visit(
             V17,
             accessFlags(),
             generatedType.internalName,
-            "Ljava/lang/Object;Lorg/bson/codecs/pojo/PropertyAccessor<${wrap(fieldType).descriptor}>;",
+            "Ljava/lang/Object;Lorg/bson/codecs/pojo/PropertyAccessor<${wrap(propertyType).descriptor}>;",
             "java/lang/Object",
             arrayOf("org/bson/codecs/pojo/PropertyAccessor")
         )
@@ -115,20 +120,20 @@ class EntityAccessorGenerator(entity: Class<*>, val fieldName: String, fieldClas
         mv.visitVarInsn(ALOAD, 1)
         mv.visitTypeInsn(CHECKCAST, entityType.internalName)
         mv.visitVarInsn(ALOAD, 2)
-        if (!wrapped.equals(fieldType)) {
+        if (!wrapped.equals(propertyType)) {
             mv.visitMethodInsn(
                 INVOKEVIRTUAL,
                 wrapped.internalName,
-                "${fieldType.className}Value",
-                "()${fieldType.descriptor}",
+                "${propertyType.className}Value",
+                "()${propertyType.descriptor}",
                 false
             )
         }
         mv.visitMethodInsn(
             INVOKEVIRTUAL,
             entityType.internalName,
-            "__write${fieldName.titleCase()}",
-            "(${fieldType.descriptor})V",
+            "__write${propertyName.titleCase()}",
+            "(${propertyType.descriptor})V",
             false
         )
         val label1 = Label()
@@ -139,7 +144,7 @@ class EntityAccessorGenerator(entity: Class<*>, val fieldName: String, fieldClas
         mv.visitLabel(label2)
         mv.visitLocalVariable("this", generatedType.descriptor, null, label0, label2, 0)
         mv.visitLocalVariable("entity", "Ljava/lang/Object;", "TS;", label0, label2, 1)
-        mv.visitLocalVariable("value", fieldType.descriptor, null, label0, label2, 2)
+        mv.visitLocalVariable("value", propertyType.descriptor, null, label0, label2, 2)
         mv.visitMaxs(2, 3)
         mv.visitEnd()
     }
@@ -162,16 +167,16 @@ class EntityAccessorGenerator(entity: Class<*>, val fieldName: String, fieldClas
         mv.visitMethodInsn(
             INVOKEVIRTUAL,
             entityType.internalName,
-            "__read${fieldName.titleCase()}",
-            "()${fieldType.descriptor}",
+            "__read${propertyName.titleCase()}",
+            "()${propertyType.descriptor}",
             false
         )
-        if (!wrapped.equals(fieldType)) {
+        if (!wrapped.equals(propertyType)) {
             mv.visitMethodInsn(
                 INVOKESTATIC,
                 wrapped.internalName,
                 "valueOf",
-                "(${fieldType.descriptor})${wrapped.descriptor}",
+                "(${propertyType.descriptor})${wrapped.descriptor}",
                 false
             )
         }
@@ -189,7 +194,7 @@ class EntityAccessorGenerator(entity: Class<*>, val fieldName: String, fieldClas
         methodVisitor.visitCode()
         val label0 = Label()
         methodVisitor.visitLabel(label0)
-        methodVisitor.visitLineNumber(15, label0)
+        methodVisitor.visitLineNumber(5, label0)
         methodVisitor.visitVarInsn(ALOAD, 0)
         methodVisitor.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false)
         methodVisitor.visitInsn(RETURN)

@@ -5,7 +5,6 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Set;
 
-import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.internal.EntityBuilder;
 import dev.morphia.critter.CritterEntityModel;
@@ -16,27 +15,18 @@ import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
 import dev.morphia.mapping.conventions.MorphiaDefaultsConvention;
 
-import org.bson.Document;
-
 public class ExampleEntityModelTemplate extends CritterEntityModel {
 
     public ExampleEntityModelTemplate(Mapper mapper) {
         super(mapper, Example.class);
-    }
-
-    @Override
-    public void callLifecycleMethods(Class<? extends Annotation> event, Object entity, Document document, MorphiaDatastore datastore) {
-
+        addProperty(new ExampleNamePropertyModelTemplate(this));
+        addProperty(new ExampleAgePropertyModelTemplate(this));
+        addProperty(new ExampleSalaryPropertyModelTemplate(this));
     }
 
     @Override
     public Set<Class<?>> classHierarchy() {
         return Set.of();
-    }
-
-    @Override
-    public <A extends Annotation> A getAnnotation(Class<A> clazz) {
-        return null;
     }
 
     @Override

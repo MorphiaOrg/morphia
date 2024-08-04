@@ -8,6 +8,11 @@ object Generators {
     var config = MorphiaConfig.load()
     var convention = MorphiaDefaultsConvention()
 
+    fun critterPackage(entity: Class<*>): String {
+        val name = "${entity.packageName}/__morphia/${entity.simpleName.lowercase()}/"
+        return name.replace('.', '/')
+    }
+
     fun wrap(fieldType: Type): Type {
         return when (fieldType) {
             Type.VOID_TYPE -> Type.getType(Void::class.java)

@@ -1,9 +1,10 @@
 package dev.morphia.critter.parser
 
-import dev.morphia.critter.parser.generators.EntityAccessorGenerator
+import dev.morphia.critter.parser.generators.Generators.critterPackage
 import dev.morphia.critter.parser.java.CritterClassLoader
 import dev.morphia.critter.parser.java.CritterParser.critterClassLoader
 import dev.morphia.critter.sources.Example
+import dev.morphia.critter.titleCase
 import org.bson.codecs.pojo.PropertyAccessor
 import org.testng.Assert.assertEquals
 import org.testng.Assert.assertTrue
@@ -23,31 +24,22 @@ class TestAccessorsMutators : BaseCritterTest() {
         val entity = critterClassLoader.loadClass(type.name).getConstructor().newInstance()
 
         testFields.forEach { field ->
-            testAccessor(
-                type,
-                critterClassLoader,
-                entity,
-                field[0] as String,
-                field[1] as Class<*>,
-                field[2]
-            )
+            testAccessor(type, critterClassLoader, entity, field[0] as String, field[2])
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun testAccessor(
         type: Class<*>,
         critterClassLoader: CritterClassLoader,
         entity: Any,
         fieldName: String,
-        fieldType: Class<*>,
         testValue: Any,
     ) {
-        val generator = EntityAccessorGenerator(type, fieldName, fieldType)
-        critterClassLoader.register(generator.generatedType.className, generator.emit())
-
         val accessor =
-            (critterClassLoader.loadClass(generator.generatedType.className)
-                    as Class<PropertyAccessor<Any>>)
+            (critterClassLoader.loadClass(
+                    "${critterPackage(type)}${type.simpleName}${fieldName.titleCase()}Accessor"
+                ) as Class<PropertyAccessor<Any>>)
                 .getConstructor()
                 .newInstance()
 

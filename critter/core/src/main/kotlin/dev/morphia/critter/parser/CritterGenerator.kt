@@ -14,14 +14,13 @@ class CritterGenerator(val classLoader: CritterClassLoader, val mapper: Mapper) 
     fun generate(type: Class<*>): CritterEntityModel {
         val classNode = ClassNode()
         ClassReader(type.name).accept(classNode, 0)
+        val models = propertyFinder.find(type, classNode)
 
-        propertyFinder.find(type, classNode)
-
-        return entityModel(type)
+        return entityModel(type, models)
     }
 
-    private fun entityModel(type: Class<*>): CritterEntityModel {
-        val entityModelGenerator = CritterEntityModelGenerator(type)
+    private fun entityModel(type: Class<*>, models: List<String>): CritterEntityModel {
+        val entityModelGenerator = CritterEntityModelGenerator(type, models)
         val className = entityModelGenerator.generatedType.className
         critterClassLoader.register(className, entityModelGenerator.emit())
         return critterClassLoader

@@ -1,8 +1,9 @@
 package dev.morphia.critter.parser
 
 import dev.morphia.config.PropertyAnnotationProvider
-import dev.morphia.critter.firstToLowerCase
 import dev.morphia.critter.parser.generators.AddFieldAccessorMethods
+import dev.morphia.critter.parser.generators.CritterPropertyModelGenerator
+import dev.morphia.critter.parser.generators.EntityAccessorGenerator
 import dev.morphia.critter.parser.java.CritterClassLoader
 import dev.morphia.critter.parser.java.CritterParser
 import dev.morphia.mapping.Mapper
@@ -17,14 +18,30 @@ class PropertyFinder(mapper: Mapper, val classLoader: CritterClassLoader) {
         providerMap = mapper.config.propertyAnnotationProviders().associateBy { it.provides() }
     }
 
-    fun find(type: Class<*>, classNode: ClassNode) {
-        var properties = discoverPropertyMethods(classNode)
-        var methodsFound = properties.isNotEmpty()
-        if (!methodsFound) {
-            properties = discoverFields(classNode)
-            classLoader.register(type.name, AddFieldAccessorMethods(type, properties).emit())
+    fun find(entityType: Class<*>, classNode: ClassNode): List<String> {
+        val models = mutableListOf<String>()
+        val methods = discoverPropertyMethods(classNode)
+        if (methods.isEmpty()) {
+            val fields = discoverFields(classNode)
+            classLoader.register(
+                entityType.name,
+                AddFieldAccessorMethods(entityType, fields).emit()
+            )
+            fields.forEach { field ->
+                val accessorGenerator = EntityAccessorGenerator(entityType, field)
+                classLoader.register(
+                    accessorGenerator.generatedType.className,
+                    accessorGenerator.emit()
+                )
+
+                val propertyModelGenerator = CritterPropertyModelGenerator(entityType, field)
+                val className = propertyModelGenerator.generatedType.className
+                classLoader.register(className, propertyModelGenerator.emit())
+                models += className
+            }
         }
-        // generate property models now.  will need more data than just "Type"
+
+        return models
     }
 
     private fun isPropertyAnnotated(
@@ -33,24 +50,20 @@ class PropertyFinder(mapper: Mapper, val classLoader: CritterClassLoader) {
     ): Boolean {
         val annotations = annotationNodes ?: listOf()
         val keys = providerMap.keys.map { Type.getType(it).descriptor }
-        return (allowUnannotated && annotations.isEmpty()) ||
-            annotations
-                .map { a -> a.desc }
-                .any { desc -> desc in keys && desc !in CritterParser.transientAnnotations() }
+        return allowUnannotated || annotations.any { a -> a.desc in keys }
     }
 
-    private fun discoverFields(classNode: ClassNode): Map<String, Type> {
-        return classNode.fields
+    private fun discoverFields(classNode: ClassNode) =
+        classNode.fields
+            .filter { field ->
+                (field.visibleAnnotations ?: listOf())
+                    .map { a -> a.desc }
+                    .none { desc -> desc in CritterParser.transientAnnotations() }
+            }
             .filter { isPropertyAnnotated(it.visibleAnnotations, true) }
-            .associate { field -> field.name to Type.getType(field.desc) }
-    }
 
-    private fun discoverPropertyMethods(classNode: ClassNode): Map<String, Type> {
-        return classNode.methods
+    private fun discoverPropertyMethods(classNode: ClassNode) =
+        classNode.methods
             .filter { it.name.startsWith("get") && it.parameters.isEmpty() }
             .filter { isPropertyAnnotated(it.visibleAnnotations, false) }
-            .associate { method ->
-                method.name.drop(3).firstToLowerCase() to Type.getMethodType(method.desc)
-            }
-    }
 }

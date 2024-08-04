@@ -1,5 +1,6 @@
 package dev.morphia.critter.sources;
 
+import java.lang.annotation.Annotation;
 import java.util.List;
 
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -8,27 +9,23 @@ import dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel;
 
 import org.bson.codecs.pojo.PropertyAccessor;
 
-import static dev.morphia.annotations.internal.AlsoLoadBuilder.alsoLoadBuilder;
-import static dev.morphia.annotations.internal.PropertyBuilder.propertyBuilder;
+public class ExampleAgePropertyModelTemplate extends CritterPropertyModel {
 
-public class ExampleNamePropertyModelTemplate extends CritterPropertyModel {
+    private PropertyAccessor<?> accessor = new ExampleAgeAccessorTemplate();
 
-    private PropertyAccessor<?> accessor = new ExampleNameAccessorTemplate();
-
-    public ExampleNamePropertyModelTemplate(EntityModel entityModel) {
+    public ExampleAgePropertyModelTemplate(EntityModel entityModel) {
         super(entityModel);
-        annotation(propertyBuilder()
-                .value("myName")
-                .concreteClass(String.class)
-                .build());
-        annotation(alsoLoadBuilder()
-                .value("name1", "name2")
-                .build());
+
     }
 
     @Override
     public PropertyAccessor<Object> getAccessor() {
         return (PropertyAccessor<Object>) accessor;
+    }
+
+    @Override
+    public List<Annotation> getAnnotations() {
+        return List.of();
     }
 
     @Override
@@ -38,37 +35,37 @@ public class ExampleNamePropertyModelTemplate extends CritterPropertyModel {
 
     @Override
     public String getFullName() {
-        return "dev.morphia.critter.sources.Example#name";
+        return "dev.morphia.critter.sources.Example#age";
     }
 
     @Override
     public List<String> getLoadNames() {
-        return List.of("name1", "name2");
+        return List.of();
     }
 
     @Override
     public String getMappedName() {
-        return "myName";
+        return "age";
     }
 
     @Override
     public String getName() {
-        return "name";
+        return "age";
     }
 
     @Override
     public Class<?> getNormalizedType() {
-        return String.class;
+        return int.class;
     }
 
     @Override
     public Class<?> getType() {
-        return String.class;
+        return int.class;
     }
 
     @Override
     public TypeData<?> getTypeData() {
-        return TypeData.get(String.class);
+        return TypeData.get(int.class);
     }
 
     @Override

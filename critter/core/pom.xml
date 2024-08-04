@@ -23,14 +23,17 @@
             <artifactId>morphia-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>dev.morphia.morphia</groupId>
+            <artifactId>build-plugins</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm-tree</artifactId>
-            <version>9.7</version>
         </dependency>
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm-util</artifactId>
-            <version>9.7</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
@@ -80,6 +83,27 @@
                     <compilerArgument>-proc:none</compilerArgument>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>build-plugins</artifactId>
+                <version>${project.version}</version>
+                <executions>
+                    <execution>
+                        <id>morphia-annotations-asm</id>
+                        <goals>
+                            <goal>morphia-annotations-asm</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>docs-config</id>
+                        <goals>
+                            <goal>docs-config</goal>
+                        </goals>
+                        <phase>generate-test-resources</phase>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 </project>

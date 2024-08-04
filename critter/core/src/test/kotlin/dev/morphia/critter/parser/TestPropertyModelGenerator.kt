@@ -2,54 +2,38 @@ package dev.morphia.critter.parser
 
 import dev.morphia.critter.parser.GeneratorTest.entityModel
 import dev.morphia.critter.parser.GeneratorTest.methodNames
-import dev.morphia.critter.parser.generators.CritterPropertyModelGenerator
 import dev.morphia.critter.parser.java.CritterParser.critterClassLoader
-import dev.morphia.critter.sources.Example
 import dev.morphia.mapping.codec.pojo.EntityModel
 import dev.morphia.mapping.codec.pojo.PropertyModel
 import dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel
 import java.lang.reflect.Method
-import org.objectweb.asm.Type
 import org.testng.Assert.assertEquals
 import org.testng.annotations.DataProvider
 import org.testng.annotations.NoInjection
 import org.testng.annotations.Test
 
-class TestPropertyModelGenerator {
-    @Test(dataProvider = "properties")
-    fun testProperty(control: PropertyModel, methodName: String, @NoInjection method: Method) {
-        val propertyModel = generateModel(control)
+class TestPropertyModelGenerator : BaseCritterTest() {
+    @Test(dataProvider = "properties", testName = "")
+    fun testProperty(control: String, methodName: String, @NoInjection method: Method) {
+        val propertyModel = getModel(control)
 
-        println(
-            "exampleModel = [${control.name}], methodName = [${methodName}], method = [${method}]"
-        )
+        println("exampleModel = [${control}], methodName = [${methodName}], method = [${method}]")
         val expected = method.invoke(control)
         val actual = method.invoke(propertyModel)
         assertEquals(actual, expected, "${method.name} should return the same value")
     }
 
-    private fun generateModel(control: PropertyModel): CritterPropertyModel {
-        val generator = CritterPropertyModelGenerator(Example::class.java, control.name)
-        val className = generator.generatedType.className
-        critterClassLoader.register(className, generator.emit())
-        critterClassLoader.dump(
-            control::class.java.name,
-            mapOf(Type.getType(control::class.java) to generator.generatedType)
-        )
-
-        return critterClassLoader
-            .loadClass(className)
-            .getConstructor(EntityModel::class.java)
-            .newInstance(entityModel) as CritterPropertyModel
+    private fun getModel(name: String): CritterPropertyModel {
+        return entityModel.getProperty(name) as CritterPropertyModel
     }
 
     @DataProvider(name = "properties")
     fun methods(): Array<Array<Any>> {
         val methods = methodNames(CritterPropertyModel::class.java)
-        return listOf("dev.morphia.critter.sources.ExampleNamePropertyModel")
+        return listOf("dev.morphia.critter.sources.ExampleNamePropertyModelTemplate")
             .map { loadModel(it) }
             .flatMap { propertyModel ->
-                methods.map { method -> arrayOf(propertyModel, method[0], method[1]) }
+                methods.map { method -> arrayOf(propertyModel.name, method[0], method[1]) }
             }
             .toTypedArray()
     }

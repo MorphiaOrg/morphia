@@ -2,16 +2,18 @@ package dev.morphia.critter.parser.generators
 
 import dev.morphia.annotations.Entity
 import dev.morphia.critter.CritterEntityModel
+import dev.morphia.critter.parser.generators.Generators.critterPackage
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import java.lang.reflect.Proxy
-import org.objectweb.asm.Label
+import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes.*
 import org.objectweb.asm.Type
 import org.objectweb.asm.tree.ClassNode
 
-class CritterEntityModelGenerator(val entity: Class<*>) : BaseGenerator(entity) {
+class CritterEntityModelGenerator(val entity: Class<*>, val models: List<String>) :
+    BaseGenerator(entity) {
     companion object {
         private val baseType = Type.getType(CritterEntityModel::class.java)
     }
@@ -47,18 +49,9 @@ class CritterEntityModelGenerator(val entity: Class<*>) : BaseGenerator(entity) 
     }
 
     fun constructor() {
-        val mv =
-            classWriter.visitMethod(
-                ACC_PUBLIC,
-                "<init>",
-                "(Ldev/morphia/mapping/Mapper;)V",
-                null,
-                null
-            )
+        val mv = method(ACC_PUBLIC, "<init>", "(Ldev/morphia/mapping/Mapper;)V", null, null, 24)
         mv.visitCode()
-        val label0 = Label()
-        mv.visitLabel(label0)
-        mv.visitLineNumber(21, label0)
+        val label0 = label(mv)
         mv.visitVarInsn(ALOAD, 0)
         mv.visitVarInsn(ALOAD, 1)
         mv.visitLdcInsn(Type.getType(entityType.descriptor))
@@ -69,31 +62,48 @@ class CritterEntityModelGenerator(val entity: Class<*>) : BaseGenerator(entity) 
             "(Ldev/morphia/mapping/Mapper;Ljava/lang/Class;)V",
             false
         )
-        val label1 = Label()
-        mv.visitLabel(label1)
-        mv.visitLineNumber(22, label1)
+
+        propertyModels(mv, models)
+
+        val label1 = label(mv)
         mv.visitInsn(RETURN)
-        val label2 = Label()
-        mv.visitLabel(label2)
+        val label2 = label(mv)
         mv.visitLocalVariable("this", generatedType.descriptor, null, label0, label2, 0)
         mv.visitLocalVariable("mapper", "Ldev/morphia/mapping/Mapper;", null, label0, label2, 1)
-        mv.visitMaxs(3, 2)
+        //        mv.visitMaxs(4, 2)
         mv.visitEnd()
     }
 
-    fun colllectionName() {
-        val mv =
-            classWriter.visitMethod(
-                ACC_PUBLIC,
-                "collectionName",
-                "()Ljava/lang/String;",
-                null,
-                null
+    private fun propertyModels(mv: MethodVisitor, models: List<String>) {
+        models.forEach {
+            val model = it.replace('.', '/')
+            var label = label(mv)
+            mv.visitVarInsn(ALOAD, 0)
+            mv.visitTypeInsn(NEW, model)
+            mv.visitInsn(DUP)
+            mv.visitVarInsn(ALOAD, 0)
+            mv.visitMethodInsn(
+                INVOKESPECIAL,
+                model,
+                "<init>",
+                "(Ldev/morphia/mapping/codec/pojo/EntityModel;)V",
+                false
             )
+            mv.visitMethodInsn(
+                INVOKEVIRTUAL,
+                generatedType.internalName,
+                "addProperty",
+                "(Ldev/morphia/mapping/codec/pojo/PropertyModel;)Z",
+                false
+            )
+            mv.visitInsn(POP)
+        }
+    }
+
+    fun colllectionName() {
+        val mv = method(ACC_PUBLIC, "collectionName", "()Ljava/lang/String;", null, null, 37)
         mv.visitCode()
-        val label0 = Label()
-        mv.visitLabel(label0)
-        mv.visitLineNumber(41, label0)
+        val label0 = label(mv, 37)
         mv.visitVarInsn(ALOAD, 0)
         mv.visitFieldInsn(
             GETFIELD,
@@ -124,20 +134,16 @@ class CritterEntityModelGenerator(val entity: Class<*>) : BaseGenerator(entity) 
             false
         )
         mv.visitInsn(ARETURN)
-        val label1 = Label()
-        mv.visitLabel(label1)
+        val label1 = label(mv)
         mv.visitLocalVariable("this", generatedType.descriptor, null, label0, label1, 0)
-        mv.visitMaxs(2, 1)
+        //        mv.visitMaxs(2, 1)
         mv.visitEnd()
     }
 
     fun discriminator() {
-        val mv =
-            classWriter.visitMethod(ACC_PUBLIC, "discriminator", "()Ljava/lang/String;", null, null)
+        val mv = method(ACC_PUBLIC, "discriminator", "()Ljava/lang/String;", null, null, 47)
         mv.visitCode()
-        val label0 = Label()
-        mv.visitLabel(label0)
-        mv.visitLineNumber(51, label0)
+        val label0 = label(mv)
         mv.visitVarInsn(ALOAD, 0)
         mv.visitFieldInsn(
             GETFIELD,
@@ -169,26 +175,16 @@ class CritterEntityModelGenerator(val entity: Class<*>) : BaseGenerator(entity) 
             false
         )
         mv.visitInsn(ARETURN)
-        val label1 = Label()
-        mv.visitLabel(label1)
+        val label1 = label(mv)
         mv.visitLocalVariable("this", generatedType.descriptor, null, label0, label1, 0)
         mv.visitMaxs(3, 1)
         mv.visitEnd()
     }
 
     fun discriminatorKey() {
-        val mv =
-            classWriter.visitMethod(
-                ACC_PUBLIC,
-                "discriminatorKey",
-                "()Ljava/lang/String;",
-                null,
-                null
-            )
+        val mv = method(ACC_PUBLIC, "discriminatorKey", "()Ljava/lang/String;", null, null, 52)
         mv.visitCode()
-        val label0 = Label()
-        mv.visitLabel(label0)
-        mv.visitLineNumber(57, label0)
+        val label0 = label(mv)
         mv.visitLdcInsn(entity.getAnnotation(Entity::class.java).discriminatorKey)
         mv.visitVarInsn(ALOAD, 0)
         mv.visitFieldInsn(
@@ -219,8 +215,7 @@ class CritterEntityModelGenerator(val entity: Class<*>) : BaseGenerator(entity) 
             false
         )
         mv.visitInsn(ARETURN)
-        val label1 = Label()
-        mv.visitLabel(label1)
+        val label1 = label(mv)
         mv.visitLocalVariable(
             "this",
             "Ldev/morphia/critter/sources/ExampleEntityModel;",
@@ -236,15 +231,13 @@ class CritterEntityModelGenerator(val entity: Class<*>) : BaseGenerator(entity) 
     fun useDiscriminator() {
         val mv = classWriter.visitMethod(ACC_PUBLIC, "useDiscriminator", "()Z", null, null)
         mv.visitCode()
-        val label0 = Label()
-        mv.visitLabel(label0)
+        val label0 = label(mv)
         mv.visitLineNumber(137, label0)
         mv.visitInsn(
             if (entity.getAnnotation(Entity::class.java).useDiscriminator) ICONST_1 else ICONST_0
         )
         mv.visitInsn(IRETURN)
-        val label1 = Label()
-        mv.visitLabel(label1)
+        val label1 = label(mv)
         mv.visitLocalVariable("this", generatedType.descriptor, null, label0, label1, 0)
         mv.visitMaxs(1, 1)
         mv.visitEnd()
@@ -252,17 +245,16 @@ class CritterEntityModelGenerator(val entity: Class<*>) : BaseGenerator(entity) 
 
     fun getEntityAnnotation() {
         val mv =
-            classWriter.visitMethod(
+            method(
                 ACC_PUBLIC,
                 "getEntityAnnotation",
                 "()Ldev/morphia/annotations/Entity;",
                 null,
-                null
+                null,
+                57
             )
         mv.visitCode()
-        val label0 = Label()
-        mv.visitLabel(label0)
-        mv.visitLineNumber(65, label0)
+        val label0 = label(mv)
         mv.visitVarInsn(ALOAD, 0)
         mv.visitFieldInsn(
             GETFIELD,
@@ -270,17 +262,13 @@ class CritterEntityModelGenerator(val entity: Class<*>) : BaseGenerator(entity) 
             "entityAnnotation",
             "Ldev/morphia/annotations/Entity;"
         )
-        val label1 = Label()
+        val label1 = label(mv, visit = false)
         mv.visitJumpInsn(IFNONNULL, label1)
-        val label2 = Label()
-        mv.visitLabel(label2)
-        mv.visitLineNumber(66, label2)
+        val label2 = label(mv)
         mv.visitVarInsn(ALOAD, 0)
         mv.visitLdcInsn(Type.getType(entityType.descriptor))
         mv.visitLdcInsn(Type.getType("Ldev/morphia/annotations/Entity;"))
-        val label3 = Label()
-        mv.visitLabel(label3)
-        mv.visitLineNumber(67, label3)
+        val label3 = label(mv)
         mv.visitMethodInsn(
             INVOKEVIRTUAL,
             "java/lang/Class",
@@ -296,9 +284,7 @@ class CritterEntityModelGenerator(val entity: Class<*>) : BaseGenerator(entity) 
             "(Ldev/morphia/annotations/Entity;)Ldev/morphia/annotations/internal/EntityBuilder;",
             false
         )
-        val label4 = Label()
-        mv.visitLabel(label4)
-        mv.visitLineNumber(68, label4)
+        val label4 = label(mv)
         mv.visitMethodInsn(
             INVOKEVIRTUAL,
             "dev/morphia/annotations/internal/EntityBuilder",
@@ -313,7 +299,7 @@ class CritterEntityModelGenerator(val entity: Class<*>) : BaseGenerator(entity) 
             "Ldev/morphia/annotations/Entity;"
         )
         mv.visitLabel(label1)
-        mv.visitLineNumber(70, label1)
+        mv.visitLineNumber(62, label1)
         mv.visitFrame(F_SAME, 0, null, 0, null)
         mv.visitVarInsn(ALOAD, 0)
         mv.visitFieldInsn(
@@ -323,8 +309,7 @@ class CritterEntityModelGenerator(val entity: Class<*>) : BaseGenerator(entity) 
             "Ldev/morphia/annotations/Entity;"
         )
         mv.visitInsn(ARETURN)
-        val label5 = Label()
-        mv.visitLabel(label5)
+        val label5 = label(mv)
         mv.visitLocalVariable(
             "this",
             "Ldev/morphia/critter/sources/ExampleEntityModel;",
@@ -339,51 +324,43 @@ class CritterEntityModelGenerator(val entity: Class<*>) : BaseGenerator(entity) 
 
     fun getType() {
         val mv =
-            classWriter.visitMethod(
+            method(
                 ACC_PUBLIC,
                 "getType",
                 "()Ljava/lang/Class;",
                 "()Ljava/lang/Class<*>;",
-                null
+                null,
+                107
             )
         mv.visitCode()
-        val label0 = Label()
-        mv.visitLabel(label0)
-        mv.visitLineNumber(110, label0)
+        val label0 = label(mv)
         mv.visitLdcInsn(Type.getType(entityType.descriptor))
         mv.visitInsn(ARETURN)
-        val label1 = Label()
-        mv.visitLabel(label1)
+        val label1 = label(mv)
         mv.visitLocalVariable("this", generatedType.descriptor, null, label0, label1, 0)
         mv.visitMaxs(1, 1)
         mv.visitEnd()
     }
 
     private fun isAbstract() {
-        val mv = classWriter.visitMethod(ACC_PUBLIC, "isAbstract", "()Z", null, null)
+        val mv = method(ACC_PUBLIC, "isAbstract", "()Z", null, null, 127)
         mv.visitCode()
-        var label0 = Label()
-        mv.visitLabel(label0)
-        mv.visitLineNumber(135, label0)
+        val label0 = label(mv)
         mv.visitInsn(if (Modifier.isAbstract(entity.modifiers)) ICONST_1 else ICONST_0)
         mv.visitInsn(IRETURN)
-        var label1 = Label()
-        mv.visitLabel(label1)
+        val label1 = label(mv)
         mv.visitLocalVariable("this", generatedType.descriptor, null, label0, label1, 0)
         mv.visitMaxs(1, 1)
         mv.visitEnd()
     }
 
     private fun isInterface() {
-        val mv = classWriter.visitMethod(ACC_PUBLIC, "isInterface", "()Z", null, null)
+        val mv = method(ACC_PUBLIC, "isInterface", "()Z", null, null, 132)
         mv.visitCode()
-        var label0 = Label()
-        mv.visitLabel(label0)
-        mv.visitLineNumber(135, label0)
+        val label0 = label(mv)
         mv.visitInsn(if (entity.isInterface) ICONST_1 else ICONST_0)
         mv.visitInsn(IRETURN)
-        var label1 = Label()
-        mv.visitLabel(label1)
+        val label1 = label(mv)
         mv.visitLocalVariable("this", generatedType.descriptor, null, label0, label1, 0)
         mv.visitMaxs(1, 1)
         mv.visitEnd()

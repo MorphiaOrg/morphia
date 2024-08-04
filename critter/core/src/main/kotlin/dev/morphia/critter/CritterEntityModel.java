@@ -29,19 +29,6 @@ public abstract class CritterEntityModel extends EntityModel {
     }
 
     @Override
-    public final boolean addProperty(PropertyModel property) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public final void annotation(Annotation annotation) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public abstract void callLifecycleMethods(Class<? extends Annotation> event, Object entity, Document document, MorphiaDatastore datastore);
-
-    @Override
     public abstract Set<Class<?>> classHierarchy();
 
     @Override
@@ -58,9 +45,6 @@ public abstract class CritterEntityModel extends EntityModel {
     public final EntityModel discriminatorEnabled(boolean discriminatorEnabled) {
         throw new UnsupportedOperationException();
     }
-
-    @Override
-    public abstract <A extends Annotation> A getAnnotation(Class<A> clazz);
 
     @Override
     public abstract String collectionName();

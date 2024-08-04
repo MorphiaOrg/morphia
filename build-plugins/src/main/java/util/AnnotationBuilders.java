@@ -329,7 +329,7 @@ public class AnnotationBuilders extends AbstractMojo {
 
     }
 
-    String methodCase(String name) {
+    public static String methodCase(String name) {
         return name.substring(0, 1).toLowerCase() + name.substring(1);
     }
 

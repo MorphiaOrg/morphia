@@ -45,7 +45,7 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     Boolean ignoreFinals;
     List<String> packages;
     PropertyDiscovery propertyDiscovery;
-    List<PropertyAnnotationProvider<?>> propertyAnnotationProviders = new ArrayList<>();
+    List<PropertyAnnotationProvider<?>> propertyAnnotationProviders;
     NamingStrategy propertyNaming;
     QueryFactory queryFactory;
     Boolean storeEmpties;
@@ -167,7 +167,7 @@ public class ManualMorphiaConfig implements MorphiaConfig {
 
     @Override
     public List<PropertyAnnotationProvider<?>> propertyAnnotationProviders() {
-        return propertyAnnotationProviders;
+        return orDefault(propertyAnnotationProviders, List.of(new MorphiaPropertyAnnotationProvider()));
     }
 
     @Override

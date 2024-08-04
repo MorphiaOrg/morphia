@@ -1,7 +1,7 @@
 package dev.morphia.critter.parser.generators
 
 import dev.morphia.critter.titleCase
-import org.objectweb.asm.ClassVisitor
+import org.objectweb.asm.ClassReader
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes.ACC_PUBLIC
 import org.objectweb.asm.Opcodes.ACC_SYNTHETIC
@@ -12,22 +12,30 @@ import org.objectweb.asm.Opcodes.IRETURN
 import org.objectweb.asm.Opcodes.PUTFIELD
 import org.objectweb.asm.Opcodes.RETURN
 import org.objectweb.asm.Type
+import org.objectweb.asm.tree.FieldNode
 
-class AddFieldAccessorMethods(entity: Class<*>, var fields: Map<String, Type>) :
+class AddFieldAccessorMethods(entity: Class<*>, var fields: List<FieldNode>) :
     BaseGenerator(entity) {
+
+    init {
+        ClassReader(entity.name).accept(classWriter, 0)
+    }
+
     override fun emit(): ByteArray {
-        fields.forEach { (name, type) ->
-            reader(classWriter, name, type)
-            writer(classWriter, name, type)
+        fields.forEach { field ->
+            val name = field.name
+            val type = Type.getType(field.desc)
+            reader(name, type)
+            writer(name, type)
         }
 
         classWriter.visitEnd()
         return classWriter.toByteArray()
     }
 
-    private fun writer(classNode: ClassVisitor, field: String, fieldType: Type) {
+    private fun writer(field: String, fieldType: Type) {
         val mv =
-            classNode.visitMethod(
+            classWriter.visitMethod(
                 ACC_PUBLIC or ACC_SYNTHETIC,
                 "__write${field.titleCase()}",
                 "(${fieldType.descriptor})V",
@@ -53,23 +61,24 @@ class AddFieldAccessorMethods(entity: Class<*>, var fields: Map<String, Type>) :
         mv.visitEnd()
     }
 
-    private fun reader(classNode: ClassVisitor, field: String, fieldType: Type) {
+    private fun reader(field: String, fieldType: Type) {
+        val name = "__read${field.titleCase()}"
         val mv =
-            classNode.visitMethod(
+            classWriter.visitMethod(
                 ACC_PUBLIC or ACC_SYNTHETIC,
-                "__read${field.titleCase()}",
+                name,
                 "()${fieldType.descriptor}",
                 null,
                 null
             )
         mv.visitCode()
-        val label0: Label = Label()
+        val label0 = Label()
         mv.visitLabel(label0)
         mv.visitLineNumber(14, label0)
         mv.visitVarInsn(ALOAD, 0)
         mv.visitFieldInsn(GETFIELD, entityType.internalName, field, fieldType.descriptor)
         mv.visitInsn(fieldType.getOpcode(IRETURN))
-        val label1: Label = Label()
+        val label1 = Label()
         mv.visitLabel(label1)
         mv.visitLocalVariable("this", entityType.descriptor, null, label0, label1, 0)
         mv.visitMaxs(1, 1)

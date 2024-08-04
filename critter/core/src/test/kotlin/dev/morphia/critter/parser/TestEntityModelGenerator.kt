@@ -19,10 +19,10 @@ class TestEntityModelGenerator {
     init {
         control =
             critterClassLoader
-                .loadClass("dev.morphia.critter.sources.ExampleEntityModel")
+                .loadClass("dev.morphia.critter.sources.ExampleEntityModelTemplate")
                 .getConstructor(Mapper::class.java)
                 .newInstance(mapper) as CritterEntityModel
-        critterClassLoader.dump("dev.morphia.critter.sources.ExampleEntityModel")
+        critterClassLoader.dump("dev.morphia.critter.sources.ExampleEntityModelTemplate")
     }
 
     @Test(dataProvider = "methods")

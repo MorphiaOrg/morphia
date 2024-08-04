@@ -8,21 +8,15 @@ import dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel;
 
 import org.bson.codecs.pojo.PropertyAccessor;
 
-import static dev.morphia.annotations.internal.AlsoLoadBuilder.alsoLoadBuilder;
 import static dev.morphia.annotations.internal.PropertyBuilder.propertyBuilder;
 
-public class ExampleNamePropertyModelTemplate extends CritterPropertyModel {
+public class ExampleSalaryPropertyModelTemplate extends CritterPropertyModel {
 
-    private PropertyAccessor<?> accessor = new ExampleNameAccessorTemplate();
+    private PropertyAccessor<?> accessor = new ExampleSalaryAccessorTemplate();
 
-    public ExampleNamePropertyModelTemplate(EntityModel entityModel) {
+    public ExampleSalaryPropertyModelTemplate(EntityModel entityModel) {
         super(entityModel);
         annotation(propertyBuilder()
-                .value("myName")
-                .concreteClass(String.class)
-                .build());
-        annotation(alsoLoadBuilder()
-                .value("name1", "name2")
                 .build());
     }
 
@@ -38,37 +32,37 @@ public class ExampleNamePropertyModelTemplate extends CritterPropertyModel {
 
     @Override
     public String getFullName() {
-        return "dev.morphia.critter.sources.Example#name";
+        return "dev.morphia.critter.sources.Example#salary";
     }
 
     @Override
     public List<String> getLoadNames() {
-        return List.of("name1", "name2");
+        return List.of();
     }
 
     @Override
     public String getMappedName() {
-        return "myName";
+        return "salary";
     }
 
     @Override
     public String getName() {
-        return "name";
+        return "salary";
     }
 
     @Override
     public Class<?> getNormalizedType() {
-        return String.class;
+        return Long.class;
     }
 
     @Override
     public Class<?> getType() {
-        return String.class;
+        return Long.class;
     }
 
     @Override
     public TypeData<?> getTypeData() {
-        return TypeData.get(String.class);
+        return TypeData.get(Long.class);
     }
 
     @Override

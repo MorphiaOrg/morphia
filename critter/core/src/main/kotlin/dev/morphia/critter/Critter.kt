@@ -51,6 +51,6 @@ fun String.titleCase(): String {
     return first().uppercase() + substring(1)
 }
 
-fun String.firstToLowerCase(): String {
+fun String.identifierCase(): String {
     return first().lowercase() + substring(1)
 }

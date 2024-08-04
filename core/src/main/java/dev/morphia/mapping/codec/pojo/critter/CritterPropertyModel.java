@@ -24,22 +24,6 @@ public abstract class CritterPropertyModel extends PropertyModel {
     }
 
     @Override
-    public abstract <A extends Annotation> A getAnnotation(Class<A> type);
-
-    @Override
-    public abstract List<Annotation> getAnnotations();
-
-    @Override
-    public PropertyModel annotation(Annotation annotation) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public PropertyModel annotations(List<Annotation> annotations) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public abstract boolean isFinal();
 
     @Override

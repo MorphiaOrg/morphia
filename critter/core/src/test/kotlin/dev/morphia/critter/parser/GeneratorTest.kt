@@ -22,7 +22,8 @@ object GeneratorTest {
         classGraph.scan().use { scanResult ->
             for (classInfo in scanResult.allClasses) {
                 try {
-                    critterClassLoader.dump(classInfo.name)
+                    val name = classInfo.name
+                    critterClassLoader.dump(name)
                 } catch (ignored: Throwable) {}
             }
         }
