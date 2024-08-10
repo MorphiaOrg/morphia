@@ -13,10 +13,6 @@
 
     <artifactId>critter-core</artifactId>
 
-    <properties>
-        <roaster.version>2.29.0.Final</roaster.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>dev.morphia.morphia</groupId>
@@ -27,6 +23,11 @@
             <artifactId>build-plugins</artifactId>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.squareup</groupId>
+            <artifactId>javapoet</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm-tree</artifactId>
@@ -89,9 +90,9 @@
                 <version>${project.version}</version>
                 <executions>
                     <execution>
-                        <id>morphia-annotations-asm</id>
+                        <id>morphia-annotations-ksp</id>
                         <goals>
-                            <goal>morphia-annotations-asm</goal>
+                            <goal>morphia-annotations-ksp</goal>
                         </goals>
                     </execution>
                     <execution>

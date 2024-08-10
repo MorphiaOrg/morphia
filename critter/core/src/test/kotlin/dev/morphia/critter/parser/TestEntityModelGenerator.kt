@@ -3,7 +3,7 @@ package dev.morphia.critter.parser
 import dev.morphia.critter.CritterEntityModel
 import dev.morphia.critter.parser.GeneratorTest.entityModel
 import dev.morphia.critter.parser.GeneratorTest.methodNames
-import dev.morphia.critter.parser.generators.Generators
+import dev.morphia.critter.parser.asm.Generators
 import dev.morphia.critter.parser.java.CritterParser.critterClassLoader
 import dev.morphia.mapping.Mapper
 import java.lang.reflect.Method

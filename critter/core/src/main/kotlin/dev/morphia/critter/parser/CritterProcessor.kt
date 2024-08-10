@@ -11,6 +11,7 @@ import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import dev.morphia.annotations.Entity
 import dev.morphia.annotations.ExternalEntity
+import dev.morphia.critter.parser.ksp.EntityModelGenerator
 
 @OptIn(KspExperimental::class)
 class CritterProcessor(val environment: SymbolProcessorEnvironment) : SymbolProcessor {
@@ -29,6 +30,8 @@ class CritterProcessor(val environment: SymbolProcessorEnvironment) : SymbolProc
                         it.isAnnotationPresent(ExternalEntity::class)
                 }
                 .toList()
+
+        classes.forEach { source -> EntityModelGenerator(source).build().write() }
 
         //        println("**************** files[1].declarations.toList() =
         // ${klass.declarations.toList()}")

@@ -1,4 +1,4 @@
-package dev.morphia.critter.parser.generators
+package dev.morphia.critter.parser.asm
 
 import org.objectweb.asm.ClassWriter
 import org.objectweb.asm.ClassWriter.COMPUTE_FRAMES

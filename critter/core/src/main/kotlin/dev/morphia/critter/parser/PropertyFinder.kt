@@ -1,9 +1,9 @@
 package dev.morphia.critter.parser
 
 import dev.morphia.config.PropertyAnnotationProvider
-import dev.morphia.critter.parser.generators.AddFieldAccessorMethods
-import dev.morphia.critter.parser.generators.CritterPropertyModelGenerator
-import dev.morphia.critter.parser.generators.EntityAccessorGenerator
+import dev.morphia.critter.parser.asm.AddFieldAccessorMethods
+import dev.morphia.critter.parser.asm.CritterPropertyModelGenerator
+import dev.morphia.critter.parser.asm.EntityAccessorGenerator
 import dev.morphia.critter.parser.java.CritterClassLoader
 import dev.morphia.critter.parser.java.CritterParser
 import dev.morphia.mapping.Mapper

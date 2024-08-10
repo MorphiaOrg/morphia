@@ -1,4 +1,4 @@
-package dev.morphia.critter.parser.generators
+package dev.morphia.critter.parser.asm
 
 import dev.morphia.config.MorphiaConfig
 import dev.morphia.mapping.conventions.MorphiaDefaultsConvention

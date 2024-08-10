@@ -1,8 +1,8 @@
-package dev.morphia.critter.parser.generators
+package dev.morphia.critter.parser.asm
 
 import dev.morphia.annotations.internal.AnnotationAsmFactory
 import dev.morphia.critter.identifierCase
-import dev.morphia.critter.parser.generators.Generators.critterPackage
+import dev.morphia.critter.parser.asm.Generators.critterPackage
 import dev.morphia.critter.titleCase
 import dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel
 import org.objectweb.asm.FieldVisitor

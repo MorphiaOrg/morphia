@@ -1,6 +1,7 @@
 package dev.morphia.critter.parser.java
 
 import dev.morphia.annotations.Property
+import java.io.File
 import java.io.PrintWriter
 import java.io.StringWriter
 import org.objectweb.asm.ClassReader
@@ -9,6 +10,7 @@ import org.objectweb.asm.util.ASMifier
 import org.objectweb.asm.util.TraceClassVisitor
 
 object CritterParser {
+    var outputGenerated: File? = null
     val critterClassLoader = CritterClassLoader(Thread.currentThread().contextClassLoader)
     val propertyAnnotations = mutableListOf(Type.getType(Property::class.java))
     val transientAnnotations = mutableListOf(Type.getType(Transient::class.java))

@@ -1,7 +1,7 @@
 package dev.morphia.critter.parser
 
 import dev.morphia.critter.CritterEntityModel
-import dev.morphia.critter.parser.generators.Generators
+import dev.morphia.critter.parser.asm.Generators
 import dev.morphia.critter.parser.java.CritterParser.asmify
 import dev.morphia.critter.parser.java.CritterParser.critterClassLoader
 import dev.morphia.critter.sources.Example

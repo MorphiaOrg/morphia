@@ -1,4 +1,4 @@
-package dev.morphia.critter.parser.generators
+package dev.morphia.critter.parser.asm
 
 import dev.morphia.critter.titleCase
 import org.objectweb.asm.ClassReader

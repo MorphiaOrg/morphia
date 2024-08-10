@@ -20,6 +20,10 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
                 <version>3.13.1</version>
                 <configuration>
@@ -109,6 +113,23 @@
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.devtools.ksp</groupId>
+            <artifactId>symbol-processing-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.devtools.ksp</groupId>
+            <artifactId>symbol-processing-common-deps</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.devtools.ksp</groupId>
+            <artifactId>symbol-processing-aa-embeddable</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup</groupId>
+            <artifactId>kotlinpoet-jvm</artifactId>
+            <version>1.18.1</version>
         </dependency>
     </dependencies>
 </project>

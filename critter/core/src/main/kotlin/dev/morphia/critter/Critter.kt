@@ -9,8 +9,12 @@ import dev.morphia.critter.parser.CritterProcessorProvider
 import java.io.File
 
 class Critter(val root: File) {
+    companion object {
+        var outputDirectory = File("target/generated-sources/morphia")
+    }
 
     private val outputDir = File(root, "target")
+
     private val ksp = File(outputDir, "ksp")
 
     fun build(): KSPConfig {
@@ -27,7 +31,7 @@ class Critter(val root: File) {
                 outputBaseDir = outputDir
                 projectBaseDir = root
                 resourceOutputDir = File(ksp, "resource-output")
-                sourceRoots = listOf(File(root, "src/test/kotlin"))
+                sourceRoots = listOf(File(root, "src/test/java"), File(root, "src/test/kotlin"))
                 libraries = listOf(File(Entity::class.java.loadPath()))
             }
 
