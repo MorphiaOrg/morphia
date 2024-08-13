@@ -37,7 +37,7 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
             model.annotation(entity);
         }
 
-        model.discriminator(config.discriminator().apply(model.getType(), entity.discriminator()));
+        model.discriminator(config.discriminator().apply(model.getType().getName(), entity.discriminator()));
     }
 
     public static String applyDefaults(String configured, String defaultValue) {

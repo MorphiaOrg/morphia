@@ -8,7 +8,7 @@ import dev.morphia.mapping.Mapper
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.tree.ClassNode
 
-class CritterGenerator(val classLoader: CritterClassLoader, val mapper: Mapper) {
+class CritterAsmGenerator(val classLoader: CritterClassLoader, val mapper: Mapper) {
     val propertyFinder = PropertyFinder(mapper, classLoader)
 
     fun generate(type: Class<*>): CritterEntityModel {

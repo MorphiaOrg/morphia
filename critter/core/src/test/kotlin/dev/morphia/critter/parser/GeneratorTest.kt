@@ -13,7 +13,7 @@ import org.objectweb.asm.Type
 object GeneratorTest {
     var entityModel: CritterEntityModel
     val mapper = Mapper(Generators.config)
-    val critterGenerator = CritterGenerator(critterClassLoader, mapper)
+    val critterAsmGenerator = CritterAsmGenerator(critterClassLoader, mapper)
 
     init {
         val classGraph = ClassGraph().addClassLoader(critterClassLoader).enableAllInfo()
@@ -28,7 +28,7 @@ object GeneratorTest {
             }
         }
 
-        entityModel = critterGenerator.generate(Example::class.java)
+        entityModel = critterAsmGenerator.generate(Example::class.java)
     }
 
     fun methodNames(clazz: Class<*>): Array<Array<Any>> {

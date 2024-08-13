@@ -11,10 +11,13 @@ import com.google.devtools.ksp.symbol.KSAnnotated
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import dev.morphia.annotations.Entity
 import dev.morphia.annotations.ExternalEntity
+import dev.morphia.config.MorphiaConfig
+import dev.morphia.critter.parser.asm.Generators.config
 import dev.morphia.critter.parser.ksp.EntityModelGenerator
 
 @OptIn(KspExperimental::class)
-class CritterProcessor(val environment: SymbolProcessorEnvironment) : SymbolProcessor {
+class CritterProcessor(val environment: SymbolProcessorEnvironment, val config: MorphiaConfig) :
+    SymbolProcessor {
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
         val classes =
@@ -31,11 +34,7 @@ class CritterProcessor(val environment: SymbolProcessorEnvironment) : SymbolProc
                 }
                 .toList()
 
-        classes.forEach { source -> EntityModelGenerator(source).build().write() }
-
-        //        println("**************** files[1].declarations.toList() =
-        // ${klass.declarations.toList()}")
-        println("**************** classes = ${classes}")
+        classes.forEach { source -> EntityModelGenerator(source, config).build().write() }
 
         return listOf()
     }

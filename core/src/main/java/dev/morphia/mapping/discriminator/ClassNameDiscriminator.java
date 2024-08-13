@@ -4,7 +4,7 @@ import dev.morphia.mapping.DiscriminatorFunction;
 
 public class ClassNameDiscriminator extends DiscriminatorFunction {
     @Override
-    public String compute(Class<?> type) {
-        return type.getName();
+    public String compute(String type) {
+        return type;
     }
 }

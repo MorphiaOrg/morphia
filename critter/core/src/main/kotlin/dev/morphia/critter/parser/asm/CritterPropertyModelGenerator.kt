@@ -1,6 +1,5 @@
 package dev.morphia.critter.parser.asm
 
-import dev.morphia.annotations.internal.AnnotationAsmFactory
 import dev.morphia.critter.identifierCase
 import dev.morphia.critter.parser.asm.Generators.critterPackage
 import dev.morphia.critter.titleCase
@@ -173,7 +172,9 @@ class CritterPropertyModelGenerator(val entity: Class<*>, propertyName: String) 
     }
 
     private fun registerAnnotations() {
-        annotations.forEach { annotation -> AnnotationAsmFactory.build(methodVisitor, annotation) }
+        annotations.forEach { annotation
+            -> /* AnnotationAsmFactory.build(methodVisitor, annotation)*/
+        }
     }
 
     private fun lookupBuilder(annotation: AnnotationNode): Type {

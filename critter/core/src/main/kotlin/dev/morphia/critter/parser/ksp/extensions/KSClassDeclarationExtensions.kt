@@ -1,17 +1,11 @@
 package dev.morphia.critter.parser.ksp.extensions
 
-import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.TypeName
-import dev.morphia.annotations.CappedAt
-import dev.morphia.annotations.Entity
-import dev.morphia.annotations.internal.CappedAtBuilder
-import dev.morphia.annotations.internal.EntityBuilder
 import dev.morphia.critter.parser.packageName
 import dev.morphia.critter.parser.simpleName
-import dev.morphia.mapping.MappingException
 
 fun KSClassDeclaration.toTypeName(): TypeName {
     return ClassName.get(packageName.asString(), simpleName.asString())
@@ -27,18 +21,9 @@ fun KSClassDeclaration.allAnnotations(): Set<KSAnnotation> {
     var all =
         annotations.filter { it.annotationType.packageName().startsWith("dev.morphia") }.toSet() +
             types.flatMap { it.allAnnotations() }
-    /*
-        if (types.isNotEmpty()) {
-            println(
-                "**************** ${name()} superTypes = ${types.map { it.className() to it.javaClass }.toList()}"
-            )
-            println("          annotations = ${this.annotations.toList()}")
-            //    annotations.toSet() +
-            //    superTypes.filterIsInstance<KSAnnotated>().flatMap { it }
-        }
-    */
     return all.distinctBy { it.shortName.asString() }.toSet()
 }
+/*
 
 @OptIn(KspExperimental::class)
 fun KSClassDeclaration.entityAnnotation() =
@@ -72,3 +57,4 @@ private fun KSAnnotation.toCappedAt(): CappedAt {
 
     return cappedAtBuilder.build()
 }
+*/

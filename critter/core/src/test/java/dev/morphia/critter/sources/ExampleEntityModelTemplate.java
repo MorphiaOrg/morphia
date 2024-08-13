@@ -41,7 +41,7 @@ public class ExampleEntityModelTemplate extends CritterEntityModel {
 
     @Override
     public String discriminator() {
-        return mapper.getConfig().discriminator().apply(Example.class, ".");
+        return mapper.getConfig().discriminator().apply(Example.class.getName(), ".");
     }
 
     @Override

@@ -21,6 +21,7 @@
         <dependency>
             <groupId>dev.morphia.morphia</groupId>
             <artifactId>build-plugins</artifactId>
+            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -90,9 +91,9 @@
                 <version>${project.version}</version>
                 <executions>
                     <execution>
-                        <id>morphia-annotations-ksp</id>
+                        <id>morphia-annotations-kotlin</id>
                         <goals>
-                            <goal>morphia-annotations-ksp</goal>
+                            <goal>morphia-annotations-kotlin</goal>
                         </goals>
                     </execution>
                     <execution>

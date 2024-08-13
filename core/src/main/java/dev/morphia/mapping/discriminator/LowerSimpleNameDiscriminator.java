@@ -1,10 +1,11 @@
 package dev.morphia.mapping.discriminator;
 
 import dev.morphia.mapping.DiscriminatorFunction;
+import dev.morphia.mapping.Mapper;
 
 public class LowerSimpleNameDiscriminator extends DiscriminatorFunction {
     @Override
-    public String compute(Class<?> type) {
-        return type.getSimpleName().toLowerCase();
+    public String compute(String type) {
+        return Mapper.simpleName(type).toLowerCase();
     }
 }
