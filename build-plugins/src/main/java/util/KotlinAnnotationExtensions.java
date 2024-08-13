@@ -93,6 +93,7 @@ public class KotlinAnnotationExtensions extends AbstractMojo {
             fileBuilder.addImport("dev.morphia.critter.parser.ksp.extensions",
                     "allAnnotations", "name", "className");
             fileBuilder.addImport("dev.morphia.mapping", "MappingException");
+            fileBuilder.addImport("java.util", "Objects");
             emitFactory();
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
@@ -201,15 +202,20 @@ public class KotlinAnnotationExtensions extends AbstractMojo {
             if (type.getQualifiedName().startsWith("dev.morphia.annotations.")) {
                 String typeName = type.getSimpleName();
                 method.addCode("""
-                            var codeGen = (it as KSAnnotation).%sCodeGen()
-                        """.formatted(methodCase(typeName)));
-                value = "$codeGen";
+                        if (!Objects.equals(%sBuilder.defaults.%s, (it as KSAnnotation).to%s())) {
+                        """.formatted(source.getName(), name, typeName));
+                value = "${it.%sCodeGen()}".formatted(methodCase(typeName));
             } else {
+                method.addCode("""
+                        if (!Objects.equals(%sBuilder.defaults.%s, it)) {
+                        """.formatted(source.getName(), name));
+
                 value = getValue(type);
             }
 
             method.addCode("""
                         code += ".%s(%s)"
+                      }
                     }
                     """.formatted(name, value));
         }
@@ -253,6 +259,7 @@ public class KotlinAnnotationExtensions extends AbstractMojo {
             code = "Int";
         } else if (typeName.equals("long")) {
             code = "Long";
+            cast = "(it as Number).to%s()";
         } else if (typeName.equals("Class")) {
             code = "Class<*>";
         } else if (type.isArray()) {

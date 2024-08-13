@@ -184,6 +184,13 @@ public class AnnotationBuilders extends AbstractMojo {
                     .setReturnType(builder.getName())
                     .setBody(format("return new %s();", builder.getName()));
 
+            builder.addField()
+                    .setName("defaults")
+                    .setStatic(true)
+                    .setPublic()
+                    .setType(source.getName())
+                    .setLiteralInitializer("%s().build()".formatted(builderMethodName(source.getName())));
+
             JavaClassSource morphiaAnnotation = annotationType(source, builder);
             List<AnnotationElementSource> elements = source.getAnnotationElements();
             if (!elements.isEmpty()) {
