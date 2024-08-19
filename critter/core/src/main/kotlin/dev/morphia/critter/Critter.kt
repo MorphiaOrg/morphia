@@ -11,6 +11,10 @@ import java.io.File
 class Critter(val root: File) {
     companion object {
         var outputDirectory = File("target/generated-sources/morphia")
+
+        fun critterPackage(entity: Class<*>): String {
+            return "${entity.packageName}.__morphia.${entity.simpleName.lowercase()}"
+        }
     }
 
     private val outputDir = File(root, "target")

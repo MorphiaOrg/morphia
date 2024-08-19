@@ -1,8 +1,8 @@
 package dev.morphia.critter.parser.asm
 
 import dev.morphia.annotations.Entity
+import dev.morphia.critter.Critter.Companion.critterPackage
 import dev.morphia.critter.CritterEntityModel
-import dev.morphia.critter.parser.asm.Generators.critterPackage
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
@@ -19,7 +19,7 @@ class CritterEntityModelGenerator(val entity: Class<*>, val models: List<String>
     }
 
     init {
-        val generatorName = "${critterPackage(entity)}${entity.simpleName}EntityModel"
+        val generatorName = "${critterPackage(entity)}.${entity.simpleName}EntityModel"
         generatedType = Type.getType("L${generatorName};")
     }
 

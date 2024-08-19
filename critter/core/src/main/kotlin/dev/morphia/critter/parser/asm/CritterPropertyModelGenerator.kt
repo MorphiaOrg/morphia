@@ -1,7 +1,7 @@
 package dev.morphia.critter.parser.asm
 
+import dev.morphia.critter.Critter.Companion.critterPackage
 import dev.morphia.critter.identifierCase
-import dev.morphia.critter.parser.asm.Generators.critterPackage
 import dev.morphia.critter.titleCase
 import dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel
 import org.objectweb.asm.FieldVisitor

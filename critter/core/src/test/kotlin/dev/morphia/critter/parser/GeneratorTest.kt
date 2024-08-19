@@ -4,14 +4,13 @@ import dev.morphia.critter.CritterEntityModel
 import dev.morphia.critter.parser.asm.Generators
 import dev.morphia.critter.parser.java.CritterParser.asmify
 import dev.morphia.critter.parser.java.CritterParser.critterClassLoader
-import dev.morphia.critter.sources.Example
 import dev.morphia.mapping.Mapper
 import io.github.classgraph.ClassGraph
 import java.lang.reflect.Modifier
 import org.objectweb.asm.Type
 
 object GeneratorTest {
-    var entityModel: CritterEntityModel
+    lateinit var entityModel: CritterEntityModel
     val mapper = Mapper(Generators.config)
     val critterAsmGenerator = CritterAsmGenerator(critterClassLoader, mapper)
 
@@ -28,7 +27,7 @@ object GeneratorTest {
             }
         }
 
-        entityModel = critterAsmGenerator.generate(Example::class.java)
+        //        entityModel = critterAsmGenerator.generate(Example::class.java)
     }
 
     fun methodNames(clazz: Class<*>): Array<Array<Any>> {

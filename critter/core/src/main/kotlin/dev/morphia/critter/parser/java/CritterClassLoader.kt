@@ -19,6 +19,14 @@ class CritterClassLoader(parent: ClassLoader?) : ChildFirst(parent, mapOf()) {
         dump(name)
     }
 
+    override fun loadClass(name: String?): Class<*> {
+        try {
+            return super.loadClass(name)
+        } catch (e: ClassNotFoundException) {
+            throw ClassNotFoundException("Known class names: ${typeDefinitions.keys}", e)
+        }
+    }
+
     fun dump(name: String, mappings: Map<Type, Type> = mapOf()) {
         File(output).mkdirs()
         val outputFolder = File(output, File(name.replace('.', '/')).parent)

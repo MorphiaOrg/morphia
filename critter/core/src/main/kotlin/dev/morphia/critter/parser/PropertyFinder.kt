@@ -2,8 +2,8 @@ package dev.morphia.critter.parser
 
 import dev.morphia.config.PropertyAnnotationProvider
 import dev.morphia.critter.parser.asm.AddFieldAccessorMethods
-import dev.morphia.critter.parser.asm.CritterPropertyModelGenerator
-import dev.morphia.critter.parser.asm.EntityAccessorGenerator
+import dev.morphia.critter.parser.gizmo.GizmoPropertyAccessorGenerator
+import dev.morphia.critter.parser.gizmo.GizmoPropertyModelGenerator
 import dev.morphia.critter.parser.java.CritterClassLoader
 import dev.morphia.critter.parser.java.CritterParser
 import dev.morphia.mapping.Mapper
@@ -28,16 +28,11 @@ class PropertyFinder(mapper: Mapper, val classLoader: CritterClassLoader) {
                 AddFieldAccessorMethods(entityType, fields).emit()
             )
             fields.forEach { field ->
-                val accessorGenerator = EntityAccessorGenerator(entityType, field)
-                classLoader.register(
-                    accessorGenerator.generatedType.className,
-                    accessorGenerator.emit()
-                )
-
-                val propertyModelGenerator = CritterPropertyModelGenerator(entityType, field)
-                val className = propertyModelGenerator.generatedType.className
-                classLoader.register(className, propertyModelGenerator.emit())
-                models += className
+                val accessorGenerator = GizmoPropertyAccessorGenerator(entityType, field)
+                accessorGenerator.emit()
+                val propertyModelGenerator = GizmoPropertyModelGenerator(entityType, field)
+                propertyModelGenerator.emit()
+                models += propertyModelGenerator.generatedType
             }
         }
 
