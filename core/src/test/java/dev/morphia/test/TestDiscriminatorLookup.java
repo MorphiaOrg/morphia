@@ -1,8 +1,6 @@
 package dev.morphia.test;
 
 import dev.morphia.annotations.Entity;
-import dev.morphia.test.models.Shape;
-import dev.morphia.test.models.Square;
 import dev.morphia.test.models.TestEntity;
 
 import org.testng.annotations.Test;
@@ -16,14 +14,14 @@ public class TestDiscriminatorLookup extends TestBase {
     public void testLookup() {
         withConfig(buildConfig(SomeEntity.class), () -> {
             final SomeEntity entity = new SomeEntity();
-            entity.setShape(new Square());
+            entity.setShape(new Shape.Square());
 
             getDs().save(entity);
         });
 
         final SomeEntity entity = getDs().find(SomeEntity.class).first();
         assertNotNull(entity);
-        assertTrue(Square.class.isInstance(entity.getShape()));
+        assertTrue(Shape.Square.class.isInstance(entity.getShape()));
     }
 
     @Entity
@@ -36,6 +34,13 @@ public class TestDiscriminatorLookup extends TestBase {
 
         public void setShape(Shape shape) {
             this.shape = shape;
+        }
+    }
+
+    @Entity
+    public static abstract class Shape {
+        public static class Square extends Shape {
+            public double side;
         }
     }
 }
