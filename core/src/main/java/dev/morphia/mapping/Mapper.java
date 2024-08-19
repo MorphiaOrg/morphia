@@ -49,14 +49,6 @@ import static java.util.Arrays.asList;
 public class Mapper {
     private static final Logger LOG = LoggerFactory.getLogger(Mapper.class);
 
-    public static String simpleName(String type) {
-        while (!Character.isUpperCase(type.charAt(0)) && type.contains(".")) {
-            type = type.substring(type.indexOf('.') + 1);
-        }
-
-        return type;
-    }
-
     /**
      * Special name that can never be used. Used as default for some fields to indicate default state.
      *

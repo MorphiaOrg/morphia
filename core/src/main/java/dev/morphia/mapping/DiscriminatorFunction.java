@@ -1,7 +1,5 @@
 package dev.morphia.mapping;
 
-import com.mongodb.lang.NonNull;
-
 import dev.morphia.mapping.discriminator.ClassNameDiscriminator;
 import dev.morphia.mapping.discriminator.LowerClassNameDiscriminator;
 import dev.morphia.mapping.discriminator.LowerSimpleNameDiscriminator;
@@ -57,7 +55,7 @@ public abstract class DiscriminatorFunction {
      * @return
      * @hidden
      */
-    public final String apply(String type, String discriminator) {
+    public final String apply(Class<?> type, String discriminator) {
         return discriminator.equals(Mapper.IGNORED_FIELDNAME) ? compute(type) : discriminator;
     }
 
@@ -67,9 +65,6 @@ public abstract class DiscriminatorFunction {
      * @return the discriminator value
      * @param type
      */
-    public final String compute(Class<?> type) {
-        return compute(type.getName());
-    }
+    public abstract String compute(Class<?> type);
 
-    public abstract String compute(@NonNull String type);
 }

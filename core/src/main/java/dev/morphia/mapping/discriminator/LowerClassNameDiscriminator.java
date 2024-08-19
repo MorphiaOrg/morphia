@@ -4,7 +4,7 @@ import dev.morphia.mapping.DiscriminatorFunction;
 
 public class LowerClassNameDiscriminator extends DiscriminatorFunction {
     @Override
-    public String compute(String type) {
-        return type.toLowerCase();
+    public String compute(Class<?> type) {
+        return type.getName().toLowerCase();
     }
 }
