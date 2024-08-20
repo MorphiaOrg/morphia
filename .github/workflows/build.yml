@@ -16,7 +16,8 @@ jobs:
 
   Build:
     uses: evanchooly/workflows/.github/workflows/build.yml@master
-    secrets: inherit
+    secrets:
+      DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
     with:
       java: 17
       saveBuild: true
