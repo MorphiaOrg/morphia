@@ -7,12 +7,12 @@ import java.util.Set;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.internal.EntityBuilder;
-import dev.morphia.critter.CritterEntityModel;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
+import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 import dev.morphia.mapping.conventions.MorphiaDefaultsConvention;
 
 public class ExampleEntityModelTemplate extends CritterEntityModel {
@@ -41,7 +41,7 @@ public class ExampleEntityModelTemplate extends CritterEntityModel {
 
     @Override
     public String discriminator() {
-        return mapper.getConfig().discriminator().apply(Example.class.getName(), ".");
+        return mapper.getConfig().discriminator().apply(Example.class, ".");
     }
 
     @Override

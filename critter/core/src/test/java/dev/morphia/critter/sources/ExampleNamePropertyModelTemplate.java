@@ -8,22 +8,21 @@ import dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel;
 
 import org.bson.codecs.pojo.PropertyAccessor;
 
-import static dev.morphia.annotations.internal.AlsoLoadBuilder.alsoLoadBuilder;
-import static dev.morphia.annotations.internal.PropertyBuilder.propertyBuilder;
-
 public class ExampleNamePropertyModelTemplate extends CritterPropertyModel {
 
     private PropertyAccessor<?> accessor = new ExampleNameAccessorTemplate();
 
     public ExampleNamePropertyModelTemplate(EntityModel entityModel) {
         super(entityModel);
-        annotation(propertyBuilder()
-                .value("myName")
-                .concreteClass(String.class)
-                .build());
-        annotation(alsoLoadBuilder()
-                .value("name1", "name2")
-                .build());
+        /*
+         * annotation(propertyBuilder()
+         * .value("myName")
+         * .concreteClass(String.class)
+         * .build());
+         * annotation(alsoLoadBuilder()
+         * .value("name1", "name2")
+         * .build());
+         */
     }
 
     @Override

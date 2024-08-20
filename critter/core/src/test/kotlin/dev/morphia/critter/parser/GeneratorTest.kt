@@ -1,10 +1,10 @@
 package dev.morphia.critter.parser
 
-import dev.morphia.critter.CritterEntityModel
 import dev.morphia.critter.parser.asm.Generators
 import dev.morphia.critter.parser.java.CritterParser.asmify
 import dev.morphia.critter.parser.java.CritterParser.critterClassLoader
 import dev.morphia.mapping.Mapper
+import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel
 import io.github.classgraph.ClassGraph
 import java.lang.reflect.Modifier
 import org.objectweb.asm.Type

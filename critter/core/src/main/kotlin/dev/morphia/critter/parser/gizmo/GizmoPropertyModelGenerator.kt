@@ -49,13 +49,16 @@ class GizmoPropertyModelGenerator : BaseGizmoGenerator {
     private fun ctor() {
         val constructor = creator.getConstructorCreator(EntityModel::class.java)
         constructor.invokeSpecialMethod(
-            MethodDescriptor.ofConstructor(PropertyModel::class.java, EntityModel::class.java),
-            constructor.`this`,
+            MethodDescriptor.ofConstructor(
+                CritterPropertyModel::class.java,
+                EntityModel::class.java
+            ),
+            constructor.getThis(),
             constructor.getMethodParam(0)
         )
         constructor.setParameterNames(arrayOf("model"))
 
-        registerAnnotations(constructor)
+        //        registerAnnotations(constructor)
 
         constructor.close()
     }

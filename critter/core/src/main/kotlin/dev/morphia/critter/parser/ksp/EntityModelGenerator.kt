@@ -9,11 +9,11 @@ import com.squareup.javapoet.TypeSpec
 import dev.morphia.annotations.internal.AnnotationKspFactory.entityAnnotation
 import dev.morphia.annotations.internal.AnnotationKspFactory.entityCodeGen
 import dev.morphia.config.MorphiaConfig
-import dev.morphia.critter.CritterEntityModel
 import dev.morphia.critter.parser.ksp.extensions.allAnnotations
 import dev.morphia.critter.parser.ksp.extensions.name
 import dev.morphia.critter.parser.ksp.extensions.toTypeName
 import dev.morphia.mapping.Mapper
+import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel
 import javax.lang.model.element.Modifier.PUBLIC
 
 class EntityModelGenerator(source: KSClassDeclaration, val config: MorphiaConfig) :
@@ -37,10 +37,12 @@ class EntityModelGenerator(source: KSClassDeclaration, val config: MorphiaConfig
             "collectionName",
             orDefault(entityAnnotation.value, config.collectionNaming().apply(source.name()))
         )
-        stringMethod(
-            "discriminator",
-            config.discriminator().apply(fqcn, entityAnnotation.discriminator)
-        )
+        /*
+                stringMethod(
+                    "discriminator",
+                    config.discriminator().apply(fqcn, entityAnnotation.discriminator)
+                )
+        */
         stringMethod(
             "discriminatorKey",
             orDefault(entityAnnotation.discriminatorKey, config.discriminatorKey())

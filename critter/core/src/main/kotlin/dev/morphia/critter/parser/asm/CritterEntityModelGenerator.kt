@@ -2,7 +2,7 @@ package dev.morphia.critter.parser.asm
 
 import dev.morphia.annotations.Entity
 import dev.morphia.critter.Critter.Companion.critterPackage
-import dev.morphia.critter.CritterEntityModel
+import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier

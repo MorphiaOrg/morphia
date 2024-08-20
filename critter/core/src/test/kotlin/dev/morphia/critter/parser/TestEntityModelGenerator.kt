@@ -1,11 +1,11 @@
 package dev.morphia.critter.parser
 
-import dev.morphia.critter.CritterEntityModel
 import dev.morphia.critter.parser.GeneratorTest.entityModel
 import dev.morphia.critter.parser.GeneratorTest.methodNames
 import dev.morphia.critter.parser.asm.Generators
 import dev.morphia.critter.parser.java.CritterParser.critterClassLoader
 import dev.morphia.mapping.Mapper
+import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel
 import java.lang.reflect.Method
 import org.testng.Assert.assertEquals
 import org.testng.annotations.DataProvider
