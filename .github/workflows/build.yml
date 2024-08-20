@@ -89,12 +89,12 @@ jobs:
         driver: ${{ fromJson(needs.matrix.outputs.driver_latest) }}
         java: [ 17 ]
     uses: evanchooly/workflows/.github/workflows/build.yml@master
+    secrets: inherit
     with:
       java: ${{ matrix.java }}
       reuseBuild: true
       archive-name: "${{matrix.mongo}}-${{matrix.driver}}-${{matrix.java}}-${{github.run_id}}"
       maven-flags: "-e -Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }}"
-    secrets: inherit
 
   DriversTests:
     name: Driver
@@ -120,13 +120,13 @@ jobs:
             mongo: 7
             optional: true
     uses: evanchooly/workflows/.github/workflows/build.yml@master
+    secrets: inherit
     with:
       java: ${{ matrix.java }}
       reuseBuild: true
       archive-name: "${{matrix.mongo}}-${{matrix.driver}}-${{matrix.java}}-${{github.run_id}}"
       maven-flags: "-e -Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }}"
       optional: ${{ matrix.optional == true }}
-    secrets: inherit
 
   Release:
     needs:
