@@ -16,6 +16,7 @@ jobs:
 
   Build:
     uses: evanchooly/workflows/.github/workflows/build.yml@master
+    secrets: inherit
     with:
       java: 17
       saveBuild: true
