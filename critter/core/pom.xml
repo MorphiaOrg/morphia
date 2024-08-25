@@ -96,6 +96,12 @@
                 <version>${project.version}</version>
                 <executions>
                     <execution>
+                        <id>morphia-annotations-asm</id>
+                        <goals>
+                            <goal>morphia-annotation-node</goal>
+                        </goals>
+                    </execution>
+                    <execution>
                         <id>morphia-annotations-kotlin</id>
                         <goals>
                             <goal>morphia-annotations-kotlin</goal>

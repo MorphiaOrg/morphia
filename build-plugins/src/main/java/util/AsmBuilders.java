@@ -54,7 +54,7 @@ public class AsmBuilders extends AbstractMojo {
     @SuppressWarnings("ConstantConditions")
     public void execute() throws MojoExecutionException {
         List<File> files = new ArrayList<>();
-        generated = new File(project.getBasedir() + "/target/generated-sources/morphia-annotations-asm/");
+        generated = new File(project.getBasedir() + "/target/generated-sources/morphia-annotations/");
 
         String path = core() + "/src/main/java/dev/morphia/annotations";
         files.addAll(find(path));

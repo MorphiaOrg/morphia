@@ -26,7 +26,7 @@
     <buildScan>
         <backgroundBuildScanUpload>#{isFalse(env['CI'])}</backgroundBuildScanUpload> <!-- adjust to your CI provider -->
         <publishing>
-            <onlyIf><![CDATA[authenticated]]></onlyIf>
+            <onlyIf><![CDATA[authenticated && isTrue(env['CI'])]]></onlyIf>
         </publishing>
         <obfuscation>
             <ipAddresses>#{{'0.0.0.0'}}</ipAddresses>
