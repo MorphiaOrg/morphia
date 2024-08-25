@@ -22,6 +22,19 @@ jobs:
       java: 17
       saveBuild: true
 
+  Critter:
+    uses: evanchooly/workflows/.github/workflows/build.yml@master
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [ 17, 21, 23-ea ]
+    secrets:
+      DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+    with:
+      java: ${{ matrix.java }}
+      maven-flags: "-Pcritter"
+      optional: true
+
   Matrix:
     runs-on: ubuntu-latest
     steps:
@@ -89,7 +102,7 @@ jobs:
       matrix:
         mongo: ${{ fromJson(needs.matrix.outputs.version_matrix) }}
         driver: ${{ fromJson(needs.matrix.outputs.driver_latest) }}
-        java: [ 17 ]
+        java: [ 17, 21, 23-ea ]
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     secrets:
       DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
@@ -108,7 +121,7 @@ jobs:
       fail-fast: false
       matrix:
         driver: ${{ fromJson(needs.matrix.outputs.driver_matrix) }}
-        java: [ 17 ]
+        java: [ 17, 21, 23-ea ]
         mongo: [ 7 ]
         include:
           - driver: ${{ fromJson(needs.matrix.outputs.driver_latest)[0] }}
