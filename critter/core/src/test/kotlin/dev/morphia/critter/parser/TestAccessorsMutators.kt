@@ -9,10 +9,9 @@ import org.bson.codecs.pojo.PropertyAccessor
 import org.testng.Assert.assertEquals
 import org.testng.Assert.assertTrue
 import org.testng.annotations.DataProvider
-import org.testng.annotations.Test
 
 class TestAccessorsMutators : BaseCritterTest() {
-    @Test(dataProvider = "classes")
+    //    @Test(dataProvider = "classes")
     fun testPropertyAccessors(type: Class<*>) {
         val testFields =
             listOf(

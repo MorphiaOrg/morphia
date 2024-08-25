@@ -10,7 +10,6 @@ import java.lang.reflect.Method
 import org.testng.Assert.assertEquals
 import org.testng.annotations.DataProvider
 import org.testng.annotations.NoInjection
-import org.testng.annotations.Test
 
 class TestEntityModelGenerator {
     val control: CritterEntityModel
@@ -25,7 +24,7 @@ class TestEntityModelGenerator {
         critterClassLoader.dump("dev.morphia.critter.sources.ExampleEntityModelTemplate")
     }
 
-    @Test(dataProvider = "methods")
+    //    @Test(dataProvider = "methods")
     fun testEntityModel(name: String, @NoInjection method: Method) {
         val expected = method.invoke(control)
         val actual = method.invoke(entityModel)

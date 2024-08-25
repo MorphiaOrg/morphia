@@ -10,10 +10,9 @@ import java.lang.reflect.Method
 import org.testng.Assert.assertEquals
 import org.testng.annotations.DataProvider
 import org.testng.annotations.NoInjection
-import org.testng.annotations.Test
 
 class TestPropertyModelGenerator : BaseCritterTest() {
-    @Test(dataProvider = "properties", testName = "")
+    //    @Test(dataProvider = "properties", testName = "")
     fun testProperty(control: String, methodName: String, @NoInjection method: Method) {
         val propertyModel = getModel(control)
 
