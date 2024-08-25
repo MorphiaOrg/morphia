@@ -30,6 +30,7 @@
         </publishing>
         <obfuscation>
             <ipAddresses>#{{'0.0.0.0'}}</ipAddresses>
+            <username>#{isTrue(env['CI']) ? 'GH actions' : 'Carmen Sandiego'}</username>
         </obfuscation>
     </buildScan>
     <buildCache>
