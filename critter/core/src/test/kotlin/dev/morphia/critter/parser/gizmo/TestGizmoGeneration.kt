@@ -7,9 +7,9 @@ import dev.morphia.critter.sources.Example
 import dev.morphia.mapping.codec.pojo.PropertyModel
 import dev.morphia.mapping.codec.pojo.TypeData
 import io.quarkus.gizmo.ClassCreator
-import io.quarkus.gizmo.ClassOutput
 import io.quarkus.gizmo.MethodDescriptor
 import java.lang.reflect.Modifier
+import kotlin.reflect.KClass
 import org.objectweb.asm.Type
 import org.testng.Assert.assertEquals
 import org.testng.Assert.assertNotNull
@@ -17,13 +17,6 @@ import org.testng.Assert.fail
 import org.testng.annotations.Test
 
 class TestGizmoGeneration {
-    private val map: Map<String, Example>? = null
-    private val list: List<Map<String, Example>>? = null
-
-    private val classOutput = ClassOutput { name, data ->
-        critterClassLoader.register(name.replace('/', '.'), data)
-    }
-
     @Test
     fun testMapStringExample() {
         var descString = "Ljava/util/Map<Ljava/lang/String;Ldev/morphia/critter/sources/Example;>;"
@@ -38,7 +31,7 @@ class TestGizmoGeneration {
         var typeData = typeData(descString)[0]
         assertEquals(
             typeData,
-            Map::class.java.typeData(String::class.java.typeData(), Example::class.java.typeData())
+            Map::class.typeData(String::class.typeData(), Example::class.typeData())
         )
     }
 
@@ -60,13 +53,9 @@ class TestGizmoGeneration {
         val typeData = typeData(descString)[0]
         assertEquals(
             typeData,
-            List::class
-                .java
-                .typeData(
-                    Map::class
-                        .java
-                        .typeData(String::class.java.typeData(), Example::class.java.typeData())
-                )
+            List::class.typeData(
+                Map::class.typeData(String::class.typeData(), Example::class.typeData())
+            )
         )
     }
 
@@ -81,17 +70,13 @@ class TestGizmoGeneration {
                 descriptor(List::class.java, descriptor(Example::class.java))
             )
         assertEquals(descriptor, descString)
-        println("**************** descString = ${descriptor}")
         val typeData = typeData(descriptor)[0]
-        println("**************** descString = $typeData")
         assertEquals(
             typeData,
-            Map::class
-                .java
-                .typeData(
-                    String::class.java.typeData(),
-                    List::class.java.typeData(Example::class.java.typeData())
-                )
+            Map::class.typeData(
+                String::class.typeData(),
+                List::class.typeData(Example::class.typeData())
+            )
         )
     }
 
@@ -107,10 +92,11 @@ class TestGizmoGeneration {
         return desc
     }
 
-    private fun Class<*>.typeData(vararg typeParameters: TypeData<*>) =
-        TypeData(this, listOf(*typeParameters))
+    private fun KClass<*>.typeData(vararg typeParameters: TypeData<*>): TypeData<*> {
+        return TypeData(this.java, listOf(*typeParameters))
+    }
 
-    @Test
+    //    @Test
     fun testGizmo() {
         val generator = CritterGizmoGenerator(critterClassLoader, GeneratorTest.mapper)
         generator.generate(Example::class.java)
@@ -192,7 +178,6 @@ class TestGizmoGeneration {
                 .getConstructor(String::class.java)
                 .newInstance("here i am")
 
-        println("**************** newInstance = ${newInstance}")
         val creator =
             ClassCreator.builder()
                 .classOutput { name, data ->

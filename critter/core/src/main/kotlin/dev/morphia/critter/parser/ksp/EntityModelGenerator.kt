@@ -53,15 +53,8 @@ class EntityModelGenerator(source: KSClassDeclaration, val config: MorphiaConfig
     }
 
     private fun annotations(ctor: Builder) {
-        println("**************** annotations()")
         source.allAnnotations().forEach { annotation ->
-            println("**************** annotation = ${annotation}")
-            val codeGen = annotation.entityCodeGen()
-            try {
-                ctor.addCode("\nannotation($codeGen);")
-            } finally {
-                println("**************** codeGen = ${codeGen}")
-            }
+            ctor.addCode("\nannotation(${annotation.entityCodeGen()});")
         }
     }
 
