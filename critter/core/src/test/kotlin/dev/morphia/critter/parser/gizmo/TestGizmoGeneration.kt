@@ -25,7 +25,7 @@ class TestGizmoGeneration {
     }
 
     @Test
-    fun testTypeData() {
+    fun testMapStringExample() {
         var descString = "Ljava/util/Map<Ljava/lang/String;Ldev/morphia/critter/sources/Example;>;"
         var descriptor =
             descriptor(
@@ -35,18 +35,29 @@ class TestGizmoGeneration {
             )
 
         assertEquals(descriptor, descString)
-
-        var typeData = descString.typeData()[0]
+        var typeData = typeData(descString)[0]
         assertEquals(
             typeData,
             Map::class.java.typeData(String::class.java.typeData(), Example::class.java.typeData())
         )
+    }
 
-        descString =
+    @Test
+    fun testListMapStringExample() {
+        val descString =
             "Ljava/util/List<Ljava/util/Map<Ljava/lang/String;Ldev/morphia/critter/sources/Example;>;>;"
-        assertEquals(descriptor(List::class.java, descriptor), descString)
+        val descriptor =
+            descriptor(
+                List::class.java,
+                descriptor(
+                    Map::class.java,
+                    descriptor(String::class.java),
+                    descriptor(Example::class.java)
+                )
+            )
+        assertEquals(descriptor, descString)
 
-        typeData = descString.typeData()[0]
+        val typeData = typeData(descString)[0]
         assertEquals(
             typeData,
             List::class
@@ -57,15 +68,21 @@ class TestGizmoGeneration {
                         .typeData(String::class.java.typeData(), Example::class.java.typeData())
                 )
         )
+    }
 
-        descriptor =
+    @Test
+    fun testMapOfList() {
+        val descString =
+            "Ljava/util/Map<Ljava/lang/String;Ljava/util/List<Ldev/morphia/critter/sources/Example;>;>;"
+        val descriptor =
             descriptor(
                 Map::class.java,
                 descriptor(String::class.java),
                 descriptor(List::class.java, descriptor(Example::class.java))
             )
+        assertEquals(descriptor, descString)
         println("**************** descString = ${descriptor}")
-        typeData = descriptor.typeData()[0]
+        val typeData = typeData(descriptor)[0]
         println("**************** descString = $typeData")
         assertEquals(
             typeData,

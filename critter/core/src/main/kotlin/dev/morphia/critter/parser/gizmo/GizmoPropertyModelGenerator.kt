@@ -18,7 +18,6 @@ import io.quarkus.gizmo.MethodCreator
 import io.quarkus.gizmo.MethodDescriptor
 import io.quarkus.gizmo.MethodDescriptor.ofMethod
 import io.quarkus.gizmo.ResultHandle
-import ksp.com.intellij.codeWithMe.ClientId.Companion.current
 import org.bson.codecs.pojo.PropertyAccessor
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
@@ -38,7 +37,7 @@ class GizmoPropertyModelGenerator private constructor(val config: MorphiaConfig,
         val signature = field.signature
         typeArguments =
             signature?.let {
-                it.typeData()
+                typeData(it)
                 Type.getArgumentTypes("()$it")
             } ?: arrayOf()
         generatedType = "${baseName}.${propertyName.titleCase()}Model"
@@ -286,15 +285,23 @@ class GizmoPropertyModelGenerator private constructor(val config: MorphiaConfig,
     }
 }
 
-fun String.typeData(): List<TypeData<*>> {
-    val bracket = indexOf('<')
+fun String.typeData2(): List<TypeData<*>> {
+    if (!contains("<")) {
+        listOf(TypeData(getType(this).asClass()))
+    }
+    var current = this
     var typeArguments = listOf<TypeData<*>>()
 
-    var current = this
-    if (bracket != -1) {
-        val substring = substring(indexOf("<") + 1, lastIndexOf('>'))
-        typeArguments += substring.typeData()
-        current = current.replace("<$substring>", "")
+    while (current.isNotEmpty()) {
+        if (current.contains('<') && current.indexOf('<') < current.indexOf(';')) {
+            val substring = substring(indexOf("<") + 1, lastIndexOf('>'))
+            typeArguments += substring.typeData2()
+            current = current.replace("<$substring>", "")
+        } else {
+            val substring = current.substringBefore(";") + ";"
+            typeArguments += TypeData(getType(substring).asClass())
+            current = current.substringAfter(";")
+        }
     }
 
     var // types = mutableListOf<TypeData<*>>()
@@ -320,9 +327,51 @@ fun String.typeData(): List<TypeData<*>> {
     if (types.size == 1) {
         types = listOf(TypeData(types[0].type, typeArguments))
     }
+    return if (types.isNotEmpty()) types else typeArguments
+}
+
+private fun String.balanced(): String {
+    if (!contains("<")) return ""
+    val start = indexOf('<') + 1
+    var index = start
+    var count = 1
+
+    while (index < length && count != 0) {
+        when (this[++index]) {
+            '>' -> count--
+            '<' -> count++
+        }
+    }
+
+    return substring(start, index)
+}
+
+fun typeData(input: String): List<TypeData<*>> {
+    if (input.isEmpty()) return emptyList()
+    //    if (!input.contains('<')) return listOf(getType(input).typeData())
+    val types = mutableListOf<TypeData<*>>()
+
+    var value = input
+
+    while (value.isNotEmpty()) {
+        val bracket = value.indexOf('<')
+        if (bracket == -1 || bracket > value.indexOf(';')) {
+            val type = value.substringBefore(';')
+            types += getType("$type;").typeData()
+            value = value.substringAfter(';')
+        } else {
+            val paramString = value.balanced()
+            val parameterTypes = typeData(paramString)
+            value = value.replace("<$paramString>", "")
+
+            types += getType(value).typeData(parameterTypes)
+            value = value.substringAfter(';')
+        }
+    }
     return types
 }
 
-private fun Type.asClass(): Class<*> {
-    return Class.forName(className)
-}
+private fun Type.typeData(typeParameters: List<TypeData<*>> = listOf()) =
+    TypeData(asClass(), typeParameters)
+
+private fun Type.asClass() = Class.forName(className)
