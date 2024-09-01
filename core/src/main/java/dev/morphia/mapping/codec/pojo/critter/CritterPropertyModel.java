@@ -19,7 +19,7 @@ public abstract class CritterPropertyModel extends PropertyModel {
     public abstract PropertyAccessor<Object> getAccessor();
 
     @Override
-    public PropertyModel accessor(PropertyAccessor<? super Object> accessor) {
+    public final PropertyModel accessor(PropertyAccessor<? super Object> accessor) {
         throw new UnsupportedOperationException();
     }
 
@@ -77,9 +77,6 @@ public abstract class CritterPropertyModel extends PropertyModel {
 
     @Override
     public abstract boolean isMap();
-
-    @Override
-    public abstract boolean isMultipleValues();
 
     @Override
     public abstract boolean isReference();

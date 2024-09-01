@@ -76,11 +76,6 @@ public class ExampleSalaryPropertyModelTemplate extends CritterPropertyModel {
     }
 
     @Override
-    public boolean isMultipleValues() {
-        return false;
-    }
-
-    @Override
     public boolean isReference() {
         return false;
     }

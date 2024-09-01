@@ -1,6 +1,5 @@
 package dev.morphia.critter.sources;
 
-import java.lang.annotation.Annotation;
 import java.util.List;
 
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -21,11 +20,6 @@ public class ExampleAgePropertyModelTemplate extends CritterPropertyModel {
     @Override
     public PropertyAccessor<Object> getAccessor() {
         return (PropertyAccessor<Object>) accessor;
-    }
-
-    @Override
-    public List<Annotation> getAnnotations() {
-        return List.of();
     }
 
     @Override
@@ -75,11 +69,6 @@ public class ExampleAgePropertyModelTemplate extends CritterPropertyModel {
 
     @Override
     public boolean isMap() {
-        return false;
-    }
-
-    @Override
-    public boolean isMultipleValues() {
         return false;
     }
 

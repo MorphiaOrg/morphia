@@ -1,15 +1,26 @@
 package dev.morphia.critter.sources;
 
+import java.util.List;
+import java.util.Map;
+
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
+import dev.morphia.annotations.Transient;
 
 @Entity
 public class Example {
     @Property(value = "myName")
     @AlsoLoad({ "name1", "name2" })
     private String name;
+
+    @Transient
+    @Reference
+    private final int[] temp = new int[0];
+
+    private Map<String, Example> map;
+    private List<Map<String, Example>> list;
 
     @Reference(idOnly = true)
     private int age = 21;

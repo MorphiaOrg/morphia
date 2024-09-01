@@ -146,7 +146,7 @@ public class PropertyModel {
         return type.cast(annotationMap.get(type));
     }
 
-    public List<Annotation> getAnnotations() {
+    public final List<Annotation> getAnnotations() {
         return new ArrayList<>(annotationMap.values());
     }
 
@@ -342,13 +342,6 @@ public class PropertyModel {
      */
     public boolean isMap() {
         return Map.class.isAssignableFrom(getTypeData().getType());
-    }
-
-    /**
-     * @return true if this field is a container type such as a List, Map, Set, or array
-     */
-    public boolean isMultipleValues() {
-        return !isScalarValue();
     }
 
     /**

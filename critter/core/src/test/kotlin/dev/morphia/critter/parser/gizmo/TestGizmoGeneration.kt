@@ -5,17 +5,93 @@ import dev.morphia.critter.parser.GeneratorTest
 import dev.morphia.critter.parser.java.CritterParser.critterClassLoader
 import dev.morphia.critter.sources.Example
 import dev.morphia.mapping.codec.pojo.PropertyModel
+import dev.morphia.mapping.codec.pojo.TypeData
 import io.quarkus.gizmo.ClassCreator
 import io.quarkus.gizmo.ClassOutput
 import io.quarkus.gizmo.MethodDescriptor
 import java.lang.reflect.Modifier
+import org.objectweb.asm.Type
+import org.testng.Assert.assertEquals
 import org.testng.Assert.assertNotNull
+import org.testng.Assert.fail
 import org.testng.annotations.Test
 
 class TestGizmoGeneration {
+    private val map: Map<String, Example>? = null
+    private val list: List<Map<String, Example>>? = null
+
     private val classOutput = ClassOutput { name, data ->
         critterClassLoader.register(name.replace('/', '.'), data)
     }
+
+    @Test
+    fun testTypeData() {
+        var descString = "Ljava/util/Map<Ljava/lang/String;Ldev/morphia/critter/sources/Example;>;"
+        var descriptor =
+            descriptor(
+                Map::class.java,
+                descriptor(String::class.java),
+                descriptor(Example::class.java)
+            )
+
+        assertEquals(descriptor, descString)
+
+        var typeData = descString.typeData()[0]
+        assertEquals(
+            typeData,
+            Map::class.java.typeData(String::class.java.typeData(), Example::class.java.typeData())
+        )
+
+        descString =
+            "Ljava/util/List<Ljava/util/Map<Ljava/lang/String;Ldev/morphia/critter/sources/Example;>;>;"
+        assertEquals(descriptor(List::class.java, descriptor), descString)
+
+        typeData = descString.typeData()[0]
+        assertEquals(
+            typeData,
+            List::class
+                .java
+                .typeData(
+                    Map::class
+                        .java
+                        .typeData(String::class.java.typeData(), Example::class.java.typeData())
+                )
+        )
+
+        descriptor =
+            descriptor(
+                Map::class.java,
+                descriptor(String::class.java),
+                descriptor(List::class.java, descriptor(Example::class.java))
+            )
+        println("**************** descString = ${descriptor}")
+        typeData = descriptor.typeData()[0]
+        println("**************** descString = $typeData")
+        assertEquals(
+            typeData,
+            Map::class
+                .java
+                .typeData(
+                    String::class.java.typeData(),
+                    List::class.java.typeData(Example::class.java.typeData())
+                )
+        )
+    }
+
+    private fun descriptor(type: Class<*>, vararg typeParameters: String): String {
+        var desc = Type.getDescriptor(type)
+        if (typeParameters.isNotEmpty()) {
+            desc =
+                desc.dropLast(1) +
+                    typeParameters.joinToString("", prefix = "<", postfix = ">") +
+                    ";"
+        }
+
+        return desc
+    }
+
+    private fun Class<*>.typeData(vararg typeParameters: TypeData<*>) =
+        TypeData(this, listOf(*typeParameters))
 
     @Test
     fun testGizmo() {
@@ -42,9 +118,27 @@ class TestGizmoGeneration {
 
     private fun invokeAll(type: Class<*>, nameModel: Class<*>) {
         val instance = nameModel.constructors[0].newInstance(null)
-        type.declaredMethods
-            .filter { it.parameterCount == 0 }
-            .forEach { method -> nameModel.getMethod(method.name).invoke(instance) }
+        val results =
+            type.declaredMethods
+                .filter {
+                    Modifier.isPublic(it.modifiers) &&
+                        !Modifier.isFinal(it.modifiers) &&
+                        it.parameterCount == 0
+                }
+                .sortedBy { it.name }
+                .map { method ->
+                    try {
+                        nameModel.getDeclaredMethod(method.name, *method.parameterTypes)
+                        null
+                    } catch (e: Exception) {
+                        e.message
+                    }
+                }
+                .filterNotNull()
+
+        if (results.isNotEmpty()) {
+            fail("Missing methods from ${type.name}: \n${results.joinToString("\n")}")
+        }
     }
 
     @Test

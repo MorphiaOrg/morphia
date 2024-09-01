@@ -3,6 +3,7 @@ package dev.morphia.critter.conventions;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
+import dev.morphia.annotations.Transient;
 import dev.morphia.annotations.Version;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
@@ -22,6 +23,10 @@ import java.util.Map;
  */
 @MorphiaInternal
 public class PropertyConvention {
+    public static List<Class<? extends Annotation>> transientAnnotations() {
+        return List.of(Transient.class, kotlin.jvm.Transient.class, java.beans.Transient.class);
+    }
+
     @MorphiaInternal
     public static String mappedName(MorphiaConfig config, Map<String, Annotation> annotations, String modelName) {
         Property property = (Property) annotations.get(Property.class.getName());
