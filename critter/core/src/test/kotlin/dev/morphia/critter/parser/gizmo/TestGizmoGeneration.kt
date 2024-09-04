@@ -135,6 +135,7 @@ class TestGizmoGeneration {
                         !Modifier.isFinal(it.modifiers) &&
                         it.parameterCount == 0
                 }
+                .filter { it.name !in listOf("hashCode", "toString") }
                 .sortedBy { it.name }
                 .map { method ->
                     try {

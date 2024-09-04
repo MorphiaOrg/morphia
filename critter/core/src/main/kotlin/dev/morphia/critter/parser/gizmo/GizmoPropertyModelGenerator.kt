@@ -81,6 +81,7 @@ class GizmoPropertyModelGenerator private constructor(val config: MorphiaConfig,
                 ?: method!!.let<MethodNode, String> { it.signature ?: it.desc }
         typeData(input)[0]
     }
+    val model by lazy { creator.getFieldCreator("entityModel", EntityModel::class.java) }
 
     fun emit() {
         creator =
@@ -108,6 +109,7 @@ class GizmoPropertyModelGenerator private constructor(val config: MorphiaConfig,
         isCollection()
         getType()
         getTypeData()
+        getEntityModel()
         creator.close()
     }
 
@@ -136,6 +138,14 @@ class GizmoPropertyModelGenerator private constructor(val config: MorphiaConfig,
     private fun getType() {
         creator.getMethodCreator("getType", Class::class.java).use { methodCreator ->
             methodCreator.returnValue(methodCreator.loadClass(typeData.type))
+        }
+    }
+
+    private fun getEntityModel() {
+        creator.getMethodCreator("getEntityModel", EntityModel::class.java).use { methodCreator ->
+            methodCreator.returnValue(
+                methodCreator.readInstanceField(model.fieldDescriptor, methodCreator.`this`)
+            )
         }
     }
 
@@ -257,6 +267,11 @@ class GizmoPropertyModelGenerator private constructor(val config: MorphiaConfig,
                 constructor.getMethodParam(0)
             )
             constructor.setParameterNames(arrayOf("model"))
+            constructor.writeInstanceField(
+                model.fieldDescriptor,
+                constructor.`this`,
+                constructor.getMethodParam(0)
+            )
             registerAnnotations(constructor)
             constructor.returnVoid()
         }
