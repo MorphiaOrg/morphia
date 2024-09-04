@@ -13,6 +13,7 @@ import dev.morphia.critter.parser.ksp.extensions.methodCase
 import dev.morphia.critter.titleCase
 import dev.morphia.mapping.codec.pojo.EntityModel
 import dev.morphia.mapping.codec.pojo.PropertyModel
+import dev.morphia.mapping.codec.pojo.PropertyModel.normalize
 import dev.morphia.mapping.codec.pojo.TypeData
 import dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel
 import io.quarkus.gizmo.ClassCreator
@@ -25,7 +26,6 @@ import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
 import org.objectweb.asm.Type.ARRAY
 import org.objectweb.asm.Type.getReturnType
-import org.objectweb.asm.Type.getType
 import org.objectweb.asm.tree.AnnotationNode
 import org.objectweb.asm.tree.FieldNode
 import org.objectweb.asm.tree.MethodNode
@@ -35,7 +35,7 @@ class GizmoPropertyModelGenerator private constructor(val config: MorphiaConfig,
     constructor(config: MorphiaConfig, entity: Class<*>, field: FieldNode) : this(config, entity) {
         this.field = field
         propertyName = field.name.methodCase()
-        propertyType = getType(field.desc)
+        propertyType = Type.getType(field.desc)
         val signature = field.signature
         typeArguments =
             signature?.let {
@@ -106,7 +106,8 @@ class GizmoPropertyModelGenerator private constructor(val config: MorphiaConfig,
         isMap()
         isSet()
         isCollection()
-        typeData()
+        getType()
+        getTypeData()
         creator.close()
     }
 
@@ -132,32 +133,32 @@ class GizmoPropertyModelGenerator private constructor(val config: MorphiaConfig,
         }
     }
 
-    private fun typeData() {
-        creator.getMethodCreator("typeData", TypeData::class.java).use { methodCreator ->
+    private fun getType() {
+        creator.getMethodCreator("getType", Class::class.java).use { methodCreator ->
+            methodCreator.returnValue(methodCreator.loadClass(typeData.type))
+        }
+    }
+
+    private fun getTypeData() {
+        creator.getMethodCreator("getTypeData", TypeData::class.java).use { methodCreator ->
             methodCreator.returnValue(emitTypeData(methodCreator, this.typeData))
         }
     }
 
     private fun emitTypeData(methodCreator: MethodCreator, data: TypeData<*>): ResultHandle {
-        var typeParameters =
-            data.typeParameters.map { typeParameter -> emitTypeData(methodCreator, typeParameter) }
-        var array = methodCreator.newArray(TypeData::class.java, typeParameters.size)
-        typeParameters.forEachIndexed { index, typeParameter ->
-            methodCreator.writeArrayValue(array, index, typeParameter)
+        var array = methodCreator.newArray(TypeData::class.java, data.typeParameters.size)
+
+        data.typeParameters.forEachIndexed { index, typeParameter ->
+            methodCreator.writeArrayValue(array, index, emitTypeData(methodCreator, typeParameter))
         }
         val list = listOf(methodCreator.loadClass(data.type), array)
         val descriptor =
             MethodDescriptor.ofConstructor(
                 TypeData::class.java,
                 Class::class.java,
-                "[${getType(TypeData::class.java).descriptor}"
+                "[${Type.getType(TypeData::class.java).descriptor}"
             )
-        return methodCreator.newInstance(
-            descriptor,
-            //            methodCreator.getThis(),
-            //            *list.toTypedArray()
-            *list.toTypedArray()
-        )
+        return methodCreator.newInstance(descriptor, *list.toTypedArray())
     }
 
     private fun isCollection() {
@@ -196,7 +197,7 @@ class GizmoPropertyModelGenerator private constructor(val config: MorphiaConfig,
         creator.getMethodCreator("isReference", Boolean::class.java).use { methodCreator ->
             methodCreator.returnValue(
                 methodCreator.load(
-                    propertyType.equals(getType(DBRef::class.java)) or
+                    propertyType.equals(Type.getType(DBRef::class.java)) or
                         annotationMap.containsKey(Reference::class.java.name)
                 )
             )
@@ -205,7 +206,11 @@ class GizmoPropertyModelGenerator private constructor(val config: MorphiaConfig,
 
     private fun checkMask(mask: Int) = (accessValue and mask) == mask
 
-    private fun getNormalizedType() {}
+    private fun getNormalizedType() {
+        creator.getMethodCreator("getNormalizedType", Class::class.java).use { methodCreator ->
+            methodCreator.returnValue(methodCreator.loadClass(normalize(typeData)))
+        }
+    }
 
     private fun getLoadNames() {
         creator.getMethodCreator("getLoadNames", Array<String>::class.java).use { methodCreator ->
@@ -278,11 +283,11 @@ class GizmoPropertyModelGenerator private constructor(val config: MorphiaConfig,
         constructor: MethodCreator,
         annotation: AnnotationNode,
     ): ResultHandle {
-        val type = getType(annotation.desc)
+        val type = Type.getType(annotation.desc)
         val classPackage = type.className.substringBeforeLast('.')
         val className = type.className.substringAfterLast('.')
         val builderType =
-            getType("L${classPackage}.internal.${className}Builder;".replace('.', '/'))
+            Type.getType("L${classPackage}.internal.${className}Builder;".replace('.', '/'))
         val builder =
             ofMethod(
                 builderType.className,
@@ -367,12 +372,12 @@ fun typeData(input: String): List<TypeData<*>> {
                 type += ";"
             }
             value = value.substring(type.length)
-            val type1 = getType(type)
+            val type1 = Type.getType(type)
             types += type1.typeData()
         } else {
             val paramString = value.balanced()
             value = value.replace("<$paramString>", "")
-            types += getType(value).typeData(typeData(paramString))
+            types += Type.getType(value).typeData(typeData(paramString))
             value = value.substringAfter(';')
         }
     }
