@@ -13,6 +13,7 @@ import kotlin.reflect.KClass
 import org.objectweb.asm.Type
 import org.testng.Assert.assertEquals
 import org.testng.Assert.assertNotNull
+import org.testng.Assert.assertTrue
 import org.testng.Assert.fail
 import org.testng.annotations.Test
 
@@ -80,6 +81,12 @@ class TestGizmoGeneration {
         )
     }
 
+    @Test
+    fun testPrimitiveArray() {
+        val typeData = typeData("[I")[0]
+        assertTrue(typeData.array)
+    }
+
     private fun descriptor(type: Class<*>, vararg typeParameters: String): String {
         var desc = Type.getDescriptor(type)
         if (typeParameters.isNotEmpty()) {
@@ -96,7 +103,7 @@ class TestGizmoGeneration {
         return TypeData(this.java, listOf(*typeParameters))
     }
 
-    //    @Test
+    @Test
     fun testGizmo() {
         val generator = CritterGizmoGenerator(critterClassLoader, GeneratorTest.mapper)
         generator.generate(Example::class.java)

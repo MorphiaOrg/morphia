@@ -2,6 +2,7 @@ package dev.morphia.critter.sources;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Entity;
@@ -21,6 +22,7 @@ public class Example {
 
     private Map<String, Example> map;
     private List<Map<String, Example>> list;
+    private Set<Map<String, Example>> set;
 
     @Reference(idOnly = true)
     private int age = 21;

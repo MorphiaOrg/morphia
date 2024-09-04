@@ -21,6 +21,7 @@ import dev.morphia.sofia.Sofia;
 import org.bson.codecs.pojo.TypeWithTypeParameters;
 
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 import static org.bson.assertions.Assertions.notNull;
 
 /**
@@ -54,6 +55,27 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
      */
     public TypeData(Class<T> type) {
         this.type = type;
+        array = type.isArray();
+    }
+
+    /**
+     * Creates a new TypeData with the concrete type and type parameters around it.
+     * <p>
+     * e.g., List&lt;Address&gt; would be
+     *
+     * <pre>
+     * <code>
+     * new TypeData(Address.class, TypeData.builder(List.class).build())
+     * </code>
+     * </pre>
+     *
+     * @param type           the type
+     * @param typeParameters the parameters
+     */
+    public TypeData(Class<T> type, TypeData<?>... typeParameters) {
+        this.type = type;
+        this.typeParameters.addAll(asList(typeParameters));
+        array = type.isArray();
     }
 
     /**
@@ -73,6 +95,7 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
     public TypeData(Class<T> type, List<TypeData<?>> typeParameters) {
         this.type = type;
         this.typeParameters.addAll(typeParameters);
+        array = type.isArray();
     }
 
     /**

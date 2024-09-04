@@ -435,7 +435,7 @@ public class PropertyModel {
         return handler;
     }
 
-    private boolean isCollection() {
+    public boolean isCollection() {
         return Collection.class.isAssignableFrom(getTypeData().getType());
     }
 

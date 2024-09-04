@@ -6,6 +6,8 @@ import dev.morphia.annotations.Reference
 import dev.morphia.annotations.internal.AnnotationNodeExtensions.toMorphiaAnnotation
 import dev.morphia.config.MorphiaConfig
 import dev.morphia.critter.conventions.PropertyConvention
+import dev.morphia.critter.parser.asm.Generators.asClass
+import dev.morphia.critter.parser.asm.Generators.isArray
 import dev.morphia.critter.parser.java.CritterParser.critterClassLoader
 import dev.morphia.critter.parser.ksp.extensions.methodCase
 import dev.morphia.critter.titleCase
@@ -73,6 +75,12 @@ class GizmoPropertyModelGenerator private constructor(val config: MorphiaConfig,
             .associateBy { it.annotationClass.qualifiedName!! }
     }
     val accessValue by lazy { field?.access ?: method!!.access }
+    val typeData by lazy {
+        val input =
+            field?.let<FieldNode, String> { it.signature ?: it.desc }
+                ?: method!!.let<MethodNode, String> { it.signature ?: it.desc }
+        typeData(input)[0]
+    }
 
     fun emit() {
         creator =
@@ -96,28 +104,73 @@ class GizmoPropertyModelGenerator private constructor(val config: MorphiaConfig,
         isReference()
         isTransient()
         isMap()
-        //        isSet()
+        isSet()
+        isCollection()
+        typeData()
         creator.close()
     }
 
     private fun isArray() {
         creator.getMethodCreator("isArray", Boolean::class.java).use { methodCreator ->
-            methodCreator.returnValue(methodCreator.load(propertyType.sort == ARRAY))
+            methodCreator.returnValue(methodCreator.load(propertyType.isArray()))
         }
     }
 
     private fun isMap() {
-        val type = extractType(propertyType)
-
         creator.getMethodCreator("isMap", Boolean::class.java).use { methodCreator ->
-            methodCreator.returnValue(methodCreator.load("wait"))
+            methodCreator.returnValue(
+                methodCreator.load(Map::class.java.isAssignableFrom(typeData.type))
+            )
+        }
+    }
+
+    private fun isSet() {
+        creator.getMethodCreator("isSet", Boolean::class.java).use { methodCreator ->
+            methodCreator.returnValue(
+                methodCreator.load(Set::class.java.isAssignableFrom(typeData.type))
+            )
+        }
+    }
+
+    private fun typeData() {
+        creator.getMethodCreator("typeData", TypeData::class.java).use { methodCreator ->
+            methodCreator.returnValue(emitTypeData(methodCreator, this.typeData))
+        }
+    }
+
+    private fun emitTypeData(methodCreator: MethodCreator, data: TypeData<*>): ResultHandle {
+        var typeParameters =
+            data.typeParameters.map { typeParameter -> emitTypeData(methodCreator, typeParameter) }
+        var array = methodCreator.newArray(TypeData::class.java, typeParameters.size)
+        typeParameters.forEachIndexed { index, typeParameter ->
+            methodCreator.writeArrayValue(array, index, typeParameter)
+        }
+        val list = listOf(methodCreator.loadClass(data.type), array)
+        val descriptor =
+            MethodDescriptor.ofConstructor(
+                TypeData::class.java,
+                Class::class.java,
+                "[${getType(TypeData::class.java).descriptor}"
+            )
+        return methodCreator.newInstance(
+            descriptor,
+            //            methodCreator.getThis(),
+            //            *list.toTypedArray()
+            *list.toTypedArray()
+        )
+    }
+
+    private fun isCollection() {
+        creator.getMethodCreator("isCollection", Boolean::class.java).use { methodCreator ->
+            methodCreator.returnValue(
+                methodCreator.load(Collection::class.java.isAssignableFrom(typeData.type))
+            )
         }
     }
 
     private fun extractType(type: Type): Any {
         return when {
             type.sort == ARRAY -> extractType(type.elementType)
-            //            type.argumentCount != 0 -> extractType(type.argumentTypes.last())
             else -> type
         }
     }
@@ -285,51 +338,6 @@ class GizmoPropertyModelGenerator private constructor(val config: MorphiaConfig,
     }
 }
 
-fun String.typeData2(): List<TypeData<*>> {
-    if (!contains("<")) {
-        listOf(TypeData(getType(this).asClass()))
-    }
-    var current = this
-    var typeArguments = listOf<TypeData<*>>()
-
-    while (current.isNotEmpty()) {
-        if (current.contains('<') && current.indexOf('<') < current.indexOf(';')) {
-            val substring = substring(indexOf("<") + 1, lastIndexOf('>'))
-            typeArguments += substring.typeData2()
-            current = current.replace("<$substring>", "")
-        } else {
-            val substring = current.substringBefore(";") + ";"
-            typeArguments += TypeData(getType(substring).asClass())
-            current = current.substringAfter(";")
-        }
-    }
-
-    var // types = mutableListOf<TypeData<*>>()
-    types =
-        current
-            .split(';')
-            .filterNot { it.isEmpty() }
-            .map { "$it;" }
-            .map { TypeData(getType(it).asClass()) }
-
-    /*
-        val substring = substring(bracket + 1, lastIndexOf('>'))
-        if(substring.indexOf('<') == -1) {
-            typeArguments = substring.split(';')
-                .filterNot { it.isEmpty() }
-                .map { "$it;" }
-                .map { it.typeData() }
-        } else {
-            TODO()
-        }
-        current = current.removeRange(bracket, lastIndexOf('>') + 1)
-    */
-    if (types.size == 1) {
-        types = listOf(TypeData(types[0].type, typeArguments))
-    }
-    return if (types.isNotEmpty()) types else typeArguments
-}
-
 private fun String.balanced(): String {
     if (!contains("<")) return ""
     val start = indexOf('<') + 1
@@ -348,23 +356,23 @@ private fun String.balanced(): String {
 
 fun typeData(input: String): List<TypeData<*>> {
     if (input.isEmpty()) return emptyList()
-    //    if (!input.contains('<')) return listOf(getType(input).typeData())
     val types = mutableListOf<TypeData<*>>()
-
     var value = input
 
     while (value.isNotEmpty()) {
         val bracket = value.indexOf('<')
         if (bracket == -1 || bracket > value.indexOf(';')) {
-            val type = value.substringBefore(';')
-            types += getType("$type;").typeData()
-            value = value.substringAfter(';')
+            var type = value.substringBefore(';')
+            if (type.length > 2) {
+                type += ";"
+            }
+            value = value.substring(type.length)
+            val type1 = getType(type)
+            types += type1.typeData()
         } else {
             val paramString = value.balanced()
-            val parameterTypes = typeData(paramString)
             value = value.replace("<$paramString>", "")
-
-            types += getType(value).typeData(parameterTypes)
+            types += getType(value).typeData(typeData(paramString))
             value = value.substringAfter(';')
         }
     }
@@ -373,5 +381,3 @@ fun typeData(input: String): List<TypeData<*>> {
 
 private fun Type.typeData(typeParameters: List<TypeData<*>> = listOf()) =
     TypeData(asClass(), typeParameters)
-
-private fun Type.asClass() = Class.forName(className)
