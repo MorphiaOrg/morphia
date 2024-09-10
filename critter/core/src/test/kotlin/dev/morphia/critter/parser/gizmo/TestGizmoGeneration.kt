@@ -105,29 +105,31 @@ class TestGizmoGeneration {
 
     @Test
     fun testGizmo() {
+        val classLoader = critterClassLoader
         val generator = CritterGizmoGenerator(critterClassLoader, GeneratorTest.mapper)
+
         generator.generate(Example::class.java)
-        critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.AgeModel")
+        classLoader.loadClass("dev.morphia.critter.sources.__morphia.example.AgeModel")
         val nameModel =
-            critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.NameModel")
+            classLoader.loadClass("dev.morphia.critter.sources.__morphia.example.NameModel")
         invokeAll(PropertyModel::class.java, nameModel)
-        critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.SalaryModel")
-        critterClassLoader
+        classLoader.loadClass("dev.morphia.critter.sources.__morphia.example.SalaryModel")
+        classLoader
             .loadClass("dev.morphia.critter.sources.__morphia.example.AgeAccessor")
             .getConstructor()
             .newInstance()
-        critterClassLoader
+        classLoader
             .loadClass("dev.morphia.critter.sources.__morphia.example.NameAccessor")
             .getConstructor()
             .newInstance()
-        critterClassLoader
+        classLoader
             .loadClass("dev.morphia.critter.sources.__morphia.example.SalaryAccessor")
             .getConstructor()
             .newInstance()
     }
 
-    private fun invokeAll(type: Class<*>, nameModel: Class<*>) {
-        val instance = nameModel.constructors[0].newInstance(null)
+    private fun invokeAll(type: Class<*>, klass: Class<*>) {
+        val instance = klass.constructors[0].newInstance(null)
         val results =
             type.declaredMethods
                 .filter {
@@ -139,7 +141,7 @@ class TestGizmoGeneration {
                 .sortedBy { it.name }
                 .map { method ->
                     try {
-                        nameModel.getDeclaredMethod(method.name, *method.parameterTypes)
+                        klass.getDeclaredMethod(method.name, *method.parameterTypes)
                         null
                     } catch (e: Exception) {
                         e.message

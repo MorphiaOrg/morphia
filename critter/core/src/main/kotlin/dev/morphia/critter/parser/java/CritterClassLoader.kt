@@ -14,6 +14,7 @@ class CritterClassLoader(parent: ClassLoader?) :
     ChildFirst(parent, mapOf()) {
     companion object {
         var output = "target/critter"
+        var asm = false
     }
 
     fun register(name: String, bytes: ByteArray) {
@@ -36,28 +37,39 @@ class CritterClassLoader(parent: ClassLoader?) :
 
         if (bytes != null) {
             FileOutputStream(File(outputFolder, "$fileName.class")).use { it.write(bytes) }
-            var asm = asmify(bytes)
-            mappings.forEach { (type, mapping) ->
-                asm =
-                    asm.replace(type.internalName, mapping.internalName)
-                        .replace(type.descriptor, mapping.descriptor)
-                        .replace(type.className, mapping.className)
-                //                        .lines()
-                //                            .filterNot { it.contains("visitLineNumber") }
-                //                        .joinToString(separator = "\n")
-            }
-            if (!name.contains("__morphia")) {
-                asm =
-                    asm.replace("Template", "")
-                        .replace(".sources", ".sources.__morphia.example")
-                        .replace("/sources", "/sources/__morphia/example")
-            }
-
-            val source = Roaster.parse(JavaClassSource::class.java, asm)
-            FileWriter(File(outputFolder, "$fileName.asm")).use { it.write(source.toString()) }
+            asmify(bytes, mappings, name, outputFolder, fileName)
         } else {
             throw ClassNotFoundException("Could not find $name")
         }
+    }
+
+    private fun asmify(
+        bytes: ByteArray,
+        mappings: Map<Type, Type>,
+        name: String,
+        outputFolder: File,
+        fileName: String
+    ) {
+        if (!asm) return
+
+        var asm = asmify(bytes)
+        mappings.forEach { (type, mapping) ->
+            asm =
+                asm.replace(type.internalName, mapping.internalName)
+                    .replace(type.descriptor, mapping.descriptor)
+                    .replace(type.className, mapping.className)
+            //                        .lines()
+            //                            .filterNot { it.contains("visitLineNumber") }
+            //                        .joinToString(separator = "\n")
+        }
+        if (!name.contains("__morphia")) {
+            asm =
+                asm.replace("Template", "")
+                    .replace(".sources", ".sources.__morphia.example")
+                    .replace("/sources", "/sources/__morphia/example")
+        }
+        val source = Roaster.parse(JavaClassSource::class.java, asm)
+        FileWriter(File(outputFolder, "$fileName.asm")).use { it.write(source.toString()) }
     }
 
     override fun findClass(name: String): Class<*> {
