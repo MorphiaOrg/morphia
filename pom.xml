@@ -59,6 +59,7 @@
         <sofia.version>0.25</sofia.version>
         <surefire.version>3.1.0</surefire.version>
         <testng.version>7.10.2</testng.version>
+        <junit.testng.engine.version>1.0.5</junit.testng.engine.version>
         <zt.exec.version>1.12</zt.exec.version>
 
         <maven.compiler.target>17</maven.compiler.target>
@@ -171,6 +172,12 @@
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
                 <version>${testng.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.support</groupId>
+                <artifactId>testng-engine</artifactId>
+                <version>${junit.testng.engine.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
