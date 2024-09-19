@@ -23,7 +23,7 @@
     </scm>
 
     <properties>
-        <kotlin.version>1.9.25</kotlin.version>
+        <kotlin.version>2.0.0</kotlin.version>
         <awaitility.version>1.7.0</awaitility.version>
         <driver.version>4.11.4</driver.version>
         <driver.minor.version>4.11</driver.minor.version>
