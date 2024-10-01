@@ -2,6 +2,7 @@ package dev.morphia.critter.parser.gizmo
 
 import dev.morphia.annotations.internal.AnnotationNodeExtensions.setBuilderValues
 import dev.morphia.critter.parser.methodCase
+import io.quarkus.gizmo.FieldDescriptor
 import io.quarkus.gizmo.MethodCreator
 import io.quarkus.gizmo.MethodDescriptor
 import io.quarkus.gizmo.ResultHandle
@@ -37,8 +38,9 @@ fun attributeType(type: KClass<*>, name: String) =
     type.declaredMemberProperties.filter { it.name == name }.map { it.returnType.javaType }.first()
         as Class<*>
 
+@Suppress("UNCHECKED_CAST")
 @OptIn(ExperimentalStdlibApi::class)
-public fun load(creator: MethodCreator, type: Class<*>, `value`: Any): ResultHandle {
+fun load(creator: MethodCreator, type: Class<*>, `value`: Any): ResultHandle {
     return when (type) {
         String::class.java -> creator.load(value as String)
         Int::class.java -> creator.load(value as Int)
@@ -46,20 +48,26 @@ public fun load(creator: MethodCreator, type: Class<*>, `value`: Any): ResultHan
         Boolean::class.java -> creator.load(value as Boolean)
         AnnotationNode::class.java -> (value as AnnotationNode).annotationBuilder(creator)
         else -> {
-            return if (type.isArray) {
-                @Suppress("UNCHECKED_CAST")
-                value as List<Any>
-                val handle = creator.newArray(type.componentType, value.size)
-                value.forEachIndexed { index: Int, element: Any ->
-                    creator.writeArrayValue(
-                        handle,
-                        index,
-                        load(creator, element.javaClass, element)
+            when {
+                type.isAnnotation -> (value as AnnotationNode).annotationBuilder(creator)
+                type.isArray ->
+                    creator.newArray(type.componentType, (value as List<Any>).size).apply<
+                        ResultHandle
+                    > {
+                        value.forEachIndexed { index: Int, element: Any ->
+                            creator.writeArrayValue(
+                                this,
+                                index,
+                                load(creator, element.javaClass, element)
+                            )
+                        }
+                    }
+                type.isEnum ->
+                    return creator.readStaticField(
+                        FieldDescriptor.of(type, (value as Array<String>)[1], type)
                     )
-                }
-
-                return handle
-            } else TODO("$type is not yet supported")
+                else -> TODO("$type is not yet supported")
+            }
         }
     }
 }

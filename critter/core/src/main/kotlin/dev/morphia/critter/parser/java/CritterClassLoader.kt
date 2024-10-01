@@ -58,9 +58,6 @@ class CritterClassLoader(parent: ClassLoader?) :
                 asm.replace(type.internalName, mapping.internalName)
                     .replace(type.descriptor, mapping.descriptor)
                     .replace(type.className, mapping.className)
-            //                        .lines()
-            //                            .filterNot { it.contains("visitLineNumber") }
-            //                        .joinToString(separator = "\n")
         }
         if (!name.contains("__morphia")) {
             asm =
