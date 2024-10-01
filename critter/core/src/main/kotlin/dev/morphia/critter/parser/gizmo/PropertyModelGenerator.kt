@@ -6,17 +6,15 @@ import dev.morphia.annotations.Reference
 import dev.morphia.annotations.internal.AnnotationNodeExtensions.toMorphiaAnnotation
 import dev.morphia.config.MorphiaConfig
 import dev.morphia.critter.conventions.PropertyConvention
-import dev.morphia.critter.parser.asm.Generators.asClass
-import dev.morphia.critter.parser.asm.Generators.isArray
-import dev.morphia.critter.parser.java.CritterParser.critterClassLoader
-import dev.morphia.critter.parser.ksp.extensions.methodCase
+import dev.morphia.critter.parser.Generators.asClass
+import dev.morphia.critter.parser.Generators.isArray
+import dev.morphia.critter.parser.methodCase
 import dev.morphia.critter.titleCase
 import dev.morphia.mapping.codec.pojo.EntityModel
 import dev.morphia.mapping.codec.pojo.PropertyModel
 import dev.morphia.mapping.codec.pojo.PropertyModel.normalize
 import dev.morphia.mapping.codec.pojo.TypeData
 import dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel
-import io.quarkus.gizmo.ClassCreator
 import io.quarkus.gizmo.MethodCreator
 import io.quarkus.gizmo.MethodDescriptor
 import io.quarkus.gizmo.MethodDescriptor.ofMethod
@@ -30,7 +28,7 @@ import org.objectweb.asm.tree.AnnotationNode
 import org.objectweb.asm.tree.FieldNode
 import org.objectweb.asm.tree.MethodNode
 
-class GizmoPropertyModelGenerator private constructor(val config: MorphiaConfig, entity: Class<*>) :
+class PropertyModelGenerator private constructor(val config: MorphiaConfig, entity: Class<*>) :
     BaseGizmoGenerator(entity) {
     constructor(config: MorphiaConfig, entity: Class<*>, field: FieldNode) : this(config, entity) {
         this.field = field
@@ -67,7 +65,6 @@ class GizmoPropertyModelGenerator private constructor(val config: MorphiaConfig,
     lateinit var propertyName: String
     lateinit var propertyType: Type
     lateinit var accessorType: String
-    lateinit var creator: ClassCreator
     lateinit var annotations: List<AnnotationNode>
     val annotationMap: Map<String, Annotation> by lazy {
         annotations
@@ -83,34 +80,29 @@ class GizmoPropertyModelGenerator private constructor(val config: MorphiaConfig,
     }
     val model by lazy { creator.getFieldCreator("entityModel", EntityModel::class.java) }
 
-    fun emit() {
-        creator =
-            ClassCreator.builder()
-                .classOutput { name, data ->
-                    critterClassLoader.register(name.replace('/', '.'), data)
-                }
-                .className(generatedType)
-                .superClass(CritterPropertyModel::class.java)
-                .build()
+    fun emit(): PropertyModelGenerator {
+        builder.superClass(CritterPropertyModel::class.java)
 
-        ctor()
-        getAccessor()
-        getFullName()
-        getLoadNames()
-        getMappedName()
-        getName()
-        getNormalizedType()
-        isArray()
-        isFinal()
-        isReference()
-        isTransient()
-        isMap()
-        isSet()
-        isCollection()
-        getType()
-        getTypeData()
-        getEntityModel()
-        creator.close()
+        creator.use {
+            ctor()
+            getAccessor()
+            getFullName()
+            getLoadNames()
+            getMappedName()
+            getName()
+            getNormalizedType()
+            isArray()
+            isFinal()
+            isReference()
+            isTransient()
+            isMap()
+            isSet()
+            isCollection()
+            getType()
+            getTypeData()
+            getEntityModel()
+        }
+        return this
     }
 
     private fun isArray() {
@@ -289,59 +281,8 @@ class GizmoPropertyModelGenerator private constructor(val config: MorphiaConfig,
             constructor.invokeVirtualMethod(
                 annotationMethod,
                 constructor.`this`,
-                annotationBuilder(constructor, annotation)
+                annotation.annotationBuilder(constructor)
             )
-        }
-    }
-
-    private fun annotationBuilder(
-        constructor: MethodCreator,
-        annotation: AnnotationNode,
-    ): ResultHandle {
-        val type = Type.getType(annotation.desc)
-        val classPackage = type.className.substringBeforeLast('.')
-        val className = type.className.substringAfterLast('.')
-        val builderType =
-            Type.getType("L${classPackage}.internal.${className}Builder;".replace('.', '/'))
-        val builder =
-            ofMethod(
-                builderType.className,
-                "${className.methodCase()}Builder",
-                builderType.className
-            )
-        val local = constructor.invokeStaticMethod(builder)
-        val values = annotation.values?.windowed(2, 2) ?: emptyList()
-        values.forEach { value ->
-            val method =
-                ofMethod(
-                    builderType.className,
-                    value[0] as String,
-                    builderType.className,
-                    when (value[1]) {
-                        is List<*> -> Array<String>::class.java
-                        else -> value[1].javaClass
-                    }
-                )
-            constructor.invokeVirtualMethod(method, local, load(constructor, value[1]))
-        }
-
-        return constructor.invokeVirtualMethod(
-            ofMethod(builderType.className, "build", type.className),
-            local
-        )
-    }
-
-    private fun load(constructor: MethodCreator, value: Any): ResultHandle {
-        return when (value) {
-            is String -> constructor.load(value)
-            is Int -> constructor.load(value)
-            is Long -> constructor.load(value)
-            is Boolean -> constructor.load(value)
-            is List<*> -> {
-                val toTypedArray = value.map { load(constructor, it!!) }.toTypedArray()
-                constructor.marshalAsArray(value[0]!!.javaClass, *toTypedArray)
-            }
-            else -> TODO("${value.javaClass} is not yet supported")
         }
     }
 

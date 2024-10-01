@@ -1,16 +1,20 @@
 package dev.morphia.critter
 
-import com.google.devtools.ksp.impl.KotlinSymbolProcessing
 import com.google.devtools.ksp.processing.KSPConfig
 import com.google.devtools.ksp.processing.KSPJvmConfig.Builder
-import com.google.devtools.ksp.processing.KspGradleLogger
 import dev.morphia.annotations.Entity
-import dev.morphia.critter.parser.CritterProcessorProvider
+import dev.morphia.annotations.Property
+import dev.morphia.critter.parser.java.CritterClassLoader
+import dev.morphia.mapping.codec.pojo.PropertyModel
 import java.io.File
+import org.objectweb.asm.Type
 
 class Critter(val root: File) {
     companion object {
         var outputDirectory = File("target/generated-sources/morphia")
+        val critterClassLoader = CritterClassLoader(PropertyModel::class.java.classLoader)
+        val propertyAnnotations = mutableListOf(Type.getType(Property::class.java))
+        val transientAnnotations = mutableListOf(Type.getType(Transient::class.java))
 
         fun critterPackage(entity: Class<*>): String {
             return "${entity.packageName}.__morphia.${entity.simpleName.lowercase()}"
@@ -40,15 +44,6 @@ class Critter(val root: File) {
             }
 
         return builder.build()
-    }
-
-    fun process() {
-        KotlinSymbolProcessing(
-                build(),
-                listOf(CritterProcessorProvider()),
-                KspGradleLogger(KspGradleLogger.LOGGING_LEVEL_WARN)
-            )
-            .execute()
     }
 
     private fun Class<Entity>.loadPath() =

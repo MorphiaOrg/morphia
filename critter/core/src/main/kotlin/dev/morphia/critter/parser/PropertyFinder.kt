@@ -1,10 +1,9 @@
 package dev.morphia.critter.parser
 
-import dev.morphia.config.PropertyAnnotationProvider
-import dev.morphia.critter.parser.asm.AddFieldAccessorMethods
-import dev.morphia.critter.parser.asm.Generators.config
-import dev.morphia.critter.parser.gizmo.GizmoPropertyAccessorGenerator
-import dev.morphia.critter.parser.gizmo.GizmoPropertyModelGenerator
+import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator.accessor
+import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator.fieldAccessors
+import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator.propertyModelGenerator
+import dev.morphia.critter.parser.gizmo.PropertyModelGenerator
 import dev.morphia.critter.parser.java.CritterClassLoader
 import dev.morphia.critter.parser.java.CritterParser
 import dev.morphia.mapping.Mapper
@@ -13,28 +12,21 @@ import org.objectweb.asm.tree.AnnotationNode
 import org.objectweb.asm.tree.ClassNode
 
 class PropertyFinder(mapper: Mapper, val classLoader: CritterClassLoader) {
-    val providerMap: Map<Class<out Any>, PropertyAnnotationProvider<*>>
+    private val providerMap =
+        mapper.config.propertyAnnotationProviders().associateBy { it.provides() }
 
-    init {
-        providerMap = mapper.config.propertyAnnotationProviders().associateBy { it.provides() }
-    }
-
-    fun find(entityType: Class<*>, classNode: ClassNode): List<String> {
-        val models = mutableListOf<String>()
+    fun find(entityType: Class<*>, classNode: ClassNode): List<PropertyModelGenerator> {
+        val models = mutableListOf<PropertyModelGenerator>()
         val methods = discoverPropertyMethods(classNode)
         if (methods.isEmpty()) {
             val fields = discoverFields(classNode)
-            classLoader.register(
-                entityType.name,
-                AddFieldAccessorMethods(entityType, fields).emit()
-            )
+            classLoader.register(entityType.name, fieldAccessors(entityType, fields))
             fields.forEach { field ->
-                val accessorGenerator = GizmoPropertyAccessorGenerator(entityType, field)
-                accessorGenerator.emit()
-                val propertyModelGenerator = GizmoPropertyModelGenerator(config, entityType, field)
-                propertyModelGenerator.emit()
-                models += propertyModelGenerator.generatedType
+                accessor(entityType, field)
+                models += propertyModelGenerator(entityType, field)
             }
+        } else {
+            TODO()
         }
 
         return models

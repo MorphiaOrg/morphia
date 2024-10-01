@@ -1,18 +1,17 @@
 package dev.morphia.critter.parser
 
-import dev.morphia.critter.parser.asm.Generators
+import dev.morphia.critter.Critter.Companion.critterClassLoader
+import dev.morphia.critter.parser.Generators.mapper
+import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator as generator
 import dev.morphia.critter.parser.java.CritterParser.asmify
-import dev.morphia.critter.parser.java.CritterParser.critterClassLoader
-import dev.morphia.mapping.Mapper
+import dev.morphia.critter.sources.Example
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel
 import io.github.classgraph.ClassGraph
 import java.lang.reflect.Modifier
 import org.objectweb.asm.Type
 
 object GeneratorTest {
-    lateinit var entityModel: CritterEntityModel
-    val mapper = Mapper(Generators.config)
-    val critterAsmGenerator = CritterAsmGenerator(critterClassLoader, mapper)
+    var entityModel: CritterEntityModel
 
     init {
         val classGraph = ClassGraph().addClassLoader(critterClassLoader).enableAllInfo()
@@ -23,11 +22,16 @@ object GeneratorTest {
                 try {
                     val name = classInfo.name
                     critterClassLoader.dump(name)
-                } catch (ignored: Throwable) {}
+                } catch (_: Throwable) {}
             }
         }
+        val generator = generator.generate(Example::class.java)
 
-        //        entityModel = critterAsmGenerator.generate(Example::class.java)
+        entityModel =
+            critterClassLoader
+                .loadClass(generator.generatedType)
+                .constructors[0]
+                .newInstance(mapper) as CritterEntityModel
     }
 
     fun methodNames(clazz: Class<*>): Array<Array<Any>> {

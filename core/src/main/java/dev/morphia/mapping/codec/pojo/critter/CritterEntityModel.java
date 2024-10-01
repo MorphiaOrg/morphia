@@ -71,40 +71,15 @@ public abstract class CritterEntityModel extends EntityModel {
 
     @Override
     public final void setIdProperty(PropertyModel model) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public abstract MorphiaInstanceCreator getInstanceCreator();
 
     @Override
-    public abstract List<PropertyModel> getProperties(Class<? extends Annotation> type);
-
-    @Override
-    public abstract List<PropertyModel> getProperties();
-
-    @Override
-    public final PropertyModel getProperty(String name) {
-        return super.getProperty(name);
-    }
-
-    @Override
-    public abstract EntityModel getSubtype(Class<?> type);
-
-    @Override
-    public abstract Set<EntityModel> getSubtypes();
-
-    @Override
-    public abstract void addSubtype(EntityModel subtype);
-
-    @Override
-    public abstract EntityModel getSuperClass();
-
-    @Override
-    public abstract Class<?> getType();
-
-    @Override
     public final void setType(Class<?> type) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -115,7 +90,7 @@ public abstract class CritterEntityModel extends EntityModel {
 
     @Override
     public final void setVersionProperty(PropertyModel model) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override

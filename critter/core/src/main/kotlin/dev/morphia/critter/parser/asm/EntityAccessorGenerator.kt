@@ -1,7 +1,7 @@
 package dev.morphia.critter.parser.asm
 
 import dev.morphia.critter.Critter.Companion.critterPackage
-import dev.morphia.critter.parser.asm.Generators.wrap
+import dev.morphia.critter.parser.Generators.wrap
 import dev.morphia.critter.titleCase
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes.*

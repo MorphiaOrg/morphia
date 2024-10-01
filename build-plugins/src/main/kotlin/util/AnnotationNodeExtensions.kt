@@ -1,6 +1,5 @@
 package util
 
-import com.google.devtools.ksp.symbol.KSAnnotation
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.AnnotationSpec.UseSiteTarget.FILE
 import com.squareup.kotlinpoet.ClassName
@@ -8,6 +7,7 @@ import com.squareup.kotlinpoet.ClassName.Companion.bestGuess
 import com.squareup.kotlinpoet.DelicateKotlinPoetApi
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.TypeSpec.Companion.objectBuilder
 import com.squareup.kotlinpoet.TypeVariableName
@@ -16,8 +16,6 @@ import java.io.File
 import java.io.FileFilter
 import java.io.FileWriter
 import java.io.IOException
-import java.text.MessageFormat
-import java.util.Arrays
 import java.util.TreeMap
 import org.apache.maven.plugin.AbstractMojo
 import org.apache.maven.plugin.MojoExecutionException
@@ -31,14 +29,20 @@ import org.jboss.forge.roaster.model.Type
 import org.jboss.forge.roaster.model.source.Import
 import org.jboss.forge.roaster.model.source.JavaAnnotationSource
 import org.jboss.forge.roaster.model.source.JavaClassSource
-import org.jboss.forge.roaster.model.source.JavaSource
 import org.jboss.forge.roaster.model.util.Types
 import org.objectweb.asm.Type as AsmType
 import org.objectweb.asm.tree.AnnotationNode
+import util.AnnotationBuilders.methodCase
 
 @OptIn(DelicateKotlinPoetApi::class)
 @Mojo(name = "morphia-annotation-node", defaultPhase = GENERATE_SOURCES)
 class AnnotationNodeExtensions : AbstractMojo() {
+    companion object {
+        val RESULT_HANDLE = ClassName("io.quarkus.gizmo", "ResultHandle")
+        val METHOD_CREATOR = ClassName("io.quarkus.gizmo", "MethodCreator")
+        val METHOD_DESCRIPTOR = ClassName("io.quarkus.gizmo", "MethodDescriptor")
+    }
+
     private val builders: MutableMap<String, JavaAnnotationSource> = TreeMap()
     lateinit var fileBuilder: FileSpec.Builder
 
@@ -85,8 +89,13 @@ class AnnotationNodeExtensions : AbstractMojo() {
                     .build()
             )
 
+            fileBuilder.addImport("kotlin.reflect.full", "declaredMemberProperties")
+            fileBuilder.addImport("kotlin.reflect.jvm", "javaType")
             fileBuilder.addImport("dev.morphia.mapping", "MappingException")
             fileBuilder.addImport("java.util", "Objects")
+            fileBuilder.addImport("dev.morphia.critter.parser", "methodCase")
+            fileBuilder.addImport("dev.morphia.critter.parser.gizmo", "load")
+            fileBuilder.addImport("dev.morphia.critter.parser.gizmo", "attributeType")
             emitFactory()
         } catch (e: Exception) {
             throw MojoExecutionException(e.message, e)
@@ -104,11 +113,11 @@ class AnnotationNodeExtensions : AbstractMojo() {
     @Throws(Exception::class)
     private fun emitFactory() {
         factory = createFactory()
+        genericSetters()
         genericConverter()
         for (source in builders.values) {
             annotationConverters(source)
-            //            annotationExtractors(source)
-            //            annotationCodeBuilders(source)
+            annotationValueSetters(source)
         }
 
         fileBuilder.addType(factory.build())
@@ -146,15 +155,83 @@ class AnnotationNodeExtensions : AbstractMojo() {
         factory.addFunction(method.build())
     }
 
+    private fun genericSetters() {
+        val method =
+            FunSpec.builder("setBuilderValues")
+                .receiver(AnnotationNode::class.asClassName())
+                .addParameter("creator", METHOD_CREATOR)
+                .addParameter("local", RESULT_HANDLE)
+        //                .returns(RESULT_HANDLE)
+
+        method.beginControlFlow("return when (desc)")
+        builders.values.forEach() { source ->
+            val type = bestGuess(source.qualifiedName).toType()
+            method.addStatement(
+                """"${type.descriptor}" -> set${source.name}Values(creator, local)"""
+            )
+        }
+        method.addStatement(
+            """else -> throw IllegalArgumentException("Unknown annotation type: ${"$"}{desc}")"""
+        )
+
+        method.endControlFlow()
+
+        factory.addFunction(method.build())
+    }
+
+    private fun annotationValueSetters(source: JavaAnnotationSource) {
+        val builderName = "${source.name}Builder"
+        fileBuilder.addImport(fileBuilder.packageName, "$builderName.${methodCase(builderName)}")
+        val method =
+            FunSpec.builder("set${source.name}Values")
+                .addModifiers(KModifier.PRIVATE)
+                .receiver(AnnotationNode::class.java)
+                .addParameter("creator", METHOD_CREATOR)
+                .addParameter("local", RESULT_HANDLE)
+
+        if (source.annotationElements.isNotEmpty()) {
+            method.addCode(
+                """
+                val map = (values?.windowed(2, 2) ?: emptyList())
+                    .map { it -> (it[0] ?: "value") to it[1] }
+                    .toMap()
+                    
+            """
+                    .trimIndent()
+            )
+        }
+
+        for (element in source.annotationElements) {
+            val builderName =
+                ClassName(fileBuilder.packageName, "${source.name}Builder") /*.reflectionName()*/
+            val name = element.name
+            method.addCode(
+                """
+                    
+                map["${name}"]?.let { 
+                  val type = attributeType(${source.name}::class, "$name")
+                  val method = %T.ofMethod( %T::class.java, "${name}", %T::class.java, attributeType(${source.name}::class, "$name") )
+                  creator.invokeVirtualMethod(method, local, load(creator, type, it))
+                }
+                
+                """
+                    .trimIndent(),
+                METHOD_DESCRIPTOR,
+                builderName,
+                builderName
+            )
+        }
+
+        factory.addFunction(method.build())
+    }
+
     private fun annotationConverters(source: JavaAnnotationSource) {
         val builderName = "${source.name}Builder"
-        fileBuilder.addImport(
-            fileBuilder.packageName,
-            "$builderName.${AnnotationBuilders.methodCase(builderName)}"
-        )
+        fileBuilder.addImport(fileBuilder.packageName, "$builderName.${methodCase(builderName)}")
         val method =
             FunSpec.builder("to" + source.name)
                 .receiver(AnnotationNode::class.asClassName())
+                .addModifiers(KModifier.PRIVATE)
                 .returns(bestGuess(source.qualifiedName))
         var code = ""
         if (source.annotationElements.isNotEmpty()) {
@@ -169,117 +246,20 @@ class AnnotationNodeExtensions : AbstractMojo() {
         }
         code +=
             """
-                return ${AnnotationBuilders.methodCase(source.name)}Builder().apply {
+                return ${methodCase(source.name)}Builder().apply {
                 
             """
                 .trimIndent()
 
         for (element in source.annotationElements) {
             val name = element.name
-            var cast = processType(element.type)
-            /*
-                        if (element.type.isArray) {
-                            cast = "*(${cast})"
-                        }
-            */
-            code += ("map[\"${name}\"]?.let { ${name}(${cast}) }\n")
+            code += ("map[\"${name}\"]?.let { ${name}(${processType(element.type)}) }\n")
         }
 
         code += "}\n.build()"
         method.addCode(code)
 
         factory.addFunction(method.build())
-    }
-
-    private fun annotationCodeBuilders(source: JavaAnnotationSource) {
-        val method =
-            FunSpec.builder(AnnotationBuilders.methodCase(source.name) + "CodeGen")
-                .receiver(KSAnnotation::class.java)
-                .returns(bestGuess("kotlin.String"))
-        val className: ClassName = bestGuess(builderName(source))
-        fileBuilder.addImport(className.packageName, className.simpleName)
-        method.addCode(
-            MessageFormat.format(
-                """
-                 val map = arguments
-                            .map '{' it -> (it.name?.asString() ?: "value") to it.value }
-                            .toMap()
-                var code = "{0}Builder.{1}Builder()"
-                
-                """
-                    .trimIndent(),
-                source.name,
-                AnnotationBuilders.methodCase(source.name)
-            )
-        )
-
-        for (element in source.annotationElements) {
-            val name = element.name
-            var value: String?
-
-            method.addCode(
-                """
-                        map["$name"]?.let {
-                    
-                    """
-                    .trimIndent()
-            )
-            val type = element.type
-            if (type.qualifiedName.startsWith("dev.morphia.annotations.")) {
-                val typeName = type.simpleName
-                method.addCode(
-                    """
-                        if (!Objects.equals(${source.name}Builder.defaults.${name}, (it as AnnotationNode).to${typeName}())) {
-                        
-                        """
-                        .trimIndent()
-                )
-                value = "\${it.${AnnotationBuilders.methodCase(typeName)}CodeGen()}"
-            } else {
-                method.addCode(
-                    """
-                        if (!Objects.equals(${source.name}Builder.defaults.${name}, it)) {
-                        
-                        """
-                        .trimIndent()
-                )
-
-                value = getValue(type)
-            }
-
-            method.addCode(
-                """
-                        code += ".${name}(${value})"
-                      }
-                    }
-                    
-                    """
-                    .trimIndent()
-            )
-        }
-
-        method.addCode(
-            """
-                code += ".build()"
-                
-                """
-                .trimIndent()
-        )
-        method.addCode("return code")
-
-        factory.addFunction(method.build())
-    }
-
-    private fun getValue(type: Type<JavaAnnotationSource>): String {
-        val typeName = type.name
-        var code = "\$it"
-
-        if (typeName == "String") {
-            code = """\"${code}\""""
-        } else if (typeName == "Class") {
-            code += ".class"
-        }
-        return code
     }
 
     private fun processType(type: Type<JavaAnnotationSource>): String {
@@ -297,7 +277,7 @@ class AnnotationNodeExtensions : AbstractMojo() {
         } else if (typeName == "Class") {
             code = "it as Class<*>"
         } else if (type.isArray) {
-            code = "${processArrayType(type)}"
+            code = processArrayType(type)
         } else if (
             type.qualifiedName.startsWith("com.mongodb.client.model.") ||
                 type.qualifiedName.startsWith("dev.morphia.mapping.")
@@ -332,44 +312,36 @@ class AnnotationNodeExtensions : AbstractMojo() {
 
     private fun find(path: String): List<File> {
         val files = File(path).listFiles(filter)
-        return if (files != null) Arrays.asList(*files) else listOf()
+        return if (files != null) listOf(*files) else listOf()
     }
 
-    companion object {
-        private fun builderName(builder: JavaSource<*>): String {
-            val pkg = builder.getPackage() + ".internal."
-            val name = builder.name + "Builder"
-            return pkg + name
-        }
-
-        private fun processArrayType(type: Type<JavaAnnotationSource>): String {
-            var code: String = type.simpleName
-            val parameterized = type.isParameterized
-            val params = if (parameterized) type.typeArguments else emptyList()
-            if (!params.isEmpty()) {
-                val param = params[0]
-                var parameterName = Types.toSimpleName(param.qualifiedName)
-                if (param.isWildcard) {
-                    parameterName = parameterName.substring(parameterName.lastIndexOf(' ') + 1)
-                }
-                if (!Types.isQualified(parameterName)) {
-                    val target = parameterName
-                    val imp =
-                        type.origin.imports
-                            .stream()
-                            .filter { i: Import -> i.simpleName == target }
-                            .findFirst()
-                            .orElseThrow()
-                    parameterName = imp.qualifiedName
-                }
-                if (param.isWildcard) {
-                    parameterName += "<*>"
-                }
-
-                code = "${type.simpleName}<${parameterName}>"
+    private fun processArrayType(type: Type<JavaAnnotationSource>): String {
+        var code: String = type.simpleName
+        val parameterized = type.isParameterized
+        val params = if (parameterized) type.typeArguments else emptyList()
+        if (!params.isEmpty()) {
+            val param = params[0]
+            var parameterName = Types.toSimpleName(param.qualifiedName)
+            if (param.isWildcard) {
+                parameterName = parameterName.substring(parameterName.lastIndexOf(' ') + 1)
             }
-            return "*(it as List<${code}>).toTypedArray()"
+            if (!Types.isQualified(parameterName)) {
+                val target = parameterName
+                val imp =
+                    type.origin.imports
+                        .stream()
+                        .filter { i: Import -> i.simpleName == target }
+                        .findFirst()
+                        .orElseThrow()
+                parameterName = imp.qualifiedName
+            }
+            if (param.isWildcard) {
+                parameterName += "<*>"
+            }
+
+            code = "${type.simpleName}<${parameterName}>"
         }
+        return "*(it as List<${code}>).toTypedArray()"
     }
 }
 

@@ -335,12 +335,14 @@ public class EntityModel {
         return name != null ? propertyModelsByMappedName.getOrDefault(name, propertyModelsByName.get(name)) : null;
     }
 
-    @Nullable
-    public EntityModel getSubtype(Class<?> type) {
-        return subtypes.stream().filter(subtype -> subtype.type.equals(type))
-                .findFirst()
-                .orElse(null);
-    }
+    /*
+     * @Nullable
+     * public EntityModel getSubtype(Class<?> type) {
+     * return subtypes.stream().filter(subtype -> subtype.type.equals(type))
+     * .findFirst()
+     * .orElse(null);
+     * }
+     */
 
     /**
      * Get the subtypes of this model

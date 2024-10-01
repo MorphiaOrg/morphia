@@ -1,12 +1,19 @@
-package dev.morphia.critter.parser.asm
+package dev.morphia.critter.parser
 
 import dev.morphia.config.MorphiaConfig
+import dev.morphia.config.MorphiaConfigHelper.MORPHIA_CONFIG_PROPERTIES
+import dev.morphia.mapping.Mapper
 import dev.morphia.mapping.conventions.MorphiaDefaultsConvention
 import org.objectweb.asm.Type
 import org.objectweb.asm.Type.ARRAY
 
 object Generators {
-    var config = MorphiaConfig.load()
+    var configFile = MORPHIA_CONFIG_PROPERTIES
+
+    val config: MorphiaConfig by lazy { MorphiaConfig.load(configFile) }
+
+    val mapper: Mapper by lazy { Mapper(config) }
+
     var convention = MorphiaDefaultsConvention()
 
     fun wrap(fieldType: Type): Type {

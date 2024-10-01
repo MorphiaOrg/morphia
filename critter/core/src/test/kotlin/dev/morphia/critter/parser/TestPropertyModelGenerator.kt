@@ -1,8 +1,8 @@
 package dev.morphia.critter.parser
 
+import dev.morphia.critter.Critter.Companion.critterClassLoader
 import dev.morphia.critter.parser.GeneratorTest.entityModel
 import dev.morphia.critter.parser.GeneratorTest.methodNames
-import dev.morphia.critter.parser.java.CritterParser.critterClassLoader
 import dev.morphia.mapping.codec.pojo.EntityModel
 import dev.morphia.mapping.codec.pojo.PropertyModel
 import dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel

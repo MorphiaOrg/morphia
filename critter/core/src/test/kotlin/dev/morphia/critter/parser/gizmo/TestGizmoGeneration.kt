@@ -1,16 +1,19 @@
 package dev.morphia.critter.parser.gizmo
 
-import dev.morphia.critter.parser.CritterGizmoGenerator
-import dev.morphia.critter.parser.GeneratorTest
-import dev.morphia.critter.parser.java.CritterParser.critterClassLoader
+import dev.morphia.critter.Critter.Companion.critterClassLoader
+import dev.morphia.critter.parser.Generators.mapper
+import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator as generator
 import dev.morphia.critter.sources.Example
+import dev.morphia.mapping.codec.pojo.EntityModel
 import dev.morphia.mapping.codec.pojo.PropertyModel
 import dev.morphia.mapping.codec.pojo.TypeData
 import io.quarkus.gizmo.ClassCreator
 import io.quarkus.gizmo.MethodDescriptor
+import io.quarkus.gizmo.MethodDescriptor.ofMethod
 import java.lang.reflect.Modifier
 import kotlin.reflect.KClass
 import org.objectweb.asm.Type
+import org.objectweb.asm.tree.AnnotationNode
 import org.testng.Assert.assertEquals
 import org.testng.Assert.assertNotNull
 import org.testng.Assert.assertTrue
@@ -104,28 +107,61 @@ class TestGizmoGeneration {
     }
 
     @Test
-    fun testGizmo() {
-        val classLoader = critterClassLoader
-        val generator = CritterGizmoGenerator(critterClassLoader, GeneratorTest.mapper)
+    fun testAnnotationBuilding() {
+        val index = AnnotationNode("Ldev/morphia/annotations/Index;")
+        val field = AnnotationNode("Ldev/morphia/annotations/Field;")
+        //        field.values = listOf("value", "name")
+        index.values = listOf("fields", listOf(field))
+        ClassCreator.builder()
+            .className("critter.AnnotationTest")
+            .superClass(EntityModel::class.java)
+            .classOutput { name, data -> critterClassLoader.register(name.replace('/', '.'), data) }
+            .build()
+            .use {
+                val creator = it.getMethodCreator("test", Void::class.java)
+                val annotationMethod =
+                    ofMethod(
+                        EntityModel::class.java.name,
+                        "annotation",
+                        EntityModel::class.java.name,
+                        Annotation::class.java
+                    )
 
+                creator.invokeVirtualMethod(
+                    annotationMethod,
+                    creator.`this`,
+                    index.annotationBuilder(creator)
+                )
+            }
+    }
+
+    @Test
+    fun testGizmo() {
         generator.generate(Example::class.java)
-        classLoader.loadClass("dev.morphia.critter.sources.__morphia.example.AgeModel")
+        critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.AgeModel")
         val nameModel =
-            classLoader.loadClass("dev.morphia.critter.sources.__morphia.example.NameModel")
+            critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.NameModel")
         invokeAll(PropertyModel::class.java, nameModel)
-        classLoader.loadClass("dev.morphia.critter.sources.__morphia.example.SalaryModel")
-        classLoader
+        critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.SalaryModel")
+        critterClassLoader
             .loadClass("dev.morphia.critter.sources.__morphia.example.AgeAccessor")
             .getConstructor()
             .newInstance()
-        classLoader
+        critterClassLoader
             .loadClass("dev.morphia.critter.sources.__morphia.example.NameAccessor")
             .getConstructor()
             .newInstance()
-        classLoader
+        critterClassLoader
             .loadClass("dev.morphia.critter.sources.__morphia.example.SalaryAccessor")
             .getConstructor()
             .newInstance()
+        val loadClass =
+            critterClassLoader.loadClass(
+                "dev.morphia.critter.sources.__morphia.example.ExampleEntityModel"
+            )
+        val constructors = loadClass.constructors
+        val model: EntityModel = constructors[0].newInstance(mapper) as EntityModel
+        println("**************** newInstance = ${model}")
     }
 
     private fun invokeAll(type: Class<*>, klass: Class<*>) {

@@ -1,8 +1,6 @@
 package dev.morphia.critter.parser.gizmo
 
-import dev.morphia.critter.parser.java.CritterParser.critterClassLoader
 import dev.morphia.critter.titleCase
-import io.quarkus.gizmo.ClassCreator
 import io.quarkus.gizmo.MethodDescriptor.ofConstructor
 import io.quarkus.gizmo.MethodDescriptor.ofMethod
 import io.quarkus.gizmo.SignatureBuilder.*
@@ -13,7 +11,7 @@ import org.objectweb.asm.Type.getType
 import org.objectweb.asm.tree.FieldNode
 import org.objectweb.asm.tree.MethodNode
 
-class GizmoPropertyAccessorGenerator : BaseGizmoGenerator {
+class PropertyAccessorGenerator : BaseGizmoGenerator {
     constructor(entity: Class<*>, field: FieldNode) : super(entity) {
         propertyName = field.name
         propertyType = getType(field.desc).className
@@ -26,32 +24,27 @@ class GizmoPropertyAccessorGenerator : BaseGizmoGenerator {
         generatedType = "${baseName}.${propertyName.titleCase()}Accessor"
     }
 
-    lateinit var creator: ClassCreator
     val propertyName: String
     val propertyType: String
 
-    fun emit() {
-        creator =
-            ClassCreator.builder()
-                .signature(
-                    forClass()
-                        .addInterface(
-                            parameterizedType(
-                                classType(PropertyAccessor::class.java),
-                                classType(propertyType)
-                            )
-                        )
+    fun emit(): PropertyAccessorGenerator {
+        builder.signature(
+            forClass()
+                .addInterface(
+                    parameterizedType(
+                        classType(PropertyAccessor::class.java),
+                        classType(propertyType)
+                    )
                 )
-                .classOutput { name, data ->
-                    critterClassLoader.register(name.replace('/', '.'), data)
-                }
-                .className(generatedType)
-                .build()
+        )
 
-        ctor()
-        get()
-        set()
-        creator.close()
+        creator.use {
+            ctor()
+            get()
+            set()
+        }
+
+        return this
     }
 
     private fun get() {
@@ -81,7 +74,6 @@ class GizmoPropertyAccessorGenerator : BaseGizmoGenerator {
                 .addParameterType(classType(propertyType))
                 .build()
         method.setParameterNames(arrayOf("model", "value"))
-
         val toInvoke = ofMethod(entity, "__write${propertyName.titleCase()}", "void", propertyType)
         method.invokeVirtualMethod(toInvoke, method.getMethodParam(0), method.getMethodParam(1))
         method.returnValue(null)

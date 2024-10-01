@@ -80,11 +80,6 @@ public class ExampleEntityModelTemplate extends CritterEntityModel {
     }
 
     @Override
-    public EntityModel getSubtype(Class<?> type) {
-        return null;
-    }
-
-    @Override
     public Set<EntityModel> getSubtypes() {
         return Set.of();
     }

@@ -82,15 +82,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
-                <configuration>
-                    <!-- Need to disable default annotation processing since apt-maven-plugin takes over -->
-                    <compilerArgument>-proc:none</compilerArgument>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>build-plugins</artifactId>
                 <version>${project.version}</version>
@@ -101,22 +92,8 @@
                             <goal>morphia-annotation-node</goal>
                         </goals>
                     </execution>
-                    <execution>
-                        <id>morphia-annotations-kotlin</id>
-                        <goals>
-                            <goal>morphia-annotations-kotlin</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>docs-config</id>
-                        <goals>
-                            <goal>docs-config</goal>
-                        </goals>
-                        <phase>generate-test-resources</phase>
-                    </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 </project>
