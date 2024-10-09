@@ -1,5 +1,16 @@
 package dev.morphia.critter.parser.gizmo
 
+import com.mongodb.client.model.CollationCaseFirst.LOWER
+import dev.morphia.annotations.Entity
+import dev.morphia.annotations.EntityListeners
+import dev.morphia.annotations.Indexes
+import dev.morphia.annotations.internal.CollationBuilder.collationBuilder
+import dev.morphia.annotations.internal.EntityBuilder.entityBuilder
+import dev.morphia.annotations.internal.EntityListenersBuilder.entityListenersBuilder
+import dev.morphia.annotations.internal.FieldBuilder.fieldBuilder
+import dev.morphia.annotations.internal.IndexBuilder.indexBuilder
+import dev.morphia.annotations.internal.IndexOptionsBuilder.indexOptionsBuilder
+import dev.morphia.annotations.internal.IndexesBuilder.indexesBuilder
 import dev.morphia.critter.Critter.Companion.critterClassLoader
 import dev.morphia.critter.parser.Generators.mapper
 import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator as generator
@@ -7,6 +18,7 @@ import dev.morphia.critter.sources.Example
 import dev.morphia.mapping.codec.pojo.EntityModel
 import dev.morphia.mapping.codec.pojo.PropertyModel
 import dev.morphia.mapping.codec.pojo.TypeData
+import dev.morphia.mapping.lifecycle.EntityListenerAdapter
 import io.quarkus.gizmo.ClassCreator
 import io.quarkus.gizmo.MethodDescriptor
 import io.quarkus.gizmo.MethodDescriptor.ofMethod
@@ -161,7 +173,38 @@ class TestGizmoGeneration {
             )
         val constructors = loadClass.constructors
         val model: EntityModel = constructors[0].newInstance(mapper) as EntityModel
+        validate(model)
         println("**************** newInstance = ${model}")
+    }
+
+    private fun validate(model: EntityModel) {
+        val annotation = model.getAnnotation(EntityListeners::class.java)
+        assertEquals(
+            annotation,
+            entityListenersBuilder().value(EntityListenerAdapter::class.java).build()
+        )
+
+        assertEquals(
+            model.getAnnotation(Entity::class.java),
+            entityBuilder().value("examples").build()
+        )
+
+        assertEquals(
+            model.getAnnotation<Indexes>(Indexes::class.java),
+            indexesBuilder()
+                .value(
+                    indexBuilder()
+                        .fields(fieldBuilder().value("name").weight(42).build())
+                        .options(
+                            indexOptionsBuilder()
+                                .partialFilter("partial filter")
+                                .collation(collationBuilder().caseFirst(LOWER).build())
+                                .build()
+                        )
+                        .build()
+                )
+                .build()
+        )
     }
 
     private fun invokeAll(type: Class<*>, klass: Class<*>) {

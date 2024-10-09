@@ -43,7 +43,7 @@ fun rawType(type: java.lang.reflect.Type) =
             Type.getType("[" + Type.getType(type1.rawType as Class<*>).descriptor)
         }
         else -> Type.getType(type as Class<*>)
-    }.internalName
+    }.descriptor
 
 fun attributeType(type: KClass<*>, name: String): java.lang.reflect.Type {
     val map =
