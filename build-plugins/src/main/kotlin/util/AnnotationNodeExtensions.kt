@@ -94,8 +94,12 @@ class AnnotationNodeExtensions : AbstractMojo() {
             fileBuilder.addImport("dev.morphia.mapping", "MappingException")
             fileBuilder.addImport("java.util", "Objects")
             fileBuilder.addImport("dev.morphia.critter.parser", "methodCase")
-            fileBuilder.addImport("dev.morphia.critter.parser.gizmo", "load")
-            fileBuilder.addImport("dev.morphia.critter.parser.gizmo", "attributeType")
+            fileBuilder.addImport(
+                "dev.morphia.critter.parser.gizmo",
+                "load",
+                "attributeType",
+                "rawType"
+            )
             emitFactory()
         } catch (e: Exception) {
             throw MojoExecutionException(e.message, e)
@@ -210,7 +214,7 @@ class AnnotationNodeExtensions : AbstractMojo() {
                     
                 map["${name}"]?.let { 
                   val type = attributeType(${source.name}::class, "$name")
-                  val method = %T.ofMethod( %T::class.java, "${name}", %T::class.java, attributeType(${source.name}::class, "$name") )
+                  val method = %T.ofMethod( %T::class.java, "${name}", %T::class.java, rawType(type) )
                   creator.invokeVirtualMethod(method, local, load(creator, type, it))
                 }
                 
@@ -278,11 +282,11 @@ class AnnotationNodeExtensions : AbstractMojo() {
             code = "it as Class<*>"
         } else if (type.isArray) {
             code = processArrayType(type)
-        } else if (
-            type.qualifiedName.startsWith("com.mongodb.client.model.") ||
-                type.qualifiedName.startsWith("dev.morphia.mapping.")
-        ) {
-            code = "it as ${type.qualifiedName}"
+        } else if (type.qualifiedName.startsWith("com.mongodb.client.model.")) {
+            addImport(type.qualifiedName)
+            code = "${type.simpleName}.valueOf((it as Array<String>)[1])"
+        } else if (type.qualifiedName.startsWith("dev.morphia.mapping.")) {
+            code = "${type.qualifiedName}.valueOf(it as String)"
         } else if (type.qualifiedName.startsWith("dev.morphia.annotations.")) {
             code = "(it as AnnotationNode).to${type.simpleName}()"
         } else {
@@ -296,6 +300,11 @@ class AnnotationNodeExtensions : AbstractMojo() {
         }
 
         return code
+    }
+
+    private fun addImport(typeName: String) {
+        val className = bestGuess(typeName)
+        fileBuilder.addImport(className.packageName, className.simpleName)
     }
 
     private fun createFactory(): TypeSpec.Builder {
@@ -319,29 +328,35 @@ class AnnotationNodeExtensions : AbstractMojo() {
         var code: String = type.simpleName
         val parameterized = type.isParameterized
         val params = if (parameterized) type.typeArguments else emptyList()
-        if (!params.isEmpty()) {
-            val param = params[0]
-            var parameterName = Types.toSimpleName(param.qualifiedName)
-            if (param.isWildcard) {
-                parameterName = parameterName.substring(parameterName.lastIndexOf(' ') + 1)
-            }
-            if (!Types.isQualified(parameterName)) {
-                val target = parameterName
-                val imp =
-                    type.origin.imports
-                        .stream()
-                        .filter { i: Import -> i.simpleName == target }
-                        .findFirst()
-                        .orElseThrow()
-                parameterName = imp.qualifiedName
-            }
-            if (param.isWildcard) {
-                parameterName += "<*>"
-            }
+        when {
+            type.qualifiedName == "java.lang.Class" -> {
+                val param = params[0]
+                var parameterName = Types.toSimpleName(param.qualifiedName)
+                if (param.isWildcard) {
+                    parameterName = parameterName.substringAfterLast(' ')
+                }
+                if (!Types.isQualified(parameterName)) {
+                    parameterName =
+                        type.origin.imports
+                            .filter { i: Import -> i.simpleName == parameterName }
+                            .map { i -> i.qualifiedName }
+                            .first()
+                }
+                if (param.isWildcard) {
+                    parameterName += "<*>"
+                }
 
-            code = "${type.simpleName}<${parameterName}>"
+                code = "${type.simpleName}<${parameterName}>"
+                return """*(it as List<org.objectweb.asm.Type>)
+                    .map { Class.forName(it.className) }
+                    .toTypedArray() as Array<$code>"""
+                    .trimMargin()
+            }
+            type.qualifiedName.startsWith("dev.morphia.annotations.") ->
+                return "*(it as List<AnnotationNode>).map { it.to$code() } .toTypedArray()"
+            type.qualifiedName == "java.lang.String" -> return "*(it as List<$code>).toTypedArray()"
+            else -> TODO("unknown type: $type")
         }
-        return "*(it as List<${code}>).toTypedArray()"
     }
 }
 

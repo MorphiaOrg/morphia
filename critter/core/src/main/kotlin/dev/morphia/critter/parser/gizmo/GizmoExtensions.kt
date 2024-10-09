@@ -6,6 +6,8 @@ import io.quarkus.gizmo.FieldDescriptor
 import io.quarkus.gizmo.MethodCreator
 import io.quarkus.gizmo.MethodDescriptor
 import io.quarkus.gizmo.ResultHandle
+import java.lang.reflect.GenericArrayType
+import java.lang.reflect.ParameterizedType
 import kotlin.reflect.KClass
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.javaType
@@ -34,12 +36,50 @@ fun AnnotationNode.annotationBuilder(creator: MethodCreator): ResultHandle {
     )
 }
 
-fun attributeType(type: KClass<*>, name: String) =
-    type.declaredMemberProperties.filter { it.name == name }.map { it.returnType.javaType }.first()
-        as Class<*>
+fun rawType(type: java.lang.reflect.Type) =
+    when (type) {
+        is GenericArrayType -> {
+            val type1 = type.genericComponentType as ParameterizedType
+            Type.getType("[" + Type.getType(type1.rawType as Class<*>).descriptor)
+        }
+        else -> Type.getType(type as Class<*>)
+    }.internalName
+
+fun attributeType(type: KClass<*>, name: String): java.lang.reflect.Type {
+    val map =
+        type.declaredMemberProperties
+            .filter { it.name == name }
+            .map { it.returnType.javaType }
+            .first()
+    return map
+}
 
 @Suppress("UNCHECKED_CAST")
-@OptIn(ExperimentalStdlibApi::class)
+fun load(creator: MethodCreator, type: java.lang.reflect.Type, `value`: Any): ResultHandle {
+    fun extractComponentType(arrayType: GenericArrayType) =
+        (arrayType.genericComponentType as ParameterizedType).rawType.typeName
+
+    return when (type) {
+        is Class<*> -> load(creator, type, value)
+        is GenericArrayType -> {
+            val genericComponentType = extractComponentType(type)
+            val newArray = creator.newArray(genericComponentType, (value as List<Any>).size)
+            newArray.apply<ResultHandle> {
+                value.forEachIndexed { index: Int, element: Any ->
+                    creator.writeArrayValue(
+                        this,
+                        index,
+                        load(creator, Class.forName((element as Type).className), element)
+                    )
+                }
+            }
+            newArray
+        }
+        else -> TODO("unknown type: $type")
+    }
+}
+
+@Suppress("UNCHECKED_CAST")
 fun load(creator: MethodCreator, type: Class<*>, `value`: Any): ResultHandle {
     return when (type) {
         String::class.java -> creator.load(value as String)
@@ -66,6 +106,9 @@ fun load(creator: MethodCreator, type: Class<*>, `value`: Any): ResultHandle {
                     return creator.readStaticField(
                         FieldDescriptor.of(type, (value as Array<String>)[1], type)
                     )
+                value is Type -> {
+                    creator.loadClass(value.className)
+                }
                 else -> TODO("$type is not yet supported")
             }
         }

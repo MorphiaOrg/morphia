@@ -9,6 +9,7 @@ import com.mongodb.client.model.CollationCaseFirst;
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Collation;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.EntityListeners;
 import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Index;
 import dev.morphia.annotations.IndexOptions;
@@ -16,8 +17,10 @@ import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Transient;
+import dev.morphia.mapping.lifecycle.EntityListenerAdapter;
 
 @Entity("examples")
+@EntityListeners(EntityListenerAdapter.class)
 @Indexes(@Index(fields = @Field(value = "name", weight = 42), options = @IndexOptions(partialFilter = "partial filter", collation = @Collation(caseFirst = CollationCaseFirst.LOWER))))
 public class Example {
     @Property(value = "myName")
