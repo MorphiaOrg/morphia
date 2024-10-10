@@ -41,7 +41,7 @@
         <dependency>
             <groupId>org.asciidoctor</groupId>
             <artifactId>asciidoctorj</artifactId>
-            <version>2.5.13</version>
+            <version>3.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.jboss.forge.roaster</groupId>
