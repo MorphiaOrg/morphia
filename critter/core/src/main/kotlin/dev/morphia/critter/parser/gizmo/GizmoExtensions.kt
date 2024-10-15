@@ -1,7 +1,9 @@
 package dev.morphia.critter.parser.gizmo
 
 import dev.morphia.annotations.internal.AnnotationNodeExtensions.setBuilderValues
+import dev.morphia.critter.parser.Generators.asClass
 import dev.morphia.critter.parser.methodCase
+import dev.morphia.mapping.codec.pojo.TypeData
 import io.quarkus.gizmo.FieldDescriptor
 import io.quarkus.gizmo.MethodCreator
 import io.quarkus.gizmo.MethodDescriptor
@@ -34,6 +36,22 @@ fun AnnotationNode.annotationBuilder(creator: MethodCreator): ResultHandle {
         MethodDescriptor.ofMethod(builderType.className, "build", type.className),
         local
     )
+}
+
+fun TypeData<*>.emitTypeData(methodCreator: MethodCreator): ResultHandle {
+    var array = methodCreator.newArray(TypeData::class.java, typeParameters.size)
+
+    typeParameters.forEachIndexed { index, typeParameter ->
+        methodCreator.writeArrayValue(array, index, typeParameter.emitTypeData(methodCreator))
+    }
+    val list = listOf(methodCreator.loadClass(type), array)
+    val descriptor =
+        MethodDescriptor.ofConstructor(
+            TypeData::class.java,
+            Class::class.java,
+            "[${Type.getType(TypeData::class.java).descriptor}"
+        )
+    return methodCreator.newInstance(descriptor, *list.toTypedArray())
 }
 
 fun rawType(type: java.lang.reflect.Type) =
@@ -114,3 +132,6 @@ fun load(creator: MethodCreator, type: Class<*>, `value`: Any): ResultHandle {
         }
     }
 }
+
+fun Type.typeData(typeParameters: List<TypeData<*>> = listOf()) =
+    TypeData(asClass(), typeParameters)

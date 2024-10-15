@@ -27,6 +27,7 @@ import kotlin.reflect.KClass
 import org.objectweb.asm.Type
 import org.objectweb.asm.tree.AnnotationNode
 import org.testng.Assert.assertEquals
+import org.testng.Assert.assertFalse
 import org.testng.Assert.assertNotNull
 import org.testng.Assert.assertTrue
 import org.testng.Assert.fail
@@ -174,7 +175,6 @@ class TestGizmoGeneration {
         val constructors = loadClass.constructors
         val model: EntityModel = constructors[0].newInstance(mapper) as EntityModel
         validate(model)
-        println("**************** newInstance = ${model}")
     }
 
     private fun validate(model: EntityModel) {
@@ -205,6 +205,17 @@ class TestGizmoGeneration {
                 )
                 .build()
         )
+
+        assertEquals(model.collectionName(), "examples")
+        assertEquals(model.discriminator(), "Example")
+        assertEquals(model.discriminatorKey(), "_t")
+        assertEquals(model.type.name, Example::class.java.name)
+        assertFalse(model.properties.isEmpty(), "Should have properties")
+        assertNotNull(model.idProperty, "Should have an ID property")
+        assertFalse(model.isAbstract(), "Should not be abstract")
+        assertFalse(model.isInterface(), "Should not be an interface")
+        assertTrue(model.useDiscriminator(), "Should use the discriminator")
+        assertTrue(model.classHierarchy().isEmpty(), "Should not have a class hierarchy")
     }
 
     private fun invokeAll(type: Class<*>, klass: Class<*>) {

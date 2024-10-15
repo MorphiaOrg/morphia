@@ -6,7 +6,6 @@ import dev.morphia.annotations.Reference
 import dev.morphia.annotations.internal.AnnotationNodeExtensions.toMorphiaAnnotation
 import dev.morphia.config.MorphiaConfig
 import dev.morphia.critter.conventions.PropertyConvention
-import dev.morphia.critter.parser.Generators.asClass
 import dev.morphia.critter.parser.Generators.isArray
 import dev.morphia.critter.parser.methodCase
 import dev.morphia.critter.titleCase
@@ -339,6 +338,3 @@ fun typeData(input: String): List<TypeData<*>> {
     }
     return types
 }
-
-private fun Type.typeData(typeParameters: List<TypeData<*>> = listOf()) =
-    TypeData(asClass(), typeParameters)
