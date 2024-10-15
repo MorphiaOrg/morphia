@@ -13,6 +13,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertManyResult;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
+import com.mongodb.internal.TimeoutContext;
 import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 import com.mongodb.session.ServerSession;
@@ -43,6 +44,8 @@ import org.bson.Document;
 public class SessionDatastore extends MorphiaDatastore implements MorphiaSession {
 
     private final ClientSession session;
+
+    private TimeoutContext timeoutContext;
 
     /**
      * Creates a new session.
@@ -273,6 +276,15 @@ public class SessionDatastore extends MorphiaDatastore implements MorphiaSession
     @Override
     public BsonDocument getClusterTime() {
         return session.getClusterTime();
+    }
+
+    @Override
+    public TimeoutContext getTimeoutContext() {
+        return timeoutContext;
+    }
+
+    public void setTimeoutContext(TimeoutContext timeoutContext) {
+        this.timeoutContext = timeoutContext;
     }
 
     @Override
