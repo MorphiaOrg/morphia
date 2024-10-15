@@ -8,6 +8,7 @@ import java.util.List;
 import com.mongodb.ReadConcern;
 import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
+import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.FindOneAndDeleteOptions;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
@@ -23,6 +24,7 @@ import dev.morphia.query.CountOptions;
 import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.FindOptions;
 
+import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.testng.Assert;
@@ -32,7 +34,7 @@ import org.testng.annotations.Test;
 public class OptionsTest {
     @Test
     public void aggregationOptions() {
-        beanScan(com.mongodb.AggregationOptions.class, AggregationOptions.class, List.of("builder",
+        beanScan(AggregateIterable.class, AggregationOptions.class, List.of("builder",
                 "getAllowDiskUse",
                 "getBatchSize",
                 "getBypassDocumentValidation",
@@ -117,6 +119,8 @@ public class OptionsTest {
         for (int i = 0; i < types.length; i++) {
             if (types[i].equals(Bson.class)) {
                 types[i] = Document.class;
+            } else if (types[i].equals(BsonValue.class)) {
+                types[i] = String.class;
             }
         }
         return types;
