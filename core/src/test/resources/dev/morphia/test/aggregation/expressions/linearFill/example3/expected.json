@@ -1,6 +1,0 @@
-{    _id: ObjectId("620ad555394d47411658b5ef"),    time: ISODate("2021-03-08T09:00:00.000Z"),    price: 500,    linearFillPrice: 500,    locfPrice: 500  },
-{    _id: ObjectId("620ad555394d47411658b5f0"),    time: ISODate("2021-03-08T10:00:00.000Z"),    linearFillPrice: 507.5,    locfPrice: 500  },
-{    _id: ObjectId("620ad555394d47411658b5f1"),    time: ISODate("2021-03-08T11:00:00.000Z"),    price: 515,    linearFillPrice: 515,    locfPrice: 515  },
-{    _id: ObjectId("620ad555394d47411658b5f2"),    time: ISODate("2021-03-08T12:00:00.000Z"),    linearFillPrice: 505,    locfPrice: 515  },
-{    _id: ObjectId("620ad555394d47411658b5f3"),    time: ISODate("2021-03-08T13:00:00.000Z"),    linearFillPrice: 495,    locfPrice: 515  },
-{    _id: ObjectId("620ad555394d47411658b5f4"),    time: ISODate("2021-03-08T14:00:00.000Z"),    price: 485,    linearFillPrice: 485,    locfPrice: 485  }

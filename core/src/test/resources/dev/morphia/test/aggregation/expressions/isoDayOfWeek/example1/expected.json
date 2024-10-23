@@ -1,2 +1,2 @@
-{ "name" : "Betty", "dayOfWeek" : 2 }
-{ "name" : "Veronica", "dayOfWeek" : 6 }
+{ name: "Betty", dayOfWeek: 2 },
+{ name: "Veronica", dayOfWeek: 6 }

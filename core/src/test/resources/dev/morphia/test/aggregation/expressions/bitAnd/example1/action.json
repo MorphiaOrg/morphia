@@ -1,0 +1,7 @@
+{ 
+    $project: { 
+      result: { 
+        $bitAnd: [ "$a", "$b" ]
+      }
+    }
+  }

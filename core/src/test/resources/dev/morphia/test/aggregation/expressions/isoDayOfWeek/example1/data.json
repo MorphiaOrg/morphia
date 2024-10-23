@@ -1,2 +1,2 @@
-{ "_id" : 1, "name" : "Betty", "birthday" : ISODate("1993-09-21T00:00:00Z") }
-{ "_id" : 2, "name" : "Veronica", "birthday" : ISODate("1981-11-07T00:00:00Z") }
+{ _id: 1, name: "Betty", birthday: ISODate("1993-09-21T00:00:00Z") },
+{ _id: 2, name: "Veronica", birthday: ISODate("1981-11-07T00:00:00Z") }

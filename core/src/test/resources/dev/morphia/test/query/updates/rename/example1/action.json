@@ -1,0 +1,4 @@
+db.students.updateMany(
+   { "nmae": { $ne: null } },
+   { $rename: { "nmae": "name" } }
+)

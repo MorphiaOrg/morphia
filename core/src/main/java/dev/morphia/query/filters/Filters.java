@@ -51,49 +51,27 @@ public final class Filters {
     /**
      * Matches numeric or binary values in which a set of bit positions all have a value of 0.
      *
-     * @param field     the field to check
-     * @param positions the value to check
+     * @param field the field to check
+     * @param val   the value to check
      * @return the filter
      * @query.filter $bitsAllClear
+     * @since 3.0 changed to take a plain Object instead of overloading
      */
-    public static Filter bitsAllClear(String field, int[] positions) {
-        return new Filter("$bitsAllClear", field, positions);
-    }
-
-    /**
-     * Matches numeric or binary values in which a set of bit positions all have a value of 0.
-     *
-     * @param field   the field to check
-     * @param bitMask the numeric bitmask to use
-     * @return the filter
-     * @query.filter $bitsAllClear
-     */
-    public static Filter bitsAllClear(String field, int bitMask) {
-        return new Filter("$bitsAllClear", field, bitMask);
+    public static Filter bitsAllClear(String field, Object val) {
+        return new Filter("$bitsAllClear", field, val);
     }
 
     /**
      * Matches numeric or binary values in which a set of bit positions all have a value of 1.
      *
-     * @param field   the field to check
-     * @param bitMask the numeric bitmask to use
+     * @param field the field to check
+     * @param val   the value to check
      * @return the filter
      * @query.filter $bitsAllSet
+     * @since 3.0 changed to take a plain Object instead of overloading
      */
-    public static Filter bitsAllSet(String field, int bitMask) {
-        return new Filter("$bitsAllSet", field, bitMask);
-    }
-
-    /**
-     * Matches numeric or binary values in which a set of bit positions all have a value of 1.
-     *
-     * @param field     the field to check
-     * @param positions the value to check
-     * @return the filter
-     * @query.filter $bitsAllSet
-     */
-    public static Filter bitsAllSet(String field, int[] positions) {
-        return new Filter("$bitsAllSet", field, positions);
+    public static Filter bitsAllSet(String field, Object val) {
+        return new Filter("$bitsAllSet", field, val);
     }
 
     /**
@@ -170,13 +148,23 @@ public final class Filters {
     /**
      * Adds a comment to a query predicate.
      *
-     * @param field the field to check
-     * @param val   the value to check
+     * @param comment the comment to attach
      * @return the filter
      * @query.filter $comment
      */
-    public static Filter comment(String field, Object val) {
-        return new Filter("$comment", field, val);
+    public static Filter comment(String comment) {
+        return new CommentFilter(comment);
+    }
+
+    /**
+     * Selects documents if a value in the results matches all the specified $elemMatch conditions.
+     *
+     * @param filters the filters to evaluate against
+     * @return the filter
+     * @query.filter $elemMatch
+     */
+    public static Filter elemMatch(Filter... filters) {
+        return new ElemMatchFilter(asList(filters));
     }
 
     /**
@@ -274,6 +262,17 @@ public final class Filters {
     }
 
     /**
+     * $gt selects those documents where the value is greater than the specified value.
+     *
+     * @param val the value to check
+     * @return the filter
+     * @query.filter $gt
+     */
+    public static Filter gt(Object val) {
+        return new Filter("$gt", null, val);
+    }
+
+    /**
      * $gt selects those documents where the value of the field is greater than the specified value.
      *
      * @param field the field to check
@@ -286,7 +285,7 @@ public final class Filters {
     }
 
     /**
-     * $gte selects the documents where the value of the field is greater than or equal to a specified value (e.g. value.)
+     * $gte selects the documents where the value of the field is greater than or equal to a specified value
      *
      * @param field the field to check
      * @param val   the value to check
@@ -295,6 +294,18 @@ public final class Filters {
      */
     public static Filter gte(String field, Object val) {
         return new Filter("$gte", field, val);
+    }
+
+    /**
+     * $gte selects the documents where the value of the target field is greater than or equal to a specified value
+     *
+     * @param val the value to check
+     * @return the filter
+     * @query.filter $gte
+     * @since 3.0
+     */
+    public static Filter gte(Object val) {
+        return new Filter("$gte", null, val);
     }
 
     /**
@@ -307,6 +318,18 @@ public final class Filters {
      */
     public static Filter in(String field, Iterable<?> val) {
         return new Filter("$in", field, val);
+    }
+
+    /**
+     * The $in operator selects the documents where the value of a field equals any value in a given array.
+     *
+     * @param val the values to check
+     * @return the filter
+     * @query.filter $in
+     * @since 3.0
+     */
+    public static Filter in(Iterable<?> val) {
+        return new Filter("$in", null, val);
     }
 
     /**
@@ -324,6 +347,18 @@ public final class Filters {
     /**
      * $lt selects the documents where the value of the field is less than the specified value.
      *
+     * @param val the value to check
+     * @return the filter
+     * @query.filter $lt
+     * @since 3.0
+     */
+    public static Filter lt(Object val) {
+        return new Filter("$lt", null, val);
+    }
+
+    /**
+     * $lt selects the documents where the value of the field is less than the specified value.
+     *
      * @param field the field to check
      * @param val   the value to check
      * @return the filter
@@ -331,6 +366,17 @@ public final class Filters {
      */
     public static Filter lt(String field, Object val) {
         return new Filter("$lt", field, val);
+    }
+
+    /**
+     * $lte selects the documents where the value is less than or equal to the specified value.
+     *
+     * @param val the value to check
+     * @return the filter
+     * @query.filter $lte
+     */
+    public static Filter lte(Object val) {
+        return new Filter("$lte", null, val);
     }
 
     /**
@@ -379,6 +425,20 @@ public final class Filters {
      * @query.filter $mod
      */
     public static Filter mod(String field, long divisor, long remainder) {
+        return new ModFilter(field, divisor, remainder);
+    }
+
+    /**
+     * Performs a modulo operation on the value of a field and selects documents with a specified result.
+     *
+     * @param field     the field to check
+     * @param divisor   the value to divide by
+     * @param remainder the remainder to check for
+     * @return the filter
+     * @query.filter $mod
+     * @since 3.0
+     */
+    public static Filter mod(String field, double divisor, double remainder) {
         return new ModFilter(field, divisor, remainder);
     }
 
@@ -483,10 +543,11 @@ public final class Filters {
      * @param pattern the regex pattern
      * @return the filter
      * @query.filter $regex
+     * @mongodb.server.release 1.9.0
      * @since 2.4.0
      */
     public static RegexFilter regex(String field, String pattern) {
-        return new RegexFilter(field, pattern);
+        return new RegexFilter(field, Pattern.compile(pattern));
     }
 
     /**
@@ -496,10 +557,11 @@ public final class Filters {
      * @param pattern the regex pattern
      * @return the filter
      * @query.filter $regex
+     * @mongodb.server.release 1.9.0
      * @since 2.4.0
      */
     public static RegexFilter regex(String field, Pattern pattern) {
-        return new RegexFilter(field, pattern.pattern());
+        return new RegexFilter(field, pattern);
     }
 
     /**
@@ -533,8 +595,8 @@ public final class Filters {
      * @return the filter
      * @query.filter $type
      */
-    public static Filter type(String field, Type val) {
-        return new Filter("$type", field, val.toString().toLowerCase());
+    public static Filter type(String field, Type... val) {
+        return new Filter("$type", field, val.length == 1 ? val[0] : val);
     }
 
     /**

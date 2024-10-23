@@ -45,6 +45,7 @@ public class ChangeStream extends Stage {
      *
      * @return the new ChangeStream stage
      * @aggregation.stage $changeStream
+     * @mongodb.server.release 5.0
      * @since 2.3
      */
     public static ChangeStream changeStream() {

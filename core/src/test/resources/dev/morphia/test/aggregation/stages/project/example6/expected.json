@@ -1,1 +1,2 @@
-{ "_id" : 1, "title" : "abc123", "isbn" : { "prefix" : "000", "group" : "11", "publisher" : "2222", "title" : "333", "checkDigit" : "4" }, "lastName" : "zzz", "copiesSold" : 5}
+{ "_id" : 1, "stop" : { "title" : "book1" } }
+{ "_id" : 2, "stop" : [ { "title" : "book2" }, { "title" : "book3" } ] }

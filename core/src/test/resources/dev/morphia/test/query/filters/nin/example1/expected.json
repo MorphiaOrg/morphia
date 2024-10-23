@@ -1,0 +1,2 @@
+{ item: 'Pens', quantity: 350, tags: [ 'school', 'office' ] },
+{ item: 'Maps', tags: [ 'office', 'storage' ] }

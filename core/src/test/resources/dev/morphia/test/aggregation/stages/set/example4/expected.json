@@ -1,1 +1,1 @@
-{ "_id" : 1, "student" : "Maya", "homework" : [ 10, 5, 10, 7 ], "quiz" : [ 10, 8 ], "extraCredit" : 0 }
+[ { _id: 1, student: "Maya", homework: [ 10, 5, 10, 7 ], quiz: [ 10, 8 ], extraCredit: 0 } ]

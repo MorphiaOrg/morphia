@@ -1,0 +1,11 @@
+{
+         $project: {
+            items: {
+               $filter: {
+                 input: "$items",
+                 cond: { $eq: [ "$$item.name", "pen"] },
+                 as: "item"
+               }
+            }
+         }
+      }

@@ -42,4 +42,4 @@ Not every project will need or want them.
 
 . It's been on the issues list for a while but, perhaps in light of the last point, generate index builders, validation builders, etc.
 for each entity type.
-This would solve the configuration problem of trying to specify *all* of that in a pom file.
+This would solve the configuration problem of trying to specify *TestPositional* of that in a pom file.

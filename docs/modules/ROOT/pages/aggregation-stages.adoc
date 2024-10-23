@@ -1,138 +1,186 @@
-[%header,cols="1,2"]
+[%header,cols="1,2,3"]
 |===
-|Operator|Docs
+|Operator|Docs|Test Examples
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/addFields[$addFields]
 | link:javadoc/dev/morphia/aggregation/stages/AddFields.html#addFields()[AddFields#addFields()]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestAddFields.java[TestAddFields]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/bucket[$bucket]
 | link:javadoc/dev/morphia/aggregation/stages/Bucket.html#bucket()[Bucket#bucket()]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestBucket.java[TestBucket]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/bucketAuto[$bucketAuto]
 | link:javadoc/dev/morphia/aggregation/stages/AutoBucket.html#autoBucket()[AutoBucket#autoBucket()]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestBucketAuto.java[TestBucketAuto]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/changeStream[$changeStream]
 | link:javadoc/dev/morphia/aggregation/stages/ChangeStream.html#changeStream()[ChangeStream#changeStream()]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestChangeStream.java[TestChangeStream]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/collStats[$collStats]
 | link:javadoc/dev/morphia/aggregation/stages/CollectionStats.html#collStats()[CollectionStats#collStats()]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestCollStats.java[TestCollStats]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/count[$count]
 | link:javadoc/dev/morphia/aggregation/stages/Count.html#count(java.lang.String)[Count#count(String)]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestCount.java[TestCount]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/currentOp[$currentOp]
 | link:javadoc/dev/morphia/aggregation/stages/CurrentOp.html#currentOp()[CurrentOp#currentOp()]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestCurrentOp.java[TestCurrentOp]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/densify[$densify]
 | link:javadoc/dev/morphia/aggregation/stages/Densify.html#densify(java.lang.String,dev.morphia.aggregation.stages.Range)[Densify#densify(String,Range)]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestDensify.java[TestDensify]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/documents[$documents]
 | link:javadoc/dev/morphia/aggregation/stages/Documents.html#documents(dev.morphia.aggregation.expressions.impls.DocumentExpression%2E%2E%2E)[Documents#documents(DocumentExpression...)]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestDocuments.java[TestDocuments]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/facet[$facet]
 | link:javadoc/dev/morphia/aggregation/stages/Facet.html#facet()[Facet#facet()]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestFacet.java[TestFacet]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/fill[$fill]
 | link:javadoc/dev/morphia/aggregation/stages/Fill.html#fill()[Fill#fill()]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestFill.java[TestFill]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/geoNear[$geoNear]
-a| 
-
- * link:javadoc/dev/morphia/aggregation/stages/GeoNear.html#geoNear(java.lang.String)[GeoNear#geoNear(String)]
- * link:javadoc/dev/morphia/aggregation/stages/GeoNear.html#geoNear(com.mongodb.client.model.geojson.Point)[GeoNear#geoNear(Point)]
- * link:javadoc/dev/morphia/aggregation/stages/GeoNear.html#geoNear(double)[GeoNear#geoNear(double)]
+a| link:javadoc/dev/morphia/aggregation/stages/GeoNear.html#geoNear(java.lang.String)[GeoNear#geoNear(String)] +
+link:javadoc/dev/morphia/aggregation/stages/GeoNear.html#geoNear(com.mongodb.client.model.geojson.Point)[GeoNear#geoNear(Point)] +
+link:javadoc/dev/morphia/aggregation/stages/GeoNear.html#geoNear(double)[GeoNear#geoNear(double)]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestGeoNear.java[TestGeoNear]
 
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/graphLookup[$graphLookup]
-a| 
-
- * link:javadoc/dev/morphia/aggregation/stages/GraphLookup.html#graphLookup(java.lang.String)[GraphLookup#graphLookup(String)]
- * link:javadoc/dev/morphia/aggregation/stages/GraphLookup.html#graphLookup(java.lang.Class)[GraphLookup#graphLookup(Class)]
+a| link:javadoc/dev/morphia/aggregation/stages/GraphLookup.html#graphLookup(java.lang.String)[GraphLookup#graphLookup(String)] +
+link:javadoc/dev/morphia/aggregation/stages/GraphLookup.html#graphLookup(java.lang.Class)[GraphLookup#graphLookup(Class)]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestGraphLookup.java[TestGraphLookup]
 
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/group[$group]
-a| 
-
- * link:javadoc/dev/morphia/aggregation/stages/Group.html#group(dev.morphia.aggregation.stages.GroupId)[Group#group(GroupId)]
- * link:javadoc/dev/morphia/aggregation/stages/Group.html#group()[Group#group()]
+a| link:javadoc/dev/morphia/aggregation/stages/Group.html#group(dev.morphia.aggregation.stages.GroupId)[Group#group(GroupId)] +
+link:javadoc/dev/morphia/aggregation/stages/Group.html#group()[Group#group()]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestGroup.java[TestGroup]
 
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/indexStats[$indexStats]
 | link:javadoc/dev/morphia/aggregation/stages/IndexStats.html#indexStats()[IndexStats#indexStats()]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestIndexStats.java[TestIndexStats]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/limit[$limit]
 | link:javadoc/dev/morphia/aggregation/stages/Limit.html#limit(long)[Limit#limit(long)]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestLimit.java[TestLimit]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/lookup[$lookup]
-a| 
-
- * link:javadoc/dev/morphia/aggregation/stages/Lookup.html#lookup(java.lang.Class)[Lookup#lookup(Class)]
- * link:javadoc/dev/morphia/aggregation/stages/Lookup.html#lookup(java.lang.String)[Lookup#lookup(String)]
- * link:javadoc/dev/morphia/aggregation/stages/Lookup.html#lookup()[Lookup#lookup()]
+a| link:javadoc/dev/morphia/aggregation/stages/Lookup.html#lookup(java.lang.Class)[Lookup#lookup(Class)] +
+link:javadoc/dev/morphia/aggregation/stages/Lookup.html#lookup(java.lang.String)[Lookup#lookup(String)] +
+link:javadoc/dev/morphia/aggregation/stages/Lookup.html#lookup()[Lookup#lookup()]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestLookup.java[TestLookup]
 
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/match[$match]
 | link:javadoc/dev/morphia/aggregation/stages/Match.html#match(dev.morphia.query.filters.Filter%2E%2E%2E)[Match#match(Filter...)]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestMatch.java[TestMatch]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/merge[$merge]
-a| 
-
- * link:javadoc/dev/morphia/aggregation/Aggregation.html#merge(dev.morphia.aggregation.stages.Merge)[Aggregation#merge(Merge)]
- * link:javadoc/dev/morphia/aggregation/Aggregation.html#merge(dev.morphia.aggregation.stages.Merge,dev.morphia.aggregation.AggregationOptions)[Aggregation#merge(Merge,AggregationOptions)]
+a| link:javadoc/dev/morphia/aggregation/Aggregation.html#merge(dev.morphia.aggregation.stages.Merge)[Aggregation#merge(Merge)] +
+link:javadoc/dev/morphia/aggregation/Aggregation.html#merge(dev.morphia.aggregation.stages.Merge,dev.morphia.aggregation.AggregationOptions)[Aggregation#merge(Merge,AggregationOptions)]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestMerge.java[TestMerge]
 
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/out[$out]
-a| 
-
- * link:javadoc/dev/morphia/aggregation/Aggregation.html#out(dev.morphia.aggregation.stages.Out)[Aggregation#out(Out)]
- * link:javadoc/dev/morphia/aggregation/Aggregation.html#out(dev.morphia.aggregation.stages.Out,dev.morphia.aggregation.AggregationOptions)[Aggregation#out(Out,AggregationOptions)]
+a| link:javadoc/dev/morphia/aggregation/Aggregation.html#out(dev.morphia.aggregation.stages.Out)[Aggregation#out(Out)] +
+link:javadoc/dev/morphia/aggregation/Aggregation.html#out(dev.morphia.aggregation.stages.Out,dev.morphia.aggregation.AggregationOptions)[Aggregation#out(Out,AggregationOptions)]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestOut.java[TestOut]
 
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/planCacheStats[$planCacheStats]
 | link:javadoc/dev/morphia/aggregation/stages/PlanCacheStats.html#planCacheStats()[PlanCacheStats#planCacheStats()]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestPlanCacheStats.java[TestPlanCacheStats]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/project[$project]
 | link:javadoc/dev/morphia/aggregation/stages/Projection.html#project()[Projection#project()]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestProject.java[TestProject]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/redact[$redact]
 | link:javadoc/dev/morphia/aggregation/stages/Redact.html#redact(dev.morphia.aggregation.expressions.impls.Expression)[Redact#redact(Expression)]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestRedact.java[TestRedact]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/replaceRoot[$replaceRoot]
 | link:javadoc/dev/morphia/aggregation/stages/ReplaceRoot.html#replaceRoot()[ReplaceRoot#replaceRoot()]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestReplaceRoot.java[TestReplaceRoot]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/replaceWith[$replaceWith]
 | link:javadoc/dev/morphia/aggregation/stages/ReplaceWith.html#replaceWith()[ReplaceWith#replaceWith()]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestReplaceWith.java[TestReplaceWith]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/sample[$sample]
 | link:javadoc/dev/morphia/aggregation/stages/Sample.html#sample(long)[Sample#sample(long)]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestSample.java[TestSample]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/set[$set]
 | link:javadoc/dev/morphia/aggregation/stages/Set.html#set()[Set#set()]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestSet.java[TestSet]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/setWindowFields[$setWindowFields]
 | link:javadoc/dev/morphia/aggregation/stages/SetWindowFields.html#setWindowFields()[SetWindowFields#setWindowFields()]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestSetWindowFields.java[TestSetWindowFields]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/skip[$skip]
 | link:javadoc/dev/morphia/aggregation/stages/Skip.html#skip(long)[Skip#skip(long)]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestSkip.java[TestSkip]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/sort[$sort]
 | link:javadoc/dev/morphia/aggregation/stages/Sort.html#sort()[Sort#sort()]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestSort.java[TestSort]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/sortByCount[$sortByCount]
 | link:javadoc/dev/morphia/aggregation/stages/SortByCount.html#sortByCount(java.lang.Object)[SortByCount#sortByCount(Object)]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestSortByCount.java[TestSortByCount]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/unionWith[$unionWith]
-a| 
-
- * link:javadoc/dev/morphia/aggregation/stages/UnionWith.html#unionWith(java.lang.Class,dev.morphia.aggregation.stages.Stage%2E%2E%2E)[UnionWith#unionWith(Class,Stage...)]
- * link:javadoc/dev/morphia/aggregation/stages/UnionWith.html#unionWith(java.lang.String,dev.morphia.aggregation.stages.Stage%2E%2E%2E)[UnionWith#unionWith(String,Stage...)]
- * link:javadoc/dev/morphia/aggregation/Aggregation.html#unionWith(java.lang.String,dev.morphia.aggregation.stages.Stage%2E%2E%2E)[Aggregation#unionWith(String,Stage...)]
+a| link:javadoc/dev/morphia/aggregation/stages/UnionWith.html#unionWith(dev.morphia.aggregation.stages.Stage%2E%2E%2E)[UnionWith#unionWith(Stage...)] +
+link:javadoc/dev/morphia/aggregation/stages/UnionWith.html#unionWith(java.lang.Class,dev.morphia.aggregation.stages.Stage%2E%2E%2E)[UnionWith#unionWith(Class,Stage...)] +
+link:javadoc/dev/morphia/aggregation/stages/UnionWith.html#unionWith(java.lang.String,dev.morphia.aggregation.stages.Stage%2E%2E%2E)[UnionWith#unionWith(String,Stage...)] +
+link:javadoc/dev/morphia/aggregation/Aggregation.html#unionWith(java.lang.String,dev.morphia.aggregation.stages.Stage%2E%2E%2E)[Aggregation#unionWith(String,Stage...)]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestUnionWith.java[TestUnionWith]
 
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/unset[$unset]
 | link:javadoc/dev/morphia/aggregation/stages/Unset.html#unset(java.lang.String,java.lang.String%2E%2E%2E)[Unset#unset(String,String...)]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestUnset.java[TestUnset]
+
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/unwind[$unwind]
 | link:javadoc/dev/morphia/aggregation/stages/Unwind.html#unwind(java.lang.String)[Unwind#unwind(String)]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestUnwind.java[TestUnwind]
+
 
 |===

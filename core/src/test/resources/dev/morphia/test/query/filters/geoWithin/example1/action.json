@@ -1,0 +1,12 @@
+db.places.find(
+   {
+     loc: {
+       $geoWithin: {
+          $geometry: {
+             type : "Polygon" ,
+             coordinates: [ [ [ 0.0, 0.0 ], [ 3.0, 6.0 ], [ 6.0, 1.0 ], [ 0.0, 0.0 ] ] ]
+          }
+       }
+     }
+   }
+)

@@ -1,0 +1,20 @@
+db.places.find(
+   {
+     loc: {
+       $geoWithin: {
+          $geometry: {
+             type : "Polygon" ,
+             coordinates: [
+               [
+                 [ -100.0, 60.0 ], [ -100.0, 0.0 ], [ -100.0, -60.0 ], [ 100.0, -60.0 ], [ 100.0, 60.0 ], [ -100.0, 60.0 ]
+               ]
+             ],
+             crs: {
+                type: "name",
+                properties: { name: "urn:x-mongodb:crs:strictwinding:EPSG:4326" }
+             }
+          }
+       }
+     }
+   }
+)

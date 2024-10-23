@@ -1,0 +1,4 @@
+db.stores.updateMany(
+    { },
+    { $pull: { fruits: { $in: [ "apples", "oranges" ] }, vegetables: "carrots" } }
+)

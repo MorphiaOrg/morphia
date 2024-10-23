@@ -195,9 +195,7 @@ public interface Query<T> extends Iterable<T> {
      * @since 2.3
      */
     @Nullable
-    default T modify(ModifyOptions options, UpdateOperator first, UpdateOperator... updates) {
-        throw new UnsupportedOperationException();
-    }
+    T modify(ModifyOptions options, UpdateOperator first, UpdateOperator... updates);
 
     /**
      * Execute the query and get the results.
@@ -206,7 +204,7 @@ public interface Query<T> extends Iterable<T> {
      * @return a MorphiaCursor
      * @since 2.0
      */
-    MorphiaCursor<T> iterator(FindOptions options);
+    MorphiaCursor<T> iterator(@Nullable FindOptions options);
 
     /**
      * Provides a {@link Stream} representation of the results of this query.

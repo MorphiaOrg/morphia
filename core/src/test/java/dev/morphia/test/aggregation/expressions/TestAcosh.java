@@ -1,6 +1,7 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -9,22 +10,26 @@ import static dev.morphia.aggregation.expressions.TrigonometryExpressions.radian
 import static dev.morphia.aggregation.stages.AddFields.addFields;
 import static dev.morphia.test.ServerVersion.ANY;
 
-public class TestAcosh extends AggregationTest {
-    @Test
+public class TestAcosh extends TemplatedTestBase {
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/acosh/example1
+     * 
+     */
+    @Test(testName = "main :: Inverse Hyperbolic Cosine in Degrees")
     public void testExample1() {
-        testPipeline(ANY, false, true, aggregation -> aggregation
-                .pipeline(addFields()
-                        .field("y-coordinate",
-                                radiansToDegrees(acosh("$x-coordinate")))));
+        testPipeline(new ActionTestOptions().serverVersion(ANY), aggregation -> aggregation
+                .pipeline(addFields().field("y-coordinate", radiansToDegrees(acosh("$x-coordinate")))));
 
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/acosh/example2
+     * 
+     */
+    @Test(testName = "main :: Inverse Hyperbolic Cosine in Radians")
     public void testExample2() {
-        testPipeline(ANY, false, true, aggregation -> aggregation
-                .pipeline(addFields()
-                        .field("y-coordinate",
-                                acosh("$x-coordinate"))));
+        testPipeline(new ActionTestOptions().serverVersion(ANY),
+                aggregation -> aggregation.pipeline(addFields().field("y-coordinate", acosh("$x-coordinate"))));
 
     }
 }

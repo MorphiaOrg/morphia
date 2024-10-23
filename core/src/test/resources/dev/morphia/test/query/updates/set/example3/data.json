@@ -1,0 +1,1 @@
+{ _id: 100, quantity: 250, instock: true, reorder: false, details: { model: "14QQ", make: "Clothes Corp" }, tags: [ "apparel", "clothing" ], ratings: [ { by: "Customer007", rating: 4 } ] }

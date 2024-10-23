@@ -1,2 +1,3 @@
-db.createUser( { user: "John", pwd: "jn008", roles: [ { role: "Marketing", db: "test" }, { role: "Development", db: "test" }, { role: "Operations", db: "test" }, { role: "read", db: "test" } ]} )
-db.createUser( { user: "Jane", pwd: "je009", roles: [ { role: "Sales", db: "test" }, { role: "Operations", db: "test" }, { role: "read", db: "test" } ]} )
+{ _id: 0, allowedRoles: [ 'Marketing' ], comment: 'For marketing team', yearlyBudget: 15000 },
+{ _id: 2, allowedRoles: [ 'Operations' ], comment: 'For operations team', yearlyBudget: 19000, cloudBudget: 12000 },
+{ _id: 3, allowedRoles: [ 'Development' ], comment: 'For development team', yearlyBudget: 27000 }

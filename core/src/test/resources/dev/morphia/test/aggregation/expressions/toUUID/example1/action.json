@@ -1,0 +1,9 @@
+{
+      $project: {
+         name: 1,
+         price: 1,
+         UUID: {
+            $toUUID: "$UUID"
+         }
+      }
+   }

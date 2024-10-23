@@ -1,0 +1,3 @@
+{ "_id" : 1, "item" : "abc", description: "product 1", "instock" : 120 },
+{ "_id" : 2, "item" : "def", description: "product 2", "instock" : 80 },
+{ "_id" : 3, "item" : "jkl", description: "product 3", "instock" : 60 }

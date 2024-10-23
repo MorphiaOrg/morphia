@@ -9,6 +9,7 @@ import com.mongodb.WriteConcern;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.cursor.TimeoutMode;
 import com.mongodb.client.model.Collation;
 import com.mongodb.lang.Nullable;
 
@@ -25,16 +26,20 @@ import org.bson.Document;
 @SuppressWarnings("unused")
 public class AggregationOptions implements ReadConfigurable<AggregationOptions>, WriteConfigurable<AggregationOptions>,
         CollectionConfigurable<AggregationOptions> {
-    private String collection;
     private boolean allowDiskUse;
     private Integer batchSize;
     private boolean bypassDocumentValidation;
     private Collation collation;
-    private Long maxTimeMS;
-    private ReadPreference readPreference;
-    private ReadConcern readConcern;
-    private WriteConcern writeConcern;
+    private String collection;
+    private String comment;
     private Document hint;
+    private Document let;
+    private Long maxAwaitTime;
+    private Long maxTimeMS;
+    private ReadConcern readConcern;
+    private ReadPreference readPreference;
+    private TimeoutMode timeoutMode;
+    private WriteConcern writeConcern;
 
     /**
      * Enables writing to temporary files.
@@ -45,59 +50,6 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
     public AggregationOptions allowDiskUse(boolean allowDiskUse) {
         this.allowDiskUse = allowDiskUse;
         return this;
-    }
-
-    /**
-     * Applies the configured options to the collection.
-     *
-     * @param <T>        the collection type
-     * @param <S>        the result type
-     * @param documents  the stage documents
-     * @param database
-     * @param collection the collection to configure
-     * @param resultType the result type
-     * @return the updated collection
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    <S, T> AggregateIterable<S> apply(List<Document> documents,
-            MongoDatabase database, MongoCollection<T> collection, Class<S> resultType) {
-        MongoCollection<T> bound = prepare(collection, database);
-        if (readConcern != null) {
-            bound = bound.withReadConcern(readConcern);
-        }
-        if (readPreference != null) {
-            bound = bound.withReadPreference(readPreference);
-        }
-        AggregateIterable<S> aggregate = bound.aggregate(documents, resultType)
-                .allowDiskUse(allowDiskUse)
-                .bypassDocumentValidation(bypassDocumentValidation);
-        if (batchSize != null) {
-            aggregate.batchSize(batchSize);
-        }
-        if (collation != null) {
-            aggregate.collation(collation);
-        }
-        if (maxTimeMS != null) {
-            aggregate.maxTime(maxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS);
-        }
-        if (hint != null) {
-            aggregate.hint(hint);
-        }
-
-        return aggregate;
-    }
-
-    /**
-     * @param unit the target unit type
-     * @return the configuration value
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    public long maxTime(TimeUnit unit) {
-        return unit.convert(maxTimeMS, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -163,15 +115,51 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
     }
 
     /**
+     * Sets the comment for this operation. A null value means no comment is set.
+     *
+     * @param comment the comment
+     * @return this
+     * @since 3.0
+     * @mongodb.server.release 3.6
+     */
+    public AggregationOptions comment(String comment) {
+        this.comment = comment;
+        return this;
+    }
+
+    /**
      * Sets the hint for which index to use. A null value means no hint is set.
      *
      * @param hint the hint
      * @return this
      * @mongodb.server.release 3.6
-     * @since 3.6
      */
     public AggregationOptions hint(String hint) {
-        this.hint = new Document("hint", hint);
+        return hint(new Document("hint", hint));
+    }
+
+    /**
+     * Sets the hint for which index to use. A null value means no hint is set.
+     *
+     * @param hint the hint
+     * @return this
+     * @mongodb.server.release 3.6
+     * @since 3.0
+     */
+    public AggregationOptions hint(Document hint) {
+        this.hint = hint;
+        return this;
+    }
+
+    /**
+     * Defines any variables to use when evaluating the pipeline
+     * 
+     * @param let the variable definitions
+     * @return this
+     * @since 3.0
+     */
+    public AggregationOptions let(Document let) {
+        this.let = let;
         return this;
     }
 
@@ -184,6 +172,34 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
      */
     public AggregationOptions maxTimeMS(long maxTimeMS) {
         this.maxTimeMS = maxTimeMS;
+        return this;
+    }
+
+    /**
+     * Specifies a time limit for processing operations on a cursor. If you do not specify a value for maxTime,
+     * operations will not time out. A value of 0 explicitly specifies the default unbounded behavior.
+     *
+     * @param maxTime  the max time
+     * @param timeUnit the time unit
+     * @return this
+     * @since 3.0
+     */
+    public AggregationOptions maxTime(long maxTime, TimeUnit timeUnit) {
+        this.maxTimeMS = timeUnit.toMillis(maxTime);
+        return this;
+    }
+
+    /**
+     * Specifies a time limit for processing operations on a cursor. If you do not specify a value for maxTime,
+     * operations will not time out. A value of 0 explicitly specifies the default unbounded behavior.
+     *
+     * @param maxTime  the max time
+     * @param timeUnit the time unit
+     * @return this
+     * @since 3.0
+     */
+    public AggregationOptions maxAwaitTime(long maxTime, TimeUnit timeUnit) {
+        this.maxAwaitTime = timeUnit.toMillis(maxTime);
         return this;
     }
 
@@ -230,11 +246,34 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
     }
 
     /**
+     * Sets the timeout mode
+     *
+     * @param timeoutMode the timeout mode
+     * @return this
+     * @since 3.0
+     */
+    public AggregationOptions timeoutMode(TimeoutMode timeoutMode) {
+        this.timeoutMode = timeoutMode;
+        return this;
+    }
+
+    /**
+     * @return the timeout mode
+     * @hidden
+     * @morphia.internal
+     * @since 3.0
+     */
+    @MorphiaInternal
+    public TimeoutMode timeoutMode() {
+        return timeoutMode;
+    }
+
+    /**
      * @hidden
      * @morphia.internal
      */
-    @MorphiaInternal
     @Override
+    @MorphiaInternal
     public String toString() {
         return ("AggregationOptions{allowDiskUse=%s, batchSize=%d, bypassDocumentValidation=%s, collation=%s, maxTimeMS=%d, " +
                 "readPreference=%s, readConcern=%s, writeConcern=%s, hint=%s}").formatted(allowDiskUse, batchSize,
@@ -261,5 +300,78 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
     @Nullable
     public WriteConcern writeConcern() {
         return writeConcern;
+    }
+
+    /**
+     * Applies the configured options to the collection.
+     *
+     * @param <T>        the collection type
+     * @param <S>        the result type
+     * @param documents  the stage documents
+     * @param database
+     * @param collection the collection to configure
+     * @param resultType the result type
+     * @return the updated collection
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    <S, T> AggregateIterable<S> apply(List<Document> documents,
+            MongoDatabase database, MongoCollection<T> collection, Class<S> resultType) {
+        MongoCollection<T> bound = prepare(collection, database);
+        if (readConcern != null) {
+            bound = bound.withReadConcern(readConcern);
+        }
+        if (readPreference != null) {
+            bound = bound.withReadPreference(readPreference);
+        }
+        AggregateIterable<S> aggregate = bound.aggregate(documents, resultType)
+                .allowDiskUse(allowDiskUse)
+                .bypassDocumentValidation(bypassDocumentValidation);
+        if (batchSize != null) {
+            aggregate.batchSize(batchSize);
+        }
+        if (collation != null) {
+            aggregate.collation(collation);
+        }
+        if (maxTimeMS != null) {
+            aggregate.maxTime(maxTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS);
+        }
+        if (maxAwaitTime != null) {
+            aggregate.maxAwaitTime(maxAwaitTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS);
+        }
+        if (hint != null) {
+            aggregate.hint(hint);
+        }
+        if (let != null) {
+            aggregate.let(let);
+        }
+        if (comment != null) {
+            aggregate.comment(comment);
+        }
+
+        return aggregate;
+    }
+
+    /**
+     * @param unit the target unit type
+     * @return the configuration value
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public long maxTime(TimeUnit unit) {
+        return unit.convert(maxTimeMS, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * @param unit the target unit type
+     * @return the configuration value
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public long maxAwaitTime(TimeUnit unit) {
+        return unit.convert(maxAwaitTime, TimeUnit.MILLISECONDS);
     }
 }

@@ -1,0 +1,13 @@
+{
+         $project: {
+            items: {
+               $filter: {
+                  input: "$items",
+                  cond: {
+                     $regexMatch: { input: "$$item.name", regex: /^p/ }
+                  },
+                 as: "item"
+               }
+            }
+         }
+      }

@@ -1,1 +1,5 @@
-{    _id: null,   test01_percentiles: [ 62, 64, 67, 67 ],   test02_percentiles: [ 81, 82, 83, 83 ],   test03_percentiles: [ 78, 79, 80, 80 ],   test03_percent_alt: [ 80, 78, 79, 80 ]}
+{ studentId: '2345', testPercentiles: [ 80, 81 ] },
+{ studentId: '2356', testPercentiles: [ 79, 83 ] },
+{ studentId: '2358', testPercentiles: [ 78, 82 ] },
+{ studentId: '2367', testPercentiles: [ 72, 77 ] },
+{ studentId: '2369', testPercentiles: [ 60, 72 ] }

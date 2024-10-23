@@ -1,2 +1,2 @@
-{ "_id" : "2019Q1", "sales" : 1950, "purchased" : 1200 }
-{ "_id" : "2019Q2", "sales" : 500, "purchased" : 1700 }
+{ "_id" : "2019Q2", "purchased" : 1700 }
+{ "_id" : "2019Q1", "purchased" : 1200 }

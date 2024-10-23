@@ -4,10 +4,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.List;
+import java.util.stream.Stream;
 
 import com.mongodb.ReadConcern;
 import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
+import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.FindOneAndDeleteOptions;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
@@ -23,21 +25,26 @@ import dev.morphia.query.CountOptions;
 import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.FindOptions;
 
+import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("SameParameterValue")
-public class OptionsTest {
+public class OptionsTest extends TestBase {
     @Test
     public void aggregationOptions() {
-        beanScan(com.mongodb.AggregationOptions.class, AggregationOptions.class, List.of("builder",
+        checkMinDriverVersion(DriverVersion.v52);
+        beanScan(AggregateIterable.class, AggregationOptions.class, List.of("builder",
+                "explain",
                 "getAllowDiskUse",
                 "getBatchSize",
                 "getBypassDocumentValidation",
                 "getCollation",
-                "getMaxTime"));
+                "getMaxTime",
+                "hintString",
+                "toCollection"));
     }
 
     @Test
@@ -62,6 +69,7 @@ public class OptionsTest {
 
     @Test
     public void findOptions() {
+        checkMinDriverVersion(DriverVersion.v52);
         beanScan(FindIterable.class, FindOptions.class, List.of("explain", "filter", "projection"));
     }
 
@@ -86,15 +94,19 @@ public class OptionsTest {
     }
 
     private void beanScan(Class<?> driver, Class<?> morphia, List<String> filtered) {
-        try {
-            Method[] methods = driver.getDeclaredMethods();
-            for (Method method : methods) {
-                if (!filtered.contains(method.getName()) && method.getAnnotation(Deprecated.class) == null) {
+        Method[] methods = driver.getDeclaredMethods();
+        for (Method method : methods) {
+            if (!filtered.contains(method.getName()) && method.getAnnotation(Deprecated.class) == null) {
+                try {
                     morphia.getDeclaredMethod(method.getName(), convert(method.getParameterTypes()));
+                } catch (ReflectiveOperationException e) {
+                    try {
+                        morphia.getDeclaredMethod(method.getName(), method.getParameterTypes());
+                    } catch (NoSuchMethodException ex) {
+                        throw new RuntimeException("Method not found: " + e.getMessage(), e);
+                    }
                 }
             }
-        } catch (ReflectiveOperationException e) {
-            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -113,13 +125,41 @@ public class OptionsTest {
         }
     }
 
-    private Class<?>[] convert(Class<?>[] types) {
-        for (int i = 0; i < types.length; i++) {
-            if (types[i].equals(Bson.class)) {
-                types[i] = Document.class;
-            }
-        }
-        return types;
+    @SuppressWarnings("rawtypes")
+    private Class<?>[] convert(Class[] types) {
+        List<Class> list = Stream.of(types)
+                .map(type -> {
+                    if (type.equals(Bson.class)) {
+                        return Document.class;
+                    }
+                    if (type.equals(BsonValue.class)) {
+                        return String.class;
+                    }
+                    if (type.equals(Boolean.class)) {
+                        return boolean.class;
+                    }
+                    if (type.equals(Character.class)) {
+                        return char.class;
+                    }
+                    if (type.equals(Byte.class)) {
+                        return byte.class;
+                    }
+                    if (type.equals(Double.class)) {
+                        return double.class;
+                    }
+                    if (type.equals(Float.class)) {
+                        return float.class;
+                    }
+                    if (type.equals(Integer.class)) {
+                        return int.class;
+                    }
+                    if (type.equals(Long.class)) {
+                        return long.class;
+                    }
+                    return type;
+                })
+                .toList();
+        return list.toArray(new Class[0]);
     }
 
     private boolean getter(Method method) {

@@ -1,0 +1,3 @@
+db.articles.find(
+   { $text: { $search: "leche", $language: "es" } }
+)

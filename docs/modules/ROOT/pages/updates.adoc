@@ -155,3 +155,11 @@ Regardless of whether this value is set, `merge()` will issue a `find()` for tha
 Without using `unsetMissing()`, this is useful for merging the in memory state with what's in the database.
 With this value set, the two should be identical, of course.
 
+=== Supported Operators
+Every effort is made to provide 100% coverage of all the operators offered by MongoDB. Below is listed all the currently supported
+operators. To see an example of an operator in action, click through to see the test cases for that operator.
+
+If an operator is missing and you think it should be included, please file an https://github.com/MorphiaOrg/morphia/issues[issue] for that operator.
+
+.Filters
+include::update-operators.adoc[]

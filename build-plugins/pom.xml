@@ -19,9 +19,18 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <version>${kotlin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
-                <version>3.13.1</version>
+                <version>3.15.0</version>
                 <configuration>
                     <!-- see http://jira.codehaus.org/browse/MNG-5346 -->
                     <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
@@ -62,7 +71,7 @@
         <dependency>
             <groupId>org.apache.maven.plugin-tools</groupId>
             <artifactId>maven-plugin-annotations</artifactId>
-            <version>3.13.1</version>
+            <version>3.15.0</version>
             <scope>provided</scope>
         </dependency>
 
@@ -88,8 +97,8 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.zafarkhaja</groupId>
-            <artifactId>java-semver</artifactId>
+            <groupId>org.semver4j</groupId>
+            <artifactId>semver4j</artifactId>
             <scope>compile</scope>
         </dependency>
 
@@ -100,6 +109,37 @@
         <dependency>
             <groupId>org.jboss.forge.roaster</groupId>
             <artifactId>roaster-jdt</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-tree</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.devtools.ksp</groupId>
+            <artifactId>symbol-processing-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.devtools.ksp</groupId>
+            <artifactId>symbol-processing-common-deps</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.devtools.ksp</groupId>
+            <artifactId>symbol-processing-aa-embeddable</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup</groupId>
+            <artifactId>kotlinpoet-jvm</artifactId>
+            <version>1.18.1</version>
         </dependency>
     </dependencies>
 </project>

@@ -29,11 +29,13 @@ import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.EntityListeners;
 import dev.morphia.annotations.ExternalEntity;
+import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.ShardKeys;
+import dev.morphia.annotations.Version;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.InstanceCreatorFactory;
 import dev.morphia.mapping.InstanceCreatorFactoryImpl;
@@ -98,11 +100,11 @@ public class EntityModel {
             throw new MappingException(Sofia.noInnerClasses(type.getName()));
         }
         this.type = type;
+        creatorFactory = new InstanceCreatorFactoryImpl(this);
     }
 
     public EntityModel(Mapper mapper, Class<?> type) {
         this(type);
-        creatorFactory = new InstanceCreatorFactoryImpl(this);
 
         new MappingUtil(mapper);
 
@@ -167,6 +169,13 @@ public class EntityModel {
         var added = propertyModelsByName.putIfAbsent(property.getName(), property) == null;
         added &= propertyModelsByMappedName.put(property.getMappedName(), property) == null;
 
+        if (added) {
+            if (property.hasAnnotation(Id.class)) {
+                idProperty = property;
+            } else if (property.hasAnnotation(Version.class)) {
+                versionProperty = property;
+            }
+        }
         return added;
     }
 
@@ -335,12 +344,14 @@ public class EntityModel {
         return name != null ? propertyModelsByMappedName.getOrDefault(name, propertyModelsByName.get(name)) : null;
     }
 
-    @Nullable
-    public EntityModel getSubtype(Class<?> type) {
-        return subtypes.stream().filter(subtype -> subtype.type.equals(type))
-                .findFirst()
-                .orElse(null);
-    }
+    /*
+     * @Nullable
+     * public EntityModel getSubtype(Class<?> type) {
+     * return subtypes.stream().filter(subtype -> subtype.type.equals(type))
+     * .findFirst()
+     * .orElse(null);
+     * }
+     */
 
     /**
      * Get the subtypes of this model

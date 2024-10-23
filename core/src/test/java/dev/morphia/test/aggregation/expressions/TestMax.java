@@ -1,7 +1,8 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -14,34 +15,39 @@ import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
 import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 import static dev.morphia.query.Sort.ascending;
 
-public class TestMax extends AggregationTest {
-    @Test
+public class TestMax extends TemplatedTestBase {
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/max/example1
+     * 
+     */
+    @Test(testName = "Use in ``$group`` Stage")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
-                group(id("$item"))
-                        .field("maxTotalAmount", max(multiply("$price", "$quantity")))
-                        .field("maxQuantity", max("$quantity"))));
+        testPipeline(new ActionTestOptions().orderMatters(false),
+                (aggregation) -> aggregation
+                        .pipeline(group(id("$item")).field("maxTotalAmount", max(multiply("$price", "$quantity")))
+                                .field("maxQuantity", max("$quantity"))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/max/example2
+     * 
+     */
+    @Test(testName = "Use in ``$project`` Stage")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                project()
-                        .include("quizMax", max("$quizzes"))
-                        .include("labMax", max("$labs"))
-                        .include("examMax", max("$final", "$midterm"))));
+        testPipeline((aggregation) -> aggregation.pipeline(project().include("quizMax", max("$quizzes"))
+                .include("labMax", max("$labs")).include("examMax", max("$final", "$midterm"))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/max/example3
+     * 
+     */
+    @Test(testName = "Use in ``$setWindowFields`` Stage")
     public void testExample3() {
-        testPipeline(ServerVersion.v50, false, true, (aggregation) -> aggregation.pipeline(
-                setWindowFields()
-                        .partitionBy("$state")
-                        .sortBy(ascending("orderDate"))
-                        .output(output("maximumQuantityForState")
-                                .operator(max("$quantity"))
-                                .window()
-                                .documents("unbounded", "current"))));
+        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.v50),
+                (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
+                        .sortBy(ascending("orderDate")).output(output("maximumQuantityForState")
+                                .operator(max("$quantity")).window().documents("unbounded", "current"))));
     }
 
 }

@@ -1,0 +1,3 @@
+db.legacyPlaces.find(
+   { location : { $nearSphere : [ -73.9667, 40.78 ], $maxDistance: 0.10 } }
+)

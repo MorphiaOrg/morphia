@@ -1,0 +1,3 @@
+db.restaurants.find(
+   { "grades.grade" : { $type : "minKey" } }
+)

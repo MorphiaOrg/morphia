@@ -1,10 +1,6 @@
 package dev.morphia.query.updates;
 
-import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.internal.PathTarget;
-import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.query.OperationTarget;
 
 import org.bson.Document;
 
@@ -14,7 +10,7 @@ import org.bson.Document;
  * @since 2.0
  */
 public class CurrentDateOperator extends UpdateOperator {
-    private TypeSpecification typeSpec = TypeSpecification.DATE;
+    private TypeSpecification type = TypeSpecification.DATE;
 
     /**
      * Creates an operator for a field
@@ -29,26 +25,23 @@ public class CurrentDateOperator extends UpdateOperator {
     }
 
     /**
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Override
-    public OperationTarget toOperationTarget(MorphiaDatastore datastore, EntityModel model, boolean validate) {
-        var pathTarget = new PathTarget(datastore.getMapper(), model, field(), validate);
-
-        return new OperationTarget(pathTarget, typeSpec.toTarget());
-    }
-
-    /**
      * Sets the type of value to set when updating the field
      *
      * @param type the type to use
      * @return this
      */
     public CurrentDateOperator type(TypeSpecification type) {
-        this.typeSpec = type;
+        this.type = type;
         return this;
+    }
+
+    /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public TypeSpecification type() {
+        return type;
     }
 
     /**

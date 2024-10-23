@@ -1,9 +1,0 @@
- [
-  { 
-    $project: { 
-      result: { 
-        $bitNot: "$a"
-      }
-    }
-  }
-]

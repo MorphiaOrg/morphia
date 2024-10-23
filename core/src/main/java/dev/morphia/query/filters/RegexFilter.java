@@ -1,8 +1,10 @@
 package dev.morphia.query.filters;
 
-import com.mongodb.lang.Nullable;
+import java.util.regex.Pattern;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
+
+import static dev.morphia.mapping.codec.PatternCodec.RegexFlag.getByCharacter;
 
 /**
  * Defines a regular expression filter
@@ -11,7 +13,8 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  */
 @SuppressWarnings("unused")
 public class RegexFilter extends Filter {
-    private String options;
+
+    Pattern pattern;
 
     /**
      * @param field   the field
@@ -20,8 +23,16 @@ public class RegexFilter extends Filter {
      * @morphia.internal
      */
     @MorphiaInternal
-    RegexFilter(String field, @Nullable String pattern) {
-        super("$regex", field, pattern);
+    RegexFilter(String field, Pattern pattern) {
+        super("$regex", field, null);
+        this.pattern = pattern;
+    }
+
+    /**
+     * @hidden
+     */
+    public Pattern pattern() {
+        return pattern;
     }
 
     /**
@@ -31,7 +42,9 @@ public class RegexFilter extends Filter {
      * @return this
      */
     public RegexFilter options(String options) {
-        this.options = options;
+        for (char c : options.toCharArray()) {
+            add(c);
+        }
         return this;
     }
 
@@ -41,7 +54,7 @@ public class RegexFilter extends Filter {
      * @return this
      */
     public RegexFilter caseInsensitive() {
-        add("i");
+        add('i');
         return this;
     }
 
@@ -57,7 +70,7 @@ public class RegexFilter extends Filter {
      * @return this
      */
     public RegexFilter extended() {
-        add("x");
+        add('x');
         return this;
     }
 
@@ -68,7 +81,7 @@ public class RegexFilter extends Filter {
      * @return this
      */
     public RegexFilter multiline() {
-        add("m");
+        add('m');
         return this;
     }
 
@@ -78,26 +91,12 @@ public class RegexFilter extends Filter {
      * @return this
      */
     public RegexFilter special() {
-        add("s");
+        add('s');
         return this;
     }
 
-    private void add(String option) {
-        if (options == null) {
-            options = "";
-        }
-        if (!options.contains(option)) {
-            options += option;
-        }
-    }
-
-    /**
-     * @hidden
-     * @morphia.internal
-     * @return the options
-     */
-    @MorphiaInternal
-    public String options() {
-        return options;
+    private void add(char option) {
+        pattern = Pattern.compile(pattern.pattern(),
+                pattern.flags() | getByCharacter(option).javaFlag);
     }
 }

@@ -1,0 +1,4 @@
+db.students.updateOne(
+{ _id: 4, "grades.grade": 85 },
+{ $set: { "grades.$.std" : 6 } }
+)

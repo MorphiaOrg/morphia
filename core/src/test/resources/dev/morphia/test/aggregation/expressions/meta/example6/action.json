@@ -1,0 +1,4 @@
+db.orders.find( 
+   { price: { $gte: 10 } }, 
+   { idxKey: { $meta: "indexKey" } }
+)

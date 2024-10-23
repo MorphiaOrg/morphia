@@ -10,6 +10,7 @@ import com.mongodb.ReadConcern;
 import com.mongodb.ReadPreference;
 import com.mongodb.assertions.Assertions;
 import com.mongodb.client.FindIterable;
+import com.mongodb.client.cursor.TimeoutMode;
 import com.mongodb.client.model.Collation;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
@@ -41,28 +42,54 @@ import static dev.morphia.internal.MorphiaInternals.tryInvoke;
 public final class FindOptions implements ReadConfigurable<FindOptions>, CollectionConfigurable<FindOptions> {
     private Boolean allowDiskUse;
     private int batchSize;
-    private int limit;
-    private long maxTimeMS;
-    private long maxAwaitTimeMS;
-    private int skip;
-    private Document variables;
-    private Document sort;
-    private CursorType cursorType;
-    private boolean noCursorTimeout;
-    private boolean partial;
+
     private Collation collation;
-    private BsonValue comment;
-    private Document hint;
-    private String hintString;
-    private Document max;
-    private Document min;
-    private boolean returnKey;
-    private boolean showRecordId;
-    private ReadConcern readConcern;
-    private ReadPreference readPreference;
-    private Projection projection;
-    private String queryLogId;
+
     private String collection;
+
+    private BsonValue comment;
+
+    private CursorType cursorType;
+
+    private boolean disableValidation = false;
+
+    private Document hint;
+
+    private String hintString;
+
+    private int limit;
+
+    private Document max;
+
+    private long maxAwaitTimeMS;
+
+    private long maxTimeMS;
+
+    private Document min;
+
+    private boolean noCursorTimeout;
+
+    private boolean partial;
+
+    private Projection projection;
+
+    private String queryLogId;
+
+    private ReadConcern readConcern;
+
+    private ReadPreference readPreference;
+
+    private boolean returnKey;
+
+    private boolean showRecordId;
+
+    private int skip;
+
+    private Document sort;
+
+    private TimeoutMode timeoutMode;
+
+    private Document variables;
 
     /**
      * Enables writing to temporary files on the server. When set to true, the server
@@ -92,6 +119,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
             logQuery(); //  reset to a new ID
         }
         if (projection != null) {
+            projection.disableValidation(disableValidation);
             iterable.projection(projection.map(mapper, type));
         }
 
@@ -129,8 +157,45 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
             }
             iterable.sort(mapped);
         }
-        tryInvoke(v4_6_0, () -> iterable.let(variables));
+        iterable.let(variables);
+        if (timeoutMode != null) {
+            iterable.timeoutMode(timeoutMode);
+        }
         return iterable;
+    }
+
+    /**
+     * This is an internal method. It's implementation and presence are subject to change.
+     *
+     * @return this
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public boolean isLogQuery() {
+        return queryLogId != null;
+    }
+
+    /**
+     * This is an experimental method. It's implementation and presence are subject to change.
+     *
+     * @return this
+     */
+    public FindOptions logQuery() {
+        queryLogId = new ObjectId().toString();
+        comment(Sofia.loggedQuery(queryLogId));
+        return this;
+    }
+
+    /**
+     * Sets the comment to log with the query
+     *
+     * @param comment the comment
+     * @return this
+     */
+    public FindOptions comment(String comment) {
+        this.comment = new BsonString(comment);
+        return this;
     }
 
     /**
@@ -169,17 +234,6 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     @Override
     public String collection() {
         return collection;
-    }
-
-    /**
-     * Sets the comment to log with the query
-     *
-     * @param comment the comment
-     * @return this
-     */
-    public FindOptions comment(String comment) {
-        this.comment = new BsonString(comment);
-        return this;
     }
 
     /**
@@ -252,6 +306,16 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     }
 
     /**
+     * @param disable
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public void disableValidation(boolean disable) {
+        this.disableValidation = disable;
+    }
+
+    /**
      * @hidden
      * @morphia.internal
      */
@@ -289,6 +353,37 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     }
 
     /**
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", FindOptions.class.getSimpleName() + "[", "]")
+                .add("allowDiskUse=" + allowDiskUse)
+                .add("batchSize=" + batchSize)
+                .add("limit=" + limit)
+                .add("maxTimeMS=" + maxTimeMS)
+                .add("maxAwaitTimeMS=" + maxAwaitTimeMS)
+                .add("skip=" + skip)
+                .add("sort=" + sort)
+                .add("cursorType=" + cursorType)
+                .add("noCursorTimeout=" + noCursorTimeout)
+                .add("partial=" + partial)
+                .add("collation=" + collation)
+                .add("comment='" + comment + "'")
+                .add("hint=" + hint)
+                .add("max=" + max)
+                .add("min=" + min)
+                .add("returnKey=" + returnKey)
+                .add("showRecordId=" + showRecordId)
+                .add("readPreference=" + readPreference)
+                .add("queryLogId='" + queryLogId + "'")
+                .add("projection=" + projection)
+                .toString();
+    }
+
+    /**
      * Sets the index hint
      *
      * @param hint the hint
@@ -322,18 +417,6 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     }
 
     /**
-     * This is an internal method. It's implementation and presence are subject to change.
-     *
-     * @return this
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    public boolean isLogQuery() {
-        return queryLogId != null;
-    }
-
-    /**
      * Add top-level variables to the operation. A null value means no variables are set.
      *
      * <p>
@@ -350,16 +433,6 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     }
 
     /**
-     * @return the query log id used for retrieving the logged query
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    public String queryLogId() {
-        return queryLogId;
-    }
-
-    /**
      * Sets the limit
      *
      * @param limit the limit
@@ -367,17 +440,6 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
      */
     public FindOptions limit(int limit) {
         this.limit = limit;
-        return this;
-    }
-
-    /**
-     * This is an experimental method. It's implementation and presence are subject to change.
-     *
-     * @return this
-     */
-    public FindOptions logQuery() {
-        queryLogId = new ObjectId().toString();
-        comment(Sofia.loggedQuery(queryLogId));
         return this;
     }
 
@@ -466,16 +528,13 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     }
 
     /**
-     * @return the projection
+     * @return the query log id used for retrieving the logged query
      * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
-    public Projection projection() {
-        if (projection == null) {
-            projection = new Projection(this);
-        }
-        return projection;
+    public String queryLogId() {
+        return queryLogId;
     }
 
     /**
@@ -544,37 +603,6 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     }
 
     /**
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @Override
-    public String toString() {
-        return new StringJoiner(", ", FindOptions.class.getSimpleName() + "[", "]")
-                .add("allowDiskUse=" + allowDiskUse)
-                .add("batchSize=" + batchSize)
-                .add("limit=" + limit)
-                .add("maxTimeMS=" + maxTimeMS)
-                .add("maxAwaitTimeMS=" + maxAwaitTimeMS)
-                .add("skip=" + skip)
-                .add("sort=" + sort)
-                .add("cursorType=" + cursorType)
-                .add("noCursorTimeout=" + noCursorTimeout)
-                .add("partial=" + partial)
-                .add("collation=" + collation)
-                .add("comment='" + comment + "'")
-                .add("hint=" + hint)
-                .add("max=" + max)
-                .add("min=" + min)
-                .add("returnKey=" + returnKey)
-                .add("showRecordId=" + showRecordId)
-                .add("readPreference=" + readPreference)
-                .add("queryLogId='" + queryLogId + "'")
-                .add("projection=" + projection)
-                .toString();
-    }
-
-    /**
      * Sets to the sort to use
      *
      * @param meta the meta data to sort by
@@ -584,6 +612,30 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     public FindOptions sort(Meta meta) {
         projection().project(meta);
         return sort(meta.toDatabase());
+    }
+
+    /**
+     * @return the projection
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public Projection projection() {
+        if (projection == null) {
+            projection = new Projection(this);
+        }
+        return projection;
+    }
+
+    /**
+     * Sets to the sort to use
+     *
+     * @param sort the sort document
+     * @return this
+     */
+    public FindOptions sort(Document sort) {
+        this.sort = new Document(sort);
+        return this;
     }
 
     /**
@@ -607,17 +659,6 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     /**
      * Sets to the sort to use
      *
-     * @param sort the sort document
-     * @return this
-     */
-    public FindOptions sort(Document sort) {
-        this.sort = new Document(sort);
-        return this;
-    }
-
-    /**
-     * Sets to the sort to use
-     *
      * @param sorts the sorts to apply
      * @return this
      */
@@ -626,6 +667,15 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
         for (Sort sort : sorts) {
             this.sort.append(sort.getField(), sort.getOrder());
         }
+        return this;
+    }
+
+    public TimeoutMode timeoutMode() {
+        return timeoutMode;
+    }
+
+    public FindOptions timeoutMode(TimeoutMode timeoutMode) {
+        this.timeoutMode = timeoutMode;
         return this;
     }
 

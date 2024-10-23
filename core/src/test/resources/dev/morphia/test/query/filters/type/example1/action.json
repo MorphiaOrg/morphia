@@ -1,0 +1,1 @@
+db.addressBook.find( { zipCode : { $type : "string" } } )

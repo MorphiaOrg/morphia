@@ -1,7 +1,5 @@
 package dev.morphia.mapping;
 
-import dev.morphia.annotations.Entity;
-import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.discriminator.ClassNameDiscriminator;
 import dev.morphia.mapping.discriminator.LowerClassNameDiscriminator;
 import dev.morphia.mapping.discriminator.LowerSimpleNameDiscriminator;
@@ -52,20 +50,13 @@ public abstract class DiscriminatorFunction {
     /**
      * Applies the function to the given model to determine the discriminator value
      *
-     * @param model the model to evaluate
+     * @param type
+     * @param discriminator
+     * @return
      * @hidden
      */
-    public final void apply(EntityModel model) {
-        String discriminator = Mapper.IGNORED_FIELDNAME;
-        Entity entity = model.getAnnotation(Entity.class);
-        if (entity != null) {
-            discriminator = entity.discriminator();
-        }
-        if (discriminator.equals(Mapper.IGNORED_FIELDNAME)) {
-            discriminator = compute(model.getType());
-        }
-
-        model.discriminator(discriminator);
+    public final String apply(Class<?> type, String discriminator) {
+        return discriminator.equals(Mapper.IGNORED_FIELDNAME) ? compute(type) : discriminator;
     }
 
     /**

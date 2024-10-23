@@ -17,7 +17,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.1</version>
+                <version>3.4.2</version>
                 <executions>
                     <execution>
                         <id>test-jar</id>
@@ -57,7 +57,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>3.10.1</version>
                 <configuration>
                     <failOnError>true</failOnError>
                     <failOnWarnings>false</failOnWarnings>
@@ -92,9 +92,21 @@
                 </configuration>
             </plugin>
             <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <properties>
+                        <distribution>
+                            <enabled>true</enabled>
+                            <maxLocalExecutors>4</maxLocalExecutors>
+                            <maxRemoteExecutors>0</maxRemoteExecutors>
+                        </distribution>
+                    </properties>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>io.github.git-commit-id</groupId>
                 <artifactId>git-commit-id-maven-plugin</artifactId>
-                <version>8.0.2</version>
+                <version>9.0.1</version>
                 <executions>
                     <execution>
                         <id>git info</id>
@@ -185,12 +197,16 @@
             <artifactId>testng</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.junit.support</groupId>
+            <artifactId>testng-engine</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.skyscreamer</groupId>
             <artifactId>jsonassert</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.zafarkhaja</groupId>
-            <artifactId>java-semver</artifactId>
+            <groupId>org.semver4j</groupId>
+            <artifactId>semver4j</artifactId>
         </dependency>
         <dependency>
             <groupId>org.awaitility</groupId>

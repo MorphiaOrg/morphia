@@ -1,4 +1,0 @@
-   [
-     { $match: { $text: { $search: "operating" } } },
-     { $sort: { score: { $meta: "textScore" }, posts: -1 } }
-   ]

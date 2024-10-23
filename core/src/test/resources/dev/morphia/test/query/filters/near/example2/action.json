@@ -1,0 +1,3 @@
+db.legacy2d.find(
+   { location : { $near : [ -73.9667, 40.78 ], $maxDistance: 0.10 } }
+)

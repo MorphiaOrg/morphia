@@ -7,7 +7,7 @@ import org.bson.BsonWriter;
 import org.bson.codecs.EncoderContext;
 
 import static dev.morphia.mapping.codec.CodecHelper.document;
-import static dev.morphia.mapping.codec.CodecHelper.value;
+import static dev.morphia.mapping.codec.CodecHelper.namedValue;
 
 public class RegexFilterCodec extends BaseFilterCodec<RegexFilter> {
     public RegexFilterCodec(MorphiaDatastore datastore) {
@@ -29,8 +29,7 @@ public class RegexFilterCodec extends BaseFilterCodec<RegexFilter> {
     }
 
     private void encodeFilter(BsonWriter writer, RegexFilter filter, EncoderContext context) {
-        value(writer, "$regex", filter.getValue().toString());
-        value(writer, "$options", filter.options());
+        namedValue(writer, datastore, "$regex", filter.pattern(), context);
     }
 
     @Override

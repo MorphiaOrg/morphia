@@ -1,0 +1,6 @@
+db.inventory.find( {
+                     qty: { $all: [
+                                    { "$elemMatch" : { size: "M", num: { $gt: 50} } },
+                                    { "$elemMatch" : { num : 100, color: "green" } }
+                                  ] }
+                   } )

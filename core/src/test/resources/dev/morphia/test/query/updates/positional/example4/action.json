@@ -1,0 +1,4 @@
+db.students_deans_list.updateOne(
+   { activity_ids: 1, grades: 95, deans_list: 2021 },
+   { $set: { "deans_list.$": 2022 } }
+)

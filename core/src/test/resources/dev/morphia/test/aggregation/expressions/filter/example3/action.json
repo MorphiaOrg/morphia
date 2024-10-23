@@ -1,0 +1,12 @@
+{
+         $project: {
+            items: {
+               $filter: {
+                  input: "$items",
+                  as: "item", 
+                  cond: { $gte: [ "$$item.price", 100] },
+                  limit: 5
+               }
+            }
+         }
+      }

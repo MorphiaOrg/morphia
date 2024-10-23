@@ -96,7 +96,8 @@ public class AnnotationBuilders extends AbstractMojo {
             var code = builders.entrySet().stream()
                     .map(entry -> {
                         JavaClassSource builder = entry.getValue();
-                        return "if (kind.equals(%s.class)) return (K)%s.%s().build();".formatted(entry.getKey(), builder.getQualifiedName(),
+                        return "if (kind.equals(%s.class)) return (K)%s.%s().build();".formatted(entry.getKey(),
+                                builder.getQualifiedName(),
                                 methodCase(builder.getName()));
                     })
                     .collect(Collectors.joining("\n"));
@@ -184,6 +185,13 @@ public class AnnotationBuilders extends AbstractMojo {
                     .setReturnType(builder.getName())
                     .setBody(format("return new %s();", builder.getName()));
 
+            builder.addField()
+                    .setName("defaults")
+                    .setStatic(true)
+                    .setPublic()
+                    .setType(source.getName())
+                    .setLiteralInitializer("%s().build()".formatted(builderMethodName(source.getName())));
+
             JavaClassSource morphiaAnnotation = annotationType(source, builder);
             List<AnnotationElementSource> elements = source.getAnnotationElements();
             if (!elements.isEmpty()) {
@@ -219,6 +227,18 @@ public class AnnotationBuilders extends AbstractMojo {
                                 format("annotation.%s = %s; return this;", name,
                                         name))
                         .addParameter(parameterType, name).setVarArgs(varargs);
+
+                if (element.getType().isPrimitive()) {
+                    builder.addMethod()
+                            .setPublic()
+                            .setName(name)
+                            .setReturnType(builder.getName())
+                            .setBody(
+                                    format("annotation.%s = %s; return this;", name,
+                                            name))
+                            .addParameter(wrapper(parameterType), name).setVarArgs(varargs);
+                }
+
             }
 
             for (Import anImport : source.getImports()) {
@@ -227,6 +247,14 @@ public class AnnotationBuilders extends AbstractMojo {
             builder.addImport(Objects.class);
             output();
         }
+    }
+
+    private String wrapper(String type) {
+        return switch (type) {
+            case "int" -> "Integer";
+            case "char" -> "Character";
+            default -> type.substring(0, 1).toUpperCase(Locale.ROOT) + type.substring(1);
+        };
     }
 
     private JavaClassSource createClass(String name) {
@@ -329,7 +357,7 @@ public class AnnotationBuilders extends AbstractMojo {
 
     }
 
-    String methodCase(String name) {
+    public static String methodCase(String name) {
         return name.substring(0, 1).toLowerCase() + name.substring(1);
     }
 

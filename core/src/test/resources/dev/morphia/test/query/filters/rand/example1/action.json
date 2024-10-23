@@ -1,0 +1,10 @@
+db.donors.updateMany(
+   {},
+      { $set:
+         { amount:
+            { $floor:
+               { $multiply: [ { $rand: {} }, 100 ] }
+            }
+         }
+      }
+)

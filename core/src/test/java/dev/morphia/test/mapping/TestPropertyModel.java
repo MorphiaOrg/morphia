@@ -35,7 +35,6 @@ public class TestPropertyModel extends TestBase {
         final PropertyModel property = getMappedField("arrayOfInt");
 
         Assert.assertFalse(property.isScalarValue());
-        Assert.assertTrue(property.isMultipleValues());
         Assert.assertTrue(property.isArray());
         Assert.assertTrue(property.getType().isArray());
         Assert.assertEquals(property.getName(), "arrayOfInt");
@@ -57,7 +56,6 @@ public class TestPropertyModel extends TestBase {
         final PropertyModel property = getMappedField("listOfString");
 
         Assert.assertFalse(property.isScalarValue());
-        Assert.assertTrue(property.isMultipleValues());
         Assert.assertFalse(property.isArray());
         Assert.assertSame(property.getType(), List.class);
         Assert.assertSame(property.getNormalizedType(), String.class);
@@ -80,7 +78,6 @@ public class TestPropertyModel extends TestBase {
         final PropertyModel property = getMappedField("listOfListOfString");
 
         Assert.assertFalse(property.isScalarValue());
-        Assert.assertTrue(property.isMultipleValues());
         Assert.assertFalse(property.isArray());
         Assert.assertSame(property.getType(), List.class);
 
@@ -108,7 +105,6 @@ public class TestPropertyModel extends TestBase {
         final PropertyModel property = getMappedField("nestedList");
 
         Assert.assertFalse(property.isScalarValue());
-        Assert.assertTrue(property.isMultipleValues());
         Assert.assertFalse(property.isArray());
         Assert.assertSame(property.getType(), List.class);
         Assert.assertSame(property.getNormalizedType(), Nested.class);

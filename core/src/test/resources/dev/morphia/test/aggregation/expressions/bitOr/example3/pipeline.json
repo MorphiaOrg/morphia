@@ -1,9 +1,0 @@
- [
-  { 
-    $project: { 
-      result: { 
-        $bitOr: [ "$a", NumberLong("63") ]
-      }
-    }
-  }
-]

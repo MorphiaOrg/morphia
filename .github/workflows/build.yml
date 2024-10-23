@@ -16,9 +16,26 @@ jobs:
 
   Build:
     uses: evanchooly/workflows/.github/workflows/build.yml@master
+    secrets:
+      DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
     with:
       java: 17
       saveBuild: true
+
+  Critter:
+    uses: evanchooly/workflows/.github/workflows/build.yml@master
+    needs:
+      - Build
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [ 17, 21, 24-ea ]
+    secrets:
+      DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+    with:
+      java: ${{ matrix.java }}
+      maven-flags: "-Pcritter"
+      optional: true
 
   Matrix:
     runs-on: ubuntu-latest
@@ -89,6 +106,8 @@ jobs:
         driver: ${{ fromJson(needs.matrix.outputs.driver_latest) }}
         java: [ 17 ]
     uses: evanchooly/workflows/.github/workflows/build.yml@master
+    secrets:
+      DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
     with:
       java: ${{ matrix.java }}
       reuseBuild: true
@@ -111,14 +130,16 @@ jobs:
             java: 21
             mongo: 7
           - driver: ${{ fromJson(needs.matrix.outputs.driver_latest)[0] }}
-            java: 22
+            java: 23-ea
             mongo: 7
-            optional: tre
+            optional: true
           - driver: ${{ needs.matrix.outputs.driver_snapshot }}
             java: 17
             mongo: 7
             optional: true
     uses: evanchooly/workflows/.github/workflows/build.yml@master
+    secrets:
+      DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
     with:
       java: ${{ matrix.java }}
       reuseBuild: true
@@ -138,11 +159,11 @@ jobs:
       java: 17
     secrets:
       GH_PUSH_TOKEN       : ${{ secrets.GH_PUSH_TOKEN }}
-      GPG_PASSPHRASE      : ${{ secrets.GPG_PASSPHRASE }}
+      MAVEN_GPG_PASSPHRASE      : ${{ secrets.MAVEN_GPG_PASSPHRASE }}
       GPG_PUBLIC_KEY      : ${{ secrets.GPG_PUBLIC_KEY }}
       GPG_PRIVATE_KEY     : ${{ secrets.GPG_PRIVATE_KEY }}
       SONATYPE_USERNAME   : ${{ secrets.SONATYPE_USERNAME }}
-      SONATYPE_PASSWORD   : ${{ secrets.SONATYPE_PASSWORD }}
+      SONATYPE_TOKEN   : ${{ secrets.SONATYPE_TOKEN }}
 
   Docs:
     name: Update Documentation

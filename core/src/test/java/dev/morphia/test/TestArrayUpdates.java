@@ -1,91 +1,21 @@
 package dev.morphia.test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import dev.morphia.Datastore;
 import dev.morphia.UpdateOptions;
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Id;
-import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.test.models.Grade;
 import dev.morphia.test.models.Student;
 
-import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.lt;
 import static dev.morphia.query.updates.UpdateOperators.inc;
-import static dev.morphia.query.updates.UpdateOperators.set;
-import static java.lang.String.format;
 import static java.util.Collections.singletonMap;
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
 public class TestArrayUpdates extends TestBase {
-    @Test
-    public void testStudents() {
-        final Datastore datastore = getDs();
-
-        datastore.save(new Student(1L, new Grade(80, singletonMap("name", "Homework")),
-                new Grade(90, singletonMap("name", "Test"))));
-
-        Query<Student> testQuery = datastore.find(Student.class)
-                .filter(eq("_id", 1L),
-                        eq("grades.data.name", "Test"),
-                        eq("grades.data.bad.path.should.be.null", null));
-        assertNotNull(testQuery.iterator(new FindOptions().limit(1))
-                .tryNext());
-
-        testQuery.update(set("grades.$.data.name", "Makeup Test"));
-
-        assertNull(testQuery.iterator(new FindOptions().limit(1))
-                .tryNext());
-
-        assertNotNull(datastore.find(Student.class)
-                .filter(eq("_id", 1L),
-                        eq("grades.data.name", "Makeup Test"))
-                .iterator(new FindOptions().limit(1))
-                .tryNext());
-    }
-
-    @Test
-    public void testUpdates() {
-        BatchData theBatch = new BatchData();
-        theBatch.files.add(new Files(0, "fileName1", "fileHash1"));
-        theBatch.files.add(new Files(0, "fileName2", "fileHash2"));
-        getDs().save(theBatch);
-        ObjectId id = theBatch.id;
-
-        theBatch = new BatchData();
-        theBatch.files.add(new Files(0, "fileName3", "fileHash3"));
-        theBatch.files.add(new Files(0, "fileName4", "fileHash4"));
-        getDs().save(theBatch);
-        ObjectId id2 = theBatch.id;
-
-        getDs().find(BatchData.class)
-                .filter(eq("_id", id),
-                        eq("files.fileName", "fileName1"))
-                .update(set("files.$.fileHash", "new hash"));
-
-        BatchData data = getDs().find(BatchData.class)
-                .filter(eq("_id", id)).iterator(new FindOptions().limit(1))
-                .tryNext();
-
-        assertEquals(data.files.get(0).fileHash, "new hash");
-        assertEquals(data.files.get(1).fileHash, "fileHash2");
-
-        data = getDs().find(BatchData.class)
-                .filter(eq("_id", id2))
-                .iterator(new FindOptions().limit(1))
-                .tryNext();
-
-        assertEquals(data.files.get(0).fileHash, "fileHash3");
-        assertEquals(data.files.get(1).fileHash, "fileHash4");
-    }
 
     @Test
     public void testUpdatesWithArrayFilters() {
@@ -132,39 +62,4 @@ public class TestArrayUpdates extends TestBase {
                 .tryNext());
 
     }
-
-    @Entity
-    private static class BatchData {
-
-        private final List<Files> files = new ArrayList<>();
-        @Id
-        private ObjectId id;
-
-        @Override
-        public String toString() {
-            return format("BatchData{id=%s, files=%s}", id, files);
-        }
-    }
-
-    @Entity
-    private static class Files {
-        private int position;
-        private String fileName = "";
-        private String fileHash = "";
-
-        public Files() {
-        }
-
-        public Files(int pos, String fileName, String fileHash) {
-            this.position = pos;
-            this.fileName = fileName;
-            this.fileHash = fileHash;
-        }
-
-        @Override
-        public String toString() {
-            return format("Files{fileHash='%s', fileName='%s', position=%d}", fileHash, fileName, position);
-        }
-    }
-
 }

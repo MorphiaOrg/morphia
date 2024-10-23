@@ -1,5 +1,5 @@
-{ studentId: '2345', testPercentiles: [ 80, 81 ] },
-{ studentId: '2356', testPercentiles: [ 79, 83 ] },
-{ studentId: '2358', testPercentiles: [ 78, 82 ] },
-{ studentId: '2367', testPercentiles: [ 72, 77 ] },
-{ studentId: '2369', testPercentiles: [ 60, 72 ] }
+{ studentId: '2356', test01_95percentile: [ 62 ] },
+{ studentId: '2369', test01_95percentile: [ 62 ] },
+{ studentId: '2345', test01_95percentile: [ 64 ] },
+{ studentId: '2367', test01_95percentile: [ 67 ] },
+{ studentId: '2358', test01_95percentile: [ 67 ] }

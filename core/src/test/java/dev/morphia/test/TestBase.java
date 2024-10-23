@@ -63,8 +63,6 @@ public abstract class TestBase extends MorphiaTestSetup {
         }
     }
 
-    protected DriverVersion minDriver = DriverVersion.v41;
-
     public TestBase() {
     }
 
@@ -261,8 +259,24 @@ public abstract class TestBase extends MorphiaTestSetup {
 
     protected List<Document> removeIds(List<Document> documents) {
         return documents.stream()
-                .peek(d -> d.remove("_id"))
+                .peek(d -> removeId(d))
                 .collect(toList());
+    }
+
+    private static Object removeId(Document d) {
+        Object doc = d.remove("_id");
+        d.values().forEach(v -> {
+            if (v instanceof Document document) {
+                removeId(document);
+            } else if (v instanceof List<?> list) {
+                list.forEach(e -> {
+                    if (e instanceof Document document) {
+                        removeId(document);
+                    }
+                });
+            }
+        });
+        return doc;
     }
 
     protected Document toDocument(Object entity) {
@@ -344,11 +358,6 @@ public abstract class TestBase extends MorphiaTestSetup {
         if (!expected.getClass().equals(actual.getClass())) {
             assertEquals(actual, expected, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
         }
-    }
-
-    @BeforeMethod
-    private void setDriverMinimum() {
-        minDriver = DriverVersion.v43;
     }
 
     public static class ZDTCodecProvider implements CodecProvider {

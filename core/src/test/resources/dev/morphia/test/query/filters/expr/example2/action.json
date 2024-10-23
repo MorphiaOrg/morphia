@@ -1,0 +1,8 @@
+let discountedPrice = { 
+   $cond: { 
+      if: { $gte: ["$qty", 100] }, 
+      then: { $multiply: ["$price", 0.50] }, 
+      else: { $multiply: ["$price", 0.75] } 
+   } 
+};
+db.supplies.find( { $expr: { $lt:[ discountedPrice,  5 ] } })

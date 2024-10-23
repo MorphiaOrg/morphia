@@ -21,6 +21,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.ValidationOptions;
+import com.mongodb.client.model.geojson.codecs.GeoJsonCodecProvider;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertManyResult;
 import com.mongodb.client.result.InsertOneResult;
@@ -52,6 +53,7 @@ import dev.morphia.mapping.codec.MorphiaCodecProvider;
 import dev.morphia.mapping.codec.MorphiaExpressionCodecProvider;
 import dev.morphia.mapping.codec.MorphiaFilterCodecProvider;
 import dev.morphia.mapping.codec.MorphiaTypesCodecProvider;
+import dev.morphia.mapping.codec.MorphiaUpdateOperatorCodecProvider;
 import dev.morphia.mapping.codec.PrimitiveCodecRegistry;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.MergingEncoder;
@@ -168,10 +170,12 @@ public class MorphiaDatastore implements Datastore {
                 new EnumCodecProvider(),
                 new MorphiaExpressionCodecProvider(this),
                 new MorphiaFilterCodecProvider(this),
+                new MorphiaUpdateOperatorCodecProvider(this),
                 new AggregationCodecProvider(this)));
 
         providers.addAll(morphiaCodecProviders);
         providers.add(codecRegistry);
+        providers.add(new GeoJsonCodecProvider());
         codecRegistry = fromProviders(providers);
         return codecRegistry;
     }
@@ -1085,7 +1089,11 @@ public class MorphiaDatastore implements Datastore {
         @Override
         public <T> UpdateResult updateOne(MongoCollection<T> collection, Document query, Document updates,
                 UpdateOptions options) {
-            return collection.updateOne(query, updates, options);
+            try {
+                return collection.updateOne(query, updates, options);
+            } catch (MongoWriteException e) {
+                throw e;
+            }
         }
 
         @Override

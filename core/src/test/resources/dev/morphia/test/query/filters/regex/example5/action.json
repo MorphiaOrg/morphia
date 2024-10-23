@@ -1,0 +1,3 @@
+db.products.find( { sku: { $regex: /abc #category code
+
+123 #item number/x } } )

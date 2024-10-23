@@ -1,6 +1,5 @@
 package dev.morphia.test;
 
-import com.github.zafarkhaja.semver.Version;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoDatabase;
 
@@ -8,6 +7,7 @@ import dev.morphia.MorphiaDatastore;
 import dev.morphia.config.MorphiaConfig;
 
 import org.bson.Document;
+import org.semver4j.Semver;
 
 public class MorphiaContainer {
     private MorphiaDatastore datastore;
@@ -29,12 +29,12 @@ public class MorphiaContainer {
         datastore = null;
     }
 
-    protected Version getServerVersion() {
+    protected Semver getServerVersion() {
         String version = (String) mongoClient
                 .getDatabase("admin")
                 .runCommand(new Document("serverStatus", 1))
                 .get("version");
-        return Version.valueOf(version);
+        return Semver.parse(version);
     }
 
     public Document runIsMaster() {

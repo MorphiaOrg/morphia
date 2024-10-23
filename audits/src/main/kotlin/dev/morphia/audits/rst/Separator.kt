@@ -3,6 +3,7 @@
 package dev.morphia.audits.rst
 
 import com.antwerkz.expression.RegularExpression
+import com.antwerkz.expression.RegularExpression.Companion.char
 import com.antwerkz.expression.toRegex
 
 enum class Separator(val separator: Char) {
@@ -20,7 +21,7 @@ enum class Separator(val separator: Char) {
     fun partition(input: List<String>): Map<String, MutableList<String>> {
         var name = "main"
         val partitions = mutableMapOf(name to mutableListOf<String>())
-        var lines = input.toMutableList()
+        val lines = input.toMutableList()
         while (lines.isNotEmpty()) {
             partitions[name]?.plusAssign(lines.removeWhile { !section.matches(lines.first()) })
             if (lines.isNotEmpty()) {

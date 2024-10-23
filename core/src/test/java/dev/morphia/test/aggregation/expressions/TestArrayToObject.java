@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
 
 import org.testng.annotations.Test;
 
@@ -14,28 +13,27 @@ import static dev.morphia.aggregation.expressions.Expressions.document;
 import static dev.morphia.aggregation.stages.AddFields.addFields;
 import static dev.morphia.aggregation.stages.Projection.project;
 
-public class TestArrayToObject extends AggregationTest {
-    @Test
+public class TestArrayToObject extends TemplatedTestBase {
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/arrayToObject/example1
+     * 
+     */
+    @Test(testName = "``$arrayToObject``  Example")
     public void testExample1() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                project()
-                        .include("item")
-                        .include("dimensions", arrayToObject("$dimensions"))));
+        testPipeline((aggregation) -> aggregation
+                .pipeline(project().include("item").include("dimensions", arrayToObject("$dimensions"))));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/arrayToObject/example2
+     * 
+     */
+    @Test(testName = "``$objectToArray`` + ``$arrayToObject`` Example")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                addFields()
-                        .field("instock", objectToArray("$instock")),
-                addFields()
-                        .field("instock", concatArrays(
-                                "$instock",
-                                array(document()
-                                        .field("k", "total")
-                                        .field("v", sum("$instock.v"))))),
-                addFields()
-                        .field("instock", arrayToObject("$instock"))));
+        testPipeline((aggregation) -> aggregation.pipeline(addFields().field("instock", objectToArray("$instock")),
+                addFields().field("instock",
+                        concatArrays("$instock", array(document().field("k", "total").field("v", sum("$instock.v"))))),
+                addFields().field("instock", arrayToObject("$instock"))));
     }
 
 }

@@ -1,0 +1,3 @@
+{ "item": "chisel", "sku": "C001", "quantity": 4, "instock": true },
+{ "item": "hammer", "sku": "unknown", "quantity": 3, "instock": true },
+{ "item": "nails", "sku": "unknown", "quantity": 100, "instock": true }

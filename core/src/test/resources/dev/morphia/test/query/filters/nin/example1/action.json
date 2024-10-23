@@ -1,0 +1,1 @@
+db.inventory.find( { quantity: { $nin: [ 5, 15 ] } }, { _id: 0 } )

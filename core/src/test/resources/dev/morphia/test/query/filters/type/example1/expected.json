@@ -1,0 +1,2 @@
+{ _id : 1, address : "2030 Martian Way", zipCode : "90698345" }
+{ _id : 5, address : "104 Venus Drive", zipCode : [ "834847278", "1893289032" ] }

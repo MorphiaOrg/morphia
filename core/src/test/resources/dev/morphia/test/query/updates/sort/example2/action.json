@@ -1,0 +1,4 @@
+db.students.updateOne(
+   { _id: 2 },
+   { $push: { tests: { $each: [ 40, 60 ], $sort: 1 } } }
+)

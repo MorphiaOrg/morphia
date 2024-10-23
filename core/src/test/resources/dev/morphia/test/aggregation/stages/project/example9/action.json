@@ -1,0 +1,1 @@
+{ $project: { x: '$name', _id: 0 } },

@@ -1,2 +1,0 @@
-{ $currentOp: { allUsers: true, idleSessions: true } }, 
-    { $match: { desc: "transaction coordinator" } }

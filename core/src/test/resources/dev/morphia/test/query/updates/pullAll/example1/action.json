@@ -1,0 +1,1 @@
+db.survey.updateOne( { _id: 1 }, { $pullAll: { scores: [ 0, 5 ] } } )

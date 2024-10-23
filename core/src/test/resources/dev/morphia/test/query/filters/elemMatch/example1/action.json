@@ -1,0 +1,3 @@
+db.scores.find(
+   { results: { $elemMatch: { $gte: 80, $lt: 85 } } }
+)

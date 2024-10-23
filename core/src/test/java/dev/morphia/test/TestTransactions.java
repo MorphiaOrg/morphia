@@ -21,6 +21,7 @@ import dev.morphia.transactions.MorphiaSession;
 
 import org.bson.types.ObjectId;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -32,7 +33,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
 //@Tags(@Tag("transactions"))
-public class TestTransactions extends TemplatedTestBase {
+public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
     @BeforeMethod
     public void before() {
         checkForReplicaSet();
@@ -40,6 +41,11 @@ public class TestTransactions extends TemplatedTestBase {
         getDs().find(Rectangle.class).findAndDelete();
         getDs().save(new User("", LocalDate.now()));
         getDs().find(User.class).findAndDelete();
+    }
+
+    @AfterClass
+    @Override
+    public void testCoverage() {
     }
 
     @Test
@@ -158,17 +164,19 @@ public class TestTransactions extends TemplatedTestBase {
         assertEquals(getDs().find(Rectangle.class).first().getWidth(), 20, 0.5);
     }
 
-    @Test
+    @Test(testName = "transactional aggregations")
     public void aggregation() {
         getDs().withTransaction(session -> {
-            testPipeline(ServerVersion.ANY, false, false, aggregation -> {
-                loadData("aggTest2", 2);
-                return aggregation
-                        .lookup(Lookup.lookup("aggTest2")
-                                .localField("item")
-                                .foreignField("sku")
-                                .as("inventory_docs"));
-            });
+            testPipeline(
+                    new dev.morphia.test.util.ActionTestOptions().orderMatters(false),
+                    aggregation -> {
+                        loadData("aggTest2", 2);
+                        return aggregation
+                                .lookup(Lookup.lookup("aggTest2")
+                                        .localField("item")
+                                        .foreignField("sku")
+                                        .as("inventory_docs"));
+                    });
             return null;
         });
     }

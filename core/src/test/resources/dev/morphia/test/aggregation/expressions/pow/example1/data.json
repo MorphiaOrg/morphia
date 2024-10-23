@@ -1,2 +1,2 @@
-{ "_id" : 1, "scores" : [ { "name" : "dave123", "score" : 85 }, { "name" : "dave2", "score" : 90 }, { "name" : "ahn", "score" : 71 } ]}
-{ "_id" : 2, "scores" : [ { "name" : "li", "quiz" : 2, "score" : 96 }, { "name" : "annT", "score" : 77 }, { "name" : "ty", "score" : 82 } ]}
+{ _id : 1, scores : [ { name : "dave123", score : 85 }, { name : "dave2", score : 90 }, { name : "ahn", score : 71 } ] },
+{ _id : 2, scores : [ { name : "li", quiz : 2, score : 96 }, { name : "annT", score : 77 }, { name : "ty", score : 82 } ] }

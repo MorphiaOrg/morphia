@@ -1,0 +1,1 @@
+db.companies.find( { company: /MongoDB/ }, {_id: 0 })

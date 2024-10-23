@@ -1,0 +1,5 @@
+{ "donorId" : 1000, "amount" : 2, "frequency" : 1 }
+{ "donorId" : 1001, "amount" : 58, "frequency" : 2 }
+{ "donorId" : 1002, "amount" : 27, "frequency" : 1 }
+{ "donorId" : 1003, "amount" : 26, "frequency" : 2 }
+{ "donorId" : 1004, "amount" : 42, "frequency" : 1 }

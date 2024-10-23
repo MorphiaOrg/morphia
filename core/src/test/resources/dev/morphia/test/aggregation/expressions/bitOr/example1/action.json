@@ -1,0 +1,7 @@
+{ 
+    $project: { 
+      result: { 
+        $bitOr: [ "$a", "$b" ]
+      }
+    }
+  }

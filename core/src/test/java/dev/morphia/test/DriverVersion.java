@@ -1,6 +1,6 @@
 package dev.morphia.test;
 
-import com.github.zafarkhaja.semver.Version;
+import org.semver4j.Semver;
 
 public enum DriverVersion {
     ANY(0, 0),
@@ -9,7 +9,8 @@ public enum DriverVersion {
     v43(4, 3),
     v45(4, 5),
     v46(4, 6),
-    v47(4, 7);
+    v47(4, 7),
+    v52(5, 2);
 
     private final int major;
 
@@ -20,7 +21,7 @@ public enum DriverVersion {
         this.minor = minor;
     }
 
-    public final Version version() {
-        return Version.forIntegers(major, minor);
+    public final Semver version() {
+        return Semver.of(major, minor, 0);
     }
 }

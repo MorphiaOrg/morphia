@@ -18,7 +18,7 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
     public void apply(Mapper mapper, EntityModel model) {
         MorphiaConfig config = mapper.getConfig();
 
-        final Entity entity = model.getAnnotation(Entity.class);
+        Entity entity = model.getAnnotation(Entity.class);
         final ExternalEntity externalEntity = model.getAnnotation(ExternalEntity.class);
         if (entity != null) {
             model.discriminatorEnabled(entity.useDiscriminator());
@@ -26,20 +26,21 @@ public class MorphiaDefaultsConvention implements MorphiaConvention {
         } else if (externalEntity != null) {
             model.discriminatorEnabled(externalEntity.useDiscriminator());
             model.discriminatorKey(applyDefaults(externalEntity.discriminatorKey(), config.discriminatorKey()));
-            model.annotation(EntityBuilder.entityBuilder()
+            entity = EntityBuilder.entityBuilder()
                     .cap(externalEntity.cap())
                     .concern(externalEntity.concern())
                     .discriminator(externalEntity.discriminator())
                     .discriminatorKey(externalEntity.discriminatorKey())
                     .value(externalEntity.value())
                     .useDiscriminator(externalEntity.useDiscriminator())
-                    .build());
+                    .build();
+            model.annotation(entity);
         }
 
-        config.discriminator().apply(model);
+        model.discriminator(config.discriminator().apply(model.getType(), entity.discriminator()));
     }
 
-    String applyDefaults(String configured, String defaultValue) {
+    public static String applyDefaults(String configured, String defaultValue) {
         if (!configured.equals(Mapper.IGNORED_FIELDNAME)) {
             return configured;
         } else {

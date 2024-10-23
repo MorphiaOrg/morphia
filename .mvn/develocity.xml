@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+
+<!-- Common develocity.xml configuration for Maven shared between CI agents and developers building locally.
+
+     The build cache credentials required for CI builds to write to the remote build cache are read from environment variables.
+     Possibly, the credentials are configured in Jenkins via Credentials plugin (https://plugins.jenkins.io/credentials/) and
+     Credentials Binding plugin (https://plugins.jenkins.io/credentials-binding/), or the credentials are injected using the
+     vendor-specific mechanism of the CI server running the build.
+
+     Note: In the XML configuration below, you need to adjust
+
+             - the server url of your Develocity server
+             - the name of the environment variable that reveals the build is running in a CI environment
+             - the names of the environment variables holding the build cache credentials
+
+           to the specifics of your CI server settings. -->
+
+<develocity
+        xmlns="https://www.gradle.com/develocity-maven" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="https://www.gradle.com/develocity-maven https://www.gradle.com/schema/develocity-maven.xsd">
+    <server>
+        <url>https://develocity.commonhaus.dev</url> <!-- adjust to your Develocity server -->
+        <allowUntrusted>false</allowUntrusted> <!-- ensure a trusted certificate is configured -->
+    </server>
+    <projectId>morphia</projectId>
+    <buildScan>
+        <backgroundBuildScanUpload>#{isFalse(env['CI'])}</backgroundBuildScanUpload> <!-- adjust to your CI provider -->
+        <publishing>
+            <onlyIf><![CDATA[authenticated && isTrue(env['CI'])]]></onlyIf>
+        </publishing>
+        <obfuscation>
+            <ipAddresses>#{{'0.0.0.0'}}</ipAddresses>
+            <username>#{isTrue(env['CI']) ? 'GH actions' : 'Carmen Sandiego'}</username>
+        </obfuscation>
+    </buildScan>
+    <buildCache>
+        <local>
+            <enabled>false</enabled>
+        </local>
+        <remote>
+            <enabled>false</enabled>
+            <storeEnabled>#{isTrue(env['CI'])}</storeEnabled> <!-- adjust to your CI provider -->
+        </remote>
+    </buildCache>
+</develocity>

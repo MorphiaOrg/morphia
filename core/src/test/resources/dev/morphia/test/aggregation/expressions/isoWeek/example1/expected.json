@@ -1,2 +1,2 @@
-{ "city" : "Boston", "weekNumber" : 43 }
-{ "city" : "Detroit", "weekNumber" : 33 }
+{ city: "Boston", weekNumber: 43 },
+{ city: "Detroit", weekNumber: 33 }

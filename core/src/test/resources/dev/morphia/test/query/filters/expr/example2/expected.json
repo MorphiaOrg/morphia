@@ -1,0 +1,3 @@
+{ _id : 2, item : "notebook", qty : 200 , price : NumberDecimal("8") }
+{ _id : 3, item : "pencil", qty : 50 , price : NumberDecimal("6") }
+{ _id : 4, item : "eraser", qty : 150 , price : NumberDecimal("3") }

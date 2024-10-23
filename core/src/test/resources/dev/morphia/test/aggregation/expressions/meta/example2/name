@@ -1,1 +1,1 @@
-``$meta: "indexKey"`` :: Aggregation
+``$meta: "textScore"`` :: Find and Project

@@ -1,0 +1,11 @@
+db.students.updateOne(
+   { _id: 1 },
+   {
+     $push: {
+       quizzes: {
+         $each: [ { id: 3, score: 8 }, { id: 4, score: 7 }, { id: 5, score: 6 } ],
+         $sort: { score: 1 }
+       }
+     }
+   }
+)

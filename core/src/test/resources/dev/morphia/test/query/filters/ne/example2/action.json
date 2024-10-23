@@ -1,0 +1,4 @@
+   db.inventory.updateMany( 
+      { "carrier.fee" : { $ne: 1 } }, 
+      { $set: { "price": 9.99 } } 
+   )

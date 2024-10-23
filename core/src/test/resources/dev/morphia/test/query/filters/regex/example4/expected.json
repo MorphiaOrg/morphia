@@ -1,0 +1,2 @@
+{ _id: 102, sku: 'xyz456', description: 'Many spaces before line' },
+{ _id: 103, sku: 'xyz789', description: 'Multiple\nline description' }

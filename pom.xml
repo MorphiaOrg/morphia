@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.antwerkz</groupId>
         <artifactId>antwerkz-parent</artifactId>
-        <version>39</version>
+        <version>44</version>
     </parent>
 
     <groupId>dev.morphia.morphia</groupId>
@@ -42,27 +42,32 @@
     </repositories>
 
     <properties>
-        <kotlin.version>2.0.0</kotlin.version>
+        <kotlin.version>2.0.21</kotlin.version>
         <awaitility.version>1.7.0</awaitility.version>
-        <driver.version>5.1.0</driver.version>
-        <driver.minor.version>5.1</driver.minor.version>
-        <jackson.version>2.17.1</jackson.version>
-        <json.assert.version>1.5.1</json.assert.version>
-        <logback.version>1.5.6</logback.version>
-        <maven.version>3.9.7</maven.version>
+        <driver.version>5.2.0</driver.version>
+        <driver.minor.version>5.2</driver.minor.version>
+        <jackson.version>2.18.0</jackson.version>
+        <json.assert.version>1.5.3</json.assert.version>
+        <javapoet.version>1.13.0</javapoet.version>
+        <kotlinpoet.version>1.19.1</kotlinpoet.version>
+        <logback.version>1.5.11</logback.version>
+        <maven.version>3.9.9</maven.version>
         <revapi.maven.plugin.version>0.15.0</revapi.maven.plugin.version>
         <revapi.java.version>0.28.1</revapi.java.version>
-        <roaster.version>2.28.0.Final</roaster.version>
-        <slf4j.version>2.0.13</slf4j.version>
+        <roaster.version>2.29.0.Final</roaster.version>
+        <slf4j.version>2.0.16</slf4j.version>
         <sofia.version>0.25</sofia.version>
         <surefire.version>3.1.0</surefire.version>
         <testng.version>7.10.2</testng.version>
+        <junit.testng.engine.version>1.0.5</junit.testng.engine.version>
         <zt.exec.version>1.12</zt.exec.version>
 
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
+        <asm.version>9.7.1</asm.version>
+        <ksp.version>2.0.21-1.0.25</ksp.version>
     </properties>
 
     <build>
@@ -78,6 +83,9 @@
                         <target>17</target>
                         <compilerArgument>-proc:none</compilerArgument>
                         <compilerArgument>-Xlint:deprecation</compilerArgument>
+                        <compilerArgs>
+                            <arg>-parameters</arg>
+                        </compilerArgs>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -146,6 +154,11 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>dev.morphia.morphia</groupId>
+                <artifactId>morphia-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
@@ -169,6 +182,12 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>org.junit.support</groupId>
+                <artifactId>testng-engine</artifactId>
+                <version>${junit.testng.engine.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-model</artifactId>
                 <version>${maven.version}</version>
@@ -182,7 +201,7 @@
             <dependency>
                 <groupId>io.smallrye.config</groupId>
                 <artifactId>smallrye-config</artifactId>
-                <version>3.8.2</version>
+                <version>3.10.0</version>
             </dependency>
 
             <dependency>
@@ -198,7 +217,7 @@
             <dependency>
                 <groupId>org.testcontainers</groupId>
                 <artifactId>mongodb</artifactId>
-                <version>1.19.8</version>
+                <version>1.20.2</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -221,14 +240,13 @@
             <dependency>
                 <groupId>org.awaitility</groupId>
                 <artifactId>awaitility</artifactId>
-                <version>4.2.1</version>
+                <version>4.2.2</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>com.github.zafarkhaja</groupId>
-                <artifactId>java-semver</artifactId>
-                <version>0.10.2</version>
-                <scope>test</scope>
+                <groupId>org.semver4j</groupId>
+                <artifactId>semver4j</artifactId>
+                <version>5.4.1</version>
             </dependency>
             <dependency>
                 <groupId>org.zeroturnaround</groupId>
@@ -257,22 +275,27 @@
             <dependency>
                 <groupId>org.kohsuke</groupId>
                 <artifactId>github-api</artifactId>
-                <version>1.321</version>
+                <version>1.326</version>
             </dependency>
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-tree</artifactId>
-                <version>9.7</version>
+                <version>${asm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-util</artifactId>
+                <version>${asm.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jsoup</groupId>
                 <artifactId>jsoup</artifactId>
-                <version>1.17.2</version>
+                <version>1.18.1</version>
             </dependency>
             <dependency>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctorj</artifactId>
-                <version>2.5.13</version>
+                <version>3.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.forge.roaster</groupId>
@@ -288,19 +311,40 @@
             <dependency>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-annotations</artifactId>
-                <version>4.8.5</version>
+                <version>4.8.6</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
                 <groupId>net.bytebuddy</groupId>
                 <artifactId>byte-buddy</artifactId>
-                <version>1.14.17</version>
+                <version>1.15.5</version>
             </dependency>
             <dependency>
                 <groupId>io.github.classgraph</groupId>
                 <artifactId>classgraph</artifactId>
-                <version>4.8.173</version>
+                <version>4.8.177</version>
             </dependency>
+            <dependency>
+                <groupId>com.google.devtools.ksp</groupId>
+                <artifactId>symbol-processing-api</artifactId>
+                <version>${ksp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.devtools.ksp</groupId>
+                <artifactId>symbol-processing-common-deps</artifactId>
+                <version>${ksp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.devtools.ksp</groupId>
+                <artifactId>symbol-processing-aa-embeddable</artifactId>
+                <version>${ksp.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup</groupId>
+                <artifactId>javapoet</artifactId>
+                <version>${javapoet.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -323,12 +367,26 @@
         <profile>
             <id>critter</id>
             <activation>
+                <activeByDefault>false</activeByDefault>
                 <property>
                     <name>critter</name>
                 </property>
             </activation>
             <modules>
                 <module>critter</module>
+            </modules>
+        </profile>
+
+        <profile>
+            <id>rewrite</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>rewrite</name>
+                </property>
+            </activation>
+            <modules>
+                <module>rewrite</module>
             </modules>
         </profile>
     </profiles>
@@ -341,6 +399,5 @@
         <module>kotlin</module>
         <module>validation</module>
         <module>examples</module>
-        <module>rewrite</module>
     </modules>
 </project>

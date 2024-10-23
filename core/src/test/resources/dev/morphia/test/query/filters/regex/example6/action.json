@@ -1,0 +1,1 @@
+db.products.find( { sku: { $regex: /(?i)a(?-i)bc/ } } )

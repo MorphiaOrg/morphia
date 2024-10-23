@@ -1,7 +1,7 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
-import dev.morphia.test.aggregation.AggregationTest;
+import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -14,27 +14,27 @@ import static dev.morphia.aggregation.stages.Lookup.lookup;
 import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.aggregation.stages.ReplaceRoot.replaceRoot;
 
-public class TestMergeObjects extends AggregationTest {
-    @Test
+public class TestMergeObjects extends TemplatedTestBase {
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/mergeObjects/example1
+     * 
+     */
+    @Test(testName = "``$mergeObjects``")
     public void testExample1() {
         loadData("items", 2);
-        testPipeline(ServerVersion.ANY, false, true, (aggregation) -> aggregation.pipeline(
-                lookup("items")
-                        .foreignField("item")
-                        .localField("item")
-                        .as("fromItems"),
-                replaceRoot(mergeObjects()
-                        .add(elementAt("$fromItems", 0))
-                        .add(ROOT)),
-                project()
-                        .exclude("fromItems")));
+        testPipeline((aggregation) -> aggregation.pipeline(
+                lookup("items").foreignField("item").localField("item").as("fromItems"),
+                replaceRoot(mergeObjects().add(elementAt("$fromItems", 0)).add(ROOT)), project().exclude("fromItems")));
     }
 
-    @Test
+    /**
+     * test data: dev/morphia/test/aggregation/expressions/mergeObjects/example2
+     * 
+     */
+    @Test(testName = "``$mergeObjects`` as an Accumulator")
     public void testExample2() {
-        testPipeline(ServerVersion.ANY, false, false, (aggregation) -> aggregation.pipeline(
-                group(id("$item"))
-                        .field("mergedSales", mergeObjects().add("$quantity"))));
+        testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
+                .pipeline(group(id("$item")).field("mergedSales", mergeObjects().add("$quantity"))));
     }
 
 }

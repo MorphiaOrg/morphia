@@ -194,7 +194,7 @@ public class MorphiaQuery<T> implements Query<T> {
     public T modify(ModifyOptions options, UpdateOperator first, UpdateOperator... updates) {
         EntityModel entityModel = mapper.getEntityModel(getEntityClass());
 
-        Operations value = new Operations(entityModel, coalesce(first, updates), validate);
+        Operations value = new Operations(datastore, entityModel, coalesce(first, updates), validate);
 
         return datastore.operations().findOneAndUpdate(datastore.configureCollection(options, collection),
                 toDocument(), value.toDocument(datastore), options);
@@ -206,8 +206,8 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public MorphiaCursor<T> iterator(FindOptions options) {
-        return new MorphiaCursor<>(prepareCursor(options, collection));
+    public MorphiaCursor<T> iterator(@Nullable FindOptions options) {
+        return new MorphiaCursor<>(prepareCursor(options != null ? options : new FindOptions(), collection));
     }
 
     /**
@@ -227,9 +227,10 @@ public class MorphiaQuery<T> implements Query<T> {
         if (invalid != null) {
             throw invalid;
         }
-        EntityModel entityModel = mapper.getEntityModel(getEntityClass());
-        Document updateOperations = new Operations(entityModel, coalesce(first, updates), isValidate())
-                .toDocument(datastore);
+        Class<T> entityClass = getEntityClass();
+        EntityModel entityModel = !entityClass.equals(Document.class) ? mapper.getEntityModel(entityClass) : null;
+        Operations operations = new Operations(datastore, entityModel, coalesce(first, updates), isValidate());
+        Document updateOperations = operations.toDocument(datastore);
 
         final Document queryObject = toDocument();
         if (options.isUpsert()) {
@@ -317,6 +318,7 @@ public class MorphiaQuery<T> implements Query<T> {
         if (options.isLogQuery()) {
             oldProfile = datastore.getDatabase().runCommand(new Document("profile", 2).append("slowms", 0));
         }
+        options.disableValidation(!isValidate());
         try {
             return options
                     .apply(iterable(options, collection), mapper, type)

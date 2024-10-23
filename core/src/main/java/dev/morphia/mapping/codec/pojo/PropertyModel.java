@@ -146,7 +146,7 @@ public class PropertyModel {
         return type.cast(annotationMap.get(type));
     }
 
-    public List<Annotation> getAnnotations() {
+    public final List<Annotation> getAnnotations() {
         return new ArrayList<>(annotationMap.values());
     }
 
@@ -323,10 +323,10 @@ public class PropertyModel {
     @Override
     public String toString() {
         return new StringJoiner(", ", PropertyModel.class.getSimpleName() + "[", "]")
-                .add("name='" + name + "'")
-                .add("mappedName='" + mappedName + "'")
-                .add("typeData=" + typeData)
-                .add("annotations=" + annotationMap.values())
+                .add("name='" + getName() + "'")
+                .add("mappedName='" + getMappedName() + "'")
+                .add("typeData=" + getTypeData())
+                .add("annotations=" + getAnnotations())
                 .toString();
     }
 
@@ -345,13 +345,6 @@ public class PropertyModel {
     }
 
     /**
-     * @return true if this field is a container type such as a List, Map, Set, or array
-     */
-    public boolean isMultipleValues() {
-        return !isScalarValue();
-    }
-
-    /**
      * @return true if this field is a reference to a foreign document
      * @see Reference
      * @see DBRef
@@ -363,7 +356,7 @@ public class PropertyModel {
     /**
      * @return true if this field is not a container type such as a List, Map, Set, or array
      */
-    public boolean isScalarValue() {
+    public final boolean isScalarValue() {
         return !isMap() && !isArray() && !isCollection();
     }
 
@@ -399,7 +392,7 @@ public class PropertyModel {
      * @param value the value to check
      * @return true if the given value should be serialized
      */
-    public boolean shouldSerialize(@Nullable Object value) {
+    public final boolean shouldSerialize(@Nullable Object value) {
         return serialization.shouldSerialize(value);
     }
 
@@ -442,7 +435,7 @@ public class PropertyModel {
         return handler;
     }
 
-    private boolean isCollection() {
+    public boolean isCollection() {
         return Collection.class.isAssignableFrom(getTypeData().getType());
     }
 

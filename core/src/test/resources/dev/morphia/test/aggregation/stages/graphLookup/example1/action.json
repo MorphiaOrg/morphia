@@ -1,0 +1,11 @@
+ [
+   {
+      $graphLookup: {
+         from: "example_test",
+         startWith: "$reportsTo",
+         connectFromField: "reportsTo",
+         connectToField: "name",
+         as: "reportingHierarchy"
+      }
+   }
+] 

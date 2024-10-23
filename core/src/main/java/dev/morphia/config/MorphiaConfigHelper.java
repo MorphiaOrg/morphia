@@ -31,7 +31,7 @@ import static java.util.stream.Collectors.joining;
  */
 @MorphiaInternal
 public class MorphiaConfigHelper {
-    static final String MORPHIA_CONFIG_PROPERTIES = "META-INF/morphia-config.properties";
+    public static final String MORPHIA_CONFIG_PROPERTIES = "META-INF/morphia-config.properties";
     final String prefix;
     private final MorphiaConfig config;
     private final boolean showComplete;

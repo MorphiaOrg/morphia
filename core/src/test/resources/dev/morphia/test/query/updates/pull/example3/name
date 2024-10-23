@@ -1,0 +1,1 @@
+Remove All Items That Match a Specified ``$pull`` Condition With :method:`~db.collection.bulkWrite()`
