@@ -12,25 +12,12 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: [ "version-update:semver-major" ]
-  - package-ecosystem: maven
-    target-branch: 2.3.x
-    directory: "/"
-    schedule:
-      interval: daily
-    ignore:
-      - dependency-name: "*"
-        update-types: [ "version-update:semver-minor", "version-update:semver-major" ]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: daily
   - package-ecosystem: "github-actions"
     target-branch: 2.4.x
-    directory: "/"
-    schedule:
-      interval: daily
-  - package-ecosystem: "github-actions"
-    target-branch: 2.3.x
     directory: "/"
     schedule:
       interval: daily
