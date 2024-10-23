@@ -13,6 +13,8 @@ jobs:
     uses: evanchooly/workflows/.github/workflows/code-audits.yml@master
   Build:
     uses: evanchooly/workflows/.github/workflows/build.yml@master
+    secrets:
+      DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
     with:
       java: 20
       saveBuild: true
@@ -80,6 +82,8 @@ jobs:
         driver: ${{ fromJson(needs.matrix.outputs.driver_latest) }}
         java: [ 11 ]
     uses: evanchooly/workflows/.github/workflows/build.yml@master
+    secrets:
+      DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
     with:
       java: ${{ matrix.java }}
       reuseBuild: true
@@ -118,11 +122,11 @@ jobs:
     uses: evanchooly/workflows/.github/workflows/jreleaser.yml@master
     secrets:
       GH_PUSH_TOKEN       : ${{ secrets.GH_PUSH_TOKEN }}
-      GPG_PASSPHRASE      : ${{ secrets.GPG_PASSPHRASE }}
+      MAVEN_GPG_PASSPHRASE      : ${{ secrets.MAVEN_GPG_PASSPHRASE }}
       GPG_PUBLIC_KEY      : ${{ secrets.GPG_PUBLIC_KEY }}
       GPG_PRIVATE_KEY     : ${{ secrets.GPG_PRIVATE_KEY }}
       SONATYPE_USERNAME   : ${{ secrets.SONATYPE_USERNAME }}
-      SONATYPE_PASSWORD   : ${{ secrets.SONATYPE_PASSWORD }}
+      SONATYPE_TOKEN   : ${{ secrets.SONATYPE_TOKEN }}
 
   Docs:
     name: Update Documentation
