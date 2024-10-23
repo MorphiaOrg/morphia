@@ -9,7 +9,8 @@ public enum DriverVersion {
     v43(4, 3),
     v45(4, 5),
     v46(4, 6),
-    v47(4, 7);
+    v47(4, 7),
+    v52(5, 2);
 
     private final int major;
 

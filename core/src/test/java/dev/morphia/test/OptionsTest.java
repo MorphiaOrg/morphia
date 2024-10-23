@@ -32,9 +32,10 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("SameParameterValue")
-public class OptionsTest {
+public class OptionsTest extends TestBase {
     @Test
     public void aggregationOptions() {
+        checkMinDriverVersion(DriverVersion.v52);
         beanScan(AggregateIterable.class, AggregationOptions.class, List.of("builder",
                 "explain",
                 "getAllowDiskUse",
