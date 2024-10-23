@@ -50,7 +50,7 @@
         <json.assert.version>1.5.3</json.assert.version>
         <javapoet.version>1.13.0</javapoet.version>
         <kotlinpoet.version>1.19.1</kotlinpoet.version>
-        <logback.version>1.5.9</logback.version>
+        <logback.version>1.5.11</logback.version>
         <maven.version>3.9.9</maven.version>
         <revapi.maven.plugin.version>0.15.0</revapi.maven.plugin.version>
         <revapi.java.version>0.28.1</revapi.java.version>
