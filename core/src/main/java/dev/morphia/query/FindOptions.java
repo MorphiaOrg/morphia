@@ -158,7 +158,9 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
             iterable.sort(mapped);
         }
         iterable.let(variables);
-        iterable.timeoutMode(timeoutMode);
+        if (timeoutMode != null) {
+            iterable.timeoutMode(timeoutMode);
+        }
         return iterable;
     }
 
