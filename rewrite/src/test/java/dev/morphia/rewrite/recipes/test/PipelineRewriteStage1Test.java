@@ -1,6 +1,6 @@
 package dev.morphia.rewrite.recipes.test;
 
-import dev.morphia.rewrite.recipes.PipelineRewrite;
+import dev.morphia.rewrite.recipes.PipelineRewriteStage1;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
@@ -8,12 +8,12 @@ import org.openrewrite.Recipe;
 
 import static org.openrewrite.java.Assertions.java;
 
-public class PipelineRewriteTest extends MorphiaRewriteTest {
+public class PipelineRewriteStage1Test extends MorphiaRewriteTest {
 
     @Override
     @NotNull
     protected Recipe getRecipe() {
-        return new PipelineRewrite();
+        return new PipelineRewriteStage1();
     }
 
     @Test
