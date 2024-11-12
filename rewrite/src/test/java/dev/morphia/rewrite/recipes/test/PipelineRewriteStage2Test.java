@@ -82,20 +82,24 @@ public class PipelineRewriteStage2Test extends MorphiaRewriteTest {
                                 """));
     }
 
-    @Override
-    protected @NotNull String findMorphiaCore() {
-        return classesFolder;
-    }
+    /*
+     * @Override
+     * protected @NotNull String findMorphiaCore() {
+     * return classesFolder;
+     * }
+     */
 
-    public String[] classpath() {
-        return findMongoArtifacts().toArray(new String[0]);
-    }
+    /*
+     * public String[] classpath() {
+     * return findMongoArtifacts().toArray(new String[0]);
+     * }
+     */
 
     @Override
     public void defaults(RecipeSpec spec) {
         Builder<? extends JavaParser, ?> builder = JavaParser.fromJavaVersion()
                 .addClasspathEntry(Path.of(classesFolder));
-        findMongoArtifacts().stream().map(Path::of)
+        findMongoDependencies().stream().map(Path::of)
                 .forEach(builder::addClasspathEntry);
         spec.recipe(getRecipe())
                 .parser(builder);

@@ -8,7 +8,7 @@ import org.openrewrite.Recipe;
 
 import static org.openrewrite.java.Assertions.java;
 
-public class PipelineRewriteStage1Test extends Morphia2RewriteTest {
+public class PipelineRewriteStage1Test extends MorphiaRewriteTest {
 
     @Override
     @NotNull

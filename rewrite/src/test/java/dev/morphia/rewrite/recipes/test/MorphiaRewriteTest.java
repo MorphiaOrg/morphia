@@ -2,12 +2,14 @@ package dev.morphia.rewrite.recipes.test;
 
 import java.io.File;
 import java.net.URI;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.openrewrite.Recipe;
 import org.openrewrite.java.JavaParser;
+import org.openrewrite.java.JavaParser.Builder;
 import org.openrewrite.test.RecipeSpec;
 import org.openrewrite.test.RewriteTest;
 
@@ -16,31 +18,38 @@ import io.github.classgraph.ClassGraph;
 public abstract class MorphiaRewriteTest implements RewriteTest {
     protected List<URI> runtimeClasspath = new ClassGraph().disableNestedJarScanning().getClasspathURIs();
 
-    public String[] classpath() {
-        List<String> classpath = findMongoArtifacts();
-
-        classpath.add(findMorphiaCore());
-        return classpath.toArray(new String[0]);
-    }
-
     @Override
     public void defaults(RecipeSpec spec) {
+        //        spec.recipe(getRecipe())
+        //                .parser(JavaParser.fromJavaVersion()
+        //                        .classpath(classpath()));
+
+        Builder<? extends JavaParser, ?> builder = JavaParser.fromJavaVersion()
+                .addClasspathEntry(Path.of(findMorphiaCore()));
+        findMongoDependencies().stream()
+                .map(Path::of)
+                .forEach(builder::addClasspathEntry);
         spec.recipe(getRecipe())
-                .parser(JavaParser.fromJavaVersion()
-                        .classpath(classpath()));
+                .parser(builder);
     }
 
     @NotNull
-    protected List<String> findMongoArtifacts() {
+    protected List<String> findMongoDependencies() {
         List<String> classpath = runtimeClasspath.stream()
                 .filter(uri -> uri.toString().contains("mongodb") || uri.toString().contains("bson"))
-                .map(uri -> new File(uri).getAbsolutePath()/* .getName().replaceAll("-[0-9].*", "") */)
+                .map(uri -> new File(uri).getAbsolutePath())
                 .collect(ArrayList::new, List::add, List::addAll);
         return classpath;
     }
 
-    @NotNull
-    protected abstract String findMorphiaCore();
+    protected @NotNull String findMorphiaCore() {
+        var core = runtimeClasspath.stream()
+                .filter(uri -> uri.toString().contains("morphia-core"))
+                .map(uri -> new File(uri).getAbsolutePath())
+                .findFirst().orElseThrow().toString();
+
+        return core;
+    }
 
     @NotNull
     protected abstract Recipe getRecipe();
