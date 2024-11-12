@@ -1,55 +1,45 @@
 package dev.morphia.rewrite.recipes.test;
 
-import java.io.File;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
+import io.github.classgraph.ClassGraph;
 import org.jetbrains.annotations.NotNull;
 import org.openrewrite.Recipe;
 import org.openrewrite.java.JavaParser;
 import org.openrewrite.test.RecipeSpec;
 import org.openrewrite.test.RewriteTest;
 
-import io.github.classgraph.ClassGraph;
+import java.io.File;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class MorphiaRewriteTest implements RewriteTest {
-    public static final String ARTIFACT;
+    protected List<URI> runtimeClasspath = new ClassGraph().disableNestedJarScanning().getClasspathURIs();
 
-    public static final List<String> classpath;
+    public String[] classpath() {
+        List<String> classpath = findMongoArtifacts();
 
-    static {
-        List<URI> runtimeClasspath = new ClassGraph().disableNestedJarScanning().getClasspathURIs();
-        classpath = runtimeClasspath.stream()
-                .filter(uri -> {
-                    String string = uri.toString();
-                    return string.contains("mongodb") || string.contains("bson");
-                })
-                .map(uri -> {
-                    return new File(uri).getName().replaceAll("-[0-9].*", "");
-                })
-                .collect(ArrayList::new, List::add, List::addAll);
-        var core = runtimeClasspath.stream()
-                .filter(uri -> {
-                    String string = uri.toString();
-                    return string.contains("morphia") && string.contains("core");
-                })
-                .findFirst().orElseThrow().toString();
-        if (core.contains("morphia-core")) {
-            ARTIFACT = "morphia-core";
-        } else {
-            ARTIFACT = "morphia/core";
-        }
-
-        classpath.add(ARTIFACT);
+        classpath.add(findMorphiaCore());
+        return classpath.toArray(new String[0]);
     }
 
     @Override
     public void defaults(RecipeSpec spec) {
         spec.recipe(getRecipe())
                 .parser(JavaParser.fromJavaVersion()
-                        .classpath(classpath.toArray(new String[0])));
+                        .classpath(classpath()));
     }
+
+    @NotNull
+    protected List<String> findMongoArtifacts() {
+        List<String> classpath = runtimeClasspath.stream()
+                                                 .filter(uri -> uri.toString().contains("mongodb") || uri.toString().contains("bson"))
+                                                 .map(uri -> new File(uri).getAbsolutePath()/*.getName().replaceAll("-[0-9].*", "")*/)
+                                                 .collect(ArrayList::new, List::add, List::addAll);
+        return classpath;
+    }
+
+    @NotNull
+    protected abstract String findMorphiaCore();
 
     @NotNull
     protected abstract Recipe getRecipe();

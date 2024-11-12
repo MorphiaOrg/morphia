@@ -59,7 +59,7 @@ public interface Aggregation<T> {
 
     /**
      * Execute the aggregation. This form and {@link #execute(AggregationOptions)} should be used for pipelines with $out and $merge
-     * that do no expect any results to be returned.
+     * that do not expect any results to be returned.
      *
      * @see #execute(AggregationOptions)
      */
