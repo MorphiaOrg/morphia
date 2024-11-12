@@ -8,5 +8,7 @@ on:
 jobs:
   Build:
     uses: evanchooly/workflows/.github/workflows/pull-request.yml@master
+    secrets:
+      DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
     with:
       java: 17

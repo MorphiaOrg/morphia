@@ -3,12 +3,10 @@ name: dev.morphia.UpgradeToMorphia30
 displayName: Upgrade to Morphia 3.0
 description: Adopt new dependencies and breaking changes in moving to Morphia 3.
 recipeList:
-  - org.openrewrite.java.ChangeMethodName:
-      methodPattern: dev.morphia.aggregation.stages.Out to(..)
-      newMethodName: out
+  - dev.morphia.rewrite.recipes.PipelineRewriteStage1:
       matchOverrides: "true"
       ignoreDefinition: "false"
-  - dev.morphia.rewrite.recipes.PipelineRewrite:
+  - dev.morphia.rewrite.recipes.PipelineRewriteStage2:
       matchOverrides: "true"
       ignoreDefinition: "false"
   - org.openrewrite.java.ChangeType:

@@ -2,53 +2,53 @@ package dev.morphia.rewrite.recipes.test;
 
 import java.io.File;
 import java.net.URI;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
 import org.openrewrite.Recipe;
 import org.openrewrite.java.JavaParser;
+import org.openrewrite.java.JavaParser.Builder;
 import org.openrewrite.test.RecipeSpec;
 import org.openrewrite.test.RewriteTest;
 
 import io.github.classgraph.ClassGraph;
 
 public abstract class MorphiaRewriteTest implements RewriteTest {
-    public static final String ARTIFACT;
-
-    public static final List<String> classpath;
-
-    static {
-        List<URI> runtimeClasspath = new ClassGraph().disableNestedJarScanning().getClasspathURIs();
-        classpath = runtimeClasspath.stream()
-                .filter(uri -> {
-                    String string = uri.toString();
-                    return string.contains("mongodb") || string.contains("bson");
-                })
-                .map(uri -> {
-                    return new File(uri).getName().replaceAll("-[0-9].*", "");
-                })
-                .collect(ArrayList::new, List::add, List::addAll);
-        var core = runtimeClasspath.stream()
-                .filter(uri -> {
-                    String string = uri.toString();
-                    return string.contains("morphia") && string.contains("core");
-                })
-                .findFirst().orElseThrow().toString();
-        if (core.contains("morphia-core")) {
-            ARTIFACT = "morphia-core";
-        } else {
-            ARTIFACT = "morphia/core";
-        }
-
-        classpath.add(ARTIFACT);
-    }
+    protected List<URI> runtimeClasspath = new ClassGraph().disableNestedJarScanning().getClasspathURIs();
 
     @Override
     public void defaults(RecipeSpec spec) {
+        //        spec.recipe(getRecipe())
+        //                .parser(JavaParser.fromJavaVersion()
+        //                        .classpath(classpath()));
+
+        Builder<? extends JavaParser, ?> builder = JavaParser.fromJavaVersion()
+                .addClasspathEntry(Path.of(findMorphiaCore()));
+        findMongoDependencies().stream()
+                .map(Path::of)
+                .forEach(builder::addClasspathEntry);
         spec.recipe(getRecipe())
-                .parser(JavaParser.fromJavaVersion()
-                        .classpath(classpath.toArray(new String[0])));
+                .parser(builder);
+    }
+
+    @NotNull
+    protected List<String> findMongoDependencies() {
+        List<String> classpath = runtimeClasspath.stream()
+                .filter(uri -> uri.toString().contains("mongodb") || uri.toString().contains("bson"))
+                .map(uri -> new File(uri).getAbsolutePath())
+                .collect(ArrayList::new, List::add, List::addAll);
+        return classpath;
+    }
+
+    protected @NotNull String findMorphiaCore() {
+        var core = runtimeClasspath.stream()
+                .filter(uri -> uri.toString().contains("morphia-core"))
+                .map(uri -> new File(uri).getAbsolutePath())
+                .findFirst().orElseThrow().toString();
+
+        return core;
     }
 
     @NotNull

@@ -1,26 +1,19 @@
 package dev.morphia.rewrite.recipes;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.StringJoiner;
 
 import org.jetbrains.annotations.NotNull;
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.Recipe;
 import org.openrewrite.TreeVisitor;
 import org.openrewrite.java.JavaIsoVisitor;
-import org.openrewrite.java.JavaParser;
-import org.openrewrite.java.JavaTemplate;
 import org.openrewrite.java.MethodMatcher;
-import org.openrewrite.java.tree.Expression;
-import org.openrewrite.java.tree.J;
 import org.openrewrite.java.tree.J.MethodInvocation;
 
-public class PipelineRewrite extends Recipe {
+public class PipelineRewriteStage1 extends Recipe {
 
     static final String AGGREGATION = "dev.morphia.aggregation.Aggregation";
-    static final MethodMatcher pipeline = new MethodMatcher(PipelineRewrite.AGGREGATION + " pipeline(..)");
+    static final MethodMatcher pipeline = new MethodMatcher(PipelineRewriteStage1.AGGREGATION + " pipeline(..)");
     static final List<MethodMatcher> matchers = List.of(
             new MethodMatcher(AGGREGATION + " addFields(dev.morphia.aggregation.stages.AddFields)"),
             new MethodMatcher(AGGREGATION + " autoBucket(dev.morphia.aggregation.stages.AutoBucket)"),
@@ -73,11 +66,6 @@ public class PipelineRewrite extends Recipe {
 
             @Override
             public MethodInvocation visitMethodInvocation(MethodInvocation methodInvocation, @NotNull ExecutionContext context) {
-                return working(methodInvocation, context);
-                //                return notWorking(methodInvocation, context);
-            }
-
-            public MethodInvocation working(MethodInvocation methodInvocation, @NotNull ExecutionContext context) {
                 if (matchers.stream().anyMatch(matcher -> matcher.matches(methodInvocation))) {
                     return super.visitMethodInvocation(methodInvocation
                             .withName(methodInvocation.getName().withSimpleName("pipeline")),
@@ -87,40 +75,6 @@ public class PipelineRewrite extends Recipe {
                 }
             }
 
-            public MethodInvocation notWorking(MethodInvocation methodInvocation, @NotNull ExecutionContext context) {
-                if (matchers.stream().anyMatch(matcher -> matcher.matches(methodInvocation))) {
-                    MethodInvocation mi = methodInvocation;
-                    List<Expression> arguments = new ArrayList<>();
-                    Expression expression = mi;
-                    while (expression instanceof MethodInvocation invocation) {
-                        arguments.add(invocation.getArguments().get(0));
-                        mi = invocation;
-                        expression = mi.getSelect();
-                    }
-                    Collections.reverse(arguments);
-
-                    return applyTemplate(expression, arguments, expression);
-                } else {
-                    return super.visitMethodInvocation(methodInvocation, context);
-
-                }
-            }
-
-            private J.MethodInvocation applyTemplate(Expression expression, List<Expression> arguments, Expression target) {
-                String code = buildTemplate(expression, arguments);
-                return JavaTemplate.builder(code)
-                        .contextSensitive()
-                        .javaParser(JavaParser.fromJavaVersion())
-                        .build()
-                        .apply(getCursor(), target.getCoordinates().replace());
-            }
-
-            private String buildTemplate(Expression toReplace, List<Expression> arguments) {
-                StringJoiner joiner = new StringJoiner(",\n\t", toReplace + ".pipeline(", ")");
-                arguments.forEach(argument -> joiner.add(argument.toString()));
-
-                return joiner.toString();
-            }
         };
     }
 }
