@@ -1,16 +1,17 @@
 package dev.morphia.rewrite.recipes.test;
 
-import dev.morphia.rewrite.recipes.UnwrapFieldExpressions;
-
-import io.github.classgraph.ClassGraph;
-import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Test;
-import org.openrewrite.Recipe;
-
 import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+
+import dev.morphia.rewrite.recipes.UnwrapFieldExpressions;
+
+import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Test;
+import org.openrewrite.Recipe;
+
+import io.github.classgraph.ClassGraph;
 
 import static org.openrewrite.java.Assertions.java;
 
@@ -20,14 +21,14 @@ public class UnwrapFieldTest extends Morphia2RewriteTest {
     public String[] classpath() {
         List<URI> runtimeClasspath = new ClassGraph().disableNestedJarScanning().getClasspathURIs();
         List<String> classpath = runtimeClasspath.stream()
-                                                 .filter(uri -> {
+                .filter(uri -> {
                     String string = uri.toString();
                     return string.contains("mongodb") || string.contains("bson");
                 })
-                                                 .map(uri -> {
+                .map(uri -> {
                     return new File(uri).getName().replaceAll("-[0-9].*", "");
                 })
-                                                 .collect(ArrayList::new, List::add, List::addAll);
+                .collect(ArrayList::new, List::add, List::addAll);
         var core = runtimeClasspath.stream()
                 .filter(uri -> {
                     String string = uri.toString();

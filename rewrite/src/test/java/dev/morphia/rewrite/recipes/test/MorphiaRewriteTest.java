@@ -1,16 +1,17 @@
 package dev.morphia.rewrite.recipes.test;
 
-import io.github.classgraph.ClassGraph;
+import java.io.File;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jetbrains.annotations.NotNull;
 import org.openrewrite.Recipe;
 import org.openrewrite.java.JavaParser;
 import org.openrewrite.test.RecipeSpec;
 import org.openrewrite.test.RewriteTest;
 
-import java.io.File;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
+import io.github.classgraph.ClassGraph;
 
 public abstract class MorphiaRewriteTest implements RewriteTest {
     protected List<URI> runtimeClasspath = new ClassGraph().disableNestedJarScanning().getClasspathURIs();
@@ -32,9 +33,9 @@ public abstract class MorphiaRewriteTest implements RewriteTest {
     @NotNull
     protected List<String> findMongoArtifacts() {
         List<String> classpath = runtimeClasspath.stream()
-                                                 .filter(uri -> uri.toString().contains("mongodb") || uri.toString().contains("bson"))
-                                                 .map(uri -> new File(uri).getAbsolutePath()/*.getName().replaceAll("-[0-9].*", "")*/)
-                                                 .collect(ArrayList::new, List::add, List::addAll);
+                .filter(uri -> uri.toString().contains("mongodb") || uri.toString().contains("bson"))
+                .map(uri -> new File(uri).getAbsolutePath()/* .getName().replaceAll("-[0-9].*", "") */)
+                .collect(ArrayList::new, List::add, List::addAll);
         return classpath;
     }
 

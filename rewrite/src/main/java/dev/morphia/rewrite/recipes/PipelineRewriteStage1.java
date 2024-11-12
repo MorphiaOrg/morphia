@@ -69,7 +69,7 @@ public class PipelineRewriteStage1 extends Recipe {
                 if (matchers.stream().anyMatch(matcher -> matcher.matches(methodInvocation))) {
                     return super.visitMethodInvocation(methodInvocation
                             .withName(methodInvocation.getName().withSimpleName("pipeline")),
-                        context);
+                            context);
                 } else {
                     return super.visitMethodInvocation(methodInvocation, context);
                 }

@@ -2,15 +2,9 @@ package dev.morphia.rewrite.recipes.test;
 
 import dev.morphia.rewrite.recipes.PipelineRewriteStage1;
 
-import io.github.classgraph.ClassGraph;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.openrewrite.Recipe;
-
-import java.io.File;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.openrewrite.java.Assertions.java;
 
