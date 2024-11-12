@@ -31,7 +31,7 @@ public class PipelineRewriteStage2 extends Recipe {
     public TreeVisitor<?, ExecutionContext> getVisitor() {
         return Preconditions.check(new UsesMethod<>(PIPELINE), new JavaIsoVisitor<>() {
 
-            public MethodInvocation visitMethodInvocation(MethodInvocation method, ExecutionContext p) {
+            public MethodInvocation visitMethodInvocation(MethodInvocation method, ExecutionContext ignored) {
                 if (!PIPELINE.matches(method.getSelect())) {
                     return method;
                 }
