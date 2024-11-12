@@ -67,7 +67,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
         <asm.version>9.7.1</asm.version>
-        <ksp.version>2.0.21-1.0.25</ksp.version>
+        <ksp.version>2.0.21-1.0.27</ksp.version>
     </properties>
 
     <build>
