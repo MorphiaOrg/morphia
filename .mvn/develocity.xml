@@ -24,9 +24,9 @@
     </server>
     <projectId>morphia</projectId>
     <buildScan>
-        <backgroundBuildScanUpload>#{isFalse(env['CI'] && env['GITHUB_HEAD_REF'] == null)}</backgroundBuildScanUpload> <!-- adjust to your CI provider -->
+        <backgroundBuildScanUpload><![CDATA[#{isFalse(env['CI']) && env['GITHUB_HEAD_REF'] == null}]]></backgroundBuildScanUpload>
         <publishing>
-            <onlyIf><![CDATA[authenticated && isTrue(env['CI'] && env['GITHUB_HEAD_REF'] == null)]]></onlyIf>
+            <onlyIf><![CDATA[authenticated && isTrue(env['CI']) && env['GITHUB_HEAD_REF'] == null]]></onlyIf>
         </publishing>
         <obfuscation>
             <ipAddresses>#{{'0.0.0.0'}}</ipAddresses>
@@ -39,7 +39,7 @@
         </local>
         <remote>
             <enabled>false</enabled>
-            <storeEnabled>#{isTrue(env['CI'] && env['GITHUB_HEAD_REF'] == null)}</storeEnabled> <!-- adjust to your CI provider -->
+            <storeEnabled><![CDATA[#{isTrue(env['CI']) && env['GITHUB_HEAD_REF'] == null}]]></storeEnabled>
         </remote>
     </buildCache>
 </develocity>
