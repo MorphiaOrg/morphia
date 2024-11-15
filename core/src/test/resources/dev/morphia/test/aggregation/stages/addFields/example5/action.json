@@ -1,0 +1,3 @@
+{
+      $addFields: { date: "$$REMOVE" }
+   }

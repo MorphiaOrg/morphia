@@ -53,4 +53,12 @@ public class TestUnionWith extends TemplatedTestBase {
                         document("_id", 5).field("flavor", "vanilla").field("price", 20)))));
     }
 
+    /**
+     * test data: dev/morphia/test/aggregation/stages/unionWith/example4
+     */
+    @Test(testName = "Namespaces in Subpipelines")
+    public void testExample4() {
+        // this is just an error case in the docs. nothing to test.
+    }
+
 }

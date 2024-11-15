@@ -1,0 +1,3 @@
+{ date: ISODate("2024-10-09"), temperature: 80 },
+{ date: null, temperature: 83 },
+{ date: ISODate("2024-12-09"), temperature: 85 }

@@ -13,6 +13,7 @@ import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.concatArrays;
 import static dev.morphia.aggregation.expressions.MathExpressions.add;
+import static dev.morphia.aggregation.expressions.SystemVariables.REMOVE;
 import static dev.morphia.aggregation.stages.AddFields.addFields;
 import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.query.filters.Filters.eq;
@@ -73,6 +74,17 @@ public class TestAddFields extends TemplatedTestBase {
     public void testExample4() {
         testPipeline((aggregation) -> aggregation.pipeline(match(eq("_id", 1)),
                 addFields().field("homework", concatArrays("$homework", array(7)))));
+    }
+
+    /**
+     * test data: dev/morphia/test/aggregation/stages/addFields/example5
+     * 
+     * db.labReadings.aggregate( [ { $addFields: { date: "$$REMOVE" } } ] )
+     */
+    @Test(testName = "Remove Fields")
+    public void testExample5() {
+        testPipeline(new ActionTestOptions().removeIds(true),
+                aggregation -> aggregation.pipeline(addFields().field("date", REMOVE)));
     }
 
 }
