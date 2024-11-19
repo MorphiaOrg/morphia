@@ -10,7 +10,7 @@ class PipelineVisitor extends JavaIsoVisitor<ExecutionContext> {
 
     @Override
     public MethodInvocation visitMethodInvocation(MethodInvocation methodInvocation, @NotNull ExecutionContext context) {
-        if (PipelineRewriteStage1.pipeline.matches(methodInvocation)) {
+        if (PipelineRewrite.pipeline.matches(methodInvocation)) {
             Expression select = methodInvocation.getSelect();
             System.out.println("\n\nselect = " + select);
             System.out.println("select.getSideEffects() = " + select.getSideEffects());

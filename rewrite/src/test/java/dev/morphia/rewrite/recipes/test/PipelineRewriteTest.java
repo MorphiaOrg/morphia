@@ -1,6 +1,6 @@
 package dev.morphia.rewrite.recipes.test;
 
-import dev.morphia.rewrite.recipes.PipelineRewriteStage1;
+import dev.morphia.rewrite.recipes.PipelineRewrite;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
@@ -8,12 +8,12 @@ import org.openrewrite.Recipe;
 
 import static org.openrewrite.java.Assertions.java;
 
-public class PipelineRewriteStage1Test extends MorphiaRewriteTest {
+public class PipelineRewriteTest extends MorphiaRewriteTest {
 
     @Override
     @NotNull
     protected Recipe getRecipe() {
-        return new PipelineRewriteStage1();
+        return new PipelineRewrite();
     }
 
     @Test
@@ -64,11 +64,7 @@ public class PipelineRewriteStage1Test extends MorphiaRewriteTest {
                                 public class UnwrapTest {
                                     public void update(Aggregation<?> aggregation) {
                                         aggregation
-                                            .pipeline(group(id("author")).field("count", sum(value(1))))
-                                            .pipeline(sort().ascending("1"))
-                                            .pipeline(sort().ascending("2"))
-                                            .pipeline(sort().ascending("3"))
-                                            .pipeline(sort().ascending("4"))
+                                            .pipeline(group(id("author")).field("count", sum(value(1))),sort().ascending("1"),sort().ascending("2"),sort().ascending("3"),sort().ascending("4"))
                                             .execute(Document.class);
                                     }
                                 }

@@ -1,19 +1,25 @@
 package dev.morphia.rewrite.recipes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.Recipe;
 import org.openrewrite.TreeVisitor;
 import org.openrewrite.java.JavaIsoVisitor;
 import org.openrewrite.java.MethodMatcher;
 import org.openrewrite.java.tree.J.MethodInvocation;
+import org.openrewrite.java.tree.MethodCall;
 
-public class PipelineRewriteStage1 extends Recipe {
-
+public class PipelineRewrite extends Recipe {
     static final String AGGREGATION = "dev.morphia.aggregation.Aggregation";
-    static final MethodMatcher pipeline = new MethodMatcher(PipelineRewriteStage1.AGGREGATION + " pipeline(..)");
+
+    public static final MethodMatcher PIPELINE = new MethodMatcher(AGGREGATION + " pipeline(..)");
+
+    static final MethodMatcher pipeline = new MethodMatcher(PipelineRewrite.AGGREGATION + " pipeline(..)");
+
     static final List<MethodMatcher> matchers = List.of(
             new MethodMatcher(AGGREGATION + " addFields(dev.morphia.aggregation.stages.AddFields)"),
             new MethodMatcher(AGGREGATION + " autoBucket(dev.morphia.aggregation.stages.AutoBucket)"),
@@ -49,6 +55,14 @@ public class PipelineRewriteStage1 extends Recipe {
             new MethodMatcher(AGGREGATION + " unset(dev.morphia.aggregation.stages.Unset)"),
             new MethodMatcher(AGGREGATION + " unwind(dev.morphia.aggregation.stages.Unwind)"));
 
+    private static final MethodMatcher MEGA_MATCHER = new MethodMatcher(
+            AGGREGATION + " addFields(dev.morphia.aggregation.stages.AddFields)") {
+        @Override
+        public boolean matches(@Nullable MethodCall methodCall) {
+            return matchers.stream().anyMatch(matcher -> matcher.matches(methodCall)) || PIPELINE.matches(methodCall);
+        }
+    };
+
     @Override
     public String getDisplayName() {
         return "Aggregation pipeline rewrite";
@@ -62,14 +76,18 @@ public class PipelineRewriteStage1 extends Recipe {
     @Override
     public TreeVisitor<?, ExecutionContext> getVisitor() {
 
-        return new JavaIsoVisitor<ExecutionContext>() {
-
+        return new JavaIsoVisitor<>() {
             @Override
-            public MethodInvocation visitMethodInvocation(MethodInvocation methodInvocation, @NotNull ExecutionContext context) {
-                if (matchers.stream().anyMatch(matcher -> matcher.matches(methodInvocation))) {
-                    return super.visitMethodInvocation(methodInvocation
-                            .withName(methodInvocation.getName().withSimpleName("pipeline")),
-                            context);
+            public MethodInvocation visitMethodInvocation(@NotNull MethodInvocation methodInvocation, @NotNull ExecutionContext context) {
+                if (MEGA_MATCHER.matches(methodInvocation)) {
+                    var updated = methodInvocation;
+                    while (MEGA_MATCHER.matches(updated) && MEGA_MATCHER.matches(updated.getSelect())) {
+                        MethodInvocation invocation = (MethodInvocation) updated.getSelect();
+                        var args = new ArrayList<>(invocation.getArguments());
+                        args.addAll(updated.getArguments());
+                        updated = invocation.withArguments(args);
+                    }
+                    return updated.withName(methodInvocation.getName().withSimpleName("pipeline"));
                 } else {
                     return super.visitMethodInvocation(methodInvocation, context);
                 }
