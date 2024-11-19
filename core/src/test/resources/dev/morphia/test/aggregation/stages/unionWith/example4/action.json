@@ -1,0 +1,5 @@
+{
+   $unionWith: {
+      coll: "cakeFlavors",
+      pipeline: [ { $documents: [] } ] }
+}

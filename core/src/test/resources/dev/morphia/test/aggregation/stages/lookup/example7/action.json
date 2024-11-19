@@ -1,0 +1,7 @@
+{
+   $lookup: {
+      from: "cakeFlavors",
+      pipeline: [ { $documents: [ {} ] } ],
+      as: "test"
+   }
+}
