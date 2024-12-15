@@ -90,7 +90,6 @@
             <groupId>dev.morphia.morphia</groupId>
             <artifactId>morphia-core</artifactId>
             <version>${morphia.prior.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>

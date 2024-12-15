@@ -1,6 +1,7 @@
 package dev.morphia.rewrite.recipes;
 
 import dev.morphia.rewrite.recipes.CreateDatastoreMigration.CreateDatastoreMigrationVisitor;
+
 import org.jetbrains.annotations.NotNull;
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.Preconditions;

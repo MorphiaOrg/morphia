@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import org.jetbrains.annotations.NotNull;
 import org.openrewrite.Cursor;
 import org.openrewrite.ExecutionContext;
@@ -18,8 +20,6 @@ import org.openrewrite.java.search.UsesType;
 import org.openrewrite.java.tree.Expression;
 import org.openrewrite.java.tree.J.Identifier;
 import org.openrewrite.java.tree.J.MethodInvocation;
-
-import javax.annotation.Nullable;
 
 import static java.util.List.of;
 import static org.openrewrite.java.tree.JavaType.buildType;
@@ -73,12 +73,12 @@ public class CreateDatastoreMigration extends Recipe {
 
         public static Expression convertToMorphiaConfig(Cursor cursor, Expression builder, @Nullable Expression databaseName) {
             JavaTemplate databaseCall = (databaseName != null
-                                                      ? JavaTemplate.builder("MorphiaConfig.load().database(#{})")
-                                                       :JavaTemplate.builder("MorphiaConfig.load()"))
-                                                                  .javaParser(JavaParser.fromJavaVersion()
-                                                                                        .classpath("morphia-core"))
-                                                                  .imports(NEW_TYPE)
-                                                                  .build();
+                    ? JavaTemplate.builder("MorphiaConfig.load().database(#{})")
+                    : JavaTemplate.builder("MorphiaConfig.load()"))
+                    .javaParser(JavaParser.fromJavaVersion()
+                            .classpath("morphia-core"))
+                    .imports(NEW_TYPE)
+                    .build();
 
             Cursor scope = new Cursor(cursor, builder);
             MethodInvocation applied;
@@ -92,8 +92,7 @@ public class CreateDatastoreMigration extends Recipe {
 
             expressions.set(0, applied);
             expressions.remove(1);
-            expressions.removeIf(
-                    expression -> expression instanceof MethodInvocation invocation && invocation.getSimpleName().equals("build"));
+            expressions.removeIf(e -> e instanceof MethodInvocation mi && mi.getSimpleName().equals("build"));
             return expressions.subList(1, expressions.size()).stream().reduce(expressions.get(0),
                     (current, next) -> ((MethodInvocation) next).withSelect(current));
         }
