@@ -18,7 +18,8 @@ import org.openrewrite.java.search.UsesType;
 import org.openrewrite.java.tree.Expression;
 import org.openrewrite.java.tree.J.Identifier;
 import org.openrewrite.java.tree.J.MethodInvocation;
-import org.openrewrite.java.tree.J.TypeCast;
+
+import javax.annotation.Nullable;
 
 import static java.util.List.of;
 import static org.openrewrite.java.tree.JavaType.buildType;
@@ -41,19 +42,13 @@ public class CreateDatastoreMigration extends Recipe {
     @Override
     public TreeVisitor<?, ExecutionContext> getVisitor() {
         return Preconditions.check(new UsesType<>(OLD_TYPE, true),
-                new MorphiaConfigMigrationVisitor());
+                new CreateDatastoreMigrationVisitor());
     }
 
-    private static class MorphiaConfigMigrationVisitor extends JavaIsoVisitor<ExecutionContext> {
+    public static class CreateDatastoreMigrationVisitor extends JavaIsoVisitor<ExecutionContext> {
         private static final MethodMatcher METHOD_MATCHER = new MethodMatcher(
                 "dev.morphia.Morphia createDatastore(com.mongodb.client.MongoClient, String, dev.morphia.mapping" +
                         ".MapperOptions)");
-
-        private final JavaTemplate databaseCall = JavaTemplate.builder("MorphiaConfig.load().database(#{})")
-                                .javaParser(JavaParser.fromJavaVersion()
-                                                      .classpath("morphia-core"))
-                .imports(NEW_TYPE)
-                .build();
 
         @Override
         public MethodInvocation visitMethodInvocation(@NotNull MethodInvocation methodInvocation, @NotNull ExecutionContext context) {
@@ -63,36 +58,44 @@ public class CreateDatastoreMigration extends Recipe {
 
                 List<Expression> arguments = methodInvocation.getArguments();
                 var databaseName = arguments.get(1);
-                Expression builder = arguments.get(2);
-                Cursor scope = new Cursor(getCursor(), builder);
-                MethodInvocation applied = databaseCall.apply(scope, builder.getCoordinates().replace(), databaseName);
-
-                var expressions = flatten(builder);
-
-/*
-                applied = applied.withMethodType(((MethodInvocation) builder).getMethodType()
-                        .withName("database")
-                        .withParameterTypes(
-                                of(buildType(String.class.getName()))));
-*/
-
-                expressions.set(0, applied);
-                expressions.remove(1);
-                expressions.removeIf(
-                        expression -> expression instanceof MethodInvocation invocation && invocation.getSimpleName().equals("build"));
-                var argument = expressions.subList(1, expressions.size()).stream().reduce(expressions.get(0),
-                        (current, next) -> ((MethodInvocation) next).withSelect(current));
 
                 MethodInvocation after = methodInvocation
                         .withMethodType(methodInvocation
                                 .getMethodType()
                                 .withParameterTypes(of(buildType(String.class.getName()),
                                         buildType(NEW_TYPE))))
-                        .withArguments(of(arguments.get(0), argument));
+                        .withArguments(of(arguments.get(0), convertToMorphiaConfig(getCursor(), arguments.get(2), databaseName)));
                 return maybeAutoFormat(methodInvocation, after, context);
             } else {
                 return super.visitMethodInvocation(methodInvocation, context);
             }
+        }
+
+        public static Expression convertToMorphiaConfig(Cursor cursor, Expression builder, @Nullable Expression databaseName) {
+            JavaTemplate databaseCall = (databaseName != null
+                                                      ? JavaTemplate.builder("MorphiaConfig.load().database(#{})")
+                                                       :JavaTemplate.builder("MorphiaConfig.load()"))
+                                                                  .javaParser(JavaParser.fromJavaVersion()
+                                                                                        .classpath("morphia-core"))
+                                                                  .imports(NEW_TYPE)
+                                                                  .build();
+
+            Cursor scope = new Cursor(cursor, builder);
+            MethodInvocation applied;
+            if (databaseName != null) {
+                applied = databaseCall.apply(scope, builder.getCoordinates().replace(), databaseName);
+            } else {
+                applied = databaseCall.apply(scope, builder.getCoordinates().replace());
+            }
+
+            var expressions = flatten(builder);
+
+            expressions.set(0, applied);
+            expressions.remove(1);
+            expressions.removeIf(
+                    expression -> expression instanceof MethodInvocation invocation && invocation.getSimpleName().equals("build"));
+            return expressions.subList(1, expressions.size()).stream().reduce(expressions.get(0),
+                    (current, next) -> ((MethodInvocation) next).withSelect(current));
         }
 
         private static @NotNull ArrayList<Expression> flatten(Expression start) {
@@ -109,24 +112,6 @@ public class CreateDatastoreMigration extends Recipe {
             }
             Collections.reverse(expressions);
             return expressions;
-        }
-
-        private MethodInvocation findLoad(Expression expression) {
-            if (expression instanceof MethodInvocation methodInvocation) {
-                if (methodInvocation.getSimpleName().equals("load")) {
-                    return methodInvocation;
-                }
-                Expression select = methodInvocation.getSelect();
-                if (select instanceof MethodInvocation selectInvoke) {
-                    if (selectInvoke.getSimpleName().equals("load")) {
-                        return methodInvocation;
-                    }
-                    return findLoad(select);
-                }
-            } else if (expression instanceof TypeCast typeCast) {
-                return findLoad(typeCast.getExpression());
-            }
-            throw new IllegalStateException("Could not find load()");
         }
     }
 }

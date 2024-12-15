@@ -1,5 +1,6 @@
 package dev.morphia.rewrite.recipes;
 
+import dev.morphia.rewrite.recipes.CreateDatastoreMigration.CreateDatastoreMigrationVisitor;
 import org.jetbrains.annotations.NotNull;
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.Preconditions;
@@ -8,9 +9,7 @@ import org.openrewrite.TreeVisitor;
 import org.openrewrite.java.JavaIsoVisitor;
 import org.openrewrite.java.MethodMatcher;
 import org.openrewrite.java.search.UsesType;
-import org.openrewrite.java.tree.J.Identifier;
 import org.openrewrite.java.tree.J.MethodInvocation;
-import org.openrewrite.java.tree.JavaType;
 
 public class MorphiaConfigMigration extends Recipe {
     private static final String OLD_TYPE = "dev.morphia.mapping.MapperOptions";
@@ -34,15 +33,12 @@ public class MorphiaConfigMigration extends Recipe {
     }
 
     private static class MorphiaConfigMigrationVisitor extends JavaIsoVisitor<ExecutionContext> {
-        private static final MethodMatcher BUILDER_MATCHER = new MethodMatcher("dev.morphia.mapping.MapperOptions builder()");
+        private static final MethodMatcher BUILDER_MATCHER = new MethodMatcher("dev.morphia.mapping.MapperOptions.Builder build()");
 
         @Override
         public MethodInvocation visitMethodInvocation(@NotNull MethodInvocation methodInvocation, @NotNull ExecutionContext context) {
             if (BUILDER_MATCHER.matches(methodInvocation)) {
-                return methodInvocation.withName(methodInvocation.getName().withSimpleName("load"))
-                        .withSelect(((Identifier) methodInvocation.getSelect())
-                                .withSimpleName("MorphiaConfig")
-                                .withType(JavaType.buildType(NEW_TYPE)));
+                return (MethodInvocation) CreateDatastoreMigrationVisitor.convertToMorphiaConfig(getCursor(), methodInvocation, null);
             } else {
                 return super.visitMethodInvocation(methodInvocation, context);
             }
