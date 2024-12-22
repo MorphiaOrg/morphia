@@ -15,11 +15,9 @@ import org.openrewrite.java.tree.J.MethodInvocation;
 public class MorphiaConfigMigration extends Recipe {
     private static final String OLD_TYPE = "dev.morphia.mapping.MapperOptions";
 
-    private static final String NEW_TYPE = "dev.morphia.config.MorphiaConfig";
-
     @Override
     public String getDisplayName() {
-        return "Migrate Morphia MapperOptions to MorphiaConfig";
+        return "Migrate MapperOptions to MorphiaConfig";
     }
 
     @Override
@@ -39,7 +37,8 @@ public class MorphiaConfigMigration extends Recipe {
         @Override
         public MethodInvocation visitMethodInvocation(@NotNull MethodInvocation methodInvocation, @NotNull ExecutionContext context) {
             if (BUILDER_MATCHER.matches(methodInvocation)) {
-                return (MethodInvocation) CreateDatastoreMigrationVisitor.convertToMorphiaConfig(getCursor(), methodInvocation, null);
+                return (MethodInvocation) CreateDatastoreMigrationVisitor.convertToMorphiaConfig(getCursor(),
+                        methodInvocation, null);
             } else {
                 return super.visitMethodInvocation(methodInvocation, context);
             }

@@ -18,3 +18,10 @@ recipeList:
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: dev.morphia.EntityInterceptor
       newFullyQualifiedTypeName: dev.morphia.EntityListener
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: dev.morphia.DatastoreImpl
+      newFullyQualifiedTypeName: dev.morphia.MorphiaDatastore
+  - org.openrewrite.maven.UpgradeDependencyVersion:
+      groupId: dev.morphia.morphia
+      artifactId: morphia-core
+      newVersion: 3.0.0-SNAPSHOT
