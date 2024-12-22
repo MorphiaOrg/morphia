@@ -29,6 +29,10 @@ public class CreateDatastoreMigration extends Recipe {
 
     private static final String NEW_TYPE = "dev.morphia.config.MorphiaConfig";
 
+    private static List<String> DEPRECATIONS = List.of("cacheClassLookups",
+            "disableEmbeddedIndexes",
+            "build");
+
     @Override
     public String getDisplayName() {
         return "Migrate Morphia MapperOptions to MorphiaConfig";
@@ -66,7 +70,8 @@ public class CreateDatastoreMigration extends Recipe {
                                     .getMethodType()
                                     .withParameterTypes(of(buildType(String.class.getName()),
                                             buildType(NEW_TYPE))))
-                            .withArguments(of(arguments.get(0), convertToMorphiaConfig(getCursor(), options, databaseName)));
+                            .withArguments(
+                                    of(arguments.get(0), convertToMorphiaConfig(getCursor(), options, databaseName)));
                     return maybeAutoFormat(methodInvocation, after, context);
                 } catch (RuntimeException e) {
                     System.out.println("methodInvocation = " + methodInvocation);
@@ -97,7 +102,11 @@ public class CreateDatastoreMigration extends Recipe {
                 applied = databaseCall.apply(scope, builder.getCoordinates().replace());
             }
 
-            var expressions = flatten(builder);
+            var expressions = new ArrayList<>(flatten(builder)
+                    .stream().filter(e -> {
+                        return !(e instanceof MethodInvocation mi) || !DEPRECATIONS.contains(mi.getSimpleName());
+                    })
+                    .toList());
 
             expressions.set(0, applied);
             expressions.remove(1);

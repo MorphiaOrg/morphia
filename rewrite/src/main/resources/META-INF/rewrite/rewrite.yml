@@ -3,12 +3,6 @@ name: dev.morphia.UpgradeToMorphia30
 displayName: Upgrade to Morphia 3.0
 description: Adopt new dependencies and breaking changes in moving to Morphia 3.
 recipeList:
-  - dev.morphia.rewrite.recipes.openrewrite.RemoveMethodInvocations:
-      methodPattern: dev.morphia.mapping.MapperOptions.Builder cacheClassLookups(boolean)
-  - dev.morphia.rewrite.recipes.openrewrite.RemoveMethodInvocations:
-      methodPattern: dev.morphia.mapping.MapperOptions.Builder disableEmbeddedIndexes(boolean)
-  - dev.morphia.rewrite.recipes.openrewrite.RemoveMethodInvocations:
-      methodPattern: dev.morphia.mapping.MapperOptions.Builder build()
   - dev.morphia.rewrite.recipes.PipelineRewrite
   - dev.morphia.rewrite.recipes.CreateDatastoreMigration
   - dev.morphia.rewrite.recipes.MorphiaConfigMigration

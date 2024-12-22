@@ -45,4 +45,34 @@ public class MorphiaConfigMigrationTest extends MorphiaRewriteTest {
                                 """));
     }
 
+    @Test
+    void removeOldMethods() {
+        rewriteRun(
+                //language=java
+                java(
+                        """
+                                import dev.morphia.mapping.MapperOptions;
+                                import dev.morphia.mapping.NamingStrategy;
+
+                                public class UnwrapTest {
+                                    public void update() {
+                                        MapperOptions options = MapperOptions.builder()
+                                                   .cacheClassLookups(true)
+                                                   .disableEmbeddedIndexes(true)
+                                                   .build();
+                                    }
+                                }
+                                """,
+                        """
+                                import dev.morphia.mapping.MapperOptions;
+                                import dev.morphia.mapping.NamingStrategy;
+
+                                public class UnwrapTest {
+                                    public void update() {
+                                        MapperOptions options = MorphiaConfig.load();
+                                    }
+                                }
+                                """));
+    }
+
 }
