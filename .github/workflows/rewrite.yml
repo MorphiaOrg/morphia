@@ -25,7 +25,7 @@ jobs:
       - name: Initial Build
         run: ./mvnw install -DskipTests
       - name: Hide core's main
-        run: rm -rf core/src/main
+        run: rm -rf core/src/main/java
       - name: Apply rewrites
         run: |
           ./mvnw -e -U org.openrewrite.maven:rewrite-maven-plugin:run \
