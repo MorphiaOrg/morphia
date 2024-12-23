@@ -43,8 +43,8 @@ jobs:
               }
             ]
           output_file: .m2/settings.xml
-#      - name: Initial Build
-#        run: ./mvnw install -DskipTests
+      - name: Initial Build
+        run: ./mvnw install -DskipTests
 #      - name: Hide core's main
 #        run: rm -rf core/src/main/java
       - name: Apply rewrites
