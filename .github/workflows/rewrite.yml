@@ -42,7 +42,9 @@ jobs:
                 }
               }
             ]
-          output_file: .m2/settings.xml
+          output_file: .mvn/settings.xml
+      - name: Show config
+        run: cat .mvn/settings.xml
       - name: Initial Build
         run: ./mvnw install -DskipTests
 #      - name: Hide core's main
