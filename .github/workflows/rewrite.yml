@@ -22,8 +22,29 @@ jobs:
           distribution: 'temurin'
           server-id: central
           cache: maven
-      - name: Initial Build
-        run: ./mvnw install -DskipTests
+      - name: maven-settings-xml-action
+        uses: whelk-io/maven-settings-xml-action@v22
+        with:
+          repositories: >
+            [
+              {
+                "id": "snapshot-repository",
+                "url": "https://oss.sonatype.org/content/repositories/snapshots/",
+                "releases": {
+                  "enabled": "true",
+                  "updatePolicy": "always",
+                  "checksumPolicy": "fail"
+                },
+                "snapshots": {
+                  "enabled": "tre",
+                  "updatePolicy": "always",
+                  "checksumPolicy": "fail"
+                }
+              }
+            ]
+          output_file: .m2/settings.xml
+#      - name: Initial Build
+#        run: ./mvnw install -DskipTests
 #      - name: Hide core's main
 #        run: rm -rf core/src/main/java
       - name: Apply rewrites
