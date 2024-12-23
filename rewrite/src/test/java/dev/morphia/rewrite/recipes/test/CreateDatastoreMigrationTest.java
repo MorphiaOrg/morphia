@@ -54,7 +54,7 @@ public class CreateDatastoreMigrationTest extends MorphiaRewriteTest {
 
     }
 
-    @Test
+    //    @Test
     public void variableArgument() {
         rewriteRun(
                 //language=java

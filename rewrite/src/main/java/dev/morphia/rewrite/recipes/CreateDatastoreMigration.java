@@ -20,6 +20,7 @@ import org.openrewrite.java.search.UsesType;
 import org.openrewrite.java.tree.Expression;
 import org.openrewrite.java.tree.J.Identifier;
 import org.openrewrite.java.tree.J.MethodInvocation;
+import org.openrewrite.java.tree.JavaType;
 
 import static java.util.List.of;
 import static org.openrewrite.java.tree.JavaType.buildType;
@@ -72,7 +73,7 @@ public class CreateDatastoreMigration extends Recipe {
                                             buildType(NEW_TYPE))))
                             .withArguments(
                                     of(arguments.get(0), convertToMorphiaConfig(getCursor(), options, databaseName)));
-                    return maybeAutoFormat(methodInvocation, after, context);
+                    return autoFormat(after, context);
                 } catch (RuntimeException e) {
                     System.out.println("methodInvocation = " + methodInvocation);
                     throw e;
@@ -110,7 +111,11 @@ public class CreateDatastoreMigration extends Recipe {
 
             expressions.set(0, applied);
             expressions.remove(1);
-            expressions.removeIf(e -> e instanceof MethodInvocation mi && mi.getSimpleName().equals("build"));
+
+            return rechain(expressions);
+        }
+
+        private static Expression rechain(List<Expression> expressions) {
             return expressions.subList(1, expressions.size()).stream().reduce(expressions.get(0),
                     (current, next) -> ((MethodInvocation) next).withSelect(current));
         }
@@ -122,8 +127,14 @@ public class CreateDatastoreMigration extends Recipe {
                             .classpath("morphia-core"))
                     .build();
 
-            return databaseCall.<MethodInvocation> apply(new Cursor(cursor, identifier),
-                    identifier.getCoordinates().replace(), databaseName);
+            return databaseCall.apply(new Cursor(cursor, identifier),
+                identifier.getCoordinates().replace(), databaseName);
+        }
+
+        private static Expression updateIdentifierType(Expression expression) {
+            var flattened = flatten(expression);
+            flattened.set(0, flattened.get(0).withType(JavaType.buildType(NEW_TYPE)));
+            return rechain(flattened);
         }
 
         private static @NotNull ArrayList<Expression> flatten(Expression start) {

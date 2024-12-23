@@ -39,7 +39,7 @@ public class MorphiaConfigMigrationTest extends MorphiaRewriteTest {
                                 public class UnwrapTest {
                                     public void update() {
                                         MapperOptions options = MorphiaConfig.load()
-                                            .collectionNaming(NamingStrategy.camelCase());
+                                                .collectionNaming(NamingStrategy.camelCase());
                                     }
                                 }
                                 """));

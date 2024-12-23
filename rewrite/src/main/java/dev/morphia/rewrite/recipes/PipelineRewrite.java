@@ -87,7 +87,7 @@ public class PipelineRewrite extends Recipe {
                         args.addAll(updated.getArguments());
                         updated = invocation.withArguments(args);
                     }
-                    return updated.withName(methodInvocation.getName().withSimpleName("pipeline"));
+                    return autoFormat(updated.withName(methodInvocation.getName().withSimpleName("pipeline")), context);
                 } else {
                     return super.visitMethodInvocation(methodInvocation, context);
                 }

@@ -37,8 +37,9 @@ public class MorphiaConfigMigration extends Recipe {
         @Override
         public MethodInvocation visitMethodInvocation(@NotNull MethodInvocation methodInvocation, @NotNull ExecutionContext context) {
             if (BUILDER_MATCHER.matches(methodInvocation)) {
-                return (MethodInvocation) CreateDatastoreMigrationVisitor.convertToMorphiaConfig(getCursor(),
+                MethodInvocation invocation = (MethodInvocation) CreateDatastoreMigrationVisitor.convertToMorphiaConfig(getCursor(),
                         methodInvocation, null);
+                return autoFormat(invocation, context);
             } else {
                 return super.visitMethodInvocation(methodInvocation, context);
             }
