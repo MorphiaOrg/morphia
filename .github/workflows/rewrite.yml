@@ -1,0 +1,32 @@
+name: Rewrite Tests
+
+on:
+  push:
+    branches:
+      - 'master'
+      - '2.4.x'
+  workflow_dispatch:
+
+jobs:
+  Rewrite:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: 2.4.x
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'temurin'
+          server-id: central
+          cache: maven
+      - name: Apply rewrites
+        run: |
+          rm -rf core/src/main
+          ./mvnw -e -U org.openrewrite.maven:rewrite-maven-plugin:run \
+            -Drewrite.recipeArtifactCoordinates=dev.morphia.morphia:rewrite:3.0.0-SNAPSHOT \
+            -Drewrite.activeRecipes=dev.morphia.UpgradeToMorphia30
+      - name: Test Compile
+        run: ./mvnw test-compile
