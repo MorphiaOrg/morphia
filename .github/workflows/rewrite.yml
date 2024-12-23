@@ -22,9 +22,12 @@ jobs:
           distribution: 'temurin'
           server-id: central
           cache: maven
+      - name: Initial Build
+        run: ./mvnw install -DskipTests
+      - name: Hide core's main
+        run: rm -rf core/src/main
       - name: Apply rewrites
         run: |
-          rm -rf core/src/main
           ./mvnw -e -U org.openrewrite.maven:rewrite-maven-plugin:run \
             -Drewrite.recipeArtifactCoordinates=dev.morphia.morphia:rewrite:3.0.0-SNAPSHOT \
             -Drewrite.activeRecipes=dev.morphia.UpgradeToMorphia30
