@@ -22,6 +22,7 @@ public class PipelineRewriteTest extends MorphiaRewriteTest {
                 //language=java
                 java(
                         """
+
                                 import dev.morphia.aggregation.expressions.ComparisonExpressions;
 
                                 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
@@ -31,6 +32,7 @@ public class PipelineRewriteTest extends MorphiaRewriteTest {
                                 import static dev.morphia.aggregation.expressions.Expressions.field;
                                 import static dev.morphia.aggregation.expressions.Expressions.value;
                                 import static dev.morphia.aggregation.stages.Sort.sort;
+                                import static dev.morphia.query.filters.Filters.eq;
 
                                 import dev.morphia.aggregation.Aggregation;
                                 import org.bson.Document;
@@ -38,6 +40,7 @@ public class PipelineRewriteTest extends MorphiaRewriteTest {
                                 public class UnwrapTest {
                                     public void update(Aggregation<?> aggregation) {
                                         aggregation
+                                            .match(eq("author", "Sanderson"))
                                             .group(group(id("author")).field("count", sum(value(1))))
                                             .sort(sort().ascending("1"))
                                             .sort(sort().ascending("2"))
@@ -45,8 +48,7 @@ public class PipelineRewriteTest extends MorphiaRewriteTest {
                                             .sort(sort().ascending("4"))
                                             .execute(Document.class);
                                     }
-                                }
-                                """,
+                                }""",
                         """
                                 import dev.morphia.aggregation.expressions.ComparisonExpressions;
 
@@ -57,6 +59,7 @@ public class PipelineRewriteTest extends MorphiaRewriteTest {
                                 import static dev.morphia.aggregation.expressions.Expressions.field;
                                 import static dev.morphia.aggregation.expressions.Expressions.value;
                                 import static dev.morphia.aggregation.stages.Sort.sort;
+                                import static dev.morphia.query.filters.Filters.eq;
 
                                 import dev.morphia.aggregation.Aggregation;
                                 import org.bson.Document;
@@ -64,10 +67,9 @@ public class PipelineRewriteTest extends MorphiaRewriteTest {
                                 public class UnwrapTest {
                                     public void update(Aggregation<?> aggregation) {
                                         aggregation
-                                                .pipeline(group(id("author")).field("count", sum(value(1))), sort().ascending("1"), sort().ascending("2"), sort().ascending("3"), sort().ascending("4"))
+                                                .pipeline(match(eq("author", "Sanderson")), group(id("author")).field("count", sum(value(1))), sort().ascending("1"), sort().ascending("2"), sort().ascending("3"), sort().ascending("4"))
                                             .execute(Document.class);
                                     }
-                                }
-                                """));
+                                }"""));
     }
 }

@@ -58,26 +58,21 @@ public class CreateDatastoreMigration extends Recipe {
         @Override
         public MethodInvocation visitMethodInvocation(@NotNull MethodInvocation methodInvocation, @NotNull ExecutionContext context) {
             if (METHOD_MATCHER.matches(methodInvocation)) {
-                try {
-                    maybeAddImport(NEW_TYPE, null, false);
-                    maybeRemoveImport(OLD_TYPE);
+                maybeAddImport(NEW_TYPE, null, false);
+                maybeRemoveImport(OLD_TYPE);
 
-                    List<Expression> arguments = methodInvocation.getArguments();
-                    var databaseName = arguments.get(1);
-                    var options = arguments.get(2);
+                List<Expression> arguments = methodInvocation.getArguments();
+                var databaseName = arguments.get(1);
+                var options = arguments.get(2);
 
-                    MethodInvocation after = methodInvocation
-                            .withMethodType(methodInvocation
-                                    .getMethodType()
-                                    .withParameterTypes(of(buildType(String.class.getName()),
-                                            buildType(NEW_TYPE))))
-                            .withArguments(
-                                    of(arguments.get(0), convertToMorphiaConfig(getCursor(), options, databaseName)));
-                    return autoFormat(after, context);
-                } catch (RuntimeException e) {
-                    System.out.println("methodInvocation = " + methodInvocation);
-                    throw e;
-                }
+                MethodInvocation after = methodInvocation
+                        .withMethodType(methodInvocation
+                                .getMethodType()
+                                .withParameterTypes(of(buildType(String.class.getName()),
+                                        buildType(NEW_TYPE))))
+                        .withArguments(
+                                of(arguments.get(0), convertToMorphiaConfig(getCursor(), options, databaseName)));
+                return autoFormat(after, context);
             } else {
                 return super.visitMethodInvocation(methodInvocation, context);
             }
@@ -88,7 +83,7 @@ public class CreateDatastoreMigration extends Recipe {
                 return reuseArgument(cursor, identifier, databaseName);
             }
             JavaTemplate databaseCall = (databaseName != null
-                    ? JavaTemplate.builder("MorphiaConfig.load().database(#{})")
+                    ? JavaTemplate.builder("MorphiaConfig.load().database(#{any(java.lang.String)})")
                     : JavaTemplate.builder("MorphiaConfig.load()"))
                     .javaParser(JavaParser.fromJavaVersion()
                             .classpath("morphia-core"))
@@ -121,14 +116,14 @@ public class CreateDatastoreMigration extends Recipe {
         }
 
         public static Expression reuseArgument(Cursor cursor, Identifier identifier, @Nullable Expression databaseName) {
-            JavaTemplate.Builder dbBuilder = JavaTemplate.builder(identifier.getSimpleName() + ".database(#{})");
+            JavaTemplate.Builder dbBuilder = JavaTemplate.builder(identifier.getSimpleName() + ".database(#{any})");
             JavaTemplate databaseCall = dbBuilder
                     .javaParser(JavaParser.fromJavaVersion()
                             .classpath("morphia-core"))
                     .build();
 
             return databaseCall.apply(new Cursor(cursor, identifier),
-                identifier.getCoordinates().replace(), databaseName);
+                    identifier.getCoordinates().replace(), databaseName);
         }
 
         private static Expression updateIdentifierType(Expression expression) {

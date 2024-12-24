@@ -3,13 +3,20 @@ package dev.morphia.rewrite.recipes;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.morphia.aggregation.stages.Match;
+import dev.morphia.query.filters.Filter;
+
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
+import org.openrewrite.Cursor;
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.Recipe;
 import org.openrewrite.TreeVisitor;
 import org.openrewrite.java.JavaIsoVisitor;
+import org.openrewrite.java.JavaParser;
+import org.openrewrite.java.JavaTemplate;
 import org.openrewrite.java.MethodMatcher;
+import org.openrewrite.java.tree.Expression;
 import org.openrewrite.java.tree.J.MethodInvocation;
 import org.openrewrite.java.tree.MethodCall;
 
@@ -39,7 +46,7 @@ public class PipelineRewrite extends Recipe {
             new MethodMatcher(AGGREGATION + " indexStats(dev.morphia.aggregation.stages.IndexStats)"),
             new MethodMatcher(AGGREGATION + " limit(long)"),
             new MethodMatcher(AGGREGATION + " lookup(dev.morphia.aggregation.stages.Lookup)"),
-            new MethodMatcher(AGGREGATION + " match(dev.morphia.aggregation.stages.Match)"),
+            new MethodMatcher(AGGREGATION + " match(dev.morphia.query.filters.Filter...)"),
             new MethodMatcher(AGGREGATION + " planCacheStats()"),
             new MethodMatcher(AGGREGATION + " project(dev.morphia.aggregation.stages.Projection)"),
             new MethodMatcher(AGGREGATION + " redact(dev.morphia.aggregation.stages.Redact)"),
@@ -63,6 +70,13 @@ public class PipelineRewrite extends Recipe {
         }
     };
 
+    private static final JavaTemplate MATCH = (JavaTemplate.builder("Match.match(#{any()})"))
+            .javaParser(JavaParser.fromJavaVersion()
+                    .classpath("morphia-core"))
+            .imports(Filter.class.getName())
+            .imports(Match.class.getName())
+            .build();
+
     @Override
     public String getDisplayName() {
         return "Aggregation pipeline rewrite";
@@ -82,11 +96,21 @@ public class PipelineRewrite extends Recipe {
                 if (MEGA_MATCHER.matches(methodInvocation)) {
                     var updated = methodInvocation;
                     while (MEGA_MATCHER.matches(updated) && MEGA_MATCHER.matches(updated.getSelect())) {
+                        final List<Expression> args = new ArrayList<>();
                         MethodInvocation invocation = (MethodInvocation) updated.getSelect();
-                        var args = new ArrayList<>(invocation.getArguments());
+                        if (invocation.getSimpleName().equals("match")) {
+
+                            MethodInvocation applied = MATCH.apply(new Cursor(getCursor(), invocation),
+                                    invocation.getCoordinates().replaceMethod(),
+                                    invocation.getArguments().toArray());
+                            args.add(applied.withSelect(null));
+                        } else {
+                            args.addAll(invocation.getArguments());
+                        }
                         args.addAll(updated.getArguments());
                         updated = invocation.withArguments(args);
                     }
+                    //                    return updated.withName(methodInvocation.getName().withSimpleName("pipeline"));
                     return autoFormat(updated.withName(methodInvocation.getName().withSimpleName("pipeline")), context);
                 } else {
                     return super.visitMethodInvocation(methodInvocation, context);
