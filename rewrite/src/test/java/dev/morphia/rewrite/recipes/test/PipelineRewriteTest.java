@@ -18,58 +18,65 @@ public class PipelineRewriteTest extends MorphiaRewriteTest {
 
     @Test
     void unwrapStageMethods() {
-        rewriteRun(
-                //language=java
-                java(
-                        """
+        rewriteRun(java(
+          //language=java
+          """
+            import dev.morphia.aggregation.expressions.ComparisonExpressions;
+            
+            import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
+            import static dev.morphia.aggregation.stages.Group.group;
+            import static dev.morphia.aggregation.stages.Group.id;
+            import static dev.morphia.aggregation.stages.Projection.project;
+            import static dev.morphia.aggregation.expressions.Expressions.field;
+            import static dev.morphia.aggregation.expressions.Expressions.value;
+            import static dev.morphia.aggregation.stages.Sort.sort;
+            import static dev.morphia.query.filters.Filters.eq;
+            
+            import dev.morphia.aggregation.Aggregation;
+            import dev.morphia.query.MorphiaCursor;
+            import org.bson.Document;
+            
+            public class UnwrapTest {
+                public MorphiaCursor<Document> update(Aggregation<?> aggregation) {
+                    return aggregation
+                        .match(eq("author", "Sanderson"))
+                        .group(group(id("author")).field("count", sum(value(1))))
+                        .sort(sort().ascending("1"))
+                        .sort(sort().ascending("2"))
+                        .sort(sort().ascending("3"))
+                        .sort(sort().ascending("4"))
+                        .execute(Document.class);
+                }
+            }""",
+          //language=java
+          """
+      import dev.morphia.aggregation.expressions.ComparisonExpressions;
+      
+      import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
+      import static dev.morphia.aggregation.stages.Group.group;
+      import static dev.morphia.aggregation.stages.Group.id;
+      import static dev.morphia.aggregation.stages.Projection.project;
+      import static dev.morphia.aggregation.expressions.Expressions.field;
+      import static dev.morphia.aggregation.expressions.Expressions.value;
+      import static dev.morphia.aggregation.stages.Sort.sort;
+      import static dev.morphia.query.filters.Filters.eq;
 
-                                import dev.morphia.aggregation.expressions.ComparisonExpressions;
+      import dev.morphia.aggregation.Aggregation;
+      import dev.morphia.query.MorphiaCursor;
+      import org.bson.Document;
 
-                                import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
-                                import static dev.morphia.aggregation.stages.Group.group;
-                                import static dev.morphia.aggregation.stages.Group.id;
-                                import static dev.morphia.aggregation.stages.Projection.project;
-                                import static dev.morphia.aggregation.expressions.Expressions.field;
-                                import static dev.morphia.aggregation.expressions.Expressions.value;
-                                import static dev.morphia.aggregation.stages.Sort.sort;
-                                import static dev.morphia.query.filters.Filters.eq;
-
-                                import dev.morphia.aggregation.Aggregation;
-                                import org.bson.Document;
-
-                                public class UnwrapTest {
-                                    public void update(Aggregation<?> aggregation) {
-                                        aggregation
-                                            .match(eq("author", "Sanderson"))
-                                            .group(group(id("author")).field("count", sum(value(1))))
-                                            .sort(sort().ascending("1"))
-                                            .sort(sort().ascending("2"))
-                                            .sort(sort().ascending("3"))
-                                            .sort(sort().ascending("4"))
-                                            .execute(Document.class);
-                                    }
-                                }""",
-                        """
-                                import dev.morphia.aggregation.expressions.ComparisonExpressions;
-
-                                import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
-                                import static dev.morphia.aggregation.stages.Group.group;
-                                import static dev.morphia.aggregation.stages.Group.id;
-                                import static dev.morphia.aggregation.stages.Projection.project;
-                                import static dev.morphia.aggregation.expressions.Expressions.field;
-                                import static dev.morphia.aggregation.expressions.Expressions.value;
-                                import static dev.morphia.aggregation.stages.Sort.sort;
-                                import static dev.morphia.query.filters.Filters.eq;
-
-                                import dev.morphia.aggregation.Aggregation;
-                                import org.bson.Document;
-
-                                public class UnwrapTest {
-                                    public void update(Aggregation<?> aggregation) {
-                                        aggregation
-                                                .pipeline(match(eq("author", "Sanderson")), group(id("author")).field("count", sum(value(1))), sort().ascending("1"), sort().ascending("2"), sort().ascending("3"), sort().ascending("4"))
-                                            .execute(Document.class);
-                                    }
-                                }"""));
-    }
+      public class UnwrapTest {
+          public MorphiaCursor<Document> update(Aggregation<?> aggregation) {
+              return aggregation
+                  .pipeline(
+                      match(eq("author", "Sanderson")),
+                      group(id("author")).field("count", sum(value(1))),
+                      sort().ascending("1"),
+                      sort().ascending("2"),
+                      sort().ascending("3"),
+                      sort().ascending("4"))
+                  .execute(Document.class);
+          }
+      }"""));
+      }
 }
