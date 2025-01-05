@@ -15,7 +15,29 @@ recipeList:
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: dev.morphia.DatastoreImpl
       newFullyQualifiedTypeName: dev.morphia.MorphiaDatastore
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: dev.morphia.utils.IndexDirection
+      newFullyQualifiedTypeName: dev.morphia.mapping.IndexDirection
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: dev.morphia.utils.IndexType
+      newFullyQualifiedTypeName: dev.morphia.mapping.IndexType
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: dev.morphia.mapping.MapperOptions.PropertyDiscovery
+      newFullyQualifiedTypeName: dev.morphia.mapping.PropertyDiscovery
   - org.openrewrite.maven.UpgradeDependencyVersion:
       groupId: dev.morphia.morphia
       artifactId: morphia-core
       newVersion: 3.0.0-SNAPSHOT
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: dev.morphia.InternalOnly
+displayName: Recipe definitions specifically for testing in morphia-upgrade-testing.  not for external use.
+recipeList:
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: src/test/java/dev/morphia/test/TestLegacyUpdate.java
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: src/test/java/dev/morphia/test/query/legacy/TestLegacyQuery.java
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: src/test/java/dev/morphia/test/BuildConfigTest.java
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: src/test/java/dev/morphia/test/models/Keys.java
