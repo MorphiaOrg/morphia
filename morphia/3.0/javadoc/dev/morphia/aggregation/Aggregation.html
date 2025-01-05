@@ -91,7 +91,7 @@ loadScripts(document, 'script');</script>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab3" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab3', 3)" class="table-tab">Abstract Methods</button><button id="method-summary-table-tab6" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab6', 3)" class="table-tab">Deprecated Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab3" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab3', 3)" class="table-tab">Abstract Methods</button><button id="method-summary-table-tab5" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab5', 3)" class="table-tab">Default Methods</button><button id="method-summary-table-tab6" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab6', 3)" class="table-tab">Deprecated Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
@@ -278,93 +278,88 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Appends the stages to this aggregation's pipeline.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#planCacheStats()" class="member-name-link">planCacheStats</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#pipeline(java.util.List)" class="member-name-link">pipeline</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="stages/Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>&gt;&nbsp;stages)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#project(dev.morphia.aggregation.stages.Projection)" class="member-name-link">project</a><wbr>(<a href="stages/Projection.html" title="class in dev.morphia.aggregation.stages">Projection</a>&nbsp;projection)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#planCacheStats()" class="member-name-link">planCacheStats</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">use <a href="#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
 </div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#redact(dev.morphia.aggregation.stages.Redact)" class="member-name-link">redact</a><wbr>(<a href="stages/Redact.html" title="class in dev.morphia.aggregation.stages">Redact</a>&nbsp;redact)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#project(dev.morphia.aggregation.stages.Projection)" class="member-name-link">project</a><wbr>(<a href="stages/Projection.html" title="class in dev.morphia.aggregation.stages">Projection</a>&nbsp;projection)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">use <a href="#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
 </div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#replaceRoot(dev.morphia.aggregation.stages.ReplaceRoot)" class="member-name-link">replaceRoot</a><wbr>(<a href="stages/ReplaceRoot.html" title="class in dev.morphia.aggregation.stages">ReplaceRoot</a>&nbsp;root)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#redact(dev.morphia.aggregation.stages.Redact)" class="member-name-link">redact</a><wbr>(<a href="stages/Redact.html" title="class in dev.morphia.aggregation.stages">Redact</a>&nbsp;redact)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">use <a href="#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
 </div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#replaceWith(dev.morphia.aggregation.stages.ReplaceWith)" class="member-name-link">replaceWith</a><wbr>(<a href="stages/ReplaceWith.html" title="class in dev.morphia.aggregation.stages">ReplaceWith</a>&nbsp;with)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#replaceRoot(dev.morphia.aggregation.stages.ReplaceRoot)" class="member-name-link">replaceRoot</a><wbr>(<a href="stages/ReplaceRoot.html" title="class in dev.morphia.aggregation.stages">ReplaceRoot</a>&nbsp;root)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">use <a href="#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
 </div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#sample(long)" class="member-name-link">sample</a><wbr>(long&nbsp;sample)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#replaceWith(dev.morphia.aggregation.stages.ReplaceWith)" class="member-name-link">replaceWith</a><wbr>(<a href="stages/ReplaceWith.html" title="class in dev.morphia.aggregation.stages">ReplaceWith</a>&nbsp;with)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">use <a href="#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
 </div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#set(dev.morphia.aggregation.stages.Set)" class="member-name-link">set</a><wbr>(<a href="stages/Set.html" title="class in dev.morphia.aggregation.stages">Set</a>&nbsp;set)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#sample(long)" class="member-name-link">sample</a><wbr>(long&nbsp;sample)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">use <a href="#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
 </div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#setWindowFields(dev.morphia.aggregation.stages.SetWindowFields)" class="member-name-link">setWindowFields</a><wbr>(<a href="stages/SetWindowFields.html" title="class in dev.morphia.aggregation.stages">SetWindowFields</a>&nbsp;fields)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#set(dev.morphia.aggregation.stages.Set)" class="member-name-link">set</a><wbr>(<a href="stages/Set.html" title="class in dev.morphia.aggregation.stages">Set</a>&nbsp;set)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">use <a href="#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
 </div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#skip(long)" class="member-name-link">skip</a><wbr>(long&nbsp;skip)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#setWindowFields(dev.morphia.aggregation.stages.SetWindowFields)" class="member-name-link">setWindowFields</a><wbr>(<a href="stages/SetWindowFields.html" title="class in dev.morphia.aggregation.stages">SetWindowFields</a>&nbsp;fields)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">use <a href="#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
 </div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#sort(dev.morphia.aggregation.stages.Sort)" class="member-name-link">sort</a><wbr>(<a href="stages/Sort.html" title="class in dev.morphia.aggregation.stages">Sort</a>&nbsp;sort)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#skip(long)" class="member-name-link">skip</a><wbr>(long&nbsp;skip)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">use <a href="#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
 </div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#sortByCount(dev.morphia.aggregation.expressions.impls.Expression)" class="member-name-link">sortByCount</a><wbr>(<a href="expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;sort)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#sort(dev.morphia.aggregation.stages.Sort)" class="member-name-link">sort</a><wbr>(<a href="stages/Sort.html" title="class in dev.morphia.aggregation.stages">Sort</a>&nbsp;sort)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">use <a href="#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
 </div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#unionWith(java.lang.Class,dev.morphia.aggregation.stages.Stage...)" class="member-name-link">unionWith</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;type,
- <a href="stages/Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>...&nbsp;stages)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#sortByCount(dev.morphia.aggregation.expressions.impls.Expression)" class="member-name-link">sortByCount</a><wbr>(<a href="expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;sort)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">use <a href="#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
 </div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#unionWith(java.lang.String,dev.morphia.aggregation.stages.Stage...)" class="member-name-link">unionWith</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;collection,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#unionWith(java.lang.Class,dev.morphia.aggregation.stages.Stage...)" class="member-name-link">unionWith</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;type,
  <a href="stages/Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>...&nbsp;stages)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
@@ -372,15 +367,23 @@ loadScripts(document, 'script');</script>
 </div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#unset(dev.morphia.aggregation.stages.Unset)" class="member-name-link">unset</a><wbr>(<a href="stages/Unset.html" title="class in dev.morphia.aggregation.stages">Unset</a>&nbsp;unset)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#unionWith(java.lang.String,dev.morphia.aggregation.stages.Stage...)" class="member-name-link">unionWith</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;collection,
+ <a href="stages/Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>...&nbsp;stages)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">use <a href="#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
 </div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#unwind(dev.morphia.aggregation.stages.Unwind)" class="member-name-link">unwind</a><wbr>(<a href="stages/Unwind.html" title="class in dev.morphia.aggregation.stages">Unwind</a>&nbsp;unwind)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#unset(dev.morphia.aggregation.stages.Unset)" class="member-name-link">unset</a><wbr>(<a href="stages/Unset.html" title="class in dev.morphia.aggregation.stages">Unset</a>&nbsp;unset)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
+<div class="block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
+</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6"><code><a href="#unwind(dev.morphia.aggregation.stages.Unwind)" class="member-name-link">unwind</a><wbr>(<a href="stages/Unwind.html" title="class in dev.morphia.aggregation.stages">Unwind</a>&nbsp;unwind)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3 method-summary-table-tab6">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">use <a href="#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
 </div>
@@ -412,6 +415,12 @@ loadScripts(document, 'script');</script>
 <dt>Since:</dt>
 <dd>3.0</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="pipeline(java.util.List)">
+<h3>pipeline</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type"><a href="Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</span>&nbsp;<span class="element-name">pipeline</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="stages/Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>&gt;&nbsp;stages)</span></div>
 </section>
 </li>
 <li>
