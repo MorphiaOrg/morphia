@@ -14,7 +14,7 @@
     <artifactId>rewrite</artifactId>
 
     <properties>
-        <morphia.prior.version>2.4.13</morphia.prior.version>
+        <morphia.prior.version>2.4.14</morphia.prior.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
