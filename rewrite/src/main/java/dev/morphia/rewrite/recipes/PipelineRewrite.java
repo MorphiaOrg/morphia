@@ -1,12 +1,9 @@
 package dev.morphia.rewrite.recipes;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.stages.Match;
-import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.query.filters.Filter;
 
 import org.jetbrains.annotations.NotNull;
@@ -28,8 +25,6 @@ import static java.util.Collections.emptyList;
 
 public class PipelineRewrite extends Recipe {
     static final String AGGREGATION = "dev.morphia.aggregation.Aggregation";
-
-    public static final MethodMatcher PIPELINE = new MethodMatcher(AGGREGATION + " pipeline(..)");
 
     static final List<MethodMatcher> matchers = List.of(
             new MethodMatcher(AGGREGATION + " addFields(dev.morphia.aggregation.stages.AddFields)"),
@@ -74,14 +69,6 @@ public class PipelineRewrite extends Recipe {
         }
     };
 
-    private static final JavaTemplate PIPELINE_TEMPLATE = (JavaTemplate.builder("Aggregation.pipeline(#{any(List<Stage>)})"))
-            .javaParser(JavaParser.fromJavaVersion()
-                    .classpath("morphia-core"))
-            .imports(Aggregation.class.getName())
-            .imports(Stage.class.getName())
-            .doBeforeParseTemplate(System.out::println)
-            .build();
-
     private static final JavaTemplate MATCH = (JavaTemplate.builder("Match.match()"))
             .javaParser(JavaParser.fromJavaVersion()
                     .classpath("morphia-core"))
@@ -90,21 +77,22 @@ public class PipelineRewrite extends Recipe {
             .build();
 
     @Override
-    public String getDisplayName() {
+    public @NotNull String getDisplayName() {
         return "Aggregation pipeline rewrite";
     }
 
     @Override
-    public String getDescription() {
+    public @NotNull String getDescription() {
         return "Rewrites an aggregation from using stage-named methods to using pipeline(Stage...).";
     }
 
     @Override
-    public TreeVisitor<?, ExecutionContext> getVisitor() {
+    public @NotNull TreeVisitor<?, ExecutionContext> getVisitor() {
 
         return new JavaIsoVisitor<>() {
             @Override
-            public MethodInvocation visitMethodInvocation(@NotNull MethodInvocation methodInvocation, @NotNull ExecutionContext context) {
+            public @NotNull MethodInvocation visitMethodInvocation(@NotNull MethodInvocation methodInvocation,
+                    @NotNull ExecutionContext context) {
                 if (MEGA_MATCHER.matches(methodInvocation)) {
                     var updated = methodInvocation;
                     while (MEGA_MATCHER.matches(updated) && MEGA_MATCHER.matches(updated.getSelect())) {
@@ -127,7 +115,6 @@ public class PipelineRewrite extends Recipe {
 
                         updated = invocation.withArguments(list);
                     }
-                    //                    return updated.withName(methodInvocation.getName().withSimpleName("pipeline"));
                     return maybeAutoFormat(methodInvocation, updated.withName(methodInvocation.getName().withSimpleName("pipeline"))
                             .withPrefix(Space.build("\n", emptyList())), context);
                 } else {
@@ -146,40 +133,4 @@ public class PipelineRewrite extends Recipe {
         return whitespace + "    ";
     }
 
-    public TreeVisitor<?, ExecutionContext> getVisitor2() {
-
-        return new JavaIsoVisitor<>() {
-            @Override
-            public MethodInvocation visitMethodInvocation(@NotNull MethodInvocation methodInvocation, @NotNull ExecutionContext context) {
-                if (MEGA_MATCHER.matches(methodInvocation)) {
-                    var updated = methodInvocation;
-                    final List<Expression> args = new ArrayList<>();
-                    while (MEGA_MATCHER.matches(updated) && MEGA_MATCHER.matches(updated.getSelect())) {
-                        MethodInvocation invocation = (MethodInvocation) updated.getSelect();
-                        if (invocation.getSimpleName().equals("match")) {
-
-                            MethodInvocation applied = MATCH.apply(new Cursor(getCursor(), invocation),
-                                    invocation.getCoordinates().replaceMethod(),
-                                    invocation.getArguments().toArray());
-                            args.add(applied.withSelect(null));
-                        } else {
-                            args.addAll(invocation.getArguments());
-                        }
-                        updated = invocation;
-                    }
-                    args.addAll(updated.getArguments());
-
-                    Collections.reverse(args);
-                    return updated.withName(methodInvocation.getName().withSimpleName("pipeline"))
-                            .withArguments(args);
-                    //                    MethodInvocation applied = PIPELINE_TEMPLATE.apply(new Cursor(getCursor(), updated),
-                    //                            updated.getCoordinates().replaceMethod(), args.toArray() );
-                    //                    return autoFormat(applied, context);
-                } else {
-                    return super.visitMethodInvocation(methodInvocation, context);
-                }
-            }
-
-        };
-    }
 }
