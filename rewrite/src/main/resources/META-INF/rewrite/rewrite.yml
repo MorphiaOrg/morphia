@@ -25,6 +25,12 @@ recipeList:
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: dev.morphia.mapping.MapperOptions.PropertyDiscovery
       newFullyQualifiedTypeName: dev.morphia.mapping.PropertyDiscovery
+  - org.openrewrite.java.RemoveMethodInvocations:
+      methodPattern: dev.morphia.MorphiaDatastore enableDocumentValidation(..)
+  - org.openrewrite.java.RemoveMethodInvocations:
+      methodPattern: dev.morphia.MorphiaDatastore enableCaps(..)
+  - org.openrewrite.java.RemoveMethodInvocations:
+      methodPattern: dev.morphia.MorphiaDatastore ensureIndexes(..)
   - org.openrewrite.maven.UpgradeDependencyVersion:
       groupId: dev.morphia.morphia
       artifactId: morphia-core
@@ -44,3 +50,16 @@ recipeList:
       filePattern: src/test/java/dev/morphia/test/models/Keys.java
   - org.openrewrite.DeleteSourceFiles:
       filePattern: src/test/java/dev/morphia/test/MorphiaVersionTest.java
+  - dev.morphia.rewrite.recipes.internal.RemoveMethodDeclaration:
+      methodPattern: dev.morphia.test.query.TestQuery testCriteriaContainers()
+  - dev.morphia.rewrite.recipes.internal.RemoveMethodDeclaration:
+      methodPattern: dev.morphia.test.query.TestQuery check()
+  - dev.morphia.rewrite.recipes.internal.RemoveMethodDeclaration:
+      methodPattern: dev.morphia.test.query.TestQuery testKeys()
+  - dev.morphia.rewrite.recipes.internal.RemoveMethodDeclaration:
+      methodPattern: dev.morphia.test.query.TestQuery testKeyList()
+  - dev.morphia.rewrite.recipes.internal.RemoveMethodDeclaration:
+      methodPattern: dev.morphia.test.query.TestQuery testFetchKeys()
+  - dev.morphia.rewrite.recipes.internal.RemoveMethodDeclaration:
+      methodPattern: dev.morphia.test.query.TestQuery check(dev.morphia.query.Query)
+  - org.openrewrite.java.RemoveUnusedImports

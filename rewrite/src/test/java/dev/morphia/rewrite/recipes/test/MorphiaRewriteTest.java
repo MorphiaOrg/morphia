@@ -20,10 +20,6 @@ public abstract class MorphiaRewriteTest implements RewriteTest {
 
     @Override
     public void defaults(RecipeSpec spec) {
-        //        spec.recipe(getRecipe())
-        //                .parser(JavaParser.fromJavaVersion()
-        //                        .classpath(classpath()));
-
         Builder<? extends JavaParser, ?> builder = JavaParser.fromJavaVersion()
                 .addClasspathEntry(Path.of(findMorphiaCore()));
         findMongoDependencies().stream()
