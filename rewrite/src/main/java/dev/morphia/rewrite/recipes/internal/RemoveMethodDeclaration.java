@@ -1,5 +1,7 @@
 package dev.morphia.rewrite.recipes.internal;
 
+import java.util.List;
+
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.Option;
 import org.openrewrite.Recipe;
@@ -11,7 +13,7 @@ import org.openrewrite.java.tree.J.MethodDeclaration;
 
 public class RemoveMethodDeclaration extends Recipe {
     @Option(displayName = "Method pattern", description = "A pattern to match method declarations for removal.", example = "java.lang.StringBuilder append(java.lang.String)")
-    private String methodPattern;
+    private List<String> methodPatterns;
 
     @Override
     public String getDisplayName() {
@@ -23,33 +25,31 @@ public class RemoveMethodDeclaration extends Recipe {
         return "Remove method declarations.";
     }
 
-    public String getMethodPattern() {
-        return methodPattern;
+    public List<String> getMethodPatterns() {
+        return methodPatterns;
     }
 
-    public void setMethodPattern(String methodPattern) {
-        this.methodPattern = methodPattern;
+    public void setMethodPatterns(List<String> methodPatterns) {
+        this.methodPatterns = methodPatterns;
     }
 
     @Override
     public TreeVisitor<?, ExecutionContext> getVisitor() {
-        return new RemoveMethodDeclarationVisitor(methodPattern);
+        return new RemoveMethodDeclarationVisitor(methodPatterns.stream().map(MethodMatcher::new).toList());
     }
 
     private class RemoveMethodDeclarationVisitor extends JavaVisitor<ExecutionContext> {
-        private final MethodMatcher matcher;
+        private final List<MethodMatcher> matchers;
 
-        public RemoveMethodDeclarationVisitor(MethodMatcher matcher) {
-            this.matcher = matcher;
-        }
-
-        public RemoveMethodDeclarationVisitor(String pattern) {
-            this(new MethodMatcher(pattern));
+        public RemoveMethodDeclarationVisitor(List<MethodMatcher> matchers) {
+            this.matchers = matchers;
         }
 
         @Override
         public J visitMethodDeclaration(MethodDeclaration method, ExecutionContext executionContext) {
-            return matcher.matches(method.getMethodType()) ? null : super.visitMethodDeclaration(method, executionContext);
+            return matchers.stream().anyMatch(matcher -> matcher.matches(method.getMethodType()))
+                    ? null
+                    : super.visitMethodDeclaration(method, executionContext);
         }
     }
 }

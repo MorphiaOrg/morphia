@@ -1,5 +1,7 @@
 package dev.morphia.rewrite.recipes.test.internal;
 
+import java.util.List;
+
 import dev.morphia.rewrite.recipes.internal.RemoveMethodDeclaration;
 import dev.morphia.rewrite.recipes.test.MorphiaRewriteTest;
 
@@ -14,7 +16,7 @@ class RemoveMethodDeclarationTest extends MorphiaRewriteTest {
     @Override
     protected @NotNull Recipe getRecipe() {
         RemoveMethodDeclaration declaration = new RemoveMethodDeclaration();
-        declaration.setMethodPattern("Test deleteMe(String)");
+        declaration.setMethodPatterns(List.of("Test deleteMe(String)"));
         return declaration;
     }
 
