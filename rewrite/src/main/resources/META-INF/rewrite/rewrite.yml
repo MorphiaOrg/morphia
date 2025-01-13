@@ -32,6 +32,9 @@ recipeList:
       methodPattern: dev.morphia.MorphiaDatastore enableCaps(..)
   - org.openrewrite.java.RemoveMethodInvocations:
       methodPattern: dev.morphia.MorphiaDatastore ensureIndexes(..)
+  - dev.morphia.rewrite.recipes.RenameMethod:
+      methodPatterns:
+        - dev.morphia.aggregation.expressions.Expressions of(..) document
   - org.openrewrite.maven.UpgradeDependencyVersion:
       groupId: dev.morphia.morphia
       artifactId: morphia-core
@@ -61,3 +64,8 @@ recipeList:
         - dev.morphia.test.query.TestQuery check(dev.morphia.query.Query)
         - dev.morphia.test.TestUpdateOperations testUpsert()
         - dev.morphia.test.TestUpdateOperations doUpdates(..)
+  - dev.morphia.rewrite.recipes.RenameMethod:
+      methodPatterns:
+        - dev.morphia.mapping.codec.pojo.EntityModel getCollectionName() collectionName
+        - dev.morphia.mapping.codec.pojo.EntityModel getDiscriminator() discriminator
+        - dev.morphia.mapping.codec.pojo.EntityModel getDiscriminatorKey() discriminatorKey

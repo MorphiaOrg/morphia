@@ -35,9 +35,9 @@ import org.jetbrains.annotations.NotNull;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
-import static dev.morphia.mapping.codec.CodecHelper.coalesce;
 import static java.lang.Character.toLowerCase;
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.joining;
@@ -334,14 +334,11 @@ public abstract class TemplatedTestBase extends TestBase {
         String resourceName = format("%s/%s/action.json", prefix(), pipelineTemplate);
         Document document = ((MorphiaQuery) query).toDocument();
 
-        var first = operators[0];
-        var others = Arrays.copyOfRange(operators, 1, operators.length);
-
-        checkAction(testOptions, resourceName, document, first, others);
+        checkAction(testOptions, resourceName, document, operators);
 
         if (!testOptions.skipDataCheck()) {
             var resource = loadResource(resourceName).stream().collect(joining());
-            query.update(testOptions.updateOptions().multi(resource.contains("updateMany")), first, others);
+            query.update(testOptions.updateOptions().multi(resource.contains("updateMany")), operators);
             try (var cursor = query.iterator()) {
                 return cursor.toList();
             }
@@ -353,12 +350,11 @@ public abstract class TemplatedTestBase extends TestBase {
     private void checkAction(ActionTestOptions testOptions,
             String resourceName,
             Document document,
-            UpdateOperator first,
-            UpdateOperator[] others) {
+            UpdateOperator... operators) {
         if (!testOptions.skipActionCheck()) {
             List<Document> action = loadAction(resourceName);
             assertEquals(toJson(document), toJson(action.get(0)), "Should generate the same query document");
-            Operations operations = new Operations(getDs(), null, coalesce(first, others), false);
+            Operations operations = new Operations(getDs(), null, asList(operators), false);
             Document updates = operations.toDocument(getDs());
             assertEquals(toJson(updates), toJson(action.get(1)), "Should generate the same update document");
         }

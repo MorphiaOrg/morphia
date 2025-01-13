@@ -231,24 +231,22 @@ public interface Query<T> extends Iterable<T> {
     /**
      * Creates an update operation based on this query
      *
-     * @param first   the first and required update operator
      * @param updates lists the set of updates to apply
      * @return the update operation
      */
-    default UpdateResult update(UpdateOperator first, UpdateOperator... updates) {
-        return update(new UpdateOptions(), first, updates);
+    default UpdateResult update(UpdateOperator... updates) {
+        return update(new UpdateOptions(), updates);
     }
 
     /**
      * Creates an update operation based on this query
      *
-     * @param first   the first and required update
      * @param updates lists the set of updates to apply
      * @param options the options to apply
      * @return the update operation
      * @since 2.3
      */
-    UpdateResult update(UpdateOptions options, UpdateOperator first, UpdateOperator... updates);
+    UpdateResult update(UpdateOptions options, UpdateOperator... updates);
 
     /**
      * Creates an update operation based on this query

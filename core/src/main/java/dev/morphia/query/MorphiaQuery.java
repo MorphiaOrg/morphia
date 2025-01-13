@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 import static dev.morphia.mapping.codec.CodecHelper.coalesce;
 import static dev.morphia.mapping.codec.CodecHelper.document;
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -223,13 +224,13 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public UpdateResult update(UpdateOptions options, UpdateOperator first, UpdateOperator... updates) {
+    public UpdateResult update(UpdateOptions options, UpdateOperator... updates) {
         if (invalid != null) {
             throw invalid;
         }
         Class<T> entityClass = getEntityClass();
         EntityModel entityModel = !entityClass.equals(Document.class) ? mapper.getEntityModel(entityClass) : null;
-        Operations operations = new Operations(datastore, entityModel, coalesce(first, updates), isValidate());
+        Operations operations = new Operations(datastore, entityModel, asList(updates), isValidate());
         Document updateOperations = operations.toDocument(datastore);
 
         final Document queryObject = toDocument();

@@ -467,7 +467,7 @@ public class MorphiaDatastore implements Datastore {
             MorphiaCodec morphiaCodec = (MorphiaCodec) codecRegistry.get(entity.getClass());
             var updates = ((MergingEncoder<T>) new MergingEncoder(query, morphiaCodec, mapper.getConfig()))
                     .encode(entity);
-            execute = query.update(updateOptions, updates.remove(0), updates.toArray(new UpdateOperator[0]));
+            execute = query.update(updateOptions, updates.toArray(new UpdateOperator[0]));
         }
         if (execute.getMatchedCount() != 1) {
             if (info.versioned()) {
