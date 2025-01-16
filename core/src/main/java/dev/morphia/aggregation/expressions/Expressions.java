@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.mongodb.lang.Nullable;
-
 import dev.morphia.aggregation.expressions.impls.DocumentExpression;
 import dev.morphia.aggregation.expressions.impls.Expression;
 import dev.morphia.aggregation.expressions.impls.FilterExpression;
@@ -51,18 +49,6 @@ public final class Expressions {
     public static DocumentExpression document(String name, Object expression) {
         return new DocumentExpression()
                 .field(name, expression);
-    }
-
-    /**
-     * Creates a field expression for the given value. If the value does not already start with '$', it will be prepended automatically.
-     *
-     * @param name the field name
-     * @return the new expression
-     * @deprecated
-     */
-    @Deprecated(since = "3.0", forRemoval = true)
-    public static Expression field(String name) {
-        return new ValueExpression(name.startsWith("$") ? name : "$" + name);
     }
 
     /**
@@ -137,19 +123,6 @@ public final class Expressions {
     @MorphiaInternal
     public static <T> List<T> toList(T... elements) {
         return new ArrayList<>(asList(elements));
-    }
-
-    /**
-     * Returns a value without parsing. Note that this is different from {@link #literal(Object)} in that the given value will dropped
-     * directly in to the pipeline for use/evaluation in whatever context the value is used.
-     *
-     * @param value the value
-     * @return the new expression
-     * @deprecated
-     */
-    @Deprecated(since = "3.0", forRemoval = true)
-    public static ValueExpression value(@Nullable Object value) {
-        return new ValueExpression(value);
     }
 
     /**

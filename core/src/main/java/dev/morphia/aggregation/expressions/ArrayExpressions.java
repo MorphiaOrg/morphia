@@ -5,6 +5,7 @@ import java.util.List;
 import dev.morphia.aggregation.expressions.impls.ArrayIndexExpression;
 import dev.morphia.aggregation.expressions.impls.ArrayLiteral;
 import dev.morphia.aggregation.expressions.impls.Expression;
+import dev.morphia.aggregation.expressions.impls.FilterExpression;
 import dev.morphia.aggregation.expressions.impls.MapExpression;
 import dev.morphia.aggregation.expressions.impls.RangeExpression;
 import dev.morphia.aggregation.expressions.impls.ReduceExpression;
@@ -74,6 +75,18 @@ public final class ArrayExpressions {
      */
     public static Expression elementAt(Object array, Object index) {
         return new Expression("$arrayElemAt", wrap(List.of(array, index)));
+    }
+
+    /**
+     * Selects a subset of the array to return an array with only the elements that match the filter condition.
+     *
+     * @param array       the array to use
+     * @param conditional the conditional to use for filtering
+     * @return the new expression
+     * @aggregation.expression $filter
+     */
+    public static FilterExpression filter(Expression array, Expression conditional) {
+        return Expressions.filter(array, conditional);
     }
 
     /**

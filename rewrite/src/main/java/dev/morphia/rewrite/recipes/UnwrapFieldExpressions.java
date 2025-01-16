@@ -20,8 +20,8 @@ public class UnwrapFieldExpressions extends Recipe {
 
     @Override
     public JavaVisitor<ExecutionContext> getVisitor() {
-        MethodMatcher fieldMatcher = new MethodMatcher("dev.morphia.aggregation.expressions.Expressions field(String)");
-        MethodMatcher valueMatcher = new MethodMatcher("dev.morphia.aggregation.expressions.Expressions value(Object)");
+        MethodMatcher fieldMatcher = new MethodMatcher("dev.morphia.aggregation.expressions.Expressions field(..)");
+        MethodMatcher valueMatcher = new MethodMatcher("dev.morphia.aggregation.expressions.Expressions value(..)");
 
         return new JavaVisitor<>() {
 

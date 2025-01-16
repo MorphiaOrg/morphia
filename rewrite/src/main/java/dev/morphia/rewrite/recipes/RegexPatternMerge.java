@@ -38,7 +38,7 @@ public class RegexPatternMerge extends Recipe {
             public MethodInvocation visitMethodInvocation(@NotNull MethodInvocation invocation,
                     @NotNull ExecutionContext executionContext) {
                 if (MATCHER.matches(invocation)) {
-                    MethodInvocation pattern = findPattern(invocation);
+                    MethodInvocation pattern = findInvocation(invocation, "pattern");
                     if (pattern != null) {
                         var arguments = pattern.getArguments();
                         Expression select = invocation;
@@ -70,15 +70,15 @@ public class RegexPatternMerge extends Recipe {
     }
 
     @Nullable
-    private MethodInvocation findPattern(Expression expression) {
+    public static MethodInvocation findInvocation(Expression expression, String methodName) {
         if (expression == null) {
             return null;
         }
         if (expression instanceof MethodInvocation invocation) {
-            if (invocation.getSimpleName().equals("pattern")) {
+            if (invocation.getSimpleName().equals(methodName)) {
                 return invocation;
             } else {
-                return findPattern(invocation.getSelect());
+                return findInvocation(invocation.getSelect(), methodName);
             }
         }
         return null;

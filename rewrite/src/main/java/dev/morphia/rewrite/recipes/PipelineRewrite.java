@@ -21,6 +21,7 @@ import org.openrewrite.java.tree.J.MethodInvocation;
 import org.openrewrite.java.tree.MethodCall;
 import org.openrewrite.java.tree.Space;
 
+import static dev.morphia.rewrite.recipes.RegexPatternMerge.findInvocation;
 import static java.util.Collections.emptyList;
 
 public class PipelineRewrite extends Recipe {
@@ -93,32 +94,44 @@ public class PipelineRewrite extends Recipe {
             @Override
             public @NotNull MethodInvocation visitMethodInvocation(@NotNull MethodInvocation methodInvocation,
                     @NotNull ExecutionContext context) {
+                MethodInvocation pipeline = findInvocation(methodInvocation, "pipeline");
                 if (MEGA_MATCHER.matches(methodInvocation)) {
-                    var updated = methodInvocation;
-                    while (MEGA_MATCHER.matches(updated) && MEGA_MATCHER.matches(updated.getSelect())) {
-                        final List<Expression> args = new ArrayList<>();
-                        MethodInvocation invocation = (MethodInvocation) updated.getSelect();
-                        if (invocation.getSimpleName().equals("match")) {
-                            maybeAddImport(Match.class.getName(), "match", false);
-                            MethodInvocation applied = MATCH.apply(new Cursor(getCursor(), invocation),
-                                    invocation.getCoordinates().replaceMethod());
-                            args.add(applied.withArguments(invocation.getArguments()).withSelect(null));
-                        } else {
-                            args.addAll(invocation.getArguments());
-                        }
-                        args.addAll(updated.getArguments());
-                        Space after = methodInvocation.getPadding().getSelect().getAfter();
-                        Space space = Space.build(getIndent(after), emptyList());
-                        var list = args.stream()
-                                .map(a -> (Expression) a.withPrefix(space))
-                                .toList();
+                    Expression updated = methodInvocation;
+                    MethodInvocation invocation = (MethodInvocation) updated;
+                    List<Expression> arguments = new ArrayList<>();
+                    while (MEGA_MATCHER.matches(updated)/* && MEGA_MATCHER.matches(updated.getSelect()) */) {
+                        invocation = (MethodInvocation) updated;
+                        collectArguments(arguments, invocation);
 
-                        updated = invocation.withArguments(list);
+                        updated = invocation.getSelect();
+
                     }
-                    return maybeAutoFormat(methodInvocation, updated.withName(methodInvocation.getName().withSimpleName("pipeline"))
+                    Space after = methodInvocation.getPadding().getSelect().getAfter();
+                    Space space = Space.build(getIndent(after), emptyList());
+                    arguments = arguments.stream()
+                            .map(a -> (Expression) a.withPrefix(space))
+                            .toList();
+
+                    invocation = invocation.withName(methodInvocation.getName().withSimpleName("pipeline"))
+                            .withArguments(arguments);
+
+                    after = invocation.getPadding().getSelect().getAfter();
+
+                    return maybeAutoFormat(methodInvocation, invocation
                             .withPrefix(Space.build("\n", emptyList())), context);
                 } else {
                     return super.visitMethodInvocation(methodInvocation, context);
+                }
+            }
+
+            private void collectArguments(List<Expression> args, MethodInvocation invocation) {
+                if (invocation.getSimpleName().equals("match")) {
+                    maybeAddImport(Match.class.getName(), "match", false);
+                    MethodInvocation applied = MATCH.apply(new Cursor(getCursor(), invocation),
+                            invocation.getCoordinates().replaceMethod());
+                    args.add(0, applied.withArguments(invocation.getArguments()).withSelect(null));
+                } else {
+                    args.addAll(0, invocation.getArguments());
                 }
             }
 

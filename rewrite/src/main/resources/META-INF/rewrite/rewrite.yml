@@ -3,6 +3,7 @@ name: dev.morphia.UpgradeToMorphia30
 displayName: Upgrade to Morphia 3.0
 description: Adopt new dependencies and breaking changes in moving to Morphia 3.
 recipeList:
+  - dev.morphia.rewrite.recipes.UnwrapFieldExpressions
   - dev.morphia.rewrite.recipes.PipelineRewrite
   - dev.morphia.rewrite.recipes.CreateDatastoreMigration
   - dev.morphia.rewrite.recipes.MorphiaConfigMigration
@@ -27,9 +28,15 @@ recipeList:
       oldFullyQualifiedTypeName: dev.morphia.mapping.MapperOptions.PropertyDiscovery
       newFullyQualifiedTypeName: dev.morphia.mapping.PropertyDiscovery
   - org.openrewrite.java.RemoveMethodInvocations:
+      methodPattern: dev.morphia.Datastore enableDocumentValidation(..)
+  - org.openrewrite.java.RemoveMethodInvocations:
       methodPattern: dev.morphia.MorphiaDatastore enableDocumentValidation(..)
   - org.openrewrite.java.RemoveMethodInvocations:
+      methodPattern: dev.morphia.Datastore enableCaps(..)
+  - org.openrewrite.java.RemoveMethodInvocations:
       methodPattern: dev.morphia.MorphiaDatastore enableCaps(..)
+  - org.openrewrite.java.RemoveMethodInvocations:
+      methodPattern: dev.morphia.Datastore ensureIndexes(..)
   - org.openrewrite.java.RemoveMethodInvocations:
       methodPattern: dev.morphia.MorphiaDatastore ensureIndexes(..)
   - dev.morphia.rewrite.recipes.RenameMethod:
@@ -64,8 +71,21 @@ recipeList:
         - dev.morphia.test.query.TestQuery check(dev.morphia.query.Query)
         - dev.morphia.test.TestUpdateOperations testUpsert()
         - dev.morphia.test.TestUpdateOperations doUpdates(..)
+        - dev.morphia.test.mapping.TestPropertyModel arrayFieldMapping()
+        - dev.morphia.test.mapping.TestPropertyModel collectionFieldMapping()
+        - dev.morphia.test.mapping.TestPropertyModel nestedCollectionsMapping()
+        - dev.morphia.test.mapping.TestPropertyModel nestedGenerics()
+        - dev.morphia.test.mapping.codec.TestDocumentWriter testAnd()
+        - dev.morphia.test.mapping.codec.TestDocumentWriter testOr()
+        - dev.morphia.test.query.TestQueriesOnReferences testWithKeyQuery()
   - dev.morphia.rewrite.recipes.RenameMethod:
       methodPatterns:
         - dev.morphia.mapping.codec.pojo.EntityModel getCollectionName() collectionName
         - dev.morphia.mapping.codec.pojo.EntityModel getDiscriminator() discriminator
         - dev.morphia.mapping.codec.pojo.EntityModel getDiscriminatorKey() discriminatorKey
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: dev.morphia.aggregation.codecs.ExpressionHelper
+      newFullyQualifiedTypeName: dev.morphia.mapping.codec.CodecHelper
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: dev.morphia.Datastore
+      newFullyQualifiedTypeName: dev.morphia.MorphiaDatastore

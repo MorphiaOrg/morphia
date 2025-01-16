@@ -137,4 +137,42 @@ public class PipelineRewriteTest extends MorphiaRewriteTest {
                         }"""));
     }
 
+    @Test
+    public void testMatch() {
+        rewriteRun(java(
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.query.MorphiaCursor;
+                        import dev.morphia.query.filters.Filters;
+                        import org.bson.Document;
+
+                        public class UnwrapTest {
+                          public MorphiaCursor<Document> update(Datastore ds) {
+                              Object e2 = ds.aggregate(Object.class)
+                                      .match(Filters.eq("reference", "ec"))
+                                      .execute(Object.class)
+                                      .tryNext();
+                          }
+                        }
+                        """,
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.query.MorphiaCursor;
+                        import dev.morphia.query.filters.Filters;
+                        import org.bson.Document;
+
+                        import static dev.morphia.aggregation.stages.Match.match;
+
+                        public class UnwrapTest {
+                          public MorphiaCursor<Document> update(Datastore ds) {
+                              Object e2 =#
+                                              ds.aggregate(Object.class)
+                                                      .pipeline(
+                                                              match(Filters.eq("reference", "ec")))
+                                      .execute(Object.class)
+                                      .tryNext();
+                          }
+                        }
+                        """.replace('#', ' ')));
+    }
 }
