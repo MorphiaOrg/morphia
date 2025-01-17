@@ -90,6 +90,3 @@ recipeList:
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: dev.morphia.aggregation.codecs.ExpressionHelper
       newFullyQualifiedTypeName: dev.morphia.mapping.codec.CodecHelper
-  - org.openrewrite.java.ChangeType:
-      oldFullyQualifiedTypeName: dev.morphia.Datastore
-      newFullyQualifiedTypeName: dev.morphia.MorphiaDatastore
