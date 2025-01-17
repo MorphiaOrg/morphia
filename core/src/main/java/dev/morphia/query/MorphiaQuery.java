@@ -45,12 +45,13 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
 /**
+ * @hidden
  * @param <T> the type
  * @morphia.internal
  */
 @SuppressWarnings({ "removal", "deprecation" })
 @MorphiaInternal
-class MorphiaQuery<T> implements Query<T> {
+public class MorphiaQuery<T> implements Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaQuery.class);
     private final DatastoreImpl datastore;
     private final Class<T> type;

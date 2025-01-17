@@ -48,6 +48,7 @@ import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaCursor;
+import dev.morphia.query.MorphiaQuery;
 import dev.morphia.query.Query;
 import dev.morphia.query.Sort;
 import dev.morphia.query.Update;
@@ -141,7 +142,7 @@ public class TestUpdateOperations extends TestBase {
 
         getDs().save(mapsOfStuff);
 
-        final Query<MapsOfStuff> query = getDs().find(MapsOfStuff.class);
+        final MorphiaQuery<MapsOfStuff> query = (MorphiaQuery<MapsOfStuff>) getDs().find(MapsOfStuff.class);
         query.update(set("map.k2", stuff1))
                 .execute();
 
