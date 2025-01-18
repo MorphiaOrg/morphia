@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import dev.morphia.Datastore;
+import dev.morphia.DatastoreImpl;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.mapping.DiscriminatorFunction;
@@ -194,7 +195,7 @@ public class TestConfigOptions extends TestBase {
 
     @Test
     public void discriminator() {
-        Datastore datastore = createDatastore(getMongoClient(), getDatabase().getName(),
+        DatastoreImpl datastore = (DatastoreImpl) createDatastore(getMongoClient(), getDatabase().getName(),
                 MapperOptions.builder()
                         .discriminator(DiscriminatorFunction.lowerSimpleName())
                         .build());
