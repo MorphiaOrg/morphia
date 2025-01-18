@@ -51,9 +51,7 @@ public class CreateDatastoreMigration extends Recipe {
     }
 
     public static class CreateDatastoreMigrationVisitor extends JavaIsoVisitor<ExecutionContext> {
-        private static final MethodMatcher METHOD_MATCHER = new MethodMatcher(
-                "dev.morphia.Morphia createDatastore(com.mongodb.client.MongoClient, String, dev.morphia.mapping" +
-                        ".MapperOptions)");
+        private static final MethodMatcher METHOD_MATCHER = new MethodMatcher("dev.morphia.Morphia createDatastore(..)");
 
         @Override
         public MethodInvocation visitMethodInvocation(@NotNull MethodInvocation methodInvocation, @NotNull ExecutionContext context) {
@@ -63,7 +61,12 @@ public class CreateDatastoreMigration extends Recipe {
 
                 List<Expression> arguments = methodInvocation.getArguments();
                 var databaseName = arguments.get(1);
-                var options = arguments.get(2);
+                Expression options;
+                if (arguments.size() == 3) {
+                    options = convertToMorphiaConfig(getCursor(), arguments.get(2), databaseName);
+                } else {
+                    options = synthesizeMorphiaConfig(getCursor(), databaseName);
+                }
 
                 MethodInvocation after = methodInvocation
                         .withMethodType(methodInvocation
@@ -71,11 +74,25 @@ public class CreateDatastoreMigration extends Recipe {
                                 .withParameterTypes(of(buildType(String.class.getName()),
                                         buildType(NEW_TYPE))))
                         .withArguments(
-                                of(arguments.get(0), convertToMorphiaConfig(getCursor(), options, databaseName)));
-                return autoFormat(after, context);
+                                of(arguments.get(0), options));
+                return maybeAutoFormat(methodInvocation, after, context);
             } else {
                 return super.visitMethodInvocation(methodInvocation, context);
             }
+        }
+
+        public static Expression synthesizeMorphiaConfig(Cursor cursor, @Nullable Expression databaseName) {
+            JavaTemplate databaseCall = JavaTemplate.builder("MorphiaConfig.load().database(#{any(java.lang.String)})")
+                    .javaParser(JavaParser.fromJavaVersion()
+                            .classpath("morphia-core"))
+                    .imports(NEW_TYPE)
+                    .build();
+
+            Cursor scope = new Cursor(cursor, databaseName);
+            MethodInvocation applied;
+            applied = databaseCall.apply(scope, databaseName.getCoordinates().replace(), databaseName);
+
+            return applied;
         }
 
         public static Expression convertToMorphiaConfig(Cursor cursor, Expression builder, @Nullable Expression databaseName) {

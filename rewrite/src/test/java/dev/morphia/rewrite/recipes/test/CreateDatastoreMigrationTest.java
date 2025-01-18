@@ -19,23 +19,22 @@ public class CreateDatastoreMigrationTest extends MorphiaRewriteTest {
     public void update() {
         rewriteRun(
                 //language=java
-                java(
-                        """
-                                import com.mongodb.client.MongoClient;
-                                import dev.morphia.Datastore;
-                                import dev.morphia.Morphia;
-                                import dev.morphia.mapping.MapperOptions;
+                java("""
+                        import com.mongodb.client.MongoClient;
+                        import dev.morphia.Datastore;
+                        import dev.morphia.Morphia;
+                        import dev.morphia.mapping.MapperOptions;
 
-                                public class UnwrapTest {
-                                    public void update() {
-                                        MongoClient client = null;
-                                        Datastore datastore = Morphia.createDatastore(client, "benchmarks", MapperOptions.builder()
-                                                                                                                         .discriminatorKey("__type")
-                                                                                                                         .mapSubPackages(true)
-                                                                                                                         .build());
-                                    }
-                                }
-                                """,
+                        public class UnwrapTest {
+                            public void update() {
+                                MongoClient client = null;
+                                Morphia.createDatastore(client, "benchmarks", MapperOptions.builder()
+                                    .discriminatorKey("__type")
+                                    .mapSubPackages(true)
+                                    .build());
+                            }
+                        }
+                        """,
                         """
                                 import com.mongodb.client.MongoClient;
                                 import dev.morphia.Datastore;
@@ -45,7 +44,7 @@ public class CreateDatastoreMigrationTest extends MorphiaRewriteTest {
                                 public class UnwrapTest {
                                     public void update() {
                                         MongoClient client = null;
-                                        Datastore datastore = Morphia.createDatastore(client,  MorphiaConfig.load().database("benchmarks")
+                                        Morphia.createDatastore(client,  MorphiaConfig.load().database("benchmarks")
                                                 .discriminatorKey("__type")
                                                 .mapSubPackages(true));
                                     }
@@ -54,40 +53,35 @@ public class CreateDatastoreMigrationTest extends MorphiaRewriteTest {
 
     }
 
-    //    @Test
-    public void variableArgument() {
+    @Test
+    public void clientAndDbNameOnly() {
         rewriteRun(
                 //language=java
-                java(
-                        """
+                java("""
+                        import com.mongodb.client.MongoClient;
+                        import dev.morphia.Datastore;
+                        import dev.morphia.Morphia;
+                        import dev.morphia.mapping.MapperOptions;
 
-                                import com.mongodb.client.MongoClient;
-                                      import dev.morphia.Datastore;
-                                      import dev.morphia.Morphia;
-                                      import dev.morphia.mapping.MapperOptions;
-
-                                      public class UnwrapTest {
-                                          public void update() {
-                                              MongoClient client = null;
-                                              MapperOptions options = null;
-                                              Datastore datastore = Morphia.createDatastore(client, "benchmarks",  options);
-                                          }
-                                      }
-                                      """,
+                        public class UnwrapTest {
+                            public void update() {
+                                MongoClient client = null;
+                                Datastore datastore = Morphia.createDatastore(client, "benchmarks");
+                            }
+                        }
+                        """,
                         """
                                 import com.mongodb.client.MongoClient;
-                                      import dev.morphia.Datastore;
-                                      import dev.morphia.Morphia;
+                                import dev.morphia.Datastore;
+                                import dev.morphia.Morphia;
                                 import dev.morphia.config.MorphiaConfig;
-                                import dev.morphia.mapping.MapperOptions;
 
                                 public class UnwrapTest {
-                                          public void update() {
-                                              MongoClient client = null;
-                                              MapperOptions options = null;
-                                              Datastore datastore = Morphia.createDatastore(client, options.database("benchmarks"));
-                                          }
-                                      }
+                                    public void update() {
+                                        MongoClient client = null;
+                                        Datastore datastore = Morphia.createDatastore(client, MorphiaConfig.load().database("benchmarks"));
+                                    }
+                                }
                                 """));
 
     }
