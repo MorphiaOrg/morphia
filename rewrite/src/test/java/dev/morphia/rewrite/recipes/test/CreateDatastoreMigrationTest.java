@@ -61,7 +61,6 @@ public class CreateDatastoreMigrationTest extends MorphiaRewriteTest {
                         import com.mongodb.client.MongoClient;
                         import dev.morphia.Datastore;
                         import dev.morphia.Morphia;
-                        import dev.morphia.mapping.MapperOptions;
 
                         public class UnwrapTest {
                             public void update() {
@@ -80,6 +79,38 @@ public class CreateDatastoreMigrationTest extends MorphiaRewriteTest {
                                     public void update() {
                                         MongoClient client = null;
                                         Datastore datastore = Morphia.createDatastore(client, MorphiaConfig.load().database("benchmarks"));
+                                    }
+                                }
+                                """));
+    }
+
+    @Test
+    public void clientAndDbNameOnlyStaticImport() {
+        rewriteRun(
+                //language=java
+                java("""
+                        import com.mongodb.client.MongoClient;
+                        import dev.morphia.Datastore;
+                        import static dev.morphia.Morphia.createDatastore;
+
+                        public class UnwrapTest {
+                            public void update() {
+                                MongoClient client = null;
+                                Datastore datastore = createDatastore(client, "benchmarks");
+                            }
+                        }
+                        """,
+                        """
+                                import com.mongodb.client.MongoClient;
+                                import dev.morphia.Datastore;
+                                import dev.morphia.config.MorphiaConfig;
+
+                                import static dev.morphia.Morphia.createDatastore;
+
+                                public class UnwrapTest {
+                                    public void update() {
+                                        MongoClient client = null;
+                                        Datastore datastore = createDatastore(client, MorphiaConfig.load().database("benchmarks"));
                                     }
                                 }
                                 """));

@@ -9,21 +9,19 @@ import javax.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 import org.openrewrite.Cursor;
 import org.openrewrite.ExecutionContext;
-import org.openrewrite.Preconditions;
 import org.openrewrite.Recipe;
 import org.openrewrite.TreeVisitor;
 import org.openrewrite.java.JavaIsoVisitor;
 import org.openrewrite.java.JavaParser;
 import org.openrewrite.java.JavaTemplate;
 import org.openrewrite.java.MethodMatcher;
-import org.openrewrite.java.search.UsesType;
 import org.openrewrite.java.tree.Expression;
 import org.openrewrite.java.tree.J.Identifier;
 import org.openrewrite.java.tree.J.MethodInvocation;
 import org.openrewrite.java.tree.JavaType;
+import org.openrewrite.java.tree.JavaType.Method;
 
 import static java.util.List.of;
-import static org.openrewrite.java.tree.JavaType.buildType;
 
 public class CreateDatastoreMigration extends Recipe {
     private static final String OLD_TYPE = "dev.morphia.mapping.MapperOptions";
@@ -46,17 +44,21 @@ public class CreateDatastoreMigration extends Recipe {
 
     @Override
     public TreeVisitor<?, ExecutionContext> getVisitor() {
-        return Preconditions.check(new UsesType<>(OLD_TYPE, true),
-                new CreateDatastoreMigrationVisitor());
+        return new CreateDatastoreMigrationVisitor();
     }
 
     public static class CreateDatastoreMigrationVisitor extends JavaIsoVisitor<ExecutionContext> {
-        private static final MethodMatcher METHOD_MATCHER = new MethodMatcher("dev.morphia.Morphia createDatastore(..)");
+        private static final List<MethodMatcher> METHOD_MATCHERS = List.of(
+                new MethodMatcher("dev.morphia.Morphia createDatastore(com.mongodb.client.MongoClient, String)"),
+                new MethodMatcher(
+                        "dev.morphia.Morphia createDatastore(com.mongodb.client.MongoClient, String, dev.morphia.mapping.MapperOptions)"));
+        //        private static final MethodMatcher STATIC_METHOD_MATCHER = new MethodMatcher("createDatastore(..)");
 
         @Override
         public MethodInvocation visitMethodInvocation(@NotNull MethodInvocation methodInvocation, @NotNull ExecutionContext context) {
-            if (METHOD_MATCHER.matches(methodInvocation)) {
+            if (METHOD_MATCHERS.stream().anyMatch(matcher -> matcher.matches(methodInvocation))) {
                 maybeAddImport(NEW_TYPE, null, false);
+                maybeAddImport("dev.morphia.Morphia", "createDatastore");
                 maybeRemoveImport(OLD_TYPE);
 
                 List<Expression> arguments = methodInvocation.getArguments();
@@ -68,31 +70,28 @@ public class CreateDatastoreMigration extends Recipe {
                     options = synthesizeMorphiaConfig(getCursor(), databaseName);
                 }
 
+                List<Expression> newArguments = of(arguments.get(0), options);
+                List<JavaType> types = newArguments.stream().map(Expression::getType)
+                        .toList();
+                Method methodType = methodInvocation.getMethodType().withParameterTypes(types);
                 MethodInvocation after = methodInvocation
-                        .withMethodType(methodInvocation
-                                .getMethodType()
-                                .withParameterTypes(of(buildType(String.class.getName()),
-                                        buildType(NEW_TYPE))))
-                        .withArguments(
-                                of(arguments.get(0), options));
+                        .withMethodType(methodType)
+                        .withArguments(newArguments)
+                        .withName(methodInvocation.getName().withType(methodType));
                 return maybeAutoFormat(methodInvocation, after, context);
             } else {
                 return super.visitMethodInvocation(methodInvocation, context);
             }
         }
 
-        public static Expression synthesizeMorphiaConfig(Cursor cursor, @Nullable Expression databaseName) {
+        public static Expression synthesizeMorphiaConfig(Cursor cursor, Expression databaseName) {
             JavaTemplate databaseCall = JavaTemplate.builder("MorphiaConfig.load().database(#{any(java.lang.String)})")
                     .javaParser(JavaParser.fromJavaVersion()
                             .classpath("morphia-core"))
                     .imports(NEW_TYPE)
                     .build();
 
-            Cursor scope = new Cursor(cursor, databaseName);
-            MethodInvocation applied;
-            applied = databaseCall.apply(scope, databaseName.getCoordinates().replace(), databaseName);
-
-            return applied;
+            return databaseCall.apply(new Cursor(cursor, databaseName), databaseName.getCoordinates().replace(), databaseName);
         }
 
         public static Expression convertToMorphiaConfig(Cursor cursor, Expression builder, @Nullable Expression databaseName) {
