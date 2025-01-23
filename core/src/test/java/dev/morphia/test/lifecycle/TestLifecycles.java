@@ -268,7 +268,7 @@ public class TestLifecycles extends TestBase {
 
     private static class NonNullValidation implements EntityInterceptor {
         @Override
-        public boolean hasAnnotation(Class<? extends Annotation> type) {
+        public boolean hasAnnotation(Class type) {
             return type.equals(PrePersist.class);
         }
 
