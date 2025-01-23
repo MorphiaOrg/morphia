@@ -28,6 +28,8 @@ public class UnwrapFieldExpressions extends Recipe {
             @Override
             public J visitMethodInvocation(J.MethodInvocation method, @NotNull ExecutionContext context) {
                 if (fieldMatcher.matches(method) || valueMatcher.matches(method)) {
+                    maybeRemoveImport("dev.morphia.aggregation.expressions.Expressions.field");
+                    maybeRemoveImport("dev.morphia.aggregation.expressions.Expressions.value");
                     return method.getArguments().get(0);
                 } else {
                     return super.visitMethodInvocation(method, context);

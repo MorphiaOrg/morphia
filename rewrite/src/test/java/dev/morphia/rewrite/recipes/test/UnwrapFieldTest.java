@@ -75,8 +75,6 @@ public class UnwrapFieldTest extends MorphiaRewriteTest {
 
                                     import dev.morphia.aggregation.expressions.ComparisonExpressions;
                                     import static dev.morphia.aggregation.stages.Projection.project;
-                                    import static dev.morphia.aggregation.expressions.Expressions.field;
-                                    import static dev.morphia.aggregation.expressions.Expressions.value;
                                     import dev.morphia.aggregation.Aggregation;
 
                                     public class UnwrapTest {

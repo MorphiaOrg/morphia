@@ -8,6 +8,7 @@ recipeList:
   - dev.morphia.rewrite.recipes.CreateDatastoreMigration
   - dev.morphia.rewrite.recipes.MorphiaConfigMigration
   - dev.morphia.rewrite.recipes.RegexPatternMerge
+  - dev.morphia.rewrite.recipes.ModifyExecute
   - dev.morphia.rewrite.recipes.UpdateExecute
   - dev.morphia.rewrite.recipes.LogicalFilterAdd
   - org.openrewrite.java.RemoveAnnotation:
@@ -45,6 +46,7 @@ recipeList:
   - dev.morphia.rewrite.recipes.RenameMethod:
       methodPatterns:
         - dev.morphia.aggregation.expressions.Expressions of(..) document
+        - dev.morphia.mapping.Mapper getInterceptors() getListeners
   - org.openrewrite.maven.UpgradeDependencyVersion:
       groupId: dev.morphia.morphia
       artifactId: morphia-core
@@ -68,6 +70,7 @@ recipeList:
       filePattern: src/test/java/dev/morphia/test/mapping/experimental/MorphiaReferenceTest.java
   - dev.morphia.rewrite.recipes.internal.RemoveMethodDeclaration:
       methodPatterns:
+        - dev.morphia.test.TestDatastore testAlternateCollectionsWithLegacyQuery()
         - dev.morphia.test.TestUpdateOperations testUpsert()
         - dev.morphia.test.TestUpdateOperations doUpdates(..)
         - dev.morphia.test.mapping.TestPropertyModel arrayFieldMapping()
@@ -84,6 +87,7 @@ recipeList:
         - dev.morphia.test.query.TestQuery testFetchKeys()
         - dev.morphia.test.query.TestQuery check(dev.morphia.query.Query)
         - dev.morphia.test.query.TestQueriesOnReferences testWithKeyQuery()
+        - dev.morphia.test.mapping.codec.pojo.EntityModelTest testFindParameterization()
   - dev.morphia.rewrite.recipes.RenameMethod:
       methodPatterns:
         - dev.morphia.mapping.codec.pojo.EntityModel getCollectionName() collectionName
