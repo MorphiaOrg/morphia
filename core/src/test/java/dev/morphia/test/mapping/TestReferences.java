@@ -17,6 +17,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.client.model.ReturnDocument;
 
 import dev.morphia.Datastore;
+import dev.morphia.DatastoreImpl;
 import dev.morphia.Key;
 import dev.morphia.ModifyOptions;
 import dev.morphia.aggregation.Aggregation;
@@ -315,7 +316,7 @@ public class TestReferences extends ProxyTestBase {
 
     @Test
     public void testLazyWithParent() {
-        Datastore datastore = getDs();
+        DatastoreImpl datastore = getDs();
         datastore.getMapper().map(Entity1.class, Entity2.class, EntityBase.class);
 
         Entity1 entity1 = new Entity1("entity1");
@@ -403,8 +404,8 @@ public class TestReferences extends ProxyTestBase {
 
     @Test
     public void testMultipleDatabasesSingleThreaded() {
-        final Datastore ds1 = createDatastore(getMongoClient(), "db1");
-        final Datastore ds2 = createDatastore(getMongoClient(), "db2");
+        final DatastoreImpl ds1 = (DatastoreImpl) createDatastore(getMongoClient(), "db1");
+        final DatastoreImpl ds2 = (DatastoreImpl) createDatastore(getMongoClient(), "db2");
 
         final FacebookUser db1Friend = new FacebookUser(3, "DB1 FaceBook Friend");
         ds1.save(db1Friend);
