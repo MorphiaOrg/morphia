@@ -50,7 +50,20 @@ public final class TypeExpressions {
      * @aggregation.expression $toBool
      */
     public static Expression toBool(Object input) {
+
         return new Expression("$toBool", wrap(input));
+    }
+
+    /**
+     * Converts value to a Date.
+     *
+     * @param input the value to process
+     * @return the new expression
+     * @aggregation.expression $toDate
+     * @see DateExpressions#toDate(Object)
+     */
+    public static Expression toDate(Object input) {
+        return DateExpressions.toDate(input);
     }
 
     /**

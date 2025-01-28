@@ -3,7 +3,11 @@ package dev.morphia.rewrite.recipes;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.morphia.aggregation.stages.Limit;
 import dev.morphia.aggregation.stages.Match;
+import dev.morphia.aggregation.stages.Skip;
+import dev.morphia.aggregation.stages.SortByCount;
+import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.query.filters.Filter;
 
 import org.jetbrains.annotations.NotNull;
@@ -53,10 +57,12 @@ public class PipelineRewrite extends Recipe {
             new MethodMatcher(AGGREGATION + " replaceRoot(dev.morphia.aggregation.stages.ReplaceRoot)"),
             new MethodMatcher(AGGREGATION + " replaceWith(dev.morphia.aggregation.stages.ReplaceWith)"),
             new MethodMatcher(AGGREGATION + " sample(dev.morphia.aggregation.stages.Sample)"),
+            new MethodMatcher(AGGREGATION + " set(dev.morphia.aggregation.stages.AddFields)"),
             new MethodMatcher(AGGREGATION + " set(dev.morphia.aggregation.stages.Set)"),
             new MethodMatcher(AGGREGATION + " skip(long)"),
             new MethodMatcher(AGGREGATION + " sort(dev.morphia.aggregation.stages.Sort)"),
             new MethodMatcher(AGGREGATION + " sortByCount(dev.morphia.aggregation.stages.SortByCount)"),
+            new MethodMatcher(AGGREGATION + " sortByCount(dev.morphia.aggregation.expressions.impls.Expression)"),
             new MethodMatcher(AGGREGATION + " unionWith(Class,Stage...)"),
             new MethodMatcher(AGGREGATION + " unionWith(String,Stage...)"),
             new MethodMatcher(AGGREGATION + " unset(dev.morphia.aggregation.stages.Unset)"),
@@ -70,11 +76,26 @@ public class PipelineRewrite extends Recipe {
         }
     };
 
+    private static final JavaTemplate LIMIT = (JavaTemplate.builder("Limit.limit()"))
+            .javaParser(JavaParser.fromJavaVersion()
+                    .classpath("morphia-core"))
+            .imports(Limit.class.getName())
+            .build();
     private static final JavaTemplate MATCH = (JavaTemplate.builder("Match.match()"))
             .javaParser(JavaParser.fromJavaVersion()
                     .classpath("morphia-core"))
             .imports(Filter.class.getName())
             .imports(Match.class.getName())
+            .build();
+    private static final JavaTemplate SKIP = (JavaTemplate.builder("Skip.skip()"))
+            .javaParser(JavaParser.fromJavaVersion()
+                    .classpath("morphia-core"))
+            .imports(Skip.class.getName())
+            .build();
+    private static final JavaTemplate SORT_BY_COUNT = (JavaTemplate.builder("SortByCount.sortByCount()"))
+            .javaParser(JavaParser.fromJavaVersion()
+                    .classpath("morphia-core"))
+            .imports(SortByCount.class.getName())
             .build();
 
     @Override
@@ -115,8 +136,6 @@ public class PipelineRewrite extends Recipe {
                     invocation = invocation.withName(methodInvocation.getName().withSimpleName("pipeline"))
                             .withArguments(arguments);
 
-                    after = invocation.getPadding().getSelect().getAfter();
-
                     return maybeAutoFormat(methodInvocation, invocation
                             .withPrefix(Space.build("\n", emptyList())), context);
                 } else {
@@ -125,14 +144,24 @@ public class PipelineRewrite extends Recipe {
             }
 
             private void collectArguments(List<Expression> args, MethodInvocation invocation) {
-                if (invocation.getSimpleName().equals("match")) {
-                    maybeAddImport(Match.class.getName(), "match", false);
-                    MethodInvocation applied = MATCH.apply(new Cursor(getCursor(), invocation),
-                            invocation.getCoordinates().replaceMethod());
-                    args.add(0, applied.withArguments(invocation.getArguments()).withSelect(null));
-                } else {
-                    args.addAll(0, invocation.getArguments());
+                switch (invocation.getSimpleName()) {
+                    case "limit" -> collect(Limit.class, "limit", LIMIT, invocation, args);
+                    case "match" -> collect(Match.class, "match", MATCH, invocation, args);
+                    case "skip" -> collect(Skip.class, "skip", SKIP, invocation, args);
+                    case "sortByCount" -> collect(SortByCount.class, "sortByCount", SORT_BY_COUNT, invocation, args);
+                    default -> args.addAll(0, invocation.getArguments());
                 }
+            }
+
+            private void collect(Class<? extends Stage> type,
+                    String method,
+                    JavaTemplate template,
+                    MethodInvocation invocation,
+                    List<Expression> args) {
+                maybeAddImport(type.getName(), method, false);
+                MethodInvocation applied = template.apply(new Cursor(getCursor(), invocation),
+                        invocation.getCoordinates().replaceMethod());
+                args.add(0, applied.withArguments(invocation.getArguments()).withSelect(null));
             }
 
         };

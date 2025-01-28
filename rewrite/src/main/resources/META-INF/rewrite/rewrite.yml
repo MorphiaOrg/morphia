@@ -68,6 +68,8 @@ recipeList:
       filePattern: src/test/java/dev/morphia/test/MorphiaVersionTest.java
   - org.openrewrite.DeleteSourceFiles:
       filePattern: src/test/java/dev/morphia/test/mapping/experimental/MorphiaReferenceTest.java
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: src/test/java/dev/morphia/test/callbacks/TestInterceptors.java
   - dev.morphia.rewrite.recipes.internal.RemoveMethodDeclaration:
       methodPatterns:
         - dev.morphia.test.TestDatastore testAlternateCollectionsWithLegacyQuery()
