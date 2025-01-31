@@ -1,6 +1,5 @@
 package dev.morphia.test.lifecycle;
 
-import java.lang.annotation.Annotation;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Calendar;
@@ -276,7 +275,7 @@ public class TestLifecycles extends TestBase {
         public void prePersist(@NotNull Object ent, @NotNull Document document, @NotNull Datastore datastore) {
             DatastoreImpl ds = (DatastoreImpl) datastore;
             final List<PropertyModel> fieldsToTest = ds.getMapper().getEntityModel(ent.getClass())
-                                                               .getProperties(NonNull.class);
+                    .getProperties(NonNull.class);
             for (PropertyModel mf : fieldsToTest) {
                 if (mf.getValue(ent) == null) {
                     throw new NonNullValidationException(mf);
