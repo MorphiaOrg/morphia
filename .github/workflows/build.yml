@@ -80,7 +80,7 @@ jobs:
       matrix:
         mongo: ${{ fromJson(needs.matrix.outputs.version_matrix) }}
         driver: ${{ fromJson(needs.matrix.outputs.driver_latest) }}
-        java: [ 11 ]
+        java: [ 11, 17, 21 ]
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     secrets:
       DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
@@ -99,7 +99,7 @@ jobs:
       fail-fast: false
       matrix:
         driver: ${{ fromJson(needs.matrix.outputs.driver_matrix) }}
-        java: [ 11 ]
+        java: [ 11, 17, 21 ]
         mongo: [ 7 ]
         include:
           - java: 21
