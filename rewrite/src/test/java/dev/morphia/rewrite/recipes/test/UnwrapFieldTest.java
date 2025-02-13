@@ -9,34 +9,6 @@ import org.openrewrite.Recipe;
 import static org.openrewrite.java.Assertions.java;
 
 public class UnwrapFieldTest extends MorphiaRewriteTest {
-
-    /*
-     * @Override
-     * public String[] classpath() {
-     * List<URI> runtimeClasspath = new ClassGraph().disableNestedJarScanning().getClasspathURIs();
-     * List<String> classpath = runtimeClasspath.stream()
-     * .filter(uri -> {
-     * String string = uri.toString();
-     * return string.contains("mongodb") || string.contains("bson");
-     * })
-     * .map(uri -> {
-     * return new File(uri).getName().replaceAll("-[0-9].*", "");
-     * })
-     * .collect(ArrayList::new, List::add, List::addAll);
-     * var core = runtimeClasspath.stream()
-     * .filter(uri -> {
-     * String string = uri.toString();
-     * return string.contains("morphia") && string.contains("core");
-     * })
-     * .findFirst().orElseThrow().toString();
-     * 
-     * final String artifact = core.contains("morphia-core") ? "morphia-core" : "morphia/core";
-     * 
-     * classpath.add(artifact);
-     * return classpath.toArray(new String[0]);
-     * }
-     */
-
     @Override
     @NotNull
     protected Recipe getRecipe() {
@@ -138,20 +110,19 @@ public class UnwrapFieldTest extends MorphiaRewriteTest {
                                 import static java.util.Arrays.asList;
 
                                 public class UnwrapTest {
-                                   public void update(Aggregation<?> aggregation) {
-                                    assertAndCheckDocShape("{ $allElementsTrue: [ [ true, 1, 'someString' ] ] }",
+                                    public void update(Aggregation<?> aggregation) {
+                                        assertAndCheckDocShape("{ $allElementsTrue: [ [ true, 1, 'someString' ] ] }",
                                             allElementsTrue(List.of(true, 1, "someString")), true);
-                                    assertAndCheckDocShape("{ $allElementsTrue: [ [ [ false ] ] ] }",
+                                        assertAndCheckDocShape("{ $allElementsTrue: [ [ [ false ] ] ] }",
                                             allElementsTrue(List.of(List.of(false))), true);
-                                    assertAndCheckDocShape("{ $allElementsTrue: [ [ ] ] }",
+                                        assertAndCheckDocShape("{ $allElementsTrue: [ [ ] ] }",
                                             allElementsTrue(List.of()), true);
-                                    assertAndCheckDocShape("{ $allElementsTrue: [ [ null, false, 0 ] ] }",
+                                        assertAndCheckDocShape("{ $allElementsTrue: [ [ null, false, 0 ] ] }",
                                             allElementsTrue(asList(null, false, 0)), false);
-                                   }
+                                    }
 
-                                   protected void assertAndCheckDocShape(String expectedString, Expression value, Object expectedValue) {
-                                       int x = 32;
-                                   }
+                                    protected void assertAndCheckDocShape(String expectedString, Expression value, Object expectedValue) {
+                                    }
                                 }
                                 """));
     }

@@ -5,12 +5,14 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.aggregation.expressions.DateExpressions;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
+
 /**
  * Reusable type for ISO Date related expressions.
  *
- * @see DateExpressions#isoDayOfWeek(Expression)
- * @see DateExpressions#isoWeek(Expression)
- * @see DateExpressions#isoWeekYear(Expression)
+ * @see DateExpressions#isoDayOfWeek(Object)
+ * @see DateExpressions#isoWeek(Object)
+ * @see DateExpressions#isoWeekYear(Object)
  */
 public class IsoDates extends Expression {
     private final Expression date;
@@ -55,8 +57,8 @@ public class IsoDates extends Expression {
      * @param timezone the expression
      * @return this
      */
-    public IsoDates timezone(Expression timezone) {
-        this.timezone = timezone;
+    public IsoDates timezone(Object timezone) {
+        this.timezone = wrap(timezone);
         return this;
     }
 }

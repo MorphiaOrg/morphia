@@ -2,6 +2,8 @@ package dev.morphia.aggregation.expressions.impls;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
 
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
+
 /**
  * Removes whitespace or the specified characters from a string.
  */
@@ -25,8 +27,8 @@ public class TrimExpression extends Expression {
      * @param chars The character(s) to trim from input.
      * @return this
      */
-    public TrimExpression chars(Expression chars) {
-        this.chars = chars;
+    public TrimExpression chars(String chars) {
+        this.chars = wrap(chars);
         return this;
     }
 

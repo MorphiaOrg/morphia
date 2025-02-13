@@ -9,10 +9,12 @@ recipeList:
   - dev.morphia.rewrite.recipes.MorphiaConfigMigration
   - dev.morphia.rewrite.recipes.RegexPatternMerge
   - dev.morphia.rewrite.recipes.ModifyExecute
+  - dev.morphia.rewrite.recipes.ModifyReturnType
   - dev.morphia.rewrite.recipes.UpdateExecute
+  - dev.morphia.rewrite.recipes.UpdateReturnType
   - dev.morphia.rewrite.recipes.LogicalFilterAdd
   - org.openrewrite.java.RemoveAnnotation:
-      annotationPattern: '@dev.morphia.annotations.Embedded(..)'
+      annotationPattern: '@dev.morphia.annotations.Embedded'
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: dev.morphia.mapping.MapperOptions
       newFullyQualifiedTypeName: dev.morphia.config.MorphiaConfig
@@ -70,8 +72,46 @@ recipeList:
       filePattern: src/test/java/dev/morphia/test/mapping/experimental/MorphiaReferenceTest.java
   - org.openrewrite.DeleteSourceFiles:
       filePattern: src/test/java/dev/morphia/test/callbacks/TestInterceptors.java
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: src/test/java/dev/morphia/test/aggregation/codecs/stages/CodecStructureTest.java
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: src/test/java/dev/morphia/test/aggregation/expressions/ExpressionsTestBase.java
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: src/test/java/dev/morphia/test/aggregation/expressions/AccumulatorExpressionsTest.java
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: src/test/java/dev/morphia/test/aggregation/expressions/ArrayExpressionsTest.java
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: src/test/java/dev/morphia/test/aggregation/expressions/BooleanExpressionsTest.java
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: src/test/java/dev/morphia/test/aggregation/expressions/ComparisonExpressionsTest.java
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: src/test/java/dev/morphia/test/aggregation/expressions/ConditionalExpressionsTest.java
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: src/test/java/dev/morphia/test/aggregation/expressions/DataSizeExpressionsTest.java
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: src/test/java/dev/morphia/test/aggregation/expressions/ExpressionsTest.java
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: src/test/java/dev/morphia/test/aggregation/expressions/LiteralExpressionExpressionTest.java
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: src/test/java/dev/morphia/test/aggregation/expressions/MathExpressionTest.java
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: src/test/java/dev/morphia/test/aggregation/expressions/SetExpressionsTest.java
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: src/test/java/dev/morphia/test/aggregation/expressions/StringExpressionsTest.java
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: src/test/java/dev/morphia/test/aggregation/expressions/TestDateExpression.java
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: src/test/java/dev/morphia/test/aggregation/expressions/TrigonometryExpressionsTest.java
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: src/test/java/dev/morphia/test/aggregation/expressions/TypeExpressionsTest.java
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: src/test/java/dev/morphia/test/aggregation/expressions/VariableExpressionsTest.java
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: src/test/java/dev/morphia/test/aggregation/TestDateExpression.java
   - dev.morphia.rewrite.recipes.internal.RemoveMethodDeclaration:
       methodPatterns:
+        - dev.morphia.test.TestBase mapperOptions()
+        - dev.morphia.test.TestBase queryFactories()
         - dev.morphia.test.TestDatastore testAlternateCollectionsWithLegacyQuery()
         - dev.morphia.test.TestUpdateOperations testUpsert()
         - dev.morphia.test.TestUpdateOperations doUpdates(..)

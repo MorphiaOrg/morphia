@@ -6,6 +6,8 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
+import static dev.morphia.aggregation.expressions.Expressions.wrap;
+
 /**
  * Defines a logical expression.
  *
@@ -56,6 +58,19 @@ public class LogicalExpression extends Expression {
     @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
     public LogicalExpression add(Expression expression) {
         value().add(expression);
+        return this;
+    }
+
+    /**
+     * Adds a new expression to this LogicalExpression.
+     *
+     * @param value the new expression
+     * @return this
+     * @since 2.3
+     */
+    @SuppressFBWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
+    public LogicalExpression add(boolean value) {
+        value().add(wrap(value));
         return this;
     }
 }
