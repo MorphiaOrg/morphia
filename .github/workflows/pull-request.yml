@@ -12,6 +12,4 @@ jobs:
     needs:
       - CodeAudits
     uses: evanchooly/workflows/.github/workflows/pull-request.yml@master
-    with:
-      maven-flags: "-Dmongodb=6"
 
