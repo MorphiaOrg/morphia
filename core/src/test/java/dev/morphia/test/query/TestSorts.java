@@ -6,7 +6,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Text;
 import dev.morphia.query.FindOptions;
-import dev.morphia.query.Query;
+import dev.morphia.query.MorphiaQuery;
 import dev.morphia.test.TemplatedTestBase;
 
 import org.testng.annotations.Test;
@@ -23,7 +23,7 @@ public class TestSorts extends TemplatedTestBase {
         getMapper().map(Article.class);
         getDs().ensureIndexes();
 
-        Query<Article> query = getDs().find(Article.class)
+        MorphiaQuery<Article> query = (MorphiaQuery<Article>) getDs().find(Article.class)
                 .filter(text("coffee"));
         FindOptions options = new FindOptions()
                 .logQuery()

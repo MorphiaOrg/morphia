@@ -2,7 +2,7 @@ package dev.morphia.test.sharding;
 
 import java.time.LocalDateTime;
 
-import dev.morphia.Datastore;
+import dev.morphia.DatastoreImpl;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.ShardKey;
@@ -29,7 +29,7 @@ public class TestSharding extends TestBase {
     public void testShardCollection() {
         checkMinServerVersion(6.0);
         withSharding(() -> {
-            Datastore datastore = getDs();
+            DatastoreImpl datastore = getDs();
             datastore.getDatabase().createCollection("split_brain"); // make sure the db exists on 4.0.x
             datastore.getMapper().map(Sharded.class);
             datastore.shardCollections();

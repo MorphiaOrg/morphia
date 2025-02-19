@@ -39,7 +39,7 @@ public class TestMapper extends TestBase {
         } else {
             assertNotSame(originalEntity.superClass, clonedEntity.superClass);
         }
-        originalEntity.subtypes.forEach(subtype -> {
+        originalEntity.getSubtypes().forEach(subtype -> {
             assertNotSame(subtype, findSubtype(clonedEntity, subtype));
         });
         originalEntity.getProperties().forEach(propertyModel -> {
@@ -49,7 +49,7 @@ public class TestMapper extends TestBase {
     }
 
     private static EntityModel findSubtype(EntityModel clonedEntity, EntityModel subtype) {
-        return clonedEntity.subtypes.stream()
+        return clonedEntity.getSubtypes().stream()
                 .filter(clone -> clone.getType().equals(subtype.getType()))
                 .findFirst()
                 .orElseThrow(() -> new MappingException(

@@ -25,7 +25,6 @@ import org.bson.Document;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static dev.morphia.aggregation.expressions.ComparisonExpressions.gt;
 import static dev.morphia.aggregation.expressions.Expressions.field;
 import static dev.morphia.aggregation.expressions.Expressions.value;
 import static dev.morphia.aggregation.expressions.Miscellaneous.rand;
@@ -184,7 +183,7 @@ public class FiltersTest extends TestBase {
                 parse("{ '_id' : 5, 'category' : 'travel', 'budget': 200, 'spent': 650 }")));
 
         List<Budget> budgets = getDs().find(Budget.class)
-                .filter(expr(gt(field("spent"), field("budget")))).iterator()
+                .filter(expr(ComparisonExpressions.gt(field("spent"), field("budget")))).iterator()
                 .toList();
 
         assertEquals(budgets.size(), 3);

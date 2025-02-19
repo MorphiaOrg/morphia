@@ -1,6 +1,5 @@
 package dev.morphia.test.lifecycle;
 
-import java.lang.annotation.Annotation;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Calendar;
@@ -14,6 +13,7 @@ import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.Datastore;
+import dev.morphia.DatastoreImpl;
 import dev.morphia.EntityInterceptor;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -267,13 +267,14 @@ public class TestLifecycles extends TestBase {
 
     private static class NonNullValidation implements EntityInterceptor {
         @Override
-        public boolean hasAnnotation(Class<? extends Annotation> type) {
+        public boolean hasAnnotation(Class type) {
             return type.equals(PrePersist.class);
         }
 
         @Override
         public void prePersist(@NotNull Object ent, @NotNull Document document, @NotNull Datastore datastore) {
-            final List<PropertyModel> fieldsToTest = datastore.getMapper().getEntityModel(ent.getClass())
+            DatastoreImpl ds = (DatastoreImpl) datastore;
+            final List<PropertyModel> fieldsToTest = ds.getMapper().getEntityModel(ent.getClass())
                     .getProperties(NonNull.class);
             for (PropertyModel mf : fieldsToTest) {
                 if (mf.getValue(ent) == null) {
