@@ -14,7 +14,7 @@ import static java.util.Collections.singletonList;
 /**
  * Defines helper methods for specifying operations for updates or findAndModify
  *
- * @see Query#update(UpdateOperator, UpdateOperator...)
+ * @see Query#update(UpdateOperator...)
  * @see Query#modify(UpdateOperator, UpdateOperator...)
  * @since 2.0
  */
