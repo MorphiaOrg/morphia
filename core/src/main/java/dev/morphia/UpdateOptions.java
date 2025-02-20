@@ -117,6 +117,12 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
         return this;
     }
 
+    @Override
+    public UpdateOptions sort(Bson sort) {
+        super.sort(sort);
+        return this;
+    }
+
     /**
      * @param hint the hint to apply
      * @return this

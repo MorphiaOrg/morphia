@@ -101,6 +101,12 @@ public class ReplaceOptions extends com.mongodb.client.model.ReplaceOptions impl
         return this;
     }
 
+    @Override
+    public ReplaceOptions sort(Bson sort) {
+        super.sort(sort);
+        return this;
+    }
+
     /**
      * Sets the write concern to use for the insert.
      *
