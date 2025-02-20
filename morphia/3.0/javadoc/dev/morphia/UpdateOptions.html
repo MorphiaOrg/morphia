@@ -161,16 +161,22 @@ implements dev.morphia.internal.WriteConfigurable&lt;<a href="UpdateOptions.html
 <div class="block">If true, sets this update to affect all matched documents.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#upsert(boolean)" class="member-name-link">upsert</a><wbr>(boolean&nbsp;upsert)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#sort(org.bson.conversions.Bson)" class="member-name-link">sort</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/conversions/Bson.html" title="class or interface in org.bson.conversions" class="external-link">Bson</a>&nbsp;sort)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#writeConcern(com.mongodb.WriteConcern)" class="member-name-link">writeConcern</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-core/com/mongodb/WriteConcern.html" title="class or interface in com.mongodb" class="external-link">WriteConcern</a>&nbsp;writeConcern)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#upsert(boolean)" class="member-name-link">upsert</a><wbr>(boolean&nbsp;upsert)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#writeConcern(com.mongodb.WriteConcern)" class="member-name-link">writeConcern</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-core/com/mongodb/WriteConcern.html" title="class or interface in com.mongodb" class="external-link">WriteConcern</a>&nbsp;writeConcern)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the write concern</div>
 </div>
 </div>
 </div>
 </div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-com.mongodb.client.model.UpdateOptions">Methods inherited from class&nbsp;com.mongodb.client.model.<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-core/com/mongodb/client/model/UpdateOptions.html" title="class or interface in com.mongodb.client.model" class="external-link">UpdateOptions</a></h3>
+<code><a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-core/com/mongodb/client/model/UpdateOptions.html#getSort()" title="class or interface in com.mongodb.client.model" class="external-link">getSort</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -290,6 +296,16 @@ implements dev.morphia.internal.WriteConfigurable&lt;<a href="UpdateOptions.html
 <li><a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-core/com/mongodb/client/model/UpdateOptions.html#let(org.bson.conversions.Bson)" title="class or interface in com.mongodb.client.model" class="external-link"><code>UpdateOptions.let(Bson)</code></a></li>
 </ul>
 </dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="sort(org.bson.conversions.Bson)">
+<h3>sort</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a></span>&nbsp;<span class="element-name">sort</span><wbr><span class="parameters">(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/conversions/Bson.html" title="class or interface in org.bson.conversions" class="external-link">Bson</a>&nbsp;sort)</span></div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-core/com/mongodb/client/model/UpdateOptions.html#sort(org.bson.conversions.Bson)" title="class or interface in com.mongodb.client.model" class="external-link">sort</a></code>&nbsp;in class&nbsp;<code><a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-core/com/mongodb/client/model/UpdateOptions.html" title="class or interface in com.mongodb.client.model" class="external-link">UpdateOptions</a></code></dd>
 </dl>
 </section>
 </li>

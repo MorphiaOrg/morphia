@@ -78,6 +78,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="dev/morphia/annotations/Validation.html#action()" class="member-name-link">action()</a> - Element in annotation interface dev.morphia.annotations.<a href="dev/morphia/annotations/Validation.html" title="annotation interface in dev.morphia.annotations">Validation</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="dev/morphia/aggregation/expressions/impls/LogicalExpression.html#add(boolean)" class="member-name-link">add(boolean)</a> - Method in class dev.morphia.aggregation.expressions.impls.<a href="dev/morphia/aggregation/expressions/impls/LogicalExpression.html" title="class in dev.morphia.aggregation.expressions.impls">LogicalExpression</a></dt>
+<dd>
+<div class="block">Adds a new expression to this LogicalExpression.</div>
+</dd>
 <dt><a href="dev/morphia/aggregation/expressions/impls/LogicalExpression.html#add(dev.morphia.aggregation.expressions.impls.Expression)" class="member-name-link">add(Expression)</a> - Method in class dev.morphia.aggregation.expressions.impls.<a href="dev/morphia/aggregation/expressions/impls/LogicalExpression.html" title="class in dev.morphia.aggregation.expressions.impls">LogicalExpression</a></dt>
 <dd>
 <div class="block">Adds a new expression to this LogicalExpression.</div>
@@ -542,7 +546,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns a Change Stream cursor on a collection, a database, or an entire cluster.</div>
 </dd>
-<dt><a href="dev/morphia/aggregation/expressions/impls/TrimExpression.html#chars(dev.morphia.aggregation.expressions.impls.Expression)" class="member-name-link">chars(Expression)</a> - Method in class dev.morphia.aggregation.expressions.impls.<a href="dev/morphia/aggregation/expressions/impls/TrimExpression.html" title="class in dev.morphia.aggregation.expressions.impls">TrimExpression</a></dt>
+<dt><a href="dev/morphia/aggregation/expressions/impls/TrimExpression.html#chars(java.lang.String)" class="member-name-link">chars(String)</a> - Method in class dev.morphia.aggregation.expressions.impls.<a href="dev/morphia/aggregation/expressions/impls/TrimExpression.html" title="class in dev.morphia.aggregation.expressions.impls">TrimExpression</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/mapping/DiscriminatorFunction.html#className()" class="member-name-link">className()</a> - Static method in class dev.morphia.mapping.<a href="dev/morphia/mapping/DiscriminatorFunction.html" title="class in dev.morphia.mapping">DiscriminatorFunction</a></dt>
 <dd>
@@ -1470,10 +1474,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Processes multiple aggregation pipelines within a single stage on the same set of input documents.</div>
 </dd>
-<dt><a href="dev/morphia/aggregation/expressions/Expressions.html#field(java.lang.String)" class="member-name-link">field(String)</a> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/Expressions.html" title="class in dev.morphia.aggregation.expressions">Expressions</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>&nbsp;</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/stages/Group.html#field(java.lang.String)" class="member-name-link">field(String)</a> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Group.html" title="class in dev.morphia.aggregation.stages">Group</a></dt>
 <dd>
 <div class="block">Adds a field to the group.</div>
@@ -1552,6 +1552,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="dev/morphia/aggregation/stages/Fill.Method.html" class="type-name-link" title="enum class in dev.morphia.aggregation.stages">Fill.Method</a> - Enum Class in <a href="dev/morphia/aggregation/stages/package-summary.html">dev.morphia.aggregation.stages</a></dt>
 <dd>
 <div class="block">Possible methods for defining fill strategies.</div>
+</dd>
+<dt><a href="dev/morphia/aggregation/expressions/ArrayExpressions.html#filter(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)" class="member-name-link">filter(Expression, Expression)</a> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/ArrayExpressions.html" title="class in dev.morphia.aggregation.expressions">ArrayExpressions</a></dt>
+<dd>
+<div class="block">Selects a subset of the array to return an array with only the elements that match the filter condition.</div>
 </dd>
 <dt><a href="dev/morphia/query/Query.html#filter(dev.morphia.query.filters.Filter...)" class="member-name-link">filter(Filter...)</a> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
 <dd>
@@ -3862,6 +3866,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="dev/morphia/ModifyOptions.html#sort(org.bson.conversions.Bson)" class="member-name-link">sort(Bson)</a> - Method in class dev.morphia.<a href="dev/morphia/ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></dt>
 <dt><a href="dev/morphia/query/FindAndDeleteOptions.html#sort(org.bson.conversions.Bson)" class="member-name-link">sort(Bson)</a> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="dev/morphia/ReplaceOptions.html#sort(org.bson.conversions.Bson)" class="member-name-link">sort(Bson)</a> - Method in class dev.morphia.<a href="dev/morphia/ReplaceOptions.html" title="class in dev.morphia">ReplaceOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="dev/morphia/UpdateOptions.html#sort(org.bson.conversions.Bson)" class="member-name-link">sort(Bson)</a> - Method in class dev.morphia.<a href="dev/morphia/UpdateOptions.html" title="class in dev.morphia">UpdateOptions</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="dev/morphia/query/FindAndDeleteOptions.html#sort(org.bson.Document)" class="member-name-link">sort(Document)</a> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/query/FindOptions.html#sort(org.bson.Document)" class="member-name-link">sort(Document)</a> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
@@ -4132,10 +4140,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">The timezone to carry out the operation.</div>
 </dd>
-<dt><a href="dev/morphia/aggregation/expressions/impls/IsoDates.html#timezone(dev.morphia.aggregation.expressions.impls.Expression)" class="member-name-link">timezone(Expression)</a> - Method in class dev.morphia.aggregation.expressions.impls.<a href="dev/morphia/aggregation/expressions/impls/IsoDates.html" title="class in dev.morphia.aggregation.expressions.impls">IsoDates</a></dt>
-<dd>
-<div class="block">The optional timezone to use to format the date.</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/expressions/impls/DateDeltaExpression.html#timezone(java.lang.Object)" class="member-name-link">timezone(Object)</a> - Method in class dev.morphia.aggregation.expressions.impls.<a href="dev/morphia/aggregation/expressions/impls/DateDeltaExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DateDeltaExpression</a></dt>
 <dd>
 <div class="block">The timezone to carry out the operation.</div>
@@ -4159,6 +4163,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="dev/morphia/aggregation/expressions/impls/DateTruncExpression.html#timezone(java.lang.Object)" class="member-name-link">timezone(Object)</a> - Method in class dev.morphia.aggregation.expressions.impls.<a href="dev/morphia/aggregation/expressions/impls/DateTruncExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DateTruncExpression</a></dt>
 <dd>
 <div class="block">The timezone to carry out the operation.</div>
+</dd>
+<dt><a href="dev/morphia/aggregation/expressions/impls/IsoDates.html#timezone(java.lang.Object)" class="member-name-link">timezone(Object)</a> - Method in class dev.morphia.aggregation.expressions.impls.<a href="dev/morphia/aggregation/expressions/impls/IsoDates.html" title="class in dev.morphia.aggregation.expressions.impls">IsoDates</a></dt>
+<dd>
+<div class="block">The optional timezone to use to format the date.</div>
 </dd>
 <dt><a href="dev/morphia/aggregation/expressions/impls/DateFromString.html#timeZone(java.lang.Object)" class="member-name-link">timeZone(Object)</a> - Method in class dev.morphia.aggregation.expressions.impls.<a href="dev/morphia/aggregation/expressions/impls/DateFromString.html" title="class in dev.morphia.aggregation.expressions.impls">DateFromString</a></dt>
 <dd>&nbsp;</dd>
@@ -4187,6 +4195,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="dev/morphia/aggregation/expressions/DateExpressions.html#toDate(java.lang.Object)" class="member-name-link">toDate(Object)</a> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/DateExpressions.html" title="class in dev.morphia.aggregation.expressions">DateExpressions</a></dt>
 <dd>
 <div class="block">Converts a value to a date.</div>
+</dd>
+<dt><a href="dev/morphia/aggregation/expressions/TypeExpressions.html#toDate(java.lang.Object)" class="member-name-link">toDate(Object)</a> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/TypeExpressions.html" title="class in dev.morphia.aggregation.expressions">TypeExpressions</a></dt>
+<dd>
+<div class="block">Converts value to a Date.</div>
 </dd>
 <dt><a href="dev/morphia/aggregation/expressions/TypeExpressions.html#toDecimal(java.lang.Object)" class="member-name-link">toDecimal(Object)</a> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/TypeExpressions.html" title="class in dev.morphia.aggregation.expressions">TypeExpressions</a></dt>
 <dd>
@@ -4405,7 +4417,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates an update operation based on this query</div>
 </dd>
-<dt><a href="dev/morphia/query/Query.html#update(dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)" class="member-name-link">update(UpdateOperator, UpdateOperator...)</a> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
+<dt><a href="dev/morphia/query/Query.html#update(dev.morphia.query.updates.UpdateOperator...)" class="member-name-link">update(UpdateOperator...)</a> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
 <dd>
 <div class="block">Creates an update operation based on this query</div>
 </dd>
@@ -4413,7 +4425,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates an update operation based on this query</div>
 </dd>
-<dt><a href="dev/morphia/query/Query.html#update(dev.morphia.UpdateOptions,dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)" class="member-name-link">update(UpdateOptions, UpdateOperator, UpdateOperator...)</a> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
+<dt><a href="dev/morphia/query/Query.html#update(dev.morphia.UpdateOptions,dev.morphia.query.updates.UpdateOperator...)" class="member-name-link">update(UpdateOptions, UpdateOperator...)</a> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
 <dd>
 <div class="block">Creates an update operation based on this query</div>
 </dd>
@@ -4541,10 +4553,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/annotations/Version.html#value()" class="member-name-link">value()</a> - Element in annotation interface dev.morphia.annotations.<a href="dev/morphia/annotations/Version.html" title="annotation interface in dev.morphia.annotations">Version</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="dev/morphia/aggregation/expressions/Expressions.html#value(java.lang.Object)" class="member-name-link">value(Object)</a> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/Expressions.html" title="class in dev.morphia.aggregation.expressions">Expressions</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>&nbsp;</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/expressions/impls/ConvertType.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class dev.morphia.aggregation.expressions.impls.<a href="dev/morphia/aggregation/expressions/impls/ConvertType.html" title="enum class in dev.morphia.aggregation.expressions.impls">ConvertType</a></dt>
 <dd>
 <div class="block">Returns the enum constant of this class with the specified name.</div>
