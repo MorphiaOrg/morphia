@@ -102,6 +102,46 @@ class UpdateExecuteTest extends MorphiaRewriteTest {
                         """));
     }
 
+    public void testEmptyExecute() {
+        rewriteRun(java(
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.UpdateOptions;
+                        import org.bson.types.ObjectId;
+                        import dev.morphia.query.Update;
+
+                        import java.time.LocalDateTime;
+
+                        import static dev.morphia.query.filters.Filters.eq;
+                        import static dev.morphia.query.updates.UpdateOperators.set;
+
+                        public class Updates {
+                            public void doUpdate(Update<?> update) {
+                                var result = update.execute();
+                            }
+                        }
+                        """,
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.UpdateOptions;
+                        import org.bson.types.ObjectId;
+                        import dev.morphia.query.Update;
+
+                        import java.time.LocalDateTime;
+
+                        import static dev.morphia.query.filters.Filters.eq;
+                        import static dev.morphia.query.updates.UpdateOperators.set;
+
+                        public class Updates {
+                            public void doUpdate(Update<?> update) {
+                                var result =update;
+                            }
+                        }
+                        """));
+    }
+
     @Test
     public void testExecuteWithOptions() {
         rewriteRun(java(
