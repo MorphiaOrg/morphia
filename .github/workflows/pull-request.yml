@@ -6,7 +6,11 @@ on:
       - '.github/**'
 
 jobs:
+  CodeAudits:
+    uses: evanchooly/workflows/.github/workflows/code-audits.yml@master
   Build:
+    needs:
+      - CodeAudits
     uses: evanchooly/workflows/.github/workflows/pull-request.yml@master
     with:
       java: 17

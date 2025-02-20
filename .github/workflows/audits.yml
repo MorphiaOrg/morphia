@@ -5,7 +5,6 @@ name: Audits
 
 on:
   workflow_dispatch:
-
     branches:
       - 'master'
   schedule:
