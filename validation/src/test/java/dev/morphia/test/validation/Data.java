@@ -4,7 +4,8 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 
 import org.bson.types.ObjectId;
-import org.hibernate.validator.constraints.Email;
+
+import jakarta.validation.constraints.Email;
 
 @Entity
 public class Data {

@@ -32,7 +32,7 @@ import io.smallrye.config.WithDefault;
 import static dev.morphia.config.MorphiaConfigHelper.dumpConfigurationFile;
 import static dev.morphia.mapping.DiscriminatorFunction.className;
 import static dev.morphia.mapping.NamingStrategy.identity;
-import static io.smallrye.config.PropertiesConfigSourceProvider.classPathSources;
+import static io.smallrye.config.PropertiesConfigSourceLoader.*;
 import static java.lang.Thread.currentThread;
 
 /**
@@ -65,7 +65,7 @@ public interface MorphiaConfig {
      * @since 3.0
      */
     static MorphiaConfig load(String location) {
-        List<ConfigSource> configSources = classPathSources(location, currentThread().getContextClassLoader());
+        List<ConfigSource> configSources = inClassPath(location, 0, currentThread().getContextClassLoader());
         if (configSources.isEmpty()) {
             Sofia.logMissingConfigFile(location);
             return new ManualMorphiaConfig();

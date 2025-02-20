@@ -28,7 +28,8 @@ public class TestMorphiaValidation extends TestBase {
             getDs().save(data);
             Assert.fail("Should have failed validation");
         } catch (ValidationException exception) {
-            assertTrue(exception.getMessage().contains("Data.email:not a well-formed email address ('not an email')"));
+            String message = exception.getMessage();
+            assertTrue(message.contains("Data.email:must be a well-formed email address ('not an email')"), message);
         }
 
         data.email = "foo@bar.com";
