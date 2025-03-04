@@ -36,6 +36,7 @@ import com.mongodb.client.result.UpdateResult;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.Datastore;
+import dev.morphia.DatastoreImpl;
 import dev.morphia.DeleteOptions;
 import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
@@ -45,15 +46,18 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.internal.PathTarget;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaCursor;
 import dev.morphia.query.MorphiaQuery;
+import dev.morphia.query.Operations;
 import dev.morphia.query.Query;
 import dev.morphia.query.Sort;
 import dev.morphia.query.Update;
 import dev.morphia.query.ValidationException;
 import dev.morphia.query.filters.Filters;
+import dev.morphia.query.internal.DatastoreAware;
 import dev.morphia.query.updates.CurrentDateOperator.TypeSpecification;
 import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.test.models.Book;
@@ -1543,12 +1547,25 @@ public class TestUpdateOperations extends TestBase {
     public void testPathTranslations(TranslationParams params) {
         Update<Hotel> update = getDs().find(Hotel.class)
                 .update(params.operator);
-        Document document = update.toDocument();
+        Document document = toDocument(Hotel.class, params.operator);
         Codec<Document> documentCodec = getDs().getCodecRegistry().get(Document.class);
         var json = document.toJson(JSON_WRITER_SETTINGS, documentCodec);
 
         String format = format("\"%s\"", params.mappedName);
         assertTrue(json.contains(format), format("failed to find '%s' in:%n%s", format, json));
+    }
+
+    private Document toDocument(Class type, UpdateOperator update) {
+        DatastoreImpl ds = getDs();
+        Mapper mapper = ds.getMapper();
+        final Operations operations = new Operations(ds, mapper.getEntityModel(type));
+
+        PathTarget pathTarget = new PathTarget(mapper, mapper.getEntityModel(type), update.field(), false);
+        if (update instanceof DatastoreAware) {
+            ((DatastoreAware) update).setDatastore(ds);
+        }
+        operations.add(update.operator(), update.toTarget(pathTarget));
+        return operations.toDocument();
     }
 
 }
