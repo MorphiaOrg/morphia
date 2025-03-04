@@ -11,7 +11,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>rewrite</artifactId>
+    <artifactId>morphia-rewrite</artifactId>
 
     <properties>
         <morphia.prior.version>2.4.14</morphia.prior.version>

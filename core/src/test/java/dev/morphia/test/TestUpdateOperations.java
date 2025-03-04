@@ -24,6 +24,8 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.PreLoad;
+import dev.morphia.internal.PathTarget;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Operations;
 import dev.morphia.query.Query;
@@ -641,6 +643,17 @@ public class TestUpdateOperations extends TestBase {
         String format = format("\"%s\"", params.mappedName);
         boolean contains = json.contains(format);
         assertTrue(contains, format("failed to find '%s' in:%n%s", format, json));
+    }
+
+    private Document toDocument(Class type, UpdateOperator update) {
+        var ds = getDs();
+        Mapper mapper = ds.getMapper();
+        final Operations operations = new Operations(ds, mapper.getEntityModel(type), List.of(update), false);
+
+        PathTarget pathTarget = new PathTarget(mapper, mapper.getEntityModel(type), update.field(), false);
+        (update).datastore(ds);
+        operations.add(update);
+        return operations.toDocument(ds);
     }
 
 }

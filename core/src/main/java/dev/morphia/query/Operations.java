@@ -43,7 +43,7 @@ public class Operations {
         updates.forEach(this::add);
     }
 
-    private void add(UpdateOperator update) {
+    public void add(UpdateOperator update) {
         update.validate(validate);
         update.model(model);
         update.datastore(datastore);
