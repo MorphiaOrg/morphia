@@ -26,6 +26,7 @@ import org.openrewrite.java.tree.MethodCall;
 import org.openrewrite.java.tree.Space;
 
 import static dev.morphia.rewrite.recipes.RegexPatternMerge.findInvocation;
+import static dev.morphia.rewrite.recipes.RewriteUtils.findMorphiaCore;
 import static java.util.Collections.emptyList;
 
 public class PipelineRewrite extends Recipe {
@@ -78,23 +79,23 @@ public class PipelineRewrite extends Recipe {
 
     private static final JavaTemplate LIMIT = (JavaTemplate.builder("Limit.limit()"))
             .javaParser(JavaParser.fromJavaVersion()
-                    .classpath("morphia-core"))
+                    .classpath(List.of(findMorphiaCore().toPath())))
             .imports(Limit.class.getName())
             .build();
     private static final JavaTemplate MATCH = (JavaTemplate.builder("Match.match()"))
             .javaParser(JavaParser.fromJavaVersion()
-                    .classpath("morphia-core"))
+                    .classpath(List.of(findMorphiaCore().toPath())))
             .imports(Filter.class.getName())
             .imports(Match.class.getName())
             .build();
     private static final JavaTemplate SKIP = (JavaTemplate.builder("Skip.skip()"))
             .javaParser(JavaParser.fromJavaVersion()
-                    .classpath("morphia-core"))
+                    .classpath(List.of(findMorphiaCore().toPath())))
             .imports(Skip.class.getName())
             .build();
     private static final JavaTemplate SORT_BY_COUNT = (JavaTemplate.builder("SortByCount.sortByCount()"))
             .javaParser(JavaParser.fromJavaVersion()
-                    .classpath("morphia-core"))
+                    .classpath(List.of(findMorphiaCore().toPath())))
             .imports(SortByCount.class.getName())
             .build();
 

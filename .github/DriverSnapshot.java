@@ -1,7 +1,7 @@
 ///usr/bin/env jbang "$0" "$@" ; exit $?
 
 //JAVA 17
-//DEPS com.github.zafarkhaja:java-semver:0.9.0
+        //DEPS com.github.zafarkhaja:java-semver:0.9.0
 //DEPS com.fasterxml.jackson.core:jackson-databind:2.15.2
 //DEPS com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.15.2
 

@@ -5,6 +5,9 @@ import java.net.URI;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
+import dev.morphia.rewrite.recipes.RewriteUtils;
 
 import org.jetbrains.annotations.NotNull;
 import org.openrewrite.Recipe;
@@ -21,7 +24,7 @@ public abstract class MorphiaRewriteTest implements RewriteTest {
     @Override
     public void defaults(RecipeSpec spec) {
         Builder<? extends JavaParser, ?> builder = JavaParser.fromJavaVersion()
-                .addClasspathEntry(Path.of(findMorphiaCore()));
+                .classpath(Set.of(RewriteUtils.findMorphiaCore().toPath()));
         findMongoDependencies().stream()
                 .map(Path::of)
                 .forEach(builder::addClasspathEntry);
@@ -36,15 +39,6 @@ public abstract class MorphiaRewriteTest implements RewriteTest {
                 .map(uri -> new File(uri).getAbsolutePath())
                 .collect(ArrayList::new, List::add, List::addAll);
         return classpath;
-    }
-
-    protected @NotNull String findMorphiaCore() {
-        var core = runtimeClasspath.stream()
-                .filter(uri -> uri.toString().contains("morphia-core"))
-                .map(uri -> new File(uri).getAbsolutePath())
-                .findFirst().orElseThrow().toString();
-
-        return core;
     }
 
     @NotNull

@@ -1,17 +1,24 @@
 package dev.morphia.rewrite.recipes.test;
 
-import dev.morphia.rewrite.recipes.ArraySliceMigration;
+import dev.morphia.rewrite.recipes.ArraySliceRefasterRecipe;
 
-import org.jetbrains.annotations.NotNull;
-import org.openrewrite.Recipe;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.openrewrite.test.RecipeSpec;
+import org.openrewrite.test.RewriteTest;
 
 import static org.openrewrite.java.Assertions.java;
 
-public class ArraySliceMigrationTest extends MorphiaRewriteTest {
+public class ArraySliceMigrationTest implements RewriteTest {
+    /*
+     * @Override
+     * protected @NotNull Recipe getRecipe() {
+     * return new ArraySliceRefasterRecipe();
+     * }
+     */
+
     @Override
-    protected @NotNull Recipe getRecipe() {
-        return new ArraySliceMigration();
+    public void defaults(RecipeSpec spec) {
+        spec.recipe(new ArraySliceRefasterRecipe());
     }
 
     @Test

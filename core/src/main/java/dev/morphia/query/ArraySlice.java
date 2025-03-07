@@ -33,10 +33,12 @@ public class ArraySlice {
 
     /**
      * Specifies the number of array elements to return
+     * 
+     * @hidden
      *
      * @param limit the number of array elements to return
      */
-    private ArraySlice(int limit) {
+    public ArraySlice(int limit) {
         this.limit = limit;
     }
 

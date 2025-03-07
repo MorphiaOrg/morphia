@@ -21,6 +21,7 @@ import org.openrewrite.java.tree.J.MethodInvocation;
 import org.openrewrite.java.tree.JavaType;
 import org.openrewrite.java.tree.JavaType.Method;
 
+import static dev.morphia.rewrite.recipes.RewriteUtils.findMorphiaCore;
 import static java.util.List.of;
 
 public class CreateDatastoreMigration extends Recipe {
@@ -87,7 +88,7 @@ public class CreateDatastoreMigration extends Recipe {
         public static Expression synthesizeMorphiaConfig(Cursor cursor, Expression databaseName) {
             JavaTemplate databaseCall = JavaTemplate.builder("MorphiaConfig.load().database(#{any(java.lang.String)})")
                     .javaParser(JavaParser.fromJavaVersion()
-                            .classpath("morphia-core"))
+                            .classpath(List.of(findMorphiaCore().toPath())))
                     .imports(NEW_TYPE)
                     .build();
 
@@ -102,7 +103,7 @@ public class CreateDatastoreMigration extends Recipe {
                     ? JavaTemplate.builder("MorphiaConfig.load().database(#{any(java.lang.String)})")
                     : JavaTemplate.builder("MorphiaConfig.load()"))
                     .javaParser(JavaParser.fromJavaVersion()
-                            .classpath("morphia-core"))
+                            .classpath(List.of(findMorphiaCore().toPath())))
                     .imports(NEW_TYPE)
                     .build();
 
@@ -135,7 +136,7 @@ public class CreateDatastoreMigration extends Recipe {
             JavaTemplate.Builder dbBuilder = JavaTemplate.builder(identifier.getSimpleName() + ".database(#{any})");
             JavaTemplate databaseCall = dbBuilder
                     .javaParser(JavaParser.fromJavaVersion()
-                            .classpath("morphia-core"))
+                            .classpath(List.of(findMorphiaCore().toPath())))
                     .build();
 
             return databaseCall.apply(new Cursor(cursor, identifier),

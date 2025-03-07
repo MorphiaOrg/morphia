@@ -12,7 +12,6 @@ import org.openrewrite.java.JavaVisitor;
 import org.openrewrite.java.MethodMatcher;
 import org.openrewrite.java.tree.Expression;
 import org.openrewrite.java.tree.J;
-import org.openrewrite.java.tree.J.MethodInvocation;
 import org.openrewrite.java.tree.J.NewClass;
 import org.openrewrite.java.tree.JavaType;
 
@@ -40,11 +39,12 @@ public class ArraySliceMigration extends Recipe {
                         .build();
                 List<Expression> arguments = newClass.getArguments();
                 JavaType javaType = visitType(JavaType.buildType("dev.morphia.query.ArraySlice"), executionContext);
-                return template.<MethodInvocation> apply(
-                        updateCursor(newClass),
-                        newClass.getCoordinates().replace(),
-                        (Object[]) arguments.toArray(new Expression[0]))
-                        .withMethodType(javaType);
+                return null;
+                //                template.<MethodInvocation> apply(
+                //                        updateCursor(newClass),
+                //                        newClass.getCoordinates().replace(),
+                //                        (Object[]) arguments.toArray(new Expression[0]))
+                //                        .withMethodType(javaType);
             }
 
         };
