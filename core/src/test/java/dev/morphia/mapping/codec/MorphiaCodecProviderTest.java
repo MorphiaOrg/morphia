@@ -3,6 +3,7 @@ package dev.morphia.mapping.codec;
 import java.util.List;
 
 import dev.morphia.Datastore;
+import dev.morphia.DatastoreImpl;
 import dev.morphia.test.TestBase;
 
 import org.bson.codecs.pojo.PropertyCodecProvider;
@@ -18,7 +19,7 @@ public class MorphiaCodecProviderTest extends TestBase {
         // given a custom 'no-op' codec is provided in the service configuration
         // (see META-INF/services/dev.morphia.mapping.codec.MorphiaPropertyCodecProvider)
         // when we instantiate a morphia codec provider
-        Datastore datastore = getDs();
+        DatastoreImpl datastore = getDs();
         MorphiaCodecProvider provider = new MorphiaCodecProvider(datastore);
 
         // then we expect that the custom provider we provided is the first codec in the list
