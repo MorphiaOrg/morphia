@@ -35,11 +35,23 @@ public class ArraySlice {
      * Specifies the number of array elements to return
      * 
      * @hidden
-     *
-     * @param limit the number of array elements to return
+     * @morphia.internal
      */
+    @MorphiaInternal
     public ArraySlice(int limit) {
         this.limit = limit;
+    }
+
+    /**
+     * Specifies the number of array elements to return
+     *
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public ArraySlice(int limit, int skip) {
+        this.limit = limit;
+        this.skip = skip;
     }
 
     /**
@@ -55,7 +67,7 @@ public class ArraySlice {
      * @param skip the amount to skip
      * @return this
      */
-    public ArraySlice skip(Integer skip) {
+    public ArraySlice skip(int skip) {
         this.skip = skip;
         return this;
     }

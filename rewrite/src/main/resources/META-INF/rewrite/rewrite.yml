@@ -13,6 +13,7 @@ recipeList:
   - dev.morphia.rewrite.recipes.UpdateExecute
   - dev.morphia.rewrite.recipes.UpdateReturnType
   - dev.morphia.rewrite.recipes.LogicalFilterAdd
+  - dev.morphia.rewrite.recipes.ArraySliceRefasterRecipes
   - org.openrewrite.java.RemoveAnnotation:
       annotationPattern: '@dev.morphia.annotations.Embedded'
   - org.openrewrite.java.ChangeType:
@@ -49,6 +50,7 @@ recipeList:
       methodPatterns:
         - dev.morphia.aggregation.expressions.Expressions of(..) document
         - dev.morphia.mapping.Mapper getInterceptors() getListeners
+        - dev.morphia.mapping.codec.MorphiaCodecProvider getPropertyCodecProviders() propertyCodecProviders
   - org.openrewrite.maven.UpgradeDependencyVersion:
       groupId: dev.morphia.morphia
       artifactId: morphia-core
@@ -124,7 +126,7 @@ recipeList:
         - dev.morphia.test.mapping.TestReferences testFetchKeys()
         - dev.morphia.test.mapping.codec.TestDocumentWriter testAnd()
         - dev.morphia.test.mapping.codec.TestDocumentWriter testOr()
-        - dev.morphia.test.mapping.codec.pojo.EntityModelTest `testFindParameterization`()
+        - dev.morphia.test.mapping.codec.pojo.EntityModelTest testFindParameterization()
         - dev.morphia.test.query.TestQuery testCriteriaContainers()
         - dev.morphia.test.query.TestQuery check()
         - dev.morphia.test.query.TestQuery testKeys()
