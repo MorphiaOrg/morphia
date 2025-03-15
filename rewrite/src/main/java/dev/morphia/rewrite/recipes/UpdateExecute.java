@@ -13,7 +13,6 @@ import org.openrewrite.Recipe;
 import org.openrewrite.TreeVisitor;
 import org.openrewrite.java.JavaVisitor;
 import org.openrewrite.java.MethodMatcher;
-import org.openrewrite.java.TypeMatcher;
 import org.openrewrite.java.tree.Expression;
 import org.openrewrite.java.tree.J;
 import org.openrewrite.java.tree.J.Empty;
@@ -24,7 +23,6 @@ import org.openrewrite.java.tree.JavaType.Parameterized;
 
 public class UpdateExecute extends Recipe {
     private static final MethodMatcher MATCHER = new MethodMatcher("dev.morphia.query.Update execute(..)");
-    private static final TypeMatcher TYPE_MATCHER = new TypeMatcher("dev.morphia.query.Update");
 
     @NotNull
     @Override
@@ -50,27 +48,26 @@ public class UpdateExecute extends Recipe {
                 if (MATCHER.matches(invocation)) {
                     var select = invocation.getSelect();
                     List<Expression> arguments = invocation.getArguments();
-                    if (!(select instanceof MethodInvocation update)) {
-                        return invocation;
+                    if (select instanceof MethodInvocation update) {
+                        var updateArgs = new ArrayList<>(update.getArguments());
+                        Expression expression = arguments.get(0);
+                        if (!(expression instanceof Empty)) {
+                            updateArgs.add(0, expression);
+                            update = update.withArguments(updateArgs);
+                        }
+                        Method methodType = update.getMethodType();
+
+                        Parameterized returnType = (Parameterized) methodType.getReturnType();
+                        JavaType typeParameter = returnType.getTypeParameters().get(0);
+
+                        update = update.withMethodType(methodType.withReturnType(typeParameter));
+
+                        maybeRemoveImport("dev.morphia.query.Update");
+                        return maybeAutoFormat(invocation, update, executionContext);
+                    } else {
+                        return maybeAutoFormat(invocation, select, executionContext);
                     }
 
-                    var updateArgs = new ArrayList<>(update.getArguments());
-                    Expression expression = arguments.get(0);
-                    if (!(expression instanceof Empty)) {
-                        updateArgs.add(0, expression);
-                        update = update.withArguments(updateArgs);
-                    }
-                    Method methodType = update.getMethodType();
-
-                    Parameterized returnType = (Parameterized) methodType.getReturnType();
-                    JavaType typeParameter = returnType.getTypeParameters().get(0);
-                    //                    var parameterType = returnType.getTypeParameters().get(0).toString();
-                    //                    var variable = multiVariable.getVariables().get(0);
-
-                    update = update.withMethodType(methodType.withReturnType(typeParameter));
-
-                    maybeRemoveImport("dev.morphia.query.Update");
-                    return maybeAutoFormat(invocation, update, executionContext);
                 }
 
                 return super.visitMethodInvocation(invocation, executionContext);

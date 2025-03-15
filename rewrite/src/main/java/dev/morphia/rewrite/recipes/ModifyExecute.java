@@ -11,11 +11,15 @@ import org.openrewrite.NlsRewrite.Description;
 import org.openrewrite.NlsRewrite.DisplayName;
 import org.openrewrite.Recipe;
 import org.openrewrite.TreeVisitor;
-import org.openrewrite.java.JavaIsoVisitor;
+import org.openrewrite.java.JavaVisitor;
 import org.openrewrite.java.MethodMatcher;
 import org.openrewrite.java.tree.Expression;
+import org.openrewrite.java.tree.J;
 import org.openrewrite.java.tree.J.Empty;
 import org.openrewrite.java.tree.J.MethodInvocation;
+import org.openrewrite.java.tree.JavaType;
+import org.openrewrite.java.tree.JavaType.Method;
+import org.openrewrite.java.tree.JavaType.Parameterized;
 
 public class ModifyExecute extends Recipe {
     private static final MethodMatcher MATCHER = new MethodMatcher("dev.morphia.query.Modify execute(..)");
@@ -35,26 +39,35 @@ public class ModifyExecute extends Recipe {
     @NotNull
     @Override
     public TreeVisitor<?, ExecutionContext> getVisitor() {
-        return new JavaIsoVisitor<>() {
+        return new JavaVisitor<>() {
+
             @Nullable
             @Override
-            public MethodInvocation visitMethodInvocation(@NotNull MethodInvocation invocation,
+            public J visitMethodInvocation(@NotNull MethodInvocation invocation,
                     @NotNull ExecutionContext executionContext) {
                 if (MATCHER.matches(invocation)) {
                     var select = invocation.getSelect();
                     List<Expression> arguments = invocation.getArguments();
-                    boolean defaultOptions = !arguments.isEmpty() && arguments.get(0).toString().equals("new ModifyOptions()");
-                    if (!(select instanceof MethodInvocation modify)) {
-                        return invocation;
+                    if (select instanceof MethodInvocation modify) {
+                        var modifyArgs = new ArrayList<>(modify.getArguments());
+                        Expression expression = arguments.get(0);
+                        if (!(expression instanceof Empty)) {
+                            modifyArgs.add(0, expression);
+                            modify = modify.withArguments(modifyArgs);
+                        }
+                        Method methodType = modify.getMethodType();
+
+                        Parameterized returnType = (Parameterized) methodType.getReturnType();
+                        JavaType typeParameter = returnType.getTypeParameters().get(0);
+
+                        modify = modify.withMethodType(methodType.withReturnType(typeParameter));
+
+                        maybeRemoveImport("dev.morphia.query.Modify");
+                        return maybeAutoFormat(invocation, modify, executionContext);
+                    } else {
+                        return maybeAutoFormat(invocation, select, executionContext);
                     }
 
-                    var updateArgs = new ArrayList<>(modify.getArguments());
-                    Expression expression = arguments.get(0);
-                    if (!(expression instanceof Empty)) {
-                        updateArgs.add(0, expression);
-                        modify = modify.withArguments(updateArgs);
-                    }
-                    return maybeAutoFormat(invocation, modify, executionContext);
                 }
 
                 return super.visitMethodInvocation(invocation, executionContext);

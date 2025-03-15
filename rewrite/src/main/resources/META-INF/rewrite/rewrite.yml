@@ -48,6 +48,7 @@ recipeList:
       methodPattern: dev.morphia.MorphiaDatastore ensureIndexes(..)
   - dev.morphia.rewrite.recipes.RenameMethod:
       methodPatterns:
+        - dev.morphia.Datastore createQuery(java.lang.Class) find
         - dev.morphia.aggregation.expressions.Expressions of(..) document
         - dev.morphia.mapping.Mapper getInterceptors() getListeners
         - dev.morphia.mapping.codec.MorphiaCodecProvider getPropertyCodecProviders() propertyCodecProviders
@@ -129,10 +130,11 @@ recipeList:
         - dev.morphia.test.mapping.codec.pojo.EntityModelTest testFindParameterization()
         - dev.morphia.test.query.TestQuery testCriteriaContainers()
         - dev.morphia.test.query.TestQuery check()
+        - dev.morphia.test.query.TestQuery check(dev.morphia.query.Query)
         - dev.morphia.test.query.TestQuery testKeys()
         - dev.morphia.test.query.TestQuery testKeyList()
         - dev.morphia.test.query.TestQuery testFetchKeys()
-        - dev.morphia.test.query.TestQuery check(dev.morphia.query.Query)
+        - dev.morphia.test.query.TestQuery testQueryDoesNotContainDiscriminator()
         - dev.morphia.test.query.TestQueriesOnReferences testWithKeyQuery()
   - dev.morphia.rewrite.recipes.RenameMethod:
       methodPatterns:

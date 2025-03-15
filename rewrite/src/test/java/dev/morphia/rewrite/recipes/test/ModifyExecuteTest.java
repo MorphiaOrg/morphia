@@ -1,6 +1,6 @@
 package dev.morphia.rewrite.recipes.test;
 
-import dev.morphia.rewrite.recipes.UpdateExecute;
+import dev.morphia.rewrite.recipes.ModifyExecute;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
@@ -8,12 +8,12 @@ import org.openrewrite.Recipe;
 
 import static org.openrewrite.java.Assertions.java;
 
-public class UpdateExecuteTest extends MorphiaRewriteTest {
+public class ModifyExecuteTest extends MorphiaRewriteTest {
 
     @NotNull
     @Override
     protected Recipe getRecipe() {
-        return new UpdateExecute();
+        return new ModifyExecute();
     }
 
     @Test
@@ -30,10 +30,10 @@ public class UpdateExecuteTest extends MorphiaRewriteTest {
                         import static dev.morphia.query.updates.UpdateOperators.set;
 
                         public class Updates {
-                            public void doUpdate(Datastore ds) {
+                            public void doModify(Datastore ds) {
                                 ds.find(Object.class).filter(eq("_id", ObjectId.get()))
                                   .disableValidation()
-                                  .update(set("last_updated", LocalDateTime.now()))
+                                  .modify(set("last_updated", LocalDateTime.now()))
                                   .execute();
                             }
                         }
@@ -49,10 +49,10 @@ public class UpdateExecuteTest extends MorphiaRewriteTest {
                         import static dev.morphia.query.updates.UpdateOperators.set;
 
                         public class Updates {
-                            public void doUpdate(Datastore ds) {
+                            public void doModify(Datastore ds) {
                                 ds.find(Object.class).filter(eq("_id", ObjectId.get()))
                                         .disableValidation()
-                                        .update(set("last_updated", LocalDateTime.now()));
+                                        .modify(set("last_updated", LocalDateTime.now()));
                             }
                         }
                         """));
@@ -64,7 +64,7 @@ public class UpdateExecuteTest extends MorphiaRewriteTest {
                 //language=java
                 """
                         import dev.morphia.Datastore;
-                        import dev.morphia.UpdateOptions;
+                        import dev.morphia.ModifyOptions;
                         import org.bson.types.ObjectId;
 
                         import java.time.LocalDateTime;
@@ -73,18 +73,18 @@ public class UpdateExecuteTest extends MorphiaRewriteTest {
                         import static dev.morphia.query.updates.UpdateOperators.set;
 
                         public class Updates {
-                            public void doUpdate(Datastore ds) {
+                            public void doModify(Datastore ds) {
                                 ds.find(Object.class).filter(eq("_id", ObjectId.get()))
                                   .disableValidation()
-                                  .update(set("last_updated", LocalDateTime.now()))
-                                  .execute(new UpdateOptions());
+                                  .modify(set("last_updated", LocalDateTime.now()))
+                                  .execute(new ModifyOptions());
                             }
                         }
                         """,
                 //language=java
                 """
                         import dev.morphia.Datastore;
-                        import dev.morphia.UpdateOptions;
+                        import dev.morphia.ModifyOptions;
                         import org.bson.types.ObjectId;
 
                         import java.time.LocalDateTime;
@@ -93,10 +93,10 @@ public class UpdateExecuteTest extends MorphiaRewriteTest {
                         import static dev.morphia.query.updates.UpdateOperators.set;
 
                         public class Updates {
-                            public void doUpdate(Datastore ds) {
+                            public void doModify(Datastore ds) {
                                 ds.find(Object.class).filter(eq("_id", ObjectId.get()))
                                         .disableValidation()
-                                        .update(new UpdateOptions(), set("last_updated", LocalDateTime.now()));
+                                        .modify(new ModifyOptions(), set("last_updated", LocalDateTime.now()));
                             }
                         }
                         """));
@@ -108,9 +108,9 @@ public class UpdateExecuteTest extends MorphiaRewriteTest {
                 //language=java
                 """
                         import dev.morphia.Datastore;
-                        import dev.morphia.UpdateOptions;
+                        import dev.morphia.ModifyOptions;
                         import org.bson.types.ObjectId;
-                        import dev.morphia.query.Update;
+                        import dev.morphia.query.Modify;
 
                         import java.time.LocalDateTime;
 
@@ -118,17 +118,17 @@ public class UpdateExecuteTest extends MorphiaRewriteTest {
                         import static dev.morphia.query.updates.UpdateOperators.set;
 
                         public class Updates {
-                            public void doUpdate(Update<?> update) {
-                                var result = update.execute();
+                            public void doModify(Modify<?> modify) {
+                                var result = modify.execute();
                             }
                         }
                         """,
                 //language=java
                 """
                         import dev.morphia.Datastore;
-                        import dev.morphia.UpdateOptions;
+                        import dev.morphia.ModifyOptions;
                         import org.bson.types.ObjectId;
-                        import dev.morphia.query.Update;
+                        import dev.morphia.query.Modify;
 
                         import java.time.LocalDateTime;
 
@@ -136,8 +136,8 @@ public class UpdateExecuteTest extends MorphiaRewriteTest {
                         import static dev.morphia.query.updates.UpdateOperators.set;
 
                         public class Updates {
-                            public void doUpdate(Update<?> update) {
-                                var result =update;
+                            public void doModify(Modify<?> modify) {
+                                var result =modify;
                             }
                         }
                         """));
@@ -149,7 +149,7 @@ public class UpdateExecuteTest extends MorphiaRewriteTest {
                 //language=java
                 """
                         import dev.morphia.Datastore;
-                        import dev.morphia.UpdateOptions;
+                        import dev.morphia.ModifyOptions;
                         import org.bson.types.ObjectId;
 
                         import java.time.LocalDateTime;
@@ -158,18 +158,18 @@ public class UpdateExecuteTest extends MorphiaRewriteTest {
                         import static dev.morphia.query.updates.UpdateOperators.set;
 
                         public class Updates {
-                            public void doUpdate(Datastore ds) {
+                            public void doModify(Datastore ds) {
                                 ds.find(Object.class).filter(eq("_id", ObjectId.get()))
                                   .disableValidation()
-                                  .update(set("last_updated", LocalDateTime.now()))
-                                  .execute(new UpdateOptions().upsert(true));
+                                  .modify(set("last_updated", LocalDateTime.now()))
+                                  .execute(new ModifyOptions().upsert(true));
                             }
                         }
                         """,
                 //language=java
                 """
                         import dev.morphia.Datastore;
-                        import dev.morphia.UpdateOptions;
+                        import dev.morphia.ModifyOptions;
                         import org.bson.types.ObjectId;
 
                         import java.time.LocalDateTime;
@@ -178,10 +178,10 @@ public class UpdateExecuteTest extends MorphiaRewriteTest {
                         import static dev.morphia.query.updates.UpdateOperators.set;
 
                         public class Updates {
-                            public void doUpdate(Datastore ds) {
+                            public void doModify(Datastore ds) {
                                 ds.find(Object.class).filter(eq("_id", ObjectId.get()))
                                         .disableValidation()
-                                        .update(new UpdateOptions().upsert(true), set("last_updated", LocalDateTime.now()));
+                                        .modify(new ModifyOptions().upsert(true), set("last_updated", LocalDateTime.now()));
                             }
                         }
                         """));
