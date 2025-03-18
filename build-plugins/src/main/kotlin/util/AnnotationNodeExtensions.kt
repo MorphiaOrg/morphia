@@ -41,6 +41,12 @@ class AnnotationNodeExtensions : AbstractMojo() {
         val RESULT_HANDLE = ClassName("io.quarkus.gizmo", "ResultHandle")
         val METHOD_CREATOR = ClassName("io.quarkus.gizmo", "MethodCreator")
         val METHOD_DESCRIPTOR = ClassName("io.quarkus.gizmo", "MethodDescriptor")
+
+        fun find(path: String, filter: FileFilter): List<File> {
+            println("**************** path = ${path}")
+            val array = File(path).listFiles(filter)
+            return if (array != null) listOf(*array) else listOf()
+        }
     }
 
     private val builders: MutableMap<String, JavaAnnotationSource> = TreeMap()
@@ -63,7 +69,7 @@ class AnnotationNodeExtensions : AbstractMojo() {
         generated =
             File(project!!.basedir.toString() + "/target/generated-sources/morphia-annotations/")
         val path = core().toString() + "/src/main/java/dev/morphia/annotations"
-        files.addAll(find(path))
+        files.addAll(find(path, filter))
         project.addCompileSourceRoot(generated!!.absolutePath)
 
         try {
@@ -317,11 +323,6 @@ class AnnotationNodeExtensions : AbstractMojo() {
         classBuilder.addAnnotation("dev.morphia.annotations.internal.MorphiaInternal")
 
         return extensionsFactory
-    }
-
-    private fun find(path: String): List<File> {
-        val files = File(path).listFiles(filter)
-        return if (files != null) listOf(*files) else listOf()
     }
 
     private fun processArrayType(type: Type<JavaAnnotationSource>): String {
