@@ -15,16 +15,17 @@ import org.jboss.forge.roaster.Roaster
 import org.jboss.forge.roaster.model.JavaClass
 import org.jboss.forge.roaster.model.JavaType
 import org.jboss.forge.roaster.model.source.JavaClassSource
+import org.openrewrite.java.template.RecipeDescriptor
 import util.refaster.InMemoryFileManager
 import util.refaster.InMemoryFileObject
 import util.refaster.SourceFileObject
+import util.refaster.TemplateAnnotation
+import util.refaster.TemplateAnnotation.*
 
 @Mojo(name = "morphia-refaster-builder", defaultPhase = PROCESS_CLASSES)
 class RefasterBuilder : AbstractMojo() {
     companion object {
         val m2 = File(System.getProperty("user.home"), ".m2/repository")
-        val jc =
-            ToolProvider.getSystemJavaCompiler() ?: throw RuntimeException("Compiler unavailable")
 
         fun find(root: File, filter: FileFilter): List<File> {
             val files = mutableListOf<File>()
@@ -89,65 +90,29 @@ class RefasterBuilder : AbstractMojo() {
                 .toSet()
                 .map { it to Roaster.parse(JavaType::class.java, it) }
                 .filter { it.second is JavaClass<*> }
-                .map { it.first to it.second as JavaClass<*> }
-                .filter {
-                    it.second.hasAnnotation("org.openrewrite.java.template.RecipeDescriptor")
-                }
+                .map { it.second as JavaClass<*> }
+                .filter { it.hasAnnotation("dev.morphia.rewrite.refaster.TemplateDescriptor") }
         val output =
             files.flatMap {
-                listOf("BeforeTemplate", "AfterTemplate").map { annotation ->
-                    compile(it.second, annotation)
-                }
+                TemplateAnnotation.values().map { annotation -> compile(annotation, it) }
             }
         println("**************** output = ${output}")
     }
 
     private fun compile(
-        javaClass: JavaClass<*>,
-        annotation: String
-    ): MutableMap<String, InMemoryFileObject> {
+        annotation: TemplateAnnotation,
+        refasterTemplate: JavaClass<*>
+    ): Map<String, InMemoryFileObject> {
         // Extract all string fields annotated with BeforeTemplate
+        val jc =
+            ToolProvider.getSystemJavaCompiler() ?: throw RuntimeException("Compiler unavailable")
         val fileManager = InMemoryFileManager(jc.getStandardFileManager(null, null, null))
-        val templates = loadTemplate(javaClass, annotation)
-        val synthesized = Roaster.create(JavaClassSource::class.java)
-        synthesized.setPackage(javaClass.`package`)
-        synthesized.name = "${javaClass.name}_$annotation"
-        // Create a dummy class with the extracted methods
-        val files =
-            templates.map {
-                javaClass
-                    .toString()
-                    .lines()
-                    .filter { it.startsWith("import ") }
-                    .filterNot { it.contains("BeforeTemplate") || it.contains("AfterTemplate") }
-                    .forEach { synthesized.addImport(it.substringAfter(" ").substringBefore(";")) }
-                val method =
-                    synthesized.addMethod(
-                        """
-                // Method from field: ${it.second}\n"
-                ${it.first}
-                """
-                            .trimIndent()
-                    )
-                when (annotation) {
-                    "BeforeTemplate" ->
-                        method.addAnnotation(
-                            "com.google.errorprone.refaster.annotation.AfterTemplate"
-                        )
-                    "AfterTemplate" ->
-                        method.addAnnotation(
-                            "com.google.errorprone.refaster.annotation.AfterTemplate"
-                        )
-                    else -> throw RuntimeException("Unknown annotation: $annotation")
-                }
-                fileManager.classBytes[synthesized.qualifiedName] =
-                    InMemoryFileObject(synthesized.name, synthesized.toString())
-
-                SourceFileObject(synthesized.name, synthesized.toString())
-            }
+        val synthesized = buildRefasterSource(refasterTemplate, annotation, fileManager)
+        val files = listOf(SourceFileObject(synthesized.name, synthesized.toString()))
 
         val options =
             listOf(
+                "-proc:none",
                 "-g",
                 "-target",
                 "17",
@@ -155,9 +120,8 @@ class RefasterBuilder : AbstractMojo() {
                 "17",
                 "-cp",
                 when (annotation) {
-                    "BeforeTemplate" -> morphia2x
-                    "AfterTemplate" -> morphia
-                    else -> throw RuntimeException("Unknown annotation: $annotation")
+                    BEFORE -> morphia2x
+                    AFTER -> morphia
                 } + File.pathSeparator + dependencies
             )
         val output = StringWriter()
@@ -169,14 +133,100 @@ class RefasterBuilder : AbstractMojo() {
         }
     }
 
-    private fun loadTemplate(
+    private fun buildRefasterSource(
+        template: JavaClass<*>,
+        annotation: TemplateAnnotation,
+        fileManager: InMemoryFileManager
+    ): JavaClassSource {
+        val synthesized = Roaster.create(JavaClassSource::class.java)
+        synthesized.setPackage(template.`package`)
+        synthesized.name = template.name.removeSuffix("Template")
+
+        template
+            .toString()
+            .lines()
+            .filter { it.startsWith("import ") }
+            .filterNot {
+                it.contains("RefasterBeforeTemplate") ||
+                    it.contains("RefasterAfterTemplate") ||
+                    it.contains("TemplateDescriptor")
+            }
+            .forEach { synthesized.addImport(it.substringAfter(" ").substringBefore(";")) }
+
+        var templateAnnotation =
+            template.getAnnotation("dev.morphia.rewrite.refaster.TemplateDescriptor")
+        val descriptor = synthesized.addAnnotation(RecipeDescriptor::class.java)
+        descriptor.setStringValue("name", templateAnnotation.getStringValue("name"))
+        descriptor.setStringValue("description", templateAnnotation.getStringValue("description"))
+        template.nestedTypes
+            .map { nested -> buildRefasterSource(nested as JavaClass<*>, annotation, fileManager) }
+            .forEach { synthesized.addNestedType(it) }
+        template.fields
+            .filter { field ->
+                field.hasAnnotation(annotation.shortName()) && field.type.isType(String::class.java)
+            }
+            .map { field ->
+                // Extract the field value (remove quotes if present)
+                val rawValue = field.stringInitializer ?: ""
+                val methodSource = rawValue.trim('"').replace("\\\"", "\"").replace("\\n", "\n")
+                val method =
+                    synthesized.addMethod(
+                        """
+                    // Method from field: ${field.name}\n"
+                    $methodSource
+                    """
+                            .trimIndent()
+                    )
+                method.addAnnotation(annotation.errorProne())
+            }
+
+        return synthesized
+    }
+
+    private fun synthesizeTemplateClass(
+        annotation: TemplateAnnotation,
         javaClass: JavaClass<*>,
-        annotation: String
+        fileManager: InMemoryFileManager,
+    ): List<SourceFileObject> {
+        val templates = loadTemplate(annotation, javaClass)
+        val synthesized = Roaster.create(JavaClassSource::class.java)
+        synthesized.setPackage(javaClass.`package`)
+        synthesized.name = "${javaClass.name}_$annotation"
+        // Create a dummy class with the extracted methods
+        val classes =
+            templates.map {
+                javaClass
+                    .toString()
+                    .lines()
+                    .filter { it.startsWith("import ") }
+                    .filterNot { it.contains("BeforeTemplate") || it.contains("AfterTemplate") }
+                    .forEach { synthesized.addImport(it.substringAfter(" ").substringBefore(";")) }
+                val method =
+                    synthesized.addMethod(
+                        """
+                    // Method from field: ${it.second}\n"
+                    ${it.first}
+                    """
+                            .trimIndent()
+                    )
+                method.addAnnotation(annotation.errorProne())
+                fileManager.classBytes[synthesized.qualifiedName] =
+                    InMemoryFileObject(synthesized.name)
+
+                synthesized
+            }
+        return emptyList()
+    }
+
+    private fun loadTemplate(
+        annotation: TemplateAnnotation,
+        javaClass: JavaClass<*>
     ): List<Pair<String, String>> {
         val templates =
             javaClass.fields
                 .filter { field ->
-                    field.hasAnnotation(annotation) && field.type.isType(String::class.java)
+                    field.hasAnnotation(annotation.shortName()) &&
+                        field.type.isType(String::class.java)
                 }
                 .map { field ->
                     // Extract the field value (remove quotes if present)

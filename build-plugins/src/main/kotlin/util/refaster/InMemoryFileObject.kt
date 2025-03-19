@@ -1,12 +1,14 @@
 package util.refaster
 
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.io.InputStream
 import java.io.OutputStream
 import java.net.URI
 import javax.tools.JavaFileObject
 import javax.tools.SimpleJavaFileObject
 
-class InMemoryFileObject(name: String, val source: String) :
+class InMemoryFileObject(name: String) :
     SimpleJavaFileObject(
         URI.create("string:///" + name.replace('.', '/') + JavaFileObject.Kind.CLASS.extension),
         JavaFileObject.Kind.CLASS
@@ -17,8 +19,8 @@ class InMemoryFileObject(name: String, val source: String) :
         return content
     }
 
-    override fun getCharContent(ignoreEncodingErrors: Boolean): CharSequence {
-        return source
+    override fun openInputStream(): InputStream {
+        return ByteArrayInputStream(content.toByteArray())
     }
 
     fun getBytes(): ByteArray {

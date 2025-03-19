@@ -15,9 +15,11 @@ class InMemoryFileManager : ForwardingJavaFileManager<StandardJavaFileManager> {
         location: JavaFileManager.Location,
         className: String,
         kind: JavaFileObject.Kind,
-        sibling: FileObject
+        sibling: FileObject?
     ): JavaFileObject {
-        val fileObject = classBytes[className]
-        return fileObject as JavaFileObject
+        val fileObject = InMemoryFileObject(className)
+        classBytes[className] = fileObject
+
+        return fileObject
     }
 }
