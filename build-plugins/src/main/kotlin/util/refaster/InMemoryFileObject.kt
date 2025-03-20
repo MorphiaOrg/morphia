@@ -23,7 +23,7 @@ class InMemoryFileObject(name: String) :
         return ByteArrayInputStream(content.toByteArray())
     }
 
-    fun getBytes(): ByteArray {
+    fun bytes(): ByteArray {
         return content.toByteArray()
     }
 }

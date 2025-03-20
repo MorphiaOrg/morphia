@@ -2,9 +2,9 @@ package util
 
 import java.io.File
 import java.io.FileFilter
+import java.io.FileOutputStream
 import java.io.StringWriter
 import javax.tools.ToolProvider
-import kotlin.jvm.java
 import org.apache.maven.model.Dependency
 import org.apache.maven.plugin.AbstractMojo
 import org.apache.maven.plugins.annotations.LifecyclePhase.PROCESS_CLASSES
@@ -15,12 +15,16 @@ import org.jboss.forge.roaster.Roaster
 import org.jboss.forge.roaster.model.JavaClass
 import org.jboss.forge.roaster.model.JavaType
 import org.jboss.forge.roaster.model.source.JavaClassSource
+import org.objectweb.asm.ClassReader
+import org.objectweb.asm.ClassWriter
+import org.objectweb.asm.tree.ClassNode
 import org.openrewrite.java.template.RecipeDescriptor
 import util.refaster.InMemoryFileManager
 import util.refaster.InMemoryFileObject
 import util.refaster.SourceFileObject
 import util.refaster.TemplateAnnotation
-import util.refaster.TemplateAnnotation.*
+import util.refaster.TemplateAnnotation.AFTER
+import util.refaster.TemplateAnnotation.BEFORE
 
 @Mojo(name = "morphia-refaster-builder", defaultPhase = PROCESS_CLASSES)
 class RefasterBuilder : AbstractMojo() {
@@ -92,16 +96,42 @@ class RefasterBuilder : AbstractMojo() {
                 .filter { it.second is JavaClass<*> }
                 .map { it.second as JavaClass<*> }
                 .filter { it.hasAnnotation("dev.morphia.rewrite.refaster.TemplateDescriptor") }
-        val output =
-            files.flatMap {
-                TemplateAnnotation.values().map { annotation -> compile(annotation, it) }
-            }
-        println("**************** output = ${output}")
+        val output = files.map { compile(BEFORE, it) to compile(AFTER, it) }
+        val merged = output.flatMap { merge(classNodes(it.first), classNodes(it.second)) }
+        merged.forEach {
+            val out = ClassWriter(0)
+            it.accept(out)
+            val output = File(project.build.outputDirectory, it.name + ".class")
+            output.parentFile.mkdirs()
+            FileOutputStream(output).use { fos -> fos.write(out.toByteArray()) }
+        }
     }
+
+    private fun merge(beforeNodes: List<ClassNode>, afterNodes: List<ClassNode>): List<ClassNode> {
+        afterNodes
+            .sortedBy { it.name }
+            .zip(beforeNodes.sortedBy { it.name })
+            .forEach { (after, before) ->
+                after.methods
+                    .filter { !it.name.contains("<init>") }
+                    .forEach { before.methods.add(it) }
+            }
+        return beforeNodes
+    }
+
+    private fun classNodes(beforeClasses: Map<String, InMemoryFileObject>): MutableList<ClassNode> =
+        beforeClasses.entries
+            .map { (key, fileObject) ->
+                val classNode = ClassNode()
+                val cr = ClassReader(fileObject.bytes())
+                cr.accept(classNode, 0)
+                classNode
+            }
+            .toMutableList()
 
     private fun compile(
         annotation: TemplateAnnotation,
-        refasterTemplate: JavaClass<*>
+        refasterTemplate: JavaClass<*>,
     ): Map<String, InMemoryFileObject> {
         // Extract all string fields annotated with BeforeTemplate
         val jc =
@@ -136,7 +166,7 @@ class RefasterBuilder : AbstractMojo() {
     private fun buildRefasterSource(
         template: JavaClass<*>,
         annotation: TemplateAnnotation,
-        fileManager: InMemoryFileManager
+        fileManager: InMemoryFileManager,
     ): JavaClassSource {
         val synthesized = Roaster.create(JavaClassSource::class.java)
         synthesized.setPackage(template.`package`)
@@ -220,7 +250,7 @@ class RefasterBuilder : AbstractMojo() {
 
     private fun loadTemplate(
         annotation: TemplateAnnotation,
-        javaClass: JavaClass<*>
+        javaClass: JavaClass<*>,
     ): List<Pair<String, String>> {
         val templates =
             javaClass.fields
