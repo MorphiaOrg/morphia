@@ -4,7 +4,7 @@ import java.io.FileReader;
 
 import com.github.zafarkhaja.semver.Version;
 
-import dev.morphia.MorphiaVersion24;
+import dev.morphia.MorphiaVersion25;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
@@ -22,6 +22,6 @@ public class MorphiaVersionTest {
         Version version = Version.valueOf(model.getVersion());
         String minorVersion = format("%s%s", version.getMajorVersion(), version.getMinorVersion());
         //noinspection MisorderedAssertEqualsArguments
-        assertEquals(MorphiaVersion24.class.getSimpleName().replaceAll("\\D", ""), minorVersion);
+        assertEquals(MorphiaVersion25.class.getSimpleName().replaceAll("\\D", ""), minorVersion);
     }
 }

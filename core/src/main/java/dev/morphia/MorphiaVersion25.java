@@ -9,7 +9,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * @morphia.internal
  */
 @MorphiaInternal
-public final class MorphiaVersion24 {
-    private MorphiaVersion24() {
+public final class MorphiaVersion25 {
+    private MorphiaVersion25() {
     }
 }
