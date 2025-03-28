@@ -56,6 +56,8 @@
                     <target>17</target>
                     <compilerArgs>
                         <arg>-parameters</arg>
+                        <arg>--add-exports</arg>
+                        <arg>jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</arg>
                     </compilerArgs>
                     <annotationProcessorPaths>
                         <path>

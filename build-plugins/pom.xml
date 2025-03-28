@@ -22,6 +22,12 @@
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <version>${kotlin.version}</version>
+                <configuration>
+                    <javacOptions>
+                        <javacOption>--add-exports</javacOption>
+                        <javacOption>jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED</javacOption>
+                    </javacOptions>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -75,7 +81,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
+                <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <scope>compile</scope>
@@ -137,6 +143,11 @@
             <version>${kotlin.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-reflect</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
             <groupId>com.squareup</groupId>
             <artifactId>kotlinpoet-jvm</artifactId>
             <version>2.0.0</version>
@@ -145,6 +156,7 @@
             <groupId>org.openrewrite</groupId>
             <artifactId>rewrite-templating</artifactId>
             <version>1.23.0</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

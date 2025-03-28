@@ -5,6 +5,14 @@ updates:
     schedule:
       interval: daily
   - package-ecosystem: maven
+    target-branch: 2.5.x
+    directory: "/"
+    schedule:
+      interval: daily
+    ignore:
+      - dependency-name: "*"
+        update-types: [ "version-update:semver-major" ]
+  - package-ecosystem: maven
     target-branch: 2.4.x
     directory: "/"
     schedule:
@@ -17,7 +25,6 @@ updates:
     schedule:
       interval: daily
   - package-ecosystem: "github-actions"
-    target-branch: 2.4.x
     directory: "/"
     schedule:
       interval: daily
