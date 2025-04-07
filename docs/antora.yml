@@ -2,6 +2,7 @@
 name: "morphia"
 title: "Morphia"
 version: "2.5"
+prerelease: "-SNAPSHOT"
 nav:
 - "modules/ROOT/nav.adoc"
 asciidoc:

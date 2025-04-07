@@ -47,12 +47,11 @@ public class BuildConfigTest {
         var pomVersion = Semver.parse(model.getVersion());
         String url = model.getUrl();
 
-        boolean master = "master".equals(gitInfo.get("git.branch"));
         var updated = new LinkedHashMap<String, Object>();
         copy(updated, antora, "name");
         copy(updated, antora, "title");
         updated.put("version", format("%s.%s", pomVersion.getMajor(), pomVersion.getMinor()));
-        if (master) {
+        if (pomVersion.getPatch() == 0 && !pomVersion.getPreRelease().isEmpty()) {
             updated.put("prerelease", "-SNAPSHOT");
         }
         copy(updated, antora, "nav");
@@ -61,7 +60,7 @@ public class BuildConfigTest {
         attributes.put("version", previous(pomVersion).toString());
 
         String path;
-        if (master) {
+        if ("master".equals(gitInfo.get("git.branch"))) {
             path = "/blob/master";
         } else {
             path = format("/tree/%s.%s.x", pomVersion.getMajor(), pomVersion.getMinor());
