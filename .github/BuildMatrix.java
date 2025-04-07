@@ -1,12 +1,13 @@
 ///usr/bin/env jbang "$0" "$@" ; exit $?
 
-//DEPS com.github.zafarkhaja:java-semver:0.9.0
+//JAVA 17
+//DEPS org.semver4j:semver4j:5.6.0
 //DEPS com.fasterxml.jackson.core:jackson-databind:2.15.2
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.github.zafarkhaja.semver.Version;
+import org.semver4j.Semver;
 
 import java.net.URL;
 import java.util.Spliterator;
@@ -30,9 +31,9 @@ public class BuildMatrix {
         var result = StreamSupport.stream(
                 Spliterators.spliteratorUnknownSize(list.elements(), Spliterator.ORDERED), false)
                 .map(d -> ((JsonNode)d.get("version")).asText())
-                .map(Version::valueOf)
-                .filter(it -> it.getPreReleaseVersion() == null || it.getPreReleaseVersion().equals(""))
-                .filter(it -> it.greaterThanOrEqualTo("4.0.0"))
+                .map(Semver::parse)
+                .filter(it -> it.getPreRelease().isEmpty() || it.getPreRelease().get(0).equals(""))
+                .filter(it -> it.isGreaterThanOrEqualTo("4.0.0"))
                 .map(it -> format("'%s'", it))
                 .collect(Collectors.toList());
         System.out.println(result);

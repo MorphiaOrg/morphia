@@ -1,16 +1,18 @@
 ///usr/bin/env jbang "$0" "$@" ; exit $?
 
 //JAVA 17
-//DEPS com.github.zafarkhaja:java-semver:0.9.0
+//DEPS org.semver4j:semver4j:5.6.0
 //DEPS com.fasterxml.jackson.core:jackson-databind:2.15.2
 //DEPS com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.15.2
 
+import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.github.zafarkhaja.semver.Version;
+import org.semver4j.Semver;
 
 import java.net.URL;
+import java.net.http.HttpClient;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -18,7 +20,6 @@ import java.util.Map;
 import java.util.Spliterator;
 import java.util.TreeMap;
 
-import static com.github.zafarkhaja.semver.Version.forIntegers;
 import static java.lang.String.format;
 import static java.util.Comparator.comparingInt;
 import static java.util.Spliterators.spliteratorUnknownSize;
@@ -37,17 +38,18 @@ public class DriverVersions {
         var versioning = (ObjectNode) document.get("versioning");
         var versions = versioning.get("versions").get("version");
 
-        var comparator = comparingInt(Version::getMajorVersion)
-                             .thenComparingInt(Version::getMinorVersion)
-                             .thenComparingInt(Version::getPatchVersion)
+        var comparator = comparingInt(Semver::getMajor)
+                             .thenComparingInt(Semver::getMinor)
+                             .thenComparingInt(Semver::getPatch)
                              .reversed();
         var grouped = stream(spliteratorUnknownSize(versions.elements(), Spliterator.ORDERED), false)
                           .map(JsonNode::asText)
-                          .map(Version::valueOf)
-                                  .filter(it -> it.greaterThanOrEqualTo("4.0.0"))
-                          .filter(it1 -> it1.getBuildMetadata().isEmpty())
-                          .filter(it1 -> it1.getPreReleaseVersion().isEmpty())
-                          .collect(groupingBy(v -> forIntegers(v.getMajorVersion(), v.getMinorVersion()), LinkedHashMap::new, toList()));
+                          .map(Semver::parse)
+                                  .filter(it -> it.isGreaterThanOrEqualTo("4.0.0"))
+                          .filter(it1 -> it1.getBuild().isEmpty())
+                          .filter(it1 -> it1.getPreRelease().isEmpty())
+                          .collect(groupingBy(v -> Semver.of(v.getMajor(), v.getMinor(), 0      ), LinkedHashMap::new,
+                              toList()));
         var result = grouped.values().stream()
                             .map(it -> {
                                 it.sort(comparator);
