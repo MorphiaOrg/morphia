@@ -109,9 +109,9 @@ jobs:
         java: [ 11, 24 ]
         mongo: ${{ fromJson(needs.matrix.outputs.server_latest) }}
         include:
-          - java: 17
+          - driver: ${{ fromJson(needs.matrix.outputs.driver_latest)[0] }}
+            java: 17
             mongo: ${{ fromJson(needs.matrix.outputs.server_latest)[0] }}
-            driver: ${{ fromJson(needs.matrix.outputs.driver_latest)[0] }}
     with:
       java: ${{ matrix.java }}
       reuseBuild: true
