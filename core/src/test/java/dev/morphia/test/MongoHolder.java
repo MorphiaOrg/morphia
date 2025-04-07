@@ -9,6 +9,8 @@ import org.bson.UuidRepresentation;
 import org.testcontainers.containers.MongoDBContainer;
 
 import static com.mongodb.MongoClientSettings.builder;
+import static dev.morphia.internal.MorphiaInternals.DriverVersion.v5_2_0;
+import static dev.morphia.internal.MorphiaInternals.tryInvoke;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 class MongoHolder implements AutoCloseable {
@@ -40,10 +42,7 @@ class MongoHolder implements AutoCloseable {
             Builder builder = builder()
                     .uuidRepresentation(UuidRepresentation.STANDARD)
                     .applyConnectionString(new ConnectionString(connectionString));
-            try {
-                builder.timeout(10, SECONDS);
-            } catch (Exception ignore) {
-            }
+            tryInvoke(v5_2_0, () -> builder.timeout(10, SECONDS));
             mongoClient = MongoClients.create(builder
                     .build());
 
