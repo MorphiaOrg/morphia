@@ -1,9 +1,14 @@
 package dev.morphia.internal;
 
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.jar.JarInputStream;
+import java.util.jar.Manifest;
 
+import com.mongodb.client.MongoClient;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
@@ -14,12 +19,14 @@ import org.slf4j.LoggerFactory;
 /**
  * @morphia.internal
  * @since 2.2
+ * @hidden
  */
 @MorphiaInternal
 public final class MorphiaInternals {
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaInternals.class);
     private static final Map<DriverVersion, Boolean> versions = new HashMap<>();
     private static Boolean proxyClassesPresent;
+    private static String driverVersion;
 
     private MorphiaInternals() {
     }
@@ -73,6 +80,22 @@ public final class MorphiaInternals {
             }
         }
         return fallback.get();
+    }
+
+    public static String getDriverVersion() {
+        if (driverVersion == null) {
+            try {
+                URL location = MongoClient.class.getProtectionDomain().getCodeSource().getLocation();
+                URLConnection connection = location.openConnection();
+                try (JarInputStream stream = new JarInputStream(connection.getInputStream())) {
+                    Manifest manifest = stream.getManifest();
+                    driverVersion = manifest.getMainAttributes().getValue("Build-Version");
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return driverVersion;
     }
 
     public enum DriverVersion {

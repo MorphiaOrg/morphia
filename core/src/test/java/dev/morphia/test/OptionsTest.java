@@ -29,7 +29,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 @SuppressWarnings("SameParameterValue")
-public class OptionsTest {
+public class OptionsTest extends TestBase {
     @Test
     public void aggregationOptions() {
         beanScan(com.mongodb.AggregationOptions.class, AggregationOptions.class, List.of("builder",
@@ -62,6 +62,7 @@ public class OptionsTest {
 
     @Test
     public void findOptions() {
+        checkMinDriverVersion(5.2);
         beanScan(FindIterable.class, FindOptions.class, List.of("explain", "filter", "projection"));
     }
 

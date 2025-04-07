@@ -6,6 +6,7 @@ import com.github.zafarkhaja.semver.Version;
 import com.mongodb.client.MongoClient;
 
 import dev.morphia.config.MorphiaConfig;
+import dev.morphia.internal.MorphiaInternals;
 import dev.morphia.test.TestBase.ZDTCodecProvider;
 
 import org.slf4j.Logger;
@@ -102,7 +103,7 @@ public class MorphiaTestSetup {
 
     protected void checkMinDriverVersion(Version version) {
         assumeTrue(driverIsAtLeastVersion(version),
-                format("Server should be at least %s but found %s", version, getServerVersion()));
+                format("Server should be at least %s but found %s", version, Version.parse(MorphiaInternals.getDriverVersion())));
     }
 
     protected void checkMinServerVersion(double version) {
@@ -170,8 +171,7 @@ public class MorphiaTestSetup {
      * @return true if server is at least specified version
      */
     private boolean driverIsAtLeastVersion(Version version) {
-        String property = System.getProperty("driver.version");
-        Version driverVersion = property != null ? Version.valueOf(property) : null;
-        return driverVersion == null || driverVersion.greaterThanOrEqualTo(version);
+        Version driverVersion = Version.parse(MorphiaInternals.getDriverVersion());
+        return driverVersion.isHigherThanOrEquivalentTo(version);
     }
 }
