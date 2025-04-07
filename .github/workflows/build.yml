@@ -36,15 +36,20 @@ jobs:
       - name: Setup JBang
         uses: jbangdev/setup-jbang@main
 
-      - name: Find MongoDB versions
-        id: mongo-versions
+      - name: Find Latest MongoDB version
+        id: server-latest
         run: |
-          echo "mongo_versions=$( jbang .github/BuildMatrix.java )" >> $GITHUB_OUTPUT
+          echo "server_latest=$( jbang .github/BuildMatrix.java latest )" >> $GITHUB_OUTPUT
+
+      - name: Find MongoDB versions
+        id: server-versions
+        run: |
+          echo "server_versions=$( jbang .github/BuildMatrix.java all )" >> $GITHUB_OUTPUT
 
       - name: Find Latest Driver version
-        id: latest-driver-version
+        id: driver-latest
         run: |
-          echo "latest_driver_version=$( jbang .github/DriverVersions.java latest)" >> $GITHUB_OUTPUT
+          echo "driver_latest=$( jbang .github/DriverVersions.java latest)" >> $GITHUB_OUTPUT
 
       - name: Find Driver versions
         id: driver-versions
@@ -65,9 +70,10 @@ jobs:
           fi
 
     outputs:
-      driver_latest: ${{ steps.latest-driver-version.outputs.latest_driver_version }}
+      driver_latest: ${{ steps.driver-latest.outputs.driver_latest }}
       driver_matrix: ${{ steps.driver-versions.outputs.driver_versions }}
-      version_matrix: ${{ steps.mongo-versions.outputs.mongo_versions }}
+      server_matrix: ${{ steps.server-versions.outputs.server_versions }}
+      server_latest: ${{ steps.server-latest.outputs.server_latest }}
       releasable: ${{ steps.releasable.outputs.releasable }}
 
   ServerTests:
@@ -79,7 +85,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        mongo: ${{ fromJson(needs.matrix.outputs.version_matrix) }}
+        mongo: ${{ fromJson(needs.matrix.outputs.server_matrix) }}
         driver: ${{ fromJson(needs.matrix.outputs.driver_latest) }}
         java: [ 11 ]
     secrets:
@@ -101,10 +107,10 @@ jobs:
       matrix:
         driver: ${{ fromJson(needs.matrix.outputs.driver_matrix) }}
         java: [ 11, 24 ]
-        mongo: [ ${{ fromJson(needs.matrix.outputs.version_matrix)[0] }} ]
+        mongo: ${{ fromJson(needs.matrix.outputs.server_latest) }}
         include:
           - java: 17
-            mongo: ${{ fromJson(needs.matrix.outputs.version_matrix)[0] }}
+            mongo: ${{ fromJson(needs.matrix.outputs.server_latest)[0] }}
             driver: ${{ fromJson(needs.matrix.outputs.driver_latest)[0] }}
     with:
       java: ${{ matrix.java }}

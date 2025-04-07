@@ -10,8 +10,11 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.semver4j.Semver;
 
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 import java.util.Spliterator;
 import java.util.Spliterators;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -36,6 +39,20 @@ public class BuildMatrix {
                 .filter(it -> it.isGreaterThanOrEqualTo("4.0.0"))
                 .map(it -> format("'%s'", it))
                 .collect(Collectors.toList());
-        System.out.println(result);
+
+        var latest = result.get(0);
+        var map = new TreeMap<>(Map.of("latest", List.of(latest), "versions", result));
+        if (args.length != 0) {
+            if (args[0].equals("all")) {
+                System.out.println(map.get("versions"));
+            } else {
+                System.out.println(map.get("latest"));
+            }
+        } else {
+            System.out.println(map.get("latest"));
+            System.out.println(map.get("versions"));
+            System.out.println(map);
+        }
+
     }
 }
