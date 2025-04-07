@@ -101,7 +101,7 @@ jobs:
       matrix:
         driver: ${{ fromJson(needs.matrix.outputs.driver_matrix) }}
         java: [ 11, 24 ]
-        mongo: ${{ fromJson(needs.matrix.outputs.version_matrix)[0] }}
+        mongo: [ ${{ fromJson(needs.matrix.outputs.version_matrix)[0] }} ]
         include:
           - java: 17
             mongo: ${{ fromJson(needs.matrix.outputs.version_matrix)[0] }}
