@@ -72,7 +72,7 @@ jobs:
 
   ServerTests:
     name: Server
-    runs-on: ubuntu-latest
+    uses: evanchooly/workflows/.github/workflows/build.yml@master
     needs:
       - Build
       - Matrix
@@ -82,7 +82,6 @@ jobs:
         mongo: ${{ fromJson(needs.matrix.outputs.version_matrix) }}
         driver: ${{ fromJson(needs.matrix.outputs.driver_latest) }}
         java: [ 11 ]
-    uses: evanchooly/workflows/.github/workflows/build.yml@master
     secrets:
       DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
     with:
@@ -93,7 +92,7 @@ jobs:
 
   DriversTests:
     name: Driver
-    runs-on: ubuntu-latest
+    uses: evanchooly/workflows/.github/workflows/build.yml@master
     needs:
       - Build
       - Matrix
@@ -107,7 +106,6 @@ jobs:
           - java: 17
             mongo: ${{ fromJson(needs.matrix.outputs.version_matrix)[0] }}
             driver: ${{ fromJson(needs.matrix.outputs.driver_latest)[0] }}
-    uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
       java: ${{ matrix.java }}
       reuseBuild: true
