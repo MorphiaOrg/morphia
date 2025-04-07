@@ -1,6 +1,7 @@
 package dev.morphia.test;
 
 import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings.Builder;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
@@ -36,10 +37,14 @@ class MongoHolder implements AutoCloseable {
 
     public MongoClient getMongoClient() {
         if (mongoClient == null) {
-            mongoClient = MongoClients.create(builder()
-                    .uuidRepresentation(UuidRepresentation.STANDARD)
-                    .applyConnectionString(new ConnectionString(connectionString))
-                    .timeout(10, SECONDS)
+            Builder builder = builder()
+                                  .uuidRepresentation(UuidRepresentation.STANDARD)
+                                  .applyConnectionString(new ConnectionString(connectionString));
+            try {
+                builder.timeout(10, SECONDS);
+            } catch (Exception ignore) {
+            }
+            mongoClient = MongoClients.create(builder
                     .build());
 
         }

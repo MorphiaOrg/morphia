@@ -47,6 +47,8 @@ import org.bson.types.ObjectId;
 
 import static dev.morphia.internal.MorphiaInternals.DriverVersion.v4_1_0;
 import static dev.morphia.internal.MorphiaInternals.DriverVersion.v4_6_0;
+import static dev.morphia.internal.MorphiaInternals.DriverVersion.v5_0_0;
+import static dev.morphia.internal.MorphiaInternals.DriverVersion.v5_2_0;
 import static dev.morphia.internal.MorphiaInternals.tryInvoke;
 
 /**
@@ -121,14 +123,10 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
             iterable.projection(projection.map(mapper, type));
         }
 
-        tryInvoke(v4_1_0, () -> {
-            return iterable.allowDiskUse(allowDiskUse);
-        });
+        tryInvoke(v4_1_0, () -> iterable.allowDiskUse(allowDiskUse));
         iterable.batchSize(batchSize);
         iterable.collation(collation);
-        tryInvoke(v4_6_0, () -> {
-            return iterable.comment(comment);
-        });
+        tryInvoke(v4_6_0, () -> iterable.comment(comment));
         if (cursorType != null) {
             iterable.cursorType(cursorType);
         }
@@ -144,7 +142,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
         iterable.returnKey(returnKey);
         iterable.showRecordId(showRecordId);
         iterable.skip(skip);
-        iterable.timeoutMode(timeoutMode);
+        tryInvoke(v5_2_0, () -> iterable.timeoutMode(timeoutMode));
         if (sort != null) {
             Document mapped = new Document();
             EntityModel model = null;
@@ -160,9 +158,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
             }
             iterable.sort(mapped);
         }
-        tryInvoke(v4_6_0, () -> {
-            return iterable.let(variables);
-        });
+        tryInvoke(v4_6_0, () -> iterable.let(variables));
         return iterable;
     }
 

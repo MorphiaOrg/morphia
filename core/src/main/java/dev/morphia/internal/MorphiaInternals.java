@@ -60,7 +60,7 @@ public final class MorphiaInternals {
     }
 
     /**
-     * @param version the required mininum version
+     * @param version the required minimum version
      * @param block
      * @return
      */
@@ -80,5 +80,7 @@ public final class MorphiaInternals {
         v4_1_0,
         v4_2_0,
         v4_6_0,
+        v5_0_0,
+        v5_2_0,
     }
 }
