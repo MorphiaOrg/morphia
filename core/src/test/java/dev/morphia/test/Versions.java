@@ -20,19 +20,19 @@ public enum Versions {
     Version7 {
         @Override
         Semver version() {
-            return Semver.of(7, 0, 0).withPreRelease("latest");
+            return Semver.of(7, 0, 0).withBuild("latest");
         }
     },
     Version6 {
         @Override
         Semver version() {
-            return Semver.of(6, 0, 0).withPreRelease("latest");
+            return Semver.of(6, 0, 0).withBuild("latest");
         }
     },
     Version5 {
         @Override
         Semver version() {
-            return Semver.of(5, 0, 0).withPreRelease("latest");
+            return Semver.of(5, 0, 0).withBuild("latest");
         }
 
     },
