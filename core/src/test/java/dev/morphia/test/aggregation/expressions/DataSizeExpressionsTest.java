@@ -17,7 +17,7 @@ import static org.bson.Document.parse;
 public class DataSizeExpressionsTest extends ExpressionsTestBase {
     @Test
     public void testBinarySize() {
-        checkMinServerVersion(4.4);
+        checkMinServerVersion("4.4.0");
         insert("images", of(
                 parse("{ _id: 1, name: 'cat.jpg', binary: new BinData(0, 'OEJTfmD8twzaj/LPKLIVkA==')}"),
                 parse("{ _id: 2, name: 'big_ben.jpg', binary: new BinData(0, 'aGVsZmRqYWZqYmxhaGJsYXJnYWZkYXJlcTU1NDE1Z2FmZCBmZGFmZGE=')}"),
@@ -45,7 +45,7 @@ public class DataSizeExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testBsonSize() {
-        checkMinServerVersion(4.4);
+        checkMinServerVersion("4.4.0");
         insert("employees", of(
                 parse("{ '_id': 1, 'name': 'Alice', 'email': 'alice@company.com', 'position': 'Software Developer', 'current_task': "
                         + "{ 'project_id': 1, 'project_name': 'Aggregation Improvements', 'project_duration': 5, 'hours': 20 } }"),

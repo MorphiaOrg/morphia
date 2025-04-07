@@ -16,7 +16,7 @@ import static dev.morphia.query.Sort.descending;
 public class TestDocumentNumber extends AggregationTest {
     @Test
     public void testDocumentNumber() {
-        checkMinServerVersion(5.0);
+        checkMinServerVersion("5.0.0");
         cakeSales();
 
         List<Document> actual = getDs().aggregate("cakeSales")

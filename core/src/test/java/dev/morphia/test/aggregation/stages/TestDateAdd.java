@@ -17,8 +17,8 @@ import static dev.morphia.aggregation.stages.Projection.project;
 public class TestDateAdd extends AggregationTest {
     @Test
     public void testDateAdd() {
-        checkMinServerVersion(5.0);
-        checkMinDriverVersion(4.2);
+        checkMinServerVersion("5.0.0");
+        checkMinDriverVersion("4.2.0");
 
         insert("shipping", parseDocs(
                 "{ '_id' : ObjectId('603dd4b2044b995ad331c0b2'), custId: 456, purchaseDate: ISODate('2020-12-31') }",

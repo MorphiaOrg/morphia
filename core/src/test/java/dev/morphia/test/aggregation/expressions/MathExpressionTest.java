@@ -1,9 +1,8 @@
 package dev.morphia.test.aggregation.expressions;
 
-import com.github.zafarkhaja.semver.Version;
-
 import dev.morphia.aggregation.expressions.MathExpressions;
 
+import org.semver4j.Semver;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.Expressions.value;
@@ -75,7 +74,7 @@ public class MathExpressionTest extends ExpressionsTestBase {
 
     @Test
     public void testRound() {
-        checkMinServerVersion(4.2);
+        checkMinServerVersion("4.2.0");
         assertAndCheckDocShape("{ $round: [ 19.25, 1 ] }", MathExpressions.round(value(19.25), value(1)), 19.2);
     }
 
@@ -92,7 +91,7 @@ public class MathExpressionTest extends ExpressionsTestBase {
 
     @Test
     public void testTrunc() {
-        if (serverIsAtLeastVersion(Version.forIntegers(4, 2))) {
+        if (serverIsAtLeastVersion(Semver.of(4, 2, 0))) {
             assertAndCheckDocShape("{ $trunc: [ 7.85, 1 ] }", trunc(value(7.85), value(1)), 7.8);
         } else {
             assertAndCheckDocShape("{ $trunc: 7.85 }", trunc(value(7.85), null), 7.0);

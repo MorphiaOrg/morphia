@@ -99,7 +99,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void genericMultiKeyValueQueries() {
-        checkMinDriverVersion(4.6);
+        checkMinDriverVersion("4.6.0");
 
         getMapper().map(GenericKeyValue.class);
         getDs().ensureIndexes(GenericKeyValue.class);
@@ -118,7 +118,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void multiKeyValueQueries() {
-        checkMinDriverVersion(4.6);
+        checkMinDriverVersion("4.6.0");
 
         getMapper().map(List.of(KeyValue.class));
         getDs().ensureIndexes(KeyValue.class);
@@ -652,7 +652,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testFluentNotQuery() {
-        checkMinServerVersion(4.0);
+        checkMinServerVersion("4.0.0");
         final PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
         getDs().save(pwk);
 
@@ -849,7 +849,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testMultipleConstraintsOnOneField() {
-        checkMinDriverVersion(4.6);
+        checkMinDriverVersion("4.6.0");
 
         getMapper().map(ContainsPic.class);
         getDs().ensureIndexes();

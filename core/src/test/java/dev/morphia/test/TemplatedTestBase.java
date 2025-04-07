@@ -56,7 +56,7 @@ public abstract class TemplatedTestBase extends TestBase {
         return toLowerCase(root.charAt(0)) + root.substring(1);
     }
 
-    public void testPipeline(double serverVersion, String resourceNamed, boolean removeIds, boolean orderMatters,
+    public void testPipeline(String serverVersion, String resourceNamed, boolean removeIds, boolean orderMatters,
             Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
         String collection = "aggtest";
         checkMinServerVersion(serverVersion);

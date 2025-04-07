@@ -34,7 +34,7 @@ import static org.bson.Document.parse;
 public class AccumulatorExpressionsTest extends ExpressionsTestBase {
     @Test
     public void testAccumulator() {
-        checkMinServerVersion(4.4);
+        checkMinServerVersion("4.4.0");
         insert("books", of(
                 parse("{ '_id' : 8751, 'title' : 'The Banquet', 'author' : 'Dante', 'copies' : 2 }"),
                 parse("{ '_id' : 8752, 'title' : 'Divine Comedy', 'author' : 'Dante', 'copies' : 1 }"),
@@ -128,7 +128,7 @@ public class AccumulatorExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testFunction() {
-        checkMinServerVersion(4.4);
+        checkMinServerVersion("4.4.0");
         insert("players", of(
                 parse("{ _id: 1, name: 'Miss Cheevous',  scores: [ 10, 5, 10 ] }"),
                 parse("{ _id: 2, name: 'Miss Ann Thrope', scores: [ 10, 10, 10 ] }"),

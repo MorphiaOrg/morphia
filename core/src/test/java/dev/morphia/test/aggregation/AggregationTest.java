@@ -42,7 +42,7 @@ public class AggregationTest extends TemplatedTestBase {
                 .codecProvider(new ZDTCodecProvider()));
     }
 
-    public void testPipeline(double serverVersion, String resourceName,
+    public void testPipeline(String serverVersion, String resourceName,
             Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
         testPipeline(serverVersion, resourceName, true, true, pipeline);
     }

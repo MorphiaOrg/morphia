@@ -62,7 +62,7 @@ public class OptionsTest extends TestBase {
 
     @Test
     public void findOptions() {
-        checkMinDriverVersion(5.2);
+        checkMinDriverVersion("5.2.0");
         beanScan(FindIterable.class, FindOptions.class, List.of("explain", "filter", "projection"));
     }
 

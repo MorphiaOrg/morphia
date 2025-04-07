@@ -17,7 +17,7 @@ import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 public class TestCovarianceSamp extends AggregationTest {
     @Test
     public void testCovarianceSamp() {
-        checkMinServerVersion(5.0);
+        checkMinServerVersion("5.0.0");
         cakeSales();
 
         List<Document> actual = getDs().aggregate("cakeSales")

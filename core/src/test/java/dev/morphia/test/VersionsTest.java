@@ -4,10 +4,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.stream.Collectors;
 
-import com.github.zafarkhaja.semver.Version;
-
 import org.jetbrains.annotations.NotNull;
 import org.jsoup.Jsoup;
+import org.semver4j.Semver;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertFalse;
@@ -25,9 +24,9 @@ public class VersionsTest {
                 .flatMap(it -> it.getElementsByTag("ul").stream())
                 .flatMap(it -> it.getElementsByTag("li").stream())
                 .map(it -> substringBeforeSpace(it.text()))
-                .map(Version::valueOf)
-                .filter(it -> it.getPreReleaseVersion() == null || it.getPreReleaseVersion().equals(""))
-                .filter(it -> it.greaterThan(Version.valueOf("4.0.0")))
+                .map(Semver::parse)
+                .filter(it -> it.getPreRelease().size() == 0 || it.getPreRelease().get(0).equals(""))
+                .filter(it -> it.isGreaterThanOrEqualTo("4.0.0"))
                 .collect(Collectors.toList());
 
         assertFalse(found.isEmpty(), "Should find versions");

@@ -14,9 +14,9 @@ import static dev.morphia.query.Sort.ascending;
 public class TestFill extends AggregationTest {
     @Test
     public void testConstantValue() {
-        checkMinDriverVersion(4.2);
+        checkMinDriverVersion("4.2.0");
 
-        testPipeline(5.3, "constantValue", aggregation -> {
+        testPipeline("5.3.0", "constantValue", aggregation -> {
             return aggregation
                     .fill(fill()
                             .field("bootsSold", value(0))
@@ -27,9 +27,9 @@ public class TestFill extends AggregationTest {
 
     @Test
     public void testDistinctPartitions() {
-        checkMinDriverVersion(4.2);
+        checkMinDriverVersion("4.2.0");
 
-        testPipeline(5.3, "distinctPartitions", aggregation -> {
+        testPipeline("5.3.0", "distinctPartitions", aggregation -> {
             return aggregation
                     .fill(fill()
                             .sortBy(ascending("date"))
@@ -40,9 +40,9 @@ public class TestFill extends AggregationTest {
 
     @Test
     public void testLastObserved() {
-        checkMinDriverVersion(4.2);
+        checkMinDriverVersion("4.2.0");
 
-        testPipeline(5.3, "lastObserved", aggregation -> {
+        testPipeline("5.3.0", "lastObserved", aggregation -> {
             return aggregation
                     .fill(fill()
                             .sortBy(ascending("date"))
@@ -52,7 +52,7 @@ public class TestFill extends AggregationTest {
 
     @Test
     public void testLinearInterpolation() {
-        testPipeline(5.3, "linearInterpolation", aggregation -> {
+        testPipeline("5.3.0", "linearInterpolation", aggregation -> {
             return aggregation
                     .fill(fill()
                             .sortBy(ascending("time"))

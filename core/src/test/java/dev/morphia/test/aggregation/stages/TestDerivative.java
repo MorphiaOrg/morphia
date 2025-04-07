@@ -20,7 +20,7 @@ import static dev.morphia.query.filters.Filters.gt;
 public class TestDerivative extends AggregationTest {
     @Test
     public void testDerivative() {
-        checkMinServerVersion(5.0);
+        checkMinServerVersion("5.0.0");
 
         insert("deliveryFleet", parseDocs(
                 "{ truckID: '1', timeStamp: ISODate( '2020-05-18T14:10:30Z' ), miles: 1295.1 }",

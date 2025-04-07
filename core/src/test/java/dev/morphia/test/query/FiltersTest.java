@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.zafarkhaja.semver.Version;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.InsertManyOptions;
 import com.mongodb.client.result.InsertManyResult;
@@ -285,7 +284,7 @@ public class FiltersTest extends TestBase {
 
     @Test
     public void testRand() {
-        checkMinServerVersion(Version.valueOf("4.4.2"));
+        checkMinServerVersion("4.4.2");
         int count = 100;
         List<Document> list = new ArrayList<>();
         for (int i = 0; i < count; i++) {
@@ -302,7 +301,7 @@ public class FiltersTest extends TestBase {
 
     @Test
     public void testSampleRate() {
-        checkMinServerVersion(Version.valueOf("4.4.3"));
+        checkMinServerVersion("4.4.3");
         int count = 100;
         List<Document> list = new ArrayList<>();
         for (int i = 0; i < count; i++) {

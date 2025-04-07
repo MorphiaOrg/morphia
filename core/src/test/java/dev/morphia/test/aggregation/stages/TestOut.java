@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.stages;
 
-import com.github.zafarkhaja.semver.Version;
 import com.mongodb.client.MongoCursor;
 
 import dev.morphia.test.aggregation.AggregationTest;
@@ -47,8 +46,8 @@ public class TestOut extends AggregationTest {
 
     @Test
     public void testOutAlternateDatabase() {
-        checkMinServerVersion(Version.valueOf("4.4.0"));
-        checkMinDriverVersion(4.1);
+        checkMinServerVersion("4.4.0");
+        checkMinDriverVersion("4.1.0");
 
         getDs().save(asList(new Book("The Banquet", "Dante", 2, "Italian", "Sophomore Slump"),
                 new Book("Divine Comedy", "Dante", 1, "Not Very Funny", "I mean for a 'comedy'", "Ironic"),

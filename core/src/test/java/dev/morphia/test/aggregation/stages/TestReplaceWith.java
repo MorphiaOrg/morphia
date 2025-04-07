@@ -25,7 +25,7 @@ import static java.util.stream.Collectors.toList;
 public class TestReplaceWith extends AggregationTest {
     @Test
     public void testReplaceWith() {
-        checkMinServerVersion(4.2);
+        checkMinServerVersion("4.2.0");
         List<Document> documents = parseDocs(
                 "{'_id': 1, 'name': {'first': 'John', 'last': 'Backus'}}",
                 "{'_id': 2, 'name': {'first': 'John', 'last': 'McCarthy'}}",
@@ -83,7 +83,7 @@ public class TestReplaceWith extends AggregationTest {
 
     @Test
     public void testSetField() {
-        checkMinServerVersion(5.0);
+        checkMinServerVersion("5.0.0");
         insert("inventory", parseDocs(
                 "{ '_id' : 1, 'item' : 'sweatshirt', 'price': 45.99, qty: 300 }",
                 "{ '_id' : 2, 'item' : 'winter coat', 'price': 499.99, qty: 200 }",

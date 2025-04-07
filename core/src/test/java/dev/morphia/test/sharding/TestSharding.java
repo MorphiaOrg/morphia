@@ -27,7 +27,7 @@ public class TestSharding extends TestBase {
 
     @Test
     public void testShardCollection() {
-        checkMinServerVersion(6.0);
+        checkMinServerVersion("6.0.0");
         withSharding(() -> {
             DatastoreImpl datastore = getDs();
             datastore.getDatabase().createCollection("split_brain"); // make sure the db exists on 4.0.x

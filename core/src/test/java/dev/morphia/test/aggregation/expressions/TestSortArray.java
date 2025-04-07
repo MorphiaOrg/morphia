@@ -17,7 +17,7 @@ import static dev.morphia.query.Sort.naturalAscending;
 public class TestSortArray extends AggregationTest {
     @Test
     public void testField() {
-        testPipeline(5.2, "field", (aggregation) -> {
+        testPipeline("5.2.0", "field", (aggregation) -> {
             return aggregation
                     .project(project()
                             .suppressId()
@@ -28,7 +28,7 @@ public class TestSortArray extends AggregationTest {
 
     @Test
     public void testSubfield() {
-        testPipeline(5.2, "subfield", (aggregation) -> {
+        testPipeline("5.2.0", "subfield", (aggregation) -> {
             return aggregation
                     .project(project()
                             .suppressId()
@@ -39,7 +39,7 @@ public class TestSortArray extends AggregationTest {
 
     @Test
     public void testMultipleFields() {
-        testPipeline(5.2, "multipleFields", (aggregation) -> {
+        testPipeline("5.2.0", "multipleFields", (aggregation) -> {
             return aggregation
                     .project(project()
                             .suppressId()
@@ -51,7 +51,7 @@ public class TestSortArray extends AggregationTest {
 
     @Test
     public void testArrayOfIntegers() {
-        testPipeline(5.2, "arrayOfIntegers", (aggregation) -> {
+        testPipeline("5.2.0", "arrayOfIntegers", (aggregation) -> {
             return aggregation
                     .project(project()
                             .suppressId()
@@ -63,7 +63,7 @@ public class TestSortArray extends AggregationTest {
 
     @Test
     public void testMixedTypes() {
-        testPipeline(5.2, "mixedTypes", (aggregation) -> {
+        testPipeline("5.2.0", "mixedTypes", (aggregation) -> {
             return aggregation
                     .project(project()
                             .suppressId()

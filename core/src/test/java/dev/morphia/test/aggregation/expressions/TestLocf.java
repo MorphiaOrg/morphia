@@ -13,7 +13,7 @@ import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 public class TestLocf extends AggregationTest {
     @Test
     public void testMissingValues() {
-        testPipeline(5.2, "missingValues", true, false, (aggregation) -> {
+        testPipeline("5.2.0", "missingValues", true, false, (aggregation) -> {
             return aggregation
                     .setWindowFields(setWindowFields()
                             .sortBy(Sort.ascending("time"))

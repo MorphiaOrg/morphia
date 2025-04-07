@@ -17,7 +17,7 @@ import static java.time.DayOfWeek.MONDAY;
 public class TestDateTrunc extends AggregationTest {
     @Test
     public void testDateTrunc() {
-        checkMinServerVersion(5.0);
+        checkMinServerVersion("5.0.0");
 
         cakeSales();
 

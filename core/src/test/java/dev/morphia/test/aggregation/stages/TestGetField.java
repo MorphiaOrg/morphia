@@ -16,7 +16,7 @@ import static dev.morphia.query.filters.Filters.expr;
 public class TestGetField extends AggregationTest {
     @Test
     public void testGetField() {
-        checkMinServerVersion(5.0);
+        checkMinServerVersion("5.0.0");
 
         insert("inventory", parseDocs(
                 "{ '_id' : 1, 'item' : 'sweatshirt', 'price_usd': 45.99, qty: 300 }",

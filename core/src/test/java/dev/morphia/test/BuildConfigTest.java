@@ -14,12 +14,12 @@ import java.util.TreeMap;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SequenceWriter;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.github.zafarkhaja.semver.Version;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.jetbrains.annotations.NotNull;
+import org.semver4j.Semver;
 import org.testng.annotations.Test;
 
 import static java.lang.String.format;
@@ -44,14 +44,14 @@ public class BuildConfigTest {
 
     @Test
     public void testDocsConfig() throws IOException {
-        Version pomVersion = Version.valueOf(model.getVersion());
+        var pomVersion = Semver.parse(model.getVersion());
         String url = model.getUrl();
 
         boolean master = "master".equals(gitInfo.get("git.branch"));
         var updated = new LinkedHashMap<String, Object>();
         copy(updated, antora, "name");
         copy(updated, antora, "title");
-        updated.put("version", format("%s.%s", pomVersion.getMajorVersion(), pomVersion.getMinorVersion()));
+        updated.put("version", format("%s.%s", pomVersion.getMajor(), pomVersion.getMinor()));
         if (master) {
             updated.put("prerelease", "-SNAPSHOT");
         }
@@ -64,7 +64,7 @@ public class BuildConfigTest {
         if (master) {
             path = "/blob/master";
         } else {
-            path = format("/tree/%s.%s.x", pomVersion.getMajorVersion(), pomVersion.getMinorVersion());
+            path = format("/tree/%s.%s.x", pomVersion.getMajor(), pomVersion.getMinor());
         }
         attributes.put("srcRef", String.format("%s%s", url, path));
 
@@ -72,8 +72,8 @@ public class BuildConfigTest {
         sw.write(updated);
     }
 
-    private Object previous(Version version) {
-        return Version.forIntegers(version.getMajorVersion(), version.getMinorVersion(), Math.max(version.getPatchVersion() - 1, 0));
+    private Object previous(Semver version) {
+        return Semver.of(version.getMajor(), version.getMinor(), Math.max(version.getPatch() - 1, 0));
     }
 
     private void copy(LinkedHashMap<String, Object> updated, Map antora, String key) {

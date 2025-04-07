@@ -18,7 +18,7 @@ import static org.bson.Document.parse;
 public class TestCovariancePop extends AggregationTest {
     @Test
     public void testCovariancePop() {
-        checkMinServerVersion(5.0);
+        checkMinServerVersion("5.0.0");
         cakeSales();
 
         List<Document> actual = getDs().aggregate("cakeSales")

@@ -26,7 +26,7 @@ import static dev.morphia.aggregation.stages.Merge.into;
 public class TestMerge extends AggregationTest {
     @Test
     public void testMerge() {
-        checkMinServerVersion(4.2);
+        checkMinServerVersion("4.2.0");
 
         insert("salaries", parseDocs(
                 "{ '_id' : 1, employee: 'Ant', dept: 'A', salary: 100000, fiscal_year: 2017 }",

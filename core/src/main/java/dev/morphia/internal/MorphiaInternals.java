@@ -13,6 +13,7 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
 
+import org.semver4j.Semver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +27,7 @@ public final class MorphiaInternals {
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaInternals.class);
     private static final Map<DriverVersion, Boolean> versions = new HashMap<>();
     private static Boolean proxyClassesPresent;
-    private static String driverVersion;
+    private static @org.jspecify.annotations.Nullable Semver driverVersion;
 
     private MorphiaInternals() {
     }
@@ -82,14 +83,14 @@ public final class MorphiaInternals {
         return fallback.get();
     }
 
-    public static String getDriverVersion() {
+    public static Semver getDriverVersion() {
         if (driverVersion == null) {
             try {
                 URL location = MongoClient.class.getProtectionDomain().getCodeSource().getLocation();
                 URLConnection connection = location.openConnection();
                 try (JarInputStream stream = new JarInputStream(connection.getInputStream())) {
                     Manifest manifest = stream.getManifest();
-                    driverVersion = manifest.getMainAttributes().getValue("Build-Version");
+                    driverVersion = Semver.parse(manifest.getMainAttributes().getValue("Build-Version"));
                 }
             } catch (Exception e) {
                 throw new RuntimeException(e);

@@ -18,7 +18,7 @@ import static org.testng.Assert.assertEquals;
 public class TestUnset extends AggregationTest {
     @Test
     public void testUnset() {
-        checkMinServerVersion(4.2);
+        checkMinServerVersion("4.2.0");
         List<Document> documents = parseDocs(
                 "{'_id': 1, title: 'Antelope Antics', isbn: '0001122223334', author: {last:'An', first: 'Auntie' }, copies: "
                         + "[ {warehouse: 'A', qty: 5 }, {warehouse: 'B', qty: 15 } ] }",
@@ -41,8 +41,8 @@ public class TestUnset extends AggregationTest {
 
     @Test
     public void testUnsetField() {
-        checkMinServerVersion(5.0);
-        checkMinDriverVersion(4.5);
+        checkMinServerVersion("5.0.0");
+        checkMinDriverVersion("4.5.0");
         insert("inventory", parseDocs(
                 "{ '_id' : 1, 'item' : 'sweatshirt', 'price.usd': 45.99, qty: 300 }",
                 "{ '_id' : 2, 'item' : 'winter coat', 'price.usd': 499.99, qty: 200 }",
