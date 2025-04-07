@@ -26,7 +26,6 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
     public MorphiaTypesCodecProvider(DatastoreImpl datastore) {
         this.datastore = datastore;
         addCodec(new MorphiaDateCodec(datastore));
-        addCodec(new MorphiaMapCodec(datastore));
         addCodec(new MorphiaLocalDateTimeCodec(datastore));
         addCodec(new MorphiaLocalTimeCodec());
         addCodec(new ClassCodec());

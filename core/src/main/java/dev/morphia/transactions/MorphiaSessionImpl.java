@@ -13,6 +13,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertManyResult;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
+import com.mongodb.internal.TimeoutContext;
 import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 import com.mongodb.session.ServerSession;
@@ -278,5 +279,11 @@ public class MorphiaSessionImpl extends DatastoreImpl implements MorphiaSession 
     @Override
     public void close() {
         session.close();
+    }
+
+    @Nullable
+    @Override
+    public TimeoutContext getTimeoutContext() {
+        return session.getTimeoutContext();
     }
 }

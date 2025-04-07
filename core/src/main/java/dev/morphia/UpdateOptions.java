@@ -136,6 +136,12 @@ public class UpdateOptions extends com.mongodb.client.model.UpdateOptions
     }
 
     @Override
+    public UpdateOptions sort(Bson sort) {
+        super.sort(sort);
+        return this;
+    }
+
+    @Override
     public UpdateOptions upsert(boolean upsert) {
         super.upsert(upsert);
         return this;

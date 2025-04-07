@@ -27,6 +27,7 @@ import com.mongodb.ReadConcern;
 import com.mongodb.ReadPreference;
 import com.mongodb.assertions.Assertions;
 import com.mongodb.client.FindIterable;
+import com.mongodb.client.cursor.TimeoutMode;
 import com.mongodb.client.model.Collation;
 import com.mongodb.lang.Nullable;
 
@@ -82,6 +83,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     private Projection projection;
     private String queryLogId;
     private String collection;
+    private TimeoutMode timeoutMode;
 
     /**
      * Creates an instance with default values
@@ -138,11 +140,11 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
         iterable.maxTime(maxTimeMS, TimeUnit.MILLISECONDS);
         iterable.min(min);
         iterable.noCursorTimeout(noCursorTimeout);
-        iterable.oplogReplay(oplogReplay);
         iterable.partial(partial);
         iterable.returnKey(returnKey);
         iterable.showRecordId(showRecordId);
         iterable.skip(skip);
+        iterable.timeoutMode(timeoutMode);
         if (sort != null) {
             Document mapped = new Document();
             EntityModel model = null;
@@ -852,4 +854,8 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
         return this;
     }
 
+    public FindOptions timeoutMode(TimeoutMode timeoutMode) {
+        this.timeoutMode = timeoutMode;
+        return this;
+    }
 }

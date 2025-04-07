@@ -1,10 +1,10 @@
 ---
 name: "morphia"
 title: "Morphia"
-version: "2.4"
+version: "2.5"
 nav:
 - "modules/ROOT/nav.adoc"
 asciidoc:
   attributes:
-    version: "2.4.14"
-    srcRef: "https://github.com/MorphiaOrg/morphia/tree/2.4.x"
+    version: "2.5.0"
+    srcRef: "https://github.com/MorphiaOrg/morphia/tree/2.5.x"

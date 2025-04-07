@@ -8,6 +8,7 @@ import org.bson.UuidRepresentation;
 import org.testcontainers.containers.MongoDBContainer;
 
 import static com.mongodb.MongoClientSettings.builder;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 class MongoHolder implements AutoCloseable {
     private MongoDBContainer mongoDBContainer;
@@ -38,6 +39,7 @@ class MongoHolder implements AutoCloseable {
             mongoClient = MongoClients.create(builder()
                     .uuidRepresentation(UuidRepresentation.STANDARD)
                     .applyConnectionString(new ConnectionString(connectionString))
+                    .timeout(10, SECONDS)
                     .build());
 
         }

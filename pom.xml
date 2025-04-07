@@ -25,8 +25,8 @@
     <properties>
         <kotlin.version>1.9.25</kotlin.version>
         <awaitility.version>1.7.0</awaitility.version>
-        <driver.version>4.11.5</driver.version>
-        <driver.minor.version>4.11</driver.minor.version>
+        <driver.version>5.4.0</driver.version>
+        <driver.minor.version>5.4</driver.minor.version>
         <jackson.version>2.18.2</jackson.version>
         <json.assert.version>1.5.3</json.assert.version>
         <logback.version>1.5.17</logback.version>

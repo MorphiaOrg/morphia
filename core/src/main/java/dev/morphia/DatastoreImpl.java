@@ -49,6 +49,7 @@ import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.ShardKeyType;
 import dev.morphia.mapping.codec.EnumCodecProvider;
 import dev.morphia.mapping.codec.MorphiaCodecProvider;
+import dev.morphia.mapping.codec.MorphiaMapCodecProvider;
 import dev.morphia.mapping.codec.MorphiaTypesCodecProvider;
 import dev.morphia.mapping.codec.PrimitiveCodecRegistry;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -154,12 +155,14 @@ public class DatastoreImpl implements AdvancedDatastore {
         List<CodecProvider> providers = new ArrayList<>();
         mapper.getConfig().codecProvider().ifPresent(providers::add);
 
-        providers.addAll(List.of(new MorphiaTypesCodecProvider(this),
+        providers.addAll(morphiaCodecProviders);
+        providers.addAll(List.of(
+                new MorphiaMapCodecProvider(this),
+                new MorphiaTypesCodecProvider(this),
                 new PrimitiveCodecRegistry(codecRegistry),
                 new EnumCodecProvider(),
                 new AggregationCodecProvider(this)));
 
-        providers.addAll(morphiaCodecProviders);
         providers.add(codecRegistry);
         codecRegistry = fromProviders(providers);
         return codecRegistry;
