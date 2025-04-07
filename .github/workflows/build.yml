@@ -99,11 +99,11 @@ jobs:
       fail-fast: false
       matrix:
         driver: ${{ fromJson(needs.matrix.outputs.driver_matrix) }}
-        java: [ 11, 17, 21 ]
-        mongo: [ 7 ]
+        java: [ 11, 24 ]
+        mongo: [ ${{ fromJson(needs.matrix.outputs.version_matrix) }}[0] ]
         include:
-          - java: 21
-            mongo: 7
+          - java: 17
+            mongo: ${{ fromJson(needs.matrix.outputs.version_matrix) }}[0]
             driver: ${{ fromJson(needs.matrix.outputs.driver_latest)[0] }}
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:

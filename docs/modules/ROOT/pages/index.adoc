@@ -57,7 +57,6 @@ endif::[]
 
 [NOTE]
 ====
-Morphia 2.0 requires Java 11 or greater.
-Morphia has been tested on mongodb servers as old as 3.6.15 up through the most recent builds.
-Morphia will likely work on older servers versions, but those remain untested and no guarantees are made.
+Morphia 2.0 requires Java 11 or greater.  Morphia is actively tested on server versions 6 and above.  Older server versions are not
+tested but, generally, *should* work though no guarantees are made.  Morphia 2.5 and beyond require a minimum driver version of 5.0.
 ====
