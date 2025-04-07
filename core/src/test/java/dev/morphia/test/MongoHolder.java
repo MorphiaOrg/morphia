@@ -38,8 +38,8 @@ class MongoHolder implements AutoCloseable {
     public MongoClient getMongoClient() {
         if (mongoClient == null) {
             Builder builder = builder()
-                                  .uuidRepresentation(UuidRepresentation.STANDARD)
-                                  .applyConnectionString(new ConnectionString(connectionString));
+                    .uuidRepresentation(UuidRepresentation.STANDARD)
+                    .applyConnectionString(new ConnectionString(connectionString));
             try {
                 builder.timeout(10, SECONDS);
             } catch (Exception ignore) {

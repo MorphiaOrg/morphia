@@ -47,7 +47,6 @@ import org.bson.types.ObjectId;
 
 import static dev.morphia.internal.MorphiaInternals.DriverVersion.v4_1_0;
 import static dev.morphia.internal.MorphiaInternals.DriverVersion.v4_6_0;
-import static dev.morphia.internal.MorphiaInternals.DriverVersion.v5_0_0;
 import static dev.morphia.internal.MorphiaInternals.DriverVersion.v5_2_0;
 import static dev.morphia.internal.MorphiaInternals.tryInvoke;
 
