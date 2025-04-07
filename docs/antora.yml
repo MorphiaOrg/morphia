@@ -7,5 +7,5 @@ nav:
 - "modules/ROOT/nav.adoc"
 asciidoc:
   attributes:
-    version: "2.5.0"
+    version: "2.5.0-SNAPSHOT"
     srcRef: "https://github.com/MorphiaOrg/morphia/tree/2.5.x"

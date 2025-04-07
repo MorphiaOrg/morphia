@@ -72,7 +72,12 @@ public class BuildConfigTest {
     }
 
     private Object previous(Semver version) {
-        return Semver.of(version.getMajor(), version.getMinor(), Math.max(version.getPatch() - 1, 0));
+        var previous = Semver.of(version.getMajor(), version.getMinor(),
+                Math.max(version.getPatch() - 1, 0));
+        if (previous.getPatch() == 0) {
+            previous = previous.withPreRelease("SNAPSHOT");
+        }
+        return previous;
     }
 
     private void copy(LinkedHashMap<String, Object> updated, Map antora, String key) {
