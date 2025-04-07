@@ -45,7 +45,7 @@ public class DriverVersions {
         var grouped = stream(spliteratorUnknownSize(versions.elements(), Spliterator.ORDERED), false)
                           .map(JsonNode::asText)
                           .map(Semver::parse)
-                                  .filter(it -> it.isGreaterThanOrEqualTo("5.0.0"))
+                          .filter(it -> it.isGreaterThanOrEqualTo("5.0.0"))
                           .filter(it1 -> it1.getBuild().isEmpty())
                           .filter(it1 -> it1.getPreRelease().isEmpty())
                           .collect(groupingBy(v -> Semver.of(v.getMajor(), v.getMinor(), 0      ), LinkedHashMap::new,
