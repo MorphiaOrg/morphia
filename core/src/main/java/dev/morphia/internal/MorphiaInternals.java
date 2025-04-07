@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 @MorphiaInternal
 public final class MorphiaInternals {
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaInternals.class);
-    private static final Map<DriverVersion, Boolean> versions = new HashMap<>();
+    private static final Map<Semver, Boolean> versions = new HashMap<>();
     private static Boolean proxyClassesPresent;
     private static @org.jspecify.annotations.Nullable Semver driverVersion;
 
@@ -56,13 +56,9 @@ public final class MorphiaInternals {
      * @return
      */
     @Nullable
-    public static <V> V tryInvoke(DriverVersion version, Supplier<V> block) {
-        if (versions.get(version) == null) {
-            try {
-                return block.get();
-            } catch (NoSuchMethodError e) {
-                versions.put(version, false);
-            }
+    public static <V> V tryInvoke(String version, Supplier<V> block) {
+        if (getDriverVersion().isGreaterThanOrEqualTo(version)) {
+            return block.get();
         }
         return null;
     }
@@ -72,13 +68,9 @@ public final class MorphiaInternals {
      * @param block
      * @return
      */
-    public static <V> V tryInvoke(DriverVersion version, Supplier<V> block, Supplier<V> fallback) {
-        if (versions.get(version) == null) {
-            try {
-                return block.get();
-            } catch (NoSuchMethodError e) {
-                versions.put(version, false);
-            }
+    public static <V> V tryInvoke(String version, Supplier<V> block, Supplier<V> fallback) {
+        if (getDriverVersion().isGreaterThanOrEqualTo(version)) {
+            return block.get();
         }
         return fallback.get();
     }

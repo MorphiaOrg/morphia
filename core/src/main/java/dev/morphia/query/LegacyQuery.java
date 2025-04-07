@@ -22,7 +22,6 @@ import dev.morphia.UpdateOptions;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.internal.MorphiaInternals.DriverVersion;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.internal.MorphiaCursor;
@@ -171,7 +170,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     @Override
     public Map<String, Object> explain(FindOptions options, @Nullable ExplainVerbosity verbosity) {
         MongoCollection<T> collection = datastore.configureCollection(options, this.collection);
-        return tryInvoke(DriverVersion.v4_2_0,
+        return tryInvoke("4.2.0",
                 () -> {
                     return verbosity == null
                             ? iterable(options, collection).explain()
