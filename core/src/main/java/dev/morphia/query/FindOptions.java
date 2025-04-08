@@ -138,7 +138,9 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
         iterable.returnKey(returnKey);
         iterable.showRecordId(showRecordId);
         iterable.skip(skip);
-        tryInvoke("5.2.0", () -> iterable.timeoutMode(timeoutMode));
+        if (timeoutMode != null) {
+            tryInvoke("5.2.0", () -> iterable.timeoutMode(timeoutMode));
+        }
         if (sort != null) {
             Document mapped = new Document();
             EntityModel model = null;
