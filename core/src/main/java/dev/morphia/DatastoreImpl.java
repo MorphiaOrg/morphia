@@ -15,6 +15,7 @@ import com.mongodb.MongoCommandException;
 import com.mongodb.MongoException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.WriteConcern;
+import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
@@ -886,6 +887,10 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     public abstract static class DatastoreOperations {
+        public abstract <T> AggregateIterable<T> aggregate(MongoCollection<?> collection, List<Document> pipeline);
+
+        public abstract <T> AggregateIterable<T> aggregate(MongoCollection<?> collection, List<Document> pipeline, Class<?> resultType);
+
         public abstract <T> long countDocuments(MongoCollection<T> collection, Document query, CountOptions options);
 
         public abstract <T> DeleteResult deleteMany(MongoCollection<T> collection, Document queryDocument, DeleteOptions options);
@@ -923,6 +928,16 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     private class CollectionOperations extends DatastoreOperations {
+        @Override
+        public <T> AggregateIterable<T> aggregate(MongoCollection<?> collection, List<Document> pipeline) {
+            return (AggregateIterable<T>) collection.aggregate(pipeline);
+        }
+
+        @Override
+        public <T> AggregateIterable<T> aggregate(MongoCollection<?> collection, List<Document> pipeline, Class<?> resultType) {
+            return (AggregateIterable<T>) collection.aggregate(pipeline, resultType);
+        }
+
         @Override
         public <T> long countDocuments(MongoCollection<T> collection, Document query, CountOptions options) {
             return collection.countDocuments(query, options);

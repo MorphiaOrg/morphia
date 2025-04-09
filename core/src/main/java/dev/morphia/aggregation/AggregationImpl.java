@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import com.mongodb.ServerAddress;
 import com.mongodb.ServerCursor;
+import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.lang.Nullable;
@@ -154,12 +155,14 @@ public class AggregationImpl<T> implements Aggregation<T> {
         }
         if (datastore.getMapper().isMappable(resultType) && !resultType.equals(this.collection.getDocumentClass())) {
             MongoCollection<Document> collection = this.collection.withDocumentClass(Document.class);
-            MongoCursor<Document> results = collection.aggregate(pipeline).iterator();
+            AggregateIterable<Document> aggregate = datastore.operations().aggregate(collection, pipeline);
+            MongoCursor<Document> results = aggregate.iterator();
             EntityModel entityModel = datastore.getMapper().getEntityModel(this.collection.getDocumentClass());
             cursor = new MappingCursor<>(results, datastore.getCodecRegistry().get(resultType),
                     entityModel.getDiscriminatorKey());
         } else {
-            cursor = collection.aggregate(pipeline, resultType).iterator();
+            AggregateIterable<R> aggregate = datastore.operations().aggregate(collection, pipeline, resultType);
+            cursor = aggregate.iterator();
         }
         return new MorphiaCursor<>(cursor);
     }
