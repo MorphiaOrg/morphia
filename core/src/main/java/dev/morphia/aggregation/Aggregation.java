@@ -28,8 +28,8 @@ import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.aggregation.stages.Unset;
 import dev.morphia.aggregation.stages.Unwind;
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.query.MorphiaCursor;
 import dev.morphia.query.filters.Filter;
+import dev.morphia.query.internal.MorphiaCursor;
 
 /**
  * @param <T> The initial type of the aggregation. Used for collection name resolution.
