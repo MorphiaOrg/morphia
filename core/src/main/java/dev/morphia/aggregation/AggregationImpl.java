@@ -55,8 +55,8 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
-import dev.morphia.query.MorphiaCursor;
 import dev.morphia.query.filters.Filter;
+import dev.morphia.query.internal.MorphiaCursor;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
