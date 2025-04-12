@@ -12,6 +12,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Collation;
 import com.mongodb.lang.Nullable;
 
+import dev.morphia.DatastoreImpl;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.CollectionConfigurable;
 import dev.morphia.internal.ReadConfigurable;
@@ -60,16 +61,17 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
      *
      * @param <T>        the collection type
      * @param <S>        the result type
-     * @param documents  the stage documents
-     * @param database
+     * @param pipeline   the stage pipeline
+     * @param datastore
      * @param collection the collection to configure
      * @param resultType the result type
      * @return the updated collection
      * @morphia.internal
      */
     @MorphiaInternal
-    <S, T> AggregateIterable<S> apply(List<Document> documents,
-            MongoDatabase database, MongoCollection<T> collection, Class<S> resultType) {
+    <S, T> AggregateIterable<T> apply(List<Document> pipeline,
+            DatastoreImpl datastore, MongoCollection<T> collection, Class<S> resultType) {
+        MongoDatabase database = datastore.getDatabase();
         MongoCollection<T> bound = prepare(collection, database);
         if (readConcern != null) {
             bound = bound.withReadConcern(readConcern);
@@ -77,7 +79,8 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
         if (readPreference != null) {
             bound = bound.withReadPreference(readPreference);
         }
-        AggregateIterable<S> aggregate = bound.aggregate(documents, resultType)
+        AggregateIterable<T> aggregate = datastore.operations().aggregate(bound, pipeline, resultType);
+        aggregate
                 .allowDiskUse(allowDiskUse)
                 .bypassDocumentValidation(bypassDocumentValidation);
         if (batchSize != null) {
