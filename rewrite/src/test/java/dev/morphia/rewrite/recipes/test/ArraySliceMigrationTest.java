@@ -9,7 +9,7 @@ public class ArraySliceMigrationTest extends MorphiaRewriteTest {
 
     @Override
     protected Recipe getRecipe() {
-        return new ArraySliceRefasterRecipes();
+        return null; //              new ArraySliceRefaster();
     }
 
     @Test

@@ -8,13 +8,13 @@ recipeList:
   - dev.morphia.rewrite.recipes.CreateDatastoreMigration
   - dev.morphia.rewrite.recipes.MorphiaConfigMigration
   - dev.morphia.rewrite.recipes.RegexPatternMerge
-  - dev.morphia.rewrite.recipes.ModifyExecute
+#  - dev.morphia.rewrite.recipes.ModifyExecute
   - dev.morphia.rewrite.recipes.ModifyReturnType
-  - dev.morphia.rewrite.recipes.UpdateExecute
+#  - dev.morphia.rewrite.recipes.UpdateExecute
   - dev.morphia.rewrite.recipes.UpdateReturnType
   - dev.morphia.rewrite.recipes.LogicalFilterAdd
   - dev.morphia.rewrite.recipes.ArraySliceRefasterRecipes
-  - org.openrewrite.java.RemoveAnnotation:
+  - org.openrewrite.java.Rem    oveAnnotation:
       annotationPattern: '@dev.morphia.annotations.Embedded'
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: dev.morphia.mapping.MapperOptions

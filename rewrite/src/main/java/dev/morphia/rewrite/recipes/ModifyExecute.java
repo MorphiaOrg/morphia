@@ -3,8 +3,6 @@ package dev.morphia.rewrite.recipes;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import org.jetbrains.annotations.NotNull;
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.NlsRewrite.Description;
@@ -20,6 +18,8 @@ import org.openrewrite.java.tree.J.MethodInvocation;
 import org.openrewrite.java.tree.JavaType;
 import org.openrewrite.java.tree.JavaType.Method;
 import org.openrewrite.java.tree.JavaType.Parameterized;
+
+import jakarta.annotation.Nullable;
 
 public class ModifyExecute extends Recipe {
     private static final MethodMatcher MATCHER = new MethodMatcher("dev.morphia.query.Modify execute(..)");

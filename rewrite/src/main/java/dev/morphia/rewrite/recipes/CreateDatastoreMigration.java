@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import org.jetbrains.annotations.NotNull;
 import org.openrewrite.Cursor;
 import org.openrewrite.ExecutionContext;
@@ -20,6 +18,8 @@ import org.openrewrite.java.tree.J.Identifier;
 import org.openrewrite.java.tree.J.MethodInvocation;
 import org.openrewrite.java.tree.JavaType;
 import org.openrewrite.java.tree.JavaType.Method;
+
+import jakarta.annotation.Nullable;
 
 import static dev.morphia.rewrite.recipes.RewriteUtils.findMorphiaCore;
 import static java.util.List.of;
