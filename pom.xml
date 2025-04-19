@@ -66,49 +66,6 @@
                         <compilerArgument>-Xlint:deprecation</compilerArgument>
                     </configuration>
                 </plugin>
-                <plugin>
-                    <groupId>org.revapi</groupId>
-                    <artifactId>revapi-maven-plugin</artifactId>
-                    <version>${revapi.maven.plugin.version}</version>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.revapi</groupId>
-                            <artifactId>revapi-java</artifactId>
-                            <version>${revapi.java.version}</version>
-                        </dependency>
-                    </dependencies>
-                    <executions>
-                        <execution>
-                            <id>revapi</id>
-                            <goals>
-                                <goal>check</goal>
-                            </goals>
-                            <phase>verify</phase>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <failBuildOnProblemsFound>true</failBuildOnProblemsFound>
-                        <analysisConfigurationFiles>
-                            <analysisConfigurationFile>${maven.multiModuleProjectDirectory}/config/revapi-filtered.json</analysisConfigurationFile>
-                        </analysisConfigurationFiles>
-                        <analysisConfiguration>
-                            <revapi.versions>
-                                <enabled>true</enabled>
-                                <versionIncreaseAllows>
-                                    <major>
-                                        <severity>BREAKING</severity>
-                                    </major>
-                                    <minor>
-                                        <severity>NON_BREAKING</severity>
-                                    </minor>
-                                    <patch>
-                                        <severity>EQUIVALENT</severity>
-                                    </patch>
-                                </versionIncreaseAllows>
-                            </revapi.versions>
-                        </analysisConfiguration>
-                    </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
