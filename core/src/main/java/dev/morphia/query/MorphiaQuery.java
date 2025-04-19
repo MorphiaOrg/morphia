@@ -79,7 +79,7 @@ public class MorphiaQuery<T> implements Query<T> {
             collection = datastore.getDatabase().getCollection(options.collection())
                     .withDocumentClass(type);
             collectionName = options.collection();
-        } else if (mapper.isMappable(type)) {
+        } else {
             collection = datastore.getCollection(type);
             collectionName = collection.getNamespace().getCollectionName();
         }
