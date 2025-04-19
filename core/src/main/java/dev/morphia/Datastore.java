@@ -178,7 +178,20 @@ public interface Datastore {
      * @param <T>  the type to query
      * @return the query
      */
-    <T> Query<T> find(Class<T> type);
+    default <T> Query<T> find(Class<T> type) {
+        return find(type, new FindOptions());
+    };
+
+    /**
+     * Find instances of a type
+     *
+     * @param type    the class to use for mapping the results
+     * @param options the options to apply to the query
+     * @param <T>     the type to query
+     * @return the query
+     * @since 2.5
+     */
+    <T> Query<T> find(Class<T> type, FindOptions options);
 
     /**
      * Find instances of a type using a native query. This method is intended as an aid when copying queries from external sources such
@@ -204,7 +217,9 @@ public interface Datastore {
      * @deprecated use {@link FindOptions#collection(String)} instead
      */
     @Deprecated(forRemoval = true, since = "2.3")
-    <T> Query<T> find(String collection, Class<T> type);
+    default <T> Query<T> find(String collection, Class<T> type) {
+        return find(type, new FindOptions().collection(collection));
+    };
 
     /**
      * Find all instances by type in a different collection than what is mapped on the class given.

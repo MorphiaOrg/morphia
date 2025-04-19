@@ -32,7 +32,7 @@ public interface CollectionConfigurable<T> extends CollectionConfiguration {
      * @param <T>        the collection type
      * @return either the alternate collection if one is defined or the collection passed in
      */
-    default <T> MongoCollection<T> prepare(MongoCollection<T> collection, MongoDatabase database) {
+    default <T> MongoCollection<T> prepare(@Nullable MongoCollection<T> collection, MongoDatabase database) {
         String alternateName = collection();
         if (alternateName != null) {
             collection = database.getCollection(alternateName, collection.getDocumentClass());

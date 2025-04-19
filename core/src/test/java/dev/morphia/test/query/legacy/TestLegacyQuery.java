@@ -34,7 +34,6 @@ import dev.morphia.query.CountOptions;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.LegacyQueryFactory;
 import dev.morphia.query.Query;
-import dev.morphia.query.QueryFactory;
 import dev.morphia.query.ValidationException;
 import dev.morphia.test.MorphiaContainer;
 import dev.morphia.test.TestBase;
@@ -1261,10 +1260,6 @@ public class TestLegacyQuery extends TestBase {
     private void dropProfileCollection() {
         MongoCollection<Document> profileCollection = getDatabase().getCollection("system.profile");
         profileCollection.drop();
-    }
-
-    private Query<Pic> getQuery(QueryFactory queryFactory) {
-        return queryFactory.createQuery(getDs(), Pic.class);
     }
 
     private void turnOffProfiling() {

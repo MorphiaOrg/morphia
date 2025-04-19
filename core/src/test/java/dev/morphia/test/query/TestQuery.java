@@ -38,7 +38,6 @@ import dev.morphia.query.CountOptions;
 import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
-import dev.morphia.query.QueryFactory;
 import dev.morphia.query.ValidationException;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.City;
@@ -89,7 +88,7 @@ import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
-@SuppressWarnings({ "unchecked", "unused" })
+@SuppressWarnings({ "unchecked", "unused", "removal" })
 public class TestQuery extends TestBase {
     public TestQuery() {
         super(buildConfig(CappedPic.class)
@@ -504,7 +503,7 @@ public class TestQuery extends TestBase {
     @Test
     public void testCriteriaContainers() {
         assertThrows(UnsupportedOperationException.class, () -> {
-            check(new DefaultQueryFactory().createQuery(getDs(), UserInterface.class).disableValidation());
+            check(new DefaultQueryFactory().createQuery(getDs(), UserInterface.class, new FindOptions()).disableValidation());
         });
     }
 
@@ -1365,10 +1364,6 @@ public class TestQuery extends TestBase {
     private void dropProfileCollection() {
         MongoCollection<Document> profileCollection = getDatabase().getCollection("system.profile");
         profileCollection.drop();
-    }
-
-    private Query<Pic> getQuery(QueryFactory queryFactory) {
-        return queryFactory.createQuery(getDs(), Pic.class);
     }
 
     private void turnOffProfiling() {

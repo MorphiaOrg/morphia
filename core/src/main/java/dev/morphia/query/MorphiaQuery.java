@@ -54,6 +54,9 @@ import static java.util.Arrays.asList;
 public class MorphiaQuery<T> implements Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaQuery.class);
     private final DatastoreImpl datastore;
+
+    private final FindOptions options;
+
     private final Class<T> type;
     private final Mapper mapper;
     private final List<Filter> filters = new ArrayList<>();
@@ -66,27 +69,20 @@ public class MorphiaQuery<T> implements Query<T> {
     private boolean validate = true;
     private FindOptions lastOptions;
 
-    protected MorphiaQuery(Datastore datastore, @Nullable String collectionName, Class<T> type) {
-        this.type = type;
-        this.datastore = (DatastoreImpl) datastore;
-        mapper = this.datastore.getMapper();
-        seedQuery = null;
-        this.collectionName = collectionName;
-        if (collectionName != null) {
-            collection = datastore.getDatabase().getCollection(collectionName, type);
-        } else if (mapper.isMappable(type)) {
-            collection = datastore.getCollection(type);
-            this.collectionName = collection.getNamespace().getCollectionName();
-        }
-    }
-
-    protected MorphiaQuery(Datastore datastore, Class<T> type, @Nullable Document query) {
+    protected MorphiaQuery(Datastore datastore, Class<T> type, FindOptions options, @Nullable Document query) {
         this.type = type;
         this.datastore = (DatastoreImpl) datastore;
         this.seedQuery = query;
+        this.options = options;
         mapper = this.datastore.getMapper();
-        collection = datastore.getCollection(type);
-        collectionName = collection.getNamespace().getCollectionName();
+        if (options.collection() != null) {
+            collection = datastore.getDatabase().getCollection(options.collection())
+                    .withDocumentClass(type);
+            collectionName = options.collection();
+        } else if (mapper.isMappable(type)) {
+            collection = datastore.getCollection(type);
+            collectionName = collection.getNamespace().getCollectionName();
+        }
     }
 
     static <V> V legacyOperation() {
@@ -137,10 +133,20 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
+    public Map<String, Object> explain() {
+        return explain(options, null);
+    }
+
+    @Override
     public Map<String, Object> explain(FindOptions options, @Nullable ExplainVerbosity verbosity) {
         return verbosity == null
                 ? iterable(options, collection).explain()
                 : iterable(options, collection).explain(verbosity);
+    }
+
+    @Override
+    public Map<String, Object> explain(ExplainVerbosity verbosity) {
+        return explain(options, verbosity);
     }
 
     @Override
@@ -193,7 +199,7 @@ public class MorphiaQuery<T> implements Query<T> {
 
     @Override
     public T first() {
-        return first(new FindOptions());
+        return first(options);
     }
 
     @Override
@@ -225,13 +231,18 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
+    public MorphiaCursor<T> iterator() {
+        return iterator(options);
+    }
+
+    @Override
     public MorphiaCursor<T> iterator(FindOptions options) {
         return new MorphiaCursor<>(prepareCursor(options, collection));
     }
 
     @Override
     public MorphiaKeyCursor<T> keys() {
-        return keys(new FindOptions());
+        return keys(options);
     }
 
     @Override

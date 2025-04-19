@@ -321,24 +321,19 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public <T> Query<T> find(Class<T> type) {
-        return queryFactory.createQuery(this, type);
+    public <T> Query<T> find(Class<T> type, FindOptions options) {
+        return queryFactory.createQuery(this, type, options);
     }
 
     @Override
     public <T> Query<T> find(Class<T> type, Document nativeQuery) {
-        return queryFactory.createQuery(this, type, nativeQuery);
-    }
-
-    @Override
-    public <T> Query<T> find(String collection, Class<T> type) {
-        return queryFactory.createQuery(this, collection, type);
+        return queryFactory.createQuery(this, type, new FindOptions(), nativeQuery);
     }
 
     @Override
     public <T> Query<T> find(String collection) {
         Class<T> type = mapper.getClassFromCollection(collection);
-        return queryFactory.createQuery(this, type);
+        return queryFactory.createQuery(this, type, new FindOptions());
     }
 
     @Override
@@ -628,7 +623,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     @Override
     @SuppressWarnings("unchecked")
     public <T> Query<T> queryByExample(T example) {
-        return queryFactory.createQuery(this, (Class<T>) example.getClass(), toDocument(example));
+        return queryFactory.createQuery(this, (Class<T>) example.getClass(), new FindOptions(), toDocument(example));
     }
 
     @Override
@@ -702,7 +697,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     @Override
     public <T> Query<T> createQuery(Class<T> type, Document q) {
-        return queryFactory.createQuery(this, type, q);
+        return queryFactory.createQuery(this, type, new FindOptions(), q);
     }
 
     @Override

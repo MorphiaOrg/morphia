@@ -26,19 +26,13 @@ public class LegacyQueryFactory implements QueryFactory {
     }
 
     @Override
-    public <T> Query<T> createQuery(Datastore datastore, Class<T> type, @Nullable Document seed) {
-
-        final LegacyQuery<T> query = new LegacyQuery<>(datastore, null, type);
+    public <T> Query<T> createQuery(Datastore datastore, Class<T> type, FindOptions options, @Nullable Document seed) {
+        final LegacyQuery<T> query = new LegacyQuery<>(datastore, null, type, options);
 
         if (seed != null) {
             query.setQueryObject(seed);
         }
 
         return query;
-    }
-
-    @Override
-    public <T> Query<T> createQuery(Datastore datastore, String collection, Class<T> type) {
-        return new LegacyQuery<>(datastore, collection, type);
     }
 }

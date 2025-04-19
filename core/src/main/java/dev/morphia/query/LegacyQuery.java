@@ -54,6 +54,7 @@ import static java.util.List.of;
 public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(LegacyQuery.class);
     private final DatastoreImpl datastore;
+
     private final Class<T> type;
     private final String collectionName;
     private final MongoCollection<T> collection;
@@ -62,8 +63,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     private boolean validateName = true;
     private boolean validateType = true;
     private Document baseQuery;
-    @Deprecated
-    private FindOptions options;
+    private final FindOptions options;
     private FindOptions lastOptions;
     private ValidationException invalid;
 
@@ -72,10 +72,12 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
      *
      * @param datastore the Datastore to use
      * @param type      the type to return
+     * @param options
      */
-    protected LegacyQuery(Datastore datastore, @Nullable String collectionName, Class<T> type) {
+    protected LegacyQuery(Datastore datastore, @Nullable String collectionName, Class<T> type, FindOptions options) {
         this.type = type;
         this.datastore = (DatastoreImpl) datastore;
+        this.options = options;
         model = datastore.getMapper().getEntityModel(type);
         if (collectionName != null) {
             this.collection = datastore.getDatabase().getCollection(collectionName, type);
@@ -165,6 +167,16 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
         } else {
             return datastore.operations().deleteOne(collection, getQueryDocument(), options);
         }
+    }
+
+    @Override
+    public Map<String, Object> explain() {
+        return explain(options, null);
+    }
+
+    @Override
+    public Map<String, Object> explain(ExplainVerbosity verbosity) {
+        return explain(options, verbosity);
     }
 
     @Override
@@ -277,7 +289,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public T first() {
-        return first(new FindOptions());
+        return first(options);
     }
 
     @Override
@@ -305,6 +317,11 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     @Override
+    public MorphiaCursor<T> iterator() {
+        return iterator(options);
+    }
+
+    @Override
     public MorphiaCursor<T> iterator(FindOptions options) {
         return new MorphiaCursor<>(prepareCursor(options, datastore.configureCollection(options, collection)));
     }
@@ -322,7 +339,7 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
 
     @Override
     public MorphiaKeyCursor<T> keys() {
-        return keys(new FindOptions());
+        return keys(options);
     }
 
     @Override
@@ -547,9 +564,6 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     }
 
     FindOptions getOptions() {
-        if (options == null) {
-            options = new FindOptions();
-        }
         return options;
     }
 }

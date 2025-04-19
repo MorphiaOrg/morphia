@@ -12,6 +12,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.lang.Nullable;
 
+import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
@@ -158,9 +159,7 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @return Map describing the process used to return the query results.
      * @mongodb.driver.manual reference/operator/meta/explain/ explain
      */
-    default Map<String, Object> explain() {
-        return explain(new FindOptions());
-    }
+    Map<String, Object> explain();
 
     /**
      * Provides information on the query plan. The query plan is the plan the server uses to find the matches for a query. This information
@@ -170,7 +169,9 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @return Map describing the process used to return the query results.
      * @mongodb.driver.manual reference/operator/meta/explain/ explain
      * @since 1.3
+     * @deprecated use {@link Datastore#find(Class, FindOptions)} instead
      */
+    @Deprecated(since = "2.5", forRemoval = true)
     default Map<String, Object> explain(FindOptions options) {
         return explain(options, null);
     }
@@ -184,8 +185,21 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @return Map describing the process used to return the query results.
      * @mongodb.driver.manual reference/operator/meta/explain/ explain
      * @since 2.2
+     * @deprecated use {@link Datastore#find(Class, FindOptions)} instead
      */
+    @Deprecated(since = "2.5", forRemoval = true)
     Map<String, Object> explain(FindOptions options, @Nullable ExplainVerbosity verbosity);
+
+    /**
+     * Provides information on the query plan. The query plan is the plan the server uses to find the matches for a query. This information
+     * may be useful when optimizing a query.
+     *
+     * @param verbosity the verbosity of the explanation
+     * @return Map describing the process used to return the query results.
+     * @mongodb.driver.manual reference/operator/meta/explain/ explain
+     * @since 2.2
+     */
+    Map<String, Object> explain(@Nullable ExplainVerbosity verbosity);
 
     /**
      * Fluent query interface: {@code createQuery(Ent.class).field("count").greaterThan(7)...}
@@ -270,18 +284,6 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     }
 
     /**
-     * Execute the query and get the results.
-     *
-     * @return a MorphiaCursor
-     * @see #iterator(FindOptions)
-     * @since 2.0
-     */
-    @Override
-    default MorphiaCursor<T> iterator() {
-        return iterator(new FindOptions());
-    }
-
-    /**
      * Deletes an entity from the database and returns it.
      *
      * @param options the options to apply
@@ -305,8 +307,10 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @param options the options to apply to the find operation
      * @return the only instance in the result, or null if the result set is empty.
      * @since 1.5
+     * @deprecated use {@link Datastore#find(Class, FindOptions)} instead
      */
     @Nullable
+    @Deprecated(since = "2.5", forRemoval = true)
     T first(FindOptions options);
 
     /**
@@ -346,10 +350,22 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
     /**
      * Execute the query and get the results.
      *
+     * @return a MorphiaCursor
+     * @see #iterator(FindOptions)
+     * @since 2.0
+     */
+    @Override
+    MorphiaCursor<T> iterator();
+
+    /**
+     * Execute the query and get the results.
+     *
      * @param options the options to apply to the find operation
      * @return a MorphiaCursor
      * @since 2.0
+     * @deprecated use {@link Datastore#find(Class, FindOptions)} instead
      */
+    @Deprecated(forRemoval = true)
     MorphiaCursor<T> iterator(FindOptions options);
 
     /**
@@ -447,7 +463,9 @@ public interface Query<T> extends CriteriaContainer, Iterable<T> {
      * @param options the options to apply
      * @return the stream
      * @since 2.2
+     * @deprecated use {@link Datastore#find(Class, FindOptions)} instead
      */
+    @Deprecated(since = "2.5", forRemoval = true)
     default Stream<T> stream(FindOptions options) {
         Spliterator<T> spliterator = Spliterators.spliteratorUnknownSize(iterator(options), 0);
         return StreamSupport.stream(spliterator, false);

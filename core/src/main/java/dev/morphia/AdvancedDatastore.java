@@ -47,7 +47,9 @@ public interface AdvancedDatastore extends Datastore {
      * @deprecated use {@link #find(Class, Document)}
      */
     @Deprecated(since = "2.0", forRemoval = true)
-    <T> Query<T> createQuery(Class<T> type, Document q);
+    default <T> Query<T> createQuery(Class<T> type, Document q) {
+        return find(type, q);
+    };
 
     /**
      * Creates a reference to the entity (using the current DB -can be null-, the collectionName, and id)

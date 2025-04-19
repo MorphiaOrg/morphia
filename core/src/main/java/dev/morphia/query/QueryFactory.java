@@ -21,8 +21,8 @@ public interface QueryFactory {
      * @param <T>       the query type
      * @return the new query
      */
-    default <T> Query<T> createQuery(Datastore datastore, Class<T> type) {
-        return createQuery(datastore, type, null);
+    default <T> Query<T> createQuery(Datastore datastore, Class<T> type, FindOptions options) {
+        return createQuery(datastore, type, options, null);
     }
 
     /**
@@ -34,20 +34,23 @@ public interface QueryFactory {
      * @param <T>       the type of the result
      * @return the query
      */
-    <T> Query<T> createQuery(Datastore datastore, Class<T> type, @Nullable Document query);
+    <T> Query<T> createQuery(Datastore datastore, Class<T> type, FindOptions options, @Nullable Document query);
 
     /**
      * Creates and returns a {@link Query} for the given arguments. Default implementations of this method will simply delegate to {@link
-     * #createQuery(Datastore, Class)} with the last argument being {@code null}.
+     * #createQuery(Datastore, Class, FindOptions)} with the last argument being {@code null}.
      *
      * @param datastore  the Datastore to use
      * @param collection the actual collection to query. This overrides any mapped on collection on type.
      * @param type       the type of the result
      * @param <T>        the type of the result
      * @return the query
-     * @see #createQuery(Datastore, Class)
+     * @see #createQuery(Datastore, Class, FindOptions)
+     * @deprecated use {@link #createQuery(Datastore, Class, FindOptions, Document)}
      */
-    <T> Query<T> createQuery(Datastore datastore, String collection, Class<T> type);
+    default <T> Query<T> createQuery(Datastore datastore, String collection, Class<T> type) {
+        return createQuery(datastore, type, new FindOptions().collection(collection), null);
+    }
 
     /**
      * Creates an unvalidated {@link Query} typically for use in aggregation pipelines.
