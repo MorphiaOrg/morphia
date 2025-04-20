@@ -35,13 +35,10 @@ public class MorphiaMapCodec implements Codec<Map> {
 
     private Datastore datastore;
 
-    private final Class<?> clazz;
-
     private final Codec<?> valueCodec;
 
-    public <T> MorphiaMapCodec(DatastoreImpl datastore, Class<?> clazz, Codec<?> valueCodec) {
+    public MorphiaMapCodec(DatastoreImpl datastore, Class<?> clazz, Codec<?> valueCodec) {
         this.datastore = datastore;
-        this.clazz = clazz;
         this.valueCodec = valueCodec;
         try {
             Constructor<?> ctor = clazz.getDeclaredConstructor();

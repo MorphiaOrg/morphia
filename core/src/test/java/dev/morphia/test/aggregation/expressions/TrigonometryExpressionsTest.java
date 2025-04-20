@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.expressions;
 
-import org.semver4j.Semver;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -69,7 +68,7 @@ public class TrigonometryExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testCosh() {
-        checkMinServerVersion(Semver.parse("4.2.0"));
+        checkMinServerVersion("4.2.0");
         assertAndCheckDocShape("{ $cosh: 0}", cosh(value(0)), 1.0);
     }
 

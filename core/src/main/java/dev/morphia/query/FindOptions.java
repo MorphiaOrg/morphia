@@ -119,10 +119,10 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
             iterable.projection(projection.map(mapper, type));
         }
 
-        tryInvoke("4.1.0", () -> iterable.allowDiskUse(allowDiskUse));
+        iterable.allowDiskUse(allowDiskUse);
         iterable.batchSize(batchSize);
         iterable.collation(collation);
-        tryInvoke("4.6.0", () -> iterable.comment(comment));
+        iterable.comment(comment);
         if (cursorType != null) {
             iterable.cursorType(cursorType);
         }
@@ -156,7 +156,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
             }
             iterable.sort(mapped);
         }
-        tryInvoke("4.6.0", () -> iterable.let(variables));
+        iterable.let(variables);
         return iterable;
     }
 

@@ -90,13 +90,4 @@ public final class MorphiaInternals {
         }
         return driverVersion;
     }
-
-    public enum DriverVersion {
-        v4_0_0,
-        v4_1_0,
-        v4_2_0,
-        v4_6_0,
-        v5_0_0,
-        v5_2_0,
-    }
 }

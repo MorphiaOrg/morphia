@@ -1,6 +1,5 @@
 package dev.morphia.query;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -36,7 +35,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static com.mongodb.CursorType.NonTailable;
-import static dev.morphia.internal.MorphiaInternals.tryInvoke;
 import static dev.morphia.query.UpdateBase.coalesce;
 import static java.lang.String.format;
 import static java.util.List.of;
@@ -182,18 +180,9 @@ public class LegacyQuery<T> implements CriteriaContainer, Query<T> {
     @Override
     public Map<String, Object> explain(FindOptions options, @Nullable ExplainVerbosity verbosity) {
         MongoCollection<T> collection = datastore.configureCollection(options, this.collection);
-        return tryInvoke("4.2.0",
-                () -> {
-                    return verbosity == null
-                            ? iterable(options, collection).explain()
-                            : iterable(options, collection).explain(verbosity);
-                },
-                () -> {
-                    return new LinkedHashMap<>(datastore.getDatabase()
-                            .runCommand(new Document("explain",
-                                    new Document("find", collection.getNamespace().getCollectionName())
-                                            .append("filter", getQueryDocument()))));
-                });
+        return verbosity == null
+                ? iterable(options, collection).explain()
+                : iterable(options, collection).explain(verbosity);
     }
 
     @Override

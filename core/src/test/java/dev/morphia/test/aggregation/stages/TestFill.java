@@ -14,8 +14,6 @@ import static dev.morphia.query.Sort.ascending;
 public class TestFill extends AggregationTest {
     @Test
     public void testConstantValue() {
-        checkMinDriverVersion("4.2.0");
-
         testPipeline("5.3.0", "constantValue", aggregation -> {
             return aggregation
                     .fill(fill()
@@ -27,8 +25,6 @@ public class TestFill extends AggregationTest {
 
     @Test
     public void testDistinctPartitions() {
-        checkMinDriverVersion("4.2.0");
-
         testPipeline("5.3.0", "distinctPartitions", aggregation -> {
             return aggregation
                     .fill(fill()
@@ -40,8 +36,6 @@ public class TestFill extends AggregationTest {
 
     @Test
     public void testLastObserved() {
-        checkMinDriverVersion("4.2.0");
-
         testPipeline("5.3.0", "lastObserved", aggregation -> {
             return aggregation
                     .fill(fill()
