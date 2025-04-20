@@ -74,7 +74,6 @@ public class MathExpressionTest extends ExpressionsTestBase {
 
     @Test
     public void testRound() {
-        checkMinServerVersion("4.2.0");
         assertAndCheckDocShape("{ $round: [ 19.25, 1 ] }", MathExpressions.round(value(19.25), value(1)), 19.2);
     }
 

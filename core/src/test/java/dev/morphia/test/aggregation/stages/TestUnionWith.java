@@ -15,7 +15,6 @@ import static dev.morphia.aggregation.stages.Sort.sort;
 public class TestUnionWith extends AggregationTest {
     @Test
     public void testUnionWith() {
-        checkMinServerVersion("4.4.0");
         insert("sales2019q1", parseDocs(
                 "{ store: 'A', item: 'Chocolates', quantity: 150 }",
                 "{ store: 'B', item: 'Chocolates', quantity: 50 }",

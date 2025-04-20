@@ -19,7 +19,6 @@ import static org.testng.Assert.assertNotNull;
 public class TestPlanCacheStats extends AggregationTest {
     @Test
     public void testPlanCacheStats() {
-        checkMinServerVersion("4.2.0");
         List<Document> list = parseDocs(
                 "{ '_id' : 1, 'item' : 'abc', 'price' : NumberDecimal('12'), 'quantity' : 2, 'type': 'apparel' }",
                 "{ '_id' : 2, 'item' : 'jkl', 'price' : NumberDecimal('20'), 'quantity' : 1, 'type': 'electronics' }",

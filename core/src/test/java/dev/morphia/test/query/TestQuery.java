@@ -647,7 +647,6 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testFluentNotQuery() {
-        checkMinServerVersion("4.0.0");
         final PhotoWithKeywords pwk = new PhotoWithKeywords("scott", "hernandez");
         getDs().save(pwk);
 

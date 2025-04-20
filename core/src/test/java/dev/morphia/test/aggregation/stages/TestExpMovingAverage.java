@@ -16,8 +16,6 @@ import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 public class TestExpMovingAverage extends AggregationTest {
     @Test
     public void testExpMovingAverage() {
-        checkMinServerVersion("5.0.0");
-
         insert("stockPrices", parseDocs(
                 "{_id: ObjectId('60d11fef833dfeadc8e6286b'), stock: 'ABC', date: ISODate('2020-05-18T20:00:00Z'), price: 13.0 }",
                 "{_id: ObjectId('60d11fef833dfeadc8e6286c'), stock: 'ABC', date: ISODate('2020-05-19T20:00:00Z'), price: 15.4 }",

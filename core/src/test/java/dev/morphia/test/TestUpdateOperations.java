@@ -1061,7 +1061,6 @@ public class TestUpdateOperations extends TestBase {
 
     @Test
     public void testUpdateWithStages(/* MapperOptions options */) {
-        checkMinServerVersion("4.2.0");
         getDs().save(List.of(
                 new Student(1, 95, 92, 90, LocalDate.of(2020, Month.JANUARY, 5)),
                 new Student(2, 98, 100, 102, LocalDate.of(2020, Month.JANUARY, 5)),

@@ -18,8 +18,6 @@ import static dev.morphia.query.Sort.ascending;
 public class TestIntegral extends AggregationTest {
     @Test
     public void testIntegral() {
-        checkMinServerVersion("5.0.0");
-
         insert("powerConsumption", parseDocs(
                 "{ powerMeterID: '1', timeStamp: ISODate( '2020-05-18T14:10:30Z' ), kilowatts: 2.95 }",
                 "{ powerMeterID: '1', timeStamp: ISODate( '2020-05-18T14:11:00Z' ), kilowatts: 2.7 }",
