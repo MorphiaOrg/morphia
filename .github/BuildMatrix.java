@@ -1,8 +1,8 @@
 ///usr/bin/env jbang "$0" "$@" ; exit $?
 
 //JAVA 17
-//DEPS org.semver4j:semver4j:5.6.0
-//DEPS com.fasterxml.jackson.core:jackson-databind:2.15.2
+`//DEPS org.semver4j:semver4j:5.6.0
+`//DEPS com.fasterxml.jackson.core:jackson-databind:2.15.2
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
