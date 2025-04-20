@@ -94,7 +94,7 @@
                 <configuration>
                     <failOnError>false</failOnError>
                     <excludePackageNames>
-                        dev.morphia.utils:dev.morphia.sofia:*.internal:dev.morphia.mapping.*:dev.morphia.aggregation.codecs:dev.morphia.aggregation.codecs.stages
+                        dev.morphia.utils:dev.morphia.sofia:*.internal:*.experimental:dev.morphia.mapping.*:dev.morphia.aggregation.codecs:dev.morphia.aggregation.codecs.stages
                     </excludePackageNames>
                     <doclint>none</doclint>
                     <doctitle>Morphia ${project.version}</doctitle>
