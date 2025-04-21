@@ -10,12 +10,10 @@ configuration file, you can manually generate that content by calling
 `MapperOptions#toConfigFormat(String database, boolean showComplete)` on your instance.  This will return a `String` which can be copied
 in to your configuration file.
 
-[NOTE]
-====
-After some feedback about some unexpected use cases, this transition has been postponed and the requisite `MapperOptions` based methods
-undeprecated.  Programmatic configuration is a much more popular, and in some cases vital, option than previously known.  So for now,
-those methods will stay while the future of configuration and mapping gets a rethink.  Apologies for the noise and dust.
-====
+`MorphiaConfig` is the programmatic option that replaces the `MapperOptions` class.  This class is a builder for the configuration and
+works the same way as the `MapperOptions.Builder` class.  This class is immutable which allows for safe sharing between `Datastore`
+instances should you need to do so.  If you create a `META-INF/morphia-config.properties` file, you can load that configuration using
+`MorphiaConfig#load()` which will return a `MorphiaConfig` instance configured according to the contents of that file.
 
 === Deprecations
     "Man Plans and God Laughs."
