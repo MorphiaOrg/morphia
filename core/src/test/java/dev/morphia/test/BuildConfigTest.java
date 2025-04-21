@@ -45,6 +45,7 @@ public class BuildConfigTest {
     @Test
     public void testDocsConfig() throws IOException {
         var pomVersion = Semver.parse(model.getVersion());
+        System.out.println("pomVersion = " + pomVersion);
         String url = model.getUrl();
 
         var updated = new LinkedHashMap<String, Object>();
@@ -56,7 +57,9 @@ public class BuildConfigTest {
         }
         copy(updated, antora, "nav");
         copy(updated, antora, "asciidoc");
+        System.out.println("antora = " + antora);
         Map<String, Object> attributes = walk(antora, of("asciidoc", "attributes"));
+        System.out.println("attributes = " + attributes);
         attributes.put("version", previous(pomVersion).toString());
 
         String path;
@@ -67,6 +70,7 @@ public class BuildConfigTest {
         }
         attributes.put("srcRef", String.format("%s%s", url, path));
 
+        System.out.println("updated = " + updated);
         SequenceWriter sw = objectMapper.writer().writeValues(new FileWriter(DOCS_ANTORA_YML));
         sw.write(updated);
     }
@@ -74,7 +78,7 @@ public class BuildConfigTest {
     private Object previous(Semver version) {
         var previous = Semver.of(version.getMajor(), version.getMinor(),
                 Math.max(version.getPatch() - 1, 0));
-        if (previous.getPatch() == 0) {
+        if (version.getPatch() == 0 && !version.getPreRelease().isEmpty()) {
             previous = previous.withPreRelease("SNAPSHOT");
         }
         return previous;
