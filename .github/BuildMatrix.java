@@ -1,19 +1,21 @@
 ///usr/bin/env jbang "$0" "$@" ; exit $?
 
 //JAVA 17
-//DEPS com.github.zafarkhaja:java-semver:0.9.0
+//DEPS org.semver4j:semver4j:5.6.0
 //DEPS com.fasterxml.jackson.core:jackson-databind:2.15.2
 
-import java.net.URL;
-import java.util.stream.Collectors;
-import java.util.Spliterators;
-import java.util.Spliterator;
-import java.util.stream.StreamSupport;
-import com.github.zafarkhaja.semver.Version;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import org.semver4j.Semver;
+
+import java.net.URL;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import static java.lang.String.format;
 
 public class BuildMatrix {
 
@@ -29,10 +31,10 @@ public class BuildMatrix {
         var result = StreamSupport.stream(
                 Spliterators.spliteratorUnknownSize(list.elements(), Spliterator.ORDERED), false)
                 .map(d -> ((JsonNode)d.get("version")).asText())
-                .map(Version::valueOf)
-                .filter(it -> it.getPreReleaseVersion() == null || it.getPreReleaseVersion().equals(""))
-                .filter(it -> it.greaterThanOrEqualTo(Version.valueOf()))
-                .map(it -> "'%s'".formatted(it))
+                .map(Semver::parse)
+                .filter(it -> it.getPreRelease().isEmpty() || it.getPreRelease().get(0).equals(""))
+                .filter(it -> it.isGreaterThanOrEqualTo("4.0.0"))
+                .map(it -> format("'%s'", it))
                 .collect(Collectors.toList());
         System.out.println(result);
     }
