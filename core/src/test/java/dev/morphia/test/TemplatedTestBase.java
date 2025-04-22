@@ -187,7 +187,7 @@ public abstract class TemplatedTestBase extends TestBase {
                 expectedQuery = Document.parse(new BufferedReader(reader).readLine());
             }
 
-            assertDocumentEquals(query.toDocument(), expectedQuery);
+            assertDocumentEquals(((MorphiaQuery) query).toDocument(), expectedQuery);
 
             try (var cursor = query.iterator(options)) {
                 return cursor.toList();
