@@ -34,6 +34,7 @@ jobs:
       DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
     with:
       java: ${{ matrix.java }}
+      reuseBuild: true
       maven-flags: "-Pcritter"
       optional: true
 
