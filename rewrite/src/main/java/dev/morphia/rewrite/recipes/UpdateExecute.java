@@ -22,7 +22,8 @@ import org.openrewrite.java.tree.JavaType.Parameterized;
 import jakarta.annotation.Nullable;
 
 public class UpdateExecute extends Recipe {
-    private static final MethodMatcher MATCHER = new MethodMatcher("dev.morphia.query.Update execute(..)");
+    private static final MethodMatcher UPDATE = new MethodMatcher("dev.morphia.query.Update execute(..)");
+    private static final MethodMatcher MODIFY = new MethodMatcher("dev.morphia.query.Modify execute(..)");
 
     @NotNull
     @Override
@@ -45,7 +46,7 @@ public class UpdateExecute extends Recipe {
             @Override
             public J visitMethodInvocation(@NotNull MethodInvocation invocation,
                     @NotNull ExecutionContext executionContext) {
-                if (MATCHER.matches(invocation)) {
+                if (UPDATE.matches(invocation) || MODIFY.matches(invocation)) {
                     var select = invocation.getSelect();
                     List<Expression> arguments = invocation.getArguments();
                     if (select instanceof MethodInvocation update) {

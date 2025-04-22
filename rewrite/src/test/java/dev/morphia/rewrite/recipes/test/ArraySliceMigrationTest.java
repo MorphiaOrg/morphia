@@ -1,5 +1,7 @@
 package dev.morphia.rewrite.recipes.test;
 
+import dev.morphia.rewrite.recipes.ArraySliceRefaster;
+import dev.morphia.rewrite.recipes.ArraySliceRefasterRecipes;
 import org.junit.jupiter.api.Test;
 import org.openrewrite.Recipe;
 
@@ -9,7 +11,7 @@ public class ArraySliceMigrationTest extends MorphiaRewriteTest {
 
     @Override
     protected Recipe getRecipe() {
-        return null; //              new ArraySliceRefaster();
+        return new ArraySliceRefasterRecipes();
     }
 
     @Test

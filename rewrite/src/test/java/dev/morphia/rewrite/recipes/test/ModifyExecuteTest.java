@@ -1,7 +1,6 @@
 package dev.morphia.rewrite.recipes.test;
 
-import dev.morphia.rewrite.recipes.ModifyExecute;
-
+import dev.morphia.rewrite.recipes.UpdateExecute;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.openrewrite.Recipe;
@@ -13,7 +12,7 @@ public class ModifyExecuteTest extends MorphiaRewriteTest {
     @NotNull
     @Override
     protected Recipe getRecipe() {
-        return new ModifyExecute();
+        return new UpdateExecute();
     }
 
     @Test
