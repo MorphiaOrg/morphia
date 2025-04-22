@@ -36,10 +36,8 @@ import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.CountOptions;
 import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.FindOptions;
-import dev.morphia.query.Modify;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryException;
-import dev.morphia.query.Update;
 import dev.morphia.query.ValidationException;
 import dev.morphia.test.datastore.MultipleDSEntity;
 import dev.morphia.test.models.Address;
@@ -419,13 +417,12 @@ public class TestDatastore extends TestBase {
 
         Query<FacebookUser> query = getDs().find(FacebookUser.class)
                 .filter(eq("username", "john doe"));
-        Modify<FacebookUser> modify = query.modify(inc("loginCount"));
 
-        assertEquals(modify.execute().loginCount, 0);
+        assertEquals(query.modify(inc("loginCount")).execute().loginCount, 0);
         assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).first().loginCount, 0);
         assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 2)).first().loginCount, 1);
 
-        assertEquals(modify.execute(new ModifyOptions().returnDocument(AFTER)).loginCount, 2);
+        assertEquals(query.modify(inc("loginCount")).execute(new ModifyOptions().returnDocument(AFTER)).loginCount, 2);
         assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).first().loginCount, 0);
         assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 2)).first().loginCount, 2);
 
@@ -609,9 +606,8 @@ public class TestDatastore extends TestBase {
     @Test
     public void testModifyWithBadPaths() {
         Query<LifecycleTestObj> query = getDs().find(LifecycleTestObj.class);
-        Modify<LifecycleTestObj> modify = query.modify(inc("some.field", 2));
 
-        assertThrows(ValidationException.class, () -> modify.execute());
+        assertThrows(ValidationException.class, () -> query.modify(inc("some.field", 2)).execute());
 
         query.first();
     }
@@ -663,23 +659,25 @@ public class TestDatastore extends TestBase {
         getDs().save(asList(new FacebookUser(1, "John Doe"),
                 new FacebookUser(2, "john doe")));
 
-        final Update<FacebookUser> update = getDs().find(FacebookUser.class)
+        UpdateResult results = getDs().find(FacebookUser.class)
                 .filter(eq("username", "john doe"))
-                .update(inc("loginCount"));
-
-        UpdateResult results = update.execute();
+                .update(inc("loginCount"))
+                .execute();
 
         assertEquals(results.getModifiedCount(), 1);
         assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).iterator(new FindOptions().limit(1)).next().loginCount, 0);
         assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 2)).iterator(new FindOptions().limit(1))
                 .next().loginCount, 1);
 
-        results = update.execute(new UpdateOptions()
-                .multi(true)
-                .collation(Collation.builder()
-                        .locale("en")
-                        .collationStrength(SECONDARY)
-                        .build()));
+        results = getDs().find(FacebookUser.class)
+                .filter(eq("username", "john doe"))
+                .update(inc("loginCount"))
+                .execute(new UpdateOptions()
+                        .multi(true)
+                        .collation(Collation.builder()
+                                .locale("en")
+                                .collationStrength(SECONDARY)
+                                .build()));
         assertEquals(results.getModifiedCount(), 2);
         assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).iterator(new FindOptions().limit(1))
                 .next().loginCount, 1);
