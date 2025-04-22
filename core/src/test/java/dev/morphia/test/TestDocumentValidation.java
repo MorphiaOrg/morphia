@@ -37,7 +37,6 @@ import dev.morphia.UpdateOptions;
 import dev.morphia.annotations.Validation;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.FindOptions;
-import dev.morphia.query.Modify;
 import dev.morphia.query.Query;
 import dev.morphia.test.models.Contact;
 import dev.morphia.test.models.DocumentValidation;
@@ -87,16 +86,15 @@ public class TestDocumentValidation extends TestBase {
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class);
         ModifyOptions options = new ModifyOptions()
                 .bypassDocumentValidation(false);
-        Modify<DocumentValidation> modify = query.modify(set("number", 5));
         try {
-            modify.execute(options);
+            query.modify(set("number", 5)).execute(options);
             fail("Document validation should have complained");
         } catch (MongoCommandException e) {
             // expected
         }
 
         options.bypassDocumentValidation(true);
-        modify.execute(options);
+        query.modify(set("number", 5)).execute(options);
 
         Assert.assertNotNull(query.filter(eq("number", 5))
                 .iterator(new FindOptions().limit(1))
