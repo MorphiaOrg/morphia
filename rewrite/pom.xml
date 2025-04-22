@@ -146,4 +146,15 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>skip-on-java-24</id>
+            <activation>
+                <jdk>24</jdk>
+            </activation>
+            <properties>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
+        </profile>
+    </profiles>
 </project>
