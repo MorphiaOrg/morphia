@@ -1106,11 +1106,11 @@ public class TestUpdateOperations extends TestBase {
 
         Query<ContainsIntArray> query = getDs().find(ContainsIntArray.class);
 
-        doUpdates(cIntArray, control, query.update(addToSet("values", 4)),
-                new Integer[] { 1, 2, 3, 4 });
+        doUpdates(cIntArray, control,
+                new Integer[] { 1, 2, 3, 4 }, query.update(addToSet("values", 4)).execute(new UpdateOptions()));
 
-        doUpdates(cIntArray, control, query.update(addToSet("values", asList(4, 5))),
-                new Integer[] { 1, 2, 3, 4, 5 });
+        doUpdates(cIntArray, control,
+                new Integer[] { 1, 2, 3, 4, 5 }, query.update(addToSet("values", asList(4, 5))).execute(new UpdateOptions()));
 
         assertInserted(getDs().find(ContainsIntArray.class)
                 .filter(eq("values", new Integer[] { 4, 5, 7 }))
@@ -1151,8 +1151,8 @@ public class TestUpdateOperations extends TestBase {
     }
 
     @SuppressWarnings("rawtypes")
-    private void doUpdates(ContainsIntArray updated, ContainsIntArray control, Update update, Integer[] target) {
-        assertUpdated(update.execute(new UpdateOptions()), 1);
+    private void doUpdates(ContainsIntArray updated, ContainsIntArray control, Integer[] target, UpdateResult result) {
+        assertUpdated(result, 1);
         assertThat(getDs().find(ContainsIntArray.class)
                 .filter(eq("_id", updated.id))
                 .first().values,
@@ -1162,7 +1162,7 @@ public class TestUpdateOperations extends TestBase {
                 .first().values,
                 is(new Integer[] { 1, 2, 3 }));
 
-        assertEquals(update.execute(new UpdateOptions()).getMatchedCount(), 1);
+        assertEquals(result.getMatchedCount(), 1);
         assertThat(getDs().find(ContainsIntArray.class)
                 .filter(eq("_id", updated.id))
                 .first().values,

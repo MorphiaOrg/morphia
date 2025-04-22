@@ -64,7 +64,6 @@ import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
-import dev.morphia.query.Update;
 import dev.morphia.query.UpdateException;
 import dev.morphia.sofia.Sofia;
 import dev.morphia.transactions.MorphiaSessionImpl;
@@ -481,17 +480,18 @@ public class DatastoreImpl implements AdvancedDatastore {
         final Query<T> query = (Query<T>) find(entity.getClass()).filter(eq("_id", id));
         info.filter(query);
 
-        Update<T> update;
+        UpdateResult update;
         if (!options.unsetMissing()) {
-            update = query.update(set(entity));
+            update = query.update(set(entity)).execute(new UpdateOptions()
+                    .writeConcern(options.writeConcern()));
         } else {
             update = ((MergingEncoder<T>) new MergingEncoder(query,
                     (MorphiaCodec) codecRegistry.get(entity.getClass())))
-                    .encode(entity);
+                    .encode(entity)
+                    .execute(new UpdateOptions()
+                            .writeConcern(options.writeConcern()));
         }
-        UpdateResult execute = update.execute(new UpdateOptions()
-                .writeConcern(options.writeConcern()));
-        if (execute.getMatchedCount() != 1) {
+        if (update.getMatchedCount() != 1) {
             if (info.versioned()) {
                 info.rollbackVersion();
                 throw new VersionMismatchException(entity.getClass(), id);
