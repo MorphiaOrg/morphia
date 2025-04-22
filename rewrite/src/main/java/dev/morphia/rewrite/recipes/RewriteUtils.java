@@ -1,14 +1,21 @@
 package dev.morphia.rewrite.recipes;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Comparator;
+
+import org.semver4j.Semver;
 
 public class RewriteUtils {
     public static File findMorphiaCore() {
         var repo = new File(System.getProperty("user.home"), ".m2/repository/dev/morphia/morphia/morphia-core");
-        File[] files = repo.listFiles((dir, name) -> name.matches("\\d+\\.\\d+\\.\\d+"));
-        String[] split = files[files.length - 1].getName().split("\\.");
-        var version = "%s.%s.%s-SNAPSHOT".formatted(split[0], split[1], Integer.valueOf(split[2]) + 1);
+        Semver semver = Arrays.stream(repo.listFiles((dir, name) -> name.matches("\\d+\\.\\d+\\.\\d+.*")))
+                .map(File::getName)
+                .map(Semver::parse)
+                .sorted(Comparator.reverseOrder())
+                .filter(v -> v.isLowerThan("3.0.0-SNAPSHOT"))
+                .findFirst().get();
 
-        return new File(repo, "%s/morphia-core-%s.jar".formatted(version, version));
+        return new File(repo, "%s/morphia-core-%s.jar".formatted(semver, semver));
     }
 }

@@ -14,7 +14,7 @@
     <artifactId>morphia-rewrite</artifactId>
 
     <properties>
-        <morphia.prior.version>2.5.0-SNAPSHOT</morphia.prior.version>
+        <morphia.prior.version>2.5.0</morphia.prior.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
@@ -56,6 +56,17 @@
                 <version>3.8.1</version>
                 <executions>
                     <execution>
+                        <id>get</id>
+                        <goals>
+                            <goal>get</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <artifact>${project.groupId}:morphia-core:${morphia.prior.version}</artifact>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy</id>
                         <goals>
                             <goal>copy</goal>
                         </goals>
