@@ -12,7 +12,6 @@ import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
 import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
-import static dev.morphia.test.ServerVersion.v50;
 
 public class TestMin extends TemplatedTestBase {
     /**
@@ -21,7 +20,7 @@ public class TestMin extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$group`` Stage")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(v50).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion("5.0.0").orderMatters(false),
                 (aggregation) -> aggregation.pipeline(group(id("$item")).field("minQuantity", min("$quantity"))));
     }
 
@@ -31,7 +30,7 @@ public class TestMin extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$project`` Stage")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(v50),
+        testPipeline(new ActionTestOptions().serverVersion("5.0.0"),
                 (aggregation) -> aggregation.pipeline(project().include("quizMin", min("$quizzes"))
                         .include("labMin", min("$labs")).include("examMin", min("$final", "$midterm"))));
     }
@@ -42,7 +41,7 @@ public class TestMin extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$setWindowFields`` Stage")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(v50),
+        testPipeline(new ActionTestOptions().serverVersion("5.0.0"),
                 (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                         .sortBy(Sort.ascending("orderDate")).output(output("minimumQuantityForState")
                                 .operator(min("$quantity")).window().documents("unbounded", "current"))));

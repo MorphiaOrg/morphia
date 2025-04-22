@@ -64,7 +64,6 @@ import static dev.morphia.query.filters.Filters.lt;
 import static dev.morphia.query.filters.Filters.ne;
 import static dev.morphia.query.filters.Filters.or;
 import static dev.morphia.query.filters.Filters.regex;
-import static dev.morphia.test.DriverVersion.v46;
 import static java.time.LocalDate.now;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.copyOfRange;
@@ -103,7 +102,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void genericMultiKeyValueQueries() {
-        checkMinDriverVersion(v46);
+        checkMinDriverVersion("4.6.0");
 
         getMapper().map(GenericKeyValue.class);
         getDs().ensureIndexes(GenericKeyValue.class);
@@ -141,7 +140,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void multiKeyValueQueries() {
-        checkMinDriverVersion(v46);
+        checkMinDriverVersion("4.6.0");
 
         getMapper().map(KeyValue.class);
         getDs().ensureIndexes(KeyValue.class);
@@ -710,7 +709,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testMultipleConstraintsOnOneField() {
-        checkMinDriverVersion(v46);
+        checkMinDriverVersion("4.6.0");
         withConfig(buildConfig(ContainsPic.class), () -> {
         });
 

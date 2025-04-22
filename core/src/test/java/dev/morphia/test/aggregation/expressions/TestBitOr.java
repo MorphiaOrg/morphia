@@ -7,7 +7,6 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.MathExpressions.bitOr;
 import static dev.morphia.aggregation.stages.Projection.project;
-import static dev.morphia.test.ServerVersion.v63;
 
 public class TestBitOr extends TemplatedTestBase {
 
@@ -16,7 +15,7 @@ public class TestBitOr extends TemplatedTestBase {
      */
     @Test(testName = "Bitwise ``OR`` with Two Integers ")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(v63),
+        testPipeline(new ActionTestOptions().serverVersion("6.3.0"),
                 aggregation -> aggregation.pipeline(project().include("result", bitOr("$a", "$b"))));
     }
 
@@ -26,7 +25,7 @@ public class TestBitOr extends TemplatedTestBase {
      */
     @Test(testName = "Bitwise ``OR`` with a Long and Integer ", enabled = false, description = "this is getting odd unexpected results from the server")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(v63).removeIds(true).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion("6.3.0").removeIds(true).orderMatters(false),
                 aggregation -> aggregation.project(project().include("result", bitOr("$a", 63L))));
     }
 

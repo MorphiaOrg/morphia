@@ -32,7 +32,7 @@ public class DriverVersions {
         // props to Chris Dellaway for the pointer to this
         var url = "https://repo1.maven.org/maven2/org/mongodb/mongodb-driver-sync/maven-metadata.xml";
 
-        var min = System.getenv().getOrDefault("DRIVER_MIN", "5.0.0");
+        var min = System.getenv().getOrDefault("DRIVER_MIN", );
         Version driverMinimum = Version.valueOf(min);
         var mapper = new XmlMapper();
         var document = mapper.readTree(new URL(url));

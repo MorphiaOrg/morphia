@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -16,7 +15,7 @@ public class TestDateToString extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.v70),
+        testPipeline(new ActionTestOptions().serverVersion("7.0.0"),
                 (aggregation) -> aggregation.pipeline(project()
                         .include("yearMonthDayUTC", dateToString().date("$date").format("%Y-%m-%d"))
                         .include("timewithOffsetNY",

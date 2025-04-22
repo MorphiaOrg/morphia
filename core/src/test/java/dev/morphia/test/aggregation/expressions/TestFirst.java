@@ -9,7 +9,6 @@ import static dev.morphia.aggregation.expressions.AccumulatorExpressions.first;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Sort.sort;
-import static dev.morphia.test.ServerVersion.v50;
 
 public class TestFirst extends TemplatedTestBase {
 
@@ -19,7 +18,7 @@ public class TestFirst extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$group`` Stage")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(v50).orderMatters(false), (aggregation) -> aggregation
+        testPipeline(new ActionTestOptions().serverVersion("5.0.0").orderMatters(false), (aggregation) -> aggregation
                 .pipeline(sort().ascending("item", "date"), group(id("$item")).field("firstSale", first("$date"))));
     }
 
@@ -29,7 +28,7 @@ public class TestFirst extends TemplatedTestBase {
      */
     @Test(testName = "Missing Data")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(v50).orderMatters(false), (aggregation) -> aggregation
+        testPipeline(new ActionTestOptions().serverVersion("5.0.0").orderMatters(false), (aggregation) -> aggregation
                 .pipeline(sort().ascending("item", "price"), group(id("$item")).field("inStock", first("$quantity"))
 
                 ));

@@ -40,7 +40,7 @@ class AddFieldAccessorMethods(entity: Class<*>, var fields: List<FieldNode>) :
                 "__write${field.titleCase()}",
                 "(${fieldType.descriptor})V",
                 null,
-                null
+                null,
             )
         mv.visitCode()
         val label0 = Label()
@@ -69,7 +69,7 @@ class AddFieldAccessorMethods(entity: Class<*>, var fields: List<FieldNode>) :
                 name,
                 "()${fieldType.descriptor}",
                 null,
-                null
+                null,
             )
         mv.visitCode()
         val label0 = Label()

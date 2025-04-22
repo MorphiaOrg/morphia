@@ -10,7 +10,6 @@ import static dev.morphia.aggregation.expressions.WindowExpressions.locf;
 import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
 import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 import static dev.morphia.query.Sort.ascending;
-import static dev.morphia.test.ServerVersion.v53;
 
 public class TestLinearFill extends TemplatedTestBase {
     /**
@@ -18,7 +17,7 @@ public class TestLinearFill extends TemplatedTestBase {
      */
     @Test(testName = "Fill Missing Values with Linear Interpolation")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(v53).removeIds(true).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion("5.3.0").removeIds(true).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(setWindowFields().sortBy(ascending("time"))
                         .output(output("price").operator(linearFill("$price")))));
 
@@ -30,7 +29,7 @@ public class TestLinearFill extends TemplatedTestBase {
      */
     @Test(testName = "Use Multiple Fill Methods in a Single Stage")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(v53).removeIds(true).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion("5.3.0").removeIds(true).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(setWindowFields().sortBy(ascending("time")).output(
                         output("linearFillPrice").operator(linearFill("$price")),
                         output("locfPrice").operator(locf("$price")))));

@@ -157,7 +157,7 @@ class PropertyModelGenerator private constructor(val config: MorphiaConfig, enti
             MethodDescriptor.ofConstructor(
                 TypeData::class.java,
                 Class::class.java,
-                "[${Type.getType(TypeData::class.java).descriptor}"
+                "[${Type.getType(TypeData::class.java).descriptor}",
             )
         return methodCreator.newInstance(descriptor, *list.toTypedArray())
     }
@@ -252,16 +252,16 @@ class PropertyModelGenerator private constructor(val config: MorphiaConfig, enti
             constructor.invokeSpecialMethod(
                 MethodDescriptor.ofConstructor(
                     CritterPropertyModel::class.java,
-                    EntityModel::class.java
+                    EntityModel::class.java,
                 ),
                 constructor.getThis(),
-                constructor.getMethodParam(0)
+                constructor.getMethodParam(0),
             )
             constructor.setParameterNames(arrayOf("model"))
             constructor.writeInstanceField(
                 model.fieldDescriptor,
                 constructor.`this`,
-                constructor.getMethodParam(0)
+                constructor.getMethodParam(0),
             )
             registerAnnotations(constructor)
             constructor.returnVoid()
@@ -274,13 +274,13 @@ class PropertyModelGenerator private constructor(val config: MorphiaConfig, enti
                 PropertyModel::class.java.name,
                 "annotation",
                 PropertyModel::class.java.name,
-                Annotation::class.java
+                Annotation::class.java,
             )
         annotations.forEach { annotation ->
             constructor.invokeVirtualMethod(
                 annotationMethod,
                 constructor.`this`,
-                annotation.annotationBuilder(constructor)
+                annotation.annotationBuilder(constructor),
             )
         }
     }

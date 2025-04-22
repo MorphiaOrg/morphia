@@ -86,7 +86,7 @@ class AnnotationNodeExtensions : AbstractMojo() {
             fileBuilder =
                 FileSpec.builder(
                     builders.values.iterator().next().getPackage() + ".internal",
-                    "AnnotationNodeExtensions"
+                    "AnnotationNodeExtensions",
                 )
             fileBuilder.addAnnotation(
                 AnnotationSpec.builder(Suppress::class.java)
@@ -104,7 +104,7 @@ class AnnotationNodeExtensions : AbstractMojo() {
                 "dev.morphia.critter.parser.gizmo",
                 "load",
                 "attributeType",
-                "rawType"
+                "rawType",
             )
             emitFactory()
         } catch (e: Exception) {
@@ -156,7 +156,7 @@ class AnnotationNodeExtensions : AbstractMojo() {
         }
         method.addStatement(
             """else -> throw %T("Unknown annotation type: ${"$"}{desc}")""",
-            IllegalArgumentException::class
+            IllegalArgumentException::class,
         )
 
         method.endControlFlow()
@@ -228,7 +228,7 @@ class AnnotationNodeExtensions : AbstractMojo() {
                     .trimIndent(),
                 METHOD_DESCRIPTOR,
                 builderName,
-                builderName
+                builderName,
             )
         }
 
@@ -300,7 +300,7 @@ class AnnotationNodeExtensions : AbstractMojo() {
                 "unknown type: %n\t%s %n\t%s %n\t%s %n",
                 typeName,
                 type.qualifiedName,
-                type.origin.isEnum
+                type.origin.isEnum,
             )
             code = "<UNKNOWN>"
         }

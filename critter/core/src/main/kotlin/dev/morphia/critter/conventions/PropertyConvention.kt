@@ -19,7 +19,7 @@ object PropertyConvention {
         return listOf(
             Transient::class.java,
             kotlin.jvm.Transient::class.java,
-            java.beans.Transient::class.java
+            java.beans.Transient::class.java,
         )
     }
 
@@ -27,7 +27,7 @@ object PropertyConvention {
     fun mappedName(
         config: MorphiaConfig,
         annotations: Map<String, Annotation>,
-        modelName: String
+        modelName: String,
     ): String {
         val property = annotations.get(Property::class.java.getName()) as Property?
         val reference = annotations.get(Reference::class.java.getName()) as Reference?

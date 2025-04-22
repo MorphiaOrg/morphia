@@ -7,7 +7,6 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.DateExpressions.tsIncrement;
 import static dev.morphia.aggregation.stages.Projection.project;
-import static dev.morphia.test.ServerVersion.v51;
 
 public class TestTsIncrement extends TemplatedTestBase {
     /**
@@ -15,7 +14,7 @@ public class TestTsIncrement extends TemplatedTestBase {
      */
     @Test(testName = "Obtain the Incrementing Ordinal from a Timestamp Field")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(v51), (aggregation) -> aggregation.pipeline(project()
+        testPipeline(new ActionTestOptions().serverVersion("5.1.0"), (aggregation) -> aggregation.pipeline(project()
                 .suppressId().include("saleTimestamp").include("saleIncrement", tsIncrement("$saleTimestamp"))));
     }
 }

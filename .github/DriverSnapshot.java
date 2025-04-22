@@ -22,7 +22,7 @@ public class DriverSnapshot {
         // props to Chris Dellaway for the pointer to this
         var url = "https://oss.sonatype.org/content/repositories/snapshots/org/mongodb/mongodb-driver-sync/maven-metadata.xml";
         var mapper = new XmlMapper();
-        var min = System.getenv().getOrDefault("DRIVER_MIN", "5.0.0");
+        var min = System.getenv().getOrDefault("DRIVER_MIN", );
         Version driverMinimum = Version.valueOf(min);
 
         var document = mapper.readTree(new URL(url));

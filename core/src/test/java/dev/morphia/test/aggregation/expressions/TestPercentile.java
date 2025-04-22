@@ -13,7 +13,6 @@ import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
 import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 import static dev.morphia.query.Sort.ascending;
-import static dev.morphia.test.ServerVersion.v70;
 import static java.util.List.of;
 
 public class TestPercentile extends TemplatedTestBase {
@@ -22,7 +21,7 @@ public class TestPercentile extends TemplatedTestBase {
      */
     @Test(testName = "Calculate a Single Value as an Accumulator")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(v70).orderMatters(false), aggregation -> aggregation
+        testPipeline(new ActionTestOptions().serverVersion("7.0.0").orderMatters(false), aggregation -> aggregation
                 .pipeline(group().field("test01_percentiles", percentile("$test01", of(0.95)))));
     }
 
@@ -32,7 +31,7 @@ public class TestPercentile extends TemplatedTestBase {
      */
     @Test(testName = "Calculate Multiple Values as an Accumulator")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(v70).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion("7.0.0").orderMatters(false),
                 aggregation -> aggregation
                         .pipeline(group().field("test01_percentiles", percentile("$test01", of(0.5, 0.75, 0.9, 0.95)))
                                 .field("test02_percentiles", percentile("$test02", of(0.5, 0.75, 0.9, 0.95)))
@@ -46,7 +45,7 @@ public class TestPercentile extends TemplatedTestBase {
      */
     @Test(testName = "Use |operatorName| in a ``$project`` Stage")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(v70).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion("7.0.0").orderMatters(false),
                 aggregation -> aggregation.pipeline(project().suppressId().include("studentId").include(
                         "testPercentiles", percentile(List.of("$test01", "$test02", "$test03"), of(0.5, 0.95)))));
     }
@@ -58,7 +57,7 @@ public class TestPercentile extends TemplatedTestBase {
     @Test(testName = "Use |operatorName| in a ``$setWindowField`` Stage")
     public void testExample4() {
 
-        testPipeline(new ActionTestOptions().serverVersion(v70).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion("7.0.0").orderMatters(false),
                 aggregation -> aggregation.pipeline(
                         setWindowFields().sortBy(ascending("test01"))
                                 .output(output("test01_95percentile").operator(percentile("$test01", List.of(0.95)))

@@ -27,10 +27,6 @@ import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
-import static dev.morphia.internal.MorphiaInternals.DriverVersion.v4_1_0;
-import static dev.morphia.internal.MorphiaInternals.DriverVersion.v4_6_0;
-import static dev.morphia.internal.MorphiaInternals.tryInvoke;
-
 /**
  * The options to apply to a find operation (also commonly referred to as a query).
  *
@@ -123,10 +119,10 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
             iterable.projection(projection.map(mapper, type));
         }
 
-        tryInvoke(v4_1_0, () -> iterable.allowDiskUse(allowDiskUse));
+        iterable.allowDiskUse(allowDiskUse);
         iterable.batchSize(batchSize);
         iterable.collation(collation);
-        tryInvoke(v4_6_0, () -> iterable.comment(comment));
+        iterable.comment(comment);
         if (cursorType != null) {
             iterable.cursorType(cursorType);
         }

@@ -9,7 +9,6 @@ import static dev.morphia.aggregation.expressions.BooleanExpressions.and;
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.gt;
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.lt;
 import static dev.morphia.aggregation.stages.Projection.project;
-import static dev.morphia.test.ServerVersion.ANY;
 
 public class TestAnd extends TemplatedTestBase {
     /**
@@ -18,7 +17,7 @@ public class TestAnd extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY), aggregation -> aggregation.pipeline(
+        testPipeline(new ActionTestOptions().serverVersion("0.0.0"), aggregation -> aggregation.pipeline(
                 project().include("item").include("qty").include("result", and(gt("$qty", 100), lt("$qty", 250)))));
 
     }

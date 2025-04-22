@@ -19,7 +19,7 @@ class ReadWritePropertyCodecProvider : MorphiaPropertyCodecProvider() {
     @Nullable
     override fun <T> get(
         type: TypeWithTypeParameters<T>,
-        registry: PropertyCodecRegistry
+        registry: PropertyCodecRegistry,
     ): Codec<T>? {
         if (ReadWriteProperty::class.java.isAssignableFrom(type.type)) {
             val typeParameters = type.typeParameters

@@ -15,7 +15,6 @@ import static dev.morphia.query.filters.Filters.gt;
 import static dev.morphia.query.filters.Filters.gte;
 import static dev.morphia.query.filters.Filters.lt;
 import static dev.morphia.query.filters.Filters.or;
-import static dev.morphia.test.ServerVersion.ANY;
 
 public class TestMatch extends TemplatedTestBase {
     /**
@@ -32,7 +31,7 @@ public class TestMatch extends TemplatedTestBase {
      */
     @Test(testName = "Perform a Count")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY).removeIds(true).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion("0.0.0").removeIds(true).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
                         match(or(and(gt("score", 70), lt("score", 90)), gte("views", 1000))),
                         group(id(null)).field("count", sum(1))));

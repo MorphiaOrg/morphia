@@ -35,7 +35,7 @@ import org.testng.annotations.Test;
 public class OptionsTest extends TestBase {
     @Test
     public void aggregationOptions() {
-        checkMinDriverVersion(DriverVersion.v52);
+        checkMinDriverVersion("5.2.0");
         beanScan(AggregateIterable.class, AggregationOptions.class, List.of("builder",
                 "explain",
                 "getAllowDiskUse",
@@ -69,7 +69,7 @@ public class OptionsTest extends TestBase {
 
     @Test
     public void findOptions() {
-        checkMinDriverVersion(DriverVersion.v52);
+        checkMinDriverVersion("5.2.0");
         beanScan(FindIterable.class, FindOptions.class, List.of("explain", "filter", "projection"));
     }
 

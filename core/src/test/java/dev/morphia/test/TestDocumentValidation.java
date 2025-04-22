@@ -67,7 +67,7 @@ public class TestDocumentValidation extends TestBase {
 
     @BeforeMethod
     public void checkVersion() {
-        checkMinDriverVersion(DriverVersion.v43);
+        checkMinDriverVersion("4.3.0");
     }
 
     @Test

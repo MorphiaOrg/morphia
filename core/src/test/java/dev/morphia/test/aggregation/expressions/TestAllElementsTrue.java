@@ -7,7 +7,6 @@ import dev.morphia.test.util.ActionTestOptions;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.SetExpressions.allElementsTrue;
-import static dev.morphia.test.ServerVersion.ANY;
 
 public class TestAllElementsTrue extends TemplatedTestBase {
     /**
@@ -16,7 +15,7 @@ public class TestAllElementsTrue extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion("0.0.0").orderMatters(false),
                 aggregation -> aggregation.pipeline(Projection.project().suppressId().include("responses")
                         .include("isAllTrue", allElementsTrue("$responses"))));
 

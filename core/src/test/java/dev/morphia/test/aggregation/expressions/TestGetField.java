@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.DriverVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -20,7 +19,7 @@ public class TestGetField extends TemplatedTestBase {
      */
     @Test(testName = "Query Fields that Contain Periods (``.``)")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().minDriver(DriverVersion.v43),
+        testPipeline(new ActionTestOptions().minDriver("4.3.0"),
                 (aggregation) -> aggregation.pipeline(match(expr(gt(getField("price.usd"), 200)))));
     }
 

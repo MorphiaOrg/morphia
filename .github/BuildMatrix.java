@@ -31,7 +31,7 @@ public class BuildMatrix {
                 .map(d -> ((JsonNode)d.get("version")).asText())
                 .map(Version::valueOf)
                 .filter(it -> it.getPreReleaseVersion() == null || it.getPreReleaseVersion().equals(""))
-                .filter(it -> it.greaterThanOrEqualTo(Version.valueOf("5.0.0")))
+                .filter(it -> it.greaterThanOrEqualTo(Version.valueOf()))
                 .map(it -> "'%s'".formatted(it))
                 .collect(Collectors.toList());
         System.out.println(result);

@@ -9,5 +9,5 @@ import org.bson.types.ObjectId
 data class VersionedDataClass(
     @Id val id: ObjectId?,
     val name: String,
-    @Version val version: Long = 0
+    @Version val version: Long = 0,
 )

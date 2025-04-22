@@ -18,14 +18,14 @@ class Operator private constructor(var type: OperatorType) {
     val resourceFolder by lazy {
         File(
                 RstAuditor.coreTestRoot,
-                "dev/morphia/test/${type.root()}/${type.path()}/${name.substringBefore("-")}"
+                "dev/morphia/test/${type.root()}/${type.path()}/${name.substringBefore("-")}",
             )
             .canonicalFile
     }
     val testSource by lazy {
         File(
                 RstAuditor.coreTestSourceRoot,
-                "dev/morphia/test/${type.root()}/${type.path()}/Test${name.substringBefore("-").titleCase()}.java"
+                "dev/morphia/test/${type.root()}/${type.path()}/Test${name.substringBefore("-").titleCase()}.java",
             )
             .canonicalFile
     }

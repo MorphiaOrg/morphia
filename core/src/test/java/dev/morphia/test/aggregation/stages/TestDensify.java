@@ -3,7 +3,6 @@ package dev.morphia.test.aggregation.stages;
 import java.time.ZonedDateTime;
 
 import dev.morphia.aggregation.stages.Densify.Range;
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -20,7 +19,7 @@ public class TestDensify extends TemplatedTestBase {
     @Test(testName = "Densify Time Series Data")
     public void testExample1() {
         testPipeline(
-                new ActionTestOptions().serverVersion(ServerVersion.v51).removeIds(true), (
+                new ActionTestOptions().serverVersion("5.1.0").removeIds(true), (
                         aggregation) -> aggregation
                                 .pipeline(
                                         densify("timestamp",
@@ -35,7 +34,7 @@ public class TestDensify extends TemplatedTestBase {
      */
     @Test(testName = "Densifiction with Partitions")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.v51).removeIds(true).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion("5.1.0").removeIds(true).orderMatters(false),
                 (aggregation) -> aggregation
                         .pipeline(densify("altitude", Range.full(200)).partitionByFields("variety")));
     }

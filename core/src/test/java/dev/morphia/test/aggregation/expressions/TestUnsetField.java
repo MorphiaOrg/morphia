@@ -11,7 +11,6 @@ import static dev.morphia.aggregation.expressions.Miscellaneous.setField;
 import static dev.morphia.aggregation.expressions.Miscellaneous.unsetField;
 import static dev.morphia.aggregation.expressions.SystemVariables.*;
 import static dev.morphia.aggregation.stages.ReplaceWith.replaceWith;
-import static dev.morphia.test.DriverVersion.v43;
 
 public class TestUnsetField extends TemplatedTestBase {
     /**
@@ -20,7 +19,7 @@ public class TestUnsetField extends TemplatedTestBase {
      */
     @Test(testName = "Remove Fields that Contain Periods (``.``)")
     public void testExample1() {
-        checkMinDriverVersion(v43);
+        checkMinDriverVersion("4.3.0");
         testPipeline((aggregation) -> aggregation.pipeline(replaceWith(unsetField("price.usd", ROOT))));
     }
 
@@ -30,7 +29,7 @@ public class TestUnsetField extends TemplatedTestBase {
      */
     @Test(testName = "Remove Fields that Start with a Dollar Sign (``$``)")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().minDriver(v43),
+        testPipeline(new ActionTestOptions().minDriver("4.3.0"),
                 (aggregation) -> aggregation.pipeline(replaceWith(unsetField(literal("$price"), ROOT))));
     }
 

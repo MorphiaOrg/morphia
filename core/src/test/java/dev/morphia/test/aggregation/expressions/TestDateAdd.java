@@ -12,8 +12,6 @@ import static dev.morphia.aggregation.expressions.DateExpressions.dateToString;
 import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.query.filters.Filters.expr;
-import static dev.morphia.test.DriverVersion.v42;
-import static dev.morphia.test.ServerVersion.ANY;
 
 public class TestDateAdd extends TemplatedTestBase {
     /**
@@ -22,7 +20,7 @@ public class TestDateAdd extends TemplatedTestBase {
      */
     @Test(testName = "Add a Future Date")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY).removeIds(true).minDriver(v42),
+        testPipeline(new ActionTestOptions().serverVersion("0.0.0").removeIds(true).minDriver("4.2.0"),
                 aggregation -> aggregation.pipeline(
                         project().include("expectedDeliveryDate", dateAdd("$purchaseDate", 3, TimeUnit.DAY))));
 
@@ -34,7 +32,7 @@ public class TestDateAdd extends TemplatedTestBase {
      */
     @Test(testName = "Filter on a Date Range")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY),
+        testPipeline(new ActionTestOptions().serverVersion("0.0.0"),
                 aggregation -> aggregation.pipeline(
                         match(expr(gt("$deliveryDate", dateAdd("$purchaseDate", 5, TimeUnit.DAY)))),
 
@@ -52,7 +50,7 @@ public class TestDateAdd extends TemplatedTestBase {
      */
     @Test(testName = "Adjust for Daylight Savings Time")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY), aggregation -> aggregation.pipeline(project()
+        testPipeline(new ActionTestOptions().serverVersion("0.0.0"), aggregation -> aggregation.pipeline(project()
                 .suppressId().include("location")
                 .include("start", dateToString().date("$login").format("%Y-%m-%d %H:%M"))
                 .include("days",

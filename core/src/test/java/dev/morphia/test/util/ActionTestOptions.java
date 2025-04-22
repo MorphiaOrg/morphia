@@ -2,21 +2,17 @@ package dev.morphia.test.util;
 
 import dev.morphia.UpdateOptions;
 import dev.morphia.query.FindOptions;
-import dev.morphia.test.DriverVersion;
-import dev.morphia.test.ServerVersion;
-
-import static dev.morphia.test.ServerVersion.ANY;
 
 public class ActionTestOptions {
     private FindOptions findOptions;
 
-    private DriverVersion minDriver = DriverVersion.v41;
+    private String minDriver = "4.1.0";
 
     private boolean orderMatters = true;
 
     private boolean removeIds = false;
 
-    private ServerVersion serverVersion = ANY;
+    private String serverVersion = "0.0.0";
 
     private boolean skipActionCheck;
 
@@ -33,11 +29,11 @@ public class ActionTestOptions {
         return this;
     }
 
-    public DriverVersion minDriver() {
+    public String minDriver() {
         return minDriver;
     }
 
-    public ActionTestOptions minDriver(DriverVersion minDriver) {
+    public ActionTestOptions minDriver(String minDriver) {
         this.minDriver = minDriver;
         return this;
     }
@@ -60,11 +56,11 @@ public class ActionTestOptions {
         return this;
     }
 
-    public ServerVersion serverVersion() {
+    public String serverVersion() {
         return serverVersion;
     }
 
-    public ActionTestOptions serverVersion(ServerVersion serverVersion) {
+    public ActionTestOptions serverVersion(String serverVersion) {
         this.serverVersion = serverVersion;
         return this;
     }

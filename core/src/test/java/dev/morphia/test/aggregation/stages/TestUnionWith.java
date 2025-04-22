@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.stages;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 
 import org.testng.annotations.Test;
@@ -47,7 +46,7 @@ public class TestUnionWith extends TemplatedTestBase {
      */
     @Test(testName = "Create a Union with Specified Documents")
     public void testExample3() {
-        checkMinServerVersion(ServerVersion.v60);
+        checkMinServerVersion("6.0.0");
         testPipeline(
                 (aggregation) -> aggregation.pipeline(unionWith(documents(document("_id", 4).field("flavor", "orange"),
                         document("_id", 5).field("flavor", "vanilla").field("price", 20)))));

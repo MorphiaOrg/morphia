@@ -18,7 +18,7 @@ import org.objectweb.asm.tree.ClassNode
 class GizmoEntityModelGenerator(
     type: Class<*>,
     val classNode: ClassNode,
-    val properties: List<PropertyModelGenerator>
+    val properties: List<PropertyModelGenerator>,
 ) : BaseGizmoGenerator(type) {
     var annotations: List<AnnotationNode>
     var morphiaAnnotations: List<Annotation>
@@ -105,14 +105,14 @@ class GizmoEntityModelGenerator(
                 ),
                 constructor.getThis(),
                 constructor.getMethodParam(0),
-                constructor.loadClass(entity)
+                constructor.loadClass(entity),
             )
             constructor.setParameterNames(arrayOf("mapper"))
 
             constructor.invokeVirtualMethod(
                 ofMethod(generatedType, "setType", "void", Class::class.java),
                 constructor.`this`,
-                constructor.loadClass(entity)
+                constructor.loadClass(entity),
             )
             loadProperties(constructor)
             registerAnnotations(constructor)
@@ -139,7 +139,7 @@ class GizmoEntityModelGenerator(
             constructor.invokeVirtualMethod(
                 annotationMethod,
                 constructor.`this`,
-                annotation.annotationBuilder(constructor)
+                annotation.annotationBuilder(constructor),
             )
         }
     }

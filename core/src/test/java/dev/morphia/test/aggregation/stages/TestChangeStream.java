@@ -19,7 +19,6 @@ import org.bson.codecs.EncoderContext;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.stages.ChangeStream.changeStream;
-import static dev.morphia.test.DriverVersion.v47;
 import static java.lang.String.format;
 import static java.time.LocalDateTime.now;
 import static org.testng.Assert.assertEquals;
@@ -29,7 +28,7 @@ public class TestChangeStream extends TemplatedTestBase {
     @Test
     @SuppressWarnings("unchecked")
     public void testChangeStream() {
-        checkMinDriverVersion(v47);
+        checkMinDriverVersion("4.7.0");
         checkForReplicaSet();
 
         Iterator<Document> input = loadJson(format("%s/%s/data.json", prefix(), "changeStream"), "data", true).iterator();
@@ -49,7 +48,7 @@ public class TestChangeStream extends TemplatedTestBase {
 
     @Test
     public void testChangeStreamOptions() {
-        checkMinDriverVersion(v47);
+        checkMinDriverVersion("4.7.0");
         LocalDateTime startAtOperationTime = now();
         ChangeStream changeStream = changeStream().allChangesForCluster(true)
                 .fullDocument(FullDocument.REQUIRED)

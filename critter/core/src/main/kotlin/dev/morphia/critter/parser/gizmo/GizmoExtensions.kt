@@ -26,7 +26,7 @@ fun AnnotationNode.annotationBuilder(creator: MethodCreator): ResultHandle {
         MethodDescriptor.ofMethod(
             builderType.className,
             "${className.methodCase()}Builder",
-            builderType.className
+            builderType.className,
         )
     val local = creator.invokeStaticMethod(builder)
 
@@ -34,7 +34,7 @@ fun AnnotationNode.annotationBuilder(creator: MethodCreator): ResultHandle {
 
     return creator.invokeVirtualMethod(
         MethodDescriptor.ofMethod(builderType.className, "build", type.className),
-        local
+        local,
     )
 }
 
@@ -49,7 +49,7 @@ fun TypeData<*>.emitTypeData(methodCreator: MethodCreator): ResultHandle {
         MethodDescriptor.ofConstructor(
             TypeData::class.java,
             Class::class.java,
-            "[${Type.getType(TypeData::class.java).descriptor}"
+            "[${Type.getType(TypeData::class.java).descriptor}",
         )
     return methodCreator.newInstance(descriptor, *list.toTypedArray())
 }
@@ -87,7 +87,7 @@ fun load(creator: MethodCreator, type: java.lang.reflect.Type, `value`: Any): Re
                     creator.writeArrayValue(
                         this,
                         index,
-                        load(creator, Class.forName((element as Type).className), element)
+                        load(creator, Class.forName((element as Type).className), element),
                     )
                 }
             }
@@ -116,7 +116,7 @@ fun load(creator: MethodCreator, type: Class<*>, `value`: Any): ResultHandle {
                             creator.writeArrayValue(
                                 this,
                                 index,
-                                load(creator, element.javaClass, element)
+                                load(creator, element.javaClass, element),
                             )
                         }
                     }

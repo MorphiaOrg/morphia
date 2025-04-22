@@ -14,7 +14,7 @@ class OperationAuditTest {
                 .audit(
                     "query-filters",
                     "https://docs.mongodb.com/manual/reference/operator/query/",
-                    listOf("$", "\$rand")
+                    listOf("$", "\$rand"),
                 )
         ) {
             remaining += first
@@ -26,7 +26,7 @@ class OperationAuditTest {
                 .audit(
                     "update-operators",
                     "https://docs.mongodb.com/manual/reference/operator/update/",
-                    listOf("$", "$[]", "$[<identifier>]", "\$position", "\$slice", "\$sort")
+                    listOf("$", "$[]", "$[<identifier>]", "\$position", "\$slice", "\$sort"),
                 )
         ) {
             remaining += first

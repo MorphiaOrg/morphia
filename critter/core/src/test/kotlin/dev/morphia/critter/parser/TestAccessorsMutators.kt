@@ -17,7 +17,7 @@ class TestAccessorsMutators : BaseCritterTest() {
             listOf(
                 listOf("name", String::class.java, "set externally"),
                 listOf("age", Int::class.java, 100),
-                listOf("salary", java.lang.Long::class.java, 100_000L)
+                listOf("salary", java.lang.Long::class.java, 100_000L),
             )
 
         val entity = critterClassLoader.loadClass(type.name).getConstructor().newInstance()
@@ -47,7 +47,7 @@ class TestAccessorsMutators : BaseCritterTest() {
         assertEquals(accessor.get(entity), testValue)
         assertTrue(
             entity.toString().contains(testValue.toString()),
-            "Could not find '$testValue` in :${entity}"
+            "Could not find '$testValue` in :${entity}",
         )
     }
 

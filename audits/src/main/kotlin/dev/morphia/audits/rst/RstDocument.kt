@@ -78,7 +78,7 @@ class RstDocument(val operator: Operator, lines: MutableList<String>) {
                         operator,
                         it.key,
                         it.value,
-                        index
+                        index,
                     )
             }
         }
@@ -116,7 +116,7 @@ class RstDocument(val operator: Operator, lines: MutableList<String>) {
     }
 
     private fun MutableList<String>.extractSimpleTabs(
-        tabs: MutableMap<String, MutableList<String>>,
+        tabs: MutableMap<String, MutableList<String>>
     ) {
         if (isNotEmpty() && first().trim().startsWith(SIMPLE_TAB_SECTION_START)) {
             removeFirst()
@@ -140,7 +140,7 @@ class RstDocument(val operator: Operator, lines: MutableList<String>) {
     }
 
     private fun MutableList<String>.extractFancyTabs(
-        tabs: MutableMap<String, MutableList<String>>,
+        tabs: MutableMap<String, MutableList<String>>
     ) {
         while (isNotEmpty() && first().trim().startsWith(FANCY_TAB_START)) {
             val first = removeFirst()

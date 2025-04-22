@@ -9,7 +9,6 @@ import dev.morphia.test.util.ActionTestOptions;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.accumulator;
-import static dev.morphia.test.ServerVersion.ANY;
 
 public class TestAccumulator extends TemplatedTestBase {
     /**
@@ -18,7 +17,7 @@ public class TestAccumulator extends TemplatedTestBase {
      */
     @Test(testName = "Use ``$accumulator`` to Implement the ``$avg`` Operator")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY).orderMatters(false).skipActionCheck(true),
+        testPipeline(new ActionTestOptions().serverVersion("0.0.0").orderMatters(false).skipActionCheck(true),
                 aggregation -> aggregation.pipeline(Group.group(Group.id("$author")).field("avgCopies", accumulator("""
                         function() {
                           return { count: 0, sum: 0 }
@@ -47,7 +46,7 @@ public class TestAccumulator extends TemplatedTestBase {
      */
     @Test(testName = "Use ``initArgs`` to Vary the Initial State by Group")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY).orderMatters(false).skipActionCheck(true),
+        testPipeline(new ActionTestOptions().serverVersion("0.0.0").orderMatters(false).skipActionCheck(true),
                 aggregation -> aggregation.pipeline(Group.group(Group.id().field("city", "$city")).field("restaurants",
                         accumulator("""
                                 function(city, userProfileCity) {       \s

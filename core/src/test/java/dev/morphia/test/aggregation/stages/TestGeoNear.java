@@ -3,7 +3,6 @@ package dev.morphia.test.aggregation.stages;
 import com.mongodb.client.model.geojson.Point;
 import com.mongodb.client.model.geojson.Position;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -52,7 +51,7 @@ public class TestGeoNear extends TemplatedTestBase {
      */
     @Test(testName = "$geoNear with Bound ``let`` Option")
     public void testExample4() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.v60).removeIds(true).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion("6.0.0").removeIds(true).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
                         lookup(EXAMPLE_TEST_COLLECTION).as("joinedField").let("pt", "$location")
                                 .pipeline(geoNear("$$pt").distanceField("distance")),

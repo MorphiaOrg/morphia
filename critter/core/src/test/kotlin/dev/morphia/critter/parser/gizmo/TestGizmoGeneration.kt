@@ -41,14 +41,14 @@ class TestGizmoGeneration {
             descriptor(
                 Map::class.java,
                 descriptor(String::class.java),
-                descriptor(Example::class.java)
+                descriptor(Example::class.java),
             )
 
         assertEquals(descriptor, descString)
         var typeData = typeData(descString)[0]
         assertEquals(
             typeData,
-            Map::class.typeData(String::class.typeData(), Example::class.typeData())
+            Map::class.typeData(String::class.typeData(), Example::class.typeData()),
         )
     }
 
@@ -62,8 +62,8 @@ class TestGizmoGeneration {
                 descriptor(
                     Map::class.java,
                     descriptor(String::class.java),
-                    descriptor(Example::class.java)
-                )
+                    descriptor(Example::class.java),
+                ),
             )
         assertEquals(descriptor, descString)
 
@@ -72,7 +72,7 @@ class TestGizmoGeneration {
             typeData,
             List::class.typeData(
                 Map::class.typeData(String::class.typeData(), Example::class.typeData())
-            )
+            ),
         )
     }
 
@@ -84,7 +84,7 @@ class TestGizmoGeneration {
             descriptor(
                 Map::class.java,
                 descriptor(String::class.java),
-                descriptor(List::class.java, descriptor(Example::class.java))
+                descriptor(List::class.java, descriptor(Example::class.java)),
             )
         assertEquals(descriptor, descString)
         val typeData = typeData(descriptor)[0]
@@ -92,8 +92,8 @@ class TestGizmoGeneration {
             typeData,
             Map::class.typeData(
                 String::class.typeData(),
-                List::class.typeData(Example::class.typeData())
-            )
+                List::class.typeData(Example::class.typeData()),
+            ),
         )
     }
 
@@ -137,13 +137,13 @@ class TestGizmoGeneration {
                         EntityModel::class.java.name,
                         "annotation",
                         EntityModel::class.java.name,
-                        Annotation::class.java
+                        Annotation::class.java,
                     )
 
                 creator.invokeVirtualMethod(
                     annotationMethod,
                     creator.`this`,
-                    index.annotationBuilder(creator)
+                    index.annotationBuilder(creator),
                 )
             }
     }
@@ -181,12 +181,12 @@ class TestGizmoGeneration {
         val annotation = model.getAnnotation(EntityListeners::class.java)
         assertEquals(
             annotation,
-            entityListenersBuilder().value(EntityListenerAdapter::class.java).build()
+            entityListenersBuilder().value(EntityListenerAdapter::class.java).build(),
         )
 
         assertEquals(
             model.getAnnotation(Entity::class.java),
-            entityBuilder().value("examples").build()
+            entityBuilder().value("examples").build(),
         )
 
         assertEquals(
@@ -203,7 +203,7 @@ class TestGizmoGeneration {
                         )
                         .build()
                 )
-                .build()
+                .build(),
         )
 
         assertEquals(model.collectionName(), "examples")
@@ -261,13 +261,13 @@ class TestGizmoGeneration {
         val constructorCreator = constructorCall.getConstructorCreator(String::class.java)
         constructorCreator.invokeSpecialMethod(
             MethodDescriptor.ofConstructor(Object::class.java),
-            constructorCreator.`this`
+            constructorCreator.`this`,
         )
         constructorCreator.setParameterNames(arrayOf("name"))
         constructorCreator.writeInstanceField(
             fieldCreator.fieldDescriptor,
             constructorCreator.`this`,
-            constructorCreator.getMethodParam(0)
+            constructorCreator.getMethodParam(0),
         )
 
         constructorCreator.returnVoid()
@@ -290,10 +290,10 @@ class TestGizmoGeneration {
         constructor.invokeSpecialMethod(
             MethodDescriptor.ofConstructor(
                 "dev.morphia.critter.ConstructorCall",
-                String::class.java
+                String::class.java,
             ),
             constructor.getThis(),
-            constructor.getMethodParam(0)
+            constructor.getMethodParam(0),
         )
         constructor.setParameterNames(arrayOf("subName"))
         constructor.returnVoid()

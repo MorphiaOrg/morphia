@@ -8,4 +8,4 @@ nav:
 asciidoc:
   attributes:
     version: "3.0.0-SNAPSHOT"
-    srcRef: "https://github.com/MorphiaOrg/mor  phia/blob/master"
+    srcRef: "https://github.com/MorphiaOrg/morphia/blob/master"

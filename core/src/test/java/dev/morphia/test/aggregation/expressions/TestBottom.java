@@ -12,7 +12,6 @@ import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.query.Sort.descending;
 import static dev.morphia.query.filters.Filters.eq;
-import static dev.morphia.test.ServerVersion.v52;
 
 public class TestBottom extends TemplatedTestBase {
     /**
@@ -21,7 +20,7 @@ public class TestBottom extends TemplatedTestBase {
      */
     @Test(testName = "Find the Bottom ``Score``")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(v52).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion("5.2.0").orderMatters(false),
                 (aggregation) -> aggregation.pipeline(match(eq("gameId", "G1")), group(id("$gameId")).field("playerId",
                         bottom(array("$playerId", "$score"), descending("score")))));
     }
@@ -32,7 +31,7 @@ public class TestBottom extends TemplatedTestBase {
      */
     @Test(testName = "Finding the Bottom ``Score`` Across Multiple Games")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(v52).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion("5.2.0").orderMatters(false),
                 (aggregation) -> aggregation.pipeline(group(id("$gameId")).field("playerId",
                         bottom(array("$playerId", "$score"), descending("score")))));
     }

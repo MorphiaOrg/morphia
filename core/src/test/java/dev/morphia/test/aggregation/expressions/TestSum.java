@@ -16,7 +16,6 @@ import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
 import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
-import static dev.morphia.test.ServerVersion.v50;
 
 public class TestSum extends TemplatedTestBase {
     /**
@@ -25,7 +24,7 @@ public class TestSum extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$group`` Stage")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(v50).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion("5.0.0").orderMatters(false),
                 (aggregation) -> aggregation
                         .pipeline(group(id(document().field("day", dayOfYear("$date")).field("year", year("$date"))))
                                 .field("totalAmount", sum(multiply("$price", "$quantity"))).field("count", sum(1))));

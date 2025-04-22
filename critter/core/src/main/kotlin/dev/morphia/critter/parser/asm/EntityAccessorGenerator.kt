@@ -29,7 +29,7 @@ class EntityAccessorGenerator(entity: Class<*>) : BaseGenerator(entity) {
             generatedType.internalName,
             "Ljava/lang/Object;Lorg/bson/codecs/pojo/PropertyAccessor<${wrap(propertyType).descriptor}>;",
             "java/lang/Object",
-            arrayOf("org/bson/codecs/pojo/PropertyAccessor")
+            arrayOf("org/bson/codecs/pojo/PropertyAccessor"),
         )
 
         constructor()
@@ -49,7 +49,7 @@ class EntityAccessorGenerator(entity: Class<*>) : BaseGenerator(entity) {
                 "get",
                 "(Ljava/lang/Object;)Ljava/lang/Object;",
                 null,
-                null
+                null,
             )
         methodVisitor.visitCode()
         val label0 = Label()
@@ -62,7 +62,7 @@ class EntityAccessorGenerator(entity: Class<*>) : BaseGenerator(entity) {
             generatedType.internalName,
             "get",
             "(Ljava/lang/Object;)${wrapped.descriptor}",
-            false
+            false,
         )
         methodVisitor.visitInsn(ARETURN)
         val label1 = Label()
@@ -79,7 +79,7 @@ class EntityAccessorGenerator(entity: Class<*>) : BaseGenerator(entity) {
                 "set",
                 "(Ljava/lang/Object;Ljava/lang/Object;)V",
                 null,
-                null
+                null,
             )
         mv.visitCode()
         val label0 = Label()
@@ -94,7 +94,7 @@ class EntityAccessorGenerator(entity: Class<*>) : BaseGenerator(entity) {
             generatedType.internalName,
             "set",
             "(Ljava/lang/Object;${wrapped.descriptor})V",
-            false
+            false,
         )
         mv.visitInsn(RETURN)
         val label1 = Label()
@@ -111,7 +111,7 @@ class EntityAccessorGenerator(entity: Class<*>) : BaseGenerator(entity) {
                 "set",
                 "(Ljava/lang/Object;${wrapped.descriptor})V",
                 "<S:Ljava/lang/Object;>(TS;${wrapped.descriptor})V",
-                null
+                null,
             )
         mv.visitCode()
         val label0 = Label()
@@ -126,7 +126,7 @@ class EntityAccessorGenerator(entity: Class<*>) : BaseGenerator(entity) {
                 wrapped.internalName,
                 "${propertyType.className}Value",
                 "()${propertyType.descriptor}",
-                false
+                false,
             )
         }
         mv.visitMethodInsn(
@@ -134,7 +134,7 @@ class EntityAccessorGenerator(entity: Class<*>) : BaseGenerator(entity) {
             entityType.internalName,
             "__write${propertyName.titleCase()}",
             "(${propertyType.descriptor})V",
-            false
+            false,
         )
         val label1 = Label()
         mv.visitLabel(label1)
@@ -156,7 +156,7 @@ class EntityAccessorGenerator(entity: Class<*>) : BaseGenerator(entity) {
                 "get",
                 "(Ljava/lang/Object;)${wrapped.descriptor}",
                 "<S:Ljava/lang/Object;>(TS;)${wrapped.descriptor}",
-                null
+                null,
             )
         mv.visitCode()
         val label0 = Label()
@@ -169,7 +169,7 @@ class EntityAccessorGenerator(entity: Class<*>) : BaseGenerator(entity) {
             entityType.internalName,
             "__read${propertyName.titleCase()}",
             "()${propertyType.descriptor}",
-            false
+            false,
         )
         if (!wrapped.equals(propertyType)) {
             mv.visitMethodInsn(
@@ -177,7 +177,7 @@ class EntityAccessorGenerator(entity: Class<*>) : BaseGenerator(entity) {
                 wrapped.internalName,
                 "valueOf",
                 "(${propertyType.descriptor})${wrapped.descriptor}",
-                false
+                false,
             )
         }
         mv.visitInsn(ARETURN)

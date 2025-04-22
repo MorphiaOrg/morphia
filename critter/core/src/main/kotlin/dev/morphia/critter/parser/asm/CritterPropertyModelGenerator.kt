@@ -31,7 +31,7 @@ class CritterPropertyModelGenerator(val entity: Class<*>, propertyName: String) 
 
     constructor(
         entity: Class<*>,
-        method: MethodNode
+        method: MethodNode,
     ) : this(entity, method.name.drop(3).identifierCase()) {
         annotations = method.visibleAnnotations ?: listOf()
     }
@@ -58,7 +58,7 @@ class CritterPropertyModelGenerator(val entity: Class<*>, propertyName: String) 
             generatedType.internalName,
             null,
             baseType.internalName,
-            null
+            null,
         )
 
         fields()
@@ -77,7 +77,7 @@ class CritterPropertyModelGenerator(val entity: Class<*>, propertyName: String) 
                 "accessor",
                 "Lorg/bson/codecs/pojo/PropertyAccessor;",
                 "Lorg/bson/codecs/pojo/PropertyAccessor<*>;",
-                null
+                null,
             )
         fieldVisitor.visitEnd()
     }
@@ -89,7 +89,7 @@ class CritterPropertyModelGenerator(val entity: Class<*>, propertyName: String) 
                 "getAccessor",
                 "()Lorg/bson/codecs/pojo/PropertyAccessor;",
                 "()Lorg/bson/codecs/pojo/PropertyAccessor<Ljava/lang/Object;>;",
-                null
+                null,
             )
         methodVisitor.visitCode()
         val label0 = Label()
@@ -100,7 +100,7 @@ class CritterPropertyModelGenerator(val entity: Class<*>, propertyName: String) 
             GETFIELD,
             generatedType.internalName,
             "accessor",
-            "Lorg/bson/codecs/pojo/PropertyAccessor;"
+            "Lorg/bson/codecs/pojo/PropertyAccessor;",
         )
         methodVisitor.visitInsn(ARETURN)
         val label1 = Label()
@@ -117,7 +117,7 @@ class CritterPropertyModelGenerator(val entity: Class<*>, propertyName: String) 
                 "<init>",
                 "(Ldev/morphia/mapping/codec/pojo/EntityModel;)V",
                 null,
-                null
+                null,
             )
         methodVisitor.visitCode()
         val label0 = Label()
@@ -130,7 +130,7 @@ class CritterPropertyModelGenerator(val entity: Class<*>, propertyName: String) 
             "dev/morphia/mapping/codec/pojo/critter/CritterPropertyModel",
             "<init>",
             "(Ldev/morphia/mapping/codec/pojo/EntityModel;)V",
-            false
+            false,
         )
         val label1 = Label()
         methodVisitor.visitLabel(label1)
@@ -143,13 +143,13 @@ class CritterPropertyModelGenerator(val entity: Class<*>, propertyName: String) 
             accessorType.internalName,
             "<init>",
             "()V",
-            false
+            false,
         )
         methodVisitor.visitFieldInsn(
             PUTFIELD,
             generatedType.internalName,
             "accessor",
-            "Lorg/bson/codecs/pojo/PropertyAccessor;"
+            "Lorg/bson/codecs/pojo/PropertyAccessor;",
         )
 
         registerAnnotations()
@@ -165,7 +165,7 @@ class CritterPropertyModelGenerator(val entity: Class<*>, propertyName: String) 
             null,
             label0,
             label3,
-            1
+            1,
         )
         methodVisitor.visitMaxs(3, 2)
         methodVisitor.visitEnd()

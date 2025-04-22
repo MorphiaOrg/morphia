@@ -48,7 +48,7 @@ class CritterClassLoader(parent: ClassLoader?) :
         mappings: Map<Type, Type>,
         name: String,
         outputFolder: File,
-        fileName: String
+        fileName: String,
     ) {
         if (!asm) return
 

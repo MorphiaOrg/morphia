@@ -7,7 +7,6 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.DateExpressions.tsSecond;
 import static dev.morphia.aggregation.stages.Projection.project;
-import static dev.morphia.test.ServerVersion.v51;
 
 public class TestTsSecond extends TemplatedTestBase {
     /**
@@ -16,7 +15,7 @@ public class TestTsSecond extends TemplatedTestBase {
      */
     @Test(testName = "Obtain the Number of Seconds from a Timestamp Field")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(v51), (aggregation) -> aggregation.pipeline(
+        testPipeline(new ActionTestOptions().serverVersion("5.1.0"), (aggregation) -> aggregation.pipeline(
                 project().suppressId().include("saleTimestamp").include("saleSeconds", tsSecond("$saleTimestamp"))));
     }
 }

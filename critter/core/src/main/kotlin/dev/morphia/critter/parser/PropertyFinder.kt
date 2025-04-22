@@ -34,7 +34,7 @@ class PropertyFinder(mapper: Mapper, val classLoader: CritterClassLoader) {
 
     private fun isPropertyAnnotated(
         annotationNodes: MutableList<AnnotationNode>?,
-        allowUnannotated: Boolean
+        allowUnannotated: Boolean,
     ): Boolean {
         val annotations = annotationNodes ?: listOf()
         val keys = providerMap.keys.map { Type.getType(it).descriptor }

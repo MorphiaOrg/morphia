@@ -9,7 +9,6 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.MathExpressions.bitAnd;
 import static dev.morphia.aggregation.stages.Projection.project;
-import static dev.morphia.test.ServerVersion.v70;
 
 public class TestBitAnd extends TemplatedTestBase {
 
@@ -18,7 +17,7 @@ public class TestBitAnd extends TemplatedTestBase {
      */
     @Test(testName = "Bitwise ``AND`` with Two Integers ")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(v70),
+        testPipeline(new ActionTestOptions().serverVersion("7.0.0"),
                 aggregation -> aggregation.pipeline(project().include("result", bitAnd("$a", "$b"))));
     }
 
@@ -28,7 +27,7 @@ public class TestBitAnd extends TemplatedTestBase {
      */
     @Test(testName = "Bitwise ``AND`` with a Long and Integer ")
     public void testExample2() throws FileNotFoundException {
-        testPipeline(new ActionTestOptions().serverVersion(v70),
+        testPipeline(new ActionTestOptions().serverVersion("7.0.0"),
                 aggregation -> aggregation.project(project().include("result", bitAnd("$a", 63L))));
     }
 

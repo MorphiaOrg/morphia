@@ -33,7 +33,7 @@ class PropertyAccessorGenerator : BaseGizmoGenerator {
                 .addInterface(
                     parameterizedType(
                         classType(PropertyAccessor::class.java),
-                        classType(propertyType)
+                        classType(propertyType),
                     )
                 )
         )

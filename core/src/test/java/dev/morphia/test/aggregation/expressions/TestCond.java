@@ -8,7 +8,6 @@ import org.testng.annotations.Test;
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.gte;
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.condition;
 import static dev.morphia.aggregation.stages.Projection.project;
-import static dev.morphia.test.ServerVersion.ANY;
 
 public class TestCond extends TemplatedTestBase {
     /**
@@ -17,7 +16,7 @@ public class TestCond extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY), aggregation -> aggregation
+        testPipeline(new ActionTestOptions().serverVersion("0.0.0"), aggregation -> aggregation
                 .pipeline(project().include("item").include("discount", condition(gte("$qty", 250), 30, 20))));
 
     }

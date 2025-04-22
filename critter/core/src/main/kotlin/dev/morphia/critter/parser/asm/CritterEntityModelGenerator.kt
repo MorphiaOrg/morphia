@@ -30,7 +30,7 @@ class CritterEntityModelGenerator(val entity: Class<*>, val models: List<String>
             generatedType.internalName,
             null,
             baseType.internalName,
-            null
+            null,
         )
 
         constructor()
@@ -60,7 +60,7 @@ class CritterEntityModelGenerator(val entity: Class<*>, val models: List<String>
             "dev/morphia/critter/CritterEntityModel",
             "<init>",
             "(Ldev/morphia/mapping/Mapper;Ljava/lang/Class;)V",
-            false
+            false,
         )
 
         propertyModels(mv, models)
@@ -87,14 +87,14 @@ class CritterEntityModelGenerator(val entity: Class<*>, val models: List<String>
                 model,
                 "<init>",
                 "(Ldev/morphia/mapping/codec/pojo/EntityModel;)V",
-                false
+                false,
             )
             mv.visitMethodInsn(
                 INVOKEVIRTUAL,
                 generatedType.internalName,
                 "addProperty",
                 "(Ldev/morphia/mapping/codec/pojo/PropertyModel;)Z",
-                false
+                false,
             )
             mv.visitInsn(POP)
         }
@@ -109,21 +109,21 @@ class CritterEntityModelGenerator(val entity: Class<*>, val models: List<String>
             GETFIELD,
             generatedType.internalName,
             "mapper",
-            "Ldev/morphia/mapping/Mapper;"
+            "Ldev/morphia/mapping/Mapper;",
         )
         mv.visitMethodInsn(
             INVOKEVIRTUAL,
             "dev/morphia/mapping/Mapper",
             "getConfig",
             "()Ldev/morphia/config/MorphiaConfig;",
-            false
+            false,
         )
         mv.visitMethodInsn(
             INVOKEINTERFACE,
             "dev/morphia/config/MorphiaConfig",
             "collectionNaming",
             "()Ldev/morphia/mapping/NamingStrategy;",
-            true
+            true,
         )
         mv.visitLdcInsn(entityType.internalName.substringAfterLast("/"))
         mv.visitMethodInsn(
@@ -131,7 +131,7 @@ class CritterEntityModelGenerator(val entity: Class<*>, val models: List<String>
             "dev/morphia/mapping/NamingStrategy",
             "apply",
             "(Ljava/lang/String;)Ljava/lang/String;",
-            false
+            false,
         )
         mv.visitInsn(ARETURN)
         val label1 = label(mv)
@@ -149,21 +149,21 @@ class CritterEntityModelGenerator(val entity: Class<*>, val models: List<String>
             GETFIELD,
             generatedType.internalName,
             "mapper",
-            "Ldev/morphia/mapping/Mapper;"
+            "Ldev/morphia/mapping/Mapper;",
         )
         mv.visitMethodInsn(
             INVOKEVIRTUAL,
             "dev/morphia/mapping/Mapper",
             "getConfig",
             "()Ldev/morphia/config/MorphiaConfig;",
-            false
+            false,
         )
         mv.visitMethodInsn(
             INVOKEINTERFACE,
             "dev/morphia/config/MorphiaConfig",
             "discriminator",
             "()Ldev/morphia/mapping/DiscriminatorFunction;",
-            true
+            true,
         )
         mv.visitLdcInsn(entityType)
         mv.visitLdcInsn(entity.getAnnotation(Entity::class.java).discriminator)
@@ -172,7 +172,7 @@ class CritterEntityModelGenerator(val entity: Class<*>, val models: List<String>
             "dev/morphia/mapping/DiscriminatorFunction",
             "apply",
             "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/String;",
-            false
+            false,
         )
         mv.visitInsn(ARETURN)
         val label1 = label(mv)
@@ -191,28 +191,28 @@ class CritterEntityModelGenerator(val entity: Class<*>, val models: List<String>
             GETFIELD,
             generatedType.internalName,
             "mapper",
-            "Ldev/morphia/mapping/Mapper;"
+            "Ldev/morphia/mapping/Mapper;",
         )
         mv.visitMethodInsn(
             INVOKEVIRTUAL,
             "dev/morphia/mapping/Mapper",
             "getConfig",
             "()Ldev/morphia/config/MorphiaConfig;",
-            false
+            false,
         )
         mv.visitMethodInsn(
             INVOKEINTERFACE,
             "dev/morphia/config/MorphiaConfig",
             "discriminatorKey",
             "()Ljava/lang/String;",
-            true
+            true,
         )
         mv.visitMethodInsn(
             INVOKESTATIC,
             "dev/morphia/mapping/conventions/MorphiaDefaultsConvention",
             "applyDefaults",
             "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;",
-            false
+            false,
         )
         mv.visitInsn(ARETURN)
         val label1 = label(mv)
@@ -222,7 +222,7 @@ class CritterEntityModelGenerator(val entity: Class<*>, val models: List<String>
             null,
             label0,
             label1,
-            0
+            0,
         )
         mv.visitMaxs(2, 1)
         mv.visitEnd()
@@ -251,7 +251,7 @@ class CritterEntityModelGenerator(val entity: Class<*>, val models: List<String>
                 "()Ldev/morphia/annotations/Entity;",
                 null,
                 null,
-                57
+                57,
             )
         mv.visitCode()
         val label0 = label(mv)
@@ -260,7 +260,7 @@ class CritterEntityModelGenerator(val entity: Class<*>, val models: List<String>
             GETFIELD,
             generatedType.internalName,
             "entityAnnotation",
-            "Ldev/morphia/annotations/Entity;"
+            "Ldev/morphia/annotations/Entity;",
         )
         val label1 = label(mv, visit = false)
         mv.visitJumpInsn(IFNONNULL, label1)
@@ -274,7 +274,7 @@ class CritterEntityModelGenerator(val entity: Class<*>, val models: List<String>
             "java/lang/Class",
             "getAnnotation",
             "(Ljava/lang/Class;)Ljava/lang/annotation/Annotation;",
-            false
+            false,
         )
         mv.visitTypeInsn(CHECKCAST, "dev/morphia/annotations/Entity")
         mv.visitMethodInsn(
@@ -282,7 +282,7 @@ class CritterEntityModelGenerator(val entity: Class<*>, val models: List<String>
             "dev/morphia/annotations/internal/EntityBuilder",
             "entityBuilder",
             "(Ldev/morphia/annotations/Entity;)Ldev/morphia/annotations/internal/EntityBuilder;",
-            false
+            false,
         )
         val label4 = label(mv)
         mv.visitMethodInsn(
@@ -290,13 +290,13 @@ class CritterEntityModelGenerator(val entity: Class<*>, val models: List<String>
             "dev/morphia/annotations/internal/EntityBuilder",
             "build",
             "()Ldev/morphia/annotations/Entity;",
-            false
+            false,
         )
         mv.visitFieldInsn(
             PUTFIELD,
             generatedType.internalName,
             "entityAnnotation",
-            "Ldev/morphia/annotations/Entity;"
+            "Ldev/morphia/annotations/Entity;",
         )
         mv.visitLabel(label1)
         mv.visitLineNumber(62, label1)
@@ -306,7 +306,7 @@ class CritterEntityModelGenerator(val entity: Class<*>, val models: List<String>
             GETFIELD,
             generatedType.internalName,
             "entityAnnotation",
-            "Ldev/morphia/annotations/Entity;"
+            "Ldev/morphia/annotations/Entity;",
         )
         mv.visitInsn(ARETURN)
         val label5 = label(mv)
@@ -316,7 +316,7 @@ class CritterEntityModelGenerator(val entity: Class<*>, val models: List<String>
             null,
             label0,
             label5,
-            0
+            0,
         )
         mv.visitMaxs(3, 1)
         mv.visitEnd()
@@ -330,7 +330,7 @@ class CritterEntityModelGenerator(val entity: Class<*>, val models: List<String>
                 "()Ljava/lang/Class;",
                 "()Ljava/lang/Class<*>;",
                 null,
-                107
+                107,
             )
         mv.visitCode()
         val label0 = label(mv)
@@ -383,7 +383,7 @@ class CritterEntityModelGenerator(val entity: Class<*>, val models: List<String>
                             throw e
                         }
                     }
-                }
+                },
             ) as A
         }
     }

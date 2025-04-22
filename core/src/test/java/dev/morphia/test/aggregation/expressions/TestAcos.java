@@ -9,7 +9,6 @@ import static dev.morphia.aggregation.expressions.MathExpressions.divide;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.acos;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.radiansToDegrees;
 import static dev.morphia.aggregation.stages.AddFields.addFields;
-import static dev.morphia.test.ServerVersion.ANY;
 
 public class TestAcos extends TemplatedTestBase {
     /**
@@ -18,7 +17,7 @@ public class TestAcos extends TemplatedTestBase {
      */
     @Test(testName = "main :: Inverse Cosine of Value in Degrees")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY), aggregation -> aggregation
+        testPipeline(new ActionTestOptions().serverVersion("0.0.0"), aggregation -> aggregation
                 .pipeline(addFields().field("angle_a", radiansToDegrees(acos(divide("$side_b", "$hypotenuse"))))));
 
     }
@@ -29,7 +28,7 @@ public class TestAcos extends TemplatedTestBase {
      */
     @Test(testName = "main :: Inverse Cosine of Value in Radians")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY), aggregation -> aggregation
+        testPipeline(new ActionTestOptions().serverVersion("0.0.0"), aggregation -> aggregation
                 .pipeline(addFields().field("angle_a", acos(divide("$side_b", "$hypotenuse")))));
 
     }

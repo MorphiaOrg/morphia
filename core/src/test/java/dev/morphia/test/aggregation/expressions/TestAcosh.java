@@ -8,7 +8,6 @@ import org.testng.annotations.Test;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.acosh;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.radiansToDegrees;
 import static dev.morphia.aggregation.stages.AddFields.addFields;
-import static dev.morphia.test.ServerVersion.ANY;
 
 public class TestAcosh extends TemplatedTestBase {
     /**
@@ -17,7 +16,7 @@ public class TestAcosh extends TemplatedTestBase {
      */
     @Test(testName = "main :: Inverse Hyperbolic Cosine in Degrees")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY), aggregation -> aggregation
+        testPipeline(new ActionTestOptions().serverVersion("0.0.0"), aggregation -> aggregation
                 .pipeline(addFields().field("y-coordinate", radiansToDegrees(acosh("$x-coordinate")))));
 
     }
@@ -28,7 +27,7 @@ public class TestAcosh extends TemplatedTestBase {
      */
     @Test(testName = "main :: Inverse Hyperbolic Cosine in Radians")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY),
+        testPipeline(new ActionTestOptions().serverVersion("0.0.0"),
                 aggregation -> aggregation.pipeline(addFields().field("y-coordinate", acosh("$x-coordinate"))));
 
     }

@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 
 import org.testng.annotations.Test;
@@ -15,7 +14,7 @@ public class TestToUUID extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        checkMinServerVersion(ServerVersion.v80);
+        checkMinServerVersion("8.0.0");
         testPipeline(aggregation -> aggregation
                 .pipeline(project().include("name").include("price").include("UUID", toUuid("$UUID"))));
     }

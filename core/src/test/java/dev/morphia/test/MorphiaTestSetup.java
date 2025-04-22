@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import com.mongodb.client.MongoClient;
 
 import dev.morphia.config.MorphiaConfig;
+import dev.morphia.internal.MorphiaInternals;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.test.TestBase.ZDTCodecProvider;
 import dev.morphia.test.config.ManualMorphiaTestConfig;
@@ -100,17 +101,22 @@ public class MorphiaTestSetup {
         }
     }
 
-    protected void checkMinDriverVersion(DriverVersion version) {
-        String property = System.getProperty("driver.version");
-        var driverVersion = property != null ? Semver.parse(property) : null;
-
-        assumeTrue(driverVersion == null || driverVersion.isGreaterThanOrEqualTo(version.version()),
-                format("Server should be at least %s but found %s", version, getServerVersion()));
+    protected void checkMinDriverVersion(String version) {
+        checkMinDriverVersion(Semver.parse(version));
     }
 
-    protected void checkMinServerVersion(ServerVersion version) {
-        assumeTrue(serverIsAtLeastVersion(version.version()),
-                format("Server should be at least %s but found %s", version.version(), getServerVersion()));
+    protected void checkMinDriverVersion(Semver version) {
+        assumeTrue(driverIsAtLeastVersion(version),
+                format("Server should be at least %s but found %s", version, MorphiaInternals.getDriverVersion()));
+    }
+
+    protected void checkMinServerVersion(String version) {
+        checkMinServerVersion(Semver.parse(version));
+    }
+
+    protected void checkMinServerVersion(Semver version) {
+        assumeTrue(serverIsAtLeastVersion(version),
+                format("Server should be at least %s but found %s", version, getServerVersion()));
     }
 
     protected MongoClient getMongoClient() {
@@ -187,5 +193,13 @@ public class MorphiaTestSetup {
                             .map(Class::getPackageName)
                             .collect(Collectors.toList()));
         return config;
+    }
+
+    /**
+     * @param version the minimum version allowed
+     * @return true if server is at least specified version
+     */
+    private boolean driverIsAtLeastVersion(Semver version) {
+        return MorphiaInternals.getDriverVersion().isGreaterThanOrEqualTo(version);
     }
 }

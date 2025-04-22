@@ -15,7 +15,6 @@ import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.query.Sort.descending;
-import static dev.morphia.test.ServerVersion.v52;
 
 public class TestBottomN extends TemplatedTestBase {
     /**
@@ -24,7 +23,7 @@ public class TestBottomN extends TemplatedTestBase {
      */
     @Test(testName = "Find the Three Lowest ``Scores``")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(v52).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion("5.2.0").orderMatters(false),
                 (aggregation) -> aggregation.pipeline(match(Filters.eq("gameId", "G1")), group(id("$gameId"))
                         .field("playerId", bottomN(3, array("$playerId", "$score"), descending("score")))));
     }
@@ -35,7 +34,7 @@ public class TestBottomN extends TemplatedTestBase {
      */
     @Test(testName = "Finding the Three Lowest Score Documents Across Multiple Games")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(v52).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion("5.2.0").orderMatters(false),
                 (aggregation) -> aggregation.pipeline(group(id("$gameId")).field("playerId",
                         bottomN(3, array("$playerId", "$score"), descending("score")))));
     }
@@ -46,7 +45,7 @@ public class TestBottomN extends TemplatedTestBase {
      */
     @Test(testName = "Computing ``n`` Based on the Group Key for ``$group``")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(v52).orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion("5.2.0").orderMatters(false),
                 (aggregation) -> aggregation.pipeline(group(id(document("gameId", "$gameId"))).field("gamescores",
                         bottomN(condition(eq("$gameId", "G2"), 1, 3), "$score", descending("score")))));
 

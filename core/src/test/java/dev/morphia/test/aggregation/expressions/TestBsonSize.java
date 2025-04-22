@@ -13,7 +13,6 @@ import static dev.morphia.aggregation.stages.Group.id;
 import static dev.morphia.aggregation.stages.Limit.limit;
 import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.aggregation.stages.Sort.sort;
-import static dev.morphia.test.ServerVersion.ANY;
 
 public class TestBsonSize extends TemplatedTestBase {
     /**
@@ -22,7 +21,7 @@ public class TestBsonSize extends TemplatedTestBase {
      */
     @Test(testName = "Return Sizes of Documents")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY),
+        testPipeline(new ActionTestOptions().serverVersion("0.0.0"),
                 aggregation -> aggregation.pipeline(project().include("name").include("object_size", bsonSize(ROOT))));
 
     }
@@ -33,7 +32,7 @@ public class TestBsonSize extends TemplatedTestBase {
      */
     @Test(testName = "Return Combined Size of All Documents in a Collection")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY), aggregation -> aggregation
+        testPipeline(new ActionTestOptions().serverVersion("0.0.0"), aggregation -> aggregation
                 .pipeline(group(id(null)).field("combined_object_size", sum(bsonSize(ROOT)))));
 
     }
@@ -44,7 +43,7 @@ public class TestBsonSize extends TemplatedTestBase {
      */
     @Test(testName = "Return Document with Largest Specified Field")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(ANY),
+        testPipeline(new ActionTestOptions().serverVersion("0.0.0"),
                 aggregation -> aggregation.pipeline(
                         project().include("name", "$name").include("task_object_size", bsonSize("$$CURRENT")),
                         sort().descending("task_object_size"), limit(1)));

@@ -26,7 +26,7 @@ abstract class BaseGenerator(entity: Class<*>) {
         descriptor: String,
         signature: String?,
         exceptions: Array<String>?,
-        lineNumber: Int
+        lineNumber: Int,
     ): MethodVisitor {
         this.lineNumber = lineNumber
         return classWriter.visitMethod(access, name, descriptor, signature, exceptions)
@@ -35,7 +35,7 @@ abstract class BaseGenerator(entity: Class<*>) {
     protected fun label(
         mv: MethodVisitor,
         lineNumber: Int = this.lineNumber,
-        visit: Boolean = true
+        visit: Boolean = true,
     ): Label {
         val label0 = Label()
         if (visit) {

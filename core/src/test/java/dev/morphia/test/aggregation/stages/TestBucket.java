@@ -5,7 +5,6 @@ import java.util.List;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.aggregation.model.Artwork;
 import dev.morphia.test.aggregation.model.Book;
@@ -48,7 +47,7 @@ public class TestBucket extends TemplatedTestBase {
      */
     @Test(testName = "Use $bucket with $facet to Bucket by Multiple Fields")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY),
+        testPipeline(new ActionTestOptions().serverVersion("0.0.0"),
                 (aggregation) -> aggregation.pipeline(facet()
                         .field("price",
                                 bucket().groupBy("$price").boundaries(0, 200, 400).defaultValue("Other")

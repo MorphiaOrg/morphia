@@ -29,7 +29,7 @@ object CritterGizmoGenerator {
     fun entityModel(
         type: Class<*>,
         classNode: ClassNode,
-        properties: List<PropertyModelGenerator>
+        properties: List<PropertyModelGenerator>,
     ): GizmoEntityModelGenerator {
         return GizmoEntityModelGenerator(type, classNode, properties).emit()
     }

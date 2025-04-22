@@ -11,7 +11,7 @@ open class BaseAuditTest {
             results.created.size,
             0,
             "All existing operators should be represented: " +
-                results.created.joinToString("\n\t", prefix = "\n\t") { it.operator }
+                results.created.joinToString("\n\t", prefix = "\n\t") { it.operator },
         )
         assertEquals(
             results.noExamples.size,
@@ -19,7 +19,7 @@ open class BaseAuditTest {
             "All existing operators should have examples: " +
                 results.noExamples.joinToString("\n\t", prefix = "\n\t") {
                     "${it.operator.name}: ${it.name}"
-                }
+                },
         )
         assertEquals(
             results.noTest.size,
@@ -27,12 +27,12 @@ open class BaseAuditTest {
             "All existing operators should have test cases: " +
                 results.noTest.joinToString("\n\t", prefix = "\n\t") {
                     "${it.operator}: ${it.testSource.relativeTo(File("../").absoluteFile)}"
-                }
+                },
         )
         val noTags = results.noServerRelease.joinToString("\n", "\n")
         assertTrue(
             noTags.trim().isEmpty(),
-            "Some operators are missing server release tags: ${noTags}"
+            "Some operators are missing server release tags: ${noTags}",
         )
     }
 }

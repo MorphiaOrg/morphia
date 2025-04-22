@@ -7,7 +7,6 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.MathExpressions.bitXor;
 import static dev.morphia.aggregation.stages.Projection.project;
-import static dev.morphia.test.ServerVersion.v63;
 
 public class TestBitXor extends TemplatedTestBase {
 
@@ -17,7 +16,7 @@ public class TestBitXor extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(v63),
+        testPipeline(new ActionTestOptions().serverVersion("6.3.0"),
                 aggregation -> aggregation.pipeline(project().include("result", bitXor("$a", "$b"))));
     }
 }

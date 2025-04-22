@@ -10,7 +10,6 @@ import static dev.morphia.aggregation.expressions.ComparisonExpressions.gte;
 import static dev.morphia.aggregation.expressions.Expressions.filter;
 import static dev.morphia.aggregation.expressions.StringExpressions.regexMatch;
 import static dev.morphia.aggregation.stages.Projection.project;
-import static dev.morphia.test.ServerVersion.v52;
 
 public class TestFilter extends TemplatedTestBase {
     /**
@@ -19,7 +18,7 @@ public class TestFilter extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(v52), (aggregation) -> aggregation
+        testPipeline(new ActionTestOptions().serverVersion("5.2.0"), (aggregation) -> aggregation
                 .pipeline(project().include("items", filter("$items", gte("$$item.price", 100)).as("item"))));
     }
 
@@ -29,7 +28,7 @@ public class TestFilter extends TemplatedTestBase {
      */
     @Test(testName = "Use the limit Field")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(v52), (aggregation) -> aggregation
+        testPipeline(new ActionTestOptions().serverVersion("5.2.0"), (aggregation) -> aggregation
                 .pipeline(project().include("items", filter("$items", gte("$$item.price", 100)).as("item").limit(1))));
     }
 
@@ -49,7 +48,7 @@ public class TestFilter extends TemplatedTestBase {
      */
     @Test(testName = "Filter Based on String Equality Match")
     public void testExample4() {
-        testPipeline(new ActionTestOptions().serverVersion(v52), (aggregation) -> aggregation
+        testPipeline(new ActionTestOptions().serverVersion("5.2.0"), (aggregation) -> aggregation
                 .pipeline(project().include("items", filter("$items", eq("$$item.name", "pen")).as("item"))));
     }
 

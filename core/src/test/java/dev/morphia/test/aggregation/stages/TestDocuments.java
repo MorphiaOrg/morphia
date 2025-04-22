@@ -9,7 +9,6 @@ import static dev.morphia.aggregation.expressions.Expressions.document;
 import static dev.morphia.aggregation.stages.AutoBucket.autoBucket;
 import static dev.morphia.aggregation.stages.Documents.documents;
 import static dev.morphia.aggregation.stages.Lookup.lookup;
-import static dev.morphia.test.ServerVersion.v51;
 
 public class TestDocuments extends TemplatedTestBase {
     /**
@@ -30,7 +29,7 @@ public class TestDocuments extends TemplatedTestBase {
      */
     @Test(testName = "Use a ``$documents`` Stage in a ``$lookup`` Stage")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion(v51).removeIds(true), aggregation -> {
+        testPipeline(new ActionTestOptions().serverVersion("5.1.0").removeIds(true), aggregation -> {
             return aggregation.match()
                     .lookup(lookup().localField("zip").foreignField("zip_id").as("city_state")
                             .pipeline(documents(document("zip_id", 94301).field("name", "Palo Alto, CA"),

@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.aggregation.expressions.StringExpressions;
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -25,7 +24,7 @@ public class TestConvert extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.ANY), (aggregation) -> aggregation.pipeline(
+        testPipeline(new ActionTestOptions().serverVersion("0.0.0"), (aggregation) -> aggregation.pipeline(
                 addFields().field("convertedPrice", convert("$price", DECIMAL).onError("Error").onNull(0.0))
                         .field("convertedQty",
                                 convert("$qty", INT).onError(concat("Could not convert ",

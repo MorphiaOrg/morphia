@@ -1,7 +1,5 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.DriverVersion;
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -22,7 +20,7 @@ public class TestSetField extends TemplatedTestBase {
      */
     @Test(testName = "Add Fields that Contain Periods (``.``)")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.v50).minDriver(DriverVersion.v43),
+        testPipeline(new ActionTestOptions().serverVersion("5.0.0").minDriver("4.3.0"),
                 (aggregation) -> aggregation.pipeline(replaceWith(setField("price.usd", ROOT, "$price")),
                         unset("price")));
     }
@@ -33,7 +31,7 @@ public class TestSetField extends TemplatedTestBase {
      */
     @Test(testName = "Add Fields that Start with a Dollar Sign (``$``)")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().minDriver(DriverVersion.v43), (aggregation) -> aggregation
+        testPipeline(new ActionTestOptions().minDriver("4.3.0"), (aggregation) -> aggregation
                 .pipeline(replaceWith(setField(literal("$price"), ROOT, "$price")), unset("price")));
     }
 
@@ -43,7 +41,7 @@ public class TestSetField extends TemplatedTestBase {
      */
     @Test(testName = "Update Fields that Contain Periods (``.``)")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().minDriver(DriverVersion.v43), (aggregation) -> aggregation
+        testPipeline(new ActionTestOptions().minDriver("4.3.0"), (aggregation) -> aggregation
                 .pipeline(match(eq("_id", 1)), replaceWith(setField("price.usd", ROOT, 49.99))));
     }
 
@@ -53,7 +51,7 @@ public class TestSetField extends TemplatedTestBase {
      */
     @Test(testName = "Update Fields that Start with a Dollar Sign (``$``)")
     public void testExample4() {
-        testPipeline(new ActionTestOptions().minDriver(DriverVersion.v43), (aggregation) -> aggregation
+        testPipeline(new ActionTestOptions().minDriver("4.3.0"), (aggregation) -> aggregation
                 .pipeline(match(eq("_id", 1)), replaceWith(setField(literal("$price"), ROOT, 49.99))));
     }
 

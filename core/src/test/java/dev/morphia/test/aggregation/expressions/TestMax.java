@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.test.ServerVersion;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -44,7 +43,7 @@ public class TestMax extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$setWindowFields`` Stage")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion(ServerVersion.v50),
+        testPipeline(new ActionTestOptions().serverVersion("5.0.0"),
                 (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                         .sortBy(ascending("orderDate")).output(output("maximumQuantityForState")
                                 .operator(max("$quantity")).window().documents("unbounded", "current"))));
