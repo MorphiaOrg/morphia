@@ -207,11 +207,13 @@ public class EntityModel {
     public void callLifecycleMethods(Class<? extends Annotation> event, Object entity, Document document,
             Datastore datastore) {
         listeners.forEach((listener) -> {
-            invokeLifecycleEvent(event, entity, document, datastore, listener);
+            if (listener.hasAnnotation(event))
+                invokeLifecycleEvent(event, entity, document, datastore, listener);
         });
         datastore.getMapper().getInterceptors().forEach((listener) -> {
             LOG.debug(Sofia.callingInterceptorMethod(event.getSimpleName(), listener));
-            invokeLifecycleEvent(event, entity, document, datastore, listener);
+            if (listener.hasAnnotation(event))
+                invokeLifecycleEvent(event, entity, document, datastore, listener);
         });
     }
 

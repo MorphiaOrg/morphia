@@ -65,14 +65,18 @@ public class EntityListenerAdapter implements EntityListener<Object> {
     }
 
     void invoke(Class<?> annotation, Object entity, Document document, Datastore datastore) {
-        methods.get(annotation)
-                .forEach(method -> {
-                    try {
-                        method.invoke(getListener(), entity, document, datastore);
-                    } catch (ReflectiveOperationException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+        try {
+            methods.get(annotation)
+                    .forEach(method -> {
+                        try {
+                            method.invoke(getListener(), entity, document, datastore);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e.getMessage(), e);
+                        }
+                    });
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
     Object getListener() {

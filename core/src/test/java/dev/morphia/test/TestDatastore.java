@@ -17,6 +17,7 @@ import com.mongodb.client.result.UpdateResult;
 import dev.morphia.Datastore;
 import dev.morphia.DatastoreImpl;
 import dev.morphia.DeleteOptions;
+import dev.morphia.EntityListener;
 import dev.morphia.InsertManyOptions;
 import dev.morphia.InsertOneOptions;
 import dev.morphia.MissingIdException;
@@ -73,7 +74,7 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.assertTrue;
 
-@SuppressWarnings({ "rawtypes", "ConstantConditions" })
+@SuppressWarnings({ "rawtypes", "ConstantConditions", "removal" })
 public class TestDatastore extends TestBase {
 
     public TestDatastore() {
@@ -685,24 +686,22 @@ public class TestDatastore extends TestBase {
                 .next().loginCount, 2);
     }
 
-    private static class LifecycleListener {
+    private static class LifecycleListener implements EntityListener<LifecycleTestObj> {
         private static boolean prePersist;
         private static boolean prePersistWithEntity;
         private static boolean foundDatastore;
 
-        @PrePersist
-        void prePersist(Datastore datastore) {
-            foundDatastore = datastore != null;
-            prePersist = true;
+        @Override
+        public boolean hasAnnotation(Class type) {
+            return type.equals(PrePersist.class);
         }
 
         @PrePersist
-        void prePersist(LifecycleTestObj obj) {
-            if (obj == null) {
-                throw new RuntimeException();
-            }
+        @Override
+        public void prePersist(LifecycleTestObj entity, Document document, Datastore datastore) {
+            foundDatastore = datastore != null;
+            prePersist = true;
             prePersistWithEntity = true;
-
         }
     }
 
