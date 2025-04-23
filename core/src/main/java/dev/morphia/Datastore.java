@@ -81,6 +81,28 @@ public interface Datastore {
     }
 
     /**
+     * Find instances of a type
+     *
+     * @param type the class to use for mapping the results
+     * @param <T>  the type to query
+     * @return the query
+     */
+    default <T> Query<T> find(Class<T> type) {
+        return find(type, new FindOptions());
+    }
+
+    /**
+     * Find instances of a type
+     *
+     * @param type    the class to use for mapping the results
+     * @param options the options to apply to the query
+     * @param <T>     the type to query
+     * @return the query
+     * @since 2.5
+     */
+    <T> Query<T> find(Class<T> type, FindOptions options);
+
+    /**
      * The builder for all update operations
      *
      * @param clazz the type to update
@@ -154,11 +176,11 @@ public interface Datastore {
 
     /**
      * ensure capped collections for {@code Entity}(s)
-     * 
+     *
      * @deprecated this is handled by the config file and should not be called directly
      */
     @Deprecated(since = "2.4.0", forRemoval = true)
-    void ensureCaps();
+    void ensureCaps();;
 
     /**
      * Ensures (creating if necessary) the indexes found during class mapping
@@ -170,28 +192,6 @@ public interface Datastore {
      */
     @Deprecated(since = "2.4.0", forRemoval = true)
     void ensureIndexes();
-
-    /**
-     * Find instances of a type
-     *
-     * @param type the class to use for mapping the results
-     * @param <T>  the type to query
-     * @return the query
-     */
-    default <T> Query<T> find(Class<T> type) {
-        return find(type, new FindOptions());
-    };
-
-    /**
-     * Find instances of a type
-     *
-     * @param type    the class to use for mapping the results
-     * @param options the options to apply to the query
-     * @param <T>     the type to query
-     * @return the query
-     * @since 2.5
-     */
-    <T> Query<T> find(Class<T> type, FindOptions options);
 
     /**
      * Find instances of a type using a native query. This method is intended as an aid when copying queries from external sources such
@@ -338,14 +338,6 @@ public interface Datastore {
     String getLoggedQuery(FindOptions options);
 
     /**
-     * @return the Mapper used by this Datastore
-     * @morphia.internal
-     * @since 1.5
-     */
-    @MorphiaInternal
-    Mapper getMapper();
-
-    /**
      * Inserts an entity in to the mapped collection.
      *
      * @param entity the entity to insert
@@ -398,17 +390,6 @@ public interface Datastore {
     /**
      * Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.
      *
-     * @param entity  the entity to merge back in to the database
-     * @param options the options to apply
-     * @param <T>     the type of the entity
-     * @return the new merged entity. NOTE: this is a database fetch.
-     * @since 2.0
-     */
-    <T> T merge(T entity, InsertOneOptions options);
-
-    /**
-     * Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.
-     *
      * @param entity the entity to merge back in to the database
      * @param <T>    the type of the entity
      * @param wc     the WriteConcern to use
@@ -418,6 +399,17 @@ public interface Datastore {
     default <T> void merge(T entity, WriteConcern wc) {
         merge(entity, new InsertOneOptions().writeConcern(wc));
     }
+
+    /**
+     * Work as if you did an update with each field in the entity doing a $set; Only at the top level of the entity.
+     *
+     * @param entity  the entity to merge back in to the database
+     * @param options the options to apply
+     * @param <T>     the type of the entity
+     * @return the new merged entity. NOTE: this is a database fetch.
+     * @since 2.0
+     */
+    <T> T merge(T entity, InsertOneOptions options);
 
     /**
      * Returns a new query based on the example object
@@ -556,13 +548,8 @@ public interface Datastore {
      * @param options the options to apply to the save operation
      * @param <T>     the type of the entity
      * @return the saved entity
-     * @deprecated use {@link #save(Object, InsertOneOptions)} instead
      */
-    @SuppressWarnings("removal")
-    @Deprecated(since = "2.0", forRemoval = true)
-    default <T> T save(T entity, InsertOptions options) {
-        return save(entity, options.toInsertOneOptions());
-    }
+    <T> T save(T entity, InsertOneOptions options);
 
     /**
      * Saves an entity (Object) and updates the @Id field
@@ -571,8 +558,13 @@ public interface Datastore {
      * @param options the options to apply to the save operation
      * @param <T>     the type of the entity
      * @return the saved entity
+     * @deprecated use {@link #save(Object, InsertOneOptions)} instead
      */
-    <T> T save(T entity, InsertOneOptions options);
+    @SuppressWarnings("removal")
+    @Deprecated(since = "2.0", forRemoval = true)
+    default <T> T save(T entity, InsertOptions options) {
+        return save(entity, options.toInsertOneOptions());
+    }
 
     /**
      * Shards any collections with sharding definitions.
@@ -634,6 +626,14 @@ public interface Datastore {
                 .execute(
                         new UpdateOptions().upsert(false).multi(true).writeConcern(getMapper().getWriteConcern(query.getEntityClass())));
     }
+
+    /**
+     * @return the Mapper used by this Datastore
+     * @morphia.internal
+     * @since 1.5
+     */
+    @MorphiaInternal
+    Mapper getMapper();
 
     /**
      * @param transaction the transaction wrapper
