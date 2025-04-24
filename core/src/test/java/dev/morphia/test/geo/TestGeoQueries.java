@@ -168,15 +168,15 @@ public class TestGeoQueries extends TestBase {
         FindOptions options = new FindOptions()
                 .logQuery()
                 .limit(1);
-        Query<Place> query = getDs().find(Place.class)
+        Query<Place> query = getDs().find(Place.class, options)
                 .filter(near("loc", new Point(new Position(1, 1)))
                         .maxDistance(2.0));
-        Assert.assertNotNull(query.iterator(options).tryNext(), query.getLoggedQuery());
+        Assert.assertNotNull(query.first(), query.getLoggedQuery());
 
-        query = getDs().find(Place.class)
+        query = getDs().find(Place.class, options)
                 .filter(near("loc", new Point(new Position(0, 0)))
                         .maxDistance(1.0));
-        Assert.assertNull(query.first(options), query.getLoggedQuery());
+        Assert.assertNull(query.first(), query.getLoggedQuery());
     }
 
     @Test(expectedExceptions = MongoQueryException.class)
