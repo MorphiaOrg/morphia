@@ -11,7 +11,7 @@ recipeList:
   - dev.morphia.rewrite.recipes.UpdateExecute
   - dev.morphia.rewrite.recipes.LogicalFilterAdd
   - dev.morphia.rewrite.recipes.ArraySliceRefasterRecipes
-  - dev.morphia.rewrite.recipes.QueryIteratorOptions
+  - dev.morphia.rewrite.recipes.QueryFindOptions
   - org.openrewrite.java.RemoveAnnotation:
       annotationPattern: '@dev.morphia.annotations.Embedded'
   - org.openrewrite.java.ChangeType:
@@ -134,6 +134,7 @@ recipeList:
         - dev.morphia.test.query.TestQuery testFetchKeys()
         - dev.morphia.test.query.TestQuery testQueryDoesNotContainDiscriminator()
         - dev.morphia.test.query.TestQueriesOnReferences testWithKeyQuery()
+        - dev.morphia.test.TestMapping testExternalClass()
   - dev.morphia.rewrite.recipes.RenameMethod:
       methodPatterns:
         - dev.morphia.mapping.codec.pojo.EntityModel getCollectionName() collectionName

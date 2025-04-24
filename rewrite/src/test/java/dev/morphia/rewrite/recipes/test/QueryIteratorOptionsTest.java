@@ -1,6 +1,6 @@
 package dev.morphia.rewrite.recipes.test;
 
-import dev.morphia.rewrite.recipes.QueryIteratorOptions;
+import dev.morphia.rewrite.recipes.QueryFindOptions;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
@@ -8,10 +8,10 @@ import org.openrewrite.Recipe;
 
 import static org.openrewrite.java.Assertions.java;
 
-public class QueryFindOptionsTest extends MorphiaRewriteTest {
+public class QueryIteratorOptionsTest extends MorphiaRewriteTest {
     @Override
     protected @NotNull Recipe getRecipe() {
-        return new QueryIteratorOptions();
+        return new QueryFindOptions();
     }
 
     @Test
