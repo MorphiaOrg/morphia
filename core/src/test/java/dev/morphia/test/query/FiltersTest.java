@@ -90,15 +90,15 @@ public class FiltersTest extends TestBase {
 
         FindOptions options = new FindOptions().logQuery();
 
-        Query<User> query = getDs().find(User.class)
+        Query<User> query = getDs().find(User.class, options)
                 .disableValidation()
                 .filter(bitsAllClear("a", 35));
-        assertEquals(query.iterator(options).toList().size(), 2, query.getLoggedQuery());
+        assertEquals(query.iterator().toList().size(), 2, query.getLoggedQuery());
 
-        query = getDs().find(User.class)
+        query = getDs().find(User.class, options)
                 .disableValidation()
                 .filter(bitsAllClear("a", new int[] { 1, 5 }));
-        assertEquals(query.iterator(options).toList().size(), 2, query.getLoggedQuery());
+        assertEquals(query.iterator().toList().size(), 2, query.getLoggedQuery());
     }
 
     @Test
@@ -113,15 +113,15 @@ public class FiltersTest extends TestBase {
 
         final FindOptions options = new FindOptions().logQuery();
 
-        Query<User> query = getDs().find(User.class)
+        Query<User> query = getDs().find(User.class, options)
                 .disableValidation()
                 .filter(bitsAllSet("a", 50));
-        assertEquals(query.iterator(options).toList().size(), 1, query.getLoggedQuery());
+        assertEquals(query.iterator().toList().size(), 1, query.getLoggedQuery());
 
-        query = getDs().find(User.class)
+        query = getDs().find(User.class, options)
                 .disableValidation()
                 .filter(bitsAllSet("a", new int[] { 1, 5 }));
-        assertEquals(query.iterator(options)
+        assertEquals(query.iterator()
                 .toList().size(), 1, query.getLoggedQuery());
     }
 
@@ -137,15 +137,15 @@ public class FiltersTest extends TestBase {
 
         FindOptions options = new FindOptions().logQuery();
 
-        Query<User> query = getDs().find(User.class)
+        Query<User> query = getDs().find(User.class, options)
                 .disableValidation()
                 .filter(bitsAnyClear("a", 35));
-        assertEquals(query.iterator(options).toList().size(), 3, query.getLoggedQuery());
+        assertEquals(query.iterator().toList().size(), 3, query.getLoggedQuery());
 
-        query = getDs().find(User.class)
+        query = getDs().find(User.class, options)
                 .disableValidation()
                 .filter(bitsAnyClear("a", new int[] { 1, 5 }));
-        assertEquals(query.iterator(options)
+        assertEquals(query.iterator()
                 .toList().size(), 2, query.getLoggedQuery());
     }
 
@@ -161,14 +161,14 @@ public class FiltersTest extends TestBase {
 
         FindOptions options = new FindOptions().logQuery();
 
-        Query<User> query = getDs().find(User.class)
+        Query<User> query = getDs().find(User.class, options)
                 .disableValidation()
                 .filter(bitsAnySet("a", 35));
-        assertEquals(query.iterator(options).toList().size(), 1, query.getLoggedQuery());
+        assertEquals(query.iterator().toList().size(), 1, query.getLoggedQuery());
 
-        assertEquals(getDs().find(User.class)
+        assertEquals(getDs().find(User.class, options)
                 .disableValidation()
-                .filter(bitsAnySet("a", new int[] { 1, 5 })).iterator(options)
+                .filter(bitsAnySet("a", new int[] { 1, 5 })).iterator()
                 .toList().size(), 1, query.getLoggedQuery());
     }
 
@@ -224,7 +224,9 @@ public class FiltersTest extends TestBase {
                 + "  }\n"
                 + "}");
 
-        List<Document> inventory = getDs().find("inventory", Document.class).filter(jsonSchema(myschema))
+        List<Document> inventory = getDs().find(Document.class, new FindOptions()
+                .collection("inventory"))
+                .filter(jsonSchema(myschema))
                 .iterator()
                 .toList();
 
@@ -244,12 +246,14 @@ public class FiltersTest extends TestBase {
         articles.createIndex(new Document("title", "text"));
 
         FindOptions options = new FindOptions().logQuery();
-        Query<Document> query = getDs().find("articles", Document.class)
+        Query<Document> query = getDs().find(Document.class,
+                options.projection()
+                        .project(Meta.textScore("score"))
+                        .collection("articles"))
                 .disableValidation()
                 .filter(text("cake"));
         List<Document> list = query
-                .iterator(options.projection()
-                        .project(Meta.textScore("score")))
+                .iterator()
                 .toList();
         assertEquals(list.size(), 4, query.getLoggedQuery());
         Document document = list.stream().filter(d -> d.get("_id").equals(4))
@@ -292,7 +296,8 @@ public class FiltersTest extends TestBase {
         String collectionName = "rand";
         InsertManyResult bulk = getDatabase().getCollection(collectionName).insertMany(list, new InsertManyOptions().ordered(false));
         assertEquals(bulk.getInsertedIds().size(), count);
-        long matches = getDs().find(collectionName, Document.class)
+        long matches = getDs().find(Document.class, new FindOptions()
+                .collection(collectionName))
                 .filter(expr(ComparisonExpressions.lt(value(0.5), rand())))
                 .count();
         assertTrue(matches < 100);
