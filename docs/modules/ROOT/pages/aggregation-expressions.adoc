@@ -280,7 +280,8 @@ link:javadoc/dev/morphia/aggregation/expressions/WindowExpressions.html#expMovin
 
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/filter[$filter]
-| link:javadoc/dev/morphia/aggregation/expressions/Expressions.html#filter(java.lang.Object,java.lang.Object)[Expressions#filter(Object,Object)]
+a| link:javadoc/dev/morphia/aggregation/expressions/ArrayExpressions.html#filter(dev.morphia.aggregation.expressions.impls.Expression,dev.morphia.aggregation.expressions.impls.Expression)[ArrayExpressions#filter(Expression,Expression)] +
+link:javadoc/dev/morphia/aggregation/expressions/Expressions.html#filter(java.lang.Object,java.lang.Object)[Expressions#filter(Object,Object)]
 | https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestFilter.java[TestFilter]
 
 
@@ -761,7 +762,8 @@ link:javadoc/dev/morphia/aggregation/expressions/StringExpressions.html#substrBy
 
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/toDate[$toDate]
-| link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#toDate(java.lang.Object)[DateExpressions#toDate(Object)]
+a| link:javadoc/dev/morphia/aggregation/expressions/DateExpressions.html#toDate(java.lang.Object)[DateExpressions#toDate(Object)] +
+link:javadoc/dev/morphia/aggregation/expressions/TypeExpressions.html#toDate(java.lang.Object)[TypeExpressions#toDate(Object)]
 | https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestToDate.java[TestToDate]
 
 

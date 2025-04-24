@@ -23,9 +23,7 @@ public class TestRand extends TemplatedTestBase {
      */
     @Test(testName = "Generate Random Data Points")
     public void testExample1() {
-        testPipeline(
-                new ActionTestOptions().removeIds(true).orderMatters(false).minDriver("4.3.0")
-                        .skipDataCheck(true),
+        testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false).minDriver("4.3.0").skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(set().field("amount", multiply(rand(), 100)),
                         set().field("amount", floor("$amount")), merge("donors")));
     }

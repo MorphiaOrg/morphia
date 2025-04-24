@@ -4,7 +4,7 @@ import dev.morphia.UpdateOptions;
 import dev.morphia.query.FindOptions;
 
 public class ActionTestOptions {
-    private FindOptions findOptions;
+    private FindOptions findOptions = new FindOptions();
 
     private String minDriver = "4.1.0";
 

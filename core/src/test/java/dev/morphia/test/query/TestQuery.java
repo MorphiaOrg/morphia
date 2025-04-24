@@ -34,7 +34,6 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.query.CountOptions;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
-import dev.morphia.query.QueryFactory;
 import dev.morphia.query.ValidationException;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.City;
@@ -112,9 +111,9 @@ public class TestQuery extends TestBase {
         getDs().save(value);
 
         Query<GenericKeyValue> query = getDs()
-                .find(GenericKeyValue.class)
+                .find(GenericKeyValue.class, new FindOptions().logQuery())
                 .filter(in("key", keys));
-        assertEquals(((GenericKeyValue<String>) query.first(new FindOptions().logQuery())).id, value.id);
+        assertEquals(((GenericKeyValue<String>) query.first()).id, value.id);
         String loggedQuery = query.getLoggedQuery();
         assertTrue(loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"), loggedQuery);
     }
@@ -124,8 +123,8 @@ public class TestQuery extends TestBase {
         getMapper().map(City.class);
         installData();
 
-        List<String> list = getDs().find(City.class)
-                .stream(new FindOptions().limit(50))
+        List<String> list = getDs().find(City.class, new FindOptions().limit(50))
+                .stream()
                 .map(City::getName)
                 .collect(Collectors.toList());
         assertEquals(list.size(), 50);
@@ -149,9 +148,9 @@ public class TestQuery extends TestBase {
         value.key = keys;
         getDs().save(value);
 
-        Query<KeyValue> query = getDs().find(KeyValue.class)
+        Query<KeyValue> query = getDs().find(KeyValue.class, new FindOptions().logQuery())
                 .filter(in("key", keys));
-        KeyValue first = query.first(new FindOptions().logQuery());
+        KeyValue first = query.first();
         String loggedQuery = query.getLoggedQuery();
         assertTrue(loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"), loggedQuery);
         assertEquals(first.id, value.id);
@@ -178,16 +177,18 @@ public class TestQuery extends TestBase {
     public void testAliasedFieldSort() {
         getDs().save(asList(new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10, 1)));
 
-        Rectangle r1 = getDs().find(Rectangle.class).iterator(new FindOptions()
+        Rectangle r1 = getDs().find(Rectangle.class, new FindOptions()
                 .sort(ascending("w"))
                 .limit(1))
+                .iterator()
                 .tryNext();
         assertNotNull(r1);
         assertEquals(r1.getWidth(), 1, 0);
 
-        r1 = getDs().find(Rectangle.class).iterator(new FindOptions()
+        r1 = getDs().find(Rectangle.class, new FindOptions()
                 .sort(descending("w"))
                 .limit(1))
+                .iterator()
                 .tryNext();
         assertNotNull(r1);
         assertEquals(r1.getWidth(), 10, 0);
@@ -325,13 +326,6 @@ public class TestQuery extends TestBase {
         Query query = getDs().find(ContainsRenamedFields.class)
                 .filter(eq("last_name", "last"));
         assertEquals(query.iterator().toList().size(), 1);
-        assertEquals(query.iterator(new FindOptions()
-                .collation(builder()
-                        .locale("en")
-                        .collationStrength(CollationStrength.SECONDARY)
-                        .build()))
-                .toList()
-                .size(), 2);
         assertEquals(query.count(), 1);
         assertEquals(query.count(new CountOptions()
                 .collation(builder()
@@ -339,6 +333,16 @@ public class TestQuery extends TestBase {
                         .collationStrength(CollationStrength.SECONDARY)
                         .build())),
                 2);
+        assertEquals(getDs().find(ContainsRenamedFields.class,
+                new FindOptions()
+                        .collation(builder()
+                                .locale("en")
+                                .collationStrength(CollationStrength.SECONDARY)
+                                .build()))
+                .filter(eq("last_name", "last"))
+                .iterator()
+                .toList()
+                .size(), 2);
     }
 
     @Test
@@ -372,8 +376,9 @@ public class TestQuery extends TestBase {
         getDatabase().runCommand(new Document("profile", 2));
         String expectedComment = "test comment";
 
-        getDs().find(Pic.class).iterator(new FindOptions()
+        getDs().find(Pic.class, new FindOptions()
                 .comment(expectedComment))
+                .iterator()
                 .toList();
 
         MongoCollection<Document> profileCollection = getDatabase().getCollection("system.profile");
@@ -394,11 +399,11 @@ public class TestQuery extends TestBase {
     public void testComplexElemMatchQuery() {
         Keyword oscar = new Keyword("Oscar", 42);
         getDs().save(new PhotoWithKeywords(oscar, new Keyword("Jim", 12)));
-        assertNull(getDs().find(PhotoWithKeywords.class)
+        assertNull(getDs().find(PhotoWithKeywords.class, new FindOptions().limit(1))
                 .filter(elemMatch("keywords",
                         eq("keyword", "Oscar"),
                         eq("score", 12)))
-                .iterator(new FindOptions().limit(1))
+                .iterator()
                 .tryNext());
 
         List<PhotoWithKeywords> keywords = getDs().find(PhotoWithKeywords.class)
@@ -421,12 +426,12 @@ public class TestQuery extends TestBase {
         object.setText("hllo");
         getDs().save(object);
 
-        assertNotNull(getDs().find(UsesCustomIdObject.class)
-                .filter(eq("_id.type", "banker")).iterator(new FindOptions().limit(1))
+        assertNotNull(getDs().find(UsesCustomIdObject.class, new FindOptions().limit(1))
+                .filter(eq("_id.type", "banker")).iterator()
                 .tryNext());
 
-        assertNotNull(getDs().find(UsesCustomIdObject.class)
-                .filter(in("_id", singletonList(cId))).iterator(new FindOptions().limit(1))
+        assertNotNull(getDs().find(UsesCustomIdObject.class, new FindOptions().limit(1))
+                .filter(in("_id", singletonList(cId))).iterator()
                 .tryNext());
     }
 
@@ -441,8 +446,8 @@ public class TestQuery extends TestBase {
         object.setText("hllo");
         getDs().save(object);
 
-        assertNotNull(getDs().find(UsesCustomIdObject.class)
-                .filter(eq("_id.t", "banker")).iterator(new FindOptions().limit(1))
+        assertNotNull(getDs().find(UsesCustomIdObject.class, new FindOptions().limit(1))
+                .filter(eq("_id.t", "banker")).iterator()
                 .tryNext());
     }
 
@@ -465,17 +470,20 @@ public class TestQuery extends TestBase {
     public void testCompoundSort() {
         getDs().save(asList(new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10, 1)));
 
-        Rectangle r1 = getDs().find(Rectangle.class).iterator(new FindOptions()
-                .sort(ascending("width"), descending("height"))
-                .limit(1))
+        Rectangle r1 = getDs().find(Rectangle.class,
+                new FindOptions()
+                        .sort(ascending("width"), descending("height"))
+                        .limit(1))
+                .iterator()
                 .tryNext();
         assertNotNull(r1);
         assertEquals(r1.getWidth(), 1, 0);
         assertEquals(r1.getHeight(), 10, 0);
 
-        r1 = getDs().find(Rectangle.class).iterator(new FindOptions()
+        r1 = getDs().find(Rectangle.class, new FindOptions()
                 .sort(descending("height"), descending("width"))
                 .limit(1))
+                .iterator()
                 .tryNext();
         assertNotNull(r1);
         assertEquals(r1.getWidth(), 10, 0);
@@ -486,10 +494,10 @@ public class TestQuery extends TestBase {
     public void testDeepQuery() {
         getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
         assertNotNull(getDs().find(PhotoWithKeywords.class)
-                .filter(eq("keywords.keyword", "california")).iterator(new FindOptions().limit(1))
+                .filter(eq("keywords.keyword", "california")).iterator()
                 .tryNext());
         assertNull(getDs().find(PhotoWithKeywords.class)
-                .filter(eq("keywords.keyword", "not")).iterator(new FindOptions().limit(1))
+                .filter(eq("keywords.keyword", "not")).iterator()
                 .tryNext());
     }
 
@@ -497,13 +505,13 @@ public class TestQuery extends TestBase {
     public void testDeepQueryWithBadArgs() {
         getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
         assertNull(getDs().find(PhotoWithKeywords.class)
-                .filter(eq("keywords.keyword", 1)).iterator(new FindOptions().limit(1))
+                .filter(eq("keywords.keyword", 1)).iterator()
                 .tryNext());
         assertNull(getDs().find(PhotoWithKeywords.class)
-                .filter(eq("keywords.keyword", "california".getBytes())).iterator(new FindOptions().limit(1))
+                .filter(eq("keywords.keyword", "california".getBytes())).iterator()
                 .tryNext());
         assertNull(getDs().find(PhotoWithKeywords.class)
-                .filter(eq("keywords.keyword", null)).iterator(new FindOptions().limit(1))
+                .filter(eq("keywords.keyword", null)).iterator()
                 .tryNext());
     }
 
@@ -511,10 +519,10 @@ public class TestQuery extends TestBase {
     public void testDeepQueryWithRenamedFields() {
         getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
         assertNotNull(getDs().find(PhotoWithKeywords.class)
-                .filter(eq("keywords.keyword", "california")).iterator(new FindOptions().limit(1))
+                .filter(eq("keywords.keyword", "california")).iterator()
                 .tryNext());
         assertNull(getDs().find(PhotoWithKeywords.class)
-                .filter(eq("keywords.keyword", "not")).iterator(new FindOptions().limit(1))
+                .filter(eq("keywords.keyword", "not")).iterator()
                 .tryNext());
     }
 
@@ -538,10 +546,10 @@ public class TestQuery extends TestBase {
     public void testElemMatchQuery() {
         getDs().save(asList(new PhotoWithKeywords(), new PhotoWithKeywords("Scott", "Joe", "Sarah")));
         assertNotNull(getDs().find(PhotoWithKeywords.class)
-                .filter(elemMatch("keywords", eq("keyword", "Scott"))).iterator(new FindOptions().limit(1))
+                .filter(elemMatch("keywords", eq("keyword", "Scott"))).iterator()
                 .tryNext());
         assertNull(getDs().find(PhotoWithKeywords.class)
-                .filter(elemMatch("keywords", eq("keyword", "Randy"))).iterator(new FindOptions().limit(1))
+                .filter(elemMatch("keywords", eq("keyword", "Randy"))).iterator()
                 .tryNext());
     }
 
@@ -610,9 +618,9 @@ public class TestQuery extends TestBase {
     public void testIdFieldNameQuery() {
         getDs().save(new PhotoWithKeywords("scott", "hernandez"));
 
-        assertNotNull(getDs().find(PhotoWithKeywords.class).filter(ne("id", "scott")).iterator(new FindOptions().limit(1))
+        assertNotNull(getDs().find(PhotoWithKeywords.class).filter(ne("id", "scott")).iterator()
                 .next());
-        assertNotNull(getDs().find(PhotoWithKeywords.class).filter(eq("id", "scott").not()).iterator(new FindOptions().limit(1))
+        assertNotNull(getDs().find(PhotoWithKeywords.class).filter(eq("id", "scott").not()).iterator()
                 .next());
     }
 
@@ -636,7 +644,7 @@ public class TestQuery extends TestBase {
 
         assertNotNull(getDs()
                 .find(Photo.class)
-                .filter(in("keywords", asList("red", "yellow"))).iterator(new FindOptions().limit(1)).next());
+                .filter(in("keywords", asList("red", "yellow"))).iterator().next());
     }
 
     @Test
@@ -646,7 +654,7 @@ public class TestQuery extends TestBase {
         final Query<PhotoWithKeywords> query = getDs()
                 .find(PhotoWithKeywords.class)
                 .filter(in("keywords", asList(new Keyword("Scott"), new Keyword("Randy"))));
-        assertNotNull(query.iterator(new FindOptions().limit(1)).next());
+        assertNotNull(query.iterator().next());
     }
 
     @Test
@@ -668,39 +676,39 @@ public class TestQuery extends TestBase {
         getDs().save(new ContainsRenamedFields("Frank", "Zappa"));
 
         try {
-            getDs().find(ContainsRenamedFields.class)
-                    .iterator(new FindOptions()
-                            .projection().include("first_name")
-                            .projection().exclude("last_name"));
+            getDs().find(ContainsRenamedFields.class, new FindOptions()
+                    .projection().include("first_name")
+                    .projection().exclude("last_name"))
+                    .iterator();
             fail("An exception should have been thrown indication a mixed projection");
         } catch (ValidationException e) {
             // all good
         }
 
         try {
-            getDs().find(ContainsRenamedFields.class)
-                    .iterator(new FindOptions()
-                            .projection().include("first_name", "last_name")
-                            .projection().exclude("_id"));
+            getDs().find(ContainsRenamedFields.class, new FindOptions()
+                    .projection().include("first_name", "last_name")
+                    .projection().exclude("_id"))
+                    .iterator();
         } catch (ValidationException e) {
             fail("An exception should not have been thrown indication a mixed projection because _id suppression is a special case");
         }
 
         try {
-            getDs().find(ContainsRenamedFields.class)
-                    .iterator(new FindOptions()
-                            .projection().exclude("first_name", "last_name")
-                            .projection().include("_id"));
+            getDs().find(ContainsRenamedFields.class, new FindOptions()
+                    .projection().exclude("first_name", "last_name")
+                    .projection().include("_id"))
+                    .iterator();
             fail("An exception should have been thrown indication a mixed projection");
         } catch (ValidationException e) {
             // all good
         }
 
         try {
-            getDs().find(IntVector.class)
-                    .iterator(new FindOptions()
-                            .projection().exclude("name")
-                            .projection().project("scalars", limit(5)));
+            getDs().find(IntVector.class, new FindOptions()
+                    .projection().exclude("name")
+                    .projection().project("scalars", limit(5)))
+                    .iterator();
             fail("An exception should have been thrown indication a mixed projection");
         } catch (ValidationException e) {
             // all good
@@ -733,8 +741,9 @@ public class TestQuery extends TestBase {
     public void testNaturalSortAscending() {
         getDs().save(asList(new Rectangle(6, 10), new Rectangle(3, 8), new Rectangle(10, 10), new Rectangle(10, 1)));
 
-        List<Rectangle> results = getDs().find(Rectangle.class).iterator(new FindOptions()
+        List<Rectangle> results = getDs().find(Rectangle.class, new FindOptions()
                 .sort(naturalAscending()))
+                .iterator()
                 .toList();
 
         assertEquals(results.size(), 4);
@@ -761,8 +770,9 @@ public class TestQuery extends TestBase {
     public void testNaturalSortDescending() {
         getDs().save(asList(new Rectangle(6, 10), new Rectangle(3, 8), new Rectangle(10, 10), new Rectangle(10, 1)));
 
-        List<Rectangle> results = getDs().find(Rectangle.class).iterator(new FindOptions()
+        List<Rectangle> results = getDs().find(Rectangle.class, new FindOptions()
                 .sort(naturalDescending()))
+                .iterator()
                 .toList();
 
         assertEquals(results.size(), 4);
@@ -794,8 +804,10 @@ public class TestQuery extends TestBase {
                 new PhotoWithKeywords("1", "2"),
                 new PhotoWithKeywords("3", "4"),
                 new PhotoWithKeywords("5", "6")));
-        assertEquals(getDs().find(PhotoWithKeywords.class).iterator(new FindOptions()
-                .batchSize(-2)).toList()
+        assertEquals(getDs().find(PhotoWithKeywords.class,
+                new FindOptions()
+                        .batchSize(-2))
+                .iterator().toList()
                 .size(), 2);
     }
 
@@ -812,7 +824,7 @@ public class TestQuery extends TestBase {
         Query query = getDs().find(ContainsPic.class)
                 .filter(eq("pic", queryPic));
         assertFalse(queryPic.isPrePersist());
-        assertNotNull(query.iterator(new FindOptions().limit(1))
+        assertNotNull(query.iterator()
                 .tryNext());
 
         getDs().find(ContainsPic.class)
@@ -822,7 +834,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testNonexistentFindGet() {
-        assertNull(getDs().find(Student.class).filter(eq("_id", -1)).iterator(new FindOptions().limit(1))
+        assertNull(getDs().find(Student.class).filter(eq("_id", -1)).iterator()
                 .tryNext());
     }
 
@@ -837,25 +849,31 @@ public class TestQuery extends TestBase {
     public void testProject() {
         getDs().save(new ContainsRenamedFields("Frank", "Zappa"));
 
-        ContainsRenamedFields found = getDs().find(ContainsRenamedFields.class).iterator(new FindOptions()
-                .projection().include("first_name")
-                .limit(1))
+        ContainsRenamedFields found = getDs().find(ContainsRenamedFields.class,
+                new FindOptions()
+                        .projection().include("first_name")
+                        .limit(1))
+                .iterator()
                 .tryNext();
         assertNotNull(found.firstName);
         assertNull(found.lastName);
 
-        found = getDs().find(ContainsRenamedFields.class).iterator(new FindOptions()
-                .projection().include("first_name")
-                .limit(1))
+        found = getDs().find(ContainsRenamedFields.class,
+                new FindOptions()
+                        .projection().include("first_name")
+                        .limit(1))
+                .iterator()
                 .tryNext();
         assertNotNull(found.firstName);
         assertNull(found.lastName);
 
         try {
             getDs()
-                    .find(ContainsRenamedFields.class).iterator(new FindOptions()
-                            .projection().include("bad field name")
-                            .limit(1))
+                    .find(ContainsRenamedFields.class,
+                            new FindOptions()
+                                    .projection().include("bad field name")
+                                    .limit(1))
+                    .iterator()
                     .tryNext();
             fail("Validation should have caught the bad field");
         } catch (ValidationException e) {
@@ -872,24 +890,32 @@ public class TestQuery extends TestBase {
         getDs().save(vector);
 
         assertEquals(copy(ints, 0, 4),
-                getDs().find(IntVector.class).iterator(new FindOptions()
-                        .projection().project("scalars", limit(4))
-                        .limit(1))
+                getDs().find(IntVector.class,
+                        new FindOptions()
+                                .projection().project("scalars", limit(4))
+                                .limit(1))
+                        .iterator()
                         .next().scalars);
-        assertEquals(copy(ints, 5, 4), getDs().find(IntVector.class).iterator(new FindOptions()
-                .projection()
-                .project("scalars", limit(4).skip(5))
-                .limit(1))
+        assertEquals(copy(ints, 5, 4), getDs().find(IntVector.class,
+                new FindOptions()
+                        .projection()
+                        .project("scalars", limit(4).skip(5))
+                        .limit(1))
+                .iterator()
                 .next().scalars);
         assertEquals(copy(ints, ints.length - 10, 6),
-                getDs().find(IntVector.class).iterator(new FindOptions()
-                        .projection().project("scalars", limit(6).skip(-10))
-                        .limit(1))
+                getDs().find(IntVector.class,
+                        new FindOptions()
+                                .projection().project("scalars", limit(6).skip(-10))
+                                .limit(1))
+                        .iterator()
                         .next().scalars);
         assertEquals(copy(ints, ints.length - 12, 12),
-                getDs().find(IntVector.class).iterator(new FindOptions()
-                        .projection().project("scalars", limit(-12))
-                        .limit(1))
+                getDs().find(IntVector.class,
+                        new FindOptions()
+                                .projection().project("scalars", limit(-12))
+                                .limit(1))
+                        .iterator()
                         .next().scalars);
     }
 
@@ -913,7 +939,7 @@ public class TestQuery extends TestBase {
 
         final UsesCustomIdObject ex = new UsesCustomIdObject();
         ex.setText(object.getText());
-        loaded = getDs().queryByExample(ex).iterator(new FindOptions().limit(1))
+        loaded = getDs().queryByExample(ex).iterator()
                 .next();
         assertNotNull(loaded);
     }
@@ -985,7 +1011,7 @@ public class TestQuery extends TestBase {
 
         Query<Class1> query = getDs().find(Class1.class);
         query.disableValidation().filter(eq("someMap.someKey", "value"));
-        Class1 retrievedValue = query.iterator(new FindOptions().limit(1)).next();
+        Class1 retrievedValue = query.iterator().next();
         assertNotNull(retrievedValue);
         assertEquals(retrievedValue.value1, "foo");
     }
@@ -1017,16 +1043,16 @@ public class TestQuery extends TestBase {
         cpk.photo = getDs().save(p);
         getDs().save(cpk);
 
-        Query<HasPhotoReference> query = getDs().find(HasPhotoReference.class)
+        Query<HasPhotoReference> query = getDs().find(HasPhotoReference.class, new FindOptions().logQuery().limit(1))
                 .filter(eq("photo", p));
 
-        assertNotNull(query.first(new FindOptions().logQuery().limit(1)), query.getLoggedQuery());
+        assertNotNull(query.first(), query.getLoggedQuery());
 
         FindOptions limit = new FindOptions().limit(1);
-        assertNotNull(getDs().find(HasPhotoReference.class).filter(eq("photo", cpk.photo)).first(limit));
-        assertNull(getDs().find(HasPhotoReference.class).filter(eq("photo", 1)).first(limit));
+        assertNotNull(getDs().find(HasPhotoReference.class, limit).filter(eq("photo", cpk.photo)).first());
+        assertNull(getDs().find(HasPhotoReference.class, limit).filter(eq("photo", 1)).first());
 
-        assertNotNull(getDs().find(HasPhotoReference.class).filter(eq("photo.keywords", "foo")).first(limit));
+        assertNotNull(getDs().find(HasPhotoReference.class, limit).filter(eq("photo.keywords", "foo")).first());
     }
 
     @Test
@@ -1034,10 +1060,10 @@ public class TestQuery extends TestBase {
         getDs().save(new ContainsRenamedFields("Scott", "Bakula"));
 
         assertNotNull(getDs().find(ContainsRenamedFields.class)
-                .filter(eq("firstName", "Scott")).iterator(new FindOptions().limit(1))
+                .filter(eq("firstName", "Scott")).iterator()
                 .next());
         assertNotNull(getDs().find(ContainsRenamedFields.class)
-                .filter(eq("first_name", "Scott")).iterator(new FindOptions().limit(1))
+                .filter(eq("first_name", "Scott")).iterator()
                 .next());
     }
 
@@ -1046,26 +1072,32 @@ public class TestQuery extends TestBase {
         getDs().save(new ContainsRenamedFields("Frank", "Zappa"));
 
         ContainsRenamedFields found = getDs()
-                .find(ContainsRenamedFields.class).iterator(new FindOptions()
-                        .projection().include("first_name")
-                        .limit(1))
+                .find(ContainsRenamedFields.class,
+                        new FindOptions()
+                                .projection().include("first_name")
+                                .limit(1))
+                .iterator()
                 .tryNext();
         assertNotNull(found.firstName);
         assertNull(found.lastName);
 
         found = getDs()
-                .find(ContainsRenamedFields.class).iterator(new FindOptions()
-                        .projection().include("firstName")
-                        .limit(1))
+                .find(ContainsRenamedFields.class,
+                        new FindOptions()
+                                .projection().include("firstName")
+                                .limit(1))
+                .iterator()
                 .tryNext();
         assertNotNull(found.firstName);
         assertNull(found.lastName);
 
         try {
             getDs()
-                    .find(ContainsRenamedFields.class).iterator(new FindOptions()
-                            .projection().include("bad field name")
-                            .limit(1))
+                    .find(ContainsRenamedFields.class,
+                            new FindOptions()
+                                    .projection().include("bad field name")
+                                    .limit(1))
+                    .iterator()
                     .tryNext();
             fail("Validation should have caught the bad field");
         } catch (ValidationException e) {
@@ -1079,11 +1111,12 @@ public class TestQuery extends TestBase {
         getDs().ensureIndexes(Pic.class);
         getDs().save(asList(new Pic("pic1"), new Pic("pic2"), new Pic("pic3"), new Pic("pic4")));
 
-        Pic foundItem = getDs().find(Pic.class)
-                .filter(eq("name", "pic2"))
-                .first(new FindOptions()
+        Pic foundItem = getDs().find(Pic.class,
+                new FindOptions()
                         .limit(1)
-                        .returnKey(true));
+                        .returnKey(true))
+                .filter(eq("name", "pic2"))
+                .first();
         assertNotNull(foundItem);
         assertThat("Name should be populated", foundItem.getName(), is("pic2"));
         assertNull(foundItem.getId(), "ID should not be populated");
@@ -1095,16 +1128,20 @@ public class TestQuery extends TestBase {
         getDs().applyIndexes();
         getDs().save(asList(new Rectangle(1, 10), new Rectangle(3, 8), new Rectangle(6, 10), new Rectangle(10, 10), new Rectangle(10, 1)));
 
-        Rectangle r1 = getDs().find(Rectangle.class).iterator(new FindOptions()
-                .sort(ascending("width"))
-                .limit(1))
+        Rectangle r1 = getDs().find(Rectangle.class,
+                new FindOptions()
+                        .sort(ascending("width"))
+                        .limit(1))
+                .iterator()
                 .next();
         assertNotNull(r1);
         assertEquals(r1.getWidth(), 1, 0);
 
-        r1 = getDs().find(Rectangle.class).iterator(new FindOptions()
-                .sort(descending("width"))
-                .limit(1))
+        r1 = getDs().find(Rectangle.class,
+                new FindOptions()
+                        .sort(descending("width"))
+                        .limit(1))
+                .iterator()
                 .next();
         assertNotNull(r1);
         assertEquals(r1.getWidth(), 10, 0);
@@ -1113,7 +1150,9 @@ public class TestQuery extends TestBase {
     @Test
     public void testTailableCursors() {
         final Datastore ds = getDs();
-        final Query<CappedPic> query = ds.find(CappedPic.class);
+        final Query<CappedPic> query = ds.find(CappedPic.class,
+                new FindOptions()
+                        .cursorType(CursorType.Tailable));
 
         final List<CappedPic> found = new ArrayList<>();
         assertCapped(CappedPic.class, 1000);
@@ -1130,8 +1169,7 @@ public class TestQuery extends TestBase {
                 .atMost(10, TimeUnit.SECONDS)
                 .until(() -> getDs().find(CappedPic.class).count() > 0);
 
-        final Iterator<CappedPic> tail = query.iterator(new FindOptions()
-                .cursorType(CursorType.Tailable));
+        final Iterator<CappedPic> tail = query.iterator();
         Awaitility
                 .await()
                 .pollDelay(500, TimeUnit.MILLISECONDS)
@@ -1164,11 +1202,11 @@ public class TestQuery extends TestBase {
         // NOT:
         // find({ keywords: { $elemMatch: { keyword: "Scott", score: 12 } } })
         assertNotNull(getDs().find(PhotoWithKeywords.class)
-                .filter(elemMatch("keywords", eq("keyword", "Scott"))).iterator(new FindOptions().limit(1))
+                .filter(elemMatch("keywords", eq("keyword", "Scott"))).iterator()
                 .tryNext());
 
         assertNull(getDs().find(PhotoWithKeywords.class)
-                .filter(elemMatch("keywords", eq("keyword", "Randy"))).iterator(new FindOptions().limit(1))
+                .filter(elemMatch("keywords", eq("keyword", "Randy"))).iterator()
                 .tryNext());
     }
 
@@ -1205,10 +1243,6 @@ public class TestQuery extends TestBase {
             }
         }
         return null;
-    }
-
-    private Query<Pic> getQuery(QueryFactory queryFactory) {
-        return queryFactory.createQuery(getDs(), Pic.class);
     }
 
     private void turnOffProfiling() {

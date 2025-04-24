@@ -133,12 +133,13 @@ public class FiltersTest extends TemplatedTestBase {
         articles.createIndex(new Document("title", "text"));
 
         FindOptions options = new FindOptions().logQuery();
-        Query<Document> query = getDs().find("articles", Document.class)
+        Query<Document> query = getDs().find(Document.class, options.projection()
+                .project(Meta.textScore("score"))
+                .collection("articles"))
                 .disableValidation()
                 .filter(text("cake"));
         List<Document> list = query
-                .iterator(options.projection()
-                        .project(Meta.textScore("score")))
+                .iterator()
                 .toList();
         assertEquals(list.size(), 4, query.getLoggedQuery());
         Document document = list.stream().filter(d -> d.get("_id").equals(4))

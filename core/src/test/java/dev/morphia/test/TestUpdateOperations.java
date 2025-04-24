@@ -111,7 +111,7 @@ public class TestUpdateOperations extends TestBase {
         query.update(set("map.k2", stuff1));
 
         // fails due to type now missing
-        getDs().find(MapsOfStuff.class).iterator(new FindOptions().limit(1))
+        getDs().find(MapsOfStuff.class).iterator()
                 .next();
     }
 
@@ -147,7 +147,7 @@ public class TestUpdateOperations extends TestBase {
         // then
         assertThat(updateResult.getModifiedCount(), is(1L));
         assertThat(getDs().find(Parent.class)
-                .filter(eq("id", parentId)).iterator(new FindOptions().limit(1))
+                .filter(eq("id", parentId)).iterator()
                 .next().children, hasItem(new Child(childName, updatedLastName)));
     }
 
@@ -250,7 +250,7 @@ public class TestUpdateOperations extends TestBase {
         assertEquals(result.getModifiedCount(), 1);
 
         //test reading the object.
-        final ContainsPic cp2 = getDs().find(ContainsPic.class).iterator(new FindOptions().limit(1))
+        final ContainsPic cp2 = getDs().find(ContainsPic.class).iterator()
                 .next();
         assertThat(cp2, is(notNullValue()));
         MatcherAssert.assertThat(cp.getName(), CoreMatchers.is(cp2.getName()));
@@ -259,7 +259,7 @@ public class TestUpdateOperations extends TestBase {
         MatcherAssert.assertThat(pic.getName(), CoreMatchers.is(cp2.getPic().getName()));
 
         //test reading the object.
-        final ContainsPic cp3 = getDs().find(ContainsPic.class).iterator(new FindOptions().limit(1))
+        final ContainsPic cp3 = getDs().find(ContainsPic.class).iterator()
                 .next();
         assertThat(cp3, is(notNullValue()));
         MatcherAssert.assertThat(cp.getName(), CoreMatchers.is(cp3.getName()));
@@ -279,8 +279,7 @@ public class TestUpdateOperations extends TestBase {
         final UpdateResult res = query.update(inc("val", 1.1D));
         assertUpdated(res);
 
-        assertEquals(query.iterator(new FindOptions()
-                .limit(1))
+        assertEquals(query.iterator()
                 .next().val, 22);
     }
 
@@ -323,11 +322,11 @@ public class TestUpdateOperations extends TestBase {
                 .filter(eq("values", new Integer[] { 4, 5, 7 }))
                 .update(new UpdateOptions().upsert(true), addToSet("values", 6)));
 
-        query = getDs().find(ContainsIntArray.class)
+        query = getDs().find(ContainsIntArray.class,
+                new FindOptions()
+                        .logQuery())
                 .filter(eq("values", new Integer[] { 4, 5, 7, 6 }));
-        FindOptions options = new FindOptions()
-                .logQuery();
-        assertNotNull(query.first(options), query.getLoggedQuery());
+        assertNotNull(query.first(), query.getLoggedQuery());
     }
 
     private void assertInserted(UpdateResult res) {

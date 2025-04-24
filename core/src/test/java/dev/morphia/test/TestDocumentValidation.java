@@ -36,7 +36,6 @@ import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
 import dev.morphia.annotations.Validation;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.test.models.Contact;
 import dev.morphia.test.models.DocumentValidation;
@@ -105,7 +104,7 @@ public class TestDocumentValidation extends TestBase {
         query.modify(options, set("number", 5));
 
         Assert.assertNotNull(query.filter(eq("number", 5))
-                .iterator(new FindOptions().limit(1))
+                .iterator()
                 .next());
     }
 
@@ -123,7 +122,7 @@ public class TestDocumentValidation extends TestBase {
 
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
                 .filter(eq("number", 8));
-        Assert.assertNotNull(query.iterator(new FindOptions().limit(1)).tryNext());
+        Assert.assertNotNull(query.iterator().tryNext());
 
         List<DocumentValidation> list = asList(new DocumentValidation("Harold", 8, new Date()),
                 new DocumentValidation("John", 8, new Date()),
@@ -212,7 +211,7 @@ public class TestDocumentValidation extends TestBase {
 
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
                 .filter(eq("number", 8));
-        Assert.assertNotNull(query.iterator(new FindOptions().limit(1)).tryNext());
+        Assert.assertNotNull(query.iterator().tryNext());
 
         List<DocumentValidation> list = asList(new DocumentValidation("Harold", 8, new Date()),
                 new DocumentValidation("Harold", 8, new Date()),
@@ -265,7 +264,7 @@ public class TestDocumentValidation extends TestBase {
         options.bypassDocumentValidation(true);
         query.update(options, set("number", 5));
 
-        Assert.assertNotNull(query.filter(eq("number", 5)).iterator(new FindOptions().limit(1))
+        Assert.assertNotNull(query.filter(eq("number", 5)).iterator()
                 .tryNext());
     }
 

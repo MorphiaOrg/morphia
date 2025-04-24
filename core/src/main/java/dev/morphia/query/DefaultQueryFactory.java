@@ -15,12 +15,7 @@ import org.bson.Document;
 @MorphiaInternal
 public class DefaultQueryFactory implements QueryFactory {
     @Override
-    public <T> Query<T> createQuery(Datastore datastore, String collection, Class<T> type) {
-        return new MorphiaQuery<>(datastore, collection, type);
-    }
-
-    @Override
-    public <T> Query<T> createQuery(Datastore datastore, Class<T> type, @Nullable Document query) {
-        return new MorphiaQuery<>(datastore, type, query);
+    public <T> Query<T> createQuery(Datastore datastore, Class<T> type, FindOptions options, @Nullable Document query) {
+        return new MorphiaQuery<>(datastore, type, options, query);
     }
 }

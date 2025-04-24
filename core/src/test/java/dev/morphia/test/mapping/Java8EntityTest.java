@@ -96,9 +96,9 @@ public class Java8EntityTest extends TestBase {
     }
 
     private void compare(Datastore datastore, Java8Entity entity, String field, Object value) {
-        Query<Java8Entity> query = datastore.find(Java8Entity.class)
+        Query<Java8Entity> query = datastore.find(Java8Entity.class, new FindOptions().logQuery().limit(1))
                 .filter(eq(field, value));
-        Assert.assertEquals(query.first(new FindOptions().logQuery().limit(1)), entity, query.getLoggedQuery());
+        Assert.assertEquals(query.first(), entity, query.getLoggedQuery());
     }
 
     private Java8Entity createEntity(Datastore ds, Instant instant, LocalDate localDate,

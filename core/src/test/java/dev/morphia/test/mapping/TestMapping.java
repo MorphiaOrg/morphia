@@ -29,7 +29,6 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
-import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.mapping.shadowing.ShadowedChild;
@@ -320,7 +319,7 @@ public class TestMapping extends TestBase {
     public void testEmbeddedDocument() {
         withConfig(buildConfig(ContainsDocument.class), () -> {
             getDs().save(new ContainsDocument());
-            assertNotNull(getDs().find(ContainsDocument.class).iterator(new FindOptions().limit(1))
+            assertNotNull(getDs().find(ContainsDocument.class).iterator()
                     .next());
         });
     }
@@ -329,7 +328,7 @@ public class TestMapping extends TestBase {
     public void testEmbeddedEntity() {
         getDs().save(new ContainsEmbeddedEntity());
         final ContainsEmbeddedEntity ceeLoaded = getDs().find(ContainsEmbeddedEntity.class)
-                .iterator(new FindOptions().limit(1))
+                .iterator()
                 .next();
         assertNotNull(ceeLoaded);
         assertNotNull(ceeLoaded.id);
@@ -607,19 +606,19 @@ public class TestMapping extends TestBase {
     @Test
     public void testLoadOnly() {
         getDs().save(new Normal("value"));
-        Normal n = getDs().find(Normal.class).iterator(new FindOptions().limit(1))
+        Normal n = getDs().find(Normal.class).iterator()
                 .next();
         assertNotNull(n);
         assertNotNull(n.name);
         getDs().delete(n);
         getDs().save(new NormalWithLoadOnly());
-        n = getDs().find(Normal.class).iterator(new FindOptions().limit(1))
+        n = getDs().find(Normal.class).iterator()
                 .next();
         assertNotNull(n);
         assertNull(n.name);
         getDs().delete(n);
         getDs().save(new Normal("value21"));
-        final NormalWithLoadOnly notSaved = getDs().find(NormalWithLoadOnly.class).iterator(new FindOptions().limit(1))
+        final NormalWithLoadOnly notSaved = getDs().find(NormalWithLoadOnly.class).iterator()
                 .next();
         assertNotNull(notSaved);
         assertNotNull(notSaved.name);
@@ -629,7 +628,7 @@ public class TestMapping extends TestBase {
     @Test
     public void testLongArrayMapping() {
         getDs().save(new ContainsLongAndStringArray());
-        ContainsLongAndStringArray loaded = getDs().find(ContainsLongAndStringArray.class).iterator(new FindOptions().limit(1))
+        ContainsLongAndStringArray loaded = getDs().find(ContainsLongAndStringArray.class).iterator()
                 .next();
         assertEquals((new ContainsLongAndStringArray()).longs, loaded.longs);
         assertEquals((new ContainsLongAndStringArray()).strings, loaded.strings);
@@ -662,7 +661,7 @@ public class TestMapping extends TestBase {
         final ContainsMapLike ml = new ContainsMapLike();
         ml.m.put("first", "test");
         getDs().save(ml);
-        final ContainsMapLike mlLoaded = getDs().find(ContainsMapLike.class).iterator(new FindOptions().limit(1))
+        final ContainsMapLike mlLoaded = getDs().find(ContainsMapLike.class).iterator()
                 .next();
         assertNotNull(mlLoaded);
         assertNotNull(mlLoaded.m);
@@ -680,7 +679,7 @@ public class TestMapping extends TestBase {
         getDs().save(aMap);
 
         final ContainsMapWithEmbeddedInterface mapLoaded = getDs().find(ContainsMapWithEmbeddedInterface.class)
-                .iterator(new FindOptions().limit(1))
+                .iterator()
                 .next();
 
         assertNotNull(mapLoaded);

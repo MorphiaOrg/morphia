@@ -2,7 +2,6 @@ package dev.morphia.test.mapping.lazy;
 
 import dev.morphia.Datastore;
 import dev.morphia.annotations.Reference;
-import dev.morphia.query.FindOptions;
 import dev.morphia.test.mapping.ProxyTestBase;
 import dev.morphia.test.models.TestEntity;
 
@@ -31,7 +30,7 @@ public class TestLazyCircularReference extends ProxyTestBase {
 
         getDs().save(asList(root, first, second));
 
-        RootEntity rootEntity = getDs().find(RootEntity.class).iterator(new FindOptions().limit(1)).tryNext();
+        RootEntity rootEntity = getDs().find(RootEntity.class).iterator().tryNext();
         assertEquals(first.getId(), rootEntity.getR().getId());
         assertEquals(second.getId(), rootEntity.getSecondReference().getId());
         assertEquals(root.getId(), rootEntity.getR().getParent().getId());

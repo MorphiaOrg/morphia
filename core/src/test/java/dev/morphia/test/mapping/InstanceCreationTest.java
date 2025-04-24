@@ -1,6 +1,5 @@
 package dev.morphia.test.mapping;
 
-import dev.morphia.query.FindOptions;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.Author;
 
@@ -14,8 +13,7 @@ public class InstanceCreationTest extends TestBase {
         final Author author = new Author("Jane Austen");
         getDs().save(author);
 
-        final Author loaded = getDs().find(Author.class).iterator(new FindOptions()
-                .limit(1)).tryNext();
+        final Author loaded = getDs().find(Author.class).iterator().tryNext();
         assertEquals(author, loaded);
     }
 }

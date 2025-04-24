@@ -7,7 +7,6 @@ import java.util.Map;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.query.FindOptions;
 import dev.morphia.test.TestBase;
 
 import org.bson.types.ObjectId;
@@ -25,7 +24,7 @@ public class TestUriMapping extends TestBase {
 
         entity.uri = testURI;
         getDs().save(entity);
-        final ContainsURI loaded = getDs().find(ContainsURI.class).iterator(new FindOptions().limit(1)).tryNext();
+        final ContainsURI loaded = getDs().find(ContainsURI.class).iterator().tryNext();
         assertNotNull(loaded.uri);
         assertEquals(testURI, loaded.uri);
 
@@ -38,7 +37,7 @@ public class TestUriMapping extends TestBase {
 
         entity.uris.put(testURI, "first");
         getDs().save(entity);
-        final ContainsURIKeyedMap loaded = getDs().find(ContainsURIKeyedMap.class).iterator(new FindOptions().limit(1)).tryNext();
+        final ContainsURIKeyedMap loaded = getDs().find(ContainsURIKeyedMap.class).iterator().tryNext();
         assertNotNull(loaded.uris);
         assertEquals(loaded.uris.size(), 1);
         assertEquals(testURI, loaded.uris.keySet().iterator().next());

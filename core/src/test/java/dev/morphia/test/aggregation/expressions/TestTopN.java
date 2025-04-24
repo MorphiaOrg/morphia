@@ -35,8 +35,9 @@ public class TestTopN extends TemplatedTestBase {
      */
     @Test(testName = "Finding the Three Highest Score Documents Across Multiple Games")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion("5.2.0").orderMatters(false), (aggregation) -> aggregation.group(
-                group(id("$gameId")).field("playerId", topN(3, array("$playerId", "$score"), descending("score")))));
+        testPipeline(new ActionTestOptions().serverVersion("5.2.0").orderMatters(false),
+                (aggregation) -> aggregation.group(group(id("$gameId")).field("playerId",
+                        topN(3, array("$playerId", "$score"), descending("score")))));
     }
 
     /**

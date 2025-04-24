@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.StringJoiner;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import com.mongodb.ExplainVerbosity;
 import com.mongodb.client.FindIterable;
@@ -51,6 +55,7 @@ import static java.util.stream.Collectors.toList;
 public class MorphiaQuery<T> implements Query<T> {
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaQuery.class);
     private final MorphiaDatastore datastore;
+    private final FindOptions options;
     private final Class<T> type;
     private final Mapper mapper;
     private final List<Filter> filters = new ArrayList<>();
@@ -64,36 +69,25 @@ public class MorphiaQuery<T> implements Query<T> {
     private FindOptions lastOptions;
 
     /**
-     * @param datastore      the datastore
-     * @param collectionName the collection name
-     * @param type           the type to query against
-     */
-    protected MorphiaQuery(Datastore datastore, @Nullable String collectionName, Class<T> type) {
-        this.type = type;
-        this.datastore = (MorphiaDatastore) datastore;
-        mapper = this.datastore.getMapper();
-        seedQuery = null;
-        this.collectionName = collectionName;
-        if (collectionName != null) {
-            collection = datastore.getDatabase().getCollection(collectionName, type);
-        } else if (mapper.isMappable(type)) {
-            collection = datastore.getCollection(type);
-            this.collectionName = collection.getNamespace().getCollectionName();
-        }
-    }
-
-    /**
      * @param datastore the datastore
      * @param type      the type to query against
-     * @param query     the query
+     * @param options   the options to apply
+     * @param query     the seed query. might be null.
      */
-    protected MorphiaQuery(Datastore datastore, Class<T> type, @Nullable Document query) {
+    protected MorphiaQuery(Datastore datastore, Class<T> type, FindOptions options, @Nullable Document query) {
         this.type = type;
         this.datastore = (MorphiaDatastore) datastore;
         this.seedQuery = query;
+        this.options = options;
         mapper = this.datastore.getMapper();
-        collection = datastore.getCollection(type);
-        collectionName = collection.getNamespace().getCollectionName();
+        if (options.collection() != null) {
+            collection = datastore.getDatabase().getCollection(options.collection())
+                    .withDocumentClass(type);
+            collectionName = options.collection();
+        } else {
+            collection = datastore.getCollection(type);
+            collectionName = collection.getNamespace().getCollectionName();
+        }
     }
 
     @Override
@@ -140,10 +134,13 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public Map<String, Object> explain(FindOptions options, @Nullable ExplainVerbosity verbosity) {
-        return verbosity == null
-                ? iterable(options, collection).explain()
-                : iterable(options, collection).explain(verbosity);
+    public Map<String, Object> explain() {
+        return iterable(options, collection).explain();
+    }
+
+    @Override
+    public Map<String, Object> explain(ExplainVerbosity verbosity) {
+        return iterable(options, collection).explain(verbosity);
     }
 
     @Override
@@ -177,11 +174,6 @@ public class MorphiaQuery<T> implements Query<T> {
 
     @Override
     public T first() {
-        return first(new FindOptions());
-    }
-
-    @Override
-    public T first(FindOptions options) {
         try (MongoCursor<T> it = iterator(options.copy().limit(1))) {
             return it.tryNext();
         }
@@ -207,8 +199,18 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     @Override
-    public MorphiaCursor<T> iterator(@Nullable FindOptions options) {
-        return new MorphiaCursor<>(prepareCursor(options != null ? options : new FindOptions(), collection));
+    public MorphiaCursor<T> iterator() {
+        return iterator(options);
+    }
+
+    private MorphiaCursor<T> iterator(FindOptions options) {
+        return new MorphiaCursor<>(prepareCursor(options, collection));
+    }
+
+    @Override
+    public Stream<T> stream() {
+        Spliterator<T> spliterator = Spliterators.spliteratorUnknownSize(iterator(), 0);
+        return StreamSupport.stream(spliterator, false);
     }
 
     /**

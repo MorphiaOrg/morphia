@@ -7,7 +7,6 @@ import java.util.List;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
-import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.TestEntity;
@@ -85,7 +84,7 @@ public class LazyInEmbeddedTest extends TestBase {
         assertNotNull(containerWithRefInList);
 
         final Query<ContainerWithRefList> createQuery = getDs().find(ContainerWithRefList.class);
-        containerWithRefInList = createQuery.iterator(new FindOptions().limit(1)).tryNext();
+        containerWithRefInList = createQuery.iterator().tryNext();
         assertNotNull(containerWithRefInList);
 
     }
@@ -158,7 +157,7 @@ public class LazyInEmbeddedTest extends TestBase {
                 .first();
         assertNotNull(containerWithRefInList);
         final Query<ContainerWithRefList> createQuery = getDs().find(ContainerWithRefList.class);
-        containerWithRefInList = createQuery.iterator(new FindOptions().limit(1)).tryNext();
+        containerWithRefInList = createQuery.iterator().tryNext();
         assertNotNull(containerWithRefInList);
 
     }

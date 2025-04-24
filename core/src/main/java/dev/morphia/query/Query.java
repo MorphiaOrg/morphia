@@ -1,10 +1,7 @@
 package dev.morphia.query;
 
 import java.util.Map;
-import java.util.Spliterator;
-import java.util.Spliterators;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import com.mongodb.ExplainVerbosity;
 import com.mongodb.client.result.DeleteResult;
@@ -88,34 +85,18 @@ public interface Query<T> extends Iterable<T> {
      * @return Map describing the process used to return the query results.
      * @mongodb.driver.manual reference/operator/meta/explain/ explain
      */
-    default Map<String, Object> explain() {
-        return explain(new FindOptions());
-    }
+    Map<String, Object> explain();
 
     /**
      * Provides information on the query plan. The query plan is the plan the server uses to find the matches for a query. This information
      * may be useful when optimizing a query.
      *
-     * @param options the options to apply to the explain operation
-     * @return Map describing the process used to return the query results.
-     * @mongodb.driver.manual reference/operator/meta/explain/ explain
-     * @since 1.3
-     */
-    default Map<String, Object> explain(FindOptions options) {
-        return explain(options, null);
-    }
-
-    /**
-     * Provides information on the query plan. The query plan is the plan the server uses to find the matches for a query. This information
-     * may be useful when optimizing a query.
-     *
-     * @param options   the options to apply to the explain operation
      * @param verbosity the verbosity of the explanation
      * @return Map describing the process used to return the query results.
      * @mongodb.driver.manual reference/operator/meta/explain/ explain
      * @since 2.2
      */
-    Map<String, Object> explain(FindOptions options, @Nullable ExplainVerbosity verbosity);
+    Map<String, Object> explain(ExplainVerbosity verbosity);
 
     /**
      * @return The query logged during the previous execution of this query
@@ -131,18 +112,6 @@ public interface Query<T> extends Iterable<T> {
     @Nullable
     default T findAndDelete() {
         return findAndDelete(new FindAndDeleteOptions());
-    }
-
-    /**
-     * Execute the query and get the results.
-     *
-     * @return a MorphiaCursor
-     * @see #iterator(FindOptions)
-     * @since 2.0
-     */
-    @Override
-    default MorphiaCursor<T> iterator() {
-        return iterator(new FindOptions());
     }
 
     /**
@@ -164,14 +133,12 @@ public interface Query<T> extends Iterable<T> {
     T first();
 
     /**
-     * Gets the first entity in the result set. Obeys the {@link Query} offset value.
+     * Execute the query and get the results.
      *
-     * @param options the options to apply to the find operation
-     * @return the only instance in the result, or null if the result set is empty.
-     * @since 1.5
+     * @return a MorphiaCursor
+     * @since 2.0
      */
-    @Nullable
-    T first(FindOptions options);
+    MorphiaCursor<T> iterator();
 
     /**
      * Create a modify operation based on this query
@@ -198,35 +165,12 @@ public interface Query<T> extends Iterable<T> {
     T modify(ModifyOptions options, UpdateOperator first, UpdateOperator... updates);
 
     /**
-     * Execute the query and get the results.
-     *
-     * @param options the options to apply to the find operation
-     * @return a MorphiaCursor
-     * @since 2.0
-     */
-    MorphiaCursor<T> iterator(@Nullable FindOptions options);
-
-    /**
      * Provides a {@link Stream} representation of the results of this query.
      *
      * @return the stream
      * @since 2.2
      */
-    default Stream<T> stream() {
-        return stream(new FindOptions());
-    }
-
-    /**
-     * Provides a {@link Stream} representation of the results of this query.
-     *
-     * @param options the options to apply
-     * @return the stream
-     * @since 2.2
-     */
-    default Stream<T> stream(FindOptions options) {
-        Spliterator<T> spliterator = Spliterators.spliteratorUnknownSize(iterator(options), 0);
-        return StreamSupport.stream(spliterator, false);
-    }
+    Stream<T> stream();
 
     /**
      * Creates an update operation based on this query

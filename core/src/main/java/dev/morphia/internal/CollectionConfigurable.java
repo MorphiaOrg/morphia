@@ -36,7 +36,7 @@ public interface CollectionConfigurable<T> extends CollectionConfiguration {
      * @morphia.internal
      */
     @MorphiaInternal
-    default <T> MongoCollection<T> prepare(MongoCollection<T> collection, MongoDatabase database) {
+    default <T> MongoCollection<T> prepare(@Nullable MongoCollection<T> collection, MongoDatabase database) {
         String alternateName = collection();
         if (alternateName != null) {
             collection = database.getCollection(alternateName, collection.getDocumentClass());

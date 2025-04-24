@@ -40,9 +40,9 @@ public class TestTextSearching extends TestBase {
         getDs().save(new Greeting("buenas tardes", "spanish"));
         getDs().save(new Greeting("buenos noches", "spanish"));
 
-        List<Greeting> good = getDs().find(Greeting.class)
+        List<Greeting> good = getDs().find(Greeting.class, new FindOptions().sort(ascending("_id")))
                 .filter(text("good"))
-                .iterator(new FindOptions().sort(ascending("_id")))
+                .iterator()
                 .toList();
         assertEquals(good.size(), 4);
         assertEquals(good.get(0).value, "good morning");
@@ -50,10 +50,10 @@ public class TestTextSearching extends TestBase {
         assertEquals(good.get(2).value, "good night");
         assertEquals(good.get(3).value, "good riddance");
 
-        good = getDs().find(Greeting.class)
+        good = getDs().find(Greeting.class, new FindOptions().sort(ascending("_id")))
                 .filter(text("good")
                         .language("english"))
-                .iterator(new FindOptions().sort(ascending("_id")))
+                .iterator()
                 .toList();
         assertEquals(good.size(), 4);
         assertEquals(good.get(0).value, "good morning");
@@ -84,9 +84,10 @@ public class TestTextSearching extends TestBase {
                 new Book("The Odyssey", "Homer"),
                 new Book("Iliad", "Homer")));
 
-        List<Book> books = getDs().find(Book.class)
+        List<Book> books = getDs().find(Book.class,
+                new FindOptions().sort(Meta.textScore("score")))
                 .filter(text("Dante Comedy"))
-                .iterator(new FindOptions().sort(Meta.textScore("score")))
+                .iterator()
                 .toList();
         assertEquals(books.size(), 3);
         assertEquals(books.get(0).title, "Divine Comedy");
@@ -103,9 +104,10 @@ public class TestTextSearching extends TestBase {
                 new Book("The Odyssey", "Homer"),
                 new Book("Iliad", "Homer")));
 
-        List<Book> books = getDs().find(Book.class)
+        List<Book> books = getDs().find(Book.class,
+                new FindOptions().sort(Meta.textScore("score")))
                 .filter(text("Dante"))
-                .iterator(new FindOptions().sort(Meta.textScore("score")))
+                .iterator()
                 .toList();
         assertEquals(books.size(), 3);
         assertEquals(books.get(0).authorString, "Dante");
@@ -122,9 +124,10 @@ public class TestTextSearching extends TestBase {
                 new Book("The Odyssey", "Homer"),
                 new Book("Iliad", "Homer")));
 
-        List<Book> books = getDs().find(Book.class)
+        List<Book> books = getDs().find(Book.class,
+                new FindOptions().sort(Meta.textScore("score")))
                 .filter(text("Dante"))
-                .iterator(new FindOptions().sort(Meta.textScore("score")))
+                .iterator()
                 .toList();
         assertEquals(books.size(), 3);
         for (Book book : books) {

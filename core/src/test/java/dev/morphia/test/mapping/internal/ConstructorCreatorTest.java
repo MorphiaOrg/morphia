@@ -59,15 +59,20 @@ public class ConstructorCreatorTest extends TestBase {
 
         getDs().save(invoice);
 
-        MorphiaCursor<Invoice> criteria1 = getDs().find(Invoice.class)
+        MorphiaCursor<Invoice> criteria1 = getDs().find(Invoice.class,
+                new FindOptions()
+                        .sort(ascending("addresses")))
                 .filter(lte("orderDate", LocalDateTime.now().plusDays(5)))
-                .iterator(new FindOptions().sort(ascending("addresses")));
+                .iterator();
         List<Invoice> list = criteria1.toList();
         assertEquals(list.get(0).getAddresses().get(0).getCity(), "NYC",
                 list.stream().map(Invoice::getId).collect(Collectors.toList()).toString());
         assertEquals(list.get(0), invoice, list.stream().map(Invoice::getId).collect(Collectors.toList()).toString());
 
-        MorphiaCursor<Invoice> criteria2 = getDs().find(Invoice.class).iterator(new FindOptions().sort(descending("addresses")));
+        MorphiaCursor<Invoice> criteria2 = getDs().find(Invoice.class,
+                new FindOptions()
+                        .sort(descending("addresses")))
+                .iterator();
         assertEquals(criteria2.toList().get(0).getAddresses().get(0).getCity(), "New York City");
     }
 

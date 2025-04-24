@@ -394,10 +394,8 @@ public class Mapper {
      *
      * @param entityClasses the classes to map
      * @return the EntityModel references
-     * @deprecated This is handled via the config file and should not be called manually
      * @hidden
      */
-    @Deprecated(since = "2.4.0", forRemoval = true)
     public List<EntityModel> map(Class... entityClasses) {
         return map(List.of(entityClasses));
     }
@@ -408,9 +406,7 @@ public class Mapper {
      * @hidden
      * @param classes the classes to map
      * @return the list of mapped classes
-     * @deprecated This is handled via the config file and should not be called manually
      */
-    @Deprecated(since = "2.4.0", forRemoval = true)
     public List<EntityModel> map(List<Class<?>> classes) {
         Sofia.logConfiguredOperation("Mapper#map");
         for (Class type : classes) {
@@ -428,11 +424,9 @@ public class Mapper {
      * Tries to map all classes in the package specified.
      *
      * @param packageName the name of the package to process
-     * @deprecated This is handled via the config file and should not be called manually
      * @hidden
      * @since 2.4
      */
-    @Deprecated(since = "2.4.0", forRemoval = true)
     public synchronized void map(String packageName) {
         try {
             List<Class> classes = getClasses(contextClassLoader, packageName);
@@ -450,9 +444,7 @@ public class Mapper {
      *
      * @hidden
      * @param packageName the name of the package to process
-     * @deprecated This is handled via the config file and should not be called manually
      */
-    @Deprecated(since = "2.4.0", forRemoval = true)
     public synchronized void mapPackage(String packageName) {
         Sofia.logConfiguredOperation("Mapper#mapPackage");
         try {
@@ -466,18 +458,6 @@ public class Mapper {
         } catch (ClassNotFoundException e) {
             throw new MappingException("Could not get map classes from package " + packageName, e);
         }
-    }
-
-    /**
-     * Maps all the classes found in the package to which the given class belongs.
-     *
-     * @hidden
-     * @param clazz the class to use when trying to find others to map
-     * @deprecated This is handled via the config file and should not be called manually
-     */
-    @Deprecated(since = "2.4.0", forRemoval = true)
-    public void mapPackageFromClass(Class clazz) {
-        mapPackage(clazz.getPackage().getName());
     }
 
     /**

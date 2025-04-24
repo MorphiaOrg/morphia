@@ -20,9 +20,8 @@ public class TestSetField extends TemplatedTestBase {
      */
     @Test(testName = "Add Fields that Contain Periods (``.``)")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion("5.0.0").minDriver("4.3.0"),
-                (aggregation) -> aggregation.pipeline(replaceWith(setField("price.usd", ROOT, "$price")),
-                        unset("price")));
+        testPipeline(new ActionTestOptions().serverVersion("5.0.0").minDriver("4.3.0"), (aggregation) -> aggregation
+                .pipeline(replaceWith(setField("price.usd", ROOT, "$price")), unset("price")));
     }
 
     /**

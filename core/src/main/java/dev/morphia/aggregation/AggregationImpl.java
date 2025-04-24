@@ -50,7 +50,6 @@ import dev.morphia.aggregation.stages.UnionWith;
 import dev.morphia.aggregation.stages.Unset;
 import dev.morphia.aggregation.stages.Unwind;
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.MorphiaCursor;
@@ -132,33 +131,27 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
     @Override
     public <R> MorphiaCursor<R> execute(Class<R> resultType) {
-        MongoCursor<R> cursor;
         List<Document> pipeline = pipeline();
         if (LOG.isDebugEnabled()) {
             LOG.debug("pipeline = " + pipeline);
         }
-        if (datastore.getMapper().isMappable(resultType) && !resultType.equals(this.collection.getDocumentClass())) {
-            MongoCollection<Document> collection = this.collection.withDocumentClass(Document.class);
-            MongoCursor<Document> results = collection.aggregate(pipeline).iterator();
-            EntityModel entityModel = datastore.getMapper().getEntityModel(this.collection.getDocumentClass());
-            cursor = new MappingCursor<>(results, datastore.getCodecRegistry().get(resultType),
-                    entityModel.discriminatorKey());
-        } else {
-            cursor = collection.aggregate(pipeline, resultType).iterator();
-        }
-        return new MorphiaCursor<>(cursor);
+        return new MorphiaCursor<>(datastore.operations().<R> aggregate(this.collection, pipeline, resultType).iterator());
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <R> MorphiaCursor<R> execute(Class<R> resultType, AggregationOptions options) {
-        return new MorphiaCursor<>(options.apply(pipeline(), datastore.getDatabase(), collection, resultType)
-                .iterator());
+        List<Document> pipeline = pipeline();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("pipeline = " + pipeline);
+        }
+        return new MorphiaCursor<>((MongoCursor<R>) options.apply(pipeline, datastore, collection, resultType).iterator());
     }
 
     @Override
     public <M> void merge(Merge<M> merge) {
         addStage(merge);
-        collection.aggregate(pipeline())
+        datastore.operations().aggregate(collection, pipeline())
                 .toCollection();
     }
 
@@ -167,14 +160,15 @@ public class AggregationImpl<T> implements Aggregation<T> {
         addStage(merge);
         Class<?> type = merge.getType();
         type = type != null ? type : Document.class;
-        options.apply(pipeline(), datastore.getDatabase(), collection, type)
+        options.apply(pipeline(), datastore, collection, type)
                 .toCollection();
     }
 
     @Override
     public <O> void out(Out<O> out) {
         addStage(out);
-        collection.aggregate(pipeline())
+        datastore.operations()
+                .aggregate(collection, pipeline())
                 .toCollection();
     }
 
@@ -183,7 +177,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
         addStage(out);
         Class<?> type = out.type();
         type = type != null ? type : Document.class;
-        options.apply(pipeline(), datastore.getDatabase(), collection, type).toCollection();
+        options.apply(pipeline(), datastore, collection, type).toCollection();
     }
 
     @Override

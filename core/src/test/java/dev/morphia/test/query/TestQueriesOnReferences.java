@@ -65,19 +65,21 @@ public class TestQueriesOnReferences extends TestBase {
         getDs().save(p);
         getDs().save(cpk);
 
-        assertNotNull(getDs().find(ContainsPic.class)
+        assertNotNull(getDs().find(ContainsPic.class,
+                new FindOptions()
+                        .projection()
+                        .include("pic")
+                        .limit(1))
                 .filter(exists("pic"))
-                .iterator(new FindOptions()
-                        .projection()
-                        .include("pic")
-                        .limit(1))
+                .iterator()
                 .tryNext());
-        assertNull(getDs().find(ContainsPic.class)
-                .filter(exists("pic").not())
-                .iterator(new FindOptions()
+        assertNull(getDs().find(ContainsPic.class,
+                new FindOptions()
                         .projection()
                         .include("pic")
                         .limit(1))
+                .filter(exists("pic").not())
+                .iterator()
                 .tryNext());
     }
 
@@ -136,11 +138,11 @@ public class TestQueriesOnReferences extends TestBase {
         getDs().save(cpk);
 
         Query<ContainsPic> query = getDs().find(ContainsPic.class);
-        assertNotNull(query.filter(eq("lazyPic", p)).iterator(new FindOptions().limit(1))
+        assertNotNull(query.filter(eq("lazyPic", p)).iterator()
                 .tryNext());
 
         query = getDs().find(ContainsPic.class);
-        assertNotNull(query.filter(eq("lazyObjectIdPic", withObjectId)).iterator(new FindOptions().limit(1))
+        assertNotNull(query.filter(eq("lazyObjectIdPic", withObjectId)).iterator()
                 .tryNext());
     }
 
@@ -154,7 +156,7 @@ public class TestQueriesOnReferences extends TestBase {
         getDs().save(cpk);
 
         final Query<ContainsPic> query = getDs().find(ContainsPic.class);
-        final ContainsPic object = query.filter(eq("pic", p)).iterator(new FindOptions().limit(1))
+        final ContainsPic object = query.filter(eq("pic", p)).iterator()
                 .tryNext();
         assertNotNull(object);
 

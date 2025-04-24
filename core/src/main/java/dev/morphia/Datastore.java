@@ -11,6 +11,7 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.annotations.internal.MorphiaExperimental;
 import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.transactions.MorphiaSession;
 import dev.morphia.transactions.MorphiaTransaction;
@@ -68,7 +69,20 @@ public interface Datastore {
      * @param <T>  the type to query
      * @return the query
      */
-    <T> Query<T> find(Class<T> type);
+    default <T> Query<T> find(Class<T> type) {
+        return find(type, new FindOptions());
+    }
+
+    /**
+     * Find instances of a type
+     *
+     * @param type    the class to use for mapping the results
+     * @param options the options to apply to the query
+     * @param <T>     the type to query
+     * @return the query
+     * @since 2.5
+     */
+    <T> Query<T> find(Class<T> type, FindOptions options);
 
     /**
      * Find instances of a type using a native query. This method is intended as an aid when copying queries from external sources such
@@ -83,6 +97,21 @@ public interface Datastore {
      */
     @MorphiaExperimental
     <T> Query<T> find(Class<T> type, Document nativeQuery);
+
+    /**
+     * Find instances of a type using a native query. This method is intended as an aid when copying queries from external sources such
+     * as the shell or Compass whose structure is already in json form.
+     *
+     * @param type        the class to use for mapping the results
+     * @param options     the options to apply
+     * @param nativeQuery the full query structure to use for this Query
+     * @param <T>         the type to query
+     * @return the query
+     * @morphia.experimental
+     * @since 2.3
+     */
+    @MorphiaExperimental
+    <T> Query<T> find(Class<T> type, FindOptions options, Document nativeQuery);
 
     /**
      * @param type the type look up
@@ -272,6 +301,15 @@ public interface Datastore {
      * @return the saved entity
      */
     <T> T save(T entity, InsertOneOptions options);
+
+    /**
+     * Shards any collections with sharding definitions.
+     *
+     * @morphia.experimental
+     * @since 2.3
+     */
+    @MorphiaExperimental
+    void shardCollections();
 
     /**
      * Starts a new session on the server.

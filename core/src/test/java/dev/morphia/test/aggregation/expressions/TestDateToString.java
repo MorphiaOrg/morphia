@@ -15,18 +15,15 @@ public class TestDateToString extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion("7.0.0"),
-                (aggregation) -> aggregation.pipeline(project()
-                        .include("yearMonthDayUTC", dateToString().date("$date").format("%Y-%m-%d"))
-                        .include("timewithOffsetNY",
-                                dateToString().date("$date").format("%H:%M:%S:%L%z").timeZone("America/New_York"))
-                        .include("timewithOffset430",
-                                dateToString().date("$date").format("%H:%M:%S:%L%z").timeZone("+04:30"))
-                        .include("minutesOffsetNY",
-                                dateToString().date("$date").format("%Z").timeZone("America/New_York"))
-                        .include("minutesOffset430", dateToString().date("$date").format("%Z").timeZone("+04:30"))
-                        .include("abbreviated_month", dateToString().date("$date").format("%b").timeZone("+04:30"))
-                        .include("full_month", dateToString().date("$date").format("%B").timeZone("+04:30"))));
+        testPipeline(new ActionTestOptions().serverVersion("7.0.0"), (aggregation) -> aggregation.pipeline(project()
+                .include("yearMonthDayUTC", dateToString().date("$date").format("%Y-%m-%d"))
+                .include("timewithOffsetNY",
+                        dateToString().date("$date").format("%H:%M:%S:%L%z").timeZone("America/New_York"))
+                .include("timewithOffset430", dateToString().date("$date").format("%H:%M:%S:%L%z").timeZone("+04:30"))
+                .include("minutesOffsetNY", dateToString().date("$date").format("%Z").timeZone("America/New_York"))
+                .include("minutesOffset430", dateToString().date("$date").format("%Z").timeZone("+04:30"))
+                .include("abbreviated_month", dateToString().date("$date").format("%b").timeZone("+04:30"))
+                .include("full_month", dateToString().date("$date").format("%B").timeZone("+04:30"))));
     }
 
 }

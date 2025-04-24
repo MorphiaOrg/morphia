@@ -145,9 +145,9 @@ public class TestMappingOptions extends TestBase {
 
         getDs().save(List.of(entityDiscriminator, entityDiscriminator2));
 
-        Query<EntityDiscriminator2> query = getDs().find(EntityDiscriminator2.class)
+        Query<EntityDiscriminator2> query = getDs().find(EntityDiscriminator2.class, new FindOptions().logQuery())
                 .filter(ne("name", "hi"));
-        List<EntityDiscriminator2> list = query.iterator(new FindOptions().logQuery()).toList();
+        List<EntityDiscriminator2> list = query.iterator().toList();
         assertEquals(list.size(), 1, query.getLoggedQuery());
     }
 
@@ -242,7 +242,7 @@ public class TestMappingOptions extends TestBase {
         datastore.save(hl);
         document = getDocumentCollection(HasMap.class).find().first();
         assertTrue(document.containsKey("properties"), "Should find the field");
-        assertEquals(datastore.find(HasMap.class).iterator(new FindOptions().limit(1))
+        assertEquals(datastore.find(HasMap.class).iterator()
                 .tryNext().properties, expected);
         cleanup();
     }
@@ -295,7 +295,7 @@ public class TestMappingOptions extends TestBase {
         datastore.save(hl);
         Document document = getDocumentCollection(HasList.class).find().first();
         assertFalse(document.containsKey("names"), "field should not exist, value = " + document.get("names"));
-        HasList hasList = datastore.find(HasList.class).iterator(new FindOptions().limit(1))
+        HasList hasList = datastore.find(HasList.class).iterator()
                 .tryNext();
         assertNull(hasList.names);
         cleanup();

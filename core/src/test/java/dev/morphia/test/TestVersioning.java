@@ -331,10 +331,11 @@ public class TestVersioning extends TestBase {
         UpdateResult results = ds.find(VersionedType.class)
                 .update(set("text", "some new value"));
         assertEquals(results.getModifiedCount(), 1);
-        List<VersionedType> postUpdate = ds.find(VersionedType.class)
-                .filter(eq("text", "some new value"))
-                .iterator(new FindOptions()
+        List<VersionedType> postUpdate = ds.find(VersionedType.class,
+                new FindOptions()
                         .sort(Sort.ascending("_id")))
+                .filter(eq("text", "some new value"))
+                .iterator()
                 .toList();
 
         for (int i = 0, postUpdateSize = postUpdate.size(); i < postUpdateSize; i++) {
@@ -407,7 +408,7 @@ public class TestVersioning extends TestBase {
         query.filter(eq("name", "Value 1"));
         query.update(new UpdateOptions().upsert(true), set("name", "Value 3"));
 
-        entity = datastore.find(Versioned.class).iterator(new FindOptions().limit(1)).tryNext();
+        entity = datastore.find(Versioned.class).iterator().tryNext();
         assertEquals(entity.getName(), "Value 3");
         assertEquals(entity.getVersion().longValue(), 1);
     }

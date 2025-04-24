@@ -12,6 +12,7 @@ import com.mongodb.assertions.Assertions;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.cursor.TimeoutMode;
 import com.mongodb.client.model.Collation;
+import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.CollectionConfigurable;
@@ -226,8 +227,9 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
      * @hidden
      * @morphia.internal
      */
-    @MorphiaInternal
     @Override
+    @Nullable
+    @MorphiaInternal
     public String collection() {
         return collection;
     }

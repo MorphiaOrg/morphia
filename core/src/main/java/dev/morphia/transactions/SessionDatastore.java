@@ -5,6 +5,7 @@ import java.util.List;
 import com.mongodb.ClientSessionOptions;
 import com.mongodb.ServerAddress;
 import com.mongodb.TransactionOptions;
+import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.ClientSession;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -191,6 +192,16 @@ public class SessionDatastore extends MorphiaDatastore implements MorphiaSession
     }
 
     private class TransactionalOperations extends DatastoreOperations {
+        @Override
+        public <T> AggregateIterable<T> aggregate(MongoCollection<?> collection, List<Document> pipeline) {
+            return (AggregateIterable<T>) collection.aggregate(session, pipeline);
+        }
+
+        @Override
+        public <T> AggregateIterable<T> aggregate(MongoCollection<?> collection, List<Document> pipeline, Class<?> resultType) {
+            return (AggregateIterable<T>) collection.aggregate(session, pipeline, resultType);
+        }
+
         @Override
         public <T> long countDocuments(MongoCollection<T> collection, Document query, CountOptions options) {
             return collection.countDocuments(session, query, options);

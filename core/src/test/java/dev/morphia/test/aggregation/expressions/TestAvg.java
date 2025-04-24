@@ -45,7 +45,8 @@ public class TestAvg extends TemplatedTestBase {
     public void testExample3() {
         // this has an include and throws off the parser
         /*
-         * testPipeline(new dev.morphia.test.util.ActionTestOptions().serverVersion("5.0.0")
+         * testPipeline(new
+         * dev.morphia.test.util.ActionTestOptions().serverVersion("5.0.0")
          * .orderMatters(false), aggregation -> aggregation
          * .setWindowFields(SetWindowFields.setWindowFields() .partitionBy("$state")
          * .sortBy(ascending("orderDate")) .output(output("averageQuantityForState")

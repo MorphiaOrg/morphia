@@ -6,7 +6,6 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.Transient;
-import dev.morphia.query.FindOptions;
 import dev.morphia.test.models.FacebookUser;
 
 import org.bson.Document;
@@ -30,7 +29,7 @@ public class TestUUIDs extends TestBase {
         final UUID before = uuid.uuid;
         getDs().save(uuid);
         final ContainsUUID loaded = getDs().find(ContainsUUID.class)
-                .iterator(new FindOptions().limit(1))
+                .iterator()
                 .next();
         assertNotNull(loaded);
         assertNotNull(loaded.id);

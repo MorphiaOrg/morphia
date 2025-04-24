@@ -221,9 +221,9 @@ public abstract class TemplatedTestBase extends TestBase {
 
         var resourceName = prepareDatabase(options);
 
-        Query<Document> apply = function.apply(getDs().find(EXAMPLE_TEST_COLLECTION, Document.class)
+        Query<Document> apply = function.apply(getDs().find(Document.class, options.findOptions().collection(EXAMPLE_TEST_COLLECTION))
                 .disableValidation());
-        List<Document> actual = runQuery(options, resourceName, apply, options.findOptions());
+        List<Document> actual = runQuery(options, resourceName, apply);
 
         checkExpected(options, resourceName, actual);
     }
@@ -310,7 +310,7 @@ public abstract class TemplatedTestBase extends TestBase {
     }
 
     @SuppressWarnings({ "rawtypes" })
-    protected List<Document> runQuery(ActionTestOptions testOptions, String pipelineTemplate, Query<Document> query, FindOptions options) {
+    protected List<Document> runQuery(ActionTestOptions testOptions, String pipelineTemplate, Query<Document> query) {
         String resourceName = format("%s/%s/action.json", prefix(), pipelineTemplate);
         Document document = ((MorphiaQuery) query).toDocument();
 
@@ -320,7 +320,7 @@ public abstract class TemplatedTestBase extends TestBase {
         }
 
         if (!testOptions.skipDataCheck()) {
-            try (var cursor = query.iterator(options)) {
+            try (var cursor = query.iterator()) {
                 return cursor.toList();
             }
         } else {

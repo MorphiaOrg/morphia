@@ -9,7 +9,6 @@ import dev.morphia.annotations.Property;
 import dev.morphia.mapping.PropertyDiscovery;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
-import dev.morphia.query.FindOptions;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.SpecializedEntity;
 import dev.morphia.test.models.generics.Another;
@@ -40,7 +39,7 @@ public class TestGenerics extends TestBase {
         getDs().save(entity);
 
         ChildEntity childEntity = getDs().find(ChildEntity.class)
-                .iterator(new FindOptions().limit(1))
+                .iterator()
                 .next();
 
         Assert.assertEquals(childEntity, entity);
@@ -86,7 +85,7 @@ public class TestGenerics extends TestBase {
         getDs().save(ct);
         assertNotNull(ct.id);
         assertEquals(getDs().find(ContainsThings.class).count(), 1);
-        final ContainsThings ctLoaded = getDs().find(ContainsThings.class).iterator(new FindOptions().limit(1))
+        final ContainsThings ctLoaded = getDs().find(ContainsThings.class).iterator()
                 .next();
         assertNotNull(ctLoaded);
         assertNotNull(ctLoaded.id);

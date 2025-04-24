@@ -33,9 +33,11 @@ public class TestMaxMin extends TestBase {
 
     @Test(expectedExceptions = MongoException.class)
     public void testExceptionForIndexMismatch() {
-        getDs().find(IndexedEntity.class).iterator(new FindOptions()
-                .limit(1)
-                .min(new Document("doesNotExist", 1)))
+        getDs().find(IndexedEntity.class,
+                new FindOptions()
+                        .limit(1)
+                        .min(new Document("doesNotExist", 1)))
+                .iterator()
                 .next();
     }
 
@@ -52,19 +54,21 @@ public class TestMaxMin extends TestBase {
         ds.save(c);
 
         ds.applyIndexes();
-        Assert.assertEquals(ds.find(IndexedEntity.class)
-                .iterator(new FindOptions()
+        Assert.assertEquals(ds.find(IndexedEntity.class,
+                new FindOptions()
                         .sort(descending("id"))
                         .hint("testField")
                         .max(new Document("testField", "c")))
+                .iterator()
                 .next().id,
 
                 b.id, "last");
-        Assert.assertEquals(ds.find(IndexedEntity.class)
-                .iterator(new FindOptions()
+        Assert.assertEquals(ds.find(IndexedEntity.class,
+                new FindOptions()
                         .sort(descending("id"))
                         .hint("testField")
                         .max(new Document("testField", "c")))
+                .iterator()
                 .next().id,
                 b.id, "last");
     }
@@ -87,21 +91,25 @@ public class TestMaxMin extends TestBase {
         ds.save(c1);
         ds.save(c2);
 
-        List<IndexedEntity> l = ds.find(IndexedEntity.class).iterator(new FindOptions()
-                .sort(ascending("testField"), ascending("id"))
-                .hint(new Document("testField", 1)
-                        .append("_id", 1))
-                .max(new Document("testField", "b").append("_id", b2.id)))
+        List<IndexedEntity> l = ds.find(IndexedEntity.class,
+                new FindOptions()
+                        .sort(ascending("testField"), ascending("id"))
+                        .hint(new Document("testField", 1)
+                                .append("_id", 1))
+                        .max(new Document("testField", "b").append("_id", b2.id)))
+                .iterator()
                 .toList();
 
         Assert.assertEquals(l.size(), 3, "size");
         Assert.assertEquals(l.get(2).id, b1.id, "item");
 
-        l = ds.find(IndexedEntity.class).iterator(new FindOptions()
-                .sort(ascending("testField"), ascending("id"))
-                .hint(new Document("testField", 1)
-                        .append("_id", 1))
-                .max(new Document("testField", "b").append("_id", b2.id)))
+        l = ds.find(IndexedEntity.class,
+                new FindOptions()
+                        .sort(ascending("testField"), ascending("id"))
+                        .hint(new Document("testField", 1)
+                                .append("_id", 1))
+                        .max(new Document("testField", "b").append("_id", b2.id)))
+                .iterator()
                 .toList();
 
         Assert.assertEquals(l.size(), 3, "size");
@@ -120,19 +128,21 @@ public class TestMaxMin extends TestBase {
         ds.save(b);
         ds.save(c);
 
-        Assert.assertEquals(ds.find(IndexedEntity.class)
-                .iterator(new FindOptions()
+        Assert.assertEquals(ds.find(IndexedEntity.class,
+                new FindOptions()
                         .sort(ascending("id"))
                         .hint("testField")
                         .min(new Document("testField", "b")))
+                .iterator()
                 .next().id,
                 b.id, "last");
 
-        Assert.assertEquals(ds.find(IndexedEntity.class)
-                .iterator(new FindOptions()
+        Assert.assertEquals(ds.find(IndexedEntity.class,
+                new FindOptions()
                         .sort(ascending("id"))
                         .hint("testField")
                         .min(new Document("testField", "b")))
+                .iterator()
                 .next().id,
                 b.id, "last");
     }
@@ -155,21 +165,25 @@ public class TestMaxMin extends TestBase {
         ds.save(c1);
         ds.save(c2);
 
-        List<IndexedEntity> l = ds.find(IndexedEntity.class).iterator(new FindOptions()
-                .sort(ascending("testField"), ascending("id"))
-                .hint(new Document("testField", 1)
-                        .append("_id", 1))
-                .min(new Document("testField", "b").append("_id", b1.id)))
+        List<IndexedEntity> l = ds.find(IndexedEntity.class,
+                new FindOptions()
+                        .sort(ascending("testField"), ascending("id"))
+                        .hint(new Document("testField", 1)
+                                .append("_id", 1))
+                        .min(new Document("testField", "b").append("_id", b1.id)))
+                .iterator()
                 .toList();
 
         Assert.assertEquals(l.size(), 4, "size");
         Assert.assertEquals(l.get(0).id, b1.id, "item");
 
-        l = ds.find(IndexedEntity.class).iterator(new FindOptions()
-                .sort(ascending("testField"), ascending("id"))
-                .hint(new Document("testField", 1)
-                        .append("_id", 1))
-                .min(new Document("testField", "b").append("_id", b1.id)))
+        l = ds.find(IndexedEntity.class,
+                new FindOptions()
+                        .sort(ascending("testField"), ascending("id"))
+                        .hint(new Document("testField", 1)
+                                .append("_id", 1))
+                        .min(new Document("testField", "b").append("_id", b1.id)))
+                .iterator()
                 .toList();
 
         Assert.assertEquals(l.size(), 4, "item");
