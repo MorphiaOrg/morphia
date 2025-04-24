@@ -122,9 +122,9 @@ public class TestQuery extends TestBase {
         value.key = keys;
         getDs().save(value);
 
-        Query<KeyValue> query = getDs().find(KeyValue.class)
+        Query<KeyValue> query = getDs().find(KeyValue.class, new FindOptions().logQuery())
                 .filter(in("key", keys));
-        KeyValue first = query.first(new FindOptions().logQuery());
+        KeyValue first = query.first();
         String loggedQuery = query.getLoggedQuery();
         assertTrue(loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"), loggedQuery);
         assertEquals(first.id, value.id);
