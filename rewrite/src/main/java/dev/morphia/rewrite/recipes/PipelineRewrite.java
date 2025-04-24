@@ -25,7 +25,6 @@ import org.openrewrite.java.tree.J.MethodInvocation;
 import org.openrewrite.java.tree.MethodCall;
 import org.openrewrite.java.tree.Space;
 
-import static dev.morphia.rewrite.recipes.RegexPatternMerge.findInvocation;
 import static dev.morphia.rewrite.recipes.RewriteUtils.findMorphiaCore;
 import static java.util.Collections.emptyList;
 
@@ -116,12 +115,11 @@ public class PipelineRewrite extends Recipe {
             @Override
             public @NotNull MethodInvocation visitMethodInvocation(@NotNull MethodInvocation methodInvocation,
                     @NotNull ExecutionContext context) {
-                MethodInvocation pipeline = findInvocation(methodInvocation, "pipeline");
                 if (MEGA_MATCHER.matches(methodInvocation)) {
                     Expression updated = methodInvocation;
                     MethodInvocation invocation = (MethodInvocation) updated;
                     List<Expression> arguments = new ArrayList<>();
-                    while (MEGA_MATCHER.matches(updated)/* && MEGA_MATCHER.matches(updated.getSelect()) */) {
+                    while (MEGA_MATCHER.matches(updated)) {
                         invocation = (MethodInvocation) updated;
                         collectArguments(arguments, invocation);
 

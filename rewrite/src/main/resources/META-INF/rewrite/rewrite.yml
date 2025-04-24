@@ -11,6 +11,7 @@ recipeList:
   - dev.morphia.rewrite.recipes.UpdateExecute
   - dev.morphia.rewrite.recipes.LogicalFilterAdd
   - dev.morphia.rewrite.recipes.ArraySliceRefasterRecipes
+  - dev.morphia.rewrite.recipes.QueryIteratorOptions
   - org.openrewrite.java.RemoveAnnotation:
       annotationPattern: '@dev.morphia.annotations.Embedded'
   - org.openrewrite.java.ChangeType:
