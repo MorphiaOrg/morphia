@@ -7,7 +7,6 @@ import dev.morphia.Datastore;
 import dev.morphia.UpdateOptions;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.test.models.Grade;
 import dev.morphia.test.models.Student;
@@ -37,20 +36,17 @@ public class TestArrayUpdates extends TestBase {
                 .filter(eq("_id", 1L),
                         eq("grades.data.name", "Test"),
                         eq("grades.data.bad.path.should.be.null", null));
-        assertNotNull(testQuery.iterator(new FindOptions().limit(1))
-                .tryNext());
+        assertNotNull(testQuery.first());
 
         testQuery.update(set("grades.$.data.name", "Makeup Test"))
                 .execute();
 
-        assertNull(testQuery.iterator(new FindOptions().limit(1))
-                .tryNext());
+        assertNull(testQuery.first());
 
         assertNotNull(datastore.find(Student.class)
                 .filter(eq("_id", 1L),
                         eq("grades.data.name", "Makeup Test"))
-                .iterator(new FindOptions().limit(1))
-                .tryNext());
+                .first());
     }
 
     @Test
@@ -74,16 +70,14 @@ public class TestArrayUpdates extends TestBase {
                 .execute();
 
         BatchData data = getDs().find(BatchData.class)
-                .filter(eq("_id", id)).iterator(new FindOptions().limit(1))
-                .tryNext();
+                .filter(eq("_id", id)).first();
 
         assertEquals(data.files.get(0).fileHash, "new hash");
         assertEquals(data.files.get(1).fileHash, "fileHash2");
 
         data = getDs().find(BatchData.class)
                 .filter(eq("_id", id2))
-                .iterator(new FindOptions().limit(1))
-                .tryNext();
+                .first();
 
         assertEquals(data.files.get(0).fileHash, "fileHash3");
         assertEquals(data.files.get(1).fileHash, "fileHash4");
