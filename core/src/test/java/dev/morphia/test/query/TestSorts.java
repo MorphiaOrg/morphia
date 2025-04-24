@@ -23,14 +23,13 @@ public class TestSorts extends TemplatedTestBase {
         getMapper().map(Article.class);
         getDs().ensureIndexes();
 
-        MorphiaQuery<Article> query = (MorphiaQuery<Article>) getDs().find(Article.class)
-                .filter(text("coffee"));
-        FindOptions options = new FindOptions()
+        MorphiaQuery<Article> query = (MorphiaQuery<Article>) getDs().find(Article.class, new FindOptions()
                 .logQuery()
                 .sort(textScore("textScore"),
-                        ascending("subject"));
+                        ascending("subject")))
+                .filter(text("coffee"));
 
-        testQuery(query, options, true);
+        testQuery(query, true);
     }
 
     @Entity(useDiscriminator = false)

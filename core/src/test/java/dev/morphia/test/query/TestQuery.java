@@ -106,9 +106,9 @@ public class TestQuery extends TestBase {
         getDs().save(value);
 
         Query<GenericKeyValue> query = getDs()
-                .find(GenericKeyValue.class)
+                .find(GenericKeyValue.class, new FindOptions().logQuery())
                 .filter(in("key", keys));
-        assertEquals(((GenericKeyValue<String>) query.first(new FindOptions().logQuery())).id, value.id);
+        assertEquals(((GenericKeyValue<String>) query.first()).id, value.id);
         String loggedQuery = query.getLoggedQuery();
         assertTrue(loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"), loggedQuery);
     }
@@ -319,11 +319,13 @@ public class TestQuery extends TestBase {
         Query query = getDs().find(ContainsRenamedFields.class)
                 .filter(eq("last_name", "last"));
         assertEquals(query.iterator().toList().size(), 1);
-        assertEquals(query.iterator(new FindOptions()
-                .collation(builder()
-                        .locale("en")
-                        .collationStrength(CollationStrength.SECONDARY)
-                        .build()))
+        assertEquals(((Query) getDs().find(ContainsRenamedFields.class,
+                new FindOptions()
+                        .collation(builder()
+                                .locale("en")
+                                .collationStrength(CollationStrength.SECONDARY)
+                                .build()))
+                .filter(eq("last_name", "last"))).iterator()
                 .toList()
                 .size(), 2);
         assertEquals(query.count(), 1);
@@ -1020,7 +1022,6 @@ public class TestQuery extends TestBase {
         object.setId(cId);
         object.setText("hllo");
         getDs().save(object);
-        final UsesCustomIdObject loaded;
 
         // Add back if/when query by example for embedded fields is supported (require dotting each field).
         // CustomId exId = new CustomId();
@@ -1030,9 +1031,7 @@ public class TestQuery extends TestBase {
 
         final UsesCustomIdObject ex = new UsesCustomIdObject();
         ex.setText(object.getText());
-        loaded = getDs().queryByExample(ex).iterator(new FindOptions().limit(1))
-                .next();
-        assertNotNull(loaded);
+        assertNotNull(getDs().queryByExample(ex).first());
     }
 
     @Test
@@ -1124,7 +1123,11 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testRangeQuery() {
-        getDs().save(asList(new Rectangle(1, 10), new Rectangle(4, 2), new Rectangle(6, 10), new Rectangle(8, 5), new Rectangle(10, 4)));
+        getDs().save(asList(new Rectangle(1, 10),
+                new Rectangle(4, 2),
+                new Rectangle(6, 10),
+                new Rectangle(8, 5),
+                new Rectangle(10, 4)));
 
         assertEquals(getDs().find(Rectangle.class)
                 .filter(gt("height", 3))
@@ -1149,16 +1152,16 @@ public class TestQuery extends TestBase {
         cpk.photo = getDs().save(p);
         getDs().save(cpk);
 
-        Query<HasPhotoReference> query = getDs().find(HasPhotoReference.class)
+        Query<HasPhotoReference> query = getDs().find(HasPhotoReference.class,
+                new FindOptions().logQuery().limit(1))
                 .filter(eq("photo", p));
 
-        assertNotNull(query.first(new FindOptions().logQuery().limit(1)), query.getLoggedQuery());
+        assertNotNull(query.first(), query.getLoggedQuery());
 
-        FindOptions limit = new FindOptions().limit(1);
-        assertNotNull(getDs().find(HasPhotoReference.class).filter(eq("photo", cpk.photo)).first(limit));
-        assertNull(getDs().find(HasPhotoReference.class).filter(eq("photo", 1)).first(limit));
+        assertNotNull(getDs().find(HasPhotoReference.class).filter(eq("photo", cpk.photo)).first());
+        assertNull(getDs().find(HasPhotoReference.class).filter(eq("photo", 1)).first());
 
-        assertNotNull(getDs().find(HasPhotoReference.class).filter(eq("photo.keywords", "foo")).first(limit));
+        assertNotNull(getDs().find(HasPhotoReference.class).filter(eq("photo.keywords", "foo")).first());
     }
 
     @Test
@@ -1277,8 +1280,9 @@ public class TestQuery extends TestBase {
                 .atMost(10, TimeUnit.SECONDS)
                 .until(() -> getDs().find(CappedPic.class).count() > 0);
 
-        final Iterator<CappedPic> tail = query.iterator(new FindOptions()
-                .cursorType(CursorType.Tailable));
+        final Iterator<CappedPic> tail = ds.find(CappedPic.class, new FindOptions()
+                .cursorType(CursorType.Tailable))
+                .iterator();
         Awaitility
                 .await()
                 .pollDelay(500, TimeUnit.MILLISECONDS)
