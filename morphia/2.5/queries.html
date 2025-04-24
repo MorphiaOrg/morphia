@@ -334,11 +334,10 @@ Borrowing from the
 datastore.save(user);
 
 ContainsRenamedFields found = datastore
-                                  .find(ContainsRenamedFields.class)
-                                  .iterator(new FindOptions()
-                                               .projection().include("first_name")
-                                               .limit(1))
-                                  .tryNext();
+                                  .find(ContainsRenamedFields.class,
+                                      new FindOptions()
+                                            .projection().include("first_name"))
+                                  .first();
 assertNotNull(found.firstName);
 assertNull(found.lastName);</code></pre>
 </div>
@@ -376,8 +375,7 @@ An example of these methods in action would look like this:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore.find(Person.class)
-    .iterator(new FindOptions()
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore.find(Person.class, new FindOptions()
 	    .skip(1)
 	    .limit(10))</code></pre>
 </div>
@@ -397,11 +395,9 @@ For example, to sort by <code>age</code> (youngest to oldest) and then <code>inc
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">getDs().find(User.class)
-       .iterator(new FindOptions()
-                    .sort(ascending("age"), descending("income"))
-                    .limit(1))
-       .tryNext();</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">getDs().find(User.class, new FindOptions()
+                    .sort(ascending("age"), descending("income")))
+       .first();</code></pre>
 </div>
 </div>
 </div>
@@ -417,12 +413,13 @@ An example of this feature in action can be found in the
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore.getMapper().map(CappedPic.class);
 getDs().ensureCaps();                                                          <i class="conum" data-value="1"></i><b>(1)</b>
-final Query&lt;CappedPic&gt; query = getDs().find(CappedPic.class);
+final Query&lt;CappedPic&gt; query = getDs().find(CappedPic.class,
+    new FindOptions()
+            .cursorType(CursorType.Tailable));
 final List&lt;CappedPic&gt; found = new ArrayList&lt;&gt;();
 
 final MorphiaCursor&lt;CappedPic&gt; tail =
-    query.iterator(new FindOptions()
-        .cursorType(CursorType.Tailable));
+    query.iterator();
 while(found.size() &lt; 10) {
 	found.add(tail.next());                                                    <i class="conum" data-value="2"></i><b>(2)</b>
 }</code></pre>
