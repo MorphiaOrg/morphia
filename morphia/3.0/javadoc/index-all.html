@@ -122,6 +122,10 @@ loadScripts(document, 'script');</script>
 <div class="block">The $addToSet operator adds a value to an array unless the value is already present, in which case $addToSet does nothing to that
  array.</div>
 </dd>
+<dt><a href="dev/morphia/MorphiaDatastore.DatastoreOperations.html#aggregate(com.mongodb.client.MongoCollection,java.util.List)" class="member-name-link">aggregate(MongoCollection&lt;?&gt;, List&lt;Document&gt;)</a> - Method in class dev.morphia.<a href="dev/morphia/MorphiaDatastore.DatastoreOperations.html" title="class in dev.morphia">MorphiaDatastore.DatastoreOperations</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="dev/morphia/MorphiaDatastore.DatastoreOperations.html#aggregate(com.mongodb.client.MongoCollection,java.util.List,java.lang.Class)" class="member-name-link">aggregate(MongoCollection&lt;?&gt;, List&lt;Document&gt;, Class&lt;?&gt;)</a> - Method in class dev.morphia.<a href="dev/morphia/MorphiaDatastore.DatastoreOperations.html" title="class in dev.morphia">MorphiaDatastore.DatastoreOperations</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="dev/morphia/Datastore.html#aggregate(java.lang.Class)" class="member-name-link">aggregate(Class&lt;T&gt;)</a> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
 <dd>
 <div class="block">Returns a new query bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html" title="class or interface in com.mongodb.client" class="external-link"><code>MongoCollection</code></a>)</div>
@@ -841,21 +845,21 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Defines how morphia creates a Map object.</div>
 </dd>
-<dt><a href="dev/morphia/query/QueryFactory.html#createQuery(dev.morphia.Datastore,java.lang.Class)" class="member-name-link">createQuery(Datastore, Class&lt;T&gt;)</a> - Method in interface dev.morphia.query.<a href="dev/morphia/query/QueryFactory.html" title="interface in dev.morphia.query">QueryFactory</a></dt>
+<dt><a href="dev/morphia/query/QueryFactory.html#createQuery(dev.morphia.Datastore,java.lang.Class,dev.morphia.query.FindOptions)" class="member-name-link">createQuery(Datastore, Class&lt;T&gt;, FindOptions)</a> - Method in interface dev.morphia.query.<a href="dev/morphia/query/QueryFactory.html" title="interface in dev.morphia.query">QueryFactory</a></dt>
 <dd>
 <div class="block">Creates a new query for the given type.</div>
 </dd>
-<dt><a href="dev/morphia/query/DefaultQueryFactory.html#createQuery(dev.morphia.Datastore,java.lang.Class,org.bson.Document)" class="member-name-link">createQuery(Datastore, Class&lt;T&gt;, Document)</a> - Method in class dev.morphia.query.<a href="dev/morphia/query/DefaultQueryFactory.html" title="class in dev.morphia.query">DefaultQueryFactory</a></dt>
+<dt><a href="dev/morphia/query/DefaultQueryFactory.html#createQuery(dev.morphia.Datastore,java.lang.Class,dev.morphia.query.FindOptions,org.bson.Document)" class="member-name-link">createQuery(Datastore, Class&lt;T&gt;, FindOptions, Document)</a> - Method in class dev.morphia.query.<a href="dev/morphia/query/DefaultQueryFactory.html" title="class in dev.morphia.query">DefaultQueryFactory</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="dev/morphia/query/QueryFactory.html#createQuery(dev.morphia.Datastore,java.lang.Class,org.bson.Document)" class="member-name-link">createQuery(Datastore, Class&lt;T&gt;, Document)</a> - Method in interface dev.morphia.query.<a href="dev/morphia/query/QueryFactory.html" title="interface in dev.morphia.query">QueryFactory</a></dt>
+<dt><a href="dev/morphia/query/QueryFactory.html#createQuery(dev.morphia.Datastore,java.lang.Class,dev.morphia.query.FindOptions,org.bson.Document)" class="member-name-link">createQuery(Datastore, Class&lt;T&gt;, FindOptions, Document)</a> - Method in interface dev.morphia.query.<a href="dev/morphia/query/QueryFactory.html" title="interface in dev.morphia.query">QueryFactory</a></dt>
 <dd>
 <div class="block">Creates and returns a <a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query"><code>Query</code></a> for the given arguments.</div>
 </dd>
-<dt><a href="dev/morphia/query/DefaultQueryFactory.html#createQuery(dev.morphia.Datastore,java.lang.String,java.lang.Class)" class="member-name-link">createQuery(Datastore, String, Class&lt;T&gt;)</a> - Method in class dev.morphia.query.<a href="dev/morphia/query/DefaultQueryFactory.html" title="class in dev.morphia.query">DefaultQueryFactory</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="dev/morphia/query/QueryFactory.html#createQuery(dev.morphia.Datastore,java.lang.String,java.lang.Class)" class="member-name-link">createQuery(Datastore, String, Class&lt;T&gt;)</a> - Method in interface dev.morphia.query.<a href="dev/morphia/query/QueryFactory.html" title="interface in dev.morphia.query">QueryFactory</a></dt>
 <dd>
-<div class="block">Creates and returns a <a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query"><code>Query</code></a> for the given arguments.</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">use <a href="dev/morphia/query/QueryFactory.html#createQuery(dev.morphia.Datastore,java.lang.Class,dev.morphia.query.FindOptions,org.bson.Document)"><code>QueryFactory.createQuery(Datastore, Class, FindOptions, Document)</code></a></div>
+</div>
 </dd>
 <dt><a href="dev/morphia/ObjectFactory.html#createSet(dev.morphia.mapping.codec.pojo.PropertyModel)" class="member-name-link">createSet(PropertyModel)</a> - Method in interface dev.morphia.<a href="dev/morphia/ObjectFactory.html" title="interface in dev.morphia">ObjectFactory</a></dt>
 <dd>
@@ -1419,11 +1423,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Provides information on the query plan.</div>
 </dd>
-<dt><a href="dev/morphia/query/Query.html#explain(dev.morphia.query.FindOptions)" class="member-name-link">explain(FindOptions)</a> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
-<dd>
-<div class="block">Provides information on the query plan.</div>
-</dd>
-<dt><a href="dev/morphia/query/Query.html#explain(dev.morphia.query.FindOptions,com.mongodb.ExplainVerbosity)" class="member-name-link">explain(FindOptions, ExplainVerbosity)</a> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
+<dt><a href="dev/morphia/query/Query.html#explain(com.mongodb.ExplainVerbosity)" class="member-name-link">explain(ExplainVerbosity)</a> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
 <dd>
 <div class="block">Provides information on the query plan.</div>
 </dd>
@@ -1589,6 +1589,14 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Find instances of a type</div>
 </dd>
+<dt><a href="dev/morphia/Datastore.html#find(java.lang.Class,dev.morphia.query.FindOptions)" class="member-name-link">find(Class&lt;T&gt;, FindOptions)</a> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
+<dd>
+<div class="block">Find instances of a type</div>
+</dd>
+<dt><a href="dev/morphia/Datastore.html#find(java.lang.Class,dev.morphia.query.FindOptions,org.bson.Document)" class="member-name-link">find(Class&lt;T&gt;, FindOptions, Document)</a> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
+<dd>
+<div class="block">Find instances of a type using a native query.</div>
+</dd>
 <dt><a href="dev/morphia/Datastore.html#find(java.lang.Class,org.bson.Document)" class="member-name-link">find(Class&lt;T&gt;, Document)</a> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
 <dd>
 <div class="block">Find instances of a type using a native query.</div>
@@ -1622,10 +1630,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="dev/morphia/query/FindOptions.html#%3Cinit%3E()" class="member-name-link">FindOptions()</a> - Constructor for class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/query/Query.html#first()" class="member-name-link">first()</a> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
-<dd>
-<div class="block">Gets the first entity in the result set.</div>
-</dd>
-<dt><a href="dev/morphia/query/Query.html#first(dev.morphia.query.FindOptions)" class="member-name-link">first(FindOptions)</a> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
 <dd>
 <div class="block">Gets the first entity in the result set.</div>
 </dd>
@@ -2222,10 +2226,6 @@ loadScripts(document, 'script');</script>
 <div class="block">ISO Week Date Year.</div>
 </dd>
 <dt><a href="dev/morphia/query/Query.html#iterator()" class="member-name-link">iterator()</a> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
-<dd>
-<div class="block">Execute the query and get the results.</div>
-</dd>
-<dt><a href="dev/morphia/query/Query.html#iterator(dev.morphia.query.FindOptions)" class="member-name-link">iterator(FindOptions)</a> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
 <dd>
 <div class="block">Execute the query and get the results.</div>
 </dd>
@@ -3730,6 +3730,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Specifies the window boundaries and parameters.</div>
 </dd>
+<dt><a href="dev/morphia/Datastore.html#shardCollections()" class="member-name-link">shardCollections()</a> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
+<dd>
+<div class="block">Shards any collections with sharding definitions.</div>
+</dd>
 <dt><a href="dev/morphia/annotations/ShardKey.html" class="type-name-link" title="annotation interface in dev.morphia.annotations">ShardKey</a> - Annotation Interface in <a href="dev/morphia/annotations/package-summary.html">dev.morphia.annotations</a></dt>
 <dd>
 <div class="block">Defines a shard key of a particular type</div>
@@ -4006,10 +4010,6 @@ loadScripts(document, 'script');</script>
  second, and -1 if the first string is less than the second.</div>
 </dd>
 <dt><a href="dev/morphia/query/Query.html#stream()" class="member-name-link">stream()</a> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
-<dd>
-<div class="block">Provides a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link"><code>Stream</code></a> representation of the results of this query.</div>
-</dd>
-<dt><a href="dev/morphia/query/Query.html#stream(dev.morphia.query.FindOptions)" class="member-name-link">stream(FindOptions)</a> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
 <dd>
 <div class="block">Provides a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link"><code>Stream</code></a> representation of the results of this query.</div>
 </dd>

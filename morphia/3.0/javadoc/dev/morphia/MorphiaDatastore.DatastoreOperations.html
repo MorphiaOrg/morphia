@@ -111,6 +111,15 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract &lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-sync/com/mongodb/client/AggregateIterable.html" title="class or interface in com.mongodb.client" class="external-link">AggregateIterable</a>&lt;T&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#aggregate(com.mongodb.client.MongoCollection,java.util.List)" class="member-name-link">aggregate</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html" title="class or interface in com.mongodb.client" class="external-link">MongoCollection</a>&lt;?&gt;&nbsp;collection,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&gt;&nbsp;pipeline)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract &lt;T&gt;&nbsp;<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-sync/com/mongodb/client/AggregateIterable.html" title="class or interface in com.mongodb.client" class="external-link">AggregateIterable</a>&lt;T&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#aggregate(com.mongodb.client.MongoCollection,java.util.List,java.lang.Class)" class="member-name-link">aggregate</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html" title="class or interface in com.mongodb.client" class="external-link">MongoCollection</a>&lt;?&gt;&nbsp;collection,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&gt;&nbsp;pipeline,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;resultType)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract &lt;T&gt;&nbsp;long</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#countDocuments(com.mongodb.client.MongoCollection,org.bson.Document,dev.morphia.query.CountOptions)" class="member-name-link">countDocuments</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html" title="class or interface in com.mongodb.client" class="external-link">MongoCollection</a>&lt;T&gt;&nbsp;collection,
  <a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;query,
@@ -243,6 +252,21 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="aggregate(com.mongodb.client.MongoCollection,java.util.List)">
+<h3>aggregate</h3>
+<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-sync/com/mongodb/client/AggregateIterable.html" title="class or interface in com.mongodb.client" class="external-link">AggregateIterable</a>&lt;T&gt;</span>&nbsp;<span class="element-name">aggregate</span><wbr><span class="parameters">(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html" title="class or interface in com.mongodb.client" class="external-link">MongoCollection</a>&lt;?&gt;&nbsp;collection,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&gt;&nbsp;pipeline)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="aggregate(com.mongodb.client.MongoCollection,java.util.List,java.lang.Class)">
+<h3>aggregate</h3>
+<div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-sync/com/mongodb/client/AggregateIterable.html" title="class or interface in com.mongodb.client" class="external-link">AggregateIterable</a>&lt;T&gt;</span>&nbsp;<span class="element-name">aggregate</span><wbr><span class="parameters">(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html" title="class or interface in com.mongodb.client" class="external-link">MongoCollection</a>&lt;?&gt;&nbsp;collection,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&gt;&nbsp;pipeline,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;resultType)</span></div>
+</section>
+</li>
 <li>
 <section class="detail" id="countDocuments(com.mongodb.client.MongoCollection,org.bson.Document,dev.morphia.query.CountOptions)">
 <h3>countDocuments</h3>

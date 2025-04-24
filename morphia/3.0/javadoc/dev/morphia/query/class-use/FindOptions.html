@@ -55,13 +55,50 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Package</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><a href="#dev.morphia.query">dev.morphia.query</a></div>
+<div class="col-first even-row-color"><a href="#dev.morphia">dev.morphia</a></div>
 <div class="col-last even-row-color">
+<div class="block">Base Morphia package</div>
+</div>
+<div class="col-first odd-row-color"><a href="#dev.morphia.query">dev.morphia.query</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Defines the types needed to execute queries.</div>
 </div>
 </div>
 <section class="class-uses">
 <ul class="block-list">
+<li>
+<section class="detail" id="dev.morphia">
+<h2>Uses of <a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a> in <a href="../../package-summary.html">dev.morphia</a></h2>
+<div class="caption"><span>Methods in <a href="../../package-summary.html">dev.morphia</a> with parameters of type <a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>&lt;T&gt;&nbsp;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Datastore.</span><code><a href="../../Datastore.html#find(java.lang.Class,dev.morphia.query.FindOptions)" class="member-name-link">find</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
+ <a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Find instances of a type</div>
+</div>
+<div class="col-first odd-row-color"><code>&lt;T&gt;&nbsp;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Datastore.</span><code><a href="../../Datastore.html#find(java.lang.Class,dev.morphia.query.FindOptions,org.bson.Document)" class="member-name-link">find</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
+ <a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options,
+ <a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;nativeQuery)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Find instances of a type using a native query.</div>
+</div>
+<div class="col-first even-row-color"><code>&lt;T&gt;&nbsp;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">MorphiaDatastore.</span><code>find<wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
+ <a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>&lt;T&gt;&nbsp;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">MorphiaDatastore.</span><code>find<wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
+ <a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options,
+ <a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;nativeQuery)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+</div>
+</section>
+</li>
 <li>
 <section class="detail" id="dev.morphia.query">
 <h2>Uses of <a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a> in <a href="../package-summary.html">dev.morphia.query</a></h2>
@@ -249,42 +286,39 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">MorphiaQuery.</span><code>explain<wbr>(<a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options,
- <a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-core/com/mongodb/ExplainVerbosity.html" title="class or interface in com.mongodb" class="external-link">ExplainVerbosity</a>&nbsp;verbosity)</code></div>
+<div class="col-first even-row-color"><code>&lt;T&gt;&nbsp;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">DefaultQueryFactory.</span><code><a href="../DefaultQueryFactory.html#createQuery(dev.morphia.Datastore,java.lang.Class,dev.morphia.query.FindOptions,org.bson.Document)" class="member-name-link">createQuery</a><wbr>(<a href="../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
+ <a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options,
+ <a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;query)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>default <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Query.</span><code><a href="../Query.html#explain(dev.morphia.query.FindOptions)" class="member-name-link">explain</a><wbr>(<a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></div>
+<div class="col-first odd-row-color"><code>default &lt;T&gt;&nbsp;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">QueryFactory.</span><code><a href="../QueryFactory.html#createQuery(dev.morphia.Datastore,java.lang.Class,dev.morphia.query.FindOptions)" class="member-name-link">createQuery</a><wbr>(<a href="../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
+ <a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Provides information on the query plan.</div>
+<div class="block">Creates a new query for the given type.</div>
 </div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Query.</span><code><a href="../Query.html#explain(dev.morphia.query.FindOptions,com.mongodb.ExplainVerbosity)" class="member-name-link">explain</a><wbr>(<a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options,
- <a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-core/com/mongodb/ExplainVerbosity.html" title="class or interface in com.mongodb" class="external-link">ExplainVerbosity</a>&nbsp;verbosity)</code></div>
+<div class="col-first even-row-color"><code>&lt;T&gt;&nbsp;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">QueryFactory.</span><code><a href="../QueryFactory.html#createQuery(dev.morphia.Datastore,java.lang.Class,dev.morphia.query.FindOptions,org.bson.Document)" class="member-name-link">createQuery</a><wbr>(<a href="../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
+ <a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options,
+ <a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;query)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Provides information on the query plan.</div>
+<div class="block">Creates and returns a <a href="../Query.html" title="interface in dev.morphia.query"><code>Query</code></a> for the given arguments.</div>
 </div>
-<div class="col-first odd-row-color"><code>T</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">MorphiaQuery.</span><code>first<wbr>(<a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="../Query.html" title="type parameter in Query">T</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Query.</span><code><a href="../Query.html#first(dev.morphia.query.FindOptions)" class="member-name-link">first</a><wbr>(<a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Gets the first entity in the result set.</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="../MorphiaCursor.html" title="class in dev.morphia.query">MorphiaCursor</a>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">MorphiaQuery.</span><code>iterator<wbr>(<a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="../MorphiaCursor.html" title="class in dev.morphia.query">MorphiaCursor</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Query.</span><code><a href="../Query.html#iterator(dev.morphia.query.FindOptions)" class="member-name-link">iterator</a><wbr>(<a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Execute the query and get the results.</div>
-</div>
-<div class="col-first odd-row-color"><code>default <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="../Query.html" title="type parameter in Query">T</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Query.</span><code><a href="../Query.html#stream(dev.morphia.query.FindOptions)" class="member-name-link">stream</a><wbr>(<a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></div>
-<div class="col-last odd-row-color">
-<div class="block">Provides a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link"><code>Stream</code></a> representation of the results of this query.</div>
-</div>
+<div class="caption"><span>Constructors in <a href="../package-summary.html">dev.morphia.query</a> with parameters of type <a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier</div>
+<div class="table-header col-second">Constructor</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>protected </code></div>
+<div class="col-second even-row-color"><code>MorphiaQuery<wbr>(<a href="../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
+ <a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options,
+ <a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;query)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
