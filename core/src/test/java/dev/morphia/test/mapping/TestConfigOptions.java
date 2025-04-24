@@ -145,9 +145,10 @@ public class TestConfigOptions extends TestBase {
 
         getDs().save(List.of(entityDiscriminator, entityDiscriminator2));
 
-        Query<EntityDiscriminator2> query = getDs().find(EntityDiscriminator2.class)
+        Query<EntityDiscriminator2> query = getDs().find(EntityDiscriminator2.class,
+                new FindOptions().logQuery())
                 .filter(ne("name", "hi"));
-        List<EntityDiscriminator2> list = query.iterator(new FindOptions().logQuery()).toList();
+        List<EntityDiscriminator2> list = query.iterator().toList();
         assertEquals(list.size(), 1, query.getLoggedQuery());
     }
 

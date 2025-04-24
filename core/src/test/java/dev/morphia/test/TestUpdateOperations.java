@@ -613,7 +613,8 @@ public class TestUpdateOperations extends TestBase {
 
     @Test
     public void testMultiUpdates() {
-        Query<ContainsPic> finder = getDs().find(ContainsPic.class);
+        Query<ContainsPic> finder = getDs().find(ContainsPic.class,
+                new FindOptions().sort(Sort.ascending("size")));
 
         createContainsPic(0);
         createContainsPic(1);
@@ -622,7 +623,7 @@ public class TestUpdateOperations extends TestBase {
         finder.update(inc("size"))
                 .execute(new UpdateOptions().multi(true));
 
-        try (final MorphiaCursor<ContainsPic> iterator = finder.iterator(new FindOptions().sort(Sort.ascending("size")))) {
+        try (final MorphiaCursor<ContainsPic> iterator = finder.iterator()) {
             for (int i = 0; i < 3; i++) {
                 assertEquals(i + 1, iterator.next().getSize());
             }

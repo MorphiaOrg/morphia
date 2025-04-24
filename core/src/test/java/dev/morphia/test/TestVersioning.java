@@ -333,10 +333,11 @@ public class TestVersioning extends TestBase {
                 .update(set("text", "some new value"))
                 .execute();
         assertEquals(results.getModifiedCount(), 1);
-        List<VersionedType> postUpdate = ds.find(VersionedType.class)
-                .filter(eq("text", "some new value"))
-                .iterator(new FindOptions()
+        List<VersionedType> postUpdate = ds.find(VersionedType.class,
+                new FindOptions()
                         .sort(Sort.ascending("_id")))
+                .filter(eq("text", "some new value"))
+                .iterator()
                 .toList();
 
         for (int i = 0, postUpdateSize = postUpdate.size(); i < postUpdateSize; i++) {
