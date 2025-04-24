@@ -270,8 +270,7 @@ public class TestDatastore extends TestBase {
         getDs().save(new CurrentStatus("Kinda Bad"));
         assertEquals(query.count(), 1);
 
-        assertTrue(query.iterator(new FindOptions().limit(1))
-                .next().message.contains("Bad"));
+        assertTrue(query.first().message.contains("Bad"));
 
         getDs().save(new CurrentStatus("Kinda Bad2"));
         assertEquals(query.count(), 1);
@@ -449,7 +448,7 @@ public class TestDatastore extends TestBase {
         assertEquals(results.loginCount, 1);
         assertEquals(results.username, "Ron Swanson");
 
-        user = getDs().find(FacebookUser.class).filter(eq("id", 4)).iterator(new FindOptions().limit(1)).next();
+        user = getDs().find(FacebookUser.class).filter(eq("id", 4)).first();
         assertEquals(user.loginCount, 1);
         assertEquals(user.username, "Ron Swanson");
     }
@@ -666,7 +665,7 @@ public class TestDatastore extends TestBase {
                 .execute();
 
         assertEquals(results.getModifiedCount(), 1);
-        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).iterator(new FindOptions().limit(1)).next().loginCount, 0);
+        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).first().loginCount, 0);
         assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 2)).iterator(new FindOptions().limit(1))
                 .next().loginCount, 1);
 

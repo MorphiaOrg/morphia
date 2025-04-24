@@ -151,8 +151,7 @@ public class TestUpdateOperations extends TestBase {
                 .execute();
 
         // fails due to type now missing
-        getDs().find(MapsOfStuff.class).iterator(new FindOptions().limit(1))
-                .next();
+        getDs().find(MapsOfStuff.class).first();
     }
 
     @Test(description = "see https://github.com/MorphiaOrg/morphia/issues/2472 for details")
@@ -779,8 +778,7 @@ public class TestUpdateOperations extends TestBase {
                 .execute();
 
         assertEquals(results.getModifiedCount(), 1);
-        LogHolder updated = ds.find(LogHolder.class).iterator(new FindOptions().limit(1))
-                .next();
+        LogHolder updated = ds.find(LogHolder.class).first();
         assertEquals(updated.logs.size(), 4);
         assertTrue(updated.logs.stream()
                 .allMatch(log -> log.equals(new Log(1))
@@ -944,8 +942,7 @@ public class TestUpdateOperations extends TestBase {
         assertThat(res.getModifiedCount(), is(1L));
 
         //test reading the object.
-        final ContainsPicKey cpk2 = ds.find(ContainsPicKey.class).iterator(new FindOptions().limit(1))
-                .next();
+        final ContainsPicKey cpk2 = ds.find(ContainsPicKey.class).first();
         assertThat(cpk2, is(notNullValue()));
         assertThat(cpk.name, is(cpk2.name));
         MatcherAssert.assertThat(cpk2.keys.get(), Matchers.hasItem(pic));
@@ -969,8 +966,7 @@ public class TestUpdateOperations extends TestBase {
                 .execute().getModifiedCount(), is(1L));
 
         //test reading the object.
-        final ContainsPicKey cpk2 = ds.find(ContainsPicKey.class).iterator(new FindOptions().limit(1))
-                .next();
+        final ContainsPicKey cpk2 = ds.find(ContainsPicKey.class).first();
         assertThat(cpk2, is(notNullValue()));
         assertThat(cpk.name, is(cpk2.name));
         assertThat(cpk2.pic, is(notNullValue()));
@@ -979,8 +975,7 @@ public class TestUpdateOperations extends TestBase {
         query.update(set("pic", pic)).execute();
 
         //test reading the object.
-        final ContainsPicKey cpk3 = ds.find(ContainsPicKey.class).iterator(new FindOptions().limit(1))
-                .next();
+        final ContainsPicKey cpk3 = ds.find(ContainsPicKey.class).first();
         assertThat(cpk3, is(notNullValue()));
         assertThat(cpk.name, is(cpk3.name));
         assertThat(cpk3.pic, is(notNullValue()));
@@ -1025,8 +1020,7 @@ public class TestUpdateOperations extends TestBase {
         assertEquals(result.getModifiedCount(), 1);
 
         //test reading the object.
-        final ContainsPic cp2 = getDs().find(ContainsPic.class).iterator(new FindOptions().limit(1))
-                .next();
+        final ContainsPic cp2 = getDs().find(ContainsPic.class).first();
         assertThat(cp2, is(notNullValue()));
         MatcherAssert.assertThat(cp.getName(), CoreMatchers.is(cp2.getName()));
         MatcherAssert.assertThat(cp2.getPic(), is(notNullValue()));
@@ -1034,8 +1028,7 @@ public class TestUpdateOperations extends TestBase {
         MatcherAssert.assertThat(pic.getName(), CoreMatchers.is(cp2.getPic().getName()));
 
         //test reading the object.
-        final ContainsPic cp3 = getDs().find(ContainsPic.class).iterator(new FindOptions().limit(1))
-                .next();
+        final ContainsPic cp3 = getDs().find(ContainsPic.class).first();
         assertThat(cp3, is(notNullValue()));
         MatcherAssert.assertThat(cp.getName(), CoreMatchers.is(cp3.getName()));
         MatcherAssert.assertThat(cp3.getPic(), is(notNullValue()));
@@ -1054,9 +1047,7 @@ public class TestUpdateOperations extends TestBase {
         final UpdateResult res = query.update(inc("val", 1.1D)).execute();
         assertUpdated(res, 1);
 
-        assertEquals(query.iterator(new FindOptions()
-                .limit(1))
-                .next().val, 22);
+        assertEquals(query.first().val, 22);
     }
 
     @Test

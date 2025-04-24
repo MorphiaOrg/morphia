@@ -6,7 +6,6 @@ import java.util.Set;
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.query.FindOptions;
 import dev.morphia.test.TestBase;
 
 import org.bson.types.ObjectId;
@@ -19,17 +18,14 @@ public class TestSingleToMultipleConversion extends TestBase {
         getDs().find(HasSingleString.class)
                 .delete();
         getDs().save(new HasSingleString());
-        Assert.assertNotNull(getDs().find(HasSingleString.class).iterator(new FindOptions().limit(1))
-                .next());
+        Assert.assertNotNull(getDs().find(HasSingleString.class).first());
         Assert.assertEquals(getDs().find(HasSingleString.class).count(), 1);
-        final HasManyStringsArray hms = getDs().find(HasManyStringsArray.class).iterator(new FindOptions().limit(1))
-                .next();
+        final HasManyStringsArray hms = getDs().find(HasManyStringsArray.class).first();
         Assert.assertNotNull(hms);
         Assert.assertNotNull(hms.strings);
         Assert.assertEquals(hms.strings.length, 1);
 
-        final HasManyStringsList hms2 = getDs().find(HasManyStringsList.class).iterator(new FindOptions().limit(1))
-                .next();
+        final HasManyStringsList hms2 = getDs().find(HasManyStringsList.class).first();
         Assert.assertNotNull(hms2);
         Assert.assertNotNull(hms2.strings);
         Assert.assertEquals(hms2.strings.size(), 1);
@@ -38,8 +34,7 @@ public class TestSingleToMultipleConversion extends TestBase {
     @Test
     public void testEmbeddedType() {
         getDs().save(new HasEmbeddedStringy());
-        Assert.assertNotNull(getDs().find(HasEmbeddedStringy.class).iterator(new FindOptions().limit(1))
-                .next());
+        Assert.assertNotNull(getDs().find(HasEmbeddedStringy.class).first());
         Assert.assertEquals(getDs().find(HasEmbeddedStringy.class).count(), 1);
         final HasEmbeddedStringyArray has = getDs().find(HasEmbeddedStringyArray.class).first();
         Assert.assertNotNull(has);

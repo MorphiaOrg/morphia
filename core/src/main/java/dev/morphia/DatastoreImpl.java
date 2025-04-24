@@ -499,7 +499,7 @@ public class DatastoreImpl implements AdvancedDatastore {
             throw new UpdateException(Sofia.noMatchingDocuments());
         }
 
-        return (T) find(entity.getClass()).filter(eq("_id", id)).iterator(new FindOptions().limit(1)).next();
+        return (T) find(entity.getClass()).filter(eq("_id", id)).first();
     }
 
     protected MongoClient getMongoClient() {

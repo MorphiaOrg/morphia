@@ -410,7 +410,7 @@ public class TestVersioning extends TestBase {
         query.update(set("name", "Value 3"))
                 .execute(new UpdateOptions().upsert(true));
 
-        entity = datastore.find(Versioned.class).iterator(new FindOptions().limit(1)).tryNext();
+        entity = datastore.find(Versioned.class).first();
         assertEquals(entity.getName(), "Value 3");
         assertEquals(entity.getVersion().longValue(), 1);
     }

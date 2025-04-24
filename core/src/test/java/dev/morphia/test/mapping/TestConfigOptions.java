@@ -242,8 +242,7 @@ public class TestConfigOptions extends TestBase {
         datastore.save(hl);
         document = getDocumentCollection(HasMap.class).find().first();
         assertTrue(document.containsKey("properties"), "Should find the field");
-        assertEquals(datastore.find(HasMap.class).iterator(new FindOptions().limit(1))
-                .tryNext().properties, expected);
+        assertEquals(datastore.find(HasMap.class).first().properties, expected);
         cleanup();
     }
 
@@ -295,8 +294,7 @@ public class TestConfigOptions extends TestBase {
         datastore.save(hl);
         Document document = getDocumentCollection(HasList.class).find().first();
         assertFalse(document.containsKey("names"), "field should not exist, value = " + document.get("names"));
-        HasList hasList = datastore.find(HasList.class).iterator(new FindOptions().limit(1))
-                .tryNext();
+        HasList hasList = datastore.find(HasList.class).first();
         assertNull(hasList.names);
         cleanup();
     }

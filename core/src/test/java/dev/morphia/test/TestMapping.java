@@ -31,7 +31,6 @@ import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.experimental.MorphiaReference;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.mapping.validation.ConstraintViolationException;
-import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryFactory;
 import dev.morphia.test.models.Author;
@@ -380,17 +379,14 @@ public class TestMapping extends TestBase {
     public void testEmbeddedDocument() {
         withConfig(buildConfig(ContainsDocument.class), () -> {
             getDs().save(new ContainsDocument());
-            assertNotNull(getDs().find(ContainsDocument.class).iterator(new FindOptions().limit(1))
-                    .next());
+            assertNotNull(getDs().find(ContainsDocument.class).first());
         });
     }
 
     @Test
     public void testEmbeddedEntity() {
         getDs().save(new ContainsEmbeddedEntity());
-        final ContainsEmbeddedEntity ceeLoaded = getDs().find(ContainsEmbeddedEntity.class)
-                .iterator(new FindOptions().limit(1))
-                .next();
+        final ContainsEmbeddedEntity ceeLoaded = getDs().find(ContainsEmbeddedEntity.class).first();
         assertNotNull(ceeLoaded);
         assertNotNull(ceeLoaded.id);
         assertNotNull(ceeLoaded.cil);
@@ -669,20 +665,17 @@ public class TestMapping extends TestBase {
     @Test
     public void testLoadOnly() {
         getDs().save(new Normal("value"));
-        Normal n = getDs().find(Normal.class).iterator(new FindOptions().limit(1))
-                .next();
+        Normal n = getDs().find(Normal.class).first();
         assertNotNull(n);
         assertNotNull(n.name);
         getDs().delete(n);
         getDs().save(new NormalWithLoadOnly());
-        n = getDs().find(Normal.class).iterator(new FindOptions().limit(1))
-                .next();
+        n = getDs().find(Normal.class).first();
         assertNotNull(n);
         assertNull(n.name);
         getDs().delete(n);
         getDs().save(new Normal("value21"));
-        final NormalWithLoadOnly notSaved = getDs().find(NormalWithLoadOnly.class).iterator(new FindOptions().limit(1))
-                .next();
+        final NormalWithLoadOnly notSaved = getDs().find(NormalWithLoadOnly.class).first();
         assertNotNull(notSaved);
         assertNotNull(notSaved.name);
         assertEquals(notSaved.name, "never");
@@ -691,8 +684,7 @@ public class TestMapping extends TestBase {
     @Test
     public void testLongArrayMapping() {
         getDs().save(new ContainsLongAndStringArray());
-        ContainsLongAndStringArray loaded = getDs().find(ContainsLongAndStringArray.class).iterator(new FindOptions().limit(1))
-                .next();
+        ContainsLongAndStringArray loaded = getDs().find(ContainsLongAndStringArray.class).first();
         assertEquals((new ContainsLongAndStringArray()).longs, loaded.longs);
         assertEquals((new ContainsLongAndStringArray()).strings, loaded.strings);
 
@@ -724,8 +716,7 @@ public class TestMapping extends TestBase {
         final ContainsMapLike ml = new ContainsMapLike();
         ml.m.put("first", "test");
         getDs().save(ml);
-        final ContainsMapLike mlLoaded = getDs().find(ContainsMapLike.class).iterator(new FindOptions().limit(1))
-                .next();
+        final ContainsMapLike mlLoaded = getDs().find(ContainsMapLike.class).first();
         assertNotNull(mlLoaded);
         assertNotNull(mlLoaded.m);
         assertTrue(mlLoaded.m.containsKey("first"));
@@ -741,9 +732,7 @@ public class TestMapping extends TestBase {
         aMap.embeddedValues.put("second", f2);
         getDs().save(aMap);
 
-        final ContainsMapWithEmbeddedInterface mapLoaded = getDs().find(ContainsMapWithEmbeddedInterface.class)
-                .iterator(new FindOptions().limit(1))
-                .next();
+        final ContainsMapWithEmbeddedInterface mapLoaded = getDs().find(ContainsMapWithEmbeddedInterface.class).first();
 
         assertNotNull(mapLoaded);
         assertEquals(mapLoaded.embeddedValues.size(), 2);

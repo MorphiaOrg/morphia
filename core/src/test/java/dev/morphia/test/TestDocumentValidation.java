@@ -115,7 +115,7 @@ public class TestDocumentValidation extends TestBase {
 
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
                 .filter(eq("number", 8));
-        Assert.assertNotNull(query.iterator(new FindOptions().limit(1)).tryNext());
+        Assert.assertNotNull(query.first());
 
         List<DocumentValidation> list = asList(new DocumentValidation("Harold", 8, new Date()),
                 new DocumentValidation("John", 8, new Date()),
@@ -206,7 +206,7 @@ public class TestDocumentValidation extends TestBase {
 
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
                 .filter(eq("number", 8));
-        Assert.assertNotNull(query.iterator(new FindOptions().limit(1)).tryNext());
+        Assert.assertNotNull(query.first());
 
         List<DocumentValidation> list = asList(new DocumentValidation("Harold", 8, new Date()),
                 new DocumentValidation("Harold", 8, new Date()),

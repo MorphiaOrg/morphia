@@ -702,7 +702,7 @@ public class TestQuery extends TestBase {
 
         assertNotNull(getDs()
                 .find(Photo.class)
-                .filter(in("keywords", asList("red", "yellow"))).iterator(new FindOptions().limit(1)).next());
+                .filter(in("keywords", asList("red", "yellow"))).first());
     }
 
     @Test
@@ -712,7 +712,7 @@ public class TestQuery extends TestBase {
         final Query<PhotoWithKeywords> query = getDs()
                 .find(PhotoWithKeywords.class)
                 .filter(in("keywords", asList(new Keyword("Scott"), new Keyword("Randy"))));
-        assertNotNull(query.iterator(new FindOptions().limit(1)).next());
+        assertNotNull(query.first());
     }
 
     @Test
@@ -956,8 +956,7 @@ public class TestQuery extends TestBase {
         Query query = getDs().find(ContainsPic.class)
                 .filter(eq("pic", queryPic));
         assertFalse(queryPic.isPrePersist());
-        assertNotNull(query.iterator(new FindOptions().limit(1))
-                .tryNext());
+        assertNotNull(query.first());
 
         getDs().find(ContainsPic.class)
                 .filter(elemMatch("pic", eq("pic", queryPic)));
@@ -1148,7 +1147,7 @@ public class TestQuery extends TestBase {
 
         Query<Class1> query = getDs().find(Class1.class);
         query.disableValidation().filter(eq("someMap.someKey", "value"));
-        Class1 retrievedValue = query.iterator(new FindOptions().limit(1)).next();
+        Class1 retrievedValue = query.first();
         assertNotNull(retrievedValue);
         assertEquals(retrievedValue.value1, "foo");
     }

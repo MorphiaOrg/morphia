@@ -9,7 +9,6 @@ import dev.morphia.annotations.Property;
 import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
-import dev.morphia.query.FindOptions;
 import dev.morphia.test.models.SpecializedEntity;
 import dev.morphia.test.models.generics.Another;
 import dev.morphia.test.models.generics.Child;
@@ -38,9 +37,7 @@ public class TestGenerics extends TestBase {
         entity.setEmbeddedList(asList(new Child("first"), new Child("second"), new Another("third")));
         getDs().save(entity);
 
-        ChildEntity childEntity = getDs().find(ChildEntity.class)
-                .iterator(new FindOptions().limit(1))
-                .next();
+        ChildEntity childEntity = getDs().find(ChildEntity.class).first();
 
         Assert.assertEquals(childEntity, entity);
     }
@@ -85,8 +82,7 @@ public class TestGenerics extends TestBase {
         getDs().save(ct);
         assertNotNull(ct.id);
         assertEquals(getDs().find(ContainsThings.class).count(), 1);
-        final ContainsThings ctLoaded = getDs().find(ContainsThings.class).iterator(new FindOptions().limit(1))
-                .next();
+        final ContainsThings ctLoaded = getDs().find(ContainsThings.class).first();
         assertNotNull(ctLoaded);
         assertNotNull(ctLoaded.id);
         assertNotNull(ctLoaded.stringThing);
