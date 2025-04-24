@@ -463,10 +463,8 @@ public class TestDatastore extends TestBase {
                 .modify(inc("loginCount"))
                 .execute();
 
-        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).iterator(new FindOptions().limit(1))
-                .next().loginCount, 0);
-        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 2)).iterator(new FindOptions().limit(1))
-                .next().loginCount, 1);
+        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).first().loginCount, 0);
+        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 2)).first().loginCount, 1);
         assertEquals(result.loginCount, 0);
 
         result = getDs().find(FacebookUser.class)
@@ -478,11 +476,9 @@ public class TestDatastore extends TestBase {
                                 .locale("en")
                                 .collationStrength(SECONDARY)
                                 .build()));
-        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).iterator(new FindOptions().limit(1))
-                .next().loginCount, 1);
+        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).first().loginCount, 1);
         assertEquals(result.loginCount, 0);
-        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 2)).iterator(new FindOptions().limit(1))
-                .next().loginCount, 1);
+        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 2)).first().loginCount, 1);
 
         result = getDs().find(FacebookUser.class)
                 .filter(eq("id", 3L),
@@ -493,8 +489,7 @@ public class TestDatastore extends TestBase {
                         .upsert(true));
 
         assertNull(result);
-        FacebookUser user = getDs().find(FacebookUser.class).filter(eq("id", 3)).iterator(new FindOptions().limit(1))
-                .next();
+        FacebookUser user = getDs().find(FacebookUser.class).filter(eq("id", 3)).first();
         assertEquals(user.loginCount, 1);
         assertEquals(user.username, "Jon Snow");
 
@@ -507,8 +502,7 @@ public class TestDatastore extends TestBase {
                         .upsert(true));
 
         assertNotNull(result);
-        user = getDs().find(FacebookUser.class).filter(eq("id", 4)).iterator(new FindOptions().limit(1))
-                .next();
+        user = getDs().find(FacebookUser.class).filter(eq("id", 4)).first();
         assertEquals(result.loginCount, 1);
         assertEquals(result.username, "Ron Swanson");
         assertEquals(user.loginCount, 1);
@@ -666,8 +660,7 @@ public class TestDatastore extends TestBase {
 
         assertEquals(results.getModifiedCount(), 1);
         assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).first().loginCount, 0);
-        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 2)).iterator(new FindOptions().limit(1))
-                .next().loginCount, 1);
+        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 2)).first().loginCount, 1);
 
         results = getDs().find(FacebookUser.class)
                 .filter(eq("username", "john doe"))
@@ -679,10 +672,8 @@ public class TestDatastore extends TestBase {
                                 .collationStrength(SECONDARY)
                                 .build()));
         assertEquals(results.getModifiedCount(), 2);
-        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).iterator(new FindOptions().limit(1))
-                .next().loginCount, 1);
-        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 2)).iterator(new FindOptions().limit(1))
-                .next().loginCount, 2);
+        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).first().loginCount, 1);
+        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 2)).first().loginCount, 2);
     }
 
     private static class LifecycleListener implements EntityListener<LifecycleTestObj> {

@@ -25,7 +25,6 @@ import dev.morphia.annotations.Transient;
 import dev.morphia.mapping.DateStorage;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
-import dev.morphia.query.FindOptions;
 import dev.morphia.test.TestBase;
 
 import org.bson.Document;
@@ -114,9 +113,7 @@ public class TestLifecycles extends TestBase {
         Assert.assertTrue(a.b.isPrePersist());
         Assert.assertTrue(a.bs.get(0).isPrePersist());
 
-        a = getDs().find(LifecyleA.class)
-                .filter(eq("_id", a.id)).iterator(new FindOptions().limit(1))
-                .tryNext();
+        a = getDs().find(LifecyleA.class).filter(eq("_id", a.id)).first();
 
         Assert.assertTrue(a.isPostLoad());
         Assert.assertTrue(a.b.isPostLoad());
@@ -149,9 +146,7 @@ public class TestLifecycles extends TestBase {
         Assert.assertFalse(entity.isPersistent());
         getDs().save(entity);
         Assert.assertTrue(entity.isPersistent());
-        final SomeEntity reloaded = getDs().find(SomeEntity.class)
-                .filter(eq("id", entity.getId())).iterator(new FindOptions().limit(1))
-                .tryNext();
+        final SomeEntity reloaded = getDs().find(SomeEntity.class).filter(eq("id", entity.getId())).first();
         Assert.assertTrue(reloaded.isPersistent());
     }
 

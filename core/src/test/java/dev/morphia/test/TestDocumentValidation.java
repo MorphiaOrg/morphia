@@ -36,7 +36,6 @@ import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
 import dev.morphia.annotations.Validation;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.test.models.Contact;
 import dev.morphia.test.models.DocumentValidation;
@@ -96,9 +95,7 @@ public class TestDocumentValidation extends TestBase {
         options.bypassDocumentValidation(true);
         query.modify(set("number", 5)).execute(options);
 
-        Assert.assertNotNull(query.filter(eq("number", 5))
-                .iterator(new FindOptions().limit(1))
-                .next());
+        Assert.assertNotNull(query.filter(eq("number", 5)).first());
     }
 
     @Test
@@ -259,8 +256,7 @@ public class TestDocumentValidation extends TestBase {
         options.bypassDocumentValidation(true);
         query.update(set("number", 5)).execute(options);
 
-        Assert.assertNotNull(query.filter(eq("number", 5)).iterator(new FindOptions().limit(1))
-                .tryNext());
+        Assert.assertNotNull(query.filter(eq("number", 5)).first());
     }
 
     @Test

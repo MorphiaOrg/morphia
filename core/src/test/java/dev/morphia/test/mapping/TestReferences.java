@@ -29,7 +29,6 @@ import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.MapperOptions.PropertyDiscovery;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
-import dev.morphia.query.FindOptions;
 import dev.morphia.test.models.Author;
 import dev.morphia.test.models.Book;
 import dev.morphia.test.models.FacebookUser;
@@ -248,9 +247,7 @@ public class TestReferences extends ProxyTestBase {
         container.singleRef = ref;
         getDs().save(container);
 
-        assertNotNull(getDs().find(Container.class)
-                .filter(eq("singleRef", ref)).iterator(new FindOptions().limit(1))
-                .next());
+        assertNotNull(getDs().find(Container.class).filter(eq("singleRef", ref)).first());
     }
 
     @Test

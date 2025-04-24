@@ -187,9 +187,7 @@ public class TestUpdateOperations extends TestBase {
 
         // then
         assertThat(updateResult.getModifiedCount(), is(1L));
-        assertThat(getDs().find(Parent.class)
-                .filter(eq("id", parentId)).iterator(new FindOptions().limit(1))
-                .next().children, hasItem(new Child(childName, updatedLastName)));
+        assertThat(getDs().find(Parent.class).filter(eq("id", parentId)).first().children, hasItem(new Child(childName, updatedLastName)));
     }
 
     @Test
@@ -387,12 +385,8 @@ public class TestUpdateOperations extends TestBase {
                 .execute();
 
         MatcherAssert.assertThat(getDs().find(Rectangle.class).count(), is(5L));
-        MatcherAssert.assertThat(getDs().find(Rectangle.class)
-                .filter(eq("height", 1D)).iterator(new FindOptions().limit(1))
-                .next(), is(notNullValue()));
-        MatcherAssert.assertThat(getDs().find(Rectangle.class)
-                .filter(eq("width", 30D)).iterator(new FindOptions().limit(1))
-                .next(), is(notNullValue()));
+        MatcherAssert.assertThat(getDs().find(Rectangle.class).filter(eq("height", 1D)).first(), is(notNullValue()));
+        MatcherAssert.assertThat(getDs().find(Rectangle.class).filter(eq("width", 30D)).first(), is(notNullValue()));
 
         getDs().find(Rectangle.class)
                 .filter(eq("width", 30D))
@@ -400,12 +394,8 @@ public class TestUpdateOperations extends TestBase {
                         set("height", 2D),
                         set("width", 2D))
                 .execute();
-        MatcherAssert.assertThat(getDs().find(Rectangle.class)
-                .filter(eq("width", 1D)).iterator(new FindOptions().limit(1))
-                .tryNext(), is(nullValue()));
-        MatcherAssert.assertThat(getDs().find(Rectangle.class)
-                .filter(eq("width", 2D)).iterator(new FindOptions().limit(1))
-                .next(), is(notNullValue()));
+        MatcherAssert.assertThat(getDs().find(Rectangle.class).filter(eq("width", 1D)).first(), is(nullValue()));
+        MatcherAssert.assertThat(getDs().find(Rectangle.class).filter(eq("width", 2D)).first(), is(notNullValue()));
 
         heightOf35.update(dec("height", 1)).execute();
         heightOf35.update(dec("height", Long.MAX_VALUE)).execute();
@@ -450,8 +440,7 @@ public class TestUpdateOperations extends TestBase {
         assertUpdated(circle.update(inc("radius")).execute(new UpdateOptions().multi(true)), 2);
 
         //test possible data type change.
-        final Circle updatedCircle = circle.filter(eq("radius", 13)).iterator(new FindOptions().limit(1))
-                .next();
+        final Circle updatedCircle = circle.filter(eq("radius", 13)).first();
         assertThat(updatedCircle, is(notNullValue()));
         MatcherAssert.assertThat(updatedCircle.getRadius(), is(13D));
     }

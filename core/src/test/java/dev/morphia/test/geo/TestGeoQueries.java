@@ -91,10 +91,8 @@ public class TestGeoQueries extends TestBase {
     public void testGeoWithinBox() {
         final Place place1 = new Place("place1", new double[] { 1, 1 });
         getDs().save(place1);
-        final Place found = getDs().find(Place.class)
-                .filter(box("loc", new Point(new Position(0, 0)), new Point(new Position(2, 2))))
-                .iterator(new FindOptions().limit(1))
-                .next();
+        final Place found = getDs().find(Place.class).filter(box("loc", new Point(new Position(0, 0)), new Point(new Position(2, 2))))
+                .first();
         Assert.assertNotNull(found);
     }
 
@@ -103,9 +101,7 @@ public class TestGeoQueries extends TestBase {
         final Place place1 = new Place("place1", new double[] { 1, 1 });
         getDs().save(place1);
         final Place found = getDs().find(Place.class)
-                .filter(box("loc", new Point(new Position(0, 0)), new Point(new Position(.4, .5))))
-                .iterator(new FindOptions().limit(1))
-                .tryNext();
+                .filter(box("loc", new Point(new Position(0, 0)), new Point(new Position(.4, .5)))).first();
         Assert.assertNull(found);
     }
 
@@ -113,14 +109,11 @@ public class TestGeoQueries extends TestBase {
     public void testGeoWithinPolygon() {
         final Place place1 = new Place("place1", new double[] { 0, 1 });
         getDs().save(place1);
-        final Place found = getDs().find(Place.class)
-                .filter(polygon("loc",
-                        new Point(new Position(0, 0)),
-                        new Point(new Position(0, 5)),
-                        new Point(new Position(2, 3)),
-                        new Point(new Position(2, 0))))
-                .iterator(new FindOptions().limit(1))
-                .next();
+        final Place found = getDs().find(Place.class).filter(polygon("loc",
+                new Point(new Position(0, 0)),
+                new Point(new Position(0, 5)),
+                new Point(new Position(2, 3)),
+                new Point(new Position(2, 0)))).first();
         Assert.assertNotNull(found);
     }
 
@@ -128,14 +121,11 @@ public class TestGeoQueries extends TestBase {
     public void testGeoWithinPolygon2() {
         final Place place1 = new Place("place1", new double[] { 10, 1 });
         getDs().save(place1);
-        final Place found = getDs().find(Place.class)
-                .filter(polygon("loc",
-                        new Point(new Position(0, 0)),
-                        new Point(new Position(0, 5)),
-                        new Point(new Position(2, 3)),
-                        new Point(new Position(2, 0))))
-                .iterator(new FindOptions().limit(1))
-                .tryNext();
+        final Place found = getDs().find(Place.class).filter(polygon("loc",
+                new Point(new Position(0, 0)),
+                new Point(new Position(0, 5)),
+                new Point(new Position(2, 3)),
+                new Point(new Position(2, 0)))).first();
         Assert.assertNull(found);
     }
 
@@ -143,9 +133,7 @@ public class TestGeoQueries extends TestBase {
     public void testGeoWithinRadius() {
         final Place place1 = new Place("place1", new double[] { 1, 1 });
         getDs().save(place1);
-        final Place found = getDs().find(Place.class)
-                .filter(center("loc", new Point(new Position(0, 1)), 1.1)).iterator(new FindOptions().limit(1))
-                .next();
+        final Place found = getDs().find(Place.class).filter(center("loc", new Point(new Position(0, 1)), 1.1)).first();
         Assert.assertNotNull(found);
     }
 
@@ -153,9 +141,7 @@ public class TestGeoQueries extends TestBase {
     public void testGeoWithinRadius2() {
         final Place place1 = new Place("place1", new double[] { 1, 1 });
         getDs().save(place1);
-        final Place found = getDs().find(Place.class)
-                .filter(center("loc", new Point(new Position(0.5, 0.5)), 0.77)).iterator(new FindOptions().limit(1))
-                .next();
+        final Place found = getDs().find(Place.class).filter(center("loc", new Point(new Position(0.5, 0.5)), 0.77)).first();
         Assert.assertNotNull(found);
     }
 
@@ -163,9 +149,7 @@ public class TestGeoQueries extends TestBase {
     public void testGeoWithinRadiusSphere() {
         final Place place1 = new Place("place1", new double[] { 1, 1 });
         getDs().save(place1);
-        final Place found = getDs().find(Place.class)
-                .filter(centerSphere("loc", new Point(new Position(0, 1)), 1)).iterator(new FindOptions().limit(1))
-                .next();
+        final Place found = getDs().find(Place.class).filter(centerSphere("loc", new Point(new Position(0, 1)), 1)).first();
         Assert.assertNotNull(found);
     }
 
@@ -173,9 +157,7 @@ public class TestGeoQueries extends TestBase {
     public void testNear() {
         final Place place1 = new Place("place1", new double[] { 1, 1 });
         getDs().save(place1);
-        final Place found = getDs().find(Place.class)
-                .filter(near("loc", new Point(new Position(0, 0)))).iterator(new FindOptions().limit(1))
-                .next();
+        final Place found = getDs().find(Place.class).filter(near("loc", new Point(new Position(0, 0)))).first();
         Assert.assertNotNull(found);
     }
 
@@ -202,9 +184,7 @@ public class TestGeoQueries extends TestBase {
         getDs().getCollection(Place.class).drop();
         final Place place1 = new Place("place1", new double[] { 1, 1 });
         getDs().save(place1);
-        Place found = getDs().find(Place.class)
-                .filter(near("loc", new Point(new Position(0, 0)))).iterator(new FindOptions().limit(1))
-                .tryNext();
+        Place found = getDs().find(Place.class).filter(near("loc", new Point(new Position(0, 0)))).first();
         Assert.assertNull(found);
     }
 
@@ -212,12 +192,9 @@ public class TestGeoQueries extends TestBase {
     public void testWithinBox() {
         final Place place1 = new Place("place1", new double[] { 1, 1 });
         getDs().save(place1);
-        final Place found = getDs().find(Place.class)
-                .filter(box("loc",
-                        new Point(new Position(0, 0)),
-                        new Point(new Position(2, 2))))
-                .iterator(new FindOptions().limit(1))
-                .next();
+        final Place found = getDs().find(Place.class).filter(box("loc",
+                new Point(new Position(0, 0)),
+                new Point(new Position(2, 2)))).first();
         Assert.assertNotNull(found);
     }
 
@@ -225,12 +202,9 @@ public class TestGeoQueries extends TestBase {
     public void testWithinOutsideBox() {
         final Place place1 = new Place("place1", new double[] { 1, 1 });
         getDs().save(place1);
-        final Place found = getDs().find(Place.class)
-                .filter(box("loc",
-                        new Point(new Position(0, 0)),
-                        new Point(new Position(.4, .5))))
-                .iterator(new FindOptions().limit(1))
-                .tryNext();
+        final Place found = getDs().find(Place.class).filter(box("loc",
+                new Point(new Position(0, 0)),
+                new Point(new Position(.4, .5)))).first();
         Assert.assertNull(found);
     }
 
@@ -238,9 +212,7 @@ public class TestGeoQueries extends TestBase {
     public void testWithinOutsideRadius() {
         final Place place1 = new Place("place1", new double[] { 1, 1 });
         getDs().save(place1);
-        final Place found = getDs().find(Place.class)
-                .filter(center("loc", new Point(new Position(2, 2)), 0.4)).iterator(new FindOptions().limit(1))
-                .tryNext();
+        final Place found = getDs().find(Place.class).filter(center("loc", new Point(new Position(2, 2)), 0.4)).first();
         Assert.assertNull(found);
     }
 
@@ -248,9 +220,7 @@ public class TestGeoQueries extends TestBase {
     public void testWithinRadius() {
         final Place place1 = new Place("place1", new double[] { 1, 1 });
         getDs().save(place1);
-        final Place found = getDs().find(Place.class)
-                .filter(center("loc", new Point(new Position(0, 1)), 1.1)).iterator(new FindOptions().limit(1))
-                .next();
+        final Place found = getDs().find(Place.class).filter(center("loc", new Point(new Position(0, 1)), 1.1)).first();
         Assert.assertNotNull(found);
     }
 
@@ -258,9 +228,7 @@ public class TestGeoQueries extends TestBase {
     public void testWithinRadius2() {
         final Place place1 = new Place("place1", new double[] { 1, 1 });
         getDs().save(place1);
-        final Place found = getDs().find(Place.class)
-                .filter(center("loc", new Point(new Position(0.5, 0.5)), 0.77)).iterator(new FindOptions().limit(1))
-                .next();
+        final Place found = getDs().find(Place.class).filter(center("loc", new Point(new Position(0.5, 0.5)), 0.77)).first();
         Assert.assertNotNull(found);
     }
 
@@ -268,9 +236,7 @@ public class TestGeoQueries extends TestBase {
     public void testWithinRadiusSphere() {
         final Place place1 = new Place("place1", new double[] { 1, 1 });
         getDs().save(place1);
-        final Place found = getDs().find(Place.class)
-                .filter(centerSphere("loc", new Point(new Position(0, 1)), 1)).iterator(new FindOptions().limit(1))
-                .next();
+        final Place found = getDs().find(Place.class).filter(centerSphere("loc", new Point(new Position(0, 1)), 1)).first();
         Assert.assertNotNull(found);
     }
 

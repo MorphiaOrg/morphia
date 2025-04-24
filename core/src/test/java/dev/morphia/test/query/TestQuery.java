@@ -408,12 +408,9 @@ public class TestQuery extends TestBase {
     public void testComplexElemMatchQuery() {
         Keyword oscar = new Keyword("Oscar", 42);
         getDs().save(new PhotoWithKeywords(oscar, new Keyword("Jim", 12)));
-        assertNull(getDs().find(PhotoWithKeywords.class)
-                .filter(elemMatch("keywords",
-                        eq("keyword", "Oscar"),
-                        eq("score", 12)))
-                .iterator(new FindOptions().limit(1))
-                .tryNext());
+        assertNull(getDs().find(PhotoWithKeywords.class).filter(elemMatch("keywords",
+                eq("keyword", "Oscar"),
+                eq("score", 12))).first());
 
         List<PhotoWithKeywords> keywords = getDs().find(PhotoWithKeywords.class)
                 .filter(elemMatch("keywords",
@@ -435,13 +432,9 @@ public class TestQuery extends TestBase {
         object.setText("hllo");
         getDs().save(object);
 
-        assertNotNull(getDs().find(UsesCustomIdObject.class)
-                .filter(eq("_id.type", "banker")).iterator(new FindOptions().limit(1))
-                .tryNext());
+        assertNotNull(getDs().find(UsesCustomIdObject.class).filter(eq("_id.type", "banker")).first());
 
-        assertNotNull(getDs().find(UsesCustomIdObject.class)
-                .filter(in("_id", singletonList(cId))).iterator(new FindOptions().limit(1))
-                .tryNext());
+        assertNotNull(getDs().find(UsesCustomIdObject.class).filter(in("_id", singletonList(cId))).first());
     }
 
     @Test
@@ -455,9 +448,7 @@ public class TestQuery extends TestBase {
         object.setText("hllo");
         getDs().save(object);
 
-        assertNotNull(getDs().find(UsesCustomIdObject.class)
-                .filter(eq("_id.t", "banker")).iterator(new FindOptions().limit(1))
-                .tryNext());
+        assertNotNull(getDs().find(UsesCustomIdObject.class).filter(eq("_id.t", "banker")).first());
     }
 
     @Test
@@ -531,37 +522,23 @@ public class TestQuery extends TestBase {
     @Test
     public void testDeepQuery() {
         getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
-        assertNotNull(getDs().find(PhotoWithKeywords.class)
-                .filter(eq("keywords.keyword", "california")).iterator(new FindOptions().limit(1))
-                .tryNext());
-        assertNull(getDs().find(PhotoWithKeywords.class)
-                .filter(eq("keywords.keyword", "not")).iterator(new FindOptions().limit(1))
-                .tryNext());
+        assertNotNull(getDs().find(PhotoWithKeywords.class).filter(eq("keywords.keyword", "california")).first());
+        assertNull(getDs().find(PhotoWithKeywords.class).filter(eq("keywords.keyword", "not")).first());
     }
 
     @Test
     public void testDeepQueryWithBadArgs() {
         getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
-        assertNull(getDs().find(PhotoWithKeywords.class)
-                .filter(eq("keywords.keyword", 1)).iterator(new FindOptions().limit(1))
-                .tryNext());
-        assertNull(getDs().find(PhotoWithKeywords.class)
-                .filter(eq("keywords.keyword", "california".getBytes())).iterator(new FindOptions().limit(1))
-                .tryNext());
-        assertNull(getDs().find(PhotoWithKeywords.class)
-                .filter(eq("keywords.keyword", null)).iterator(new FindOptions().limit(1))
-                .tryNext());
+        assertNull(getDs().find(PhotoWithKeywords.class).filter(eq("keywords.keyword", 1)).first());
+        assertNull(getDs().find(PhotoWithKeywords.class).filter(eq("keywords.keyword", "california".getBytes())).first());
+        assertNull(getDs().find(PhotoWithKeywords.class).filter(eq("keywords.keyword", null)).first());
     }
 
     @Test
     public void testDeepQueryWithRenamedFields() {
         getDs().save(new PhotoWithKeywords(new Keyword("california"), new Keyword("nevada"), new Keyword("arizona")));
-        assertNotNull(getDs().find(PhotoWithKeywords.class)
-                .filter(eq("keywords.keyword", "california")).iterator(new FindOptions().limit(1))
-                .tryNext());
-        assertNull(getDs().find(PhotoWithKeywords.class)
-                .filter(eq("keywords.keyword", "not")).iterator(new FindOptions().limit(1))
-                .tryNext());
+        assertNotNull(getDs().find(PhotoWithKeywords.class).filter(eq("keywords.keyword", "california")).first());
+        assertNull(getDs().find(PhotoWithKeywords.class).filter(eq("keywords.keyword", "not")).first());
     }
 
     @Test
@@ -583,12 +560,8 @@ public class TestQuery extends TestBase {
     @Test
     public void testElemMatchQuery() {
         getDs().save(asList(new PhotoWithKeywords(), new PhotoWithKeywords("Scott", "Joe", "Sarah")));
-        assertNotNull(getDs().find(PhotoWithKeywords.class)
-                .filter(elemMatch("keywords", eq("keyword", "Scott"))).iterator(new FindOptions().limit(1))
-                .tryNext());
-        assertNull(getDs().find(PhotoWithKeywords.class)
-                .filter(elemMatch("keywords", eq("keyword", "Randy"))).iterator(new FindOptions().limit(1))
-                .tryNext());
+        assertNotNull(getDs().find(PhotoWithKeywords.class).filter(elemMatch("keywords", eq("keyword", "Scott"))).first());
+        assertNull(getDs().find(PhotoWithKeywords.class).filter(elemMatch("keywords", eq("keyword", "Randy"))).first());
     }
 
     @Test
@@ -676,10 +649,8 @@ public class TestQuery extends TestBase {
     public void testIdFieldNameQuery() {
         getDs().save(new PhotoWithKeywords("scott", "hernandez"));
 
-        assertNotNull(getDs().find(PhotoWithKeywords.class).filter(ne("id", "scott")).iterator(new FindOptions().limit(1))
-                .next());
-        assertNotNull(getDs().find(PhotoWithKeywords.class).filter(eq("id", "scott").not()).iterator(new FindOptions().limit(1))
-                .next());
+        assertNotNull(getDs().find(PhotoWithKeywords.class).filter(ne("id", "scott")).first());
+        assertNotNull(getDs().find(PhotoWithKeywords.class).filter(eq("id", "scott").not()).first());
     }
 
     @Test
@@ -965,8 +936,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testNonexistentFindGet() {
-        assertNull(getDs().find(Student.class).filter(eq("_id", -1)).iterator(new FindOptions().limit(1))
-                .tryNext());
+        assertNull(getDs().find(Student.class).filter(eq("_id", -1)).first());
     }
 
     @Test
@@ -1195,12 +1165,8 @@ public class TestQuery extends TestBase {
     public void testRenamedFieldQuery() {
         getDs().save(new ContainsRenamedFields("Scott", "Bakula"));
 
-        assertNotNull(getDs().find(ContainsRenamedFields.class)
-                .filter(eq("firstName", "Scott")).iterator(new FindOptions().limit(1))
-                .next());
-        assertNotNull(getDs().find(ContainsRenamedFields.class)
-                .filter(eq("first_name", "Scott")).iterator(new FindOptions().limit(1))
-                .next());
+        assertNotNull(getDs().find(ContainsRenamedFields.class).filter(eq("firstName", "Scott")).first());
+        assertNotNull(getDs().find(ContainsRenamedFields.class).filter(eq("first_name", "Scott")).first());
     }
 
     @Test
@@ -1344,13 +1310,9 @@ public class TestQuery extends TestBase {
 
         // NOT:
         // find({ keywords: { $elemMatch: { keyword: "Scott", score: 12 } } })
-        assertNotNull(getDs().find(PhotoWithKeywords.class)
-                .filter(elemMatch("keywords", eq("keyword", "Scott"))).iterator(new FindOptions().limit(1))
-                .tryNext());
+        assertNotNull(getDs().find(PhotoWithKeywords.class).filter(elemMatch("keywords", eq("keyword", "Scott"))).first());
 
-        assertNull(getDs().find(PhotoWithKeywords.class)
-                .filter(elemMatch("keywords", eq("keyword", "Randy"))).iterator(new FindOptions().limit(1))
-                .tryNext());
+        assertNull(getDs().find(PhotoWithKeywords.class).filter(elemMatch("keywords", eq("keyword", "Randy"))).first());
     }
 
     private void dropProfileCollection() {
