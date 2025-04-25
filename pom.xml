@@ -46,7 +46,7 @@
         <awaitility.version>1.7.0</awaitility.version>
         <driver.version>5.3.1</driver.version>
         <driver.minor.version>5.2</driver.minor.version>
-        <jackson.version>2.18.2</jackson.version>
+        <jackson.version>2.19.0</jackson.version>
         <json.assert.version>1.5.3</json.assert.version>
         <javapoet.version>1.13.0</javapoet.version>
         <kotlinpoet.version>1.19.1</kotlinpoet.version>
