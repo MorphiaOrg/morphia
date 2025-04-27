@@ -1,0 +1,149 @@
+= Morphia 2.5 to 3.0 API Comparison
+:toc: left
+:toclevels: 3
+
+== Introduction
+
+This document provides a side-by-side comparison of method signatures for key Morphia classes between versions 2.5 and 3.0.
+The comparison helps identify which methods were added, removed, or modified between these versions.
+
+== Datastore Interface
+
+[cols="50%,50%",options="header"]
+|===
+|Morphia 2.5 |Morphia 3.0
+
+|`Aggregation<Document> aggregate(String source)` |`Aggregation<Document> aggregate(String)`
+|`<T> Aggregation<T> aggregate(Class<T> source)` |`<T> Aggregation<T> aggregate(Class<T>)`
+|`<T> DeleteResult delete(Query<T> query)` |_Not available_
+|`<T> DeleteResult delete(Query<T> query, DeleteOptions options)` |_Not available_
+|`<T> DeleteResult delete(T entity)` |`<T> DeleteResult delete(T)`
+|`<T> DeleteResult delete(T entity, DeleteOptions options)` |`<T> DeleteResult delete(T, DeleteOptions)`
+|`<T> Query<T> find(Class<T> type)` |`<T> Query<T> find(Class<T>)`
+|`<T> Query<T> find(Class<T> type, FindOptions options)` |`<T> Query<T> find(Class<T>, FindOptions)`
+|`<T> Query<T> find(Class<T> type, Document nativeQuery)` |`<T> Query<T> find(Class<T>, Document)`
+|`<T> Query<T> find(String collection)` |_Not available_
+|_Not available_ |`<T> Query<T> find(Class<T>, FindOptions, Document)`
+|_Not available_ |`<T> void insert(T)`
+|_Not available_ |`<T> void insert(T, InsertOneOptions)`
+|_Not available_ |`<T> void insert(List<T>)`
+|_Not available_ |`<T> void insert(List<T>, InsertManyOptions)`
+|_Not available_ |`<T> T merge(T)`
+|_Not available_ |`<T> T merge(T, InsertOneOptions)`
+|`<T> Query<T> queryByExample(T example)` |`<T> Query<T> queryByExample(T)`
+|`<T> void refresh(T entity)` |`<T> void refresh(T)`
+|`<T> T replace(T entity)` |`<T> T replace(T)`
+|`<T> T replace(T entity, ReplaceOptions options)` |`<T> T replace(T, ReplaceOptions)`
+|`<T> List<T> replace(List<T> entities)` |`<T> List<T> replace(List<T>)`
+|`<T> List<T> replace(List<T> entities, ReplaceOptions options)` |`<T> List<T> replace(List<T>, ReplaceOptions)`
+|`<T> List<T> save(List<T> entities)` |`<T> List<T> save(List<T>)`
+|`<T> List<T> save(List<T> entities, InsertManyOptions options)` |`<T> List<T> save(List<T>, InsertManyOptions)`
+|`<T> T save(T entity)` |`<T> T save(T)`
+|`<T> T save(T entity, InsertOneOptions options)` |`<T> T save(T, InsertOneOptions)`
+|_Not available_ |`void shardCollections()`
+|`MorphiaSession startSession()` |`MorphiaSession startSession()`
+|`MorphiaSession startSession(ClientSessionOptions options)` |`MorphiaSession startSession(ClientSessionOptions)`
+|`<T> T withTransaction(MorphiaTransaction<T> transaction)` |`<T> T withTransaction(MorphiaTransaction<T>)`
+|`<T> T withTransaction(ClientSessionOptions options, MorphiaTransaction<T> transaction)` |`<T> T withTransaction(ClientSessionOptions, MorphiaTransaction<T>)`
+|===
+
+== Aggregation Interface
+
+[cols="50%,50%",options="header"]
+|===
+|Morphia 2.5 |Morphia 3.0
+
+|`Aggregation<T> addFields(AddFields fields)` |`Aggregation<T> addFields(AddFields fields)` 
+|`Aggregation<T> addStage(Stage stage)` |_Not available_
+|`Aggregation<T> autoBucket(AutoBucket bucket)` |`Aggregation<T> autoBucket(AutoBucket bucket)`
+|`Aggregation<T> bucket(Bucket bucket)` |`Aggregation<T> bucket(Bucket bucket)`
+|`Aggregation<T> changeStream()` |_Not available_
+|`Aggregation<T> changeStream(ChangeStream stream)` |_Not available_
+|`Aggregation<T> collStats(CollectionStats stats)` |`Aggregation<T> collStats(CollectionStats stats)`
+|`Aggregation<T> count(String name)` |`Aggregation<T> count(String name)`
+|`Aggregation<T> currentOp(CurrentOp currentOp)` |`Aggregation<T> currentOp(CurrentOp currentOp)`
+|`Aggregation<T> densify(Densify densify)` |`Aggregation<T> densify(Densify densify)`
+|`Aggregation<T> documents(DocumentExpression... documents)` |`Aggregation<T> documents(DocumentExpression... documents)`
+|_Not available_ |`void execute()`
+|`<S> MorphiaCursor<S> execute(Class<S> resultType)` |`<S> MorphiaCursor<S> execute(Class<S> resultType)`
+|`<S> MorphiaCursor<S> execute(Class<S> resultType, AggregationOptions options)` |`<S> MorphiaCursor<S> execute(Class<S> resultType, AggregationOptions options)`
+|_Not available_ |`void execute(AggregationOptions options)`
+|`Aggregation<T> facet(Facet facet)` |`Aggregation<T> facet(Facet facet)`
+|`Aggregation<T> fill(Fill fill)` |`Aggregation<T> fill(Fill fill)`
+|`Aggregation<T> geoNear(GeoNear near)` |`Aggregation<T> geoNear(GeoNear near)`
+|`Aggregation<T> graphLookup(GraphLookup lookup)` |`Aggregation<T> graphLookup(GraphLookup lookup)`
+|`Aggregation<T> group(Group group)` |`Aggregation<T> group(Group group)`
+|`Aggregation<T> indexStats()` |`Aggregation<T> indexStats()`
+|`Aggregation<T> limit(long limit)` |`Aggregation<T> limit(long limit)`
+|`Aggregation<T> lookup(Lookup lookup)` |`Aggregation<T> lookup(Lookup lookup)`
+|`Aggregation<T> match(Filter... filters)` |`Aggregation<T> match(Filter... filters)`
+|`<M> void merge(Merge<M> merge)` |`<M> void merge(Merge<M> merge)`
+|`<M> void merge(Merge<M> merge, AggregationOptions options)` |`<M> void merge(Merge<M> merge, AggregationOptions options)`
+|`<O> void out(Out<O> out)` |`<O> void out(Out<O> out)`
+|`<O> void out(Out<O> out, AggregationOptions options)` |`<O> void out(Out<O> out, AggregationOptions options)`
+|_Not available_ |`Aggregation<T> pipeline(Stage... stages)`
+|_Not available_ |`Aggregation<T> pipeline(List<Stage> stages)`
+|`Aggregation<T> planCacheStats()` |`Aggregation<T> planCacheStats()`
+|`Aggregation<T> project(Projection projection)` |`Aggregation<T> project(Projection projection)`
+|`Aggregation<T> redact(Redact redact)` |`Aggregation<T> redact(Redact redact)`
+|`Aggregation<T> replaceRoot(ReplaceRoot root)` |`Aggregation<T> replaceRoot(ReplaceRoot root)`
+|`Aggregation<T> replaceWith(ReplaceWith with)` |`Aggregation<T> replaceWith(ReplaceWith with)`
+|`Aggregation<T> sample(long sample)` |`Aggregation<T> sample(long sample)`
+|`Aggregation<T> set(AddFields fields)` |`Aggregation<T> set(AddFields fields)`
+|_Not available_ |`Aggregation<T> setWindowFields(SetWindowFields fields)`
+|_Not available_ |`Aggregation<T> skip(long skip)`
+|_Not available_ |`Aggregation<T> sort(Sort sort)`
+|_Not available_ |`Aggregation<T> sortByCount(Expression sort)`
+|_Not available_ |`Aggregation<T> unionWith(Class<?> type, Stage... stages)`
+|_Not available_ |`Aggregation<T> unionWith(String collection, Stage... stages)`
+|_Not available_ |`Aggregation<T> unset(Unset unset)`
+|_Not available_ |`Aggregation<T> unwind(Unwind unwind)`
+|===
+
+== Query Interface
+
+[cols="50%,50%",options="header"]
+|===
+|Morphia 2.5 |Morphia 3.0
+
+|`long count()` |`long count()`
+|`long count(CountOptions options)` |`long count(CountOptions)`
+|`DeleteResult delete()` |`DeleteResult delete()`
+|`DeleteResult delete(DeleteOptions options)` |`DeleteResult delete(DeleteOptions)`
+|`Query<T> disableValidation()` |`Query<T> disableValidation()`
+|`Query<T> enableValidation()` |`Query<T> enableValidation()`
+|`Map<String, Object> explain()` |`Map<String,Object> explain()`
+|`Map<String, Object> explain(ExplainVerbosity verbosity)` |`Map<String,Object> explain(ExplainVerbosity)`
+|`Query<T> filter(Filter... filters)` |`Query<T> filter(Filter...)`
+|`T findAndDelete()` |`T findAndDelete()`
+|`T findAndDelete(FindAndDeleteOptions options)` |`T findAndDelete(FindAndDeleteOptions)`
+|`T first()` |`T first()`
+|`Class<T> getEntityClass()` |_Not available_
+|`String getLoggedQuery()` |`String getLoggedQuery()`
+|`dev.morphia.query.internal.MorphiaCursor<T> iterator()` |`MorphiaCursor<T> iterator()`
+|`dev.morphia.query.internal.MorphiaKeyCursor<T> keys()` |_Not available_
+|`T modify(ModifyOptions options, UpdateOperator... updates)` |`T modify(ModifyOptions, UpdateOperator, UpdateOperator...)`
+|_Not available_ |`T modify(UpdateOperator, UpdateOperator...)`
+|`Stream<T> stream()` |`Stream<T> stream()`
+|`Document toDocument()` |_Not available_
+|`UpdateResult update(Stage... updates)` |`UpdateResult update(Stage, Stage...)`
+|`UpdateResult update(UpdateOptions options, Stage... updates)` |`UpdateResult update(UpdateOptions, Stage, Stage...)`
+|`UpdateResult update(UpdateOptions options, UpdateOperator... updates)` |`UpdateResult update(UpdateOptions, UpdateOperator...)`
+|_Not available_ |`UpdateResult update(UpdateOperator...)`
+|===
+
+== Key Observations
+
+=== Datastore Interface Changes
+* Added methods: `find(Class<T>, FindOptions, Document)`, `insert()` methods, `merge()` methods, and `shardCollections()`
+* Removed methods: `delete(Query<T>)`, `delete(Query<T>, DeleteOptions)`, and `find(String collection)`
+
+=== Aggregation Interface Changes
+* Added methods: `execute()`, `execute(AggregationOptions)`, `pipeline()` methods, and several stage-related methods like `setWindowFields()`, `skip()`, `sort()`, etc.
+* Removed methods: `addStage(Stage)`, `changeStream()`, and `changeStream(ChangeStream)`
+* The API design in 3.0 emphasizes a pipeline-based approach, with individual stage methods being deprecated in favor of `pipeline(Stage...)`
+
+=== Query Interface Changes
+* Added method: `modify(UpdateOperator, UpdateOperator...)` and `update(UpdateOperator...)`
+* Removed methods: `getEntityClass()`, `keys()`, and `toDocument()`
+* Overall, the Query interface was streamlined and simplified in 3.0
