@@ -77,6 +77,14 @@ public class FiltersTest extends TestBase {
         Query<User> query = getDs().find(User.class);
         query.filter(type("name", Type.STRING));
         Assert.assertTrue(query.count() > 0);
+
+        for (Type value : Type.values()) {
+            if ((value.val() < 0xFF)) {
+                query = getDs().find(User.class);
+                query.filter(type("name", value));
+                query.count();
+            }
+        }
     }
 
     @Test

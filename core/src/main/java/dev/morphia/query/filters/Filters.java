@@ -621,7 +621,7 @@ public final class Filters {
      * @query.filter $type
      */
     public static Filter type(String field, Type val) {
-        return new Filter("$type", field, val.toString().toLowerCase());
+        return new Filter("$type", field, val.val());
     }
 
     /**
