@@ -100,10 +100,10 @@ jobs:
       matrix:
         driver: ${{ fromJson(needs.matrix.outputs.driver_matrix) }}
         java: [ 11, 17, 21 ]
-        mongo: [ 7 ]
+        mongo: [ 8.1.0 ]
         include:
           - java: 21
-            mongo: 7
+            mongo: 8.1.0
             driver: ${{ fromJson(needs.matrix.outputs.driver_latest)[0] }}
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
