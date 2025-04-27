@@ -687,6 +687,11 @@
           "package": "dev.morphia.query.updates",
           "classQualifiedName": "dev.morphia.query.updates.UpdateOperators",
           "methodName": "pull"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.varargOverloadsOnlyDifferInVarargParameter",
+          "justification": "this isn't a new thing"
         }
       ]
     }

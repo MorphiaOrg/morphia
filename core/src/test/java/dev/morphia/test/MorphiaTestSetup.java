@@ -62,7 +62,7 @@ public class MorphiaTestSetup {
             LOG.info("'local' mongodb property specified. Using local server.");
             connectionString = "mongodb://localhost:27017/" + TEST_DB_NAME;
         } else {
-            int version = mongodb != null ? Version.parse(mongodb).getMajorVersion() : 8;
+            int version = mongodb != null ? Integer.parseInt(mongodb) : 8;
             DockerImageName imageName = DockerImageName.parse("mongo:" + version)
                     .asCompatibleSubstituteFor("mongo");
 
