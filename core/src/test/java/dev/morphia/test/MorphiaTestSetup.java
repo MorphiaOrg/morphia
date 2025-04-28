@@ -60,23 +60,16 @@ public class MorphiaTestSetup {
     }
 
     private static MongoHolder initMongoDbContainer(boolean sharded) {
-        String mongodb = System.getProperty("mongodb");
+        String mongodb = System.getProperty("mongodb", "8.1.0");
         String connectionString;
         MongoDBContainer mongoDBContainer = null;
         if ("local".equals(mongodb)) {
             LOG.info("'local' mongodb property specified. Using local server.");
             connectionString = "mongodb://localhost:27017/" + TEST_DB_NAME;
         } else {
-            DockerImageName imageName;
-            try {
-                Versions match = mongodb == null
-                        ? Versions.latest()
-                        : Versions.bestMatch(mongodb);
-                imageName = match.dockerImage();
-            } catch (IllegalArgumentException e) {
-                imageName = Versions.latest().dockerImage();
-                LOG.error(format("Could not parse mongo docker image name.  using docker image %s.", imageName));
-            }
+            int version = Semver.parse(mongodb).getMajor();
+            DockerImageName imageName = DockerImageName.parse("mongo:" + version)
+                    .asCompatibleSubstituteFor("mongo");
 
             LOG.info("Running tests using " + imageName);
             mongoDBContainer = new MongoDBContainer(imageName);

@@ -76,11 +76,6 @@ public enum Type {
     SYMBOL(14),
 
     /**
-     * javascript with scope
-     */
-    JAVASCRIPT_WITH_SCOPE(15),
-
-    /**
      * int32
      */
     INTEGER_32_BIT(16),
