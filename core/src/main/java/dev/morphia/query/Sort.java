@@ -60,6 +60,7 @@ public class Sort {
      * Creates an ascending sort on a field
      *
      * @return the Sort instance
+     * @query.filter $natural
      */
     public static Sort naturalAscending() {
         return new Sort(NATURAL, 1);
@@ -69,6 +70,7 @@ public class Sort {
      * Creates a descending natural sort on a field
      *
      * @return the Sort instance
+     * @query.filter $natural
      */
     public static Sort naturalDescending() {
         return new Sort(NATURAL, -1);
