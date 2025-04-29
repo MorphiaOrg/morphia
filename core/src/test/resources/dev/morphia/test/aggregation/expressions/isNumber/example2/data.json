@@ -1,4 +1,4 @@
-{    "student_id" : 457864153,    "class_id" : "M044",    "class_desc" : "Introduction to MongoDB 4.4",    "grade" : "A"  },
-{    "student_id" : 457864153,    "class_id" : "M103",    "class_desc" : "Basic Cluster Administration",    "grade" : 3.0  },
-{    "student_id" : 978451637,    "class_id" : "M320",    "class_desc" : "MongoDB Data Modeling",    "grade" : "C"  },
-{    "student_id" : 978451637,    "class_id" : "M001",    "class_desc" : "MongoDB Basics",    "grade" : 4.0  }
+{ "student_id" : 457864153, "class_id" : "M044", "class_desc" : "Introduction to MongoDB 4.4", "grade" : "A" },
+{ "student_id" : 457864153, "class_id" : "M103", "class_desc" : "Basic Cluster Administration", "grade" : 3.0 },
+{ "student_id" : 978451637, "class_id" : "M320", "class_desc" : "MongoDB Data Modeling", "grade" : "C" },
+{ "student_id" : 978451637, "class_id" : "M001", "class_desc" : "MongoDB Basics", "grade" : 4.0 }
