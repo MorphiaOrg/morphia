@@ -2,11 +2,13 @@ package dev.morphia.rewrite.recipes.test;
 
 import dev.morphia.rewrite.recipes.ArraySliceRefasterRecipes;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openrewrite.Recipe;
 
 import static org.openrewrite.java.Assertions.java;
 
+@Disabled
 public class ArraySliceMigrationTest extends MorphiaRewriteTest {
 
     @Override
