@@ -2,7 +2,6 @@ package dev.morphia.test;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -373,8 +372,8 @@ public abstract class TemplatedTestBase extends TestBase {
     }
 
     private void toFile(String name, List<Document> pipeline) {
-        try (PrintWriter out = new PrintWriter(new FileWriter(new File("target/%s.json".formatted(name))))) {
-            out.println(toJson(pipeline));
+        try (var writer = new PrintWriter("target/%s.json".formatted(name))) {
+            writer.println(toJson(pipeline));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -414,10 +413,6 @@ public abstract class TemplatedTestBase extends TestBase {
 
             try {
                 JSONAssert.assertEquals(toJson(expected), toJson(actual), options.orderMatters());
-                //                Comparanator.of(null, actual, expected, options.orderMatters()).compare();
-            } catch (AssertionError e) {
-                throw new AssertionError("%s\n\n actual: %s".formatted(e.getMessage(), toString(actual, "\n\t")),
-                        e);
             } catch (Exception e) {
                 throw new RuntimeException(e.getMessage(), e);
             }
