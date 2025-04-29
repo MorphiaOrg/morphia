@@ -17,9 +17,8 @@ public class TestLinearFill extends TemplatedTestBase {
      */
     @Test(testName = "Fill Missing Values with Linear Interpolation")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion("5.3.0").removeIds(true).orderMatters(false),
-                (aggregation) -> aggregation.pipeline(setWindowFields().sortBy(ascending("time"))
-                        .output(output("price").operator(linearFill("$price")))));
+        testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false), (aggregation) -> aggregation.pipeline(
+                setWindowFields().sortBy(ascending("time")).output(output("price").operator(linearFill("$price")))));
 
     }
 
@@ -29,7 +28,7 @@ public class TestLinearFill extends TemplatedTestBase {
      */
     @Test(testName = "Use Multiple Fill Methods in a Single Stage")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion("5.3.0").removeIds(true).orderMatters(false),
+        testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(setWindowFields().sortBy(ascending("time")).output(
                         output("linearFillPrice").operator(linearFill("$price")),
                         output("locfPrice").operator(locf("$price")))));

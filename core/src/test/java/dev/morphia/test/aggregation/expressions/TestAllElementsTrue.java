@@ -15,9 +15,8 @@ public class TestAllElementsTrue extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion("0.0.0").orderMatters(false),
-                aggregation -> aggregation.pipeline(Projection.project().suppressId().include("responses")
-                        .include("isAllTrue", allElementsTrue("$responses"))));
+        testPipeline(new ActionTestOptions().orderMatters(false), aggregation -> aggregation.pipeline(Projection
+                .project().suppressId().include("responses").include("isAllTrue", allElementsTrue("$responses"))));
 
     }
 }

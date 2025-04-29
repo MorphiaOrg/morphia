@@ -19,7 +19,7 @@ public class TestDensify extends TemplatedTestBase {
     @Test(testName = "Densify Time Series Data")
     public void testExample1() {
         testPipeline(
-                new ActionTestOptions().serverVersion("5.1.0").removeIds(true), (
+                new ActionTestOptions().removeIds(true), (
                         aggregation) -> aggregation
                                 .pipeline(
                                         densify("timestamp",
@@ -34,9 +34,8 @@ public class TestDensify extends TemplatedTestBase {
      */
     @Test(testName = "Densifiction with Partitions")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion("5.1.0").removeIds(true).orderMatters(false),
-                (aggregation) -> aggregation
-                        .pipeline(densify("altitude", Range.full(200)).partitionByFields("variety")));
+        testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false), (aggregation) -> aggregation
+                .pipeline(densify("altitude", Range.full(200)).partitionByFields("variety")));
     }
 
 }

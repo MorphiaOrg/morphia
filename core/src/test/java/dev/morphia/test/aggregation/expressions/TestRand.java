@@ -23,7 +23,7 @@ public class TestRand extends TemplatedTestBase {
      */
     @Test(testName = "Generate Random Data Points")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false).minDriver("4.3.0").skipDataCheck(true),
+        testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false).skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(set().field("amount", multiply(rand(), 100)),
                         set().field("amount", floor("$amount")), merge("donors")));
     }
@@ -34,7 +34,7 @@ public class TestRand extends TemplatedTestBase {
      */
     @Test(testName = "Select Random Items From a Collection")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().orderMatters(false).minDriver("4.3.0").skipDataCheck(true),
+        testPipeline(new ActionTestOptions().orderMatters(false).skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(match(eq("district", 3)), match(expr(lt(0.5, rand()))),
                         project().suppressId().include("name").include("registered")));
     }

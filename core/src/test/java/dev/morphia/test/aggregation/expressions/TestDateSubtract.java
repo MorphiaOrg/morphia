@@ -23,8 +23,7 @@ public class TestDateSubtract extends TemplatedTestBase {
      */
     @Test(testName = "Subtract A Fixed Amount")
     public void testExample1() {
-        testPipeline(
-                new ActionTestOptions().serverVersion("5.0.0").removeIds(true).orderMatters(false).minDriver("4.2.0"),
+        testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
                         match(expr(eq(year("$logout"), 2021)), expr(eq(month("$logout"), 1))),
                         project().include("logoutTime", dateSubtract("$logout", 3, HOUR))));
@@ -38,10 +37,8 @@ public class TestDateSubtract extends TemplatedTestBase {
     public void testExample2() {
         // $$NOW is a little pointless
         /*
-         * testPipeline(new
-         * dev.morphia.test.util.ActionTestOptions().serverVersion("5.0.0") ,
-         * (aggregation) -> { var epochTime = LocalDate.of(2021, Month.FEBRUARY, 22)
-         * .toEpochDay();
+         * testPipeline(new dev.morphia.test.util.ActionTestOptions() , (aggregation) ->
+         * { var epochTime = LocalDate.of(2021, Month.FEBRUARY, 22) .toEpochDay();
          * 
          * return aggregation.pipeline( match(expr(gt(field("logoutTime"),
          * dateSubtract(value(epochTime), 1, WEEK)))), project() .suppressId()
@@ -56,8 +53,7 @@ public class TestDateSubtract extends TemplatedTestBase {
      */
     @Test(testName = "Adjust for Daylight Savings Time")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().minDriver("4.2.0"), (aggregation) -> aggregation.pipeline(project()
-                .suppressId().include("location")
+        testPipeline((aggregation) -> aggregation.pipeline(project().suppressId().include("location")
                 .include("start", dateToString().date("$login").format("%Y-%m-%d %H:%M"))
                 .include("days",
                         dateToString().date(dateSubtract("$login", 1, DAY).timezone("$location"))

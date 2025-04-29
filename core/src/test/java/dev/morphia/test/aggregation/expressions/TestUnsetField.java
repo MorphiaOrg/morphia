@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -29,8 +28,7 @@ public class TestUnsetField extends TemplatedTestBase {
      */
     @Test(testName = "Remove Fields that Start with a Dollar Sign (``$``)")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().minDriver("4.3.0"),
-                (aggregation) -> aggregation.pipeline(replaceWith(unsetField(literal("$price"), ROOT))));
+        testPipeline((aggregation) -> aggregation.pipeline(replaceWith(unsetField(literal("$price"), ROOT))));
     }
 
     /**

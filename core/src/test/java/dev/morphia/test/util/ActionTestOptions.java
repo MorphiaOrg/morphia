@@ -6,7 +6,7 @@ import dev.morphia.query.FindOptions;
 public class ActionTestOptions {
     private FindOptions findOptions = new FindOptions();
 
-    private String minDriver = "4.1.0";
+    private String minDriver = "0.0.0";
 
     private boolean orderMatters = true;
 

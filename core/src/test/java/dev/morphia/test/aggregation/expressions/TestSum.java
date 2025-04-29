@@ -24,7 +24,7 @@ public class TestSum extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$group`` Stage")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion("5.0.0").orderMatters(false),
+        testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation
                         .pipeline(group(id(document().field("day", dayOfYear("$date")).field("year", year("$date"))))
                                 .field("totalAmount", sum(multiply("$price", "$quantity"))).field("count", sum(1))));

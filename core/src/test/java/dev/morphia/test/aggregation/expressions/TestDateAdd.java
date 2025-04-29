@@ -34,15 +34,14 @@ public class TestDateAdd extends TemplatedTestBase {
      */
     @Test(testName = "Filter on a Date Range")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion("0.0.0"),
-                aggregation -> aggregation.pipeline(
-                        match(expr(gt("$deliveryDate", dateAdd("$purchaseDate", 5, TimeUnit.DAY)))),
+        testPipeline(aggregation -> aggregation.pipeline(
+                match(expr(gt("$deliveryDate", dateAdd("$purchaseDate", 5, TimeUnit.DAY)))),
 
-                        project().suppressId().include("custId")
-                                .include("purchased", dateToString().date("$purchaseDate").format("%Y-%m-%d"))
-                                .include("delivery", dateToString().date("$deliveryDate").format("%Y-%m-%d"))
+                project().suppressId().include("custId")
+                        .include("purchased", dateToString().date("$purchaseDate").format("%Y-%m-%d"))
+                        .include("delivery", dateToString().date("$deliveryDate").format("%Y-%m-%d"))
 
-                ));
+        ));
 
     }
 
@@ -52,8 +51,7 @@ public class TestDateAdd extends TemplatedTestBase {
      */
     @Test(testName = "Adjust for Daylight Savings Time")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion("0.0.0"), aggregation -> aggregation.pipeline(project()
-                .suppressId().include("location")
+        testPipeline(aggregation -> aggregation.pipeline(project().suppressId().include("location")
                 .include("start", dateToString().date("$login").format("%Y-%m-%d %H:%M"))
                 .include("days",
                         dateToString().date(dateAdd("$login", 1, TimeUnit.DAY).timezone("$location"))

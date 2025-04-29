@@ -20,9 +20,9 @@ public class TestBottom extends TemplatedTestBase {
      */
     @Test(testName = "Find the Bottom ``Score``")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion("5.2.0").orderMatters(false),
-                (aggregation) -> aggregation.pipeline(match(eq("gameId", "G1")), group(id("$gameId")).field("playerId",
-                        bottom(array("$playerId", "$score"), descending("score")))));
+        testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation.pipeline(
+                match(eq("gameId", "G1")),
+                group(id("$gameId")).field("playerId", bottom(array("$playerId", "$score"), descending("score")))));
     }
 
     /**
@@ -31,9 +31,8 @@ public class TestBottom extends TemplatedTestBase {
      */
     @Test(testName = "Finding the Bottom ``Score`` Across Multiple Games")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion("5.2.0").orderMatters(false),
-                (aggregation) -> aggregation.pipeline(group(id("$gameId")).field("playerId",
-                        bottom(array("$playerId", "$score"), descending("score")))));
+        testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation.pipeline(
+                group(id("$gameId")).field("playerId", bottom(array("$playerId", "$score"), descending("score")))));
     }
 
 }

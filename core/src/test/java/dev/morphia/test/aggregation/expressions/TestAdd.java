@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -15,7 +14,7 @@ public class TestAdd extends TemplatedTestBase {
      */
     @Test(testName = "Add Numbers")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion("0.0.0"), (aggregation) -> aggregation
+        testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("item").include("total", add("$price", "$fee"))));
     }
 
@@ -25,7 +24,7 @@ public class TestAdd extends TemplatedTestBase {
      */
     @Test(testName = "Perform Addition on a Date")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion("0.0.0"), aggregation -> aggregation
+        testPipeline(aggregation -> aggregation
                 .pipeline(project().include("item", 1).include("billing_date", add("$date", 259200000))));
 
     }

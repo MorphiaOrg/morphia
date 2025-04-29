@@ -18,10 +18,8 @@ public class TestAvg extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$group`` Stage")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion("0.0.0").orderMatters(false),
-                aggregation -> aggregation
-                        .pipeline(group(id("$item")).field("avgAmount", avg(multiply("$price", "$quantity")))
-                                .field("avgQuantity", avg("$quantity"))));
+        testPipeline(new ActionTestOptions().orderMatters(false), aggregation -> aggregation.pipeline(group(id("$item"))
+                .field("avgAmount", avg(multiply("$price", "$quantity"))).field("avgQuantity", avg("$quantity"))));
 
     }
 
@@ -31,7 +29,7 @@ public class TestAvg extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$project`` Stage")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion("0.0.0").orderMatters(false),
+        testPipeline(new ActionTestOptions().orderMatters(false),
                 aggregation -> aggregation.project(Projection.project().include("quizAvg", avg("$quizzes"))
                         .include("labAvg", avg("$labs")).include("examAvg", avg("$final", "$midterm"))));
 
@@ -45,8 +43,7 @@ public class TestAvg extends TemplatedTestBase {
     public void testExample3() {
         // this has an include and throws off the parser
         /*
-         * testPipeline(new
-         * dev.morphia.test.util.ActionTestOptions().serverVersion("5.0.0")
+         * testPipeline(new dev.morphia.test.util.ActionTestOptions()
          * .orderMatters(false), aggregation -> aggregation
          * .setWindowFields(SetWindowFields.setWindowFields() .partitionBy("$state")
          * .sortBy(ascending("orderDate")) .output(output("averageQuantityForState")

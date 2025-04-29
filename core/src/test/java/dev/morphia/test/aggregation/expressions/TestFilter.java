@@ -18,7 +18,7 @@ public class TestFilter extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion("5.2.0"), (aggregation) -> aggregation
+        testPipeline(new ActionTestOptions(), (aggregation) -> aggregation
                 .pipeline(project().include("items", filter("$items", gte("$$item.price", 100)).as("item"))));
     }
 
@@ -28,7 +28,7 @@ public class TestFilter extends TemplatedTestBase {
      */
     @Test(testName = "Use the limit Field")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion("5.2.0"), (aggregation) -> aggregation
+        testPipeline(new ActionTestOptions(), (aggregation) -> aggregation
                 .pipeline(project().include("items", filter("$items", gte("$$item.price", 100)).as("item").limit(1))));
     }
 
@@ -48,7 +48,7 @@ public class TestFilter extends TemplatedTestBase {
      */
     @Test(testName = "Filter Based on String Equality Match")
     public void testExample4() {
-        testPipeline(new ActionTestOptions().serverVersion("5.2.0"), (aggregation) -> aggregation
+        testPipeline(new ActionTestOptions(), (aggregation) -> aggregation
                 .pipeline(project().include("items", filter("$items", eq("$$item.name", "pen")).as("item"))));
     }
 

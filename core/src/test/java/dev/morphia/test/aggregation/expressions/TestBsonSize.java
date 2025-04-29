@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -21,7 +20,7 @@ public class TestBsonSize extends TemplatedTestBase {
      */
     @Test(testName = "Return Sizes of Documents")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion("0.0.0"),
+        testPipeline(
                 aggregation -> aggregation.pipeline(project().include("name").include("object_size", bsonSize(ROOT))));
 
     }
@@ -32,7 +31,7 @@ public class TestBsonSize extends TemplatedTestBase {
      */
     @Test(testName = "Return Combined Size of All Documents in a Collection")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion("0.0.0"), aggregation -> aggregation
+        testPipeline(aggregation -> aggregation
                 .pipeline(group(id(null)).field("combined_object_size", sum(bsonSize(ROOT)))));
 
     }
@@ -43,10 +42,9 @@ public class TestBsonSize extends TemplatedTestBase {
      */
     @Test(testName = "Return Document with Largest Specified Field")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion("0.0.0"),
-                aggregation -> aggregation.pipeline(
-                        project().include("name", "$name").include("task_object_size", bsonSize("$$CURRENT")),
-                        sort().descending("task_object_size"), limit(1)));
+        testPipeline(aggregation -> aggregation.pipeline(
+                project().include("name", "$name").include("task_object_size", bsonSize("$$CURRENT")),
+                sort().descending("task_object_size"), limit(1)));
 
     }
 }

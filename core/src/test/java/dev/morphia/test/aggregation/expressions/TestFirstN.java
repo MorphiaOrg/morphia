@@ -21,7 +21,7 @@ import static dev.morphia.query.filters.Filters.eq;
 public class TestFirstN extends TemplatedTestBase {
     @Test(testName = "Find the First Three Player Scores for a Single Game")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion("5.2.0").orderMatters(false),
+        testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
                         match(eq("gameId", "G1")),
                         group(id("$gameId"))
@@ -32,7 +32,7 @@ public class TestFirstN extends TemplatedTestBase {
 
     @Test(testName = "Finding the First Three Player Scores Across Multiple Games")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion("5.2.0").orderMatters(false),
+        testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
                         group(id("$gameId"))
                                 .field("playerId", firstN(
@@ -43,7 +43,7 @@ public class TestFirstN extends TemplatedTestBase {
 
     @Test(testName = "Using ``$sort`` With ``$firstN``")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion("5.2.0").orderMatters(false),
+        testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
                         sort().descending("score"),
                         group(id("$gameId"))
@@ -55,7 +55,7 @@ public class TestFirstN extends TemplatedTestBase {
 
     @Test(testName = "Computing ``n`` Based on the Group Key for ``$group``")
     public void testExample4() {
-        testPipeline(new ActionTestOptions().serverVersion("5.2.0").orderMatters(false),
+        testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
                         group(id()
                                 .field("gameId", "$gameId"))

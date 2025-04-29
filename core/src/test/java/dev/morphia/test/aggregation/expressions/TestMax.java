@@ -43,7 +43,7 @@ public class TestMax extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$setWindowFields`` Stage")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion("5.0.0"),
+        testPipeline(new ActionTestOptions(),
                 (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                         .sortBy(ascending("orderDate")).output(output("maximumQuantityForState")
                                 .operator(max("$quantity")).window().documents("unbounded", "current"))));

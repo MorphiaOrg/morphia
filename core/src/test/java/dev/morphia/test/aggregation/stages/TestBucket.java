@@ -8,7 +8,6 @@ import dev.morphia.annotations.Id;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.aggregation.model.Artwork;
 import dev.morphia.test.aggregation.model.Book;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.bson.Document;
 import org.testng.Assert;
@@ -47,7 +46,7 @@ public class TestBucket extends TemplatedTestBase {
      */
     @Test(testName = "Use $bucket with $facet to Bucket by Multiple Fields")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion("0.0.0"),
+        testPipeline(
                 (aggregation) -> aggregation.pipeline(facet()
                         .field("price",
                                 bucket().groupBy("$price").boundaries(0, 200, 400).defaultValue("Other")

@@ -24,9 +24,9 @@ public class TestTopN extends TemplatedTestBase {
      */
     @Test(testName = "Find the Three Highest ``Scores``")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion("5.2.0").orderMatters(false),
-                (aggregation) -> aggregation.pipeline(match(eq("gameId", "G1")), group(id("$gameId")).field("playerId",
-                        topN(3, array("$playerId", "$score"), descending("score")))));
+        testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation.pipeline(
+                match(eq("gameId", "G1")),
+                group(id("$gameId")).field("playerId", topN(3, array("$playerId", "$score"), descending("score")))));
     }
 
     /**
@@ -35,9 +35,8 @@ public class TestTopN extends TemplatedTestBase {
      */
     @Test(testName = "Finding the Three Highest Score Documents Across Multiple Games")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion("5.2.0").orderMatters(false),
-                (aggregation) -> aggregation.group(group(id("$gameId")).field("playerId",
-                        topN(3, array("$playerId", "$score"), descending("score")))));
+        testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation.group(
+                group(id("$gameId")).field("playerId", topN(3, array("$playerId", "$score"), descending("score")))));
     }
 
     /**
@@ -46,7 +45,7 @@ public class TestTopN extends TemplatedTestBase {
      */
     @Test(testName = "Computing ``n`` Based on the Group Key for ``$group``")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion("5.2.0").orderMatters(false),
+        testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.group(group(id(document("gameId", "$gameId"))).field("gamescores", topN(
                         condition(ComparisonExpressions.eq("$gameId", "G2"), 1, 3), "$score", descending("score")))));
     }

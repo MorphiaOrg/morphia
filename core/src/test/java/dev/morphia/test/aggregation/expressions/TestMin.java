@@ -20,7 +20,7 @@ public class TestMin extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$group`` Stage")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion("5.0.0").orderMatters(false),
+        testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(group(id("$item")).field("minQuantity", min("$quantity"))));
     }
 
@@ -30,7 +30,7 @@ public class TestMin extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$project`` Stage")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion("5.0.0"),
+        testPipeline(new ActionTestOptions(),
                 (aggregation) -> aggregation.pipeline(project().include("quizMin", min("$quizzes"))
                         .include("labMin", min("$labs")).include("examMin", min("$final", "$midterm"))));
     }
@@ -41,7 +41,7 @@ public class TestMin extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$setWindowFields`` Stage")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion("5.0.0"),
+        testPipeline(new ActionTestOptions(),
                 (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                         .sortBy(Sort.ascending("orderDate")).output(output("minimumQuantityForState")
                                 .operator(min("$quantity")).window().documents("unbounded", "current"))));

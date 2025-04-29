@@ -14,7 +14,7 @@ public class TestTsIncrement extends TemplatedTestBase {
      */
     @Test(testName = "Obtain the Incrementing Ordinal from a Timestamp Field")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion("5.1.0"), (aggregation) -> aggregation.pipeline(project()
-                .suppressId().include("saleTimestamp").include("saleIncrement", tsIncrement("$saleTimestamp"))));
+        testPipeline(new ActionTestOptions(), (aggregation) -> aggregation.pipeline(project().suppressId()
+                .include("saleTimestamp").include("saleIncrement", tsIncrement("$saleTimestamp"))));
     }
 }

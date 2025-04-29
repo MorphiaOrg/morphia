@@ -21,9 +21,8 @@ public class TestFill extends TemplatedTestBase {
      */
     @Test(testName = "Fill Missing Field Values with a Constant Value")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion("5.3.0").minDriver("4.2.0").removeIds(true),
-                aggregation -> aggregation
-                        .pipeline(fill().field("bootsSold", 0).field("sandalsSold", 0).field("sneakersSold", 0)));
+        testPipeline(new ActionTestOptions().removeIds(true), aggregation -> aggregation
+                .pipeline(fill().field("bootsSold", 0).field("sandalsSold", 0).field("sneakersSold", 0)));
     }
 
     /**
@@ -32,7 +31,7 @@ public class TestFill extends TemplatedTestBase {
      */
     @Test(testName = "Fill Missing Field Values with Linear Interpolation")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion("5.3.0").removeIds(true),
+        testPipeline(new ActionTestOptions().removeIds(true),
                 aggregation -> aggregation.pipeline(fill().sortBy(ascending("time")).field("price", Method.LINEAR)));
     }
 
@@ -42,7 +41,7 @@ public class TestFill extends TemplatedTestBase {
      */
     @Test(testName = "Fill Missing Field Values Based on the Last Observed Value")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().serverVersion("5.3.0").minDriver("4.2.0").removeIds(true),
+        testPipeline(new ActionTestOptions().removeIds(true),
                 aggregation -> aggregation.pipeline(fill().sortBy(ascending("date")).field("score", Method.LOCF)));
     }
 
@@ -52,7 +51,7 @@ public class TestFill extends TemplatedTestBase {
      */
     @Test(testName = "Fill Data for Distinct Partitions")
     public void testExample4() {
-        testPipeline(new ActionTestOptions().serverVersion("5.3.0").minDriver("4.2.0").removeIds(true),
+        testPipeline(new ActionTestOptions().removeIds(true),
                 aggregation -> aggregation.pipeline(fill().sortBy(ascending("date"))
                         .partitionBy(document("restaurant", "$restaurant")).field("score", Method.LOCF)));
     }
@@ -63,7 +62,7 @@ public class TestFill extends TemplatedTestBase {
      */
     @Test(testName = "Indicate if a Field was Populated Using ``$fill``")
     public void testExample5() {
-        testPipeline(new ActionTestOptions().serverVersion("5.3.0").removeIds(true),
+        testPipeline(new ActionTestOptions().removeIds(true),
                 (aggregation) -> aggregation
                         .pipeline(
                                 set().field("valueExisted",

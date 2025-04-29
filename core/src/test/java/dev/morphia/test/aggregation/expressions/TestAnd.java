@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -17,7 +16,7 @@ public class TestAnd extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion("0.0.0"), aggregation -> aggregation.pipeline(
+        testPipeline(aggregation -> aggregation.pipeline(
                 project().include("item").include("qty").include("result", and(gt("$qty", 100), lt("$qty", 250)))));
 
     }

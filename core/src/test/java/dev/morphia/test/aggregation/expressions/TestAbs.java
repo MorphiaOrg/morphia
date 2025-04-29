@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -16,7 +15,7 @@ public class TestAbs extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion("0.0.0"), aggregation -> aggregation
+        testPipeline(aggregation -> aggregation
                 .pipeline(project().include("delta", abs(subtract("$startTemp", "$endTemp")))));
 
     }

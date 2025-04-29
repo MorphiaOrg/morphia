@@ -6,7 +6,6 @@ import dev.morphia.aggregation.expressions.ComparisonExpressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.aggregation.model.Inventory;
 import dev.morphia.test.aggregation.model.Order;
-import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -69,7 +68,7 @@ public class TestLookup extends TemplatedTestBase {
     @Test(testName = "Perform Multiple Joins and a Correlated Subquery with ``$lookup``")
     public void testExample4() {
         loadData("warehouses", 2);
-        testPipeline(new ActionTestOptions().serverVersion("0.0.0"),
+        testPipeline(
                 (aggregation) -> aggregation
                         .pipeline(lookup("warehouses")
                                 .pipeline(

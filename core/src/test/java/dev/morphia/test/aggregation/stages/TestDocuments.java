@@ -29,7 +29,7 @@ public class TestDocuments extends TemplatedTestBase {
      */
     @Test(testName = "Use a ``$documents`` Stage in a ``$lookup`` Stage")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion("5.1.0").removeIds(true), aggregation -> {
+        testPipeline(new ActionTestOptions().removeIds(true), aggregation -> {
             return aggregation.match()
                     .lookup(lookup().localField("zip").foreignField("zip_id").as("city_state")
                             .pipeline(documents(document("zip_id", 94301).field("name", "Palo Alto, CA"),

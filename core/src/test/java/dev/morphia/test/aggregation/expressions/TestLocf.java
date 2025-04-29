@@ -18,9 +18,8 @@ public class TestLocf extends TemplatedTestBase {
      */
     @Test(testName = "Fill Missing Values with the Last Observed Value")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion("5.2.0").removeIds(true).orderMatters(false),
-                (aggregation) -> aggregation.pipeline(
-                        setWindowFields().sortBy(ascending("time")).output(output("price").operator(locf("$price")))));
+        testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false), (aggregation) -> aggregation.pipeline(
+                setWindowFields().sortBy(ascending("time")).output(output("price").operator(locf("$price")))));
     }
 
     /**
@@ -29,7 +28,7 @@ public class TestLocf extends TemplatedTestBase {
      */
     @Test(testName = "Use Multiple Fill Methods in a Single Stage")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().serverVersion("5.2.0").removeIds(true),
+        testPipeline(new ActionTestOptions().removeIds(true),
                 (aggregation) -> aggregation.pipeline(setWindowFields().sortBy(ascending("time")).output(
                         output("linearFillPrice").operator(linearFill("$price")),
                         output("locfPrice").operator(locf("$price")))));
