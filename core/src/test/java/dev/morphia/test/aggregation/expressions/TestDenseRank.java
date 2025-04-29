@@ -1,6 +1,7 @@
 package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.annotations.Test;
 
@@ -36,8 +37,10 @@ public class TestDenseRank extends TemplatedTestBase {
      */
     @Test(testName = "Dense Rank for Duplicate, Null, and Missing Values")
     public void testExample3() {
-        testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
-                .sortBy(descending("quantity")).output(output("denseRankQuantityForState").operator(denseRank()))));
+        testPipeline(new ActionTestOptions().serverVersion("8.0.0"),
+                (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy(
+                        "$state")
+                        .sortBy(descending("quantity")).output(output("denseRankQuantityForState").operator(denseRank()))));
     }
 
 }

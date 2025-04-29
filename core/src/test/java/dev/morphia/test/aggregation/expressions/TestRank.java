@@ -38,7 +38,7 @@ public class TestRank extends TemplatedTestBase {
      */
     @Test(testName = "Rank Partitions Containing Duplicate Values, Nulls, or Missing Data")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().orderMatters(false),
+        testPipeline(new ActionTestOptions().serverVersion("8.0.0").orderMatters(false),
                 (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                         .sortBy(descending("quantity")).output(output("rankQuantityForState").operator(rank()))));
     }
