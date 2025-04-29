@@ -125,18 +125,18 @@ jobs:
       matrix:
         driver: ${{ fromJson(needs.matrix.outputs.driver_matrix) }}
         java: [ 17 ]
-        mongo: [ 7 ]
+        mongo: [ 8.0.0 ]
         include:
           - driver: ${{ fromJson(needs.matrix.outputs.driver_latest)[0] }}
             java: 21
-            mongo: 7
+            mongo: 8.0.0
           - driver: ${{ fromJson(needs.matrix.outputs.driver_latest)[0] }}
             java: 24
-            mongo: 7
+            mongo: 8.0.0
             optional: true
           - driver: ${{ needs.matrix.outputs.driver_snapshot }}
             java: 17
-            mongo: 7
+            mongo: 8.0.0
             optional: true
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     secrets:
