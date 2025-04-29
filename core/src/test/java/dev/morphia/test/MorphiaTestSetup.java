@@ -60,7 +60,7 @@ public class MorphiaTestSetup {
     }
 
     private static MongoHolder initMongoDbContainer(boolean sharded) {
-        String mongodb = System.getProperty("mongodb", "8.1.0");
+        String mongodb = System.getProperty("mongodb", "7.0.0");
         String connectionString;
         MongoDBContainer mongoDBContainer = null;
         if ("local".equals(mongodb)) {

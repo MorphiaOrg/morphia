@@ -1,5 +1,4 @@
-   [
-      {
+{
          $project:
             {
                expectedDeliveryDate:
@@ -12,5 +11,7 @@
                         }
                   }
             }
+       },
+       { 
+          $merge: "shipping" 
        }
-    ]

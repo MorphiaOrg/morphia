@@ -10,6 +10,7 @@ import static dev.morphia.aggregation.expressions.ComparisonExpressions.gt;
 import static dev.morphia.aggregation.expressions.DateExpressions.dateAdd;
 import static dev.morphia.aggregation.expressions.DateExpressions.dateToString;
 import static dev.morphia.aggregation.stages.Match.match;
+import static dev.morphia.aggregation.stages.Merge.merge;
 import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.query.filters.Filters.expr;
 
@@ -20,9 +21,10 @@ public class TestDateAdd extends TemplatedTestBase {
      */
     @Test(testName = "Add a Future Date")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion("0.0.0").removeIds(true).minDriver("4.2.0"),
+        testPipeline(new ActionTestOptions().removeIds(true),
                 aggregation -> aggregation.pipeline(
-                        project().include("expectedDeliveryDate", dateAdd("$purchaseDate", 3, TimeUnit.DAY))));
+                        project().include("expectedDeliveryDate", dateAdd("$purchaseDate", 3, TimeUnit.DAY)),
+                        merge(EXAMPLE_TEST_COLLECTION)));
 
     }
 

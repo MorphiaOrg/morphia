@@ -1,1 +1,1 @@
-{ _id: ObjectId('669945ab610b080391a8e2f5'), name: 'laptop', price: 400, UUID: UUID('0e3b9063-8abd-4eb3-9f9f-f4c59fd30a60') }
+{ name: 'laptop', price: 400, UUID: UUID('0e3b9063-8abd-4eb3-9f9f-f4c59fd30a60') }

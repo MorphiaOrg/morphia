@@ -24,7 +24,7 @@ public class TestConvert extends TemplatedTestBase {
      */
     @Test(testName = "main")
     public void testExample1() {
-        testPipeline(new ActionTestOptions().serverVersion("0.0.0"), (aggregation) -> aggregation.pipeline(
+        testPipeline(new ActionTestOptions(), (aggregation) -> aggregation.pipeline(
                 addFields().field("convertedPrice", convert("$price", DECIMAL).onError("Error").onNull(0.0))
                         .field("convertedQty",
                                 convert("$qty", INT).onError(concat("Could not convert ",
