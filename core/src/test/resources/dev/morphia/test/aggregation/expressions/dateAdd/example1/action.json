@@ -1,17 +1,16 @@
-{
-         $project:
-            {
-               expectedDeliveryDate:
-                  {
-                     $dateAdd:
-                        {
-                           startDate: "$purchaseDate",
-                           unit: "day",
-                           amount: 3
-                        }
-                  }
-            }
-       },
-       { 
-          $merge: "shipping" 
-       }
+[
+  {
+    $project: {
+      expectedDeliveryDate: {
+        $dateAdd: {
+          startDate: "$purchaseDate",
+          unit: "day",
+          amount: 3
+        }
+      }
+    }
+  },
+  {
+    $merge: "example_test"
+  }
+]
