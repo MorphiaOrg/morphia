@@ -8,6 +8,7 @@ import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.aggregation.model.Book;
 import dev.morphia.test.aggregation.model.BooksBucketResult;
 import dev.morphia.test.aggregation.model.BucketAutoResult;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -37,7 +38,7 @@ public class TestBucketAuto extends TemplatedTestBase {
      */
     @Test(testName = "Multi-Faceted Aggregation")
     public void testExample2() {
-        testPipeline(
+        testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(facet().field("price", autoBucket().groupBy("$price").buckets(4))
                         .field("year",
                                 autoBucket().groupBy("$year").buckets(3).outputField("count", sum(1))
@@ -48,7 +49,7 @@ public class TestBucketAuto extends TemplatedTestBase {
 
     @Test(testName = "Multi-Faceted Aggregation")
     public void testExample3() {
-        testPipeline(
+        testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(facet().field("price", autoBucket().groupBy("$price").buckets(4))
                         .field("year",
                                 autoBucket().groupBy("$year").buckets(3).outputField("count", sum(1))

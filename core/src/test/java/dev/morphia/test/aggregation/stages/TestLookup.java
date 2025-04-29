@@ -56,6 +56,7 @@ public class TestLookup extends TemplatedTestBase {
      */
     @Test(testName = "Use ``$lookup`` with ``$mergeObjects``")
     public void testExample3() {
+        loadData("items", 2);
         testPipeline((aggregation) -> aggregation.pipeline(
                 lookup("items").localField("item").foreignField("item").as("fromItems"),
                 replaceRoot(mergeObjects().add(elementAt("$fromItems", 0)).add(ROOT)), project().exclude("fromItems")));

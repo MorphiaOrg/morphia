@@ -2,9 +2,11 @@ package dev.morphia.test;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.StringReader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -25,13 +27,13 @@ import dev.morphia.query.Operations;
 import dev.morphia.query.Query;
 import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.test.util.ActionTestOptions;
-import dev.morphia.test.util.Comparanator;
 
 import org.bson.BsonInvalidOperationException;
 import org.bson.Document;
 import org.bson.json.JsonParseException;
 import org.bson.json.JsonWriterSettings;
 import org.jetbrains.annotations.NotNull;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
@@ -364,6 +366,20 @@ public abstract class TemplatedTestBase extends TestBase {
         return document.toJson(JSON_WRITER_SETTINGS, getDatabase().getCodecRegistry().get(Document.class));
     }
 
+    private String toJson(List<Document> pipeline) {
+        return pipeline.stream()
+                .map(d -> d.toJson(JSON_WRITER_SETTINGS, getDatabase().getCodecRegistry().get(Document.class)))
+                .collect(joining("\n, ", "[\n", "\n]"));
+    }
+
+    private void toFile(String name, List<Document> pipeline) {
+        try (PrintWriter out = new PrintWriter(new FileWriter(new File("target/%s.json".formatted(name))))) {
+            out.println(toJson(pipeline));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     protected void validateTestName(String resourceName) {
         Method method = findTestMethod();
         Test test = method.getAnnotation(Test.class);
@@ -393,11 +409,17 @@ public abstract class TemplatedTestBase extends TestBase {
             actual = options.removeIds() ? removeIds(actual) : actual;
             expected = options.removeIds() ? removeIds(expected) : expected;
 
+            toFile("actual", actual);
+            toFile("expected", expected);
+
             try {
-                Comparanator.of(null, actual, expected, options.orderMatters()).compare();
+                JSONAssert.assertEquals(toJson(expected), toJson(actual), options.orderMatters());
+                //                Comparanator.of(null, actual, expected, options.orderMatters()).compare();
             } catch (AssertionError e) {
                 throw new AssertionError("%s\n\n actual: %s".formatted(e.getMessage(), toString(actual, "\n\t")),
                         e);
+            } catch (Exception e) {
+                throw new RuntimeException(e.getMessage(), e);
             }
         }
     }
@@ -447,11 +469,5 @@ public abstract class TemplatedTestBase extends TestBase {
         }
         loadIndex(resourceName, EXAMPLE_TEST_COLLECTION);
         return resourceName;
-    }
-
-    private String toJson(List<Document> pipeline) {
-        return pipeline.stream()
-                .map(d -> d.toJson(JSON_WRITER_SETTINGS, getDatabase().getCodecRegistry().get(Document.class)))
-                .collect(joining("\n, ", "[\n", "\n]"));
     }
 }

@@ -148,6 +148,12 @@ link:javadoc/dev/morphia/query/filters/Filters.html#mod(java.lang.String,double,
 | https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestMod.java[TestMod]
 
 
+| http://docs.mongodb.org/manual/reference/operator/query/natural[$natural]
+a| link:javadoc/dev/morphia/query/Sort.html#naturalAscending()[Sort#naturalAscending()] +
+link:javadoc/dev/morphia/query/Sort.html#naturalDescending()[Sort#naturalDescending()]
+| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestNatural.java[TestNatural]
+
+
 | http://docs.mongodb.org/manual/reference/operator/query/ne[$ne]
 | link:javadoc/dev/morphia/query/filters/Filters.html#ne(java.lang.String,java.lang.Object)[Filters#ne(String,Object)]
 | https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/query/filters/TestNe.java[TestNe]
