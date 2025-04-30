@@ -161,23 +161,30 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns the document position (known as the rank) relative to other documents in the $setWindowFields stage partition.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#shift(java.lang.Object,long,java.lang.Object)" class="member-name-link">shift</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;output,
- long&nbsp;by,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;defaultValue)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#shift(java.lang.Object,long)" class="member-name-link">shift</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;output,
+ long&nbsp;by)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the value from an expression applied to a document in a specified position relative to the current document in the
  $setWindowFields stage partition.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stdDevPop(java.lang.Object,java.lang.Object...)" class="member-name-link">stdDevPop</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;value,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;additional)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#shift(java.lang.Object,long,java.lang.Object)" class="member-name-link">shift</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;output,
+ long&nbsp;by,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;defaultValue)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Returns the population standard deviation of the input values.</div>
+<div class="block">Returns the value from an expression applied to a document in a specified position relative to the current document in the
+ $setWindowFields stage partition.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stdDevSamp(java.lang.Object,java.lang.Object...)" class="member-name-link">stdDevSamp</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;value,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stdDevPop(java.lang.Object,java.lang.Object...)" class="member-name-link">stdDevPop</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;value,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;additional)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Returns the population standard deviation of the input values.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#stdDevSamp(java.lang.Object,java.lang.Object...)" class="member-name-link">stdDevSamp</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;value,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;additional)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Returns the sample standard deviation of the input values.</div>
 </div>
 </div>
@@ -407,6 +414,30 @@ loadScripts(document, 'script');</script>
 <dt>Since:</dt>
 <dd>2.3</dd>
 <dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/rank'>Aggregration Expression:  $rank</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href='http://docs.mongodb.org/manual/release-notes/5.0'>5.0</a></dd></dl>
+</section>
+</li>
+<li>
+<section class="detail" id="shift(java.lang.Object,long)">
+<h3>shift</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a></span>&nbsp;<span class="element-name">shift</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;output,
+ long&nbsp;by)</span></div>
+<div class="block">Returns the value from an expression applied to a document in a specified position relative to the current document in the
+ $setWindowFields stage partition.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>output</code> - Specifies an expression to evaluate and return in the output.</dd>
+<dd><code>by</code> - Specifies an integer with a numeric document position relative to the current document in the output.</dd>
+<dt>Returns:</dt>
+<dd>the expression</dd>
+<dt>Since:</dt>
+<dd>3.0</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list-long">
+<li><a href="../Aggregation.html#setWindowFields(dev.morphia.aggregation.stages.SetWindowFields)"><code>Aggregation.setWindowFields(SetWindowFields)</code></a></li>
+</ul>
+</dd>
+<dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/reference/operator/aggregation/shift'>Aggregration Expression:  $shift</a></dd><dl><dt><span class="strong">Since server release</span></dt><dd><a href='http://docs.mongodb.org/manual/release-notes/5.0'>5.0</a></dd></dl>
 </section>
 </li>
 <li>
