@@ -1,0 +1,2 @@
+{ _id: ObjectId('679d26907c5a58595234305c'), item: 'nuts', quantity: 30, carrier: { name: 'Shipit', fee: 3 }, type: [ 'hardware' ] },
+{ _id: ObjectId('679d26907c5a58595234305e'), item: 'washers', quantity: 10, carrier: { name: 'Shipit', fee: 1 } }

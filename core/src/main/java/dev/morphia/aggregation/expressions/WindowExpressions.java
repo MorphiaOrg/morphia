@@ -193,6 +193,22 @@ public final class WindowExpressions {
      * Returns the value from an expression applied to a document in a specified position relative to the current document in the
      * $setWindowFields stage partition.
      *
+     * @param output Specifies an expression to evaluate and return in the output.
+     * @param by     Specifies an integer with a numeric document position relative to the current document in the output.
+     * @return the expression
+     * @aggregation.expression $shift
+     * @mongodb.server.release 5.0
+     * @see Aggregation#setWindowFields(SetWindowFields)
+     * @since 3.0
+     */
+    public static Expression shift(Object output, long by) {
+        return new ShiftExpression(wrap(output), by);
+    }
+
+    /**
+     * Returns the value from an expression applied to a document in a specified position relative to the current document in the
+     * $setWindowFields stage partition.
+     *
      * @param output       Specifies an expression to evaluate and return in the output.
      * @param by           Specifies an integer with a numeric document position relative to the current document in the output.
      * @param defaultValue Specifies an optional default expression to evaluate if the document position is outside of the implicit

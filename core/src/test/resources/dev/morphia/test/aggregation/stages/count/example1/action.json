@@ -1,10 +1,2 @@
-{
-      $match: {
-        score: {
-          $gt: 80
-        }
-      }
-    },
-    {
-      $count: "passing_scores"
-    }
+{ $match: { score: { $gt: 80 } } },
+   { $count: "passing_scores" }

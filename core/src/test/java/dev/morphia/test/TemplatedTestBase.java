@@ -32,6 +32,7 @@ import org.bson.Document;
 import org.bson.json.JsonParseException;
 import org.bson.json.JsonWriterSettings;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
@@ -298,7 +299,17 @@ public abstract class TemplatedTestBase extends TestBase {
 
         if (!options.skipActionCheck()) {
             List<Document> target = loadAction(pipelineName);
-            assertEquals(toJson(pipeline), toJson(target), "Should generate the same pipeline");
+            try {
+                String expected = toJson(pipeline);
+                String actual = toJson(target);
+
+                toFile("actual", pipeline);
+                toFile("expected", target);
+
+                JSONAssert.assertEquals("Should generate the same pipeline", actual, expected, false);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         if (!options.skipDataCheck()) {
@@ -408,10 +419,10 @@ public abstract class TemplatedTestBase extends TestBase {
             actual = options.removeIds() ? removeIds(actual) : actual;
             expected = options.removeIds() ? removeIds(expected) : expected;
 
-            toFile("actual", actual);
-            toFile("expected", expected);
-
             try {
+                toFile("actual", actual);
+                toFile("expected", expected);
+
                 JSONAssert.assertEquals(toJson(expected), toJson(actual), options.orderMatters());
             } catch (Exception e) {
                 throw new RuntimeException(e.getMessage(), e);

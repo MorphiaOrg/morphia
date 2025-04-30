@@ -16,6 +16,17 @@ public class ShiftExpression extends Expression {
     private final Expression defaultValue;
 
     /**
+     * @param output the output
+     * @param by     the amount to shift by
+     */
+    public ShiftExpression(Expression output, long by) {
+        super("$shift");
+        this.output = output;
+        this.by = by;
+        this.defaultValue = null;
+    }
+
+    /**
      * @param output       the output
      * @param by           the amount to shift by
      * @param defaultValue the default value

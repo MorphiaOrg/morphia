@@ -1,0 +1,3 @@
+{ "item": "nuts", "quantity": 30, "carrier": { "name": "Shipit", "fee": 3 }, "type": [ "hardware" ]  },
+{ "item": "bolts", "quantity": 50, "carrier": { "name": "Shipit", "fee": 4 }, "type": [ "hardware", "fasteners" ] },
+{ "item": "washers", "quantity": 10, "carrier": { "name": "Shipit", "fee": 1 } }

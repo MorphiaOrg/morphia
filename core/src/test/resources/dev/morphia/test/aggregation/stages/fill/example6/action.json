@@ -1,0 +1,7 @@
+{
+  $fill: {
+    partitionBy: { "restaurant": "$restaurant" },
+    sortBy: { date: 1 },
+    output: { "score": { method: "linear" } }
+  }
+}

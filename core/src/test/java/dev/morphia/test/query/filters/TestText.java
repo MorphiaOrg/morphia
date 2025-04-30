@@ -32,7 +32,7 @@ public class TestText extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/text/example3
      */
-    @Test(testName = "``$text`` with a Phrase")
+    @Test(testName = "``$text`` with an Exact String")
     public void testExample3() {
         testQuery(new ActionTestOptions().orderMatters(false), (query) -> query.filter(text("\"coffee shop\"")
 

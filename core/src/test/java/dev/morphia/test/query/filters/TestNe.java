@@ -26,4 +26,14 @@ public class TestNe extends TemplatedTestBase {
         testUpdate(new ActionTestOptions().removeIds(true), (query) -> query.filter(ne("carrier.fee", 1)),
                 set("price", 9.99));
     }
+
+    /**
+     * test data: dev/morphia/test/query/filters/ne/example3
+     * 
+     */
+    @Test(testName = "Arrays")
+    public void testExample3() {
+        testQuery(new ActionTestOptions().removeIds(true),
+                (query) -> query.filter(ne("type", new String[] { "hardware", "fasteners" })));
+    }
 }
