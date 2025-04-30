@@ -64,19 +64,10 @@ public class TestSetWindowFields extends TemplatedTestBase {
     @Test(testName = "Comparison with Previous Values Example")
     public void testExample4() {
         testPipeline((aggregation) -> aggregation.pipeline(
-                setWindowFields()
-                        .partitionBy("$type")
-                        .sortBy(ascending("orderDate"))
-                        .output(output("previousPrice")
-                                .operator(shift("$price", -1))),
-                set()
-                        .field("priceComparison", condition(
-                                eq("$price", "$previousPrice"),
-                                "same",
-                                condition(
-                                        gt("$price", "$previousPrice"),
-                                        "higher",
-                                        "lower")))));
+                setWindowFields().partitionBy("$type").sortBy(ascending("orderDate"))
+                        .output(output("previousPrice").operator(shift("$price", -1))),
+                set().field("priceComparison", condition(eq("$price", "$previousPrice"), "same",
+                        condition(gt("$price", "$previousPrice"), "higher", "lower")))));
     }
 
 }

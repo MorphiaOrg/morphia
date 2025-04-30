@@ -656,7 +656,8 @@ link:javadoc/dev/morphia/aggregation/expressions/ArrayExpressions.html#range(jav
 
 
 | http://docs.mongodb.org/manual/reference/operator/aggregation/shift[$shift]
-| link:javadoc/dev/morphia/aggregation/expressions/WindowExpressions.html#shift(java.lang.Object,long,java.lang.Object)[WindowExpressions#shift(Object,long,Object)]
+a| link:javadoc/dev/morphia/aggregation/expressions/WindowExpressions.html#shift(java.lang.Object,long)[WindowExpressions#shift(Object,long)] +
+link:javadoc/dev/morphia/aggregation/expressions/WindowExpressions.html#shift(java.lang.Object,long,java.lang.Object)[WindowExpressions#shift(Object,long,Object)]
 | https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/expressions/TestShift.java[TestShift]
 
 
