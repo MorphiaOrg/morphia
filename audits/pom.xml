@@ -13,6 +13,9 @@
 
     <artifactId>morphia-audits</artifactId>
     <packaging>jar</packaging>
+    <properties>
+        <jackson.version>2.18.2</jackson.version>
+    </properties>
 
     <dependencies>
         <dependency>
