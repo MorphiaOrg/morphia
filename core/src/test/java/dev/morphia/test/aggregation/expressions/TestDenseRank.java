@@ -38,9 +38,9 @@ public class TestDenseRank extends TemplatedTestBase {
     @Test(testName = "Dense Rank for Duplicate, Null, and Missing Values")
     public void testExample3() {
         testPipeline(new ActionTestOptions().serverVersion("8.0.0"),
-                (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy(
-                        "$state")
-                        .sortBy(descending("quantity")).output(output("denseRankQuantityForState").operator(denseRank()))));
+                (aggregation) -> aggregation
+                        .pipeline(setWindowFields().partitionBy("$state").sortBy(descending("quantity"))
+                                .output(output("denseRankQuantityForState").operator(denseRank()))));
     }
 
 }
