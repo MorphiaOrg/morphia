@@ -1,0 +1,3 @@
+{ ns: "sample_mflix.movies", db: "sample_mflix", type: "collection", idIndex: { v: 2, key: { _id: 1 }, name: '_id' }, options: { ... }, sharded: false, info: { readOnly: false, uuid: new UUID("6c46c8b9-4999-4213-bcef-9a36b0cff228") } },
+{ ns: "sample_mflix.comments", db: "sample_mflix", type: "collection", options: { ... }, sharded: true, info: { readOnly: true, uuid: new UUID("6c448eb9-4090-4213-bbaf-9a36bb7fc98e") } shardKey: { _id: 1} },
+...
