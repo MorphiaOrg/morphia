@@ -176,20 +176,11 @@ public abstract class TestBase extends MorphiaTestSetup {
         assumeTrue(isReplicaSet(), "This test requires a replica set");
     }
 
-    protected int count(MongoCursor<?> cursor) {
+    protected int countResults(MongoCursor<?> cursor) {
         int count = 0;
         while (cursor.hasNext()) {
             cursor.next();
             count++;
-        }
-        return count;
-    }
-
-    protected int count(Iterator<?> iterator) {
-        int count = 0;
-        while (iterator.hasNext()) {
-            count++;
-            iterator.next();
         }
         return count;
     }

@@ -24,9 +24,9 @@ public class TestCollation extends AggregationTest {
         Aggregation<User> pipeline = getDs()
                 .aggregate(User.class)
                 .match(eq("name", "john doe"));
-        assertEquals(count(pipeline.execute(User.class)), 1);
+        assertEquals(countResults(pipeline.execute(User.class)), 1);
 
-        assertEquals(count(pipeline.execute(User.class,
+        assertEquals(countResults(pipeline.execute(User.class,
                 new AggregationOptions()
                         .collation(Collation.builder()
                                 .locale("en")
