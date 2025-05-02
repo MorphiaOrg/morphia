@@ -193,7 +193,7 @@
             <dependency>
                 <groupId>io.smallrye.config</groupId>
                 <artifactId>smallrye-config</artifactId>
-                <version>3.12.2</version>
+                <version>3.12.4</version>
             </dependency>
 
             <dependency>
