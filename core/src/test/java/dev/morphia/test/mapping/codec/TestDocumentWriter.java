@@ -76,13 +76,7 @@ public class TestDocumentWriter extends TestBase {
     public void arraysWithDocs() {
         DocumentWriter writer = new DocumentWriter(getMapper().getConfig());
 
-        document(writer, () -> {
-            array(writer, "stuff", () -> {
-                document(writer, () -> {
-                    writer.writeInt32("doc", 42);
-                });
-            });
-        });
+        document(writer, () -> array(writer, "stuff", () -> document(writer, () -> writer.writeInt32("doc", 42))));
 
         Assert.assertEquals(writer.getDocument(), new Document("stuff", of(new Document("doc", 42))));
     }
@@ -108,18 +102,12 @@ public class TestDocumentWriter extends TestBase {
     public void nestedArrays() {
         DocumentWriter writer = new DocumentWriter(getMapper().getConfig());
 
-        document(writer, () -> {
-            array(writer, "top", () -> {
-                array(writer, () -> {
-                    writer.writeInt32(1);
-                    writer.writeInt32(2);
-                    writer.writeInt32(3);
-                    document(writer, () -> {
-                        writer.writeString("nested", "string");
-                    });
-                });
-            });
-        });
+        document(writer, () -> array(writer, "top", () -> array(writer, () -> {
+            writer.writeInt32(1);
+            writer.writeInt32(2);
+            writer.writeInt32(3);
+            document(writer, () -> writer.writeString("nested", "string"));
+        })));
         Document top = new Document("top", of(of(1, 2, 3, new Document("nested", "string"))));
         Assert.assertEquals(top, writer.getDocument());
     }
@@ -130,33 +118,23 @@ public class TestDocumentWriter extends TestBase {
                 + "{$multiply: [ \"$price\", \"$quantity\" ]}}, averageQuantity: {$avg: \"$quantity\"},count: {$sum: 1}}}";
 
         DocumentWriter writer = new DocumentWriter(getMapper().getConfig());
-        document(writer, () -> {
-            document(writer, "$group", () -> {
+        document(writer, () -> document(writer, "$group", () -> {
 
-                document(writer, "_id", () -> {
-                    document(writer, "$dateToString", () -> {
-                        writer.writeString("format", "%Y-%m-%d");
-                        writer.writeString("date", "$date");
-                    });
-                });
+            document(writer, "_id", () -> document(writer, "$dateToString", () -> {
+                writer.writeString("format", "%Y-%m-%d");
+                writer.writeString("date", "$date");
+            }));
 
-                document(writer, "totalSaleAmount", () -> {
-                    document(writer, "$sum", () -> {
-                        array(writer, "$multiply", () -> {
-                            writer.writeString("$price");
-                            writer.writeString("$quantity");
-                        });
-                    });
-                });
+            document(writer, "totalSaleAmount", () -> document(writer, "$sum", () -> array(writer, "$multiply", () -> {
+                writer.writeString("$price");
+                writer.writeString("$quantity");
+            })));
 
-                document(writer, "averageQuantity", () -> writer.writeString("$avg", "$quantity"));
+            document(writer, "averageQuantity", () -> writer.writeString("$avg", "$quantity"));
 
-                document(writer, "count", () -> {
-                    writer.writeInt32("$sum", 1);
-                });
+            document(writer, "count", () -> writer.writeInt32("$sum", 1));
 
-            });
-        });
+        }));
         String s = writer.getDocument().toJson();
         JSONAssert.assertEquals(expected, s, false);
     }

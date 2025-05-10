@@ -39,35 +39,23 @@ public class TestConfigOptions extends TestBase {
         hl.names = new ArrayList<>();
 
         //Test default behavior
-        empties(false, () -> {
-            shouldNotFindField(getDs(), hl);
-        });
+        empties(false, () -> shouldNotFindField(getDs(), hl));
 
         //Test default storing empty list/array with storeEmpties option
-        empties(true, () -> {
-            shouldFindField(getDs(), hl, new ArrayList<>());
-        });
+        empties(true, () -> shouldFindField(getDs(), hl, new ArrayList<>()));
 
         //Test opposite from above
-        empties(false, () -> {
-            shouldNotFindField(getDs(), hl);
-        });
+        empties(false, () -> shouldNotFindField(getDs(), hl));
 
         hl.names = null;
         //Test default behavior
-        empties(false, () -> {
-            shouldNotFindField(getDs(), hl);
-        });
+        empties(false, () -> shouldNotFindField(getDs(), hl));
 
         //Test default storing empty list/array with storeEmpties option
-        empties(true, () -> {
-            shouldNotFindField(getDs(), hl);
-        });
+        empties(true, () -> shouldNotFindField(getDs(), hl));
 
         //Test opposite from above
-        empties(false, () -> {
-            shouldNotFindField(getDs(), hl);
-        });
+        empties(false, () -> shouldNotFindField(getDs(), hl));
     }
 
     @Test
@@ -76,19 +64,13 @@ public class TestConfigOptions extends TestBase {
         hm.properties = new HashMap<>();
 
         //Test default behavior
-        empties(false, () -> {
-            shouldNotFindField(getDs(), hm);
-        });
+        empties(false, () -> shouldNotFindField(getDs(), hm));
 
         //Test default storing empty map with storeEmpties option
-        empties(true, () -> {
-            shouldFindField(getDs(), hm, new HashMap<>());
-        });
+        empties(true, () -> shouldFindField(getDs(), hm, new HashMap<>()));
 
         //Test opposite from above
-        empties(false, () -> {
-            shouldNotFindField(getDs(), hm);
-        });
+        empties(false, () -> shouldNotFindField(getDs(), hm));
     }
 
     @Test
@@ -97,19 +79,13 @@ public class TestConfigOptions extends TestBase {
         hm.properties = new HashMap<>();
 
         //Test default behavior
-        empties(false, () -> {
-            shouldNotFindField(getDs(), hm);
-        });
+        empties(false, () -> shouldNotFindField(getDs(), hm));
 
         //Test default storing empty map with storeEmpties option
-        empties(true, () -> {
-            shouldFindField(getDs(), hm, new HashMap<>());
-        });
+        empties(true, () -> shouldFindField(getDs(), hm, new HashMap<>()));
 
         //Test opposite from above
-        empties(false, () -> {
-            shouldNotFindField(getDs(), hm);
-        });
+        empties(false, () -> shouldNotFindField(getDs(), hm));
     }
 
     @Test
@@ -118,19 +94,13 @@ public class TestConfigOptions extends TestBase {
         hm.properties = new HashMap<>();
 
         //Test default behavior
-        empties(false, () -> {
-            shouldNotFindField(getDs(), hm);
-        });
+        empties(false, () -> shouldNotFindField(getDs(), hm));
 
         //Test default storing empty map with storeEmpties option
-        empties(true, () -> {
-            shouldFindField(getDs(), hm, new HashMap<>());
-        });
+        empties(true, () -> shouldFindField(getDs(), hm, new HashMap<>()));
 
         //Test opposite from above
-        empties(false, () -> {
-            shouldNotFindField(getDs(), hm);
-        });
+        empties(false, () -> shouldNotFindField(getDs(), hm));
     }
 
     @Test
@@ -158,19 +128,13 @@ public class TestConfigOptions extends TestBase {
         hl.names = null;
 
         //Test default behavior
-        nulls(false, () -> {
-            shouldNotFindField(getDs(), hl);
-        });
+        nulls(false, () -> shouldNotFindField(getDs(), hl));
 
         //Test default storing null list/array with storeNulls option
-        nulls(true, () -> {
-            shouldFindField(getDs(), hl, null);
-        });
+        nulls(true, () -> shouldFindField(getDs(), hl, null));
 
         //Test opposite from above
-        nulls(false, () -> {
-            shouldNotFindField(getDs(), hl);
-        });
+        nulls(false, () -> shouldNotFindField(getDs(), hl));
     }
 
     @Test
@@ -179,19 +143,13 @@ public class TestConfigOptions extends TestBase {
         hm.properties = null;
 
         //Test default behavior
-        nulls(false, () -> {
-            shouldNotFindField(getDs(), hm);
-        });
+        nulls(false, () -> shouldNotFindField(getDs(), hm));
 
         //Test default storing empty map with storeEmpties option
-        nulls(true, () -> {
-            shouldFindField(getDs(), hm, null);
-        });
+        nulls(true, () -> shouldFindField(getDs(), hm, null));
 
         //Test opposite from above
-        nulls(false, () -> {
-            shouldNotFindField(getDs(), hm);
-        });
+        nulls(false, () -> shouldNotFindField(getDs(), hm));
     }
 
     @Test

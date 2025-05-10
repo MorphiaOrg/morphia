@@ -14,27 +14,23 @@ import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 public class TestLinearFill extends AggregationTest {
     @Test
     public void missingValues() {
-        testPipeline("5.3.0", "missingValues", true, false, (aggregation) -> {
-            return aggregation
-                    .setWindowFields(setWindowFields()
-                            .sortBy(Sort.ascending("time"))
-                            .output(output("price")
-                                    .operator(linearFill(field("price")))));
-        });
+        testPipeline("5.3.0", "missingValues", true, false, (aggregation) -> aggregation
+                .setWindowFields(setWindowFields()
+                        .sortBy(Sort.ascending("time"))
+                        .output(output("price")
+                                .operator(linearFill(field("price"))))));
 
     }
 
     @Test
     public void testMultipleFills() {
-        testPipeline("5.3.0", "multipleFills", true, false, (aggregation) -> {
-            return aggregation
-                    .setWindowFields(setWindowFields()
-                            .sortBy(Sort.ascending("time"))
-                            .output(output("linearFillPrice")
-                                    .operator(linearFill(field("price"))),
-                                    output("locfPrice")
-                                            .operator(locf(field("price")))));
-        });
+        testPipeline("5.3.0", "multipleFills", true, false, (aggregation) -> aggregation
+                .setWindowFields(setWindowFields()
+                        .sortBy(Sort.ascending("time"))
+                        .output(output("linearFillPrice")
+                                .operator(linearFill(field("price"))),
+                                output("locfPrice")
+                                        .operator(locf(field("price"))))));
 
     }
 

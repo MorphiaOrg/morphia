@@ -15,24 +15,20 @@ import static dev.morphia.query.filters.Filters.eq;
 public class TestBottom extends AggregationTest {
     @Test
     public void testSingleGame() {
-        testPipeline("5.2.0", "singleGame", false, false, (aggregation) -> {
-            return aggregation
-                    .match(eq("gameId", "G1"))
-                    .group(group(id(field("gameId")))
-                            .field("playerId", bottom(
-                                    array(field("playerId"), field("score")),
-                                    descending("score"))));
-        });
+        testPipeline("5.2.0", "singleGame", false, false, (aggregation) -> aggregation
+                .match(eq("gameId", "G1"))
+                .group(group(id(field("gameId")))
+                        .field("playerId", bottom(
+                                array(field("playerId"), field("score")),
+                                descending("score")))));
     }
 
     @Test
     public void testAcrossGames() {
-        testPipeline("5.2.0", "acrossGames", false, false, (aggregation) -> {
-            return aggregation
-                    .group(group(id(field("gameId")))
-                            .field("playerId", bottom(
-                                    array(field("playerId"), field("score")),
-                                    descending("score"))));
-        });
+        testPipeline("5.2.0", "acrossGames", false, false, (aggregation) -> aggregation
+                .group(group(id(field("gameId")))
+                        .field("playerId", bottom(
+                                array(field("playerId"), field("score")),
+                                descending("score")))));
     }
 }

@@ -1128,14 +1128,12 @@ public class TestLegacyQuery extends TestBase {
         assertNotNull(found.firstName);
         assertNull(found.lastName);
 
-        assertThrows(ValidationException.class, () -> {
-            getDs()
-                    .find(ContainsRenamedFields.class)
-                    .execute(new FindOptions()
-                            .projection().include("bad field name")
-                            .limit(1))
-                    .tryNext();
-        });
+        assertThrows(ValidationException.class, () -> getDs()
+                .find(ContainsRenamedFields.class)
+                .execute(new FindOptions()
+                        .projection().include("bad field name")
+                        .limit(1))
+                .tryNext());
     }
 
     @Test

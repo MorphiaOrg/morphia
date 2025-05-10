@@ -292,18 +292,13 @@ public class TestDatastore extends TestBase {
         getDs().save(new User("Christopher Turk", LocalDate.of(1974, Month.JUNE, 22)));
         withConfig(buildConfig()
                 .codecProvider(new AlwaysFailingCodecProvider()), () -> {
-                    assertThrows(QueryException.class, () -> {
-                        getDs().save(new User("John \"J.D.\" Dorian", LocalDate.of(1974, Month.APRIL, 6)));
-                    });
-                    assertThrows(QueryException.class, () -> {
-                        getDs().find(User.class).first();
-                    });
+                    assertThrows(QueryException.class,
+                            () -> getDs().save(new User("John \"J.D.\" Dorian", LocalDate.of(1974, Month.APRIL, 6))));
+                    assertThrows(QueryException.class, () -> getDs().find(User.class).first());
 
-                    assertThrows(QueryException.class, () -> {
-                        getDs().getCodecRegistry()
-                                .get(String.class)
-                                .encode(new DocumentWriter(getMapper().getConfig()), "this should fail", EncoderContext.builder().build());
-                    });
+                    assertThrows(QueryException.class, () -> getDs().getCodecRegistry()
+                            .get(String.class)
+                            .encode(new DocumentWriter(getMapper().getConfig()), "this should fail", EncoderContext.builder().build()));
                 });
     }
 
@@ -531,13 +526,9 @@ public class TestDatastore extends TestBase {
         User bob = new User("bob", LocalDate.now());
         User linda = new User("linda", LocalDate.now());
 
-        assertThrows(MissingIdException.class, () -> {
-            this.getDs().replace(bob);
-        });
+        assertThrows(MissingIdException.class, () -> this.getDs().replace(bob));
 
-        assertThrows(MissingIdException.class, () -> {
-            this.getDs().replace(List.of(bob, linda));
-        });
+        assertThrows(MissingIdException.class, () -> this.getDs().replace(List.of(bob, linda)));
 
         this.getDs().insert(bob);
         assertEquals(getDs().find(User.class).count(), 1);
@@ -638,13 +629,9 @@ public class TestDatastore extends TestBase {
         Grade grade = new Grade();
         grade.marks = 80;
 
-        assertThrows(MappingException.class, () -> {
-            getDs().save(grade);
-        });
+        assertThrows(MappingException.class, () -> getDs().save(grade));
 
-        assertThrows(MappingException.class, () -> {
-            getDs().save(of(grade, grade));
-        });
+        assertThrows(MappingException.class, () -> getDs().save(of(grade, grade)));
 
     }
 

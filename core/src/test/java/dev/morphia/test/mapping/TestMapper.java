@@ -24,9 +24,8 @@ public class TestMapper extends TestBase {
             var cloned = new Mapper(mapper);
             assertEquals(cloned.getMappedEntities().size(), mapper.getMappedEntities().size(),
                     "Should find an equal number of mapped entities");
-            mapper.getMappedEntities().forEach(originalEntity -> {
-                assertModelNotSame(originalEntity, cloned.getEntityModel(originalEntity.getType()));
-            });
+            mapper.getMappedEntities()
+                    .forEach(originalEntity -> assertModelNotSame(originalEntity, cloned.getEntityModel(originalEntity.getType())));
 
         });
     }
@@ -39,13 +38,10 @@ public class TestMapper extends TestBase {
         } else {
             assertNotSame(originalEntity.superClass, clonedEntity.superClass);
         }
-        originalEntity.getSubtypes().forEach(subtype -> {
-            assertNotSame(subtype, findSubtype(clonedEntity, subtype));
-        });
-        originalEntity.getProperties().forEach(propertyModel -> {
-            assertNotSame(propertyModel, clonedEntity.getProperty(propertyModel.getName()),
-                    format("The %s property on %s should not be the same", propertyModel.getName(), originalEntity.getType().getName()));
-        });
+        originalEntity.getSubtypes().forEach(subtype -> assertNotSame(subtype, findSubtype(clonedEntity, subtype)));
+        originalEntity.getProperties().forEach(propertyModel -> assertNotSame(propertyModel,
+                clonedEntity.getProperty(propertyModel.getName()),
+                format("The %s property on %s should not be the same", propertyModel.getName(), originalEntity.getType().getName())));
     }
 
     private static EntityModel findSubtype(EntityModel clonedEntity, EntityModel subtype) {

@@ -228,9 +228,8 @@ public class TestVersioning extends TestBase {
 
     @Test
     public void testInvalidVersionUse() {
-        withConfig(buildConfig(InvalidVersionUse.class), () -> {
-            assertThrows(ConstraintViolationException.class, () -> getMapper().getEntityModel(InvalidVersionUse.class));
-        });
+        withConfig(buildConfig(InvalidVersionUse.class),
+                () -> assertThrows(ConstraintViolationException.class, () -> getMapper().getEntityModel(InvalidVersionUse.class)));
 
     }
 

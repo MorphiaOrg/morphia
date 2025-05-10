@@ -223,9 +223,7 @@ public abstract class TemplatedTestBase extends TestBase {
 
         DecoderContext context = DecoderContext.builder().build();
         return documents.stream()
-                .map(document -> {
-                    return codec.decode(new DocumentReader(document), context);
-                })
+                .map(document -> codec.decode(new DocumentReader(document), context))
                 .collect(toList());
     }
 }

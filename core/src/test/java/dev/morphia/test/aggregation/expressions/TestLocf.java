@@ -13,12 +13,10 @@ import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 public class TestLocf extends AggregationTest {
     @Test
     public void testMissingValues() {
-        testPipeline("5.2.0", "missingValues", true, false, (aggregation) -> {
-            return aggregation
-                    .setWindowFields(setWindowFields()
-                            .sortBy(Sort.ascending("time"))
-                            .output(output("price")
-                                    .operator(locf(field("price")))));
-        });
+        testPipeline("5.2.0", "missingValues", true, false, (aggregation) -> aggregation
+                .setWindowFields(setWindowFields()
+                        .sortBy(Sort.ascending("time"))
+                        .output(output("price")
+                                .operator(locf(field("price"))))));
     }
 }

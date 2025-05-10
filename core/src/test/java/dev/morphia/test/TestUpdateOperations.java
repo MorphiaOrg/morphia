@@ -492,9 +492,7 @@ public class TestUpdateOperations extends TestBase {
         };
 
         test.accept(getDs());
-        withConfig(buildConfig().legacy(), () -> {
-            test.accept(getDs());
-        });
+        withConfig(buildConfig().legacy(), () -> test.accept(getDs()));
     }
 
     @Test
@@ -506,9 +504,7 @@ public class TestUpdateOperations extends TestBase {
         };
 
         test.accept(getDs());
-        withConfig(buildConfig().legacy(), () -> {
-            test.accept(getDs());
-        });
+        withConfig(buildConfig().legacy(), () -> test.accept(getDs()));
     }
 
     @Test
@@ -978,10 +974,8 @@ public class TestUpdateOperations extends TestBase {
                 .update(set("foo", "update1"))
                 .execute();
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            getDs().find(Stuff1.class)
-                    .update();
-        });
+        assertThrows(IllegalArgumentException.class, () -> getDs().find(Stuff1.class)
+                .update());
     }
 
     @Test

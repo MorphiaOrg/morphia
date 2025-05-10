@@ -46,16 +46,12 @@ public class TestLazyIdOnly extends ProxyTestBase {
         root = datastore.find(RootEntity.class).first();
         assertNotNull(root);
 
-        assertThrows(ReferenceException.class, () -> {
-            datastore.find(RootEntity.class).filter(eq("dontIgnoreMissing", p)).first();
-        });
+        assertThrows(ReferenceException.class, () -> datastore.find(RootEntity.class).filter(eq("dontIgnoreMissing", p)).first());
 
         assertNull(datastore.find(RootEntity.class).filter(eq("ignoreMissing", p)).first());
 
         ReferencedEntity r = root.dontIgnoreMissing;
-        assertThrows(ReferenceException.class, () -> {
-            r.getFoo();
-        });
+        assertThrows(ReferenceException.class, () -> r.getFoo());
     }
 
     public static class ReferencedEntity extends TestEntity {

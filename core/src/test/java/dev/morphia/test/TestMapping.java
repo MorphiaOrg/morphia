@@ -218,9 +218,7 @@ public class TestMapping extends TestBase {
     public final void multipleIds() {
         withConfig(buildConfig()
                 .packages(of(TwoIds.class.getPackageName())),
-                () -> {
-                    getMapper().getEntityModel(TwoIds.class);
-                });
+                () -> getMapper().getEntityModel(TwoIds.class));
     }
 
     @Test
@@ -285,26 +283,20 @@ public class TestMapping extends TestBase {
     @Test
     public void testBadMappings() {
         withConfig(buildConfig()
-                .packages(of(UnannotatedEntity.class.getPackageName())), () -> {
-                    assertThrows(NotMappableException.class, () -> {
-                        getMapper().getEntityModel(UnannotatedEntity.class);
-                        fail("Missing @Entity and @Embedded should have been caught");
-                    });
-                });
+                .packages(of(UnannotatedEntity.class.getPackageName())), () -> assertThrows(NotMappableException.class, () -> {
+                    getMapper().getEntityModel(UnannotatedEntity.class);
+                    fail("Missing @Entity and @Embedded should have been caught");
+                }));
         withConfig(buildConfig()
-                .packages(of(ThirdPartyEmbedded.class.getPackageName())), () -> {
-                    assertThrows(NotMappableException.class, () -> {
-                        getMapper().getEntityModel(ThirdPartyEmbedded.class);
-                        fail("Missing @Entity and @Embedded should have been caught");
-                    });
-                });
+                .packages(of(ThirdPartyEmbedded.class.getPackageName())), () -> assertThrows(NotMappableException.class, () -> {
+                    getMapper().getEntityModel(ThirdPartyEmbedded.class);
+                    fail("Missing @Entity and @Embedded should have been caught");
+                }));
         withConfig(buildConfig()
-                .packages(of(NonStaticInnerClass.class.getPackageName())), () -> {
-                    assertThrows(MappingException.class, () -> {
-                        getMapper().getEntityModel(NonStaticInnerClass.class);
-                        fail("Validation: Non-static inner class allowed");
-                    });
-                });
+                .packages(of(NonStaticInnerClass.class.getPackageName())), () -> assertThrows(MappingException.class, () -> {
+                    getMapper().getEntityModel(NonStaticInnerClass.class);
+                    fail("Validation: Non-static inner class allowed");
+                }));
     }
 
     @Test

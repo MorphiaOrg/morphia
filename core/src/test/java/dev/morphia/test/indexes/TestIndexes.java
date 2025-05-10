@@ -246,9 +246,7 @@ public class TestIndexes extends TestBase {
     public void testMethodMapping() {
         withConfig(buildConfig(MethodMappedUser.class)
                 .applyIndexes(true)
-                .propertyDiscovery(PropertyDiscovery.METHODS), () -> {
-                    assertEquals(getIndexInfo(MethodMappedUser.class).size(), 3);
-                });
+                .propertyDiscovery(PropertyDiscovery.METHODS), () -> assertEquals(getIndexInfo(MethodMappedUser.class).size(), 3));
     }
 
     @Test

@@ -20,9 +20,7 @@ import static org.testng.Assert.assertEquals;
 public class TestSharding extends TestBase {
     @Test
     public void testMapping() {
-        Assert.assertThrows(ConstraintViolationException.class, () -> {
-            getMapper().map(BadShardKeys.class);
-        });
+        Assert.assertThrows(ConstraintViolationException.class, () -> getMapper().map(BadShardKeys.class));
     }
 
     @Test

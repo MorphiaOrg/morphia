@@ -491,9 +491,8 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testCriteriaContainers() {
-        assertThrows(UnsupportedOperationException.class, () -> {
-            check(new DefaultQueryFactory().createQuery(getDs(), UserInterface.class, new FindOptions()).disableValidation());
-        });
+        assertThrows(UnsupportedOperationException.class,
+                () -> check(new DefaultQueryFactory().createQuery(getDs(), UserInterface.class, new FindOptions()).disableValidation()));
     }
 
     @SuppressWarnings("removal")

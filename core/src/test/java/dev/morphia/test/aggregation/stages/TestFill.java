@@ -14,43 +14,35 @@ import static dev.morphia.query.Sort.ascending;
 public class TestFill extends AggregationTest {
     @Test
     public void testConstantValue() {
-        testPipeline("5.3.0", "constantValue", aggregation -> {
-            return aggregation
-                    .fill(fill()
-                            .field("bootsSold", value(0))
-                            .field("sandalsSold", value(0))
-                            .field("sneakersSold", value(0)));
-        });
+        testPipeline("5.3.0", "constantValue", aggregation -> aggregation
+                .fill(fill()
+                        .field("bootsSold", value(0))
+                        .field("sandalsSold", value(0))
+                        .field("sneakersSold", value(0))));
     }
 
     @Test
     public void testDistinctPartitions() {
-        testPipeline("5.3.0", "distinctPartitions", aggregation -> {
-            return aggregation
-                    .fill(fill()
-                            .sortBy(ascending("date"))
-                            .partitionBy(document("restaurant", field("restaurant")))
-                            .field("score", Method.LOCF));
-        });
+        testPipeline("5.3.0", "distinctPartitions", aggregation -> aggregation
+                .fill(fill()
+                        .sortBy(ascending("date"))
+                        .partitionBy(document("restaurant", field("restaurant")))
+                        .field("score", Method.LOCF)));
     }
 
     @Test
     public void testLastObserved() {
-        testPipeline("5.3.0", "lastObserved", aggregation -> {
-            return aggregation
-                    .fill(fill()
-                            .sortBy(ascending("date"))
-                            .field("score", Method.LOCF));
-        });
+        testPipeline("5.3.0", "lastObserved", aggregation -> aggregation
+                .fill(fill()
+                        .sortBy(ascending("date"))
+                        .field("score", Method.LOCF)));
     }
 
     @Test
     public void testLinearInterpolation() {
-        testPipeline("5.3.0", "linearInterpolation", aggregation -> {
-            return aggregation
-                    .fill(fill()
-                            .sortBy(ascending("time"))
-                            .field("price", Method.LINEAR));
-        });
+        testPipeline("5.3.0", "linearInterpolation", aggregation -> aggregation
+                .fill(fill()
+                        .sortBy(ascending("time"))
+                        .field("price", Method.LINEAR)));
     }
 }

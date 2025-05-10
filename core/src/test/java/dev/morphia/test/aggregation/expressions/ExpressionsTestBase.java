@@ -26,9 +26,7 @@ public class ExpressionsTestBase extends TemplatedTestBase {
     protected void assertAndCheckDocShape(String expectedString, Expression value, Object expectedValue) {
         Document expected = Document.parse(expectedString);
         DocumentWriter writer = new DocumentWriter(getMapper().getConfig());
-        document(writer, () -> {
-            value.encode(getDs(), writer, EncoderContext.builder().build());
-        });
+        document(writer, () -> value.encode(getDs(), writer, EncoderContext.builder().build()));
 
         Document actual = writer.getDocument();
         assertDocumentEquals(actual, expected);

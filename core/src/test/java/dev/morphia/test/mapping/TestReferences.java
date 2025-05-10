@@ -478,9 +478,7 @@ public class TestReferences extends ProxyTestBase {
         List<Parent> parentList = getDs().find(Parent.class).iterator().toList();
         assertEquals(parentList.size(), 1);
 
-        withConfig(buildConfig(), () -> {
-            assertEquals(getDs().find(Parent.class).iterator().toList().size(), 1);
-        });
+        withConfig(buildConfig(), () -> assertEquals(getDs().find(Parent.class).iterator().toList().size(), 1));
     }
 
     @Test

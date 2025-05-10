@@ -11,11 +11,9 @@ import static dev.morphia.aggregation.stages.Projection.project;
 public class TestTsSecond extends AggregationTest {
     @Test
     public void testSeconds() {
-        testPipeline("5.1.0", "seconds", (aggregation) -> {
-            return aggregation.project(project()
-                    .suppressId()
-                    .include("saleTimestamp")
-                    .include("saleSeconds", tsSecond(field("saleTimestamp"))));
-        });
+        testPipeline("5.1.0", "seconds", (aggregation) -> aggregation.project(project()
+                .suppressId()
+                .include("saleTimestamp")
+                .include("saleSeconds", tsSecond(field("saleTimestamp")))));
     }
 }
