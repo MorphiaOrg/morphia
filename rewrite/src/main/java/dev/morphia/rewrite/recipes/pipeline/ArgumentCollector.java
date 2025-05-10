@@ -59,24 +59,13 @@ public class ArgumentCollector {
             visitor.maybeAddImport(type.getName(), method, false);
             MethodInvocation applied = template.apply(new Cursor(visitor.getCursor(), invocation),
                     invocation.getCoordinates().replace());
-            Method methodType = new Method(null, 1, (FullyQualified) JavaType.buildType(type.getName()),
-                    method, JavaType.buildType(Aggregation.class.getName()), List.of("T"),
-                    List.of(JavaType.buildType(Object.class.getName())),
-                    null, null, null, null);
             applied = applied.withArguments(invocation.getArguments()).withSelect(null);
             if (applied.getMethodType() == null) {
-                applied = applied.withMethodType(methodType);
+                applied = applied.withMethodType(new Method(null, 1, (FullyQualified) JavaType.buildType(type.getName()),
+                        method, JavaType.buildType(Aggregation.class.getName()), List.of("T"),
+                        List.of(JavaType.buildType(Object.class.getName())),
+                        null, null, null, null));
             }
-            //        FullyQualified fullyQualified = invocation.getMethodType().getDeclaringType().withFullyQualifiedName(type.getName());
-            //        element = element.withDeclaringType(fullyQualified);
-            //        Method methodType = applied.getMethodType()
-            //                                .withDeclaredFormalTypeNames(JavaType.EMPTY_STRING_ARRAY)
-            //                                .withDeclaringType(fullyQualified)
-            //                                .withParameterNames(List.of())
-            //                                .withParameterTypes(List.of());
-            //        element = element.withMethodType(methodType)
-            //                      .withName(applied.getName().withType(JavaType.buildType(type.getName())).withSimpleName(type.getName()))
-            //                         .withTypeParameters(JContainer.empty());
             args.add(0, applied);
             return true;
         } catch (IndexOutOfBoundsException e) {
