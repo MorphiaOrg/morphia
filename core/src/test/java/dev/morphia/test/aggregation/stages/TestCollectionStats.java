@@ -14,7 +14,7 @@ public class TestCollectionStats extends TestBase {
     public void testCollectionStats() {
         getDs().save(new Author());
         Document stats = getDs().aggregate(Author.class)
-                .collStats(collStats()
+                .pipeline(collStats()
                         .histogram(true)
                         .scale(42)
                         .count(true))

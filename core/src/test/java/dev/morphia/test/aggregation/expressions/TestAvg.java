@@ -1,6 +1,5 @@
 package dev.morphia.test.aggregation.expressions;
 
-import dev.morphia.aggregation.stages.Projection;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -10,6 +9,7 @@ import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
 import static dev.morphia.aggregation.expressions.MathExpressions.multiply;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
+import static dev.morphia.aggregation.stages.Projection.*;
 
 public class TestAvg extends TemplatedTestBase {
     /**
@@ -30,8 +30,11 @@ public class TestAvg extends TemplatedTestBase {
     @Test(testName = "Use in ``$project`` Stage")
     public void testExample2() {
         testPipeline(new ActionTestOptions().orderMatters(false),
-                aggregation -> aggregation.project(Projection.project().include("quizAvg", avg("$quizzes"))
-                        .include("labAvg", avg("$labs")).include("examAvg", avg("$final", "$midterm"))));
+                aggregation -> aggregation.pipeline(
+                        project()
+                                .include("quizAvg", avg("$quizzes"))
+                                .include("labAvg", avg("$labs"))
+                                .include("examAvg", avg("$final", "$midterm"))));
 
     }
 

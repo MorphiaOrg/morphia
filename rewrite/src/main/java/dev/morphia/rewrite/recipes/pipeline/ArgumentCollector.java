@@ -1,0 +1,87 @@
+package dev.morphia.rewrite.recipes.pipeline;
+
+import java.util.List;
+
+import dev.morphia.aggregation.Aggregation;
+import dev.morphia.rewrite.recipes.PipelineRewrite;
+
+import org.jetbrains.annotations.NotNull;
+import org.openrewrite.Cursor;
+import org.openrewrite.ExecutionContext;
+import org.openrewrite.java.JavaIsoVisitor;
+import org.openrewrite.java.JavaParser;
+import org.openrewrite.java.JavaTemplate;
+import org.openrewrite.java.MethodMatcher;
+import org.openrewrite.java.tree.Expression;
+import org.openrewrite.java.tree.J.MethodInvocation;
+import org.openrewrite.java.tree.JavaType;
+import org.openrewrite.java.tree.JavaType.FullyQualified;
+import org.openrewrite.java.tree.JavaType.Method;
+
+import static dev.morphia.rewrite.recipes.RewriteUtils.findMorphiaCore;
+import static java.util.Arrays.stream;
+
+public class ArgumentCollector {
+    @NotNull
+    private final Class<?> type;
+
+    private final String method;
+
+    private final MethodMatcher matcher;
+
+    private final JavaTemplate template;
+
+    public ArgumentCollector(Class<?> type, String method, Class<?>... imports) {
+        this.type = type;
+        this.method = method;
+        matcher = new MethodMatcher("%s %s(..)".formatted(PipelineRewrite.AGGREGATION, method));
+
+        String code = "%s.%s()".formatted(type.getSimpleName(), method);
+        template = (JavaTemplate.builder(code))
+                .javaParser(JavaParser.fromJavaVersion()
+                        .classpath(List.of(findMorphiaCore().toPath())))
+                .staticImports("%s.%s".formatted(type.getName(), method))
+                .imports(type.getName())
+                .imports(stream(imports)
+                        .filter(t -> !t.isPrimitive())
+                        .map(t -> t.isArray() ? t.getComponentType().getName() : t.getName())
+                        .toArray(String[]::new))
+                .build();
+
+    }
+
+    public boolean matches(JavaIsoVisitor<ExecutionContext> visitor, List<Expression> args, MethodInvocation invocation) {
+        try {
+            if (!matcher.matches(invocation)) {
+                return false;
+            }
+            visitor.maybeAddImport(type.getName(), false);
+            visitor.maybeAddImport(type.getName(), method, false);
+            MethodInvocation applied = template.apply(new Cursor(visitor.getCursor(), invocation),
+                    invocation.getCoordinates().replace());
+            Method methodType = new Method(null, 1, (FullyQualified) JavaType.buildType(type.getName()),
+                    method, JavaType.buildType(Aggregation.class.getName()), List.of("T"),
+                    List.of(JavaType.buildType(Object.class.getName())),
+                    null, null, null, null);
+            applied = applied.withArguments(invocation.getArguments()).withSelect(null);
+            if (applied.getMethodType() == null) {
+                applied = applied.withMethodType(methodType);
+            }
+            //        FullyQualified fullyQualified = invocation.getMethodType().getDeclaringType().withFullyQualifiedName(type.getName());
+            //        element = element.withDeclaringType(fullyQualified);
+            //        Method methodType = applied.getMethodType()
+            //                                .withDeclaredFormalTypeNames(JavaType.EMPTY_STRING_ARRAY)
+            //                                .withDeclaringType(fullyQualified)
+            //                                .withParameterNames(List.of())
+            //                                .withParameterTypes(List.of());
+            //        element = element.withMethodType(methodType)
+            //                      .withName(applied.getName().withType(JavaType.buildType(type.getName())).withSimpleName(type.getName()))
+            //                         .withTypeParameters(JContainer.empty());
+            args.add(0, applied);
+            return true;
+        } catch (IndexOutOfBoundsException e) {
+            throw new RuntimeException(template.getCode(), e);
+        }
+    }
+
+}

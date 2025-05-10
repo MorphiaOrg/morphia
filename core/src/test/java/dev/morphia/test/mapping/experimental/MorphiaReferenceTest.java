@@ -94,14 +94,14 @@ public class MorphiaReferenceTest extends TestBase {
 
         getDs().save(author);
         Object document = getDs().aggregate(Author.class)
-                .lookup(lookup(Book.class)
+                .pipeline(lookup(Book.class)
                         .as("set")
                         .foreignField("_id")
-                        .localField("set"))
-                .lookup(lookup(Book.class)
-                        .as("list")
-                        .foreignField("_id")
-                        .localField("list"))
+                        .localField("set"),
+                        lookup(Book.class)
+                                .as("list")
+                                .foreignField("_id")
+                                .localField("list"))
                 //  TODO how to fetch the values from a nested document for cross-referencing?
                 //                                   .lookup(Lookup.from(Book.class)
                 //                                                 .as("map")
@@ -112,11 +112,11 @@ public class MorphiaReferenceTest extends TestBase {
 
         final Author loaded = (Author) document;
         Book foundBook = getDs().aggregate(Book.class)
-                .lookup(lookup(Author.class)
+                .pipeline(lookup(Author.class)
                         .as("author")
                         .foreignField("_id")
-                        .localField("author"))
-                .unwind(unwind("author"))
+                        .localField("author"),
+                        unwind("author"))
                 .execute(Book.class)
                 .next();
         assertTrue(foundBook.author.isResolved());

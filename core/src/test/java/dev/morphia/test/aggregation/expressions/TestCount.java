@@ -2,7 +2,6 @@ package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.aggregation.expressions.AccumulatorExpressions;
 import dev.morphia.aggregation.stages.Group;
-import dev.morphia.query.Sort;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
@@ -11,6 +10,7 @@ import org.testng.annotations.Test;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
 import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
+import static dev.morphia.query.Sort.ascending;
 
 public class TestCount extends TemplatedTestBase {
     /**
@@ -31,9 +31,14 @@ public class TestCount extends TemplatedTestBase {
     @Test(testName = "Use in ``$setWindowFields`` Stage")
     public void testExample2() {
         testPipeline(new ActionTestOptions().orderMatters(false),
-                aggregation -> aggregation.setWindowFields(setWindowFields().partitionBy(("$state"))
-                        .sortBy(Sort.ascending("orderDate")).output(output("countNumberOfDocumentsForState")
-                                .operator(AccumulatorExpressions.count()).window().documents("unbounded", "current"))));
+                aggregation -> aggregation.pipeline(
+                        setWindowFields()
+                                .partitionBy(("$state"))
+                                .sortBy(ascending("orderDate"))
+                                .output(output("countNumberOfDocumentsForState")
+                                        .operator(AccumulatorExpressions.count())
+                                        .window()
+                                        .documents("unbounded", "current"))));
     }
 
 }

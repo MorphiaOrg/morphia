@@ -8,7 +8,6 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.topN;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
-import static dev.morphia.aggregation.expressions.ComparisonExpressions.eq;
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.condition;
 import static dev.morphia.aggregation.expressions.Expressions.document;
 import static dev.morphia.aggregation.stages.Group.group;
@@ -35,7 +34,7 @@ public class TestTopN extends TemplatedTestBase {
      */
     @Test(testName = "Finding the Three Highest Score Documents Across Multiple Games")
     public void testExample2() {
-        testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation.group(
+        testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation.pipeline(
                 group(id("$gameId")).field("playerId", topN(3, array("$playerId", "$score"), descending("score")))));
     }
 
@@ -46,7 +45,8 @@ public class TestTopN extends TemplatedTestBase {
     @Test(testName = "Computing ``n`` Based on the Group Key for ``$group``")
     public void testExample3() {
         testPipeline(new ActionTestOptions().orderMatters(false),
-                (aggregation) -> aggregation.group(group(id(document("gameId", "$gameId"))).field("gamescores", topN(
-                        condition(ComparisonExpressions.eq("$gameId", "G2"), 1, 3), "$score", descending("score")))));
+                (aggregation) -> aggregation.pipeline(
+                        group(id(document("gameId", "$gameId"))).field("gamescores", topN(
+                                condition(ComparisonExpressions.eq("$gameId", "G2"), 1, 3), "$score", descending("score")))));
     }
 }

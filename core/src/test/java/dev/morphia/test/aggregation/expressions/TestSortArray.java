@@ -33,7 +33,7 @@ public class TestSortArray extends TemplatedTestBase {
     public void testExample2() {
         testPipeline(new ActionTestOptions(), (aggregation) -> {
             return aggregation
-                    .project(project().suppressId().include("result", sortArray("$team", descending("address.city"))));
+                    .pipeline(project().suppressId().include("result", sortArray("$team", descending("address.city"))));
         });
 
     }
@@ -55,7 +55,7 @@ public class TestSortArray extends TemplatedTestBase {
     @Test(testName = "Sort an Array of Integers")
     public void testExample4() {
         testPipeline(new ActionTestOptions(), (aggregation) -> {
-            return aggregation.project(
+            return aggregation.pipeline(
                     project().suppressId().include("result", sortArray(array(1, 4, 1, 6, 12, 5), naturalAscending())));
         });
 

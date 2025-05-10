@@ -63,9 +63,13 @@ public class TestBucketAuto extends TemplatedTestBase {
         getDs().save(asList(new Book("The Banquet", "Dante", 5), new Book("Divine Comedy", "Dante", 7),
                 new Book("Eclogues", "Dante", 40), new Book("The Odyssey", "Homer", 21)));
 
-        Iterator<BooksBucketResult> aggregate = getDs().aggregate(Book.class)
-                .autoBucket(autoBucket().groupBy("$copies").buckets(3).granularity(BucketGranularity.POWERSOF2)
-                        .outputField("authors", addToSet("$author")).outputField("count", sum(1)))
+        Iterator<BooksBucketResult> aggregate = getDs().aggregate(Book.class).pipeline(
+                autoBucket()
+                        .groupBy("$copies")
+                        .buckets(3)
+                        .granularity(BucketGranularity.POWERSOF2)
+                        .outputField("authors", addToSet("$author"))
+                        .outputField("count", sum(1)))
                 .execute(BooksBucketResult.class);
         BooksBucketResult result1 = aggregate.next();
         Assert.assertEquals(result1.getId().getMin(), 4);
@@ -93,8 +97,11 @@ public class TestBucketAuto extends TemplatedTestBase {
         getDs().save(asList(new Book("The Banquet", "Dante", 5), new Book("Divine Comedy", "Dante", 10),
                 new Book("Eclogues", "Dante", 40), new Book("The Odyssey", "Homer", 21)));
 
-        Iterator<BucketAutoResult> aggregate = getDs().aggregate(Book.class)
-                .autoBucket(autoBucket().groupBy("$copies").buckets(2)).execute(BucketAutoResult.class);
+        Iterator<BucketAutoResult> aggregate = getDs().aggregate(Book.class).pipeline(
+                autoBucket()
+                        .groupBy("$copies")
+                        .buckets(2))
+                .execute(BucketAutoResult.class);
         BucketAutoResult result1 = aggregate.next();
         Assert.assertEquals(result1.getId().getMin(), 5);
         Assert.assertEquals(result1.getId().getMax(), 21);

@@ -24,6 +24,7 @@ import static dev.morphia.aggregation.expressions.AccumulatorExpressions.last;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.stages.Group.group;
 import static dev.morphia.aggregation.stages.Group.id;
+import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.aggregation.stages.Sort.sort;
 import static dev.morphia.query.filters.Filters.gte;
@@ -43,21 +44,21 @@ public class ZipCodeDataSetTest extends TestBase {
     @Test
     public void averageCitySizeByState() {
         Aggregation pipeline = getDs().aggregate(City.class)
-                .group(group(id().field("state")
-                        .field("city"))
-                        .field("pop", sum("$pop")))
-                .group(group(
-                        id("_id.state"))
-                        .field("avgCityPop", avg("$pop")));
+                .pipeline(
+                        group(id().field("state")
+                                .field("city"))
+                                .field("pop", sum("$pop")),
+                        group(id("_id.state"))
+                                .field("avgCityPop", avg("$pop")));
         validate(pipeline.execute(Population.class), "MN", 5372);
     }
 
     @Test
     public void populationsAbove10M() {
         Aggregation pipeline = getDs().aggregate(City.class)
-                .group(group(id("state"))
-                        .field("totalPop", sum("$pop")))
-                .match(gte("totalPop", 10000000));
+                .pipeline(group(id("state"))
+                        .field("totalPop", sum("$pop")),
+                        match(gte("totalPop", 10000000)));
 
         validate(pipeline.execute(Population.class), "CA", 29754890);
         validate(pipeline.execute(Population.class), "OH", 10846517);
@@ -69,30 +70,27 @@ public class ZipCodeDataSetTest extends TestBase {
 
         Aggregation pipeline = getDs().aggregate(City.class)
 
-                .group(group(id().field("state")
+                .pipeline(group(id().field("state")
                         .field("city"))
-                        .field("pop", sum("$pop")))
-
-                .sort(sort().ascending("pop"))
-
-                .group(group(
-                        id("_id.state"))
-                        .field("biggestCity", last("$_id.city"))
-                        .field("biggestPop", last("$pop"))
-                        .field("smallestCity", first("$_id.city"))
-                        .field("smallestPop", first("$pop")))
-
-                .project(project()
-                        .exclude("_id")
-                        .include("state", "$_id")
-                        .include("biggestCity",
-                                Expressions.document()
-                                        .field("name", "$biggestCity")
-                                        .field("pop", "$biggestPop"))
-                        .include("smallestCity",
-                                Expressions.document()
-                                        .field("name", "$smallestCity")
-                                        .field("pop", "$smallestPop")));
+                        .field("pop", sum("$pop")),
+                        sort().ascending("pop"),
+                        group(
+                                id("_id.state"))
+                                .field("biggestCity", last("$_id.city"))
+                                .field("biggestPop", last("$pop"))
+                                .field("smallestCity", first("$_id.city"))
+                                .field("smallestPop", first("$pop")),
+                        project()
+                                .exclude("_id")
+                                .include("state", "$_id")
+                                .include("biggestCity",
+                                        Expressions.document()
+                                                .field("name", "$biggestCity")
+                                                .field("pop", "$biggestPop"))
+                                .include("smallestCity",
+                                        Expressions.document()
+                                                .field("name", "$smallestCity")
+                                                .field("pop", "$smallestPop")));
 
         try (MongoCursor<State> cursor = (MongoCursor<State>) pipeline.execute(State.class)) {
             Map<String, State> states = new HashMap<>();

@@ -17,6 +17,7 @@ import dev.morphia.test.query.TestQuery.PicWithObjectId;
 
 import org.testng.annotations.Test;
 
+import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.exists;
 import static org.testng.Assert.assertEquals;
@@ -98,11 +99,11 @@ public class TestQueriesOnReferences extends TestBase {
 
         var e1 = getDs().find(Entity1.class).first();
         var e2 = getDs().aggregate(Entity2.class)
-                .match(Filters.eq("reference", e1))
+                .pipeline(match(Filters.eq("reference", e1)))
                 .execute(Entity2.class)
                 .tryNext();
         var e2_i = getDs().aggregate(Entity2.class)
-                .match(Filters.eq("reference", e1.getId()))
+                .pipeline(match(Filters.eq("reference", e1.getId())))
                 .execute(Entity2.class)
                 .tryNext();
 

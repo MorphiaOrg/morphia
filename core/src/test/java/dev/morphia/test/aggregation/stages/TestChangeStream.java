@@ -35,7 +35,7 @@ public class TestChangeStream extends TemplatedTestBase {
         MongoCollection<Document> collection = getDatabase().getCollection(EXAMPLE_TEST_COLLECTION);
 
         try (MorphiaCursor<Document> cursor = getDs().aggregate(EXAMPLE_TEST_COLLECTION)
-                .changeStream(changeStream())
+                .pipeline(changeStream())
                 .execute(Document.class)) {
             while (input.hasNext()) {
                 Document inserted = input.next();

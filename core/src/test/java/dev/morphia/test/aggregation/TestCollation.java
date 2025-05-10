@@ -12,6 +12,7 @@ import dev.morphia.test.models.User;
 import org.testng.annotations.Test;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
+import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.query.filters.Filters.eq;
 import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
@@ -23,7 +24,7 @@ public class TestCollation extends TestBase {
 
         Aggregation<User> pipeline = getDs()
                 .aggregate(User.class)
-                .match(eq("name", "john doe"));
+                .pipeline(match(eq("name", "john doe")));
         assertEquals(count(pipeline.execute(User.class)), 1);
 
         assertEquals(count(pipeline.execute(User.class,

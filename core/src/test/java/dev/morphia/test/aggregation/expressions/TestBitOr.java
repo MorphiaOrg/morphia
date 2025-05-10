@@ -26,7 +26,7 @@ public class TestBitOr extends TemplatedTestBase {
     @Test(testName = "Bitwise ``OR`` with a Long and Integer ", enabled = false, description = "this is getting odd unexpected results from the server")
     public void testExample2() {
         testPipeline(new ActionTestOptions().serverVersion("6.3.0").removeIds(true).orderMatters(false),
-                aggregation -> aggregation.project(project().include("result", bitOr("$a", 63L))));
+                aggregation -> aggregation.pipeline(project().include("result", bitOr("$a", 63L))));
     }
 
 }

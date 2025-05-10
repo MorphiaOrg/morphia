@@ -1,6 +1,5 @@
 package dev.morphia.aggregation.stages;
 
-import dev.morphia.aggregation.Aggregation;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
@@ -8,7 +7,6 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  */
 public abstract class Stage {
     private final String stageName;
-    private Aggregation<?> aggregation;
 
     /**
      * @param stageName the stage name
@@ -21,16 +19,6 @@ public abstract class Stage {
     }
 
     /**
-     * @param aggregation the aggregation
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    public void aggregation(Aggregation<?> aggregation) {
-        this.aggregation = aggregation;
-    }
-
-    /**
      * The name of the stage.
      *
      * @return the name
@@ -40,16 +28,5 @@ public abstract class Stage {
     @MorphiaInternal
     public String stageName() {
         return stageName;
-    }
-
-    /**
-     * @return the aggregation
-     * @hidden
-     * @morphia.internal
-     * @since 2.2.4
-     */
-    @MorphiaInternal
-    Aggregation<?> aggregation() {
-        return aggregation;
     }
 }

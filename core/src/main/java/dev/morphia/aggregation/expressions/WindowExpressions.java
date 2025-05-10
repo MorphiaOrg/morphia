@@ -2,7 +2,6 @@ package dev.morphia.aggregation.expressions;
 
 import java.util.List;
 
-import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.expressions.impls.Accumulator;
 import dev.morphia.aggregation.expressions.impls.CalculusExpression;
 import dev.morphia.aggregation.expressions.impls.DenseRankExpression;
@@ -35,7 +34,7 @@ public final class WindowExpressions {
      * @return the new expression
      * @mongodb.server.release 5.0
      * @aggregation.expression $covariancePop
-     * @see Aggregation#setWindowFields(SetWindowFields)
+     * @see SetWindowFields#setWindowFields()
      * @since 2.3
      */
     public static Expression covariancePop(Object first, Object second) {
@@ -52,7 +51,7 @@ public final class WindowExpressions {
      * @return the new expression
      * @mongodb.server.release 5.0
      * @aggregation.expression $covarianceSamp
-     * @see Aggregation#setWindowFields(SetWindowFields)
+     * @see SetWindowFields#setWindowFields()
      * @since 2.3
      */
     public static Expression covarianceSamp(Object first, Object second) {
@@ -90,7 +89,7 @@ public final class WindowExpressions {
      * @return the new expression
      * @aggregation.expression $documentNumber
      * @mongodb.server.release 5.0
-     * @see Aggregation#setWindowFields(SetWindowFields)
+     * @see SetWindowFields#setWindowFields()
      * @since 2.3
      */
     public static Expression documentNumber() {
@@ -109,7 +108,7 @@ public final class WindowExpressions {
      * @return the new expression
      * @mongodb.server.release 5.0
      * @aggregation.expression $expMovingAvg
-     * @see Aggregation#setWindowFields(SetWindowFields)
+     * @see SetWindowFields#setWindowFields()
      * @since 2.3
      */
     public static Expression expMovingAvg(Object input, int n) {
@@ -128,7 +127,7 @@ public final class WindowExpressions {
      * @return the new expression
      * @mongodb.server.release 5.0
      * @aggregation.expression $expMovingAvg
-     * @see Aggregation#setWindowFields(SetWindowFields)
+     * @see SetWindowFields#setWindowFields()
      * @since 2.3
      */
     public static Expression expMovingAvg(Object input, double alpha) {
@@ -198,7 +197,7 @@ public final class WindowExpressions {
      * @return the expression
      * @aggregation.expression $shift
      * @mongodb.server.release 5.0
-     * @see Aggregation#setWindowFields(SetWindowFields)
+     * @see SetWindowFields#setWindowFields()
      * @since 3.0
      */
     public static Expression shift(Object output, long by) {
@@ -216,7 +215,7 @@ public final class WindowExpressions {
      * @return the expression
      * @aggregation.expression $shift
      * @mongodb.server.release 5.0
-     * @see Aggregation#setWindowFields(SetWindowFields)
+     * @see SetWindowFields#setWindowFields()
      * @since 2.3
      */
     public static Expression shift(Object output, long by, Object defaultValue) {

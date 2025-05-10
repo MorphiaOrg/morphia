@@ -172,7 +172,7 @@ public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
                     aggregation -> {
                         loadData("aggTest2", 2);
                         return aggregation
-                                .lookup(Lookup.lookup("aggTest2")
+                                .pipeline(Lookup.lookup("aggTest2")
                                         .localField("item")
                                         .foreignField("sku")
                                         .as("inventory_docs"));
