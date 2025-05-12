@@ -3,6 +3,7 @@ package dev.morphia.test;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -290,6 +291,24 @@ public abstract class TestBase extends MorphiaTestSetup {
         ((Codec) getDs().getCodecRegistry().get(type)).encode(writer, entity, EncoderContext.builder().build());
 
         return writer.getDocument();
+    }
+
+    protected void toFile(String name, List<Document> pipeline) {
+        try (var writer = new PrintWriter("target/%s.json".formatted(name))) {
+            writer.println(toJson(pipeline));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    protected String toJson(Document document) {
+        return document.toJson(TemplatedTestBase.JSON_WRITER_SETTINGS, getDatabase().getCodecRegistry().get(Document.class));
+    }
+
+    protected String toJson(List<Document> pipeline) {
+        return pipeline.stream()
+                .map(d -> d.toJson(TemplatedTestBase.JSON_WRITER_SETTINGS, getDatabase().getCodecRegistry().get(Document.class)))
+                .collect(joining("\n, ", "[\n", "\n]"));
     }
 
     protected String toString(Document document) {

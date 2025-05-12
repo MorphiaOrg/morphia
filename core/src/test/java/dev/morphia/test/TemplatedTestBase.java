@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.io.StringReader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -400,24 +399,6 @@ public abstract class TemplatedTestBase extends TestBase {
             Operations operations = new Operations(getDs(), null, asList(operators), false);
             Document updates = operations.toDocument(getDs());
             assertEquals(toJson(updates), toJson(action.get(1)), "Should generate the same update document");
-        }
-    }
-
-    protected String toJson(Document document) {
-        return document.toJson(JSON_WRITER_SETTINGS, getDatabase().getCodecRegistry().get(Document.class));
-    }
-
-    private String toJson(List<Document> pipeline) {
-        return pipeline.stream()
-                .map(d -> d.toJson(JSON_WRITER_SETTINGS, getDatabase().getCodecRegistry().get(Document.class)))
-                .collect(joining("\n, ", "[\n", "\n]"));
-    }
-
-    private void toFile(String name, List<Document> pipeline) {
-        try (var writer = new PrintWriter("target/%s.json".formatted(name))) {
-            writer.println(toJson(pipeline));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
