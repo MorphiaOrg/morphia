@@ -1,6 +1,7 @@
 package dev.morphia.aggregation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,12 +9,14 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.MorphiaDatastore;
+import dev.morphia.aggregation.stages.Match;
 import dev.morphia.aggregation.stages.Merge;
 import dev.morphia.aggregation.stages.Out;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.MorphiaCursor;
+import dev.morphia.query.filters.Filter;
 
 import org.bson.Document;
 import org.slf4j.Logger;
@@ -34,6 +37,9 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
     private Class<?> targetType;
 
+    @Nullable
+    private final Class<T> source;
+
     private final AggregationOptions options;
     private final MongoCollection<T> collection;
 
@@ -45,6 +51,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @SuppressWarnings("unchecked")
     public AggregationImpl(MorphiaDatastore datastore, @Nullable Class<T> source, Class<T> targetType, AggregationOptions options) {
         this.datastore = datastore;
+        this.source = source;
         this.options = options;
         this.targetType = targetType;
         this.collection = source != null
@@ -58,6 +65,11 @@ public class AggregationImpl<T> implements Aggregation<T> {
             addStage(stage);
             if (stage instanceof Merge || stage instanceof Out) {
                 iterator = iterator();
+            } else if (stage instanceof Match match) {
+                Filter[] filters = match.getFilters();
+                Arrays.stream(filters)
+                        .filter(f -> f.getName().equals("$eq"))
+                        .forEach(f -> f.entityType(source));
             }
         }
         return this;
