@@ -100,11 +100,11 @@ public class TestQueriesOnReferences extends TestBase {
         var e1 = getDs().find(Entity1.class).first();
         var e2 = getDs().aggregate(Entity2.class)
                 .pipeline(match(Filters.eq("reference", e1)))
-                .execute(Entity2.class)
+                .iterator()
                 .tryNext();
         var e2_i = getDs().aggregate(Entity2.class)
                 .pipeline(match(Filters.eq("reference", e1.getId())))
-                .execute(Entity2.class)
+                .iterator()
                 .tryNext();
 
         assertNotNull(e1, "e1");

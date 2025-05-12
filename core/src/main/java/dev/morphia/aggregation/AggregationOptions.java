@@ -8,7 +8,6 @@ import com.mongodb.ReadPreference;
 import com.mongodb.WriteConcern;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.cursor.TimeoutMode;
 import com.mongodb.client.model.Collation;
 import com.mongodb.lang.Nullable;
@@ -109,8 +108,9 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
      * @hidden
      * @morphia.internal
      */
-    @MorphiaInternal
     @Override
+    @Nullable
+    @MorphiaInternal
     public String collection() {
         return collection;
     }
@@ -319,15 +319,8 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
     @MorphiaInternal
     <S, T> AggregateIterable<T> apply(List<Document> pipeline,
             MorphiaDatastore datastore, MongoCollection<T> collection, Class<S> resultType) {
-        MongoDatabase database = datastore.getDatabase();
-        MongoCollection<T> bound = prepare(collection, database);
-        if (readConcern != null) {
-            bound = bound.withReadConcern(readConcern);
-        }
-        if (readPreference != null) {
-            bound = bound.withReadPreference(readPreference);
-        }
-        AggregateIterable<T> aggregate = datastore.operations().aggregate(bound, pipeline, resultType);
+        MongoCollection<T> preparedCollection = datastore.configureCollection(this, collection);
+        AggregateIterable<T> aggregate = datastore.operations().aggregate(preparedCollection, pipeline, resultType);
         aggregate
                 .allowDiskUse(allowDiskUse)
                 .bypassDocumentValidation(bypassDocumentValidation);

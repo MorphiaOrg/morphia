@@ -30,11 +30,8 @@ public class TestAvg extends TemplatedTestBase {
     @Test(testName = "Use in ``$project`` Stage")
     public void testExample2() {
         testPipeline(new ActionTestOptions().orderMatters(false),
-                aggregation -> aggregation.pipeline(
-                        project()
-                                .include("quizAvg", avg("$quizzes"))
-                                .include("labAvg", avg("$labs"))
-                                .include("examAvg", avg("$final", "$midterm"))));
+                aggregation -> aggregation.pipeline(project().include("quizAvg", avg("$quizzes"))
+                        .include("labAvg", avg("$labs")).include("examAvg", avg("$final", "$midterm"))));
 
     }
 

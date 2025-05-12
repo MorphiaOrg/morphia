@@ -23,6 +23,7 @@ import static dev.morphia.query.filters.Filters.eq;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
+@SuppressWarnings("removal")
 public class MorphiaReferenceTest extends TestBase {
     @Test
     public void basicReference() {
@@ -107,7 +108,7 @@ public class MorphiaReferenceTest extends TestBase {
                 //                                                 .as("map")
                 //                                                 .foreignField("_id")
                 //                                                 .localField("map.$"))
-                .execute(Author.class)
+                .iterator()
                 .tryNext();
 
         final Author loaded = (Author) document;
@@ -117,7 +118,7 @@ public class MorphiaReferenceTest extends TestBase {
                         .foreignField("_id")
                         .localField("author"),
                         unwind("author"))
-                .execute(Book.class)
+                .iterator()
                 .next();
         assertTrue(foundBook.author.isResolved());
         assertEquals(author, foundBook.author.get());

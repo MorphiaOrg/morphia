@@ -5,19 +5,13 @@ import dev.morphia.query.FindOptions;
 
 public class ActionTestOptions {
     private FindOptions findOptions = new FindOptions();
-
     private String minDriver = "0.0.0";
-
     private boolean orderMatters = true;
-
     private boolean removeIds = false;
-
     private String serverVersion = "0.0.0";
-
     private boolean skipActionCheck;
-
     private boolean skipDataCheck = false;
-
+    private boolean skipIndex = false;
     private UpdateOptions updateOptions;
 
     public FindOptions findOptions() {
@@ -80,6 +74,16 @@ public class ActionTestOptions {
 
     public ActionTestOptions skipDataCheck(boolean skipDataCheck) {
         this.skipDataCheck = skipDataCheck;
+        skipIndex = skipDataCheck;
+        return this;
+    }
+
+    public boolean skipIndex() {
+        return skipIndex;
+    }
+
+    public ActionTestOptions skipIndex(boolean skipIndex) {
+        this.skipIndex = skipIndex;
         return this;
     }
 

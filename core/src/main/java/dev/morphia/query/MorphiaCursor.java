@@ -14,7 +14,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * @param <T> the original type being iterated
  * @since 2.2
  */
-public class MorphiaCursor<T> implements MongoCursor<T> {
+public class MorphiaCursor<T> implements AutoCloseable, MongoCursor<T> {
     private final MongoCursor<T> wrapped;
 
     /**

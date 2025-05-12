@@ -31,14 +31,9 @@ public class TestCount extends TemplatedTestBase {
     @Test(testName = "Use in ``$setWindowFields`` Stage")
     public void testExample2() {
         testPipeline(new ActionTestOptions().orderMatters(false),
-                aggregation -> aggregation.pipeline(
-                        setWindowFields()
-                                .partitionBy(("$state"))
-                                .sortBy(ascending("orderDate"))
-                                .output(output("countNumberOfDocumentsForState")
-                                        .operator(AccumulatorExpressions.count())
-                                        .window()
-                                        .documents("unbounded", "current"))));
+                aggregation -> aggregation.pipeline(setWindowFields().partitionBy(("$state"))
+                        .sortBy(ascending("orderDate")).output(output("countNumberOfDocumentsForState")
+                                .operator(AccumulatorExpressions.count()).window().documents("unbounded", "current"))));
     }
 
 }

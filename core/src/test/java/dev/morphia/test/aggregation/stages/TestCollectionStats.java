@@ -13,12 +13,12 @@ public class TestCollectionStats extends TestBase {
     @Test
     public void testCollectionStats() {
         getDs().save(new Author());
-        Document stats = getDs().aggregate(Author.class)
+        Document stats = getDs().aggregate(Author.class, Document.class)
                 .pipeline(collStats()
                         .histogram(true)
                         .scale(42)
                         .count(true))
-                .execute(Document.class)
+                .iterator()
                 .tryNext();
         assertNotNull(stats);
     }

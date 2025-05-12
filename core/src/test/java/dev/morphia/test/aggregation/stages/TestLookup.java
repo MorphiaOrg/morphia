@@ -118,7 +118,7 @@ public class TestLookup extends TemplatedTestBase {
         List<Order> lookups = getDs().aggregate(Order.class)
                 .pipeline(lookup(Inventory.class).localField("item").foreignField("sku").as("inventoryDocs"),
                         sort().ascending("_id"))
-                .execute(Order.class).toList();
+                .toList();
         assertEquals(lookups.get(0).getInventoryDocs().get(0), inventories.get(0));
         assertEquals(lookups.get(1).getInventoryDocs().get(0), inventories.get(3));
         assertEquals(lookups.get(2).getInventoryDocs().get(0), inventories.get(4));

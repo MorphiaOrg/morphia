@@ -16,10 +16,13 @@ import java.util.function.Function;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.IndexOptions;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.AggregationImpl;
+import dev.morphia.aggregation.AggregationOptions;
+import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaQuery;
 import dev.morphia.query.Operations;
@@ -46,6 +49,7 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.bson.json.JsonWriterSettings.builder;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.fail;
 
 public abstract class TemplatedTestBase extends TestBase {
@@ -132,7 +136,8 @@ public abstract class TemplatedTestBase extends TestBase {
 
         validateTestName(resourceName);
 
-        List<Document> actual = runPipeline(options, resourceName, pipeline.apply(getDs().aggregate(EXAMPLE_TEST_COLLECTION)));
+        List<Document> actual = runPipeline(options, resourceName, pipeline.apply(
+                getDs().aggregate(new AggregationOptions().collection(EXAMPLE_TEST_COLLECTION))));
 
         checkExpected(options, resourceName, actual);
     }
@@ -258,8 +263,36 @@ public abstract class TemplatedTestBase extends TestBase {
 
     protected void loadIndex(String resourceName, String collectionName) {
         MongoCollection<Document> collection = getDatabase().getCollection(collectionName);
+        String indexFile = "%s/%s/index.json".formatted(prefix(), resourceName);
+        List<Document> documents = loadJson(indexFile, "index", false);
+        if (documents.size() == 1) {
+            collection.createIndex(documents.get(0));
+        } else if (documents.size() == 2) {
+            collection.createIndex(documents.get(0), indexOptions(documents.get(1)));
+        } else if (documents.size() > 2) {
+            throw new UnsupportedOperationException("more than 2 docs in an index file: " + indexFile);
+        }
+    }
+
+    private IndexOptions indexOptions(Document document) {
+        var options = new IndexOptions();
+        document.keySet().forEach(key -> {
+            var method = stream(IndexOptions.class.getMethods())
+                    .filter(m -> m.getName().equals(key) && m.getParameterCount() == 1)
+                    .findFirst().orElseThrow();
+            try {
+                method.invoke(options, Conversions.convert(document.get(key), method.getParameterTypes()[0]));
+            } catch (ReflectiveOperationException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        return options;
+    }
+
+    protected void loadIndex(String resourceName, String databaseName, String collectionName) {
+        MongoCollection<Document> collection = getDatabase(databaseName).getCollection(collectionName);
         List<Document> documents = loadJson("%s/%s/index.json".formatted(prefix(), resourceName), "index", false);
-        documents.forEach(document -> collection.createIndex(document));
+        documents.forEach(document -> assertNotNull(collection.createIndex(document)));
     }
 
     protected Document loadQuery(String pipelineName) {
@@ -313,9 +346,7 @@ public abstract class TemplatedTestBase extends TestBase {
         }
 
         if (!options.skipDataCheck()) {
-            try (var cursor = aggregation.execute(Document.class)) {
-                return cursor.toList();
-            }
+            return aggregation.toList();
         } else {
             return emptyList();
         }
@@ -473,7 +504,9 @@ public abstract class TemplatedTestBase extends TestBase {
         if (!options.skipDataCheck()) {
             loadData(resourceName, EXAMPLE_TEST_COLLECTION);
         }
-        loadIndex(resourceName, EXAMPLE_TEST_COLLECTION);
+        if (!options.skipIndex()) {
+            loadIndex(resourceName, EXAMPLE_TEST_COLLECTION);
+        }
         return resourceName;
     }
 }

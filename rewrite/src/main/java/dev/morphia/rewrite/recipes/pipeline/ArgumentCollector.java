@@ -3,7 +3,7 @@ package dev.morphia.rewrite.recipes.pipeline;
 import java.util.List;
 
 import dev.morphia.aggregation.Aggregation;
-import dev.morphia.rewrite.recipes.PipelineRewrite;
+import dev.morphia.rewrite.recipes.PipelineRewriteRecipes;
 
 import org.jetbrains.annotations.NotNull;
 import org.openrewrite.Cursor;
@@ -34,7 +34,7 @@ public class ArgumentCollector {
     public ArgumentCollector(Class<?> type, String method, Class<?>... imports) {
         this.type = type;
         this.method = method;
-        matcher = new MethodMatcher("%s %s(..)".formatted(PipelineRewrite.AGGREGATION, method));
+        matcher = new MethodMatcher("%s %s(..)".formatted(PipelineRewriteRecipes.AGGREGATION, method));
 
         String code = "%s.%s()".formatted(type.getSimpleName(), method);
         template = (JavaTemplate.builder(code))

@@ -25,14 +25,17 @@ public class TestCollation extends TestBase {
         Aggregation<User> pipeline = getDs()
                 .aggregate(User.class)
                 .pipeline(match(eq("name", "john doe")));
-        assertEquals(count(pipeline.execute(User.class)), 1);
+        assertEquals(count(pipeline.iterator()), 1);
 
-        assertEquals(count(pipeline.execute(User.class,
-                new AggregationOptions()
-                        .collation(Collation.builder()
-                                .locale("en")
-                                .collationStrength(SECONDARY)
-                                .build()))),
+        AggregationOptions options = new AggregationOptions()
+                .collation(Collation.builder()
+                        .locale("en")
+                        .collationStrength(SECONDARY)
+                        .build());
+        pipeline = getDs()
+                .aggregate(User.class, options)
+                .pipeline(match(eq("name", "john doe")));
+        assertEquals(count(pipeline.iterator()),
                 2);
     }
 

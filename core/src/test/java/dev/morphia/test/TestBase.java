@@ -90,6 +90,10 @@ public abstract class TestBase extends MorphiaTestSetup {
         return getMorphiaContainer().getDatabase();
     }
 
+    public MongoDatabase getDatabase(String databaseName) {
+        return getMongoHolder().getMongoClient().getDatabase(databaseName);
+    }
+
     public Mapper getMapper() {
         return getDs().getMapper();
     }

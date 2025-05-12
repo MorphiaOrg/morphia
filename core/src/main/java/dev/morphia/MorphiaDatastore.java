@@ -32,6 +32,7 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.AggregationImpl;
+import dev.morphia.aggregation.AggregationOptions;
 import dev.morphia.aggregation.codecs.AggregationCodecProvider;
 import dev.morphia.annotations.CappedAt;
 import dev.morphia.annotations.Entity;
@@ -287,13 +288,8 @@ public class MorphiaDatastore implements Datastore {
     }
 
     @Override
-    public Aggregation<Document> aggregate(String source) {
-        return new AggregationImpl(this, getDatabase().getCollection(source));
-    }
-
-    @Override
-    public <T> Aggregation<T> aggregate(Class<T> source) {
-        return new AggregationImpl(this, source, getCollection(source));
+    public <S, T> Aggregation<T> aggregate(@Nullable Class<S> source, Class<T> target, AggregationOptions options) {
+        return new AggregationImpl(this, source, target, options);
     }
 
     @Override
@@ -301,13 +297,6 @@ public class MorphiaDatastore implements Datastore {
         return delete(entity, new DeleteOptions().writeConcern(mapper.getWriteConcern(entity.getClass())));
     }
 
-    /**
-     * Deletes the given entity (by @Id), with the WriteConcern
-     *
-     * @param entity  the entity to delete
-     * @param options the options to use when deleting
-     * @return results of the delete
-     */
     @Override
     public <T> DeleteResult delete(T entity, DeleteOptions options) {
         if (entity instanceof Class<?>) {

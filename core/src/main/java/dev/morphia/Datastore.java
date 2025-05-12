@@ -1,6 +1,7 @@
 package dev.morphia;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.mongodb.ClientSessionOptions;
 import com.mongodb.client.MongoCollection;
@@ -9,10 +10,12 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.aggregation.Aggregation;
+import dev.morphia.aggregation.AggregationOptions;
 import dev.morphia.annotations.internal.MorphiaExperimental;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
+import dev.morphia.sofia.Sofia;
 import dev.morphia.transactions.MorphiaSession;
 import dev.morphia.transactions.MorphiaTransaction;
 
@@ -24,30 +27,73 @@ import org.bson.Document;
 @SuppressWarnings({ "UnusedReturnValue", "unused", "removal" })
 public interface Datastore {
     /**
-     * Returns a new query bound to the kind (a specific {@link MongoCollection})
+     * Returns a new aggregation bound without an initial type. Calls to this method define the collection to be used via the options
+     * passed.
      *
-     * @param source The collection aggregation against
      * @return the aggregation pipeline
-     * @since 2.0
+     * @since 3.0
+     * @see AggregationOptions#collection(String)
      */
-    Aggregation<Document> aggregate(String source);
+    default Aggregation<Document> aggregate(AggregationOptions options) {
+        Objects.requireNonNull(options.collection(), Sofia.aggregationCollectionName());
+        return aggregate(null, Document.class, options);
+    }
 
     /**
      * Returns a new query bound to the kind (a specific {@link MongoCollection})
      *
      * @param source The class to create aggregation against
-     * @param <T>    the source type
+     * @param <S>    the source type
      * @return the aggregation pipeline
      * @since 2.0
      */
-    <T> Aggregation<T> aggregate(Class<T> source);
+    default <S> Aggregation<S> aggregate(Class<S> source) {
+        return aggregate(source, source, new AggregationOptions());
+    }
+
+    /**
+     * Returns a new aggregation bound to the kind (a specific {@link MongoCollection})
+     *
+     * @param source The class to create aggregation against
+     * @param <S>    the source type
+     * @return the aggregation pipeline
+     * @since 3.0
+     */
+    default <S> Aggregation<S> aggregate(Class<S> source, AggregationOptions options) {
+        return aggregate(source, source, options);
+    }
+
+    /**
+     * Returns a new query bound to the kind (a specific {@link MongoCollection})
+     *
+     * @param source The class to create aggregation against
+     * @param <S>    the source type
+     * @param <T>    the target type
+     * @return the aggregation pipeline
+     * @since 3.0
+     */
+    default <S, T> Aggregation<T> aggregate(Class<S> source, Class<T> target) {
+        return aggregate(source, target, new AggregationOptions());
+    }
+
+    /**
+     * Returns a new aggregation bound to the kind (a specific {@link MongoCollection}). To specify an alternate collection as the
+     * source collection use {@link AggregationOptions#collection(String)}.
+     *
+     * @param source The source type to aggregate. May be null if an alternate collection is being used.
+     * @param <S>    the source type
+     * @param <T>    the target type
+     * @return the aggregation pipeline
+     * @since 3.0
+     */
+    <S, T> Aggregation<T> aggregate(@Nullable Class<S> source, Class<T> target, AggregationOptions options);
 
     /**
      * Deletes the given entity (by @Id)
      *
      * @param <T>    the type to delete
      * @param entity the entity to delete
-     * @return results of the delete
+     * @return results of the deletion
      */
     <T> DeleteResult delete(T entity);
 

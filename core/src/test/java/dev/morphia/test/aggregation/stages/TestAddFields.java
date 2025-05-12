@@ -33,11 +33,10 @@ public class TestAddFields extends TemplatedTestBase {
 
         insert("scores", list);
 
-        List<Document> result = getDs().aggregate(Score.class)
-                .pipeline(
-                        addFields().field("totalHomework", sum("$homework")).field("totalQuiz", sum("$quiz")),
+        List<Document> result = getDs().aggregate(Score.class, Document.class)
+                .pipeline(addFields().field("totalHomework", sum("$homework")).field("totalQuiz", sum("$quiz")),
                         addFields().field("totalScore", add("$totalHomework", "$totalQuiz", "$extraCredit")))
-                .execute(Document.class).toList();
+                .toList();
 
         list = List.of(parse(
                 "{ '_id' : 1, 'student' : 'Maya', 'homework' : [ 10, 5, 10 ],'quiz' : [ 10, 8 ],'extraCredit' : 0, 'totalHomework' : 25,"

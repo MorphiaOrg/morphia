@@ -39,13 +39,8 @@ public class TestAddToSet extends TemplatedTestBase {
         if (1 == 1)
             return;
         testPipeline(new ActionTestOptions().orderMatters(false),
-                aggregation -> aggregation.pipeline(
-                        setWindowFields()
-                                .partitionBy("$state")
-                                .sortBy(ascending("orderDate"))
-                                .output(output("cakeTypesForState")
-                                        .operator(addToSet("$type"))
-                                        .window()
-                                        .documents("unbounded", "current"))));
+                aggregation -> aggregation.pipeline(setWindowFields().partitionBy("$state")
+                        .sortBy(ascending("orderDate")).output(output("cakeTypesForState").operator(addToSet("$type"))
+                                .window().documents("unbounded", "current"))));
     }
 }

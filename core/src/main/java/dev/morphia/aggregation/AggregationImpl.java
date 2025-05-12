@@ -5,10 +5,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
+import com.mongodb.lang.Nullable;
 
 import dev.morphia.MorphiaDatastore;
-import dev.morphia.aggregation.stages.ChangeStream;
 import dev.morphia.aggregation.stages.Merge;
 import dev.morphia.aggregation.stages.Out;
 import dev.morphia.aggregation.stages.Stage;
@@ -16,14 +15,13 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.MorphiaCursor;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @param <T> the starting type of the aggregation
+ * @param <T> the source type of the aggregation
+ * @param <T> the target type
  * @hidden
  * @morphia.internal
  * @since 2.0
@@ -33,78 +31,57 @@ public class AggregationImpl<T> implements Aggregation<T> {
     private static final Logger LOG = LoggerFactory.getLogger(AggregationImpl.class);
 
     private final MorphiaDatastore datastore;
-    private final Class<?> source;
+
+    private Class<?> targetType;
+
+    private final AggregationOptions options;
     private final MongoCollection<T> collection;
+
     private final List<Stage> stages = new ArrayList<>();
 
-    /**
-     * Creates an instance.
-     *
-     * @param datastore  the datastore
-     * @param collection the source collection
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    @SuppressFBWarnings("EI_EXPOSE_REP2")
-    public AggregationImpl(MorphiaDatastore datastore, MongoCollection<T> collection) {
-        this.datastore = datastore;
-        this.collection = collection;
-        this.source = null;
-    }
+    private MorphiaCursor<T> iterator;
 
-    /**
-     * Creates an instance.
-     *
-     * @param datastore  the datastore
-     * @param source     the source type
-     * @param collection the source collection
-     * @hidden
-     * @morphia.internal
-     */
     @MorphiaInternal
-    @SuppressFBWarnings("EI_EXPOSE_REP2")
-    public AggregationImpl(MorphiaDatastore datastore, Class<T> source, MongoCollection<T> collection) {
+    @SuppressWarnings("unchecked")
+    public AggregationImpl(MorphiaDatastore datastore, @Nullable Class<T> source, Class<T> targetType, AggregationOptions options) {
         this.datastore = datastore;
-        this.source = source;
-        this.collection = collection;
+        this.options = options;
+        this.targetType = targetType;
+        this.collection = source != null
+                ? datastore.getCollection(source)
+                : (MongoCollection<T>) datastore.getDatabase().getCollection(options.collection());
     }
 
     @Override
     public Aggregation<T> pipeline(Stage... stages) {
         for (Stage stage : stages) {
             addStage(stage);
+            if (stage instanceof Merge || stage instanceof Out) {
+                iterator = iterator();
+            }
         }
         return this;
     }
 
     @Override
-    public void execute() {
-        execute(Document.class);
-    }
-
-    @Override
-    public void execute(AggregationOptions options) {
-        execute(Document.class, options);
-    }
-
-    @Override
-    public <R> MorphiaCursor<R> execute(Class<R> resultType) {
-        List<Document> pipeline = pipeline();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("pipeline = " + pipeline);
+    public void close() throws Exception {
+        if (iterator != null) {
+            iterator.close();
         }
-        return new MorphiaCursor<>(datastore.operations().<R> aggregate(this.collection, pipeline, resultType).iterator());
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public <R> MorphiaCursor<R> execute(Class<R> resultType, AggregationOptions options) {
-        List<Document> pipeline = pipeline();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("pipeline = " + pipeline);
+    public MorphiaCursor<T> iterator() {
+        if (iterator == null) {
+            List<Document> pipeline = pipeline();
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("pipeline = " + pipeline);
+            }
+            iterator = new MorphiaCursor<>(options.apply(pipeline, datastore, collection, targetType).iterator());
         }
-        return new MorphiaCursor<>((MongoCursor<R>) options.apply(pipeline, datastore, collection, resultType).iterator());
+        MorphiaCursor<T> cursor = iterator;
+        iterator = null;
+        return cursor;
     }
 
     @Override
@@ -137,18 +114,6 @@ public class AggregationImpl<T> implements Aggregation<T> {
         Class<?> type = out.type();
         type = type != null ? type : Document.class;
         options.apply(pipeline(), datastore, collection, type).toCollection();
-    }
-
-    @Override
-    public Aggregation<T> changeStream(ChangeStream stream) {
-        return addStage(stream);
-    }
-
-    /**
-     * @return the stages
-     */
-    public List<Stage> getStages() {
-        return stages;
     }
 
     /**

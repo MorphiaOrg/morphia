@@ -1,6 +1,7 @@
 package dev.morphia.test.aggregation;
 
 import dev.morphia.MorphiaDatastore;
+import dev.morphia.aggregation.AggregationOptions;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.aggregation.model.Author;
 import dev.morphia.test.aggregation.model.Book;
@@ -26,12 +27,12 @@ public class TestDocsExamples extends TestBase {
         MorphiaDatastore datastore = getDs();
 // @formatter:off
 // tag::basic[]
-datastore.aggregate(Book.class).pipeline(
+datastore.aggregate(Book.class, Author.class).pipeline(
     group(id("author"))
       .field("books", push("$title")),
     sort()
        .ascending("name"))
-    .execute(Author.class);
+    .iterator();
 // end::basic[]
 // @formatter:on
     }
@@ -39,9 +40,9 @@ datastore.aggregate(Book.class).pipeline(
     @Test
     public void testMerge() {
         var datastore = getDs();
-        var aggregation = datastore.aggregate("some collection");
 // @formatter:off
 // tag::merge[]
+var aggregation = datastore.aggregate(new AggregationOptions().collection("some collection"));
 aggregation.pipeline(
     group(id()
         .field("fiscal_year", "$fiscal_year")
@@ -51,7 +52,7 @@ aggregation.pipeline(
         .on("_id")
         .whenMatched(REPLACE)
         .whenNotMatched(INSERT))
-    .execute();
+    .iterator();
 // end::merge[]
 // @formatter:on
     }
@@ -61,12 +62,12 @@ aggregation.pipeline(
         MorphiaDatastore datastore = getDs();
 // @formatter:off
 // tag::out[]
-datastore.aggregate(Book.class).pipeline(
-    group(id("$author"))
-        .field("books",
-            push().single("$title")),
-    out(Author.class))
-    .execute();
+datastore.aggregate(Book.class, Author.class)
+         .pipeline(
+             group(id("$author"))
+                 .field("books", push().single("$title")),
+             out(Author.class))
+    .iterator();
 // end::out[]
 // @formatter:on
     }

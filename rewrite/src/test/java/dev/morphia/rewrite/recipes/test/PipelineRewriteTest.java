@@ -1,6 +1,6 @@
 package dev.morphia.rewrite.recipes.test;
 
-import dev.morphia.rewrite.recipes.PipelineRewrite;
+import dev.morphia.rewrite.recipes.pipeline.PipelineRewrite;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
@@ -100,46 +100,7 @@ public class PipelineRewriteTest extends MorphiaRewriteTest {
     }
 
     @Test
-    public void testMatch() {
-        rewriteRun(java(
-                """
-                        import dev.morphia.Datastore;
-                        import dev.morphia.query.MorphiaCursor;
-                        import dev.morphia.query.filters.Filters;
-                        import org.bson.Document;
-
-                        public class UnwrapTest {
-                          public MorphiaCursor<Document> update(Datastore ds) {
-                              Object e2 = ds.aggregate(Object.class)
-                                      .match(Filters.eq("reference", "ec"))
-                                      .execute(Object.class)
-                                      .tryNext();
-                          }
-                        }
-                        """,
-                """
-                        import dev.morphia.Datastore;
-                        import dev.morphia.aggregation.stages.Match;
-                        import dev.morphia.query.MorphiaCursor;
-                        import dev.morphia.query.filters.Filters;
-                        import org.bson.Document;
-
-                        import static dev.morphia.aggregation.stages.Match.match;
-
-                        public class UnwrapTest {
-                          public MorphiaCursor<Document> update(Datastore ds) {
-                              Object e2 = ds.aggregate(Object.class)
-                                              .pipeline(
-                                                      match(Filters.eq("reference", "ec")))
-                                      .execute(Object.class)
-                                      .tryNext();
-                          }
-                        }
-                        """));
-    }
-
-    @Test
-    public void testSet() {
+    public void testUnionWith() {
         rewriteRun(java(
                 """
                         import dev.morphia.Datastore;
@@ -190,86 +151,6 @@ public class PipelineRewriteTest extends MorphiaRewriteTest {
                             }
                         }
                         """));
-    }
-
-    @Test
-    public void testSkip() {
-        rewriteRun(java(
-                """
-                        import dev.morphia.Datastore;
-                        import dev.morphia.query.MorphiaCursor;
-                        import dev.morphia.query.filters.Filters;
-                        import org.bson.Document;
-
-                        public class UnwrapTest {
-                          public MorphiaCursor<Document> update(Datastore ds) {
-                              Object e2 = ds.aggregate(Object.class)
-                                      .skip(42)
-                                      .execute(Object.class)
-                                      .tryNext();
-                          }
-                        }
-                        """,
-                //language=java
-                """
-                        import dev.morphia.Datastore;
-                        import dev.morphia.aggregation.stages.Skip;
-                        import dev.morphia.query.MorphiaCursor;
-                        import dev.morphia.query.filters.Filters;
-                        import org.bson.Document;
-
-                        import static dev.morphia.aggregation.stages.Skip.skip;
-
-                        public class UnwrapTest {
-                          public MorphiaCursor<Document> update(Datastore ds) {
-                              Object e2 = ds.aggregate(Object.class)
-                                              .pipeline(
-                                                      skip(42))
-                                      .execute(Object.class)
-                                      .tryNext();
-                          }
-                        }
-                        """));
-    }
-
-    @Test
-    public void testSortByCount() {
-        rewriteRun(java(
-                """
-                        import dev.morphia.Datastore;
-                        import dev.morphia.query.MorphiaCursor;
-                        import dev.morphia.query.filters.Filters;
-                        import org.bson.Document;
-                        import static dev.morphia.aggregation.expressions.Expressions.field;
-
-                        public class UnwrapTest {
-                          public MorphiaCursor<Document> update(Datastore ds) {
-                              Object e2 = ds.aggregate(Object.class)
-                                      .sortByCount(field("docs"))
-                                      .execute(Object.class)
-                                      .tryNext();
-                          }
-                        }
-                        """,
-                """
-                        import dev.morphia.Datastore;
-                        import dev.morphia.aggregation.stages.SortByCount;
-                        import dev.morphia.query.MorphiaCursor;
-                        import dev.morphia.query.filters.Filters;
-                        import org.bson.Document;
-                        import static dev.morphia.aggregation.expressions.Expressions.field;
-                        import static dev.morphia.aggregation.stages.SortByCount.sortByCount;
-
-                        public class UnwrapTest {
-                          public MorphiaCursor<Document> update(Datastore ds) {
-                              Object e2 = ds.aggregate(Object.class)
-                                              .pipeline(
-                                                      sortByCount(field("docs")))
-                                      .execute(Object.class)
-                                      .tryNext();
-                          }
-                        }
-                        """.replace('#', ' ')));
     }
 
     @Test

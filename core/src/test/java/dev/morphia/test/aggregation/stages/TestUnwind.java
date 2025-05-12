@@ -81,10 +81,7 @@ public class TestUnwind extends TemplatedTestBase {
                 new User("john", parse("2012-07-02", format))));
 
         Iterator<User> aggregate = getDs().aggregate(User.class)
-                .pipeline(
-                        project().include("name").include("joined").include("likes"),
-                        unwind("likes"))
-                .execute(User.class);
+                .pipeline(project().include("name").include("joined").include("likes"), unwind("likes")).iterator();
         int count = 0;
         while (aggregate.hasNext()) {
             User user = aggregate.next();
@@ -115,10 +112,8 @@ public class TestUnwind extends TemplatedTestBase {
             count++;
         }
 
-        aggregate = getDs().aggregate(User.class).pipeline(
-                project().include("name").include("joined").include("likes"),
-                unwind("likes").preserveNullAndEmptyArrays(true))
-                .execute(User.class);
+        aggregate = getDs().aggregate(User.class).pipeline(project().include("name").include("joined").include("likes"),
+                unwind("likes").preserveNullAndEmptyArrays(true)).iterator();
         count = 0;
         while (aggregate.hasNext()) {
             User user = aggregate.next();

@@ -8,6 +8,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.InsertManyOptions;
 import com.mongodb.client.result.InsertManyResult;
 
+import dev.morphia.aggregation.AggregationOptions;
 import dev.morphia.aggregation.expressions.ComparisonExpressions;
 import dev.morphia.aggregation.stages.Count;
 import dev.morphia.annotations.Entity;
@@ -198,10 +199,10 @@ public class FiltersTest extends TemplatedTestBase {
         String collectionName = "sampleRate";
         InsertManyResult bulk = getDatabase().getCollection(collectionName).insertMany(list, new InsertManyOptions().ordered(false));
         assertEquals(bulk.getInsertedIds().size(), count);
-        Document matches = getDs().aggregate(collectionName).pipeline(
+        Document matches = getDs().aggregate(new AggregationOptions().collection(collectionName)).pipeline(
                 match(sampleRate(0.33)),
                 Count.count("numMatches"))
-                .execute(Document.class)
+                .iterator()
                 .next();
         assertTrue(matches.getInteger("numMatches") < 100);
     }

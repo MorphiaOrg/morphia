@@ -59,13 +59,16 @@ public class TestMerge extends TemplatedTestBase {
      */
     @Test(testName = "Only Insert New Data")
     public void testExample3() {
-        testPipeline(new ActionTestOptions().skipDataCheck(true),
+        loadData("orgArchive", 1);
+        loadData("salaries", 2);
+        loadIndex(discoverResourceName(), "orgArchive");
+        testPipeline(new ActionTestOptions().skipDataCheck(true).skipIndex(true),
                 (aggregation) -> aggregation.pipeline(match(eq("fiscal_year", 2019)),
                         group(id().field("fiscal_year", "$fiscal_year").field("dept", "$dept")).field("employees",
                                 push("$employee")),
                         project().suppressId().include("dept", "$_id.dept").include("fiscal_year", "$_id.fiscal_year")
                                 .include("employees"),
-                        merge("reporting", "orgArchive").on("dept", "fiscal_year").whenMatched(FAIL)));
+                        merge("orgArchive").on("dept", "fiscal_year").whenMatched(FAIL)));
     }
 
     /**

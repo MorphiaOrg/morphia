@@ -7,7 +7,6 @@ import com.mongodb.client.MongoCursor;
 
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.expressions.Expressions;
-import dev.morphia.query.MorphiaCursor;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.City;
 import dev.morphia.test.models.Population;
@@ -43,32 +42,33 @@ public class ZipCodeDataSetTest extends TestBase {
 
     @Test
     public void averageCitySizeByState() {
-        Aggregation pipeline = getDs().aggregate(City.class)
+        Aggregation<Population> pipeline = getDs().aggregate(City.class, Population.class)
                 .pipeline(
                         group(id().field("state")
                                 .field("city"))
                                 .field("pop", sum("$pop")),
                         group(id("_id.state"))
                                 .field("avgCityPop", avg("$pop")));
-        validate(pipeline.execute(Population.class), "MN", 5372);
+        validate(pipeline, "MN", 5372);
     }
 
     @Test
     public void populationsAbove10M() {
-        Aggregation pipeline = getDs().aggregate(City.class)
-                .pipeline(group(id("state"))
-                        .field("totalPop", sum("$pop")),
+        Aggregation<Population> pipeline = getDs().aggregate(City.class, Population.class)
+                .pipeline(
+                        group(id("state"))
+                                .field("totalPop", sum("$pop")),
                         match(gte("totalPop", 10000000)));
 
-        validate(pipeline.execute(Population.class), "CA", 29754890);
-        validate(pipeline.execute(Population.class), "OH", 10846517);
+        validate(pipeline, "CA", 29754890);
+        validate(pipeline, "OH", 10846517);
     }
 
     @Test
     public void smallestAndLargestCities() {
         getMapper().mapPackage(getClass().getPackage().getName());
 
-        Aggregation pipeline = getDs().aggregate(City.class)
+        Aggregation<State> pipeline = getDs().aggregate(City.class, State.class)
 
                 .pipeline(group(id().field("state")
                         .field("city"))
@@ -92,7 +92,7 @@ public class ZipCodeDataSetTest extends TestBase {
                                                 .field("name", "$smallestCity")
                                                 .field("pop", "$smallestPop")));
 
-        try (MongoCursor<State> cursor = (MongoCursor<State>) pipeline.execute(State.class)) {
+        try (MongoCursor<State> cursor = pipeline.iterator()) {
             Map<String, State> states = new HashMap<>();
             while (cursor.hasNext()) {
                 State state = cursor.next();
@@ -109,20 +109,16 @@ public class ZipCodeDataSetTest extends TestBase {
         }
     }
 
-    private void validate(MorphiaCursor<Population> cursor, String state, long value) {
+    private void validate(Aggregation<Population> cursor, String state, long value) {
         boolean found = false;
-        try (cursor) {
-            while (cursor.hasNext()) {
-                Population population = cursor.next();
-
-                if (population.getState().equals(state)) {
-                    found = true;
-                    assertEquals(population.getPopulation(), Long.valueOf(value));
-                }
-                LOG.debug("population = " + population);
+        for (Population population : cursor) {
+            if (population.getState().equals(state)) {
+                found = true;
+                assertEquals(population.getPopulation(), Long.valueOf(value));
             }
-            assertTrue(found, "Should have found " + state);
+            LOG.debug("population = " + population);
         }
+        assertTrue(found, "Should have found " + state);
     }
 
 }

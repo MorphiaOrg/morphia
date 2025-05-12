@@ -1,4 +1,4 @@
-package dev.morphia.rewrite.recipes;
+package dev.morphia.rewrite.recipes.pipeline;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ import dev.morphia.aggregation.stages.SortByCount;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.aggregation.stages.UnionWith;
 import dev.morphia.query.filters.Filter;
-import dev.morphia.rewrite.recipes.pipeline.ArgumentCollector;
+import dev.morphia.rewrite.recipes.PipelineRewriteRecipes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
@@ -31,51 +31,52 @@ import org.openrewrite.java.tree.Space;
 import static java.util.Collections.emptyList;
 
 public class PipelineRewrite extends Recipe {
-    public static final String AGGREGATION = "dev.morphia.aggregation.Aggregation";
-
     static final List<MethodMatcher> matchers = List.of(
-            new MethodMatcher(AGGREGATION + " pipeline(..)"),
-            new MethodMatcher(AGGREGATION + " addFields(dev.morphia.aggregation.stages.AddFields)"),
-            new MethodMatcher(AGGREGATION + " autoBucket(dev.morphia.aggregation.stages.AutoBucket)"),
-            new MethodMatcher(AGGREGATION + " bucket(dev.morphia.aggregation.stages.Bucket)"),
-            new MethodMatcher(AGGREGATION + " changeStream()"),
-            new MethodMatcher(AGGREGATION + " changeStream(dev.morphia.aggregation.stages.ChangeStream)"),
-            new MethodMatcher(AGGREGATION + " collStats(dev.morphia.aggregation.stages.CollectionStats)"),
-            new MethodMatcher(AGGREGATION + " count(..)"),
-            new MethodMatcher(AGGREGATION + " currentOp(dev.morphia.aggregation.stages.CurrentOp)"),
-            new MethodMatcher(AGGREGATION + " densify(dev.morphia.aggregation.stages.Densify)"),
-            new MethodMatcher(AGGREGATION + " documents(dev.morphia.aggregation.expressions.impls.DocumentExpression[])"),
-            new MethodMatcher(AGGREGATION + " facet(dev.morphia.aggregation.stages.Facet)"),
-            new MethodMatcher(AGGREGATION + " fill(dev.morphia.aggregation.stages.Fill)"),
-            new MethodMatcher(AGGREGATION + " geoNear(dev.morphia.aggregation.stages.GeoNear)"),
-            new MethodMatcher(AGGREGATION + " graphLookup(dev.morphia.aggregation.stages.GraphLookup)"),
-            new MethodMatcher(AGGREGATION + " group(dev.morphia.aggregation.stages.Group)"),
-            new MethodMatcher(AGGREGATION + " indexStats()"),
-            new MethodMatcher(AGGREGATION + " limit(..)"),
-            new MethodMatcher(AGGREGATION + " lookup(dev.morphia.aggregation.stages.Lookup)"),
-            new MethodMatcher(AGGREGATION + " match(dev.morphia.query.filters.Filter...)"),
-            new MethodMatcher(AGGREGATION + " planCacheStats()"),
-            new MethodMatcher(AGGREGATION + " project(dev.morphia.aggregation.stages.Projection)"),
-            new MethodMatcher(AGGREGATION + " redact(dev.morphia.aggregation.stages.Redact)"),
-            new MethodMatcher(AGGREGATION + " replaceRoot(dev.morphia.aggregation.stages.ReplaceRoot)"),
-            new MethodMatcher(AGGREGATION + " replaceWith(dev.morphia.aggregation.stages.ReplaceWith)"),
-            new MethodMatcher(AGGREGATION + " sample(long)"),
-            new MethodMatcher(AGGREGATION + " set(dev.morphia.aggregation.stages.AddFields)"),
-            new MethodMatcher(AGGREGATION + " set(dev.morphia.aggregation.stages.Set)"),
-            new MethodMatcher(AGGREGATION + " setWindowFields(dev.morphia.aggregation.stages.SetWindowFields)"),
-            new MethodMatcher(AGGREGATION + " skip(long)"),
-            new MethodMatcher(AGGREGATION + " sort(dev.morphia.aggregation.stages.Sort)"),
-            new MethodMatcher(AGGREGATION + " sortByCount(dev.morphia.aggregation.stages.SortByCount)"),
-            new MethodMatcher(AGGREGATION + " sortByCount(dev.morphia.aggregation.expressions.impls.Expression)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " pipeline(..)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " addFields(dev.morphia.aggregation.stages.AddFields)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " autoBucket(dev.morphia.aggregation.stages.AutoBucket)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " bucket(dev.morphia.aggregation.stages.Bucket)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " changeStream()"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " changeStream(dev.morphia.aggregation.stages.ChangeStream)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " collStats(dev.morphia.aggregation.stages.CollectionStats)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " count(..)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " currentOp(dev.morphia.aggregation.stages.CurrentOp)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " densify(dev.morphia.aggregation.stages.Densify)"),
             new MethodMatcher(
-                    AGGREGATION + " unionWith(Class,dev.morphia.aggregation.stages.Stage,dev.morphia.aggregation.stages.Stage[])"),
+                    PipelineRewriteRecipes.AGGREGATION + " documents(dev.morphia.aggregation.expressions.impls.DocumentExpression[])"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " facet(dev.morphia.aggregation.stages.Facet)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " fill(dev.morphia.aggregation.stages.Fill)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " geoNear(dev.morphia.aggregation.stages.GeoNear)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " graphLookup(dev.morphia.aggregation.stages.GraphLookup)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " group(dev.morphia.aggregation.stages.Group)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " indexStats()"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " limit(..)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " lookup(dev.morphia.aggregation.stages.Lookup)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " match(dev.morphia.query.filters.Filter...)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " planCacheStats()"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " project(dev.morphia.aggregation.stages.Projection)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " redact(dev.morphia.aggregation.stages.Redact)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " replaceRoot(dev.morphia.aggregation.stages.ReplaceRoot)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " replaceWith(dev.morphia.aggregation.stages.ReplaceWith)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " sample(long)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " set(dev.morphia.aggregation.stages.AddFields)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " set(dev.morphia.aggregation.stages.Set)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " setWindowFields(dev.morphia.aggregation.stages.SetWindowFields)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " skip(long)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " sort(dev.morphia.aggregation.stages.Sort)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " sortByCount(dev.morphia.aggregation.stages.SortByCount)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " sortByCount(dev.morphia.aggregation.expressions.impls.Expression)"),
             new MethodMatcher(
-                    AGGREGATION + " unionWith(String,dev.morphia.aggregation.stages.Stage,dev.morphia.aggregation.stages.Stage[])"),
-            new MethodMatcher(AGGREGATION + " unset(dev.morphia.aggregation.stages.Unset)"),
-            new MethodMatcher(AGGREGATION + " unwind(dev.morphia.aggregation.stages.Unwind)"));
+                    PipelineRewriteRecipes.AGGREGATION
+                            + " unionWith(Class,dev.morphia.aggregation.stages.Stage,dev.morphia.aggregation.stages.Stage[])"),
+            new MethodMatcher(
+                    PipelineRewriteRecipes.AGGREGATION
+                            + " unionWith(String,dev.morphia.aggregation.stages.Stage,dev.morphia.aggregation.stages.Stage[])"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " unset(dev.morphia.aggregation.stages.Unset)"),
+            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " unwind(dev.morphia.aggregation.stages.Unwind)"));
 
     private static final MethodMatcher MEGA_MATCHER = new MethodMatcher(
-            AGGREGATION + " addFields(dev.morphia.aggregation.stages.AddFields)") {
+            PipelineRewriteRecipes.AGGREGATION + " addFields(dev.morphia.aggregation.stages.AddFields)") {
         @Override
         public boolean matches(@Nullable MethodCall methodCall) {
             return matchers.stream().anyMatch(matcher -> matcher.matches(methodCall));

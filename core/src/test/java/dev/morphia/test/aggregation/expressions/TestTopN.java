@@ -45,8 +45,7 @@ public class TestTopN extends TemplatedTestBase {
     @Test(testName = "Computing ``n`` Based on the Group Key for ``$group``")
     public void testExample3() {
         testPipeline(new ActionTestOptions().orderMatters(false),
-                (aggregation) -> aggregation.pipeline(
-                        group(id(document("gameId", "$gameId"))).field("gamescores", topN(
-                                condition(ComparisonExpressions.eq("$gameId", "G2"), 1, 3), "$score", descending("score")))));
+                (aggregation) -> aggregation.pipeline(group(id(document("gameId", "$gameId"))).field("gamescores", topN(
+                        condition(ComparisonExpressions.eq("$gameId", "G2"), 1, 3), "$score", descending("score")))));
     }
 }

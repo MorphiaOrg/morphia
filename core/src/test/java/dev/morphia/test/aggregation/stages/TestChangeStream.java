@@ -8,6 +8,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.changestream.FullDocument;
 import com.mongodb.client.model.changestream.FullDocumentBeforeChange;
 
+import dev.morphia.aggregation.AggregationOptions;
 import dev.morphia.aggregation.stages.ChangeStream;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.MorphiaCursor;
@@ -34,9 +35,9 @@ public class TestChangeStream extends TemplatedTestBase {
         Iterator<Document> input = loadJson(format("%s/%s/data.json", prefix(), "changeStream"), "data", true).iterator();
         MongoCollection<Document> collection = getDatabase().getCollection(EXAMPLE_TEST_COLLECTION);
 
-        try (MorphiaCursor<Document> cursor = getDs().aggregate(EXAMPLE_TEST_COLLECTION)
+        try (MorphiaCursor<Document> cursor = getDs().aggregate(new AggregationOptions().collection(EXAMPLE_TEST_COLLECTION))
                 .pipeline(changeStream())
-                .execute(Document.class)) {
+                .iterator()) {
             while (input.hasNext()) {
                 Document inserted = input.next();
                 collection.insertOne(inserted);

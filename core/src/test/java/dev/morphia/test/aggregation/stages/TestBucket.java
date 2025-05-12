@@ -74,10 +74,10 @@ public class TestBucket extends TemplatedTestBase {
 
         insert("artwork", list);
 
-        List<Document> results = getDs().aggregate(Artwork.class)
+        List<Document> results = getDs().aggregate(Artwork.class, Document.class)
                 .pipeline(bucket().groupBy("$price").boundaries(0, 200, 400).defaultValue("Other")
                         .outputField("count", sum(1)).outputField("titles", push().single("$title")))
-                .execute(Document.class).toList();
+                .toList();
 
         List<Document> documents = List.of(parse(
                 "{'_id': 0, 'count': 4, 'titles': ['The Pillars of Society', 'Dancer', 'The Great Wave off Kanagawa', 'Blue Flower']}"),
@@ -90,8 +90,8 @@ public class TestBucket extends TemplatedTestBase {
     public void testBucketWithBoundariesWithSizeLessThanTwo() {
         homer();
 
-        getDs().aggregate(Book.class).pipeline(bucket().groupBy("$copies").boundaries(10).outputField("count", sum(1)))
-                .execute(BucketResult.class);
+        getDs().aggregate(Book.class, BucketResult.class)
+                .pipeline(bucket().groupBy("$copies").boundaries(10).outputField("count", sum(1))).iterator();
     }
 
     private void homer() {
@@ -104,9 +104,10 @@ public class TestBucket extends TemplatedTestBase {
     public void testBucketWithOptions() {
         homer();
 
-        Iterator<BucketResult> aggregate = getDs().aggregate(Book.class)
-                .pipeline(bucket().groupBy("$copies").boundaries(1, 5, 10).defaultValue(-1).outputField("count", sum(1)))
-                .execute(BucketResult.class);
+        Iterator<BucketResult> aggregate = getDs().aggregate(Book.class, BucketResult.class)
+                .pipeline(
+                        bucket().groupBy("$copies").boundaries(1, 5, 10).defaultValue(-1).outputField("count", sum(1)))
+                .iterator();
 
         BucketResult result2 = aggregate.next();
         Assert.assertEquals(result2.getId(), valueOf(-1));
@@ -122,17 +123,17 @@ public class TestBucket extends TemplatedTestBase {
     public void testBucketWithUnsortedBoundaries() {
         homer();
 
-        Iterator<BucketResult> aggregate = getDs().aggregate(Book.class).pipeline(
+        Iterator<BucketResult> aggregate = getDs().aggregate(Book.class, BucketResult.class).pipeline(
                 bucket().groupBy("$copies").boundaries(5, 1, 10).defaultValue("test").outputField("count", sum(1)))
-                .execute(BucketResult.class);
+                .iterator();
     }
 
     @Test
     public void testBucketWithoutOptions() {
         homer();
 
-        Iterator<BucketResult> aggregate = getDs().aggregate(Book.class)
-                .pipeline(bucket().groupBy("$copies").boundaries(1, 5, 12)).execute(BucketResult.class);
+        Iterator<BucketResult> aggregate = getDs().aggregate(Book.class, BucketResult.class)
+                .pipeline(bucket().groupBy("$copies").boundaries(1, 5, 12)).iterator();
         BucketResult result1 = aggregate.next();
         Assert.assertEquals(result1.getId(), 1);
         Assert.assertEquals(result1.getCount(), 3);

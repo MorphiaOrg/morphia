@@ -55,6 +55,7 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
+@SuppressWarnings("removal")
 public class TestReferences extends ProxyTestBase {
 
     @Test
@@ -115,7 +116,7 @@ public class TestReferences extends ProxyTestBase {
                 //                                                 .as("map")
                 //                                                 .foreignField("_id")
                 //                                                 .localField("map.$"))
-                .execute(Author.class)
+                .iterator()
                 .tryNext();
 
         assertListEquals(author.list, loaded.list);
@@ -130,7 +131,7 @@ public class TestReferences extends ProxyTestBase {
                         .foreignField("_id")
                         .localField("author"),
                         unwind("author"))
-                .execute(Book.class)
+                .iterator()
                 .next();
         assertTrue(foundBook.author.isResolved());
         assertEquals(author, foundBook.author.get());
