@@ -164,9 +164,7 @@ public abstract class TemplatedTestBase extends TestBase {
                                 .collect(Collectors.joining("\n", "[\n", "\n]")));
             }
 
-            try (var cursor = aggregation.execute(Document.class)) {
-                return cursor.toList();
-            }
+            return aggregation.execute(Document.class).toList();
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
