@@ -2,6 +2,8 @@ package dev.morphia.rewrite.recipes;
 
 import java.util.List;
 
+import dev.morphia.Datastore;
+import dev.morphia.aggregation.Aggregation;
 import dev.morphia.rewrite.recipes.pipeline.PipelineExecuteRewrite;
 import dev.morphia.rewrite.recipes.pipeline.PipelineRewrite;
 
@@ -9,7 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import org.openrewrite.Recipe;
 
 public class PipelineRewriteRecipes extends Recipe {
-    public static final String AGGREGATION = "dev.morphia.aggregation.Aggregation";
+    public static final String AGGREGATION = Aggregation.class.getName();
+    public static final String DATASTORE = Datastore.class.getName();
 
     @Override
     public List<Recipe> getRecipeList() {

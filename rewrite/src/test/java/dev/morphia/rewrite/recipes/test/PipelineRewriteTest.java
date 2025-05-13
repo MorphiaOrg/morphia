@@ -213,6 +213,8 @@ public class PipelineRewriteTest extends MorphiaRewriteTest {
                                   .limit(12)
                                   .lookup(Lookup.lookup())
                                   .match(Filters.eq("field", "value"))
+                                  .merge(Merge.into(""))
+                                  .out(Out.to(""))
                                   .planCacheStats()
                                   .project(Projection.project())
                                   .redact(Redact.redact(literal("redact")))
