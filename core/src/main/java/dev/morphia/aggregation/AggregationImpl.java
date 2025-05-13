@@ -17,6 +17,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.MorphiaCursor;
 import dev.morphia.query.filters.Filter;
+import dev.morphia.sofia.Sofia;
 
 import org.bson.Document;
 import org.slf4j.Logger;
@@ -47,6 +48,8 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
     private MorphiaCursor<T> iterator;
 
+    private String terminated;
+
     @MorphiaInternal
     @SuppressWarnings("unchecked")
     public AggregationImpl(MorphiaDatastore datastore, @Nullable Class<T> source, Class<T> targetType, AggregationOptions options) {
@@ -62,8 +65,12 @@ public class AggregationImpl<T> implements Aggregation<T> {
     @Override
     public Aggregation<T> pipeline(Stage... stages) {
         for (Stage stage : stages) {
+            if (terminated != null) {
+                throw new IllegalArgumentException(Sofia.aggregationTerminated(terminated));
+            }
             addStage(stage);
             if (stage instanceof Merge || stage instanceof Out) {
+                terminated = stage.stageName();
                 iterator = iterator();
             } else if (stage instanceof Match match) {
                 Filter[] filters = match.getFilters();
