@@ -86,6 +86,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
     public void close() throws Exception {
         if (iterator != null) {
             iterator.close();
+            iterator = null;
         }
     }
 
