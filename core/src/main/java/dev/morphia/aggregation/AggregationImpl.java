@@ -96,38 +96,6 @@ public class AggregationImpl<T> implements Aggregation<T> {
         return cursor;
     }
 
-    @Override
-    public <M> void merge(Merge<M> merge) {
-        addStage(merge);
-        datastore.operations().aggregate(collection, pipeline())
-                .toCollection();
-    }
-
-    @Override
-    public <M> void merge(Merge<M> merge, AggregationOptions options) {
-        addStage(merge);
-        Class<?> type = merge.getType();
-        type = type != null ? type : Document.class;
-        options.apply(pipeline(), datastore, collection, type)
-                .toCollection();
-    }
-
-    @Override
-    public <O> void out(Out<O> out) {
-        addStage(out);
-        datastore.operations()
-                .aggregate(collection, pipeline())
-                .toCollection();
-    }
-
-    @Override
-    public <O> void out(Out<O> out, AggregationOptions options) {
-        addStage(out);
-        Class<?> type = out.type();
-        type = type != null ? type : Document.class;
-        options.apply(pipeline(), datastore, collection, type).toCollection();
-    }
-
     /**
      * @return the encoded pipeline
      * @hidden

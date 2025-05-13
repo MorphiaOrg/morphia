@@ -94,31 +94,6 @@ public class Merge<M> extends Stage {
     }
 
     /**
-     * Creates a new stage targeting the collection mapped for the given type
-     *
-     * @param type the target type
-     * @param <M>  the entity type
-     * @return the new stage
-     * @deprecated use {@link #merge(Class)}
-     */
-    @Deprecated(since = "3.0", forRemoval = true)
-    public static <M> Merge<M> into(Class<M> type) {
-        return new Merge<>(type);
-    }
-
-    /**
-     * Creates a new stage targeting the collection
-     *
-     * @param collection the target collection
-     * @return the new stage
-     * @deprecated use {@link #merge(String)}
-     */
-    @Deprecated(since = "3.0", forRemoval = true)
-    public static Merge<?> into(String collection) {
-        return new Merge<>(collection);
-    }
-
-    /**
      * Creates a new stage targeting the collection
      *
      * @param collection the target collection
@@ -134,37 +109,9 @@ public class Merge<M> extends Stage {
      * @param database   the target database
      * @param collection the target collection
      * @return the new stage
-     * @deprecated use {@link #merge(String, String)}
-     */
-    @Deprecated(since = "3.0", forRemoval = true)
-    public static Merge<?> into(String database, String collection) {
-        return new Merge<>(database, collection);
-    }
-
-    /**
-     * Creates a new stage targeting the database and collection
-     *
-     * @param database   the target database
-     * @param collection the target collection
-     * @return the new stage
      */
     public static Merge<?> merge(String database, String collection) {
         return new Merge<>(database, collection);
-    }
-
-    /**
-     * @hidden
-     * @return
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    public boolean allDefaults() {
-        return (type != null || collection != null)
-                && on == null
-                && variables == null
-                && whenMatched == null
-                && whenMatchedPipeline == null
-                && whenNotMatched == null;
     }
 
     /**
@@ -172,8 +119,9 @@ public class Merge<M> extends Stage {
      * @hidden
      * @morphia.internal
      */
+    @Nullable
     @MorphiaInternal
-    public String getCollection() {
+    public String collection() {
         return collection;
     }
 
@@ -184,7 +132,7 @@ public class Merge<M> extends Stage {
      */
     @Nullable
     @MorphiaInternal
-    public String getDatabase() {
+    public String database() {
         return database;
     }
 
@@ -193,8 +141,9 @@ public class Merge<M> extends Stage {
      * @hidden
      * @morphia.internal
      */
+    @Nullable
     @MorphiaInternal
-    public List<String> getOn() {
+    public List<String> on() {
         return on;
     }
 
@@ -205,7 +154,7 @@ public class Merge<M> extends Stage {
      */
     @Nullable
     @MorphiaInternal
-    public Class<M> getType() {
+    public Class<M> type() {
         return type;
     }
 
@@ -216,7 +165,7 @@ public class Merge<M> extends Stage {
      */
     @Nullable
     @MorphiaInternal
-    public Map<String, Expression> getVariables() {
+    public Map<String, Expression> variables() {
         return variables;
     }
 
@@ -236,7 +185,7 @@ public class Merge<M> extends Stage {
      * @morphia.internal
      */
     @MorphiaInternal
-    public List<Stage> getWhenMatchedPipeline() {
+    public List<Stage> whenMatchedPipeline() {
         return whenMatchedPipeline;
     }
 
@@ -245,8 +194,9 @@ public class Merge<M> extends Stage {
      * @hidden
      * @morphia.internal
      */
+    @Nullable
     @MorphiaInternal
-    public WhenNotMatched getWhenNotMatched() {
+    public WhenNotMatched whenNotMatched() {
         return whenNotMatched;
     }
 

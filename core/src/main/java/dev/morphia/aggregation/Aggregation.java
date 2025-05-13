@@ -2,8 +2,6 @@ package dev.morphia.aggregation;
 
 import java.util.List;
 
-import dev.morphia.aggregation.stages.Merge;
-import dev.morphia.aggregation.stages.Out;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.query.MorphiaCursor;
 
@@ -33,44 +31,4 @@ public interface Aggregation<T> extends AutoCloseable, Iterable<T> {
             return iterator.toList();
         }
     }
-
-    /**
-     * Writes the results of the aggregation pipeline to a specified collection. The $merge operator must be the last stage in the pipeline.
-     *
-     * @param merge the merge definition
-     * @param <M>   the output collection type
-     * @aggregation.stage $merge
-     * @mongodb.server.release 4.2
-     */
-    <M> void merge(Merge<M> merge);
-
-    /**
-     * Writes the results of the aggregation pipeline to a specified collection. The $merge operator must be the last stage in the pipeline.
-     *
-     * @param merge   the merge definition
-     * @param options the options to apply
-     * @param <M>     the output collection type
-     * @aggregation.stage $merge
-     * @mongodb.server.release 3.4
-     */
-    <M> void merge(Merge<M> merge, AggregationOptions options);
-
-    /**
-     * Writes the results of the aggregation pipeline to a specified collection. The $out operator must be the last stage in the pipeline.
-     *
-     * @param out the out definition
-     * @param <O> the output collection type
-     * @aggregation.stage $out
-     */
-    <O> void out(Out<O> out);
-
-    /**
-     * Writes the results of the aggregation pipeline to a specified collection. The $out operator must be the last stage in the pipeline.
-     *
-     * @param out     the out definition
-     * @param options the options to apply
-     * @param <O>     the output collection type
-     * @aggregation.stage $out
-     */
-    <O> void out(Out<O> out, AggregationOptions options);
 }
