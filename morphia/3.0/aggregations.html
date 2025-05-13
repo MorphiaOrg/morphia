@@ -247,12 +247,12 @@ As with querying, we start with the <code>Datastore</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore.aggregate(Book.class).pipeline(
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore.aggregate(Book.class, Author.class).pipeline(
     group(id("author"))
       .field("books", push("$title")),
     sort()
        .ascending("name"))
-    .execute(Author.class);</code></pre>
+    .iterator();</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -314,12 +314,12 @@ This collection can not be sharded or a capped collection, however. This collect
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore.aggregate(Book.class).pipeline(
-    group(id("$author"))
-        .field("books",
-            push().single("$title")),
-    out(Author.class))
-    .execute();</code></pre>
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">datastore.aggregate(Book.class, Author.class)
+         .pipeline(
+             group(id("$author"))
+                 .field("books", push().single("$title")),
+             out(Author.class))
+    .iterator();</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -341,7 +341,8 @@ overwrite any existing documents and replace them with the results of the pipeli
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">aggregation.pipeline(
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">var aggregation = datastore.aggregate(new AggregationOptions().collection("some collection"));
+aggregation.pipeline(
     group(id()
         .field("fiscal_year", "$fiscal_year")
         .field("dept", "$dept"))
@@ -350,7 +351,7 @@ overwrite any existing documents and replace them with the results of the pipeli
         .on("_id")
         .whenMatched(REPLACE)
         .whenNotMatched(INSERT))
-    .execute();</code></pre>
+    .iterator();</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -568,8 +569,7 @@ supported operators.  To see an example of an operator in action, click through 
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
 <p><a href="javadoc/dev/morphia/aggregation/stages/UnionWith.html#unionWith(dev.morphia.aggregation.stages.Stage%2E%2E%2E)">UnionWith#unionWith(Stage&#8230;&#8203;)</a><br>
 <a href="javadoc/dev/morphia/aggregation/stages/UnionWith.html#unionWith(java.lang.Class,dev.morphia.aggregation.stages.Stage%2E%2E%2E)">UnionWith#unionWith(Class,Stage&#8230;&#8203;)</a><br>
-<a href="javadoc/dev/morphia/aggregation/stages/UnionWith.html#unionWith(java.lang.String,dev.morphia.aggregation.stages.Stage%2E%2E%2E)">UnionWith#unionWith(String,Stage&#8230;&#8203;)</a><br>
-<a href="javadoc/dev/morphia/aggregation/Aggregation.html#unionWith(java.lang.String,dev.morphia.aggregation.stages.Stage%2E%2E%2E)">Aggregation#unionWith(String,Stage&#8230;&#8203;)</a></p>
+<a href="javadoc/dev/morphia/aggregation/stages/UnionWith.html#unionWith(java.lang.String,dev.morphia.aggregation.stages.Stage%2E%2E%2E)">UnionWith#unionWith(String,Stage&#8230;&#8203;)</a></p>
 </div></div></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestUnionWith.java">TestUnionWith</a></p></td>
 </tr>
