@@ -1,6 +1,5 @@
 package dev.morphia.rewrite.recipes.pipeline;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import dev.morphia.query.MorphiaCursor;
@@ -11,13 +10,13 @@ import org.openrewrite.Recipe;
 import org.openrewrite.TreeVisitor;
 import org.openrewrite.java.JavaIsoVisitor;
 import org.openrewrite.java.MethodMatcher;
-import org.openrewrite.java.tree.Expression;
 import org.openrewrite.java.tree.J.Identifier;
 import org.openrewrite.java.tree.J.MethodInvocation;
 import org.openrewrite.java.tree.JavaType;
 
 import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.AGGREGATION;
 import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.DATASTORE;
+import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.propagate;
 
 public class PipelineExecuteRewrite extends Recipe {
     public static final String CURSOR_CLASS = MorphiaCursor.class.getName();
@@ -61,23 +60,7 @@ public class PipelineExecuteRewrite extends Recipe {
 
                 return invocation;
             }
-
-            private Expression propagate(List<Expression> arguments, Expression expression) {
-                if (expression instanceof MethodInvocation invocation) {
-                    if (AGGREGATE.matches(invocation)) {
-                        List<Expression> aggregationArguments = new ArrayList<>(invocation.getArguments());
-                        aggregationArguments.addAll(arguments);
-                        return invocation.withArguments(aggregationArguments);
-                    }
-                    Expression propagate = propagate(arguments, invocation.getSelect());
-                    return invocation.withSelect(propagate);
-                } else if (expression instanceof Identifier identifier) {
-                    return expression;
-                } else {
-                    throw new UnsupportedOperationException();
-                }
-            }
-
         };
     }
+
 }
