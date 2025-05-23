@@ -6,7 +6,9 @@ import java.util.Map;
 
 import dev.morphia.DatastoreImpl;
 
+import org.bson.BsonDocument;
 import org.bson.Document;
+import org.bson.codecs.BsonDocumentCodec;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -26,7 +28,9 @@ public class MorphiaMapCodecProvider implements CodecProvider {
     @Override
     @SuppressWarnings("unchecked")
     public <T> Codec<T> get(Class<T> clazz, List<Type> typeArguments, CodecRegistry registry) {
-        if (Map.class.isAssignableFrom(clazz) && !Document.class.isAssignableFrom(clazz)) {
+        if (BsonDocument.class.isAssignableFrom(clazz)) {
+            return (Codec<T>) new BsonDocumentCodec(registry);
+        } else if (Map.class.isAssignableFrom(clazz) && !Document.class.isAssignableFrom(clazz)) {
             Class valueType = typeArguments.size() == 2 ? (Class) typeArguments.get(1) : Object.class;
             return (Codec<T>) new MorphiaMapCodec(datastore, clazz, registry.get(valueType));
         }
