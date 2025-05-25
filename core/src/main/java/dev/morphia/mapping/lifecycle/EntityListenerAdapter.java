@@ -22,6 +22,8 @@ import dev.morphia.mapping.MappingException;
 import dev.morphia.sofia.Sofia;
 
 import org.bson.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static dev.morphia.mapping.Mapper.LIFECYCLE_ANNOTATIONS;
 
@@ -32,13 +34,25 @@ import static dev.morphia.mapping.Mapper.LIFECYCLE_ANNOTATIONS;
  */
 @MorphiaInternal
 public class EntityListenerAdapter implements EntityListener<Object> {
+    private static final Logger LOG = LoggerFactory.getLogger(EntityListenerAdapter.class);
+
     private final Map<Class<? extends Annotation>, List<Method>> methods;
     private final Class<?> listenerType;
+
+    private static final Map<String, String> annotationMethods = new HashMap<>();
+
     private Object listener;
 
+    static {
+        annotationMethods.put(PostPersist.class.getSimpleName(), "postPersist");
+        annotationMethods.put(PostLoad.class.getSimpleName(), "postLoad");
+        annotationMethods.put(PrePersist.class.getSimpleName(), "prePersist");
+        annotationMethods.put(PreLoad.class.getSimpleName(), "preLoad");
+    }
+
     public EntityListenerAdapter(Class<?> listenerType) {
-        this.methods = mapAnnotationsToMethods(listenerType);
         this.listenerType = listenerType;
+        this.methods = mapAnnotationsToMethods();
     }
 
     @Override
@@ -113,14 +127,26 @@ public class EntityListenerAdapter implements EntityListener<Object> {
     }
 
     @NonNull
-    private Map<Class<? extends Annotation>, List<Method>> mapAnnotationsToMethods(Class<?> type) {
+    private Map<Class<? extends Annotation>, List<Method>> mapAnnotationsToMethods() {
         final Map<Class<? extends Annotation>, List<Method>> methods = new HashMap<>();
-        for (Method method : getDeclaredAndInheritedMethods(type)) {
-            for (Class<? extends Annotation> annotationClass : LIFECYCLE_ANNOTATIONS) {
+        EntityListener<?> listener = (EntityListener.class.isAssignableFrom(listenerType)) ? (EntityListener<?>) getListener() : null;
+        for (Class<? extends Annotation> annotationClass : LIFECYCLE_ANNOTATIONS) {
+            for (Method method : getDeclaredAndInheritedMethods(listenerType)) {
                 if (method.isAnnotationPresent(annotationClass)) {
                     method.setAccessible(true);
                     methods.computeIfAbsent(annotationClass, c -> new ArrayList<>())
                             .add(method);
+                }
+            }
+            if (listener != null && listener.hasAnnotation(annotationClass)) {
+                String name = annotationMethods.get(annotationClass.getSimpleName());
+                try {
+                    Method method = listenerType.getMethod(name, Object.class, Document.class, Datastore.class);
+                    method.setAccessible(true);
+                    methods.computeIfAbsent(annotationClass, c -> new ArrayList<>())
+                            .add(method);
+                } catch (NoSuchMethodException e) {
+                    LOG.error(Sofia.missingLifecycleEvent(name, annotationClass.getName()));
                 }
             }
         }
