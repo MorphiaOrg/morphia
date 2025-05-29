@@ -1,12 +1,25 @@
 == Life Cycle Methods
 
 There are various annotations which can be used to register callbacks on certain life cycle events.
-These include Pre/Post-Persist (Save), and Pre/Post-Load.
+These include Pre/Post-Persist (Save), and Pre/Post-Load.  Methods annotated with these annotations can have any or all of the following
+arguments:
 
-1. `@PrePersist` - Called before save, it can return a `Document` in place of an empty one.
-2. `@PostPersist` - Called after the save call to the database
-3. `@PreLoad` - Called before mapping the document from the database to the entity; the Document is passed as an argument (you can add/remove/change values)
-4. `@PostLoad` - Called after populating the entity with the values from the document
+1. The entity itself
+2. The `Datastore`
+3. The `Document` to be used for writing to the database.
+
+[NOTE]
+====
+Any fields added to the `document` in a pre persist event will be overwritten by the entity serialization.  If you need to modify a
+serialized value, e.g., encrypting a value, use a post persist event instead.
+====
+
+The lifecycle event annotations are:
+
+1. `@PrePersist` - Called before the entity is encoded in to a document.
+2. `@PostPersist` - Called after the entity is encoded in to a document but before data is written to the database.
+3. `@PreLoad` - Called after the document has been fetched from the database but before mapping the document in to the entity.
+4. `@PostLoad` - Called after populating the entity with the values from the document before return the entity reference back to user code.
 
 === Examples
 
@@ -32,7 +45,7 @@ class BankAccount {
   }
 
   @PrePersist
-  public void prePersist( Document document) {
+  public void prePersist(Document document) {
     // perform operations on serialized form of the entity
   }
 }
