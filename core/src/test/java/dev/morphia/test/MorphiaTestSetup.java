@@ -1,5 +1,6 @@
 package dev.morphia.test;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import com.github.zafarkhaja.semver.Version;
@@ -7,6 +8,7 @@ import com.mongodb.client.MongoClient;
 
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.test.TestBase.ZDTCodecProvider;
+import dev.morphia.test.config.ManualMorphiaTestConfig;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -138,6 +140,14 @@ public class MorphiaTestSetup {
             mongoHolder = oldHolder;
             morphiaContainer = oldContainer;
         }
+    }
+
+    protected void withTestConfig(MorphiaConfig config, List<Class<?>> types, Runnable body) {
+        withConfig(new ManualMorphiaTestConfig(config).classes(types), body);
+    }
+
+    protected void withTestConfig(List<Class<?>> types, Runnable body) {
+        withTestConfig(buildConfig(), types, body);
     }
 
     protected void withConfig(MorphiaConfig config, Runnable body) {

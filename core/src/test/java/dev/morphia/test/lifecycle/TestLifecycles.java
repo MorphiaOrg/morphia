@@ -1,8 +1,10 @@
 package dev.morphia.test.lifecycle;
 
+import java.lang.annotation.Annotation;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,7 +17,9 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.Datastore;
 import dev.morphia.DatastoreImpl;
 import dev.morphia.EntityInterceptor;
+import dev.morphia.EntityListener;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.EntityListeners;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
@@ -37,7 +41,9 @@ import org.testng.annotations.Test;
 import static dev.morphia.query.filters.Filters.eq;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertTrue;
 
 @SuppressWarnings({ "resource", "DataFlowIssue", "unused", "removal" })
@@ -58,8 +64,8 @@ public class TestLifecycles extends TestBase {
 
             SimpleBean reloaded = getDs().find(SimpleBean.class).first();
 
-            Assert.assertEquals(reloaded.ldt.getHour(), simpleBean.ldt.getHour(), format("'%s' vs '%s'", reloaded.ldt, simpleBean.ldt));
-            Assert.assertEquals(reloaded.date, simpleBean.date, format("'%s' vs '%s'", reloaded.date, simpleBean.date));
+            assertEquals(reloaded.ldt.getHour(), simpleBean.ldt.getHour(), format("'%s' vs '%s'", reloaded.ldt, simpleBean.ldt));
+            assertEquals(reloaded.date, simpleBean.date, format("'%s' vs '%s'", reloaded.date, simpleBean.date));
         });
 
     }
@@ -164,6 +170,42 @@ public class TestLifecycles extends TestBase {
         Assert.assertFalse(HoldsPolygon.lifecycle);
         Assert.assertNotNull(getDs().find(HoldsPolygon.class).first());
         Assert.assertTrue(HoldsPolygon.lifecycle);
+    }
+
+    @Test
+    public void testEncryption() {
+        withTestConfig(Collections.singletonList(EncryptedEntity.class), () -> {
+            EncryptedEntity entity = new EncryptedEntity();
+            entity.password = "incorrect";
+
+            DatastoreImpl ds = getDs();
+            ds.save(entity);
+            Document first = ds.getCollection(EncryptedEntity.class)
+                    .find(Document.class).first();
+
+            assertNotEquals(first.getString("password"), "incorrect");
+            assertEquals(first.getString("password"), "encryptedincorrectencrypted");
+        });
+    }
+
+    @Entity
+    @EntityListeners(EncryptingListener.class)
+    private static class EncryptedEntity {
+        @Id
+        private ObjectId id;
+        private String password;
+    }
+
+    private static class EncryptingListener implements EntityListener<EncryptedEntity> {
+        @Override
+        public boolean hasAnnotation(Class<? extends Annotation> type) {
+            return type.equals(PostPersist.class);
+        }
+
+        @Override
+        public void postPersist(EncryptedEntity entity, Document document, Datastore datastore) {
+            document.put("password", "encrypted" + entity.password + "encrypted");
+        }
     }
 
     private static class Callbacks {

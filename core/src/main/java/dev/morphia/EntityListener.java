@@ -16,7 +16,7 @@ public interface EntityListener<T> {
      * @param document the Document form of the entity
      * @param mapper   the Mapper being used
      * @see PostLoad
-     * @deprecated use {@link #postPersist(Object, Document, Datastore)} instead and access the Mapper via {@link Datastore#getMapper()} if
+     * @deprecated use {@link #postLoad(Object, Document, Datastore)} instead and access the Mapper via {@link Datastore#getMapper()} if
      */
     @Deprecated(forRemoval = true)
     default void postLoad(T entity, Document document, Mapper mapper) {
