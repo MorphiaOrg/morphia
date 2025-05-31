@@ -692,6 +692,15 @@
           "ignore": true,
           "code": "java.method.varargOverloadsOnlyDifferInVarargParameter",
           "justification": "this isn't a new thing"
+        },
+        {
+          "ignore": true,
+          "code": "java.method.visibilityIncreased",
+          "old": "method void dev.morphia.config.ManualMorphiaConfig::<init>(dev.morphia.config.MorphiaConfig)",
+          "new": "method void dev.morphia.config.ManualMorphiaConfig::<init>(dev.morphia.config.MorphiaConfig)",
+          "oldVisibility": "package",
+          "newVisibility": "protected",
+          "justification": "internal type"
         }
       ]
     }
