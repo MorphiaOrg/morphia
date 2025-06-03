@@ -3,6 +3,7 @@ package dev.morphia.rewrite.recipes.pipeline;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.stages.Count;
 import dev.morphia.aggregation.stages.IndexStats;
 import dev.morphia.aggregation.stages.Limit;
@@ -73,7 +74,9 @@ public class PipelineRewrite extends Recipe {
             methodMatcher(AGGREGATION, "unset(..)"),
             methodMatcher(AGGREGATION, "unwind(..)"));
 
-    private static final MethodMatcher AGGREGATE = methodMatcher(DATASTORE, "aggregate(..)");
+    private static final List<MethodMatcher> AGGREGATES = List.of(
+            methodMatcher(DATASTORE, "aggregate(..)"),
+            methodMatcher(MorphiaDatastore.class.getTypeName(), "aggregate(..)"));
     private static final MethodMatcher PIPELINE = methodMatcher(AGGREGATION, "pipeline(..)");
     private static final MethodMatcher EXECUTE = methodMatcher(AGGREGATION, "execute()");
     private static final MethodMatcher TO_LIST = methodMatcher(AGGREGATION, "toList()");
@@ -82,6 +85,13 @@ public class PipelineRewrite extends Recipe {
         @Override
         public boolean matches(@Nullable MethodCall methodCall) {
             return matchers.stream().anyMatch(matcher -> matcher.matches(methodCall));
+        }
+    };
+    private static final MethodMatcher AGGREGATE = new MethodMatcher(
+            AGGREGATION + " addFields(..)") {
+        @Override
+        public boolean matches(@Nullable MethodCall methodCall) {
+            return AGGREGATES.stream().anyMatch(matcher -> matcher.matches(methodCall));
         }
     };
 
@@ -148,7 +158,7 @@ public class PipelineRewrite extends Recipe {
              * || TO_LIST.matches(invocation)
              */) {
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("matched: " + invocation);
+                    System.out.println("matched: " + invocation);
                 }
                 var components = new Components();
                 bucket(components, invocation);
@@ -165,7 +175,7 @@ public class PipelineRewrite extends Recipe {
 
                 MethodInvocation methodInvocation = maybeAutoFormat(original, pipeline, context);
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("now method is: " + methodInvocation);
+                    System.out.println("now method is: " + methodInvocation);
                 }
                 return methodInvocation;
             } else {
