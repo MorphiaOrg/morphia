@@ -98,18 +98,6 @@ link:javadoc/dev/morphia/aggregation/stages/Lookup.html#lookup()[Lookup#lookup()
 | https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestMatch.java[TestMatch]
 
 
-| http://docs.mongodb.org/manual/reference/operator/aggregation/merge[$merge]
-a| link:javadoc/dev/morphia/aggregation/Aggregation.html#merge(dev.morphia.aggregation.stages.Merge)[Aggregation#merge(Merge)] +
-link:javadoc/dev/morphia/aggregation/Aggregation.html#merge(dev.morphia.aggregation.stages.Merge,dev.morphia.aggregation.AggregationOptions)[Aggregation#merge(Merge,AggregationOptions)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestMerge.java[TestMerge]
-
-
-| http://docs.mongodb.org/manual/reference/operator/aggregation/out[$out]
-a| link:javadoc/dev/morphia/aggregation/Aggregation.html#out(dev.morphia.aggregation.stages.Out)[Aggregation#out(Out)] +
-link:javadoc/dev/morphia/aggregation/Aggregation.html#out(dev.morphia.aggregation.stages.Out,dev.morphia.aggregation.AggregationOptions)[Aggregation#out(Out,AggregationOptions)]
-| https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestOut.java[TestOut]
-
-
 | http://docs.mongodb.org/manual/reference/operator/aggregation/planCacheStats[$planCacheStats]
 | link:javadoc/dev/morphia/aggregation/stages/PlanCacheStats.html#planCacheStats()[PlanCacheStats#planCacheStats()]
 | https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/test/aggregation/stages/TestPlanCacheStats.java[TestPlanCacheStats]

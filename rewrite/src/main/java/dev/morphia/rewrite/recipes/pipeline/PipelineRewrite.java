@@ -14,69 +14,71 @@ import dev.morphia.aggregation.stages.SortByCount;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.aggregation.stages.UnionWith;
 import dev.morphia.query.filters.Filter;
-import dev.morphia.rewrite.recipes.PipelineRewriteRecipes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
 import org.openrewrite.ExecutionContext;
+import org.openrewrite.Preconditions;
 import org.openrewrite.Recipe;
 import org.openrewrite.TreeVisitor;
 import org.openrewrite.java.JavaIsoVisitor;
 import org.openrewrite.java.MethodMatcher;
+import org.openrewrite.java.search.UsesType;
 import org.openrewrite.java.tree.Expression;
+import org.openrewrite.java.tree.J.Identifier;
 import org.openrewrite.java.tree.J.MethodInvocation;
 import org.openrewrite.java.tree.MethodCall;
 import org.openrewrite.java.tree.Space;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.AGGREGATION;
+import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.DATASTORE;
 import static java.util.Collections.emptyList;
 
 public class PipelineRewrite extends Recipe {
-    static final List<MethodMatcher> matchers = List.of(
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " pipeline(..)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " addFields(dev.morphia.aggregation.stages.AddFields)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " autoBucket(dev.morphia.aggregation.stages.AutoBucket)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " bucket(dev.morphia.aggregation.stages.Bucket)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " changeStream()"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " changeStream(dev.morphia.aggregation.stages.ChangeStream)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " collStats(dev.morphia.aggregation.stages.CollectionStats)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " count(..)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " currentOp(dev.morphia.aggregation.stages.CurrentOp)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " densify(dev.morphia.aggregation.stages.Densify)"),
-            new MethodMatcher(
-                    PipelineRewriteRecipes.AGGREGATION + " documents(dev.morphia.aggregation.expressions.impls.DocumentExpression[])"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " facet(dev.morphia.aggregation.stages.Facet)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " fill(dev.morphia.aggregation.stages.Fill)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " geoNear(dev.morphia.aggregation.stages.GeoNear)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " graphLookup(dev.morphia.aggregation.stages.GraphLookup)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " group(dev.morphia.aggregation.stages.Group)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " indexStats()"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " limit(..)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " lookup(dev.morphia.aggregation.stages.Lookup)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " match(dev.morphia.query.filters.Filter...)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " planCacheStats()"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " project(dev.morphia.aggregation.stages.Projection)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " redact(dev.morphia.aggregation.stages.Redact)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " replaceRoot(dev.morphia.aggregation.stages.ReplaceRoot)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " replaceWith(dev.morphia.aggregation.stages.ReplaceWith)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " sample(long)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " set(dev.morphia.aggregation.stages.AddFields)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " set(dev.morphia.aggregation.stages.Set)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " setWindowFields(dev.morphia.aggregation.stages.SetWindowFields)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " skip(long)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " sort(dev.morphia.aggregation.stages.Sort)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " sortByCount(dev.morphia.aggregation.stages.SortByCount)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " sortByCount(dev.morphia.aggregation.expressions.impls.Expression)"),
-            new MethodMatcher(
-                    PipelineRewriteRecipes.AGGREGATION
-                            + " unionWith(Class,dev.morphia.aggregation.stages.Stage,dev.morphia.aggregation.stages.Stage[])"),
-            new MethodMatcher(
-                    PipelineRewriteRecipes.AGGREGATION
-                            + " unionWith(String,dev.morphia.aggregation.stages.Stage,dev.morphia.aggregation.stages.Stage[])"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " unset(dev.morphia.aggregation.stages.Unset)"),
-            new MethodMatcher(PipelineRewriteRecipes.AGGREGATION + " unwind(dev.morphia.aggregation.stages.Unwind)"));
+    private static final Logger LOG = LoggerFactory.getLogger(PipelineRewrite.class);
 
+    static final List<MethodMatcher> matchers = List.of(
+            methodMatcher(AGGREGATION, "addFields(..)"),
+            methodMatcher(AGGREGATION, "autoBucket(..)"),
+            methodMatcher(AGGREGATION, "bucket(..)"),
+            methodMatcher(AGGREGATION, "changeStream(..)"),
+            methodMatcher(AGGREGATION, "collStats(..)"),
+            methodMatcher(AGGREGATION, "count(..)"),
+            methodMatcher(AGGREGATION, "currentOp(..)"),
+            methodMatcher(AGGREGATION, "densify(..)"),
+            methodMatcher(AGGREGATION, "documents(..)"),
+            methodMatcher(AGGREGATION, "facet(..)"),
+            methodMatcher(AGGREGATION, "fill(..)"),
+            methodMatcher(AGGREGATION, "geoNear(..)"),
+            methodMatcher(AGGREGATION, "graphLookup(..)"),
+            methodMatcher(AGGREGATION, "group(..)"),
+            methodMatcher(AGGREGATION, "indexStats(..)"),
+            methodMatcher(AGGREGATION, "limit(..)"),
+            methodMatcher(AGGREGATION, "lookup(..)"),
+            methodMatcher(AGGREGATION, "match(..)"),
+            methodMatcher(AGGREGATION, "planCacheStats(..)"),
+            methodMatcher(AGGREGATION, "project(..)"),
+            methodMatcher(AGGREGATION, "redact(..)"),
+            methodMatcher(AGGREGATION, "replaceRoot(..)"),
+            methodMatcher(AGGREGATION, "replaceWith(..)"),
+            methodMatcher(AGGREGATION, "sample(..)"),
+            methodMatcher(AGGREGATION, "set(..)"),
+            methodMatcher(AGGREGATION, "setWindowFields(..)"),
+            methodMatcher(AGGREGATION, "skip(..)"),
+            methodMatcher(AGGREGATION, "sort(..)"),
+            methodMatcher(AGGREGATION, "sortByCount(..)"),
+            methodMatcher(AGGREGATION, "unionWith(..)"),
+            methodMatcher(AGGREGATION, "unset(..)"),
+            methodMatcher(AGGREGATION, "unwind(..)"));
+
+    private static final MethodMatcher AGGREGATE = methodMatcher(DATASTORE, "aggregate(..)");
+    private static final MethodMatcher PIPELINE = methodMatcher(AGGREGATION, "pipeline(..)");
+    private static final MethodMatcher EXECUTE = methodMatcher(AGGREGATION, "execute()");
+    private static final MethodMatcher TO_LIST = methodMatcher(AGGREGATION, "toList()");
     private static final MethodMatcher MEGA_MATCHER = new MethodMatcher(
-            PipelineRewriteRecipes.AGGREGATION + " addFields(dev.morphia.aggregation.stages.AddFields)") {
+            AGGREGATION + " addFields(..)") {
         @Override
         public boolean matches(@Nullable MethodCall methodCall) {
             return matchers.stream().anyMatch(matcher -> matcher.matches(methodCall));
@@ -120,40 +122,10 @@ public class PipelineRewrite extends Recipe {
 
     @Override
     public @NotNull TreeVisitor<?, ExecutionContext> getVisitor() {
-
-        return new JavaIsoVisitor<>() {
-            @Override
-            public @NotNull MethodInvocation visitMethodInvocation(@NotNull MethodInvocation original,
-                    @NotNull ExecutionContext context) {
-                MethodInvocation invocation = super.visitMethodInvocation(original, context);
-                if (MEGA_MATCHER.matches(invocation)) {
-                    Expression updated = invocation;
-                    List<Expression> arguments = new ArrayList<>();
-                    while (MEGA_MATCHER.matches(updated)) {
-                        invocation = (MethodInvocation) updated;
-                        collectArguments(arguments, invocation);
-                        updated = invocation.getSelect();
-                    }
-                    Space space = Space.build(getIndent(invocation.getPadding().getSelect().getAfter()), emptyList());
-                    arguments = arguments.stream()
-                            .map(a -> (Expression) a.withPrefix(space))
-                            .toList();
-
-                    invocation = invocation.withName(invocation.getName().withSimpleName("pipeline"))
-                            .withArguments(arguments);
-
-                    return maybeAutoFormat(original, invocation, context);
-                } else {
-                    return super.visitMethodInvocation(invocation, context);
-                }
-            }
-
-            private void collectArguments(List<Expression> args, MethodInvocation invocation) {
-                if (COLLECTORS.stream().noneMatch(collector -> collector.matches(this, args, invocation))) {
-                    args.addAll(0, invocation.getArguments());
-                }
-            }
-        };
+        UsesType<ExecutionContext> usesCursor = new UsesType<>("dev.morphia.query.MorphiaCursor", true);
+        UsesType<ExecutionContext> usesAggregation = new UsesType<>("dev.morphia.aggregation.Aggregation", true);
+        return Preconditions.check(Preconditions.or(usesAggregation, Preconditions.and(usesCursor, usesAggregation)),
+                new PipelineRewriteVisitor());
     }
 
     public static String getIndent(Space after) {
@@ -164,4 +136,91 @@ public class PipelineRewrite extends Recipe {
         return whitespace + "    ";
     }
 
+    private static class PipelineRewriteVisitor extends JavaIsoVisitor<ExecutionContext> {
+        @Override
+        public @NotNull MethodInvocation visitMethodInvocation(@NotNull MethodInvocation original,
+                @NotNull ExecutionContext context) {
+            MethodInvocation invocation = super.visitMethodInvocation(original, context);
+            if (MEGA_MATCHER.matches(invocation)
+            /*
+             * || PIPELINE.matches(invocation)
+             * || EXECUTE.matches(invocation)
+             * || TO_LIST.matches(invocation)
+             */) {
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("matched: " + invocation);
+                }
+                var components = new Components();
+                bucket(components, invocation);
+                Space space = Space.build(getIndent(invocation.getPadding().getSelect().getAfter()), emptyList());
+                components.arguments = components.arguments.stream()
+                        .map(a -> (Expression) a.withPrefix(space))
+                        .toList();
+
+                var pipeline = synthesizePipeline(components, original);
+                Expression updated = null;
+                for (MethodInvocation methodInvocation : components.terminal) {
+                    updated = updated == null ? methodInvocation : methodInvocation.withSelect(updated);
+                }
+
+                MethodInvocation methodInvocation = maybeAutoFormat(original, pipeline, context);
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("now method is: " + methodInvocation);
+                }
+                return methodInvocation;
+            } else {
+                return super.visitMethodInvocation(invocation, context);
+            }
+        }
+
+        public MethodInvocation synthesizePipeline(Components components, @NotNull MethodInvocation invocation) {
+            return invocation
+                    .withName(invocation.getName().withSimpleName("pipeline"))
+                    .withSelect(components.initial)
+                    .withArguments(components.arguments);
+        }
+
+        private void bucket(Components components, Expression expression) {
+            if (TO_LIST.matches(expression) || EXECUTE.matches(expression)) {
+                MethodInvocation method = (MethodInvocation) expression;
+                components.terminal.add(method);
+                bucket(components, method.getSelect());
+            } else if (MEGA_MATCHER.matches(expression) || PIPELINE.matches(expression)) {
+                bucket(components, ((MethodInvocation) expression).getSelect());
+                collectArguments(components.arguments, (MethodInvocation) expression);
+            } else if (AGGREGATE.matches(expression) || expression instanceof Identifier) {
+                components.initial = expression;
+            } else {
+                throw new UnsupportedOperationException(expression.toString());
+            }
+        }
+
+        private void collectArguments(List<Expression> args, MethodInvocation invocation) {
+            if (COLLECTORS.stream().noneMatch(collector -> collector.matches(this, args, invocation))) {
+                args.addAll(invocation.getArguments());
+            }
+        }
+
+        private Expression rollup(Expression invocation) {
+            if (invocation instanceof MethodInvocation methodInvocation && MEGA_MATCHER.matches(methodInvocation)) {
+                var processed = rollup(methodInvocation.getSelect());
+                if (AGGREGATE.matches(processed)) {
+                    return processed;
+                }
+            } else if (AGGREGATE.matches(invocation)) {
+                return invocation;
+            }
+            return null;
+        }
+
+        private class Components {
+            final List<MethodInvocation> terminal = new ArrayList<>();
+            List<Expression> arguments = new ArrayList<>();
+            Expression initial;
+        }
+    }
+
+    private static @NotNull MethodMatcher methodMatcher(String type, String pattern) {
+        return new MethodMatcher(type + " " + pattern);
+    }
 }

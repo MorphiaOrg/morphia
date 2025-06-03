@@ -16,7 +16,7 @@
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <logger name="dev.morphia.test" level="debug" additivity="false">
+    <logger name="dev.morphia.test" level="error" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
 
@@ -29,6 +29,14 @@
     </logger>
 
     <logger name="dev.morphia.aggregation.AggregationImpl" level="info">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <logger name="dev.morphia.rewrite.recipes.pipeline.PipelineMergeRewrite" level="info">
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+    <logger name="dev.morphia.rewrite.recipes.pipeline.PipelineRewrite" level="error">
         <appender-ref ref="STDOUT" />
     </logger>
 

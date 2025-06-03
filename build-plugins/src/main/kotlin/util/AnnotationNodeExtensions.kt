@@ -43,7 +43,6 @@ class AnnotationNodeExtensions : AbstractMojo() {
         val METHOD_DESCRIPTOR = ClassName("io.quarkus.gizmo", "MethodDescriptor")
 
         fun find(path: String, filter: FileFilter): List<File> {
-            println("**************** path = ${path}")
             val array = File(path).listFiles(filter)
             return if (array != null) listOf(*array) else listOf()
         }

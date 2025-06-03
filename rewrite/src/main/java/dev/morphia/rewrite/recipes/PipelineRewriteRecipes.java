@@ -53,7 +53,12 @@ public class PipelineRewriteRecipes extends Recipe {
     public static Expression addStage(MethodInvocation invocation, MethodInvocation stage) {
         var pipeline = findPipeline(invocation);
         if (pipeline != null) {
-            return invocation;
+            List<Expression> arguments = pipeline.getArguments();
+            var list = new ArrayList<Expression>();
+            list.addAll(arguments);
+            list.add(stage);
+            return pipeline
+                    .withArguments(list);
         } else {
             Method method = invocation.getMethodType()
                     .withName("pipeline")

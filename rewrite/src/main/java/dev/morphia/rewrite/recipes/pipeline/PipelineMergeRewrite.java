@@ -1,6 +1,7 @@
 package dev.morphia.rewrite.recipes.pipeline;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import dev.morphia.aggregation.stages.Merge;
 
@@ -17,21 +18,18 @@ import org.openrewrite.java.tree.J.MethodInvocation;
 import org.openrewrite.java.tree.JavaType;
 import org.openrewrite.java.tree.JavaType.FullyQualified;
 import org.openrewrite.java.tree.JavaType.Method;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.*;
 import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.AGGREGATION;
+import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.STRING_TYPE;
 import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.addStage;
 import static dev.morphia.rewrite.recipes.RewriteUtils.findMorphiaCore;
 
 public class PipelineMergeRewrite extends Recipe {
+    private static final Logger LOG = LoggerFactory.getLogger(PipelineMergeRewrite.class);
 
     private static final MethodMatcher MERGE = new MethodMatcher(AGGREGATION + " merge(..)");
-
-    private static final JavaTemplate TEMPLATE = (JavaTemplate.builder("Merge.merge()"))
-            .javaParser(JavaParser.fromJavaVersion()
-                    .classpath(List.of(findMorphiaCore().toPath())))
-            .imports(Merge.class.getName())
-            .build();
 
     @Override
     public @NotNull String getDisplayName() {
@@ -48,24 +46,40 @@ public class PipelineMergeRewrite extends Recipe {
         return new JavaIsoVisitor<>() {
             @Override
             public @NotNull MethodInvocation visitMethodInvocation(@NotNull MethodInvocation original, @NotNull ExecutionContext context) {
-                MethodInvocation invocation = super.visitMethodInvocation(original, context);
 
-                if (MERGE.matches(invocation)) {
+                if (MERGE.matches(original)) {
+                    MethodInvocation invocation = super.visitMethodInvocation(original, context);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("PipelineMergeRewrite matches!");
+                        LOG.debug("invocation = {}", invocation);
+                    }
                     var arguments = invocation.getArguments();
                     var mergeInfo = extractTarget((MethodInvocation) arguments.get(0));
                     invocation = (MethodInvocation) addStage(invocation, mergeInfo);
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("now invocation = {}", invocation);
+                    }
+                    return maybeAutoFormat(original, invocation, context);
                 }
 
-                return invocation;
+                return original;
             }
 
             private MethodInvocation extractTarget(MethodInvocation originalArguments) {
 
                 maybeRemoveImport("dev.morphia.aggregation.stages.Merge.into");
-                MethodInvocation applied = TEMPLATE.apply(new Cursor(getCursor(), originalArguments),
-                        originalArguments.getCoordinates().replace());
-
                 var arguments = originalArguments.getArguments();
+                var parameters = arguments.stream()
+                        .map(a -> a.getType().toString())
+                        .map("#{any(%s)}"::formatted)
+                        .collect(Collectors.joining(","));
+                MethodInvocation applied = (JavaTemplate.builder("Merge.merge(%s)".formatted(parameters)))
+                        .javaParser(JavaParser.fromJavaVersion()
+                                .classpath(List.of(findMorphiaCore().toPath())))
+                        .imports(Merge.class.getName())
+                        .build().apply(new Cursor(getCursor(), originalArguments),
+                                originalArguments.getCoordinates().replace(), arguments.toArray());
+
                 List<String> parameterNames = arguments.size() == 1 ? List.of("collection") : List.of("database", "collection");
                 List<JavaType> parameterTypes = arguments.size() == 1 ? List.of(STRING_TYPE) : List.of(STRING_TYPE, STRING_TYPE);
 
@@ -78,7 +92,6 @@ public class PipelineMergeRewrite extends Recipe {
                         null, null, null, null);
 
                 return applied.withName(applied.getName().withType(method))
-                        .withArguments(arguments)
                         .withMethodType(method);
             }
         };

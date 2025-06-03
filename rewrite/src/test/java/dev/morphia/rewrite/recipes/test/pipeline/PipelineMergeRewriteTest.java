@@ -1,6 +1,7 @@
-package dev.morphia.rewrite.recipes.test;
+package dev.morphia.rewrite.recipes.test.pipeline;
 
 import dev.morphia.rewrite.recipes.pipeline.PipelineMergeRewrite;
+import dev.morphia.rewrite.recipes.test.MorphiaRewriteTest;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
@@ -36,7 +37,7 @@ public class PipelineMergeRewriteTest extends MorphiaRewriteTest {
                         public class TestTheWorld {
                             public void update(Datastore ds) {
                                 ds.aggregate(Object.class)
-                                  .pipeline(Merge.merge("database", "collection"));
+                                        .pipeline(Merge.merge("database", "collection"));
                             }
                         }"""));
     }
@@ -62,8 +63,8 @@ public class PipelineMergeRewriteTest extends MorphiaRewriteTest {
                         public class TestTheWorld {
                             public void update(Datastore ds) {
                                 ds.aggregate(Object.class)
-                                  .count("field")
-                                  .pipeline(Merge.merge("database", "collection"));
+                                        .count("field")
+                                        .pipeline(Merge.merge("database", "collection"));
                             }
                         }"""));
     }
@@ -89,8 +90,8 @@ public class PipelineMergeRewriteTest extends MorphiaRewriteTest {
                         public class TestTheWorld {
                             public void update(Aggregation aggregation) {
                                 aggregation
-                                  .count("field")
-                                  .pipeline(Merge.merge("database", "collection"));
+                                        .count("field")
+                                        .pipeline(Merge.merge("database", "collection"));
                             }
                         }"""));
     }

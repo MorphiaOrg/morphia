@@ -13,12 +13,16 @@ import org.openrewrite.java.MethodMatcher;
 import org.openrewrite.java.tree.J.Identifier;
 import org.openrewrite.java.tree.J.MethodInvocation;
 import org.openrewrite.java.tree.JavaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.AGGREGATION;
 import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.DATASTORE;
 import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.propagate;
 
 public class PipelineExecuteRewrite extends Recipe {
+    private static final Logger LOG = LoggerFactory.getLogger(PipelineExecuteRewrite.class);
+
     public static final String CURSOR_CLASS = MorphiaCursor.class.getName();
 
     private static final MethodMatcher EXECUTE = new MethodMatcher(AGGREGATION + " execute(..)");
@@ -43,6 +47,8 @@ public class PipelineExecuteRewrite extends Recipe {
                 MethodInvocation invocation = super.visitMethodInvocation(original, context);
 
                 if (EXECUTE.matches(invocation)) {
+                    LOG.debug("PipelineExecuteRewrite matches");
+                    LOG.debug("invocation = {}", invocation);
                     var arguments = invocation.getArguments();
                     invocation = (MethodInvocation) propagate(arguments,
                             invocation
@@ -56,6 +62,7 @@ public class PipelineExecuteRewrite extends Recipe {
                     Identifier name = invocation.getName()
                             .withType(JavaType.buildType(MorphiaCursor.class.getName()));
                     invocation = invocation.withName(name);
+                    LOG.debug("now invocation = {}", invocation);
                 }
 
                 return invocation;

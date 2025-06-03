@@ -1,0 +1,25 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="All Tests" type="TestNG">
+    <shortenClasspath name="NONE" />
+    <useClassPathOnly />
+    <option name="ALTERNATIVE_JRE_PATH" value="$USER_HOME$/.jdks/adopt-openjdk-16.0.1" />
+    <option name="SUITE_NAME" value="" />
+    <option name="PACKAGE_NAME" value="dev.morphia" />
+    <option name="MAIN_CLASS_NAME" value="" />
+    <option name="METHOD_NAME" value="" />
+    <option name="GROUP_NAME" value="" />
+    <option name="TEST_OBJECT" value="PACKAGE" />
+    <option name="VM_PARAMETERS" value="-ea -Dtestng.dtd.http=true " />
+    <option name="PARAMETERS" value="" />
+    <option name="OUTPUT_DIRECTORY" value="" />
+    <option name="TEST_SEARCH_SCOPE">
+      <value defaultName="wholeProject" />
+    </option>
+    <option name="PROPERTIES_FILE" value="" />
+    <properties />
+    <listeners />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

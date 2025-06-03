@@ -66,7 +66,7 @@ public class ArgumentCollector {
                         List.of(JavaType.buildType(Object.class.getName())),
                         null, null, null, null));
             }
-            args.add(0, applied);
+            args.add(applied);
             return true;
         } catch (IndexOutOfBoundsException e) {
             throw new RuntimeException(template.getCode(), e);

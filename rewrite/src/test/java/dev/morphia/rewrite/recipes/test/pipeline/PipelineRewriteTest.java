@@ -1,24 +1,20 @@
-package dev.morphia.rewrite.recipes.test;
+package dev.morphia.rewrite.recipes.test.pipeline;
+
+import dev.morphia.rewrite.recipes.pipeline.PipelineRewrite;
+import dev.morphia.rewrite.recipes.test.MorphiaRewriteTest;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.openrewrite.Recipe;
-import org.openrewrite.test.RecipeSpec;
 
 import static org.openrewrite.java.Assertions.java;
 
-public class PipelineOutRewriteTest extends MorphiaRewriteTest {
+public class PipelineRewriteTest extends MorphiaRewriteTest {
 
     @Override
     @NotNull
     protected Recipe getRecipe() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void defaults(RecipeSpec spec) {
-        super.defaults(spec);
-        spec.expectedCyclesThatMakeChanges(2);
+        return new PipelineRewrite();
     }
 
     @Test
@@ -312,78 +308,4 @@ public class PipelineOutRewriteTest extends MorphiaRewriteTest {
                         }"""));
     }
 
-    @Test
-    public void testOut() {
-        rewriteRun(java(
-                """
-                        import dev.morphia.Datastore;
-                        import dev.morphia.aggregation.stages.Count;
-                        import dev.morphia.aggregation.stages.Out;
-
-                        public class TestTheWorld {
-                            public void update(Datastore ds) {
-                                ds.aggregate(Object.class)
-                                  .count("field")
-                                  .out(Out.out(""))
-                                  .execute(Object.class)
-                                  .tryNext();
-                            }
-                        }""",
-                """
-                        import dev.morphia.Datastore;
-                        import dev.morphia.aggregation.stages.Count;
-                        import dev.morphia.aggregation.stages.Out;
-
-                        import static dev.morphia.aggregation.stages.Count.count;
-                        import static dev.morphia.aggregation.stages.Out.out;
-
-                        public class TestTheWorld {
-                            public void update(Datastore ds) {
-                                ds.aggregate(Object.class)
-                                          .pipeline(
-                                                  count("field"),
-                                                  out(""))
-                                  .execute(Object.class)
-                                  .tryNext();
-                            }
-                        }"""));
-    }
-
-    @Test
-    public void testMerge() {
-        rewriteRun(java(
-                """
-                        import dev.morphia.Datastore;
-                        import dev.morphia.aggregation.stages.Merge;
-
-                        import static dev.morphia.aggregation.stages.Merge.into;
-
-                        public class TestTheWorld {
-                            public void update(Datastore ds) {
-                                ds.aggregate(Object.class)
-                                  .count("field")
-                                  .merge(Merge.into(""))
-                                  .execute(Object.class)
-                                  .tryNext();
-                            }
-                        }""",
-                """
-                        import dev.morphia.Datastore;
-                        import dev.morphia.aggregation.stages.Count;
-                        import dev.morphia.aggregation.stages.Merge;
-
-                        import static dev.morphia.aggregation.stages.Count.count;
-                        import static dev.morphia.aggregation.stages.Merge.merge;
-
-                        public class TestTheWorld {
-                            public void update(Datastore ds) {
-                                ds.aggregate(Object.class)
-                                          .pipeline(
-                                                  count("field"),
-                                                  merge(""))
-                                  .execute(Object.class)
-                                  .tryNext();
-                            }
-                        }"""));
-    }
 }

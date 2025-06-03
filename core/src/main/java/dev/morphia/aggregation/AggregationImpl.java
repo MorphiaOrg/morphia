@@ -50,6 +50,13 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
     private String terminated;
 
+    public AggregationImpl() {
+        collection = null;
+        source = null;
+        options = null;
+        datastore = null;
+    }
+
     @MorphiaInternal
     @SuppressWarnings("unchecked")
     public AggregationImpl(MorphiaDatastore datastore, @Nullable Class<T> source, Class<T> targetType, AggregationOptions options) {
