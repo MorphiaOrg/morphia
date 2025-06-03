@@ -58,7 +58,7 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     /**
      * @hidden
      */
-    protected ManualMorphiaConfig(MorphiaConfig base) {
+    public ManualMorphiaConfig(MorphiaConfig base) {
         autoImportModels = base.autoImportModels();
         applyCaps = base.applyCaps();
         applyDocumentValidations = base.applyDocumentValidations();
