@@ -60,7 +60,7 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     /**
      * @hidden
      */
-    protected ManualMorphiaConfig(MorphiaConfig base) {
+    public ManualMorphiaConfig(MorphiaConfig base) {
         applyCaps = base.applyCaps();
         applyDocumentValidations = base.applyDocumentValidations();
         applyIndexes = base.applyIndexes();
