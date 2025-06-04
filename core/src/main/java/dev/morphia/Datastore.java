@@ -148,16 +148,16 @@ public interface Datastore {
      * Find instances of a type using a native query. This method is intended as an aid when copying queries from external sources such
      * as the shell or Compass whose structure is already in json form.
      *
-     * @param type        the class to use for mapping the results
-     * @param options     the options to apply
-     * @param nativeQuery the full query structure to use for this Query
      * @param <T>         the type to query
+     * @param type        the class to use for mapping the results
+     * @param nativeQuery the full query structure to use for this Query
+     * @param options     the options to apply
      * @return the query
      * @morphia.experimental
      * @since 2.3
      */
     @MorphiaExperimental
-    <T> Query<T> find(Class<T> type, FindOptions options, Document nativeQuery);
+    <T> Query<T> find(Class<T> type, Document nativeQuery, FindOptions options);
 
     /**
      * @param type the type look up

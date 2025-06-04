@@ -317,11 +317,11 @@ public class MorphiaDatastore implements Datastore {
 
     @Override
     public <T> Query<T> find(Class<T> type, Document nativeQuery) {
-        return find(type, new FindOptions(), nativeQuery);
+        return find(type, nativeQuery, new FindOptions());
     }
 
     @Override
-    public <T> Query<T> find(Class<T> type, FindOptions options, Document nativeQuery) {
+    public <T> Query<T> find(Class<T> type, Document nativeQuery, FindOptions options) {
         return queryFactory.createQuery(this, type, options, nativeQuery);
     }
 

@@ -6,6 +6,7 @@ import java.util.List;
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.stages.Stage;
+import dev.morphia.rewrite.recipes.pipeline.AlternateAggregationCollection;
 import dev.morphia.rewrite.recipes.pipeline.PipelineExecuteRewrite;
 import dev.morphia.rewrite.recipes.pipeline.PipelineMergeRewrite;
 import dev.morphia.rewrite.recipes.pipeline.PipelineRewrite;
@@ -42,6 +43,7 @@ public class PipelineRewriteRecipes extends Recipe {
     @Override
     public List<Recipe> getRecipeList() {
         return List.of(
+                new AlternateAggregationCollection(),
                 new PipelineExecuteRewrite(),
                 new PipelineRewrite(),
                 new PipelineMergeRewrite()/*

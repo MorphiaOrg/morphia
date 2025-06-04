@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import org.jetbrains.annotations.NotNull;
+import org.openrewrite.java.MethodMatcher;
 import org.semver4j.Semver;
 
 public class RewriteUtils {
@@ -17,5 +19,9 @@ public class RewriteUtils {
                 .findFirst().get();
 
         return new File(repo, "%s/morphia-core-%s.jar".formatted(semver, semver));
+    }
+
+    public static @NotNull MethodMatcher methodMatcher(String type, String pattern) {
+        return new MethodMatcher(type + " " + pattern);
     }
 }

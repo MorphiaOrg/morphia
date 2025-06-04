@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 
 import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.AGGREGATION;
 import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.DATASTORE;
+import static dev.morphia.rewrite.recipes.RewriteUtils.methodMatcher;
 import static java.util.Collections.emptyList;
 
 public class PipelineRewrite extends Recipe {
@@ -74,9 +75,6 @@ public class PipelineRewrite extends Recipe {
             methodMatcher(AGGREGATION, "unset(..)"),
             methodMatcher(AGGREGATION, "unwind(..)"));
 
-    private static final List<MethodMatcher> AGGREGATES = List.of(
-            methodMatcher(DATASTORE, "aggregate(..)"),
-            methodMatcher(MorphiaDatastore.class.getTypeName(), "aggregate(..)"));
     private static final MethodMatcher PIPELINE = methodMatcher(AGGREGATION, "pipeline(..)");
     private static final MethodMatcher EXECUTE = methodMatcher(AGGREGATION, "execute()");
     private static final MethodMatcher TO_LIST = methodMatcher(AGGREGATION, "toList()");
@@ -87,7 +85,12 @@ public class PipelineRewrite extends Recipe {
             return matchers.stream().anyMatch(matcher -> matcher.matches(methodCall));
         }
     };
-    private static final MethodMatcher AGGREGATE = new MethodMatcher(
+
+    public static final List<MethodMatcher> AGGREGATES = List.of(
+            methodMatcher(DATASTORE, "aggregate(..)"),
+            methodMatcher(MorphiaDatastore.class.getTypeName(), "aggregate(..)"));
+
+    public static final MethodMatcher AGGREGATE = new MethodMatcher(
             AGGREGATION + " addFields(..)") {
         @Override
         public boolean matches(@Nullable MethodCall methodCall) {
@@ -228,9 +231,5 @@ public class PipelineRewrite extends Recipe {
             List<Expression> arguments = new ArrayList<>();
             Expression initial;
         }
-    }
-
-    private static @NotNull MethodMatcher methodMatcher(String type, String pattern) {
-        return new MethodMatcher(type + " " + pattern);
     }
 }
