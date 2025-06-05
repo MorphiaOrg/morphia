@@ -47,7 +47,7 @@ public class DatastoreAggregateStringTest extends MorphiaRewriteTest {
 
                         public class DatastoreAggregateStringTest {
                             public void test(Datastore ds) {
-                                ds.aggregate(new AggregationOptions().collection("myCollection"))
+                                ds.aggregate(Document.class, new AggregationOptions().collection("myCollection"))
                                   .match(eq("field", "value"))
                                   .execute(Document.class)
                                   .toList();
@@ -88,7 +88,7 @@ public class DatastoreAggregateStringTest extends MorphiaRewriteTest {
                         public class DatastoreAggregateStringTest {
                             public void test(Datastore ds) {
                                 String myCollection = "myCollection";
-                                ds.aggregate(new AggregationOptions().collection(myCollection))
+                                ds.aggregate(Document.class, new AggregationOptions().collection(myCollection))
                                   .match(eq("field", "value"))
                                   .execute(Document.class)
                                   .toList();
@@ -137,7 +137,7 @@ public class DatastoreAggregateStringTest extends MorphiaRewriteTest {
                             }
 
                             public void test() {
-                                getDs().aggregate(new AggregationOptions().collection("myCollection"))
+                                getDs().aggregate(Document.class, new AggregationOptions().collection("myCollection"))
                                   .match(eq("field", "value"))
                                   .execute(Document.class)
                                   .toList();

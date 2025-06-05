@@ -86,21 +86,4 @@ public class PipelineRewriteRecipes extends Recipe {
         return null;
     }
 
-    public static @NotNull List<Expression> mergeArguments(List<Expression> arguments, MethodInvocation invocation) {
-        List<Expression> aggregationArguments = new ArrayList<>(invocation.getArguments());
-        aggregationArguments.addAll(arguments);
-        return aggregationArguments;
-    }
-
-    public static Expression propagate(List<Expression> arguments, Expression expression) {
-        if (expression instanceof MethodInvocation invocation) {
-            if (AGGREGATE.matches(invocation)) {
-                return invocation.withArguments(mergeArguments(arguments, invocation));
-            }
-            return invocation.withSelect(propagate(arguments, invocation.getSelect()));
-        } else {
-            return expression;
-        }
-    }
-
 }

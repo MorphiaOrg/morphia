@@ -47,4 +47,59 @@ public class PipelineRecipesTest extends MorphiaRewriteTest {
                         }"""));
     }
 
+    @Test
+    public void testUnionWith() {
+        rewriteRun(java(
+                """
+                        import dev.morphia.Datastore;
+                        import org.bson.Document;
+
+                        import static dev.morphia.aggregation.expressions.Expressions.literal;
+                        import static dev.morphia.aggregation.stages.AddFields.addFields;
+                        import static dev.morphia.aggregation.stages.Set.set;
+                        import static dev.morphia.aggregation.stages.Sort.sort;
+                        import static dev.morphia.aggregation.stages.UnionWith;
+
+                        public class UnwrapSet {
+                            public void test(Datastore ds) {
+                                ds.aggregate("sales2019q1")
+                                  .set(set().field("_id", literal("2019Q1")))
+                                  .unionWith("sales2019q2", addFields().field("_id", literal("2019Q2")))
+                                  .unionWith("sales2019q3", addFields().field("_id", literal("2019Q3")))
+                                  .unionWith("sales2019q4", addFields().field("_id", literal("2019Q4")))
+                                  .sort(sort().ascending("_id", "store", "item"))
+                                  .execute(Document.class)
+                                  .toList();
+                            }
+                        }
+                        """,
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.aggregation.AggregationOptions;
+                        import dev.morphia.aggregation.stages.UnionWith;
+                        import org.bson.Document;
+
+                        import static dev.morphia.aggregation.expressions.Expressions.literal;
+                        import static dev.morphia.aggregation.stages.AddFields.addFields;
+                        import static dev.morphia.aggregation.stages.Set.set;
+                        import static dev.morphia.aggregation.stages.Sort.sort;
+                        import static dev.morphia.aggregation.stages.UnionWith;
+                        import static dev.morphia.aggregation.stages.UnionWith.unionWith;
+
+                        public class UnwrapSet {
+                            public void test(Datastore ds) {
+                                ds.aggregate(Document.class, Document.class, new AggregationOptions().collection("sales2019q1"))
+                                          .pipeline(
+                                                  set().field("_id", literal("2019Q1")),
+                                                  unionWith("sales2019q2", addFields().field("_id", literal("2019Q2"))),
+                                                  unionWith("sales2019q3", addFields().field("_id", literal("2019Q3"))),
+                                                  unionWith("sales2019q4", addFields().field("_id", literal("2019Q4"))),
+                                                  sort().ascending("_id", "store", "item"))
+                                  .iterator()
+                                  .toList();
+                            }
+                        }
+                        """));
+    }
+
 }

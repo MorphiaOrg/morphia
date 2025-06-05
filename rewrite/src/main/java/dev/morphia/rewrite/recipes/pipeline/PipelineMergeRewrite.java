@@ -49,17 +49,13 @@ public class PipelineMergeRewrite extends Recipe {
 
                 if (MERGE.matches(original)) {
                     MethodInvocation invocation = super.visitMethodInvocation(original, context);
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("PipelineMergeRewrite matches!");
-                        LOG.debug("invocation = {}", invocation);
-                    }
+                    LOG.debug("PipelineMergeRewrite matches");
+                    LOG.debug("invocation = {}", invocation);
                     var arguments = invocation.getArguments();
                     var mergeInfo = extractTarget((MethodInvocation) arguments.get(0));
-                    invocation = (MethodInvocation) addStage(invocation, mergeInfo);
-                    if (LOG.isDebugEnabled()) {
-                        LOG.debug("now invocation = {}", invocation);
-                    }
-                    return maybeAutoFormat(original, invocation, context);
+                    invocation = maybeAutoFormat(original, (MethodInvocation) addStage(invocation, mergeInfo), context);
+                    LOG.debug("now invocation = {}", invocation);
+                    return invocation;
                 }
 
                 return original;

@@ -1,10 +1,13 @@
 package dev.morphia.rewrite.recipes.pipeline;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.AggregationOptions;
 
+import org.bson.Document;
 import org.jspecify.annotations.Nullable;
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.NlsRewrite.Description;
@@ -14,8 +17,13 @@ import org.openrewrite.TreeVisitor;
 import org.openrewrite.java.JavaIsoVisitor;
 import org.openrewrite.java.JavaTemplate;
 import org.openrewrite.java.MethodMatcher;
+import org.openrewrite.java.tree.Expression;
+import org.openrewrite.java.tree.J.Identifier;
 import org.openrewrite.java.tree.J.MethodInvocation;
+import org.openrewrite.java.tree.JavaType;
 import org.openrewrite.java.tree.MethodCall;
+import org.openrewrite.java.tree.Space;
+import org.openrewrite.marker.Markers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,9 +74,14 @@ public class AlternateAggregationCollection extends Recipe {
                         .build();
 
                 maybeAddImport(AggregationOptions.class.getName());
-                MethodInvocation updated = maybeAutoFormat(method,
-                        template.apply(getCursor(), method.getCoordinates().replaceArguments(), method.getArguments().get(0)),
-                        executionContext);
+                MethodInvocation updated = template.apply(getCursor(), method.getCoordinates().replaceArguments(),
+                        method.getArguments().get(0));
+                List<Expression> arguments = new ArrayList<>(updated.getArguments());
+                maybeAddImport(Document.class.getName());
+                arguments.add(0, new Identifier(UUID.randomUUID(), Space.EMPTY, Markers.EMPTY, List.of(), "Document.class",
+                        JavaType.buildType("java.lang.Class<Document>"), null));
+                updated = updated.withArguments(arguments);
+                updated = maybeAutoFormat(method, updated, executionContext);
                 LOG.debug("method updated:  {}", updated);
                 return updated;
             } else {

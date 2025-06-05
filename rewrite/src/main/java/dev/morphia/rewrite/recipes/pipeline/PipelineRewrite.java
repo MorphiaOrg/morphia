@@ -154,15 +154,8 @@ public class PipelineRewrite extends Recipe {
         public @NotNull MethodInvocation visitMethodInvocation(@NotNull MethodInvocation original,
                 @NotNull ExecutionContext context) {
             MethodInvocation invocation = super.visitMethodInvocation(original, context);
-            if (MEGA_MATCHER.matches(invocation)
-            /*
-             * || PIPELINE.matches(invocation)
-             * || EXECUTE.matches(invocation)
-             * || TO_LIST.matches(invocation)
-             */) {
-                if (LOG.isDebugEnabled()) {
-                    System.out.println("matched: " + invocation);
-                }
+            if (MEGA_MATCHER.matches(invocation)) {
+                LOG.debug("matched: {}", invocation);
                 var components = new Components();
                 bucket(components, invocation);
                 Space space = Space.build(getIndent(invocation.getPadding().getSelect().getAfter()), emptyList());
@@ -177,9 +170,7 @@ public class PipelineRewrite extends Recipe {
                 }
 
                 MethodInvocation methodInvocation = maybeAutoFormat(original, pipeline, context);
-                if (LOG.isDebugEnabled()) {
-                    System.out.println("now method is: " + methodInvocation);
-                }
+                LOG.debug("now method is: {}", methodInvocation);
                 return methodInvocation;
             } else {
                 return super.visitMethodInvocation(invocation, context);
