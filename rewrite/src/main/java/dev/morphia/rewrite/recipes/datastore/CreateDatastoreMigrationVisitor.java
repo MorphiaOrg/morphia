@@ -40,15 +40,11 @@ public class CreateDatastoreMigrationVisitor extends JavaIsoVisitor<ExecutionCon
     public MethodInvocation visitMethodInvocation(@NotNull MethodInvocation methodInvocation, @NotNull ExecutionContext context) {
         if (CREATE_DATASTORE.matches(methodInvocation)) {
             List<Expression> arguments = methodInvocation.getArguments();
-            if (arguments.size() == 1) {
+            if (arguments.size() == 1
+                    || arguments.size() == 2 && arguments.get(1).getType() instanceof Class type
+                            && type.getFullyQualifiedName().equals(MORPHIA_CONFIG)) {
                 LOG.debug("Nothing to do on method match.  arguments:  {}%n", arguments);
                 return methodInvocation;
-            } else if (arguments.size() == 2) {
-                if (arguments.get(1).getType() instanceof JavaType.Class type
-                        && type.getFullyQualifiedName().equals(MORPHIA_CONFIG)) {
-                    LOG.debug("Nothing to do on method match.  arguments:  {}%n", arguments);
-                    return methodInvocation;
-                }
             }
 
             maybeAddImport(NEW_TYPE, null, false);
