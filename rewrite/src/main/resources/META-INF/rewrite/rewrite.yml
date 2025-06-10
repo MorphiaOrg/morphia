@@ -54,9 +54,9 @@ recipeList:
       artifactId: morphia-core
       newVersion: 3.0.0-SNAPSHOT
   - dev.morphia.rewrite.recipes.config.MorphiaConfigMigration
+  - dev.morphia.rewrite.recipes.datastore.CreateDatastoreMigration
   - dev.morphia.rewrite.recipes.UnwrapFieldExpressions
   - dev.morphia.rewrite.recipes.PipelineRewriteRecipes
-  - dev.morphia.rewrite.recipes.CreateDatastoreMigration
   - dev.morphia.rewrite.recipes.RegexPatternMerge
   - dev.morphia.rewrite.recipes.UpdateExecute
   - dev.morphia.rewrite.recipes.LogicalFilterAdd

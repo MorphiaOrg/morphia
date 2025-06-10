@@ -1,6 +1,6 @@
 package dev.morphia.rewrite.recipes.test;
 
-import dev.morphia.rewrite.recipes.CreateDatastoreMigration;
+import dev.morphia.rewrite.recipes.datastore.CreateDatastoreMigration;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
@@ -41,12 +41,14 @@ public class CreateDatastoreMigrationTest extends MorphiaRewriteTest {
                                 import dev.morphia.Morphia;
                                 import dev.morphia.config.MorphiaConfig;
 
+                                import static dev.morphia.Morphia.createDatastore;
+
                                 public class UnwrapTest {
                                     public void update() {
                                         MongoClient client = null;
-                                        Morphia.createDatastore(client,  MorphiaConfig.load().database("benchmarks")
+                                        createDatastore(client,  MorphiaConfig.load()
                                                 .discriminatorKey("__type")
-                                                .mapSubPackages(true));
+                                                .mapSubPackages(true).database("benchmarks"));
                                     }
                                 }
                                 """));
@@ -75,10 +77,12 @@ public class CreateDatastoreMigrationTest extends MorphiaRewriteTest {
                                 import dev.morphia.Morphia;
                                 import dev.morphia.config.MorphiaConfig;
 
+                                import static dev.morphia.Morphia.createDatastore;
+
                                 public class UnwrapTest {
                                     public void update() {
                                         MongoClient client = null;
-                                        Datastore datastore = Morphia.createDatastore(client, MorphiaConfig.load().database("benchmarks"));
+                                        Datastore datastore = createDatastore(client, MorphiaConfig.load().database("benchmarks"));
                                     }
                                 }
                                 """));
