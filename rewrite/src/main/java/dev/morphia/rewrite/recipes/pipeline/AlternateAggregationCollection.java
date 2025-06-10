@@ -69,7 +69,7 @@ public class AlternateAggregationCollection extends Recipe {
                 LOG.debug("method matches:  {}", method);
                 var template = JavaTemplate.builder("new AggregationOptions().collection(#{any()})")
                         .javaParser(fromJavaVersion()
-                                .classpath(List.of(findMorphiaCore().toPath())))
+                                .classpath(List.of(findMorphiaCore())))
                         .imports(AggregationOptions.class.getName())
                         .build();
 

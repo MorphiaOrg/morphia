@@ -6,9 +6,6 @@ recipeList:
   - org.openrewrite.java.RemoveAnnotation:
       annotationPattern: '@dev.morphia.annotations.Embedded'
   - org.openrewrite.java.ChangeType:
-      oldFullyQualifiedTypeName: dev.morphia.mapping.MapperOptions
-      newFullyQualifiedTypeName: dev.morphia.config.MorphiaConfig
-  - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: dev.morphia.query.internal.MorphiaCursor
       newFullyQualifiedTypeName: dev.morphia.query.MorphiaCursor
   - org.openrewrite.java.ChangeType:
@@ -37,6 +34,14 @@ recipeList:
   - org.openrewrite.java.RemoveMethodInvocations:
       methodPattern: dev.morphia.Datastore ensureIndexes(..)
   - org.openrewrite.java.RemoveMethodInvocations:
+      methodPattern: dev.morphia.mapping.MapperOptions.Builder isCacheClassLookups()
+  - org.openrewrite.java.RemoveMethodInvocations:
+      methodPattern: dev.morphia.mapping.MapperOptions.Builder cacheClassLookups(..)
+  - org.openrewrite.java.RemoveMethodInvocations:
+      methodPattern: dev.morphia.mapping.MapperOptions.Builder disableEmbeddedIndexes(..)
+  - org.openrewrite.java.RemoveMethodInvocations:
+      methodPattern: dev.morphia.mapping.MapperOptions.Builder build()
+  - org.openrewrite.java.RemoveMethodInvocations:
       methodPattern: dev.morphia.MorphiaDatastore ensureIndexes(..)
   - dev.morphia.rewrite.recipes.RenameMethod:
       methodPatterns:
@@ -48,10 +53,10 @@ recipeList:
       groupId: dev.morphia.morphia
       artifactId: morphia-core
       newVersion: 3.0.0-SNAPSHOT
+  - dev.morphia.rewrite.recipes.config.MorphiaConfigMigration
   - dev.morphia.rewrite.recipes.UnwrapFieldExpressions
   - dev.morphia.rewrite.recipes.PipelineRewriteRecipes
   - dev.morphia.rewrite.recipes.CreateDatastoreMigration
-  - dev.morphia.rewrite.recipes.MorphiaConfigMigration
   - dev.morphia.rewrite.recipes.RegexPatternMerge
   - dev.morphia.rewrite.recipes.UpdateExecute
   - dev.morphia.rewrite.recipes.LogicalFilterAdd

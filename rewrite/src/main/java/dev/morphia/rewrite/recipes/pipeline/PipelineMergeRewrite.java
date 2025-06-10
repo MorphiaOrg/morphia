@@ -71,7 +71,7 @@ public class PipelineMergeRewrite extends Recipe {
                         .collect(Collectors.joining(","));
                 MethodInvocation applied = (JavaTemplate.builder("Merge.merge(%s)".formatted(parameters)))
                         .javaParser(JavaParser.fromJavaVersion()
-                                .classpath(List.of(findMorphiaCore().toPath())))
+                                .classpath(List.of(findMorphiaCore())))
                         .imports(Merge.class.getName())
                         .build().apply(new Cursor(getCursor(), originalArguments),
                                 originalArguments.getCoordinates().replace(), arguments.toArray());

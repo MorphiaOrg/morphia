@@ -39,7 +39,7 @@ public class ArgumentCollector {
         String code = "%s.%s()".formatted(type.getSimpleName(), method);
         template = (JavaTemplate.builder(code))
                 .javaParser(JavaParser.fromJavaVersion()
-                        .classpath(List.of(findMorphiaCore().toPath())))
+                        .classpath(List.of(findMorphiaCore())))
                 .staticImports("%s.%s".formatted(type.getName(), method))
                 .imports(type.getName())
                 .imports(stream(imports)

@@ -70,6 +70,7 @@ public class CreateDatastoreMigration extends Recipe {
                 } else {
                     options = synthesizeMorphiaConfig(getCursor(), databaseName);
                 }
+                maybeAddImport(NEW_TYPE);
 
                 List<Expression> newArguments = of(arguments.get(0), options);
                 List<JavaType> types = newArguments.stream().map(Expression::getType)
@@ -88,7 +89,7 @@ public class CreateDatastoreMigration extends Recipe {
         public static Expression synthesizeMorphiaConfig(Cursor cursor, Expression databaseName) {
             JavaTemplate databaseCall = JavaTemplate.builder("MorphiaConfig.load().database(#{any(java.lang.String)})")
                     .javaParser(JavaParser.fromJavaVersion()
-                            .classpath(List.of(findMorphiaCore().toPath())))
+                            .classpath(List.of(findMorphiaCore())))
                     .imports(NEW_TYPE)
                     .build();
 
@@ -103,7 +104,7 @@ public class CreateDatastoreMigration extends Recipe {
                     ? JavaTemplate.builder("MorphiaConfig.load().database(#{any(java.lang.String)})")
                     : JavaTemplate.builder("MorphiaConfig.load()"))
                     .javaParser(JavaParser.fromJavaVersion()
-                            .classpath(List.of(findMorphiaCore().toPath())))
+                            .classpath(List.of(findMorphiaCore())))
                     .imports(NEW_TYPE)
                     .build();
 
@@ -136,17 +137,11 @@ public class CreateDatastoreMigration extends Recipe {
             JavaTemplate.Builder dbBuilder = JavaTemplate.builder(identifier.getSimpleName() + ".database(#{any})");
             JavaTemplate databaseCall = dbBuilder
                     .javaParser(JavaParser.fromJavaVersion()
-                            .classpath(List.of(findMorphiaCore().toPath())))
+                            .classpath(List.of(findMorphiaCore())))
                     .build();
 
             return databaseCall.apply(new Cursor(cursor, identifier),
                     identifier.getCoordinates().replace(), databaseName);
-        }
-
-        private static Expression updateIdentifierType(Expression expression) {
-            var flattened = flatten(expression);
-            flattened.set(0, flattened.get(0).withType(JavaType.buildType(NEW_TYPE)));
-            return rechain(flattened);
         }
 
         private static @NotNull ArrayList<Expression> flatten(Expression start) {

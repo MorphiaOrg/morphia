@@ -14,7 +14,6 @@ import org.openrewrite.TreeVisitor;
 import org.openrewrite.java.JavaIsoVisitor;
 import org.openrewrite.java.MethodMatcher;
 import org.openrewrite.java.tree.J.MethodInvocation;
-import org.openrewrite.java.tree.JavaType;
 
 public class RenameMethod extends Recipe {
 
@@ -53,7 +52,6 @@ public class RenameMethod extends Recipe {
         public MethodInvocation visitMethodInvocation(MethodInvocation method, ExecutionContext executionContext) {
             for (Entry<MethodMatcher, String> entry : replacements.entrySet()) {
                 if (entry.getKey().matches(method)) {
-                    JavaType type = method.getType();
                     maybeAddImport(method.getMethodType().getDeclaringType().getFullyQualifiedName(), entry.getValue());
                     return method.withName(method.getName().withSimpleName(entry.getValue()));
                 }
