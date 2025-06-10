@@ -3,6 +3,7 @@ package dev.morphia.rewrite.recipes.datastore;
 import java.util.List;
 
 import dev.morphia.Morphia;
+import dev.morphia.config.MorphiaConfig;
 
 import org.jetbrains.annotations.NotNull;
 import org.openrewrite.Cursor;
@@ -14,6 +15,8 @@ import org.openrewrite.java.MethodMatcher;
 import org.openrewrite.java.tree.Expression;
 import org.openrewrite.java.tree.J.Identifier;
 import org.openrewrite.java.tree.J.MethodInvocation;
+import org.openrewrite.java.tree.JavaType;
+import org.openrewrite.java.tree.JavaType.Class;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,12 +33,22 @@ public class CreateDatastoreMigrationVisitor extends JavaIsoVisitor<ExecutionCon
     private static final String OLD_TYPE = "dev.morphia.mapping.MapperOptions";
     private static final String NEW_TYPE = "dev.morphia.config.MorphiaConfig";
 
+    private static final String MORPHIA_CONFIG = ((Class) JavaType.buildType(MorphiaConfig.class.getName()))
+            .getFullyQualifiedName();
+
     @Override
     public MethodInvocation visitMethodInvocation(@NotNull MethodInvocation methodInvocation, @NotNull ExecutionContext context) {
         if (CREATE_DATASTORE.matches(methodInvocation)) {
             List<Expression> arguments = methodInvocation.getArguments();
-            if (arguments.size() == 2 && arguments.get(1) instanceof MethodInvocation) {
+            if (arguments.size() == 1) {
+                LOG.debug("Nothing to do on method match.  arguments:  {}%n", arguments);
                 return methodInvocation;
+            } else if (arguments.size() == 2) {
+                if (arguments.get(1).getType() instanceof JavaType.Class type
+                        && type.getFullyQualifiedName().equals(MORPHIA_CONFIG)) {
+                    LOG.debug("Nothing to do on method match.  arguments:  {}%n", arguments);
+                    return methodInvocation;
+                }
             }
 
             maybeAddImport(NEW_TYPE, null, false);

@@ -121,4 +121,48 @@ public class CreateDatastoreMigrationTest extends MorphiaRewriteTest {
 
     }
 
+    @Test
+    public void usingMorphiaConfigVariable() {
+        rewriteRun(
+                //language=java
+                java("""
+                        import com.mongodb.client.MongoClient;
+                        import dev.morphia.Datastore;
+                        import static dev.morphia.Morphia.createDatastore;
+                        import dev.morphia.config.MorphiaConfig;
+
+                        public class UnwrapTest {
+                            public void update() {
+                                MongoClient client = null;
+
+                                var config = MorphiaConfig.load();
+
+                                Datastore datastore = createDatastore(client, config);
+                            }
+                        }
+                        """));
+
+    }
+
+    @Test
+    public void usingMorphiaConfigInline() {
+        rewriteRun(
+                //language=java
+                java("""
+                        import com.mongodb.client.MongoClient;
+                        import dev.morphia.Datastore;
+                        import static dev.morphia.Morphia.createDatastore;
+                        import dev.morphia.config.MorphiaConfig;
+
+                        public class UnwrapTest {
+                            public void update() {
+                                MongoClient client = null;
+
+                                Datastore datastore = createDatastore(client, MorphiaConfig.load());
+                            }
+                        }
+                        """));
+
+    }
+
 }
