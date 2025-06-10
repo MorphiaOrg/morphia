@@ -247,21 +247,53 @@
 <div class="sectionbody">
 <div class="paragraph">
 <p>There are various annotations which can be used to register callbacks on certain life cycle events.
-These include Pre/Post-Persist (Save), and Pre/Post-Load.</p>
+These include Pre/Post-Persist (Save), and Pre/Post-Load.  Methods annotated with these annotations can have any or all of the following
+arguments:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><code>@PrePersist</code> - Called before save, it can return a <code>Document</code> in place of an empty one.</p>
+<p>The entity itself</p>
 </li>
 <li>
-<p><code>@PostPersist</code> - Called after the save call to the database</p>
+<p>The <code>Datastore</code></p>
 </li>
 <li>
-<p><code>@PreLoad</code> - Called before mapping the document from the database to the entity; the Document is passed as an argument (you can add/remove/change values)</p>
+<p>The <code>Document</code> to be used for writing to the database.</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Any fields added to the <code>document</code> in a pre persist event will be overwritten by the entity serialization.  If you need to modify a
+serialized value, e.g., encrypting a value, use a post persist event instead.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The lifecycle event annotations are:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>@PrePersist</code> - Called before the entity is encoded in to a document.</p>
 </li>
 <li>
-<p><code>@PostLoad</code> - Called after populating the entity with the values from the document</p>
+<p><code>@PostPersist</code> - Called after the entity is encoded in to a document but before data is written to the database.</p>
+</li>
+<li>
+<p><code>@PreLoad</code> - Called after the document has been fetched from the database but before mapping the document in to the entity.</p>
+</li>
+<li>
+<p><code>@PostLoad</code> - Called after populating the entity with the values from the document before return the entity reference back to user code.</p>
 </li>
 </ol>
 </div>
@@ -292,7 +324,7 @@ Alternatively, the resulting serialized form can be passed back in just prior to
   }
 
   @PrePersist
-  public void prePersist( Document document) {
+  public void prePersist(Document document) {
     // perform operations on serialized form of the entity
   }
 }</code></pre>
