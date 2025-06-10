@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import dev.morphia.Datastore;
 import dev.morphia.DatastoreImpl;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -188,7 +187,7 @@ public class TestConfigOptions extends TestBase {
                 });
     }
 
-    private void shouldFindField(Datastore datastore, HasList hl, List<String> expected) {
+    private void shouldFindField(DatastoreImpl datastore, HasList hl, List<String> expected) {
         datastore.save(hl);
         final Document document = getDocumentCollection(HasList.class).find().first();
         assertTrue(document.containsKey("names"), "Should find the field");
@@ -196,7 +195,7 @@ public class TestConfigOptions extends TestBase {
         cleanup();
     }
 
-    private void shouldFindField(Datastore datastore, HasMap hl, Map<String, String> expected) {
+    private void shouldFindField(DatastoreImpl datastore, HasMap hl, Map<String, String> expected) {
         final Document document;
         datastore.save(hl);
         document = getDocumentCollection(HasMap.class).find().first();
@@ -205,7 +204,7 @@ public class TestConfigOptions extends TestBase {
         cleanup();
     }
 
-    private void shouldFindField(Datastore datastore,
+    private void shouldFindField(DatastoreImpl datastore,
             HasCollectionValuedMap hm,
             Map<String, Collection<String>> expected) {
         final Document document;
@@ -216,7 +215,7 @@ public class TestConfigOptions extends TestBase {
         cleanup();
     }
 
-    private void shouldFindField(Datastore datastore, HasComplexObjectValuedMap hm, Map<String, ComplexObject> expected) {
+    private void shouldFindField(DatastoreImpl datastore, HasComplexObjectValuedMap hm, Map<String, ComplexObject> expected) {
         final Document document;
         datastore.save(hm);
         document = getDocumentCollection(HasComplexObjectValuedMap.class).find().first();
@@ -225,7 +224,7 @@ public class TestConfigOptions extends TestBase {
         cleanup();
     }
 
-    private void shouldNotFindField(Datastore datastore, HasCollectionValuedMap hm) {
+    private void shouldNotFindField(DatastoreImpl datastore, HasCollectionValuedMap hm) {
         datastore.save(hm);
         Document document = getDocumentCollection(HasCollectionValuedMap.class).find().first();
         assertFalse(document.containsKey("properties"), "field should not exist, value = " + document.get("properties"));
@@ -233,7 +232,7 @@ public class TestConfigOptions extends TestBase {
         cleanup();
     }
 
-    private void shouldNotFindField(Datastore datastore, HasMap hl) {
+    private void shouldNotFindField(DatastoreImpl datastore, HasMap hl) {
         datastore.save(hl);
         Document document = getDocumentCollection(HasMap.class).find().first();
         assertFalse(document.containsKey("properties"), "field should not exist, value = " + document.get("properties"));
@@ -241,7 +240,7 @@ public class TestConfigOptions extends TestBase {
         cleanup();
     }
 
-    private void shouldNotFindField(Datastore datastore, HasComplexObjectValuedMap hm) {
+    private void shouldNotFindField(DatastoreImpl datastore, HasComplexObjectValuedMap hm) {
         datastore.save(hm);
         Document document = getDocumentCollection(HasComplexObjectValuedMap.class).find().first();
         assertFalse(document.containsKey("properties"), "field should not exist, value = " + document.get("properties"));
@@ -249,7 +248,7 @@ public class TestConfigOptions extends TestBase {
         cleanup();
     }
 
-    private void shouldNotFindField(Datastore datastore, HasList hl) {
+    private void shouldNotFindField(DatastoreImpl datastore, HasList hl) {
         datastore.save(hl);
         Document document = getDocumentCollection(HasList.class).find().first();
         assertFalse(document.containsKey("names"), "field should not exist, value = " + document.get("names"));
