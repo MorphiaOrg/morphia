@@ -102,4 +102,50 @@ public class PipelineRecipesTest extends MorphiaRewriteTest {
                         """));
     }
 
+    @Test
+    public void removeExecuteWithClassDefinedSource() {
+        rewriteRun(java(
+                """
+                        import dev.morphia.Datastore;
+                        import java.util.List;
+                        import org.bson.Document;
+
+                        import static dev.morphia.aggregation.expressions.Expressions.literal;
+                        import static dev.morphia.aggregation.stages.AddFields.addFields;
+                        import static dev.morphia.aggregation.stages.Set.set;
+                        import static dev.morphia.aggregation.stages.Sort.sort;
+                        import static dev.morphia.aggregation.stages.UnionWith;
+
+                        public class RewriteExecute {
+                            public void test(Datastore ds) {
+                                List<Document> list = ds.aggregate(String.class)
+                                  .set(set().field("_id", literal("2019Q1")))
+                                  .execute(Document.class)
+                                  .toList();
+                            }
+                        }
+                        """,
+                """
+                        import dev.morphia.Datastore;
+                        import java.util.List;
+                        import org.bson.Document;
+
+                        import static dev.morphia.aggregation.expressions.Expressions.literal;
+                        import static dev.morphia.aggregation.stages.AddFields.addFields;
+                        import static dev.morphia.aggregation.stages.Set.set;
+                        import static dev.morphia.aggregation.stages.Sort.sort;
+                        import static dev.morphia.aggregation.stages.UnionWith;
+
+                        public class RewriteExecute {
+                            public void test(Datastore ds) {
+                                List<Document> list = ds.aggregate(String.class, Document.class)
+                                          .pipeline(
+                                                  set().field("_id", literal("2019Q1")))
+                                  .iterator()
+                                  .toList();
+                            }
+                        }
+                        """));
+    }
+
 }

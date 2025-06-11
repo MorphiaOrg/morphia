@@ -53,8 +53,7 @@ public class PipelineExecuteRewrite extends Recipe {
                 MethodInvocation invocation = super.visitMethodInvocation(original, context);
 
                 if (EXECUTE.matches(invocation)) {
-                    LOG.debug("PipelineExecuteRewrite matches");
-                    LOG.debug("invocation = {}", invocation);
+                    LOG.debug("matches invocation = {}", invocation);
                     var arguments = invocation.getArguments();
                     targetType = arguments.size() == 1 ? arguments.get(0) : null;
                     invocation = (MethodInvocation) propagate(

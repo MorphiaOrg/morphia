@@ -6,9 +6,9 @@ import java.util.UUID;
 
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.AggregationOptions;
+import dev.morphia.rewrite.recipes.MultiMethodMatcher;
 
 import org.bson.Document;
-import org.jspecify.annotations.Nullable;
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.NlsRewrite.Description;
 import org.openrewrite.NlsRewrite.DisplayName;
@@ -21,13 +21,11 @@ import org.openrewrite.java.tree.Expression;
 import org.openrewrite.java.tree.J.Identifier;
 import org.openrewrite.java.tree.J.MethodInvocation;
 import org.openrewrite.java.tree.JavaType;
-import org.openrewrite.java.tree.MethodCall;
 import org.openrewrite.java.tree.Space;
 import org.openrewrite.marker.Markers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.AGGREGATION;
 import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.DATASTORE;
 import static dev.morphia.rewrite.recipes.RewriteUtils.findMorphiaCore;
 import static dev.morphia.rewrite.recipes.RewriteUtils.methodMatcher;
@@ -35,17 +33,10 @@ import static org.openrewrite.java.JavaParser.fromJavaVersion;
 
 public class AlternateAggregationCollection extends Recipe {
     private static final Logger LOG = LoggerFactory.getLogger(AlternateAggregationCollection.class);
-    public static final List<MethodMatcher> AGGREGATES = List.of(
+
+    public static final MethodMatcher AGGREGATE = new MultiMethodMatcher(
             methodMatcher(DATASTORE, "aggregate(String)"),
             methodMatcher(MorphiaDatastore.class.getTypeName(), "aggregate(String)"));
-
-    public static final MethodMatcher AGGREGATE = new MethodMatcher(
-            AGGREGATION + " addFields(..)") {
-        @Override
-        public boolean matches(@Nullable MethodCall methodCall) {
-            return AGGREGATES.stream().anyMatch(matcher -> matcher.matches(methodCall));
-        }
-    };
 
     @Override
     public @DisplayName String getDisplayName() {
