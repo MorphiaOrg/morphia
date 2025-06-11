@@ -97,13 +97,16 @@ public class CreateDatastoreMigrationVisitor extends JavaIsoVisitor<ExecutionCon
     }
 
     public static Expression reuseArgument(Cursor cursor, Identifier identifier, @Nullable Expression databaseName) {
-        Builder dbBuilder = JavaTemplate.builder(identifier.getSimpleName() + ".database(#{any})");
+        Builder dbBuilder = JavaTemplate.builder("MorphiaConfig.load().database(#{any()})");
         JavaTemplate databaseCall = dbBuilder
                 .javaParser(fromJavaVersion()
                         .classpath(of(findMorphiaCore())))
+                .imports(MORPHIA_CONFIG)
                 .build();
 
-        return databaseCall.apply(new Cursor(cursor, identifier),
+        MethodInvocation apply = databaseCall.apply(new Cursor(cursor, identifier),
                 identifier.getCoordinates().replace(), databaseName);
+        apply = apply.withSelect(identifier);
+        return apply;
     }
 }
