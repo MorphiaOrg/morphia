@@ -15,16 +15,15 @@ import dev.morphia.aggregation.stages.SortByCount;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.aggregation.stages.UnionWith;
 import dev.morphia.query.filters.Filter;
+import dev.morphia.rewrite.recipes.PipelineRewriteRecipes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
 import org.openrewrite.ExecutionContext;
-import org.openrewrite.Preconditions;
 import org.openrewrite.Recipe;
 import org.openrewrite.TreeVisitor;
 import org.openrewrite.java.JavaIsoVisitor;
 import org.openrewrite.java.MethodMatcher;
-import org.openrewrite.java.search.UsesType;
 import org.openrewrite.java.tree.Expression;
 import org.openrewrite.java.tree.J.Identifier;
 import org.openrewrite.java.tree.J.MethodInvocation;
@@ -90,14 +89,6 @@ public class PipelineRewrite extends Recipe {
             methodMatcher(DATASTORE, "aggregate(..)"),
             methodMatcher(MorphiaDatastore.class.getTypeName(), "aggregate(..)"));
 
-    public static final MethodMatcher AGGREGATE = new MethodMatcher(
-            AGGREGATION + " addFields(..)") {
-        @Override
-        public boolean matches(@Nullable MethodCall methodCall) {
-            return AGGREGATES.stream().anyMatch(matcher -> matcher.matches(methodCall));
-        }
-    };
-
     private static final List<ArgumentCollector> COLLECTORS = List.of(
             collector(Count.class, "count"),
             collector(IndexStats.class, "indexStats"),
@@ -135,10 +126,7 @@ public class PipelineRewrite extends Recipe {
 
     @Override
     public @NotNull TreeVisitor<?, ExecutionContext> getVisitor() {
-        UsesType<ExecutionContext> usesCursor = new UsesType<>("dev.morphia.query.MorphiaCursor", true);
-        UsesType<ExecutionContext> usesAggregation = new UsesType<>("dev.morphia.aggregation.Aggregation", true);
-        return Preconditions.check(Preconditions.or(usesAggregation, Preconditions.and(usesCursor, usesAggregation)),
-                new PipelineRewriteVisitor());
+        return new PipelineRewriteVisitor();
     }
 
     public static String getIndent(Space after) {
@@ -192,7 +180,7 @@ public class PipelineRewrite extends Recipe {
             } else if (MEGA_MATCHER.matches(expression) || PIPELINE.matches(expression)) {
                 bucket(components, ((MethodInvocation) expression).getSelect());
                 collectArguments(components.arguments, (MethodInvocation) expression);
-            } else if (AGGREGATE.matches(expression) || expression instanceof Identifier) {
+            } else if (PipelineRewriteRecipes.AGGREGATE_ANYTHING.matches(expression) || expression instanceof Identifier) {
                 components.initial = expression;
             } else {
                 throw new UnsupportedOperationException(expression.toString());
@@ -208,10 +196,10 @@ public class PipelineRewrite extends Recipe {
         private Expression rollup(Expression invocation) {
             if (invocation instanceof MethodInvocation methodInvocation && MEGA_MATCHER.matches(methodInvocation)) {
                 var processed = rollup(methodInvocation.getSelect());
-                if (AGGREGATE.matches(processed)) {
+                if (PipelineRewriteRecipes.AGGREGATE_ANYTHING.matches(processed)) {
                     return processed;
                 }
-            } else if (AGGREGATE.matches(invocation)) {
+            } else if (PipelineRewriteRecipes.AGGREGATE_ANYTHING.matches(invocation)) {
                 return invocation;
             }
             return null;

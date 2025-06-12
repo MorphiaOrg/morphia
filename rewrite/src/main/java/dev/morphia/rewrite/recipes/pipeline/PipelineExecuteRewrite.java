@@ -19,8 +19,8 @@ import org.openrewrite.java.tree.JavaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.AGGREGATE_ANYTHING;
 import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.AGGREGATION;
-import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.DATASTORE;
 import static dev.morphia.rewrite.recipes.RewriteUtils.methodMatcher;
 import static java.util.List.of;
 
@@ -28,8 +28,6 @@ public class PipelineExecuteRewrite extends Recipe {
     private static final Logger LOG = LoggerFactory.getLogger(PipelineExecuteRewrite.class);
 
     private static final MethodMatcher EXECUTE = methodMatcher(AGGREGATION, "execute(..)");
-    private static final MethodMatcher AGGREGATE = methodMatcher(DATASTORE, "aggregate(..)");
-
     private static final JavaType MORPHIA_CURSOR = JavaType.buildType(MorphiaCursor.class.getName());
 
     @Override
@@ -91,7 +89,7 @@ public class PipelineExecuteRewrite extends Recipe {
 
             private Expression propagate(Expression expression) {
                 if (expression instanceof MethodInvocation invocation) {
-                    if (AGGREGATE.matches(invocation)) {
+                    if (AGGREGATE_ANYTHING.matches(invocation)) {
                         return invocation.withArguments(mergeArguments(invocation.getArguments()));
                     }
                     return invocation.withSelect(propagate(invocation.getSelect()));

@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dev.morphia.Datastore;
+import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.rewrite.recipes.pipeline.AlternateAggregationCollection;
 import dev.morphia.rewrite.recipes.pipeline.PipelineExecuteRewrite;
 import dev.morphia.rewrite.recipes.pipeline.PipelineMergeRewrite;
+import dev.morphia.rewrite.recipes.pipeline.PipelineOutRewrite;
 import dev.morphia.rewrite.recipes.pipeline.PipelineRewrite;
 
 import org.jetbrains.annotations.NotNull;
@@ -20,12 +22,19 @@ import org.openrewrite.java.tree.JavaType;
 import org.openrewrite.java.tree.JavaType.Array;
 import org.openrewrite.java.tree.JavaType.Method;
 
+import static dev.morphia.rewrite.recipes.RewriteUtils.methodMatcher;
+
 public class PipelineRewriteRecipes extends Recipe {
     public static final String AGGREGATION = Aggregation.class.getName();
-    public static final String DATASTORE = Datastore.class.getName();
-    public static final JavaType STRING_TYPE = JavaType.buildType(String.class.getName());
     private static final JavaType AGGREGATION_TYPE = JavaType.buildType(AGGREGATION);
-    private static final MethodMatcher AGGREGATE = new MethodMatcher(DATASTORE + " aggregate(..)");
+    public static final String DATASTORE = Datastore.class.getName();
+
+    public static final MethodMatcher AGGREGATE_ANYTHING = new MultiMethodMatcher(
+            methodMatcher(DATASTORE, "aggregate(..)"),
+            methodMatcher(DATASTORE + "Impl", "aggregate(..)"),
+            methodMatcher(MorphiaDatastore.class.getTypeName(), "aggregate(..)"));
+
+    public static final JavaType STRING_TYPE = JavaType.buildType(String.class.getName());
     private static final MethodMatcher PIPELINE = new MethodMatcher(AGGREGATION + " pipeline(..)");
     private static final Array STAGE_ARRAY_TYPE = new Array(null,
             JavaType.buildType(Stage.class.getName()), null);
@@ -44,12 +53,10 @@ public class PipelineRewriteRecipes extends Recipe {
     public List<Recipe> getRecipeList() {
         return List.of(
                 new AlternateAggregationCollection(),
-                new PipelineExecuteRewrite(),
                 new PipelineRewrite(),
-                new PipelineMergeRewrite()/*
-                                           * ,
-                                           * new PipelineOutRewrite()
-                                           */);
+                new PipelineMergeRewrite(),
+                new PipelineOutRewrite(),
+                new PipelineExecuteRewrite());
     }
 
     public static Expression addStage(MethodInvocation invocation, MethodInvocation stage) {

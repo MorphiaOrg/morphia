@@ -36,6 +36,7 @@ public class AlternateAggregationCollection extends Recipe {
 
     public static final MethodMatcher AGGREGATE = new MultiMethodMatcher(
             methodMatcher(DATASTORE, "aggregate(String)"),
+            methodMatcher(DATASTORE + "Impl", "aggregate(String)"),
             methodMatcher(MorphiaDatastore.class.getTypeName(), "aggregate(String)"));
 
     @Override

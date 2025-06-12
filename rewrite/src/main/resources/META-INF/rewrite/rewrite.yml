@@ -70,6 +70,8 @@ recipeList:
   - org.openrewrite.DeleteSourceFiles:
       filePattern: src/test/java/dev/morphia/test/TestLegacyUpdate.java
   - org.openrewrite.DeleteSourceFiles:
+      filePattern: src/test/java/dev/morphia/test/aggregation/stages/TestProjection.java
+  - org.openrewrite.DeleteSourceFiles:
       filePattern: src/test/java/dev/morphia/test/query/legacy/TestLegacyQuery.java
   - org.openrewrite.DeleteSourceFiles:
       filePattern: src/test/java/dev/morphia/test/BuildConfigTest.java

@@ -88,7 +88,7 @@ public class PipelineRecipesTest extends MorphiaRewriteTest {
 
                         public class UnwrapSet {
                             public void test(Datastore ds) {
-                                ds.aggregate(Document.class, Document.class, new AggregationOptions().collection("sales2019q1"))
+                                ds.aggregate(Document.class,Document.class, new AggregationOptions().collection("sales2019q1"))
                                           .pipeline(
                                                   set().field("_id", literal("2019Q1")),
                                                   unionWith("sales2019q2", addFields().field("_id", literal("2019Q2"))),
@@ -138,7 +138,53 @@ public class PipelineRecipesTest extends MorphiaRewriteTest {
 
                         public class RewriteExecute {
                             public void test(Datastore ds) {
-                                List<Document> list = ds.aggregate(String.class, Document.class)
+                                List<Document> list = ds.aggregate(String.class,Document.class)
+                                          .pipeline(
+                                                  set().field("_id", literal("2019Q1")))
+                                  .iterator()
+                                  .toList();
+                            }
+                        }
+                        """));
+    }
+
+    @Test
+    public void removeExecuteWithClassDefinedSourceOnDatastoreImpl() {
+        rewriteRun(java(
+                """
+                        import dev.morphia.DatastoreImpl;
+                        import java.util.List;
+                        import org.bson.Document;
+
+                        import static dev.morphia.aggregation.expressions.Expressions.literal;
+                        import static dev.morphia.aggregation.stages.AddFields.addFields;
+                        import static dev.morphia.aggregation.stages.Set.set;
+                        import static dev.morphia.aggregation.stages.Sort.sort;
+                        import static dev.morphia.aggregation.stages.UnionWith;
+
+                        public class RewriteExecute {
+                            public void test(DatastoreImpl ds) {
+                                List<Document> list = ds.aggregate(String.class)
+                                  .set(set().field("_id", literal("2019Q1")))
+                                  .execute(Document.class)
+                                  .toList();
+                            }
+                        }
+                        """,
+                """
+                        import dev.morphia.DatastoreImpl;
+                        import java.util.List;
+                        import org.bson.Document;
+
+                        import static dev.morphia.aggregation.expressions.Expressions.literal;
+                        import static dev.morphia.aggregation.stages.AddFields.addFields;
+                        import static dev.morphia.aggregation.stages.Set.set;
+                        import static dev.morphia.aggregation.stages.Sort.sort;
+                        import static dev.morphia.aggregation.stages.UnionWith;
+
+                        public class RewriteExecute {
+                            public void test(DatastoreImpl ds) {
+                                List<Document> list = ds.aggregate(String.class,Document.class)
                                           .pipeline(
                                                   set().field("_id", literal("2019Q1")))
                                   .iterator()
