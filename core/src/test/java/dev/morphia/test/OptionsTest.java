@@ -37,6 +37,7 @@ public class OptionsTest extends TestBase {
     public void aggregationOptions() {
         checkMinDriverVersion("5.2.0");
         beanScan(AggregateIterable.class, AggregationOptions.class, List.of("builder",
+                "cursor",
                 "explain",
                 "getAllowDiskUse",
                 "getBatchSize",
@@ -44,6 +45,7 @@ public class OptionsTest extends TestBase {
                 "getCollation",
                 "getMaxTime",
                 "hintString",
+                "iterator",
                 "toCollection"));
     }
 
