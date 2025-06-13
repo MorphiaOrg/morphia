@@ -239,7 +239,7 @@
             <dependency>
                 <groupId>org.semver4j</groupId>
                 <artifactId>semver4j</artifactId>
-                <version>5.7.0</version>
+                <version>5.7.1</version>
             </dependency>
             <dependency>
                 <groupId>org.zeroturnaround</groupId>
