@@ -42,7 +42,7 @@
     </repositories>
 
     <properties>
-        <kotlin.version>2.1.20</kotlin.version>
+        <kotlin.version>2.1.21</kotlin.version>
         <awaitility.version>1.7.0</awaitility.version>
         <driver.version>5.5.1</driver.version>
         <driver.minor.version>5.5</driver.minor.version>
