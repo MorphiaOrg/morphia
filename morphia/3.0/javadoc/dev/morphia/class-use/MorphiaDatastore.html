@@ -59,20 +59,24 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">Base Morphia package</div>
 </div>
-<div class="col-first odd-row-color"><a href="#dev.morphia.mapping">dev.morphia.mapping</a></div>
+<div class="col-first odd-row-color"><a href="#dev.morphia.aggregation">dev.morphia.aggregation</a></div>
 <div class="col-last odd-row-color">
+<div class="block">Defines the Morphia support for the aggregation framework.</div>
+</div>
+<div class="col-first even-row-color"><a href="#dev.morphia.mapping">dev.morphia.mapping</a></div>
+<div class="col-last even-row-color">
 <div class="block">Defines the mapping infrastructure used by Morphia.</div>
 </div>
-<div class="col-first even-row-color"><a href="#dev.morphia.query">dev.morphia.query</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="#dev.morphia.query">dev.morphia.query</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Defines the types needed to execute queries.</div>
 </div>
-<div class="col-first odd-row-color"><a href="#dev.morphia.query.updates">dev.morphia.query.updates</a></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><a href="#dev.morphia.query.updates">dev.morphia.query.updates</a></div>
+<div class="col-last even-row-color">
 <div class="block">Defines the various update operators.</div>
 </div>
-<div class="col-first even-row-color"><a href="#dev.morphia.transactions">dev.morphia.transactions</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="#dev.morphia.transactions">dev.morphia.transactions</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Defines the transaction types.</div>
 </div>
 </div>
@@ -88,6 +92,23 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>protected dev.morphia.MorphiaDatastore</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">MorphiaDatastore.</span><code>operations<wbr>(<a href="../MorphiaDatastore.DatastoreOperations.html" title="class in dev.morphia">MorphiaDatastore.DatastoreOperations</a>&nbsp;operations)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="dev.morphia.aggregation">
+<h2>Uses of dev.morphia.MorphiaDatastore in <a href="../aggregation/package-summary.html">dev.morphia.aggregation</a></h2>
+<div class="caption"><span>Constructors in <a href="../aggregation/package-summary.html">dev.morphia.aggregation</a> with parameters of type dev.morphia.MorphiaDatastore in  in </span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier</div>
+<div class="table-header col-second">Constructor</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>&nbsp;</code></div>
+<div class="col-second even-row-color"><code>AggregationImpl<wbr>(dev.morphia.MorphiaDatastore&nbsp;datastore,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;source,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;targetType,
+ <a href="../aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a>&nbsp;options)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -122,7 +143,7 @@ loadScripts(document, 'script');</script>
 <div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span></div>
 <div class="block">Encodes this target</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a></code></div>
+<div class="col-first odd-row-color"><code><a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">Operations.</span><code>toDocument<wbr>(dev.morphia.MorphiaDatastore&nbsp;datastore)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 </div>
@@ -173,7 +194,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>&nbsp;</code></div>
 <div class="col-second even-row-color"><code>SessionDatastore<wbr>(dev.morphia.MorphiaDatastore&nbsp;datastore,
- <a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-sync/com/mongodb/client/ClientSession.html" title="class or interface in com.mongodb.client" class="external-link">ClientSession</a>&nbsp;session)</code></div>
+ <a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/driver-sync/com/mongodb/client/ClientSession.html" title="class or interface in com.mongodb.client" class="external-link">ClientSession</a>&nbsp;session)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Creates a new session.</div>
 </div>

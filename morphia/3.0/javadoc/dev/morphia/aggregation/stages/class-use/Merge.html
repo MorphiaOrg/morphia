@@ -55,46 +55,13 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Package</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><a href="#dev.morphia.aggregation">dev.morphia.aggregation</a></div>
+<div class="col-first even-row-color"><a href="#dev.morphia.aggregation.stages">dev.morphia.aggregation.stages</a></div>
 <div class="col-last even-row-color">
-<div class="block">Defines the Morphia support for the aggregation framework.</div>
-</div>
-<div class="col-first odd-row-color"><a href="#dev.morphia.aggregation.stages">dev.morphia.aggregation.stages</a></div>
-<div class="col-last odd-row-color">
 <div class="block">Defines the aggregation stages.</div>
 </div>
 </div>
 <section class="class-uses">
 <ul class="block-list">
-<li>
-<section class="detail" id="dev.morphia.aggregation">
-<h2>Uses of <a href="../Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a> in <a href="../../package-summary.html">dev.morphia.aggregation</a></h2>
-<div class="caption"><span>Methods in <a href="../../package-summary.html">dev.morphia.aggregation</a> with parameters of type <a href="../Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a></span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Method</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>&lt;M&gt;&nbsp;void</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../../Aggregation.html#merge(dev.morphia.aggregation.stages.Merge)" class="member-name-link">merge</a><wbr>(<a href="../Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;M&gt;&nbsp;merge)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Writes the results of the aggregation pipeline to a specified collection.</div>
-</div>
-<div class="col-first odd-row-color"><code>&lt;M&gt;&nbsp;void</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../../Aggregation.html#merge(dev.morphia.aggregation.stages.Merge,dev.morphia.aggregation.AggregationOptions)" class="member-name-link">merge</a><wbr>(<a href="../Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;M&gt;&nbsp;merge,
- <a href="../../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a>&nbsp;options)</code></div>
-<div class="col-last odd-row-color">
-<div class="block">Writes the results of the aggregation pipeline to a specified collection.</div>
-</div>
-<div class="col-first even-row-color"><code>&lt;M&gt;&nbsp;void</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AggregationImpl.</span><code>merge<wbr>(<a href="../Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;M&gt;&nbsp;merge)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>&lt;M&gt;&nbsp;void</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AggregationImpl.</span><code>merge<wbr>(<a href="../Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;M&gt;&nbsp;merge,
- <a href="../../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a>&nbsp;options)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-</div>
-</section>
-</li>
 <li>
 <section class="detail" id="dev.morphia.aggregation.stages">
 <h2>Uses of <a href="../Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a> in <a href="../package-summary.html">dev.morphia.aggregation.stages</a></h2>
@@ -103,74 +70,52 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static &lt;M&gt;&nbsp;<a href="../Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;M&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Merge.</span><code><a href="../Merge.html#into(java.lang.Class)" class="member-name-link">into</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;M&gt;&nbsp;type)</code></div>
-<div class="col-last even-row-color">
-<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecation-comment">use <a href="../Merge.html#merge(java.lang.Class)"><code>merge(Class)</code></a></div>
-</div>
-</div>
-<div class="col-first odd-row-color"><code>static <a href="../Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;?&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Merge.</span><code><a href="../Merge.html#into(java.lang.String)" class="member-name-link">into</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;collection)</code></div>
-<div class="col-last odd-row-color">
-<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecation-comment">use <a href="../Merge.html#merge(java.lang.String)"><code>merge(String)</code></a></div>
-</div>
-</div>
-<div class="col-first even-row-color"><code>static <a href="../Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;?&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Merge.</span><code><a href="../Merge.html#into(java.lang.String,java.lang.String)" class="member-name-link">into</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;database,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;collection)</code></div>
-<div class="col-last even-row-color">
-<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecation-comment">use <a href="../Merge.html#merge(java.lang.String,java.lang.String)"><code>merge(String, String)</code></a></div>
-</div>
-</div>
-<div class="col-first odd-row-color"><code><a href="../Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;<a href="../Merge.html" title="type parameter in Merge">M</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Merge.</span><code><a href="../Merge.html#let(java.lang.String,dev.morphia.aggregation.expressions.impls.Expression)" class="member-name-link">let</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;variable,
+<div class="col-first even-row-color"><code><a href="../Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;<a href="../Merge.html" title="type parameter in Merge">M</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Merge.</span><code><a href="../Merge.html#let(java.lang.String,dev.morphia.aggregation.expressions.impls.Expression)" class="member-name-link">let</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;variable,
  <a href="../../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;value)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Specifies a variable accessible for use in the whenMatched pipeline</div>
 </div>
-<div class="col-first even-row-color"><code>static &lt;M&gt;&nbsp;<a href="../Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;M&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Merge.</span><code><a href="../Merge.html#merge(java.lang.Class)" class="member-name-link">merge</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;M&gt;&nbsp;type)</code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>static &lt;M&gt;&nbsp;<a href="../Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;M&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Merge.</span><code><a href="../Merge.html#merge(java.lang.Class)" class="member-name-link">merge</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;M&gt;&nbsp;type)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Creates a new stage targeting the collection mapped for the given type</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="../Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;?&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Merge.</span><code><a href="../Merge.html#merge(java.lang.String)" class="member-name-link">merge</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;collection)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>static <a href="../Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;?&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Merge.</span><code><a href="../Merge.html#merge(java.lang.String)" class="member-name-link">merge</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;collection)</code></div>
+<div class="col-last even-row-color">
 <div class="block">Creates a new stage targeting the collection</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="../Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;?&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Merge.</span><code><a href="../Merge.html#merge(java.lang.String,java.lang.String)" class="member-name-link">merge</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;database,
+<div class="col-first odd-row-color"><code>static <a href="../Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;?&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Merge.</span><code><a href="../Merge.html#merge(java.lang.String,java.lang.String)" class="member-name-link">merge</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;database,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;collection)</code></div>
-<div class="col-last even-row-color">
+<div class="col-last odd-row-color">
 <div class="block">Creates a new stage targeting the database and collection</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="../Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;<a href="../Merge.html" title="type parameter in Merge">M</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Merge.</span><code><a href="../Merge.html#on(java.lang.String,java.lang.String...)" class="member-name-link">on</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;field,
+<div class="col-first even-row-color"><code><a href="../Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;<a href="../Merge.html" title="type parameter in Merge">M</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Merge.</span><code><a href="../Merge.html#on(java.lang.String,java.lang.String...)" class="member-name-link">on</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;field,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;fields)</code></div>
-<div class="col-last odd-row-color">
-<div class="block">Optional.</div>
-</div>
-<div class="col-first even-row-color"><code><a href="../Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;<a href="../Merge.html" title="type parameter in Merge">M</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Merge.</span><code><a href="../Merge.html#whenMatched(com.mongodb.client.model.MergeOptions.WhenMatched)" class="member-name-link">whenMatched</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-core/com/mongodb/client/model/MergeOptions.WhenMatched.html" title="class or interface in com.mongodb.client.model" class="external-link">MergeOptions.WhenMatched</a>&nbsp;whenMatched)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Optional.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;<a href="../Merge.html" title="type parameter in Merge">M</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Merge.</span><code><a href="../Merge.html#whenMatched(dev.morphia.aggregation.stages.Stage...)" class="member-name-link">whenMatched</a><wbr>(<a href="../Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>...&nbsp;pipeline)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Merge.</span><code><a href="../Merge.html#whenMatched(com.mongodb.client.model.MergeOptions.WhenMatched)" class="member-name-link">whenMatched</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/driver-core/com/mongodb/client/model/MergeOptions.WhenMatched.html" title="class or interface in com.mongodb.client.model" class="external-link">MergeOptions.WhenMatched</a>&nbsp;whenMatched)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Optional.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="../Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;<a href="../Merge.html" title="type parameter in Merge">M</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Merge.</span><code><a href="../Merge.html#whenMatched(java.util.List)" class="member-name-link">whenMatched</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>&gt;&nbsp;pipeline)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Merge.</span><code><a href="../Merge.html#whenMatched(dev.morphia.aggregation.stages.Stage...)" class="member-name-link">whenMatched</a><wbr>(<a href="../Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>...&nbsp;pipeline)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Optional.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;<a href="../Merge.html" title="type parameter in Merge">M</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Merge.</span><code><a href="../Merge.html#whenNotMatched(com.mongodb.client.model.MergeOptions.WhenNotMatched)" class="member-name-link">whenNotMatched</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-core/com/mongodb/client/model/MergeOptions.WhenNotMatched.html" title="class or interface in com.mongodb.client.model" class="external-link">MergeOptions.WhenNotMatched</a>&nbsp;whenNotMatched)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Merge.</span><code><a href="../Merge.html#whenMatched(java.util.List)" class="member-name-link">whenMatched</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>&gt;&nbsp;pipeline)</code></div>
 <div class="col-last odd-row-color">
+<div class="block">Optional.</div>
+</div>
+<div class="col-first even-row-color"><code><a href="../Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;<a href="../Merge.html" title="type parameter in Merge">M</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Merge.</span><code><a href="../Merge.html#whenNotMatched(com.mongodb.client.model.MergeOptions.WhenNotMatched)" class="member-name-link">whenNotMatched</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/driver-core/com/mongodb/client/model/MergeOptions.WhenNotMatched.html" title="class or interface in com.mongodb.client.model" class="external-link">MergeOptions.WhenNotMatched</a>&nbsp;whenNotMatched)</code></div>
+<div class="col-last even-row-color">
 <div class="block">Optional.</div>
 </div>
 </div>

@@ -55,13 +55,53 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Package</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><a href="#dev.morphia.aggregation">dev.morphia.aggregation</a></div>
+<div class="col-first even-row-color"><a href="#dev.morphia">dev.morphia</a></div>
 <div class="col-last even-row-color">
+<div class="block">Base Morphia package</div>
+</div>
+<div class="col-first odd-row-color"><a href="#dev.morphia.aggregation">dev.morphia.aggregation</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Defines the Morphia support for the aggregation framework.</div>
 </div>
 </div>
 <section class="class-uses">
 <ul class="block-list">
+<li>
+<section class="detail" id="dev.morphia">
+<h2>Uses of <a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a> in <a href="../../package-summary.html">dev.morphia</a></h2>
+<div class="caption"><span>Methods in <a href="../../package-summary.html">dev.morphia</a> with parameters of type <a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>default <a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Datastore.</span><code><a href="../../Datastore.html#aggregate(dev.morphia.aggregation.AggregationOptions)" class="member-name-link">aggregate</a><wbr>(<a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a>&nbsp;options)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Returns a new aggregation bound without an initial type.</div>
+</div>
+<div class="col-first odd-row-color"><code>default &lt;S&gt;&nbsp;<a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;S&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Datastore.</span><code><a href="../../Datastore.html#aggregate(java.lang.Class,dev.morphia.aggregation.AggregationOptions)" class="member-name-link">aggregate</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;S&gt;&nbsp;source,
+ <a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a>&nbsp;options)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Returns a new aggregation bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/driver-sync/com/mongodb/client/MongoCollection.html" title="class or interface in com.mongodb.client" class="external-link"><code>MongoCollection</code></a>)</div>
+</div>
+<div class="col-first even-row-color"><code>&lt;S,<wbr>
+T&gt;&nbsp;<a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Datastore.</span><code><a href="../../Datastore.html#aggregate(java.lang.Class,java.lang.Class,dev.morphia.aggregation.AggregationOptions)" class="member-name-link">aggregate</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;S&gt;&nbsp;source,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;target,
+ <a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a>&nbsp;options)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Returns a new aggregation bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/driver-sync/com/mongodb/client/MongoCollection.html" title="class or interface in com.mongodb.client" class="external-link"><code>MongoCollection</code></a>).</div>
+</div>
+<div class="col-first odd-row-color"><code>&lt;S,<wbr>
+T&gt;&nbsp;<a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">MorphiaDatastore.</span><code>aggregate<wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;S&gt;&nbsp;source,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;target,
+ <a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a>&nbsp;options)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+</div>
+</section>
+</li>
 <li>
 <section class="detail" id="dev.morphia.aggregation">
 <h2>Uses of <a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a> in <a href="../package-summary.html">dev.morphia.aggregation</a></h2>
@@ -86,7 +126,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Enables the aggregation to bypass document validation during the operation.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AggregationOptions.</span><code><a href="../AggregationOptions.html#collation(com.mongodb.client.model.Collation)" class="member-name-link">collation</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-core/com/mongodb/client/model/Collation.html" title="class or interface in com.mongodb.client.model" class="external-link">Collation</a>&nbsp;collation)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">AggregationOptions.</span><code><a href="../AggregationOptions.html#collation(com.mongodb.client.model.Collation)" class="member-name-link">collation</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/driver-core/com/mongodb/client/model/Collation.html" title="class or interface in com.mongodb.client.model" class="external-link">Collation</a>&nbsp;collation)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Specifies the collation to use for the operation.</div>
 </div>
@@ -107,12 +147,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Sets the hint for which index to use.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AggregationOptions.</span><code><a href="../AggregationOptions.html#hint(org.bson.Document)" class="member-name-link">hint</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;hint)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">AggregationOptions.</span><code><a href="../AggregationOptions.html#hint(org.bson.Document)" class="member-name-link">hint</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;hint)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Sets the hint for which index to use.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AggregationOptions.</span><code><a href="../AggregationOptions.html#let(org.bson.Document)" class="member-name-link">let</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;let)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">AggregationOptions.</span><code><a href="../AggregationOptions.html#let(org.bson.Document)" class="member-name-link">let</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;let)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Defines any variables to use when evaluating the pipeline</div>
 </div>
@@ -134,69 +174,37 @@ loadScripts(document, 'script');</script>
 <div class="block">Specifies a time limit in milliseconds for processing operations on a cursor.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AggregationOptions.</span><code><a href="../AggregationOptions.html#readConcern(com.mongodb.ReadConcern)" class="member-name-link">readConcern</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-core/com/mongodb/ReadConcern.html" title="class or interface in com.mongodb" class="external-link">ReadConcern</a>&nbsp;readConcern)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">AggregationOptions.</span><code><a href="../AggregationOptions.html#readConcern(com.mongodb.ReadConcern)" class="member-name-link">readConcern</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/driver-core/com/mongodb/ReadConcern.html" title="class or interface in com.mongodb" class="external-link">ReadConcern</a>&nbsp;readConcern)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Specifies the read concern.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AggregationOptions.</span><code><a href="../AggregationOptions.html#readPreference(com.mongodb.ReadPreference)" class="member-name-link">readPreference</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-core/com/mongodb/ReadPreference.html" title="class or interface in com.mongodb" class="external-link">ReadPreference</a>&nbsp;readPreference)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">AggregationOptions.</span><code><a href="../AggregationOptions.html#readPreference(com.mongodb.ReadPreference)" class="member-name-link">readPreference</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/driver-core/com/mongodb/ReadPreference.html" title="class or interface in com.mongodb" class="external-link">ReadPreference</a>&nbsp;readPreference)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Sets the read preference to use</div>
 </div>
 <div class="col-first even-row-color"><code><a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AggregationOptions.</span><code><a href="../AggregationOptions.html#timeoutMode(com.mongodb.client.cursor.TimeoutMode)" class="member-name-link">timeoutMode</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-core/com/mongodb/client/cursor/TimeoutMode.html" title="class or interface in com.mongodb.client.cursor" class="external-link">TimeoutMode</a>&nbsp;timeoutMode)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">AggregationOptions.</span><code><a href="../AggregationOptions.html#timeoutMode(com.mongodb.client.cursor.TimeoutMode)" class="member-name-link">timeoutMode</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/driver-core/com/mongodb/client/cursor/TimeoutMode.html" title="class or interface in com.mongodb.client.cursor" class="external-link">TimeoutMode</a>&nbsp;timeoutMode)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Sets the timeout mode</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AggregationOptions.</span><code><a href="../AggregationOptions.html#writeConcern(com.mongodb.WriteConcern)" class="member-name-link">writeConcern</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-core/com/mongodb/WriteConcern.html" title="class or interface in com.mongodb" class="external-link">WriteConcern</a>&nbsp;writeConcern)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">AggregationOptions.</span><code><a href="../AggregationOptions.html#writeConcern(com.mongodb.WriteConcern)" class="member-name-link">writeConcern</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/driver-core/com/mongodb/WriteConcern.html" title="class or interface in com.mongodb" class="external-link">WriteConcern</a>&nbsp;writeConcern)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Sets the write concern to use</div>
 </div>
 </div>
-<div class="caption"><span>Methods in <a href="../package-summary.html">dev.morphia.aggregation</a> with parameters of type <a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></span></div>
+<div class="caption"><span>Constructors in <a href="../package-summary.html">dev.morphia.aggregation</a> with parameters of type <a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></span></div>
 <div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Method</div>
+<div class="table-header col-first">Modifier</div>
+<div class="table-header col-second">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>void</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#execute(dev.morphia.aggregation.AggregationOptions)" class="member-name-link">execute</a><wbr>(<a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a>&nbsp;options)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Execute the aggregation.</div>
-</div>
-<div class="col-first odd-row-color"><code>&lt;S&gt;&nbsp;<a href="../../query/MorphiaCursor.html" title="class in dev.morphia.query">MorphiaCursor</a>&lt;S&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#execute(java.lang.Class,dev.morphia.aggregation.AggregationOptions)" class="member-name-link">execute</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;S&gt;&nbsp;resultType,
+<div class="col-first even-row-color"><code>&nbsp;</code></div>
+<div class="col-second even-row-color"><code>AggregationImpl<wbr>(dev.morphia.MorphiaDatastore&nbsp;datastore,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;source,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;targetType,
  <a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a>&nbsp;options)</code></div>
-<div class="col-last odd-row-color">
-<div class="block">Execute the aggregation and get the results.</div>
-</div>
-<div class="col-first even-row-color"><code>void</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AggregationImpl.</span><code>execute<wbr>(<a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a>&nbsp;options)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>&lt;R&gt;&nbsp;<a href="../../query/MorphiaCursor.html" title="class in dev.morphia.query">MorphiaCursor</a>&lt;R&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AggregationImpl.</span><code>execute<wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;R&gt;&nbsp;resultType,
- <a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a>&nbsp;options)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>&lt;M&gt;&nbsp;void</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#merge(dev.morphia.aggregation.stages.Merge,dev.morphia.aggregation.AggregationOptions)" class="member-name-link">merge</a><wbr>(<a href="../stages/Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;M&gt;&nbsp;merge,
- <a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a>&nbsp;options)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Writes the results of the aggregation pipeline to a specified collection.</div>
-</div>
-<div class="col-first odd-row-color"><code>&lt;M&gt;&nbsp;void</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AggregationImpl.</span><code>merge<wbr>(<a href="../stages/Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a>&lt;M&gt;&nbsp;merge,
- <a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a>&nbsp;options)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>&lt;O&gt;&nbsp;void</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#out(dev.morphia.aggregation.stages.Out,dev.morphia.aggregation.AggregationOptions)" class="member-name-link">out</a><wbr>(<a href="../stages/Out.html" title="class in dev.morphia.aggregation.stages">Out</a>&lt;O&gt;&nbsp;out,
- <a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a>&nbsp;options)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Writes the results of the aggregation pipeline to a specified collection.</div>
-</div>
-<div class="col-first odd-row-color"><code>&lt;O&gt;&nbsp;void</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AggregationImpl.</span><code>out<wbr>(<a href="../stages/Out.html" title="class in dev.morphia.aggregation.stages">Out</a>&lt;O&gt;&nbsp;out,
- <a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a>&nbsp;options)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>

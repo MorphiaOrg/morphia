@@ -74,21 +74,42 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>&lt;T&gt;&nbsp;<a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Datastore.</span><code><a href="../../Datastore.html#aggregate(java.lang.Class)" class="member-name-link">aggregate</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;source)</code></div>
+<div class="col-first even-row-color"><code>default <a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Datastore.</span><code><a href="../../Datastore.html#aggregate(dev.morphia.aggregation.AggregationOptions)" class="member-name-link">aggregate</a><wbr>(<a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a>&nbsp;options)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns a new query bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html" title="class or interface in com.mongodb.client" class="external-link"><code>MongoCollection</code></a>)</div>
+<div class="block">Returns a new aggregation bound without an initial type.</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Datastore.</span><code><a href="../../Datastore.html#aggregate(java.lang.String)" class="member-name-link">aggregate</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;source)</code></div>
+<div class="col-first odd-row-color"><code>default &lt;S&gt;&nbsp;<a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;S&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Datastore.</span><code><a href="../../Datastore.html#aggregate(java.lang.Class)" class="member-name-link">aggregate</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;S&gt;&nbsp;source)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Returns a new query bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html" title="class or interface in com.mongodb.client" class="external-link"><code>MongoCollection</code></a>)</div>
+<div class="block">Returns a new query bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/driver-sync/com/mongodb/client/MongoCollection.html" title="class or interface in com.mongodb.client" class="external-link"><code>MongoCollection</code></a>)</div>
 </div>
-<div class="col-first even-row-color"><code>&lt;T&gt;&nbsp;<a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">MorphiaDatastore.</span><code>aggregate<wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;source)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">MorphiaDatastore.</span><code>aggregate<wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;source)</code></div>
+<div class="col-first even-row-color"><code>default &lt;S&gt;&nbsp;<a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;S&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Datastore.</span><code><a href="../../Datastore.html#aggregate(java.lang.Class,dev.morphia.aggregation.AggregationOptions)" class="member-name-link">aggregate</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;S&gt;&nbsp;source,
+ <a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a>&nbsp;options)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Returns a new aggregation bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/driver-sync/com/mongodb/client/MongoCollection.html" title="class or interface in com.mongodb.client" class="external-link"><code>MongoCollection</code></a>)</div>
+</div>
+<div class="col-first odd-row-color"><code>default &lt;S,<wbr>
+T&gt;&nbsp;<a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Datastore.</span><code><a href="../../Datastore.html#aggregate(java.lang.Class,java.lang.Class)" class="member-name-link">aggregate</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;S&gt;&nbsp;source,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;target)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Returns a new query bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/driver-sync/com/mongodb/client/MongoCollection.html" title="class or interface in com.mongodb.client" class="external-link"><code>MongoCollection</code></a>)</div>
+</div>
+<div class="col-first even-row-color"><code>&lt;S,<wbr>
+T&gt;&nbsp;<a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Datastore.</span><code><a href="../../Datastore.html#aggregate(java.lang.Class,java.lang.Class,dev.morphia.aggregation.AggregationOptions)" class="member-name-link">aggregate</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;S&gt;&nbsp;source,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;target,
+ <a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a>&nbsp;options)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Returns a new aggregation bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/driver-sync/com/mongodb/client/MongoCollection.html" title="class or interface in com.mongodb.client" class="external-link"><code>MongoCollection</code></a>).</div>
+</div>
+<div class="col-first odd-row-color"><code>&lt;S,<wbr>
+T&gt;&nbsp;<a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">MorphiaDatastore.</span><code>aggregate<wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;S&gt;&nbsp;source,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;target,
+ <a href="../AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a>&nbsp;options)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
@@ -102,363 +123,16 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#addFields(dev.morphia.aggregation.stages.AddFields)" class="member-name-link">addFields</a><wbr>(<a href="../stages/AddFields.html" title="class in dev.morphia.aggregation.stages">AddFields</a>&nbsp;fields)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)" class="member-name-link">pipeline</a><wbr>(<a href="../stages/Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>...&nbsp;stages)</code></div>
 <div class="col-last even-row-color">
-<div class="block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AggregationImpl.</span><code>addFields<wbr>(<a href="../stages/AddFields.html" title="class in dev.morphia.aggregation.stages">AddFields</a>&nbsp;fields)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AggregationImpl.</span><code>addStage<wbr>(<a href="../stages/Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>&nbsp;stage)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#autoBucket(dev.morphia.aggregation.stages.AutoBucket)" class="member-name-link">autoBucket</a><wbr>(<a href="../stages/AutoBucket.html" title="class in dev.morphia.aggregation.stages">AutoBucket</a>&nbsp;bucket)</code></div>
-<div class="col-last odd-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AggregationImpl.</span><code>autoBucket<wbr>(<a href="../stages/AutoBucket.html" title="class in dev.morphia.aggregation.stages">AutoBucket</a>&nbsp;bucket)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#bucket(dev.morphia.aggregation.stages.Bucket)" class="member-name-link">bucket</a><wbr>(<a href="../stages/Bucket.html" title="class in dev.morphia.aggregation.stages">Bucket</a>&nbsp;bucket)</code></div>
-<div class="col-last odd-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AggregationImpl.</span><code>bucket<wbr>(<a href="../stages/Bucket.html" title="class in dev.morphia.aggregation.stages">Bucket</a>&nbsp;bucket)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#changeStream()" class="member-name-link">changeStream</a>()</code></div>
-<div class="col-last odd-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#changeStream(dev.morphia.aggregation.stages.ChangeStream)" class="member-name-link">changeStream</a><wbr>(<a href="../stages/ChangeStream.html" title="class in dev.morphia.aggregation.stages">ChangeStream</a>&nbsp;stream)</code></div>
-<div class="col-last even-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AggregationImpl.</span><code>changeStream()</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AggregationImpl.</span><code>changeStream<wbr>(<a href="../stages/ChangeStream.html" title="class in dev.morphia.aggregation.stages">ChangeStream</a>&nbsp;stream)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#collStats(dev.morphia.aggregation.stages.CollectionStats)" class="member-name-link">collStats</a><wbr>(<a href="../stages/CollectionStats.html" title="class in dev.morphia.aggregation.stages">CollectionStats</a>&nbsp;stats)</code></div>
-<div class="col-last odd-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AggregationImpl.</span><code>collStats<wbr>(<a href="../stages/CollectionStats.html" title="class in dev.morphia.aggregation.stages">CollectionStats</a>&nbsp;stats)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#count(java.lang.String)" class="member-name-link">count</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
-<div class="col-last odd-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AggregationImpl.</span><code>count<wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#currentOp(dev.morphia.aggregation.stages.CurrentOp)" class="member-name-link">currentOp</a><wbr>(<a href="../stages/CurrentOp.html" title="class in dev.morphia.aggregation.stages">CurrentOp</a>&nbsp;currentOp)</code></div>
-<div class="col-last odd-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AggregationImpl.</span><code>currentOp<wbr>(<a href="../stages/CurrentOp.html" title="class in dev.morphia.aggregation.stages">CurrentOp</a>&nbsp;currentOp)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#densify(dev.morphia.aggregation.stages.Densify)" class="member-name-link">densify</a><wbr>(<a href="../stages/Densify.html" title="class in dev.morphia.aggregation.stages">Densify</a>&nbsp;densify)</code></div>
-<div class="col-last odd-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AggregationImpl.</span><code>densify<wbr>(<a href="../stages/Densify.html" title="class in dev.morphia.aggregation.stages">Densify</a>&nbsp;densify)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#documents(dev.morphia.aggregation.expressions.impls.DocumentExpression...)" class="member-name-link">documents</a><wbr>(<a href="../expressions/impls/DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a>...&nbsp;documents)</code></div>
-<div class="col-last odd-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AggregationImpl.</span><code>documents<wbr>(<a href="../expressions/impls/DocumentExpression.html" title="class in dev.morphia.aggregation.expressions.impls">DocumentExpression</a>...&nbsp;documents)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#facet(dev.morphia.aggregation.stages.Facet)" class="member-name-link">facet</a><wbr>(<a href="../stages/Facet.html" title="class in dev.morphia.aggregation.stages">Facet</a>&nbsp;facet)</code></div>
-<div class="col-last odd-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AggregationImpl.</span><code>facet<wbr>(<a href="../stages/Facet.html" title="class in dev.morphia.aggregation.stages">Facet</a>&nbsp;facet)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#fill(dev.morphia.aggregation.stages.Fill)" class="member-name-link">fill</a><wbr>(<a href="../stages/Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a>&nbsp;fill)</code></div>
-<div class="col-last odd-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AggregationImpl.</span><code>fill<wbr>(<a href="../stages/Fill.html" title="class in dev.morphia.aggregation.stages">Fill</a>&nbsp;fill)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#geoNear(dev.morphia.aggregation.stages.GeoNear)" class="member-name-link">geoNear</a><wbr>(<a href="../stages/GeoNear.html" title="class in dev.morphia.aggregation.stages">GeoNear</a>&nbsp;near)</code></div>
-<div class="col-last odd-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AggregationImpl.</span><code>geoNear<wbr>(<a href="../stages/GeoNear.html" title="class in dev.morphia.aggregation.stages">GeoNear</a>&nbsp;near)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#graphLookup(dev.morphia.aggregation.stages.GraphLookup)" class="member-name-link">graphLookup</a><wbr>(<a href="../stages/GraphLookup.html" title="class in dev.morphia.aggregation.stages">GraphLookup</a>&nbsp;lookup)</code></div>
-<div class="col-last odd-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AggregationImpl.</span><code>graphLookup<wbr>(<a href="../stages/GraphLookup.html" title="class in dev.morphia.aggregation.stages">GraphLookup</a>&nbsp;lookup)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#group(dev.morphia.aggregation.stages.Group)" class="member-name-link">group</a><wbr>(<a href="../stages/Group.html" title="class in dev.morphia.aggregation.stages">Group</a>&nbsp;group)</code></div>
-<div class="col-last odd-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AggregationImpl.</span><code>group<wbr>(<a href="../stages/Group.html" title="class in dev.morphia.aggregation.stages">Group</a>&nbsp;group)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#indexStats()" class="member-name-link">indexStats</a>()</code></div>
-<div class="col-last odd-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AggregationImpl.</span><code>indexStats()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#limit(long)" class="member-name-link">limit</a><wbr>(long&nbsp;limit)</code></div>
-<div class="col-last odd-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AggregationImpl.</span><code>limit<wbr>(long&nbsp;limit)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#lookup(dev.morphia.aggregation.stages.Lookup)" class="member-name-link">lookup</a><wbr>(<a href="../stages/Lookup.html" title="class in dev.morphia.aggregation.stages">Lookup</a>&nbsp;lookup)</code></div>
-<div class="col-last odd-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AggregationImpl.</span><code>lookup<wbr>(<a href="../stages/Lookup.html" title="class in dev.morphia.aggregation.stages">Lookup</a>&nbsp;lookup)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#match(dev.morphia.query.filters.Filter...)" class="member-name-link">match</a><wbr>(<a href="../../query/filters/Filter.html" title="class in dev.morphia.query.filters">Filter</a>...&nbsp;filters)</code></div>
-<div class="col-last odd-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AggregationImpl.</span><code>match<wbr>(<a href="../../query/filters/Filter.html" title="class in dev.morphia.query.filters">Filter</a>...&nbsp;filters)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)" class="member-name-link">pipeline</a><wbr>(<a href="../stages/Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>...&nbsp;stages)</code></div>
-<div class="col-last odd-row-color">
 <div class="block">Appends the stages to this aggregation's pipeline.</div>
 </div>
-<div class="col-first even-row-color"><code>default <a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#pipeline(java.util.List)" class="member-name-link">pipeline</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../stages/Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>&gt;&nbsp;stages)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AggregationImpl.</span><code>pipeline<wbr>(<a href="../stages/Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>...&nbsp;stages)</code></div>
+<div class="col-first odd-row-color"><code>default <a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#pipeline(java.util.List)" class="member-name-link">pipeline</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../stages/Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>&gt;&nbsp;stages)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#planCacheStats()" class="member-name-link">planCacheStats</a>()</code></div>
-<div class="col-last even-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AggregationImpl.</span><code>planCacheStats()</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#project(dev.morphia.aggregation.stages.Projection)" class="member-name-link">project</a><wbr>(<a href="../stages/Projection.html" title="class in dev.morphia.aggregation.stages">Projection</a>&nbsp;projection)</code></div>
-<div class="col-last even-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AggregationImpl.</span><code>project<wbr>(<a href="../stages/Projection.html" title="class in dev.morphia.aggregation.stages">Projection</a>&nbsp;projection)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#redact(dev.morphia.aggregation.stages.Redact)" class="member-name-link">redact</a><wbr>(<a href="../stages/Redact.html" title="class in dev.morphia.aggregation.stages">Redact</a>&nbsp;redact)</code></div>
-<div class="col-last even-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AggregationImpl.</span><code>redact<wbr>(<a href="../stages/Redact.html" title="class in dev.morphia.aggregation.stages">Redact</a>&nbsp;redact)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#replaceRoot(dev.morphia.aggregation.stages.ReplaceRoot)" class="member-name-link">replaceRoot</a><wbr>(<a href="../stages/ReplaceRoot.html" title="class in dev.morphia.aggregation.stages">ReplaceRoot</a>&nbsp;root)</code></div>
-<div class="col-last even-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AggregationImpl.</span><code>replaceRoot<wbr>(<a href="../stages/ReplaceRoot.html" title="class in dev.morphia.aggregation.stages">ReplaceRoot</a>&nbsp;root)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#replaceWith(dev.morphia.aggregation.stages.ReplaceWith)" class="member-name-link">replaceWith</a><wbr>(<a href="../stages/ReplaceWith.html" title="class in dev.morphia.aggregation.stages">ReplaceWith</a>&nbsp;with)</code></div>
-<div class="col-last even-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AggregationImpl.</span><code>replaceWith<wbr>(<a href="../stages/ReplaceWith.html" title="class in dev.morphia.aggregation.stages">ReplaceWith</a>&nbsp;with)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#sample(long)" class="member-name-link">sample</a><wbr>(long&nbsp;sample)</code></div>
-<div class="col-last even-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AggregationImpl.</span><code>sample<wbr>(long&nbsp;sample)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#set(dev.morphia.aggregation.stages.Set)" class="member-name-link">set</a><wbr>(<a href="../stages/Set.html" title="class in dev.morphia.aggregation.stages">Set</a>&nbsp;set)</code></div>
-<div class="col-last even-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AggregationImpl.</span><code>set<wbr>(<a href="../stages/Set.html" title="class in dev.morphia.aggregation.stages">Set</a>&nbsp;set)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#setWindowFields(dev.morphia.aggregation.stages.SetWindowFields)" class="member-name-link">setWindowFields</a><wbr>(<a href="../stages/SetWindowFields.html" title="class in dev.morphia.aggregation.stages">SetWindowFields</a>&nbsp;fields)</code></div>
-<div class="col-last even-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AggregationImpl.</span><code>setWindowFields<wbr>(<a href="../stages/SetWindowFields.html" title="class in dev.morphia.aggregation.stages">SetWindowFields</a>&nbsp;fields)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#skip(long)" class="member-name-link">skip</a><wbr>(long&nbsp;skip)</code></div>
-<div class="col-last even-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AggregationImpl.</span><code>skip<wbr>(long&nbsp;skip)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#sort(dev.morphia.aggregation.stages.Sort)" class="member-name-link">sort</a><wbr>(<a href="../stages/Sort.html" title="class in dev.morphia.aggregation.stages">Sort</a>&nbsp;sort)</code></div>
-<div class="col-last even-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AggregationImpl.</span><code>sort<wbr>(<a href="../stages/Sort.html" title="class in dev.morphia.aggregation.stages">Sort</a>&nbsp;sort)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#sortByCount(dev.morphia.aggregation.expressions.impls.Expression)" class="member-name-link">sortByCount</a><wbr>(<a href="../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;sort)</code></div>
-<div class="col-last even-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AggregationImpl.</span><code>sortByCount<wbr>(<a href="../expressions/impls/Expression.html" title="class in dev.morphia.aggregation.expressions.impls">Expression</a>&nbsp;sort)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#unionWith(java.lang.Class,dev.morphia.aggregation.stages.Stage...)" class="member-name-link">unionWith</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;type,
- <a href="../stages/Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>...&nbsp;stages)</code></div>
-<div class="col-last even-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#unionWith(java.lang.String,dev.morphia.aggregation.stages.Stage...)" class="member-name-link">unionWith</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;collection,
- <a href="../stages/Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>...&nbsp;stages)</code></div>
-<div class="col-last odd-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
 <div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AggregationImpl.</span><code>unionWith<wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;type,
- <a href="../stages/Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>...&nbsp;stages)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">AggregationImpl.</span><code>pipeline<wbr>(<a href="../stages/Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>...&nbsp;stages)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AggregationImpl.</span><code>unionWith<wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;collection,
- <a href="../stages/Stage.html" title="class in dev.morphia.aggregation.stages">Stage</a>...&nbsp;stages)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#unset(dev.morphia.aggregation.stages.Unset)" class="member-name-link">unset</a><wbr>(<a href="../stages/Unset.html" title="class in dev.morphia.aggregation.stages">Unset</a>&nbsp;unset)</code></div>
-<div class="col-last even-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AggregationImpl.</span><code>unset<wbr>(<a href="../stages/Unset.html" title="class in dev.morphia.aggregation.stages">Unset</a>&nbsp;unset)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="../Aggregation.html" title="type parameter in Aggregation">T</a>&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Aggregation.</span><code><a href="../Aggregation.html#unwind(dev.morphia.aggregation.stages.Unwind)" class="member-name-link">unwind</a><wbr>(<a href="../stages/Unwind.html" title="class in dev.morphia.aggregation.stages">Unwind</a>&nbsp;unwind)</code></div>
-<div class="col-last even-row-color">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="../Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>pipeline(Stage...)</code></a> instead</div>
-</div>
-</div>
-<div class="col-first odd-row-color"><code><a href="../Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">AggregationImpl.</span><code>unwind<wbr>(<a href="../stages/Unwind.html" title="class in dev.morphia.aggregation.stages">Unwind</a>&nbsp;unwind)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>

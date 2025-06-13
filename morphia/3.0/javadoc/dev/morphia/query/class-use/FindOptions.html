@@ -81,9 +81,9 @@ loadScripts(document, 'script');</script>
 <div class="block">Find instances of a type</div>
 </div>
 <div class="col-first odd-row-color"><code>&lt;T&gt;&nbsp;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Datastore.</span><code><a href="../../Datastore.html#find(java.lang.Class,dev.morphia.query.FindOptions,org.bson.Document)" class="member-name-link">find</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
- <a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options,
- <a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;nativeQuery)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">Datastore.</span><code><a href="../../Datastore.html#find(java.lang.Class,org.bson.Document,dev.morphia.query.FindOptions)" class="member-name-link">find</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
+ <a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;nativeQuery,
+ <a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Find instances of a type using a native query.</div>
 </div>
@@ -93,8 +93,8 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>&lt;T&gt;&nbsp;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">MorphiaDatastore.</span><code>find<wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
- <a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options,
- <a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;nativeQuery)</code></div>
+ <a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;nativeQuery,
+ <a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
@@ -118,7 +118,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Sets the batch size</div>
 </div>
 <div class="col-first even-row-color"><code><a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">FindOptions.</span><code><a href="../FindOptions.html#collation(com.mongodb.client.model.Collation)" class="member-name-link">collation</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-core/com/mongodb/client/model/Collation.html" title="class or interface in com.mongodb.client.model" class="external-link">Collation</a>&nbsp;collation)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">FindOptions.</span><code><a href="../FindOptions.html#collation(com.mongodb.client.model.Collation)" class="member-name-link">collation</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/driver-core/com/mongodb/client/model/Collation.html" title="class or interface in com.mongodb.client.model" class="external-link">Collation</a>&nbsp;collation)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Sets the collation to use</div>
 </div>
@@ -131,12 +131,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Sets the comment to log with the query</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">FindOptions.</span><code><a href="../FindOptions.html#comment(org.bson.BsonValue)" class="member-name-link">comment</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/BsonValue.html" title="class or interface in org.bson" class="external-link">BsonValue</a>&nbsp;comment)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">FindOptions.</span><code><a href="../FindOptions.html#comment(org.bson.BsonValue)" class="member-name-link">comment</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/bson/org/bson/BsonValue.html" title="class or interface in org.bson" class="external-link">BsonValue</a>&nbsp;comment)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Sets the comment to log with the query</div>
 </div>
 <div class="col-first even-row-color"><code><a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">FindOptions.</span><code><a href="../FindOptions.html#cursorType(com.mongodb.CursorType)" class="member-name-link">cursorType</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-core/com/mongodb/CursorType.html" title="class or interface in com.mongodb" class="external-link">CursorType</a>&nbsp;cursorType)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">FindOptions.</span><code><a href="../FindOptions.html#cursorType(com.mongodb.CursorType)" class="member-name-link">cursorType</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/driver-core/com/mongodb/CursorType.html" title="class or interface in com.mongodb" class="external-link">CursorType</a>&nbsp;cursorType)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Sets the cursor type</div>
 </div>
@@ -151,7 +151,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Defines the index hint value</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">FindOptions.</span><code><a href="../FindOptions.html#hint(org.bson.Document)" class="member-name-link">hint</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;hint)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">FindOptions.</span><code><a href="../FindOptions.html#hint(org.bson.Document)" class="member-name-link">hint</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;hint)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Sets the index hint</div>
 </div>
@@ -171,7 +171,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Configure the project to only return known, mapped fields</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">FindOptions.</span><code><a href="../FindOptions.html#let(org.bson.Document)" class="member-name-link">let</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;variables)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">FindOptions.</span><code><a href="../FindOptions.html#let(org.bson.Document)" class="member-name-link">let</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;variables)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Add top-level variables to the operation.</div>
 </div>
@@ -186,7 +186,7 @@ loadScripts(document, 'script');</script>
 <div class="block">This is an experimental method.</div>
 </div>
 <div class="col-first even-row-color"><code><a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">FindOptions.</span><code><a href="../FindOptions.html#max(org.bson.Document)" class="member-name-link">max</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;max)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">FindOptions.</span><code><a href="../FindOptions.html#max(org.bson.Document)" class="member-name-link">max</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;max)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Sets the max index value</div>
 </div>
@@ -203,7 +203,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Sets the max time</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">FindOptions.</span><code><a href="../FindOptions.html#min(org.bson.Document)" class="member-name-link">min</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;min)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">FindOptions.</span><code><a href="../FindOptions.html#min(org.bson.Document)" class="member-name-link">min</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;min)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Sets the min index value</div>
 </div>
@@ -236,10 +236,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Adds an sliced array field to a projection.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">FindOptions.</span><code><a href="../FindOptions.html#readConcern(com.mongodb.ReadConcern)" class="member-name-link">readConcern</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-core/com/mongodb/ReadConcern.html" title="class or interface in com.mongodb" class="external-link">ReadConcern</a>&nbsp;readConcern)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">FindOptions.</span><code><a href="../FindOptions.html#readConcern(com.mongodb.ReadConcern)" class="member-name-link">readConcern</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/driver-core/com/mongodb/ReadConcern.html" title="class or interface in com.mongodb" class="external-link">ReadConcern</a>&nbsp;readConcern)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code><a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">FindOptions.</span><code><a href="../FindOptions.html#readPreference(com.mongodb.ReadPreference)" class="member-name-link">readPreference</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-core/com/mongodb/ReadPreference.html" title="class or interface in com.mongodb" class="external-link">ReadPreference</a>&nbsp;readPreference)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">FindOptions.</span><code><a href="../FindOptions.html#readPreference(com.mongodb.ReadPreference)" class="member-name-link">readPreference</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/driver-core/com/mongodb/ReadPreference.html" title="class or interface in com.mongodb" class="external-link">ReadPreference</a>&nbsp;readPreference)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code><a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">FindOptions.</span><code><a href="../FindOptions.html#returnKey(boolean)" class="member-name-link">returnKey</a><wbr>(boolean&nbsp;returnKey)</code></div>
@@ -273,12 +273,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Sets to the sort to use</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">FindOptions.</span><code><a href="../FindOptions.html#sort(org.bson.Document)" class="member-name-link">sort</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;sort)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">FindOptions.</span><code><a href="../FindOptions.html#sort(org.bson.Document)" class="member-name-link">sort</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;sort)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Sets to the sort to use</div>
 </div>
 <div class="col-first even-row-color"><code><a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">FindOptions.</span><code><a href="../FindOptions.html#timeoutMode(com.mongodb.client.cursor.TimeoutMode)" class="member-name-link">timeoutMode</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-core/com/mongodb/client/cursor/TimeoutMode.html" title="class or interface in com.mongodb.client.cursor" class="external-link">TimeoutMode</a>&nbsp;timeoutMode)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">FindOptions.</span><code><a href="../FindOptions.html#timeoutMode(com.mongodb.client.cursor.TimeoutMode)" class="member-name-link">timeoutMode</a><wbr>(<a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/driver-core/com/mongodb/client/cursor/TimeoutMode.html" title="class or interface in com.mongodb.client.cursor" class="external-link">TimeoutMode</a>&nbsp;timeoutMode)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 <div class="caption"><span>Methods in <a href="../package-summary.html">dev.morphia.query</a> with parameters of type <a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a></span></div>
@@ -290,7 +290,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><span class="type-name-label">DefaultQueryFactory.</span><code><a href="../DefaultQueryFactory.html#createQuery(dev.morphia.Datastore,java.lang.Class,dev.morphia.query.FindOptions,org.bson.Document)" class="member-name-link">createQuery</a><wbr>(<a href="../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
  <a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options,
- <a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;query)</code></div>
+ <a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;query)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>default &lt;T&gt;&nbsp;<a href="../Query.html" title="interface in dev.morphia.query">Query</a>&lt;T&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">QueryFactory.</span><code><a href="../QueryFactory.html#createQuery(dev.morphia.Datastore,java.lang.Class,dev.morphia.query.FindOptions)" class="member-name-link">createQuery</a><wbr>(<a href="../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
@@ -303,7 +303,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><span class="type-name-label">QueryFactory.</span><code><a href="../QueryFactory.html#createQuery(dev.morphia.Datastore,java.lang.Class,dev.morphia.query.FindOptions,org.bson.Document)" class="member-name-link">createQuery</a><wbr>(<a href="../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
  <a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options,
- <a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;query)</code></div>
+ <a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;query)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Creates and returns a <a href="../Query.html" title="interface in dev.morphia.query"><code>Query</code></a> for the given arguments.</div>
 </div>
@@ -317,7 +317,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code>MorphiaQuery<wbr>(<a href="../../Datastore.html" title="interface in dev.morphia">Datastore</a>&nbsp;datastore,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;type,
  <a href="../FindOptions.html" title="class in dev.morphia.query">FindOptions</a>&nbsp;options,
- <a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;query)</code></div>
+ <a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/bson/org/bson/Document.html" title="class or interface in org.bson" class="external-link">Document</a>&nbsp;query)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>

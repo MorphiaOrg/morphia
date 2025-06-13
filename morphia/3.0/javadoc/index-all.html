@@ -98,12 +98,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates a new AddFields stage</div>
 </dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#addFields(dev.morphia.aggregation.stages.AddFields)" class="member-name-link">addFields(AddFields)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/stages/AddFields.html" class="type-name-link" title="class in dev.morphia.aggregation.stages">AddFields</a> - Class in <a href="dev/morphia/aggregation/stages/package-summary.html">dev.morphia.aggregation.stages</a></dt>
 <dd>
 <div class="block">Adds new fields to documents.</div>
@@ -126,13 +120,25 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/MorphiaDatastore.DatastoreOperations.html#aggregate(com.mongodb.client.MongoCollection,java.util.List,java.lang.Class)" class="member-name-link">aggregate(MongoCollection&lt;?&gt;, List&lt;Document&gt;, Class&lt;?&gt;)</a> - Method in class dev.morphia.<a href="dev/morphia/MorphiaDatastore.DatastoreOperations.html" title="class in dev.morphia">MorphiaDatastore.DatastoreOperations</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="dev/morphia/Datastore.html#aggregate(java.lang.Class)" class="member-name-link">aggregate(Class&lt;T&gt;)</a> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
+<dt><a href="dev/morphia/Datastore.html#aggregate(dev.morphia.aggregation.AggregationOptions)" class="member-name-link">aggregate(AggregationOptions)</a> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
 <dd>
-<div class="block">Returns a new query bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html" title="class or interface in com.mongodb.client" class="external-link"><code>MongoCollection</code></a>)</div>
+<div class="block">Returns a new aggregation bound without an initial type.</div>
 </dd>
-<dt><a href="dev/morphia/Datastore.html#aggregate(java.lang.String)" class="member-name-link">aggregate(String)</a> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
+<dt><a href="dev/morphia/Datastore.html#aggregate(java.lang.Class)" class="member-name-link">aggregate(Class&lt;S&gt;)</a> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
 <dd>
-<div class="block">Returns a new query bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/5.2/apidocs/mongodb-driver-sync/com/mongodb/client/MongoCollection.html" title="class or interface in com.mongodb.client" class="external-link"><code>MongoCollection</code></a>)</div>
+<div class="block">Returns a new query bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/driver-sync/com/mongodb/client/MongoCollection.html" title="class or interface in com.mongodb.client" class="external-link"><code>MongoCollection</code></a>)</div>
+</dd>
+<dt><a href="dev/morphia/Datastore.html#aggregate(java.lang.Class,dev.morphia.aggregation.AggregationOptions)" class="member-name-link">aggregate(Class&lt;S&gt;, AggregationOptions)</a> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
+<dd>
+<div class="block">Returns a new aggregation bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/driver-sync/com/mongodb/client/MongoCollection.html" title="class or interface in com.mongodb.client" class="external-link"><code>MongoCollection</code></a>)</div>
+</dd>
+<dt><a href="dev/morphia/Datastore.html#aggregate(java.lang.Class,java.lang.Class)" class="member-name-link">aggregate(Class&lt;S&gt;, Class&lt;T&gt;)</a> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
+<dd>
+<div class="block">Returns a new query bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/driver-sync/com/mongodb/client/MongoCollection.html" title="class or interface in com.mongodb.client" class="external-link"><code>MongoCollection</code></a>)</div>
+</dd>
+<dt><a href="dev/morphia/Datastore.html#aggregate(java.lang.Class,java.lang.Class,dev.morphia.aggregation.AggregationOptions)" class="member-name-link">aggregate(Class&lt;S&gt;, Class&lt;T&gt;, AggregationOptions)</a> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
+<dd>
+<div class="block">Returns a new aggregation bound to the kind (a specific <a href="https://mongodb.github.io/mongo-java-driver/5.5/apidocs/driver-sync/com/mongodb/client/MongoCollection.html" title="class or interface in com.mongodb.client" class="external-link"><code>MongoCollection</code></a>).</div>
 </dd>
 <dt><a href="dev/morphia/aggregation/Aggregation.html" class="type-name-link" title="interface in dev.morphia.aggregation">Aggregation</a>&lt;<a href="dev/morphia/aggregation/Aggregation.html" title="type parameter in Aggregation">T</a>&gt; - Interface in <a href="dev/morphia/aggregation/package-summary.html">dev.morphia.aggregation</a></dt>
 <dd>&nbsp;</dd>
@@ -325,12 +331,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates a new auto bucket</div>
 </dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#autoBucket(dev.morphia.aggregation.stages.AutoBucket)" class="member-name-link">autoBucket(AutoBucket)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/stages/AutoBucket.html" class="type-name-link" title="class in dev.morphia.aggregation.stages">AutoBucket</a> - Class in <a href="dev/morphia/aggregation/stages/package-summary.html">dev.morphia.aggregation.stages</a></dt>
 <dd>
 <div class="block">Categorizes incoming documents into a specific number of groups, called buckets, based on a specified expression.</div>
@@ -450,12 +450,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates a new bucket stage</div>
 </dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#bucket(dev.morphia.aggregation.stages.Bucket)" class="member-name-link">bucket(Bucket)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/stages/Bucket.html" class="type-name-link" title="class in dev.morphia.aggregation.stages">Bucket</a> - Class in <a href="dev/morphia/aggregation/stages/package-summary.html">dev.morphia.aggregation.stages</a></dt>
 <dd>
 <div class="block">Categorizes incoming documents into groups, called buckets, based on a specified expression and bucket boundaries.</div>
@@ -530,21 +524,9 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Defines a circle for a geospatial query that uses spherical geometry.</div>
 </dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#changeStream()" class="member-name-link">changeStream()</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/stages/ChangeStream.html#changeStream()" class="member-name-link">changeStream()</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/ChangeStream.html" title="class in dev.morphia.aggregation.stages">ChangeStream</a></dt>
 <dd>
 <div class="block">Returns a Change Stream cursor on a collection, a database, or an entire cluster.</div>
-</dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#changeStream(dev.morphia.aggregation.stages.ChangeStream)" class="member-name-link">changeStream(ChangeStream)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
 </dd>
 <dt><a href="dev/morphia/aggregation/stages/ChangeStream.html" class="type-name-link" title="class in dev.morphia.aggregation.stages">ChangeStream</a> - Class in <a href="dev/morphia/aggregation/stages/package-summary.html">dev.morphia.aggregation.stages</a></dt>
 <dd>
@@ -649,12 +631,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="dev/morphia/aggregation/stages/CollectionStats.html#collStats()" class="member-name-link">collStats()</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/CollectionStats.html" title="class in dev.morphia.aggregation.stages">CollectionStats</a></dt>
 <dd>
 <div class="block">Creates a new collStats stage</div>
-</dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#collStats(dev.morphia.aggregation.stages.CollectionStats)" class="member-name-link">collStats(CollectionStats)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
 </dd>
 <dt><a href="dev/morphia/query/filters/CommentFilter.html#comment()" class="member-name-link">comment()</a> - Method in class dev.morphia.query.filters.<a href="dev/morphia/query/filters/CommentFilter.html" title="class in dev.morphia.query.filters">CommentFilter</a></dt>
 <dd>&nbsp;</dd>
@@ -785,12 +761,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Count the total number of values in the result, ignoring limit and offset</div>
 </dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#count(java.lang.String)" class="member-name-link">count(String)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/stages/Count.html#count(java.lang.String)" class="member-name-link">count(String)</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Count.html" title="class in dev.morphia.aggregation.stages">Count</a></dt>
 <dd>
 <div class="block">Creates a new Count stage</div>
@@ -890,12 +860,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="dev/morphia/aggregation/stages/CurrentOp.html#currentOp()" class="member-name-link">currentOp()</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/CurrentOp.html" title="class in dev.morphia.aggregation.stages">CurrentOp</a></dt>
 <dd>
 <div class="block">Creates a new stage</div>
-</dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#currentOp(dev.morphia.aggregation.stages.CurrentOp)" class="member-name-link">currentOp(CurrentOp)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
 </dd>
 <dt><a href="dev/morphia/aggregation/stages/CurrentOp.html" class="type-name-link" title="class in dev.morphia.aggregation.stages">CurrentOp</a> - Class in <a href="dev/morphia/aggregation/stages/package-summary.html">dev.morphia.aggregation.stages</a></dt>
 <dd>
@@ -1129,12 +1093,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the document position (known as the rank) relative to other documents in the $setWindowFields stage partition.</div>
 </dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#densify(dev.morphia.aggregation.stages.Densify)" class="member-name-link">densify(Densify)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/stages/Densify.html#densify(java.lang.String,dev.morphia.aggregation.stages.Densify.Range)" class="member-name-link">densify(String, Densify.Range)</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Densify.html" title="class in dev.morphia.aggregation.stages">Densify</a></dt>
 <dd>
 <div class="block">Creates new documents in a sequence of documents where certain values in a field are missing.</div>
@@ -1297,12 +1255,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the position of a document (known as the document number) in the $setWindowFields stage partition.</div>
 </dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#documents(dev.morphia.aggregation.expressions.impls.DocumentExpression...)" class="member-name-link">documents(DocumentExpression...)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/stages/Documents.html#documents(dev.morphia.aggregation.expressions.impls.DocumentExpression...)" class="member-name-link">documents(DocumentExpression...)</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Documents.html" title="class in dev.morphia.aggregation.stages">Documents</a></dt>
 <dd>
 <div class="block">Creates a new stage with the given document expressions</div>
@@ -1389,25 +1341,9 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Adds a field to the projection clause.</div>
 </dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#execute()" class="member-name-link">execute()</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="block">Execute the aggregation.</div>
-</dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#execute(dev.morphia.aggregation.AggregationOptions)" class="member-name-link">execute(AggregationOptions)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="block">Execute the aggregation.</div>
-</dd>
 <dt><a href="dev/morphia/transactions/MorphiaTransaction.html#execute(dev.morphia.transactions.MorphiaSession)" class="member-name-link">execute(MorphiaSession)</a> - Method in interface dev.morphia.transactions.<a href="dev/morphia/transactions/MorphiaTransaction.html" title="interface in dev.morphia.transactions">MorphiaTransaction</a></dt>
 <dd>
 <div class="block">Executes the transaction body</div>
-</dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#execute(java.lang.Class)" class="member-name-link">execute(Class&lt;S&gt;)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="block">Execute the aggregation and get the results.</div>
-</dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#execute(java.lang.Class,dev.morphia.aggregation.AggregationOptions)" class="member-name-link">execute(Class&lt;S&gt;, AggregationOptions)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="block">Execute the aggregation and get the results.</div>
 </dd>
 <dt><a href="dev/morphia/query/filters/Filters.html#exists(java.lang.String)" class="member-name-link">exists(String)</a> - Static method in class dev.morphia.query.filters.<a href="dev/morphia/query/filters/Filters.html" title="class in dev.morphia.query.filters">Filters</a></dt>
 <dd>
@@ -1463,12 +1399,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="dev/morphia/aggregation/stages/Facet.html#facet()" class="member-name-link">facet()</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Facet.html" title="class in dev.morphia.aggregation.stages">Facet</a></dt>
 <dd>
 <div class="block">Creates a new facet stage</div>
-</dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#facet(dev.morphia.aggregation.stages.Facet)" class="member-name-link">facet(Facet)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
 </dd>
 <dt><a href="dev/morphia/aggregation/stages/Facet.html" class="type-name-link" title="class in dev.morphia.aggregation.stages">Facet</a> - Class in <a href="dev/morphia/aggregation/stages/package-summary.html">dev.morphia.aggregation.stages</a></dt>
 <dd>
@@ -1539,12 +1469,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates a new $fill stage</div>
 </dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#fill(dev.morphia.aggregation.stages.Fill)" class="member-name-link">fill(Fill)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/stages/Fill.html" class="type-name-link" title="class in dev.morphia.aggregation.stages">Fill</a> - Class in <a href="dev/morphia/aggregation/stages/package-summary.html">dev.morphia.aggregation.stages</a></dt>
 <dd>
 <div class="block">Populates null and missing field values within documents.</div>
@@ -1593,11 +1517,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Find instances of a type</div>
 </dd>
-<dt><a href="dev/morphia/Datastore.html#find(java.lang.Class,dev.morphia.query.FindOptions,org.bson.Document)" class="member-name-link">find(Class&lt;T&gt;, FindOptions, Document)</a> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
+<dt><a href="dev/morphia/Datastore.html#find(java.lang.Class,org.bson.Document)" class="member-name-link">find(Class&lt;T&gt;, Document)</a> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
 <dd>
 <div class="block">Find instances of a type using a native query.</div>
 </dd>
-<dt><a href="dev/morphia/Datastore.html#find(java.lang.Class,org.bson.Document)" class="member-name-link">find(Class&lt;T&gt;, Document)</a> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
+<dt><a href="dev/morphia/Datastore.html#find(java.lang.Class,org.bson.Document,dev.morphia.query.FindOptions)" class="member-name-link">find(Class&lt;T&gt;, Document, FindOptions)</a> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
 <dd>
 <div class="block">Find instances of a type using a native query.</div>
 </dd>
@@ -1712,12 +1636,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates a new geoNear stage</div>
 </dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#geoNear(dev.morphia.aggregation.stages.GeoNear)" class="member-name-link">geoNear(GeoNear)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/stages/GeoNear.html#geoNear(java.lang.String)" class="member-name-link">geoNear(String)</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/GeoNear.html" title="class in dev.morphia.aggregation.stages">GeoNear</a></dt>
 <dd>
 <div class="block">Creates a new geoNear stage</div>
@@ -1771,12 +1689,6 @@ loadScripts(document, 'script');</script>
 <div class="block">A string that specifies the preferred number series to use to ensure that the calculated boundary edges end on preferred round
  numbers or their powers of 10.</div>
 </dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#graphLookup(dev.morphia.aggregation.stages.GraphLookup)" class="member-name-link">graphLookup(GraphLookup)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/stages/GraphLookup.html#graphLookup(java.lang.Class)" class="member-name-link">graphLookup(Class&lt;?&gt;)</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/GraphLookup.html" title="class in dev.morphia.aggregation.stages">GraphLookup</a></dt>
 <dd>
 <div class="block">Target collection for the $graphLookup operation to search, recursively matching the connectFromField to the connectToField.</div>
@@ -1792,12 +1704,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="dev/morphia/aggregation/stages/Group.html#group()" class="member-name-link">group()</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Group.html" title="class in dev.morphia.aggregation.stages">Group</a></dt>
 <dd>
 <div class="block">Creates a group stage with no ID definition</div>
-</dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#group(dev.morphia.aggregation.stages.Group)" class="member-name-link">group(Group)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
 </dd>
 <dt><a href="dev/morphia/aggregation/stages/Group.html#group(dev.morphia.aggregation.stages.Group.GroupId)" class="member-name-link">group(Group.GroupId)</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Group.html" title="class in dev.morphia.aggregation.stages">Group</a></dt>
 <dd>
@@ -2078,12 +1984,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Defines the options to be used when declaring an index.</div>
 </dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#indexStats()" class="member-name-link">indexStats()</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/stages/IndexStats.html#indexStats()" class="member-name-link">indexStats()</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/IndexStats.html" title="class in dev.morphia.aggregation.stages">IndexStats</a></dt>
 <dd>
 <div class="block">Creates the new stage.</div>
@@ -2166,24 +2066,6 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns the approximation of the area under a curve, which is calculated using the trapezoidal rule where each set of adjacent
  documents form a trapezoid using the:</div>
 </dd>
-<dt><a href="dev/morphia/aggregation/stages/Merge.html#into(java.lang.Class)" class="member-name-link">into(Class&lt;M&gt;)</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/stages/Merge.html#merge(java.lang.Class)"><code>Merge.merge(Class)</code></a></div>
-</div>
-</dd>
-<dt><a href="dev/morphia/aggregation/stages/Merge.html#into(java.lang.String)" class="member-name-link">into(String)</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/stages/Merge.html#merge(java.lang.String)"><code>Merge.merge(String)</code></a></div>
-</div>
-</dd>
-<dt><a href="dev/morphia/aggregation/stages/Merge.html#into(java.lang.String,java.lang.String)" class="member-name-link">into(String, String)</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/stages/Merge.html#merge(java.lang.String,java.lang.String)"><code>Merge.merge(String, String)</code></a></div>
-</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/expressions/ArrayExpressions.html#isArray(java.lang.Object)" class="member-name-link">isArray(Object)</a> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/ArrayExpressions.html" title="class in dev.morphia.aggregation.expressions">ArrayExpressions</a></dt>
 <dd>
 <div class="block">Determines if the operand is an array.</div>
@@ -2225,6 +2107,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">ISO Week Date Year.</div>
 </dd>
+<dt><a href="dev/morphia/aggregation/Aggregation.html#iterator()" class="member-name-link">iterator()</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="dev/morphia/query/Query.html#iterator()" class="member-name-link">iterator()</a> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
 <dd>
 <div class="block">Execute the query and get the results.</div>
@@ -2327,12 +2211,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Sets the limit</div>
 </dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#limit(long)" class="member-name-link">limit(long)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/stages/Limit.html#limit(long)" class="member-name-link">limit(long)</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Limit.html" title="class in dev.morphia.aggregation.stages">Limit</a></dt>
 <dd>
 <div class="block">Creates the new stage.</div>
@@ -2416,12 +2294,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates a new stage using the target collection</div>
 </dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#lookup(dev.morphia.aggregation.stages.Lookup)" class="member-name-link">lookup(Lookup)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/stages/Lookup.html#lookup(java.lang.Class)" class="member-name-link">lookup(Class&lt;?&gt;)</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Lookup.html" title="class in dev.morphia.aggregation.stages">Lookup</a></dt>
 <dd>
 <div class="block">Creates a new stage using the target collection for the mapped type</div>
@@ -2504,12 +2376,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="dev/morphia/mapping/MappingException.html#%3Cinit%3E(java.lang.String,java.lang.Throwable)" class="member-name-link">MappingException(String, Throwable)</a> - Constructor for exception dev.morphia.mapping.<a href="dev/morphia/mapping/MappingException.html" title="class in dev.morphia.mapping">MappingException</a></dt>
 <dd>
 <div class="block">Creates an exception with a message and a cause</div>
-</dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#match(dev.morphia.query.filters.Filter...)" class="member-name-link">match(Filter...)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
 </dd>
 <dt><a href="dev/morphia/aggregation/stages/Match.html#match(dev.morphia.query.filters.Filter...)" class="member-name-link">match(Filter...)</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Match.html" title="class in dev.morphia.aggregation.stages">Match</a></dt>
 <dd>
@@ -2597,14 +2463,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="dev/morphia/aggregation/expressions/MathExpressions.html#median(java.lang.Object)" class="member-name-link">median(Object)</a> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/MathExpressions.html" title="class in dev.morphia.aggregation.expressions">MathExpressions</a></dt>
 <dd>
 <div class="block">Returns an approximation of the median, the 50th percentile, as a scalar value.</div>
-</dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#merge(dev.morphia.aggregation.stages.Merge)" class="member-name-link">merge(Merge&lt;M&gt;)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="block">Writes the results of the aggregation pipeline to a specified collection.</div>
-</dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#merge(dev.morphia.aggregation.stages.Merge,dev.morphia.aggregation.AggregationOptions)" class="member-name-link">merge(Merge&lt;M&gt;, AggregationOptions)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="block">Writes the results of the aggregation pipeline to a specified collection.</div>
 </dd>
 <dt><a href="dev/morphia/aggregation/stages/Merge.html#merge(java.lang.Class)" class="member-name-link">merge(Class&lt;M&gt;)</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Merge.html" title="class in dev.morphia.aggregation.stages">Merge</a></dt>
 <dd>
@@ -3009,14 +2867,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Sets whether the server should insert the documents in the order provided.</div>
 </dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#out(dev.morphia.aggregation.stages.Out)" class="member-name-link">out(Out&lt;O&gt;)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="block">Writes the results of the aggregation pipeline to a specified collection.</div>
-</dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#out(dev.morphia.aggregation.stages.Out,dev.morphia.aggregation.AggregationOptions)" class="member-name-link">out(Out&lt;O&gt;, AggregationOptions)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="block">Writes the results of the aggregation pipeline to a specified collection.</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/stages/Out.html#out(java.lang.Class)" class="member-name-link">out(Class&lt;O&gt;)</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Out.html" title="class in dev.morphia.aggregation.stages">Out</a></dt>
 <dd>
 <div class="block">Creates a $out stage with target type/collection</div>
@@ -3109,12 +2959,6 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="dev/morphia/aggregation/Aggregation.html#pipeline(java.util.List)" class="member-name-link">pipeline(List&lt;Stage&gt;)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#planCacheStats()" class="member-name-link">planCacheStats()</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/stages/PlanCacheStats.html#planCacheStats()" class="member-name-link">planCacheStats()</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/PlanCacheStats.html" title="class in dev.morphia.aggregation.stages">PlanCacheStats</a></dt>
 <dd>
 <div class="block">Creates the new stage</div>
@@ -3190,12 +3034,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="dev/morphia/aggregation/stages/Projection.html#project()" class="member-name-link">project()</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Projection.html" title="class in dev.morphia.aggregation.stages">Projection</a></dt>
 <dd>
 <div class="block">Creates a new stage</div>
-</dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#project(dev.morphia.aggregation.stages.Projection)" class="member-name-link">project(Projection)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
 </dd>
 <dt><a href="dev/morphia/query/Projection.html#project(dev.morphia.query.Meta)" class="member-name-link">project(Meta)</a> - Method in class dev.morphia.query.<a href="dev/morphia/query/Projection.html" title="class in dev.morphia.query">Projection</a></dt>
 <dd>
@@ -3416,12 +3254,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates a redaction stage with the given expression</div>
 </dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#redact(dev.morphia.aggregation.stages.Redact)" class="member-name-link">redact(Redact)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/stages/Redact.html" class="type-name-link" title="class in dev.morphia.aggregation.stages">Redact</a> - Class in <a href="dev/morphia/aggregation/stages/package-summary.html">dev.morphia.aggregation.stages</a></dt>
 <dd>
 <div class="block">Restricts the contents of the documents based on information stored in the documents themselves.</div>
@@ -3524,12 +3356,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates a new stage</div>
 </dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#replaceRoot(dev.morphia.aggregation.stages.ReplaceRoot)" class="member-name-link">replaceRoot(ReplaceRoot)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/stages/ReplaceRoot.html#replaceRoot(java.lang.Object)" class="member-name-link">replaceRoot(Object)</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/ReplaceRoot.html" title="class in dev.morphia.aggregation.stages">ReplaceRoot</a></dt>
 <dd>
 <div class="block">Creates a new stage to replace the root with the given expression.</div>
@@ -3541,12 +3367,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="dev/morphia/aggregation/stages/ReplaceWith.html#replaceWith()" class="member-name-link">replaceWith()</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/ReplaceWith.html" title="class in dev.morphia.aggregation.stages">ReplaceWith</a></dt>
 <dd>
 <div class="block">Creates a new stage</div>
-</dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#replaceWith(dev.morphia.aggregation.stages.ReplaceWith)" class="member-name-link">replaceWith(ReplaceWith)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
 </dd>
 <dt><a href="dev/morphia/aggregation/stages/ReplaceWith.html#replaceWith(java.lang.Object)" class="member-name-link">replaceWith(Object)</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/ReplaceWith.html" title="class in dev.morphia.aggregation.stages">ReplaceWith</a></dt>
 <dd>
@@ -3592,12 +3412,6 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:S">S</h2>
 <dl class="index">
-<dt><a href="dev/morphia/aggregation/Aggregation.html#sample(long)" class="member-name-link">sample(long)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/stages/Sample.html#sample(long)" class="member-name-link">sample(long)</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Sample.html" title="class in dev.morphia.aggregation.stages">Sample</a></dt>
 <dd>
 <div class="block">Creates a new stage with the given sample size.</div>
@@ -3650,12 +3464,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates a new Set stage</div>
 </dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#set(dev.morphia.aggregation.stages.Set)" class="member-name-link">set(Set)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
-</dd>
 <dt><a href="dev/morphia/query/updates/UpdateOperators.html#set(java.lang.Object)" class="member-name-link">set(Object)</a> - Static method in class dev.morphia.query.updates.<a href="dev/morphia/query/updates/UpdateOperators.html" title="class in dev.morphia.query.updates">UpdateOperators</a></dt>
 <dd>
 <div class="block">The $set operator replaces the value of a field with the specified value.</div>
@@ -3706,12 +3514,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Performs operations on a specified span of documents in a collection, known as a window, and returns the results based on the chosen
  window operator.</div>
-</dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#setWindowFields(dev.morphia.aggregation.stages.SetWindowFields)" class="member-name-link">setWindowFields(SetWindowFields)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
 </dd>
 <dt><a href="dev/morphia/aggregation/stages/SetWindowFields.html" class="type-name-link" title="class in dev.morphia.aggregation.stages">SetWindowFields</a> - Class in <a href="dev/morphia/aggregation/stages/package-summary.html">dev.morphia.aggregation.stages</a></dt>
 <dd>
@@ -3792,12 +3594,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Sets how many documents to skip</div>
 </dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#skip(long)" class="member-name-link">skip(long)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/stages/Skip.html#skip(long)" class="member-name-link">skip(long)</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Skip.html" title="class in dev.morphia.aggregation.stages">Skip</a></dt>
 <dd>
 <div class="block">Creates a new stage with the given skip size</div>
@@ -3841,12 +3637,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="dev/morphia/query/updates/PushOperator.html#sort(int)" class="member-name-link">sort(int)</a> - Method in class dev.morphia.query.updates.<a href="dev/morphia/query/updates/PushOperator.html" title="class in dev.morphia.query.updates">PushOperator</a></dt>
 <dd>
 <div class="block">Sets the sort value for the update</div>
-</dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#sort(dev.morphia.aggregation.stages.Sort)" class="member-name-link">sort(Sort)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
 </dd>
 <dt><a href="dev/morphia/query/FindOptions.html#sort(dev.morphia.query.Meta)" class="member-name-link">sort(Meta)</a> - Method in class dev.morphia.query.<a href="dev/morphia/query/FindOptions.html" title="class in dev.morphia.query">FindOptions</a></dt>
 <dd>
@@ -3904,12 +3694,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="dev/morphia/aggregation/stages/SetWindowFields.html#sortBy(dev.morphia.query.Sort...)" class="member-name-link">sortBy(Sort...)</a> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/SetWindowFields.html" title="class in dev.morphia.aggregation.stages">SetWindowFields</a></dt>
 <dd>
 <div class="block">Specifies the field(s) to sort the documents by in the partition.</div>
-</dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#sortByCount(dev.morphia.aggregation.expressions.impls.Expression)" class="member-name-link">sortByCount(Expression)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
 </dd>
 <dt><a href="dev/morphia/aggregation/stages/SortByCount.html#sortByCount(java.lang.Object)" class="member-name-link">sortByCount(Object)</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/SortByCount.html" title="class in dev.morphia.aggregation.stages">SortByCount</a></dt>
 <dd>
@@ -4173,18 +3957,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/aggregation/expressions/impls/DateToString.html#timeZone(java.lang.Object)" class="member-name-link">timeZone(Object)</a> - Method in class dev.morphia.aggregation.expressions.impls.<a href="dev/morphia/aggregation/expressions/impls/DateToString.html" title="class in dev.morphia.aggregation.expressions.impls">DateToString</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="dev/morphia/aggregation/stages/Out.html#to(java.lang.Class)" class="member-name-link">to(Class&lt;O&gt;)</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Out.html" title="class in dev.morphia.aggregation.stages">Out</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/stages/Out.html#out(java.lang.Class)"><code>Out.out(Class)</code></a></div>
-</div>
-</dd>
-<dt><a href="dev/morphia/aggregation/stages/Out.html#to(java.lang.String)" class="member-name-link">to(String)</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Out.html" title="class in dev.morphia.aggregation.stages">Out</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/stages/Out.html#out(java.lang.String)"><code>Out.out(String)</code></a></div>
-</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/expressions/TypeExpressions.html#toBool(java.lang.Object)" class="member-name-link">toBool(Object)</a> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/TypeExpressions.html" title="class in dev.morphia.aggregation.expressions">TypeExpressions</a></dt>
 <dd>
 <div class="block">Converts value to a boolean.</div>
@@ -4221,6 +3993,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Converts value to an integer.</div>
 </dd>
+<dt><a href="dev/morphia/aggregation/Aggregation.html#toList()" class="member-name-link">toList()</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="dev/morphia/query/MorphiaCursor.html#toList()" class="member-name-link">toList()</a> - Method in class dev.morphia.query.<a href="dev/morphia/query/MorphiaCursor.html" title="class in dev.morphia.query">MorphiaCursor</a></dt>
 <dd>
 <div class="block">Converts this cursor to a List.</div>
@@ -4332,21 +4106,9 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Performs a union of two collections; i.e.</div>
 </dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#unionWith(java.lang.Class,dev.morphia.aggregation.stages.Stage...)" class="member-name-link">unionWith(Class&lt;?&gt;, Stage...)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/stages/UnionWith.html#unionWith(java.lang.Class,dev.morphia.aggregation.stages.Stage...)" class="member-name-link">unionWith(Class&lt;?&gt;, Stage...)</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/UnionWith.html" title="class in dev.morphia.aggregation.stages">UnionWith</a></dt>
 <dd>
 <div class="block">Performs a union of two collections; i.e.</div>
-</dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#unionWith(java.lang.String,dev.morphia.aggregation.stages.Stage...)" class="member-name-link">unionWith(String, Stage...)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
 </dd>
 <dt><a href="dev/morphia/aggregation/stages/UnionWith.html#unionWith(java.lang.String,dev.morphia.aggregation.stages.Stage...)" class="member-name-link">unionWith(String, Stage...)</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/UnionWith.html" title="class in dev.morphia.aggregation.stages">UnionWith</a></dt>
 <dd>
@@ -4374,12 +4136,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">The unit to apply to the step field when incrementing date values in field.</div>
 </dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#unset(dev.morphia.aggregation.stages.Unset)" class="member-name-link">unset(Unset)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/stages/Unset.html#unset(java.lang.String,java.lang.String...)" class="member-name-link">unset(String, String...)</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Unset.html" title="class in dev.morphia.aggregation.stages">Unset</a></dt>
 <dd>
 <div class="block">Creates a new stage with the given fields</div>
@@ -4399,12 +4155,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="dev/morphia/InsertOneOptions.html#unsetMissing(boolean)" class="member-name-link">unsetMissing(boolean)</a> - Method in class dev.morphia.<a href="dev/morphia/InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></dt>
 <dd>
 <div class="block">Applies the rules for storing null/empty values for fields no present in the object to be merged.</div>
-</dd>
-<dt><a href="dev/morphia/aggregation/Aggregation.html#unwind(dev.morphia.aggregation.stages.Unwind)" class="member-name-link">unwind(Unwind)</a> - Method in interface dev.morphia.aggregation.<a href="dev/morphia/aggregation/Aggregation.html" title="interface in dev.morphia.aggregation">Aggregation</a></dt>
-<dd>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">use <a href="dev/morphia/aggregation/Aggregation.html#pipeline(dev.morphia.aggregation.stages.Stage...)"><code>Aggregation.pipeline(Stage...)</code></a> instead</div>
-</div>
 </dd>
 <dt><a href="dev/morphia/aggregation/stages/Unwind.html#unwind(java.lang.String)" class="member-name-link">unwind(String)</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Unwind.html" title="class in dev.morphia.aggregation.stages">Unwind</a></dt>
 <dd>
