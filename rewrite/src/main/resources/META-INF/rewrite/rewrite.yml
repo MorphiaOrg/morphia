@@ -119,32 +119,36 @@ recipeList:
       filePattern: src/test/java/dev/morphia/test/aggregation/expressions/VariableExpressionsTest.java
   - org.openrewrite.DeleteSourceFiles:
       filePattern: src/test/java/dev/morphia/test/aggregation/TestDateExpression.java
+  - org.openrewrite.DeleteSourceFiles:
+      filePattern: src/test/java/dev/morphia/test/aggregation/stages/TestAdd.java
   - dev.morphia.rewrite.recipes.internal.RemoveMethodDeclaration:
       methodPatterns:
-        - dev.morphia.test.TestBase mapperOptions()
-        - dev.morphia.test.TestBase queryFactories()
-        - dev.morphia.test.TestDatastore testAlternateCollectionsWithLegacyQuery()
-        - dev.morphia.test.TestUpdateOperations testUpsert()
-        - dev.morphia.test.TestUpdateOperations doUpdates(..)
-        - dev.morphia.test.TestUpdateOperations testPathTranslations(dev.morphia.test.TestUpdateOperations.TranslationParams)
-        - dev.morphia.test.TestUpdateOperations toDocument(java.lang.Class,dev.morphia.query.updates.UpdateOperator)
+        - dev.morphia.test.aggregation.TestAggregation testDateToString()
+        - dev.morphia.test.aggregation.TestAggregation testNullGroupId()
+        - dev.morphia.test.mapping.codec.pojo.EntityModelTest testFindParameterization()
+        - dev.morphia.test.mapping.codec.TestDocumentWriter testAnd()
+        - dev.morphia.test.mapping.codec.TestDocumentWriter testOr()
         - dev.morphia.test.mapping.TestPropertyModel arrayFieldMapping()
         - dev.morphia.test.mapping.TestPropertyModel collectionFieldMapping()
         - dev.morphia.test.mapping.TestPropertyModel nestedCollectionsMapping()
         - dev.morphia.test.mapping.TestPropertyModel nestedGenerics()
         - dev.morphia.test.mapping.TestReferences testFetchKeys()
-        - dev.morphia.test.mapping.codec.TestDocumentWriter testAnd()
-        - dev.morphia.test.mapping.codec.TestDocumentWriter testOr()
-        - dev.morphia.test.mapping.codec.pojo.EntityModelTest testFindParameterization()
-        - dev.morphia.test.query.TestQuery testCriteriaContainers()
+        - dev.morphia.test.query.TestQueriesOnReferences testWithKeyQuery()
         - dev.morphia.test.query.TestQuery check()
         - dev.morphia.test.query.TestQuery check(dev.morphia.query.Query)
-        - dev.morphia.test.query.TestQuery testKeys()
-        - dev.morphia.test.query.TestQuery testKeyList()
+        - dev.morphia.test.query.TestQuery testCriteriaContainers()
         - dev.morphia.test.query.TestQuery testFetchKeys()
+        - dev.morphia.test.query.TestQuery testKeyList()
+        - dev.morphia.test.query.TestQuery testKeys()
         - dev.morphia.test.query.TestQuery testQueryDoesNotContainDiscriminator()
-        - dev.morphia.test.query.TestQueriesOnReferences testWithKeyQuery()
+        - dev.morphia.test.TestBase mapperOptions()
+        - dev.morphia.test.TestBase queryFactories()
+        - dev.morphia.test.TestDatastore testAlternateCollectionsWithLegacyQuery()
         - dev.morphia.test.TestMapping testExternalClass()
+        - dev.morphia.test.TestUpdateOperations doUpdates(..)
+        - dev.morphia.test.TestUpdateOperations testPathTranslations(dev.morphia.test.TestUpdateOperations.TranslationParams)
+        - dev.morphia.test.TestUpdateOperations testUpsert()
+        - dev.morphia.test.TestUpdateOperations toDocument(java.lang.Class,dev.morphia.query.updates.UpdateOperator)
   - dev.morphia.rewrite.recipes.RenameMethod:
       methodPatterns:
         - dev.morphia.mapping.codec.pojo.EntityModel getCollectionName() collectionName

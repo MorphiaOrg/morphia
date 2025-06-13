@@ -26,8 +26,10 @@
     <root level="info">
         <appender-ref ref="CONSOLE"/>
     </root>
+<!--
     <logger name="dev.morphia.rewrite.recipes.pipeline" level="debug">
         <appender-ref ref="STDOUT" />
     </logger>
+-->
 
 </configuration>

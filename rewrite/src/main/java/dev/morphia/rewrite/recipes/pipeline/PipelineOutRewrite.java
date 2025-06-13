@@ -54,7 +54,7 @@ public class PipelineOutRewrite extends Recipe {
 
             private MethodInvocation extractTarget(MethodInvocation argument) {
 
-                MethodInvocation to = null;
+                MethodInvocation to;
                 MethodInvocation database = null;
                 if (DATABASE.matches(argument)) {
                     database = argument;
@@ -64,6 +64,7 @@ public class PipelineOutRewrite extends Recipe {
                 }
                 maybeRemoveImport("dev.morphia.aggregation.stages.Out.to");
                 maybeAddImport("dev.morphia.aggregation.stages.Out");
+                maybeAddImport("dev.morphia.aggregation.stages.Out", "out");
 
                 to = to.withMethodType(to.getMethodType()
                         .withName("out"))

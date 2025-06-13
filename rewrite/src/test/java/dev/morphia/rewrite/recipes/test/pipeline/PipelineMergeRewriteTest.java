@@ -43,6 +43,43 @@ public class PipelineMergeRewriteTest extends MorphiaRewriteTest {
     }
 
     @Test
+    public void testComplexMerge() {
+        rewriteRun(java(
+                """
+                        import dev.morphia.Datastore;
+
+                        import static com.mongodb.client.model.MergeOptions.WhenMatched.REPLACE;
+                        import static com.mongodb.client.model.MergeOptions.WhenNotMatched.INSERT;
+                        import static dev.morphia.aggregation.stages.Merge.into;
+
+                        public class TestTheWorld {
+                            public void update(Datastore ds) {
+                                ds.aggregate(Object.class)
+                                  .merge(into("budgets")
+                                       .on("_id")
+                                       .whenMatched(REPLACE)
+                                       .whenNotMatched(INSERT));
+                            }
+                        }""",
+                """
+                        import dev.morphia.Datastore;
+
+                        import static com.mongodb.client.model.MergeOptions.WhenMatched.REPLACE;
+                        import static com.mongodb.client.model.MergeOptions.WhenNotMatched.INSERT;
+                        import static dev.morphia.aggregation.stages.Merge.merge;
+
+                        public class TestTheWorld {
+                            public void update(Datastore ds) {
+                                ds.aggregate(Object.class)
+                                        .pipeline(merge("budgets")
+                                                .on("_id")
+                                                .whenMatched(REPLACE)
+                                                .whenNotMatched(INSERT));
+                            }
+                        }"""));
+    }
+
+    @Test
     public void testMergeWithOtherStage() {
         rewriteRun(java(
                 """

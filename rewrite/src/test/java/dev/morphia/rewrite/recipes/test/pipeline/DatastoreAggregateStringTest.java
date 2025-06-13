@@ -22,7 +22,6 @@ public class DatastoreAggregateStringTest extends MorphiaRewriteTest {
         rewriteRun(java(
                 """
                         import dev.morphia.Datastore;
-                        import dev.morphia.aggregation.AggregationOptions;
                         import org.bson.Document;
 
                         import static dev.morphia.aggregation.stages.Match.match;

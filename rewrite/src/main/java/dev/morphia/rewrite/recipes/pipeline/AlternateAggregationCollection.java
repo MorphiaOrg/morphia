@@ -72,8 +72,7 @@ public class AlternateAggregationCollection extends Recipe {
                 maybeAddImport(Document.class.getName());
                 arguments.add(0, new Identifier(UUID.randomUUID(), Space.EMPTY, Markers.EMPTY, List.of(), "Document.class",
                         JavaType.buildType("java.lang.Class<Document>"), null));
-                updated = updated.withArguments(arguments);
-                updated = maybeAutoFormat(method, updated, executionContext);
+                updated = maybeAutoFormat(method, updated.withArguments(arguments), executionContext);
                 LOG.debug("method updated:  {}", updated);
                 return updated;
             } else {

@@ -194,4 +194,108 @@ public class PipelineRecipesTest extends MorphiaRewriteTest {
                         """));
     }
 
+    @Test
+    public void removeExecuteWithOptions() {
+        rewriteRun(java(
+                """
+                        import com.mongodb.ReadConcern;
+                        import dev.morphia.Datastore;
+                        import org.bson.Document;
+                        import dev.morphia.aggregation.AggregationOptions;
+
+                        import static dev.morphia.aggregation.expressions.Expressions.literal;
+                        import static dev.morphia.aggregation.stages.AddFields.addFields;
+                        import static dev.morphia.aggregation.stages.Set.set;
+                        import static dev.morphia.aggregation.stages.Sort.sort;
+                        import static dev.morphia.aggregation.stages.UnionWith;
+
+                        public class RewriteExecute {
+                            public void test(Datastore ds) {
+                                ds.aggregate(String.class)
+                                  .set(set().field("_id", literal("2019Q1")))
+                                  .execute(Document.class, new AggregationOptions()
+                                         .readConcern(ReadConcern.LOCAL)
+                                         .hint("hint"))
+                                  .toList();
+                            }
+                        }
+                        """,
+                """
+                        import com.mongodb.ReadConcern;
+                        import dev.morphia.Datastore;
+                        import org.bson.Document;
+                        import dev.morphia.aggregation.AggregationOptions;
+
+                        import static dev.morphia.aggregation.expressions.Expressions.literal;
+                        import static dev.morphia.aggregation.stages.AddFields.addFields;
+                        import static dev.morphia.aggregation.stages.Set.set;
+                        import static dev.morphia.aggregation.stages.Sort.sort;
+                        import static dev.morphia.aggregation.stages.UnionWith;
+
+                        public class RewriteExecute {
+                            public void test(Datastore ds) {
+                                ds.aggregate(String.class,Document.class, new AggregationOptions()
+                                         .readConcern(ReadConcern.LOCAL)
+                                         .hint("hint"))
+                                          .pipeline(
+                                                  set().field("_id", literal("2019Q1")))
+                                  .iterator()
+                                  .toList();
+                            }
+                        }
+                        """));
+    }
+
+    @Test
+    public void removeExecuteWithOptionsAlternateCollection() {
+        rewriteRun(java(
+                """
+                        import com.mongodb.ReadConcern;
+                        import dev.morphia.Datastore;
+                        import org.bson.Document;
+                        import dev.morphia.aggregation.AggregationOptions;
+
+                        import static dev.morphia.aggregation.expressions.Expressions.literal;
+                        import static dev.morphia.aggregation.stages.AddFields.addFields;
+                        import static dev.morphia.aggregation.stages.Set.set;
+                        import static dev.morphia.aggregation.stages.Sort.sort;
+                        import static dev.morphia.aggregation.stages.UnionWith;
+
+                        public class RewriteExecute {
+                            public void test(Datastore ds) {
+                                ds.aggregate("sales2019q1")
+                                  .set(set().field("_id", literal("2019Q1")))
+                                  .execute(Document.class, new AggregationOptions()
+                                         .readConcern(ReadConcern.LOCAL)
+                                         .hint("hint"))
+                                  .toList();
+                            }
+                        }
+                        """,
+                """
+                        import com.mongodb.ReadConcern;
+                        import dev.morphia.Datastore;
+                        import org.bson.Document;
+                        import dev.morphia.aggregation.AggregationOptions;
+
+                        import static dev.morphia.aggregation.expressions.Expressions.literal;
+                        import static dev.morphia.aggregation.stages.AddFields.addFields;
+                        import static dev.morphia.aggregation.stages.Set.set;
+                        import static dev.morphia.aggregation.stages.Sort.sort;
+                        import static dev.morphia.aggregation.stages.UnionWith;
+
+                        public class RewriteExecute {
+                            public void test(Datastore ds) {
+                                ds.aggregate(Document.class,Document.class,  new AggregationOptions().collection("sales2019q1")
+                                         .readConcern(ReadConcern.LOCAL)
+                                         .hint("hint"))
+                                          .pipeline(
+                                                  set().field("_id", literal("2019Q1")))
+                                  .iterator()
+                                  .toList();
+                            }
+                        }
+                        """));
+    }
+
 }
