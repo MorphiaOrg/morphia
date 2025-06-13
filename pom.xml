@@ -46,6 +46,7 @@
         <awaitility.version>1.7.0</awaitility.version>
         <driver.version>5.5.1</driver.version>
         <driver.minor.version>5.5</driver.minor.version>
+        <driver-javadoc.link>https://mongodb.github.io/mongo-java-driver/${driver.minor.version}/apidocs</driver-javadoc.link>
         <jackson.version>2.19.0</jackson.version>
         <json.assert.version>1.5.3</json.assert.version>
         <javapoet.version>1.13.0</javapoet.version>
