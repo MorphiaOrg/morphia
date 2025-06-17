@@ -1,3 +1,0 @@
-Read https://morphia.dev/morphia/2.5/javadoc/index.html and https://morphia.dev/morphia/3.0/javadoc/index.html compare the two versions.
-Looking at the types Aggregation, Datastore, and Query, show them side by side with gaps where a method is missing from the other version.
- sort the methods by name and parameter count.  generate this as a asciidoc table in docs/morphia-2.5-3.0-table.adoc.
