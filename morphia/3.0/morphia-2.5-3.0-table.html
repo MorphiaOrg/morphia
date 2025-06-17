@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Morphia API Changes: v2.5.1-SNAPSHOT to v3.0.0-SNAPSHOT :: Morphia Docs</title>
+    <meta name="generator" content="Antora 3.1.4">
+<link rel="stylesheet" href="../../_/css/site.css">
+<link rel="stylesheet" href="../../_/css/morphia.css">
+
+  </head>
+  <body class="article">
+<header class="header" role="banner">
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img height="80%" src="../../_/img/logo.png">
+        </div>
+        <div class="navbar-brand">
+            <div class="navbar-item">
+                <a href="https://morphia.dev">Morphia</a>
+                <span class="separator">//</span>
+                <a href="../..">Docs</a>
+            </div>
+            <button class="navbar-burger" data-target="topbar-nav">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <div id="topbar-nav" class="navbar-menu">
+            <div class="navbar-end">
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-link">Projects</div>
+                    <div class="navbar-dropdown">
+                        <div class="navbar-item"><strong>Core</strong></div>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
+                        <hr class="navbar-divider">
+                        <div class="navbar-item"><strong>Critter</strong></div>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
+                        <!--                        <hr class="navbar-divider">-->
+                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
+                    </div>
+                </div>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-link">Community</div>
+                    <div class="navbar-dropdown is-right">
+                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
+                            ODMs chat</a>
+                    </div>
+                </div>
+
+                <a class="navbar-item" href="https://twitter.com/evanchooly">
+                    <span class="icon">
+                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                            <path fill="#57aaee"
+                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="body">
+<div class="nav-container" data-component="morphia" data-version="3.0">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html">Morphia</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="index.html">Getting Started</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="migrating.html">Migrating</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="quicktour.html">Quick Tour</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Features</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="configuration.html">Configuration</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="kotlin.html">Kotlin</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="mapping.html">Mapping</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="indexing.html">Indexing</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="sharding.html">Sharding</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="queries.html">Querying</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="updates.html">Updating</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="deletes.html">Deleting</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="aggregations.html">Aggregation</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="textSearches.html">Text Search</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="references.html">References</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="transactions.html">Transactions</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="lifeCycleMethods.html">Life Cycle Methods</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="schemaValidation.html">Schema Validation</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text"><em>Support</em></span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="issues-help.html">Issues &amp; Support</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="https://github.com/MorphiaOrg/morphia/">GitHub Repository</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="javadoc/index.html">Javadoc</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Morphia</span>
+    <span class="version">3.0-SNAPSHOT</span>
+  </div>
+  <ul class="components">
+    <li class="component">
+      <span class="title">Critter</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../critter/4.4/index.html">4.4</a>
+        </li>
+        <li class="version">
+          <a href="../../critter/4.3/index.html">4.3</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component">
+      <span class="title">Home</span>
+      <ul class="versions">
+        <li class="version is-latest">
+          <a href="../../landing/index.html">landing</a>
+        </li>
+      </ul>
+    </li>
+    <li class="component is-current">
+      <span class="title">Morphia</span>
+      <ul class="versions">
+        <li class="version is-current">
+          <a href="index.html">3.0-SNAPSHOT</a>
+        </li>
+        <li class="version is-latest">
+          <a href="../2.5/index.html">2.5</a>
+        </li>
+        <li class="version">
+          <a href="../2.4/index.html">2.4</a>
+        </li>
+        <li class="version">
+          <a href="../2.3/index.html">2.3</a>
+        </li>
+        <li class="version">
+          <a href="../1.6/index.html">1.6</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="../../landing/index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Morphia</a></li>
+    <li><a href="morphia-2.5-3.0-table.html">Morphia API Changes: v2.5.1-SNAPSHOT to v3.0.0-SNAPSHOT</a></li>
+  </ul>
+</nav>
+<div class="page-versions">
+  <button class="version-menu-toggle" title="Show other versions of page">3.0-SNAPSHOT</button>
+  <div class="version-menu">
+    <a class="version is-current" href="morphia-2.5-3.0-table.html">3.0-SNAPSHOT</a>
+    <a class="version is-missing" href="../2.5/index.html">2.5</a>
+    <a class="version is-missing" href="../2.4/index.html">2.4</a>
+    <a class="version is-missing" href="../2.3/index.html">2.3</a>
+    <a class="version is-missing" href="../1.6/index.html">1.6</a>
+  </div>
+</div>
+  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/morphia-2.5-3.0-table.adoc">Edit this Page</a></div>
+  </div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Morphia API Changes: v2.5.1-SNAPSHOT to v3.0.0-SNAPSHOT</h1>
+<div class="sect1">
+<h2 id="_summary"><a class="anchor" href="#_summary"></a>Summary</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This document compares the public API methods between Morphia v2.5.1-SNAPSHOT and v3.0.0-SNAPSHOT, focusing exclusively on methods that differ between the two versions. Methods that remain unchanged are not included in this comparison.</p>
+</div>
+<div class="paragraph">
+<p>The analysis covers three core interfaces:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Aggregation</code> - MongoDB aggregation pipeline interface</p>
+</li>
+<li>
+<p><code>Datastore</code> - Main database operations interface</p>
+</li>
+<li>
+<p><code>Query</code> - Query building and execution interface</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Major architectural changes</strong>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>v2.5.1 interfaces contain many methods (both current and deprecated)</p>
+</li>
+<li>
+<p>v3.0.0 interfaces are significantly streamlined with deprecated methods removed</p>
+</li>
+<li>
+<p>v3.0.0 introduces new unified approaches (e.g., <code>pipeline()</code> for aggregations)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_method_changes_by_interface"><a class="anchor" href="#_method_changes_by_interface"></a>Method Changes by Interface</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_aggregation_interface"><a class="anchor" href="#_aggregation_interface"></a>Aggregation Interface</h3>
+<div class="sect3">
+<h4 id="_key_changes"><a class="anchor" href="#_key_changes"></a>Key Changes:</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>v2.5.1</strong>: 40+ methods including individual stage methods and execution methods</p>
+</li>
+<li>
+<p><strong>v3.0.0</strong>: Simplified to 4 core methods with unified pipeline approach</p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Methods Removed/Deprecated in v3.0.0</th>
+<th class="tableblock halign-left valign-top">Methods Added in v3.0.0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Aggregation&lt;T&gt; autoBucket(AutoBucket)</code><br>
+<code>Aggregation&lt;T&gt; bucket(Bucket)</code><br>
+<code>Aggregation&lt;T&gt; collStats(CollectionStats)</code><br>
+<code>Aggregation&lt;T&gt; count(String)</code><br>
+<code>Aggregation&lt;T&gt; currentOp(CurrentOp)</code><br>
+<code>Aggregation&lt;T&gt; densify(Densify)</code><br>
+<code>Aggregation&lt;T&gt; documents(DocumentExpression&#8230;&#8203;)</code><br>
+<code>Aggregation&lt;T&gt; facet(Facet)</code><br>
+<code>Aggregation&lt;T&gt; fill(Fill)</code><br>
+<code>Aggregation&lt;T&gt; geoNear(GeoNear)</code><br>
+<code>Aggregation&lt;T&gt; graphLookup(GraphLookup)</code><br>
+<code>Aggregation&lt;T&gt; group(Group)</code><br>
+<code>Aggregation&lt;T&gt; indexStats()</code><br>
+<code>Aggregation&lt;T&gt; limit(long)</code><br>
+<code>Aggregation&lt;T&gt; lookup(Lookup)</code><br>
+<code>Aggregation&lt;T&gt; match(Filter&#8230;&#8203;)</code><br>
+<code>Aggregation&lt;T&gt; planCacheStats()</code><br>
+<code>Aggregation&lt;T&gt; project(Projection)</code><br>
+<code>Aggregation&lt;T&gt; redact(Redact)</code><br>
+<code>Aggregation&lt;T&gt; replaceRoot(ReplaceRoot)</code><br>
+<code>Aggregation&lt;T&gt; replaceWith(ReplaceWith)</code><br>
+<code>Aggregation&lt;T&gt; sample(long)</code><br>
+<code>Aggregation&lt;T&gt; addFields(AddFields)</code><br>
+<code>Aggregation&lt;T&gt; set(Set)</code><br>
+<code>Aggregation&lt;T&gt; setWindowFields(SetWindowFields)</code><br>
+<code>Aggregation&lt;T&gt; skip(long)</code><br>
+<code>Aggregation&lt;T&gt; sort(Sort)</code><br>
+<code>Aggregation&lt;T&gt; sortByCount(Expression)</code><br>
+<code>Aggregation&lt;T&gt; unionWith(Class&lt;?&gt;, Stage, Stage&#8230;&#8203;)</code><br>
+<code>Aggregation&lt;T&gt; unset(Unset)</code><br>
+<code>Aggregation&lt;T&gt; unwind(Unwind)</code><br>
+<code>Aggregation changeStream()</code><br>
+<code>Aggregation changeStream(ChangeStream)</code><br>
+<code>&lt;S&gt; MorphiaCursor&lt;S&gt; execute(Class&lt;S&gt;)</code><br>
+<code>&lt;S&gt; MorphiaCursor&lt;S&gt; execute(Class&lt;S&gt;, AggregationOptions)</code><br>
+<code>&lt;M&gt; void merge(Merge&lt;M&gt;)</code><br>
+<code>&lt;M&gt; void merge(Merge&lt;M&gt;, AggregationOptions)</code><br>
+<code>&lt;O&gt; void out(Out&lt;O&gt;)</code><br>
+<code>&lt;O&gt; void out(Out&lt;O&gt;, AggregationOptions)</code><br>
+<code>Aggregation&lt;T&gt; addStage(Stage)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Aggregation&lt;T&gt; pipeline(Stage&#8230;&#8203;)</code><br>
+<code>Aggregation&lt;T&gt; pipeline(List&lt;Stage&gt;)</code><br>
+<code>MorphiaCursor&lt;T&gt; iterator()</code><br>
+<code>List&lt;T&gt; toList()</code><br>
+<code>AutoCloseable</code> interface implemented</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_datastore_interface"><a class="anchor" href="#_datastore_interface"></a>Datastore Interface</h3>
+<div class="sect3">
+<h4 id="_key_changes_2"><a class="anchor" href="#_key_changes_2"></a>Key Changes:</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>v2.5.1</strong>: 35+ methods including deprecated legacy methods</p>
+</li>
+<li>
+<p><strong>v3.0.0</strong>: Streamlined to ~20 core methods with enhanced aggregation support</p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Methods Removed in v3.0.0</th>
+<th class="tableblock halign-left valign-top">Methods Added in v3.0.0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AggregationPipeline createAggregation(Class&lt;?&gt;)</code><br>
+<code>&lt;T&gt; Query&lt;T&gt; createQuery(Class&lt;T&gt;)</code><br>
+<code>&lt;T&gt; Query&lt;T&gt; find(Class&lt;T&gt;, FindOptions)</code><br>
+<code>&lt;T&gt; Query&lt;T&gt; find(String, Class&lt;T&gt;)</code><br>
+<code>&lt;T&gt; Query&lt;T&gt; find(String)</code><br>
+<code>void enableDocumentValidation()</code><br>
+<code>void ensureCaps()</code><br>
+<code>void ensureIndexes()</code><br>
+<code>&lt;T&gt; DeleteResult delete(Query&lt;T&gt;)</code><br>
+<code>&lt;T&gt; DeleteResult delete(Query&lt;T&gt;, DeleteOptions)</code><br>
+<code>&lt;T&gt; T findAndDelete(Query&lt;T&gt;)</code><br>
+<code>&lt;T&gt; T findAndDelete(Query&lt;T&gt;, FindAndModifyOptions)</code><br>
+<code>&lt;T&gt; T findAndModify(Query&lt;T&gt;, UpdateOperations&lt;T&gt;, FindAndModifyOptions)</code><br>
+<code>&lt;T&gt; T findAndModify(Query&lt;T&gt;, UpdateOperations&lt;T&gt;)</code><br>
+<code>CodecRegistry getCodecRegistry()</code><br>
+<code>&lt;T&gt; MongoCollection&lt;T&gt; getCollection(Class&lt;T&gt;)</code><br>
+<code>MongoDatabase getDatabase()</code><br>
+<code>String getLoggedQuery(FindOptions)</code><br>
+<code>&lt;T&gt; UpdateOperations&lt;T&gt; createUpdateOperations(Class&lt;T&gt;)</code><br>
+<code>&lt;T&gt; T merge(T, WriteConcern)</code><br>
+<code>&lt;T&gt; List&lt;T&gt; save(Iterable&lt;T&gt;)</code><br>
+<code>&lt;T&gt; List&lt;T&gt; save(Iterable&lt;T&gt;, InsertOptions)</code><br>
+<code>&lt;T&gt; T save(T, InsertOptions)</code><br>
+<code>void shardCollections()</code><br>
+<code>&lt;T&gt; UpdateResult update(Query&lt;T&gt;, UpdateOperations&lt;T&gt;, UpdateOptions)</code><br>
+<code>&lt;T&gt; UpdateResult update(Query&lt;T&gt;, UpdateOperations&lt;T&gt;)</code><br>
+<code>Mapper getMapper()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Aggregation&lt;Document&gt; aggregate(AggregationOptions)</code><br>
+<code>&lt;S&gt; Aggregation&lt;S&gt; aggregate(Class&lt;S&gt;, AggregationOptions)</code><br>
+<code>&lt;S, T&gt; Aggregation&lt;T&gt; aggregate(Class&lt;S&gt;, Class&lt;T&gt;)</code><br>
+<code>&lt;S, T&gt; Aggregation&lt;T&gt; aggregate(Class&lt;S&gt;, Class&lt;T&gt;, AggregationOptions)</code><br>
+Enhanced type safety for aggregation operations</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_query_interface"><a class="anchor" href="#_query_interface"></a>Query Interface</h3>
+<div class="sect3">
+<h4 id="_key_changes_3"><a class="anchor" href="#_key_changes_3"></a>Key Changes:</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>v2.5.1</strong>: 35+ methods including deprecated criteria-based methods</p>
+</li>
+<li>
+<p><strong>v3.0.0</strong>: Streamlined to ~15 core methods with modern filter-based approach</p>
+</li>
+</ul>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Methods Removed in v3.0.0</th>
+<th class="tableblock halign-left valign-top">Methods Maintained/Enhanced in v3.0.0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CriteriaContainer and(Criteria&#8230;&#8203;)</code><br>
+<code>FieldEnd&lt;CriteriaContainer&gt; criteria(String)</code><br>
+<code>MorphiaCursor&lt;T&gt; execute()</code><br>
+<code>MorphiaCursor&lt;T&gt; execute(FindOptions)</code><br>
+<code>MorphiaCursor&lt;T&gt; find()</code><br>
+<code>MorphiaCursor&lt;T&gt; find(FindOptions)</code><br>
+<code>Map&lt;String, Object&gt; explain(FindOptions)</code><br>
+<code>Map&lt;String, Object&gt; explain(FindOptions, ExplainVerbosity)</code><br>
+<code>FieldEnd&lt;Query&lt;T&gt;&gt; field(String)</code><br>
+<code>Query&lt;T&gt; filter(String, Object)</code><br>
+<code>T first(FindOptions)</code><br>
+<code>MorphiaCursor&lt;T&gt; iterator(FindOptions)</code><br>
+<code>MorphiaKeyCursor&lt;T&gt; keys()</code><br>
+<code>MorphiaKeyCursor&lt;T&gt; keys(FindOptions)</code><br>
+<code>CriteriaContainer or(Criteria&#8230;&#8203;)</code><br>
+<code>Modify&lt;T&gt; modify(UpdateOperations&lt;T&gt;)</code><br>
+<code>Modify&lt;T&gt; modify(UpdateOperator, UpdateOperator&#8230;&#8203;)</code><br>
+<code>Query&lt;T&gt; retrieveKnownFields()</code><br>
+<code>Query&lt;T&gt; search(String)</code><br>
+<code>Query&lt;T&gt; search(String, String)</code><br>
+<code>Stream&lt;T&gt; stream(FindOptions)</code><br>
+<code>Document toDocument()</code><br>
+<code>Update&lt;T&gt; update(List&lt;UpdateOperator&gt;)</code><br>
+<code>Update&lt;T&gt; update(UpdateOperator, UpdateOperator&#8230;&#8203;)</code><br>
+<code>Update&lt;T&gt; update(UpdateOperations&lt;T&gt;)</code><br>
+<code>UpdateResult update(Stage&#8230;&#8203;)</code><br>
+<code>UpdateResult update(UpdateOptions, Stage&#8230;&#8203;)</code><br>
+<code>UpdateResult update(UpdateOptions, UpdateOperator&#8230;&#8203;)</code><br>
+<code>Class&lt;T&gt; getEntityClass()</code><br>
+<code>String getLoggedQuery()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Query&lt;T&gt; filter(Filter&#8230;&#8203;)</code> <em>(enhanced)</em><br>
+<code>long count()</code><br>
+<code>long count(CountOptions)</code><br>
+<code>DeleteResult delete()</code><br>
+<code>DeleteResult delete(DeleteOptions)</code><br>
+<code>Query&lt;T&gt; disableValidation()</code><br>
+<code>Query&lt;T&gt; enableValidation()</code><br>
+<code>Map&lt;String, Object&gt; explain()</code><br>
+<code>Map&lt;String, Object&gt; explain(ExplainVerbosity)</code><br>
+<code>T findAndDelete()</code><br>
+<code>T findAndDelete(FindAndDeleteOptions)</code><br>
+<code>T first()</code><br>
+<code>MorphiaCursor&lt;T&gt; iterator()</code><br>
+<code>T modify(UpdateOperator, UpdateOperator&#8230;&#8203;)</code><br>
+<code>T modify(ModifyOptions, UpdateOperator, UpdateOperator&#8230;&#8203;)</code><br>
+<code>Stream&lt;T&gt; stream()</code><br>
+<code>UpdateResult update(UpdateOperator, UpdateOperator&#8230;&#8203;)</code><br>
+<code>UpdateResult update(UpdateOptions, UpdateOperator, UpdateOperator&#8230;&#8203;)</code><br>
+<code>UpdateResult update(Stage, Stage&#8230;&#8203;)</code><br>
+<code>UpdateResult update(UpdateOptions, Stage, Stage&#8230;&#8203;)</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_key_observations"><a class="anchor" href="#_key_observations"></a>Key Observations</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_aggregation_interface_changes"><a class="anchor" href="#_aggregation_interface_changes"></a>Aggregation Interface Changes</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Architectural Shift</strong>: v3.0.0 moves from individual stage methods to a unified <code>pipeline(Stage&#8230;&#8203;)</code> approach</p>
+</li>
+<li>
+<p><strong>Simplified Execution</strong>: Aggregation now implements <code>Iterable&lt;T&gt;</code> and <code>AutoCloseable</code> for easier resource management</p>
+</li>
+<li>
+<p><strong>Reduced API Surface</strong>: From 40+ methods to 4 core methods, making the interface much simpler to use</p>
+</li>
+<li>
+<p><strong>Enhanced Type Safety</strong>: Better support for source/target type separation in aggregations</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_datastore_interface_changes"><a class="anchor" href="#_datastore_interface_changes"></a>Datastore Interface Changes</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Legacy Method Removal</strong>: All deprecated methods with <code>forRemoval=true</code> have been removed</p>
+</li>
+<li>
+<p><strong>Enhanced Aggregation Support</strong>: New overloaded <code>aggregate()</code> methods provide better type safety and flexibility</p>
+</li>
+<li>
+<p><strong>Configuration-Driven Setup</strong>: Database initialization methods removed in favor of configuration-based setup</p>
+</li>
+<li>
+<p><strong>Simplified API</strong>: Interface reduced from 35+ to ~20 methods, focusing on core operations</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_query_interface_changes"><a class="anchor" href="#_query_interface_changes"></a>Query Interface Changes</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Modern Filter Approach</strong>: Transition from legacy criteria/field-based queries to <code>Filter</code>-based approach</p>
+</li>
+<li>
+<p><strong>Streamlined Operations</strong>: Update and modify operations have cleaner signatures with better parameter ordering</p>
+</li>
+<li>
+<p><strong>Enhanced Pipeline Support</strong>: Better support for pipeline-based updates using MongoDB stages</p>
+</li>
+<li>
+<p><strong>Removed Complexity</strong>: Legacy string-based filtering and criteria containers eliminated</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_migration_impact"><a class="anchor" href="#_migration_impact"></a>Migration Impact</h3>
+<div class="sect3">
+<h4 id="_breaking_changes_requiring_code_updates"><a class="anchor" href="#_breaking_changes_requiring_code_updates"></a>Breaking Changes Requiring Code Updates:</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Aggregation</strong>: Replace individual stage method calls with <code>pipeline(StageClass.stageMethod(), &#8230;&#8203;)</code> pattern</p>
+</li>
+<li>
+<p><strong>Query</strong>: Replace <code>field("name").equal(value)</code> with <code>filter(eq("name", value))</code> pattern</p>
+</li>
+<li>
+<p><strong>Datastore</strong>: Use configuration files for database setup instead of method calls</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_benefits_of_v3_0_0"><a class="anchor" href="#_benefits_of_v3_0_0"></a>Benefits of v3.0.0:</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Cleaner APIs</strong>: Significantly reduced method count across all interfaces</p>
+</li>
+<li>
+<p><strong>Better Type Safety</strong>: Enhanced generic support, especially for aggregations</p>
+</li>
+<li>
+<p><strong>Modern MongoDB Features</strong>: Better alignment with current MongoDB driver patterns</p>
+</li>
+<li>
+<p><strong>Simplified Resource Management</strong>: Proper <code>AutoCloseable</code> support for aggregations</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_recommended_migration_strategy"><a class="anchor" href="#_recommended_migration_strategy"></a>Recommended Migration Strategy:</h4>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Update Aggregations</strong>: Convert to <code>pipeline()</code> approach using static factory methods from stage classes</p>
+</li>
+<li>
+<p><strong>Update Queries</strong>: Replace legacy criteria with <code>Filters</code> class methods</p>
+</li>
+<li>
+<p><strong>Update Configuration</strong>: Move database setup from code to configuration files</p>
+</li>
+<li>
+<p><strong>Update Dependencies</strong>: Ensure code uses v3.0.0-compatible patterns throughout</p>
+</li>
+</ol>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+This analysis focuses only on public interface methods that changed between versions. Implementation details, internal methods, and unchanged public methods are not included.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main>
+</div>
+<!--
+<footer class="footer">
+    <p>Copyright (C) 2020-2025
+</footer>
+-->
+<script src="../../_/js/site.js"></script>
+<script async src="../../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
