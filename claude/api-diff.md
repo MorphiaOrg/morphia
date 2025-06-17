@@ -11,4 +11,4 @@
   * if a method is present in both versions, omit it.
   * list them side by side in an asciidoc table with gaps where a method is missing from the other version.
   * provide a summary as introduction and key observations at the end
-  * generate this as an asciidoc table in docs/morphia-2.5-3.0-table.adoc.
+  * generate this as an asciidoc table in docs/modules/ROOT/pages/morphia-2.5-3.0-table.adoc.
