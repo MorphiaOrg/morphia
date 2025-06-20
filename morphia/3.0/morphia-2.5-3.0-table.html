@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Morphia API Changes: v2.5.1-SNAPSHOT to v3.0.0-SNAPSHOT :: Morphia Docs</title>
+    <title>Morphia API Migration Guide: 2.5 to 3.0 :: Morphia Docs</title>
     <meta name="generator" content="Antora 3.1.4">
 <link rel="stylesheet" href="../../_/css/site.css">
 <link rel="stylesheet" href="../../_/css/morphia.css">
@@ -212,7 +212,7 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Morphia</a></li>
-    <li><a href="morphia-2.5-3.0-table.html">Morphia API Changes: v2.5.1-SNAPSHOT to v3.0.0-SNAPSHOT</a></li>
+    <li><a href="morphia-2.5-3.0-table.html">Morphia API Migration Guide: 2.5 to 3.0</a></li>
   </ul>
 </nav>
 <div class="page-versions">
@@ -229,64 +229,40 @@
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Morphia API Changes: v2.5.1-SNAPSHOT to v3.0.0-SNAPSHOT</h1>
+<h1 class="page">Morphia API Migration Guide: 2.5 to 3.0</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This document provides a comprehensive comparison of the core Morphia interfaces between version 2.5 and 3.0, highlighting the significant architectural changes and API simplifications introduced in the major version update.</p>
+</div>
+</div>
+</div>
 <div class="sect1">
 <h2 id="_summary"><a class="anchor" href="#_summary"></a>Summary</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This document compares the public API methods between Morphia v2.5.1-SNAPSHOT and v3.0.0-SNAPSHOT, focusing exclusively on methods that differ between the two versions. Methods that remain unchanged are not included in this comparison.</p>
-</div>
-<div class="paragraph">
-<p>The analysis covers three core interfaces:</p>
+<p>Morphia 3.0 represents a major architectural shift with extensive API simplification and modernization. The update removes deprecated methods, consolidates functionality, and provides cleaner, more intuitive interfaces. Key changes include:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>Aggregation</code> - MongoDB aggregation pipeline interface</p>
+<p><strong>Aggregation Interface</strong>: Complete redesign from a fluent pipeline builder to a simple pipeline container</p>
 </li>
 <li>
-<p><code>Datastore</code> - Main database operations interface</p>
+<p><strong>Datastore Interface</strong>: Modernized aggregation methods with enhanced type safety and removed legacy operations</p>
 </li>
 <li>
-<p><code>Query</code> - Query building and execution interface</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p><strong>Major architectural changes</strong>:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>v2.5.1 interfaces contain many methods (both current and deprecated)</p>
-</li>
-<li>
-<p>v3.0.0 interfaces are significantly streamlined with deprecated methods removed</p>
-</li>
-<li>
-<p>v3.0.0 introduces new unified approaches (e.g., <code>pipeline()</code> for aggregations)</p>
+<p><strong>Query Interface</strong>: Streamlined API with removed deprecated methods and cleaner parameter signatures</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_method_changes_by_interface"><a class="anchor" href="#_method_changes_by_interface"></a>Method Changes by Interface</h2>
+<h2 id="_interface_comparisons"><a class="anchor" href="#_interface_comparisons"></a>Interface Comparisons</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_aggregation_interface"><a class="anchor" href="#_aggregation_interface"></a>Aggregation Interface</h3>
-<div class="sect3">
-<h4 id="_key_changes"><a class="anchor" href="#_key_changes"></a>Key Changes:</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>v2.5.1</strong>: 40+ methods including individual stage methods and execution methods</p>
-</li>
-<li>
-<p><strong>v3.0.0</strong>: Simplified to 4 core methods with unified pipeline approach</p>
-</li>
-</ul>
-</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -294,76 +270,200 @@
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Methods Removed/Deprecated in v3.0.0</th>
-<th class="tableblock halign-left valign-top">Methods Added in v3.0.0</th>
+<th class="tableblock halign-left valign-top">v2.5</th>
+<th class="tableblock halign-left valign-top">v3.0</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Aggregation&lt;T&gt; autoBucket(AutoBucket)</code><br>
-<code>Aggregation&lt;T&gt; bucket(Bucket)</code><br>
-<code>Aggregation&lt;T&gt; collStats(CollectionStats)</code><br>
-<code>Aggregation&lt;T&gt; count(String)</code><br>
-<code>Aggregation&lt;T&gt; currentOp(CurrentOp)</code><br>
-<code>Aggregation&lt;T&gt; densify(Densify)</code><br>
-<code>Aggregation&lt;T&gt; documents(DocumentExpression&#8230;&#8203;)</code><br>
-<code>Aggregation&lt;T&gt; facet(Facet)</code><br>
-<code>Aggregation&lt;T&gt; fill(Fill)</code><br>
-<code>Aggregation&lt;T&gt; geoNear(GeoNear)</code><br>
-<code>Aggregation&lt;T&gt; graphLookup(GraphLookup)</code><br>
-<code>Aggregation&lt;T&gt; group(Group)</code><br>
-<code>Aggregation&lt;T&gt; indexStats()</code><br>
-<code>Aggregation&lt;T&gt; limit(long)</code><br>
-<code>Aggregation&lt;T&gt; lookup(Lookup)</code><br>
-<code>Aggregation&lt;T&gt; match(Filter&#8230;&#8203;)</code><br>
-<code>Aggregation&lt;T&gt; planCacheStats()</code><br>
-<code>Aggregation&lt;T&gt; project(Projection)</code><br>
-<code>Aggregation&lt;T&gt; redact(Redact)</code><br>
-<code>Aggregation&lt;T&gt; replaceRoot(ReplaceRoot)</code><br>
-<code>Aggregation&lt;T&gt; replaceWith(ReplaceWith)</code><br>
-<code>Aggregation&lt;T&gt; sample(long)</code><br>
-<code>Aggregation&lt;T&gt; addFields(AddFields)</code><br>
-<code>Aggregation&lt;T&gt; set(Set)</code><br>
-<code>Aggregation&lt;T&gt; setWindowFields(SetWindowFields)</code><br>
-<code>Aggregation&lt;T&gt; skip(long)</code><br>
-<code>Aggregation&lt;T&gt; sort(Sort)</code><br>
-<code>Aggregation&lt;T&gt; sortByCount(Expression)</code><br>
-<code>Aggregation&lt;T&gt; unionWith(Class&lt;?&gt;, Stage, Stage&#8230;&#8203;)</code><br>
-<code>Aggregation&lt;T&gt; unset(Unset)</code><br>
-<code>Aggregation&lt;T&gt; unwind(Unwind)</code><br>
-<code>Aggregation changeStream()</code><br>
-<code>Aggregation changeStream(ChangeStream)</code><br>
-<code>&lt;S&gt; MorphiaCursor&lt;S&gt; execute(Class&lt;S&gt;)</code><br>
-<code>&lt;S&gt; MorphiaCursor&lt;S&gt; execute(Class&lt;S&gt;, AggregationOptions)</code><br>
-<code>&lt;M&gt; void merge(Merge&lt;M&gt;)</code><br>
-<code>&lt;M&gt; void merge(Merge&lt;M&gt;, AggregationOptions)</code><br>
-<code>&lt;O&gt; void out(Out&lt;O&gt;)</code><br>
-<code>&lt;O&gt; void out(Out&lt;O&gt;, AggregationOptions)</code><br>
-<code>Aggregation&lt;T&gt; addStage(Stage)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Aggregation&lt;T&gt; pipeline(Stage&#8230;&#8203;)</code><br>
-<code>Aggregation&lt;T&gt; pipeline(List&lt;Stage&gt;)</code><br>
-<code>MorphiaCursor&lt;T&gt; iterator()</code><br>
-<code>List&lt;T&gt; toList()</code><br>
-<code>AutoCloseable</code> interface implemented</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">addFields(AddFields)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">addStage(Stage)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">autoBucket(AutoBucket)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">bucket(Bucket)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">changeStream()</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">changeStream(ChangeStream)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">collStats(CollectionStats)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count(String)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">currentOp(CurrentOp)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">densify(Densify)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">documents(DocumentExpression&#8230;&#8203;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">execute(Class&lt;S&gt;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">execute(Class&lt;S&gt;, AggregationOptions)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">facet(Facet)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">fill(Fill)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">geoNear(GeoNear)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">graphLookup(GraphLookup)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">group(Group)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">indexStats()</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">iterator()</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">limit(long)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">lookup(Lookup)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">match(Filter&#8230;&#8203;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">merge(Merge&lt;M&gt;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">merge(Merge&lt;M&gt;, AggregationOptions)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">out(Out&lt;O&gt;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">out(Out&lt;O&gt;, AggregationOptions)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pipeline(List&lt;Stage&gt;)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">pipeline(Stage&#8230;&#8203;)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">planCacheStats()</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">project(Projection)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">redact(Redact)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">replaceRoot(ReplaceRoot)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">replaceWith(ReplaceWith)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sample(long)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">set(AddFields)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">set(Set)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">setWindowFields(SetWindowFields)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">skip(long)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sort(Sort)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">sortByCount(Expression)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">toList()</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">unionWith(Class&lt;?&gt;, Stage, Stage&#8230;&#8203;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">unionWith(String, Stage, Stage&#8230;&#8203;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">unset(Unset)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">unwind(Unwind)</p></td>
+<td class="tableblock halign-left valign-top"></td>
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 <div class="sect2">
 <h3 id="_datastore_interface"><a class="anchor" href="#_datastore_interface"></a>Datastore Interface</h3>
-<div class="sect3">
-<h4 id="_key_changes_2"><a class="anchor" href="#_key_changes_2"></a>Key Changes:</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>v2.5.1</strong>: 35+ methods including deprecated legacy methods</p>
-</li>
-<li>
-<p><strong>v3.0.0</strong>: Streamlined to ~20 core methods with enhanced aggregation support</p>
-</li>
-</ul>
-</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -371,63 +471,252 @@
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Methods Removed in v3.0.0</th>
-<th class="tableblock halign-left valign-top">Methods Added in v3.0.0</th>
+<th class="tableblock halign-left valign-top">v2.5</th>
+<th class="tableblock halign-left valign-top">v3.0</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AggregationPipeline createAggregation(Class&lt;?&gt;)</code><br>
-<code>&lt;T&gt; Query&lt;T&gt; createQuery(Class&lt;T&gt;)</code><br>
-<code>&lt;T&gt; Query&lt;T&gt; find(Class&lt;T&gt;, FindOptions)</code><br>
-<code>&lt;T&gt; Query&lt;T&gt; find(String, Class&lt;T&gt;)</code><br>
-<code>&lt;T&gt; Query&lt;T&gt; find(String)</code><br>
-<code>void enableDocumentValidation()</code><br>
-<code>void ensureCaps()</code><br>
-<code>void ensureIndexes()</code><br>
-<code>&lt;T&gt; DeleteResult delete(Query&lt;T&gt;)</code><br>
-<code>&lt;T&gt; DeleteResult delete(Query&lt;T&gt;, DeleteOptions)</code><br>
-<code>&lt;T&gt; T findAndDelete(Query&lt;T&gt;)</code><br>
-<code>&lt;T&gt; T findAndDelete(Query&lt;T&gt;, FindAndModifyOptions)</code><br>
-<code>&lt;T&gt; T findAndModify(Query&lt;T&gt;, UpdateOperations&lt;T&gt;, FindAndModifyOptions)</code><br>
-<code>&lt;T&gt; T findAndModify(Query&lt;T&gt;, UpdateOperations&lt;T&gt;)</code><br>
-<code>CodecRegistry getCodecRegistry()</code><br>
-<code>&lt;T&gt; MongoCollection&lt;T&gt; getCollection(Class&lt;T&gt;)</code><br>
-<code>MongoDatabase getDatabase()</code><br>
-<code>String getLoggedQuery(FindOptions)</code><br>
-<code>&lt;T&gt; UpdateOperations&lt;T&gt; createUpdateOperations(Class&lt;T&gt;)</code><br>
-<code>&lt;T&gt; T merge(T, WriteConcern)</code><br>
-<code>&lt;T&gt; List&lt;T&gt; save(Iterable&lt;T&gt;)</code><br>
-<code>&lt;T&gt; List&lt;T&gt; save(Iterable&lt;T&gt;, InsertOptions)</code><br>
-<code>&lt;T&gt; T save(T, InsertOptions)</code><br>
-<code>void shardCollections()</code><br>
-<code>&lt;T&gt; UpdateResult update(Query&lt;T&gt;, UpdateOperations&lt;T&gt;, UpdateOptions)</code><br>
-<code>&lt;T&gt; UpdateResult update(Query&lt;T&gt;, UpdateOperations&lt;T&gt;)</code><br>
-<code>Mapper getMapper()</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Aggregation&lt;Document&gt; aggregate(AggregationOptions)</code><br>
-<code>&lt;S&gt; Aggregation&lt;S&gt; aggregate(Class&lt;S&gt;, AggregationOptions)</code><br>
-<code>&lt;S, T&gt; Aggregation&lt;T&gt; aggregate(Class&lt;S&gt;, Class&lt;T&gt;)</code><br>
-<code>&lt;S, T&gt; Aggregation&lt;T&gt; aggregate(Class&lt;S&gt;, Class&lt;T&gt;, AggregationOptions)</code><br>
-Enhanced type safety for aggregation operations</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">aggregate(AggregationOptions)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">aggregate(Class&lt;S&gt;)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">aggregate(Class&lt;S&gt;, AggregationOptions)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">aggregate(Class&lt;S&gt;, Class&lt;T&gt;)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">aggregate(Class&lt;S&gt;, Class&lt;T&gt;, AggregationOptions)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">aggregate(Class&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">aggregate(String)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">createAggregation(Class&lt;?&gt;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">createQuery(Class&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">createUpdateOperations(Class&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">delete(Query&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">delete(Query&lt;T&gt;, DeleteOptions)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">delete(T)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">delete(T)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">delete(T, DeleteOptions)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">delete(T, DeleteOptions)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">enableDocumentValidation()</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ensureCaps()</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ensureIndexes()</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">find(Class&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">find(Class&lt;T&gt;)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">find(Class&lt;T&gt;, Document)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">find(Class&lt;T&gt;, Document)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">find(Class&lt;T&gt;, Document, FindOptions)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">find(Class&lt;T&gt;, FindOptions)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">find(Class&lt;T&gt;, FindOptions)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">find(String)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">find(String, Class&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">findAndDelete(Query&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">findAndDelete(Query&lt;T&gt;, FindAndModifyOptions)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">findAndModify(Query&lt;T&gt;, UpdateOperations&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">findAndModify(Query&lt;T&gt;, UpdateOperations&lt;T&gt;, FindAndModifyOptions)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getCodecRegistry()</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getCollection(Class&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getCollection(Class&lt;T&gt;)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getDatabase()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getDatabase()</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getLoggedQuery(FindOptions)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getMapper()</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">insert(List&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">insert(List&lt;T&gt;)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">insert(List&lt;T&gt;, InsertManyOptions)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">insert(List&lt;T&gt;, InsertManyOptions)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">insert(T)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">insert(T)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">insert(T, InsertOneOptions)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">insert(T, InsertOneOptions)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">merge(T)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">merge(T)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">merge(T, InsertOneOptions)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">merge(T, InsertOneOptions)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">merge(T, WriteConcern)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">queryByExample(T)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">queryByExample(T)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">refresh(T)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">refresh(T)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">replace(List&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">replace(List&lt;T&gt;)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">replace(List&lt;T&gt;, ReplaceOptions)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">replace(List&lt;T&gt;, ReplaceOptions)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">replace(T)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">replace(T)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">replace(T, ReplaceOptions)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">replace(T, ReplaceOptions)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">save(Iterable&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">save(Iterable&lt;T&gt;, InsertOptions)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">save(List&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">save(List&lt;T&gt;)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">save(List&lt;T&gt;, InsertManyOptions)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">save(List&lt;T&gt;, InsertManyOptions)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">save(T)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">save(T)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">save(T, InsertOneOptions)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">save(T, InsertOneOptions)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">save(T, InsertOptions)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">shardCollections()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">shardCollections()</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">startSession()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">startSession()</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">startSession(ClientSessionOptions)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">startSession(ClientSessionOptions)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">update(Query&lt;T&gt;, UpdateOperations&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">update(Query&lt;T&gt;, UpdateOperations&lt;T&gt;, UpdateOptions)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">withTransaction(ClientSessionOptions, MorphiaTransaction&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">withTransaction(ClientSessionOptions, MorphiaTransaction&lt;T&gt;)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">withTransaction(MorphiaTransaction&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">withTransaction(MorphiaTransaction&lt;T&gt;)</p></td>
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 <div class="sect2">
 <h3 id="_query_interface"><a class="anchor" href="#_query_interface"></a>Query Interface</h3>
-<div class="sect3">
-<h4 id="_key_changes_3"><a class="anchor" href="#_key_changes_3"></a>Key Changes:</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>v2.5.1</strong>: 35+ methods including deprecated criteria-based methods</p>
-</li>
-<li>
-<p><strong>v3.0.0</strong>: Streamlined to ~15 core methods with modern filter-based approach</p>
-</li>
-</ul>
-</div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -435,66 +724,209 @@ Enhanced type safety for aggregation operations</p></td>
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">Methods Removed in v3.0.0</th>
-<th class="tableblock halign-left valign-top">Methods Maintained/Enhanced in v3.0.0</th>
+<th class="tableblock halign-left valign-top">v2.5</th>
+<th class="tableblock halign-left valign-top">v3.0</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CriteriaContainer and(Criteria&#8230;&#8203;)</code><br>
-<code>FieldEnd&lt;CriteriaContainer&gt; criteria(String)</code><br>
-<code>MorphiaCursor&lt;T&gt; execute()</code><br>
-<code>MorphiaCursor&lt;T&gt; execute(FindOptions)</code><br>
-<code>MorphiaCursor&lt;T&gt; find()</code><br>
-<code>MorphiaCursor&lt;T&gt; find(FindOptions)</code><br>
-<code>Map&lt;String, Object&gt; explain(FindOptions)</code><br>
-<code>Map&lt;String, Object&gt; explain(FindOptions, ExplainVerbosity)</code><br>
-<code>FieldEnd&lt;Query&lt;T&gt;&gt; field(String)</code><br>
-<code>Query&lt;T&gt; filter(String, Object)</code><br>
-<code>T first(FindOptions)</code><br>
-<code>MorphiaCursor&lt;T&gt; iterator(FindOptions)</code><br>
-<code>MorphiaKeyCursor&lt;T&gt; keys()</code><br>
-<code>MorphiaKeyCursor&lt;T&gt; keys(FindOptions)</code><br>
-<code>CriteriaContainer or(Criteria&#8230;&#8203;)</code><br>
-<code>Modify&lt;T&gt; modify(UpdateOperations&lt;T&gt;)</code><br>
-<code>Modify&lt;T&gt; modify(UpdateOperator, UpdateOperator&#8230;&#8203;)</code><br>
-<code>Query&lt;T&gt; retrieveKnownFields()</code><br>
-<code>Query&lt;T&gt; search(String)</code><br>
-<code>Query&lt;T&gt; search(String, String)</code><br>
-<code>Stream&lt;T&gt; stream(FindOptions)</code><br>
-<code>Document toDocument()</code><br>
-<code>Update&lt;T&gt; update(List&lt;UpdateOperator&gt;)</code><br>
-<code>Update&lt;T&gt; update(UpdateOperator, UpdateOperator&#8230;&#8203;)</code><br>
-<code>Update&lt;T&gt; update(UpdateOperations&lt;T&gt;)</code><br>
-<code>UpdateResult update(Stage&#8230;&#8203;)</code><br>
-<code>UpdateResult update(UpdateOptions, Stage&#8230;&#8203;)</code><br>
-<code>UpdateResult update(UpdateOptions, UpdateOperator&#8230;&#8203;)</code><br>
-<code>Class&lt;T&gt; getEntityClass()</code><br>
-<code>String getLoggedQuery()</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Query&lt;T&gt; filter(Filter&#8230;&#8203;)</code> <em>(enhanced)</em><br>
-<code>long count()</code><br>
-<code>long count(CountOptions)</code><br>
-<code>DeleteResult delete()</code><br>
-<code>DeleteResult delete(DeleteOptions)</code><br>
-<code>Query&lt;T&gt; disableValidation()</code><br>
-<code>Query&lt;T&gt; enableValidation()</code><br>
-<code>Map&lt;String, Object&gt; explain()</code><br>
-<code>Map&lt;String, Object&gt; explain(ExplainVerbosity)</code><br>
-<code>T findAndDelete()</code><br>
-<code>T findAndDelete(FindAndDeleteOptions)</code><br>
-<code>T first()</code><br>
-<code>MorphiaCursor&lt;T&gt; iterator()</code><br>
-<code>T modify(UpdateOperator, UpdateOperator&#8230;&#8203;)</code><br>
-<code>T modify(ModifyOptions, UpdateOperator, UpdateOperator&#8230;&#8203;)</code><br>
-<code>Stream&lt;T&gt; stream()</code><br>
-<code>UpdateResult update(UpdateOperator, UpdateOperator&#8230;&#8203;)</code><br>
-<code>UpdateResult update(UpdateOptions, UpdateOperator, UpdateOperator&#8230;&#8203;)</code><br>
-<code>UpdateResult update(Stage, Stage&#8230;&#8203;)</code><br>
-<code>UpdateResult update(UpdateOptions, Stage, Stage&#8230;&#8203;)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">and(Criteria&#8230;&#8203;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count()</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count(CountOptions)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">count(CountOptions)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">criteria(String)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">delete()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">delete()</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">delete(DeleteOptions)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">delete(DeleteOptions)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">disableValidation()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">disableValidation()</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">enableValidation()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">enableValidation()</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">execute()</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">execute(FindOptions)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">explain()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">explain()</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">explain(ExplainVerbosity)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">explain(ExplainVerbosity)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">explain(FindOptions)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">explain(FindOptions, ExplainVerbosity)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">field(String)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">filter(Filter&#8230;&#8203;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">filter(Filter&#8230;&#8203;)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">filter(String, Object)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">find()</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">find(FindOptions)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">findAndDelete()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">findAndDelete()</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">findAndDelete(FindAndDeleteOptions)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">findAndDelete(FindAndDeleteOptions)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">first()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">first()</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">first(FindOptions)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getEntityClass()</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getLoggedQuery()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">getLoggedQuery()</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">iterator()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">iterator()</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">iterator(FindOptions)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">keys()</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">keys(FindOptions)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">modify(ModifyOptions, UpdateOperator, UpdateOperator&#8230;&#8203;)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">modify(ModifyOptions, UpdateOperator&#8230;&#8203;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">modify(UpdateOperations&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">modify(UpdateOperator, UpdateOperator&#8230;&#8203;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">modify(UpdateOperator, UpdateOperator&#8230;&#8203;)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">or(Criteria&#8230;&#8203;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">retrieveKnownFields()</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">search(String)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">search(String, String)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">stream()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">stream()</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">stream(FindOptions)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">toDocument()</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">update(List&lt;UpdateOperator&gt;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">update(Stage, Stage&#8230;&#8203;)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">update(Stage&#8230;&#8203;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">update(UpdateOperations&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">update(UpdateOperator, UpdateOperator&#8230;&#8203;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">update(UpdateOperator&#8230;&#8203;)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">update(UpdateOptions, Stage, Stage&#8230;&#8203;)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">update(UpdateOptions, Stage&#8230;&#8203;)</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">update(UpdateOptions, UpdateOperator&#8230;&#8203;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">update(UpdateOptions, UpdateOperator&#8230;&#8203;)</p></td>
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 </div>
 </div>
@@ -503,128 +935,134 @@ Enhanced type safety for aggregation operations</p></td>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_aggregation_interface_changes"><a class="anchor" href="#_aggregation_interface_changes"></a>Aggregation Interface Changes</h3>
+<div class="paragraph">
+<p><strong>Major Simplification</strong>: The Aggregation interface underwent the most dramatic transformation in Morphia 3.0:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Architectural Shift</strong>: v3.0.0 moves from individual stage methods to a unified <code>pipeline(Stage&#8230;&#8203;)</code> approach</p>
+<p><strong>Removed 41 pipeline-building methods</strong>: All specific aggregation stage methods (autoBucket, bucket, match, group, etc.) were removed</p>
 </li>
 <li>
-<p><strong>Simplified Execution</strong>: Aggregation now implements <code>Iterable&lt;T&gt;</code> and <code>AutoCloseable</code> for easier resource management</p>
+<p><strong>Added 4 new methods</strong>: The interface now focuses on pipeline management with <code>pipeline()</code>, <code>iterator()</code>, and <code>toList()</code> methods</p>
 </li>
 <li>
-<p><strong>Reduced API Surface</strong>: From 40+ methods to 4 core methods, making the interface much simpler to use</p>
+<p><strong>Architectural shift</strong>: Changed from a fluent pipeline builder to a simple pipeline container that implements <code>Iterable&lt;T&gt;</code></p>
 </li>
 <li>
-<p><strong>Enhanced Type Safety</strong>: Better support for source/target type separation in aggregations</p>
+<p><strong>Impact</strong>: Users must now build pipelines using the stage classes directly and pass them to <code>pipeline()</code> method</p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_datastore_interface_changes"><a class="anchor" href="#_datastore_interface_changes"></a>Datastore Interface Changes</h3>
+<div class="paragraph">
+<p><strong>Modernized Aggregation Support</strong>:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Legacy Method Removal</strong>: All deprecated methods with <code>forRemoval=true</code> have been removed</p>
+<p><strong>Enhanced type safety</strong>: New aggregation methods provide better source/target type separation with <code>aggregate(Class&lt;S&gt;, Class&lt;T&gt;, AggregationOptions)</code></p>
 </li>
 <li>
-<p><strong>Enhanced Aggregation Support</strong>: New overloaded <code>aggregate()</code> methods provide better type safety and flexibility</p>
+<p><strong>Removed legacy methods</strong>: Eliminated deprecated <code>createAggregation()</code>, <code>createQuery()</code>, and <code>createUpdateOperations()</code> methods</p>
 </li>
 <li>
-<p><strong>Configuration-Driven Setup</strong>: Database initialization methods removed in favor of configuration-based setup</p>
+<p><strong>Simplified options</strong>: Removed <code>WriteConcern</code> overloads in favor of <code>InsertOneOptions</code>/<code>InsertManyOptions</code></p>
 </li>
 <li>
-<p><strong>Simplified API</strong>: Interface reduced from 35+ to ~20 methods, focusing on core operations</p>
+<p><strong>Removed internal methods</strong>: Eliminated <code>getCodecRegistry()</code>, <code>getMapper()</code>, and development-time methods</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>CRUD Operation Consistency</strong>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Preserved core functionality</strong>: All essential CRUD operations remain available</p>
+</li>
+<li>
+<p><strong>Standardized options</strong>: Consistent use of <code>InsertOneOptions</code>, <code>InsertManyOptions</code>, <code>DeleteOptions</code>, and <code>ReplaceOptions</code></p>
+</li>
+<li>
+<p><strong>Removed query-based operations</strong>: Methods like <code>findAndDelete(Query&lt;T&gt;)</code> and <code>update(Query&lt;T&gt;, &#8230;&#8203;)</code> were removed</p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_query_interface_changes"><a class="anchor" href="#_query_interface_changes"></a>Query Interface Changes</h3>
+<div class="paragraph">
+<p><strong>API Cleanup and Modernization</strong>:</p>
+</div>
 <div class="ulist">
 <ul>
 <li>
-<p><strong>Modern Filter Approach</strong>: Transition from legacy criteria/field-based queries to <code>Filter</code>-based approach</p>
+<p><strong>Removed legacy criteria API</strong>: Eliminated <code>and()</code>, <code>or()</code>, <code>criteria()</code>, and <code>field()</code> methods from the old criteria-based query system</p>
 </li>
 <li>
-<p><strong>Streamlined Operations</strong>: Update and modify operations have cleaner signatures with better parameter ordering</p>
+<p><strong>Simplified execution methods</strong>: Removed redundant <code>execute()</code>, <code>find()</code>, and <code>keys()</code> methods</p>
 </li>
 <li>
-<p><strong>Enhanced Pipeline Support</strong>: Better support for pipeline-based updates using MongoDB stages</p>
+<p><strong>Enhanced update operations</strong>: Improved parameter ordering in <code>modify()</code> methods and added new <code>update()</code> overloads for pipeline-based updates</p>
 </li>
 <li>
-<p><strong>Removed Complexity</strong>: Legacy string-based filtering and criteria containers eliminated</p>
+<p><strong>Removed internal methods</strong>: Eliminated <code>getEntityClass()</code>, <code>toDocument()</code>, and other implementation details</p>
+</li>
+<li>
+<p><strong>Cleaner options handling</strong>: Removed <code>FindOptions</code> parameters from many methods, encouraging use of <code>Datastore.find(Class&lt;T&gt;, FindOptions)</code> instead</p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_migration_impact"><a class="anchor" href="#_migration_impact"></a>Migration Impact</h3>
-<div class="sect3">
-<h4 id="_breaking_changes_requiring_code_updates"><a class="anchor" href="#_breaking_changes_requiring_code_updates"></a>Breaking Changes Requiring Code Updates:</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Aggregation</strong>: Replace individual stage method calls with <code>pipeline(StageClass.stageMethod(), &#8230;&#8203;)</code> pattern</p>
-</li>
-<li>
-<p><strong>Query</strong>: Replace <code>field("name").equal(value)</code> with <code>filter(eq("name", value))</code> pattern</p>
-</li>
-<li>
-<p><strong>Datastore</strong>: Use configuration files for database setup instead of method calls</p>
-</li>
-</ul>
+<div class="paragraph">
+<p><strong>Breaking Changes</strong>:</p>
 </div>
-</div>
-<div class="sect3">
-<h4 id="_benefits_of_v3_0_0"><a class="anchor" href="#_benefits_of_v3_0_0"></a>Benefits of v3.0.0:</h4>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Cleaner APIs</strong>: Significantly reduced method count across all interfaces</p>
-</li>
-<li>
-<p><strong>Better Type Safety</strong>: Enhanced generic support, especially for aggregations</p>
-</li>
-<li>
-<p><strong>Modern MongoDB Features</strong>: Better alignment with current MongoDB driver patterns</p>
-</li>
-<li>
-<p><strong>Simplified Resource Management</strong>: Proper <code>AutoCloseable</code> support for aggregations</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_recommended_migration_strategy"><a class="anchor" href="#_recommended_migration_strategy"></a>Recommended Migration Strategy:</h4>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><strong>Update Aggregations</strong>: Convert to <code>pipeline()</code> approach using static factory methods from stage classes</p>
+<p><strong>Aggregation pipelines</strong> require complete rewriting to use the new pipeline-based approach</p>
 </li>
 <li>
-<p><strong>Update Queries</strong>: Replace legacy criteria with <code>Filters</code> class methods</p>
+<p><strong>Legacy query criteria</strong> must be migrated to the modern Filter-based API</p>
 </li>
 <li>
-<p><strong>Update Configuration</strong>: Move database setup from code to configuration files</p>
+<p><strong>Query execution patterns</strong> need updates due to removed execute/find methods</p>
 </li>
 <li>
-<p><strong>Update Dependencies</strong>: Ensure code uses v3.0.0-compatible patterns throughout</p>
+<p><strong>Update operations</strong> require parameter reordering in some modify methods</p>
 </li>
 </ol>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-This analysis focuses only on public interface methods that changed between versions. Implementation details, internal methods, and unchanged public methods are not included.
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p><strong>Benefits</strong>:</p>
 </div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Cleaner APIs</strong> with reduced method proliferation and clearer responsibilities</p>
+</li>
+<li>
+<p><strong>Better type safety</strong> especially in aggregation operations</p>
+</li>
+<li>
+<p><strong>Reduced complexity</strong> through elimination of deprecated and redundant methods</p>
+</li>
+<li>
+<p><strong>Improved consistency</strong> across CRUD operations and options handling</p>
+</li>
+<li>
+<p><strong>Future-proof design</strong> that better aligns with MongoDB driver patterns</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>This migration represents a significant modernization effort that, while requiring code changes, results in a cleaner, more maintainable, and more intuitive API surface.</p>
 </div>
 </div>
 </div>
