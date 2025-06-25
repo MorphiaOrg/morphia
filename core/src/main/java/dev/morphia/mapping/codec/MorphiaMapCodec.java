@@ -70,7 +70,7 @@ public class MorphiaMapCodec implements Codec<Map> {
         }
 
         reader.readEndDocument();
-        return Map.of();
+        return map;
     }
 
     @Override
