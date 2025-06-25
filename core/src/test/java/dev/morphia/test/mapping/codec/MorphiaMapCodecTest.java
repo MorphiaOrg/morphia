@@ -1,12 +1,13 @@
 package dev.morphia.test.mapping.codec;
 
+import java.util.Map;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.test.TestBase;
+
 import org.bson.BsonNull;
 import org.testng.annotations.Test;
-
-import java.util.Map;
 
 import static java.util.List.of;
 import static org.testng.Assert.*;
@@ -21,7 +22,6 @@ public class MorphiaMapCodecTest extends TestBase {
     public void testBasicUsagex() {
         var testClass = new SomeClass(1L, "value");
         getDs().save(testClass);
-        getMapper().map(SomeClass.class);
 
         var found = getDs().aggregate(SomeClass.class).execute(Map.class).toList();
         assertNotNull(found);
@@ -37,7 +37,6 @@ public class MorphiaMapCodecTest extends TestBase {
     public void testNullCase() {
         var testClass = new SomeClass(1L, BsonNull.VALUE);
         getDs().save(testClass);
-        getMapper().map(SomeClass.class);
 
         var found = getDs().aggregate(SomeClass.class).execute(Map.class).toList();
         assertNotNull(found);
