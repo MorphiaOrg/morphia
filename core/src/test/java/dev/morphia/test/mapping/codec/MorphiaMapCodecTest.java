@@ -19,7 +19,7 @@ public class MorphiaMapCodecTest extends TestBase {
     }
 
     @Test
-    public void testBasicUsagex() {
+    public void testBasicUsage() {
         var testClass = new SomeClass(1L, "value");
         getDs().save(testClass);
 
