@@ -1,246 +1,507 @@
-= Morphia API Migration Guide: 2.5 to 3.0
+= API Changes: Morphia 2.5 to 3.0
+:source-highlighter: highlight.js
 
-This document provides a comprehensive comparison of the core Morphia interfaces between version 2.5 and 3.0, highlighting the significant architectural changes and API simplifications introduced in the major version update.
+== Introduction
 
-== Summary
+This document outlines the public API changes between Morphia 2.5 and 3.0, providing a comprehensive side-by-side comparison of all modified classes and their methods. The migration from 2.5 to 3.0 represents a significant modernization of the Morphia API, with substantial changes to the aggregation framework, query interface, and datastore operations.
 
-Morphia 3.0 represents a major architectural shift with extensive API simplification and modernization. The update removes deprecated methods, consolidates functionality, and provides cleaner, more intuitive interfaces. Key changes include:
+The changes focus on simplifying the API surface, removing deprecated functionality, and providing more consistent method signatures across the framework. Developers upgrading from 2.5 will need to adapt their code to use the new streamlined interfaces, particularly around aggregation pipelines and query operations.
 
-* **Aggregation Interface**: Complete redesign from a fluent pipeline builder to a simple pipeline container
-* **Datastore Interface**: Modernized aggregation methods with enhanced type safety and removed legacy operations
-* **Query Interface**: Streamlined API with removed deprecated methods and cleaner parameter signatures
+== Method Changes by Class
 
-== Interface Comparisons
-
-=== Aggregation Interface
+=== dev.morphia.Datastore
 
 [cols="1,1", options="header"]
 |===
-| v2.5 | v3.0
+|2.5 |3.0
 
-| addFields(AddFields) | 
-| addStage(Stage) | 
-| autoBucket(AutoBucket) | 
-| bucket(Bucket) | 
-| changeStream() | 
-| changeStream(ChangeStream) | 
-| collStats(CollectionStats) | 
-| count(String) | 
-| currentOp(CurrentOp) | 
-| densify(Densify) | 
-| documents(DocumentExpression...) | 
-| execute(Class<S>) | 
-| execute(Class<S>, AggregationOptions) | 
-| facet(Facet) | 
-| fill(Fill) | 
-| geoNear(GeoNear) | 
-| graphLookup(GraphLookup) | 
-| group(Group) | 
-| indexStats() | 
-|  | iterator()
-| limit(long) | 
-| lookup(Lookup) | 
-| match(Filter...) | 
-| merge(Merge<M>) | 
-| merge(Merge<M>, AggregationOptions) | 
-| out(Out<O>) | 
-| out(Out<O>, AggregationOptions) | 
-|  | pipeline(List<Stage>)
-|  | pipeline(Stage...)
-| planCacheStats() | 
-| project(Projection) | 
-| redact(Redact) | 
-| replaceRoot(ReplaceRoot) | 
-| replaceWith(ReplaceWith) | 
-| sample(long) | 
-| set(AddFields) | 
-| set(Set) | 
-| setWindowFields(SetWindowFields) | 
-| skip(long) | 
-| sort(Sort) | 
-| sortByCount(Expression) | 
-|  | toList()
-| unionWith(Class<?>, Stage, Stage...) | 
-| unionWith(String, Stage, Stage...) | 
-| unset(Unset) | 
-| unwind(Unwind) |
+|`abstract dev.morphia.aggregation.Aggregation aggregate(java.lang.String)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation aggregate(java.lang.Class)`
+|
+
+|
+|`dev.morphia.aggregation.Aggregation aggregate(dev.morphia.aggregation.AggregationOptions)`
+
+|
+|`dev.morphia.aggregation.Aggregation aggregate(java.lang.Class)`
+
+|
+|`dev.morphia.aggregation.Aggregation aggregate(java.lang.Class, dev.morphia.aggregation.AggregationOptions)`
+
+|
+|`dev.morphia.aggregation.Aggregation aggregate(java.lang.Class, java.lang.Class)`
+
+|
+|`abstract dev.morphia.aggregation.Aggregation aggregate(java.lang.Class, java.lang.Class, dev.morphia.aggregation.AggregationOptions)`
+
+|`abstract dev.morphia.aggregation.AggregationPipeline createAggregation(java.lang.Class)`
+|
+
+|`dev.morphia.query.Query createQuery(java.lang.Class)`
+|
+
+|`dev.morphia.query.UpdateOperations createUpdateOperations(java.lang.Class)`
+|
+
+|`com.mongodb.client.result.DeleteResult delete(dev.morphia.query.Query)`
+|
+
+|`abstract com.mongodb.client.result.DeleteResult delete(dev.morphia.T)`
+|`abstract com.mongodb.client.result.DeleteResult delete(dev.morphia.T)`
+
+|`com.mongodb.client.result.DeleteResult delete(dev.morphia.query.Query, dev.morphia.DeleteOptions)`
+|
+
+|`abstract com.mongodb.client.result.DeleteResult delete(dev.morphia.T, dev.morphia.DeleteOptions)`
+|`abstract com.mongodb.client.result.DeleteResult delete(dev.morphia.T, dev.morphia.DeleteOptions)`
+
+|`abstract dev.morphia.void enableDocumentValidation()`
+|
+
+|`abstract dev.morphia.void ensureCaps()`
+|
+
+|`abstract dev.morphia.void ensureIndexes()`
+|
+
+|`dev.morphia.query.Query find(java.lang.Class)`
+|`dev.morphia.query.Query find(java.lang.Class)`
+
+|`abstract dev.morphia.query.Query find(java.lang.String)`
+|
+
+|`abstract dev.morphia.query.Query find(java.lang.Class, dev.morphia.query.FindOptions)`
+|`abstract dev.morphia.query.Query find(java.lang.Class, dev.morphia.query.FindOptions)`
+
+|`abstract dev.morphia.query.Query find(java.lang.Class, org.bson.Document)`
+|`abstract dev.morphia.query.Query find(java.lang.Class, org.bson.Document)`
+
+|`dev.morphia.query.Query find(java.lang.String, java.lang.Class)`
+|
+
+|
+|`abstract dev.morphia.query.Query find(java.lang.Class, org.bson.Document, dev.morphia.query.FindOptions)`
+
+|`dev.morphia.T findAndDelete(dev.morphia.query.Query)`
+|
+
+|`dev.morphia.T findAndDelete(dev.morphia.query.Query, dev.morphia.FindAndModifyOptions)`
+|
+
+|`dev.morphia.T findAndModify(dev.morphia.query.Query, dev.morphia.query.UpdateOperations)`
+|
+
+|`dev.morphia.T findAndModify(dev.morphia.query.Query, dev.morphia.query.UpdateOperations, dev.morphia.FindAndModifyOptions)`
+|
+
+|`abstract org.bson.codecs.configuration.CodecRegistry getCodecRegistry()`
+|
+
+|`abstract com.mongodb.client.MongoCollection getCollection(java.lang.Class)`
+|`abstract com.mongodb.client.MongoCollection getCollection(java.lang.Class)`
+
+|`abstract com.mongodb.client.MongoDatabase getDatabase()`
+|`abstract com.mongodb.client.MongoDatabase getDatabase()`
+
+|`abstract java.lang.String getLoggedQuery(dev.morphia.query.FindOptions)`
+|
+
+|`abstract dev.morphia.mapping.Mapper getMapper()`
+|
+
+|`dev.morphia.void insert(dev.morphia.T)`
+|`dev.morphia.void insert(dev.morphia.T)`
+
+|`dev.morphia.void insert(java.util.List)`
+|`dev.morphia.void insert(java.util.List)`
+
+|`abstract dev.morphia.void insert(dev.morphia.T, dev.morphia.InsertOneOptions)`
+|`abstract dev.morphia.void insert(dev.morphia.T, dev.morphia.InsertOneOptions)`
+
+|`abstract dev.morphia.void insert(java.util.List, dev.morphia.InsertManyOptions)`
+|`abstract dev.morphia.void insert(java.util.List, dev.morphia.InsertManyOptions)`
+
+|`abstract dev.morphia.T merge(dev.morphia.T)`
+|`abstract dev.morphia.T merge(dev.morphia.T)`
+
+|`dev.morphia.void merge(dev.morphia.T, com.mongodb.WriteConcern)`
+|
+
+|`abstract dev.morphia.T merge(dev.morphia.T, dev.morphia.InsertOneOptions)`
+|`abstract dev.morphia.T merge(dev.morphia.T, dev.morphia.InsertOneOptions)`
+
+|`abstract dev.morphia.query.Query queryByExample(dev.morphia.T)`
+|`abstract dev.morphia.query.Query queryByExample(dev.morphia.T)`
+
+|`abstract dev.morphia.void refresh(dev.morphia.T)`
+|`abstract dev.morphia.void refresh(dev.morphia.T)`
+
+|`dev.morphia.T replace(dev.morphia.T)`
+|`dev.morphia.T replace(dev.morphia.T)`
+
+|`java.util.List replace(java.util.List)`
+|`java.util.List replace(java.util.List)`
+
+|`abstract dev.morphia.T replace(dev.morphia.T, dev.morphia.ReplaceOptions)`
+|`abstract dev.morphia.T replace(dev.morphia.T, dev.morphia.ReplaceOptions)`
+
+|`abstract java.util.List replace(java.util.List, dev.morphia.ReplaceOptions)`
+|`abstract java.util.List replace(java.util.List, dev.morphia.ReplaceOptions)`
+
+|`java.util.List save(java.lang.Iterable)`
+|
+
+|`java.util.List save(java.util.List)`
+|`java.util.List save(java.util.List)`
+
+|`dev.morphia.T save(dev.morphia.T)`
+|`dev.morphia.T save(dev.morphia.T)`
+
+|`abstract java.util.List save(java.util.List, dev.morphia.InsertManyOptions)`
+|`abstract java.util.List save(java.util.List, dev.morphia.InsertManyOptions)`
+
+|`java.util.List save(java.lang.Iterable, dev.morphia.InsertOptions)`
+|
+
+|`abstract dev.morphia.T save(dev.morphia.T, dev.morphia.InsertOneOptions)`
+|`abstract dev.morphia.T save(dev.morphia.T, dev.morphia.InsertOneOptions)`
+
+|`dev.morphia.T save(dev.morphia.T, dev.morphia.InsertOptions)`
+|
+
+|`abstract dev.morphia.void shardCollections()`
+|`abstract dev.morphia.void shardCollections()`
+
+|`abstract dev.morphia.transactions.MorphiaSession startSession()`
+|`abstract dev.morphia.transactions.MorphiaSession startSession()`
+
+|`abstract dev.morphia.transactions.MorphiaSession startSession(com.mongodb.ClientSessionOptions)`
+|`abstract dev.morphia.transactions.MorphiaSession startSession(com.mongodb.ClientSessionOptions)`
+
+|`com.mongodb.client.result.UpdateResult update(dev.morphia.query.Query, dev.morphia.query.UpdateOperations)`
+|
+
+|`com.mongodb.client.result.UpdateResult update(dev.morphia.query.Query, dev.morphia.query.UpdateOperations, dev.morphia.UpdateOptions)`
+|
+
+|`abstract dev.morphia.T withTransaction(dev.morphia.transactions.MorphiaTransaction)`
+|`abstract dev.morphia.T withTransaction(dev.morphia.transactions.MorphiaTransaction)`
+
+|`abstract dev.morphia.T withTransaction(com.mongodb.ClientSessionOptions, dev.morphia.transactions.MorphiaTransaction)`
+|`abstract dev.morphia.T withTransaction(com.mongodb.ClientSessionOptions, dev.morphia.transactions.MorphiaTransaction)`
 |===
 
-=== Datastore Interface
+=== dev.morphia.aggregation.Aggregation
 
 [cols="1,1", options="header"]
 |===
-| v2.5 | v3.0
+|2.5 |3.0
 
-|  | aggregate(AggregationOptions)
-|  | aggregate(Class<S>)
-|  | aggregate(Class<S>, AggregationOptions)
-|  | aggregate(Class<S>, Class<T>)
-|  | aggregate(Class<S>, Class<T>, AggregationOptions)
-| aggregate(Class<T>) | 
-| aggregate(String) | 
-| createAggregation(Class<?>) | 
-| createQuery(Class<T>) | 
-| createUpdateOperations(Class<T>) | 
-| delete(Query<T>) | 
-| delete(Query<T>, DeleteOptions) | 
-| delete(T) | delete(T)
-| delete(T, DeleteOptions) | delete(T, DeleteOptions)
-| enableDocumentValidation() | 
-| ensureCaps() | 
-| ensureIndexes() | 
-| find(Class<T>) | find(Class<T>)
-| find(Class<T>, Document) | find(Class<T>, Document)
-|  | find(Class<T>, Document, FindOptions)
-| find(Class<T>, FindOptions) | find(Class<T>, FindOptions)
-| find(String) | 
-| find(String, Class<T>) | 
-| findAndDelete(Query<T>) | 
-| findAndDelete(Query<T>, FindAndModifyOptions) | 
-| findAndModify(Query<T>, UpdateOperations<T>) | 
-| findAndModify(Query<T>, UpdateOperations<T>, FindAndModifyOptions) | 
-| getCodecRegistry() | 
-| getCollection(Class<T>) | getCollection(Class<T>)
-| getDatabase() | getDatabase()
-| getLoggedQuery(FindOptions) | 
-| getMapper() | 
-| insert(List<T>) | insert(List<T>)
-| insert(List<T>, InsertManyOptions) | insert(List<T>, InsertManyOptions)
-| insert(T) | insert(T)
-| insert(T, InsertOneOptions) | insert(T, InsertOneOptions)
-| merge(T) | merge(T)
-| merge(T, InsertOneOptions) | merge(T, InsertOneOptions)
-| merge(T, WriteConcern) | 
-| queryByExample(T) | queryByExample(T)
-| refresh(T) | refresh(T)
-| replace(List<T>) | replace(List<T>)
-| replace(List<T>, ReplaceOptions) | replace(List<T>, ReplaceOptions)
-| replace(T) | replace(T)
-| replace(T, ReplaceOptions) | replace(T, ReplaceOptions)
-| save(Iterable<T>) | 
-| save(Iterable<T>, InsertOptions) | 
-| save(List<T>) | save(List<T>)
-| save(List<T>, InsertManyOptions) | save(List<T>, InsertManyOptions)
-| save(T) | save(T)
-| save(T, InsertOneOptions) | save(T, InsertOneOptions)
-| save(T, InsertOptions) | 
-| shardCollections() | shardCollections()
-| startSession() | startSession()
-| startSession(ClientSessionOptions) | startSession(ClientSessionOptions)
-| update(Query<T>, UpdateOperations<T>) | 
-| update(Query<T>, UpdateOperations<T>, UpdateOptions) | 
-| withTransaction(ClientSessionOptions, MorphiaTransaction<T>) | withTransaction(ClientSessionOptions, MorphiaTransaction<T>)
-| withTransaction(MorphiaTransaction<T>) | withTransaction(MorphiaTransaction<T>)
+|`abstract dev.morphia.aggregation.Aggregation addFields(dev.morphia.aggregation.stages.AddFields)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation addStage(dev.morphia.aggregation.stages.Stage)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation autoBucket(dev.morphia.aggregation.stages.AutoBucket)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation bucket(dev.morphia.aggregation.stages.Bucket)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation changeStream()`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation changeStream(dev.morphia.aggregation.stages.ChangeStream)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation collStats(dev.morphia.aggregation.stages.CollectionStats)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation count(java.lang.String)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation currentOp(dev.morphia.aggregation.stages.CurrentOp)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation densify(dev.morphia.aggregation.stages.Densify)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation documents(dev.morphia.aggregation.expressions.impls.DocumentExpression)`
+|
+
+|`abstract dev.morphia.query.internal.MorphiaCursor execute(java.lang.Class)`
+|
+
+|`abstract dev.morphia.query.internal.MorphiaCursor execute(java.lang.Class, dev.morphia.aggregation.AggregationOptions)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation facet(dev.morphia.aggregation.stages.Facet)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation fill(dev.morphia.aggregation.stages.Fill)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation geoNear(dev.morphia.aggregation.stages.GeoNear)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation graphLookup(dev.morphia.aggregation.stages.GraphLookup)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation group(dev.morphia.aggregation.stages.Group)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation indexStats()`
+|
+
+|
+|`abstract dev.morphia.query.MorphiaCursor iterator()`
+
+|`abstract dev.morphia.aggregation.Aggregation limit(long)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation lookup(dev.morphia.aggregation.stages.Lookup)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation match(dev.morphia.query.filters.Filter)`
+|
+
+|`abstract dev.morphia.aggregation.void merge(dev.morphia.aggregation.stages.Merge)`
+|
+
+|`abstract dev.morphia.aggregation.void merge(dev.morphia.aggregation.stages.Merge, dev.morphia.aggregation.AggregationOptions)`
+|
+
+|`abstract dev.morphia.aggregation.void out(dev.morphia.aggregation.stages.Out)`
+|
+
+|`abstract dev.morphia.aggregation.void out(dev.morphia.aggregation.stages.Out, dev.morphia.aggregation.AggregationOptions)`
+|
+
+|
+|`abstract dev.morphia.aggregation.Aggregation pipeline(dev.morphia.aggregation.stages.Stage)`
+
+|
+|`dev.morphia.aggregation.Aggregation pipeline(java.util.List)`
+
+|`abstract dev.morphia.aggregation.Aggregation planCacheStats()`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation project(dev.morphia.aggregation.stages.Projection)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation redact(dev.morphia.aggregation.stages.Redact)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation replaceRoot(dev.morphia.aggregation.stages.ReplaceRoot)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation replaceWith(dev.morphia.aggregation.stages.ReplaceWith)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation sample(long)`
+|
+
+|`dev.morphia.aggregation.Aggregation set(dev.morphia.aggregation.stages.AddFields)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation set(dev.morphia.aggregation.stages.Set)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation setWindowFields(dev.morphia.aggregation.stages.SetWindowFields)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation skip(long)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation sort(dev.morphia.aggregation.stages.Sort)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation sortByCount(dev.morphia.aggregation.expressions.impls.Expression)`
+|
+
+|
+|`java.util.List toList()`
+
+|`abstract dev.morphia.aggregation.Aggregation unionWith(java.lang.Class, dev.morphia.aggregation.stages.Stage, dev.morphia.aggregation.stages.Stage)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation unionWith(java.lang.String, dev.morphia.aggregation.stages.Stage, dev.morphia.aggregation.stages.Stage)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation unset(dev.morphia.aggregation.stages.Unset)`
+|
+
+|`abstract dev.morphia.aggregation.Aggregation unwind(dev.morphia.aggregation.stages.Unwind)`
+|
 |===
 
-=== Query Interface
+=== dev.morphia.query.Query
 
 [cols="1,1", options="header"]
 |===
-| v2.5 | v3.0
+|2.5 |3.0
 
-| and(Criteria...) | 
-| count() | count()
-| count(CountOptions) | count(CountOptions)
-| criteria(String) | 
-| delete() | delete()
-| delete(DeleteOptions) | delete(DeleteOptions)
-| disableValidation() | disableValidation()
-| enableValidation() | enableValidation()
-| execute() | 
-| execute(FindOptions) | 
-| explain() | explain()
-| explain(ExplainVerbosity) | explain(ExplainVerbosity)
-| explain(FindOptions) | 
-| explain(FindOptions, ExplainVerbosity) | 
-| field(String) | 
-| filter(Filter...) | filter(Filter...)
-| filter(String, Object) | 
-| find() | 
-| find(FindOptions) | 
-| findAndDelete() | findAndDelete()
-| findAndDelete(FindAndDeleteOptions) | findAndDelete(FindAndDeleteOptions)
-| first() | first()
-| first(FindOptions) | 
-| getEntityClass() | 
-| getLoggedQuery() | getLoggedQuery()
-| iterator() | iterator()
-| iterator(FindOptions) | 
-| keys() | 
-| keys(FindOptions) | 
-|  | modify(ModifyOptions, UpdateOperator, UpdateOperator...)
-| modify(ModifyOptions, UpdateOperator...) | 
-| modify(UpdateOperations<T>) | 
-| modify(UpdateOperator, UpdateOperator...) | modify(UpdateOperator, UpdateOperator...)
-| or(Criteria...) | 
-| retrieveKnownFields() | 
-| search(String) | 
-| search(String, String) | 
-| stream() | stream()
-| stream(FindOptions) | 
-| toDocument() | 
-| update(List<UpdateOperator>) | 
-|  | update(Stage, Stage...)
-| update(Stage...) | 
-| update(UpdateOperations<T>) | 
-| update(UpdateOperator, UpdateOperator...) | 
-|  | update(UpdateOperator...)
-|  | update(UpdateOptions, Stage, Stage...)
-| update(UpdateOptions, Stage...) | 
-| update(UpdateOptions, UpdateOperator...) | update(UpdateOptions, UpdateOperator...)
+|`dev.morphia.query.CriteriaContainer and(dev.morphia.query.Criteria)`
+|
+
+|`abstract long count()`
+|`abstract long count()`
+
+|`abstract long count(dev.morphia.query.CountOptions)`
+|`abstract long count(dev.morphia.query.CountOptions)`
+
+|`dev.morphia.query.FieldEnd criteria(java.lang.String)`
+|
+
+|`com.mongodb.client.result.DeleteResult delete()`
+|`com.mongodb.client.result.DeleteResult delete()`
+
+|`abstract com.mongodb.client.result.DeleteResult delete(dev.morphia.DeleteOptions)`
+|`abstract com.mongodb.client.result.DeleteResult delete(dev.morphia.DeleteOptions)`
+
+|`abstract dev.morphia.query.Query disableValidation()`
+|`abstract dev.morphia.query.Query disableValidation()`
+
+|`abstract dev.morphia.query.Query enableValidation()`
+|`abstract dev.morphia.query.Query enableValidation()`
+
+|`dev.morphia.query.internal.MorphiaCursor execute()`
+|
+
+|`dev.morphia.query.internal.MorphiaCursor execute(dev.morphia.query.FindOptions)`
+|
+
+|`abstract java.util.Map explain()`
+|`abstract java.util.Map explain()`
+
+|`java.util.Map explain(dev.morphia.query.FindOptions)`
+|
+
+|`abstract java.util.Map explain(com.mongodb.ExplainVerbosity)`
+|`abstract java.util.Map explain(com.mongodb.ExplainVerbosity)`
+
+|`abstract java.util.Map explain(dev.morphia.query.FindOptions, com.mongodb.ExplainVerbosity)`
+|
+
+|`dev.morphia.query.FieldEnd field(java.lang.String)`
+|
+
+|`dev.morphia.query.Query filter(dev.morphia.query.filters.Filter)`
+|`abstract dev.morphia.query.Query filter(dev.morphia.query.filters.Filter)`
+
+|`dev.morphia.query.Query filter(java.lang.String, java.lang.Object)`
+|
+
+|`dev.morphia.query.internal.MorphiaCursor find()`
+|
+
+|`dev.morphia.query.internal.MorphiaCursor find(dev.morphia.query.FindOptions)`
+|
+
+|`dev.morphia.query.T findAndDelete()`
+|`dev.morphia.query.T findAndDelete()`
+
+|`abstract dev.morphia.query.T findAndDelete(dev.morphia.query.FindAndDeleteOptions)`
+|`abstract dev.morphia.query.T findAndDelete(dev.morphia.query.FindAndDeleteOptions)`
+
+|`abstract dev.morphia.query.T first()`
+|`abstract dev.morphia.query.T first()`
+
+|`abstract dev.morphia.query.T first(dev.morphia.query.FindOptions)`
+|
+
+|`abstract java.lang.Class getEntityClass()`
+|
+
+|`abstract java.lang.String getLoggedQuery()`
+|`abstract java.lang.String getLoggedQuery()`
+
+|`abstract dev.morphia.query.internal.MorphiaCursor iterator()`
+|`abstract dev.morphia.query.MorphiaCursor iterator()`
+
+|`abstract dev.morphia.query.internal.MorphiaCursor iterator(dev.morphia.query.FindOptions)`
+|
+
+|`abstract dev.morphia.query.internal.MorphiaKeyCursor keys()`
+|
+
+|`abstract dev.morphia.query.internal.MorphiaKeyCursor keys(dev.morphia.query.FindOptions)`
+|
+
+|`dev.morphia.query.Modify modify(dev.morphia.query.UpdateOperations)`
+|
+
+|`abstract dev.morphia.query.Modify modify(dev.morphia.query.updates.UpdateOperator, dev.morphia.query.updates.UpdateOperator)`
+|`dev.morphia.query.T modify(dev.morphia.query.updates.UpdateOperator, dev.morphia.query.updates.UpdateOperator)`
+
+|`dev.morphia.query.T modify(dev.morphia.ModifyOptions, dev.morphia.query.updates.UpdateOperator)`
+|
+
+|
+|`abstract dev.morphia.query.T modify(dev.morphia.ModifyOptions, dev.morphia.query.updates.UpdateOperator, dev.morphia.query.updates.UpdateOperator)`
+
+|`dev.morphia.query.CriteriaContainer or(dev.morphia.query.Criteria)`
+|
+
+|`dev.morphia.query.Query retrieveKnownFields()`
+|
+
+|`abstract dev.morphia.query.Query search(java.lang.String)`
+|
+
+|`abstract dev.morphia.query.Query search(java.lang.String, java.lang.String)`
+|
+
+|`java.util.stream.Stream stream()`
+|`abstract java.util.stream.Stream stream()`
+
+|`java.util.stream.Stream stream(dev.morphia.query.FindOptions)`
+|
+
+|`abstract org.bson.Document toDocument()`
+|
+
+|`dev.morphia.query.Update update(java.util.List)`
+|
+
+|`dev.morphia.query.Update update(dev.morphia.query.UpdateOperations)`
+|
+
+|`com.mongodb.client.result.UpdateResult update(dev.morphia.aggregation.stages.Stage)`
+|
+
+|
+|`com.mongodb.client.result.UpdateResult update(dev.morphia.query.updates.UpdateOperator)`
+
+|`abstract dev.morphia.query.Update update(dev.morphia.query.updates.UpdateOperator, dev.morphia.query.updates.UpdateOperator)`
+|
+
+|`com.mongodb.client.result.UpdateResult update(dev.morphia.UpdateOptions, dev.morphia.aggregation.stages.Stage)`
+|
+
+|`com.mongodb.client.result.UpdateResult update(dev.morphia.UpdateOptions, dev.morphia.query.updates.UpdateOperator)`
+|`abstract com.mongodb.client.result.UpdateResult update(dev.morphia.UpdateOptions, dev.morphia.query.updates.UpdateOperator)`
+
+|
+|`com.mongodb.client.result.UpdateResult update(dev.morphia.aggregation.stages.Stage, dev.morphia.aggregation.stages.Stage)`
+
+|
+|`abstract com.mongodb.client.result.UpdateResult update(dev.morphia.UpdateOptions, dev.morphia.aggregation.stages.Stage, dev.morphia.aggregation.stages.Stage)`
 |===
 
 == Key Observations
 
-=== Aggregation Interface Changes
+The migration from Morphia 2.5 to 3.0 represents a significant modernization effort with several major architectural changes:
 
-**Major Simplification**: The Aggregation interface underwent the most dramatic transformation in Morphia 3.0:
+**Aggregation Framework Redesign**: The most substantial change is in the aggregation API. Version 2.5 provided an extensive fluent interface with methods for each aggregation stage (addFields, bucket, group, etc.), while version 3.0 adopts a streamlined pipeline-based approach. The new API focuses on building pipelines using `pipeline()` methods and executing them with `iterator()` and `toList()`.
 
-* **Removed 41 pipeline-building methods**: All specific aggregation stage methods (autoBucket, bucket, match, group, etc.) were removed
-* **Added 4 new methods**: The interface now focuses on pipeline management with `pipeline()`, `iterator()`, and `toList()` methods
-* **Architectural shift**: Changed from a fluent pipeline builder to a simple pipeline container that implements `Iterable<T>`
-* **Impact**: Users must now build pipelines using the stage classes directly and pass them to `pipeline()` method
+**Query API Modernization**: The query interface has been significantly simplified. Legacy methods like `criteria()`, `field()`, `execute()`, and `find()` have been removed in favor of a more focused filter-based approach. The `filter()` method has changed from concrete to abstract, indicating a shift toward more structured query building.
 
-=== Datastore Interface Changes
+**Datastore Method Consolidation**: Several deprecated methods have been removed from the Datastore interface, including string-based operations, legacy query creation methods, and various utility functions. The API now emphasizes type safety and modern MongoDB driver patterns.
 
-**Modernized Aggregation Support**: 
+**Improved Method Signatures**: New overloads have been added with additional options parameters, providing more flexibility while maintaining backward compatibility where possible. Some methods have transitioned from concrete to abstract implementations, allowing for better extensibility.
 
-* **Enhanced type safety**: New aggregation methods provide better source/target type separation with `aggregate(Class<S>, Class<T>, AggregationOptions)`
-* **Removed legacy methods**: Eliminated deprecated `createAggregation()`, `createQuery()`, and `createUpdateOperations()` methods
-* **Simplified options**: Removed `WriteConcern` overloads in favor of `InsertOneOptions`/`InsertManyOptions`
-* **Removed internal methods**: Eliminated `getCodecRegistry()`, `getMapper()`, and development-time methods
-
-**CRUD Operation Consistency**:
-
-* **Preserved core functionality**: All essential CRUD operations remain available
-* **Standardized options**: Consistent use of `InsertOneOptions`, `InsertManyOptions`, `DeleteOptions`, and `ReplaceOptions`
-* **Removed query-based operations**: Methods like `findAndDelete(Query<T>)` and `update(Query<T>, ...)` were removed
-
-=== Query Interface Changes
-
-**API Cleanup and Modernization**:
-
-* **Removed legacy criteria API**: Eliminated `and()`, `or()`, `criteria()`, and `field()` methods from the old criteria-based query system
-* **Simplified execution methods**: Removed redundant `execute()`, `find()`, and `keys()` methods
-* **Enhanced update operations**: Improved parameter ordering in `modify()` methods and added new `update()` overloads for pipeline-based updates
-* **Removed internal methods**: Eliminated `getEntityClass()`, `toDocument()`, and other implementation details
-* **Cleaner options handling**: Removed `FindOptions` parameters from many methods, encouraging use of `Datastore.find(Class<T>, FindOptions)` instead
-
-=== Migration Impact
-
-**Breaking Changes**:
-
-1. **Aggregation pipelines** require complete rewriting to use the new pipeline-based approach
-2. **Legacy query criteria** must be migrated to the modern Filter-based API
-3. **Query execution patterns** need updates due to removed execute/find methods
-4. **Update operations** require parameter reordering in some modify methods
-
-**Benefits**:
-
-1. **Cleaner APIs** with reduced method proliferation and clearer responsibilities
-2. **Better type safety** especially in aggregation operations
-3. **Reduced complexity** through elimination of deprecated and redundant methods
-4. **Improved consistency** across CRUD operations and options handling
-5. **Future-proof design** that better aligns with MongoDB driver patterns
-
-This migration represents a significant modernization effort that, while requiring code changes, results in a cleaner, more maintainable, and more intuitive API surface.
+These changes collectively represent Morphia's evolution toward a more modern, maintainable, and MongoDB-driver-aligned API that should provide better performance and developer experience in version 3.0.
