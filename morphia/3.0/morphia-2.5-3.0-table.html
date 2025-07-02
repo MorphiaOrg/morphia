@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Morphia API Migration Guide: 2.5 to 3.0 :: Morphia Docs</title>
+    <title>API Changes: Morphia 2.5 to 3.0 :: Morphia Docs</title>
     <meta name="generator" content="Antora 3.1.4">
 <link rel="stylesheet" href="../../_/css/site.css">
 <link rel="stylesheet" href="../../_/css/morphia.css">
@@ -212,7 +212,7 @@
 <nav class="breadcrumbs" aria-label="breadcrumbs">
   <ul>
     <li><a href="index.html">Morphia</a></li>
-    <li><a href="morphia-2.5-3.0-table.html">Morphia API Migration Guide: 2.5 to 3.0</a></li>
+    <li><a href="morphia-2.5-3.0-table.html">API Changes: Morphia 2.5 to 3.0</a></li>
   </ul>
 </nav>
 <div class="page-versions">
@@ -229,40 +229,23 @@
   </div>
   <div class="content">
 <article class="doc">
-<h1 class="page">Morphia API Migration Guide: 2.5 to 3.0</h1>
-<div id="preamble">
+<h1 class="page">API Changes: Morphia 2.5 to 3.0</h1>
+<div class="sect1">
+<h2 id="_introduction"><a class="anchor" href="#_introduction"></a>Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This document provides a comprehensive comparison of the core Morphia interfaces between version 2.5 and 3.0, highlighting the significant architectural changes and API simplifications introduced in the major version update.</p>
+<p>This document outlines the public API changes between Morphia 2.5 and 3.0, providing a comprehensive side-by-side comparison of all modified classes and their methods. The migration from 2.5 to 3.0 represents a significant modernization of the Morphia API, with substantial changes to the aggregation framework, query interface, and datastore operations.</p>
+</div>
+<div class="paragraph">
+<p>The changes focus on simplifying the API surface, removing deprecated functionality, and providing more consistent method signatures across the framework. Developers upgrading from 2.5 will need to adapt their code to use the new streamlined interfaces, particularly around aggregation pipelines and query operations.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_summary"><a class="anchor" href="#_summary"></a>Summary</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Morphia 3.0 represents a major architectural shift with extensive API simplification and modernization. The update removes deprecated methods, consolidates functionality, and provides cleaner, more intuitive interfaces. Key changes include:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Aggregation Interface</strong>: Complete redesign from a fluent pipeline builder to a simple pipeline container</p>
-</li>
-<li>
-<p><strong>Datastore Interface</strong>: Modernized aggregation methods with enhanced type safety and removed legacy operations</p>
-</li>
-<li>
-<p><strong>Query Interface</strong>: Streamlined API with removed deprecated methods and cleaner parameter signatures</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_interface_comparisons"><a class="anchor" href="#_interface_comparisons"></a>Interface Comparisons</h2>
+<h2 id="_method_changes_by_class"><a class="anchor" href="#_method_changes_by_class"></a>Method Changes by Class</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_aggregation_interface"><a class="anchor" href="#_aggregation_interface"></a>Aggregation Interface</h3>
+<h3 id="_dev_morphia_datastore"><a class="anchor" href="#_dev_morphia_datastore"></a>dev.morphia.Datastore</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -270,200 +253,453 @@
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">v2.5</th>
-<th class="tableblock halign-left valign-top">v3.0</th>
+<th class="tableblock halign-left valign-top">2.5</th>
+<th class="tableblock halign-left valign-top">3.0</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">addFields(AddFields)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation aggregate(java.lang.String)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">addStage(Stage)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">autoBucket(AutoBucket)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">bucket(Bucket)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">changeStream()</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">changeStream(ChangeStream)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">collStats(CollectionStats)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">count(String)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">currentOp(CurrentOp)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">densify(Densify)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">documents(DocumentExpression&#8230;&#8203;)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">execute(Class&lt;S&gt;)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">execute(Class&lt;S&gt;, AggregationOptions)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">facet(Facet)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">fill(Fill)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">geoNear(GeoNear)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">graphLookup(GraphLookup)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">group(Group)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">indexStats()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation aggregate(java.lang.Class)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">iterator()</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">limit(long)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">lookup(Lookup)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">match(Filter&#8230;&#8203;)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">merge(Merge&lt;M&gt;)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">merge(Merge&lt;M&gt;, AggregationOptions)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">out(Out&lt;O&gt;)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">out(Out&lt;O&gt;, AggregationOptions)</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.aggregation.Aggregation aggregate(dev.morphia.aggregation.AggregationOptions)</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">pipeline(List&lt;Stage&gt;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.aggregation.Aggregation aggregate(java.lang.Class)</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">pipeline(Stage&#8230;&#8203;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.aggregation.Aggregation aggregate(java.lang.Class, dev.morphia.aggregation.AggregationOptions)</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">planCacheStats()</p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.aggregation.Aggregation aggregate(java.lang.Class, java.lang.Class)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation aggregate(java.lang.Class, java.lang.Class, dev.morphia.aggregation.AggregationOptions)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.AggregationPipeline createAggregation(java.lang.Class)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">project(Projection)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.query.Query createQuery(java.lang.Class)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">redact(Redact)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.query.UpdateOperations createUpdateOperations(java.lang.Class)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">replaceRoot(ReplaceRoot)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.mongodb.client.result.DeleteResult delete(dev.morphia.query.Query)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">replaceWith(ReplaceWith)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract com.mongodb.client.result.DeleteResult delete(dev.morphia.T)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract com.mongodb.client.result.DeleteResult delete(dev.morphia.T)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.mongodb.client.result.DeleteResult delete(dev.morphia.query.Query, dev.morphia.DeleteOptions)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">sample(long)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract com.mongodb.client.result.DeleteResult delete(dev.morphia.T, dev.morphia.DeleteOptions)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract com.mongodb.client.result.DeleteResult delete(dev.morphia.T, dev.morphia.DeleteOptions)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.void enableDocumentValidation()</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">set(AddFields)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.void ensureCaps()</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">set(Set)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.void ensureIndexes()</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">setWindowFields(SetWindowFields)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.query.Query find(java.lang.Class)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.query.Query find(java.lang.Class)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.Query find(java.lang.String)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">skip(long)</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.Query find(java.lang.Class, dev.morphia.query.FindOptions)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.Query find(java.lang.Class, dev.morphia.query.FindOptions)</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">sort(Sort)</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.Query find(java.lang.Class, org.bson.Document)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.Query find(java.lang.Class, org.bson.Document)</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">sortByCount(Expression)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.query.Query find(java.lang.String, java.lang.Class)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">toList()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.Query find(java.lang.Class, org.bson.Document, dev.morphia.query.FindOptions)</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">unionWith(Class&lt;?&gt;, Stage, Stage&#8230;&#8203;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.T findAndDelete(dev.morphia.query.Query)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">unionWith(String, Stage, Stage&#8230;&#8203;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.T findAndDelete(dev.morphia.query.Query, dev.morphia.FindAndModifyOptions)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">unset(Unset)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.T findAndModify(dev.morphia.query.Query, dev.morphia.query.UpdateOperations)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">unwind(Unwind)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.T findAndModify(dev.morphia.query.Query, dev.morphia.query.UpdateOperations, dev.morphia.FindAndModifyOptions)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract org.bson.codecs.configuration.CodecRegistry getCodecRegistry()</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract com.mongodb.client.MongoCollection getCollection(java.lang.Class)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract com.mongodb.client.MongoCollection getCollection(java.lang.Class)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract com.mongodb.client.MongoDatabase getDatabase()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract com.mongodb.client.MongoDatabase getDatabase()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract java.lang.String getLoggedQuery(dev.morphia.query.FindOptions)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.mapping.Mapper getMapper()</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.void insert(dev.morphia.T)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.void insert(dev.morphia.T)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.void insert(java.util.List)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.void insert(java.util.List)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.void insert(dev.morphia.T, dev.morphia.InsertOneOptions)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.void insert(dev.morphia.T, dev.morphia.InsertOneOptions)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.void insert(java.util.List, dev.morphia.InsertManyOptions)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.void insert(java.util.List, dev.morphia.InsertManyOptions)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.T merge(dev.morphia.T)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.T merge(dev.morphia.T)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.void merge(dev.morphia.T, com.mongodb.WriteConcern)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.T merge(dev.morphia.T, dev.morphia.InsertOneOptions)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.T merge(dev.morphia.T, dev.morphia.InsertOneOptions)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.Query queryByExample(dev.morphia.T)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.Query queryByExample(dev.morphia.T)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.void refresh(dev.morphia.T)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.void refresh(dev.morphia.T)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.T replace(dev.morphia.T)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.T replace(dev.morphia.T)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.util.List replace(java.util.List)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.util.List replace(java.util.List)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.T replace(dev.morphia.T, dev.morphia.ReplaceOptions)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.T replace(dev.morphia.T, dev.morphia.ReplaceOptions)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract java.util.List replace(java.util.List, dev.morphia.ReplaceOptions)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract java.util.List replace(java.util.List, dev.morphia.ReplaceOptions)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.util.List save(java.lang.Iterable)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.util.List save(java.util.List)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.util.List save(java.util.List)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.T save(dev.morphia.T)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.T save(dev.morphia.T)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract java.util.List save(java.util.List, dev.morphia.InsertManyOptions)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract java.util.List save(java.util.List, dev.morphia.InsertManyOptions)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.util.List save(java.lang.Iterable, dev.morphia.InsertOptions)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.T save(dev.morphia.T, dev.morphia.InsertOneOptions)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.T save(dev.morphia.T, dev.morphia.InsertOneOptions)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.T save(dev.morphia.T, dev.morphia.InsertOptions)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.void shardCollections()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.void shardCollections()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.transactions.MorphiaSession startSession()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.transactions.MorphiaSession startSession()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.transactions.MorphiaSession startSession(com.mongodb.ClientSessionOptions)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.transactions.MorphiaSession startSession(com.mongodb.ClientSessionOptions)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.mongodb.client.result.UpdateResult update(dev.morphia.query.Query, dev.morphia.query.UpdateOperations)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.mongodb.client.result.UpdateResult update(dev.morphia.query.Query, dev.morphia.query.UpdateOperations, dev.morphia.UpdateOptions)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.T withTransaction(dev.morphia.transactions.MorphiaTransaction)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.T withTransaction(dev.morphia.transactions.MorphiaTransaction)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.T withTransaction(com.mongodb.ClientSessionOptions, dev.morphia.transactions.MorphiaTransaction)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.T withTransaction(com.mongodb.ClientSessionOptions, dev.morphia.transactions.MorphiaTransaction)</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_dev_morphia_aggregation_aggregation"><a class="anchor" href="#_dev_morphia_aggregation_aggregation"></a>dev.morphia.aggregation.Aggregation</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">2.5</th>
+<th class="tableblock halign-left valign-top">3.0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation addFields(dev.morphia.aggregation.stages.AddFields)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation addStage(dev.morphia.aggregation.stages.Stage)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation autoBucket(dev.morphia.aggregation.stages.AutoBucket)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation bucket(dev.morphia.aggregation.stages.Bucket)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation changeStream()</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation changeStream(dev.morphia.aggregation.stages.ChangeStream)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation collStats(dev.morphia.aggregation.stages.CollectionStats)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation count(java.lang.String)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation currentOp(dev.morphia.aggregation.stages.CurrentOp)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation densify(dev.morphia.aggregation.stages.Densify)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation documents(dev.morphia.aggregation.expressions.impls.DocumentExpression)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.internal.MorphiaCursor execute(java.lang.Class)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.internal.MorphiaCursor execute(java.lang.Class, dev.morphia.aggregation.AggregationOptions)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation facet(dev.morphia.aggregation.stages.Facet)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation fill(dev.morphia.aggregation.stages.Fill)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation geoNear(dev.morphia.aggregation.stages.GeoNear)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation graphLookup(dev.morphia.aggregation.stages.GraphLookup)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation group(dev.morphia.aggregation.stages.Group)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation indexStats()</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.MorphiaCursor iterator()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation limit(long)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation lookup(dev.morphia.aggregation.stages.Lookup)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation match(dev.morphia.query.filters.Filter)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.void merge(dev.morphia.aggregation.stages.Merge)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.void merge(dev.morphia.aggregation.stages.Merge, dev.morphia.aggregation.AggregationOptions)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.void out(dev.morphia.aggregation.stages.Out)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.void out(dev.morphia.aggregation.stages.Out, dev.morphia.aggregation.AggregationOptions)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation pipeline(dev.morphia.aggregation.stages.Stage)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.aggregation.Aggregation pipeline(java.util.List)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation planCacheStats()</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation project(dev.morphia.aggregation.stages.Projection)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation redact(dev.morphia.aggregation.stages.Redact)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation replaceRoot(dev.morphia.aggregation.stages.ReplaceRoot)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation replaceWith(dev.morphia.aggregation.stages.ReplaceWith)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation sample(long)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.aggregation.Aggregation set(dev.morphia.aggregation.stages.AddFields)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation set(dev.morphia.aggregation.stages.Set)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation setWindowFields(dev.morphia.aggregation.stages.SetWindowFields)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation skip(long)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation sort(dev.morphia.aggregation.stages.Sort)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation sortByCount(dev.morphia.aggregation.expressions.impls.Expression)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.util.List toList()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation unionWith(java.lang.Class, dev.morphia.aggregation.stages.Stage, dev.morphia.aggregation.stages.Stage)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation unionWith(java.lang.String, dev.morphia.aggregation.stages.Stage, dev.morphia.aggregation.stages.Stage)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation unset(dev.morphia.aggregation.stages.Unset)</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.aggregation.Aggregation unwind(dev.morphia.aggregation.stages.Unwind)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="sect2">
-<h3 id="_datastore_interface"><a class="anchor" href="#_datastore_interface"></a>Datastore Interface</h3>
+<h3 id="_dev_morphia_query_query"><a class="anchor" href="#_dev_morphia_query_query"></a>dev.morphia.query.Query</h3>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -471,459 +707,206 @@
 </colgroup>
 <thead>
 <tr>
-<th class="tableblock halign-left valign-top">v2.5</th>
-<th class="tableblock halign-left valign-top">v3.0</th>
+<th class="tableblock halign-left valign-top">2.5</th>
+<th class="tableblock halign-left valign-top">3.0</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">aggregate(AggregationOptions)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">aggregate(Class&lt;S&gt;)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">aggregate(Class&lt;S&gt;, AggregationOptions)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">aggregate(Class&lt;S&gt;, Class&lt;T&gt;)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">aggregate(Class&lt;S&gt;, Class&lt;T&gt;, AggregationOptions)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">aggregate(Class&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.query.CriteriaContainer and(dev.morphia.query.Criteria)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">aggregate(String)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract long count()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract long count()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract long count(dev.morphia.query.CountOptions)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract long count(dev.morphia.query.CountOptions)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.query.FieldEnd criteria(java.lang.String)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">createAggregation(Class&lt;?&gt;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.mongodb.client.result.DeleteResult delete()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.mongodb.client.result.DeleteResult delete()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract com.mongodb.client.result.DeleteResult delete(dev.morphia.DeleteOptions)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract com.mongodb.client.result.DeleteResult delete(dev.morphia.DeleteOptions)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.Query disableValidation()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.Query disableValidation()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.Query enableValidation()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.Query enableValidation()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.query.internal.MorphiaCursor execute()</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">createQuery(Class&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.query.internal.MorphiaCursor execute(dev.morphia.query.FindOptions)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">createUpdateOperations(Class&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract java.util.Map explain()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract java.util.Map explain()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.util.Map explain(dev.morphia.query.FindOptions)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">delete(Query&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract java.util.Map explain(com.mongodb.ExplainVerbosity)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract java.util.Map explain(com.mongodb.ExplainVerbosity)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract java.util.Map explain(dev.morphia.query.FindOptions, com.mongodb.ExplainVerbosity)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">delete(Query&lt;T&gt;, DeleteOptions)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.query.FieldEnd field(java.lang.String)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">delete(T)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">delete(T)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.query.Query filter(dev.morphia.query.filters.Filter)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.Query filter(dev.morphia.query.filters.Filter)</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">delete(T, DeleteOptions)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">delete(T, DeleteOptions)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">enableDocumentValidation()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.query.Query filter(java.lang.String, java.lang.Object)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ensureCaps()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.query.internal.MorphiaCursor find()</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ensureIndexes()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.query.internal.MorphiaCursor find(dev.morphia.query.FindOptions)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">find(Class&lt;T&gt;)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">find(Class&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.query.T findAndDelete()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.query.T findAndDelete()</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">find(Class&lt;T&gt;, Document)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">find(Class&lt;T&gt;, Document)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.T findAndDelete(dev.morphia.query.FindAndDeleteOptions)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.T findAndDelete(dev.morphia.query.FindAndDeleteOptions)</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">find(Class&lt;T&gt;, Document, FindOptions)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.T first()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.T first()</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">find(Class&lt;T&gt;, FindOptions)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">find(Class&lt;T&gt;, FindOptions)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">find(String)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.T first(dev.morphia.query.FindOptions)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">find(String, Class&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract java.lang.Class getEntityClass()</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">findAndDelete(Query&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract java.lang.String getLoggedQuery()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract java.lang.String getLoggedQuery()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.internal.MorphiaCursor iterator()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.MorphiaCursor iterator()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.internal.MorphiaCursor iterator(dev.morphia.query.FindOptions)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">findAndDelete(Query&lt;T&gt;, FindAndModifyOptions)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.internal.MorphiaKeyCursor keys()</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">findAndModify(Query&lt;T&gt;, UpdateOperations&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.internal.MorphiaKeyCursor keys(dev.morphia.query.FindOptions)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">findAndModify(Query&lt;T&gt;, UpdateOperations&lt;T&gt;, FindAndModifyOptions)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.query.Modify modify(dev.morphia.query.UpdateOperations)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">getCodecRegistry()</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.Modify modify(dev.morphia.query.updates.UpdateOperator, dev.morphia.query.updates.UpdateOperator)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.query.T modify(dev.morphia.query.updates.UpdateOperator, dev.morphia.query.updates.UpdateOperator)</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">getCollection(Class&lt;T&gt;)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">getCollection(Class&lt;T&gt;)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">getDatabase()</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">getDatabase()</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">getLoggedQuery(FindOptions)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">getMapper()</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">insert(List&lt;T&gt;)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">insert(List&lt;T&gt;)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">insert(List&lt;T&gt;, InsertManyOptions)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">insert(List&lt;T&gt;, InsertManyOptions)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">insert(T)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">insert(T)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">insert(T, InsertOneOptions)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">insert(T, InsertOneOptions)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">merge(T)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">merge(T)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">merge(T, InsertOneOptions)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">merge(T, InsertOneOptions)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">merge(T, WriteConcern)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">queryByExample(T)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">queryByExample(T)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">refresh(T)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">refresh(T)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">replace(List&lt;T&gt;)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">replace(List&lt;T&gt;)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">replace(List&lt;T&gt;, ReplaceOptions)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">replace(List&lt;T&gt;, ReplaceOptions)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">replace(T)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">replace(T)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">replace(T, ReplaceOptions)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">replace(T, ReplaceOptions)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">save(Iterable&lt;T&gt;)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">save(Iterable&lt;T&gt;, InsertOptions)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">save(List&lt;T&gt;)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">save(List&lt;T&gt;)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">save(List&lt;T&gt;, InsertManyOptions)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">save(List&lt;T&gt;, InsertManyOptions)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">save(T)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">save(T)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">save(T, InsertOneOptions)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">save(T, InsertOneOptions)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">save(T, InsertOptions)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">shardCollections()</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">shardCollections()</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">startSession()</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">startSession()</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">startSession(ClientSessionOptions)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">startSession(ClientSessionOptions)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">update(Query&lt;T&gt;, UpdateOperations&lt;T&gt;)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">update(Query&lt;T&gt;, UpdateOperations&lt;T&gt;, UpdateOptions)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">withTransaction(ClientSessionOptions, MorphiaTransaction&lt;T&gt;)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">withTransaction(ClientSessionOptions, MorphiaTransaction&lt;T&gt;)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">withTransaction(MorphiaTransaction&lt;T&gt;)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">withTransaction(MorphiaTransaction&lt;T&gt;)</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_query_interface"><a class="anchor" href="#_query_interface"></a>Query Interface</h3>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">v2.5</th>
-<th class="tableblock halign-left valign-top">v3.0</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">and(Criteria&#8230;&#8203;)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">count()</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">count()</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">count(CountOptions)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">count(CountOptions)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">criteria(String)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">delete()</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">delete()</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">delete(DeleteOptions)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">delete(DeleteOptions)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">disableValidation()</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">disableValidation()</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">enableValidation()</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">enableValidation()</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">execute()</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">execute(FindOptions)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">explain()</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">explain()</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">explain(ExplainVerbosity)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">explain(ExplainVerbosity)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">explain(FindOptions)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">explain(FindOptions, ExplainVerbosity)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">field(String)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">filter(Filter&#8230;&#8203;)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">filter(Filter&#8230;&#8203;)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">filter(String, Object)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">find()</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">find(FindOptions)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">findAndDelete()</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">findAndDelete()</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">findAndDelete(FindAndDeleteOptions)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">findAndDelete(FindAndDeleteOptions)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">first()</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">first()</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">first(FindOptions)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">getEntityClass()</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">getLoggedQuery()</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">getLoggedQuery()</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">iterator()</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">iterator()</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">iterator(FindOptions)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">keys()</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">keys(FindOptions)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.query.T modify(dev.morphia.ModifyOptions, dev.morphia.query.updates.UpdateOperator)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">modify(ModifyOptions, UpdateOperator, UpdateOperator&#8230;&#8203;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.T modify(dev.morphia.ModifyOptions, dev.morphia.query.updates.UpdateOperator, dev.morphia.query.updates.UpdateOperator)</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">modify(ModifyOptions, UpdateOperator&#8230;&#8203;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.query.CriteriaContainer or(dev.morphia.query.Criteria)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">modify(UpdateOperations&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.query.Query retrieveKnownFields()</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">modify(UpdateOperator, UpdateOperator&#8230;&#8203;)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">modify(UpdateOperator, UpdateOperator&#8230;&#8203;)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">or(Criteria&#8230;&#8203;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.Query search(java.lang.String)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">retrieveKnownFields()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.Query search(java.lang.String, java.lang.String)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">search(String)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.util.stream.Stream stream()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract java.util.stream.Stream stream()</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.util.stream.Stream stream(dev.morphia.query.FindOptions)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">search(String, String)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract org.bson.Document toDocument()</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">stream()</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">stream()</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">stream(FindOptions)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.query.Update update(java.util.List)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">toDocument()</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dev.morphia.query.Update update(dev.morphia.query.UpdateOperations)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">update(List&lt;UpdateOperator&gt;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.mongodb.client.result.UpdateResult update(dev.morphia.aggregation.stages.Stage)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">update(Stage, Stage&#8230;&#8203;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.mongodb.client.result.UpdateResult update(dev.morphia.query.updates.UpdateOperator)</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">update(Stage&#8230;&#8203;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract dev.morphia.query.Update update(dev.morphia.query.updates.UpdateOperator, dev.morphia.query.updates.UpdateOperator)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">update(UpdateOperations&lt;T&gt;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.mongodb.client.result.UpdateResult update(dev.morphia.UpdateOptions, dev.morphia.aggregation.stages.Stage)</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">update(UpdateOperator, UpdateOperator&#8230;&#8203;)</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.mongodb.client.result.UpdateResult update(dev.morphia.UpdateOptions, dev.morphia.query.updates.UpdateOperator)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract com.mongodb.client.result.UpdateResult update(dev.morphia.UpdateOptions, dev.morphia.query.updates.UpdateOperator)</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">update(UpdateOperator&#8230;&#8203;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.mongodb.client.result.UpdateResult update(dev.morphia.aggregation.stages.Stage, dev.morphia.aggregation.stages.Stage)</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">update(UpdateOptions, Stage, Stage&#8230;&#8203;)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">update(UpdateOptions, Stage&#8230;&#8203;)</p></td>
-<td class="tableblock halign-left valign-top"></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">update(UpdateOptions, UpdateOperator&#8230;&#8203;)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">update(UpdateOptions, UpdateOperator&#8230;&#8203;)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>abstract com.mongodb.client.result.UpdateResult update(dev.morphia.UpdateOptions, dev.morphia.aggregation.stages.Stage, dev.morphia.aggregation.stages.Stage)</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -933,137 +916,23 @@
 <div class="sect1">
 <h2 id="_key_observations"><a class="anchor" href="#_key_observations"></a>Key Observations</h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="_aggregation_interface_changes"><a class="anchor" href="#_aggregation_interface_changes"></a>Aggregation Interface Changes</h3>
 <div class="paragraph">
-<p><strong>Major Simplification</strong>: The Aggregation interface underwent the most dramatic transformation in Morphia 3.0:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Removed 41 pipeline-building methods</strong>: All specific aggregation stage methods (autoBucket, bucket, match, group, etc.) were removed</p>
-</li>
-<li>
-<p><strong>Added 4 new methods</strong>: The interface now focuses on pipeline management with <code>pipeline()</code>, <code>iterator()</code>, and <code>toList()</code> methods</p>
-</li>
-<li>
-<p><strong>Architectural shift</strong>: Changed from a fluent pipeline builder to a simple pipeline container that implements <code>Iterable&lt;T&gt;</code></p>
-</li>
-<li>
-<p><strong>Impact</strong>: Users must now build pipelines using the stage classes directly and pass them to <code>pipeline()</code> method</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_datastore_interface_changes"><a class="anchor" href="#_datastore_interface_changes"></a>Datastore Interface Changes</h3>
-<div class="paragraph">
-<p><strong>Modernized Aggregation Support</strong>:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Enhanced type safety</strong>: New aggregation methods provide better source/target type separation with <code>aggregate(Class&lt;S&gt;, Class&lt;T&gt;, AggregationOptions)</code></p>
-</li>
-<li>
-<p><strong>Removed legacy methods</strong>: Eliminated deprecated <code>createAggregation()</code>, <code>createQuery()</code>, and <code>createUpdateOperations()</code> methods</p>
-</li>
-<li>
-<p><strong>Simplified options</strong>: Removed <code>WriteConcern</code> overloads in favor of <code>InsertOneOptions</code>/<code>InsertManyOptions</code></p>
-</li>
-<li>
-<p><strong>Removed internal methods</strong>: Eliminated <code>getCodecRegistry()</code>, <code>getMapper()</code>, and development-time methods</p>
-</li>
-</ul>
+<p>The migration from Morphia 2.5 to 3.0 represents a significant modernization effort with several major architectural changes:</p>
 </div>
 <div class="paragraph">
-<p><strong>CRUD Operation Consistency</strong>:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Preserved core functionality</strong>: All essential CRUD operations remain available</p>
-</li>
-<li>
-<p><strong>Standardized options</strong>: Consistent use of <code>InsertOneOptions</code>, <code>InsertManyOptions</code>, <code>DeleteOptions</code>, and <code>ReplaceOptions</code></p>
-</li>
-<li>
-<p><strong>Removed query-based operations</strong>: Methods like <code>findAndDelete(Query&lt;T&gt;)</code> and <code>update(Query&lt;T&gt;, &#8230;&#8203;)</code> were removed</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_query_interface_changes"><a class="anchor" href="#_query_interface_changes"></a>Query Interface Changes</h3>
-<div class="paragraph">
-<p><strong>API Cleanup and Modernization</strong>:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p><strong>Removed legacy criteria API</strong>: Eliminated <code>and()</code>, <code>or()</code>, <code>criteria()</code>, and <code>field()</code> methods from the old criteria-based query system</p>
-</li>
-<li>
-<p><strong>Simplified execution methods</strong>: Removed redundant <code>execute()</code>, <code>find()</code>, and <code>keys()</code> methods</p>
-</li>
-<li>
-<p><strong>Enhanced update operations</strong>: Improved parameter ordering in <code>modify()</code> methods and added new <code>update()</code> overloads for pipeline-based updates</p>
-</li>
-<li>
-<p><strong>Removed internal methods</strong>: Eliminated <code>getEntityClass()</code>, <code>toDocument()</code>, and other implementation details</p>
-</li>
-<li>
-<p><strong>Cleaner options handling</strong>: Removed <code>FindOptions</code> parameters from many methods, encouraging use of <code>Datastore.find(Class&lt;T&gt;, FindOptions)</code> instead</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_migration_impact"><a class="anchor" href="#_migration_impact"></a>Migration Impact</h3>
-<div class="paragraph">
-<p><strong>Breaking Changes</strong>:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><strong>Aggregation pipelines</strong> require complete rewriting to use the new pipeline-based approach</p>
-</li>
-<li>
-<p><strong>Legacy query criteria</strong> must be migrated to the modern Filter-based API</p>
-</li>
-<li>
-<p><strong>Query execution patterns</strong> need updates due to removed execute/find methods</p>
-</li>
-<li>
-<p><strong>Update operations</strong> require parameter reordering in some modify methods</p>
-</li>
-</ol>
+<p><strong>Aggregation Framework Redesign</strong>: The most substantial change is in the aggregation API. Version 2.5 provided an extensive fluent interface with methods for each aggregation stage (addFields, bucket, group, etc.), while version 3.0 adopts a streamlined pipeline-based approach. The new API focuses on building pipelines using <code>pipeline()</code> methods and executing them with <code>iterator()</code> and <code>toList()</code>.</p>
 </div>
 <div class="paragraph">
-<p><strong>Benefits</strong>:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><strong>Cleaner APIs</strong> with reduced method proliferation and clearer responsibilities</p>
-</li>
-<li>
-<p><strong>Better type safety</strong> especially in aggregation operations</p>
-</li>
-<li>
-<p><strong>Reduced complexity</strong> through elimination of deprecated and redundant methods</p>
-</li>
-<li>
-<p><strong>Improved consistency</strong> across CRUD operations and options handling</p>
-</li>
-<li>
-<p><strong>Future-proof design</strong> that better aligns with MongoDB driver patterns</p>
-</li>
-</ol>
+<p><strong>Query API Modernization</strong>: The query interface has been significantly simplified. Legacy methods like <code>criteria()</code>, <code>field()</code>, <code>execute()</code>, and <code>find()</code> have been removed in favor of a more focused filter-based approach. The <code>filter()</code> method has changed from concrete to abstract, indicating a shift toward more structured query building.</p>
 </div>
 <div class="paragraph">
-<p>This migration represents a significant modernization effort that, while requiring code changes, results in a cleaner, more maintainable, and more intuitive API surface.</p>
+<p><strong>Datastore Method Consolidation</strong>: Several deprecated methods have been removed from the Datastore interface, including string-based operations, legacy query creation methods, and various utility functions. The API now emphasizes type safety and modern MongoDB driver patterns.</p>
 </div>
+<div class="paragraph">
+<p><strong>Improved Method Signatures</strong>: New overloads have been added with additional options parameters, providing more flexibility while maintaining backward compatibility where possible. Some methods have transitioned from concrete to abstract implementations, allowing for better extensibility.</p>
+</div>
+<div class="paragraph">
+<p>These changes collectively represent Morphia&#8217;s evolution toward a more modern, maintainable, and MongoDB-driver-aligned API that should provide better performance and developer experience in version 3.0.</p>
 </div>
 </div>
 </div>
