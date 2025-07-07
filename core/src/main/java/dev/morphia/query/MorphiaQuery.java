@@ -209,7 +209,7 @@ public class MorphiaQuery<T> implements Query<T> {
 
     @Override
     public Stream<T> stream() {
-        Spliterator<T> spliterator = Spliterators.spliteratorUnknownSize(iterator(), 0);
+        Spliterator<T> spliterator = Spliterators.spliteratorUnknownSize(iterator(options), 0);
         return StreamSupport.stream(spliterator, false);
     }
 
