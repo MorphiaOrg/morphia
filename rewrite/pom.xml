@@ -14,6 +14,7 @@
     <artifactId>morphia-rewrite</artifactId>
 
     <properties>
+        <kotlin.version>1.9.25</kotlin.version>
         <morphia.prior.version>2.5.0</morphia.prior.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -24,7 +25,7 @@
             <dependency>
                 <groupId>org.openrewrite.recipe</groupId>
                 <artifactId>rewrite-recipe-bom</artifactId>
-                <version>3.10.1</version>
+                <version>3.11.1</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -95,6 +96,22 @@
         <dependency>
             <groupId>org.openrewrite</groupId>
             <artifactId>rewrite-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
+            <version>${kotlin.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-compiler-embeddable</artifactId>
+            <version>${kotlin.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.openrewrite</groupId>
+            <artifactId>rewrite-kotlin</artifactId>
         </dependency>
         <dependency>
             <groupId>org.openrewrite</groupId>
