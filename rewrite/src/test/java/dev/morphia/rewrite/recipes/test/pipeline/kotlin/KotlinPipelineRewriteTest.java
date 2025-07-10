@@ -1,4 +1,4 @@
-package dev.morphia.rewrite.recipes.test.pipeline;
+package dev.morphia.rewrite.recipes.test.pipeline.kotlin;
 
 import java.nio.file.Path;
 import java.util.Set;
