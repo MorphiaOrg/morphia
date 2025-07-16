@@ -30,7 +30,7 @@
         <jackson.version>2.18.2</jackson.version>
         <json.assert.version>1.5.3</json.assert.version>
         <logback.version>1.5.18</logback.version>
-        <maven.version>3.9.10</maven.version>
+        <maven.version>3.9.11</maven.version>
         <revapi.maven.plugin.version>0.15.1</revapi.maven.plugin.version>
         <revapi.java.version>0.28.4</revapi.java.version>
         <roaster.version>2.28.0.Final</roaster.version>
