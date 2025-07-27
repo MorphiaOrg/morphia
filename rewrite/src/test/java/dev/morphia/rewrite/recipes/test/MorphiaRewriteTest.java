@@ -34,11 +34,11 @@ public abstract class MorphiaRewriteTest implements RewriteTest {
 
     @NotNull
     protected List<String> findMongoDependencies() {
-        List<String> classpath = runtimeClasspath.stream()
-                .filter(uri -> uri.toString().contains("mongodb") || uri.toString().contains("bson"))
+        return runtimeClasspath.stream()
+                .filter(uri -> uri.toString().contains("mongodb")
+                        || uri.toString().contains("bson"))
                 .map(uri -> new File(uri).getAbsolutePath())
                 .collect(ArrayList::new, List::add, List::addAll);
-        return classpath;
     }
 
     @NotNull

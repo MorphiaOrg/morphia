@@ -34,10 +34,13 @@ public class PipelineRewriteRecipes extends Recipe {
             methodMatcher(DATASTORE + "Impl", "aggregate(..)"),
             methodMatcher(MorphiaDatastore.class.getTypeName(), "aggregate(..)"));
 
-    public static final JavaType STRING_TYPE = JavaType.buildType(String.class.getName());
     private static final MethodMatcher PIPELINE = new MethodMatcher(AGGREGATION + " pipeline(..)");
     private static final Array STAGE_ARRAY_TYPE = new Array(null,
             JavaType.buildType(Stage.class.getName()), null);
+
+    public static @NotNull JavaType javaType(Class<?> type) {
+        return JavaType.buildType(type.getName());
+    }
 
     @Override
     public @NotNull String getDisplayName() {

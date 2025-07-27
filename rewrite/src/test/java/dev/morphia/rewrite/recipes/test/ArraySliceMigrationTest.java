@@ -2,6 +2,7 @@ package dev.morphia.rewrite.recipes.test;
 
 import dev.morphia.rewrite.recipes.ArraySliceRefasterRecipes;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openrewrite.Recipe;
@@ -12,7 +13,7 @@ import static org.openrewrite.java.Assertions.java;
 public class ArraySliceMigrationTest extends MorphiaRewriteTest {
 
     @Override
-    protected Recipe getRecipe() {
+    protected @NotNull Recipe getRecipe() {
         return new ArraySliceRefasterRecipes();
     }
 

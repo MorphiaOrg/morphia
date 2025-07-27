@@ -32,7 +32,10 @@
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <logger name="dev.morphia.rewrite.recipes.pipeline" level="info" additivity="false">
+    <logger name="dev.morphia.rewrite.recipes.pipeline" level="debug" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="dev.morphia.rewrite.recipes.pipeline.PipelineExecuteRewrite" level="debug" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
 

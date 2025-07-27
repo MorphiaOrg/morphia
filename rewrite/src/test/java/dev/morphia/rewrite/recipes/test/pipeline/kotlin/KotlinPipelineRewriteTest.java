@@ -1,33 +1,14 @@
 package dev.morphia.rewrite.recipes.test.pipeline.kotlin;
 
-import java.nio.file.Path;
-import java.util.Set;
-
-import dev.morphia.rewrite.recipes.RewriteUtils;
 import dev.morphia.rewrite.recipes.pipeline.PipelineRewrite;
-import dev.morphia.rewrite.recipes.test.MorphiaRewriteTest;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.openrewrite.Recipe;
-import org.openrewrite.kotlin.KotlinParser;
-import org.openrewrite.kotlin.KotlinParser.Builder;
-import org.openrewrite.test.RecipeSpec;
 
 import static org.openrewrite.kotlin.Assertions.kotlin;
 
-public class KotlinPipelineRewriteTest extends MorphiaRewriteTest {
-
-    @Override
-    public void defaults(RecipeSpec spec) {
-        Builder builder = KotlinParser.builder()
-                .classpath(Set.of(RewriteUtils.findMorphiaCore()));
-        findMongoDependencies().stream()
-                .map(Path::of)
-                .forEach(builder::addClasspathEntry);
-        spec.recipe(getRecipe())
-                .parser(builder);
-    }
+public class KotlinPipelineRewriteTest extends MorphiaRewriteKotlinTest {
 
     @Override
     @NotNull
