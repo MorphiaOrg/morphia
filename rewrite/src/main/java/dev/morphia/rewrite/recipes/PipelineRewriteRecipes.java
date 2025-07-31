@@ -1,6 +1,7 @@
 package dev.morphia.rewrite.recipes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import dev.morphia.Datastore;
@@ -38,8 +39,15 @@ public class PipelineRewriteRecipes extends Recipe {
     private static final Array STAGE_ARRAY_TYPE = new Array(null,
             JavaType.buildType(Stage.class.getName()), null);
 
-    public static @NotNull JavaType javaType(Class<?> type) {
-        return JavaType.buildType(type.getName());
+    public static @NotNull <T> T javaType(Class<?> type, Class<?>... parameterTypes) {
+        JavaType.Class javaType = (JavaType.Class) JavaType.buildType(type.getName());
+        if (parameterTypes.length != 0) {
+            javaType = javaType.withTypeParameters(
+                    Arrays.stream(parameterTypes)
+                            .map(t -> (JavaType) javaType(t))
+                            .toList());
+        }
+        return (T) javaType;
     }
 
     @Override

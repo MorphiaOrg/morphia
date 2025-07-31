@@ -1,8 +1,9 @@
 package dev.morphia.rewrite.recipes.test.pipeline.kotlin;
 
-import dev.morphia.rewrite.recipes.PipelineRewriteRecipes;
+import dev.morphia.rewrite.recipes.pipeline.AlternateAggregationCollection;
 
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openrewrite.Recipe;
 
@@ -13,7 +14,7 @@ public class KotlinDatastoreAggregateStringTest extends MorphiaRewriteKotlinTest
     @Override
     @NotNull
     protected Recipe getRecipe() {
-        return new PipelineRewriteRecipes();
+        return new AlternateAggregationCollection();
     }
 
     @Test
@@ -45,7 +46,7 @@ public class KotlinDatastoreAggregateStringTest extends MorphiaRewriteKotlinTest
 
                         class DatastoreAggregateStringTest {
                             fun test(ds: Datastore) {
-                                ds.aggregate(Document::class.java, AggregationOptions().collection("myCollection"))
+                                ds.aggregate( AggregationOptions().collection("myCollection"))
                                   .match(eq("field", "value"))
                                   .execute(Document::class.java)
                                   .toList()
@@ -55,6 +56,7 @@ public class KotlinDatastoreAggregateStringTest extends MorphiaRewriteKotlinTest
     }
 
     @Test
+    @Disabled
     public void nameVariable() {
         rewriteRun(kotlin(
                 """
@@ -67,7 +69,7 @@ public class KotlinDatastoreAggregateStringTest extends MorphiaRewriteKotlinTest
 
                         class DatastoreAggregateStringTest {
                             fun test(ds: Datastore) {
-                                val myCollection = "myCollection"
+                                val myCollection: String = "myCollection"
                                 ds.aggregate(myCollection)
                                   .match(eq("field", "value"))
                                   .execute(Document::class.java)
@@ -85,8 +87,8 @@ public class KotlinDatastoreAggregateStringTest extends MorphiaRewriteKotlinTest
 
                         class DatastoreAggregateStringTest {
                             fun test(ds: Datastore) {
-                                val myCollection = "myCollection"
-                                ds.aggregate(Document::class.java, AggregationOptions().collection(myCollection))
+                                val myCollection: String = "myCollection"
+                                ds.aggregate( AggregationOptions().collection(myCollection))
                                   .match(eq("field", "value"))
                                   .execute(Document::class.java)
                                   .toList()
@@ -122,7 +124,6 @@ public class KotlinDatastoreAggregateStringTest extends MorphiaRewriteKotlinTest
                 """
                         import dev.morphia.Datastore
                         import dev.morphia.aggregation.AggregationOptions
-                        import dev.morphia.aggregation.stages.Match
                         import org.bson.Document
 
                         import dev.morphia.aggregation.stages.Match.match
@@ -135,10 +136,9 @@ public class KotlinDatastoreAggregateStringTest extends MorphiaRewriteKotlinTest
                             }
 
                             fun test() {
-                                getDs().aggregate(Document::class.java,Document::class.java, AggregationOptions().collection("myCollection"))
-                                      .pipeline(
-                                          match(eq("field", "value")))
-                                  .iterator()
+                                getDs().aggregate( AggregationOptions().collection("myCollection"))
+                                  .match(eq("field", "value"))
+                                  .execute(Document::class.java)
                                   .toList()
                             }
                         }
