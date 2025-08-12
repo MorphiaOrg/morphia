@@ -19,13 +19,14 @@ import org.openrewrite.java.JavaTemplate;
 import org.openrewrite.java.MethodMatcher;
 import org.openrewrite.java.tree.Expression;
 import org.openrewrite.java.tree.J.MethodInvocation;
+import org.openrewrite.kotlin.KotlinParser;
 import org.openrewrite.kotlin.KotlinTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.DATASTORE;
 import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.javaType;
-import static dev.morphia.rewrite.recipes.RewriteUtils.findMorphiaCore;
+import static dev.morphia.rewrite.recipes.RewriteUtils.findMorphiaDependencies;
 import static dev.morphia.rewrite.recipes.RewriteUtils.methodMatcher;
 import static java.util.List.of;
 import static org.openrewrite.java.JavaParser.fromJavaVersion;
@@ -69,7 +70,8 @@ public class AlternateAggregationCollection extends Recipe {
 
                 var classLiteral = documentLiteral(method);
 
-                MethodInvocation updated = template("new AggregationOptions().collection(#{any()})", of(AggregationOptions.class))
+                MethodInvocation updated = template(method, "AggregationOptions().collection(#{any()})",
+                        "new AggregationOptions().collection(#{any()})", of(AggregationOptions.class))
                         .apply(getCursor(), method.getCoordinates().replaceArguments(),
                                 method.getArguments().get(0));
                 var args = new ArrayList<>(of(classLiteral));
@@ -102,15 +104,17 @@ public class AlternateAggregationCollection extends Recipe {
 
     private static @NotNull JavaTemplate template(JavaTemplate.Builder builder, List<Class<?>> imports) {
         return builder
-                .javaParser(fromJavaVersion()
-                        .classpath(of(findMorphiaCore())))
                 .imports(imports.stream().map(c -> c.getName()).toArray(String[]::new))
                 .build();
     }
 
     private static JavaTemplate.@NotNull Builder builder(MethodInvocation method, String kotlinCode, String javaCode) {
         return isKotlin(method) ? KotlinTemplate.builder(kotlinCode)
-                : JavaTemplate.builder(javaCode);
+                .parser(KotlinParser.builder()
+                        .classpath(findMorphiaDependencies()))
+                : JavaTemplate.builder(javaCode)
+                        .javaParser(fromJavaVersion()
+                                .classpath(findMorphiaDependencies()));
     }
 
     private static boolean isKotlin(MethodInvocation method) {

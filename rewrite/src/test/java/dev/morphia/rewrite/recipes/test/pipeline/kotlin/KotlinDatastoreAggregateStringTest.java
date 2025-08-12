@@ -46,7 +46,7 @@ public class KotlinDatastoreAggregateStringTest extends MorphiaRewriteKotlinTest
 
                         class DatastoreAggregateStringTest {
                             fun test(ds: Datastore) {
-                                ds.aggregate( AggregationOptions().collection("myCollection"))
+                                ds.aggregate(Document::class.java, AggregationOptions().collection("myCollection"))
                                   .match(eq("field", "value"))
                                   .execute(Document::class.java)
                                   .toList()
@@ -136,7 +136,7 @@ public class KotlinDatastoreAggregateStringTest extends MorphiaRewriteKotlinTest
                             }
 
                             fun test() {
-                                getDs().aggregate(Document::class.java,  AggregationOptions().collection("myCollection"))
+                                getDs().aggregate(Document::class.java, AggregationOptions().collection("myCollection"))
                                   .match(eq("field", "value"))
                                   .execute(Document::class.java)
                                   .toList()

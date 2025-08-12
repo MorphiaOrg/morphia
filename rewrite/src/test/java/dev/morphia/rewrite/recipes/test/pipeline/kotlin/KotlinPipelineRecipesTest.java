@@ -278,7 +278,7 @@ public class KotlinPipelineRecipesTest extends MorphiaRewriteKotlinTest {
 
                         class RewriteExecute {
                             fun test(ds: Datastore) {
-                                ds.aggregate(Document::class.java, Document::class.java, AggregationOptions().collection("sales2019q1")
+                                ds.aggregate(Document::class.java,Document::class.java,  AggregationOptions().collection("sales2019q1")
                                          .readConcern(ReadConcern.LOCAL)
                                          .hint("hint"))
                                       .pipeline(
