@@ -18,7 +18,7 @@ import org.openrewrite.java.tree.JavaType;
 import org.openrewrite.java.tree.JavaType.FullyQualified;
 import org.openrewrite.java.tree.JavaType.Method;
 
-import static dev.morphia.rewrite.recipes.RewriteUtils.findMorphiaCore;
+import static dev.morphia.rewrite.recipes.RewriteUtils.findMorphiaDependencies;
 import static java.util.Arrays.stream;
 
 public class ArgumentCollector {
@@ -39,7 +39,7 @@ public class ArgumentCollector {
         String code = "%s.%s()".formatted(type.getSimpleName(), method);
         template = (JavaTemplate.builder(code))
                 .javaParser(JavaParser.fromJavaVersion()
-                        .classpath(List.of(findMorphiaCore())))
+                        .classpath(findMorphiaDependencies()))
                 .staticImports("%s.%s".formatted(type.getName(), method))
                 .imports(type.getName())
                 .imports(stream(imports)
@@ -47,7 +47,6 @@ public class ArgumentCollector {
                         .map(t -> t.isArray() ? t.getComponentType().getName() : t.getName())
                         .toArray(String[]::new))
                 .build();
-
     }
 
     public boolean matches(JavaIsoVisitor<ExecutionContext> visitor, List<Expression> args, MethodInvocation invocation) {

@@ -29,6 +29,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -83,6 +84,11 @@
     </build>
     <dependencies>
         <dependency>
+            <groupId>io.moderne</groupId>
+            <artifactId>jsonrpc</artifactId>
+            <version>1.0.1</version>
+        </dependency>
+        <dependency>
             <groupId>dev.morphia.morphia</groupId>
             <artifactId>util</artifactId>
             <version>${project.version}</version>
@@ -92,6 +98,16 @@
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
             <version>3.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openrewrite</groupId>
+            <artifactId>rewrite-core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.moderne</groupId>
+                    <artifactId>jsonrpc</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.openrewrite</groupId>
@@ -116,6 +132,7 @@
         <dependency>
             <groupId>org.openrewrite</groupId>
             <artifactId>rewrite-templating</artifactId>
+            <version>1.29.2</version>
         </dependency>
         <dependency>
             <groupId>com.google.errorprone</groupId>

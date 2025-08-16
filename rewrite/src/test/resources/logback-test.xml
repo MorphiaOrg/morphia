@@ -16,11 +16,11 @@
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <logger name="dev.morphia.test" level="error" additivity="false">
+    <logger name="dev.morphia.test" level="info" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <logger name="dev.morphia.test.TestBase" level="debug" additivity="false">
+    <logger name="dev.morphia.test.TestBase" level="info" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
 
@@ -33,6 +33,9 @@
     </logger>
 
     <logger name="dev.morphia.rewrite.recipes.pipeline" level="info" additivity="false">
+        <appender-ref ref="STDOUT" />
+    </logger>
+    <logger name="dev.morphia.rewrite.recipes.pipeline.PipelineExecuteRewrite" level="info" additivity="false">
         <appender-ref ref="STDOUT" />
     </logger>
 

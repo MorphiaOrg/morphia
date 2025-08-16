@@ -53,7 +53,7 @@ public class PipelineExecuteRewrite extends Recipe {
                 MethodInvocation invocation = super.visitMethodInvocation(original, context);
 
                 if (EXECUTE.matches(invocation)) {
-                    LOG.debug("matches invocation = {}", invocation);
+                    LOG.debug("matches invocation = \n{}", invocation);
                     var arguments = invocation.getArguments();
                     targetType = arguments.size() != 0 ? arguments.get(0) : null;
                     options = arguments.size() > 1 ? (MethodInvocation) arguments.get(1) : null;
@@ -68,7 +68,7 @@ public class PipelineExecuteRewrite extends Recipe {
                                             .withReturnType(MORPHIA_CURSOR)));
                     invocation = invocation.withName(invocation.getName()
                             .withType(MORPHIA_CURSOR));
-                    LOG.debug("now invocation = {}", invocation);
+                    LOG.debug("now invocation = \n{}", invocation);
                 }
 
                 return invocation;

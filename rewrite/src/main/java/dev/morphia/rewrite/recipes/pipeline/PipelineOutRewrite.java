@@ -9,6 +9,7 @@ import org.openrewrite.TreeVisitor;
 import org.openrewrite.java.JavaIsoVisitor;
 import org.openrewrite.java.MethodMatcher;
 import org.openrewrite.java.tree.J.MethodInvocation;
+import org.openrewrite.java.tree.JavaType.Method;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,9 +67,12 @@ public class PipelineOutRewrite extends Recipe {
                 maybeAddImport("dev.morphia.aggregation.stages.Out");
                 maybeAddImport("dev.morphia.aggregation.stages.Out", "out");
 
-                to = to.withMethodType(to.getMethodType()
-                        .withName("out"))
-                        .withName(to.getName().withSimpleName("out"));
+                Method type = to.getMethodType()
+                        .withName("out");
+                to = to.withMethodType(type)
+                        .withName(to.getName()
+                                .withSimpleName("out")
+                                .withType(type));
                 return database == null
                         ? to
                         : database.withSelect(to);

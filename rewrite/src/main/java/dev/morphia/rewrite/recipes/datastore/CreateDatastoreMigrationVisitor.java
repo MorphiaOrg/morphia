@@ -22,9 +22,8 @@ import org.slf4j.LoggerFactory;
 
 import jakarta.annotation.Nullable;
 
-import static dev.morphia.rewrite.recipes.RewriteUtils.findMorphiaCore;
+import static dev.morphia.rewrite.recipes.RewriteUtils.findMorphiaDependencies;
 import static dev.morphia.rewrite.recipes.RewriteUtils.methodMatcher;
-import static java.util.List.of;
 import static org.openrewrite.java.JavaParser.fromJavaVersion;
 
 public class CreateDatastoreMigrationVisitor extends JavaIsoVisitor<ExecutionContext> {
@@ -58,7 +57,7 @@ public class CreateDatastoreMigrationVisitor extends JavaIsoVisitor<ExecutionCon
 
             MethodInvocation newCreate = JavaTemplate.builder("createDatastore(#{any()}, #{any()})")
                     .javaParser(fromJavaVersion()
-                            .classpath(of(findMorphiaCore())))
+                            .classpath(findMorphiaDependencies()))
                     .imports(NEW_TYPE)
                     .staticImports(Morphia.class.getName() + ".createDatastore")
                     .build()
@@ -74,7 +73,7 @@ public class CreateDatastoreMigrationVisitor extends JavaIsoVisitor<ExecutionCon
     public Expression synthesizeMorphiaConfig(Expression databaseName) {
         JavaTemplate databaseCall = JavaTemplate.builder("MorphiaConfig.load().database(#{any(java.lang.String)})")
                 .javaParser(fromJavaVersion()
-                        .classpath(of(findMorphiaCore())))
+                        .classpath(findMorphiaDependencies()))
                 .imports(NEW_TYPE)
                 .build();
 
@@ -87,7 +86,7 @@ public class CreateDatastoreMigrationVisitor extends JavaIsoVisitor<ExecutionCon
         }
         JavaTemplate databaseCall = JavaTemplate.builder("MorphiaConfig.load().database(#{any(java.lang.String)})")
                 .javaParser(fromJavaVersion()
-                        .classpath(of(findMorphiaCore())))
+                        .classpath(findMorphiaDependencies()))
                 .imports(NEW_TYPE)
                 .build();
 
@@ -100,7 +99,7 @@ public class CreateDatastoreMigrationVisitor extends JavaIsoVisitor<ExecutionCon
         Builder dbBuilder = JavaTemplate.builder("MorphiaConfig.load().database(#{any()})");
         JavaTemplate databaseCall = dbBuilder
                 .javaParser(fromJavaVersion()
-                        .classpath(of(findMorphiaCore())))
+                        .classpath(findMorphiaDependencies()))
                 .imports(MORPHIA_CONFIG)
                 .build();
 

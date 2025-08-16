@@ -1,7 +1,5 @@
 package dev.morphia.rewrite.recipes.config;
 
-import java.util.List;
-
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.rewrite.recipes.MultiMethodMatcher;
 
@@ -16,7 +14,7 @@ import org.openrewrite.java.tree.Space;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static dev.morphia.rewrite.recipes.RewriteUtils.findMorphiaCore;
+import static dev.morphia.rewrite.recipes.RewriteUtils.findMorphiaDependencies;
 import static dev.morphia.rewrite.recipes.RewriteUtils.methodMatcher;
 
 public class MorphiaConfigMigrationVisitor extends JavaIsoVisitor<ExecutionContext> {
@@ -44,7 +42,7 @@ public class MorphiaConfigMigrationVisitor extends JavaIsoVisitor<ExecutionConte
         } else if (BUILDERS.matches(methodInvocation)) {
             var template = JavaTemplate.builder("MorphiaConfig.load()")
                     .javaParser(JavaParser.fromJavaVersion()
-                            .classpath(List.of(findMorphiaCore())))
+                            .classpath(findMorphiaDependencies()))
                     .imports(MorphiaConfig.class.getName())
                     .build();
 

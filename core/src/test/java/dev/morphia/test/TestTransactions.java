@@ -17,6 +17,7 @@ import dev.morphia.test.mapping.lazy.TestLazyCircularReference.ReferencedEntity;
 import dev.morphia.test.mapping.lazy.TestLazyCircularReference.RootEntity;
 import dev.morphia.test.models.Rectangle;
 import dev.morphia.test.models.User;
+import dev.morphia.test.util.ActionTestOptions;
 import dev.morphia.transactions.MorphiaSession;
 
 import org.bson.types.ObjectId;
@@ -168,7 +169,7 @@ public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
     public void aggregation() {
         getDs().withTransaction(session -> {
             testPipeline(
-                    new dev.morphia.test.util.ActionTestOptions().orderMatters(false),
+                    new ActionTestOptions().orderMatters(false),
                     aggregation -> {
                         loadData("aggTest2", 2);
                         return aggregation

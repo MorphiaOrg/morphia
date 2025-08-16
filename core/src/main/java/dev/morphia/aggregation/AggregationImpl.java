@@ -64,7 +64,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
         this.source = source;
         this.options = options;
         this.targetType = targetType;
-        this.collection = source != null
+        this.collection = source != null && options.collection() == null
                 ? datastore.getCollection(source)
                 : (MongoCollection<T>) datastore.getDatabase().getCollection(options.collection());
     }

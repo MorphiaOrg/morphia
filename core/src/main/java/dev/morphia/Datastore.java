@@ -36,7 +36,7 @@ public interface Datastore {
      */
     default Aggregation<Document> aggregate(AggregationOptions options) {
         Objects.requireNonNull(options.collection(), Sofia.aggregationCollectionName());
-        return aggregate(null, Document.class, options);
+        return aggregate(Document.class, Document.class, options);
     }
 
     /**
