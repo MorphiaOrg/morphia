@@ -1,6 +1,7 @@
-package dev.morphia.rewrite.recipes.test;
+package dev.morphia.rewrite.recipes.test.query;
 
 import dev.morphia.rewrite.recipes.RegexPatternMerge;
+import dev.morphia.rewrite.recipes.test.MorphiaRewriteTest;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;

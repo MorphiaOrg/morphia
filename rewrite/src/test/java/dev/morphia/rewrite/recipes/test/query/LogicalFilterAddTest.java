@@ -1,12 +1,12 @@
-package dev.morphia.rewrite.recipes.test;
+package dev.morphia.rewrite.recipes.test.query;
 
 import dev.morphia.rewrite.recipes.LogicalFilterAdd;
+import dev.morphia.rewrite.recipes.test.MorphiaRewriteTest;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.openrewrite.Recipe;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.openrewrite.java.Assertions.java;
 
 public class LogicalFilterAddTest extends MorphiaRewriteTest {

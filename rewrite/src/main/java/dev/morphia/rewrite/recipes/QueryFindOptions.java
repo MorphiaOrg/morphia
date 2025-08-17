@@ -14,9 +14,9 @@ import org.openrewrite.java.JavaVisitor;
 import org.openrewrite.java.MethodMatcher;
 import org.openrewrite.java.tree.Expression;
 import org.openrewrite.java.tree.J;
-import org.openrewrite.java.tree.J.ClassDeclaration;
 import org.openrewrite.java.tree.J.Empty;
 import org.openrewrite.java.tree.J.MethodInvocation;
+import org.openrewrite.java.tree.JavaType.Method;
 
 import static java.util.Collections.emptyList;
 
@@ -72,14 +72,6 @@ public class QueryFindOptions extends Recipe {
         @Override
         public TreeVisitor<?, ExecutionContext> getVisitor() {
             return new JavaVisitor<>() {
-                String className = null;
-
-                @NotNull
-                @Override
-                public J visitClassDeclaration(@NotNull ClassDeclaration classDecl, @NotNull ExecutionContext executionContext) {
-                    className = classDecl.getName().getSimpleName();
-                    return super.visitClassDeclaration(classDecl, executionContext);
-                }
 
                 @NotNull
                 @Override
@@ -92,10 +84,12 @@ public class QueryFindOptions extends Recipe {
                         while (select instanceof MethodInvocation method && !method.getSimpleName().equals("find")) {
                             if (method.getSimpleName().equals(methodName)) {
                                 arguments.addAll(method.getArguments());
+                                Method newType = method.getMethodType()
+                                        .withParameterTypes(emptyList())
+                                        .withParameterNames(emptyList());
                                 method = method.withArguments(emptyList())
-                                        .withMethodType(method.getMethodType()
-                                                .withParameterTypes(emptyList())
-                                                .withParameterNames(emptyList()));
+                                        .withName(method.getName().withType(newType))
+                                        .withMethodType(newType);
                             }
                             newCall.add(method);
                             select = method.getSelect();

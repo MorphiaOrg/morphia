@@ -94,13 +94,13 @@ public class DocsConfig extends AbstractMojo {
         return "master".equals(branch) || pattern.matcher(branch).matches();
     }
 
-    private Object previous(Semver version) {
+    private Semver previous(Semver version) {
         var previous = Semver.of(version.getMajor(), version.getMinor(),
                 Math.max(version.getPatch() - 1, 0));
         if (master) {
             previous = previous.withPreRelease("SNAPSHOT");
         }
-        return previous;
+        return previous.build();
     }
 
     private void copy(LinkedHashMap<String, Object> updated, Map antora, String key) {
