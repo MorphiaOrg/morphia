@@ -48,20 +48,37 @@ public class UpdateExecute extends Recipe {
                     @NotNull ExecutionContext executionContext) {
                 if (UPDATE.matches(invocation) || MODIFY.matches(invocation)) {
                     var select = invocation.getSelect();
-                    List<Expression> arguments = invocation.getArguments();
                     if (select instanceof MethodInvocation update) {
                         var updateArgs = new ArrayList<>(update.getArguments());
-                        Expression expression = arguments.get(0);
+                        Expression expression = invocation.getArguments().get(0);
+                        Method methodType = update.getMethodType();
                         if (!(expression instanceof Empty)) {
                             updateArgs.add(0, expression);
+                            JavaType type = invocation.getName().getType();
+                            if (type != null) {
+                                List<String> names = ((Method) type).getParameterNames();
+                                List<JavaType> types = ((Method) type).getParameterTypes();
+                                List<String> extantNames = methodType.getParameterNames();
+                                List<JavaType> extantTypes = methodType.getParameterTypes();
+                                if (extantNames.size() > 1) {
+                                    extantNames = List.of("updates");
+                                    extantTypes = extantTypes.subList(1, extantTypes.size());
+                                }
+                                methodType = methodType
+                                        .withParameterNames(combine(names, extantNames))
+                                        .withParameterTypes(combine(types, extantTypes));
+                            }
                             update = update.withArguments(updateArgs);
                         }
-                        Method methodType = update.getMethodType();
 
-                        Parameterized returnType = (Parameterized) methodType.getReturnType();
-                        JavaType typeParameter = returnType.getTypeParameters().get(0);
+                        JavaType typeParameter = ((Parameterized) methodType.getReturnType())
+                                .getTypeParameters()
+                                .get(0);
+                        methodType = methodType.withReturnType(typeParameter);
 
-                        update = update.withMethodType(methodType.withReturnType(typeParameter));
+                        update = update
+                                .withName(update.getName().withType(methodType))
+                                .withMethodType(methodType);
 
                         maybeRemoveImport("dev.morphia.query.Update");
                         return maybeAutoFormat(invocation, update, executionContext);
@@ -74,5 +91,13 @@ public class UpdateExecute extends Recipe {
                 return super.visitMethodInvocation(invocation, executionContext);
             }
         };
+    }
+
+    private <T> List<T> combine(List<T> first, List<T> second) {
+        var combined = new ArrayList<T>();
+        combined.addAll(first);
+        combined.addAll(second);
+
+        return combined;
     }
 }

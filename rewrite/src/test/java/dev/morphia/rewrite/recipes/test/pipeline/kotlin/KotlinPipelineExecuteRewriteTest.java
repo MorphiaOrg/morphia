@@ -1,6 +1,7 @@
 package dev.morphia.rewrite.recipes.test.pipeline.kotlin;
 
 import dev.morphia.rewrite.recipes.pipeline.PipelineExecuteRewrite;
+import dev.morphia.rewrite.recipes.test.KotlinRewriteTest;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
@@ -8,7 +9,7 @@ import org.openrewrite.Recipe;
 
 import static org.openrewrite.kotlin.Assertions.kotlin;
 
-public class KotlinPipelineExecuteRewriteTest extends MorphiaRewriteKotlinTest {
+public class KotlinPipelineExecuteRewriteTest extends KotlinRewriteTest {
 
     @Override
     @NotNull

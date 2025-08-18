@@ -1,6 +1,7 @@
 package dev.morphia.rewrite.recipes.test.pipeline.kotlin;
 
 import dev.morphia.rewrite.recipes.pipeline.AlternateAggregationCollection;
+import dev.morphia.rewrite.recipes.test.KotlinRewriteTest;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Disabled;
@@ -9,7 +10,7 @@ import org.openrewrite.Recipe;
 
 import static org.openrewrite.kotlin.Assertions.kotlin;
 
-public class KotlinDatastoreAggregateStringTest extends MorphiaRewriteKotlinTest {
+public class KotlinDatastoreAggregateStringTest extends KotlinRewriteTest {
 
     @Override
     @NotNull

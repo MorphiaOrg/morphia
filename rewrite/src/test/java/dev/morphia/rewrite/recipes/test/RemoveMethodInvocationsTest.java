@@ -8,7 +8,9 @@ import org.openrewrite.Recipe;
 
 import static org.openrewrite.java.Assertions.java;
 
-@SuppressWarnings("removal")
+/**
+ * This is for the internal testing recipes only
+ */
 public class RemoveMethodInvocationsTest extends MorphiaRewriteTest {
     @Override
     protected @NotNull Recipe getRecipe() {
