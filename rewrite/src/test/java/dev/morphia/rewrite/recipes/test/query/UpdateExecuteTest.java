@@ -1,6 +1,6 @@
 package dev.morphia.rewrite.recipes.test.query;
 
-import dev.morphia.rewrite.recipes.UpdateExecute;
+import dev.morphia.rewrite.recipes.query.UpdateExecute;
 import dev.morphia.rewrite.recipes.test.MorphiaRewriteTest;
 
 import org.jetbrains.annotations.NotNull;

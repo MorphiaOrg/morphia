@@ -9,54 +9,14 @@ import org.openrewrite.Recipe;
 
 import static org.openrewrite.java.Assertions.java;
 
-public class QueryIteratorOptionsTest extends MorphiaRewriteTest {
+public class FirstWithOptionsTest extends MorphiaRewriteTest {
     @Override
     protected @NotNull Recipe getRecipe() {
         return new QueryFindOptions();
     }
 
     @Test
-    public void testWithTryNext() {
-        rewriteRun(java(
-                //language=java
-                """
-                        import dev.morphia.Datastore;
-                        import dev.morphia.query.FindOptions;
-                        import org.bson.types.ObjectId;
-
-                        import static dev.morphia.query.filters.Filters.eq;
-
-                        public class Updates {
-                            public void doUpdate(Datastore ds) {
-                                ds.find(Object.class)
-                                  .filter(eq("_id", ObjectId.get()))
-                                  .iterator(new FindOptions().limit(1))
-                                  .tryNext();
-                            }
-                        }
-                        """,
-                //language=java
-                """
-                        import dev.morphia.Datastore;
-                        import dev.morphia.query.FindOptions;
-                        import org.bson.types.ObjectId;
-
-                        import static dev.morphia.query.filters.Filters.eq;
-
-                        public class Updates {
-                            public void doUpdate(Datastore ds) {
-                                ds.find(Object.class, new FindOptions().limit(1))
-                                        .filter(eq("_id", ObjectId.get()))
-                                        .iterator()
-                                        .tryNext();
-                            }
-                        }
-                        """));
-
-    }
-
-    @Test
-    public void testWithIteratorNoFilter() {
+    public void testWithFirstNoFilter() {
         rewriteRun(java(
                 //language=java
                 """
@@ -74,8 +34,7 @@ public class QueryIteratorOptionsTest extends MorphiaRewriteTest {
 
                             public void doUpdate(Datastore ds) {
                                 getDs().find(Object.class)
-                                    .iterator(new FindOptions().limit(1))
-                                    .next();
+                                    .first(new FindOptions().limit(1));
                             }
                         }
                         """,
@@ -95,8 +54,7 @@ public class QueryIteratorOptionsTest extends MorphiaRewriteTest {
 
                             public void doUpdate(Datastore ds) {
                                 getDs().find(Object.class, new FindOptions().limit(1))
-                                        .iterator()
-                                        .next();
+                                        .first();
                             }
                         }
                         """));
@@ -104,7 +62,7 @@ public class QueryIteratorOptionsTest extends MorphiaRewriteTest {
     }
 
     @Test
-    public void testWithIteratorWithOptions() {
+    public void testWithFirstWithOptions() {
         rewriteRun(java(
                 //language=java
                 """
@@ -118,7 +76,7 @@ public class QueryIteratorOptionsTest extends MorphiaRewriteTest {
                             public void doUpdate(Datastore ds) {
                                 ds.find(Object.class)
                                   .filter(eq("_id", ObjectId.get()))
-                                  .iterator(new FindOptions().limit(1));
+                                  .first(new FindOptions().limit(1));
                             }
                         }
                         """,
@@ -134,7 +92,7 @@ public class QueryIteratorOptionsTest extends MorphiaRewriteTest {
                             public void doUpdate(Datastore ds) {
                                 ds.find(Object.class, new FindOptions().limit(1))
                                         .filter(eq("_id", ObjectId.get()))
-                                        .iterator();
+                                        .first();
                             }
                         }
                         """));
@@ -142,7 +100,7 @@ public class QueryIteratorOptionsTest extends MorphiaRewriteTest {
     }
 
     @Test
-    public void testWithIteratorNoOptions() {
+    public void testWithFirstNoOptions() {
         rewriteRun(java(
                 //language=java
                 """
@@ -156,11 +114,10 @@ public class QueryIteratorOptionsTest extends MorphiaRewriteTest {
                             public void doUpdate(Datastore ds) {
                                 ds.find(Object.class)
                                   .filter(eq("_id", ObjectId.get()))
-                                  .iterator();
+                                  .first();
                             }
                         }
                         """));
 
     }
-
 }

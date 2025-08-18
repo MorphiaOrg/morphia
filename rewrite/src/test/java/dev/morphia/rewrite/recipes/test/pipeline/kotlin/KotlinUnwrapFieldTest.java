@@ -1,6 +1,6 @@
 package dev.morphia.rewrite.recipes.test.pipeline.kotlin;
 
-import dev.morphia.rewrite.recipes.UnwrapFieldExpressions;
+import dev.morphia.rewrite.recipes.pipeline.UnwrapFieldExpressions;
 import dev.morphia.rewrite.recipes.test.KotlinRewriteTest;
 
 import org.jetbrains.annotations.NotNull;

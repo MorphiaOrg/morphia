@@ -1,4 +1,4 @@
-package dev.morphia.rewrite.recipes;
+package dev.morphia.rewrite.recipes.query;
 
 import java.util.Collections;
 

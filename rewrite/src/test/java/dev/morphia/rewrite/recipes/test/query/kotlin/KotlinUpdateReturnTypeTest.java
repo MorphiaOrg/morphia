@@ -1,6 +1,6 @@
 package dev.morphia.rewrite.recipes.test.query.kotlin;
 
-import dev.morphia.rewrite.recipes.UpdateReturnType;
+import dev.morphia.rewrite.recipes.query.UpdateReturnType;
 import dev.morphia.rewrite.recipes.test.KotlinRewriteTest;
 
 import org.jetbrains.annotations.NotNull;
