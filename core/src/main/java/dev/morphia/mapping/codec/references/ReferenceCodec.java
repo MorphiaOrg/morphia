@@ -69,6 +69,8 @@ import static java.lang.String.format;
 @SuppressWarnings({ "unchecked", "removal" })
 @MorphiaInternal
 public class ReferenceCodec extends BaseReferenceCodec<Object> implements PropertyHandler {
+    private static final TypeCache<TypeCache.SimpleKey> TYPE_CACHE = new TypeCache.WithInlineExpunction<>(Sort.SOFT);
+
     private final Reference annotation;
     private final BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
     private final Mapper mapper;
@@ -80,7 +82,6 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     /**
      * Type-cache for proxy classes generated w/ Byte Buddy.
      */
-    private final TypeCache<TypeCache.SimpleKey> typeCache = new TypeCache.WithInlineExpunction<>(Sort.SOFT);
     private Datastore datastore;
 
     /**
@@ -269,7 +270,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         try {
             Class<?> type = propertyModel.getType();
             // Get or create proxy class
-            Class<T> proxyClass = (Class<T>) typeCache.findOrInsert(type.getClassLoader(), getCacheKey(type), this::makeProxy, typeCache);
+            Class<T> proxyClass = (Class<T>) TYPE_CACHE.findOrInsert(type.getClassLoader(), getCacheKey(type), this::makeProxy, TYPE_CACHE);
             //... instantiate it
             final T proxy = proxyClass.getDeclaredConstructor().newInstance();
             // .. and set the invocation handler
