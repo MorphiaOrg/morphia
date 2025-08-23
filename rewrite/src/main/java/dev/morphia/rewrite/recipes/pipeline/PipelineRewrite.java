@@ -15,7 +15,6 @@ import dev.morphia.aggregation.stages.SortByCount;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.aggregation.stages.UnionWith;
 import dev.morphia.query.filters.Filter;
-import dev.morphia.rewrite.recipes.PipelineRewriteRecipes;
 
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
@@ -32,9 +31,9 @@ import org.openrewrite.java.tree.Space;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.AGGREGATION;
-import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.DATASTORE;
 import static dev.morphia.rewrite.recipes.RewriteUtils.methodMatcher;
+import static dev.morphia.rewrite.recipes.pipeline.PipelineRewriteRecipes.AGGREGATION;
+import static dev.morphia.rewrite.recipes.pipeline.PipelineRewriteRecipes.DATASTORE;
 import static java.util.Collections.emptyList;
 
 public class PipelineRewrite extends Recipe {

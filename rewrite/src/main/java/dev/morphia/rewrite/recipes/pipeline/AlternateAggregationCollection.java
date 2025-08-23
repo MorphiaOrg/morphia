@@ -24,10 +24,10 @@ import org.openrewrite.kotlin.KotlinTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.DATASTORE;
-import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.javaType;
 import static dev.morphia.rewrite.recipes.RewriteUtils.findMorphiaDependencies;
 import static dev.morphia.rewrite.recipes.RewriteUtils.methodMatcher;
+import static dev.morphia.rewrite.recipes.pipeline.PipelineRewriteRecipes.DATASTORE;
+import static dev.morphia.rewrite.recipes.pipeline.PipelineRewriteRecipes.javaType;
 import static java.util.List.of;
 import static org.openrewrite.java.JavaParser.fromJavaVersion;
 

@@ -102,12 +102,6 @@
         <dependency>
             <groupId>org.openrewrite</groupId>
             <artifactId>rewrite-core</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>io.moderne</groupId>
-                    <artifactId>jsonrpc</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.openrewrite</groupId>
@@ -117,13 +111,11 @@
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
             <version>${kotlin.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-compiler-embeddable</artifactId>
             <version>${kotlin.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.openrewrite</groupId>

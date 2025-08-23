@@ -1,6 +1,6 @@
 package dev.morphia.rewrite.recipes.test.pipeline.kotlin;
 
-import dev.morphia.rewrite.recipes.PipelineRewriteRecipes;
+import dev.morphia.rewrite.recipes.pipeline.PipelineRewriteRecipes;
 import dev.morphia.rewrite.recipes.test.KotlinRewriteTest;
 
 import org.jetbrains.annotations.NotNull;

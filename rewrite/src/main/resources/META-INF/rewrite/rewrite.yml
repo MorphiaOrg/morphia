@@ -55,13 +55,14 @@ recipeList:
       newVersion: 3.0.0-SNAPSHOT
   - dev.morphia.rewrite.recipes.config.MorphiaConfigMigration
   - dev.morphia.rewrite.recipes.datastore.CreateDatastoreMigration
-  - dev.morphia.rewrite.recipes.UnwrapFieldExpressions
-  - dev.morphia.rewrite.recipes.PipelineRewriteRecipes
-  - dev.morphia.rewrite.recipes.RegexPatternMerge
-  - dev.morphia.rewrite.recipes.UpdateExecute
-  - dev.morphia.rewrite.recipes.LogicalFilterAdd
+  - dev.morphia.rewrite.recipes.pipeline.UnwrapFieldExpressions
+  - dev.morphia.rewrite.recipes.pipeline.PipelineRewriteRecipes
+  - dev.morphia.rewrite.recipes.query.LogicalFilterAdd
+  - dev.morphia.rewrite.recipes.query.QueryFindOptions
+  - dev.morphia.rewrite.recipes.query.RegexPatternMerge
+  - dev.morphia.rewrite.recipes.query.UpdateExecute
+  - dev.morphia.rewrite.recipes.query.UpdateReturnType
   - dev.morphia.rewrite.recipes.ArraySliceRefasterRecipes
-  - dev.morphia.rewrite.recipes.QueryFindOptions
 ---
 type: specs.openrewrite.org/v1beta/recipe
 name: dev.morphia.InternalOnly

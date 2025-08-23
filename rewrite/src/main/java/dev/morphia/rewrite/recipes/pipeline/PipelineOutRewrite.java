@@ -13,9 +13,9 @@ import org.openrewrite.java.tree.JavaType.Method;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.AGGREGATION;
-import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.addStage;
 import static dev.morphia.rewrite.recipes.RewriteUtils.methodMatcher;
+import static dev.morphia.rewrite.recipes.pipeline.PipelineRewriteRecipes.AGGREGATION;
+import static dev.morphia.rewrite.recipes.pipeline.PipelineRewriteRecipes.addStage;
 
 public class PipelineOutRewrite extends Recipe {
     private static final Logger LOG = LoggerFactory.getLogger(PipelineOutRewrite.class);

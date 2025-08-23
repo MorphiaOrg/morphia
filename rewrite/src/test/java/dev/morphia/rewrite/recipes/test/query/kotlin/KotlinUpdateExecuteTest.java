@@ -172,4 +172,44 @@ public class KotlinUpdateExecuteTest extends KotlinRewriteTest {
                         """));
     }
 
+    @Test
+    public void testExecuteWithOptionsPart2() {
+        rewriteRun(kotlin(
+                //language=kotlin
+                """
+                        import dev.morphia.Datastore
+                        import dev.morphia.UpdateOptions
+                        import org.bson.types.ObjectId
+                        import java.time.LocalDateTime
+                        import dev.morphia.query.filters.Filters.eq
+                        import dev.morphia.query.updates.UpdateOperators.set
+
+                        class Updates {
+                            fun doUpdate(ds: Datastore) {
+                                ds.find(Any::class.java)
+                                            .filter(eq("nick", oldNick))
+                                            .update(set("nick", newNick))
+                                            .execute(UpdateOptions().multi(false))
+                            }
+                        }
+                        """,
+                //language=kotlin
+                """
+                        import dev.morphia.Datastore
+                        import dev.morphia.UpdateOptions
+                        import org.bson.types.ObjectId
+                        import java.time.LocalDateTime
+                        import dev.morphia.query.filters.Filters.eq
+                        import dev.morphia.query.updates.UpdateOperators.set
+
+                        class Updates {
+                            fun doUpdate(ds: Datastore) {
+                                ds.find(Any::class.java)
+                                    .filter(eq("nick", oldNick))
+                                    .update(UpdateOptions().multi(false), set("nick", newNick))
+                            }
+                        }
+                        """));
+    }
+
 }

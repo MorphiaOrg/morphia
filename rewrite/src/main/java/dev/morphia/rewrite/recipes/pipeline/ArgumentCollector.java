@@ -3,7 +3,6 @@ package dev.morphia.rewrite.recipes.pipeline;
 import java.util.List;
 
 import dev.morphia.aggregation.Aggregation;
-import dev.morphia.rewrite.recipes.PipelineRewriteRecipes;
 
 import org.jetbrains.annotations.NotNull;
 import org.openrewrite.Cursor;

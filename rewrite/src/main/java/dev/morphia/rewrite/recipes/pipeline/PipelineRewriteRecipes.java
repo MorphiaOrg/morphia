@@ -1,4 +1,4 @@
-package dev.morphia.rewrite.recipes;
+package dev.morphia.rewrite.recipes.pipeline;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,11 +8,7 @@ import dev.morphia.Datastore;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.stages.Stage;
-import dev.morphia.rewrite.recipes.pipeline.AlternateAggregationCollection;
-import dev.morphia.rewrite.recipes.pipeline.PipelineExecuteRewrite;
-import dev.morphia.rewrite.recipes.pipeline.PipelineMergeRewrite;
-import dev.morphia.rewrite.recipes.pipeline.PipelineOutRewrite;
-import dev.morphia.rewrite.recipes.pipeline.PipelineRewrite;
+import dev.morphia.rewrite.recipes.MultiMethodMatcher;
 
 import org.jetbrains.annotations.NotNull;
 import org.openrewrite.Recipe;

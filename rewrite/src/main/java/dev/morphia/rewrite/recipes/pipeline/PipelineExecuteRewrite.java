@@ -20,9 +20,9 @@ import org.openrewrite.java.tree.JavaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.AGGREGATE_ANYTHING;
-import static dev.morphia.rewrite.recipes.PipelineRewriteRecipes.AGGREGATION;
 import static dev.morphia.rewrite.recipes.RewriteUtils.methodMatcher;
+import static dev.morphia.rewrite.recipes.pipeline.PipelineRewriteRecipes.AGGREGATE_ANYTHING;
+import static dev.morphia.rewrite.recipes.pipeline.PipelineRewriteRecipes.AGGREGATION;
 import static java.util.List.of;
 
 public class PipelineExecuteRewrite extends Recipe {
