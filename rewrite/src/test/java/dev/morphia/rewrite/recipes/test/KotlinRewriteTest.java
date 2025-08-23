@@ -1,17 +1,16 @@
 package dev.morphia.rewrite.recipes.test;
 
-import org.openrewrite.kotlin.KotlinParser;
 import org.openrewrite.test.RecipeSpec;
 
 import static dev.morphia.rewrite.recipes.RewriteUtils.findMorphiaDependencies;
+import static org.openrewrite.kotlin.KotlinParser.*;
 
 public abstract class KotlinRewriteTest extends MorphiaRewriteTest {
     @Override
     public void defaults(RecipeSpec spec) {
-        var builder = KotlinParser.builder()
-                .classpath(findMorphiaDependencies());
         spec.recipe(getRecipe())
-                .parser(builder);
+                .parser(builder()
+                        .classpath(findMorphiaDependencies()));
     }
 
 }

@@ -34,13 +34,15 @@ recipeList:
   - org.openrewrite.java.RemoveMethodInvocations:
       methodPattern: dev.morphia.Datastore ensureIndexes(..)
   - org.openrewrite.java.RemoveMethodInvocations:
-      methodPattern: dev.morphia.mapping.MapperOptions.Builder isCacheClassLookups()
+      methodPattern: dev.morphia.mapping.MapperOptions.Builder build()
+  - org.openrewrite.java.RemoveMethodInvocations:
+      methodPattern: dev.morphia.mapping.MapperOptions.Builder autoImportModels(..)
   - org.openrewrite.java.RemoveMethodInvocations:
       methodPattern: dev.morphia.mapping.MapperOptions.Builder cacheClassLookups(..)
   - org.openrewrite.java.RemoveMethodInvocations:
       methodPattern: dev.morphia.mapping.MapperOptions.Builder disableEmbeddedIndexes(..)
   - org.openrewrite.java.RemoveMethodInvocations:
-      methodPattern: dev.morphia.mapping.MapperOptions.Builder build()
+      methodPattern: dev.morphia.mapping.MapperOptions.Builder isCacheClassLookups()
   - org.openrewrite.java.RemoveMethodInvocations:
       methodPattern: dev.morphia.MorphiaDatastore ensureIndexes(..)
   - dev.morphia.rewrite.recipes.RenameMethod:

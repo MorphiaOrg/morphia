@@ -15,8 +15,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class KotlinTestValidationTest {
 
-    private static final String QUERY_PACKAGE = "dev.morphia.rewrite.recipes.test.query";
-    private static final String PIPELINE_PACKAGE = "dev.morphia.rewrite.recipes.test.pipeline";
+    private static final String BASE_TEST_PACKAGE = "dev.morphia.rewrite.recipes.test";
+
+    private static final String QUERY_PACKAGE = BASE_TEST_PACKAGE + ".query";
+    private static final String PIPELINE_PACKAGE = BASE_TEST_PACKAGE + ".pipeline";
 
     @DisplayName("Checking for Kotlin variants of Java tests")
     @ParameterizedTest(name = "{0}.{2}()")
@@ -42,19 +44,14 @@ public class KotlinTestValidationTest {
     }
 
     public static Stream<Object[]> generateTestData() {
-        List<Object[]> testData = new ArrayList<>();
 
-        // Generate test data for query tests
-        Map<String, Set<String>> queryJavaTests = getJavaTestMethods(QUERY_PACKAGE);
-        Map<String, Set<String>> queryKotlinTests = getKotlinTestMethods(QUERY_PACKAGE + ".kotlin");
-        testData.addAll(generateTestDataForPackage(queryJavaTests, queryKotlinTests));
-
-        // Generate test data for pipeline tests
-        Map<String, Set<String>> pipelineJavaTests = getJavaTestMethods(PIPELINE_PACKAGE);
-        Map<String, Set<String>> pipelineKotlinTests = getKotlinTestMethods(PIPELINE_PACKAGE + ".kotlin");
-        testData.addAll(generateTestDataForPackage(pipelineJavaTests, pipelineKotlinTests));
-
-        return testData.stream();
+        return List.of(BASE_TEST_PACKAGE, QUERY_PACKAGE, PIPELINE_PACKAGE)
+                .stream().flatMap(pkg -> generateTestDataForPackage(
+                        getJavaTestMethods(pkg),
+                        getKotlinTestMethods(pkg + ".kotlin"))
+                        .stream())
+                .toList()
+                .stream();
     }
 
     private static List<Object[]> generateTestDataForPackage(Map<String, Set<String>> javaTests,
