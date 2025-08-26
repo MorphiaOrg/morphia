@@ -113,12 +113,13 @@ public class QueryIteratorOptionsTest extends MorphiaRewriteTest {
                         import org.bson.types.ObjectId;
 
                         import static dev.morphia.query.filters.Filters.eq;
+                        import static dev.morphia.query.Sort.descending;
 
                         public class Updates {
                             public void doUpdate(Datastore ds) {
                                 ds.find(Object.class)
                                   .filter(eq("_id", ObjectId.get()))
-                                  .iterator(new FindOptions().limit(1));
+                                  .iterator(new FindOptions().limit(1).sort(descending("changeDate")));
                             }
                         }
                         """,
@@ -129,10 +130,11 @@ public class QueryIteratorOptionsTest extends MorphiaRewriteTest {
                         import org.bson.types.ObjectId;
 
                         import static dev.morphia.query.filters.Filters.eq;
+                        import static dev.morphia.query.Sort.descending;
 
                         public class Updates {
                             public void doUpdate(Datastore ds) {
-                                ds.find(Object.class, new FindOptions().limit(1))
+                                ds.find(Object.class, new FindOptions().limit(1).sort(descending("changeDate")))
                                         .filter(eq("_id", ObjectId.get()))
                                         .iterator();
                             }
@@ -162,5 +164,4 @@ public class QueryIteratorOptionsTest extends MorphiaRewriteTest {
                         """));
 
     }
-
 }

@@ -1,7 +1,7 @@
 type: specs.openrewrite.org/v1beta/recipe
 name: dev.morphia.UpgradeToMorphia30
 displayName: Upgrade to Morphia 3.0
-description: Adopt new dependencies and breaking changes in moving to Morphia 3.
+description: Adopt new dependencies and breaking changes in moving to Morphia 3.0.
 recipeList:
   - org.openrewrite.java.RemoveAnnotation:
       annotationPattern: '@dev.morphia.annotations.Embedded'
@@ -43,6 +43,8 @@ recipeList:
       methodPattern: dev.morphia.mapping.MapperOptions.Builder disableEmbeddedIndexes(..)
   - org.openrewrite.java.RemoveMethodInvocations:
       methodPattern: dev.morphia.mapping.MapperOptions.Builder isCacheClassLookups()
+  - org.openrewrite.java.RemoveMethodInvocations:
+      methodPattern: dev.morphia.config.MorphiaConfig autoImportModels(..)
   - org.openrewrite.java.RemoveMethodInvocations:
       methodPattern: dev.morphia.MorphiaDatastore ensureIndexes(..)
   - dev.morphia.rewrite.recipes.RenameMethod:

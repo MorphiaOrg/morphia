@@ -107,13 +107,14 @@ public class KotlinQueryIteratorOptionsTest extends KotlinRewriteTest {
                         import dev.morphia.Datastore
                         import dev.morphia.query.FindOptions
                         import org.bson.types.ObjectId
+                        import dev.morphia.query.Sort.descending
                         import dev.morphia.query.filters.Filters.eq
 
                         class Updates {
                             fun doUpdate(ds: Datastore) {
                                 ds.find(Any::class.java)
                                     .filter(eq("_id", ObjectId.get()))
-                                    .iterator(FindOptions().limit(1))
+                                    .iterator(FindOptions().limit(1).sort(descending("changeDate")))
                             }
                         }
                         """,
@@ -122,11 +123,12 @@ public class KotlinQueryIteratorOptionsTest extends KotlinRewriteTest {
                         import dev.morphia.Datastore
                         import dev.morphia.query.FindOptions
                         import org.bson.types.ObjectId
+                        import dev.morphia.query.Sort.descending
                         import dev.morphia.query.filters.Filters.eq
 
                         class Updates {
                             fun doUpdate(ds: Datastore) {
-                                ds.find(Any::class.java, FindOptions().limit(1))
+                                ds.find(Any::class.java, FindOptions().limit(1).sort(descending("changeDate")))
                                     .filter(eq("_id", ObjectId.get()))
                                     .iterator()
                             }
