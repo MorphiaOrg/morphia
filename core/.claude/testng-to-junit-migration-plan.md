@@ -37,13 +37,7 @@
     <artifactId>junit-jupiter</artifactId>
     <scope>test</scope>
 </dependency>
-<dependency>
-<groupId>org.junit.vintage</groupId>
-<artifactId>junit-vintage-engine</artifactId>
-<scope>test</scope>
-</dependency>
 
-        <!-- Update surefire plugin -->
 <plugin>
 <groupId>org.apache.maven.plugins</groupId>
 <artifactId>maven-surefire-plugin</artifactId>
