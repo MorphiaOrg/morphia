@@ -108,8 +108,9 @@ async function createDuplicateIssues(github, context, originalIssue, milestones,
         const milestoneId = milestoneMap[milestoneName];
 
         if (!milestoneId) {
-            console.log(`⚠️  Milestone "${milestoneName}" not found, skipping...`);
-            results.push(`❌ Milestone "${milestoneName}" not found`);
+            let message = `Milestone "${milestoneName}" not found in ${JSON.stringify(Array.from(milestoneMap.keys()))}, skipping...`;
+            console.log(`⚠️  ${message}`);
+            results.push(`❌ ${message}`);
             continue;
         }
 
