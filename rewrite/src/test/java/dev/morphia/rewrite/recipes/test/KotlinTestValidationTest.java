@@ -11,6 +11,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import static java.lang.String.format;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class KotlinTestValidationTest {
@@ -24,16 +25,23 @@ public class KotlinTestValidationTest {
     @ParameterizedTest(name = "{0}.{2}()")
     @MethodSource("generateTestData")
     public void validateKotlinTestMethodExists(String javaClassName, String kotlinClassName,
-            String javaMethodName, String kotlinMethodName) {
+            String javaMethodName, String kotlinMethodName, String packageName) {
         // First check both class names are not null
+        Map<String, Set<String>> kotlinTestMethods = getKotlinTestMethods(packageName);
         if (javaClassName == null || kotlinClassName == null) {
-            fail(String.format("Missing Kotlin test class. Expected to find Kotlin class: Kotlin" + javaClassName));
+            var joiner = new StringJoiner(", ");
+            kotlinTestMethods.keySet().forEach(joiner::add);
+            fail(format("Missing Kotlin test class. Expected to find Kotlin class: Kotlin%s.  For package '%s.kotlin', found %s"
+                    .formatted(javaClassName, packageName, joiner)));
         }
 
         // Both class names are present, now check method names
         if (javaMethodName == null || kotlinMethodName == null) {
-            fail(String.format("Missing Kotlin test method '%s' in class %s. Java class %s has this method.",
-                    javaMethodName, kotlinClassName, javaClassName));
+            var joiner = new StringJoiner(", ");
+            kotlinTestMethods.get(javaClassName)
+                    .forEach(joiner::add);
+            fail(format("Missing Kotlin test method '%s' in class %s. Java class %s has this method.  Methods found: %s",
+                    javaMethodName, kotlinClassName, javaClassName, joiner));
         }
 
         // If we get here, both class and method exist - test passes
@@ -43,18 +51,17 @@ public class KotlinTestValidationTest {
         assertNotNull(kotlinMethodName, "Kotlin method name should not be null");
     }
 
-    public static Stream<Object[]> generateTestData() {
-
+    private static Stream<Object[]> generateTestData() {
         return List.of(BASE_TEST_PACKAGE, QUERY_PACKAGE, PIPELINE_PACKAGE)
-                .stream().flatMap(pkg -> generateTestDataForPackage(
+                .stream().flatMap(pkg -> generateTestDataForPackage(pkg,
                         getJavaTestMethods(pkg),
-                        getKotlinTestMethods(pkg + ".kotlin"))
+                        getKotlinTestMethods(pkg))
                         .stream())
                 .toList()
                 .stream();
     }
 
-    private static List<Object[]> generateTestDataForPackage(Map<String, Set<String>> javaTests,
+    private static List<Object[]> generateTestDataForPackage(String pkg, Map<String, Set<String>> javaTests,
             Map<String, Set<String>> kotlinTests) {
         List<Object[]> testData = new ArrayList<>();
 
@@ -78,7 +85,8 @@ public class KotlinTestValidationTest {
                         javaClassName,
                         kotlinMethods != null ? kotlinClassName : null, // null if class doesn't exist
                         javaMethodName,
-                        kotlinMethodName // null if method doesn't exist
+                        kotlinMethodName, // null if method doesn't exist
+                        pkg,
                 });
             }
         }
@@ -111,7 +119,7 @@ public class KotlinTestValidationTest {
         Map<String, Set<String>> testMethods = new HashMap<>();
 
         // Get all Kotlin test classes in the package
-        List<Class<?>> testClasses = getTestClasses(packageName);
+        List<Class<?>> testClasses = getTestClasses(packageName + ".kotlin");
 
         for (Class<?> testClass : testClasses) {
             String className = testClass.getSimpleName();

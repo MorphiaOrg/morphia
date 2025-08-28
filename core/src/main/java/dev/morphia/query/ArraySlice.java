@@ -38,7 +38,7 @@ public class ArraySlice {
      * @morphia.internal
      */
     @MorphiaInternal
-    public ArraySlice(int limit) {
+    private ArraySlice(int limit) {
         this.limit = limit;
     }
 
@@ -49,7 +49,7 @@ public class ArraySlice {
      * @morphia.internal
      */
     @MorphiaInternal
-    public ArraySlice(int limit, int skip) {
+    private ArraySlice(int limit, int skip) {
         this.limit = limit;
         this.skip = skip;
     }

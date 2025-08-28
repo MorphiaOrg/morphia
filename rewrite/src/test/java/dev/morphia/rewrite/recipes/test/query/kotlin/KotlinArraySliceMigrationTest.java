@@ -1,6 +1,6 @@
-package dev.morphia.rewrite.recipes.test.kotlin;
+package dev.morphia.rewrite.recipes.test.query.kotlin;
 
-import dev.morphia.rewrite.recipes.ArraySliceRefasterRecipes;
+import dev.morphia.rewrite.recipes.query.ArraySliceMigration;
 import dev.morphia.rewrite.recipes.test.KotlinRewriteTest;
 
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +15,7 @@ public class KotlinArraySliceMigrationTest extends KotlinRewriteTest {
 
     @Override
     protected @NotNull Recipe getRecipe() {
-        return new ArraySliceRefasterRecipes();
+        return new ArraySliceMigration();
     }
 
     @Test
