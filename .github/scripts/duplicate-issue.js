@@ -84,14 +84,14 @@ async function getOriginalIssue(github, context, issueNumber) {
  * Create a map of milestone names to IDs
  */
 async function getMilestoneMap(github, context) {
-    const { data: allMilestones } = await github.rest.issues.listMilestones({
+    const { data: openMilestones } = await github.rest.issues.listMilestones({
         owner: context.repo.owner,
         repo: context.repo.repo,
-        state: 'all'
+        state: 'open'
     });
 
     const milestoneMap = {};
-    allMilestones.forEach(milestone => {
+    openMilestones.forEach(milestone => {
         milestoneMap[milestone.title] = milestone.number;
     });
 
