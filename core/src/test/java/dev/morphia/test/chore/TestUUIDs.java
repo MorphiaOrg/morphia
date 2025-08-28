@@ -1,17 +1,17 @@
-package dev.morphia.test;
-
-import java.util.UUID;
+package dev.morphia.test.chore;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.Transient;
+import dev.morphia.test.TestBase;
 import dev.morphia.test.models.FacebookUser;
-
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.UUID;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static org.testng.Assert.assertEquals;

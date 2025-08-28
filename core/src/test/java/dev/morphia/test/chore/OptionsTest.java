@@ -1,10 +1,4 @@
-package dev.morphia.test;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.List;
-import java.util.stream.Stream;
+package dev.morphia.test.chore;
 
 import com.mongodb.ReadConcern;
 import com.mongodb.ReadPreference;
@@ -13,26 +7,26 @@ import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.model.FindOneAndDeleteOptions;
 import com.mongodb.client.model.FindOneAndUpdateOptions;
-
-import dev.morphia.DeleteOptions;
-import dev.morphia.InsertManyOptions;
-import dev.morphia.InsertOneOptions;
-import dev.morphia.ModifyOptions;
-import dev.morphia.ReplaceOptions;
-import dev.morphia.UpdateOptions;
+import dev.morphia.*;
 import dev.morphia.aggregation.AggregationOptions;
 import dev.morphia.query.CountOptions;
 import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.FindOptions;
-
+import dev.morphia.test.JUnitMorphiaTestBase;
 import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.junit.jupiter.api.Test;
 import org.testng.Assert;
-import org.testng.annotations.Test;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.List;
+import java.util.stream.Stream;
 
 @SuppressWarnings("SameParameterValue")
-public class OptionsTest extends TestBase {
+public class OptionsTest extends JUnitMorphiaTestBase {
     @Test
     public void aggregationOptions() {
         checkMinDriverVersion("5.2.0");

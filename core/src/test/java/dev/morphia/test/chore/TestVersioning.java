@@ -1,23 +1,10 @@
-package dev.morphia.test;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+package dev.morphia.test.chore;
 
 import com.mongodb.MongoWriteException;
 import com.mongodb.client.model.ReturnDocument;
 import com.mongodb.client.result.UpdateResult;
-
-import dev.morphia.Datastore;
-import dev.morphia.DeleteOptions;
-import dev.morphia.ModifyOptions;
-import dev.morphia.UpdateOptions;
-import dev.morphia.VersionMismatchException;
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Id;
-import dev.morphia.annotations.IndexOptions;
-import dev.morphia.annotations.Indexed;
-import dev.morphia.annotations.Version;
+import dev.morphia.*;
+import dev.morphia.annotations.*;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.PropertyDiscovery;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -26,26 +13,27 @@ import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.Sort;
+import dev.morphia.test.TestBase;
 import dev.morphia.test.models.TestEntity;
 import dev.morphia.test.models.errors.invalidVersion.InvalidVersionUse;
 import dev.morphia.test.models.methods.MethodMappedUser;
 import dev.morphia.test.models.versioned.AbstractVersionedBase;
 import dev.morphia.test.models.versioned.Versioned;
 import dev.morphia.test.models.versioned.VersionedChildEntity;
-
 import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.updates.UpdateOperators.inc;
 import static dev.morphia.query.updates.UpdateOperators.set;
 import static java.util.Arrays.asList;
 import static java.util.List.of;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertThrows;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 public class TestVersioning extends TestBase {
     public TestVersioning() {

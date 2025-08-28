@@ -1,8 +1,8 @@
-package dev.morphia.test;
+package dev.morphia.test.chore;
 
 import dev.morphia.annotations.Entity;
+import dev.morphia.test.TestBase;
 import dev.morphia.test.models.TestEntity;
-
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertNotNull;

@@ -1,21 +1,6 @@
-package dev.morphia.test;
-
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.StringJoiner;
-import java.util.function.Consumer;
+package dev.morphia.test.chore;
 
 import com.mongodb.client.result.UpdateResult;
-
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.ModifyOptions;
@@ -32,16 +17,12 @@ import dev.morphia.query.Query;
 import dev.morphia.query.ValidationException;
 import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.query.updates.UpdateOperators;
-import dev.morphia.test.models.Circle;
-import dev.morphia.test.models.FacebookUser;
-import dev.morphia.test.models.Hotel;
-import dev.morphia.test.models.Shape;
-import dev.morphia.test.models.TestEntity;
+import dev.morphia.test.TestBase;
+import dev.morphia.test.models.*;
 import dev.morphia.test.models.generics.Child;
 import dev.morphia.test.query.TestQuery.CappedPic;
 import dev.morphia.test.query.TestQuery.ContainsPic;
 import dev.morphia.test.query.TestQuery.Pic;
-
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.json.JsonWriterSettings;
@@ -52,37 +33,20 @@ import org.jetbrains.annotations.NotNull;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.*;
+import java.util.function.Consumer;
+
 import static dev.morphia.query.filters.Filters.eq;
-import static dev.morphia.query.updates.UpdateOperators.addToSet;
-import static dev.morphia.query.updates.UpdateOperators.and;
-import static dev.morphia.query.updates.UpdateOperators.bit;
-import static dev.morphia.query.updates.UpdateOperators.currentDate;
-import static dev.morphia.query.updates.UpdateOperators.dec;
-import static dev.morphia.query.updates.UpdateOperators.inc;
-import static dev.morphia.query.updates.UpdateOperators.max;
-import static dev.morphia.query.updates.UpdateOperators.min;
-import static dev.morphia.query.updates.UpdateOperators.mul;
-import static dev.morphia.query.updates.UpdateOperators.or;
-import static dev.morphia.query.updates.UpdateOperators.pop;
-import static dev.morphia.query.updates.UpdateOperators.pull;
-import static dev.morphia.query.updates.UpdateOperators.pullAll;
-import static dev.morphia.query.updates.UpdateOperators.push;
-import static dev.morphia.query.updates.UpdateOperators.rename;
-import static dev.morphia.query.updates.UpdateOperators.set;
-import static dev.morphia.query.updates.UpdateOperators.setOnInsert;
-import static dev.morphia.query.updates.UpdateOperators.unset;
-import static dev.morphia.query.updates.UpdateOperators.xor;
+import static dev.morphia.query.updates.UpdateOperators.*;
 import static java.lang.String.format;
-import static java.time.LocalDate.now;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertThrows;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 @SuppressWarnings({ "ConstantConditions", "unused" })
 public class TestUpdateOperations extends TestBase {

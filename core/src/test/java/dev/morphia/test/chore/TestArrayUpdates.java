@@ -1,12 +1,12 @@
-package dev.morphia.test;
+package dev.morphia.test.chore;
 
 import dev.morphia.Datastore;
 import dev.morphia.UpdateOptions;
 import dev.morphia.query.Query;
+import dev.morphia.test.JUnitMorphiaTestBase;
 import dev.morphia.test.models.Grade;
 import dev.morphia.test.models.Student;
-
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.lt;
@@ -15,7 +15,7 @@ import static java.util.Collections.singletonMap;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 
-public class TestArrayUpdates extends TestBase {
+public class TestArrayUpdates extends JUnitMorphiaTestBase {
 
     @Test
     public void testUpdatesWithArrayFilters() {

@@ -1,5 +1,6 @@
 package dev.morphia.test;
 
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
@@ -18,10 +19,11 @@ import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -37,12 +39,16 @@ import static java.lang.String.format;
 import static java.nio.file.Files.lines;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
-public abstract class TestBase extends MorphiaTestSetup {
-    private static final Logger LOG = LoggerFactory.getLogger(TestBase.class);
-    public static final String TEST_DB_NAME = "morphia_test";
+/**
+ * Unified JUnit 5 base class for Morphia tests
+ * Combines functionality from TestBase and MorphiaTestSetup using JUnit 5 Extension
+ */
+@ExtendWith(MorphiaJUnitExtension.class)
+public abstract class JUnitMorphiaTestBase {
+    private static final Logger LOG = LoggerFactory.getLogger(JUnitMorphiaTestBase.class);
+    protected static final String TEST_DB_NAME = "morphia_test";
 
     public static File GIT_ROOT = new File(".").getAbsoluteFile();
     protected static File CORE_ROOT;
@@ -58,30 +64,76 @@ public abstract class TestBase extends MorphiaTestSetup {
         }
     }
 
-    public TestBase() {
+    // Access methods for extension-managed resources
+    protected MongoClient getMongoClient() {
+        return getMongoHolder().getMongoClient();
     }
 
-    public TestBase(MorphiaConfig config) {
-        super(config);
+    protected MongoHolder getMongoHolder() {
+        return MorphiaJUnitExtension.getCurrentMongoHolder();
     }
 
-    @BeforeMethod
-    public void beforeEach() {
-        cleanup();
+    protected MorphiaContainer getMorphiaContainer() {
+        // Check if we're in a withConfig scope
+        ConfigScope currentScope = ConfigScope.getCurrentScope();
+        if (currentScope != null) {
+            return currentScope.getContainer();
+        }
+        return MorphiaJUnitExtension.getCurrentMorphiaContainer();
     }
 
-    protected void cleanup() {
-        MongoDatabase db = getMongoClient().getDatabase(getMorphiaContainer().getMorphiaConfig().database());
-        db.runCommand(new Document("profile", 0).append("slowms", 0));
-        db.drop();
-        getMorphiaContainer().reset();
+    protected MorphiaConfig getMorphiaConfig() {
+        // Check if we're in a withConfig scope
+        ConfigScope currentScope = ConfigScope.getCurrentScope();
+        if (currentScope != null) {
+            return currentScope.getConfig();
+        }
+        return MorphiaJUnitExtension.getCurrentMorphiaConfig();
     }
 
+    /**
+     * Executes the given body with a temporary MorphiaContainer using custom config.
+     * This allows tests to use different configurations within individual test methods.
+     * The temporary container is automatically cleaned up after the body execution completes.
+     *
+     * @param config the custom MorphiaConfig to use
+     * @param body   the code to execute with the custom configuration
+     */
+    protected void withConfig(MorphiaConfig config, Runnable body) {
+        // Create temporary container with the custom config
+        MorphiaContainer tempContainer = new MorphiaContainer(getMongoClient(), config);
+        ConfigScope scope = new ConfigScope(tempContainer);
+
+        // Store the current scope in ThreadLocal for access during body execution
+        ConfigScope.setCurrentScope(scope);
+
+        try {
+            // Execute the body with the custom config
+            body.run();
+        } finally {
+            // Clean up the temporary config scope
+            ConfigScope.clearCurrentScope();
+            // Optionally clean up the container if needed
+            // tempContainer could have cleanup logic here if required
+        }
+    }
+
+    // Core test utility methods
     public MorphiaDatastore getDs() {
+        // Check if we're in a withConfig scope
+        ConfigScope currentScope = ConfigScope.getCurrentScope();
+        if (currentScope != null) {
+            return currentScope.getDs();
+        }
         return getMorphiaContainer().getDs();
     }
 
     public MongoDatabase getDatabase() {
+        // Check if we're in a withConfig scope
+        ConfigScope currentScope = ConfigScope.getCurrentScope();
+        if (currentScope != null) {
+            return currentScope.getDatabase();
+        }
         return getMorphiaContainer().getDatabase();
     }
 
@@ -93,6 +145,7 @@ public abstract class TestBase extends MorphiaTestSetup {
         return getDs().getMapper();
     }
 
+    // Data setup utilities
     protected void download(URL url, File file) throws IOException {
         LOG.info("Downloading zip data set to " + file);
         try (var inputStream = url.openStream(); var outputStream = new FileOutputStream(file)) {
@@ -129,21 +182,12 @@ public abstract class TestBase extends MorphiaTestSetup {
         assumeTrue(file.exists(), "Failed to process media files");
     }
 
-    public static <T> T walk(Map map, List<String> steps) {
-        Object value = map;
-        for (String step : steps) {
-            if (value instanceof Map) {
-                value = ((Map<?, ?>) value).get(step);
-            }
-        }
-        return (T) value;
-    }
-
+    // Assertion utilities
     protected void assertCapped(Class<?> type, Integer max) {
         Document result = getOptions(type);
-        Assert.assertTrue(result.getBoolean("capped"));
-        assertEquals(result.get("max"), max);
-        assertEquals(result.get("size"), 1048576);
+        assertTrue(result.getBoolean("capped"));
+        assertEquals(max, result.get("max"));
+        assertEquals(1048576, result.get("size"));
     }
 
     protected void assertDocumentEquals(Object actual, Object expected) {
@@ -167,7 +211,7 @@ public abstract class TestBase extends MorphiaTestSetup {
     }
 
     protected void assertListEquals(Collection<?> actual, Collection<?> expected) {
-        assertEquals(actual.size(), expected.size());
+        assertEquals(expected.size(), actual.size());
         expected.forEach(
                 d -> assertTrueLazy(actual.contains(coerceToLong(d)), () -> {
                     String actualString = actual.stream()
@@ -186,12 +230,43 @@ public abstract class TestBase extends MorphiaTestSetup {
         }
     }
 
+    // Test condition checks
     protected void checkForProxyTypes() {
         assumeTrue(proxyClassesPresent(), "Proxy classes are needed for this test");
     }
 
     protected void checkForReplicaSet() {
         assumeTrue(isReplicaSet(), "This test requires a replica set");
+    }
+
+    protected void assumeTrue(boolean condition, String message) {
+        Assumptions.assumeTrue(condition, message);
+    }
+
+    // Version checking methods
+    protected void checkMinDriverVersion(String version) {
+        MorphiaJUnitExtension.checkMinDriverVersion(version);
+    }
+
+    protected void checkMinServerVersion(String version) {
+        ExtensionContext context = MorphiaJUnitExtension.getCurrentContext();
+        MorphiaJUnitExtension.checkMinServerVersion(context, version);
+    }
+
+    protected void checkMaxServerVersion(String version) {
+        ExtensionContext context = MorphiaJUnitExtension.getCurrentContext();
+        MorphiaJUnitExtension.checkMaxServerVersion(context, version);
+    }
+
+    // Utility methods
+    public static <T> T walk(Map map, List<String> steps) {
+        Object value = map;
+        for (String step : steps) {
+            if (value instanceof Map) {
+                value = ((Map<?, ?>) value).get(step);
+            }
+        }
+        return (T) value;
     }
 
     protected int count(MongoCursor<?> cursor) {
@@ -252,8 +327,16 @@ public abstract class TestBase extends MorphiaTestSetup {
         collection.deleteMany(new Document());
         if (!list.isEmpty()) {
             InsertManyResult insertManyResult = collection.insertMany(list);
-            assertEquals(insertManyResult.getInsertedIds().size(), list.size());
+            assertEquals(list.size(), insertManyResult.getInsertedIds().size());
         }
+    }
+
+    protected boolean isReplicaSet() {
+        return getMorphiaContainer().runIsMaster().get("setName") != null;
+    }
+
+    protected static MorphiaConfig buildConfig(Class<?>... types) {
+        return MorphiaJUnitExtension.buildConfig(types);
     }
 
     protected List<Document> removeIds(List<Document> documents) {
@@ -309,7 +392,15 @@ public abstract class TestBase extends MorphiaTestSetup {
         return document.toJson(getDs().getCodecRegistry().get(Document.class));
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    protected Object coerceToLong(Object value) {
+        if (value instanceof Integer) {
+            return ((Integer) value).longValue();
+        }
+        return value;
+    }
+
+    // Document comparison (simplified implementation)
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private void assertDocumentEquals(String path, Object actual, Object expected) {
         assertSameNullity(path, expected, actual);
         if (expected == null) {
@@ -348,7 +439,7 @@ public abstract class TestBase extends MorphiaTestSetup {
             }
 
         } else {
-            assertEquals(coerceToLong(actual), coerceToLong(expected), format("mismatch found at %s:%n%s vs %s", path, expected, actual));
+            assertEquals(coerceToLong(expected), coerceToLong(actual), format("mismatch found at %s:%n%s vs %s", path, expected, actual));
         }
     }
 
@@ -357,28 +448,17 @@ public abstract class TestBase extends MorphiaTestSetup {
         return path.isEmpty() ? key : path + "." + key;
     }
 
-    public static Object coerceToLong(Object object) {
-        return object instanceof Integer ? ((Integer) object).longValue() : object;
-    }
-
     private void assertSameNullity(String path, Object expected, Object actual) {
         if (expected == null && actual != null
                 || actual == null && expected != null) {
-            assertEquals(actual, expected, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
+            assertEquals(expected, actual, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
         }
     }
 
-    private void assertSameType(String path, Object actual, Object expected) {
-        if (expected instanceof List && actual instanceof List) {
-            return;
-        }
-        if (!expected.getClass().equals(actual.getClass())) {
-            assertEquals(actual, expected, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
-        }
-    }
-
+    // ZDT Codec Provider (same as original TestBase)
     public static class ZDTCodecProvider implements CodecProvider {
         @Override
+        @SuppressWarnings("unchecked")
         public <T> Codec<T> get(Class<T> clazz, CodecRegistry registry) {
             if (clazz.equals(ZonedDateTime.class)) {
                 return (Codec<T>) new ZonedDateTimeCodec();

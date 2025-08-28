@@ -11,7 +11,7 @@
     </extension>
     <option name="SUITE_NAME" value="" />
     <option name="PACKAGE_NAME" value="dev.morphia.test" />
-    <option name="MAIN_CLASS_NAME" value="dev.morphia.test.TestTransactions" />
+    <option name="MAIN_CLASS_NAME" value="dev.morphia.test.chore.TestTransactions" />
     <option name="GROUP_NAME" value="" />
     <option name="TEST_OBJECT" value="CLASS" />
     <option name="VM_PARAMETERS" value="-ea -Dtestng.dtd.http=true -Dmongodb=4.4.29" />

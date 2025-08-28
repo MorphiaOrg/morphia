@@ -1,14 +1,13 @@
-package dev.morphia.test;
+package dev.morphia.test.chore;
+
+import dev.morphia.MorphiaVersion30;
+import org.apache.maven.model.Model;
+import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.junit.jupiter.api.Test;
+import org.semver4j.Semver;
 
 import java.io.File;
 import java.io.FileReader;
-
-import dev.morphia.MorphiaVersion30;
-
-import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.semver4j.Semver;
-import org.testng.annotations.Test;
 
 import static dev.morphia.test.TestBase.GIT_ROOT;
 import static java.lang.String.format;

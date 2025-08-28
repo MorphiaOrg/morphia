@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-package dev.morphia.test;
-
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.List;
+package dev.morphia.test.chore;
 
 import com.mongodb.MongoBulkWriteException;
 import com.mongodb.MongoCommandException;
@@ -29,7 +24,6 @@ import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.ValidationAction;
 import com.mongodb.client.model.ValidationLevel;
 import com.mongodb.client.model.ValidationOptions;
-
 import dev.morphia.InsertManyOptions;
 import dev.morphia.InsertOneOptions;
 import dev.morphia.ModifyOptions;
@@ -37,15 +31,20 @@ import dev.morphia.UpdateOptions;
 import dev.morphia.annotations.Validation;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.Query;
+import dev.morphia.test.TestBase;
 import dev.morphia.test.models.Contact;
 import dev.morphia.test.models.DocumentValidation;
 import dev.morphia.test.models.User;
-
 import org.bson.Document;
 import org.bson.json.JsonWriterSettings;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.EnumSet;
+import java.util.List;
 
 import static dev.morphia.annotations.internal.ValidationBuilder.validationBuilder;
 import static dev.morphia.query.filters.Filters.eq;
@@ -53,10 +52,7 @@ import static dev.morphia.query.updates.UpdateOperators.set;
 import static dev.morphia.query.updates.UpdateOperators.unset;
 import static java.util.Arrays.asList;
 import static org.bson.Document.parse;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
+import static org.testng.Assert.*;
 
 public class TestDocumentValidation extends TestBase {
     public TestDocumentValidation() {

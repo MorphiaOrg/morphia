@@ -1,12 +1,4 @@
-package dev.morphia.test;
-
-import java.lang.annotation.Annotation;
-import java.time.LocalDate;
-import java.time.Month;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
+package dev.morphia.test.chore;
 
 import com.mongodb.WriteConcern;
 import com.mongodb.client.MongoCollection;
@@ -15,50 +7,31 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.lang.NonNull;
-
-import dev.morphia.Datastore;
-import dev.morphia.DeleteOptions;
-import dev.morphia.EntityListener;
-import dev.morphia.InsertManyOptions;
-import dev.morphia.InsertOneOptions;
-import dev.morphia.MissingIdException;
-import dev.morphia.ModifyOptions;
-import dev.morphia.MorphiaDatastore;
-import dev.morphia.UpdateOptions;
-import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.EntityListeners;
-import dev.morphia.annotations.Id;
-import dev.morphia.annotations.PostLoad;
-import dev.morphia.annotations.PostPersist;
-import dev.morphia.annotations.PreLoad;
-import dev.morphia.annotations.PrePersist;
-import dev.morphia.annotations.Transient;
+import dev.morphia.*;
+import dev.morphia.annotations.*;
+import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
-import dev.morphia.query.CountOptions;
-import dev.morphia.query.FindAndDeleteOptions;
-import dev.morphia.query.FindOptions;
-import dev.morphia.query.Query;
-import dev.morphia.query.QueryException;
-import dev.morphia.query.ValidationException;
+import dev.morphia.query.*;
+import dev.morphia.test.CustomMorphiaConfig;
+import dev.morphia.test.JUnitMorphiaTestBase;
+import dev.morphia.test.MorphiaConfigProvider;
 import dev.morphia.test.datastore.MultipleDSEntity;
-import dev.morphia.test.models.Address;
-import dev.morphia.test.models.Book;
-import dev.morphia.test.models.City;
-import dev.morphia.test.models.CurrentStatus;
-import dev.morphia.test.models.FacebookUser;
-import dev.morphia.test.models.Grade;
-import dev.morphia.test.models.Hotel;
-import dev.morphia.test.models.Population;
-import dev.morphia.test.models.Rectangle;
-import dev.morphia.test.models.TestEntity;
-import dev.morphia.test.models.User;
-
+import dev.morphia.test.models.*;
+import dev.morphia.test.util.AlwaysFailingCodecProvider;
 import org.bson.Document;
 import org.bson.codecs.EncoderContext;
 import org.bson.types.ObjectId;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+
+import java.lang.annotation.Annotation;
+import java.time.LocalDate;
+import java.time.Month;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static com.mongodb.client.model.ReturnDocument.AFTER;
@@ -69,21 +42,18 @@ import static dev.morphia.query.updates.UpdateOperators.set;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.List.of;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNotSame;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertThrows;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 @SuppressWarnings({ "rawtypes", "ConstantConditions" })
-public class TestDatastore extends TestBase {
+@CustomMorphiaConfig
+public class TestDatastore extends JUnitMorphiaTestBase implements MorphiaConfigProvider {
 
-    public TestDatastore() {
-        super(buildConfig()
+    @Override
+    public MorphiaConfig provideMorphiaConfig() {
+        return buildConfig()
                 .applyCaps(true)
                 .packages(of(LifecycleTestObj.class.getPackageName(),
-                        FacebookUser.class.getPackageName())));
+                        FacebookUser.class.getPackageName()));
     }
 
     @Test

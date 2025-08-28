@@ -1,4 +1,4 @@
-package dev.morphia.test;
+package dev.morphia.test.chore;
 
 import dev.morphia.Datastore;
 import dev.morphia.InsertOneOptions;
@@ -9,7 +9,7 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.LoadOnly;
 import dev.morphia.annotations.Version;
 import dev.morphia.query.filters.Filters;
-
+import dev.morphia.test.TestBase;
 import org.bson.types.ObjectId;
 import org.testng.Assert;
 import org.testng.annotations.Test;
