@@ -11,7 +11,7 @@ import java.io.FileReader;
 
 import static dev.morphia.test.TestBase.GIT_ROOT;
 import static java.lang.String.format;
-import static org.testng.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MorphiaVersionTest {
     @Test

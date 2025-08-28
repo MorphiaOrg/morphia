@@ -42,7 +42,7 @@ import static dev.morphia.query.updates.UpdateOperators.set;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.List.of;
-import static org.testng.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings({ "rawtypes", "ConstantConditions" })
 @CustomMorphiaConfig

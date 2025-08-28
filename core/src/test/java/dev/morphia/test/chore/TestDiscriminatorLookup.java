@@ -1,14 +1,14 @@
 package dev.morphia.test.chore;
 
 import dev.morphia.annotations.Entity;
-import dev.morphia.test.TestBase;
+import dev.morphia.test.JUnitMorphiaTestBase;
 import dev.morphia.test.models.TestEntity;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class TestDiscriminatorLookup extends TestBase {
+public class TestDiscriminatorLookup extends JUnitMorphiaTestBase {
 
     @Test
     public void testLookup() {
@@ -21,7 +21,7 @@ public class TestDiscriminatorLookup extends TestBase {
 
         final SomeEntity entity = getDs().find(SomeEntity.class).first();
         assertNotNull(entity);
-        assertTrue(Shape.Square.class.isInstance(entity.getShape()));
+        assertInstanceOf(Shape.Square.class, entity.getShape());
     }
 
     @Entity

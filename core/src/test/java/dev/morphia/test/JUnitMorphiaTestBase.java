@@ -11,6 +11,8 @@ import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
+import dev.morphia.test.config.ManualMorphiaTestConfig;
+import dev.morphia.test.config.MorphiaTestConfig;
 import dev.morphia.test.mapping.codec.ZonedDateTimeCodec;
 import org.bson.Document;
 import org.bson.codecs.Codec;
@@ -99,16 +101,27 @@ public abstract class JUnitMorphiaTestBase {
      * @param config the custom MorphiaConfig to use
      * @param body   the code to execute with the custom configuration
      */
+    protected void withTestConfig(MorphiaConfig config, List<Class<?>> types, Runnable body) {
+        withConfig(new ManualMorphiaTestConfig(config).classes(types), body);
+    }
+
     protected void withConfig(MorphiaConfig config, Runnable body) {
+        // Execute the body with the custom config
+        if (config instanceof MorphiaTestConfig testConfig) {
+            List<Class<?>> classes = testConfig.classes();
+            if (classes != null) {
+                getMorphiaContainer().getDs().getMapper().map(classes);
+            }
+            if (config.applyIndexes()) {
+                getMorphiaContainer().getDs().applyIndexes();
+            }
+        }
         // Create temporary container with the custom config
         MorphiaContainer tempContainer = new MorphiaContainer(getMongoClient(), config);
         ConfigScope scope = new ConfigScope(tempContainer);
-
         // Store the current scope in ThreadLocal for access during body execution
         ConfigScope.setCurrentScope(scope);
-
         try {
-            // Execute the body with the custom config
             body.run();
         } finally {
             // Clean up the temporary config scope

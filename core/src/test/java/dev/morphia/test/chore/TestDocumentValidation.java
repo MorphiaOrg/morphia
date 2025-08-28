@@ -29,17 +29,19 @@ import dev.morphia.InsertOneOptions;
 import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
 import dev.morphia.annotations.Validation;
+import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.query.Query;
-import dev.morphia.test.TestBase;
+import dev.morphia.test.CustomMorphiaConfig;
+import dev.morphia.test.JUnitMorphiaTestBase;
+import dev.morphia.test.MorphiaConfigProvider;
 import dev.morphia.test.models.Contact;
 import dev.morphia.test.models.DocumentValidation;
 import dev.morphia.test.models.User;
 import org.bson.Document;
 import org.bson.json.JsonWriterSettings;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -52,15 +54,17 @@ import static dev.morphia.query.updates.UpdateOperators.set;
 import static dev.morphia.query.updates.UpdateOperators.unset;
 import static java.util.Arrays.asList;
 import static org.bson.Document.parse;
-import static org.testng.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class TestDocumentValidation extends TestBase {
-    public TestDocumentValidation() {
-        super(buildConfig()
-                .applyDocumentValidations(true));
+@CustomMorphiaConfig
+public class TestDocumentValidation extends JUnitMorphiaTestBase implements MorphiaConfigProvider {
+    @Override
+    public MorphiaConfig provideMorphiaConfig() {
+        return buildConfig()
+                .applyDocumentValidations(true);
     }
 
-    @BeforeMethod
+    @BeforeEach
     public void checkVersion() {
         checkMinDriverVersion("4.3.0");
     }
@@ -99,7 +103,7 @@ public class TestDocumentValidation extends TestBase {
         options.bypassDocumentValidation(true);
         query.modify(options, set("number", 5));
 
-        Assert.assertNotNull(query.filter(eq("number", 5))
+        assertNotNull(query.filter(eq("number", 5))
                 .iterator()
                 .next());
     }
@@ -118,7 +122,7 @@ public class TestDocumentValidation extends TestBase {
 
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
                 .filter(eq("number", 8));
-        Assert.assertNotNull(query.iterator().tryNext());
+        assertNotNull(query.iterator().tryNext());
 
         List<DocumentValidation> list = asList(new DocumentValidation("Harold", 8, new Date()),
                 new DocumentValidation("John", 8, new Date()),
@@ -147,7 +151,7 @@ public class TestDocumentValidation extends TestBase {
                     parse("{ '_id': 2, 'name': 'Ivan', 'city': 'Vancouver' }")));
             getDs().applyDocumentValidations();
 
-            Assert.assertThrows(MongoWriteException.class,
+            assertThrows(MongoWriteException.class,
                     () -> getDs().find(Contact.class)
                             .filter(eq("_id", 1))
                             .update(set("age", 42)));
@@ -207,7 +211,7 @@ public class TestDocumentValidation extends TestBase {
 
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
                 .filter(eq("number", 8));
-        Assert.assertNotNull(query.iterator().tryNext());
+        assertNotNull(query.iterator().tryNext());
 
         List<DocumentValidation> list = asList(new DocumentValidation("Harold", 8, new Date()),
                 new DocumentValidation("Harold", 8, new Date()),
@@ -260,7 +264,7 @@ public class TestDocumentValidation extends TestBase {
         options.bypassDocumentValidation(true);
         query.update(options, set("number", 5));
 
-        Assert.assertNotNull(query.filter(eq("number", 5)).iterator()
+        assertNotNull(query.filter(eq("number", 5)).iterator()
                 .tryNext());
     }
 
@@ -288,7 +292,7 @@ public class TestDocumentValidation extends TestBase {
     }
 
     private void checkValidation(Document validator, EntityModel model, ValidationLevel level,
-            ValidationAction action) {
+                                 ValidationAction action) {
         updateValidation(model, level, action);
         Document expected = new Document("validator", validator)
                 .append("validationLevel", level.getValue())

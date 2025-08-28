@@ -12,8 +12,8 @@ import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.lt;
 import static dev.morphia.query.updates.UpdateOperators.inc;
 import static java.util.Collections.singletonMap;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class TestArrayUpdates extends JUnitMorphiaTestBase {
 

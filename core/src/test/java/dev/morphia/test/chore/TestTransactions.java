@@ -9,6 +9,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
 import dev.morphia.query.filters.Filters;
+import dev.morphia.test.JUnitTemplatedTestBase;
 import dev.morphia.test.mapping.lazy.TestLazyCircularReference.ReferencedEntity;
 import dev.morphia.test.mapping.lazy.TestLazyCircularReference.RootEntity;
 import dev.morphia.test.models.Rectangle;
@@ -16,10 +17,10 @@ import dev.morphia.test.models.User;
 import dev.morphia.test.util.ActionTestOptions;
 import dev.morphia.transactions.MorphiaSession;
 import org.bson.types.ObjectId;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,11 +28,10 @@ import java.util.List;
 import static com.mongodb.ClientSessionOptions.builder;
 import static com.mongodb.WriteConcern.MAJORITY;
 import static dev.morphia.query.updates.UpdateOperators.inc;
-import static org.testng.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-//@Tags(@Tag("transactions"))
-public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
-    @BeforeMethod
+public class TestTransactions extends JUnitTemplatedTestBase {
+    @BeforeEach
     public void before() {
         checkForReplicaSet();
         getDs().save(new Rectangle(1, 1));
@@ -40,9 +40,8 @@ public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
         getDs().find(User.class).findAndDelete();
     }
 
-    @AfterClass
-    @Override
-    public void testCoverage() {
+    @AfterAll
+    public static void disable() {
     }
 
     @Test
@@ -161,7 +160,8 @@ public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
         assertEquals(getDs().find(Rectangle.class).first().getWidth(), 20, 0.5);
     }
 
-    @Test(testName = "transactional aggregations")
+    @Test
+    @DisplayName("transactional aggregations")
     public void aggregation() {
         getDs().withTransaction(session -> {
             testPipeline(
@@ -321,9 +321,9 @@ public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
         root = getDs().find(RootEntity.class).filter(Filters.eq("_id", rootId)).first();
 
         final DeleteResult deleteResult = getDs().withTransaction((session) -> session.find(RootEntity.class).delete());
-        Assert.assertEquals(deleteResult.getDeletedCount(), 1);
-
-        Assert.assertEquals(root.getR().getId(), refId);
+        assertEquals(1, deleteResult.getDeletedCount());
+        assertNotNull(root);
+        assertEquals(root.getR().getId(), refId);
     }
 
     @Entity

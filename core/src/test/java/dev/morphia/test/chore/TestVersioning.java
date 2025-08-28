@@ -5,6 +5,7 @@ import com.mongodb.client.model.ReturnDocument;
 import com.mongodb.client.result.UpdateResult;
 import dev.morphia.*;
 import dev.morphia.annotations.*;
+import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.PropertyDiscovery;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -13,7 +14,9 @@ import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.Query;
 import dev.morphia.query.Sort;
-import dev.morphia.test.TestBase;
+import dev.morphia.test.CustomMorphiaConfig;
+import dev.morphia.test.JUnitMorphiaTestBase;
+import dev.morphia.test.MorphiaConfigProvider;
 import dev.morphia.test.models.TestEntity;
 import dev.morphia.test.models.errors.invalidVersion.InvalidVersionUse;
 import dev.morphia.test.models.methods.MethodMappedUser;
@@ -21,8 +24,7 @@ import dev.morphia.test.models.versioned.AbstractVersionedBase;
 import dev.morphia.test.models.versioned.Versioned;
 import dev.morphia.test.models.versioned.VersionedChildEntity;
 import org.bson.types.ObjectId;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +35,15 @@ import static dev.morphia.query.updates.UpdateOperators.inc;
 import static dev.morphia.query.updates.UpdateOperators.set;
 import static java.util.Arrays.asList;
 import static java.util.List.of;
-import static org.testng.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class TestVersioning extends TestBase {
-    public TestVersioning() {
-        super(buildConfig(VersionedChildEntity.class, Primitive.class));
+@CustomMorphiaConfig
+public class TestVersioning extends JUnitMorphiaTestBase implements MorphiaConfigProvider {
+    @Override
+    public MorphiaConfig provideMorphiaConfig() {
+        return buildConfig(VersionedChildEntity.class, Primitive.class);
     }
+
 
     @Test
     public void testBulkUpdate() {
@@ -50,23 +55,26 @@ public class TestVersioning extends TestBase {
         datastore.save(entity);
 
         entity = datastore.find(Versioned.class).filter(eq("_id", entity.getId())).first();
-        assertEquals(entity.getName(), "Value 1");
-        assertEquals(entity.getVersion().longValue(), 1);
+        assertNotNull(entity);
+        assertEquals("Value 1", entity.getName());
+        assertEquals(1, entity.getVersion().longValue());
 
         entity.setName("Value 2");
         datastore.save(entity);
 
         entity = datastore.find(Versioned.class).filter(eq("_id", entity.getId())).first();
-        assertEquals(entity.getName(), "Value 2");
-        assertEquals(entity.getVersion().longValue(), 2);
+        assertNotNull(entity);
+        assertEquals("Value 2", entity.getName());
+        assertEquals(2, entity.getVersion().longValue());
 
         Query<Versioned> query = datastore.find(Versioned.class);
         query.filter(eq("id", entity.getId()));
         query.update(set("name", "Value 3"));
 
         entity = datastore.find(Versioned.class).filter(eq("_id", entity.getId())).first();
-        assertEquals(entity.getName(), "Value 3");
-        assertEquals(entity.getVersion().longValue(), 3);
+        assertNotNull(entity);
+        assertEquals("Value 3", entity.getName());
+        assertEquals(3, entity.getVersion().longValue());
     }
 
     @Test
@@ -93,6 +101,7 @@ public class TestVersioning extends TestBase {
                                 .filter(eq("name", "Sweden"))
                                 .first();
 
+                        assertNotNull(first);
                         first.name = "USA";
 
                         getDs().save(first);
@@ -241,7 +250,7 @@ public class TestVersioning extends TestBase {
     public void testMerge() {
         assertThrows(VersionMismatchException.class, () -> {
             final NamedVersion a = new NamedVersion();
-            Assert.assertNull(a.v);
+            assertNull(a.v);
             getDs().save(a);
 
             a.text = " foosdfds ";
@@ -361,7 +370,7 @@ public class TestVersioning extends TestBase {
         final VersionInHashcode model = new VersionInHashcode();
         model.data = "whatever";
         getDs().save(model);
-        Assert.assertNotNull(model.version);
+        assertNotNull(model.version);
     }
 
     @Test
@@ -413,7 +422,7 @@ public class TestVersioning extends TestBase {
         assertEquals(a.version, 2);
         final long version2 = a.version;
 
-        Assert.assertNotEquals(version1, version2);
+        assertNotEquals(version1, version2);
     }
 
     @Test
