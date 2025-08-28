@@ -123,7 +123,7 @@ async function createDuplicateIssues(github, context, originalIssue, milestones,
                 title: originalIssue.title,
                 body: newIssueBody,
                 milestone: milestoneId,
-                labels: originalIssue.labels.map(label => label.name),
+                labels: [ "forward-port" ].concat(originalIssue.labels.map(label => label.name)),
                 assignees: originalIssue.assignees.map(assignee => assignee.login)
             });
 
