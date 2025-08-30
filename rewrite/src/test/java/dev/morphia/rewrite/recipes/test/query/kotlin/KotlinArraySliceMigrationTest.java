@@ -4,13 +4,11 @@ import dev.morphia.rewrite.recipes.query.ArraySliceMigration;
 import dev.morphia.rewrite.recipes.test.KotlinRewriteTest;
 
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openrewrite.Recipe;
 
 import static org.openrewrite.kotlin.Assertions.kotlin;
 
-@Disabled
 public class KotlinArraySliceMigrationTest extends KotlinRewriteTest {
 
     @Override

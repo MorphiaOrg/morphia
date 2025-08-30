@@ -52,7 +52,6 @@ public class ArraySliceMigration extends Recipe {
                             .javaParser(JavaParser.fromJavaVersion()
                                     .classpath(findMorphiaDependencies()))
                             .imports(ArraySlice.class.getName())
-                            .staticImports(ArraySlice.class.getName() + ".limit")
                             .build();
 
                     MethodInvocation applied = template.apply(getCursor(), newClass.getCoordinates().replace(),
