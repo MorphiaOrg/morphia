@@ -4,13 +4,12 @@ import com.mongodb.ConnectionString;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-
 import org.bson.UuidRepresentation;
 import org.testcontainers.containers.MongoDBContainer;
 
 import static com.mongodb.MongoClientSettings.builder;
 
-class MongoHolder implements AutoCloseable {
+public class MongoHolder implements AutoCloseable {
     private MongoDBContainer mongoDBContainer;
     private String connectionString;
     private MongoClient mongoClient;

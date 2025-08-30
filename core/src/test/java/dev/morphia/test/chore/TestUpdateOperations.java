@@ -1,21 +1,6 @@
-package dev.morphia.test;
-
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.StringJoiner;
-import java.util.function.Consumer;
+package dev.morphia.test.chore;
 
 import com.mongodb.client.result.UpdateResult;
-
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.ModifyOptions;
@@ -24,6 +9,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Indexed;
 import dev.morphia.annotations.PreLoad;
+import dev.morphia.config.MorphiaConfig;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.query.FindOptions;
@@ -32,65 +18,44 @@ import dev.morphia.query.Query;
 import dev.morphia.query.ValidationException;
 import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.query.updates.UpdateOperators;
-import dev.morphia.test.models.Circle;
-import dev.morphia.test.models.FacebookUser;
-import dev.morphia.test.models.Hotel;
-import dev.morphia.test.models.Shape;
-import dev.morphia.test.models.TestEntity;
+import dev.morphia.test.CustomMorphiaConfig;
+import dev.morphia.test.JUnitMorphiaTestBase;
+import dev.morphia.test.MorphiaConfigProvider;
+import dev.morphia.test.models.*;
 import dev.morphia.test.models.generics.Child;
 import dev.morphia.test.query.TestQuery.CappedPic;
 import dev.morphia.test.query.TestQuery.ContainsPic;
 import dev.morphia.test.query.TestQuery.Pic;
-
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.json.JsonWriterSettings;
 import org.bson.types.ObjectId;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.MatcherAssert;
 import org.jetbrains.annotations.NotNull;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.*;
+import java.util.function.Consumer;
 
 import static dev.morphia.query.filters.Filters.eq;
-import static dev.morphia.query.updates.UpdateOperators.addToSet;
-import static dev.morphia.query.updates.UpdateOperators.and;
-import static dev.morphia.query.updates.UpdateOperators.bit;
-import static dev.morphia.query.updates.UpdateOperators.currentDate;
-import static dev.morphia.query.updates.UpdateOperators.dec;
-import static dev.morphia.query.updates.UpdateOperators.inc;
-import static dev.morphia.query.updates.UpdateOperators.max;
-import static dev.morphia.query.updates.UpdateOperators.min;
-import static dev.morphia.query.updates.UpdateOperators.mul;
-import static dev.morphia.query.updates.UpdateOperators.or;
-import static dev.morphia.query.updates.UpdateOperators.pop;
-import static dev.morphia.query.updates.UpdateOperators.pull;
-import static dev.morphia.query.updates.UpdateOperators.pullAll;
-import static dev.morphia.query.updates.UpdateOperators.push;
-import static dev.morphia.query.updates.UpdateOperators.rename;
-import static dev.morphia.query.updates.UpdateOperators.set;
-import static dev.morphia.query.updates.UpdateOperators.setOnInsert;
-import static dev.morphia.query.updates.UpdateOperators.unset;
-import static dev.morphia.query.updates.UpdateOperators.xor;
+import static dev.morphia.query.updates.UpdateOperators.*;
 import static java.lang.String.format;
-import static java.time.LocalDate.now;
 import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertThrows;
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings({ "ConstantConditions", "unused" })
-public class TestUpdateOperations extends TestBase {
+@CustomMorphiaConfig
+public class TestUpdateOperations extends JUnitMorphiaTestBase implements MorphiaConfigProvider {
 
     private static final JsonWriterSettings WRITER_SETTINGS = JsonWriterSettings.builder().indent(true).build();
 
-    public TestUpdateOperations() {
-        super(buildConfig(LogHolder.class, CappedPic.class, Shape.class));
+    @Override
+    public MorphiaConfig provideMorphiaConfig() {
+        return buildConfig(LogHolder.class, CappedPic.class, Shape.class);
     }
 
     @Test
@@ -115,7 +80,8 @@ public class TestUpdateOperations extends TestBase {
                 .next();
     }
 
-    @Test(description = "see https://github.com/MorphiaOrg/morphia/issues/2472 for details")
+    @Test
+    @DisplayName("see https://github.com/MorphiaOrg/morphia/issues/2472 for details")
     public void testUpdateWithDocumentConversion() {
         getDs().find(Hotel.class).filter(eq("_id", ObjectId.get()))
                 .disableValidation()
@@ -145,10 +111,10 @@ public class TestUpdateOperations extends TestBase {
         UpdateResult updateResult = query.update(set("children.$.last", updatedLastName));
 
         // then
-        assertThat(updateResult.getModifiedCount(), is(1L));
-        assertThat(getDs().find(Parent.class)
+        assertEquals(1L, updateResult.getModifiedCount());
+        assertTrue(getDs().find(Parent.class)
                 .filter(eq("id", parentId)).iterator()
-                .next().children, hasItem(new Child(childName, updatedLastName)));
+                .next().children.contains(new Child(childName, updatedLastName)));
     }
 
     @Test
@@ -161,22 +127,22 @@ public class TestUpdateOperations extends TestBase {
                 .filter(eq("name", "first"),
                         eq("pic", picKey));
         assertInserted(query.update(new UpdateOptions().upsert(true), set("name", "A")));
-        MatcherAssert.assertThat(getDs().find(ContainsPic.class).count(), is(1L));
+        assertEquals(1L, getDs().find(ContainsPic.class).count());
         getDs().find(ContainsPic.class).delete(new DeleteOptions().multi(true));
 
         query = getDs().find(ContainsPic.class)
                 .filter(eq("name", "first"),
                         eq("pic", pic));
         assertInserted(query.update(new UpdateOptions().upsert(true), set("name", "second")));
-        MatcherAssert.assertThat(getDs().find(ContainsPic.class).count(), is(1L));
+        assertEquals(1L, getDs().find(ContainsPic.class).count());
 
         //test reading the object.
         final ContainsPic cp = getDs().find(ContainsPic.class).first();
-        assertThat(cp, is(notNullValue()));
-        MatcherAssert.assertThat(cp.getName(), is("second"));
-        MatcherAssert.assertThat(cp.getPic(), is(notNullValue()));
-        MatcherAssert.assertThat(cp.getPic().getName(), is(notNullValue()));
-        MatcherAssert.assertThat(cp.getPic().getName(), is("fist"));
+        assertNotNull(cp);
+        assertEquals("second", cp.getName());
+        assertNotNull(cp.getPic());
+        assertNotNull(cp.getPic().getName());
+        assertEquals("fist", cp.getPic().getName());
     }
 
     @Test
@@ -252,20 +218,20 @@ public class TestUpdateOperations extends TestBase {
         //test reading the object.
         final ContainsPic cp2 = getDs().find(ContainsPic.class).iterator()
                 .next();
-        assertThat(cp2, is(notNullValue()));
-        MatcherAssert.assertThat(cp.getName(), CoreMatchers.is(cp2.getName()));
-        MatcherAssert.assertThat(cp2.getPic(), is(notNullValue()));
-        MatcherAssert.assertThat(cp2.getPic().getName(), is(notNullValue()));
-        MatcherAssert.assertThat(pic.getName(), CoreMatchers.is(cp2.getPic().getName()));
+        assertNotNull(cp2);
+        assertEquals(cp.getName(), cp2.getName());
+        assertNotNull(cp2.getPic());
+        assertNotNull(cp2.getPic().getName());
+        assertEquals(pic.getName(), cp2.getPic().getName());
 
         //test reading the object.
         final ContainsPic cp3 = getDs().find(ContainsPic.class).iterator()
                 .next();
-        assertThat(cp3, is(notNullValue()));
-        MatcherAssert.assertThat(cp.getName(), CoreMatchers.is(cp3.getName()));
-        MatcherAssert.assertThat(cp3.getPic(), is(notNullValue()));
-        MatcherAssert.assertThat(cp3.getPic().getName(), is(notNullValue()));
-        MatcherAssert.assertThat(pic.getName(), CoreMatchers.is(cp3.getPic().getName()));
+        assertNotNull(cp3);
+        assertEquals(cp.getName(), cp3.getName());
+        assertNotNull(cp3.getPic());
+        assertNotNull(cp3.getPic().getName());
+        assertEquals(pic.getName(), cp3.getPic().getName());
     }
 
     @Test
@@ -283,11 +249,13 @@ public class TestUpdateOperations extends TestBase {
                 .next().val, 22);
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void testValidationBadFieldName() {
-        Query<Circle> query = getDs().find(Circle.class)
-                .filter(eq("radius", 0));
-        query.update(inc("rad", 1D));
+        assertThrows(ValidationException.class, () -> {
+            Query<Circle> query = getDs().find(Circle.class)
+                    .filter(eq("radius", 0));
+            query.update(inc("rad", 1D));
+        });
     }
 
     @Test
@@ -340,24 +308,20 @@ public class TestUpdateOperations extends TestBase {
 
     private void doUpdates(ContainsIntArray updated, ContainsIntArray control, UpdateResult result, Integer[] target) {
         assertUpdated(result);
-        assertThat(getDs().find(ContainsIntArray.class)
+        assertArrayEquals(target, getDs().find(ContainsIntArray.class)
                 .filter(eq("_id", updated.id))
-                .first().values,
-                is(target));
-        assertThat(getDs().find(ContainsIntArray.class)
+                .first().values);
+        assertArrayEquals(new Integer[]{1, 2, 3}, getDs().find(ContainsIntArray.class)
                 .filter(eq("_id", control.id))
-                .first().values,
-                is(new Integer[] { 1, 2, 3 }));
+                .first().values);
 
         assertEquals(result.getMatchedCount(), 1);
-        assertThat(getDs().find(ContainsIntArray.class)
+        assertArrayEquals(target, getDs().find(ContainsIntArray.class)
                 .filter(eq("_id", updated.id))
-                .first().values,
-                is(target));
-        assertThat(getDs().find(ContainsIntArray.class)
+                .first().values);
+        assertArrayEquals(new Integer[]{1, 2, 3}, getDs().find(ContainsIntArray.class)
                 .filter(eq("_id", control.id))
-                .first().values,
-                is(new Integer[] { 1, 2, 3 }));
+                .first().values);
     }
 
     private Integer[] get(ContainsIntArray array) {
@@ -572,8 +536,7 @@ public class TestUpdateOperations extends TestBase {
 
     }
 
-    @DataProvider
-    private static Iterator<TranslationParams> paths() {
+    static List<TranslationParams> pathsProvider() {
         List<TranslationParams> list = new ArrayList<>();
 
         list.addAll(prepParams("stars", "s"));
@@ -586,7 +549,7 @@ public class TestUpdateOperations extends TestBase {
         list.addAll(prepParams("addr.street", "addr.address_street"));
         list.addAll(prepParams("addr.address_street", "addr.address_street"));
 
-        return list.iterator();
+        return list;
     }
 
     private static int countUpdateOperators() {
@@ -632,7 +595,8 @@ public class TestUpdateOperations extends TestBase {
     public record TranslationParams(String updateName, String mappedName, UpdateOperator operator) {
     }
 
-    @Test(dataProvider = "paths")
+    @ParameterizedTest
+    @MethodSource("pathsProvider")
     public void testPathTranslations(TestUpdateOperations.TranslationParams params) {
         CodecRegistry registry = getDs().getCodecRegistry();
         Operations value = new Operations(getDs(), getMapper().getEntityModel(Hotel.class), List.of(params.operator), true);
