@@ -1,2 +1,2 @@
-{ "_id" : 1, "item" : "ABC1", "instock" : { "warehouse1" : 2500, "warehouse2" : 500, "total" : 3000 } }
-{ "_id" : 2, "item" : "ABC2", "instock" : { "warehouse2" : 500, "warehouse3" : 200, "total" : 700 } }
+{ _id: 1, item: "ABC1", instock: { warehouse1: 2500, warehouse2: 500, total: 3000 } }
+{ _id: 2, item: "ABC2", instock: { warehouse2: 500, warehouse3: 200, total: 700 } }

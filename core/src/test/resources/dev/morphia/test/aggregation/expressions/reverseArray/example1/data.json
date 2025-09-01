@@ -1,4 +1,4 @@
-{ "_id" : 1, "name" : "dave123", "favorites" : [ "chocolate", "cake", "butter", "apples" ] }
-{ "_id" : 2, "name" : "li", "favorites" : [ "apples", "pudding", "pie" ] }
-{ "_id" : 3, "name" : "ahn", "favorites" : [ ] }
-{ "_id" : 4, "name" : "ty" }
+{ _id: 1, name: "dave123", favorites: [ "chocolate", "cake", "butter", "apples" ] },
+{ _id: 2, name: "li", favorites: [ "apples", "pudding", "pie" ] },
+{ _id: 3, name: "ahn", favorites: [ ] },
+{ _id: 4, name: "ty" }

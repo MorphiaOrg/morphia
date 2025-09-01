@@ -4,3 +4,4 @@
 { _id: 3, type: "vanilla", orderDate: ISODate("2020-02-08T13:13:23Z"), state: "WA", price: 13, quantity: 104 },
 { _id: 4, type: "strawberry", orderDate: ISODate("2019-05-18T16:09:01Z"), state: "CA", price: 41, quantity: 162 },
 { _id: 5, type: "strawberry", orderDate: ISODate("2019-01-08T06:12:03Z"), state: "WA", price: 43, quantity: 134 }
+The following examples use the ``cakeSales`` collection.

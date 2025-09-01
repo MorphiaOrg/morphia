@@ -1,3 +1,3 @@
-{ "_id" : 1, "item" : "ABC1", "comparisonResult" : -1 }
-{ "_id" : 2, "item" : "ABC2", "comparisonResult" : 0 }
-{ "_id" : 3, "item" : "XYZ1", "comparisonResult" : 1 }
+{ _id: 1, item: "ABC1", comparisonResult: -1 }
+{ _id: 2, item: "ABC2", comparisonResult: 0 }
+{ _id: 3, item: "XYZ1", comparisonResult: 1 }

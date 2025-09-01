@@ -1,5 +1,5 @@
-{ "_id" : 1, "item" : "sweatshirt", "price.usd": 45.99, qty: 300 }
-{ "_id" : 2, "item" : "winter coat", "price.usd": 499.99, qty: 200 }
-{ "_id" : 3, "item" : "sun dress", "price.usd": 199.99, qty: 250 }
-{ "_id" : 4, "item" : "leather boots", "price.usd": 249.99, qty: 300 }
-{ "_id" : 5, "item" : "bow tie", "price.usd": 9.99, qty: 180 }
+{ _id: 1, item: "sweatshirt", "price.usd": 45.99, qty: 300 },
+{ _id: 2, item: "winter coat", "price.usd": 499.99, qty: 200 },
+{ _id: 3, item: "sun dress", "price.usd": 199.99, qty: 250 },
+{ _id: 4, item: "leather boots", "price.usd": 249.99, qty: 300 },
+{ _id: 5, item: "bow tie", "price.usd": 9.99, qty: 180 }

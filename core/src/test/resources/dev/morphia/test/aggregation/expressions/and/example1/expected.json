@@ -1,5 +1,5 @@
-{ "_id" : 1, "item" : "abc1", "qty" : 300, "result" : false }
-{ "_id" : 2, "item" : "abc2", "qty" : 200, "result" : true }
-{ "_id" : 3, "item" : "xyz1", "qty" : 250, "result" : false }
-{ "_id" : 4, "item" : "VWZ1", "qty" : 300, "result" : false }
-{ "_id" : 5, "item" : "VWZ2", "qty" : 180, "result" : true }
+{ _id: 1, item: "abc1", qty: 300, result: false }
+{ _id: 2, item: "abc2", qty: 200, result: true }
+{ _id: 3, item: "xyz1", qty: 250, result: false }
+{ _id: 4, item: "VWZ1", qty: 300, result: false }
+{ _id: 5, item: "VWZ2", qty: 180, result: true }

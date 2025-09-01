@@ -2,7 +2,7 @@
       $densify: {
          field: "timestamp",
          range: {
-            step: 1, 
+            step: 1,
             unit: "hour",
             bounds:[ ISODate("2021-05-18T00:00:00.000Z"), ISODate("2021-05-18T08:00:00.000Z") ]
          }

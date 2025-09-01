@@ -1,7 +1,7 @@
 { $project: 
       {
-          _id: 0,
-          result:
+         _id: 0,
+         result:
             {
                $sortArray: { input: "$team", sortBy: { name: 1 } }
             }

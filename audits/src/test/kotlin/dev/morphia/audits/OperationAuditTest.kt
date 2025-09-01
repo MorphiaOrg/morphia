@@ -13,7 +13,7 @@ class OperationAuditTest {
             OperationAudit.parse(taglet = "@query.filter")
                 .audit(
                     "query-filters",
-                    "https://docs.mongodb.com/manual/reference/operator/query/",
+                    "https://www.mongodb.com/docs/manual/reference/mql/expressions/",
                     listOf("$", "\$rand"),
                 )
         ) {
@@ -25,7 +25,7 @@ class OperationAuditTest {
             OperationAudit.parse(taglet = "@update.operator")
                 .audit(
                     "update-operators",
-                    "https://docs.mongodb.com/manual/reference/operator/update/",
+                    "https://www.mongodb.com/docs/manual/reference/mql/expressions/",
                     listOf("$", "$[]", "$[<identifier>]", "\$position", "\$slice", "\$sort"),
                 )
         ) {

@@ -1,3 +1,3 @@
-{ "_id" : "warehouse3", "total" : 200 }
-{ "_id" : "warehouse2", "total" : 1000 }
-{ "_id" : "warehouse1", "total" : 2500 }
+{ _id: "warehouse3", total: 200 }
+{ _id: "warehouse2", total: 1000 }
+{ _id: "warehouse1", total: 2500 }

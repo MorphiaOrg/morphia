@@ -1,4 +1,4 @@
-{ "_id" : 1, "item" : "red paint" }
-{ "_id" : 2, "item" : "blue and green paint" }
-{ "_id" : 3, "item" : "red paint with blue paintbrush" }
-{ "_id" : 4, "item" : "red paint with green paintbrush" }
+{ _id: 1, item: "red paint" }
+{ _id: 2, item: "blue and green paint" }
+{ _id: 3, item: "red paint with blue paintbrush" }
+{ _id: 4, item: "red paint with green paintbrush" }

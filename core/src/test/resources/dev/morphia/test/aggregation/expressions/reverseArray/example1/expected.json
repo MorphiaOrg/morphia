@@ -1,4 +1,4 @@
-{ "_id" : 1, "name" : "dave123", "reverseFavorites" : [ "apples", "butter", "cake", "chocolate" ] }
-{ "_id" : 2, "name" : "li", "reverseFavorites" : [ "pie", "pudding", "apples" ] }
-{ "_id" : 3, "name" : "ahn", "reverseFavorites" : [ ] }
-{ "_id" : 4, "name" : "ty", "reverseFavorites" : null }
+{ _id: 1, name: "dave123", reverseFavorites: [ "apples", "butter", "cake", "chocolate" ] },
+{ _id: 2, name: "li", reverseFavorites: [ "pie", "pudding", "apples" ] },
+{ _id: 3, name: "ahn", reverseFavorites: [ ] },
+{ _id: 4, name: "ty", reverseFavorites: null },
