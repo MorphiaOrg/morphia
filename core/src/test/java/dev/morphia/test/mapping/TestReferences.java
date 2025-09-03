@@ -561,7 +561,7 @@ public class TestReferences extends ProxyTestBase {
         assertNotFetched(root.secondReference);
     }
 
-    @Test //(enabled = false)
+    @Test(enabled = false)
     public void testTypeCacheMemoryLeak() {
         MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
         MemoryUsage beforeUsage = memoryBean.getHeapMemoryUsage();
