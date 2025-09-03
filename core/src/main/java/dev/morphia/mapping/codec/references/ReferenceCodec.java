@@ -69,7 +69,7 @@ import static java.lang.String.format;
 @SuppressWarnings({ "unchecked", "removal" })
 @MorphiaInternal
 public class ReferenceCodec extends BaseReferenceCodec<Object> implements PropertyHandler {
-    private static final TypeCache<TypeCache.SimpleKey> TYPE_CACHE = new TypeCache.WithInlineExpunction<>(Sort.SOFT);
+    private static final TypeCache<TypeCache.SimpleKey> TYPE_CACHE = new TypeCache.WithInlineExpunction<>(Sort.WEAK);
 
     private final Reference annotation;
     private final BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();

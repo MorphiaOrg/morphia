@@ -1,5 +1,8 @@
 package dev.morphia.test.mapping;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryUsage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -558,6 +561,99 @@ public class TestReferences extends ProxyTestBase {
         assertNotFetched(root.secondReference);
     }
 
+    @Test //(enabled = false)
+    public void testTypeCacheMemoryLeak() {
+        MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
+        MemoryUsage beforeUsage = memoryBean.getHeapMemoryUsage();
+
+        List<Object> entities = new ArrayList<>();
+        List<MultiTypeContainer> containers = new ArrayList<>();
+        List<Long> memoryReadings = new ArrayList<>();
+        int count = 10_000;
+
+        for (int i = 0; i < count; i++) {
+            Object entity;
+            MultiTypeContainer container = new MultiTypeContainer();
+
+            switch (i % 4) {
+                case 0:
+                    Ref ref = new Ref("ref" + i);
+                    entity = ref;
+                    container.refEntity = ref;
+                    break;
+                case 1:
+                    Target target = new Target();
+                    target.setFoo("target" + i);
+                    entity = target;
+                    container.targetEntity = target;
+                    break;
+                case 2:
+                    Complex complex = new Complex(new ChildId("complex" + i, i), "value" + i);
+                    entity = complex;
+                    container.complexEntity = complex;
+                    break;
+                default:
+                    ReferencedEntity refEntity = new ReferencedEntity();
+                    refEntity.setFoo("referenced" + i);
+                    entity = refEntity;
+                    container.referencedEntity = refEntity;
+                    break;
+            }
+
+            entities.add(entity);
+            getDs().save(entity);
+            containers.add(container);
+            getDs().save(container);
+
+            MultiTypeContainer loaded = getDs().find(MultiTypeContainer.class)
+                    .filter(eq("_id", container.getId()))
+                    .first();
+
+            if (loaded.refEntity != null)
+                loaded.refEntity.getId();
+            if (loaded.targetEntity != null)
+                loaded.targetEntity.getFoo();
+            if (loaded.complexEntity != null)
+                loaded.complexEntity.getValue();
+            if (loaded.referencedEntity != null)
+                loaded.referencedEntity.getFoo();
+
+            if (i % 500 == 0) {
+                long used = memoryBean.getHeapMemoryUsage().getUsed();
+                memoryReadings.add(used);
+                System.out.printf("%5d Current memory: %,12d bytes%n", i, used);
+            }
+        }
+
+        double averageUsage = memoryReadings.stream().mapToLong(Long::longValue).average().orElse(0);
+        System.out.printf("Average memory usage: %,15.0f bytes%n", averageUsage);
+
+        for (MultiTypeContainer container : containers) {
+            MultiTypeContainer loaded = getDs().find(MultiTypeContainer.class)
+                    .filter(eq("_id", container.getId()))
+                    .first();
+
+            if (loaded.refEntity != null)
+                loaded.refEntity.getId();
+            if (loaded.targetEntity != null)
+                loaded.targetEntity.getId();
+            if (loaded.complexEntity != null)
+                loaded.complexEntity.getId();
+            if (loaded.referencedEntity != null)
+                loaded.referencedEntity.getId();
+        }
+
+        System.gc();
+
+        MemoryUsage afterUsage = memoryBean.getHeapMemoryUsage();
+        long memoryIncreaseBytes = afterUsage.getUsed() - beforeUsage.getUsed();
+        long memoryIncreaseMB = memoryIncreaseBytes / (1024 * 1024);
+
+        System.out.println("Memory increase: " + memoryIncreaseMB + " MB");
+
+        assertTrue(memoryIncreaseMB < 50, "Memory leak detected: " + memoryIncreaseMB + " MB increase");
+    }
+
     private static class ArrayOfReferences extends TestEntity {
         @Reference
         private final Ref[] refs = new Ref[2];
@@ -637,7 +733,7 @@ public class TestReferences extends ProxyTestBase {
 
         private String value;
 
-        Complex() {
+        public Complex() {
         }
 
         public Complex(ChildId id, String value) {
@@ -1089,7 +1185,7 @@ public class TestReferences extends ProxyTestBase {
     }
 
     @Entity
-    private static class Ref {
+    public static class Ref {
         @Id
         private String id;
 
@@ -1243,6 +1339,29 @@ public class TestReferences extends ProxyTestBase {
 
         public void setId(ObjectId id) {
             this.id = id;
+        }
+
+    }
+
+    @Entity
+    private static class MultiTypeContainer {
+        @Id
+        private ObjectId id;
+
+        @Reference(lazy = true)
+        private Ref refEntity;
+
+        @Reference(lazy = true)
+        private Target targetEntity;
+
+        @Reference(lazy = true)
+        private Complex complexEntity;
+
+        @Reference(lazy = true)
+        private ReferencedEntity referencedEntity;
+
+        public ObjectId getId() {
+            return id;
         }
     }
 }
