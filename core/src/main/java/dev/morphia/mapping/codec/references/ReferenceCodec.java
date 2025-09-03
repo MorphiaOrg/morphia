@@ -80,7 +80,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     /**
      * Type-cache for proxy classes generated w/ Byte Buddy.
      */
-    private final TypeCache<TypeCache.SimpleKey> typeCache = new TypeCache.WithInlineExpunction<>(Sort.SOFT);
+    private static final TypeCache<TypeCache.SimpleKey> typeCache = new TypeCache.WithInlineExpunction<>(Sort.WEAK);
     private Datastore datastore;
 
     /**
