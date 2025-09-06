@@ -8,5 +8,5 @@ import java.util.UUID
 data class PlayerInfo(
     @Id val uuid: UUID,
     val firstJoin: Long = System.currentTimeMillis(),
-    var lastJoin: Long = System.currentTimeMillis()
+    var lastJoin: Long = System.currentTimeMillis(),
 )
