@@ -76,12 +76,12 @@ enum class Version {
 enum class State {
     ABSENT,
     PRESENT,
-    DEPRECATED
+    DEPRECATED,
 }
 
 val typeMigrations =
     mapOf(
         "Lcom/mongodb/DBObject;" to "Lorg/bson/Document;",
         "Lcom/mongodb/WriteResult;" to "Lcom/mongodb/client/result/DeleteResult;",
-        "Ldev/morphia/query/UpdateResults;" to "Lcom/mongodb/client/result/UpdateResult;"
+        "Ldev/morphia/query/UpdateResults;" to "Lcom/mongodb/client/result/UpdateResult;",
     )

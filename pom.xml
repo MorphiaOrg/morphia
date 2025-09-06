@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.antwerkz</groupId>
         <artifactId>antwerkz-parent</artifactId>
-        <version>44</version>
+        <version>55</version>
     </parent>
 
     <groupId>dev.morphia.morphia</groupId>
@@ -21,6 +21,25 @@
         <developerConnection>scm:git:git@github.com:MorphiaOrg/morphia.git</developerConnection>
         <url>git@github.com:MorphiaOrg/morphia.git</url>
     </scm>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Maven Central</name>
+            <layout>default</layout>
+            <url>https://repo1.maven.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>sonatype-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <properties>
         <kotlin.version>1.9.25</kotlin.version>
@@ -45,12 +64,6 @@
         <kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>central snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </repository>
-    </repositories>
     <build>
         <defaultGoal>install</defaultGoal>
         <pluginManagement>

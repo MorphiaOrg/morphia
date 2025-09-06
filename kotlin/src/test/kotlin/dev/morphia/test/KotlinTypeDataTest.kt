@@ -19,7 +19,7 @@ class KotlinTypeDataTest : TestBase() {
                 } catch (e: ReflectiveOperationException) {
                     throw RuntimeException(e)
                 }
-            }
+            },
         )
     }
 
@@ -28,7 +28,7 @@ class KotlinTypeDataTest : TestBase() {
         owner: KClass<*>,
         propertyName: String,
         fieldType: Class<*>?,
-        vararg parameterTypes: Class<*>
+        vararg parameterTypes: Class<*>,
     ) {
         val field = owner.declaredMemberProperties.first { it.name == propertyName }
         val typeData = TypeData.builder(field.javaField?.type).build()

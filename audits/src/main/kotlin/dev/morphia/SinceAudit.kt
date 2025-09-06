@@ -92,7 +92,7 @@ class SinceAudit {
                                     MorphiaMethod(
                                         morphiaClass.pkgName,
                                         morphiaClass.name,
-                                        m.descriptor()
+                                        m.descriptor(),
                                     )
                                 val method =
                                     methodHistory.computeIfAbsent(morphiaMethod.fullyQualified()) {
@@ -148,7 +148,7 @@ class SinceAudit {
             "Methods missing in ${newer} that weren't deprecated in ${older}".format(newer, older),
             older,
             newer,
-            list
+            list,
         )
     }
 
@@ -184,7 +184,7 @@ class SinceAudit {
                 "dev.morphia.query.AbstractQueryFactory#createQuery(Ldev/morphia/Datastore;Lcom/mongodb/DBCollection;Ljava/lang/Class;)Ldev/morphia/query/Query;",
                 "dev.morphia.query.DefaultQueryFactory#createQuery(Ldev/morphia/Datastore;Lcom/mongodb/DBCollection;Ljava/lang/Class;Lorg/bson/Document;)Ldev/morphia/query/Query;",
                 "dev.morphia.query.QueryFactory#createQuery(Ldev/morphia/Datastore;Lcom/mongodb/DBCollection;Ljava/lang/Class;)Ldev/morphia/query/Query;",
-                "dev.morphia.query.QueryFactory#createQuery(Ldev/morphia/Datastore;Lcom/mongodb/DBCollection;Ljava/lang/Class;Lorg/bson/Document;)Ldev/morphia/query/Query;"
+                "dev.morphia.query.QueryFactory#createQuery(Ldev/morphia/Datastore;Lcom/mongodb/DBCollection;Ljava/lang/Class;Lorg/bson/Document;)Ldev/morphia/query/Query;",
             ) &&
             !name.startsWith("dev.morphia.converters") &&
             !name.contains("Converter") &&
@@ -227,7 +227,7 @@ class SinceAudit {
                 "dev.morphia.query.UpdateOperator#fromString(Ljava/lang/String;)Ldev/morphia/query/UpdateOperator;",
                 "dev.morphia.query.UpdateOpsImpl#<init>(Ljava/lang/Class;Ldev/morphia/mapping/Mapper;)V",
                 "dev.morphia.query.UpdateOpsImpl#add(Ldev/morphia/query/UpdateOperator;Ljava/lang/String;Ljava/lang/Object;Z)V",
-                "dev.morphia.query.UpdateOpsImpl#toDBObjList(Ldev/morphia/mapping/MappedField;Ljava/util/List;)Ljava/util/List;"
+                "dev.morphia.query.UpdateOpsImpl#toDBObjList(Ldev/morphia/mapping/MappedField;Ljava/util/List;)Ljava/util/List;",
             ) &&
             !name.startsWith("dev.morphia.logging") &&
             !name.startsWith("dev.morphia.mapping.lazy") &&
@@ -273,7 +273,7 @@ class SinceAudit {
                 "dev.morphia.AdvancedDatastore#insert(Ljava/lang/Object;)Ldev/morphia/Key;",
                 "dev.morphia.AdvancedDatastore#insert(Ljava/lang/Object;Ldev/morphia/InsertOptions;)Ldev/morphia/Key;",
                 "dev.morphia.AdvancedDatastore#insert(Ljava/util/List;)Ljava/lang/Iterable;",
-                "dev.morphia.AdvancedDatastore#insert(Ljava/util/List;Ldev/morphia/InsertOptions;)Ljava/lang/Iterable;"
+                "dev.morphia.AdvancedDatastore#insert(Ljava/util/List;Ldev/morphia/InsertOptions;)Ljava/lang/Iterable;",
             )
     }
 
@@ -291,7 +291,7 @@ class SinceAudit {
             older,
             newer,
             newMethods(newer, older, DEPRECATED, ABSENT),
-            false
+            false,
         )
     }
 
@@ -301,7 +301,7 @@ class SinceAudit {
             older,
             newer,
             newClasses(newer, older, DEPRECATED, ABSENT),
-            false
+            false,
         )
     }
 
@@ -311,7 +311,7 @@ class SinceAudit {
             older,
             newer,
             newClasses(newer, older, PRESENT, ABSENT),
-            false
+            false,
         )
     }
 
@@ -321,7 +321,7 @@ class SinceAudit {
             older,
             newer,
             newMethods(newer, older, PRESENT, ABSENT),
-            false
+            false,
         )
     }
 
@@ -329,7 +329,7 @@ class SinceAudit {
         newer: Version,
         older: Version,
         newState: State,
-        oldState: State
+        oldState: State,
     ): List<MorphiaMethod> {
         return methodHistory.values
             .filter { it.versions[newer] == newState && it.versions[older] == oldState }
@@ -340,7 +340,7 @@ class SinceAudit {
         newer: Version,
         older: Version,
         newState: State,
-        oldState: State
+        oldState: State,
     ): List<MorphiaClass> {
         return classHistory.values
             .filter { !it.name.contains("\$") }
@@ -353,7 +353,7 @@ class SinceAudit {
         older: Version,
         newer: Version,
         list: List<MorphiaMethod>,
-        failureCase: Boolean = true
+        failureCase: Boolean = true,
     ) {
         if (list.isNotEmpty())
             reports[title] = { writer ->
@@ -373,7 +373,7 @@ class SinceAudit {
         older: Version,
         newer: Version,
         list: List<MorphiaClass>,
-        failureCase: Boolean = true
+        failureCase: Boolean = true,
     ) {
         if (list.isNotEmpty())
             reports[title] = { writer ->

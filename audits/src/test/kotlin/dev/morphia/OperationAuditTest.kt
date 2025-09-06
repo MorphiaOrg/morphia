@@ -14,7 +14,7 @@ class OperationAuditTest {
                 .audit(
                     "query-filters",
                     "https://docs.mongodb.com/manual/reference/operator/query/",
-                    listOf("$", "\$rand")
+                    listOf("$", "\$rand"),
                 )
         ) {
             remaining += first
@@ -26,7 +26,7 @@ class OperationAuditTest {
                 .audit(
                     "update-operators",
                     "https://docs.mongodb.com/manual/reference/operator/update/",
-                    listOf("$", "$[]", "$[<identifier>]", "\$position", "\$slice", "\$sort")
+                    listOf("$", "$[]", "$[<identifier>]", "\$position", "\$slice", "\$sort"),
                 )
         ) {
             remaining += first
@@ -43,8 +43,8 @@ class OperationAuditTest {
                         "\$listSessions",
                         "\$listLocalSessions",
                         "\$search", /* not terribly well doc'd.  atlas only? */
-                        "\$shardedDataDistribution" /* not terribly well doc'd.  atlas only? */
-                    )
+                        "\$shardedDataDistribution", /* not terribly well doc'd.  atlas only? */
+                    ),
                 )
         ) {
             remaining += first
@@ -56,7 +56,7 @@ class OperationAuditTest {
                 .audit(
                     "aggregation-expressions",
                     "https://docs.mongodb.com/manual/reference/operator/aggregation/index.html",
-                    listOf("$", "\$addFields", "\$group", "\$project")
+                    listOf("$", "\$addFields", "\$group", "\$project"),
                 )
         ) {
             remaining += first
