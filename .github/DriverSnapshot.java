@@ -20,7 +20,7 @@ public class DriverSnapshot {
 
     public static void main(String... args) throws Exception {
         // props to Chris Dellaway for the pointer to this
-        var url = "https://oss.sonatype.org/content/repositories/snapshots/org/mongodb/mongodb-driver-sync/maven-metadata.xml";
+        var url = "https://central.sonatype.com/repository/maven-snapshots/org/mongodb/mongodb-driver-sync/maven-metadata.xml";
         var mapper = new XmlMapper();
         var min = System.getenv().getOrDefault("DRIVER_MIN", "5.0.0");
         var driverMinimum = Semver.parse(min);
