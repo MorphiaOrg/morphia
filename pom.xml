@@ -48,7 +48,7 @@
         <driver.minor.version>5.4</driver.minor.version>
         <jackson.version>2.20.0</jackson.version>
         <json.assert.version>1.5.3</json.assert.version>
-        <logback.version>1.5.18</logback.version>
+        <logback.version>1.5.19</logback.version>
         <maven.version>3.9.11</maven.version>
         <revapi.maven.plugin.version>0.15.1</revapi.maven.plugin.version>
         <revapi.java.version>0.28.1</revapi.java.version>
