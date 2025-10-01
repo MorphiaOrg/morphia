@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.antwerkz</groupId>
         <artifactId>antwerkz-parent</artifactId>
-        <version>68</version>
+        <version>69</version>
     </parent>
 
     <groupId>dev.morphia.morphia</groupId>
