@@ -1,16 +1,14 @@
 == Configuration
 
-[NOTE]
-====
-After some feedback about some unexpected use cases, this transition has been postponed and the requisite `MapperOptions` based methods
-undeprecated.  Programmatic configuration is a much more popular, and in some cases vital, option than previously known.  So for now,
-those methods will stay while the future of configuration and mapping gets a rethink.  Apologies for the noise and dust.
-====
+Starting in Morphia 3.0, configuration will use a newer configuration mechanism, `MorphiaConfig`.  This class will replace
+`MapperOptions` in 3.0 and `MapperOptions` will be removed completely then.  `MapperOptions` is deprecated as of now and users are
+encouraged to change before 3.0.  There will be an automated refactoring provided for users to migrate with the 3.0 release for those
+that would rather wait.
 
-Starting in Morphia 3.0, configuration will be driven via a configuration file rather than programmatic configuration. The file
+`MorphiaConfig` can be programmatically created like `MapperOptions` are today but it can also be configured via a configuration file. The file
 should live in your build's resources folder and be named `META-INF/morphia-config.properties`. This is being done for a number of reasons:
 
-1. Better align with usage in frameworks such as Quarkus and Spring Boot
+1. Better alignment with usage in frameworks such as Quarkus and Spring Boot
 2. Allow for deployment specific variations based on the deployment environment.
 3. Allow for certain optimizations and simplifications because we know more about the runtime set up earlier in the process.
 
