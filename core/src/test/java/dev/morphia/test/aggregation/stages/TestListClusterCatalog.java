@@ -5,7 +5,7 @@ import dev.morphia.test.TemplatedTestBase;
 import org.testng.annotations.Test;
 
 // this operation is more administrative than application oriented.  if someone needs it, we can add it but for now skip it.
-@Test(enabled = false)
+@Test
 public class TestListClusterCatalog extends TemplatedTestBase {
 
     /**
