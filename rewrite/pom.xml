@@ -14,7 +14,7 @@
     <artifactId>morphia-rewrite</artifactId>
 
     <properties>
-        <kotlin.version>1.9.25</kotlin.version>
+        <kotlin.version>2.2.20</kotlin.version>
         <morphia.prior.version>2.5.0</morphia.prior.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
