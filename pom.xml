@@ -60,6 +60,7 @@
         <sofia.version>0.25</sofia.version>
         <surefire.version>3.1.0</surefire.version>
         <testng.version>7.11.0</testng.version>
+        <junit.version>5.13.4</junit.version>
         <zt.exec.version>1.12</zt.exec.version>
 
         <maven.compiler.target>17</maven.compiler.target>
@@ -180,6 +181,13 @@
                 <version>${testng.version}</version>
                 <scope>test</scope>
             </dependency>
+            <!-- JUnit 5 dependencies for migration -->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
             <dependency>
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-model</artifactId>
@@ -210,6 +218,12 @@
             <dependency>
                 <groupId>org.testcontainers</groupId>
                 <artifactId>mongodb</artifactId>
+                <version>1.21.3</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>junit-jupiter</artifactId>
                 <version>1.21.3</version>
                 <scope>test</scope>
             </dependency>
