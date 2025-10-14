@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>morphia-core</artifactId>
+    <name>${project.artifactId}</name>
 
     <build>
         <plugins>
