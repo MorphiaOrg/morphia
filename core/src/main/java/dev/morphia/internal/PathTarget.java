@@ -179,6 +179,8 @@ public class PathTarget {
                 if (property.isMap()) {
                     resolved = true;
                 }
+            } else if (root != null && segment.equals(root.getDiscriminatorKey())) {
+                translate(segment);
             } else {
                 if (validateNames) {
                     failValidation(segment);

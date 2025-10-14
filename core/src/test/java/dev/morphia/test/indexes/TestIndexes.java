@@ -1,10 +1,14 @@
 package dev.morphia.test.indexes;
 
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 import com.mongodb.MongoCommandException;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.CollationCaseFirst;
 import com.mongodb.client.model.CollationMaxVariable;
 import com.mongodb.client.model.CollationStrength;
@@ -43,6 +47,7 @@ import static org.bson.Document.parse;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
@@ -261,6 +266,16 @@ public class TestIndexes extends TestBase {
     }
 
     @Test
+    public void testPolymorphicIndexes() {
+        getDs().getMapper().map(Event.class, CustomEvent.class, TaskEvent.class);
+        getDs().ensureIndexes(Event.class);
+        MongoDatabase database = getDs().getDatabase();
+        MongoCollection<Document> collection = database.getCollection(getMapper().getEntityModel(Event.class).getCollectionName());
+        List<Document> documents = collection.listIndexes().into(new ArrayList<>());
+        assertFalse(documents.isEmpty());
+    }
+
+    @Test
     public void testSingleAnnotation() {
         List<Document> indexInfo = getIndexInfo(CompoundTextIndex.class);
         Assert.assertEquals(indexInfo.size(), 2);
@@ -351,6 +366,33 @@ public class TestIndexes extends TestBase {
         @Property("nick")
         private String nickName;
         private String nativeTongue;
+    }
+
+    @Entity("event")
+    @Indexes({
+            @Index(fields = @Field(value = "start", type = IndexType.DESC)),
+            @Index(fields = @Field(value = "end", type = IndexType.DESC)),
+            @Index(fields = @Field(value = "creationTime", type = IndexType.DESC)),
+            @Index(fields = {
+                    @Field(value = "category", type = IndexType.DESC),
+                    @Field(value = "start", type = IndexType.DESC),
+                    @Field(value = "end", type = IndexType.DESC),
+                    @Field(value = "_t", type = IndexType.ASC)
+            })
+    })
+    private static abstract class Event {
+        @Id
+        private ObjectId id;
+        String start;
+        String end;
+        String category;
+        Instant creationTime;
+    };
+
+    private static class CustomEvent extends Event {
+    }
+
+    private static class TaskEvent extends Event {
     }
 
     @Entity
