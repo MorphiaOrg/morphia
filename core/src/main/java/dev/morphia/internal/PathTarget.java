@@ -171,26 +171,20 @@ public class PathTarget {
             }
             property = resolveProperty(segment);
 
-            try {
-                if (property != null) {
-                    if (hasNext() && property.isReference()) {
-                        failValidation(segment);
-                    }
-                    translate(property.getMappedName());
-                    if (property.isMap()) {
-                        resolved = true;
-                    }
-                } else if (root != null && segment.equals(root.getDiscriminatorKey())) {
-                    translate(segment);
-                } else {
-                    if (validateNames) {
-                        failValidation(segment);
-                    }
+            if (property != null) {
+                if (hasNext() && property.isReference()) {
+                    failValidation(segment);
                 }
-            } catch (NullPointerException e) {
-                System.out.println(root.getDiscriminator());
-                System.out.println(segment);
-                throw e;
+                translate(property.getMappedName());
+                if (property.isMap()) {
+                    resolved = true;
+                }
+            } else if (root != null && segment.equals(root.getDiscriminatorKey())) {
+                translate(segment);
+            } else {
+                if (validateNames) {
+                    failValidation(segment);
+                }
             }
         }
         target = property;
