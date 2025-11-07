@@ -24,13 +24,18 @@ public class PropertyAnnotationProviderConverter implements Converter<List<Prope
     public List<PropertyAnnotationProvider<?>> convert(String value) {
         List<String> list = new ArrayList<>(List.of(MorphiaPropertyAnnotationProvider.class.getName()));
         list.addAll(asList(value.split(",")));
-        return (List<PropertyAnnotationProvider<?>>) list.stream().distinct()
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        return (List<PropertyAnnotationProvider<?>>) list.stream()
+                .distinct()
                 .map(s -> {
                     try {
-                        return Class.forName(s.trim()).getConstructor().newInstance();
+                        return Class.forName(s.trim(), true, classLoader)
+                                .getConstructor()
+                                .newInstance();
                     } catch (ReflectiveOperationException e) {
                         throw new MappingException(e.getMessage(), e);
                     }
-                }).toList();
+                })
+                .toList();
     }
 }
