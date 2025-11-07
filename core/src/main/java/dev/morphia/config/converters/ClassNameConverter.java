@@ -23,9 +23,13 @@ public class ClassNameConverter<T> implements Converter<T> {
     @Nullable
     private T loadClass(@Nullable String value) {
         try {
-            return value == null || value.trim().isEmpty()
-                    ? null
-                    : ((Class<T>) Class.forName(value, true, Thread.currentThread().getContextClassLoader())).getDeclaredConstructor().newInstance();
+            if (value == null || value.trim().isEmpty()) {
+                return null;
+            }
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            return ((Class<T>) Class.forName(value, true, classLoader))
+                    .getDeclaredConstructor()
+                    .newInstance();
         } catch (ReflectiveOperationException e) {
             throw new MappingException(e.getMessage(), e);
         }
