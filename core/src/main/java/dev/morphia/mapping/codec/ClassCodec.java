@@ -15,7 +15,7 @@ public class ClassCodec implements Codec<Class> {
     @Override
     public Class decode(BsonReader reader, DecoderContext decoderContext) {
         try {
-            return Class.forName(reader.readString());
+            return Class.forName(reader.readString(), true, Thread.currentThread().getContextClassLoader());
         } catch (ClassNotFoundException e) {
             throw new MappingException(e.getMessage(), e);
         }

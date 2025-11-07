@@ -27,7 +27,7 @@ public class PropertyAnnotationProviderConverter implements Converter<List<Prope
         return (List<PropertyAnnotationProvider<?>>) list.stream().distinct()
                 .map(s -> {
                     try {
-                        return Class.forName(s.trim()).getConstructor().newInstance();
+                        return Class.forName(s.trim(), true, Thread.currentThread().getContextClassLoader()).getConstructor().newInstance();
                     } catch (ReflectiveOperationException e) {
                         throw new MappingException(e.getMessage(), e);
                     }

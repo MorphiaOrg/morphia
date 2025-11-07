@@ -25,7 +25,7 @@ public class ClassNameConverter<T> implements Converter<T> {
         try {
             return value == null || value.trim().isEmpty()
                     ? null
-                    : ((Class<T>) Class.forName(value)).getDeclaredConstructor().newInstance();
+                    : ((Class<T>) Class.forName(value, true, Thread.currentThread().getContextClassLoader())).getDeclaredConstructor().newInstance();
         } catch (ReflectiveOperationException e) {
             throw new MappingException(e.getMessage(), e);
         }

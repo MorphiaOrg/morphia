@@ -25,7 +25,7 @@ public class DiscriminatorFunctionConverter implements Converter<DiscriminatorFu
                 case "lowerClassName" -> lowerClassName();
                 case "lowerSimpleName" -> lowerSimpleName();
                 case "simpleName" -> simpleName();
-                default -> (DiscriminatorFunction) Class.forName(value).getDeclaredConstructor().newInstance();
+                default -> (DiscriminatorFunction) Class.forName(value, true, Thread.currentThread().getContextClassLoader()).getDeclaredConstructor().newInstance();
             };
         } catch (ReflectiveOperationException e) {
             throw new MappingException(e.getMessage(), e);
