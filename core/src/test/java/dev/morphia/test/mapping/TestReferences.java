@@ -227,6 +227,13 @@ public class TestReferences extends ProxyTestBase {
     }
 
     @Test
+    public void testEqWithNull() {
+        getDs().find(Container.class)
+                .filter(eq("singleRef", null))
+                .iterator();
+    }
+
+    @Test
     public void testFetchKeys() {
         List<Complex> list = asList(new Complex(new ChildId("Turk", 27), "Turk"),
                 new Complex(new ChildId("JD", 26), "Dorian"),
