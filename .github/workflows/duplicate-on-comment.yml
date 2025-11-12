@@ -1,0 +1,11 @@
+name: Duplicate Issue on Comment
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  duplicate-issue:
+    uses: evanchooly/workflows/.github/workflows/duplicate-on-comment.yml@master
+    secrets:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -218,13 +218,13 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     }
 
     @Override
-    public void encode(BsonWriter writer, Object instance, EncoderContext encoderContext) {
+    public void encode(BsonWriter writer, @Nullable Object instance, EncoderContext encoderContext) {
         Object idValue = collectIdValues(instance);
 
         if (idValue != null) {
             final Codec codec = getDatastore().getCodecRegistry().get(idValue.getClass());
             codec.encode(writer, idValue, encoderContext);
-        } else if (getReferenceAnnotation(getPropertyModel()).ignoreMissing()) {
+        } else if (getReferenceAnnotation(getPropertyModel()).ignoreMissing() || instance == null) {
             writer.writeNull();
         } else {
             throw new ReferenceException(Sofia.noIdForReference());
@@ -242,7 +242,10 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     }
 
     @Nullable
-    private Object collectIdValues(Object value) {
+    private Object collectIdValues(@Nullable Object value) {
+        if (value == null) {
+            return null;
+        }
         if (value instanceof Collection) {
             return ((Collection<?>) value).stream()
                     .map(o -> collectIdValues(o))
