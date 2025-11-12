@@ -79,6 +79,33 @@
                         <compilerArgument>-Xlint:deprecation</compilerArgument>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.revapi</groupId>
+                    <artifactId>revapi-maven-plugin</artifactId>
+                    <version>${revapi.maven.plugin.version}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.revapi</groupId>
+                            <artifactId>revapi-java</artifactId>
+                            <version>${revapi.java.version}</version>
+                        </dependency>
+                    </dependencies>
+                    <executions>
+                        <execution>
+                            <id>revapi</id>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                            <phase>none</phase>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <failBuildOnProblemsFound>true</failBuildOnProblemsFound>
+                        <analysisConfigurationFiles>
+                            <analysisConfigurationFile>${maven.multiModuleProjectDirectory}/config/revapi-filtered.json</analysisConfigurationFile>
+                        </analysisConfigurationFiles>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
