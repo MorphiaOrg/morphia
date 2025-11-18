@@ -618,7 +618,7 @@ public class Mapper {
         try (ScanResult scanResult = classGraph.scan()) {
             for (ClassInfo classInfo : scanResult.getAllClasses()) {
                 try {
-                    classes.add(Class.forName(classInfo.getName()));
+                    classes.add(Class.forName(classInfo.getName(), true, Thread.currentThread().getContextClassLoader()));
                 } catch (Throwable ignored) {
                 }
             }

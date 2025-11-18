@@ -207,7 +207,7 @@ public abstract class TemplatedTestBase extends TestBase {
 
     private boolean isTestMethod(StackTraceElement element) {
         try {
-            Class<?> klass = Class.forName(element.getClassName());
+            Class<?> klass = Class.forName(element.getClassName(), true, Thread.currentThread().getContextClassLoader());
             Method method = klass.getDeclaredMethod(element.getMethodName());
 
             return method.getAnnotation(Test.class) != null;

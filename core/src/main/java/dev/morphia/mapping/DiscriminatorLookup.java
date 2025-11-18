@@ -64,7 +64,7 @@ public final class DiscriminatorLookup {
     public Class<?> lookup(String discriminator) {
         if (discriminatorClassMap.containsKey(discriminator)) {
             try {
-                return Class.forName(discriminatorClassMap.get(discriminator));
+                return Class.forName(discriminatorClassMap.get(discriminator), true, Thread.currentThread().getContextClassLoader());
             } catch (ClassNotFoundException e) {
                 throw new MappingException(e.getMessage(), e);
             }
@@ -85,7 +85,7 @@ public final class DiscriminatorLookup {
     private Class<?> getClassForName(String discriminator) {
         Class<?> clazz = null;
         try {
-            clazz = Class.forName(discriminator);
+            clazz = Class.forName(discriminator, true, Thread.currentThread().getContextClassLoader());
         } catch (ClassNotFoundException e) {
             // Ignore
         }
