@@ -17,8 +17,12 @@ public class ClassNameConverter<T> implements Converter<Object> {
     }
 
     static Object loadClass(String value) {
+        if (value == null || value.trim().equals("")) {
+            return null;
+        }
         try {
-            return value == null || value.trim().equals("") ? null : Class.forName(value).getDeclaredConstructor().newInstance();
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            return Class.forName(value, true, classLoader).getDeclaredConstructor().newInstance();
         } catch (ReflectiveOperationException e) {
             throw new MappingException(e.getMessage(), e);
         }

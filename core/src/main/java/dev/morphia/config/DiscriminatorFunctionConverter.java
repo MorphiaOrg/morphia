@@ -30,7 +30,9 @@ public class DiscriminatorFunctionConverter implements Converter<DiscriminatorFu
                 case "simpleName":
                     return simpleName();
                 default:
-                    return (DiscriminatorFunction) Class.forName(value).getDeclaredConstructor().newInstance();
+                    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+                    return (DiscriminatorFunction) Class.forName(value, true, classLoader).getDeclaredConstructor()
+                            .newInstance();
             }
         } catch (ReflectiveOperationException e) {
             throw new MappingException(e.getMessage(), e);

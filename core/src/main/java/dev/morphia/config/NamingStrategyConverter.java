@@ -33,7 +33,8 @@ public class NamingStrategyConverter implements Converter<NamingStrategy> {
                 case "snakeCase":
                     return snakeCase();
                 default:
-                    return (NamingStrategy) Class.forName(value).getDeclaredConstructor().newInstance();
+                    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+                    return (NamingStrategy) Class.forName(value, true, classLoader).getDeclaredConstructor().newInstance();
             }
         } catch (ReflectiveOperationException e) {
             throw new MappingException(e.getMessage(), e);
