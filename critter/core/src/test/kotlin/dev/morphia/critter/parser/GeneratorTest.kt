@@ -1,5 +1,6 @@
 package dev.morphia.critter.parser
 
+import dev.morphia.critter.ClassfileOutput.dump
 import dev.morphia.critter.Critter.Companion.critterClassLoader
 import dev.morphia.critter.parser.Generators.mapper
 import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator as generator

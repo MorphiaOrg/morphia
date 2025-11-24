@@ -11,6 +11,7 @@ import dev.morphia.annotations.internal.FieldBuilder.fieldBuilder
 import dev.morphia.annotations.internal.IndexBuilder.indexBuilder
 import dev.morphia.annotations.internal.IndexOptionsBuilder.indexOptionsBuilder
 import dev.morphia.annotations.internal.IndexesBuilder.indexesBuilder
+import dev.morphia.critter.ClassfileOutput
 import dev.morphia.critter.Critter.Companion.critterClassLoader
 import dev.morphia.critter.parser.Generators.mapper
 import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator as generator
@@ -128,7 +129,11 @@ class TestGizmoGeneration {
         ClassCreator.builder()
             .className("critter.AnnotationTest")
             .superClass(EntityModel::class.java)
-            .classOutput { name, data -> critterClassLoader.register(name.replace('/', '.'), data) }
+            .classOutput { name, data ->
+                val className = name.replace('/', '.')
+                critterClassLoader.register(className, data)
+                ClassfileOutput.dump(name, data)
+            }
             .build()
             .use {
                 val creator = it.getMethodCreator("test", Void::class.java)

@@ -1,10 +1,10 @@
 package dev.morphia.critter.parser
 
+import dev.morphia.critter.CritterClassLoader
 import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator.accessor
 import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator.fieldAccessors
 import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator.propertyModelGenerator
 import dev.morphia.critter.parser.gizmo.PropertyModelGenerator
-import dev.morphia.critter.parser.java.CritterClassLoader
 import dev.morphia.critter.parser.java.CritterParser
 import dev.morphia.mapping.Mapper
 import org.objectweb.asm.Type

@@ -2,7 +2,7 @@ package dev.morphia.critter.parser
 
 import dev.morphia.critter.Critter.Companion.critterClassLoader
 import dev.morphia.critter.Critter.Companion.critterPackage
-import dev.morphia.critter.parser.java.CritterClassLoader
+import dev.morphia.critter.CritterClassLoader
 import dev.morphia.critter.sources.Example
 import dev.morphia.critter.titleCase
 import org.bson.codecs.pojo.PropertyAccessor

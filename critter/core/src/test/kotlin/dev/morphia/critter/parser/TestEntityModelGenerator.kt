@@ -1,5 +1,6 @@
 package dev.morphia.critter.parser
 
+import dev.morphia.critter.ClassfileOutput.dump
 import dev.morphia.critter.Critter.Companion.critterClassLoader
 import dev.morphia.critter.parser.GeneratorTest.entityModel
 import dev.morphia.critter.parser.GeneratorTest.methodNames

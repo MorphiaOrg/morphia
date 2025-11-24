@@ -4,7 +4,6 @@ import com.google.devtools.ksp.processing.KSPConfig
 import com.google.devtools.ksp.processing.KSPJvmConfig.Builder
 import dev.morphia.annotations.Entity
 import dev.morphia.annotations.Property
-import dev.morphia.critter.parser.java.CritterClassLoader
 import dev.morphia.mapping.codec.pojo.PropertyModel
 import java.io.File
 import org.objectweb.asm.Type
