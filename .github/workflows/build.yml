@@ -35,7 +35,7 @@ jobs:
     with:
       java: ${{ matrix.java }}
       reuseBuild: true
-      maven-flags: "-Pcritter"
+      maven-flags: "-f critter/pom.xml"
       optional: true
 
   Matrix:
