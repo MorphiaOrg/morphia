@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="../../_/css/site.css">
 <link rel="stylesheet" href="../../_/css/morphia.css">
 
+    <script>var uiRootPath = '../../_'</script>
   </head>
   <body class="article">
 <header class="header" role="banner">
@@ -174,7 +175,7 @@
   </div>
   <ul class="components">
     <li class="component">
-      <span class="title">Critter</span>
+      <a class="title" href="../../critter/4.4/index.html">Critter</a>
       <ul class="versions">
         <li class="version is-latest">
           <a href="../../critter/4.4/index.html">4.4</a>
@@ -185,7 +186,7 @@
       </ul>
     </li>
     <li class="component">
-      <span class="title">Home</span>
+      <a class="title" href="../../landing/index.html">Home</a>
       <ul class="versions">
         <li class="version is-latest">
           <a href="../../landing/index.html">landing</a>
@@ -193,7 +194,7 @@
       </ul>
     </li>
     <li class="component is-current">
-      <span class="title">Morphia</span>
+      <a class="title" href="index.html">Morphia</a>
       <ul class="versions">
         <li class="version">
           <a href="../3.0/index.html">3.0-SNAPSHOT</a>
@@ -241,34 +242,27 @@
   <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/2.5.x/docs/modules/ROOT/pages/configuration.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
 <article class="doc">
 <div class="sect1">
 <h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
 <div class="sectionbody">
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
 <div class="paragraph">
-<p>After some feedback about some unexpected use cases, this transition has been postponed and the requisite <code>MapperOptions</code> based methods
-undeprecated.  Programmatic configuration is a much more popular, and in some cases vital, option than previously known.  So for now,
-those methods will stay while the future of configuration and mapping gets a rethink.  Apologies for the noise and dust.</p>
-</div>
-</td>
-</tr>
-</table>
+<p>Starting in Morphia 3.0, configuration will use a newer configuration mechanism, <code>MorphiaConfig</code>.  This class will replace
+<code>MapperOptions</code> in 3.0 and <code>MapperOptions</code> will be removed completely then.  <code>MapperOptions</code> is deprecated as of now and users are
+encouraged to change before 3.0.  There will be an automated refactoring provided for users to migrate with the 3.0 release for those
+that would rather wait.</p>
 </div>
 <div class="paragraph">
-<p>Starting in Morphia 3.0, configuration will be driven via a configuration file rather than programmatic configuration. The file
+<p><code>MorphiaConfig</code> can be programmatically created like <code>MapperOptions</code> are today but it can also be configured via a configuration file. The file
 should live in your build&#8217;s resources folder and be named <code>META-INF/morphia-config.properties</code>. This is being done for a number of reasons:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Better align with usage in frameworks such as Quarkus and Spring Boot</p>
+<p>Better alignment with usage in frameworks such as Quarkus and Spring Boot</p>
 </li>
 <li>
 <p>Allow for deployment specific variations based on the deployment environment.</p>
@@ -633,9 +627,6 @@ work.  In order to export your service for Morphia to find you need an entry in 
 </div>
 </div>
 </article>
-<aside class="toc sidebar" data-title="Contents" data-levels="2">
-  <div class="toc-menu"></div>
-</aside>
   </div>
 </main>
 </div>
