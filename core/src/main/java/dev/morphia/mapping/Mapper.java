@@ -249,7 +249,6 @@ public class Mapper {
      * @hidden
      * @morphia.internal
      */
-    @Nullable
     @MorphiaInternal
     public EntityModel getEntityModel(Class type) {
         final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;

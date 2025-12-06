@@ -179,3 +179,17 @@ jobs:
           repo: MorphiaOrg/morphia-docs
           token: ${{ secrets.GH_PUSH_TOKEN }}
           ref: refs/heads/master
+
+  Rewrite:
+    name: Validate upgrade automation
+    runs-on: ubuntu-latest
+    needs:
+      - Release
+    steps:
+      - name: Invoke build
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: Docs
+          repo: MorphiaOrg/morphia-upgrade-testing
+          token: ${{ secrets.GH_PUSH_TOKEN }}
+          ref: refs/heads/master

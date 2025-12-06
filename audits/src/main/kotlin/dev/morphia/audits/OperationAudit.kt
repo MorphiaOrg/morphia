@@ -104,10 +104,11 @@ class OperationAudit(var methods: Map<String, List<MethodSource<*>>>) {
                                """
                             .trimIndent()
                     )
-//                    val builder = github.createIssue(title).milestone(milestone).body(body)
-//
-//                    labels.forEach { builder.label(it.name) }
-//                    builder.create()
+                    //                    val builder =
+                    // github.createIssue(title).milestone(milestone).body(body)
+                    //
+                    //                    labels.forEach { builder.label(it.name) }
+                    //                    builder.create()
                 }
             }
         }
