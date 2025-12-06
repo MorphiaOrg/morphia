@@ -21,6 +21,7 @@ import com.mongodb.lang.NonNull;
 
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.config.MorphiaConfig;
+import dev.morphia.internal.MorphiaInternals;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
@@ -62,6 +63,7 @@ public abstract class TestBase extends MorphiaTestSetup {
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
+        LOG.info("Running tests using driver version " + MorphiaInternals.getDriverVersion());
     }
 
     public TestBase() {

@@ -82,6 +82,7 @@ public final class MorphiaInternals {
                 URLConnection connection = location.openConnection();
                 try (JarInputStream stream = new JarInputStream(connection.getInputStream())) {
                     Manifest manifest = stream.getManifest();
+                    System.out.println("manifest.getMainAttributes() = " + manifest.getMainAttributes());
                     driverVersion = Semver.parse(manifest.getMainAttributes().getValue("Build-Version"));
                 }
             } catch (Exception e) {

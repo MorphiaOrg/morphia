@@ -189,7 +189,7 @@ jobs:
       - name: Invoke build
         uses: benc-uk/workflow-dispatch@v1
         with:
-          workflow: Docs
+          workflow: Upgrades
           repo: MorphiaOrg/morphia-upgrade-testing
           token: ${{ secrets.GH_PUSH_TOKEN }}
           ref: refs/heads/master

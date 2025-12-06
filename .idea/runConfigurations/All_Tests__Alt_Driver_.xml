@@ -12,7 +12,7 @@
           <option name="goals">
             <list>
               <option value="surefire:test" />
-              <option value="-Dmongo.driver=5.3.1" />
+              <option value="-Ddriver.version=5.7.0-SNAPSHOT" />
             </list>
           </option>
           <option name="multimoduleDir" />
@@ -28,6 +28,8 @@
         </MavenRunnerParameters>
       </option>
     </MavenSettings>
-    <method v="2" />
+    <method v="2">
+      <option name="MakeProject" enabled="true" />
+    </method>
   </configuration>
 </component>
