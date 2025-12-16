@@ -70,7 +70,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
-        <asm.version>9.9</asm.version>
+        <asm.version>9.9.1</asm.version>
         <ksp.version>2.3.3</ksp.version>
     </properties>
 
