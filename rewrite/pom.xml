@@ -47,7 +47,7 @@
                         <path>
                             <groupId>org.openrewrite</groupId>
                             <artifactId>rewrite-templating</artifactId>
-                            <version>1.38.2</version>
+                            <version>1.38.3</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
@@ -124,7 +124,7 @@
         <dependency>
             <groupId>org.openrewrite</groupId>
             <artifactId>rewrite-templating</artifactId>
-            <version>1.38.2</version>
+            <version>1.38.3</version>
         </dependency>
         <dependency>
             <groupId>com.google.errorprone</groupId>
