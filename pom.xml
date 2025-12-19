@@ -371,11 +371,11 @@
         <module>build-plugins</module>
         <module>util</module>
         <module>core</module>
-        <module>docs</module>
         <module>kotlin</module>
+        <module>critter</module>
         <module>validation</module>
-        <module>examples</module>
         <module>rewrite</module>
-<!--        <module>critter</module>-->
+        <module>examples</module>
+        <module>docs</module>
     </modules>
 </project>

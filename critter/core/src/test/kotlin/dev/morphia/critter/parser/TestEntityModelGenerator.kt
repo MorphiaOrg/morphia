@@ -7,21 +7,32 @@ import dev.morphia.critter.parser.GeneratorTest.methodNames
 import dev.morphia.mapping.Mapper
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel
 import java.lang.reflect.Method
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.testng.Assert.assertEquals
 import org.testng.annotations.DataProvider
 import org.testng.annotations.NoInjection
 
 class TestEntityModelGenerator {
+    companion object {
+        val LOG: Logger = LoggerFactory.getLogger(TestEntityModelGenerator::class.java)
+    }
+
     val control: CritterEntityModel
     val mapper = Mapper(Generators.config)
 
     init {
-        control =
-            critterClassLoader
-                .loadClass("dev.morphia.critter.sources.ExampleEntityModelTemplate")
-                .getConstructor(Mapper::class.java)
-                .newInstance(mapper) as CritterEntityModel
-        critterClassLoader.dump("dev.morphia.critter.sources.ExampleEntityModelTemplate")
+        try {
+            control =
+                critterClassLoader
+                    .loadClass("dev.morphia.critter.sources.ExampleEntityModelTemplate")
+                    .getConstructor(Mapper::class.java)
+                    .newInstance(mapper) as CritterEntityModel
+            critterClassLoader.dump("dev.morphia.critter.sources.ExampleEntityModelTemplate")
+        } catch (e: Exception) {
+            LOG.error(e.message, e)
+            throw e
+        }
     }
 
     //    @Test(dataProvider = "methods")
