@@ -1,6 +1,5 @@
 package dev.morphia.critter.parser
 
-import dev.morphia.critter.Critter.Companion.critterClassLoader
 import dev.morphia.critter.Critter.Companion.critterPackage
 import dev.morphia.critter.CritterClassLoader
 import dev.morphia.critter.sources.Example
@@ -11,6 +10,8 @@ import org.testng.Assert.assertTrue
 import org.testng.annotations.DataProvider
 
 class TestAccessorsMutators : BaseCritterTest() {
+    val critterClassLoader = CritterClassLoader()
+
     //    @Test(dataProvider = "classes")
     fun testPropertyAccessors(type: Class<*>) {
         val testFields =

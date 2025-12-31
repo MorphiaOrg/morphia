@@ -12,7 +12,7 @@ import dev.morphia.annotations.internal.IndexBuilder.indexBuilder
 import dev.morphia.annotations.internal.IndexOptionsBuilder.indexOptionsBuilder
 import dev.morphia.annotations.internal.IndexesBuilder.indexesBuilder
 import dev.morphia.critter.ClassfileOutput
-import dev.morphia.critter.Critter.Companion.critterClassLoader
+import dev.morphia.critter.CritterClassLoader
 import dev.morphia.critter.parser.Generators.mapper
 import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator as generator
 import dev.morphia.critter.sources.Example
@@ -35,6 +35,8 @@ import org.testng.Assert.fail
 import org.testng.annotations.Test
 
 class TestGizmoGeneration {
+    val critterClassLoader = CritterClassLoader()
+
     @Test
     fun testMapStringExample() {
         var descString = "Ljava/util/Map<Ljava/lang/String;Ldev/morphia/critter/sources/Example;>;"
@@ -155,7 +157,7 @@ class TestGizmoGeneration {
 
     @Test
     fun testGizmo() {
-        generator.generate(Example::class.java)
+        generator.generate(Example::class.java, critterClassLoader)
         critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.AgeModel")
         val nameModel =
             critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.NameModel")

@@ -12,13 +12,21 @@ import org.objectweb.asm.tree.FieldNode
 import org.objectweb.asm.tree.MethodNode
 
 class PropertyAccessorGenerator : BaseGizmoGenerator {
-    constructor(entity: Class<*>, field: FieldNode) : super(entity) {
+    constructor(
+        entity: Class<*>,
+        critterClassLoader: dev.morphia.critter.CritterClassLoader,
+        field: FieldNode,
+    ) : super(entity, critterClassLoader) {
         propertyName = field.name
         propertyType = getType(field.desc).className
         generatedType = "${baseName}.${propertyName.titleCase()}Accessor"
     }
 
-    constructor(entity: Class<*>, method: MethodNode) : super(entity) {
+    constructor(
+        entity: Class<*>,
+        critterClassLoader: dev.morphia.critter.CritterClassLoader,
+        method: MethodNode,
+    ) : super(entity, critterClassLoader) {
         propertyName = method.name
         propertyType = getReturnType(method.signature).className
         generatedType = "${baseName}.${propertyName.titleCase()}Accessor"

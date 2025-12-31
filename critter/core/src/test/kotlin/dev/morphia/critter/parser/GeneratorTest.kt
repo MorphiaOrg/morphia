@@ -1,7 +1,7 @@
 package dev.morphia.critter.parser
 
 import dev.morphia.critter.ClassfileOutput.dump
-import dev.morphia.critter.Critter.Companion.critterClassLoader
+import dev.morphia.critter.CritterClassLoader
 import dev.morphia.critter.parser.Generators.mapper
 import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator as generator
 import dev.morphia.critter.parser.java.CritterParser.asmify
@@ -13,6 +13,7 @@ import org.objectweb.asm.Type
 
 object GeneratorTest {
     var entityModel: CritterEntityModel
+    val critterClassLoader = CritterClassLoader()
 
     init {
         val classGraph = ClassGraph().addClassLoader(critterClassLoader).enableAllInfo()
@@ -26,7 +27,7 @@ object GeneratorTest {
                 } catch (_: Throwable) {}
             }
         }
-        val generator = generator.generate(Example::class.java)
+        val generator = generator.generate(Example::class.java, critterClassLoader)
 
         entityModel =
             critterClassLoader

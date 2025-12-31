@@ -1,10 +1,10 @@
 package dev.morphia.critter.parser.gizmo
 
-import dev.morphia.critter.Critter.Companion.critterClassLoader
 import dev.morphia.critter.Critter.Companion.critterPackage
+import dev.morphia.critter.CritterClassLoader
 import io.quarkus.gizmo.ClassCreator
 
-open class BaseGizmoGenerator(val entity: Class<*>) {
+open class BaseGizmoGenerator(val entity: Class<*>, val critterClassLoader: CritterClassLoader) {
     lateinit var generatedType: String
 
     val baseName = critterPackage(entity)

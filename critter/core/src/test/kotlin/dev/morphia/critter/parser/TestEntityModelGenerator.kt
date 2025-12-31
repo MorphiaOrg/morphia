@@ -1,7 +1,7 @@
 package dev.morphia.critter.parser
 
 import dev.morphia.critter.ClassfileOutput.dump
-import dev.morphia.critter.Critter.Companion.critterClassLoader
+import dev.morphia.critter.CritterClassLoader
 import dev.morphia.critter.parser.GeneratorTest.entityModel
 import dev.morphia.critter.parser.GeneratorTest.methodNames
 import dev.morphia.mapping.Mapper
@@ -20,6 +20,7 @@ class TestEntityModelGenerator {
 
     val control: CritterEntityModel
     val mapper = Mapper(Generators.config)
+    val critterClassLoader = CritterClassLoader()
 
     init {
         try {

@@ -27,9 +27,18 @@ import org.objectweb.asm.tree.AnnotationNode
 import org.objectweb.asm.tree.FieldNode
 import org.objectweb.asm.tree.MethodNode
 
-class PropertyModelGenerator private constructor(val config: MorphiaConfig, entity: Class<*>) :
-    BaseGizmoGenerator(entity) {
-    constructor(config: MorphiaConfig, entity: Class<*>, field: FieldNode) : this(config, entity) {
+class PropertyModelGenerator
+private constructor(
+    val config: MorphiaConfig,
+    entity: Class<*>,
+    critterClassLoader: dev.morphia.critter.CritterClassLoader,
+) : BaseGizmoGenerator(entity, critterClassLoader) {
+    constructor(
+        config: MorphiaConfig,
+        entity: Class<*>,
+        critterClassLoader: dev.morphia.critter.CritterClassLoader,
+        field: FieldNode,
+    ) : this(config, entity, critterClassLoader) {
         this.field = field
         propertyName = field.name.methodCase()
         propertyType = Type.getType(field.desc)
@@ -47,8 +56,9 @@ class PropertyModelGenerator private constructor(val config: MorphiaConfig, enti
     constructor(
         config: MorphiaConfig,
         entity: Class<*>,
+        critterClassLoader: dev.morphia.critter.CritterClassLoader,
         method: MethodNode,
-    ) : this(config, entity) {
+    ) : this(config, entity, critterClassLoader) {
         this.method = method
         propertyName = method.name.methodCase()
         propertyType = getReturnType(method.desc)

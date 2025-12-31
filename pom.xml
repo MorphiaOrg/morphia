@@ -1,5 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 http://maven.apache.org/xsd/maven-4.1.0.xsd">
+    <modelVersion>4.1.0</modelVersion>
 
     <parent>
         <groupId>com.antwerkz</groupId>
@@ -56,7 +57,7 @@
         <javapoet.version>1.13.0</javapoet.version>
         <kotlinpoet.version>1.19.1</kotlinpoet.version>
         <logback.version>1.5.23</logback.version>
-        <maven.version>3.9.12</maven.version>
+        <maven.version>4.0.0-rc-5</maven.version>
         <revapi.maven.plugin.version>0.15.1</revapi.maven.plugin.version>
         <revapi.java.version>0.28.4</revapi.java.version>
         <roaster.version>2.29.0.Final</roaster.version>
@@ -367,15 +368,15 @@
         </profile>
     </profiles>
 
-    <modules>
-        <module>build-plugins</module>
-        <module>util</module>
-        <module>core</module>
-        <module>kotlin</module>
-        <module>critter</module>
-        <module>validation</module>
-        <module>rewrite</module>
-        <module>examples</module>
-        <module>docs</module>
-    </modules>
+    <subprojects>
+        <subproject>build-plugins</subproject>
+        <subproject>util</subproject>
+        <subproject>core</subproject>
+        <subproject>kotlin</subproject>
+        <subproject>critter</subproject>
+        <subproject>validation</subproject>
+        <subproject>rewrite</subproject>
+        <subproject>examples</subproject>
+        <subproject>docs</subproject>
+    </subprojects>
 </project>

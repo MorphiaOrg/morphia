@@ -22,8 +22,8 @@ class PropertyFinder(mapper: Mapper, val classLoader: CritterClassLoader) {
             val fields = discoverFields(classNode)
             classLoader.register(entityType.name, fieldAccessors(entityType, fields))
             fields.forEach { field ->
-                accessor(entityType, field)
-                models += propertyModelGenerator(entityType, field)
+                accessor(entityType, classLoader, field)
+                models += propertyModelGenerator(entityType, classLoader, field)
             }
         } else {
             TODO()

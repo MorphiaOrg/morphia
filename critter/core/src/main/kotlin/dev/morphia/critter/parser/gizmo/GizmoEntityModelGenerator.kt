@@ -17,9 +17,10 @@ import org.objectweb.asm.tree.ClassNode
 
 class GizmoEntityModelGenerator(
     type: Class<*>,
+    critterClassLoader: dev.morphia.critter.CritterClassLoader,
     val classNode: ClassNode,
     val properties: List<PropertyModelGenerator>,
-) : BaseGizmoGenerator(type) {
+) : BaseGizmoGenerator(type, critterClassLoader) {
     var annotations: List<AnnotationNode>
     var morphiaAnnotations: List<Annotation>
 

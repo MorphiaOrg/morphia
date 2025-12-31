@@ -1,8 +1,10 @@
 package dev.morphia.critter
 
+import dev.morphia.mapping.codec.pojo.PropertyModel
 import net.bytebuddy.dynamic.loading.ByteArrayClassLoader
 
-class CritterClassLoader(parent: ClassLoader?) : ByteArrayClassLoader.ChildFirst(parent, mapOf()) {
+class CritterClassLoader :
+    ByteArrayClassLoader.ChildFirst(PropertyModel::class.java.classLoader, mapOf()) {
     fun register(name: String, bytes: ByteArray) {
         typeDefinitions[name] = bytes
     }
