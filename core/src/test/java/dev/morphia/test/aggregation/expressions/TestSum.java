@@ -46,6 +46,7 @@ public class TestSum extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$setWindowFields`` Stage")
     public void testExample3() {
+        checkMinServerVersion("5.0.0");
         testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                 .sortBy(Sort.ascending("orderDate")).output(output("sumQuantityForState").operator(sum("$quantity"))
                         .window().documents("unbounded", "current"))));

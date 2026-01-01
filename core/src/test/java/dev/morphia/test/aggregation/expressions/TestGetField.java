@@ -2,6 +2,7 @@ package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.gt;
@@ -12,6 +13,12 @@ import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.query.filters.Filters.expr;
 
 public class TestGetField extends TemplatedTestBase {
+
+    @BeforeMethod
+    public void versionCheck() {
+        checkMinServerVersion("5.0.0");
+    }
+
     /**
      * test data: dev/morphia/test/aggregation/expressions/getField/example1
      * 

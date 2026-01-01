@@ -4,6 +4,7 @@ import dev.morphia.aggregation.expressions.ComparisonExpressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.firstN;
@@ -19,6 +20,12 @@ import static dev.morphia.aggregation.stages.Sort.sort;
 import static dev.morphia.query.filters.Filters.eq;
 
 public class TestFirstN extends TemplatedTestBase {
+
+    @BeforeMethod
+    public void versionCheck() {
+        checkMinServerVersion("5.2.0");
+    }
+
     @Test(testName = "Find the First Three Player Scores for a Single Game")
     public void testExample1() {
         testPipeline(new ActionTestOptions().orderMatters(false),

@@ -4,6 +4,7 @@ import dev.morphia.query.Sort;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.TimeUnit.HOUR;
@@ -12,6 +13,12 @@ import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
 import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 
 public class TestIntegral extends TemplatedTestBase {
+
+    @BeforeMethod
+    public void versionCheck() {
+        checkMinServerVersion("5.0.0");
+    }
+
     /**
      * test data: dev/morphia/test/aggregation/expressions/integral/example1
      * 

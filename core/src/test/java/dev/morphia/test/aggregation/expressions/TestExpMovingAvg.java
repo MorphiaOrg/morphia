@@ -3,6 +3,7 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.WindowExpressions.expMovingAvg;
@@ -11,6 +12,12 @@ import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 import static dev.morphia.query.Sort.*;
 
 public class TestExpMovingAvg extends TemplatedTestBase {
+
+    @BeforeMethod
+    public void versionCheck() {
+        checkMinServerVersion("5.0.0");
+    }
+
     /**
      * test data: dev/morphia/test/aggregation/expressions/expMovingAvg/example1
      * 

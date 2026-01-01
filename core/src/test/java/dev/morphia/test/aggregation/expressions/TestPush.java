@@ -35,6 +35,7 @@ public class TestPush extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$setWindowFields`` Stage")
     public void testExample2() {
+        checkMinServerVersion("5.0.0");
         testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                 .sortBy(ascending("orderDate")).output(output("quantitiesForState").operator(push("$quantity")).window()
                         .documents("unbounded", "current"))));

@@ -2,12 +2,19 @@ package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.ifNull;
 import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestIfNull extends TemplatedTestBase {
+
+    @BeforeMethod
+    public void versionCheck() {
+        checkMinServerVersion("5.0.0");
+    }
+
     /**
      * test data: dev/morphia/test/aggregation/expressions/ifNull/example1
      * 

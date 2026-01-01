@@ -3,6 +3,7 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.aggregation.expressions.TimeUnit;
 import dev.morphia.test.TemplatedTestBase;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
@@ -19,6 +20,12 @@ import static java.time.DayOfWeek.*;
 import static java.time.DayOfWeek.FRIDAY;
 
 public class TestDateDiff extends TemplatedTestBase {
+
+    @BeforeMethod
+    public void versionCheck() {
+        checkMinServerVersion("5.0.0");
+    }
+
     /**
      * test data: dev/morphia/test/aggregation/expressions/dateDiff/example1
      * 

@@ -6,12 +6,19 @@ import dev.morphia.aggregation.stages.Densify.Range;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.TimeUnit.HOUR;
 import static dev.morphia.aggregation.stages.Densify.densify;
 
 public class TestDensify extends TemplatedTestBase {
+
+    @BeforeMethod
+    public void versionCheck() {
+        checkMinServerVersion("5.1.0");
+    }
+
     /**
      * test data: dev/morphia/test/aggregation/stages/densify/example1
      * 

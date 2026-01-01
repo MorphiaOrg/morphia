@@ -4,6 +4,7 @@ import dev.morphia.query.filters.Filters;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.bottomN;
@@ -17,6 +18,12 @@ import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.query.Sort.descending;
 
 public class TestBottomN extends TemplatedTestBase {
+
+    @BeforeMethod
+    public void versionCheck() {
+        checkMinServerVersion("5.2.0");
+    }
+
     /**
      * test data: dev/morphia/test/aggregation/expressions/bottomN/example1
      * 

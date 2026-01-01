@@ -41,6 +41,7 @@ public class TestMin extends TemplatedTestBase {
      */
     @Test(testName = "Use in ``$setWindowFields`` Stage")
     public void testExample3() {
+        checkMinServerVersion("5.0.0");
         testPipeline(new ActionTestOptions(),
                 (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                         .sortBy(Sort.ascending("orderDate")).output(output("minimumQuantityForState")
