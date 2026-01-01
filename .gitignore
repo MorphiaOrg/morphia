@@ -7,8 +7,6 @@
 *.sw*
 .idea/*.xml
 release.sh
-**/target/**
-**/build/**
 entityscanner-plug/dependency-reduced-pom.xml
 codereview.rc
 target
