@@ -28,6 +28,7 @@ public class TestGroup extends TemplatedTestBase {
      */
     @Test(testName = "Count the Number of Documents in a Collection")
     public void testExample1() {
+        checkMinServerVersion("5.0.0");
         testPipeline(
                 (aggregation) -> aggregation.pipeline(group(id(null)).field("count", AccumulatorExpressions.count())));
     }

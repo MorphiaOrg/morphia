@@ -4,6 +4,7 @@ import dev.morphia.aggregation.expressions.TimeUnit;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
@@ -18,6 +19,11 @@ import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 import static dev.morphia.query.Sort.ascending;
 
 public class TestSetWindowFields extends TemplatedTestBase {
+    @BeforeMethod
+    public void versionCheck() {
+        checkMinServerVersion("5.0.0");
+    }
+
     /**
      * test data: dev/morphia/test/aggregation/stages/setWindowFields/example1
      * 

@@ -99,6 +99,7 @@ public class TestLookup extends TemplatedTestBase {
      */
     @Test(testName = "Perform a Concise Correlated Subquery with ``$lookup``")
     public void testExample6() {
+        checkMinServerVersion("6.0.0");
         loadData("restaurants", 2);
         testPipeline((aggregation) -> aggregation.pipeline(lookup("restaurants").localField("restaurant_name")
                 .foreignField("name").pipeline(match(expr(in("$$orders_drink", "$beverages"))))

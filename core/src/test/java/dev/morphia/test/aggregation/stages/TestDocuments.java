@@ -3,6 +3,7 @@ package dev.morphia.test.aggregation.stages;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.Expressions.document;
@@ -12,6 +13,11 @@ import static dev.morphia.aggregation.stages.Lookup.lookup;
 import static dev.morphia.aggregation.stages.Match.match;
 
 public class TestDocuments extends TemplatedTestBase {
+    @BeforeMethod
+    public void versionCheck() {
+        checkMinServerVersion("6.0.0");
+    }
+
     /**
      * test data: dev/morphia/test/aggregation/stages/documents/example1
      * 

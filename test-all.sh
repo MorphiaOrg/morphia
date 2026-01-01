@@ -60,7 +60,7 @@ findRoot
 selectServers
 selectDrivers
 
-[ "$TEST" ] && TEST=$( echo -Dtest=$TEST )
+[ "$TEST" ] && TEST=$( echo -Dtest=\"$TEST\" )
 
 mvn install -DskipTests
 mkdir -p target
@@ -76,7 +76,7 @@ do
       echo "*** testing with mongo $SERVER and driver $DRIVER $TEST"
       echo "***"
       OUTFILE="target/mongo-$SERVER-driver-$DRIVER.txt"
-      mvn surefire:test -Dmongodb=$SERVER -Ddriver.version=$DRIVER ${TEST} #| tee "$OUTFILE"
+      mvn -e surefire:test -Dmongodb=$SERVER -Ddriver.version=$DRIVER ${TEST} #| tee "$OUTFILE"
       if [ $? -ne 0 ]
       then
         FAILURES="${FAILURES}\t--- mongo $SERVER and driver $DRIVER\n"
