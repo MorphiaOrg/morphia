@@ -5,6 +5,7 @@ import dev.morphia.aggregation.stages.Fill.Method;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.ifNull;
@@ -15,6 +16,11 @@ import static dev.morphia.aggregation.stages.Set.set;
 import static dev.morphia.query.Sort.ascending;
 
 public class TestFill extends TemplatedTestBase {
+    @BeforeMethod
+    public void versionCheck() {
+        checkMinServerVersion("5.3.0");
+    }
+
     /**
      * test data: dev/morphia/test/aggregation/stages/fill/example1
      * 
