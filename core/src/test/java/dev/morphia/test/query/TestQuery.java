@@ -717,7 +717,7 @@ public class TestQuery extends TestBase {
 
     @Test
     public void testMultipleConstraintsOnOneField() {
-        checkMinDriverVersion("4.6.0");
+        checkMinDriverVersion("5.0.0");
         withConfig(buildConfig(ContainsPic.class), () -> {
         });
 
