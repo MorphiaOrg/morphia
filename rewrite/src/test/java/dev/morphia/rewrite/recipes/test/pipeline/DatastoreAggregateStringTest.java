@@ -41,12 +41,13 @@ public class DatastoreAggregateStringTest extends MorphiaRewriteTest {
                         import dev.morphia.aggregation.AggregationOptions;
                         import org.bson.Document;
 
+                        import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
                         import static dev.morphia.aggregation.stages.Match.match;
                         import static dev.morphia.query.filters.Filters.eq;
 
                         public class DatastoreAggregateStringTest {
                             public void test(Datastore ds) {
-                                ds.aggregate(Document.class, new AggregationOptions().collection("myCollection"))
+                                ds.aggregate(Document.class, aggregationOptions().collection("myCollection"))
                                   .match(eq("field", "value"))
                                   .execute(Document.class)
                                   .toList();
@@ -81,13 +82,14 @@ public class DatastoreAggregateStringTest extends MorphiaRewriteTest {
                         import dev.morphia.aggregation.AggregationOptions;
                         import org.bson.Document;
 
+                        import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
                         import static dev.morphia.aggregation.stages.Match.match;
                         import static dev.morphia.query.filters.Filters.eq;
 
                         public class DatastoreAggregateStringTest {
                             public void test(Datastore ds) {
                                 String myCollection = "myCollection";
-                                ds.aggregate(Document.class, new AggregationOptions().collection(myCollection))
+                                ds.aggregate(Document.class, aggregationOptions().collection(myCollection))
                                   .match(eq("field", "value"))
                                   .execute(Document.class)
                                   .toList();
@@ -126,6 +128,7 @@ public class DatastoreAggregateStringTest extends MorphiaRewriteTest {
                         import dev.morphia.aggregation.AggregationOptions;
                         import org.bson.Document;
 
+                        import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
                         import static dev.morphia.aggregation.stages.Match.match;
                         import static dev.morphia.query.filters.Filters.eq;
 
@@ -136,7 +139,7 @@ public class DatastoreAggregateStringTest extends MorphiaRewriteTest {
                             }
 
                             public void test() {
-                                getDs().aggregate(Document.class, new AggregationOptions().collection("myCollection"))
+                                getDs().aggregate(Document.class, aggregationOptions().collection("myCollection"))
                                   .match(eq("field", "value"))
                                   .execute(Document.class)
                                   .toList();

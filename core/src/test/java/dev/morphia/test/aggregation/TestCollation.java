@@ -12,6 +12,7 @@ import dev.morphia.test.models.User;
 import org.testng.annotations.Test;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
+import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
 import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.query.filters.Filters.eq;
 import static java.util.Arrays.asList;
@@ -27,7 +28,7 @@ public class TestCollation extends TestBase {
                 .pipeline(match(eq("name", "john doe")));
         assertEquals(count(pipeline.iterator()), 1);
 
-        AggregationOptions options = new AggregationOptions()
+        AggregationOptions options = aggregationOptions()
                 .collation(Collation.builder()
                         .locale("en")
                         .collationStrength(SECONDARY)

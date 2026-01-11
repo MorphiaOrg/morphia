@@ -1,5 +1,24 @@
 [
   {
+    "extension": "revapi.versions",
+    "configuration": {
+      "enabled": true,
+      "semantic0": true,
+      "strictSemver": true,
+      "versionIncreaseAllows": {
+        "major": {
+          "severity": "BREAKING"
+        },
+        "minor": {
+          "severity": "NON_BREAKING"
+        },
+        "patch": {
+          "severity": "EQUIVALENT"
+        }
+      }
+    }
+  },
+  {
     "extension": "revapi.filter",
     "configuration": {
       "elements": {
@@ -45,25 +64,6 @@
             "match": "dev.morphia.annotations.internal"
           }
         ]
-      }
-    }
-  },
-  {
-    "extension": "revapi.versions",
-    "configuration": {
-      "enabled": true,
-      "semantic0": true,
-      "strictSemver": true,
-      "versionIncreaseAllows": {
-        "major": {
-          "severity": "BREAKING"
-        },
-        "minor": {
-          "severity": "NON_BREAKING"
-        },
-        "patch": {
-          "severity": "EQUIVALENT"
-        }
       }
     }
   },
