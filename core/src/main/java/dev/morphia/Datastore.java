@@ -21,6 +21,8 @@ import dev.morphia.transactions.MorphiaTransaction;
 
 import org.bson.Document;
 
+import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
+
 /**
  * Datastore interface to get/delete/save objects
  */
@@ -48,7 +50,7 @@ public interface Datastore {
      * @since 2.0
      */
     default <S> Aggregation<S> aggregate(Class<S> source) {
-        return aggregate(source, source, new AggregationOptions());
+        return aggregate(source, source, aggregationOptions());
     }
 
     /**
@@ -73,7 +75,7 @@ public interface Datastore {
      * @since 3.0
      */
     default <S, T> Aggregation<T> aggregate(Class<S> source, Class<T> target) {
-        return aggregate(source, target, new AggregationOptions());
+        return aggregate(source, target, aggregationOptions());
     }
 
     /**

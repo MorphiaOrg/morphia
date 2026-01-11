@@ -79,6 +79,7 @@ public class PipelineRecipesTest extends MorphiaRewriteTest {
                         import dev.morphia.aggregation.stages.UnionWith;
                         import org.bson.Document;
 
+                        import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
                         import static dev.morphia.aggregation.expressions.Expressions.literal;
                         import static dev.morphia.aggregation.stages.AddFields.addFields;
                         import static dev.morphia.aggregation.stages.Set.set;
@@ -88,7 +89,7 @@ public class PipelineRecipesTest extends MorphiaRewriteTest {
 
                         public class UnwrapSet {
                             public void test(Datastore ds) {
-                                ds.aggregate(Document.class,Document.class, new AggregationOptions().collection("sales2019q1"))
+                                ds.aggregate(Document.class,Document.class, aggregationOptions().collection("sales2019q1"))
                                           .pipeline(
                                                   set().field("_id", literal("2019Q1")),
                                                   unionWith("sales2019q2", addFields().field("_id", literal("2019Q2"))),
@@ -203,6 +204,7 @@ public class PipelineRecipesTest extends MorphiaRewriteTest {
                         import org.bson.Document;
                         import dev.morphia.aggregation.AggregationOptions;
 
+                        import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
                         import static dev.morphia.aggregation.expressions.Expressions.literal;
                         import static dev.morphia.aggregation.stages.AddFields.addFields;
                         import static dev.morphia.aggregation.stages.Set.set;
@@ -213,7 +215,7 @@ public class PipelineRecipesTest extends MorphiaRewriteTest {
                             public void test(Datastore ds) {
                                 ds.aggregate(String.class)
                                   .set(set().field("_id", literal("2019Q1")))
-                                  .execute(Document.class, new AggregationOptions()
+                                  .execute(Document.class, aggregationOptions()
                                          .readConcern(ReadConcern.LOCAL)
                                          .hint("hint"))
                                   .toList();
@@ -226,6 +228,7 @@ public class PipelineRecipesTest extends MorphiaRewriteTest {
                         import org.bson.Document;
                         import dev.morphia.aggregation.AggregationOptions;
 
+                        import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
                         import static dev.morphia.aggregation.expressions.Expressions.literal;
                         import static dev.morphia.aggregation.stages.AddFields.addFields;
                         import static dev.morphia.aggregation.stages.Set.set;
@@ -234,7 +237,7 @@ public class PipelineRecipesTest extends MorphiaRewriteTest {
 
                         public class RewriteExecute {
                             public void test(Datastore ds) {
-                                ds.aggregate(String.class,Document.class, new AggregationOptions()
+                                ds.aggregate(String.class,Document.class, aggregationOptions()
                                          .readConcern(ReadConcern.LOCAL)
                                          .hint("hint"))
                                           .pipeline(
@@ -255,6 +258,7 @@ public class PipelineRecipesTest extends MorphiaRewriteTest {
                         import org.bson.Document;
                         import dev.morphia.aggregation.AggregationOptions;
 
+                        import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
                         import static dev.morphia.aggregation.expressions.Expressions.literal;
                         import static dev.morphia.aggregation.stages.AddFields.addFields;
                         import static dev.morphia.aggregation.stages.Set.set;
@@ -265,7 +269,7 @@ public class PipelineRecipesTest extends MorphiaRewriteTest {
                             public void test(Datastore ds) {
                                 ds.aggregate("sales2019q1")
                                   .set(set().field("_id", literal("2019Q1")))
-                                  .execute(Document.class, new AggregationOptions()
+                                  .execute(Document.class, aggregationOptions()
                                          .readConcern(ReadConcern.LOCAL)
                                          .hint("hint"))
                                   .toList();
@@ -278,6 +282,7 @@ public class PipelineRecipesTest extends MorphiaRewriteTest {
                         import org.bson.Document;
                         import dev.morphia.aggregation.AggregationOptions;
 
+                        import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
                         import static dev.morphia.aggregation.expressions.Expressions.literal;
                         import static dev.morphia.aggregation.stages.AddFields.addFields;
                         import static dev.morphia.aggregation.stages.Set.set;
@@ -286,7 +291,7 @@ public class PipelineRecipesTest extends MorphiaRewriteTest {
 
                         public class RewriteExecute {
                             public void test(Datastore ds) {
-                                ds.aggregate(Document.class,Document.class,  new AggregationOptions().collection("sales2019q1")
+                                ds.aggregate(Document.class,Document.class,  aggregationOptions().collection("sales2019q1")
                                          .readConcern(ReadConcern.LOCAL)
                                          .hint("hint"))
                                           .pipeline(

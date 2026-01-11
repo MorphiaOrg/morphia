@@ -41,6 +41,13 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
     private TimeoutMode timeoutMode;
     private WriteConcern writeConcern;
 
+    private AggregationOptions() {
+    }
+
+    public static AggregationOptions aggregationOptions() {
+        return new AggregationOptions();
+    }
+
     /**
      * Enables writing to temporary files.
      *

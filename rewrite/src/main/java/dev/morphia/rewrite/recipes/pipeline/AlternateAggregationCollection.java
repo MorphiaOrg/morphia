@@ -70,8 +70,8 @@ public class AlternateAggregationCollection extends Recipe {
 
                 var classLiteral = documentLiteral(method);
 
-                MethodInvocation updated = template(method, "AggregationOptions().collection(#{any()})",
-                        "new AggregationOptions().collection(#{any()})", of(AggregationOptions.class))
+                MethodInvocation updated = template(method, "AggregationOptions.aggregationOptions().collection(#{any()})",
+                        "AggregationOptions.aggregationOptions().collection(#{any()})", of(AggregationOptions.class))
                         .apply(getCursor(), method.getCoordinates().replaceArguments(),
                                 method.getArguments().get(0));
                 var args = new ArrayList<>(of(classLiteral));

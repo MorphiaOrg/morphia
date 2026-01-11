@@ -20,7 +20,6 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.AggregationImpl;
-import dev.morphia.aggregation.AggregationOptions;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaQuery;
@@ -39,6 +38,7 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.Test;
 
+import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
 import static java.lang.Character.toLowerCase;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -136,7 +136,7 @@ public abstract class TemplatedTestBase extends TestBase {
         validateTestName(resourceName);
 
         List<Document> actual = runPipeline(options, resourceName, pipeline.apply(
-                getDs().aggregate(new AggregationOptions().collection(EXAMPLE_TEST_COLLECTION))));
+                getDs().aggregate(aggregationOptions().collection(EXAMPLE_TEST_COLLECTION))));
 
         checkExpected(options, resourceName, actual);
     }
