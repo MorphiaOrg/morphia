@@ -68,3 +68,6 @@ Changes-*.md
 github.properties
 test-output/
 upgrade-test/
+
+# Critter integration tests are copied from core during build
+critter/critter-integration/src/test/

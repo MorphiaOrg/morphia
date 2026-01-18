@@ -47,6 +47,7 @@
     </repositories>
 
     <properties>
+        <asm.version>9.9.1</asm.version>
         <awaitility.version>1.7.0</awaitility.version>
         <driver.version>5.6.2</driver.version>
         <driver.minor.version>5.5</driver.minor.version>
@@ -56,6 +57,7 @@
         <json.assert.version>1.5.3</json.assert.version>
         <javapoet.version>1.13.0</javapoet.version>
         <kotlinpoet.version>1.19.1</kotlinpoet.version>
+        <ksp.version>2.3.4</ksp.version>
         <logback.version>1.5.23</logback.version>
         <maven.version>4.0.0-rc-5</maven.version>
         <revapi.maven.plugin.version>0.15.1</revapi.maven.plugin.version>
@@ -71,8 +73,6 @@
         <maven.compiler.source>17</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
-        <asm.version>9.9.1</asm.version>
-        <ksp.version>2.3.4</ksp.version>
     </properties>
 
     <build>

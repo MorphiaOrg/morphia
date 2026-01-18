@@ -20,5 +20,7 @@
 
     <subprojects>
         <subproject>core</subproject>
+        <subproject>critter-maven</subproject>
+        <subproject>critter-integration</subproject>
     </subprojects>
 </project>
