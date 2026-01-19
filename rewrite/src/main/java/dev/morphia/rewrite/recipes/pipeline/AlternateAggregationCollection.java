@@ -65,13 +65,14 @@ public class AlternateAggregationCollection extends Recipe {
 
                 maybeAddImport(Document.class.getName(), false);
                 maybeAddImport(AggregationOptions.class.getName(), false);
+                maybeAddImport(AggregationOptions.class.getName(), "aggregationOptions");
                 var newType = method.getMethodType()
                         .withParameterTypes(of(javaType(Class.class), javaType(AggregationOptions.class)));
 
                 var classLiteral = documentLiteral(method);
 
                 MethodInvocation updated = template(method, "AggregationOptions.aggregationOptions().collection(#{any()})",
-                        "AggregationOptions.aggregationOptions().collection(#{any()})", of(AggregationOptions.class))
+                        "aggregationOptions().collection(#{any()})", of(AggregationOptions.class))
                         .apply(getCursor(), method.getCoordinates().replaceArguments(),
                                 method.getArguments().get(0));
                 var args = new ArrayList<>(of(classLiteral));
