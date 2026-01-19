@@ -82,7 +82,6 @@ public class AlternateAggregationCollection extends Recipe {
 
                 maybeAddImport(Document.class.getName(), false);
                 maybeAddImport(AggregationOptions.class.getName(), false);
-                maybeAddImport(AggregationOptions.class.getName(), "aggregationOptions");
 
                 LOG.debug("method updated:  {}", updated);
                 return updated;
