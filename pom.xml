@@ -373,9 +373,9 @@
         <subproject>util</subproject>
         <subproject>core</subproject>
         <subproject>kotlin</subproject>
+        <subproject>rewrite</subproject>
         <subproject>critter</subproject>
         <subproject>validation</subproject>
-        <subproject>rewrite</subproject>
         <subproject>examples</subproject>
         <subproject>docs</subproject>
     </subprojects>
