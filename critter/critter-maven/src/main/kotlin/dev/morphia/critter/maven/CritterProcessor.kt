@@ -88,12 +88,7 @@ class CritterProcessor(
     }
 
     private fun writeGeneratedClasses() {
-        val classesField =
-            critterClassLoader.javaClass.superclass.getDeclaredField("typeDefinitions")
-        classesField.isAccessible = true
-
-        @Suppress("UNCHECKED_CAST")
-        val typeDefinitions = classesField.get(critterClassLoader) as Map<String, ByteArray>
+        val typeDefinitions = critterClassLoader.getTypeDefinitions()
 
         if (!outputDirectory.exists()) {
             outputDirectory.mkdirs()

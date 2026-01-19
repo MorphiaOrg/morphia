@@ -62,7 +62,10 @@
                     <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
                     <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
                     <postBuildHookScript>verify</postBuildHookScript>
+<!--                    <debug>true</debug>-->
+<!--                    <streamLogs>true</streamLogs>-->
                     <goals>
+                        <goal>-e</goal>
                         <goal>clean</goal>
                         <goal>compile</goal>
                     </goals>

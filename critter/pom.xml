@@ -18,9 +18,22 @@
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
+    <profiles>
+        <profile>
+            <id>enable-integration-tests</id>
+            <activation>
+                <property>
+                    <name>critter.it</name>
+                </property>
+            </activation>
+            <subprojects>
+                <subproject>critter-integration-tests</subproject>
+            </subprojects>
+        </profile>
+    </profiles>
+
     <subprojects>
         <subproject>core</subproject>
         <subproject>critter-maven</subproject>
-        <subproject>critter-integration</subproject>
     </subprojects>
 </project>

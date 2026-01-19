@@ -52,6 +52,6 @@ class PropertyFinder(mapper: Mapper, val classLoader: CritterClassLoader) {
 
     private fun discoverPropertyMethods(classNode: ClassNode) =
         classNode.methods
-            .filter { it.name.startsWith("get") && it.parameters.isEmpty() }
+            .filter { it.name.startsWith("get") && Type.getArgumentTypes(it.desc).isEmpty() }
             .filter { isPropertyAnnotated(it.visibleAnnotations, false) }
 }

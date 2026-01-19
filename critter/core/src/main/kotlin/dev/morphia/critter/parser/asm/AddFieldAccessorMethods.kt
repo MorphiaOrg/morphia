@@ -18,7 +18,11 @@ class AddFieldAccessorMethods(entity: Class<*>, var fields: List<FieldNode>) :
     BaseGenerator(entity) {
 
     init {
-        ClassReader(entity.name).accept(classWriter, 0)
+        val resourceName = entity.name.replace('.', '/') + ".class"
+        val inputStream =
+            entity.classLoader.getResourceAsStream(resourceName)
+                ?: throw IllegalArgumentException("Could not find class file for ${entity.name}")
+        ClassReader(inputStream).accept(classWriter, 0)
     }
 
     override fun emit(): ByteArray {

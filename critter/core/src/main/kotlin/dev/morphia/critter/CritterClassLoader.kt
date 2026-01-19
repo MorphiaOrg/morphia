@@ -48,4 +48,8 @@ class CritterClassLoader :
         // This avoids SecurityException (java.*, javax.*) and LinkageError (third-party libs)
         return className.startsWith("dev.morphia.critter.")
     }
+
+    fun getTypeDefinitions(): Map<String, ByteArray> {
+        return typeDefinitions.toMap()
+    }
 }

@@ -14,7 +14,11 @@ object CritterGizmoGenerator {
         critterClassLoader: CritterClassLoader = CritterClassLoader(),
     ): GizmoEntityModelGenerator {
         val classNode = ClassNode()
-        ClassReader(type.name).accept(classNode, 0)
+        val resourceName = type.name.replace('.', '/') + ".class"
+        val inputStream =
+            type.classLoader.getResourceAsStream(resourceName)
+                ?: throw IllegalArgumentException("Could not find class file for ${type.name}")
+        ClassReader(inputStream).accept(classNode, 0)
         val propertyFinder = PropertyFinder(Generators.mapper, critterClassLoader)
 
         return entityModel(

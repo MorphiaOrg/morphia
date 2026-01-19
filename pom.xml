@@ -341,6 +341,12 @@
                 <groupId>com.google.devtools.ksp</groupId>
                 <artifactId>symbol-processing-aa-embeddable</artifactId>
                 <version>${ksp.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.jetbrains.kotlinx</groupId>
+                        <artifactId>kotlinx-coroutines-core-jvm</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.squareup</groupId>
