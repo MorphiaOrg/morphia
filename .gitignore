@@ -70,4 +70,4 @@ test-output/
 upgrade-test/
 
 # Critter integration tests are copied from core during build
-critter/critter-integration/src/test/
+critter/critter-integration-tests/src/test/
