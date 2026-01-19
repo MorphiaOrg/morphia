@@ -63,16 +63,13 @@ public class AlternateAggregationCollection extends Recipe {
             if (AGGREGATE.matches(method)) {
                 LOG.debug("method matches:  {}", method);
 
-                maybeAddImport(Document.class.getName(), false);
-                maybeAddImport(AggregationOptions.class.getName(), false);
-                maybeAddImport(AggregationOptions.class.getName(), "aggregationOptions");
                 var newType = method.getMethodType()
                         .withParameterTypes(of(javaType(Class.class), javaType(AggregationOptions.class)));
 
                 var classLiteral = documentLiteral(method);
 
                 MethodInvocation updated = template(method, "AggregationOptions.aggregationOptions().collection(#{any()})",
-                        "aggregationOptions().collection(#{any()})", of(AggregationOptions.class))
+                        "AggregationOptions.aggregationOptions().collection(#{any()})", of(AggregationOptions.class))
                         .apply(getCursor(), method.getCoordinates().replaceArguments(),
                                 method.getArguments().get(0));
                 var args = new ArrayList<>(of(classLiteral));
@@ -82,6 +79,11 @@ public class AlternateAggregationCollection extends Recipe {
                         .withArguments(args)
                         .withSelect(method.getSelect());
                 updated = maybeAutoFormat(method, updated, executionContext);
+
+                maybeAddImport(Document.class.getName(), false);
+                maybeAddImport(AggregationOptions.class.getName(), false);
+                maybeAddImport(AggregationOptions.class.getName(), "aggregationOptions");
+
                 LOG.debug("method updated:  {}", updated);
                 return updated;
             } else {
