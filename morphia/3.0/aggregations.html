@@ -345,7 +345,7 @@ overwrite any existing documents and replace them with the results of the pipeli
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">var aggregation = datastore.aggregate(new AggregationOptions().collection("some collection"));
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">var aggregation = datastore.aggregate(AggregationOptions.aggregationOptions().collection("some collection"));
 aggregation.pipeline(
     group(id()
         .field("fiscal_year", "$fiscal_year")
