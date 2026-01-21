@@ -8,7 +8,6 @@ import dev.morphia.rewrite.recipes.MultiMethodMatcher;
 
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
-import org.openrewrite.Cursor;
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.NlsRewrite.Description;
 import org.openrewrite.NlsRewrite.DisplayName;
@@ -77,10 +76,11 @@ public class AlternateAggregationCollection extends Recipe {
                 var classLiteral = documentLiteral(method);
 
                 // Create the AggregationOptions argument: aggregationOptions().collection("collectionName")
+                // Use coordinates that don't create a cycle
                 MethodInvocation aggregationOptionsArg = templateWithStaticImport(method, "AggregationOptions().collection(#{any()})",
                         "AggregationOptions.aggregationOptions().collection(#{any()})", of(AggregationOptions.class),
                         AggregationOptions.class.getName() + ".aggregationOptions")
-                        .apply(new Cursor(getCursor(), method), method.getCoordinates().replaceArguments(),
+                        .apply(getCursor().getParent(), method.getCoordinates().replaceArguments(),
                                 method.getArguments().get(0));
 
                 // For Java, simplify the static method call to use the static import
