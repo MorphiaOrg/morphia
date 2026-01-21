@@ -1,6 +1,5 @@
 package dev.morphia.rewrite.recipes.pipeline;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import dev.morphia.MorphiaDatastore;
@@ -9,6 +8,7 @@ import dev.morphia.rewrite.recipes.MultiMethodMatcher;
 
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
+import org.openrewrite.Cursor;
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.NlsRewrite.Description;
 import org.openrewrite.NlsRewrite.DisplayName;
@@ -65,21 +65,37 @@ public class AlternateAggregationCollection extends Recipe {
 
                 maybeAddImport(Document.class.getName(), false);
                 maybeAddImport(AggregationOptions.class.getName(), false);
+
+                // For Java, add static import for aggregationOptions()
+                if (!isKotlin(method)) {
+                    maybeAddImport(AggregationOptions.class.getName(), "aggregationOptions", false);
+                }
+
                 var newType = method.getMethodType()
                         .withParameterTypes(of(javaType(Class.class), javaType(AggregationOptions.class)));
 
                 var classLiteral = documentLiteral(method);
 
-                MethodInvocation updated = template(method, "AggregationOptions.aggregationOptions().collection(#{any()})",
-                        "AggregationOptions.aggregationOptions().collection(#{any()})", of(AggregationOptions.class))
-                        .apply(getCursor(), method.getCoordinates().replaceArguments(),
+                // Create the AggregationOptions argument: aggregationOptions().collection("collectionName")
+                MethodInvocation aggregationOptionsArg = templateWithStaticImport(method, "AggregationOptions().collection(#{any()})",
+                        "AggregationOptions.aggregationOptions().collection(#{any()})", of(AggregationOptions.class),
+                        AggregationOptions.class.getName() + ".aggregationOptions")
+                        .apply(new Cursor(getCursor(), method), method.getCoordinates().replaceArguments(),
                                 method.getArguments().get(0));
-                var args = new ArrayList<>(of(classLiteral));
-                args.addAll(updated.getArguments());
-                updated = updated.withMethodType(newType)
-                        .withName(updated.getName().withType(newType))
-                        .withArguments(args)
-                        .withSelect(method.getSelect());
+
+                // For Java, simplify the static method call to use the static import
+                if (!isKotlin(method) && aggregationOptionsArg.getSelect() instanceof MethodInvocation aggregationOptionsCall) {
+                    // Remove the class qualifier from aggregationOptions() to use the static import
+                    aggregationOptionsArg = aggregationOptionsArg.withSelect(aggregationOptionsCall.withSelect(null));
+                }
+
+                // Build the new arguments list: [Document.class, aggregationOptions().collection(...)]
+                var args = List.of(classLiteral, aggregationOptionsArg);
+
+                // Transform the original aggregate method to have the new signature and arguments
+                MethodInvocation updated = method.withMethodType(newType)
+                        .withName(method.getName().withType(newType))
+                        .withArguments(args);
                 updated = maybeAutoFormat(method, updated, executionContext);
                 LOG.debug("method updated:  {}", updated);
                 return updated;
@@ -96,6 +112,15 @@ public class AlternateAggregationCollection extends Recipe {
 
     private static @NotNull JavaTemplate template(MethodInvocation method, String kotlinCode, String javaCode, List<Class<?>> imports) {
         return template(builder(method, kotlinCode, javaCode), imports);
+    }
+
+    private static @NotNull JavaTemplate templateWithStaticImport(MethodInvocation method, String kotlinCode, String javaCode,
+            List<Class<?>> imports, String staticImport) {
+        var builder = builder(method, kotlinCode, javaCode);
+        if (!isKotlin(method)) {
+            builder = builder.staticImports(staticImport);
+        }
+        return template(builder, imports);
     }
 
     private static @NotNull JavaTemplate template(String javaCode, List<Class<?>> imports) {
