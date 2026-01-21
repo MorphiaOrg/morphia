@@ -225,17 +225,17 @@ public class KotlinPipelineRecipesTest extends KotlinRewriteTest {
                         import dev.morphia.aggregation.stages.Sort.sort
                         import dev.morphia.aggregation.stages.UnionWith
 
-                         class RewriteExecute {
-                             fun test(ds: Datastore) {
-                                 ds.aggregate(String::class.java,Document::class.java, AggregationOptions.aggregationOptions()
+                        class RewriteExecute {
+                            fun test(ds: Datastore) {
+                                ds.aggregate(String::class.java,Document::class.java, AggregationOptions.aggregationOptions()
                                          .readConcern(ReadConcern.LOCAL)
                                          .hint("hint"))
-                                       .pipeline(
-                                           set().field("_id", literal("2019Q1")))
-                                   .iterator()
-                                   .toList()
-                             }
-                         }
+                                      .pipeline(
+                                          set().field("_id", literal("2019Q1")))
+                                  .iterator()
+                                  .toList()
+                            }
+                        }
                         """));
     }
 

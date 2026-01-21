@@ -24,8 +24,8 @@ import org.openrewrite.kotlin.KotlinTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static dev.morphia.rewrite.recipes.RewriteUtils.findMorphiaDependencies;
 import static dev.morphia.rewrite.recipes.RewriteUtils.methodMatcher;
+import static dev.morphia.rewrite.recipes.RewriteUtils.runtimeClasspathPaths;
 import static dev.morphia.rewrite.recipes.pipeline.PipelineRewriteRecipes.DATASTORE;
 import static dev.morphia.rewrite.recipes.pipeline.PipelineRewriteRecipes.javaType;
 import static java.util.List.of;
@@ -106,6 +106,8 @@ public class AlternateAggregationCollection extends Recipe {
 
     private static @NotNull JavaTemplate template(JavaTemplate.Builder builder, List<Class<?>> imports) {
         return builder
+                .javaParser(fromJavaVersion()
+                        .classpath(runtimeClasspathPaths()))
                 .imports(imports.stream().map(c -> c.getName()).toArray(String[]::new))
                 .build();
     }
@@ -113,10 +115,10 @@ public class AlternateAggregationCollection extends Recipe {
     private static JavaTemplate.@NotNull Builder builder(MethodInvocation method, String kotlinCode, String javaCode) {
         return isKotlin(method) ? KotlinTemplate.builder(kotlinCode)
                 .parser(KotlinParser.builder()
-                        .classpath(findMorphiaDependencies()))
+                        .classpath(runtimeClasspathPaths()))
                 : JavaTemplate.builder(javaCode)
                         .javaParser(fromJavaVersion()
-                                .classpath(findMorphiaDependencies()));
+                                .classpath(runtimeClasspathPaths()));
     }
 
     private static boolean isKotlin(MethodInvocation method) {

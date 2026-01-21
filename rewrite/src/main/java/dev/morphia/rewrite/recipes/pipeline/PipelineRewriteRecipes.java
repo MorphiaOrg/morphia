@@ -63,7 +63,8 @@ public class PipelineRewriteRecipes extends Recipe {
                 new PipelineRewrite(),
                 new PipelineMergeRewrite(),
                 new PipelineOutRewrite(),
-                new PipelineExecuteRewrite());
+                new PipelineExecuteRewrite(),
+                new AggregationOptionsConstructorToFactory());
     }
 
     public static Expression addStage(MethodInvocation invocation, MethodInvocation stage) {

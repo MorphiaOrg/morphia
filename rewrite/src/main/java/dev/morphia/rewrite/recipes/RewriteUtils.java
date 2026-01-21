@@ -55,4 +55,15 @@ public class RewriteUtils {
     public static @NotNull MethodMatcher methodMatcher(String type, String pattern) {
         return new MethodMatcher(type + " " + pattern);
     }
+
+    /**
+     * Returns the runtime classpath as paths, suitable for templates generating 3.x API code.
+     * This includes the current project's classes (3.x morphia-core) unlike findMorphiaDependencies()
+     * which only includes 2.x versions.
+     */
+    public static Set<Path> runtimeClasspathPaths() {
+        return runtimeClasspath.stream()
+                .map(uri -> Path.of(uri))
+                .collect(LinkedHashSet::new, Set::add, Set::addAll);
+    }
 }
