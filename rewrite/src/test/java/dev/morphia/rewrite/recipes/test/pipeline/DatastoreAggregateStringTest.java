@@ -41,6 +41,7 @@ public class DatastoreAggregateStringTest extends MorphiaRewriteTest {
                         import dev.morphia.aggregation.AggregationOptions;
                         import org.bson.Document;
 
+                        import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
                         import static dev.morphia.aggregation.stages.Match.match;
                         import static dev.morphia.query.filters.Filters.eq;
 
@@ -81,6 +82,7 @@ public class DatastoreAggregateStringTest extends MorphiaRewriteTest {
                         import dev.morphia.aggregation.AggregationOptions;
                         import org.bson.Document;
 
+                        import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
                         import static dev.morphia.aggregation.stages.Match.match;
                         import static dev.morphia.query.filters.Filters.eq;
 
@@ -126,6 +128,7 @@ public class DatastoreAggregateStringTest extends MorphiaRewriteTest {
                         import dev.morphia.aggregation.AggregationOptions;
                         import org.bson.Document;
 
+                        import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
                         import static dev.morphia.aggregation.stages.Match.match;
                         import static dev.morphia.query.filters.Filters.eq;
 

@@ -51,12 +51,12 @@
         <driver.version>5.6.2</driver.version>
         <driver.minor.version>5.5</driver.minor.version>
         <driver-javadoc.link>https://mongodb.github.io/mongo-java-driver/${driver.minor.version}/apidocs</driver-javadoc.link>
-        <jackson.version>2.20.1</jackson.version>
-        <jackson-annotations.version>2.20</jackson-annotations.version>
+        <jackson.version>2.21.0</jackson.version>
+        <jackson-annotations.version>2.21</jackson-annotations.version>
         <json.assert.version>1.5.3</json.assert.version>
         <javapoet.version>1.13.0</javapoet.version>
         <kotlinpoet.version>1.19.1</kotlinpoet.version>
-        <logback.version>1.5.23</logback.version>
+        <logback.version>1.5.25</logback.version>
         <maven.version>4.0.0-rc-5</maven.version>
         <revapi.maven.plugin.version>0.15.1</revapi.maven.plugin.version>
         <revapi.java.version>0.28.4</revapi.java.version>
@@ -199,7 +199,7 @@
             <dependency>
                 <groupId>io.smallrye.config</groupId>
                 <artifactId>smallrye-config</artifactId>
-                <version>3.14.1</version>
+                <version>3.15.1</version>
             </dependency>
 
             <dependency>
@@ -293,7 +293,7 @@
             <dependency>
                 <groupId>org.jsoup</groupId>
                 <artifactId>jsoup</artifactId>
-                <version>1.21.2</version>
+                <version>1.22.1</version>
             </dependency>
             <dependency>
                 <groupId>org.asciidoctor</groupId>
@@ -303,7 +303,7 @@
             <dependency>
                 <groupId>org.jboss.forge.roaster</groupId>
                 <artifactId>roaster-api</artifactId>
-                <version>2.30.3.Final</version>
+                <version>2.31.0.Final</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.forge.roaster</groupId>
@@ -320,7 +320,7 @@
             <dependency>
                 <groupId>net.bytebuddy</groupId>
                 <artifactId>byte-buddy</artifactId>
-                <version>1.18.3</version>
+                <version>1.18.4</version>
             </dependency>
             <dependency>
                 <groupId>io.github.classgraph</groupId>
