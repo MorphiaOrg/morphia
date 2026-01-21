@@ -203,7 +203,6 @@ public class PipelineRecipesTest extends MorphiaRewriteTest {
                         import org.bson.Document;
                         import dev.morphia.aggregation.AggregationOptions;
 
-
                         import static dev.morphia.aggregation.expressions.Expressions.literal;
                         import static dev.morphia.aggregation.stages.AddFields.addFields;
                         import static dev.morphia.aggregation.stages.Set.set;
