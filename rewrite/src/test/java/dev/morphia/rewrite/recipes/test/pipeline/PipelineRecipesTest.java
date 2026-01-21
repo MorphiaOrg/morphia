@@ -213,7 +213,7 @@ public class PipelineRecipesTest extends MorphiaRewriteTest {
                             public void test(Datastore ds) {
                                 ds.aggregate(String.class)
                                   .set(set().field("_id", literal("2019Q1")))
-                                  .execute(Document.class, AggregationOptions.aggregationOptions()
+                                  .execute(Document.class, new AggregationOptions()
                                          .readConcern(ReadConcern.LOCAL)
                                          .hint("hint"))
                                   .toList();
@@ -265,7 +265,7 @@ public class PipelineRecipesTest extends MorphiaRewriteTest {
                             public void test(Datastore ds) {
                                 ds.aggregate("sales2019q1")
                                   .set(set().field("_id", literal("2019Q1")))
-                                  .execute(Document.class, AggregationOptions.aggregationOptions()
+                                  .execute(Document.class, new AggregationOptions()
                                          .readConcern(ReadConcern.LOCAL)
                                          .hint("hint"))
                                   .toList();
