@@ -1,7 +1,6 @@
 package dev.morphia.test.aggregation;
 
 import dev.morphia.MorphiaDatastore;
-import dev.morphia.aggregation.AggregationOptions;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.aggregation.model.Author;
 import dev.morphia.test.aggregation.model.Book;
@@ -10,6 +9,7 @@ import org.testng.annotations.Test;
 
 import static com.mongodb.client.model.MergeOptions.WhenMatched.REPLACE;
 import static com.mongodb.client.model.MergeOptions.WhenNotMatched.INSERT;
+import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.stages.Group.group;

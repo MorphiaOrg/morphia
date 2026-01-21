@@ -47,7 +47,7 @@ public class KotlinDatastoreAggregateStringTest extends KotlinRewriteTest {
 
                         class DatastoreAggregateStringTest {
                             fun test(ds: Datastore) {
-                                ds.aggregate(Document::class.java, AggregationOptions().collection("myCollection"))
+                                ds.aggregate(Document::class.java, AggregationOptions.aggregationOptions().collection("myCollection"))
                                   .match(eq("field", "value"))
                                   .execute(Document::class.java)
                                   .toList()
@@ -89,7 +89,7 @@ public class KotlinDatastoreAggregateStringTest extends KotlinRewriteTest {
                         class DatastoreAggregateStringTest {
                             fun test(ds: Datastore) {
                                 val myCollection: String = "myCollection"
-                                ds.aggregate( AggregationOptions().collection(myCollection))
+                                ds.aggregate( AggregationOptions.aggregationOptions().collection(myCollection))
                                   .match(eq("field", "value"))
                                   .execute(Document::class.java)
                                   .toList()
@@ -137,7 +137,7 @@ public class KotlinDatastoreAggregateStringTest extends KotlinRewriteTest {
                             }
 
                             fun test() {
-                                getDs().aggregate(Document::class.java, AggregationOptions().collection("myCollection"))
+                                getDs().aggregate(Document::class.java, AggregationOptions.aggregationOptions().collection("myCollection"))
                                   .match(eq("field", "value"))
                                   .execute(Document::class.java)
                                   .toList()
