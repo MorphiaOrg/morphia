@@ -42,7 +42,7 @@ datastore.aggregate(Book.class, Author.class).pipeline(
         var datastore = getDs();
 // @formatter:off
 // tag::merge[]
-var aggregation = datastore.aggregate(AggregationOptions.aggregationOptions().collection("some collection"));
+var aggregation = datastore.aggregate(aggregationOptions().collection("some collection"));
 aggregation.pipeline(
     group(id()
         .field("fiscal_year", "$fiscal_year")
