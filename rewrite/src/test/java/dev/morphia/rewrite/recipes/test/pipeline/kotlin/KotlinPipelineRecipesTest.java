@@ -85,7 +85,7 @@ public class KotlinPipelineRecipesTest extends KotlinRewriteTest {
 
                         class UnwrapSet {
                             fun test(ds: Datastore) {
-                                ds.aggregate(Document::class.java,Document::class.java, AggregationOptions().collection("sales2019q1"))
+                                ds.aggregate(Document::class.java,Document::class.java, AggregationOptions.aggregationOptions().collection("sales2019q1"))
                                       .pipeline(
                                           set().field("_id", literal("2019Q1")),
                                           unionWith("sales2019q2", addFields().field("_id", literal("2019Q2"))),
@@ -227,7 +227,7 @@ public class KotlinPipelineRecipesTest extends KotlinRewriteTest {
 
                         class RewriteExecute {
                             fun test(ds: Datastore) {
-                                ds.aggregate(String::class.java,Document::class.java, AggregationOptions()
+                                ds.aggregate(String::class.java,Document::class.java, AggregationOptions.aggregationOptions()
                                          .readConcern(ReadConcern.LOCAL)
                                          .hint("hint"))
                                       .pipeline(
@@ -279,7 +279,7 @@ public class KotlinPipelineRecipesTest extends KotlinRewriteTest {
 
                         class RewriteExecute {
                             fun test(ds: Datastore) {
-                                ds.aggregate(Document::class.java,Document::class.java,  AggregationOptions().collection("sales2019q1")
+                                ds.aggregate(Document::class.java,Document::class.java,  AggregationOptions.aggregationOptions().collection("sales2019q1")
                                          .readConcern(ReadConcern.LOCAL)
                                          .hint("hint"))
                                       .pipeline(
