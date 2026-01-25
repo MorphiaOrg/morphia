@@ -133,5 +133,7 @@ fun load(creator: MethodCreator, type: Class<*>, `value`: Any): ResultHandle {
     }
 }
 
-fun Type.typeData(typeParameters: List<TypeData<*>> = listOf()) =
-    TypeData(asClass(), typeParameters)
+fun Type.typeData(
+    classLoader: ClassLoader = Thread.currentThread().contextClassLoader,
+    typeParameters: List<TypeData<*>> = listOf(),
+) = TypeData(asClass(classLoader), typeParameters)

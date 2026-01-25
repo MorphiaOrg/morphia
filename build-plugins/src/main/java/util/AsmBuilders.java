@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.StringJoiner;
 import java.util.TreeMap;
 
+import org.apache.maven.api.Language;
+import org.apache.maven.api.ProjectScope;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -36,7 +38,7 @@ import static util.AnnotationBuilders.methodCase;
 @Mojo(name = "morphia-annotations-asm", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class AsmBuilders extends AbstractMojo {
 
-    private Map<String, JavaAnnotationSource> builders = new TreeMap<>();
+    private final Map<String, JavaAnnotationSource> builders = new TreeMap<>();
 
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     private MavenProject project;
@@ -53,12 +55,11 @@ public class AsmBuilders extends AbstractMojo {
     @Override
     @SuppressWarnings("ConstantConditions")
     public void execute() throws MojoExecutionException {
-        List<File> files = new ArrayList<>();
-        generated = new File(project.getBasedir() + "/target/generated-sources/morphia-annotations/");
+        generated = new File(project.getBaseDirectory() + "/target/generated-sources/morphia-annotations/");
 
         String path = core() + "/src/main/java/dev/morphia/annotations";
-        files.addAll(find(path));
-        project.addCompileSourceRoot(generated.getAbsolutePath());
+        List<File> files = new ArrayList<>(find(path));
+        project.addSourceRoot(ProjectScope.MAIN, Language.JAVA_FAMILY, generated.getAbsolutePath());
 
         try {
             for (File file : files) {
@@ -78,7 +79,7 @@ public class AsmBuilders extends AbstractMojo {
     }
 
     private File core() {
-        var dir = project.getBasedir();
+        var dir = project.getBaseDirectory().toFile();
         while (!new File(dir, ".git").exists()) {
             dir = dir.getParentFile();
         }
@@ -160,7 +161,7 @@ public class AsmBuilders extends AbstractMojo {
         method.setBody(code);
     }
 
-    private void emitterMethod(JavaClassSource factory, JavaAnnotationSource builder) throws ClassNotFoundException {
+    private void emitterMethod(JavaClassSource factory, JavaAnnotationSource builder) {
         var method = factory.addMethod()
                 .setStatic(true)
                 .setName("emit" + builder.getName());

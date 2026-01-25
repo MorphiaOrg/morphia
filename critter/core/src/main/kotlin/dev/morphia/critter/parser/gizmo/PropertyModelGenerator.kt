@@ -45,7 +45,7 @@ private constructor(
         val signature = field.signature
         typeArguments =
             signature?.let {
-                typeData(it)
+                typeData(it, entity.classLoader)
                 Type.getArgumentTypes("()$it")
             } ?: arrayOf()
         generatedType = "${baseName}.${propertyName.titleCase()}Model"
@@ -77,6 +77,7 @@ private constructor(
     lateinit var annotations: List<AnnotationNode>
     val annotationMap: Map<String, Annotation> by lazy {
         annotations
+            .filter { it.desc.startsWith("Ldev/morphia/annotations/") }
             .map { it.toMorphiaAnnotation() as Annotation }
             .associateBy { it.annotationClass.qualifiedName!! }
     }
@@ -85,7 +86,7 @@ private constructor(
         val input =
             field?.let<FieldNode, String> { it.signature ?: it.desc }
                 ?: method!!.let<MethodNode, String> { it.signature ?: it.desc }
-        typeData(input)[0]
+        typeData(input, entity.classLoader)[0]
     }
     val model by lazy { creator.getFieldCreator("entityModel", EntityModel::class.java) }
 
@@ -324,25 +325,30 @@ private fun String.balanced(): String {
     return substring(start, index)
 }
 
-fun typeData(input: String): List<TypeData<*>> {
+fun typeData(
+    input: String,
+    classLoader: ClassLoader = Thread.currentThread().contextClassLoader,
+): List<TypeData<*>> {
     if (input.isEmpty()) return emptyList()
     val types = mutableListOf<TypeData<*>>()
     var value = input
 
     while (value.isNotEmpty()) {
         val bracket = value.indexOf('<')
-        if (bracket == -1 || bracket > value.indexOf(';')) {
+        val semicolon = value.indexOf(';')
+        if (bracket == -1 || (semicolon != -1 && bracket > semicolon)) {
             var type = value.substringBefore(';')
-            if (type.length > 2) {
+            val hadSemicolon = semicolon != -1 && semicolon < value.length
+            if (hadSemicolon && type.length > 2) {
                 type += ";"
             }
-            value = value.substring(type.length)
+            value = if (hadSemicolon) value.substring(type.length) else ""
             val type1 = Type.getType(type)
-            types += type1.typeData()
+            types += type1.typeData(classLoader)
         } else {
             val paramString = value.balanced()
             value = value.replace("<$paramString>", "")
-            types += Type.getType(value).typeData(typeData(paramString))
+            types += Type.getType(value).typeData(classLoader, typeData(paramString, classLoader))
             value = value.substringAfter(';')
         }
     }

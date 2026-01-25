@@ -14,6 +14,8 @@ import java.util.StringJoiner;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+import org.apache.maven.api.Language;
+import org.apache.maven.api.ProjectScope;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -36,9 +38,7 @@ import static java.util.Arrays.asList;
 @Mojo(name = "morphia-annotations", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class AnnotationBuilders extends AbstractMojo {
 
-    private Map<String, JavaClassSource> builders = new TreeMap<>();
-
-    private MethodSource<JavaClassSource> factoryMethod;
+    private final Map<String, JavaClassSource> builders = new TreeMap<>();
 
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     private MavenProject project;
@@ -59,11 +59,10 @@ public class AnnotationBuilders extends AbstractMojo {
     @Override
     @SuppressWarnings("ConstantConditions")
     public void execute() throws MojoExecutionException {
-        List<File> files = new ArrayList<>();
-        generated = new File(project.getBasedir() + "/target/generated-sources/morphia-annotations/");
+        generated = new File(project.getBaseDirectory() + "/target/generated-sources/morphia-annotations/");
 
-        files.addAll(find(project.getBasedir() + "/src/main/java/dev/morphia/annotations"));
-        project.addCompileSourceRoot(generated.getAbsolutePath());
+        List<File> files = new ArrayList<>(find(project.getBaseDirectory() + "/src/main/java/dev/morphia/annotations"));
+        project.addSourceRoot(ProjectScope.MAIN, Language.JAVA_FAMILY, generated.getAbsolutePath());
 
         try {
             for (File file : files) {
@@ -83,7 +82,7 @@ public class AnnotationBuilders extends AbstractMojo {
         if (factory == null) {
             factory = createClass("AnnotationFactory");
 
-            factoryMethod = factory.addMethod()
+            MethodSource<JavaClassSource> factoryMethod = factory.addMethod()
                     .setReturnType("K")
                     .setPublic()
                     .setStatic(true);
@@ -176,7 +175,7 @@ public class AnnotationBuilders extends AbstractMojo {
                     .setPublic()
                     .setName("build")
                     .setReturnType(source.getName())
-                    .setBody(format("var anno = annotation; annotation = null; return anno;", builder.getName()));
+                    .setBody("var anno = annotation; annotation = null; return anno;");
 
             builder.addMethod()
                     .setPublic()

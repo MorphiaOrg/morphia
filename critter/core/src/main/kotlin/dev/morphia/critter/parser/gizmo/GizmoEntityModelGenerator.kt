@@ -23,14 +23,20 @@ class GizmoEntityModelGenerator(
 ) : BaseGizmoGenerator(type, critterClassLoader) {
     var annotations: List<AnnotationNode>
     var morphiaAnnotations: List<Annotation>
+    val entityAnnotation: Entity =
+        entity.getAnnotation(Entity::class.java)
+            ?: throw IllegalStateException("Class ${entity.name} does not have @Entity annotation")
 
     init {
         generatedType = "${baseName}.${entity.simpleName}EntityModel"
         annotations = classNode.visibleAnnotations ?: emptyList()
-        morphiaAnnotations = annotations.map { it.toMorphiaAnnotation() }
+        morphiaAnnotations =
+            annotations
+                .filter { it.desc.startsWith("Ldev/morphia/annotations/") }
+                .map { it.toMorphiaAnnotation() }
     }
 
-    fun <T> annotation(type: Class<T>) = morphiaAnnotations.filterIsInstance(type).firstOrNull()
+    fun <T : Annotation> annotation(type: Class<T>): T? = entity.getAnnotation(type)
 
     fun emit(): GizmoEntityModelGenerator {
         builder.superClass(CritterEntityModel::class.java)
@@ -50,7 +56,7 @@ class GizmoEntityModelGenerator(
 
     private fun useDiscriminator() {
         creator.getMethodCreator("useDiscriminator", "boolean").use {
-            it.returnValue(it.load(annotation(Entity::class.java)!!.useDiscriminator))
+            it.returnValue(it.load(entityAnnotation.useDiscriminator))
         }
     }
 
@@ -68,7 +74,7 @@ class GizmoEntityModelGenerator(
 
     private fun discriminatorKey() {
         creator.getMethodCreator("discriminatorKey", String::class.java).use {
-            val key = annotation(Entity::class.java)!!.discriminator
+            val key = entityAnnotation.discriminator
             it.returnValue(
                 it.load(if (key == Mapper.IGNORED_FIELDNAME) config.discriminatorKey() else key)
             )
@@ -77,15 +83,14 @@ class GizmoEntityModelGenerator(
 
     private fun discriminator() {
         creator.getMethodCreator("discriminator", String::class.java).use {
-            val discriminator =
-                config.discriminator().apply(entity, annotation(Entity::class.java)!!.discriminator)
+            val discriminator = config.discriminator().apply(entity, entityAnnotation.discriminator)
             it.returnValue(it.load(discriminator))
         }
     }
 
     private fun collectionName() {
         creator.getMethodCreator("collectionName", String::class.java).use {
-            val key = annotation(Entity::class.java)!!.value
+            val key = entityAnnotation.value
             it.returnValue(
                 it.load(
                     if (key == Mapper.IGNORED_FIELDNAME)

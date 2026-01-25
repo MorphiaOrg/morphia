@@ -33,9 +33,10 @@ object Generators {
 
     fun Type.isArray(): Boolean = sort == ARRAY
 
-    fun Type.asClass(): Class<*> {
-        if (isArray()) return arrayAsClass()
-        return when (this) {
+    fun Type.asClass(
+        classLoader: ClassLoader = Thread.currentThread().contextClassLoader
+    ): Class<*> =
+        when (this) {
             Type.BOOLEAN_TYPE -> Boolean::class.java
             Type.CHAR_TYPE -> Char::class.java
             Type.BYTE_TYPE -> Byte::class.java
@@ -44,23 +45,11 @@ object Generators {
             Type.FLOAT_TYPE -> Float::class.java
             Type.LONG_TYPE -> Long::class.java
             Type.DOUBLE_TYPE -> Double::class.java
-            else -> Class.forName(className)
+            else ->
+                Class.forName(
+                    if (sort == ARRAY) descriptor.replace('/', '.') else className,
+                    false,
+                    classLoader,
+                )
         }
-    }
-
-    private fun Type.arrayAsClass(): Class<*> {
-        val klass: Class<*> =
-            when (this.elementType) {
-                Type.BOOLEAN_TYPE -> Array<Boolean>::class.java
-                Type.CHAR_TYPE -> Array<Char>::class.java
-                Type.BYTE_TYPE -> Array<Byte>::class.java
-                Type.SHORT_TYPE -> Array<Short>::class.java
-                Type.INT_TYPE -> Array<Int>::class.java
-                Type.FLOAT_TYPE -> Array<Float>::class.java
-                Type.LONG_TYPE -> Array<Long>::class.java
-                Type.DOUBLE_TYPE -> Array<Double>::class.java
-                else -> TODO()
-            }
-        return klass
-    }
 }
