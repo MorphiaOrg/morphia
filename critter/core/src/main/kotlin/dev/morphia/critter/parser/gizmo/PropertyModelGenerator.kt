@@ -336,7 +336,12 @@ fun typeData(
     while (value.isNotEmpty()) {
         val bracket = value.indexOf('<')
         val semicolon = value.indexOf(';')
-        if (bracket == -1 || (semicolon != -1 && bracket > semicolon)) {
+        // Handle type parameters (e.g., TT; for type param T) - use Object as erasure
+        if (value.startsWith("T") && !value.startsWith("T[")) {
+            val typeParam = value.substringBefore(';')
+            value = if (semicolon != -1) value.substring(semicolon + 1) else ""
+            types += Type.getType(Object::class.java).typeData(classLoader)
+        } else if (bracket == -1 || (semicolon != -1 && bracket > semicolon)) {
             var type = value.substringBefore(';')
             val hadSemicolon = semicolon != -1 && semicolon < value.length
             if (hadSemicolon && type.length > 2) {

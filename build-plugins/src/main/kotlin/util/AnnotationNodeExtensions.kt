@@ -284,14 +284,14 @@ class AnnotationNodeExtensions : AbstractMojo() {
         } else if (typeName == "long") {
             code = "(it as Number).toLong()"
         } else if (typeName == "Class") {
-            code = "it as Class<*>"
+            code = "Class.forName((it as org.objectweb.asm.Type).className)"
         } else if (type.isArray) {
             code = processArrayType(type)
         } else if (type.qualifiedName.startsWith("com.mongodb.client.model.")) {
             addImport(type.qualifiedName)
             code = "${type.simpleName}.valueOf((it as Array<String>)[1])"
         } else if (type.qualifiedName.startsWith("dev.morphia.mapping.")) {
-            code = "${type.qualifiedName}.valueOf(it as String)"
+            code = "${type.qualifiedName}.valueOf((it as Array<String>)[1])"
         } else if (type.qualifiedName.startsWith("dev.morphia.annotations.")) {
             code = "(it as AnnotationNode).to${type.simpleName}()"
         } else {

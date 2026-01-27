@@ -60,6 +60,7 @@ fun rawType(type: java.lang.reflect.Type) =
             val type1 = type.genericComponentType as ParameterizedType
             Type.getType("[" + Type.getType(type1.rawType as Class<*>).descriptor)
         }
+        is ParameterizedType -> Type.getType(type.rawType as Class<*>)
         else -> Type.getType(type as Class<*>)
     }.descriptor
 
@@ -79,6 +80,7 @@ fun load(creator: MethodCreator, type: java.lang.reflect.Type, `value`: Any): Re
 
     return when (type) {
         is Class<*> -> load(creator, type, value)
+        is ParameterizedType -> load(creator, type.rawType as Class<*>, value)
         is GenericArrayType -> {
             val genericComponentType = extractComponentType(type)
             val newArray = creator.newArray(genericComponentType, (value as List<Any>).size)
