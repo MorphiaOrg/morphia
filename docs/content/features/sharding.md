@@ -1,0 +1,73 @@
+---
+title: "Sharding"
+weight: 5
+description: "Defining and using sharded collections with Morphia"
+---
+
+## Sharding
+
+{{% notice note %}}
+Sharding suport is new in 2.3 and should be considered experimental.
+While all tests currently pass, the form and function of the sharding support might change as issues arise and any usability concerns are addressed.
+This is feature is safe to use just be aware that this API might change based on user feedback.
+{{% /notice %}}
+
+Much like the indexing support, Morphia provides a number of annotations to help in the definition and use of sharded collections.
+You don't need to use Morphia to shard your collections, but if your collection is sharded, you must also define that shard key on your entity in order for Morphia to properly generate certain operations.
+
+Documentation on how to choose a proper shard key can be found in the [manual](https://www.mongodb.com/docs/manual/sharding).
+
+### Shard Definition
+
+Sharding definitions are driven by the [@ShardKeys](/javadoc/dev/morphia/annotations/ShardKeys.html) annotation.
+This annotation takes two values: the shard keys themselves as defined by the [@ShardKey](/javadoc/dev/morphia/annotations/ShardKey.html) annotation and the options to apply when sharding the collection via the [@ShardOptions](/javadoc/dev/morphia/annotations/ShardOptions.html)
+annotation.
+
+An shard definition might look something like this.
+
+```java
+@Entity("profiles")
+@ShardKeys({@ShardKey(value = "name", type = HASHED)})
+private static class UserProfiles {
+    @Id
+    private ObjectId id;
+    private final String name;
+    private String nickName;
+    private LocalDateTime date;
+}
+```
+
+In this example, we have a single property used in the shard key.
+In this case, we're making use of
+[hashed sharding](https://www.mongodb.com/docs/manual/core/hashed-sharding).
+The other type of shard key supported by MongoDB is
+[ranged sharding](https://www.mongodb.com/docs/manual/core/ranged-sharding).
+You can define that kind of shard key just like the example above except instead of
+`HASHED`, you would use `RANGED`.
+Additionally, since the default type is `RANGED`, you can omit this value entirely and simplify your definitions to `@ShardKey("price")`, for example.
+
+{{% notice note %}}
+In the example above, you'll note that the property we've defined as part of the shard key is declared as final.
+It is recommended that you follow this practice to help prevent mutating your shard key values in memory.
+If you were to fetch an entity and update one or more of the shard key properties, mongodb would be unable to find the document in the database to update with the new state.
+If you find yourself needing to mutate one of those properties, consult the [manual](https://www.mongodb.com/docs/manual/core/sharding-change-shard-key-value/) first.
+{{% /notice %}}
+
+{{% notice note %}}
+Morphia does not currently support redefining the shard key definition entirely.
+{{% /notice %}}
+
+### Sharding Options
+
+`@ShardKeys` also has an `options` field which takes a [@ShardOptions](/javadoc/dev/morphia/annotations/ShardOptions.html).
+Using this annotation, you can configure the number of initial shards, [presplit the hashed zones](https://www.mongodb.com/docs/manual/core/hashed-sharding/#shard-an-empty-collection), or [enforce uniqueness](https://www.mongodb.com/docs/manual/core/sharding-shard-key/#unique-indexes) in your shard key.
+
+### How is it used?
+
+Once you have your sharding configured, you have the choice of manually sharding it via the mongo shell or having Morphia shard it for you.
+For the latter, there is a new method [shardCollections()](/javadoc/dev/morphia/Datastore.html#shardCollections()) that will do
+thisfor you. It should be noted here that if your collection is not empty, there are certain administrative tasks you must perform on the collection first that Morphia does *not* handle.
+You can find those details in the server documentation.
+
+Once your collection is sharded, Morphia uses the shard key definition to update certain operations (such as saves/upserts and find-and-modify among others) to include the relevant shard key information so that mongodb can quickly and efficiently find the documents in the database.
+This is done transparently for you so you needn't worry about doing such things manually.
