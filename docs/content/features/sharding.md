@@ -7,7 +7,7 @@ description: "Defining and using sharded collections with Morphia"
 ## Sharding
 
 {{% notice note %}}
-Sharding suport is new in 2.3 and should be considered experimental.
+Sharding support is new in 2.3 and should be considered experimental.
 While all tests currently pass, the form and function of the sharding support might change as issues arise and any usability concerns are addressed.
 This is feature is safe to use just be aware that this API might change based on user feedback.
 {{% /notice %}}
@@ -66,7 +66,7 @@ Using this annotation, you can configure the number of initial shards, [presplit
 
 Once you have your sharding configured, you have the choice of manually sharding it via the mongo shell or having Morphia shard it for you.
 For the latter, there is a new method [shardCollections()](/javadoc/dev/morphia/Datastore.html#shardCollections()) that will do
-thisfor you. It should be noted here that if your collection is not empty, there are certain administrative tasks you must perform on the collection first that Morphia does *not* handle.
+this for you. It should be noted here that if your collection is not empty, there are certain administrative tasks you must perform on the collection first that Morphia does *not* handle.
 You can find those details in the server documentation.
 
 Once your collection is sharded, Morphia uses the shard key definition to update certain operations (such as saves/upserts and find-and-modify among others) to include the relevant shard key information so that mongodb can quickly and efficiently find the documents in the database.

@@ -61,7 +61,7 @@ To change the name of the city in the address, one would use something like this
 datastore
     .find(Hotel.class)
     .update(UpdateOperators.set("address.city", "Ottawa"))
-    execute();
+    .execute();
 ```
 
 Values can also be removed from documents as shown below:
@@ -70,7 +70,7 @@ Values can also be removed from documents as shown below:
 datastore
     .find(Hotel.class)
     .update(UpdateOperators.unset("name"))
-    execute();
+    .execute();
 ```
 
 After this update, the name of the hotel would be `null` when the entity is loaded.
@@ -128,7 +128,7 @@ This can be changed by passing in a `ModifyOptions` reference to the operation:
 datastore
     .find(Hotel.class)
     .modify(UpdateOperators.set("address.city", "Ottawa"))
-    execute(new ModifyOptions()
+    .execute(new ModifyOptions()
         .returnDocument(ReturnDocument.AFTER));
 ```
 

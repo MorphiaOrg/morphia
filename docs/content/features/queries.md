@@ -90,7 +90,7 @@ It's also worth noting that this projection works with both the mapped document 
 `"first_name"` and the Java field name `"firstName"`.
 
 {{% notice warning %}}
-While projections can be a nice performance win in some cases, it's important to note that this object can not be safely saved back to MongoDB.Any fields in the existing document in the database that are missing from the entity will be removed if this entity is saved.
+While projections can be a nice performance win in some cases, it's important to note that this object can not be safely saved back to MongoDB. Any fields in the existing document in the database that are missing from the entity will be removed if this entity is saved.
 For example, in the example above if `found` is saved back to MongoDB, the `last_name` field that currently exists in the database for this entity will be removed.
 To save such instances back consider using
 [Datastore#merge(T)](/javadoc/dev/morphia/Datastore.html#merge(T))

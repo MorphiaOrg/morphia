@@ -17,7 +17,8 @@ Writing an aggregation pipeline starts just like writing a standard query.
 As with querying, we start with the `Datastore`:
 
 ```java
-include::example$TestDocsExamples.java[tag=basic]
+// Example aggregation code
+// See TestDocsExamples.java for full examples
 ```
 
 `aggregate()` takes a `Class` literal. This lets Morphia know which collection to perform this aggregation against. Because of the transformational operations available in the aggregation [pipeline](https://docs.mongodb.com/manual/core/aggregation-pipeline), Morphia can not validate as much as it can with querying so care will need to be taken to ensure document fields actually exist when referencing them in your pipeline.
@@ -60,7 +61,8 @@ Any existing data in the collection will be replaced by the output of the aggreg
 An example aggregation using the `$out` stage looks like this:
 
 ```java
-include::example$TestDocsExamples.java[tag=out]
+// Example using $out stage
+// See TestDocsExamples.java for full examples
 ```
 
 You'll note that `out()` is the final stage.  `$out` and `$merge` must be the final stage in our pipeline.  We pass a type to `out()`
@@ -77,7 +79,8 @@ overwrite any existing documents and replace them with the results of the pipeli
 Using `$merge` might look something like this:
 
 ```java
-include::example$TestDocsExamples.java[tag=merge]
+// Example using $merge stage
+// See TestDocsExamples.java for full examples
 ```
 
 Much like `out()` above, for `merge()` we pass in a collection information but here we are also passing in which database to find/create
@@ -94,8 +97,4 @@ supported operators.  To see an example of an operator in action, click through 
 
 If an operator is missing and you think it should be included, please file an [issue](https://github.com/MorphiaOrg/morphia/issues) for that operator.
 
-.Stages
-include::aggregation-stages.adoc[]
-
-.Expressions
-include::aggregation-expressions.adoc[]
+For detailed information on stages and expressions, see the MongoDB [Aggregation Pipeline Operators documentation](https://docs.mongodb.com/manual/reference/operator/aggregation/).
