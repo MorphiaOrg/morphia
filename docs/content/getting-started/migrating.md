@@ -25,4 +25,4 @@ In preparation for 3.0, deprecations will be incrementally made in the 2.5.x lin
 
 Morphia 2.4 introduces file-based configuration instead of the programmatic configuration currently in use. The file should live in your build's resources folder and be named `META-INF/morphia-config.properties`. More information can be found in the [configuration section](/features/configuration/).
 
-`MorphiaConfig` is the programmatic option that replaces the `MapperOptions` class. This class is a builder for the configuration and works the same way as the `MapperOptions.Builder` class. This class is immutable which allows for safe sharing between `Datastore` instances should you need to do so.
+`MorphiaConfig` is the programmatic option that replaces the `MapperOptions` class. This class is a builder for the configuration and works the same way as the `MapperOptions.Builder` class.
