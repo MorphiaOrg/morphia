@@ -62,10 +62,10 @@ private constructor(
         this.method = method
         propertyName = method.name.methodCase()
         propertyType = getReturnType(method.desc)
-        typeArguments = Type.getArgumentTypes(method.signature)
+        typeArguments = method.signature?.let { Type.getArgumentTypes(it) } ?: arrayOf()
         generatedType = "${baseName}.${propertyName.titleCase()}Model"
         accessorType = "${baseName}.${propertyName.titleCase()}Accessor"
-        annotations = method.visibleAnnotations
+        annotations = method.visibleAnnotations ?: emptyList()
     }
 
     private var typeArguments: Array<Type> = arrayOf()
@@ -85,7 +85,17 @@ private constructor(
     val typeData by lazy {
         val input =
             field?.let<FieldNode, String> { it.signature ?: it.desc }
-                ?: method!!.let<MethodNode, String> { it.signature ?: it.desc }
+                ?: method!!.let<MethodNode, String> {
+                    // For methods, extract return type from signature or desc
+                    val sig = it.signature
+                    if (sig != null) {
+                        // Extract return type from generic signature (after the last ')')
+                        sig.substringAfterLast(')')
+                    } else {
+                        // Use the return type descriptor
+                        getReturnType(it.desc).descriptor
+                    }
+                }
         typeData(input, entity.classLoader)[0]
     }
     val model by lazy { creator.getFieldCreator("entityModel", EntityModel::class.java) }

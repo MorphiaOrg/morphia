@@ -37,6 +37,7 @@ object Generators {
         classLoader: ClassLoader = Thread.currentThread().contextClassLoader
     ): Class<*> =
         when (this) {
+            Type.VOID_TYPE -> Void.TYPE
             Type.BOOLEAN_TYPE -> Boolean::class.java
             Type.CHAR_TYPE -> Char::class.java
             Type.BYTE_TYPE -> Byte::class.java

@@ -3,6 +3,7 @@ package dev.morphia.critter.parser
 import dev.morphia.critter.CritterClassLoader
 import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator.accessor
 import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator.fieldAccessors
+import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator.methodAccessors
 import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator.propertyModelGenerator
 import dev.morphia.critter.parser.gizmo.PropertyModelGenerator
 import dev.morphia.critter.parser.java.CritterParser
@@ -26,7 +27,11 @@ class PropertyFinder(mapper: Mapper, val classLoader: CritterClassLoader) {
                 models += propertyModelGenerator(entityType, classLoader, field)
             }
         } else {
-            TODO()
+            classLoader.register(entityType.name, methodAccessors(entityType, methods))
+            methods.forEach { method ->
+                accessor(entityType, classLoader, method)
+                models += propertyModelGenerator(entityType, classLoader, method)
+            }
         }
 
         return models

@@ -1,5 +1,6 @@
 package dev.morphia.critter.parser.gizmo
 
+import dev.morphia.critter.parser.methodCase
 import dev.morphia.critter.titleCase
 import io.quarkus.gizmo.MethodDescriptor.ofConstructor
 import io.quarkus.gizmo.MethodDescriptor.ofMethod
@@ -27,8 +28,8 @@ class PropertyAccessorGenerator : BaseGizmoGenerator {
         critterClassLoader: dev.morphia.critter.CritterClassLoader,
         method: MethodNode,
     ) : super(entity, critterClassLoader) {
-        propertyName = method.name
-        propertyType = getReturnType(method.signature).className
+        propertyName = method.name.methodCase()
+        propertyType = getReturnType(method.desc).className
         generatedType = "${baseName}.${propertyName.titleCase()}Accessor"
     }
 
