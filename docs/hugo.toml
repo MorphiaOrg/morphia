@@ -1,0 +1,42 @@
+baseURL = "https://morphia.dev/"
+languageCode = "en-us"
+title = "Morphia Documentation"
+theme = "morphia-docs"
+
+# Version for this branch
+[params]
+  version = "3.0.0-SNAPSHOT"
+  srcRef = "https://github.com/MorphiaOrg/morphia/blob/master"
+  docsRef = "http://docs.mongodb.org/manual"
+  description = "Morphia - The MongoDB Object Document Mapper for Java"
+  github_repo = "https://github.com/MorphiaOrg/morphia"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    style = "monokai"
+    lineNos = false
+
+[menu]
+  [[menu.main]]
+    identifier = "getting-started"
+    name = "Getting Started"
+    url = "/getting-started/"
+    weight = 1
+  [[menu.main]]
+    identifier = "features"
+    name = "Features"
+    url = "/features/"
+    weight = 2
+  [[menu.main]]
+    identifier = "support"
+    name = "Support"
+    url = "/support/"
+    weight = 3
+  [[menu.main]]
+    identifier = "javadoc"
+    name = "Javadoc"
+    url = "/javadoc/"
+    weight = 4
