@@ -17,33 +17,5 @@
         <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
     </properties>
 
-    <build>
-        <defaultGoal>generate-sources</defaultGoal>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.4.0</version>
-                <executions>
-                    <execution>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${basedir}/modules/ROOT/examples</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${basedir}/../core/src/test/java/dev/morphia/test/aggregation</directory>
-                                    <includes>
-                                        <include>TestDocsExamples.java</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+    <!-- Hugo-based documentation - build using 'make build' or 'make serve' -->
 </project>
