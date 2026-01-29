@@ -1,7 +1,6 @@
 baseURL = "https://morphia.dev/"
 languageCode = "en-us"
 title = "Morphia Documentation"
-theme = "morphia-docs"
 
 # Version for this branch
 [params]

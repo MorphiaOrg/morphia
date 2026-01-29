@@ -1,0 +1,23 @@
+{{ define "main" }}
+<article class="single-page">
+    <header>
+        <h1>{{ .Title }}</h1>
+        {{ if .Description }}
+        <p class="description">{{ .Description }}</p>
+        {{ end }}
+    </header>
+    <div class="page-content">
+        {{ .Content }}
+    </div>
+    {{ if or .PrevInSection .NextInSection }}
+    <nav class="page-navigation">
+        {{ if .PrevInSection }}
+        <a href="{{ .PrevInSection.RelPermalink }}" class="prev">← {{ .PrevInSection.Title }}</a>
+        {{ end }}
+        {{ if .NextInSection }}
+        <a href="{{ .NextInSection.RelPermalink }}" class="next">{{ .NextInSection.Title }} →</a>
+        {{ end }}
+    </nav>
+    {{ end }}
+</article>
+{{ end }}

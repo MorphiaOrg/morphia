@@ -1,0 +1,40 @@
+---
+title: "References"
+weight: 11
+description: "Learn how to use MongoDB database references in Morphia with @Reference annotation or MorphiaReference wrapper type"
+---
+
+## References
+
+MongoDB tries to encourage self-contained documents so that data can be fetched much more efficiently via single reads from the database.
+However not every data model or application can adhere to this philosophy in its entirety.
+As such, MongoDB supports [database references](https://www.mongodb.com/docs/manual/reference/database-references/). Morphia supports two styles of defining references:
+
+1. the [@Reference](/javadoc/dev/morphia/annotations/Reference.html) annotation
+2. an experimental wrapper type [MorphiaReference](/javadoc/dev/morphia/mapping/experimental/MorphiaReference.html).
+
+### Using the annotation
+
+The annotation based approach is the traditional approach.
+The [@Reference](/javadoc/dev/morphia/annotations/Reference.html) can be applied to any property whose type is a mappable Entity type.
+When this is done, instead of storing that objects information as a subdocument in the larger document sent to the database, a reference will be stored instead which points to where the document is actually stored.
+The referenced types are stored according to the mapping information configured by their
+[@Entity](/javadoc/dev/morphia/annotations/Entity.html) annotations.
+
+{{% notice note %}}
+It can be helpful to think of references as a foreign key like you would find in a relational database.
+It's important to note, however, that MongoDB does not enforce any notion of referential integrity with these keys.
+Those remote documents may or may not actually exist and you will have to tailor your application (and configure Morphia as we'll see in a moment) to deal with those missing documents.
+{{% /notice %}}
+
+The annotation provides a number of options to help tailor Morphia's behavior to your liking.
+
+1. `idOnly` -- _defaults to false_ When `true`, only the value of the ID field is stored in the enclosing documents.
+If the referenced entity type has no subclasses, setting this can help save disk space and network traffic.
+If there *are* subtypes, this setting may be overridden automatically so that type information can properly stored.
+2. `ignoreMissing` _defaults to false_ When `true`, references that can not be loaded are simply ignored.
+Otherwise an exception is thrown whenever the reference load is attempted.
+3. `lazy` _defaults to false_ When `true` the referenced entity will not be fetched until the property is explicitly referenced.
+Otherwise the referenced entity (or entities) are loaded as part of the query load cycle of the enclosing entity.
+
+A `String` may be passed to the annotation to define the document field name to be stored in the database.

@@ -1,0 +1,28 @@
+<aside class="sidebar">
+    <nav class="sidebar-nav">
+        {{ $currentPage := . }}
+        {{ range .Site.Menus.main }}
+        <div class="nav-section">
+            <h3>
+                <a href="{{ .URL }}" {{ if or ($.IsMenuCurrent "main" .) ($.HasMenuCurrent "main" .) }}class="active"{{ end }}>
+                    {{ .Name }}
+                </a>
+            </h3>
+            {{ if or ($.IsMenuCurrent "main" .) ($.HasMenuCurrent "main" .) }}
+            {{ $section := $.Site.GetPage .URL }}
+            {{ if $section }}
+            <ul>
+                {{ range $section.Pages }}
+                <li>
+                    <a href="{{ .RelPermalink }}" {{ if eq $currentPage.RelPermalink .RelPermalink }}class="active"{{ end }}>
+                        {{ .Title }}
+                    </a>
+                </li>
+                {{ end }}
+            </ul>
+            {{ end }}
+            {{ end }}
+        </div>
+        {{ end }}
+    </nav>
+</aside>

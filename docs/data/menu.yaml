@@ -1,0 +1,51 @@
+main:
+  - name: "Getting Started"
+    url: "/getting-started/"
+    weight: 1
+    items:
+      - name: "Quick Tour"
+        url: "/getting-started/quicktour/"
+      - name: "Migrating"
+        url: "/getting-started/migrating/"
+  
+  - name: "Features"
+    url: "/features/"
+    weight: 2
+    items:
+      - name: "Configuration"
+        url: "/features/configuration/"
+      - name: "Kotlin"
+        url: "/features/kotlin/"
+      - name: "Mapping"
+        url: "/features/mapping/"
+      - name: "Indexing"
+        url: "/features/indexing/"
+      - name: "Sharding"
+        url: "/features/sharding/"
+      - name: "Querying"
+        url: "/features/queries/"
+      - name: "Updating"
+        url: "/features/updates/"
+      - name: "Deleting"
+        url: "/features/deletes/"
+      - name: "Aggregation"
+        url: "/features/aggregations/"
+      - name: "Text Search"
+        url: "/features/text-search/"
+      - name: "References"
+        url: "/features/references/"
+      - name: "Transactions"
+        url: "/features/transactions/"
+      - name: "Life Cycle Methods"
+        url: "/features/lifecycle-methods/"
+      - name: "Schema Validation"
+        url: "/features/schema-validation/"
+  
+  - name: "Support"
+    url: "/support/"
+    weight: 3
+  
+  - name: "Javadoc"
+    url: "/javadoc/"
+    weight: 4
+    external: true
