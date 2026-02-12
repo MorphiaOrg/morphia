@@ -635,6 +635,8 @@ public interface Datastore {
     @MorphiaInternal
     Mapper getMapper();
 
+    ClassLoader getClassLoader();
+
     /**
      * @param transaction the transaction wrapper
      * @param <T>         the return type

@@ -18,6 +18,12 @@ import static dev.morphia.mapping.NamingStrategy.snakeCase;
  */
 @MorphiaInternal
 public class NamingStrategyConverter implements Converter<NamingStrategy> {
+    private final MorphiaConfig morphiaConfig;
+
+    public NamingStrategyConverter(MorphiaConfig morphiaConfig) {
+        this.morphiaConfig = morphiaConfig;
+    }
+
     @Override
     public NamingStrategy convert(String value) throws IllegalArgumentException, NullPointerException {
         try {
@@ -33,7 +39,7 @@ public class NamingStrategyConverter implements Converter<NamingStrategy> {
                 case "snakeCase":
                     return snakeCase();
                 default:
-                    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+                    ClassLoader classLoader = morphiaConfig.classLoader();
                     return (NamingStrategy) Class.forName(value, true, classLoader).getDeclaredConstructor().newInstance();
             }
         } catch (ReflectiveOperationException e) {

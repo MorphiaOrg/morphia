@@ -50,6 +50,7 @@ public class MapperOptions {
     private final QueryFactory queryFactory;
     private final boolean enablePolymorphicQueries;
     private final CodecProvider codecProvider;
+    private final ClassLoader classLoader;
 
     private MapperOptions(Builder builder) {
         autoImportModels = builder.autoImportModels;
@@ -70,6 +71,7 @@ public class MapperOptions {
         storeEmpties = builder.storeEmpties();
         storeNulls = builder.storeNulls();
         uuidRepresentation = builder.uuidRepresentation();
+        classLoader = builder.getClassLoader();
     }
 
     /**
@@ -101,6 +103,10 @@ public class MapperOptions {
                 .collectionNaming(NamingStrategy.identity())
                 .propertyNaming(NamingStrategy.identity())
                 .queryFactory(new LegacyQueryFactory());
+    }
+
+    public ClassLoader getClassLoader() {
+        return classLoader;
     }
 
     /**
@@ -239,9 +245,9 @@ public class MapperOptions {
     }
 
     /**
+     * @return
      * @since 2.4
      * @deprecated 3.0 will evaluate both field and getter/setters for annotation so this setting becomes vestigial
-     * @return
      */
     @Deprecated(since = "2.4", forRemoval = true)
     public PropertyDiscovery propertyDiscovery() {
@@ -270,7 +276,7 @@ public class MapperOptions {
 
     /**
      * A builder class for setting mapping options
-     * 
+     *
      * @deprecated use the new configuration file mechanism. See the
      *             <a href="https://morphia.dev/morphia/2.4/migrating.html#_migrating_to_2_4">website docs</a> for more information.
      */
@@ -296,6 +302,7 @@ public class MapperOptions {
         private QueryFactory queryFactory = new DefaultQueryFactory();
         private PropertyDiscovery propertyDiscovery = FIELDS;
         private MapperOptions options;
+        private ClassLoader classLoader;
 
         private Builder() {
         }
@@ -318,6 +325,7 @@ public class MapperOptions {
             uuidRepresentation = original.uuidRepresentation;
             queryFactory = original.queryFactory;
             propertyDiscovery = original.propertyDiscovery;
+            classLoader = original.classLoader;
         }
 
         /**
@@ -374,6 +382,7 @@ public class MapperOptions {
          */
         @SuppressFBWarnings("EI_EXPOSE_REP2")
         public Builder classLoader(ClassLoader classLoader) {
+            this.classLoader = classLoader;
             return this;
         }
 
@@ -513,9 +522,9 @@ public class MapperOptions {
          * Determines how properties are discovered on mapped entities
          *
          * @param discovery the discovery strategy to use
-         * @deprecated 3.0 will evaluate both field and getter/setters for annotation so this setting becomes vestigial
          * @return this
          * @since 2.2
+         * @deprecated 3.0 will evaluate both field and getter/setters for annotation so this setting becomes vestigial
          */
         @Deprecated(since = "2.4", forRemoval = true)
         public Builder propertyDiscovery(PropertyDiscovery discovery) {
@@ -600,6 +609,10 @@ public class MapperOptions {
             if (options != null) {
                 throw new MappingException(Sofia.mapperOptionsLocked());
             }
+        }
+
+        public ClassLoader getClassLoader() {
+            return classLoader;
         }
 
         private DateStorage dateStorage() {

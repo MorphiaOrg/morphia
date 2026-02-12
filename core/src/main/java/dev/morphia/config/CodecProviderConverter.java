@@ -10,6 +10,10 @@ import org.bson.codecs.configuration.CodecProvider;
  */
 @MorphiaInternal
 public class CodecProviderConverter extends ClassNameConverter<CodecProvider> {
+    public CodecProviderConverter(MorphiaConfig morphiaConfig) {
+        super(morphiaConfig);
+    }
+
     @Override
     public CodecProvider convert(String value) throws IllegalArgumentException, NullPointerException {
         return (CodecProvider) super.convert(value);

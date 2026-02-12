@@ -11,17 +11,23 @@ import org.eclipse.microprofile.config.spi.Converter;
  */
 @MorphiaInternal
 public class ClassNameConverter<T> implements Converter<Object> {
+    private final MorphiaConfig morphiaConfig;
+
+    public ClassNameConverter(MorphiaConfig morphiaConfig) {
+        this.morphiaConfig = morphiaConfig;
+    }
+
     @Override
     public Object convert(String value) throws IllegalArgumentException, NullPointerException {
         return loadClass(value);
     }
 
-    static Object loadClass(String value) {
+    Object loadClass(String value) {
         if (value == null || value.trim().equals("")) {
             return null;
         }
         try {
-            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            ClassLoader classLoader = morphiaConfig.classLoader();
             return Class.forName(value, true, classLoader).getDeclaredConstructor().newInstance();
         } catch (ReflectiveOperationException e) {
             throw new MappingException(e.getMessage(), e);

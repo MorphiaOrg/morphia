@@ -99,6 +99,7 @@ public final class Conversions {
         register(Class.class, String.class, Class::getName);
         register(String.class, Class.class, className -> {
             try {
+                // FIXME still old classloader!
                 return Thread.currentThread().getContextClassLoader().loadClass(className);
             } catch (ClassNotFoundException e) {
                 throw new MappingException(e.getMessage(), e);

@@ -89,7 +89,7 @@ public class Mapper {
     @MorphiaInternal
     public Mapper(MorphiaConfig config) {
         this.config = config;
-        discriminatorLookup = new DiscriminatorLookup();
+        discriminatorLookup = new DiscriminatorLookup(this);
     }
 
     /**
@@ -99,9 +99,13 @@ public class Mapper {
      */
     public Mapper(Mapper other) {
         config = other.config;
-        discriminatorLookup = new DiscriminatorLookup();
+        discriminatorLookup = new DiscriminatorLookup(this);
         other.mappedEntities.values().forEach(entity -> clone(entity));
         listeners.addAll(other.listeners);
+    }
+
+    public ClassLoader getClassLoader() {
+        return config.classLoader();
     }
 
     @Nullable
@@ -618,7 +622,7 @@ public class Mapper {
         try (ScanResult scanResult = classGraph.scan()) {
             for (ClassInfo classInfo : scanResult.getAllClasses()) {
                 try {
-                    classes.add(Class.forName(classInfo.getName(), true, Thread.currentThread().getContextClassLoader()));
+                    classes.add(Class.forName(classInfo.getName(), true, getClassLoader()));
                 } catch (Throwable ignored) {
                 }
             }

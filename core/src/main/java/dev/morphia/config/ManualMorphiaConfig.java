@@ -48,6 +48,7 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     Boolean storeEmpties;
     Boolean storeNulls;
     UuidRepresentation uuidRepresentation;
+    ClassLoader classLoader;
 
     /**
      * @hidden
@@ -78,6 +79,7 @@ public class ManualMorphiaConfig implements MorphiaConfig {
         storeEmpties = base.storeEmpties();
         storeNulls = base.storeNulls();
         uuidRepresentation = base.uuidRepresentation();
+        classLoader = base.classLoader();
     }
 
     /**
@@ -98,6 +100,11 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     @Override
     public Boolean applyCaps() {
         return orDefault(applyCaps, FALSE);
+    }
+
+    @Override
+    public ClassLoader classLoader() {
+        return orDefault(classLoader, Thread.currentThread().getContextClassLoader());
     }
 
     public Boolean applyDocumentValidations() {
