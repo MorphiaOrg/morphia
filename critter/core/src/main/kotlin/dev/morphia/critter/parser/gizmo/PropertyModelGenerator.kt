@@ -7,6 +7,7 @@ import dev.morphia.annotations.internal.AnnotationNodeExtensions.toMorphiaAnnota
 import dev.morphia.config.MorphiaConfig
 import dev.morphia.critter.conventions.PropertyConvention
 import dev.morphia.critter.parser.Generators.isArray
+import dev.morphia.critter.parser.getterToPropertyName
 import dev.morphia.critter.parser.methodCase
 import dev.morphia.critter.titleCase
 import dev.morphia.mapping.codec.pojo.EntityModel
@@ -60,7 +61,7 @@ private constructor(
         method: MethodNode,
     ) : this(config, entity, critterClassLoader) {
         this.method = method
-        propertyName = method.name.methodCase()
+        propertyName = method.getterToPropertyName(entity)
         propertyType = getReturnType(method.desc)
         typeArguments = method.signature?.let { Type.getArgumentTypes(it) } ?: arrayOf()
         generatedType = "${baseName}.${propertyName.titleCase()}Model"

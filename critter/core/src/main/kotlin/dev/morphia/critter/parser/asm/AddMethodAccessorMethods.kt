@@ -1,20 +1,24 @@
 package dev.morphia.critter.parser.asm
 
-import dev.morphia.critter.parser.methodCase
+import dev.morphia.critter.parser.getterToPropertyName
 import dev.morphia.critter.titleCase
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes.ACC_PUBLIC
 import org.objectweb.asm.Opcodes.ACC_SYNTHETIC
 import org.objectweb.asm.Opcodes.ALOAD
+import org.objectweb.asm.Opcodes.ATHROW
+import org.objectweb.asm.Opcodes.DUP
 import org.objectweb.asm.Opcodes.ILOAD
+import org.objectweb.asm.Opcodes.INVOKESPECIAL
 import org.objectweb.asm.Opcodes.INVOKEVIRTUAL
 import org.objectweb.asm.Opcodes.IRETURN
+import org.objectweb.asm.Opcodes.NEW
 import org.objectweb.asm.Opcodes.RETURN
 import org.objectweb.asm.Type
 import org.objectweb.asm.tree.MethodNode
 
-class AddMethodAccessorMethods(entity: Class<*>, var methods: List<MethodNode>) :
+class AddMethodAccessorMethods(private val entity: Class<*>, var methods: List<MethodNode>) :
     BaseGenerator(entity) {
 
     init {
@@ -27,7 +31,7 @@ class AddMethodAccessorMethods(entity: Class<*>, var methods: List<MethodNode>) 
 
     override fun emit(): ByteArray {
         methods.forEach { method ->
-            val propertyName = method.name.methodCase()
+            val propertyName = method.getterToPropertyName(entity)
             val returnType = Type.getReturnType(method.desc)
             reader(propertyName, returnType, method.name)
             writer(propertyName, returnType)
@@ -38,8 +42,8 @@ class AddMethodAccessorMethods(entity: Class<*>, var methods: List<MethodNode>) 
     }
 
     private fun writer(propertyName: String, propertyType: Type) {
-        // Find the setter method name (setXxx)
         val setterName = "set${propertyName.titleCase()}"
+        val hasSetter = entity.methods.any { m -> m.name == setterName && m.parameterCount == 1 }
 
         val mv =
             classWriter.visitMethod(
@@ -53,23 +57,45 @@ class AddMethodAccessorMethods(entity: Class<*>, var methods: List<MethodNode>) 
         val label0 = Label()
         mv.visitLabel(label0)
         mv.visitLineNumber(18, label0)
-        mv.visitVarInsn(ALOAD, 0)
-        mv.visitVarInsn(propertyType.getOpcode(ILOAD), 1)
-        mv.visitMethodInsn(
-            INVOKEVIRTUAL,
-            entityType.internalName,
-            setterName,
-            "(${propertyType.descriptor})V",
-            false,
-        )
-        val label1 = Label()
-        mv.visitLabel(label1)
-        mv.visitLineNumber(19, label1)
-        mv.visitInsn(RETURN)
-        val label2 = Label()
-        mv.visitLabel(label2)
-        mv.visitLocalVariable("this", entityType.descriptor, null, label0, label2, 0)
-        mv.visitLocalVariable("value", propertyType.descriptor, null, label0, label2, 1)
+
+        if (hasSetter) {
+            // Call the setter method
+            mv.visitVarInsn(ALOAD, 0)
+            mv.visitVarInsn(propertyType.getOpcode(ILOAD), 1)
+            mv.visitMethodInsn(
+                INVOKEVIRTUAL,
+                entityType.internalName,
+                setterName,
+                "(${propertyType.descriptor})V",
+                false,
+            )
+            val label1 = Label()
+            mv.visitLabel(label1)
+            mv.visitLineNumber(19, label1)
+            mv.visitInsn(RETURN)
+            val label2 = Label()
+            mv.visitLabel(label2)
+            mv.visitLocalVariable("this", entityType.descriptor, null, label0, label2, 0)
+            mv.visitLocalVariable("value", propertyType.descriptor, null, label0, label2, 1)
+        } else {
+            // Throw UnsupportedOperationException for read-only properties
+            mv.visitTypeInsn(NEW, "java/lang/UnsupportedOperationException")
+            mv.visitInsn(DUP)
+            mv.visitLdcInsn("Property '$propertyName' is read-only")
+            mv.visitMethodInsn(
+                INVOKESPECIAL,
+                "java/lang/UnsupportedOperationException",
+                "<init>",
+                "(Ljava/lang/String;)V",
+                false,
+            )
+            mv.visitInsn(ATHROW)
+            val label1 = Label()
+            mv.visitLabel(label1)
+            mv.visitLocalVariable("this", entityType.descriptor, null, label0, label1, 0)
+            mv.visitLocalVariable("value", propertyType.descriptor, null, label0, label1, 1)
+        }
+
         mv.visitMaxs(2, 2)
         mv.visitEnd()
     }

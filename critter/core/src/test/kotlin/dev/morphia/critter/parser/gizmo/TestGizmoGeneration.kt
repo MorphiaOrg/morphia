@@ -16,6 +16,7 @@ import dev.morphia.critter.CritterClassLoader
 import dev.morphia.critter.parser.Generators.mapper
 import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator as generator
 import dev.morphia.critter.sources.Example
+import dev.morphia.critter.sources.MethodExample
 import dev.morphia.mapping.codec.pojo.EntityModel
 import dev.morphia.mapping.codec.pojo.PropertyModel
 import dev.morphia.mapping.codec.pojo.TypeData
@@ -313,5 +314,89 @@ class TestGizmoGeneration {
                 .newInstance("This is my name")
 
         assertNotNull(instance)
+    }
+
+    @Test
+    fun testMethodBasedAccessors() {
+        val classLoader = CritterClassLoader()
+
+        // Convert to ASM MethodNodes
+        val resourceName = MethodExample::class.java.name.replace('.', '/') + ".class"
+        val inputStream = MethodExample::class.java.classLoader.getResourceAsStream(resourceName)
+        val classNode = org.objectweb.asm.tree.ClassNode()
+        org.objectweb.asm.ClassReader(inputStream).accept(classNode, 0)
+
+        val methodNodes =
+            classNode.methods.filter { node ->
+                node.name.startsWith("get") &&
+                    Type.getArgumentTypes(node.desc).isEmpty() &&
+                    node.visibleAnnotations?.any {
+                        it.desc in
+                            listOf(
+                                "Ldev/morphia/annotations/Id;",
+                                "Ldev/morphia/annotations/Property;",
+                            )
+                    } == true
+            }
+
+        // Ensure we found the expected methods
+        val methodNames = methodNodes.map { it.name }
+        assertTrue(methodNames.contains("getId"), "Should find getId method")
+        assertTrue(methodNames.contains("getCount"), "Should find getCount method")
+        assertTrue(methodNames.contains("getScore"), "Should find getScore method")
+        assertTrue(methodNames.contains("getComputedValue"), "Should find getComputedValue method")
+        assertEquals(4, methodNodes.size, "Should find exactly 4 annotated getter methods")
+
+        // Generate the accessor methods
+        val bytecode =
+            dev.morphia.critter.parser.asm
+                .AddMethodAccessorMethods(MethodExample::class.java, methodNodes)
+                .emit()
+
+        // Register and load the modified class
+        classLoader.register(MethodExample::class.java.name, bytecode)
+        val modifiedClass = classLoader.loadClass(MethodExample::class.java.name)
+
+        // Verify __read methods exist for all properties
+        assertNotNull(modifiedClass.getMethod("__readId"), "Should have __readId method")
+        assertNotNull(modifiedClass.getMethod("__readCount"), "Should have __readCount method")
+        assertNotNull(modifiedClass.getMethod("__readScore"), "Should have __readScore method")
+        assertNotNull(
+            modifiedClass.getMethod("__readComputedValue"),
+            "Should have __readComputedValue method",
+        )
+
+        // Verify __write methods exist for properties with setters
+        assertNotNull(
+            modifiedClass.getMethod("__writeId", org.bson.types.ObjectId::class.java),
+            "Should have __writeId method",
+        )
+        assertNotNull(
+            modifiedClass.getMethod("__writeCount", Long::class.javaPrimitiveType),
+            "Should have __writeCount method",
+        )
+        assertNotNull(
+            modifiedClass.getMethod("__writeScore", Double::class.javaPrimitiveType),
+            "Should have __writeScore method",
+        )
+
+        // Create an instance and test the read-only property throws exception
+        val instance = modifiedClass.getConstructor().newInstance()
+        val writeComputedMethod =
+            modifiedClass.getMethod("__writeComputedValue", String::class.java)
+
+        try {
+            writeComputedMethod.invoke(instance, "test value")
+            fail("Should throw UnsupportedOperationException for read-only property")
+        } catch (e: java.lang.reflect.InvocationTargetException) {
+            assertTrue(
+                e.cause is UnsupportedOperationException,
+                "Should throw UnsupportedOperationException, got: ${e.cause}",
+            )
+            assertTrue(
+                e.cause?.message?.contains("read-only") == true,
+                "Exception message should mention read-only",
+            )
+        }
     }
 }
