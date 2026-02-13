@@ -46,6 +46,7 @@ class GizmoEntityModelGenerator(
             collectionName()
             discriminator()
             discriminatorKey()
+            hasLifecycle()
             isAbstract()
             isInterface()
             useDiscriminator()
@@ -63,6 +64,13 @@ class GizmoEntityModelGenerator(
     private fun isInterface() {
         creator.getMethodCreator("isInterface", "boolean").use {
             it.returnValue(it.load(entity.isInterface))
+        }
+    }
+
+    private fun hasLifecycle() {
+        creator.getMethodCreator("hasLifecycle", "boolean", Class::class.java).use {
+            it.setParameterNames(arrayOf("type"))
+            it.returnValue(it.load(false))
         }
     }
 

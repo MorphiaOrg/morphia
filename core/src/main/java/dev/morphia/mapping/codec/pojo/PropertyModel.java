@@ -278,7 +278,7 @@ public class PropertyModel {
         if (target instanceof MorphiaProxy) {
             target = ((MorphiaProxy) instance).unwrap();
         }
-        return accessor.get(target);
+        return getAccessor().get(target);
     }
 
     /**
@@ -383,7 +383,7 @@ public class PropertyModel {
      * @param value    the value to set
      */
     public void setValue(Object instance, @Nullable Object value) {
-        accessor.set(instance, Conversions.convert(value, getType()));
+        getAccessor().set(instance, Conversions.convert(value, getType()));
     }
 
     /**
@@ -393,7 +393,7 @@ public class PropertyModel {
      * @return true if the given value should be serialized
      */
     public final boolean shouldSerialize(@Nullable Object value) {
-        return serialization.shouldSerialize(value);
+        return serialization == null || serialization.shouldSerialize(value);
     }
 
     public PropertyModel serialization(PropertySerialization serialization) {
@@ -411,14 +411,14 @@ public class PropertyModel {
             } catch (ReflectiveOperationException e) {
                 throw new MappingException(e.getMessage(), e);
             }
-        } else if (typeData.getTypeParameters().isEmpty()) {
+        } else if (getTypeData().getTypeParameters().isEmpty()) {
             codec = (Codec<? super Object>) ((MorphiaDatastore) datastore).getCodecRegistry().get(getType());
         }
     }
 
     @Nullable
     private Handler getHandler() {
-        Handler handler = typeData.getType().getAnnotation(Handler.class);
+        Handler handler = getTypeData().getType().getAnnotation(Handler.class);
 
         if (handler == null) {
             handler = (Handler) annotationMap.values()

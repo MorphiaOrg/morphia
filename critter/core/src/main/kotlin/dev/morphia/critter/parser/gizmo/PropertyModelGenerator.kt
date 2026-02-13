@@ -100,6 +100,7 @@ private constructor(
         typeData(input, entity.classLoader)[0]
     }
     val model by lazy { creator.getFieldCreator("entityModel", EntityModel::class.java) }
+    val accessorField by lazy { creator.getFieldCreator("accessor", accessorType) }
 
     fun emit(): PropertyModelGenerator {
         builder.superClass(CritterPropertyModel::class.java)
@@ -236,14 +237,21 @@ private constructor(
     }
 
     private fun getLoadNames() {
-        creator.getMethodCreator("getLoadNames", Array<String>::class.java).use { methodCreator ->
+        creator.getMethodCreator("getLoadNames", List::class.java).use { methodCreator ->
             val alsoLoad: AlsoLoad? = annotationMap[AlsoLoad::class.java.name] as AlsoLoad?
             val size = alsoLoad?.value?.size ?: 0
-            val names = methodCreator.newArray(String::class.java, size)
+            val names = methodCreator.newArray(Object::class.java, size)
             alsoLoad?.value?.forEachIndexed { index, it ->
                 methodCreator.writeArrayValue(names, index, methodCreator.load(it))
             }
-            methodCreator.returnValue(names)
+            val asList =
+                ofMethod(
+                    java.util.Arrays::class.java,
+                    "asList",
+                    List::class.java,
+                    Array<Object>::class.java,
+                )
+            methodCreator.returnValue(methodCreator.invokeStaticMethod(asList, names))
         }
     }
 
@@ -285,6 +293,13 @@ private constructor(
                 constructor.`this`,
                 constructor.getMethodParam(0),
             )
+            val accessorInstance =
+                constructor.newInstance(MethodDescriptor.ofConstructor(accessorType))
+            constructor.writeInstanceField(
+                accessorField.fieldDescriptor,
+                constructor.`this`,
+                accessorInstance,
+            )
             registerAnnotations(constructor)
             constructor.returnVoid()
         }
@@ -308,13 +323,12 @@ private constructor(
     }
 
     private fun getAccessor() {
-        val field = creator.getFieldCreator("accessor", accessorType)
         val method =
             creator.getMethodCreator(
                 ofMethod(creator.className, "getAccessor", PropertyAccessor::class.java.name)
             )
 
-        method.returnValue(method.readInstanceField(field.fieldDescriptor, method.`this`))
+        method.returnValue(method.readInstanceField(accessorField.fieldDescriptor, method.`this`))
 
         method.close()
     }
@@ -345,6 +359,16 @@ fun typeData(
     var value = input
 
     while (value.isNotEmpty()) {
+        // Strip wildcard bound prefixes (+ = extends, - = super, * = unbounded)
+        if (value.startsWith("+") || value.startsWith("-")) {
+            value = value.substring(1)
+            continue
+        }
+        if (value.startsWith("*")) {
+            value = value.substring(1)
+            types += Type.getType(Object::class.java).typeData(classLoader)
+            continue
+        }
         val bracket = value.indexOf('<')
         val semicolon = value.indexOf(';')
         // Handle type parameters (e.g., TT; for type param T) - use Object as erasure

@@ -73,7 +73,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.basedir}/src/test/java</outputDirectory>
+                            <outputDirectory>${project.basedir}/src/core-test/java</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${maven.multiModuleProjectDirectory}/core/src/test/java</directory>
@@ -89,11 +89,44 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.basedir}/src/test/resources</outputDirectory>
+                            <outputDirectory>${project.basedir}/src/core-test/resources</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${maven.multiModuleProjectDirectory}/core/src/test/resources</directory>
                                     <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.6.0</version>
+                <executions>
+                    <execution>
+                        <id>add-core-test-sources</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.basedir}/src/core-test/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>add-core-test-resources</id>
+                        <phase>generate-test-resources</phase>
+                        <goals>
+                            <goal>add-test-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}/src/core-test/resources</directory>
                                 </resource>
                             </resources>
                         </configuration>

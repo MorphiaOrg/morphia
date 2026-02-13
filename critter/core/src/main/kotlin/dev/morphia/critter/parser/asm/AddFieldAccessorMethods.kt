@@ -1,7 +1,6 @@
 package dev.morphia.critter.parser.asm
 
 import dev.morphia.critter.titleCase
-import org.objectweb.asm.ClassReader
 import org.objectweb.asm.Label
 import org.objectweb.asm.Opcodes.ACC_PUBLIC
 import org.objectweb.asm.Opcodes.ACC_SYNTHETIC
@@ -18,11 +17,7 @@ class AddFieldAccessorMethods(entity: Class<*>, var fields: List<FieldNode>) :
     BaseGenerator(entity) {
 
     init {
-        val resourceName = entity.name.replace('.', '/') + ".class"
-        val inputStream =
-            entity.classLoader.getResourceAsStream(resourceName)
-                ?: throw IllegalArgumentException("Could not find class file for ${entity.name}")
-        ClassReader(inputStream).accept(classWriter, 0)
+        readClassFiltering(entity)
     }
 
     override fun emit(): ByteArray {
