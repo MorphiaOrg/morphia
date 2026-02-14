@@ -4,6 +4,7 @@ import dev.morphia.critter.parser.getterToPropertyName
 import dev.morphia.critter.titleCase
 import io.quarkus.gizmo.MethodDescriptor.ofConstructor
 import io.quarkus.gizmo.MethodDescriptor.ofMethod
+import io.quarkus.gizmo.ResultHandle
 import io.quarkus.gizmo.SignatureBuilder.*
 import io.quarkus.gizmo.Type.*
 import org.bson.codecs.pojo.PropertyAccessor
@@ -35,6 +36,25 @@ class PropertyAccessorGenerator : BaseGizmoGenerator {
 
     val propertyName: String
     val propertyType: String
+    val isPrimitive: Boolean
+        get() = primitiveToWrapper.containsKey(propertyType)
+
+    val wrapperType: String
+        get() = primitiveToWrapper[propertyType] ?: propertyType
+
+    companion object {
+        private val primitiveToWrapper =
+            mapOf(
+                "boolean" to "java.lang.Boolean",
+                "byte" to "java.lang.Byte",
+                "char" to "java.lang.Character",
+                "short" to "java.lang.Short",
+                "int" to "java.lang.Integer",
+                "long" to "java.lang.Long",
+                "float" to "java.lang.Float",
+                "double" to "java.lang.Double",
+            )
+    }
 
     fun emit(): PropertyAccessorGenerator {
         builder.signature(
@@ -58,33 +78,50 @@ class PropertyAccessorGenerator : BaseGizmoGenerator {
 
     private fun get() {
         val method =
-            creator.getMethodCreator(ofMethod(generatedType, "get", propertyType, entity.name))
+            creator.getMethodCreator(
+                ofMethod(generatedType, "get", Object::class.java.name, Object::class.java.name)
+            )
         method.signature =
             forMethod()
                 .addTypeParameter(typeVariable("S"))
                 .setReturnType(classType(propertyType))
-                .addParameterType(classType(entity))
+                .addParameterType(typeVariable("S"))
                 .build()
         method.setParameterNames(arrayOf("model"))
+        val castModel = method.checkCast(method.getMethodParam(0), entity)
         val toInvoke = ofMethod(entity, "__read${propertyName.titleCase()}", propertyType)
-        method.returnValue(method.invokeVirtualMethod(toInvoke, method.getMethodParam(0)))
+        val result = method.invokeVirtualMethod(toInvoke, castModel)
+        val boxed: ResultHandle = if (isPrimitive) method.smartCast(result, wrapperType) else result
+        method.returnValue(boxed)
     }
 
     private fun set() {
         val method =
             creator.getMethodCreator(
-                ofMethod(generatedType, "set", "void", entity.name, propertyType)
+                ofMethod(
+                    generatedType,
+                    "set",
+                    "void",
+                    Object::class.java.name,
+                    Object::class.java.name,
+                )
             )
         method.signature =
             forMethod()
                 .addTypeParameter(typeVariable("S"))
                 .setReturnType(voidType())
-                .addParameterType(classType(entity))
+                .addParameterType(typeVariable("S"))
                 .addParameterType(classType(propertyType))
                 .build()
         method.setParameterNames(arrayOf("model", "value"))
+        val castModel = method.checkCast(method.getMethodParam(0), entity)
+        val castValue: ResultHandle =
+            if (isPrimitive) {
+                val boxed = method.checkCast(method.getMethodParam(1), wrapperType)
+                method.smartCast(boxed, propertyType)
+            } else method.checkCast(method.getMethodParam(1), propertyType)
         val toInvoke = ofMethod(entity, "__write${propertyName.titleCase()}", "void", propertyType)
-        method.invokeVirtualMethod(toInvoke, method.getMethodParam(0), method.getMethodParam(1))
+        method.invokeVirtualMethod(toInvoke, castModel, castValue)
         method.returnValue(null)
     }
 
