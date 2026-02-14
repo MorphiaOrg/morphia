@@ -22,7 +22,7 @@ public class ClassCodec implements Codec<Class> {
     @Override
     public Class decode(BsonReader reader, DecoderContext decoderContext) {
         try {
-            ClassLoader classLoader = datastore.getMapper().getClassLoader();
+            ClassLoader classLoader = datastore.getClassLoader();
             return Class.forName(reader.readString(), true, classLoader);
         } catch (ClassNotFoundException e) {
             throw new MappingException(e.getMessage(), e);

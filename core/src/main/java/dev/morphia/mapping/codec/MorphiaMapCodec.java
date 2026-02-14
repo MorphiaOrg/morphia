@@ -78,7 +78,7 @@ public class MorphiaMapCodec implements Codec<Map> {
         document(writer, () -> {
             for (Entry<?, ?> entry : ((Map<?, ?>) map).entrySet()) {
                 final Object key = entry.getKey();
-                writer.writeName(Conversions.convert(key, String.class));
+                writer.writeName(Conversions.convert(key, String.class, datastore.getClassLoader()));
                 if (entry.getValue() == null) {
                     writer.writeNull();
                 } else {

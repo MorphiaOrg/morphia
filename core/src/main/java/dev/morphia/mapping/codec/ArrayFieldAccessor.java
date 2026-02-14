@@ -20,6 +20,7 @@ public class ArrayFieldAccessor extends FieldAccessor {
 
     private final TypeData<?> typeData;
     private final Class<?> componentType;
+    private final ClassLoader classLoader;
 
     /**
      * Creates the accessor
@@ -27,10 +28,11 @@ public class ArrayFieldAccessor extends FieldAccessor {
      * @param typeData the type data
      * @param field    the field
      */
-    public ArrayFieldAccessor(TypeData<?> typeData, Field field) {
+    public ArrayFieldAccessor(TypeData<?> typeData, Field field, ClassLoader classLoader) {
         super(field);
         this.typeData = typeData;
         componentType = field.getType().getComponentType();
+        this.classLoader = classLoader;
     }
 
     @Override
@@ -84,6 +86,6 @@ public class ArrayFieldAccessor extends FieldAccessor {
 
             return newArray;
         }
-        return Conversions.convert(o, type);
+        return Conversions.convert(o, type, classLoader);
     }
 }

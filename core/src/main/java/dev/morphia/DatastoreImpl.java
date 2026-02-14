@@ -106,6 +106,11 @@ public class DatastoreImpl implements AdvancedDatastore {
     private DatastoreOperations operations;
     private ClassLoader classLoader;
 
+    /**
+     * @deprecated use {@link #DatastoreImpl(MongoClient, MorphiaConfig, ClassLoader)} instead to avoid issues in environments with custom
+     *             class loading.
+     */
+    @Deprecated(since = "2.5.3")
     public DatastoreImpl(MongoClient client, MorphiaConfig config) {
         this(client, config, Thread.currentThread().getContextClassLoader());
     }
@@ -646,7 +651,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                 .iterator()
                 .next();
 
-        refreshCodec.decode(new DocumentReader(id), DecoderContext.builder().checkedDiscriminator(true).build());
+        refreshCodec.decode(new DocumentReader(id, getClassLoader()), DecoderContext.builder().checkedDiscriminator(true).build());
     }
 
     @Override

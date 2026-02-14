@@ -35,7 +35,7 @@ public class FieldDiscovery implements MorphiaConvention {
                                 .name(field.getName())
                                 .typeData(typeData)
                                 .annotations(List.of(field.getDeclaredAnnotations()))
-                                .accessor(getAccessor(getTargetField(builder, field), typeData))
+                                .accessor(getAccessor(getTargetField(builder, field), typeData, mapper.getClassLoader()))
                                 .modifiers(field.getModifiers())
                                 .discoverMappedName();
                     } catch (NoSuchFieldException e) {
@@ -55,9 +55,9 @@ public class FieldDiscovery implements MorphiaConvention {
         return builder.targetType().getDeclaredField(field.getName());
     }
 
-    private PropertyAccessor<? super Object> getAccessor(Field field, TypeData<?> typeData) {
+    private PropertyAccessor<? super Object> getAccessor(Field field, TypeData<?> typeData, ClassLoader classLoader) {
         return field.getType().isArray() && !field.getType().getComponentType().equals(byte.class)
-                ? new ArrayFieldAccessor(typeData, field)
+                ? new ArrayFieldAccessor(typeData, field, classLoader)
                 : new FieldAccessor(field);
     }
 }
