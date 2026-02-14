@@ -104,11 +104,16 @@ public class DatastoreImpl implements AdvancedDatastore {
     public List<MorphiaCodecProvider> morphiaCodecProviders = new ArrayList<>();
     private MongoDatabase database;
     private DatastoreOperations operations;
+    private ClassLoader classLoader;
 
     public DatastoreImpl(MongoClient client, MorphiaConfig config) {
+        this(client, config, Thread.currentThread().getContextClassLoader());
+    }
+
+    public DatastoreImpl(MongoClient client, MorphiaConfig config, ClassLoader classLoader) {
         this.mongoClient = client;
         this.database = mongoClient.getDatabase(config.database());
-        this.mapper = new Mapper(config);
+        this.mapper = new Mapper(config, classLoader);
         this.queryFactory = mapper.getConfig().queryFactory();
         importModels();
 
