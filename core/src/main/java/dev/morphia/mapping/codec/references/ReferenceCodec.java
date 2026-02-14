@@ -344,7 +344,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
                 .intercept(InvocationHandlerAdapter.toField(FIELD_INVOCATION_HANDLER))
                 .defineField(FIELD_INVOCATION_HANDLER, InvocationHandler.class, Visibility.PRIVATE)
                 .make()
-                .load(datastore.getClassLoader(), Default.WRAPPER)
+                .load(Thread.currentThread().getContextClassLoader(), Default.WRAPPER)
                 .getLoaded();
     }
 

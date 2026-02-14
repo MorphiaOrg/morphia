@@ -514,11 +514,6 @@ public class DatastoreImpl implements AdvancedDatastore {
     }
 
     @Override
-    public ClassLoader getClassLoader() {
-        return mapper.getClassLoader();
-    }
-
-    @Override
     public void shardCollections() {
         var entities = getMapper().getMappedEntities()
                 .stream().filter(m -> m.getAnnotation(ShardKeys.class) != null)

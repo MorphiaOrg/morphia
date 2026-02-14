@@ -38,13 +38,8 @@ import static java.lang.String.format;
  */
 @MorphiaInternal
 public final class DiscriminatorLookup {
-    private final Mapper mapper;
     private final Map<String, String> discriminatorClassMap = new ConcurrentHashMap<>();
     private final Set<String> packages = new ConcurrentSkipListSet<>();
-
-    public DiscriminatorLookup(Mapper mapper) {
-        this.mapper = mapper;
-    }
 
     /**
      * Adds a model to the map
@@ -69,7 +64,7 @@ public final class DiscriminatorLookup {
     public Class<?> lookup(String discriminator) {
         if (discriminatorClassMap.containsKey(discriminator)) {
             try {
-                return Class.forName(discriminatorClassMap.get(discriminator), true, mapper.getClassLoader());
+                return Class.forName(discriminatorClassMap.get(discriminator), true, Thread.currentThread().getContextClassLoader());
             } catch (ClassNotFoundException e) {
                 throw new MappingException(e.getMessage(), e);
             }
@@ -90,7 +85,7 @@ public final class DiscriminatorLookup {
     private Class<?> getClassForName(String discriminator) {
         Class<?> clazz = null;
         try {
-            clazz = Class.forName(discriminator, true, mapper.getClassLoader());
+            clazz = Class.forName(discriminator, true, Thread.currentThread().getContextClassLoader());
         } catch (ClassNotFoundException e) {
             // Ignore
         }

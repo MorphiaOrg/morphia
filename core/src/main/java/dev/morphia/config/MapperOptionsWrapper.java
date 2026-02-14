@@ -34,11 +34,6 @@ public class MapperOptionsWrapper implements MorphiaConfig {
     }
 
     @Override
-    public ClassLoader classLoader() {
-        return options.getClassLoader();
-    }
-
-    @Override
     public Boolean applyCaps() {
         return false;
     }

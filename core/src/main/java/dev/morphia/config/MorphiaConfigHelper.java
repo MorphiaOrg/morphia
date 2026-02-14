@@ -78,7 +78,7 @@ public class MorphiaConfigHelper {
                 .sorted(Comparator.comparing(Method::getName))
                 .filter(m -> !Modifier.isStatic(m.getModifiers()))
                 .filter(m -> m.getParameterCount() == 0 && !m.getReturnType().equals(MorphiaConfig.class))
-                .map(m -> getEntry(config, prefix, m))
+                .map(m -> getEntry(prefix, m))
                 .collect(Collectors.toList());
 
     }
@@ -92,15 +92,15 @@ public class MorphiaConfigHelper {
                 .collect(joining("\n"));
     }
 
-    private Entry getEntry(MorphiaConfig morphiaConfig, String prefix, Method m) {
+    private Entry getEntry(String prefix, Method m) {
         WithConverter annotation = m.getAnnotation(WithConverter.class);
         Converter<?> converter = null;
         if (annotation != null) {
             try {
                 converter = annotation
                         .value()
-                        .getDeclaredConstructor(morphiaConfig.getClass())
-                        .newInstance(morphiaConfig);
+                        .getDeclaredConstructor()
+                        .newInstance();
             } catch (ReflectiveOperationException e) {
                 throw new RuntimeException(e);
             }

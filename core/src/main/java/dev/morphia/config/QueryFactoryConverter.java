@@ -9,10 +9,6 @@ import dev.morphia.query.QueryFactory;
  */
 @MorphiaInternal
 public class QueryFactoryConverter extends ClassNameConverter<QueryFactory> {
-    public QueryFactoryConverter(MorphiaConfig morphiaConfig) {
-        super(morphiaConfig);
-    }
-
     @Override
     public QueryFactory convert(String value) {
         return (QueryFactory) super.convert(value);

@@ -38,8 +38,8 @@ import static java.lang.Thread.currentThread;
  * tweaks might be made to improve the experience. As of 3.0, the experimental label will be dropped and the format fixed for the
  * existing configuration values.
  *
- * @morphia.experimental
  * @since 2.4
+ * @morphia.experimental
  */
 @MorphiaExperimental
 @ConfigMapping(prefix = "morphia")
@@ -57,15 +57,12 @@ public interface MorphiaConfig {
      * Parses and loads the configuration found at the given location
      *
      * @param path the location of the configuration to load. This can be a file path, a classpath resource, a URL, etc.
+     *
      * @return the loaded configuration
      * @since 3.0
      */
     static MorphiaConfig load(String path) {
-        return load(path, currentThread().getContextClassLoader());
-    }
-
-    static MorphiaConfig load(String path, ClassLoader classLoader) {
-        List<ConfigSource> configSources = classPathSources(path, classLoader);
+        List<ConfigSource> configSources = classPathSources(path, currentThread().getContextClassLoader());
         if (configSources.isEmpty()) {
             LoggerFactory.getLogger(MorphiaConfig.class).warn(Sofia.missingConfigFile(path));
             return new ManualMorphiaConfig();
@@ -110,15 +107,6 @@ public interface MorphiaConfig {
     @WithDefault("false")
     Boolean applyCaps();
 
-    ClassLoader classLoader();
-
-    default MorphiaConfig classLoader(ClassLoader value) {
-        var newConfig = new ManualMorphiaConfig(this);
-
-        newConfig.classLoader = value;
-        return newConfig;
-    }
-
     /**
      * Updates this configuration with a new value and returns a new instance. The original instance is unchanged.
      *
@@ -136,8 +124,8 @@ public interface MorphiaConfig {
     /**
      * If true, document validations will be enabled for entities/collections with validation mappings.
      *
-     * @return true if the validations should be applied
      * @mongodb.driver.manual core/document-validation/
+     * @return true if the validations should be applied
      * @see Validation
      */
     @WithDefault("false")
@@ -353,6 +341,7 @@ public interface MorphiaConfig {
      * changed.
      *
      * @return the update configuration
+     *
      * @since 3.0
      */
     default MorphiaConfig legacy() {
@@ -537,8 +526,9 @@ public interface MorphiaConfig {
     }
 
     /**
-     * @return true if models should be automatically loaded from prebuilt structures.
+     *
      * @hidden
+     * @return true if models should be automatically loaded from prebuilt structures.
      * @morphia.internal
      */
     @MorphiaInternal
@@ -546,8 +536,9 @@ public interface MorphiaConfig {
     Boolean autoImportModels();
 
     /**
-     * @return a new instance with the updated configuration
+     *
      * @hidden
+     * @return a new instance with the updated configuration
      * @morphia.internal
      */
     @MorphiaInternal

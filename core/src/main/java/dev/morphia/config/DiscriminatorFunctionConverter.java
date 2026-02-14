@@ -17,12 +17,6 @@ import static dev.morphia.mapping.DiscriminatorFunction.simpleName;
  */
 @MorphiaInternal
 public class DiscriminatorFunctionConverter implements Converter<DiscriminatorFunction> {
-    private final MorphiaConfig morphiaConfig;
-
-    public DiscriminatorFunctionConverter(MorphiaConfig morphiaConfig) {
-        this.morphiaConfig = morphiaConfig;
-    }
-
     @Override
     public DiscriminatorFunction convert(String value) throws IllegalArgumentException, NullPointerException {
         try {
@@ -36,7 +30,7 @@ public class DiscriminatorFunctionConverter implements Converter<DiscriminatorFu
                 case "simpleName":
                     return simpleName();
                 default:
-                    ClassLoader classLoader = morphiaConfig.classLoader();
+                    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
                     return (DiscriminatorFunction) Class.forName(value, true, classLoader).getDeclaredConstructor()
                             .newInstance();
             }
