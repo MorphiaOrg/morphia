@@ -645,7 +645,8 @@ public class DatastoreImpl implements AdvancedDatastore {
                 .iterator()
                 .next();
 
-        refreshCodec.decode(new DocumentReader(id, getClassLoader()), DecoderContext.builder().checkedDiscriminator(true).build());
+        refreshCodec.decode(new DocumentReader(id, getMapper().getClassLoader()),
+                DecoderContext.builder().checkedDiscriminator(true).build());
     }
 
     @Override

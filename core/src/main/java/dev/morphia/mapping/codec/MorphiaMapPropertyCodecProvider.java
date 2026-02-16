@@ -74,7 +74,7 @@ class MorphiaMapPropertyCodecProvider extends MorphiaPropertyCodecProvider {
             document(writer, () -> {
                 for (Entry<K, V> entry : map.entrySet()) {
                     final K key = entry.getKey();
-                    writer.writeName(Conversions.convert(key, String.class, datastore.getClassLoader()));
+                    writer.writeName(Conversions.convert(key, String.class, datastore.getMapper().getClassLoader()));
                     if (entry.getValue() == null) {
                         writer.writeNull();
                     } else {
@@ -89,7 +89,7 @@ class MorphiaMapPropertyCodecProvider extends MorphiaPropertyCodecProvider {
             reader.readStartDocument();
             Map<K, V> map = getInstance();
             while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
-                final K key = Conversions.convert(reader.readName(), keyType, datastore.getClassLoader());
+                final K key = Conversions.convert(reader.readName(), keyType, datastore.getMapper().getClassLoader());
                 if (reader.getCurrentBsonType() == BsonType.NULL) {
                     map.put(key, null);
                     reader.readNull();

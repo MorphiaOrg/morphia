@@ -91,7 +91,7 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         if (!documentHasId(entity)) {
             if (idProperty != null) {
                 if (ObjectId.class.equals(idProperty.getType()) || String.class.equals(idProperty.getType())) {
-                    idProperty.setValue(entity, convert(new ObjectId(), idProperty.getType(), datastore.getClassLoader()));
+                    idProperty.setValue(entity, convert(new ObjectId(), idProperty.getType(), getMapper().getClassLoader()));
                 } else {
                     LOG.warn(Sofia.noIdAndNotObjectId(entity.getClass().getName()));
                 }
