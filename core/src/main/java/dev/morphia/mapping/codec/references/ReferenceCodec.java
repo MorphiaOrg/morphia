@@ -164,7 +164,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
                 try {
                     id = datastore.getCodecRegistry()
                             .get(datastore.getMapper().getClass(document))
-                            .decode(new DocumentReader(document, datastore.getClassLoader()), decoderContext);
+                            .decode(new DocumentReader(document, datastore.getMapper().getClassLoader()), decoderContext);
                 } catch (CodecConfigurationException e) {
                     throw new MappingException(Sofia.cannotFindTypeInDocument(), e);
                 }
@@ -176,7 +176,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             if (refId instanceof Document) {
                 refId = datastore.getCodecRegistry()
                         .get(Object.class)
-                        .decode(new DocumentReader((Document) refId, datastore.getClassLoader()), decoderContext);
+                        .decode(new DocumentReader((Document) refId, datastore.getMapper().getClassLoader()), decoderContext);
             }
             id = new DBRef(ref.getDatabaseName(), ref.getCollectionName(), refId);
         }
@@ -374,13 +374,14 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         Codec<?> codec = getDatastore().getCodecRegistry().get(getEntityModelForField().getType());
         return value.stream()
                 .filter(v -> v instanceof Document && ((Document) v).containsKey("_id"))
-                .map(d -> codec.decode(new DocumentReader((Document) d, datastore.getClassLoader()), DecoderContext.builder().build()))
+                .map(d -> codec.decode(new DocumentReader((Document) d, datastore.getMapper().getClassLoader()),
+                        DecoderContext.builder().build()))
                 .collect(Collectors.toList());
     }
 
     MorphiaReference<?> readDocument(Document value) {
         final Object id = getDatastore().getCodecRegistry().get(Object.class)
-                .decode(new DocumentReader(value, datastore.getClassLoader()), DecoderContext.builder().build());
+                .decode(new DocumentReader(value, datastore.getMapper().getClassLoader()), DecoderContext.builder().build());
         return readSingle(id);
     }
 
