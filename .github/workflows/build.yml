@@ -8,6 +8,10 @@ on:
       - '*'
   workflow_dispatch:
 
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   CodeAudits:
     uses: evanchooly/workflows/.github/workflows/code-audits.yml@master
@@ -24,6 +28,7 @@ jobs:
 
   Matrix:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -153,27 +158,23 @@ jobs:
   Docs:
     name: Update Documentation
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     needs:
       - Release
     steps:
       - name: Invoke antora build
-        uses: benc-uk/workflow-dispatch@v1
-        with:
-          workflow: Docs
-          repo: MorphiaOrg/morphia-docs
-          token: ${{ secrets.GH_PUSH_TOKEN }}
-          ref: refs/heads/master
+        run: gh workflow run Docs --repo MorphiaOrg/morphia-docs --ref master
+        env:
+          GH_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
 
   Rewrite:
     name: Validate upgrade automation
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     needs:
       - Release
     steps:
       - name: Invoke build
-        uses: benc-uk/workflow-dispatch@v1
-        with:
-          workflow: Upgrades
-          repo: MorphiaOrg/morphia-upgrade-testing
-          token: ${{ secrets.GH_PUSH_TOKEN }}
-          ref: refs/heads/main
+        run: gh workflow run Upgrades --repo MorphiaOrg/morphia-upgrade-testing --ref main
+        env:
+          GH_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
