@@ -192,7 +192,7 @@ public abstract class TestBase extends MorphiaTestSetup {
             aClass = mapper.getClass(document);
         }
 
-        DocumentReader reader = new DocumentReader(document, mapper.getClassLoader());
+        DocumentReader reader = new DocumentReader(document, mapper.getConversions());
 
         return getDs().getCodecRegistry()
                 .get(aClass)

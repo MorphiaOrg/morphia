@@ -1,9 +1,10 @@
 package dev.morphia.mapping;
 
 import java.lang.reflect.Constructor;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.internal.ConstructorCreator;
@@ -22,7 +23,7 @@ public class InstanceCreatorFactoryImpl implements InstanceCreatorFactory {
     private static final Logger LOG = LoggerFactory.getLogger(InstanceCreatorFactoryImpl.class);
 
     private final EntityModel model;
-    private Supplier<MorphiaInstanceCreator> creator;
+    private Function<Conversions, MorphiaInstanceCreator> creator;
 
     /**
      * Creates a factory for this type
@@ -35,20 +36,20 @@ public class InstanceCreatorFactoryImpl implements InstanceCreatorFactory {
     }
 
     @Override
-    public MorphiaInstanceCreator create() {
+    public MorphiaInstanceCreator create(Conversions conversions) {
         if (creator == null) {
             if (!model.getType().isInterface()) {
                 Constructor<?> constructor = ConstructorCreator.bestConstructor(model);
                 if (constructor != null) {
-                    creator = () -> new ConstructorCreator(model, constructor);
+                    creator = (c) -> new ConstructorCreator(model, constructor, c);
                 } else {
                     LOG.debug("using old creator approach: " + model.getType().getName());
                     try {
                         Constructor<?> declared = model.getType().getDeclaredConstructor();
-                        creator = () -> new NoArgCreator(declared);
+                        creator = (c) -> new NoArgCreator(declared);
                     } catch (NoSuchMethodException e) {
                         Constructor<?> full = ConstructorCreator.getFullConstructor(model);
-                        creator = () -> new ConstructorCreator(model, full);
+                        creator = (c) -> new ConstructorCreator(model, full, c);
                     }
                 }
             }
@@ -58,6 +59,6 @@ public class InstanceCreatorFactoryImpl implements InstanceCreatorFactory {
             }
         }
 
-        return creator.get();
+        return creator.apply(conversions);
     }
 }

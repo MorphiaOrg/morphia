@@ -89,16 +89,4 @@ public final class Morphia {
         return new DatastoreImpl(mongoClient, config);
     }
 
-    /**
-     * Creates a Datastore configured via config file
-     *
-     * @param mongoClient the client to use
-     * @param config      the configuration to use
-     * @param classLoader the classloader to use when scanning for entities and codecs. If null, the default classloader will be used.
-     * @return a Datastore that you can use to interact with MongoDB
-     * @since 3.0.0
-     */
-    public static Datastore createDatastore(MongoClient mongoClient, MorphiaConfig config, ClassLoader classLoader) {
-        return new DatastoreImpl(mongoClient, config, classLoader);
-    }
 }

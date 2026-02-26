@@ -32,12 +32,30 @@ import static java.lang.Boolean.FALSE;
  * @morphia.internal
  */
 @MorphiaInternal
-public final class Conversions {
+public class Conversions {
     private static final Logger LOG = LoggerFactory.getLogger(Conversions.class);
 
-    private static final Map<Class<?>, Map<Class<?>, BiFunction<?, ClassLoader, ?>>> CONVERSIONS = new ConcurrentHashMap<>();
+    private final Map<Class<?>, Map<Class<?>, BiFunction<?, ClassLoader, ?>>> conversions = new ConcurrentHashMap<>();
+    private final ClassLoader classLoader;
 
-    static {
+    /**
+     * Creates a new Conversions instance with the given ClassLoader.
+     *
+     * @param classLoader the ClassLoader to use for class resolution
+     */
+    public Conversions(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+        registerDefaults();
+    }
+
+    /**
+     * @return the ClassLoader used by this Conversions instance
+     */
+    public ClassLoader getClassLoader() {
+        return classLoader;
+    }
+
+    private void registerDefaults() {
         registerStringConversions();
 
         register(Binary.class, byte[].class, Binary::getData);
@@ -82,10 +100,7 @@ public final class Conversions {
         });
     }
 
-    private Conversions() {
-    }
-
-    private static void registerStringConversions() {
+    private void registerStringConversions() {
         register(String.class, BigDecimal.class, BigDecimal::new);
         register(String.class, ObjectId.class, ObjectId::new);
         register(String.class, Character.class, s -> {
@@ -98,9 +113,9 @@ public final class Conversions {
             }
         });
         register(Class.class, String.class, Class::getName);
-        registerWithClassLoader(String.class, Class.class, (className, classLoader) -> {
+        registerWithClassLoader(String.class, Class.class, (className, cl) -> {
             try {
-                return classLoader.loadClass(className);
+                return cl.loadClass(className);
             } catch (ClassNotFoundException e) {
                 throw new MappingException(e.getMessage(), e);
             }
@@ -125,32 +140,16 @@ public final class Conversions {
     }
 
     /**
-     * Attempts to convert a value to the given type using the current thread's context ClassLoader.
+     * Attempts to convert a value to the given type.
      *
      * @param value  the value to convert
      * @param target the target type
      * @param <T>    the target type
      * @return the potentially converted value
-     * @deprecated Use {@link #convert(Object, Class, ClassLoader)} instead to avoid issues in environments with custom class loading.
-     */
-    @Nullable
-    @Deprecated(since = "2.5.3", forRemoval = true)
-    public static <T> T convert(@Nullable Object value, Class<T> target) {
-        return convert(value, target, Thread.currentThread().getContextClassLoader());
-    }
-
-    /**
-     * Attempts to convert a value to the given type using the specified ClassLoader.
-     *
-     * @param value       the value to convert
-     * @param target      the target type
-     * @param classLoader the ClassLoader to use for class resolution
-     * @param <T>         the target type
-     * @return the potentially converted value
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Nullable
-    public static <T> T convert(@Nullable Object value, Class<T> target, ClassLoader classLoader) {
+    public <T> T convert(@Nullable Object value, Class<T> target) {
         if (value == null) {
             return (T) convertNull(target);
         }
@@ -158,7 +157,7 @@ public final class Conversions {
         if (fromType.equals(target)) {
             return (T) value;
         }
-        final BiFunction function = CONVERSIONS
+        final BiFunction function = conversions
                 .computeIfAbsent(fromType, (f) -> new ConcurrentHashMap<>())
                 .get(target);
         if (function == null) {
@@ -192,7 +191,7 @@ public final class Conversions {
      * @param <S>      the source type
      * @param <T>      the target type
      */
-    public static <S, T> void register(Class<S> source, Class<T> target, Function<S, T> function) {
+    public <S, T> void register(Class<S> source, Class<T> target, Function<S, T> function) {
         register(source, target, function, null);
     }
 
@@ -206,7 +205,7 @@ public final class Conversions {
      * @param <S>      the source type
      * @param <T>      the target type
      */
-    public static <S, T> void register(Class<S> source, Class<T> target, Function<S, T> function,
+    public <S, T> void register(Class<S> source, Class<T> target, Function<S, T> function,
             @Nullable String warning) {
         // Wrap Function as BiFunction (ignore ClassLoader parameter)
         BiFunction<S, ClassLoader, T> biFunction = (s, cl) -> function.apply(s);
@@ -222,7 +221,7 @@ public final class Conversions {
      * @param <S>      the source type
      * @param <T>      the target type
      */
-    public static <S, T> void registerWithClassLoader(Class<S> source, Class<T> target,
+    public <S, T> void registerWithClassLoader(Class<S> source, Class<T> target,
             BiFunction<S, ClassLoader, T> function) {
         registerWithClassLoader(source, target, function, null);
     }
@@ -237,7 +236,7 @@ public final class Conversions {
      * @param <S>      the source type
      * @param <T>      the target type
      */
-    public static <S, T> void registerWithClassLoader(Class<S> source, Class<T> target,
+    public <S, T> void registerWithClassLoader(Class<S> source, Class<T> target,
             BiFunction<S, ClassLoader, T> function, @Nullable String warning) {
         final BiFunction<S, ClassLoader, T> conversion = warning == null
                 ? function
@@ -247,7 +246,7 @@ public final class Conversions {
                     }
                     return function.apply(s, cl);
                 };
-        CONVERSIONS.computeIfAbsent(source, (Class<?> c) -> new HashMap<>())
+        conversions.computeIfAbsent(source, (Class<?> c) -> new HashMap<>())
                 .put(target, conversion);
     }
 

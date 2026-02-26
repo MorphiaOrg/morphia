@@ -48,11 +48,11 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
                 }
             }
         }
-        final MorphiaInstanceCreator instanceCreator = model.getInstanceCreator();
+        final MorphiaInstanceCreator instanceCreator = model.getInstanceCreator(getMorphiaCodec().getConversions());
         T entity = (T) instanceCreator.getInstance();
 
         model.callLifecycleMethods(PreLoad.class, entity, document, getMorphiaCodec().getDatastore());
-        decodeProperties(new DocumentReader(document, model.getClassLoader()), decoderContext, instanceCreator,
+        decodeProperties(new DocumentReader(document, getMorphiaCodec().getConversions()), decoderContext, instanceCreator,
                 model);
         model.callLifecycleMethods(PostLoad.class, entity, document, getMorphiaCodec().getDatastore());
 

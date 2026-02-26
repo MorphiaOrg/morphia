@@ -70,11 +70,13 @@ public final class PropertyModel {
     private final Map<Class<? extends Annotation>, Annotation> annotationMap = new HashMap<>();
     private final List<String> loadNames; // List of stored names in order of trying, contains nameToStore and potential aliases
     private final EntityModel entityModel;
+    private final Conversions conversions;
     private Codec<? super Object> codec;
     private Class<?> normalizedType;
 
     PropertyModel(PropertyModelBuilder builder) {
         entityModel = builder.owner();
+        conversions = builder.conversions();
         name = Objects.requireNonNull(builder.name(), Sofia.notNull("name"));
         mappedName = Objects.requireNonNull(builder.mappedName(), Sofia.notNull("name"));
         typeData = Objects.requireNonNull(builder.typeData(), Sofia.notNull("typeData"));
@@ -97,6 +99,7 @@ public final class PropertyModel {
 
     public PropertyModel(EntityModel owner, PropertyModel other) {
         entityModel = owner;
+        conversions = other.conversions;
 
         name = other.name;
         typeData = other.typeData;
@@ -362,7 +365,7 @@ public final class PropertyModel {
      * @param value    the value to set
      */
     public void setValue(Object instance, @Nullable Object value) {
-        accessor.set(instance, Conversions.convert(value, getType(), entityModel.getClassLoader()));
+        accessor.set(instance, conversions.convert(value, getType()));
     }
 
     /**

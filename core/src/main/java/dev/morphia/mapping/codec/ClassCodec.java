@@ -1,6 +1,5 @@
 package dev.morphia.mapping.codec;
 
-import dev.morphia.Datastore;
 import dev.morphia.mapping.MappingException;
 
 import org.bson.BsonReader;
@@ -13,17 +12,16 @@ import org.bson.codecs.EncoderContext;
  * Defines a codec for Class references
  */
 public class ClassCodec implements Codec<Class> {
-    private final Datastore datastore;
+    private final Conversions conversions;
 
-    public ClassCodec(Datastore datastore) {
-        this.datastore = datastore;
+    public ClassCodec(Conversions conversions) {
+        this.conversions = conversions;
     }
 
     @Override
     public Class decode(BsonReader reader, DecoderContext decoderContext) {
         try {
-            ClassLoader classLoader = datastore.getClassLoader();
-            return Class.forName(reader.readString(), true, classLoader);
+            return Class.forName(reader.readString(), true, conversions.getClassLoader());
         } catch (ClassNotFoundException e) {
             throw new MappingException(e.getMessage(), e);
         }

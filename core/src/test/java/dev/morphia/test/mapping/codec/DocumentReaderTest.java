@@ -93,7 +93,7 @@ public class DocumentReaderTest extends TestBase {
         Document first = collection.find().first();
 
         Parent decode = getDs().getCodecRegistry().get(Parent.class)
-                .decode(new DocumentReader(first, getMapper().getClassLoader()), DecoderContext.builder().build());
+                .decode(new DocumentReader(first, getMapper().getConversions()), DecoderContext.builder().build());
 
         assertEquals(parent, decode);
     }
@@ -280,7 +280,7 @@ public class DocumentReaderTest extends TestBase {
     }
 
     private void setup(Document document) {
-        reader = new DocumentReader(document, getMapper().getClassLoader());
+        reader = new DocumentReader(document, getMapper().getConversions());
     }
 
     private void step(Consumer<BsonReader> function) {

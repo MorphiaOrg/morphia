@@ -28,6 +28,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.InstanceCreatorFactory;
 import dev.morphia.mapping.InstanceCreatorFactoryImpl;
 import dev.morphia.mapping.MappingException;
+import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.lifecycle.EntityListenerAdapter;
 import dev.morphia.mapping.lifecycle.OnEntityListenerAdapter;
@@ -71,7 +72,6 @@ public class EntityModel {
     private final PropertyModel idProperty;
     private final PropertyModel versionProperty;
     private final List<EntityListener<?>> listeners = new ArrayList<>();
-    private final ClassLoader classLoader;
 
     /**
      * Creates a new instance
@@ -138,7 +138,6 @@ public class EntityModel {
         }
 
         listeners.add(new OnEntityListenerAdapter(getType()));
-        this.classLoader = builder.mapper().getClassLoader();
     }
 
     public EntityModel(EntityModel other) {
@@ -195,7 +194,6 @@ public class EntityModel {
         }
 
         listeners.add(new OnEntityListenerAdapter(getType()));
-        this.classLoader = other.classLoader;
     }
 
     /**
@@ -287,10 +285,11 @@ public class EntityModel {
     }
 
     /**
+     * @param conversions the Conversions instance to use
      * @return a new InstanceCreator instance for the ClassModel
      */
-    public MorphiaInstanceCreator getInstanceCreator() {
-        return creatorFactory.create();
+    public MorphiaInstanceCreator getInstanceCreator(Conversions conversions) {
+        return creatorFactory.create(conversions);
     }
 
     /**
@@ -380,10 +379,6 @@ public class EntityModel {
     public boolean hasLifecycle(Class<? extends Annotation> type) {
         return listeners.stream()
                 .anyMatch(listener -> listener.hasAnnotation(type));
-    }
-
-    public ClassLoader getClassLoader() {
-        return classLoader;
     }
 
     @Override

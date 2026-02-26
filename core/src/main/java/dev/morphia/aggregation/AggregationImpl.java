@@ -403,7 +403,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
         private R map(Document next) {
             next.remove(discriminator);
-            return codec.decode(new DocumentReader(next, datastore.getClassLoader()), DecoderContext.builder().build());
+            return codec.decode(new DocumentReader(next, datastore.getConversions()), DecoderContext.builder().build());
         }
     }
 

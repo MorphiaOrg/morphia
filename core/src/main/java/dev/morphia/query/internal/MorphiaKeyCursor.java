@@ -117,7 +117,7 @@ public class MorphiaKeyCursor<T> implements MongoCursor<Key<T>> {
             aClass = mapper.getClass(document);
         }
 
-        DocumentReader reader = new DocumentReader(document, datastore.getClassLoader());
+        DocumentReader reader = new DocumentReader(document, datastore.getMapper().getConversions());
 
         return datastore.getCodecRegistry()
                 .get(aClass)

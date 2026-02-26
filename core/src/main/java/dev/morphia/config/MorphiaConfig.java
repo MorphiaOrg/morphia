@@ -88,15 +88,39 @@ public interface MorphiaConfig {
         List<ConfigSource> configSources = classPathSources(path, classLoader);
         if (configSources.isEmpty()) {
             LoggerFactory.getLogger(MorphiaConfig.class).warn(Sofia.missingConfigFile(path));
-            return new ManualMorphiaConfig();
+            return new ManualMorphiaConfig().classLoader(classLoader);
         }
-        return new SmallRyeConfigBuilder()
+        MorphiaConfig config = new SmallRyeConfigBuilder()
                 .addDefaultInterceptors()
                 .withMapping(MorphiaConfig.class)
                 .withSources(configSources)
                 .addDefaultSources()
                 .build()
                 .getConfigMapping(MorphiaConfig.class);
+        return config.classLoader(classLoader);
+    }
+
+    /**
+     * The ClassLoader to use for class resolution. Defaults to the current thread's context ClassLoader.
+     *
+     * @return the ClassLoader
+     * @since 2.5
+     */
+    default ClassLoader classLoader() {
+        return currentThread().getContextClassLoader();
+    }
+
+    /**
+     * Updates this configuration with a new ClassLoader and returns a new instance. The original instance is unchanged.
+     *
+     * @param value the new ClassLoader
+     * @return a new instance with the updated configuration
+     * @since 2.5
+     */
+    default MorphiaConfig classLoader(ClassLoader value) {
+        var newConfig = new ManualMorphiaConfig(this);
+        newConfig.classLoader = value;
+        return newConfig;
     }
 
     /**

@@ -30,9 +30,11 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 @SuppressWarnings("unchecked")
 class MorphiaMapPropertyCodecProvider extends MorphiaPropertyCodecProvider {
     private final Datastore datastore;
+    private final Conversions conversions;
 
-    public MorphiaMapPropertyCodecProvider(Datastore datastore) {
+    public MorphiaMapPropertyCodecProvider(Datastore datastore, Conversions conversions) {
         this.datastore = datastore;
+        this.conversions = conversions;
     }
 
     @Override
@@ -74,7 +76,7 @@ class MorphiaMapPropertyCodecProvider extends MorphiaPropertyCodecProvider {
             document(writer, () -> {
                 for (Entry<K, V> entry : map.entrySet()) {
                     final K key = entry.getKey();
-                    writer.writeName(Conversions.convert(key, String.class, datastore.getClassLoader()));
+                    writer.writeName(conversions.convert(key, String.class));
                     if (entry.getValue() == null) {
                         writer.writeNull();
                     } else {
@@ -89,7 +91,7 @@ class MorphiaMapPropertyCodecProvider extends MorphiaPropertyCodecProvider {
             reader.readStartDocument();
             Map<K, V> map = getInstance();
             while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
-                final K key = Conversions.convert(reader.readName(), keyType, datastore.getClassLoader());
+                final K key = conversions.convert(reader.readName(), keyType);
                 if (reader.getCurrentBsonType() == BsonType.NULL) {
                     map.put(key, null);
                     reader.readNull();
