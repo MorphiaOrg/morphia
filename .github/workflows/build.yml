@@ -22,22 +22,6 @@ jobs:
       java: 17
       saveBuild: true
 
-  Critter:
-    uses: evanchooly/workflows/.github/workflows/build.yml@master
-    needs:
-      - Build
-    strategy:
-      fail-fast: false
-      matrix:
-        java: [ 17, 21, 24 ]
-    secrets:
-      DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
-    with:
-      java: ${{ matrix.java }}
-      reuseBuild: true
-      maven-flags: "-f critter/pom.xml"
-      optional: true
-
   Matrix:
     runs-on: ubuntu-latest
     steps:
