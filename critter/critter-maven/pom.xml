@@ -14,10 +14,6 @@
     <packaging>maven-plugin</packaging>
     <description>Maven plugin for Critter code generation</description>
 
-    <properties>
-        <maven.deploy.skip>true</maven.deploy.skip>
-    </properties>
-
     <build>
         <plugins>
             <plugin>

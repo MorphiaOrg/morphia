@@ -14,10 +14,6 @@
     <description>A buildtime code generator for various serde facilities</description>
     <packaging>pom</packaging>
 
-    <properties>
-        <maven.deploy.skip>true</maven.deploy.skip>
-    </properties>
-
     <subprojects>
         <subproject>core</subproject>
         <subproject>critter-maven</subproject>
