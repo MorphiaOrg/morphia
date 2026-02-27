@@ -17,13 +17,11 @@ All evaluation issues have been resolved. See Design Decisions table below.
 
 # Progress Tracking
 
+Each phase has a tracked sub-issue. When a phase is completed, check its box, close the sub-issue, and **update this issue's title** with the new percentage: `[XX%]` where `XX = (completed_phases / 7) * 100`.
+
 ## Directive
 
-The parent issue title (#4179) includes a percentage indicator (e.g., `[0%]`, `[14%]`, `[100%]`). **When a phase sub-issue is completed**, recompute the percentage and update the parent issue title:
-
-```
-percentage = (completed_phases / 7) * 100, rounded to nearest integer
-```
+The parent issue title (#4179) includes a percentage indicator (e.g., `[0%]`, `[14%]`, `[100%]`). **When a phase or task in a phase is completed**, recompute the percentage for all issues involved and update the issue titles.  Each phase's percentage complete should be a function of the number of tasks in that.  The percent complete on the parent issue should be a function of the completed tasks across all phases.
 
 Update command:
 ```bash
@@ -32,15 +30,15 @@ gh issue edit 4179 --repo MorphiaOrg/morphia --title "[XX%] Integrate critter-co
 
 Also check the corresponding checkbox in the parent issue body.
 
-| Phase | Issue | Tasks | Parent Weight | Status |
-|---|---|---|---|---|
-| Phase 1: Mapper interface + config | #4184 | 9 | 1/7 (14%) | Pending |
-| Phase 2: VarHandle accessor generator | #4185 | 6 | 1/7 (14%) | Pending |
-| Phase 3: Move critter-core into core | #4186 | 8 | 1/7 (14%) | Pending |
-| Phase 4: CritterMapper implementation | #4187 | 9 | 1/7 (14%) | Pending |
-| Phase 5: Wire into MorphiaDatastore | #4188 | 5 | 1/7 (14%) | Pending |
-| Phase 6: Test infrastructure + CI | #4189 | 7 | 1/7 (14%) | Pending |
-| Phase 7: Cleanup + documentation | #4190 | 9 | 1/7 (14%) | Pending |
+| Phase | Issue | Tasks | Status |
+|---|---|---|---|
+| Phase 1: Mapper interface + config | #4184 | 9 | Pending |
+| Phase 2: VarHandle accessor generator | #4185 | 6 | Pending |
+| Phase 3: Move critter-core into core | #4186 | 8 | Pending |
+| Phase 4: CritterMapper implementation | #4187 | 9 | Pending |
+| Phase 5: Wire into MorphiaDatastore | #4188 | 5 | Pending |
+| Phase 6: Test infrastructure + CI | #4189 | 7 | Pending |
+| Phase 7: Cleanup + documentation | #4190 | 9 | Pending |
 
 ### Per-phase progress
 
@@ -56,7 +54,7 @@ When a phase reaches 100%, close the sub-issue and update the parent (#4179) tit
 parent_percentage = (completed_phases / 7) * 100, rounded to nearest integer
 gh issue edit 4179 --repo MorphiaOrg/morphia --title "[XX%] Integrate critter-core into morphia-core with new Mapper architecture"
 ```
-
+As tasks are completed or added/removed, update the phase percentage and task count accordingly.
 ---
 
 # Implementation Plan
