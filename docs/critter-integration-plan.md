@@ -15,6 +15,35 @@ All evaluation issues have been resolved. See Design Decisions table below.
 
 ---
 
+# Progress Tracking
+
+## Directive
+
+The parent issue title (#4179) includes a percentage indicator (e.g., `[0%]`, `[14%]`, `[100%]`). **When a phase sub-issue is completed**, recompute the percentage and update the parent issue title:
+
+```
+percentage = (completed_phases / 7) * 100, rounded to nearest integer
+```
+
+Update command:
+```bash
+gh issue edit 4179 --repo MorphiaOrg/morphia --title "[XX%] Integrate critter-core into morphia-core with new Mapper architecture"
+```
+
+Also check the corresponding checkbox in the parent issue body.
+
+| Phase | Issue | Weight | Status |
+|---|---|---|---|
+| Phase 1: Mapper interface + config | #4184 | 1/7 (14%) | Pending |
+| Phase 2: VarHandle accessor generator | #4185 | 1/7 (14%) | Pending |
+| Phase 3: Move critter-core into core | #4186 | 1/7 (14%) | Pending |
+| Phase 4: CritterMapper implementation | #4187 | 1/7 (14%) | Pending |
+| Phase 5: Wire into MorphiaDatastore | #4188 | 1/7 (14%) | Pending |
+| Phase 6: Test infrastructure + CI | #4189 | 1/7 (14%) | Pending |
+| Phase 7: Cleanup + documentation | #4190 | 1/7 (14%) | Pending |
+
+---
+
 # Implementation Plan
 
 ## Design Decisions (Resolved)
