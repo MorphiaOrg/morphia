@@ -285,6 +285,7 @@ public class MorphiaDatastore implements Datastore {
         this.queryFactory = datastore.queryFactory;
         this.operations = datastore.operations;
         codecRegistry = buildRegistry(mongoClient.getDatabase(mapper.getConfig().database()).getCodecRegistry());
+        this.database = database.withCodecRegistry(codecRegistry);
     }
 
     @Override
@@ -330,8 +331,7 @@ public class MorphiaDatastore implements Datastore {
         EntityModel entityModel = mapper.getEntityModel(type);
         String collectionName = entityModel.collectionName();
 
-        MongoCollection<T> collection = getDatabase().getCollection(collectionName, type)
-                .withCodecRegistry(codecRegistry);
+        MongoCollection<T> collection = getDatabase().getCollection(collectionName, type);
 
         Entity annotation = entityModel.getEntityAnnotation();
         if (annotation != null && !annotation.concern().equals("")) {
