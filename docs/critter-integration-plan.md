@@ -32,15 +32,30 @@ gh issue edit 4179 --repo MorphiaOrg/morphia --title "[XX%] Integrate critter-co
 
 Also check the corresponding checkbox in the parent issue body.
 
-| Phase | Issue | Weight | Status |
-|---|---|---|---|
-| Phase 1: Mapper interface + config | #4184 | 1/7 (14%) | Pending |
-| Phase 2: VarHandle accessor generator | #4185 | 1/7 (14%) | Pending |
-| Phase 3: Move critter-core into core | #4186 | 1/7 (14%) | Pending |
-| Phase 4: CritterMapper implementation | #4187 | 1/7 (14%) | Pending |
-| Phase 5: Wire into MorphiaDatastore | #4188 | 1/7 (14%) | Pending |
-| Phase 6: Test infrastructure + CI | #4189 | 1/7 (14%) | Pending |
-| Phase 7: Cleanup + documentation | #4190 | 1/7 (14%) | Pending |
+| Phase | Issue | Tasks | Parent Weight | Status |
+|---|---|---|---|---|
+| Phase 1: Mapper interface + config | #4184 | 9 | 1/7 (14%) | Pending |
+| Phase 2: VarHandle accessor generator | #4185 | 6 | 1/7 (14%) | Pending |
+| Phase 3: Move critter-core into core | #4186 | 8 | 1/7 (14%) | Pending |
+| Phase 4: CritterMapper implementation | #4187 | 9 | 1/7 (14%) | Pending |
+| Phase 5: Wire into MorphiaDatastore | #4188 | 5 | 1/7 (14%) | Pending |
+| Phase 6: Test infrastructure + CI | #4189 | 7 | 1/7 (14%) | Pending |
+| Phase 7: Cleanup + documentation | #4190 | 9 | 1/7 (14%) | Pending |
+
+### Per-phase progress
+
+Each phase sub-issue title also carries a `[XX%]` indicator based on its own task checklist:
+
+```
+phase_percentage = (completed_tasks / total_tasks) * 100, rounded to nearest integer
+gh issue edit <ISSUE> --repo MorphiaOrg/morphia --title "[XX%] Phase N: ..."
+```
+
+When a phase reaches 100%, close the sub-issue and update the parent (#4179) title with:
+```
+parent_percentage = (completed_phases / 7) * 100, rounded to nearest integer
+gh issue edit 4179 --repo MorphiaOrg/morphia --title "[XX%] Integrate critter-core into morphia-core with new Mapper architecture"
+```
 
 ---
 

@@ -9,7 +9,3 @@ jobs:
     uses: evanchooly/workflows/.github/workflows/duplicate-on-comment.yml@master
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-
-#      make a thorough plan of how you would update this issue.  this issue will serve as the plan for you to implement these changes so the plan
-#  needs to be really good.  append that plan to the end of the file.
