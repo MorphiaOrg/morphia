@@ -40,6 +40,11 @@ import static java.lang.String.format;
 public final class DiscriminatorLookup {
     private final Map<String, String> discriminatorClassMap = new ConcurrentHashMap<>();
     private final Set<String> packages = new ConcurrentSkipListSet<>();
+    private final ClassLoader classLoader;
+
+    public DiscriminatorLookup(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+    }
 
     /**
      * Adds a model to the map
@@ -64,7 +69,7 @@ public final class DiscriminatorLookup {
     public Class<?> lookup(String discriminator) {
         if (discriminatorClassMap.containsKey(discriminator)) {
             try {
-                return Class.forName(discriminatorClassMap.get(discriminator), true, Thread.currentThread().getContextClassLoader());
+                return Class.forName(discriminatorClassMap.get(discriminator), true, classLoader);
             } catch (ClassNotFoundException e) {
                 throw new MappingException(e.getMessage(), e);
             }
@@ -85,7 +90,7 @@ public final class DiscriminatorLookup {
     private Class<?> getClassForName(String discriminator) {
         Class<?> clazz = null;
         try {
-            clazz = Class.forName(discriminator, true, Thread.currentThread().getContextClassLoader());
+            clazz = Class.forName(discriminator, true, classLoader);
         } catch (ClassNotFoundException e) {
             // Ignore
         }

@@ -50,9 +50,10 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
     /**
      * @param model       the model
      * @param constructor the constructor to use
+     * @param conversions the Conversions instance to use
      */
     @SuppressFBWarnings("EI_EXPOSE_REP2")
-    public ConstructorCreator(EntityModel model, Constructor<?> constructor) {
+    public ConstructorCreator(EntityModel model, Constructor<?> constructor, Conversions conversions) {
         this.model = model;
         this.constructor = constructor;
         this.constructor.setAccessible(true);
@@ -68,7 +69,7 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
                 throw new MappingException(Sofia.unnamedConstructorParameter(model.getType().getName()));
             }
             BiFunction<Object[], Object, Void> old = positions.put(name, (Object[] params, Object v) -> {
-                params[finalI] = Conversions.convert(v, parameter.getType());
+                params[finalI] = conversions.convert(v, parameter.getType());
                 return null;
             });
 

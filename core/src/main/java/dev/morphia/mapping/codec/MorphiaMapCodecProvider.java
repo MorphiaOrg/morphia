@@ -32,7 +32,7 @@ public class MorphiaMapCodecProvider implements CodecProvider {
             return (Codec<T>) new BsonDocumentCodec(registry);
         } else if (Map.class.isAssignableFrom(clazz) && !Document.class.isAssignableFrom(clazz)) {
             Class valueType = typeArguments.size() == 2 ? (Class) typeArguments.get(1) : Object.class;
-            return (Codec<T>) new MorphiaMapCodec(datastore, clazz, registry.get(valueType));
+            return (Codec<T>) new MorphiaMapCodec(datastore, clazz, registry.get(valueType), datastore.getConversions());
         }
         return null;
     }

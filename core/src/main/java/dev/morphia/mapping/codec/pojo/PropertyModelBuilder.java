@@ -30,6 +30,7 @@ import dev.morphia.annotations.Version;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.MorphiaPropertySerialization;
 
 import org.bson.codecs.pojo.PropertyAccessor;
@@ -309,6 +310,13 @@ public final class PropertyModelBuilder {
                 .add("typeData=" + typeData)
                 .add("annotations=" + annotations)
                 .toString();
+    }
+
+    /**
+     * @return the Conversions instance from the mapper
+     */
+    Conversions conversions() {
+        return mapper.getConversions();
     }
 
     /**
