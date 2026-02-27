@@ -68,7 +68,7 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
                 throw new MappingException(Sofia.unnamedConstructorParameter(model.getType().getName()));
             }
             BiFunction<Object[], Object, Void> old = positions.put(name, (Object[] params, Object v) -> {
-                params[finalI] = Conversions.convert(v, parameter.getType());
+                params[finalI] = Conversions.convert(v, parameter.getType(), model.getClassLoader());
                 return null;
             });
 

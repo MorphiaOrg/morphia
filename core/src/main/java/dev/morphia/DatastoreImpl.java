@@ -106,9 +106,13 @@ public class DatastoreImpl implements AdvancedDatastore {
     private DatastoreOperations operations;
 
     public DatastoreImpl(MongoClient client, MorphiaConfig config) {
+        this(client, config, Thread.currentThread().getContextClassLoader());
+    }
+
+    public DatastoreImpl(MongoClient client, MorphiaConfig config, ClassLoader classLoader) {
         this.mongoClient = client;
         this.database = mongoClient.getDatabase(config.database());
-        this.mapper = new Mapper(config);
+        this.mapper = new Mapper(config, classLoader);
         this.queryFactory = mapper.getConfig().queryFactory();
         importModels();
 
@@ -641,7 +645,8 @@ public class DatastoreImpl implements AdvancedDatastore {
                 .iterator()
                 .next();
 
-        refreshCodec.decode(new DocumentReader(id), DecoderContext.builder().checkedDiscriminator(true).build());
+        refreshCodec.decode(new DocumentReader(id, getMapper().getClassLoader()),
+                DecoderContext.builder().checkedDiscriminator(true).build());
     }
 
     @Override

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import dev.morphia.Datastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.pojo.TypeData;
 
@@ -28,6 +29,12 @@ import static dev.morphia.aggregation.codecs.ExpressionHelper.document;
 @MorphiaInternal
 @SuppressWarnings("unchecked")
 class MorphiaMapPropertyCodecProvider extends MorphiaPropertyCodecProvider {
+    private final Datastore datastore;
+
+    public MorphiaMapPropertyCodecProvider(Datastore datastore) {
+        this.datastore = datastore;
+    }
+
     @Override
     public <T> Codec<T> get(TypeWithTypeParameters<T> type, PropertyCodecRegistry registry) {
         if (Map.class.isAssignableFrom(type.getType())) {
@@ -51,7 +58,7 @@ class MorphiaMapPropertyCodecProvider extends MorphiaPropertyCodecProvider {
         return null;
     }
 
-    private static class MapCodec<K, V> implements Codec<Map<K, V>> {
+    private class MapCodec<K, V> implements Codec<Map<K, V>> {
         private final Class<Map<K, V>> encoderClass;
         private final Class<K> keyType;
         private final Codec<V> codec;
@@ -67,7 +74,7 @@ class MorphiaMapPropertyCodecProvider extends MorphiaPropertyCodecProvider {
             document(writer, () -> {
                 for (Entry<K, V> entry : map.entrySet()) {
                     final K key = entry.getKey();
-                    writer.writeName(Conversions.convert(key, String.class));
+                    writer.writeName(Conversions.convert(key, String.class, datastore.getMapper().getClassLoader()));
                     if (entry.getValue() == null) {
                         writer.writeNull();
                     } else {
@@ -82,7 +89,7 @@ class MorphiaMapPropertyCodecProvider extends MorphiaPropertyCodecProvider {
             reader.readStartDocument();
             Map<K, V> map = getInstance();
             while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
-                final K key = Conversions.convert(reader.readName(), keyType);
+                final K key = Conversions.convert(reader.readName(), keyType, datastore.getMapper().getClassLoader());
                 if (reader.getCurrentBsonType() == BsonType.NULL) {
                     map.put(key, null);
                     reader.readNull();
