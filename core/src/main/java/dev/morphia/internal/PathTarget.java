@@ -24,7 +24,6 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.NotMappableException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.query.ValidationException;
@@ -208,11 +207,7 @@ public class PathTarget {
             }
 
             if (model != null) {
-                try {
-                    context = mapper.getEntityModel(model.getNormalizedType());
-                } catch (NotMappableException ignored) {
-                    context = null;
-                }
+                context = mapper.tryGetEntityModel(model.getNormalizedType()).orElse(null);
             }
             return model;
         } else {

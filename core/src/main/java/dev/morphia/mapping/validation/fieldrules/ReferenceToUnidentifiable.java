@@ -5,7 +5,6 @@ import java.util.Set;
 import dev.morphia.Key;
 import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.NotMappableException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.validation.ConstraintViolation;
@@ -25,9 +24,7 @@ public class ReferenceToUnidentifiable extends PropertyConstraint {
             if (realType.equals(Key.class)) {
                 ve.add(new ConstraintViolation(Level.FATAL, entityModel, propertyModel, getClass(), Sofia.keyNotAllowedAsProperty()));
             } else {
-                try {
-                    mapper.getEntityModel(realType);
-                } catch (NotMappableException ignored) {
+                if (!mapper.tryGetEntityModel(realType).isPresent()) {
                     ve.add(new ConstraintViolation(Level.FATAL, entityModel, propertyModel, getClass(),
                             Sofia.referredTypeMissingId(propertyModel.getFullName(), propertyModel.getType().getName())));
                 }
