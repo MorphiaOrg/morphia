@@ -8,6 +8,7 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.mapping.DateStorage;
 import dev.morphia.mapping.DiscriminatorFunction;
+import dev.morphia.mapping.MapperType;
 import dev.morphia.mapping.NamingStrategy;
 import dev.morphia.mapping.PropertyDiscovery;
 import dev.morphia.query.DefaultQueryFactory;
@@ -43,6 +44,7 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     String discriminatorKey;
     Boolean enablePolymorphicQueries;
     Boolean ignoreFinals;
+    MapperType mapper;
     List<String> packages;
     PropertyDiscovery propertyDiscovery;
     List<PropertyAnnotationProvider<?>> propertyAnnotationProviders;
@@ -72,6 +74,7 @@ public class ManualMorphiaConfig implements MorphiaConfig {
         discriminatorKey = base.discriminatorKey();
         enablePolymorphicQueries = base.enablePolymorphicQueries();
         ignoreFinals = base.ignoreFinals();
+        mapper = base.mapper();
         packages = new ArrayList<>(base.packages());
         propertyDiscovery = base.propertyDiscovery();
         propertyNaming = base.propertyNaming();
@@ -99,11 +102,11 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     public String toString() {
         return ("MorphiaConfig{applyCaps=%s, applyDocumentValidations=%s, applyIndexes=%s, database='%s', codecProvider=%s, " +
                 "collectionNaming=%s, dateStorage=%s, discriminator=%s, discriminatorKey='%s', enablePolymorphicQueries=%s, " +
-                "ignoreFinals=%s, packages=%s, propertyDiscovery=%s, propertyNaming=%s, queryFactory=%s, " +
+                "ignoreFinals=%s, mapper=%s, packages=%s, propertyDiscovery=%s, propertyNaming=%s, queryFactory=%s, " +
                 "storeEmpties=%s, storeNulls=%s}").formatted(
                         applyCaps(), applyDocumentValidations(), applyIndexes(), database(), codecProvider(), collectionNaming(),
-                        dateStorage(), discriminator(), discriminatorKey(), enablePolymorphicQueries(), ignoreFinals(), packages(),
-                        propertyDiscovery(), propertyNaming(), queryFactory(), storeEmpties(), storeNulls());
+                        dateStorage(), discriminator(), discriminatorKey(), enablePolymorphicQueries(), ignoreFinals(), mapper(),
+                        packages(), propertyDiscovery(), propertyNaming(), queryFactory(), storeEmpties(), storeNulls());
     }
 
     @Override
@@ -158,6 +161,11 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     @Override
     public Boolean ignoreFinals() {
         return orDefault(ignoreFinals, FALSE);
+    }
+
+    @Override
+    public MapperType mapper() {
+        return orDefault(mapper, MapperType.LEGACY);
     }
 
     @Override
