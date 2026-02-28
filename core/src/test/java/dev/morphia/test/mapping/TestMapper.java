@@ -21,7 +21,7 @@ public class TestMapper extends TestBase {
             Mapper mapper = getMapper();
             assertFalse(mapper.getMappedEntities().isEmpty());
 
-            var cloned = new Mapper(mapper);
+            var cloned = mapper.copy();
             assertEquals(cloned.getMappedEntities().size(), mapper.getMappedEntities().size(),
                     "Should find an equal number of mapped entities");
             mapper.getMappedEntities().forEach(originalEntity -> {

@@ -49,6 +49,7 @@ import dev.morphia.internal.WriteConfigurable;
 import dev.morphia.mapping.EntityModelImporter;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
+import dev.morphia.mapping.ReflectiveMapper;
 import dev.morphia.mapping.ShardKeyType;
 import dev.morphia.mapping.codec.EnumCodecProvider;
 import dev.morphia.mapping.codec.MorphiaCodecProvider;
@@ -124,7 +125,7 @@ public class MorphiaDatastore implements Datastore {
     @MorphiaInternal
     public MorphiaDatastore(MongoClient client, MorphiaConfig config) {
         this.mongoClient = client;
-        this.mapper = new Mapper(config);
+        this.mapper = createMapper(config);
         this.queryFactory = mapper.getConfig().queryFactory();
         importModels();
 
@@ -232,6 +233,13 @@ public class MorphiaDatastore implements Datastore {
         for (EntityModel model : mapper.getMappedEntities()) {
             enableDocumentValidation(model);
         }
+    }
+
+    private static Mapper createMapper(MorphiaConfig config) {
+        return switch (config.mapper()) {
+            case CRITTER -> throw new MappingException(Sofia.mapperNotYetAvailable("CRITTER"));
+            case LEGACY -> new ReflectiveMapper(config);
+        };
     }
 
     /**

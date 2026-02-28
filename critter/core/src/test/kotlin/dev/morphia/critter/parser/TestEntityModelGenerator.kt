@@ -5,6 +5,7 @@ import dev.morphia.critter.CritterClassLoader
 import dev.morphia.critter.parser.GeneratorTest.entityModel
 import dev.morphia.critter.parser.GeneratorTest.methodNames
 import dev.morphia.mapping.Mapper
+import dev.morphia.mapping.ReflectiveMapper
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel
 import java.lang.reflect.Method
 import org.slf4j.Logger
@@ -19,7 +20,7 @@ class TestEntityModelGenerator {
     }
 
     val control: CritterEntityModel
-    val mapper = Mapper(Generators.config)
+    val mapper = ReflectiveMapper(Generators.config)
     val critterClassLoader = CritterClassLoader()
 
     init {

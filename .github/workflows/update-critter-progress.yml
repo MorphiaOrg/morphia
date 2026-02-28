@@ -1,0 +1,33 @@
+name: Update Critter Integration Progress
+
+# Runs whenever a PR is merged or a tracked issue is edited (e.g. checkbox ticked).
+# Recomputes phase and parent percentages using the formulas in docs/critter-integration-plan.md.
+
+on:
+  pull_request:
+    types: [closed]
+  issues:
+    types: [edited]
+
+jobs:
+  update-progress:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    # Run on merged PRs, or edits to the parent/phase issues only
+    if: |
+      (github.event_name == 'pull_request' && github.event.pull_request.merged == true) ||
+      (github.event_name == 'issues' && contains(
+        fromJson('[4179, 4184, 4185, 4186, 4187, 4188, 4189, 4190]'),
+        github.event.issue.number
+      ))
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Update issue percentages
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash .github/scripts/update-critter-progress.sh
