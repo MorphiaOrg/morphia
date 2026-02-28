@@ -16,6 +16,7 @@ import dev.morphia.config.converters.PropertyAnnotationProviderConverter;
 import dev.morphia.config.converters.QueryFactoryConverter;
 import dev.morphia.mapping.DateStorage;
 import dev.morphia.mapping.DiscriminatorFunction;
+import dev.morphia.mapping.MapperType;
 import dev.morphia.mapping.NamingStrategy;
 import dev.morphia.mapping.PropertyDiscovery;
 import dev.morphia.query.QueryFactory;
@@ -355,6 +356,30 @@ public interface MorphiaConfig {
 
         return newConfig;
 
+    }
+
+    /**
+     * The mapper implementation to use. Defaults to {@link MapperType#LEGACY} (reflection-based).
+     * Set to {@link MapperType#CRITTER} to use the bytecode-generated mapper (requires critter dependencies).
+     *
+     * @return the mapper type to use
+     * @since 3.0
+     */
+    @WithDefault("legacy")
+    MapperType mapper();
+
+    /**
+     * Updates this configuration with a new value and returns a new instance. The original instance is unchanged.
+     *
+     * @param value the new value
+     * @return a new instance with the updated configuration
+     * @since 3.0
+     */
+    default MorphiaConfig mapper(MapperType value) {
+        var newConfig = new ManualMorphiaConfig(this);
+
+        newConfig.mapper = value;
+        return newConfig;
     }
 
     /**
