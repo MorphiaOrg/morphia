@@ -3,6 +3,7 @@ package dev.morphia.critter.parser
 import dev.morphia.config.MorphiaConfig
 import dev.morphia.config.MorphiaConfigHelper.MORPHIA_CONFIG_PROPERTIES
 import dev.morphia.mapping.Mapper
+import dev.morphia.mapping.ReflectiveMapper
 import dev.morphia.mapping.conventions.MorphiaDefaultsConvention
 import org.objectweb.asm.Type
 import org.objectweb.asm.Type.ARRAY
@@ -12,7 +13,7 @@ object Generators {
 
     val config: MorphiaConfig by lazy { MorphiaConfig.load(configFile) }
 
-    val mapper: Mapper by lazy { Mapper(config) }
+    val mapper: Mapper by lazy { ReflectiveMapper(config) }
 
     var convention = MorphiaDefaultsConvention()
 
