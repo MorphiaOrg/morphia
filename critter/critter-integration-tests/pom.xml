@@ -61,7 +61,6 @@
 
     <build>
         <plugins>
-<!--
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -78,22 +77,9 @@
                             <resources>
                                 <resource>
                                     <directory>${maven.multiModuleProjectDirectory}/core/src/test/java</directory>
-                                    <filtering>false</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-test-resources</id>
-                        <phase>generate-test-resources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.basedir}/src/core-test/resources</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${maven.multiModuleProjectDirectory}/core/src/test/resources</directory>
+                                    <includes>
+                                        <include>dev/morphia/test/models/**</include>
+                                    </includes>
                                     <filtering>false</filtering>
                                 </resource>
                             </resources>
@@ -118,23 +104,8 @@
                             </sources>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>add-core-test-resources</id>
-                        <phase>generate-test-resources</phase>
-                        <goals>
-                            <goal>add-test-resource</goal>
-                        </goals>
-                        <configuration>
-                            <resources>
-                                <resource>
-                                    <directory>${project.basedir}/src/core-test/resources</directory>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
--->
             <plugin>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>critter-maven</artifactId>
