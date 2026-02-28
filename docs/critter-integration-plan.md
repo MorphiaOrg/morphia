@@ -17,22 +17,39 @@ All evaluation issues have been resolved. See Design Decisions table below.
 
 # Progress Tracking
 
-Each phase has a tracked sub-issue. When a phase is completed, check its box, close the sub-issue, and **update this issue's title** with the new percentage: `[XX%]` where `XX = (completed_phases / 7) * 100`.
+This document is the **source of truth** for progress tracking. Consult it before updating any issue percentage.
 
 ## Directive
 
-The parent issue title (#4179) includes a percentage indicator (e.g., `[0%]`, `[14%]`, `[100%]`). **When a phase or task in a phase is completed**, recompute the percentage for all issues involved and update the issue titles.  Each phase's percentage complete should be a function of the number of tasks in that.  The percent complete on the parent issue should be a function of the completed tasks across all phases.
+**When any task is completed**, update the phase issue title and the parent issue title using the formulas below.
 
-Update command:
-```bash
-gh issue edit 4179 --repo MorphiaOrg/morphia --title "[XX%] Integrate critter-core into morphia-core with new Mapper architecture"
+### Phase percentage
+
+Each phase sub-issue title carries a `[XX%]` indicator based on its own completed tasks:
+
+```
+phase_percentage = (completed_tasks_in_phase / total_tasks_in_phase) * 100, rounded to nearest integer
+gh issue edit <ISSUE> --repo MorphiaOrg/morphia --title "[XX%] Phase N: ..."
 ```
 
-Also check the corresponding checkbox in the parent issue body.
+When a phase reaches 100%, close the sub-issue and check its box in the parent issue body.
+
+### Parent percentage
+
+The parent issue title (#4179) reflects progress across **all tasks in all phases**:
+
+```
+parent_percentage = (total_completed_tasks_across_all_phases / 53) * 100, rounded to nearest integer
+gh issue edit 4179 --repo MorphiaOrg/morphia --title "[XX%] Integrate critter-core into morphia-core"
+```
+
+Update the parent title after every task completion, not just after a phase closes.
+
+### Phase table (53 tasks total)
 
 | Phase | Issue | Tasks | Status |
 |---|---|---|---|
-| Phase 1: Mapper interface + config | #4184 | 9 | Pending |
+| Phase 1: Mapper interface + config | #4184 | 9 | In Progress |
 | Phase 2: VarHandle accessor generator | #4185 | 6 | Pending |
 | Phase 3: Move critter-core into core | #4186 | 8 | Pending |
 | Phase 4: CritterMapper implementation | #4187 | 9 | Pending |
@@ -40,21 +57,7 @@ Also check the corresponding checkbox in the parent issue body.
 | Phase 6: Test infrastructure + CI | #4189 | 7 | Pending |
 | Phase 7: Cleanup + documentation | #4190 | 9 | Pending |
 
-### Per-phase progress
-
-Each phase sub-issue title also carries a `[XX%]` indicator based on its own task checklist:
-
-```
-phase_percentage = (completed_tasks / total_tasks) * 100, rounded to nearest integer
-gh issue edit <ISSUE> --repo MorphiaOrg/morphia --title "[XX%] Phase N: ..."
-```
-
-When a phase reaches 100%, close the sub-issue and update the parent (#4179) title with:
-```
-parent_percentage = (completed_phases / 7) * 100, rounded to nearest integer
-gh issue edit 4179 --repo MorphiaOrg/morphia --title "[XX%] Integrate critter-core into morphia-core with new Mapper architecture"
-```
-As tasks are completed or added/removed, update the phase percentage and task count accordingly.
+As tasks are added or removed, update the task count in this table and the total (53) in the formula above.
 ---
 
 # Implementation Plan
