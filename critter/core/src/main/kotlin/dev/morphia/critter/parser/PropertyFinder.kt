@@ -5,6 +5,7 @@ import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator.accessor
 import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator.fieldAccessors
 import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator.methodAccessors
 import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator.propertyModelGenerator
+import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator.varHandleAccessor
 import dev.morphia.critter.parser.gizmo.PropertyModelGenerator
 import dev.morphia.critter.parser.java.CritterParser
 import dev.morphia.mapping.Mapper
@@ -14,7 +15,11 @@ import org.objectweb.asm.tree.AnnotationNode
 import org.objectweb.asm.tree.ClassNode
 import org.objectweb.asm.tree.FieldNode
 
-class PropertyFinder(mapper: Mapper, val classLoader: CritterClassLoader) {
+class PropertyFinder(
+    mapper: Mapper,
+    val classLoader: CritterClassLoader,
+    val runtimeMode: Boolean = false,
+) {
     private val providerMap =
         mapper.config.propertyAnnotationProviders().associateBy { it.provides() }
 
@@ -23,15 +28,21 @@ class PropertyFinder(mapper: Mapper, val classLoader: CritterClassLoader) {
         val methods = discoverPropertyMethods(classNode)
         if (methods.isEmpty()) {
             val fields = discoverAllFields(entityType, classNode)
-            classLoader.register(entityType.name, fieldAccessors(entityType, fields))
+            if (!runtimeMode) {
+                classLoader.register(entityType.name, fieldAccessors(entityType, fields))
+            }
             fields.forEach { field ->
-                accessor(entityType, classLoader, field)
+                if (runtimeMode) varHandleAccessor(entityType, classLoader, field)
+                else accessor(entityType, classLoader, field)
                 models += propertyModelGenerator(entityType, classLoader, field)
             }
         } else {
-            classLoader.register(entityType.name, methodAccessors(entityType, methods))
+            if (!runtimeMode) {
+                classLoader.register(entityType.name, methodAccessors(entityType, methods))
+            }
             methods.forEach { method ->
-                accessor(entityType, classLoader, method)
+                if (runtimeMode) varHandleAccessor(entityType, classLoader, method)
+                else accessor(entityType, classLoader, method)
                 models += propertyModelGenerator(entityType, classLoader, method)
             }
         }
