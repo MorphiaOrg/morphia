@@ -36,7 +36,7 @@ for i in "${!PHASE_ISSUES[@]}"; do
     tasks="${PHASE_TASKS[$i]}"
 
     body=$(gh issue view "$issue" --repo "$REPO" --json body -q '.body')
-    done_count=$(printf '%s' "$body" | grep -c '^\- \[x\]' || true)
+    done_count=$(printf '%s' "$body" | grep -ci '^\- \[x\]' || true)
     total_done=$((total_done + done_count))
 
     pct=$(awk "BEGIN { printf \"%.0f\", ($done_count * 100) / $tasks }")
