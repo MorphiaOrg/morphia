@@ -168,7 +168,7 @@ public abstract class AbstractMapper implements Mapper {
             if (!isMappable(actual)) {
                 return Optional.empty();
             }
-            model = mapEntity(type);
+            model = mapEntity(actual);
         }
 
         return Optional.of(model);
@@ -233,6 +233,9 @@ public abstract class AbstractMapper implements Mapper {
     @Override
     @MorphiaInternal
     public <T> boolean isMappable(@Nullable Class<T> type) {
+        if (type == null) {
+            return false;
+        }
         final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
         return actual != null && hasAnnotation(actual, MAPPING_ANNOTATIONS);
     }

@@ -237,8 +237,7 @@ public class MorphiaDatastore implements Datastore {
 
     private static Mapper createMapper(MorphiaConfig config) {
         return switch (config.mapper()) {
-            case CRITTER -> throw new UnsupportedOperationException(
-                    "CritterMapper not yet available. Use MapperType.LEGACY.");
+            case CRITTER -> throw new MappingException(Sofia.mapperNotYetAvailable("CRITTER"));
             case LEGACY -> new ReflectiveMapper(config);
         };
     }

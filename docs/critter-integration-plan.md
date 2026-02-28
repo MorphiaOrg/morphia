@@ -43,7 +43,8 @@ parent_percentage = (total_completed_tasks_across_all_phases / 53) * 100, rounde
 gh issue edit 4179 --repo MorphiaOrg/morphia --title "[XX%] Integrate critter-core into morphia-core"
 ```
 
-Update the parent title after every task completion, not just after a phase closes.
+Update the issue titles after every task completion, not just after a phase closes.  These checkboxes and updates should be performed 
+after every PR is merged that completes a task, to ensure the issue tracking reflects the current state of the project.
 
 ### Phase table (53 tasks total)
 
