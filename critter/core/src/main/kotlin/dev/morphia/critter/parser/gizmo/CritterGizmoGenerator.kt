@@ -14,6 +14,7 @@ object CritterGizmoGenerator {
     fun generate(
         type: Class<*>,
         critterClassLoader: CritterClassLoader = CritterClassLoader(),
+        runtimeMode: Boolean = false,
     ): GizmoEntityModelGenerator {
         val classNode = ClassNode()
         val resourceName = type.name.replace('.', '/') + ".class"
@@ -21,7 +22,7 @@ object CritterGizmoGenerator {
             type.classLoader.getResourceAsStream(resourceName)
                 ?: throw IllegalArgumentException("Could not find class file for ${type.name}")
         ClassReader(inputStream).accept(classNode, 0)
-        val propertyFinder = PropertyFinder(Generators.mapper, critterClassLoader)
+        val propertyFinder = PropertyFinder(Generators.mapper, critterClassLoader, runtimeMode)
 
         return entityModel(
             type,
@@ -42,6 +43,18 @@ object CritterGizmoGenerator {
 
     fun accessor(entityType: Class<*>, critterClassLoader: CritterClassLoader, method: MethodNode) =
         PropertyAccessorGenerator(entityType, critterClassLoader, method).emit()
+
+    fun varHandleAccessor(
+        entityType: Class<*>,
+        critterClassLoader: CritterClassLoader,
+        field: FieldNode,
+    ) = VarHandleAccessorGenerator(entityType, critterClassLoader, field).emit()
+
+    fun varHandleAccessor(
+        entityType: Class<*>,
+        critterClassLoader: CritterClassLoader,
+        method: MethodNode,
+    ) = VarHandleAccessorGenerator(entityType, critterClassLoader, method).emit()
 
     fun propertyModelGenerator(
         entityType: Class<*>,
