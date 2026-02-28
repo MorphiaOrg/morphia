@@ -1,5 +1,16 @@
 # Morphia Development Guide
 
+## Critter integration tasks
+- Always consult the [Critter Integration Guide](docs/critter-integration-guide.md) before starting work on a new phase or task related to Critter. That document is the dominant source of truth. if you find any conflicts between it and this document, please ask for guidance before doing anything.
+- Any directive to work on a phase or a task mentioned in #4179:
+  - should be done on a branch
+  - when the work is done, createa a PR for it
+  - only after merging the PR, should the appropriate checkboxes be checked
+- Any changes to the plan should submitted via PR so changes are obvious and easily trackable. If you have any questions about the plan, please ask for clarification before making changes.
+
+## Code quality
+- After making changes, run `./mvnw spotless:apply` to ensure code formatting is consistent.
+
 ## Build Commands
 - `./mvnw` - Use Maven wrapper (requires Maven 4.1.0+)
 - `-pl :artifactId` - Target specific module (e.g., `-pl :critter-core`)
