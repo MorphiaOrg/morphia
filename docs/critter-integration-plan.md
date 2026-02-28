@@ -39,26 +39,27 @@ When a phase reaches 100%, close the sub-issue and check its box in the parent i
 The parent issue title (#4179) reflects progress across **all tasks in all phases**:
 
 ```
-parent_percentage = (total_completed_tasks_across_all_phases / 53) * 100, rounded to nearest integer
+parent_percentage = (total_completed_tasks_across_all_phases / 55) * 100, rounded to nearest integer
 gh issue edit 4179 --repo MorphiaOrg/morphia --title "[XX%] Integrate critter-core into morphia-core"
 ```
 
-Update the issue titles after every task completion, not just after a phase closes.  These checkboxes and updates should be performed 
+Update the issue titles after every task completion, not just after a phase closes.  These checkboxes and updates should be performed
 after every PR is merged that completes a task, to ensure the issue tracking reflects the current state of the project.
 
-### Phase table (53 tasks total)
+### Phase table (55 tasks total)
 
 | Phase | Issue | Tasks | Status |
 |---|---|---|---|
 | Phase 1: Mapper interface + config | #4184 | 9 | In Progress |
 | Phase 2: VarHandle accessor generator | #4185 | 6 | Pending |
-| Phase 3: Move critter-core into core | #4186 | 8 | Pending |
-| Phase 4: CritterMapper implementation | #4187 | 9 | Pending |
-| Phase 5: Wire into MorphiaDatastore | #4188 | 5 | Pending |
-| Phase 6: Test infrastructure + CI | #4189 | 7 | Pending |
-| Phase 7: Cleanup + documentation | #4190 | 9 | Pending |
+| Phase 3: Convert Kotlin to Java | #4195 | 2 | Pending |
+| Phase 4: Move critter-core into core | #4186 | 8 | Pending |
+| Phase 5: CritterMapper implementation | #4187 | 9 | Pending |
+| Phase 6: Wire into MorphiaDatastore | #4188 | 5 | Pending |
+| Phase 7: Test infrastructure + CI | #4189 | 7 | Pending |
+| Phase 8: Cleanup + documentation | #4190 | 9 | Pending |
 
-As tasks are added or removed, update the task count in this table and the total (53) in the formula above.
+As tasks are added or removed, update the task count in this table and the total (55) in the formula above.
 ---
 
 # Implementation Plan
@@ -69,7 +70,7 @@ As tasks are added or removed, update the task count in this table and the total
 |---|---|---|
 | Generation strategy | **Hybrid** | Check classpath for pre-generated models (critter-maven AOT), fall back to runtime generation (Gizmo), fall back to reflection |
 | Runtime accessors | **VarHandle-based** | Generate accessor classes using `VarHandle` for field/method access. Eliminates need for synthetic `__read/__write` methods at runtime. Nearly native performance after JIT. |
-| Language | **Keep Kotlin** | Move critter Kotlin code into morphia-core as-is. Add `kotlin-maven-plugin` to core build. |
+| Language | **Convert to Java** | Convert critter Kotlin source to Java before moving into morphia-core. Eliminates the Kotlin runtime dependency and simplifies the build to pure Java. |
 | Mapper interface scope | **`@MorphiaInternal` only** | Not exposed on `Datastore` or any public API. Strictly internal contract. **Any changes to the interface contract (method signatures, additions, removals) must be explicitly approved by the user before implementation.** |
 | Fallback granularity | **Entity-type level** | If any part of generation fails for a type, the entire type falls back to reflection. No mixed models. |
 | `copy()` semantics | **Share immutable models** | `CritterEntityModel` is immutable (setters throw). `CritterMapper.copy()` shares model references, creates new `DiscriminatorLookup`. |
@@ -169,7 +170,7 @@ Move the entire current `Mapper.java` class body here. Rename to `ReflectiveMapp
 
 ### 1.5 Extract shared base class `AbstractMapper`
 
-Since both `ReflectiveMapper` and `CritterMapper` (Phase 4) will share entity registration, discriminator management, listener handling, and config access, extract shared logic into:
+Since both `ReflectiveMapper` and `CritterMapper` (Phase 5) will share entity registration, discriminator management, listener handling, and config access, extract shared logic into:
 
 **New file:** `core/src/main/java/dev/morphia/mapping/AbstractMapper.java`
 
@@ -232,13 +233,13 @@ this.mapper = createMapper(config);
 // New private method:
 private static Mapper createMapper(MorphiaConfig config) {
     return switch (config.mapper()) {
-        case CRITTER -> new CritterMapper(config);  // Phase 4
+        case CRITTER -> new CritterMapper(config);  // Phase 5
         case LEGACY -> new ReflectiveMapper(config);
     };
 }
 ```
 
-For now (before Phase 4), default to `ReflectiveMapper` always. Wire `CritterMapper` in Phase 5.
+For now (before Phase 5), default to `ReflectiveMapper` always. Wire `CritterMapper` in Phase 6.
 
 ### 1.7 Add Sofia error message
 
@@ -301,7 +302,7 @@ For method-based properties (getter/setter discovered via `@Property` on methods
 
 ### 2.2 Update `PropertyFinder` to support dual mode
 
-**File:** `critter/core/src/main/kotlin/dev/morphia/critter/parser/PropertyFinder.kt` (will be moved in Phase 3)
+**File:** `critter/core/src/main/kotlin/dev/morphia/critter/parser/PropertyFinder.kt` (will be moved in Phase 4)
 
 Add a `runtimeMode: Boolean` parameter. When `true`:
 - Skip the `classLoader.register(entityType.name, fieldAccessors(...))` calls (no entity modification)
@@ -328,57 +329,78 @@ Write a test that:
 
 ---
 
-## Phase 3: Move Critter-Core into Morphia-Core
+## Phase 3: Convert Kotlin Source to Java
 
-**Goal:** Physically move Kotlin source, configure the build, refactor `Generators` singleton.
+**Goal:** Convert all critter-core Kotlin sources to Java to eliminate the Kotlin runtime dependency and simplify the build. This is done in two atomic steps so each can be reviewed and merged independently.
 
-### 3.1 Add Kotlin build support to core
+### 3.1 Convert critter-core test sources to Java
+
+Convert all Kotlin test files in `critter/core/src/test/kotlin/` to equivalent Java. The production Kotlin code remains **unchanged** at this step; only test code is converted. All converted tests must compile and pass against the existing Kotlin production code with no behavior changes.
+
+Key conversion patterns:
+- Kotlin `fun` → Java methods
+- `val`/`var` → Java local variables and fields
+- String templates (`"$var"`) → `String.format()` or concatenation
+- Kotlin collection extensions (`listOf`, `mapOf`, `filter`, `map`) → Java equivalents (`List.of`, `Map.of`, streams)
+- `companion object` → static nested class or static methods
+- `data class` → Java record (JDK 16+) or POJO
+- Kotlin nullability (`?`, `?.`, `!!`) → Java with `@Nullable`/`@NonNull` or explicit null checks
+- `when` expressions → `switch` or if-else chains
+
+**Verification:**
+
+```bash
+./mvnw test -pl :critter-core -Ddeploy.skip=true
+```
+
+All tests must pass against the unchanged Kotlin production code.
+
+### 3.2 Convert critter-core main sources to Java
+
+Convert all Kotlin production files in `critter/core/src/main/kotlin/` to Java. Attempt to leave the test files (converted in 3.1) unchanged. Minor test modifications to accommodate syntactic differences between Kotlin and Java are acceptable.
+
+Files to convert (in dependency order):
+- `ExtensionFunctions.kt` → `ExtensionFunctions.java` (static utility methods)
+- `Critter.kt` → `Critter.java`
+- `CritterClassLoader.kt` → `CritterClassLoader.java`
+- `conventions/PropertyConvention.kt` → `conventions/PropertyConvention.java`
+- `parser/Generators.kt` → `parser/Generators.java`
+- `parser/ExtensionFunctions.kt` → `parser/ExtensionFunctions.java`
+- `parser/PropertyFinder.kt` → `parser/PropertyFinder.java`
+- `parser/java/CritterParser.kt` → `parser/java/CritterParser.java`
+- `parser/asm/*.kt` → `parser/asm/*.java`
+- `parser/gizmo/*.kt` → `parser/gizmo/*.java` (including `VarHandleAccessorGenerator` from Phase 2)
+
+Key conversion patterns:
+- `object` singletons → Java singletons (enum-based or class with private constructor + static instance)
+- Extension functions → static methods in a companion helper class (e.g., `Generators.wrap(type)`)
+- Named parameters with defaults → method overloads or Builder pattern
+- Kotlin `?.let { }` / `?.run { }` chains → Java null checks with if-else
+- `apply` / `also` scope functions → inline initialization or helper methods
+- `reified` inline functions → regular methods with explicit `Class<T>` parameter
+- Kotlin's `by lazy` → `java.util.concurrent.atomic.AtomicReference` or field initialized in constructor
+
+**Verification:**
+
+```bash
+./mvnw test -pl :critter-core -Ddeploy.skip=true
+```
+
+All tests (largely unchanged from 3.1) must continue to pass against the converted Java production code.
+
+---
+
+## Phase 4: Move Critter-Core into Morphia-Core
+
+**Goal:** Physically move Java source (converted in Phase 3), configure the build with optional bytecode-generation dependencies, and refactor `Generators` singleton.
+
+### 4.1 Add optional bytecode-generation dependencies to core
 
 **File:** `core/pom.xml`
 
-Add `kotlin-maven-plugin` (must execute **before** `maven-compiler-plugin`):
+Since the moved code is now pure Java, no Kotlin plugin is needed. Add only the optional deps required for bytecode generation:
 
 ```xml
-<plugin>
-    <groupId>org.jetbrains.kotlin</groupId>
-    <artifactId>kotlin-maven-plugin</artifactId>
-    <version>${kotlin.version}</version>
-    <executions>
-        <execution>
-            <id>compile</id>
-            <phase>compile</phase>
-            <goals><goal>compile</goal></goals>
-            <configuration>
-                <sourceDirs>
-                    <sourceDir>${project.basedir}/src/main/kotlin</sourceDir>
-                    <sourceDir>${project.basedir}/src/main/java</sourceDir>
-                </sourceDirs>
-            </configuration>
-        </execution>
-        <execution>
-            <id>test-compile</id>
-            <phase>test-compile</phase>
-            <goals><goal>test-compile</goal></goals>
-            <configuration>
-                <sourceDirs>
-                    <sourceDir>${project.basedir}/src/test/kotlin</sourceDir>
-                    <sourceDir>${project.basedir}/src/test/java</sourceDir>
-                </sourceDirs>
-            </configuration>
-        </execution>
-    </executions>
-</plugin>
-```
-
-Add dependencies. Kotlin stdlib is required (non-optional, since critter Kotlin code is always compiled into morphia-core). Generation-specific deps are `<optional>true</optional>` — only needed when CRITTER mapper is selected:
-
-```xml
-<!-- Required: Kotlin runtime (critter code is Kotlin) -->
-<dependency>
-    <groupId>org.jetbrains.kotlin</groupId>
-    <artifactId>kotlin-stdlib</artifactId>
-</dependency>
-
 <!-- Optional: Only needed when mapper=CRITTER -->
 <dependency>
     <groupId>io.quarkus.gizmo</groupId>
@@ -409,82 +431,93 @@ Add dependencies. Kotlin stdlib is required (non-optional, since critter Kotlin 
 
 **Fail-fast check in `CritterMapper` constructor:** Attempt to load a marker class (e.g., `io.quarkus.gizmo.ClassCreator`) and throw a clear `MappingException` if missing, listing the required dependencies.
 
-### 3.2 Move Kotlin source files
+### 4.2 Move Java source files
 
-Move all files from `critter/core/src/main/kotlin/` to `core/src/main/kotlin/` preserving package structure:
+Move all files from `critter/core/src/main/java/` to `core/src/main/java/` preserving package structure:
 
 ```
 dev/morphia/critter/
-├── Critter.kt
-├── CritterClassLoader.kt
-├── conventions/PropertyConvention.kt
+├── Critter.java
+├── CritterClassLoader.java
+├── conventions/PropertyConvention.java
 ├── parser/
-│   ├── Generators.kt
-│   ├── ExtensionFunctions.kt
-│   ├── PropertyFinder.kt
-│   ├── java/CritterParser.kt
+│   ├── Generators.java
+│   ├── ExtensionFunctions.java
+│   ├── PropertyFinder.java
+│   ├── java/CritterParser.java
 │   ├── asm/
-│   │   ├── AddFieldAccessorMethods.kt
-│   │   ├── AddMethodAccessorMethods.kt
-│   │   ├── BaseGenerator.kt
-│   │   └── ... (all asm/*.kt files)
+│   │   ├── AddFieldAccessorMethods.java
+│   │   ├── AddMethodAccessorMethods.java
+│   │   ├── BaseGenerator.java
+│   │   └── ... (all asm/*.java files)
 │   └── gizmo/
-│       ├── BaseGizmoGenerator.kt
-│       ├── CritterGizmoGenerator.kt
-│       ├── GizmoEntityModelGenerator.kt
-│       ├── PropertyAccessorGenerator.kt
-│       ├── PropertyModelGenerator.kt
-│       ├── VarHandleAccessorGenerator.kt  (new from Phase 2)
-│       └── ... (all gizmo/*.kt files)
+│       ├── BaseGizmoGenerator.java
+│       ├── CritterGizmoGenerator.java
+│       ├── GizmoEntityModelGenerator.java
+│       ├── PropertyAccessorGenerator.java
+│       ├── PropertyModelGenerator.java
+│       ├── VarHandleAccessorGenerator.java  (from Phase 2, converted in Phase 3)
+│       └── ... (all gizmo/*.java files)
 ```
 
-Move relevant test files from `critter/core/src/test/kotlin/` to `core/src/test/kotlin/`.
+Move relevant test files from `critter/core/src/test/java/` to `core/src/test/java/`.
 
-### 3.3 Refactor `Generators` from singleton to instance
+### 4.3 Refactor `Generators` from singleton to instance
 
-**File:** `core/src/main/kotlin/dev/morphia/critter/parser/Generators.kt`
+**File:** `core/src/main/java/dev/morphia/critter/parser/Generators.java`
 
-Before (singleton):
-```kotlin
-object Generators {
-    var configFile = MORPHIA_CONFIG_PROPERTIES
-    val config: MorphiaConfig by lazy { MorphiaConfig.load(configFile) }
-    val mapper: Mapper by lazy { Mapper(config) }
-    var convention = MorphiaDefaultsConvention()
-    // utility functions
+Before (static singleton, as produced by Phase 3.2 conversion):
+```java
+public class Generators {
+    public static final String CONFIG_FILE = MORPHIA_CONFIG_PROPERTIES;
+    public static MorphiaConfig config = MorphiaConfig.load(CONFIG_FILE);
+    public static Mapper mapper = new Mapper(config);
+    public static MorphiaDefaultsConvention convention = new MorphiaDefaultsConvention();
 }
 ```
 
-After (instance-scoped + companion for utilities):
-```kotlin
-class Generators(val config: MorphiaConfig, val mapper: Mapper) {
-    val convention = MorphiaDefaultsConvention()
+After (instance-scoped + static for utilities):
+```java
+public class Generators {
+    private final MorphiaConfig config;
+    private final Mapper mapper;
+    private final MorphiaDefaultsConvention convention = new MorphiaDefaultsConvention();
 
-    companion object {
-        // Keep stateless utility functions here (wrap(), Type.isArray(), Type.asClass())
-        fun wrap(fieldType: Type): Type { ... }
-        fun Type.isArray(): Boolean = ...
-        fun Type.asClass(classLoader: ClassLoader = ...): Class<*> = ...
+    public Generators(MorphiaConfig config, Mapper mapper) {
+        this.config = config;
+        this.mapper = mapper;
     }
+
+    // Static utility methods (formerly extension functions)
+    public static Type wrap(Type fieldType) { ... }
+    public static boolean isArray(Type type) { ... }
+    public static Class<?> asClass(Type type, ClassLoader classLoader) { ... }
 }
 ```
 
-### 3.4 Update all files that reference `Generators` singleton
+### 4.4 Update all files that reference `Generators` singleton
 
 Every file that accesses `Generators.config` or `Generators.mapper` must be updated to receive a `Generators` instance. Key files:
 
-- `CritterGizmoGenerator.kt` — add `generators` parameter, pass to `PropertyFinder`
-- `PropertyFinder.kt` — already takes `mapper`, add `config` access via it
-- `GizmoEntityModelGenerator.kt` — currently accesses `Generators.config` directly (line 87, 94, 105). Pass `config` through constructor or accept `Generators` instance.
-- `PropertyModelGenerator.kt` — currently takes `config` in constructor (already good)
+- `CritterGizmoGenerator.java` — add `generators` parameter, pass to `PropertyFinder`
+- `PropertyFinder.java` — already takes `mapper`, add `config` access via it
+- `GizmoEntityModelGenerator.java` — currently accesses `Generators.config` directly. Pass `config` through constructor or accept `Generators` instance.
+- `PropertyModelGenerator.java` — currently takes `config` in constructor (already good)
 
-### 3.5 Update `CritterClassLoader` constructor
+### 4.5 Update `CritterClassLoader` constructor
 
 Accept parent classloader as parameter instead of hardcoding. The parent should be the configured classloader so that non-critter-generated classes can be resolved through the normal delegation chain. Build-time generation (critter-maven) produces permanent `.class` files on the classpath; if those are absent, runtime generation produces classes loaded into this classloader. Runtime-generated classes are **not** cached to disk — they are regenerated on each JVM startup.
 
-```kotlin
-class CritterClassLoader(parent: ClassLoader = Thread.currentThread().contextClassLoader)
-    : ByteArrayClassLoader.ChildFirst(parent, true, mapOf())
+```java
+public class CritterClassLoader extends ByteArrayClassLoader.ChildFirst {
+    public CritterClassLoader(ClassLoader parent) {
+        super(parent, true, Collections.emptyMap());
+    }
+
+    public CritterClassLoader() {
+        this(Thread.currentThread().getContextClassLoader());
+    }
+}
 ```
 
 **Classloader delegation:**
@@ -498,15 +531,15 @@ class CritterClassLoader(parent: ClassLoader = Thread.currentThread().contextCla
 ./mvnw clean install -pl :morphia-core -am -DskipTests -Ddeploy.skip=true -Dinvoker.skip=true
 ```
 
-Must compile successfully with mixed Java + Kotlin sources.
+Must compile successfully with Java sources only.
 
 ---
 
-## Phase 4: CritterMapper Implementation
+## Phase 5: CritterMapper Implementation
 
 **Goal:** Implement the hybrid discovery mapper with three-tier fallback.
 
-### 4.1 Create `CritterMapper`
+### 5.1 Create `CritterMapper`
 
 **New file:** `core/src/main/java/dev/morphia/mapping/CritterMapper.java`
 
@@ -612,7 +645,7 @@ public class CritterMapper extends AbstractMapper {
 }
 ```
 
-### 4.2 Key design notes
+### 5.2 Key design notes
 
 **Thread safety:**
 - `mappedEntities` (from `AbstractMapper`) is `ConcurrentHashMap` — `computeIfAbsent` could deadlock with Gizmo classloading. Instead, use the check-then-register pattern already established in `Mapper.mapEntity()` + `register()` which handles races via `mappedEntities.get()` returning existing on collision.
@@ -645,11 +678,11 @@ Tests:
 
 ---
 
-## Phase 5: Wire CritterMapper into MorphiaDatastore
+## Phase 6: Wire CritterMapper into MorphiaDatastore
 
 **Goal:** Complete the config-driven mapper selection.
 
-### 5.1 Update `MorphiaDatastore` factory
+### 6.1 Update `MorphiaDatastore` factory
 
 **File:** `core/src/main/java/dev/morphia/MorphiaDatastore.java`
 
@@ -662,13 +695,13 @@ private static Mapper createMapper(MorphiaConfig config) {
 }
 ```
 
-### 5.2 Update copy constructor
+### 6.2 Update copy constructor
 
 **File:** `core/src/main/java/dev/morphia/MorphiaDatastore.java`
 
 The existing `mapper.copy()` call is already polymorphic (dispatches to `CritterMapper.copy()` or `ReflectiveMapper.copy()`). No change needed beyond what Phase 1 set up.
 
-### 5.3 Validate `importModels()` integration
+### 6.3 Validate `importModels()` integration
 
 **File:** `core/src/main/java/dev/morphia/MorphiaDatastore.java`
 
@@ -686,11 +719,11 @@ The existing `mapper.copy()` call is already polymorphic (dispatches to `Critter
 
 ---
 
-## Phase 6: Test Infrastructure
+## Phase 7: Test Infrastructure
 
 **Goal:** Enable parameterized testing, Maven property support, CI matrix.
 
-### 6.1 Add Maven property passthrough
+### 7.1 Add Maven property passthrough
 
 **File:** `core/pom.xml` (surefire plugin config)
 
@@ -710,7 +743,7 @@ Default property in `<properties>`:
 <morphia.mapper>legacy</morphia.mapper>
 ```
 
-### 6.2 Update `MorphiaTestSetup` to read system property
+### 7.2 Update `MorphiaTestSetup` to read system property
 
 **File:** `core/src/test/java/dev/morphia/test/MorphiaTestSetup.java`
 
@@ -728,7 +761,7 @@ protected static MorphiaConfig buildConfig() {
 
 This means **all tests** automatically use the mapper specified by `-Dmorphia.mapper=critter` without any individual test changes. This is the simplest approach and gives maximum coverage.
 
-### 6.3 Add DataProvider for tests that need explicit dual-mapper testing
+### 7.3 Add DataProvider for tests that need explicit dual-mapper testing
 
 **File:** `core/src/test/java/dev/morphia/test/TestBase.java`
 
@@ -744,7 +777,7 @@ public static Object[][] mapperTypes() {
 
 For specific tests that should always run with both (e.g., `TestMapping`, `TestEntityModel`), annotate with `@Test(dataProvider = "mapperTypes")` and accept `MapperType` parameter.
 
-### 6.4 Update CI workflow
+### 7.4 Update CI workflow
 
 **File:** `.github/workflows/build.yml`
 
@@ -764,11 +797,11 @@ env:
     -Dmorphia.mapper=${{ matrix.mapper }}
 ```
 
-### 6.5 Fold critter-integration-tests into core tests
+### 7.5 Fold critter-integration-tests into core tests
 
 The `critter-integration-tests` module copies test sources from morphia-core and re-runs them with critter-generated models. With the new architecture, `./mvnw test -Dmorphia.mapper=critter` achieves the same thing. This module becomes redundant.
 
-**Action:** Keep it for now (Phase 7 cleanup). Mark as deprecated in pom.xml comment.
+**Action:** Keep it for now (Phase 8 cleanup). Mark as deprecated in pom.xml comment.
 
 ### Verification
 
@@ -778,20 +811,20 @@ The `critter-integration-tests` module copies test sources from morphia-core and
 ./mvnw test -pl :morphia-core -Dmorphia.mapper=critter -Ddeploy.skip=true
 ```
 
-Both must be green before proceeding to Phase 7.
+Both must be green before proceeding to Phase 8.
 
 ---
 
-## Phase 7: Cleanup and Documentation
+## Phase 8: Cleanup and Documentation
 
 **Goal:** Remove redundant modules, update docs, verify published artifacts.
 
-### 7.1 Remove critter-core module
+### 8.1 Remove critter-core module
 
 - Delete `critter/core/` directory entirely
 - Update `critter/pom.xml`: remove `<subproject>core</subproject>`
 
-### 7.2 Update critter-maven to depend on morphia-core
+### 8.2 Update critter-maven to depend on morphia-core
 
 **File:** `critter/critter-maven/pom.xml`
 
@@ -811,21 +844,21 @@ Replace `critter-core` dependency with `morphia-core`:
 </dependency>
 ```
 
-### 7.3 Remove critter-integration-tests (or refactor)
+### 8.3 Remove critter-integration-tests (or refactor)
 
 If all core tests pass with `-Dmorphia.mapper=critter`, this module is redundant.
 
 - Delete `critter/critter-integration-tests/` or
 - Refactor to only test AOT-specific behavior (critter-maven plugin → generated classes → runtime loading)
 
-### 7.4 Update root POM
+### 8.4 Update root POM
 
 **File:** `pom.xml`
 
 - Remove `critter-core` from `<dependencyManagement>` if listed
 - Update module list if critter-core was listed
 
-### 7.5 Update documentation
+### 8.5 Update documentation
 
 **File:** `.claude/CLAUDE.md`
 
@@ -841,14 +874,14 @@ Document the new option:
 # morphia.mapper=legacy
 ```
 
-### 7.6 Verify published artifact
+### 8.6 Verify published artifact
 
 ```bash
 ./mvnw clean install -Ddeploy.skip=true -Dinvoker.skip=true
 ```
 
-- `morphia-core` JAR contains Kotlin classes under `dev.morphia.critter`
-- `morphia-core` POM declares Kotlin/Gizmo/ASM dependencies
+- `morphia-core` JAR contains Java classes under `dev.morphia.critter`
+- `morphia-core` POM declares Gizmo/ASM/ByteBuddy dependencies as optional
 - `critter-core` artifact no longer published
 - `critter-maven` still published, depends on `morphia-core`
 
@@ -875,25 +908,27 @@ Document the new option:
 | `core/.../mapping/Mapper.java` | 1 | Convert to interface |
 | `core/.../mapping/AbstractMapper.java` | 1 | Create (shared base) |
 | `core/.../mapping/ReflectiveMapper.java` | 1 | Create (current impl) |
-| `core/.../MorphiaDatastore.java` | 1, 5 | Factory method |
-| `core/.../critter/parser/gizmo/VarHandleAccessorGenerator.kt` | 2 | Create |
-| `core/.../critter/parser/PropertyFinder.kt` | 2, 3 | Dual mode + move |
-| `core/pom.xml` | 3 | Kotlin plugin + deps |
-| `core/src/main/kotlin/dev/morphia/critter/**` | 3 | Move from critter/core |
-| `core/.../critter/parser/Generators.kt` | 3 | Refactor to instance |
-| `core/.../mapping/CritterMapper.java` | 4 | Create |
-| `core/src/test/.../TestBase.java` | 6 | DataProvider |
-| `core/src/test/.../MorphiaTestSetup.java` | 6 | System property |
-| `.github/workflows/build.yml` | 6 | Matrix extension |
-| `critter/core/` | 7 | Delete |
-| `critter/critter-maven/pom.xml` | 7 | Update deps |
+| `core/.../MorphiaDatastore.java` | 1, 6 | Factory method |
+| `core/.../critter/parser/gizmo/VarHandleAccessorGenerator.kt` | 2 | Create (Kotlin) |
+| `core/.../critter/parser/PropertyFinder.kt` | 2 | Dual mode |
+| `critter/core/src/test/kotlin/**` | 3.1 | Convert to Java |
+| `critter/core/src/main/kotlin/**` | 3.2 | Convert to Java |
+| `core/pom.xml` | 4 | Optional bytecode-gen deps |
+| `core/src/main/java/dev/morphia/critter/**` | 4 | Move from critter/core |
+| `core/.../critter/parser/Generators.java` | 4 | Refactor to instance |
+| `core/.../mapping/CritterMapper.java` | 5 | Create |
+| `core/src/test/.../TestBase.java` | 7 | DataProvider |
+| `core/src/test/.../MorphiaTestSetup.java` | 7 | System property |
+| `.github/workflows/build.yml` | 7 | Matrix extension |
+| `critter/core/` | 8 | Delete |
+| `critter/critter-maven/pom.xml` | 8 | Update deps |
 
 ## Risk Mitigation
 
 | Risk | Mitigation |
 |---|---|
 | VarHandle access fails for private fields in other modules (JPMS) | Use `MethodHandles.privateLookupIn()` which works when the calling module has access. If entity is in an unexported package, fall back to reflection. Add `--add-opens` guidance for modular apps. |
-| Kotlin compilation slows core build | Measure build time delta. If >30s increase, consider incremental compilation or splitting compilation phases. |
+| Kotlin-to-Java conversion introduces subtle behavioral differences | Each converted file must be covered by the test suite from 3.1 before production code is converted. Any test failures block the phase. |
 | Gizmo bytecode incompatible with newer JVMs | Gizmo targets the classfile version of the running JVM. Pin minimum Java 17+. |
 | CritterClassLoader leaks memory | Tie lifecycle to `CritterMapper` instance. When `MorphiaDatastore` is closed/GC'd, the classloader and generated classes become eligible for GC. |
 | Pre-generated models from critter-maven use synthetic `__read/__write` but entity class on classpath doesn't have them (build skipped plugin) | Pre-generated models only exist when critter-maven runs. If the plugin ran, the modified entity class files are also present. This is inherently consistent. |

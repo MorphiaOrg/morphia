@@ -18,7 +18,7 @@ jobs:
     if: |
       (github.event_name == 'pull_request' && github.event.pull_request.merged == true) ||
       (github.event_name == 'issues' && contains(
-        fromJson('[4179, 4184, 4185, 4186, 4187, 4188, 4189, 4190]'),
+        fromJson('[4179, 4184, 4185, 4195, 4186, 4187, 4188, 4189, 4190]'),
         github.event.issue.number
       ))
     steps:
