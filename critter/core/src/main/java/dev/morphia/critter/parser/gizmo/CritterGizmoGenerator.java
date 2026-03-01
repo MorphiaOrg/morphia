@@ -49,11 +49,11 @@ public class CritterGizmoGenerator {
         return new AddMethodAccessorMethods(entityType, methods).emit();
     }
 
-    public PropertyAccessorGenerator accessor(Class<?> entityType, CritterClassLoader critterClassLoader, FieldNode field) {
+    public PropertyAccessorGenerator propertyAccessor(Class<?> entityType, CritterClassLoader critterClassLoader, FieldNode field) {
         return new PropertyAccessorGenerator(entityType, critterClassLoader, field).emit();
     }
 
-    public PropertyAccessorGenerator accessor(Class<?> entityType, CritterClassLoader critterClassLoader, MethodNode method) {
+    public PropertyAccessorGenerator propertyAccessor(Class<?> entityType, CritterClassLoader critterClassLoader, MethodNode method) {
         return new PropertyAccessorGenerator(entityType, critterClassLoader, method).emit();
     }
 

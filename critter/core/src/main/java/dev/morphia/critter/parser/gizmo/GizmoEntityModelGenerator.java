@@ -36,12 +36,12 @@ public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
         this.classNode = classNode;
         this.properties = properties;
 
-        generatedType = baseName + "." + type.getSimpleName() + "EntityModel";
+        generatedType = "%s.%sEntityModel".formatted(baseName, type.getSimpleName());
         this.annotations = classNode.visibleAnnotations != null ? classNode.visibleAnnotations : Collections.emptyList();
 
         Entity ann = type.getAnnotation(Entity.class);
         if (ann == null) {
-            throw new IllegalStateException("Class " + type.getName() + " does not have @Entity annotation");
+            throw new IllegalStateException("Class %s does not have @Entity annotation".formatted(type.getName()));
         }
         this.entityAnnotation = ann;
 

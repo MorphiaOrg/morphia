@@ -88,7 +88,7 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
             annotationMap = new LinkedHashMap<>();
             for (AnnotationNode ann : annotations) {
                 if (ann.desc.startsWith("Ldev/morphia/annotations/")) {
-                    Annotation a = (Annotation) AnnotationNodeExtensions.INSTANCE.toMorphiaAnnotation(ann);
+                    Annotation a = AnnotationNodeExtensions.INSTANCE.toMorphiaAnnotation(ann);
                     annotationMap.put(a.annotationType().getName(), a);
                 }
             }

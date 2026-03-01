@@ -46,7 +46,7 @@ public class PropertyFinder {
                 if (runtimeMode) {
                     CritterGizmoGenerator.INSTANCE.varHandleAccessor(entityType, classLoader, field);
                 } else {
-                    CritterGizmoGenerator.INSTANCE.accessor(entityType, classLoader, field);
+                    CritterGizmoGenerator.INSTANCE.propertyAccessor(entityType, classLoader, field);
                 }
                 models.add(CritterGizmoGenerator.INSTANCE.propertyModelGenerator(entityType, classLoader, field));
             }
@@ -58,7 +58,7 @@ public class PropertyFinder {
                 if (runtimeMode) {
                     CritterGizmoGenerator.INSTANCE.varHandleAccessor(entityType, classLoader, method);
                 } else {
-                    CritterGizmoGenerator.INSTANCE.accessor(entityType, classLoader, method);
+                    CritterGizmoGenerator.INSTANCE.propertyAccessor(entityType, classLoader, method);
                 }
                 models.add(CritterGizmoGenerator.INSTANCE.propertyModelGenerator(entityType, classLoader, method));
             }

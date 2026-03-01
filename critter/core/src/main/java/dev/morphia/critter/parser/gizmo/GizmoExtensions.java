@@ -17,6 +17,8 @@ import io.quarkus.gizmo.MethodCreator;
 import io.quarkus.gizmo.MethodDescriptor;
 import io.quarkus.gizmo.ResultHandle;
 
+import static io.quarkus.gizmo.MethodDescriptor.ofMethod;
+
 public class GizmoExtensions {
 
     public static ResultHandle annotationBuilder(AnnotationNode annotationNode, MethodCreator creator) {
@@ -24,7 +26,7 @@ public class GizmoExtensions {
         String classPackage = type.getClassName().substring(0, type.getClassName().lastIndexOf('.'));
         String className = type.getClassName().substring(type.getClassName().lastIndexOf('.') + 1);
         Type builderType = Type.getType(("L" + classPackage + ".internal." + className + "Builder;").replace('.', '/'));
-        MethodDescriptor builder = MethodDescriptor.ofMethod(
+        MethodDescriptor builder = ofMethod(
                 builderType.getClassName(),
                 ExtensionFunctions.methodCase(className) + "Builder",
                 builderType.getClassName());
@@ -32,9 +34,7 @@ public class GizmoExtensions {
 
         setBuilderValues(annotationNode, creator, local);
 
-        return creator.invokeVirtualMethod(
-                MethodDescriptor.ofMethod(builderType.getClassName(), "build", type.getClassName()),
-                local);
+        return creator.invokeVirtualMethod(ofMethod(builderType.getClassName(), "build", type.getClassName()), local);
     }
 
     public static void setBuilderValues(AnnotationNode annotationNode, MethodCreator creator, ResultHandle local) {
