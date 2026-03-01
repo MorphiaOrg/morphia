@@ -4,7 +4,6 @@ import java.util.List;
 
 import dev.morphia.critter.Critter;
 import dev.morphia.critter.CritterClassLoader;
-import dev.morphia.critter.CritterKt;
 import dev.morphia.critter.sources.Example;
 
 import org.bson.codecs.pojo.PropertyAccessor;
@@ -36,9 +35,9 @@ public class TestAccessorsMutators extends BaseCritterTest {
             String fieldName,
             Object testValue) throws Exception {
         Class<PropertyAccessor<Object>> accessorClass = (Class<PropertyAccessor<Object>>) loader.loadClass(
-                Critter.Companion.critterPackage(type)
+                Critter.critterPackage(type)
                         + type.getSimpleName()
-                        + CritterKt.titleCase(fieldName)
+                        + Critter.titleCase(fieldName)
                         + "Accessor");
         PropertyAccessor<Object> accessor = accessorClass.getConstructor().newInstance();
 

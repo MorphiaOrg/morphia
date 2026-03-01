@@ -56,7 +56,7 @@ public class TestGizmoGeneration {
                 descriptor(Example.class));
 
         Assert.assertEquals(descriptor, descString);
-        TypeData<?> typeData = PropertyModelGeneratorKt.typeData(descString, Thread.currentThread().getContextClassLoader()).get(0);
+        TypeData<?> typeData = PropertyModelGenerator.typeData(descString, Thread.currentThread().getContextClassLoader()).get(0);
         Assert.assertEquals(
                 typeData,
                 typeDataHelper(java.util.Map.class, typeDataHelper(String.class), typeDataHelper(Example.class)));
@@ -73,7 +73,7 @@ public class TestGizmoGeneration {
                         descriptor(Example.class)));
         Assert.assertEquals(descriptor, descString);
 
-        TypeData<?> typeData = PropertyModelGeneratorKt.typeData(descString, Thread.currentThread().getContextClassLoader()).get(0);
+        TypeData<?> typeData = PropertyModelGenerator.typeData(descString, Thread.currentThread().getContextClassLoader()).get(0);
         Assert.assertEquals(
                 typeData,
                 typeDataHelper(java.util.List.class,
@@ -88,7 +88,7 @@ public class TestGizmoGeneration {
                 descriptor(String.class),
                 descriptor(java.util.List.class, descriptor(Example.class)));
         Assert.assertEquals(descriptor, descString);
-        TypeData<?> typeData = PropertyModelGeneratorKt.typeData(descriptor, Thread.currentThread().getContextClassLoader()).get(0);
+        TypeData<?> typeData = PropertyModelGenerator.typeData(descriptor, Thread.currentThread().getContextClassLoader()).get(0);
         Assert.assertEquals(
                 typeData,
                 typeDataHelper(java.util.Map.class,
@@ -98,7 +98,7 @@ public class TestGizmoGeneration {
 
     @Test
     public void testPrimitiveArray() {
-        TypeData<?> typeData = PropertyModelGeneratorKt.typeData("[I", Thread.currentThread().getContextClassLoader()).get(0);
+        TypeData<?> typeData = PropertyModelGenerator.typeData("[I", Thread.currentThread().getContextClassLoader()).get(0);
         Assert.assertTrue(typeData.isArray());
     }
 
@@ -129,7 +129,7 @@ public class TestGizmoGeneration {
             mc.invokeVirtualMethod(
                     annotationMethod,
                     mc.getThis(),
-                    GizmoExtensionsKt.annotationBuilder(index, mc));
+                    GizmoExtensions.annotationBuilder(index, mc));
         }
     }
 

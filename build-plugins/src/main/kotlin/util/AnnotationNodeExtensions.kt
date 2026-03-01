@@ -1,17 +1,7 @@
 package util
 
-import com.squareup.kotlinpoet.AnnotationSpec
-import com.squareup.kotlinpoet.AnnotationSpec.UseSiteTarget.FILE
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ClassName.Companion.bestGuess
-import com.squareup.kotlinpoet.DelicateKotlinPoetApi
-import com.squareup.kotlinpoet.FileSpec
-import com.squareup.kotlinpoet.FunSpec
-import com.squareup.kotlinpoet.KModifier
-import com.squareup.kotlinpoet.TypeSpec
-import com.squareup.kotlinpoet.TypeSpec.Companion.objectBuilder
-import com.squareup.kotlinpoet.TypeVariableName
-import com.squareup.kotlinpoet.asClassName
 import java.io.File
 import java.io.FileFilter
 import java.io.FileWriter
@@ -26,22 +16,12 @@ import org.apache.maven.project.MavenProject
 import org.jboss.forge.roaster.ParserException
 import org.jboss.forge.roaster.Roaster
 import org.jboss.forge.roaster.model.Type
-import org.jboss.forge.roaster.model.source.Import
 import org.jboss.forge.roaster.model.source.JavaAnnotationSource
-import org.jboss.forge.roaster.model.source.JavaClassSource
-import org.jboss.forge.roaster.model.util.Types
 import org.objectweb.asm.Type as AsmType
-import org.objectweb.asm.tree.AnnotationNode
-import util.AnnotationBuilders.methodCase
 
-@OptIn(DelicateKotlinPoetApi::class)
 @Mojo(name = "morphia-annotation-node", defaultPhase = GENERATE_SOURCES)
 class AnnotationNodeExtensions : AbstractMojo() {
     companion object {
-        val RESULT_HANDLE = ClassName("io.quarkus.gizmo", "ResultHandle")
-        val METHOD_CREATOR = ClassName("io.quarkus.gizmo", "MethodCreator")
-        val METHOD_DESCRIPTOR = ClassName("io.quarkus.gizmo", "MethodDescriptor")
-
         fun find(path: String, filter: FileFilter): List<File> {
             val array = File(path).listFiles(filter)
             return if (array != null) listOf(*array) else listOf()
@@ -49,11 +29,9 @@ class AnnotationNodeExtensions : AbstractMojo() {
     }
 
     private val builders: MutableMap<String, JavaAnnotationSource> = TreeMap()
-    lateinit var fileBuilder: FileSpec.Builder
 
     @Parameter(defaultValue = "\${project}", required = true, readonly = true)
     private val project: MavenProject? = null
-    lateinit var factory: TypeSpec.Builder
     private var generated: File? = null
     private val filter = FileFilter { pathname: File ->
         (pathname.name.endsWith(".java") || pathname.name.endsWith(".kt")) &&
@@ -82,30 +60,7 @@ class AnnotationNodeExtensions : AbstractMojo() {
                     throw MojoExecutionException("Could not parse $file", e)
                 }
             }
-            fileBuilder =
-                FileSpec.builder(
-                    builders.values.iterator().next().getPackage() + ".internal",
-                    "AnnotationNodeExtensions",
-                )
-            fileBuilder.addAnnotation(
-                AnnotationSpec.builder(Suppress::class.java)
-                    .addMember("%S", "UNCHECKED_CAST")
-                    .useSiteTarget(FILE)
-                    .build()
-            )
-
-            fileBuilder.addImport("kotlin.reflect.full", "declaredMemberProperties")
-            fileBuilder.addImport("kotlin.reflect.jvm", "javaType")
-            fileBuilder.addImport("dev.morphia.mapping", "MappingException")
-            fileBuilder.addImport("java.util", "Objects")
-            fileBuilder.addImport("dev.morphia.critter.parser", "methodCase")
-            fileBuilder.addImport(
-                "dev.morphia.critter.parser.gizmo",
-                "load",
-                "attributeType",
-                "rawType",
-            )
-            emitFactory()
+            emitJavaFactory()
         } catch (e: Exception) {
             throw MojoExecutionException(e.message, e)
         }
@@ -120,242 +75,201 @@ class AnnotationNodeExtensions : AbstractMojo() {
     }
 
     @Throws(Exception::class)
-    private fun emitFactory() {
-        factory = createFactory()
-        genericSetters()
-        genericConverter()
+    private fun emitJavaFactory() {
+        val pkg = builders.values.iterator().next().getPackage() + ".internal"
+        val body = StringBuilder()
+
+        body.appendLine("package $pkg;")
+        body.appendLine()
+        body.appendLine("@dev.morphia.annotations.internal.MorphiaInternal")
+        body.appendLine("@SuppressWarnings(\"unchecked\")")
+        body.appendLine("public final class AnnotationNodeExtensions {")
+        body.appendLine()
+        body.appendLine(
+            "    public static final AnnotationNodeExtensions INSTANCE = new AnnotationNodeExtensions();"
+        )
+        body.appendLine()
+        body.appendLine("    private AnnotationNodeExtensions() {}")
+        body.appendLine()
+        body.appendLine(
+            """
+    private static java.util.Map<String, Object> toMap(org.objectweb.asm.tree.AnnotationNode annotationNode) {
+        if (annotationNode.values == null) return java.util.Collections.emptyMap();
+        java.util.Map<String, Object> map = new java.util.LinkedHashMap<>();
+        java.util.List<?> values = annotationNode.values;
+        for (int i = 0; i < values.size() - 1; i += 2) {
+            Object key = values.get(i);
+            map.put(key != null ? key.toString() : "value", values.get(i + 1));
+        }
+        return map;
+    }
+
+    private static Class<?> loadClass(String name) {
+        try {
+            return Class.forName(name);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+"""
+        )
+
+        // setBuilderValues dispatch
+        body.appendLine(
+            "    public void setBuilderValues(org.objectweb.asm.tree.AnnotationNode annotationNode, io.quarkus.gizmo.MethodCreator creator, io.quarkus.gizmo.ResultHandle local) {"
+        )
+        body.appendLine("        switch (annotationNode.desc) {")
         for (source in builders.values) {
-            annotationConverters(source)
-            annotationValueSetters(source)
+            val type = bestGuess(source.qualifiedName).toType()
+            body.appendLine(
+                "            case \"${type.descriptor}\" -> set${source.name}Values(annotationNode, creator, local);"
+            )
+        }
+        body.appendLine(
+            "            default -> throw new IllegalArgumentException(\"Unknown annotation type: \" + annotationNode.desc);"
+        )
+        body.appendLine("        }")
+        body.appendLine("    }")
+        body.appendLine()
+
+        // toMorphiaAnnotation dispatch
+        body.appendLine(
+            "    public <T extends java.lang.annotation.Annotation> T toMorphiaAnnotation(org.objectweb.asm.tree.AnnotationNode annotationNode) {"
+        )
+        body.appendLine("        return (T) switch (annotationNode.desc) {")
+        for (source in builders.values) {
+            val type = bestGuess(source.qualifiedName).toType()
+            body.appendLine(
+                "            case \"${type.descriptor}\" -> to${source.name}(annotationNode);"
+            )
+        }
+        body.appendLine(
+            "            default -> throw new IllegalArgumentException(\"Unknown annotation type: \" + annotationNode.desc);"
+        )
+        body.appendLine("        };")
+        body.appendLine("    }")
+        body.appendLine()
+
+        // Per-annotation methods
+        for (source in builders.values) {
+            emitToAnnotationMethod(body, source)
+            emitSetAnnotationValuesMethod(body, source)
         }
 
-        fileBuilder.addType(factory.build())
-        val fileSpec: FileSpec = fileBuilder.build()
-        val outputFile = File(generated, fileSpec.relativePath)
+        body.appendLine("}")
+
+        val outputFile = File(generated, pkg.replace('.', '/') + "/AnnotationNodeExtensions.java")
         if (!outputFile.parentFile.mkdirs() && !outputFile.parentFile.exists()) {
             throw IOException(
                 String.format("Could not create directory: %s", outputFile.parentFile)
             )
         }
-        FileWriter(outputFile).use { out -> fileSpec.writeTo(out) }
+        // Delete any stale Kotlin file from previous builds
+        File(generated, pkg.replace('.', '/') + "/AnnotationNodeExtensions.kt").delete()
+        FileWriter(outputFile).use { out -> out.write(body.toString()) }
     }
 
-    private fun genericConverter() {
-        val typeVariable = TypeVariableName("T", Annotation::class.asClassName())
-        val method =
-            FunSpec.builder("toMorphiaAnnotation")
-                .addTypeVariable(typeVariable)
-                .receiver(AnnotationNode::class.asClassName())
-                .returns(typeVariable)
+    private fun emitToAnnotationMethod(sb: StringBuilder, source: JavaAnnotationSource) {
+        val builderClass =
+            "${source.qualifiedName.substringBeforeLast('.')}.internal.${source.name}Builder"
+        val methodName = source.name.first().lowercaseChar() + source.name.substring(1) + "Builder"
 
-        method.beginControlFlow("return when (desc)")
-        for (source in builders.values) {
-            val type = bestGuess(source.qualifiedName).toType()
-            method.addStatement(""""${type.descriptor}" -> to${source.name}()""")
-        }
-        method.addStatement(
-            """else -> throw %T("Unknown annotation type: ${"$"}{desc}")""",
-            IllegalArgumentException::class,
+        sb.appendLine(
+            "    private ${source.qualifiedName} to${source.name}(org.objectweb.asm.tree.AnnotationNode annotationNode) {"
         )
-
-        method.endControlFlow()
-        method.addStatement("as T")
-
-        factory.addFunction(method.build())
-    }
-
-    private fun genericSetters() {
-        val method =
-            FunSpec.builder("setBuilderValues")
-                .receiver(AnnotationNode::class.asClassName())
-                .addParameter("creator", METHOD_CREATOR)
-                .addParameter("local", RESULT_HANDLE)
-        //                .returns(RESULT_HANDLE)
-
-        method.beginControlFlow("return when (desc)")
-        builders.values.forEach() { source ->
-            val type = bestGuess(source.qualifiedName).toType()
-            method.addStatement(
-                """"${type.descriptor}" -> set${source.name}Values(creator, local)"""
-            )
-        }
-        method.addStatement(
-            """else -> throw IllegalArgumentException("Unknown annotation type: ${"$"}{desc}")"""
-        )
-
-        method.endControlFlow()
-
-        factory.addFunction(method.build())
-    }
-
-    private fun annotationValueSetters(source: JavaAnnotationSource) {
-        val builderName = "${source.name}Builder"
-        fileBuilder.addImport(fileBuilder.packageName, "$builderName.${methodCase(builderName)}")
-        val method =
-            FunSpec.builder("set${source.name}Values")
-                .addModifiers(KModifier.PRIVATE)
-                .receiver(AnnotationNode::class.java)
-                .addParameter("creator", METHOD_CREATOR)
-                .addParameter("local", RESULT_HANDLE)
-
         if (source.annotationElements.isNotEmpty()) {
-            method.addCode(
-                """
-                val map = (values?.windowed(2, 2) ?: emptyList())
-                    .map { it -> (it[0] ?: "value") to it[1] }
-                    .toMap()
-                    
-            """
-                    .trimIndent()
-            )
+            sb.appendLine("        java.util.Map<String, Object> map = toMap(annotationNode);")
         }
-
-        for (element in source.annotationElements) {
-            val builderName =
-                ClassName(fileBuilder.packageName, "${source.name}Builder") /*.reflectionName()*/
-            val name = element.name
-            method.addCode(
-                """
-                    
-                map["${name}"]?.let { 
-                  val type = attributeType(${source.name}::class, "$name")
-                  val method = %T.ofMethod( %T::class.java, "${name}", %T::class.java, rawType(type) )
-                  creator.invokeVirtualMethod(method, local, load(creator, type, it))
-                }
-                
-                """
-                    .trimIndent(),
-                METHOD_DESCRIPTOR,
-                builderName,
-                builderName,
-            )
-        }
-
-        factory.addFunction(method.build())
-    }
-
-    private fun annotationConverters(source: JavaAnnotationSource) {
-        val builderName = "${source.name}Builder"
-        fileBuilder.addImport(fileBuilder.packageName, "$builderName.${methodCase(builderName)}")
-        val method =
-            FunSpec.builder("to" + source.name)
-                .receiver(AnnotationNode::class.asClassName())
-                .addModifiers(KModifier.PRIVATE)
-                .returns(bestGuess(source.qualifiedName))
-        var code = ""
-        if (source.annotationElements.isNotEmpty()) {
-            code +=
-                """
-                val map = (values?.windowed(2, 2) ?: emptyList())
-                    .map { it -> (it[0] ?: "value") to it[1] }
-                    .toMap()
-                    
-            """
-                    .trimIndent()
-        }
-        code +=
-            """
-                return ${methodCase(source.name)}Builder().apply {
-                
-            """
-                .trimIndent()
+        sb.appendLine("        var builder = $builderClass.$methodName();")
 
         for (element in source.annotationElements) {
             val name = element.name
-            code += ("map[\"${name}\"]?.let { ${name}(${processType(element.type)}) }\n")
+            val varName = "__${name}"
+            sb.appendLine("        Object $varName = map.get(\"$name\");")
+            sb.appendLine("        if ($varName != null) {")
+            sb.appendLine("            builder.$name(${processTypeJava(element.type, varName)});")
+            sb.appendLine("        }")
         }
 
-        code += "}\n.build()"
-        method.addCode(code)
-
-        factory.addFunction(method.build())
+        sb.appendLine("        return builder.build();")
+        sb.appendLine("    }")
+        sb.appendLine()
     }
 
-    private fun processType(type: Type<JavaAnnotationSource>): String {
+    private fun emitSetAnnotationValuesMethod(sb: StringBuilder, source: JavaAnnotationSource) {
+        val builderClass =
+            "${source.qualifiedName.substringBeforeLast('.')}.internal.${source.name}Builder"
+
+        sb.appendLine(
+            "    private void set${source.name}Values(org.objectweb.asm.tree.AnnotationNode annotationNode, io.quarkus.gizmo.MethodCreator creator, io.quarkus.gizmo.ResultHandle local) {"
+        )
+        if (source.annotationElements.isNotEmpty()) {
+            sb.appendLine("        java.util.Map<String, Object> map = toMap(annotationNode);")
+        }
+
+        for (element in source.annotationElements) {
+            val name = element.name
+            val varName = "__${name}"
+            sb.appendLine("        Object $varName = map.get(\"$name\");")
+            sb.appendLine("        if ($varName != null) {")
+            sb.appendLine(
+                "            java.lang.reflect.Type type = dev.morphia.critter.parser.gizmo.GizmoExtensions.attributeType(${source.qualifiedName}.class, \"$name\");"
+            )
+            sb.appendLine(
+                "            io.quarkus.gizmo.MethodDescriptor method = io.quarkus.gizmo.MethodDescriptor.ofMethod($builderClass.class, \"$name\", $builderClass.class, dev.morphia.critter.parser.gizmo.GizmoExtensions.rawType(type));"
+            )
+            sb.appendLine(
+                "            creator.invokeVirtualMethod(method, local, dev.morphia.critter.parser.gizmo.GizmoExtensions.load(creator, type, $varName));"
+            )
+            sb.appendLine("        }")
+        }
+
+        sb.appendLine("    }")
+        sb.appendLine()
+    }
+
+    private fun processTypeJava(type: Type<JavaAnnotationSource>, varName: String): String {
         val typeName = type.name
-        var code: String? = "NOT SET"
 
-        if (typeName == "boolean") {
-            code = "it as Boolean"
-        } else if (typeName == "String") {
-            code = "it as String"
-        } else if (typeName == "int") {
-            code = "it as Int"
-        } else if (typeName == "long") {
-            code = "(it as Number).toLong()"
-        } else if (typeName == "Class") {
-            code = "Class.forName((it as org.objectweb.asm.Type).className)"
-        } else if (type.isArray) {
-            code = processArrayType(type)
-        } else if (type.qualifiedName.startsWith("com.mongodb.client.model.")) {
-            addImport(type.qualifiedName)
-            code = "${type.simpleName}.valueOf((it as Array<String>)[1])"
-        } else if (type.qualifiedName.startsWith("dev.morphia.mapping.")) {
-            code = "${type.qualifiedName}.valueOf((it as Array<String>)[1])"
-        } else if (type.qualifiedName.startsWith("dev.morphia.annotations.")) {
-            code = "(it as AnnotationNode).to${type.simpleName}()"
-        } else {
-            System.out.printf(
-                "unknown type: %n\t%s %n\t%s %n\t%s %n",
-                typeName,
-                type.qualifiedName,
-                type.origin.isEnum,
-            )
-            code = "<UNKNOWN>"
+        return when {
+            typeName == "boolean" -> "(Boolean) $varName"
+            typeName == "String" -> "(String) $varName"
+            typeName == "int" -> "(Integer) $varName"
+            typeName == "long" -> "((Number) $varName).longValue()"
+            typeName == "Class" && !type.isArray ->
+                "loadClass(((org.objectweb.asm.Type) $varName).getClassName())"
+            type.isArray -> processArrayTypeJava(type, varName)
+            type.qualifiedName.startsWith("com.mongodb.client.model.") ->
+                "${type.qualifiedName}.valueOf(((String[]) $varName)[1])"
+            type.qualifiedName.startsWith("dev.morphia.mapping.") ->
+                "${type.qualifiedName}.valueOf(((String[]) $varName)[1])"
+            type.qualifiedName.startsWith("dev.morphia.annotations.") ->
+                "to${type.simpleName}((org.objectweb.asm.tree.AnnotationNode) $varName)"
+            else -> {
+                System.out.printf(
+                    "unknown type: %n\t%s %n\t%s %n\t%s %n",
+                    typeName,
+                    type.qualifiedName,
+                    type.origin.isEnum,
+                )
+                "<UNKNOWN>"
+            }
         }
-
-        return code
     }
 
-    private fun addImport(typeName: String) {
-        val className = bestGuess(typeName)
-        fileBuilder.addImport(className.packageName, className.simpleName)
-    }
-
-    private fun createFactory(): TypeSpec.Builder {
-        val extensionsFactory = objectBuilder("AnnotationNodeExtensions")
-        val classBuilder =
-            Roaster.create(JavaClassSource::class.java)
-                .setName("AnnotationNodeExtensions")
-                .setPackage(builders.values.iterator().next().getPackage() + ".internal")
-                .setFinal(true)
-        classBuilder.addAnnotation("dev.morphia.annotations.internal.MorphiaInternal")
-
-        return extensionsFactory
-    }
-
-    private fun processArrayType(type: Type<JavaAnnotationSource>): String {
-        var code: String = type.simpleName
+    private fun processArrayTypeJava(type: Type<JavaAnnotationSource>, varName: String): String {
+        val simpleName: String = type.simpleName
         val parameterized = type.isParameterized
         val params = if (parameterized) type.typeArguments else emptyList()
-        when {
+        return when {
             type.qualifiedName == "java.lang.Class" -> {
-                val param = params[0]
-                var parameterName = Types.toSimpleName(param.qualifiedName)
-                if (param.isWildcard) {
-                    parameterName = parameterName.substringAfterLast(' ')
-                }
-                if (!Types.isQualified(parameterName)) {
-                    parameterName =
-                        type.origin.imports
-                            .filter { i: Import -> i.simpleName == parameterName }
-                            .map { i -> i.qualifiedName }
-                            .first()
-                }
-                if (param.isWildcard) {
-                    parameterName += "<*>"
-                }
-
-                code = "${type.simpleName}<${parameterName}>"
-                return """*(it as List<org.objectweb.asm.Type>)
-                    .map { Class.forName(it.className) }
-                    .toTypedArray() as Array<$code>"""
-                    .trimMargin()
+                """((java.util.List<?>) $varName).stream().map(t -> loadClass(((org.objectweb.asm.Type) t).getClassName())).toArray(java.lang.Class[]::new)"""
             }
             type.qualifiedName.startsWith("dev.morphia.annotations.") ->
-                return "*(it as List<AnnotationNode>).map { it.to$code() } .toTypedArray()"
-            type.qualifiedName == "java.lang.String" -> return "*(it as List<$code>).toTypedArray()"
-            else -> TODO("unknown type: $type")
+                "((java.util.List<?>) $varName).stream().map(a -> to${simpleName}((org.objectweb.asm.tree.AnnotationNode) a)).toArray(${type.qualifiedName}[]::new)"
+            type.qualifiedName == "java.lang.String" ->
+                "((java.util.List<String>) $varName).toArray(new String[0])"
+            else -> TODO("unknown array type: $type")
         }
     }
 }

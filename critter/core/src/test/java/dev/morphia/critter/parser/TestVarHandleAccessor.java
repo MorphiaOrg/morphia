@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import dev.morphia.critter.Critter;
 import dev.morphia.critter.CritterClassLoader;
-import dev.morphia.critter.CritterKt;
 import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator;
 import dev.morphia.critter.sources.Example;
 
@@ -77,7 +76,7 @@ public class TestVarHandleAccessor {
     public void testAccessorsInstantiatable() throws Exception {
         for (String field : List.of("name", "age", "salary")) {
             Class<?> cls = classLoader.loadClass(
-                    Critter.Companion.critterPackage(Example.class) + "." + CritterKt.titleCase(field) + "Accessor");
+                    Critter.critterPackage(Example.class) + "." + Critter.titleCase(field) + "Accessor");
             cls.getConstructor().newInstance();
         }
     }
@@ -85,7 +84,7 @@ public class TestVarHandleAccessor {
     @SuppressWarnings("unchecked")
     private <T> PropertyAccessor<T> loadAccessor(Class<?> entityType, String fieldName) throws Exception {
         Class<PropertyAccessor<T>> cls = (Class<PropertyAccessor<T>>) classLoader.loadClass(
-                Critter.Companion.critterPackage(entityType) + "." + CritterKt.titleCase(fieldName) + "Accessor");
+                Critter.critterPackage(entityType) + "." + Critter.titleCase(fieldName) + "Accessor");
         return cls.getConstructor().newInstance();
     }
 }
