@@ -27,7 +27,7 @@ public class CritterClassLoader extends ByteArrayClassLoader.ChildFirst {
 
         // Try to load from resources if it's a project class
         if (shouldRegister(name)) {
-            String resourceName = name.replace('.', '/') + ".class";
+            String resourceName = "%s.class".formatted(name.replace('.', '/'));
             // Try both this classloader and parent classloader
             java.io.InputStream stream = getResourceAsStream(resourceName);
             if (stream == null && getParent() != null) {
@@ -52,7 +52,7 @@ public class CritterClassLoader extends ByteArrayClassLoader.ChildFirst {
         // Try to register from resources first if not already registered
         // Only register project classes to avoid LinkageError with third-party libraries
         if (!typeDefinitions.containsKey(name) && shouldRegister(name)) {
-            java.net.URL resource = getResource(name.replace('.', '/') + ".class");
+            java.net.URL resource = getResource("%s.class".formatted(name.replace('.', '/')));
             if (resource != null) {
                 try {
                     register(name, resource.openStream().readAllBytes());

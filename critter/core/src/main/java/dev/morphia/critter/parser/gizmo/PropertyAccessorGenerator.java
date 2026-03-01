@@ -41,14 +41,14 @@ public class PropertyAccessorGenerator extends BaseGizmoGenerator {
         super(entity, critterClassLoader);
         this.propertyName = field.name;
         this.propertyType = Type.getType(field.desc).getClassName();
-        generatedType = baseName + "." + Critter.titleCase(propertyName) + "Accessor";
+        generatedType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
     }
 
     public PropertyAccessorGenerator(Class<?> entity, CritterClassLoader critterClassLoader, MethodNode method) {
         super(entity, critterClassLoader);
         this.propertyName = ExtensionFunctions.getterToPropertyName(method, entity);
         this.propertyType = Type.getReturnType(method.desc).getClassName();
-        generatedType = baseName + "." + Critter.titleCase(propertyName) + "Accessor";
+        generatedType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
     }
 
     public boolean isPrimitive() {
@@ -87,7 +87,7 @@ public class PropertyAccessorGenerator extends BaseGizmoGenerator {
                         .build());
         method.setParameterNames(new String[] { "model" });
         ResultHandle castModel = method.checkCast(method.getMethodParam(0), entity);
-        MethodDescriptor toInvoke = ofMethod(entity, "__read" + Critter.titleCase(propertyName), propertyType);
+        MethodDescriptor toInvoke = ofMethod(entity, "__read%s".formatted(Critter.titleCase(propertyName)), propertyType);
         ResultHandle result = method.invokeVirtualMethod(toInvoke, castModel);
         ResultHandle boxed = isPrimitive() ? method.smartCast(result, getWrapperType()) : result;
         method.returnValue(boxed);
@@ -112,7 +112,7 @@ public class PropertyAccessorGenerator extends BaseGizmoGenerator {
         } else {
             castValue = method.checkCast(method.getMethodParam(1), propertyType);
         }
-        MethodDescriptor toInvoke = ofMethod(entity, "__write" + Critter.titleCase(propertyName), "void", propertyType);
+        MethodDescriptor toInvoke = ofMethod(entity, "__write%s".formatted(Critter.titleCase(propertyName)), "void", propertyType);
         method.invokeVirtualMethod(toInvoke, castModel, castValue);
         method.returnValue(null);
     }

@@ -96,7 +96,7 @@ public class PropertyFinder {
     }
 
     private ClassNode readClassNode(Class<?> type) {
-        String resourceName = type.getName().replace('.', '/') + ".class";
+        String resourceName = "%s.class".formatted(type.getName().replace('.', '/'));
         InputStream inputStream = type.getClassLoader().getResourceAsStream(resourceName);
         if (inputStream == null)
             return null;

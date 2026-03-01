@@ -91,7 +91,7 @@ public class Generators {
         try {
             return Class.forName(className, false, classLoader);
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Could not find class: " + className, e);
+            throw new RuntimeException("Could not find class: %s".formatted(className), e);
         }
     }
 }

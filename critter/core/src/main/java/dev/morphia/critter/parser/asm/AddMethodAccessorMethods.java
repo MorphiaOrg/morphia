@@ -45,7 +45,7 @@ public class AddMethodAccessorMethods extends BaseGenerator {
     }
 
     private void writer(String propertyName, Type propertyType) {
-        String setterName = "set" + Critter.titleCase(propertyName);
+        String setterName = "set%s".formatted(Critter.titleCase(propertyName));
         boolean hasSetter = false;
         for (java.lang.reflect.Method m : entity.getMethods()) {
             if (m.getName().equals(setterName) && m.getParameterCount() == 1) {
@@ -56,8 +56,8 @@ public class AddMethodAccessorMethods extends BaseGenerator {
 
         var mv = classWriter.visitMethod(
                 ACC_PUBLIC | ACC_SYNTHETIC,
-                "__write" + Critter.titleCase(propertyName),
-                "(" + propertyType.getDescriptor() + ")V",
+                "__write%s".formatted(Critter.titleCase(propertyName)),
+                "(%s)V".formatted(propertyType.getDescriptor()),
                 null,
                 null);
         mv.visitCode();
@@ -73,7 +73,7 @@ public class AddMethodAccessorMethods extends BaseGenerator {
                     INVOKEVIRTUAL,
                     entityType.getInternalName(),
                     setterName,
-                    "(" + propertyType.getDescriptor() + ")V",
+                    "(%s)V".formatted(propertyType.getDescriptor()),
                     false);
             Label label1 = new Label();
             mv.visitLabel(label1);
@@ -87,7 +87,7 @@ public class AddMethodAccessorMethods extends BaseGenerator {
             // Throw UnsupportedOperationException for read-only properties
             mv.visitTypeInsn(NEW, "java/lang/UnsupportedOperationException");
             mv.visitInsn(DUP);
-            mv.visitLdcInsn("Property '" + propertyName + "' is read-only");
+            mv.visitLdcInsn("Property '%s' is read-only".formatted(propertyName));
             mv.visitMethodInsn(
                     INVOKESPECIAL,
                     "java/lang/UnsupportedOperationException",
@@ -106,11 +106,11 @@ public class AddMethodAccessorMethods extends BaseGenerator {
     }
 
     private void reader(String propertyName, Type returnType, String getterName) {
-        String name = "__read" + Critter.titleCase(propertyName);
+        String name = "__read%s".formatted(Critter.titleCase(propertyName));
         var mv = classWriter.visitMethod(
                 ACC_PUBLIC | ACC_SYNTHETIC,
                 name,
-                "()" + returnType.getDescriptor(),
+                "()%s".formatted(returnType.getDescriptor()),
                 null,
                 null);
         mv.visitCode();
@@ -122,7 +122,7 @@ public class AddMethodAccessorMethods extends BaseGenerator {
                 INVOKEVIRTUAL,
                 entityType.getInternalName(),
                 getterName,
-                "()" + returnType.getDescriptor(),
+                "()%s".formatted(returnType.getDescriptor()),
                 false);
         mv.visitInsn(returnType.getOpcode(IRETURN));
         Label label1 = new Label();

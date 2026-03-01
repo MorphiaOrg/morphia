@@ -35,10 +35,10 @@ public abstract class BaseGenerator {
      * methods so that accessor generation is idempotent across repeated plugin runs.
      */
     protected void readClassFiltering(Class<?> entity) {
-        String resourceName = entity.getName().replace('.', '/') + ".class";
+        String resourceName = "%s.class".formatted(entity.getName().replace('.', '/'));
         java.io.InputStream inputStream = entity.getClassLoader().getResourceAsStream(resourceName);
         if (inputStream == null) {
-            throw new IllegalArgumentException("Could not find class file for " + entity.getName());
+            throw new IllegalArgumentException("Could not find class file for %s".formatted(entity.getName()));
         }
         ClassVisitor filteringVisitor = new ClassVisitor(ASM9, classWriter) {
             @Override
@@ -54,7 +54,7 @@ public abstract class BaseGenerator {
         try {
             new ClassReader(inputStream).accept(filteringVisitor, 0);
         } catch (java.io.IOException e) {
-            throw new RuntimeException("Failed to read class " + entity.getName(), e);
+            throw new RuntimeException("Failed to read class %s".formatted(entity.getName()), e);
         }
     }
 

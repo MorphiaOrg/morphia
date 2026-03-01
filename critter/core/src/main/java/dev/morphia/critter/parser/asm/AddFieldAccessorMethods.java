@@ -41,8 +41,8 @@ public class AddFieldAccessorMethods extends BaseGenerator {
     private void writer(String field, Type fieldType) {
         var mv = classWriter.visitMethod(
                 ACC_PUBLIC | ACC_SYNTHETIC,
-                "__write" + Critter.titleCase(field),
-                "(" + fieldType.getDescriptor() + ")V",
+                "__write%s".formatted(Critter.titleCase(field)),
+                "(%s)V".formatted(fieldType.getDescriptor()),
                 null,
                 null);
         mv.visitCode();
@@ -65,11 +65,11 @@ public class AddFieldAccessorMethods extends BaseGenerator {
     }
 
     private void reader(String field, Type fieldType) {
-        String name = "__read" + Critter.titleCase(field);
+        String name = "__read%s".formatted(Critter.titleCase(field));
         var mv = classWriter.visitMethod(
                 ACC_PUBLIC | ACC_SYNTHETIC,
                 name,
-                "()" + fieldType.getDescriptor(),
+                "()%s".formatted(fieldType.getDescriptor()),
                 null,
                 null);
         mv.visitCode();

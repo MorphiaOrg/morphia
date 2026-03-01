@@ -64,7 +64,7 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
         this.isFieldBased = true;
         this.getterName = null;
         this.setterName = null;
-        generatedType = baseName + "." + Critter.titleCase(propertyName) + "Accessor";
+        generatedType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
     }
 
     public VarHandleAccessorGenerator(Class<?> entity, CritterClassLoader critterClassLoader, MethodNode method) {
@@ -73,8 +73,8 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
         this.propertyType = Type.getReturnType(method.desc).getClassName();
         this.isFieldBased = false;
         this.getterName = method.name;
-        this.setterName = "set" + Critter.titleCase(propertyName);
-        generatedType = baseName + "." + Critter.titleCase(propertyName) + "Accessor";
+        this.setterName = "set%s".formatted(Critter.titleCase(propertyName));
+        generatedType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
     }
 
     public boolean isPrimitive() {
@@ -262,7 +262,7 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
 
         if (!isFieldBased && setterHandleDesc == null) {
             // Read-only property — no setter
-            method.throwException(UnsupportedOperationException.class, "Property '" + propertyName + "' is read-only");
+            method.throwException(UnsupportedOperationException.class, "Property '%s' is read-only".formatted(propertyName));
             return;
         }
 

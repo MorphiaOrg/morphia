@@ -25,7 +25,7 @@ public class GizmoExtensions {
         Type type = Type.getType(annotationNode.desc);
         String classPackage = type.getClassName().substring(0, type.getClassName().lastIndexOf('.'));
         String className = type.getClassName().substring(type.getClassName().lastIndexOf('.') + 1);
-        Type builderType = Type.getType(("L" + classPackage + ".internal." + className + "Builder;").replace('.', '/'));
+        Type builderType = Type.getType("L%s.internal.%sBuilder;".formatted(classPackage, className).replace('.', '/'));
         MethodDescriptor builder = ofMethod(
                 builderType.getClassName(),
                 ExtensionFunctions.methodCase(className) + "Builder",
@@ -72,7 +72,7 @@ public class GizmoExtensions {
         try {
             return type.getDeclaredMethod(name).getGenericReturnType();
         } catch (NoSuchMethodException e) {
-            throw new RuntimeException("Cannot find annotation element '" + name + "' in " + type.getName(), e);
+            throw new RuntimeException("Cannot find annotation element '%s' in %s".formatted(name, type.getName()), e);
         }
     }
 
@@ -97,7 +97,7 @@ public class GizmoExtensions {
             }
             return newArray;
         } else {
-            throw new UnsupportedOperationException("Unknown type: " + type);
+            throw new UnsupportedOperationException("Unknown type: %s".formatted(type));
         }
     }
 
@@ -128,7 +128,7 @@ public class GizmoExtensions {
         } else if (value instanceof Type asmType) {
             return creator.loadClass(asmType.getClassName());
         } else {
-            throw new UnsupportedOperationException(type + " is not yet supported");
+            throw new UnsupportedOperationException("%s is not yet supported".formatted(type));
         }
     }
 

@@ -22,15 +22,15 @@ public class CritterGizmoGenerator {
 
     public GizmoEntityModelGenerator generate(Class<?> type, CritterClassLoader critterClassLoader, boolean runtimeMode) {
         ClassNode classNode = new ClassNode();
-        String resourceName = type.getName().replace('.', '/') + ".class";
+        String resourceName = "%s.class".formatted(type.getName().replace('.', '/'));
         java.io.InputStream inputStream = type.getClassLoader().getResourceAsStream(resourceName);
         if (inputStream == null) {
-            throw new IllegalArgumentException("Could not find class file for " + type.getName());
+            throw new IllegalArgumentException("Could not find class file for %s".formatted(type.getName()));
         }
         try {
             new ClassReader(inputStream).accept(classNode, 0);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to read class " + type.getName(), e);
+            throw new RuntimeException("Failed to read class %s".formatted(type.getName()), e);
         }
         PropertyFinder propertyFinder = new PropertyFinder(Generators.INSTANCE.getMapper(), critterClassLoader, runtimeMode);
 

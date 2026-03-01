@@ -64,8 +64,8 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
         if (signature != null) {
             this.typeArguments = Type.getArgumentTypes("()" + signature);
         }
-        generatedType = baseName + "." + Critter.titleCase(propertyName) + "Model";
-        accessorType = baseName + "." + Critter.titleCase(propertyName) + "Accessor";
+        generatedType = "%s.%sModel".formatted(baseName, Critter.titleCase(propertyName));
+        accessorType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
         this.annotations = field.visibleAnnotations != null ? field.visibleAnnotations : Collections.emptyList();
     }
 
@@ -78,8 +78,8 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
         if (method.signature != null) {
             this.typeArguments = Type.getArgumentTypes(method.signature);
         }
-        generatedType = baseName + "." + Critter.titleCase(propertyName) + "Model";
-        accessorType = baseName + "." + Critter.titleCase(propertyName) + "Accessor";
+        generatedType = "%s.%sModel".formatted(baseName, Critter.titleCase(propertyName));
+        accessorType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
         this.annotations = method.visibleAnnotations != null ? method.visibleAnnotations : Collections.emptyList();
     }
 
@@ -290,7 +290,7 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
 
     private void getFullName() {
         try (MethodCreator methodCreator = getCreator().getMethodCreator("getFullName", String.class)) {
-            methodCreator.returnValue(methodCreator.load(entity.getName() + "#" + propertyName));
+            methodCreator.returnValue(methodCreator.load("%s#%s".formatted(entity.getName(), propertyName)));
         }
     }
 

@@ -16,19 +16,19 @@ public class Critter {
     public static final List<Type> transientAnnotations = new ArrayList<>(List.of(Type.getType(Transient.class)));
 
     public static String critterPackage(Class<?> entity) {
-        return entity.getPackageName() + ".__morphia." + entity.getSimpleName().toLowerCase();
+        return "%s.__morphia.%s".formatted(entity.getPackageName(), entity.getSimpleName().toLowerCase());
     }
 
     public static String titleCase(String s) {
         if (s == null || s.isEmpty())
             return s;
-        return Character.toUpperCase(s.charAt(0)) + s.substring(1);
+        return "%c%s".formatted(Character.toUpperCase(s.charAt(0)), s.substring(1));
     }
 
     public static String identifierCase(String s) {
         if (s == null || s.isEmpty())
             return s;
-        return Character.toLowerCase(s.charAt(0)) + s.substring(1);
+        return "%c%s".formatted(Character.toLowerCase(s.charAt(0)), s.substring(1));
     }
 
     private final File root;

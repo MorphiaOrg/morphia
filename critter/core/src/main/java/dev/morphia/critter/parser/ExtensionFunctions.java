@@ -13,13 +13,13 @@ public class ExtensionFunctions {
     public static String titleCase(String s) {
         if (s == null || s.isEmpty())
             return s;
-        return Character.toUpperCase(s.charAt(0)) + s.substring(1);
+        return "%c%s".formatted(Character.toUpperCase(s.charAt(0)), s.substring(1));
     }
 
     public static String methodCase(String s) {
         if (s == null || s.isEmpty())
             return s;
-        return Character.toLowerCase(s.charAt(0)) + s.substring(1);
+        return "%c%s".formatted(Character.toLowerCase(s.charAt(0)), s.substring(1));
     }
 
     public static String snakeCase(String s) {
