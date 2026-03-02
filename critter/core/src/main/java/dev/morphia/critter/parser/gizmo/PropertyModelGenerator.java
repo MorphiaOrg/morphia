@@ -1,0 +1,403 @@
+package dev.morphia.critter.parser.gizmo;
+
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.mongodb.DBRef;
+
+import dev.morphia.annotations.AlsoLoad;
+import dev.morphia.annotations.Reference;
+import dev.morphia.annotations.internal.AnnotationNodeExtensions;
+import dev.morphia.config.MorphiaConfig;
+import dev.morphia.critter.Critter;
+import dev.morphia.critter.CritterClassLoader;
+import dev.morphia.critter.conventions.PropertyConvention;
+import dev.morphia.critter.parser.ExtensionFunctions;
+import dev.morphia.critter.parser.Generators;
+import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
+import dev.morphia.mapping.codec.pojo.TypeData;
+import dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel;
+
+import org.bson.codecs.pojo.PropertyAccessor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
+import org.objectweb.asm.tree.AnnotationNode;
+import org.objectweb.asm.tree.FieldNode;
+import org.objectweb.asm.tree.MethodNode;
+
+import io.quarkus.gizmo.MethodCreator;
+import io.quarkus.gizmo.MethodDescriptor;
+import io.quarkus.gizmo.ResultHandle;
+
+import static io.quarkus.gizmo.MethodDescriptor.ofMethod;
+import static org.objectweb.asm.Type.getReturnType;
+
+public class PropertyModelGenerator extends BaseGizmoGenerator {
+    private final MorphiaConfig config;
+
+    private Type[] typeArguments = new Type[0];
+    private FieldNode field;
+    private MethodNode method;
+    private String propertyName;
+    private Type propertyType;
+    private String accessorType;
+    private List<AnnotationNode> annotations;
+
+    // Lazy fields
+    private Map<String, Annotation> annotationMap;
+    private TypeData<?> typeData;
+    private io.quarkus.gizmo.FieldCreator modelField;
+    private io.quarkus.gizmo.FieldCreator accessorField;
+
+    public PropertyModelGenerator(MorphiaConfig config, Class<?> entity, CritterClassLoader critterClassLoader, FieldNode field) {
+        super(entity, critterClassLoader);
+        this.config = config;
+        this.field = field;
+        this.propertyName = ExtensionFunctions.methodCase(field.name);
+        this.propertyType = Type.getType(field.desc);
+        String signature = field.signature;
+        if (signature != null) {
+            this.typeArguments = Type.getArgumentTypes("()" + signature);
+        }
+        generatedType = "%s.%sModel".formatted(baseName, Critter.titleCase(propertyName));
+        accessorType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
+        this.annotations = field.visibleAnnotations != null ? field.visibleAnnotations : Collections.emptyList();
+    }
+
+    public PropertyModelGenerator(MorphiaConfig config, Class<?> entity, CritterClassLoader critterClassLoader, MethodNode method) {
+        super(entity, critterClassLoader);
+        this.config = config;
+        this.method = method;
+        this.propertyName = ExtensionFunctions.getterToPropertyName(method, entity);
+        this.propertyType = getReturnType(method.desc);
+        if (method.signature != null) {
+            this.typeArguments = Type.getArgumentTypes(method.signature);
+        }
+        generatedType = "%s.%sModel".formatted(baseName, Critter.titleCase(propertyName));
+        accessorType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
+        this.annotations = method.visibleAnnotations != null ? method.visibleAnnotations : Collections.emptyList();
+    }
+
+    private Map<String, Annotation> getAnnotationMap() {
+        if (annotationMap == null) {
+            annotationMap = new LinkedHashMap<>();
+            for (AnnotationNode ann : annotations) {
+                if (ann.desc.startsWith("Ldev/morphia/annotations/")) {
+                    Annotation a = AnnotationNodeExtensions.INSTANCE.toMorphiaAnnotation(ann);
+                    annotationMap.put(a.annotationType().getName(), a);
+                }
+            }
+        }
+        return annotationMap;
+    }
+
+    private int getAccessValue() {
+        return field != null ? field.access : method.access;
+    }
+
+    private TypeData<?> getTypeData() {
+        if (typeData == null) {
+            String input;
+            if (field != null) {
+                input = field.signature != null ? field.signature : field.desc;
+            } else {
+                String sig = method.signature;
+                if (sig != null) {
+                    // Extract return type from generic signature (after the last ')')
+                    input = sig.substring(sig.lastIndexOf(')') + 1);
+                } else {
+                    input = getReturnType(method.desc).getDescriptor();
+                }
+            }
+            List<TypeData<?>> results = typeData(input, entity.getClassLoader());
+            typeData = results.isEmpty() ? new TypeData<>(Object.class, List.of()) : results.get(0);
+        }
+        return typeData;
+    }
+
+    private io.quarkus.gizmo.FieldCreator getModelField() {
+        if (modelField == null) {
+            modelField = getCreator().getFieldCreator("entityModel", EntityModel.class);
+        }
+        return modelField;
+    }
+
+    private io.quarkus.gizmo.FieldCreator getAccessorField() {
+        if (accessorField == null) {
+            accessorField = getCreator().getFieldCreator("accessor", accessorType);
+        }
+        return accessorField;
+    }
+
+    public PropertyModelGenerator emit() {
+        getBuilder().superClass(CritterPropertyModel.class);
+
+        try (var creator = getCreator()) {
+            // Initialize fields first
+            getModelField();
+            getAccessorField();
+            ctor();
+            getAccessor();
+            getFullName();
+            getLoadNames();
+            getMappedName();
+            getName();
+            getNormalizedType();
+            isArray();
+            isFinal();
+            isReference();
+            isTransient();
+            isMap();
+            isSet();
+            isCollection();
+            getType();
+            emitGetTypeData();
+            getEntityModel();
+        }
+        return this;
+    }
+
+    private void isArray() {
+        try (MethodCreator methodCreator = getCreator().getMethodCreator("isArray", boolean.class)) {
+            methodCreator.returnValue(methodCreator.load(Generators.isArray(propertyType)));
+        }
+    }
+
+    private void isMap() {
+        try (MethodCreator methodCreator = getCreator().getMethodCreator("isMap", boolean.class)) {
+            methodCreator.returnValue(methodCreator.load(Map.class.isAssignableFrom(getTypeData().getType())));
+        }
+    }
+
+    private void isSet() {
+        try (MethodCreator methodCreator = getCreator().getMethodCreator("isSet", boolean.class)) {
+            methodCreator.returnValue(methodCreator.load(java.util.Set.class.isAssignableFrom(getTypeData().getType())));
+        }
+    }
+
+    private void getType() {
+        try (MethodCreator methodCreator = getCreator().getMethodCreator("getType", Class.class)) {
+            methodCreator.returnValue(methodCreator.loadClass(getTypeData().getType()));
+        }
+    }
+
+    private void getEntityModel() {
+        try (MethodCreator methodCreator = getCreator().getMethodCreator("getEntityModel", EntityModel.class)) {
+            methodCreator.returnValue(
+                    methodCreator.readInstanceField(getModelField().getFieldDescriptor(), methodCreator.getThis()));
+        }
+    }
+
+    private void emitGetTypeData() {
+        try (MethodCreator methodCreator = getCreator().getMethodCreator("getTypeData", TypeData.class)) {
+            methodCreator.returnValue(emitTypeData(methodCreator, this.getTypeData()));
+        }
+    }
+
+    private ResultHandle emitTypeData(MethodCreator methodCreator, TypeData<?> data) {
+        ResultHandle array = methodCreator.newArray(TypeData.class, data.getTypeParameters().size());
+        List<TypeData<?>> typeParameters = data.getTypeParameters();
+        for (int index = 0; index < typeParameters.size(); index++) {
+            methodCreator.writeArrayValue(array, index, emitTypeData(methodCreator, typeParameters.get(index)));
+        }
+        List<ResultHandle> list = new ArrayList<>();
+        list.add(methodCreator.loadClass(data.getType()));
+        list.add(array);
+        MethodDescriptor descriptor = MethodDescriptor.ofConstructor(
+                TypeData.class,
+                Class.class,
+                "[" + Type.getType(TypeData.class).getDescriptor());
+        return methodCreator.newInstance(descriptor, list.toArray(new ResultHandle[0]));
+    }
+
+    private void isCollection() {
+        try (MethodCreator methodCreator = getCreator().getMethodCreator("isCollection", boolean.class)) {
+            methodCreator.returnValue(
+                    methodCreator.load(java.util.Collection.class.isAssignableFrom(getTypeData().getType())));
+        }
+    }
+
+    private void isFinal() {
+        try (MethodCreator methodCreator = getCreator().getMethodCreator("isFinal", boolean.class)) {
+            methodCreator.returnValue(methodCreator.load(checkMask(Opcodes.ACC_FINAL)));
+        }
+    }
+
+    private void isTransient() {
+        try (MethodCreator methodCreator = getCreator().getMethodCreator("isTransient", boolean.class)) {
+            boolean isTransient = checkMask(Opcodes.ACC_TRANSIENT)
+                    || PropertyConvention.transientAnnotations().stream()
+                            .anyMatch(c -> getAnnotationMap().containsKey(c.getName()));
+            methodCreator.returnValue(methodCreator.load(isTransient));
+        }
+    }
+
+    private void isReference() {
+        try (MethodCreator methodCreator = getCreator().getMethodCreator("isReference", boolean.class)) {
+            methodCreator.returnValue(methodCreator.load(
+                    propertyType.equals(Type.getType(DBRef.class))
+                            || getAnnotationMap().containsKey(Reference.class.getName())));
+        }
+    }
+
+    private boolean checkMask(int mask) {
+        return (getAccessValue() & mask) == mask;
+    }
+
+    private void getNormalizedType() {
+        try (MethodCreator methodCreator = getCreator().getMethodCreator("getNormalizedType", Class.class)) {
+            methodCreator.returnValue(methodCreator.loadClass(PropertyModel.normalize(getTypeData())));
+        }
+    }
+
+    private void getLoadNames() {
+        try (MethodCreator methodCreator = getCreator().getMethodCreator("getLoadNames", List.class)) {
+            AlsoLoad alsoLoad = (AlsoLoad) getAnnotationMap().get(AlsoLoad.class.getName());
+            int size = alsoLoad != null ? alsoLoad.value().length : 0;
+            ResultHandle names = methodCreator.newArray(Object.class, size);
+            if (alsoLoad != null) {
+                String[] values = alsoLoad.value();
+                for (int index = 0; index < values.length; index++) {
+                    methodCreator.writeArrayValue(names, index, methodCreator.load(values[index]));
+                }
+            }
+            MethodDescriptor asList = ofMethod(
+                    java.util.Arrays.class,
+                    "asList",
+                    List.class,
+                    Object[].class);
+            methodCreator.returnValue(methodCreator.invokeStaticMethod(asList, names));
+        }
+    }
+
+    private void getName() {
+        try (MethodCreator methodCreator = getCreator().getMethodCreator("getName", String.class)) {
+            methodCreator.returnValue(methodCreator.load(propertyName));
+        }
+    }
+
+    private void getMappedName() {
+        try (MethodCreator methodCreator = getCreator().getMethodCreator("getMappedName", String.class)) {
+            methodCreator.returnValue(methodCreator.load(
+                    PropertyConvention.mappedName(config, getAnnotationMap(), propertyName)));
+        }
+    }
+
+    private void getFullName() {
+        try (MethodCreator methodCreator = getCreator().getMethodCreator("getFullName", String.class)) {
+            methodCreator.returnValue(methodCreator.load("%s#%s".formatted(entity.getName(), propertyName)));
+        }
+    }
+
+    private void ctor() {
+        try (MethodCreator constructor = getCreator().getConstructorCreator(EntityModel.class)) {
+            constructor.invokeSpecialMethod(
+                    MethodDescriptor.ofConstructor(CritterPropertyModel.class, EntityModel.class),
+                    constructor.getThis(),
+                    constructor.getMethodParam(0));
+            constructor.setParameterNames(new String[] { "model" });
+            constructor.writeInstanceField(
+                    getModelField().getFieldDescriptor(),
+                    constructor.getThis(),
+                    constructor.getMethodParam(0));
+            ResultHandle accessorInstance = constructor.newInstance(
+                    MethodDescriptor.ofConstructor(accessorType));
+            constructor.writeInstanceField(
+                    getAccessorField().getFieldDescriptor(),
+                    constructor.getThis(),
+                    accessorInstance);
+            registerAnnotations(constructor);
+            constructor.returnVoid();
+        }
+    }
+
+    private void registerAnnotations(MethodCreator constructor) {
+        MethodDescriptor annotationMethod = ofMethod(
+                PropertyModel.class.getName(),
+                "annotation",
+                PropertyModel.class.getName(),
+                Annotation.class);
+        for (AnnotationNode annotation : annotations) {
+            constructor.invokeVirtualMethod(
+                    annotationMethod,
+                    constructor.getThis(),
+                    GizmoExtensions.annotationBuilder(annotation, constructor));
+        }
+    }
+
+    private void getAccessor() {
+        MethodCreator method = getCreator().getMethodCreator(
+                ofMethod(generatedType, "getAccessor", PropertyAccessor.class.getName()));
+        method.returnValue(method.readInstanceField(getAccessorField().getFieldDescriptor(), method.getThis()));
+        method.close();
+    }
+
+    // ---- Static utility methods (formerly package-level functions) ----
+
+    private static String balanced(String s) {
+        if (!s.contains("<"))
+            return "";
+        int start = s.indexOf('<') + 1;
+        int index = start;
+        int count = 1;
+
+        while (index < s.length() && count != 0) {
+            char c = s.charAt(++index);
+            if (c == '>')
+                count--;
+            else if (c == '<')
+                count++;
+        }
+
+        return s.substring(start, index);
+    }
+
+    public static List<TypeData<?>> typeData(String input, ClassLoader classLoader) {
+        if (input.isEmpty())
+            return Collections.emptyList();
+        List<TypeData<?>> types = new ArrayList<>();
+        String value = input;
+
+        while (!value.isEmpty()) {
+            // Strip wildcard bound prefixes (+ = extends, - = super, * = unbounded)
+            if (value.startsWith("+") || value.startsWith("-")) {
+                value = value.substring(1);
+                continue;
+            }
+            if (value.startsWith("*")) {
+                value = value.substring(1);
+                types.add(GizmoExtensions.typeDataFromType(Type.getType(Object.class), classLoader));
+                continue;
+            }
+            int bracket = value.indexOf('<');
+            int semicolon = value.indexOf(';');
+            // Handle type parameters (e.g., TT; for type param T) - use Object as erasure
+            if (value.startsWith("T") && !value.startsWith("T[")) {
+                value = (semicolon != -1) ? value.substring(semicolon + 1) : "";
+                types.add(GizmoExtensions.typeDataFromType(Type.getType(Object.class), classLoader));
+            } else if (bracket == -1 || (semicolon != -1 && bracket > semicolon)) {
+                String type = value.substring(0, semicolon != -1 ? semicolon : value.length());
+                boolean hadSemicolon = semicolon != -1 && semicolon < value.length();
+                if (hadSemicolon && type.length() > 2) {
+                    type += ";";
+                }
+                value = hadSemicolon ? value.substring(type.length()) : "";
+                types.add(GizmoExtensions.typeDataFromType(Type.getType(type), classLoader));
+            } else {
+                String paramString = balanced(value);
+                value = value.replace("<" + paramString + ">", "");
+                types.add(GizmoExtensions.typeDataFromType(
+                        Type.getType(value),
+                        classLoader,
+                        typeData(paramString, classLoader)));
+                value = value.contains(";") ? value.substring(value.indexOf(';') + 1) : "";
+            }
+        }
+        return types;
+    }
+}

@@ -24,7 +24,7 @@ class CritterProcessor(
 
     fun process() {
         // Configure Generators with the loaded MorphiaConfig
-        Generators.configFile = findConfigFile()
+        Generators.INSTANCE.configFile = findConfigFile()
 
         val entityClasses = findEntityClasses()
 
@@ -84,7 +84,7 @@ class CritterProcessor(
 
     private fun processClass(entityClass: Class<*>) {
         logger.info("Generating critter code for: ${entityClass.name}")
-        CritterGizmoGenerator.generate(entityClass, critterClassLoader)
+        CritterGizmoGenerator.INSTANCE.generate(entityClass, critterClassLoader, false)
     }
 
     private fun writeGeneratedClasses() {
