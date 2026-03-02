@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.mongodb.lang.Nullable;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.DateStorage;
 import dev.morphia.mapping.DiscriminatorFunction;
 import dev.morphia.mapping.MapperType;
@@ -26,7 +27,9 @@ import static java.lang.Boolean.FALSE;
 /**
  * @since 2.4
  * @hidden
+ * @morphia.internal
  */
+@MorphiaInternal
 @SuppressWarnings("removal")
 public class ManualMorphiaConfig implements MorphiaConfig {
     Boolean applyCaps;
