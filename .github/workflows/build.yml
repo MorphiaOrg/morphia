@@ -8,10 +8,6 @@ on:
       - '*'
   workflow_dispatch:
 
-concurrency:
-  group: build-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   CodeAudits:
     uses: evanchooly/workflows/.github/workflows/code-audits.yml@master
@@ -145,6 +141,9 @@ jobs:
       - DriversTests
     if: needs.Matrix.outputs.releasable == 'true'
     uses: evanchooly/workflows/.github/workflows/jreleaser.yml@master
+    concurrency:
+      group: build-${{ github.ref }}
+      cancel-in-progress: true
     with:
       java: 17
     secrets:
