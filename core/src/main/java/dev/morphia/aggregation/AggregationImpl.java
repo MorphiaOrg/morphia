@@ -354,7 +354,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
         return this;
     }
 
-    private static class MappingCursor<R> implements MongoCursor<R> {
+    private class MappingCursor<R> implements MongoCursor<R> {
         private final MongoCursor<Document> results;
         private final Codec<R> codec;
         private final String discriminator;
@@ -403,7 +403,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
 
         private R map(Document next) {
             next.remove(discriminator);
-            return codec.decode(new DocumentReader(next), DecoderContext.builder().build());
+            return codec.decode(new DocumentReader(next, datastore.getMapper().getClassLoader()), DecoderContext.builder().build());
         }
     }
 

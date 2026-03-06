@@ -28,7 +28,7 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
         addCodec(new MorphiaDateCodec(datastore));
         addCodec(new MorphiaLocalDateTimeCodec(datastore));
         addCodec(new MorphiaLocalTimeCodec());
-        addCodec(new ClassCodec());
+        addCodec(new ClassCodec(datastore));
         addCodec(new CenterCodec());
         addCodec(new KeyCodec(datastore));
         addCodec(new LocaleCodec());

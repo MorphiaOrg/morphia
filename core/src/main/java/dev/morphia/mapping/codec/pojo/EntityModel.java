@@ -71,6 +71,7 @@ public class EntityModel {
     private final PropertyModel idProperty;
     private final PropertyModel versionProperty;
     private final List<EntityListener<?>> listeners = new ArrayList<>();
+    private final ClassLoader classLoader;
 
     /**
      * Creates a new instance
@@ -137,6 +138,7 @@ public class EntityModel {
         }
 
         listeners.add(new OnEntityListenerAdapter(getType()));
+        this.classLoader = builder.mapper().getClassLoader();
     }
 
     public EntityModel(EntityModel other) {
@@ -193,6 +195,7 @@ public class EntityModel {
         }
 
         listeners.add(new OnEntityListenerAdapter(getType()));
+        this.classLoader = other.classLoader;
     }
 
     /**
@@ -377,6 +380,10 @@ public class EntityModel {
     public boolean hasLifecycle(Class<? extends Annotation> type) {
         return listeners.stream()
                 .anyMatch(listener -> listener.hasAnnotation(type));
+    }
+
+    public ClassLoader getClassLoader() {
+        return classLoader;
     }
 
     @Override

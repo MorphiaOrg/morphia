@@ -79,6 +79,7 @@ public class Mapper {
     private final MorphiaConfig config;
     private final DiscriminatorLookup discriminatorLookup;
     private final Object entityRegistrationMonitor = new Object();
+    private final ClassLoader classLoader;
 
     /**
      * Creates a Mapper with the given options.
@@ -89,8 +90,22 @@ public class Mapper {
      */
     @MorphiaInternal
     public Mapper(MorphiaConfig config) {
+        this(config, Thread.currentThread().getContextClassLoader());
+    }
+
+    /**
+     * Creates a Mapper with the given options and classloader.
+     *
+     * @param config      the config to use
+     * @param classLoader the classloader to use when looking up classes by discriminator
+     * @morphia.internal
+     * @hidden
+     */
+    @MorphiaInternal
+    public Mapper(MorphiaConfig config, ClassLoader classLoader) {
         this.config = config;
-        discriminatorLookup = new DiscriminatorLookup();
+        this.classLoader = classLoader;
+        discriminatorLookup = new DiscriminatorLookup(classLoader);
     }
 
     /**
@@ -100,7 +115,8 @@ public class Mapper {
      */
     public Mapper(Mapper other) {
         config = other.config;
-        discriminatorLookup = new DiscriminatorLookup();
+        classLoader = other.classLoader;
+        discriminatorLookup = new DiscriminatorLookup(other.getClassLoader());
         other.mappedEntities.values().forEach(entity -> clone(entity));
         listeners.addAll(other.listeners);
     }
@@ -171,6 +187,10 @@ public class Mapper {
             throw new MappingException(Sofia.idRequired(type.getName()));
         }
         return idField;
+    }
+
+    public ClassLoader getClassLoader() {
+        return classLoader;
     }
 
     /**
@@ -618,7 +638,7 @@ public class Mapper {
         try (ScanResult scanResult = classGraph.scan()) {
             for (ClassInfo classInfo : scanResult.getAllClasses()) {
                 try {
-                    classes.add(Class.forName(classInfo.getName(), true, Thread.currentThread().getContextClassLoader()));
+                    classes.add(Class.forName(classInfo.getName(), true, classLoader));
                 } catch (Throwable ignored) {
                 }
             }

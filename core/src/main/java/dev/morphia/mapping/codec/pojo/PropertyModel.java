@@ -362,7 +362,7 @@ public final class PropertyModel {
      * @param value    the value to set
      */
     public void setValue(Object instance, @Nullable Object value) {
-        accessor.set(instance, Conversions.convert(value, getType()));
+        accessor.set(instance, Conversions.convert(value, getType(), entityModel.getClassLoader()));
     }
 
     /**
