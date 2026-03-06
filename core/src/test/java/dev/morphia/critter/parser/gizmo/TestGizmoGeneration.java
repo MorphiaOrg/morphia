@@ -19,7 +19,6 @@ import dev.morphia.annotations.internal.FieldBuilder;
 import dev.morphia.annotations.internal.IndexBuilder;
 import dev.morphia.annotations.internal.IndexOptionsBuilder;
 import dev.morphia.annotations.internal.IndexesBuilder;
-import dev.morphia.config.ManualMorphiaConfig;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.critter.ClassfileOutput;
 import dev.morphia.critter.CritterClassLoader;
@@ -138,7 +137,7 @@ public class TestGizmoGeneration {
 
     @Test
     public void testGizmo() throws Exception {
-        MorphiaConfig config = new ManualMorphiaConfig();
+        MorphiaConfig config = dev.morphia.config.MorphiaConfig.load();
         Generators generators = new Generators(config, new ReflectiveMapper(config));
         CritterGizmoGenerator.generate(Example.class, critterClassLoader, generators, false);
         critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.AgeModel");

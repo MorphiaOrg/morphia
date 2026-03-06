@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import dev.morphia.config.ManualMorphiaConfig;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.critter.ClassfileOutput;
 import dev.morphia.critter.CritterClassLoader;
@@ -41,7 +40,7 @@ public class GeneratorTest {
         } catch (Exception ignored) {
         }
 
-        MorphiaConfig config = new ManualMorphiaConfig();
+        MorphiaConfig config = MorphiaConfig.load();
         Generators generators = new Generators(config, new ReflectiveMapper(config));
         GizmoEntityModelGenerator gen = CritterGizmoGenerator.generate(Example.class, critterClassLoader, generators, false);
         try {

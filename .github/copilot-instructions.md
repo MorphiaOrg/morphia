@@ -182,7 +182,7 @@ The `pull-request.yml` workflow runs on every PR and is the gating check:
 | Error | Cause | Fix |
 |-------|-------|-----|
 | `Cannot connect to MongoDB` in tests | Docker not running / Testcontainers can't pull image | Start Docker daemon; or use `-Dmongodb=local` with a local `mongod` |
-| `No MorphiaConfig found` | Missing `morphia-config.properties` on classpath | Add the file to `src/test/resources/`, or call `Morphia.createDatastore(client, new ManualMorphiaConfig())` |
+| `No MorphiaConfig found` | Missing `morphia-config.properties` on classpath | Add the file to `src/test/resources/`, or call `Morphia.createDatastore(client, dev.morphia.config.MorphiaConfig.load())` |
 | `MappingException: No usable constructor` | Entity class has no no-arg constructor accessible to Morphia | Add a `protected` or `public` no-arg constructor |
 | `ClassCastException` with proxies | Lazy-loading proxy and `instanceof` check clash | Check `MorphiaInternals.proxyClassesPresent()` before using proxies, or disable lazy loading |
 | Tests skipped with `SkipException` | MongoDB version below minimum for a feature | Pass a higher `-Dmongodb=` version |

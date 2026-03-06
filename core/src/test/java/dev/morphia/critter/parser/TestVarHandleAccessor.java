@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import dev.morphia.config.ManualMorphiaConfig;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.critter.Critter;
 import dev.morphia.critter.CritterClassLoader;
@@ -23,7 +22,7 @@ public class TestVarHandleAccessor {
     @BeforeClass
     public void setup() {
         classLoader = new CritterClassLoader();
-        MorphiaConfig config = new ManualMorphiaConfig();
+        MorphiaConfig config = dev.morphia.config.MorphiaConfig.load();
         CritterGizmoGenerator.generate(Example.class, classLoader, new Generators(config, new ReflectiveMapper(config)), true);
     }
 

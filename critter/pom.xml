@@ -15,7 +15,6 @@
     <packaging>pom</packaging>
 
     <subprojects>
-        <subproject>core</subproject>
         <subproject>critter-maven</subproject>
         <subproject>critter-integration-tests</subproject>
     </subprojects>
