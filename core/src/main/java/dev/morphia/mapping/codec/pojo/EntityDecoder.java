@@ -18,7 +18,6 @@ import org.bson.codecs.configuration.CodecRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static dev.morphia.mapping.codec.Conversions.convert;
 import static java.lang.String.format;
 
 /**
@@ -71,7 +70,7 @@ public class EntityDecoder<T> implements Decoder<T> {
             } catch (BsonInvalidOperationException e) {
                 mark.reset();
                 final Object value = morphiaCodec.getDatastore().getCodecRegistry().get(Object.class).decode(reader, decoderContext);
-                instanceCreator.set(convert(value, model.getTypeData().getType()), model);
+                instanceCreator.set(morphiaCodec.getConversions().convert(value, model.getTypeData().getType()), model);
             }
         } else {
             reader.skipValue();
@@ -118,7 +117,7 @@ public class EntityDecoder<T> implements Decoder<T> {
     }
 
     protected MorphiaInstanceCreator getInstanceCreator() {
-        return classModel.getInstanceCreator();
+        return classModel.getInstanceCreator(morphiaCodec.getConversions());
     }
 
     protected MorphiaCodec<T> getMorphiaCodec() {

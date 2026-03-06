@@ -54,6 +54,16 @@ public interface MorphiaConfig {
     }
 
     /**
+     * Tries to load a configuration from the default location using the given classloader.
+     *
+     * @param classLoader the classloader to use when loading resources from the classpath
+     * @return the loaded config
+     */
+    static MorphiaConfig load(ClassLoader classLoader) {
+        return load(MorphiaConfigHelper.MORPHIA_CONFIG_PROPERTIES, classLoader);
+    }
+
+    /**
      * Parses and loads the configuration found at the given location
      *
      * @param path the location of the configuration to load. This can be a file path, a classpath resource, a URL, etc.
@@ -62,18 +72,55 @@ public interface MorphiaConfig {
      * @since 3.0
      */
     static MorphiaConfig load(String path) {
-        List<ConfigSource> configSources = classPathSources(path, currentThread().getContextClassLoader());
+        return load(path, currentThread().getContextClassLoader());
+    }
+
+    /**
+     * Parses and loads the configuration found at the given location
+     *
+     * @param path        the location of the configuration to load. This can be a file path, a classpath resource, a URL, etc.
+     * @param classLoader the classloader to use when loading resources from the classpath
+     *
+     * @return the loaded configuration
+     * @since 3.0
+     */
+    static MorphiaConfig load(String path, ClassLoader classLoader) {
+        List<ConfigSource> configSources = classPathSources(path, classLoader);
         if (configSources.isEmpty()) {
             LoggerFactory.getLogger(MorphiaConfig.class).warn(Sofia.missingConfigFile(path));
-            return new ManualMorphiaConfig();
+            return new ManualMorphiaConfig().classLoader(classLoader);
         }
-        return new SmallRyeConfigBuilder()
+        MorphiaConfig config = new SmallRyeConfigBuilder()
                 .addDefaultInterceptors()
                 .withMapping(MorphiaConfig.class)
                 .withSources(configSources)
                 .addDefaultSources()
                 .build()
                 .getConfigMapping(MorphiaConfig.class);
+        return config.classLoader(classLoader);
+    }
+
+    /**
+     * The ClassLoader to use for class resolution. Defaults to the current thread's context ClassLoader.
+     *
+     * @return the ClassLoader
+     * @since 2.5
+     */
+    default ClassLoader classLoader() {
+        return currentThread().getContextClassLoader();
+    }
+
+    /**
+     * Updates this configuration with a new ClassLoader and returns a new instance. The original instance is unchanged.
+     *
+     * @param value the new ClassLoader
+     * @return a new instance with the updated configuration
+     * @since 2.5
+     */
+    default MorphiaConfig classLoader(ClassLoader value) {
+        var newConfig = new ManualMorphiaConfig(this);
+        newConfig.classLoader = value;
+        return newConfig;
     }
 
     /**

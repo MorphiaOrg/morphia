@@ -48,6 +48,7 @@ import dev.morphia.mapping.EntityModelImporter;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.ShardKeyType;
+import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.EnumCodecProvider;
 import dev.morphia.mapping.codec.MorphiaCodecProvider;
 import dev.morphia.mapping.codec.MorphiaMapCodecProvider;
@@ -98,6 +99,7 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 public class DatastoreImpl implements AdvancedDatastore {
     private static final Logger LOG = LoggerFactory.getLogger(Datastore.class);
     private final MongoClient mongoClient;
+    private final Conversions conversions;
     private final Mapper mapper;
     private final QueryFactory queryFactory;
     private final CodecRegistry codecRegistry;
@@ -108,7 +110,8 @@ public class DatastoreImpl implements AdvancedDatastore {
     public DatastoreImpl(MongoClient client, MorphiaConfig config) {
         this.mongoClient = client;
         this.database = mongoClient.getDatabase(config.database());
-        this.mapper = new Mapper(config);
+        this.conversions = new Conversions(config.classLoader());
+        this.mapper = new Mapper(config, conversions);
         this.queryFactory = mapper.getConfig().queryFactory();
         importModels();
 
@@ -142,10 +145,21 @@ public class DatastoreImpl implements AdvancedDatastore {
     public DatastoreImpl(DatastoreImpl datastore) {
         this.mongoClient = datastore.mongoClient;
         this.database = mongoClient.getDatabase(datastore.mapper.getConfig().database());
+        this.conversions = datastore.conversions;
         this.mapper = datastore.mapper.copy();
         this.queryFactory = datastore.queryFactory;
         this.operations = datastore.operations;
         codecRegistry = buildRegistry();
+    }
+
+    /**
+     * @return the Conversions instance used by this Datastore
+     * @morphia.internal
+     * @hidden
+     */
+    @MorphiaInternal
+    public Conversions getConversions() {
+        return conversions;
     }
 
     private CodecRegistry buildRegistry() {
@@ -641,7 +655,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                 .iterator()
                 .next();
 
-        refreshCodec.decode(new DocumentReader(id), DecoderContext.builder().checkedDiscriminator(true).build());
+        refreshCodec.decode(new DocumentReader(id, conversions), DecoderContext.builder().checkedDiscriminator(true).build());
     }
 
     @Override

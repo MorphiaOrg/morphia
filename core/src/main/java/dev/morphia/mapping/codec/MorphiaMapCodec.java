@@ -34,11 +34,13 @@ public class MorphiaMapCodec implements Codec<Map> {
     private Supplier<Map> factory;
 
     private Datastore datastore;
+    private final Conversions conversions;
 
     private final Codec<?> valueCodec;
 
-    public MorphiaMapCodec(DatastoreImpl datastore, Class<?> clazz, Codec<?> valueCodec) {
+    public MorphiaMapCodec(DatastoreImpl datastore, Class<?> clazz, Codec<?> valueCodec, Conversions conversions) {
         this.datastore = datastore;
+        this.conversions = conversions;
         this.valueCodec = valueCodec;
         try {
             Constructor<?> ctor = clazz.getDeclaredConstructor();
@@ -78,7 +80,7 @@ public class MorphiaMapCodec implements Codec<Map> {
         document(writer, () -> {
             for (Entry<?, ?> entry : ((Map<?, ?>) map).entrySet()) {
                 final Object key = entry.getKey();
-                writer.writeName(Conversions.convert(key, String.class));
+                writer.writeName(conversions.convert(key, String.class));
                 if (entry.getValue() == null) {
                     writer.writeNull();
                 } else {

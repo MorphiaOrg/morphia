@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import com.mongodb.lang.Nullable;
@@ -31,12 +32,30 @@ import static java.lang.Boolean.FALSE;
  * @morphia.internal
  */
 @MorphiaInternal
-public final class Conversions {
+public class Conversions {
     private static final Logger LOG = LoggerFactory.getLogger(Conversions.class);
 
-    private static final Map<Class<?>, Map<Class<?>, Function<?, ?>>> CONVERSIONS = new ConcurrentHashMap<>();
+    private final Map<Class<?>, Map<Class<?>, BiFunction<?, ClassLoader, ?>>> conversions = new ConcurrentHashMap<>();
+    private final ClassLoader classLoader;
 
-    static {
+    /**
+     * Creates a new Conversions instance with the given ClassLoader.
+     *
+     * @param classLoader the ClassLoader to use for class resolution
+     */
+    public Conversions(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+        registerDefaults();
+    }
+
+    /**
+     * @return the ClassLoader used by this Conversions instance
+     */
+    public ClassLoader getClassLoader() {
+        return classLoader;
+    }
+
+    private void registerDefaults() {
         registerStringConversions();
 
         register(Binary.class, byte[].class, Binary::getData);
@@ -81,10 +100,7 @@ public final class Conversions {
         });
     }
 
-    private Conversions() {
-    }
-
-    private static void registerStringConversions() {
+    private void registerStringConversions() {
         register(String.class, BigDecimal.class, BigDecimal::new);
         register(String.class, ObjectId.class, ObjectId::new);
         register(String.class, Character.class, s -> {
@@ -97,9 +113,9 @@ public final class Conversions {
             }
         });
         register(Class.class, String.class, Class::getName);
-        register(String.class, Class.class, className -> {
+        registerWithClassLoader(String.class, Class.class, (className, cl) -> {
             try {
-                return Thread.currentThread().getContextClassLoader().loadClass(className);
+                return cl.loadClass(className);
             } catch (ClassNotFoundException e) {
                 throw new MappingException(e.getMessage(), e);
             }
@@ -124,24 +140,7 @@ public final class Conversions {
     }
 
     /**
-     * Register a conversion between two types. For example, to register the conversion of {@link Date} to a {@link Long}, this method
-     * could be invoked as follows:
-     * <code>
-     * register(Date.class, Long.class, Date::getTime);
-     * </code>
-     *
-     * @param source   the source type
-     * @param target   the target type
-     * @param function the function that performs the conversion. This is often just a method reference.
-     * @param <S>      the source type
-     * @param <T>      the target type.
-     */
-    public static <S, T> void register(Class<S> source, Class<T> target, Function<S, T> function) {
-        register(source, target, function, null);
-    }
-
-    /**
-     * Attempts to convert a value to the given type
+     * Attempts to convert a value to the given type.
      *
      * @param value  the value to convert
      * @param target the target type
@@ -150,17 +149,15 @@ public final class Conversions {
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
     @Nullable
-    public static <T> T convert(@Nullable Object value, Class<T> target) {
+    public <T> T convert(@Nullable Object value, Class<T> target) {
         if (value == null) {
             return (T) convertNull(target);
         }
-
         final Class<?> fromType = value.getClass();
         if (fromType.equals(target)) {
             return (T) value;
         }
-
-        final Function function = CONVERSIONS
+        final BiFunction function = conversions
                 .computeIfAbsent(fromType, (f) -> new ConcurrentHashMap<>())
                 .get(target);
         if (function == null) {
@@ -172,7 +169,7 @@ public final class Conversions {
             }
             return (T) value;
         }
-        return (T) function.apply(value);
+        return (T) function.apply(value, classLoader);
     }
 
     @Nullable
@@ -186,30 +183,70 @@ public final class Conversions {
     }
 
     /**
-     * Register a conversion between two types. For example, to register the conversion of {@link Date} to a {@link Long}, this method
-     * could be invoked as follows:
-     * <code>
-     * register(Date.class, Long.class, Date::getTime);
-     * </code>
+     * Register a conversion between two types.
      *
      * @param source   the source type
      * @param target   the target type
-     * @param function the function that performs the conversion. This is often just a method reference.
-     * @param warning  if non-null, this will be the message logged on the WARN level indicating the conversion is taking place.
+     * @param function the function that performs the conversion
      * @param <S>      the source type
-     * @param <T>      the target type.
+     * @param <T>      the target type
      */
-    public static <S, T> void register(Class<S> source, Class<T> target, Function<S, T> function,
+    public <S, T> void register(Class<S> source, Class<T> target, Function<S, T> function) {
+        register(source, target, function, null);
+    }
+
+    /**
+     * Register a conversion between two types.
+     *
+     * @param source   the source type
+     * @param target   the target type
+     * @param function the function that performs the conversion
+     * @param warning  if non-null, this will be logged on WARN level
+     * @param <S>      the source type
+     * @param <T>      the target type
+     */
+    public <S, T> void register(Class<S> source, Class<T> target, Function<S, T> function,
             @Nullable String warning) {
-        final Function<S, T> conversion = warning == null
+        // Wrap Function as BiFunction (ignore ClassLoader parameter)
+        BiFunction<S, ClassLoader, T> biFunction = (s, cl) -> function.apply(s);
+        registerWithClassLoader(source, target, biFunction, warning);
+    }
+
+    /**
+     * Register a conversion between two types with ClassLoader support.
+     *
+     * @param source   the source type
+     * @param target   the target type
+     * @param function the function that performs the conversion (receives ClassLoader)
+     * @param <S>      the source type
+     * @param <T>      the target type
+     */
+    public <S, T> void registerWithClassLoader(Class<S> source, Class<T> target,
+            BiFunction<S, ClassLoader, T> function) {
+        registerWithClassLoader(source, target, function, null);
+    }
+
+    /**
+     * Register a conversion between two types with ClassLoader support.
+     *
+     * @param source   the source type
+     * @param target   the target type
+     * @param function the function that performs the conversion (receives ClassLoader)
+     * @param warning  if non-null, this will be logged on WARN level
+     * @param <S>      the source type
+     * @param <T>      the target type
+     */
+    public <S, T> void registerWithClassLoader(Class<S> source, Class<T> target,
+            BiFunction<S, ClassLoader, T> function, @Nullable String warning) {
+        final BiFunction<S, ClassLoader, T> conversion = warning == null
                 ? function
-                : s -> {
+                : (s, cl) -> {
                     if (LOG.isWarnEnabled()) {
                         LOG.warn(warning);
                     }
-                    return function.apply(s);
+                    return function.apply(s, cl);
                 };
-        CONVERSIONS.computeIfAbsent(source, (Class<?> c) -> new HashMap<>())
+        conversions.computeIfAbsent(source, (Class<?> c) -> new HashMap<>())
                 .put(target, conversion);
     }
 
