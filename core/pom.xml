@@ -133,6 +133,7 @@
                         <goals>
                             <goal>morphia-annotation-node</goal>
                         </goals>
+                        <phase>generate-sources</phase>
                     </execution>
                 </executions>
             </plugin>
