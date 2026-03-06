@@ -48,7 +48,7 @@ import static com.mongodb.client.model.CollationCaseFirst.LOWER;
 import static io.quarkus.gizmo.MethodDescriptor.ofMethod;
 
 public class TestGizmoGeneration {
-    private final CritterClassLoader critterClassLoader = new CritterClassLoader();
+    private final CritterClassLoader critterClassLoader = new CritterClassLoader(Thread.currentThread().getContextClassLoader());
 
     @Test
     public void testMapStringExample() {
@@ -262,7 +262,7 @@ public class TestGizmoGeneration {
 
     @Test
     public void testMethodBasedAccessors() throws Exception {
-        CritterClassLoader classLoader = new CritterClassLoader();
+        CritterClassLoader classLoader = new CritterClassLoader(Thread.currentThread().getContextClassLoader());
 
         String resourceName = MethodExample.class.getName().replace('.', '/') + ".class";
         var inputStream = MethodExample.class.getClassLoader().getResourceAsStream(resourceName);

@@ -14,7 +14,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.NoInjection;
 
 public class TestPropertyModelGenerator extends BaseCritterTest {
-    private final CritterClassLoader critterClassLoader = new CritterClassLoader();
+    private final CritterClassLoader critterClassLoader = new CritterClassLoader(Thread.currentThread().getContextClassLoader());
 
     // @Test(dataProvider = "properties", testName = "")
     public void testProperty(String control, String methodName, @NoInjection Method method) throws Exception {

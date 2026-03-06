@@ -35,6 +35,7 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     Boolean applyCaps;
     Boolean applyDocumentValidations;
     Boolean applyIndexes;
+    ClassLoader classLoader;
 
     Optional<CodecProvider> codecProvider;
 
@@ -69,6 +70,7 @@ public class ManualMorphiaConfig implements MorphiaConfig {
         applyCaps = base.applyCaps();
         applyDocumentValidations = base.applyDocumentValidations();
         applyIndexes = base.applyIndexes();
+        classLoader = base.classLoader();
         codecProvider = base.codecProvider();
         collectionNaming = base.collectionNaming();
         database = base.database();
@@ -120,6 +122,11 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     @Override
     public Boolean applyCaps() {
         return orDefault(applyCaps, FALSE);
+    }
+
+    @Override
+    public ClassLoader classLoader() {
+        return orDefault(classLoader, Thread.currentThread().getContextClassLoader());
     }
 
     public Boolean applyDocumentValidations() {

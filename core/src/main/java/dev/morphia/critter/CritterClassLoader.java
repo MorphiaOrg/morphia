@@ -12,10 +12,6 @@ public class CritterClassLoader extends ByteArrayClassLoader.ChildFirst {
         super(parent, Collections.emptyMap());
     }
 
-    public CritterClassLoader() {
-        this(Thread.currentThread().getContextClassLoader());
-    }
-
     public void register(String name, byte[] bytes) {
         typeDefinitions.put(name, bytes);
     }

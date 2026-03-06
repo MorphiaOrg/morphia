@@ -20,7 +20,7 @@ public class TestEntityModelGenerator {
 
     private final CritterEntityModel control;
     private final Mapper mapper = new ReflectiveMapper(new ManualMorphiaConfig());
-    private final CritterClassLoader critterClassLoader = new CritterClassLoader();
+    private final CritterClassLoader critterClassLoader = new CritterClassLoader(Thread.currentThread().getContextClassLoader());
 
     public TestEntityModelGenerator() {
         CritterEntityModel tmp;

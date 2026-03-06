@@ -49,6 +49,30 @@ import static java.lang.Thread.currentThread;
 public interface MorphiaConfig {
 
     /**
+     * The classloader to use for class lookups and bytecode generation.
+     *
+     * @return the configured classloader
+     * @since 3.0
+     */
+    default ClassLoader classLoader() {
+        return Thread.currentThread().getContextClassLoader();
+    }
+
+    /**
+     * Updates this configuration with a new value and returns a new instance. The original instance is unchanged.
+     *
+     * @param value the new value
+     * @return a new instance with the updated configuration
+     * @since 3.0
+     */
+    default MorphiaConfig classLoader(ClassLoader value) {
+        var newConfig = new ManualMorphiaConfig(this);
+
+        newConfig.classLoader = value;
+        return newConfig;
+    }
+
+    /**
      * Tries to load a configuration from the default location.
      * 
      * @return the loaded config
