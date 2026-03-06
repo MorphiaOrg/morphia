@@ -23,11 +23,10 @@ public class CritterGizmoGenerator {
             Generators generators, boolean runtimeMode) {
         ClassNode classNode = new ClassNode();
         String resourceName = "%s.class".formatted(type.getName().replace('.', '/'));
-        java.io.InputStream inputStream = type.getClassLoader().getResourceAsStream(resourceName);
-        if (inputStream == null) {
-            throw new IllegalArgumentException("Could not find class file for %s".formatted(type.getName()));
-        }
-        try {
+        try (java.io.InputStream inputStream = type.getClassLoader().getResourceAsStream(resourceName)) {
+            if (inputStream == null) {
+                throw new IllegalArgumentException("Could not find class file for %s".formatted(type.getName()));
+            }
             new ClassReader(inputStream).accept(classNode, 0);
         } catch (IOException e) {
             throw new RuntimeException("Failed to read class %s".formatted(type.getName()), e);
