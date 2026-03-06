@@ -5,6 +5,7 @@ import dev.morphia.config.MorphiaConfig
 import dev.morphia.critter.CritterClassLoader
 import dev.morphia.critter.parser.Generators
 import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator
+import dev.morphia.mapping.ReflectiveMapper
 import io.github.classgraph.ClassGraph
 import java.io.File
 import org.slf4j.Logger
@@ -21,11 +22,9 @@ class CritterProcessor(
 
     private val logger: Logger = LoggerFactory.getLogger(CritterProcessor::class.java)
     private val critterClassLoader = CritterClassLoader()
+    private val generators = Generators(config, ReflectiveMapper(config))
 
     fun process() {
-        // Configure Generators with the loaded MorphiaConfig
-        Generators.INSTANCE.configFile = findConfigFile()
-
         val entityClasses = findEntityClasses()
 
         if (entityClasses.isEmpty()) {
@@ -42,17 +41,6 @@ class CritterProcessor(
         }
 
         writeGeneratedClasses()
-    }
-
-    private fun findConfigFile(): String {
-        // Check if morphia-config.properties exists in the classes directory
-        val configFile = File(classesDirectory, "META-INF/morphia-config.properties")
-        return if (configFile.exists()) {
-            "META-INF/morphia-config.properties"
-        } else {
-            // Return default location - Generators will use defaults if not found
-            "META-INF/morphia-config.properties"
-        }
     }
 
     private fun findEntityClasses(): List<Class<*>> {
@@ -84,7 +72,7 @@ class CritterProcessor(
 
     private fun processClass(entityClass: Class<*>) {
         logger.info("Generating critter code for: ${entityClass.name}")
-        CritterGizmoGenerator.INSTANCE.generate(entityClass, critterClassLoader, false)
+        CritterGizmoGenerator.generate(entityClass, critterClassLoader, generators, false)
     }
 
     private fun writeGeneratedClasses() {

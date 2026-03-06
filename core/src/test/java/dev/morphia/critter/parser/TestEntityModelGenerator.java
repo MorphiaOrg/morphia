@@ -2,6 +2,7 @@ package dev.morphia.critter.parser;
 
 import java.lang.reflect.Method;
 
+import dev.morphia.config.ManualMorphiaConfig;
 import dev.morphia.critter.ClassfileOutput;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.mapping.Mapper;
@@ -18,7 +19,7 @@ public class TestEntityModelGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(TestEntityModelGenerator.class);
 
     private final CritterEntityModel control;
-    private final Mapper mapper = new ReflectiveMapper(Generators.INSTANCE.getConfig());
+    private final Mapper mapper = new ReflectiveMapper(new ManualMorphiaConfig());
     private final CritterClassLoader critterClassLoader = new CritterClassLoader();
 
     public TestEntityModelGenerator() {

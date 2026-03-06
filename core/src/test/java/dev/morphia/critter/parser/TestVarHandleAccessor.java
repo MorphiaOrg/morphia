@@ -4,10 +4,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import dev.morphia.config.ManualMorphiaConfig;
+import dev.morphia.config.MorphiaConfig;
 import dev.morphia.critter.Critter;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator;
 import dev.morphia.critter.sources.Example;
+import dev.morphia.mapping.ReflectiveMapper;
 
 import org.bson.codecs.pojo.PropertyAccessor;
 import org.testng.Assert;
@@ -20,7 +23,8 @@ public class TestVarHandleAccessor {
     @BeforeClass
     public void setup() {
         classLoader = new CritterClassLoader();
-        CritterGizmoGenerator.INSTANCE.generate(Example.class, classLoader, true);
+        MorphiaConfig config = new ManualMorphiaConfig();
+        CritterGizmoGenerator.generate(Example.class, classLoader, new Generators(config, new ReflectiveMapper(config)), true);
     }
 
     @Test

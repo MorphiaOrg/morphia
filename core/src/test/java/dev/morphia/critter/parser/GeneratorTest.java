@@ -9,11 +9,14 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import dev.morphia.config.ManualMorphiaConfig;
+import dev.morphia.config.MorphiaConfig;
 import dev.morphia.critter.ClassfileOutput;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator;
 import dev.morphia.critter.parser.gizmo.GizmoEntityModelGenerator;
 import dev.morphia.critter.sources.Example;
+import dev.morphia.mapping.ReflectiveMapper;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
 import io.github.classgraph.ClassGraph;
@@ -38,12 +41,14 @@ public class GeneratorTest {
         } catch (Exception ignored) {
         }
 
-        GizmoEntityModelGenerator gen = CritterGizmoGenerator.INSTANCE.generate(Example.class, critterClassLoader, false);
+        MorphiaConfig config = new ManualMorphiaConfig();
+        Generators generators = new Generators(config, new ReflectiveMapper(config));
+        GizmoEntityModelGenerator gen = CritterGizmoGenerator.generate(Example.class, critterClassLoader, generators, false);
         try {
             entityModel = (CritterEntityModel) critterClassLoader
                     .loadClass(gen.getGeneratedType())
                     .getConstructors()[0]
-                    .newInstance(Generators.INSTANCE.getMapper());
+                    .newInstance(generators.getMapper());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
