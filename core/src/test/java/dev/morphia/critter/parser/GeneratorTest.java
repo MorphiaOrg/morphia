@@ -23,7 +23,7 @@ import io.github.classgraph.ClassGraph;
 
 public class GeneratorTest {
     public static final CritterEntityModel entityModel;
-    public static final CritterClassLoader critterClassLoader = new CritterClassLoader();
+    public static final CritterClassLoader critterClassLoader = new CritterClassLoader(Thread.currentThread().getContextClassLoader());
 
     static {
         ClassGraph classGraph = new ClassGraph()

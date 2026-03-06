@@ -22,7 +22,7 @@ public class TestVarHandleAccessor {
 
     @BeforeClass
     public void setup() {
-        classLoader = new CritterClassLoader();
+        classLoader = new CritterClassLoader(Thread.currentThread().getContextClassLoader());
         MorphiaConfig config = new ManualMorphiaConfig();
         CritterGizmoGenerator.generate(Example.class, classLoader, new Generators(config, new ReflectiveMapper(config)), true);
     }

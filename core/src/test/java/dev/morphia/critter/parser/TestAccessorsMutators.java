@@ -11,7 +11,7 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 
 public class TestAccessorsMutators extends BaseCritterTest {
-    private final CritterClassLoader critterClassLoader = new CritterClassLoader();
+    private final CritterClassLoader critterClassLoader = new CritterClassLoader(Thread.currentThread().getContextClassLoader());
 
     // @Test(dataProvider = "classes")
     public void testPropertyAccessors(Class<?> type) throws Exception {
