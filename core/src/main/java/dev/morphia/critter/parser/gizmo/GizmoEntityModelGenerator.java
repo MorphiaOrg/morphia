@@ -8,8 +8,8 @@ import java.util.List;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.internal.AnnotationNodeExtensions;
+import dev.morphia.config.MorphiaConfig;
 import dev.morphia.critter.CritterClassLoader;
-import dev.morphia.critter.parser.Generators;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
@@ -29,10 +29,12 @@ public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
     private final List<AnnotationNode> annotations;
     private final List<Annotation> morphiaAnnotations;
     private final Entity entityAnnotation;
+    private final MorphiaConfig config;
 
     public GizmoEntityModelGenerator(Class<?> type, CritterClassLoader critterClassLoader,
-            ClassNode classNode, List<PropertyModelGenerator> properties) {
+            ClassNode classNode, List<PropertyModelGenerator> properties, MorphiaConfig config) {
         super(type, critterClassLoader);
+        this.config = config;
         this.classNode = classNode;
         this.properties = properties;
 
@@ -108,7 +110,7 @@ public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
         try (MethodCreator mc = getCreator().getMethodCreator("discriminatorKey", String.class)) {
             String key = entityAnnotation.discriminator();
             String result = Mapper.IGNORED_FIELDNAME.equals(key)
-                    ? Generators.INSTANCE.getConfig().discriminatorKey()
+                    ? config.discriminatorKey()
                     : key;
             mc.returnValue(mc.load(result));
         }
@@ -116,7 +118,7 @@ public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
 
     private void discriminator() {
         try (MethodCreator mc = getCreator().getMethodCreator("discriminator", String.class)) {
-            String discriminator = Generators.INSTANCE.getConfig().discriminator()
+            String discriminator = config.discriminator()
                     .apply(entity, entityAnnotation.discriminator());
             mc.returnValue(mc.load(discriminator));
         }
@@ -126,7 +128,7 @@ public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
         try (MethodCreator mc = getCreator().getMethodCreator("collectionName", String.class)) {
             String key = entityAnnotation.value();
             String result = Mapper.IGNORED_FIELDNAME.equals(key)
-                    ? Generators.INSTANCE.getConfig().collectionNaming().apply(entity.getSimpleName())
+                    ? config.collectionNaming().apply(entity.getSimpleName())
                     : key;
             mc.returnValue(mc.load(result));
         }

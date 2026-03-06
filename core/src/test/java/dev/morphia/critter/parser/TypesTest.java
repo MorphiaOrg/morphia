@@ -81,7 +81,7 @@ public class TypesTest {
     @Test(dataProvider = "types")
     public void asClassConversion(Class<?> expected) {
         Type type = Type.getType(expected);
-        Class<?> actual = Generators.INSTANCE.asClass(type, Thread.currentThread().getContextClassLoader());
+        Class<?> actual = Generators.asClass(type, Thread.currentThread().getContextClassLoader());
         Assert.assertEquals(actual, expected, "Type " + type.getDescriptor() + " should convert to " + expected.getName());
     }
 }

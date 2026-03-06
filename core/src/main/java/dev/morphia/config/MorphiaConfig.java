@@ -30,9 +30,6 @@ import io.smallrye.config.SmallRyeConfigBuilder;
 import io.smallrye.config.WithConverter;
 import io.smallrye.config.WithDefault;
 
-import static dev.morphia.config.MorphiaConfigHelper.dumpConfigurationFile;
-import static dev.morphia.mapping.DiscriminatorFunction.className;
-import static dev.morphia.mapping.NamingStrategy.identity;
 import static io.smallrye.config.PropertiesConfigSourceLoader.*;
 import static java.lang.Thread.currentThread;
 
@@ -50,7 +47,7 @@ public interface MorphiaConfig {
 
     /**
      * Tries to load a configuration from the default location.
-     * 
+     *
      * @return the loaded config
      */
     static MorphiaConfig load() {
@@ -87,12 +84,7 @@ public interface MorphiaConfig {
      * @return a new instance with the updated configuration
      * @since 3.0
      */
-    default MorphiaConfig collectionNaming(NamingStrategy value) {
-        var newConfig = new ManualMorphiaConfig(this);
-
-        newConfig.collectionNaming = value;
-        return newConfig;
-    }
+    MorphiaConfig collectionNaming(NamingStrategy value);
 
     /**
      * The database name that Morphia should use. This entry is required to be present and is the only necessary configuration element
@@ -118,12 +110,7 @@ public interface MorphiaConfig {
      * @return a new instance with the updated configuration
      * @since 3.0
      */
-    default MorphiaConfig applyCaps(Boolean value) {
-        var newConfig = new ManualMorphiaConfig(this);
-
-        newConfig.applyCaps = value;
-        return newConfig;
-    }
+    MorphiaConfig applyCaps(Boolean value);
 
     /**
      * If true, document validations will be enabled for entities/collections with validation mappings.
@@ -142,12 +129,7 @@ public interface MorphiaConfig {
      * @return a new instance with the updated configuration
      * @since 3.0
      */
-    default MorphiaConfig applyDocumentValidations(Boolean value) {
-        var newConfig = new ManualMorphiaConfig(this);
-
-        newConfig.applyDocumentValidations = value;
-        return newConfig;
-    }
+    MorphiaConfig applyDocumentValidations(Boolean value);
 
     /**
      * If true, mapped indexes will be applied to the database at start up.
@@ -164,12 +146,7 @@ public interface MorphiaConfig {
      * @return a new instance with the updated configuration
      * @since 3.0
      */
-    default MorphiaConfig applyIndexes(Boolean value) {
-        var newConfig = new ManualMorphiaConfig(this);
-
-        newConfig.applyIndexes = value;
-        return newConfig;
-    }
+    MorphiaConfig applyIndexes(Boolean value);
 
     /**
      * Specifies a {@code CodecProvider} to supply user defined codecs that Morphia should use.
@@ -188,12 +165,7 @@ public interface MorphiaConfig {
      * @return a new instance with the updated configuration
      * @since 3.0
      */
-    default MorphiaConfig codecProvider(CodecProvider value) {
-        var newConfig = new ManualMorphiaConfig(this);
-
-        newConfig.codecProvider = Optional.of(value);
-        return newConfig;
-    }
+    MorphiaConfig codecProvider(CodecProvider value);
 
     /**
      * Sets the naming strategy to be used when generating collection names for entities if name is not explicitly given in the {@code
@@ -217,12 +189,7 @@ public interface MorphiaConfig {
      * @return a new instance with the updated configuration
      * @since 3.0
      */
-    default MorphiaConfig database(String value) {
-        var newConfig = new ManualMorphiaConfig(this);
-
-        newConfig.database = value;
-        return newConfig;
-    }
+    MorphiaConfig database(String value);
 
     /**
      * The date storage configuration Morphia should use for JSR 310 types.
@@ -239,12 +206,7 @@ public interface MorphiaConfig {
      * @return a new instance with the updated configuration
      * @since 3.0
      */
-    default MorphiaConfig dateStorage(DateStorage value) {
-        var newConfig = new ManualMorphiaConfig(this);
-
-        newConfig.dateStorage = value;
-        return newConfig;
-    }
+    MorphiaConfig dateStorage(DateStorage value);
 
     /**
      * The function to use when calculating the discriminator value for an entity
@@ -264,12 +226,7 @@ public interface MorphiaConfig {
      * @return a new instance with the updated configuration
      * @since 3.0
      */
-    default MorphiaConfig discriminator(DiscriminatorFunction value) {
-        var newConfig = new ManualMorphiaConfig(this);
-
-        newConfig.discriminator = value;
-        return newConfig;
-    }
+    MorphiaConfig discriminator(DiscriminatorFunction value);
 
     /**
      * The document field name to use when storing discriminator values
@@ -286,12 +243,7 @@ public interface MorphiaConfig {
      * @return a new instance with the updated configuration
      * @since 3.0
      */
-    default MorphiaConfig discriminatorKey(String value) {
-        var newConfig = new ManualMorphiaConfig(this);
-
-        newConfig.discriminatorKey = value;
-        return newConfig;
-    }
+    MorphiaConfig discriminatorKey(String value);
 
     /**
      * Enable polymorphic queries. By default, Morphia will only query for the given type. However, in cases where subtypes are stored
@@ -309,12 +261,7 @@ public interface MorphiaConfig {
      * @return a new instance with the updated configuration
      * @since 3.0
      */
-    default MorphiaConfig enablePolymorphicQueries(Boolean value) {
-        var newConfig = new ManualMorphiaConfig(this);
-
-        newConfig.enablePolymorphicQueries = value;
-        return newConfig;
-    }
+    MorphiaConfig enablePolymorphicQueries(Boolean value);
 
     /**
      * Instructs Morphia to ignore final fields.
@@ -331,32 +278,17 @@ public interface MorphiaConfig {
      * @return a new instance with the updated configuration
      * @since 3.0
      */
-    default MorphiaConfig ignoreFinals(Boolean value) {
-        var newConfig = new ManualMorphiaConfig(this);
-
-        newConfig.ignoreFinals = value;
-        return newConfig;
-    }
+    MorphiaConfig ignoreFinals(Boolean value);
 
     /**
      * Creates a new configuration based on the current one but updated to reflect the legacy configuration. This configuration is not
      * changed.
-     * 
+     *
      * @return the update configuration
      *
      * @since 3.0
      */
-    default MorphiaConfig legacy() {
-        ManualMorphiaConfig newConfig = new ManualMorphiaConfig(this);
-        newConfig.dateStorage = DateStorage.SYSTEM_DEFAULT;
-        newConfig.discriminatorKey = "className";
-        newConfig.discriminator = className();
-        newConfig.collectionNaming = identity();
-        newConfig.propertyNaming = identity();
-
-        return newConfig;
-
-    }
+    MorphiaConfig legacy();
 
     /**
      * The mapper implementation to use. Defaults to {@link MapperType#LEGACY} (reflection-based).
@@ -375,12 +307,7 @@ public interface MorphiaConfig {
      * @return a new instance with the updated configuration
      * @since 3.0
      */
-    default MorphiaConfig mapper(MapperType value) {
-        var newConfig = new ManualMorphiaConfig(this);
-
-        newConfig.mapper = value;
-        return newConfig;
-    }
+    MorphiaConfig mapper(MapperType value);
 
     /**
      * A comma delimited list of packages that Morphia should map. If subpackages of a specific package should also be mapped, simply add
@@ -398,12 +325,7 @@ public interface MorphiaConfig {
      * @return a new instance with the updated configuration
      * @since 3.0
      */
-    default MorphiaConfig packages(List<String> value) {
-        var newConfig = new ManualMorphiaConfig(this);
-        newConfig.packages = value;
-
-        return newConfig;
-    }
+    MorphiaConfig packages(List<String> value);
 
     /**
      * Specifies the providers of any external annotations to use as markers for properties for Morphia to consider while mapping. This
@@ -440,14 +362,7 @@ public interface MorphiaConfig {
      */
     @MorphiaInternal
     @MorphiaExperimental
-    default MorphiaConfig propertyAnnotationProviders(List<PropertyAnnotationProvider<?>> list) {
-        var newConfig = new ManualMorphiaConfig(this);
-        newConfig.propertyAnnotationProviders = list;
-        if (list.isEmpty() || list.stream().noneMatch(p -> p instanceof MorphiaPropertyAnnotationProvider)) {
-            newConfig.propertyAnnotationProviders.add(new MorphiaPropertyAnnotationProvider());
-        }
-        return newConfig;
-    }
+    MorphiaConfig propertyAnnotationProviders(List<PropertyAnnotationProvider<?>> list);
 
     /**
      * Determines how properties are discovered. The traditional value is by scanning for fields which involves a bit more reflective
@@ -468,12 +383,7 @@ public interface MorphiaConfig {
      * @return a new instance with the updated configuration
      * @since 3.0
      */
-    default MorphiaConfig propertyDiscovery(PropertyDiscovery value) {
-        var newConfig = new ManualMorphiaConfig(this);
-
-        newConfig.propertyDiscovery = value;
-        return newConfig;
-    }
+    MorphiaConfig propertyDiscovery(PropertyDiscovery value);
 
     /**
      * Defines the strategy to use when generating property names to document field names for storage in the database when not explicitly
@@ -497,12 +407,7 @@ public interface MorphiaConfig {
      * @return a new instance with the updated configuration
      * @since 3.0
      */
-    default MorphiaConfig propertyNaming(NamingStrategy value) {
-        var newConfig = new ManualMorphiaConfig(this);
-
-        newConfig.propertyNaming = value;
-        return newConfig;
-    }
+    MorphiaConfig propertyNaming(NamingStrategy value);
 
     /**
      * Specifies the query factory to use. Typically, there is no need to set this value.
@@ -520,12 +425,7 @@ public interface MorphiaConfig {
      * @return a new instance with the updated configuration
      * @since 3.0
      */
-    default MorphiaConfig queryFactory(QueryFactory value) {
-        var newConfig = new ManualMorphiaConfig(this);
-
-        newConfig.queryFactory = value;
-        return newConfig;
-    }
+    MorphiaConfig queryFactory(QueryFactory value);
 
     /**
      * Instructs Morphia on how to handle empty Collections and Maps.
@@ -542,12 +442,7 @@ public interface MorphiaConfig {
      * @return a new instance with the updated configuration
      * @since 3.0
      */
-    default MorphiaConfig storeEmpties(Boolean value) {
-        var newConfig = new ManualMorphiaConfig(this);
-
-        newConfig.storeEmpties = value;
-        return newConfig;
-    }
+    MorphiaConfig storeEmpties(Boolean value);
 
     /**
      * Instructs Morphia on how to handle null property values.
@@ -564,12 +459,7 @@ public interface MorphiaConfig {
      * @return a new instance with the updated configuration
      * @since 3.0
      */
-    default MorphiaConfig storeNulls(Boolean value) {
-        var newConfig = new ManualMorphiaConfig(this);
-
-        newConfig.storeNulls = value;
-        return newConfig;
-    }
+    MorphiaConfig storeNulls(Boolean value);
 
     /**
      * Converts this instance in to the format needed for a configuration file
@@ -577,8 +467,6 @@ public interface MorphiaConfig {
      * @param showComplete true if all the entries should be shown. If false, only those settings with non-default values will be listed
      * @return the config file contents
      */
-    default String toConfigFormat(boolean showComplete) {
-        return dumpConfigurationFile(this, showComplete);
-    }
+    String toConfigFormat(boolean showComplete);
 
 }
