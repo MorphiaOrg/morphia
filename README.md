@@ -7,3 +7,6 @@ list of the resolved issues can be found [here](CHANGELOG.md) or in the [milesto
 section on github.
 
 Fancy a more real time chat?  Join the discord server [here](https://discord.gg/saZsJescBa).
+
+<img src="https://raw.githubusercontent.com/commonhaus/artwork/main/foundation/brand/svg/CF_logo_horizontal_single_default.svg" height="30" alt=""/><br />
+Copyright © [Morphia](https://www.commonhaus.org). All rights reserved. For details on our trademarks, please visit our [Trademark Policy](https://www.commonhaus.org/policies/trademark-policy/) and [Trademark List](https://www.commonhaus.org/trademarks/). Trademarks of third parties are owned by their respective holders and their mention here does not suggest any endorsement or association.
