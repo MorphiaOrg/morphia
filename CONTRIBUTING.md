@@ -8,9 +8,7 @@ from the community that are within the guidelines set forth below.
 Bug Fixes and New Features
 --------------------------
 
-Before starting to write code, look for existing [tickets]
-(https://github.com/MorphiaOrg/morphia/issues) or [create one]
-(https://github.com/MorphiaOrg/morphia/issues/new) 
+Before starting to write code, look for existing [tickets](https://github.com/MorphiaOrg/morphia/issues) or [create one](https://github.com/MorphiaOrg/morphia/issues/new) 
 for your bug, issue, or feature request. This helps the community
 avoid working on something that might not be of interest or which
 has already been addressed.  Once you've verified your potential bug
