@@ -48,6 +48,7 @@ public class DocumentReader implements BsonReader {
         }
     };
     private final ReaderState start;
+    private final ClassLoader classLoader;
     private ReaderState current;
 
     /**
@@ -55,9 +56,10 @@ public class DocumentReader implements BsonReader {
      *
      * @param document the document to read from
      */
-    public DocumentReader(Document document) {
+    public DocumentReader(Document document, ClassLoader classLoader) {
         current = new DocumentState(this, document);
         start = current;
+        this.classLoader = classLoader;
     }
 
     /**
@@ -147,7 +149,7 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public long readDateTime() {
-        Long value = Conversions.convert(stage().value(), long.class);
+        Long value = Conversions.convert(stage().value(), long.class, classLoader);
         if (value != null) {
             return value;
         }

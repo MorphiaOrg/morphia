@@ -164,7 +164,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
                 try {
                     id = datastore.getCodecRegistry()
                             .get(datastore.getMapper().getClass(document))
-                            .decode(new DocumentReader(document), decoderContext);
+                            .decode(new DocumentReader(document, datastore.getMapper().getClassLoader()), decoderContext);
                 } catch (CodecConfigurationException e) {
                     throw new MappingException(Sofia.cannotFindTypeInDocument(), e);
                 }
@@ -176,7 +176,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             if (refId instanceof Document) {
                 refId = datastore.getCodecRegistry()
                         .get(Object.class)
-                        .decode(new DocumentReader((Document) refId), decoderContext);
+                        .decode(new DocumentReader((Document) refId, datastore.getMapper().getClassLoader()), decoderContext);
             }
             id = new DBRef(ref.getDatabaseName(), ref.getCollectionName(), refId);
         }
@@ -344,7 +344,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
                 .intercept(InvocationHandlerAdapter.toField(FIELD_INVOCATION_HANDLER))
                 .defineField(FIELD_INVOCATION_HANDLER, InvocationHandler.class, Visibility.PRIVATE)
                 .make()
-                .load(Thread.currentThread().getContextClassLoader(), Default.WRAPPER)
+                .load(mapper.getClassLoader(), Default.WRAPPER)
                 .getLoaded();
     }
 
@@ -374,13 +374,14 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         Codec<?> codec = getDatastore().getCodecRegistry().get(getEntityModelForField().getType());
         return value.stream()
                 .filter(v -> v instanceof Document && ((Document) v).containsKey("_id"))
-                .map(d -> codec.decode(new DocumentReader((Document) d), DecoderContext.builder().build()))
+                .map(d -> codec.decode(new DocumentReader((Document) d, datastore.getMapper().getClassLoader()),
+                        DecoderContext.builder().build()))
                 .collect(Collectors.toList());
     }
 
     MorphiaReference<?> readDocument(Document value) {
         final Object id = getDatastore().getCodecRegistry().get(Object.class)
-                .decode(new DocumentReader(value), DecoderContext.builder().build());
+                .decode(new DocumentReader(value, datastore.getMapper().getClassLoader()), DecoderContext.builder().build());
         return readSingle(id);
     }
 
@@ -395,7 +396,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         final Map<Object, Object> ids = new LinkedHashMap<>();
         Class<?> keyType = getTypeData().getTypeParameters().get(0).getType();
         for (Entry<Object, Object> entry : value.entrySet()) {
-            ids.put(Conversions.convert(entry.getKey(), keyType), entry.getValue());
+            ids.put(Conversions.convert(entry.getKey(), keyType, mapper.getClassLoader()), entry.getValue());
         }
 
         return new MapReference(datastore, ids, getEntityModelForField());

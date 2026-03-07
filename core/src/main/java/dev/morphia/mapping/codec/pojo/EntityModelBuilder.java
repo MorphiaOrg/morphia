@@ -330,6 +330,10 @@ public class EntityModelBuilder {
         return type;
     }
 
+    public Mapper mapper() {
+        return mapper;
+    }
+
     /**
      * @return the name of the version property
      */
