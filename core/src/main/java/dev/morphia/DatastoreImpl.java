@@ -102,13 +102,19 @@ public class DatastoreImpl implements AdvancedDatastore {
     private final QueryFactory queryFactory;
     private final CodecRegistry codecRegistry;
     public List<MorphiaCodecProvider> morphiaCodecProviders = new ArrayList<>();
+    private ClassLoader classLoader;
     private MongoDatabase database;
     private DatastoreOperations operations;
 
     public DatastoreImpl(MongoClient client, MorphiaConfig config) {
+        this(client, config, Thread.currentThread().getContextClassLoader());
+    }
+
+    public DatastoreImpl(MongoClient client, MorphiaConfig config, ClassLoader classLoader) {
+        this.classLoader = classLoader;
         this.mongoClient = client;
         this.database = mongoClient.getDatabase(config.database());
-        this.mapper = new Mapper(config);
+        this.mapper = new Mapper(config, classLoader);
         this.queryFactory = mapper.getConfig().queryFactory();
         importModels();
 
@@ -146,6 +152,10 @@ public class DatastoreImpl implements AdvancedDatastore {
         this.queryFactory = datastore.queryFactory;
         this.operations = datastore.operations;
         codecRegistry = buildRegistry();
+    }
+
+    public ClassLoader getClassLoader() {
+        return classLoader;
     }
 
     private CodecRegistry buildRegistry() {
@@ -641,7 +651,7 @@ public class DatastoreImpl implements AdvancedDatastore {
                 .iterator()
                 .next();
 
-        refreshCodec.decode(new DocumentReader(id), DecoderContext.builder().checkedDiscriminator(true).build());
+        refreshCodec.decode(new DocumentReader(id, mapper.getConversions()), DecoderContext.builder().checkedDiscriminator(true).build());
     }
 
     @Override

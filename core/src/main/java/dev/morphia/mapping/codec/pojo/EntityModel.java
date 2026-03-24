@@ -28,6 +28,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.InstanceCreatorFactory;
 import dev.morphia.mapping.InstanceCreatorFactoryImpl;
 import dev.morphia.mapping.MappingException;
+import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.lifecycle.EntityListenerAdapter;
 import dev.morphia.mapping.lifecycle.OnEntityListenerAdapter;
@@ -284,10 +285,11 @@ public class EntityModel {
     }
 
     /**
+     * @param conversions the Conversions instance to use
      * @return a new InstanceCreator instance for the ClassModel
      */
-    public MorphiaInstanceCreator getInstanceCreator() {
-        return creatorFactory.create();
+    public MorphiaInstanceCreator getInstanceCreator(Conversions conversions) {
+        return creatorFactory.create(conversions);
     }
 
     /**

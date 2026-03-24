@@ -54,6 +54,16 @@ public interface MorphiaConfig {
     }
 
     /**
+     * Tries to load a configuration from the default location using the given classloader.
+     *
+     * @param classLoader the classloader to use when loading resources from the classpath
+     * @return the loaded config
+     */
+    static MorphiaConfig load(ClassLoader classLoader) {
+        return load(MorphiaConfigHelper.MORPHIA_CONFIG_PROPERTIES, classLoader);
+    }
+
+    /**
      * Parses and loads the configuration found at the given location
      *
      * @param path the location of the configuration to load. This can be a file path, a classpath resource, a URL, etc.
@@ -62,7 +72,20 @@ public interface MorphiaConfig {
      * @since 3.0
      */
     static MorphiaConfig load(String path) {
-        List<ConfigSource> configSources = classPathSources(path, currentThread().getContextClassLoader());
+        return load(path, currentThread().getContextClassLoader());
+    }
+
+    /**
+     * Parses and loads the configuration found at the given location
+     *
+     * @param path        the location of the configuration to load. This can be a file path, a classpath resource, a URL, etc.
+     * @param classLoader the classloader to use when loading resources from the classpath
+     *
+     * @return the loaded configuration
+     * @since 3.0
+     */
+    static MorphiaConfig load(String path, ClassLoader classLoader) {
+        List<ConfigSource> configSources = classPathSources(path, classLoader);
         if (configSources.isEmpty()) {
             LoggerFactory.getLogger(MorphiaConfig.class).warn(Sofia.missingConfigFile(path));
             return new ManualMorphiaConfig();

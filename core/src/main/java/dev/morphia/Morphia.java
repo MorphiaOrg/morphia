@@ -78,15 +78,39 @@ public final class Morphia {
     }
 
     /**
+     * Creates a Datastore configured via config file using the given classloader for resource and class resolution.
+     *
+     * @param mongoClient the client to use
+     * @param classLoader the classloader to use
+     * @return a Datastore that you can use to interact with MongoDB
+     * @since 2.6
+     */
+    public static Datastore createDatastore(MongoClient mongoClient, ClassLoader classLoader) {
+        return new DatastoreImpl(mongoClient, MorphiaConfig.load(classLoader), classLoader);
+    }
+
+    /**
      * Creates a Datastore configured via config file
      *
      * @param mongoClient the client to use
      * @param config      the configuration to use
      * @return a Datastore that you can use to interact with MongoDB
-     * @since 3.0.0
      */
     public static Datastore createDatastore(MongoClient mongoClient, MorphiaConfig config) {
         return new DatastoreImpl(mongoClient, config);
+    }
+
+    /**
+     * Creates a Datastore with the given configuration and classloader.
+     *
+     * @param mongoClient the client to use
+     * @param config      the configuration to use
+     * @param classLoader the classloader to use for class and resource resolution
+     * @return a Datastore that you can use to interact with MongoDB
+     * @since 2.6
+     */
+    public static Datastore createDatastore(MongoClient mongoClient, MorphiaConfig config, ClassLoader classLoader) {
+        return new DatastoreImpl(mongoClient, config, classLoader);
     }
 
 }

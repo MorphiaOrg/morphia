@@ -10,6 +10,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.ArrayFieldAccessor;
+import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.FieldAccessor;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.TypeData;
@@ -35,7 +36,7 @@ public class FieldDiscovery implements MorphiaConvention {
                                 .name(field.getName())
                                 .typeData(typeData)
                                 .annotations(List.of(field.getDeclaredAnnotations()))
-                                .accessor(getAccessor(getTargetField(builder, field), typeData))
+                                .accessor(getAccessor(getTargetField(builder, field), typeData, mapper.getConversions()))
                                 .modifiers(field.getModifiers())
                                 .discoverMappedName();
                     } catch (NoSuchFieldException e) {
@@ -55,9 +56,9 @@ public class FieldDiscovery implements MorphiaConvention {
         return builder.targetType().getDeclaredField(field.getName());
     }
 
-    private PropertyAccessor<? super Object> getAccessor(Field field, TypeData<?> typeData) {
+    private PropertyAccessor<? super Object> getAccessor(Field field, TypeData<?> typeData, Conversions conversions) {
         return field.getType().isArray() && !field.getType().getComponentType().equals(byte.class)
-                ? new ArrayFieldAccessor(typeData, field)
+                ? new ArrayFieldAccessor(typeData, field, conversions)
                 : new FieldAccessor(field);
     }
 }

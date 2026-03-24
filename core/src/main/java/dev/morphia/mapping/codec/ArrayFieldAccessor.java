@@ -20,17 +20,20 @@ public class ArrayFieldAccessor extends FieldAccessor {
 
     private final TypeData<?> typeData;
     private final Class<?> componentType;
+    private final Conversions conversions;
 
     /**
      * Creates the accessor
      *
-     * @param typeData the type data
-     * @param field    the field
+     * @param typeData    the type data
+     * @param field       the field
+     * @param conversions the Conversions instance to use
      */
-    public ArrayFieldAccessor(TypeData<?> typeData, Field field) {
+    public ArrayFieldAccessor(TypeData<?> typeData, Field field, Conversions conversions) {
         super(field);
         this.typeData = typeData;
         componentType = field.getType().getComponentType();
+        this.conversions = conversions;
     }
 
     @Override
@@ -84,6 +87,6 @@ public class ArrayFieldAccessor extends FieldAccessor {
 
             return newArray;
         }
-        return Conversions.convert(o, type);
+        return conversions.convert(o, type);
     }
 }

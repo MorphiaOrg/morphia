@@ -12,12 +12,18 @@ import dev.morphia.test.TestBase;
 
 import org.bson.types.ObjectId;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dev.morphia.mapping.ShardKeyType.HASHED;
 import static org.testng.Assert.assertEquals;
 
 public class TestSharding extends TestBase {
+    @BeforeMethod
+    public void versionCheck() {
+        checkMinServerVersion("5.0.0");
+    }
+
     @Test
     public void testMapping() {
         Assert.assertThrows(ConstraintViolationException.class, () -> getMapper().map(BadShardKeys.class));

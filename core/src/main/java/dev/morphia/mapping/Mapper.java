@@ -29,6 +29,7 @@ import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
+import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.EntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
@@ -79,18 +80,24 @@ public class Mapper {
     private final MorphiaConfig config;
     private final DiscriminatorLookup discriminatorLookup;
     private final Object entityRegistrationMonitor = new Object();
+    private final Conversions conversions;
+
+    private ClassLoader classLoader;
 
     /**
-     * Creates a Mapper with the given options.
+     * Creates a Mapper with the given options and Conversions instance.
      *
-     * @param config the config to use
+     * @param config      the config to use
+     * @param classLoader
      * @morphia.internal
      * @hidden
      */
     @MorphiaInternal
-    public Mapper(MorphiaConfig config) {
+    public Mapper(MorphiaConfig config, ClassLoader classLoader) {
         this.config = config;
-        discriminatorLookup = new DiscriminatorLookup();
+        this.conversions = new Conversions(classLoader);
+        this.classLoader = classLoader;
+        discriminatorLookup = new DiscriminatorLookup(this.classLoader);
     }
 
     /**
@@ -99,8 +106,7 @@ public class Mapper {
      * @hidden
      */
     public Mapper(Mapper other) {
-        config = other.config;
-        discriminatorLookup = new DiscriminatorLookup();
+        this(other.config, other.classLoader);
         other.mappedEntities.values().forEach(entity -> clone(entity));
         listeners.addAll(other.listeners);
     }
@@ -171,6 +177,16 @@ public class Mapper {
             throw new MappingException(Sofia.idRequired(type.getName()));
         }
         return idField;
+    }
+
+    /**
+     * @return the Conversions instance used by this Mapper
+     * @morphia.internal
+     * @hidden
+     */
+    @MorphiaInternal
+    public Conversions getConversions() {
+        return conversions;
     }
 
     /**
@@ -618,7 +634,7 @@ public class Mapper {
         try (ScanResult scanResult = classGraph.scan()) {
             for (ClassInfo classInfo : scanResult.getAllClasses()) {
                 try {
-                    classes.add(Class.forName(classInfo.getName(), true, Thread.currentThread().getContextClassLoader()));
+                    classes.add(Class.forName(classInfo.getName(), true, classLoader));
                 } catch (Throwable ignored) {
                 }
             }

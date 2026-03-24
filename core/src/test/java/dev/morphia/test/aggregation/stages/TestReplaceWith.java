@@ -8,6 +8,7 @@ import dev.morphia.test.aggregation.AggregationTest;
 import dev.morphia.test.aggregation.model.Author;
 
 import org.bson.Document;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.ifNull;
@@ -23,6 +24,11 @@ import static dev.morphia.query.filters.Filters.type;
 import static java.util.stream.Collectors.toList;
 
 public class TestReplaceWith extends AggregationTest {
+    @BeforeMethod
+    public void versionCheck() {
+        checkMinServerVersion("5.0.0");
+    }
+
     @Test
     public void testReplaceWith() {
         List<Document> documents = parseDocs(

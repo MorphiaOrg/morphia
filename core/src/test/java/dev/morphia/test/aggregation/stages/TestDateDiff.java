@@ -3,6 +3,7 @@ package dev.morphia.test.aggregation.stages;
 import dev.morphia.test.aggregation.AggregationTest;
 
 import org.bson.Document;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
@@ -16,6 +17,11 @@ import static dev.morphia.aggregation.stages.Projection.project;
 import static org.testng.Assert.assertEquals;
 
 public class TestDateDiff extends AggregationTest {
+    @BeforeMethod
+    public void versionCheck() {
+        checkMinServerVersion("5.0.0");
+    }
+
     @Test
     public void testDateDiff() {
         insert("orders", parseDocs(

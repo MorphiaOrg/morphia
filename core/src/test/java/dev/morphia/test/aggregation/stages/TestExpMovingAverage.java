@@ -6,6 +6,7 @@ import dev.morphia.query.Sort;
 import dev.morphia.test.aggregation.AggregationTest;
 
 import org.bson.Document;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.Expressions.field;
@@ -14,6 +15,11 @@ import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
 import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 
 public class TestExpMovingAverage extends AggregationTest {
+    @BeforeMethod
+    public void versionCheck() {
+        checkMinServerVersion("5.0.0");
+    }
+
     @Test
     public void testExpMovingAverage() {
         insert("stockPrices", parseDocs(

@@ -5,11 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.mongodb.ServerAddress;
-import com.mongodb.ServerCursor;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
-import com.mongodb.lang.Nullable;
 
 import dev.morphia.DatastoreImpl;
 import dev.morphia.aggregation.expressions.Expressions;
@@ -51,7 +48,6 @@ import dev.morphia.aggregation.stages.UnionWith;
 import dev.morphia.aggregation.stages.Unset;
 import dev.morphia.aggregation.stages.Unwind;
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.filters.Filter;
 import dev.morphia.query.internal.MorphiaCursor;
@@ -59,8 +55,6 @@ import dev.morphia.query.internal.MorphiaCursor;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import org.bson.Document;
-import org.bson.codecs.Codec;
-import org.bson.codecs.DecoderContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -352,59 +346,6 @@ public class AggregationImpl<T> implements Aggregation<T> {
         stage.aggregation(this);
         stages.add(stage);
         return this;
-    }
-
-    private static class MappingCursor<R> implements MongoCursor<R> {
-        private final MongoCursor<Document> results;
-        private final Codec<R> codec;
-        private final String discriminator;
-
-        MappingCursor(MongoCursor<Document> results, Codec<R> codec, String discriminator) {
-            this.results = results;
-            this.codec = codec;
-            this.discriminator = discriminator;
-        }
-
-        @Override
-        public void close() {
-            results.close();
-        }
-
-        @Override
-        public boolean hasNext() {
-            return results.hasNext();
-        }
-
-        @Override
-        public R next() {
-            return map(results.next());
-        }
-
-        public int available() {
-            return results.available();
-        }
-
-        @Override
-        @Nullable
-        public R tryNext() {
-            return hasNext() ? next() : null;
-        }
-
-        @Override
-        @Nullable
-        public ServerCursor getServerCursor() {
-            return results.getServerCursor();
-        }
-
-        @Override
-        public ServerAddress getServerAddress() {
-            return results.getServerAddress();
-        }
-
-        private R map(Document next) {
-            next.remove(discriminator);
-            return codec.decode(new DocumentReader(next), DecoderContext.builder().build());
-        }
     }
 
 }

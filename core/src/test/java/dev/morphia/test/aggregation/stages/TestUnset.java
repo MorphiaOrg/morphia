@@ -7,6 +7,7 @@ import dev.morphia.test.aggregation.AggregationTest;
 import dev.morphia.test.aggregation.model.Book;
 
 import org.bson.Document;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.Miscellaneous.unsetField;
@@ -16,6 +17,11 @@ import static dev.morphia.aggregation.stages.Unset.unset;
 import static org.testng.Assert.assertEquals;
 
 public class TestUnset extends AggregationTest {
+    @BeforeMethod
+    public void versionCheck() {
+        checkMinServerVersion("5.0.0");
+    }
+
     @Test
     public void testUnset() {
         List<Document> documents = parseDocs(

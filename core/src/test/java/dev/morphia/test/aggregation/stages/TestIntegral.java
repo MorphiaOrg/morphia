@@ -5,6 +5,7 @@ import java.util.List;
 import dev.morphia.test.aggregation.AggregationTest;
 
 import org.bson.Document;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.Expressions.field;
@@ -16,6 +17,11 @@ import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 import static dev.morphia.query.Sort.ascending;
 
 public class TestIntegral extends AggregationTest {
+    @BeforeMethod
+    public void versionCheck() {
+        checkMinServerVersion("5.0.0");
+    }
+
     @Test
     public void testIntegral() {
         insert("powerConsumption", parseDocs(
