@@ -7,4 +7,4 @@ nav:
 asciidoc:
   attributes:
     version: "2.5.2"
-    srcRef: "https://github.com/MorphiaOrg/morphia/tree/2.5.x"
+    srcRef: "https://github.com/MorphiaOrg/morphia/blob/master"

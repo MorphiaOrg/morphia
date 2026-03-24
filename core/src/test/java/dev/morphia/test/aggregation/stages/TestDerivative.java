@@ -5,6 +5,7 @@ import java.util.List;
 import dev.morphia.test.aggregation.AggregationTest;
 
 import org.bson.Document;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.Expressions.field;
@@ -18,6 +19,11 @@ import static dev.morphia.query.Sort.ascending;
 import static dev.morphia.query.filters.Filters.gt;
 
 public class TestDerivative extends AggregationTest {
+    @BeforeMethod
+    public void versionCheck() {
+        checkMinServerVersion("5.0.0");
+    }
+
     @Test
     public void testDerivative() {
         insert("deliveryFleet", parseDocs(

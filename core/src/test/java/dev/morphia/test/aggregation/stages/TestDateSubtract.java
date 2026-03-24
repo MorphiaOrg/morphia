@@ -8,6 +8,7 @@ import dev.morphia.aggregation.stages.Merge;
 import dev.morphia.test.aggregation.AggregationTest;
 
 import org.bson.Document;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.DateExpressions.dateSubtract;
@@ -20,6 +21,11 @@ import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.query.filters.Filters.expr;
 
 public class TestDateSubtract extends AggregationTest {
+    @BeforeMethod
+    public void versionCheck() {
+        checkMinServerVersion("5.0.0");
+    }
+
     @Test
     public void testDateSubtract() {
         insert("connectionTime", parseDocs(

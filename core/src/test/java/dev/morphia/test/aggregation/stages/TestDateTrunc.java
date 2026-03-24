@@ -5,6 +5,7 @@ import java.util.List;
 import dev.morphia.test.aggregation.AggregationTest;
 
 import org.bson.Document;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.DateExpressions.dateTrunc;
@@ -15,6 +16,11 @@ import static dev.morphia.aggregation.stages.Projection.project;
 import static java.time.DayOfWeek.MONDAY;
 
 public class TestDateTrunc extends AggregationTest {
+    @BeforeMethod
+    public void versionCheck() {
+        checkMinServerVersion("5.0.0");
+    }
+
     @Test
     public void testDateTrunc() {
         cakeSales();

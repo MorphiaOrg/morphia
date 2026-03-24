@@ -8,12 +8,18 @@ import dev.morphia.aggregation.stages.Densify.Range;
 import dev.morphia.test.aggregation.AggregationTest;
 
 import org.bson.Document;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.TimeUnit.HOUR;
 import static org.testng.Assert.assertEquals;
 
 public class TestDensify extends AggregationTest {
+    @BeforeMethod
+    public void versionCheck() {
+        checkMinServerVersion("5.1.0");
+    }
+
     @Test
     public void testDensify() {
         insert("weather", parseDocs(
