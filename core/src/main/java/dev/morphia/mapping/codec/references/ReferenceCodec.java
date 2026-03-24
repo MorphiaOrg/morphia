@@ -18,6 +18,7 @@ import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.Datastore;
+import dev.morphia.DatastoreImpl;
 import dev.morphia.Key;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.internal.MorphiaInternal;
@@ -72,6 +73,9 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
 
     private final Reference annotation;
     private final BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
+
+    private final ClassLoader classLoader;
+
     private final Mapper mapper;
 
     /**
@@ -89,9 +93,10 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
      * @param datastore
      * @param propertyModel the reference property
      */
-    public ReferenceCodec(Datastore datastore, PropertyModel propertyModel) {
+    public ReferenceCodec(DatastoreImpl datastore, PropertyModel propertyModel) {
         super(datastore, propertyModel);
         this.datastore = datastore;
+        classLoader = datastore.getClassLoader();
         this.mapper = datastore.getMapper();
         annotation = getReferenceAnnotation(propertyModel);
     }
@@ -272,7 +277,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         try {
             Class<?> type = propertyModel.getType();
             // Get or create proxy class
-            Class<T> proxyClass = (Class<T>) TYPE_CACHE.findOrInsert(type.getClassLoader(), getCacheKey(type), this::makeProxy, TYPE_CACHE);
+            Class<T> proxyClass = (Class<T>) TYPE_CACHE.findOrInsert(classLoader, getCacheKey(type), this::makeProxy, TYPE_CACHE);
             //... instantiate it
             final T proxy = proxyClass.getDeclaredConstructor().newInstance();
             // .. and set the invocation handler
@@ -343,7 +348,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
                 .intercept(InvocationHandlerAdapter.toField(FIELD_INVOCATION_HANDLER))
                 .defineField(FIELD_INVOCATION_HANDLER, InvocationHandler.class, Visibility.PRIVATE)
                 .make()
-                .load(mapper.getClassLoader(), Default.WRAPPER)
+                .load(classLoader, Default.WRAPPER)
                 .getLoaded();
     }
 

@@ -48,13 +48,6 @@ public class Conversions {
         registerDefaults();
     }
 
-    /**
-     * @return the ClassLoader used by this Conversions instance
-     */
-    public ClassLoader getClassLoader() {
-        return classLoader;
-    }
-
     private void registerDefaults() {
         registerStringConversions();
 

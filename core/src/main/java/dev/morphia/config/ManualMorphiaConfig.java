@@ -48,7 +48,6 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     Boolean storeEmpties;
     Boolean storeNulls;
     UuidRepresentation uuidRepresentation;
-    ClassLoader classLoader;
 
     /**
      * @hidden
@@ -79,7 +78,6 @@ public class ManualMorphiaConfig implements MorphiaConfig {
         storeEmpties = base.storeEmpties();
         storeNulls = base.storeNulls();
         uuidRepresentation = base.uuidRepresentation();
-        classLoader = base.classLoader();
     }
 
     /**
@@ -95,11 +93,6 @@ public class ManualMorphiaConfig implements MorphiaConfig {
      */
     public static ManualMorphiaConfig configure(MorphiaConfig base) {
         return new ManualMorphiaConfig(base);
-    }
-
-    @Override
-    public ClassLoader classLoader() {
-        return orDefault(classLoader, Thread.currentThread().getContextClassLoader());
     }
 
     @Override

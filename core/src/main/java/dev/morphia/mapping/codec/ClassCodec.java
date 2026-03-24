@@ -12,16 +12,16 @@ import org.bson.codecs.EncoderContext;
  * Defines a codec for Class references
  */
 public class ClassCodec implements Codec<Class> {
-    private final Conversions conversions;
+    private final ClassLoader classLoader;
 
-    public ClassCodec(Conversions conversions) {
-        this.conversions = conversions;
+    public ClassCodec(ClassLoader classLoader) {
+        this.classLoader = classLoader;
     }
 
     @Override
     public Class decode(BsonReader reader, DecoderContext decoderContext) {
         try {
-            return Class.forName(reader.readString(), true, conversions.getClassLoader());
+            return Class.forName(reader.readString(), true, classLoader);
         } catch (ClassNotFoundException e) {
             throw new MappingException(e.getMessage(), e);
         }

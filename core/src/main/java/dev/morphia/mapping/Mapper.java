@@ -81,19 +81,22 @@ public class Mapper {
     private final Object entityRegistrationMonitor = new Object();
     private final Conversions conversions;
 
+    private ClassLoader classLoader;
+
     /**
      * Creates a Mapper with the given options and Conversions instance.
      *
      * @param config      the config to use
-     * @param conversions the Conversions instance to use
+     * @param classLoader
      * @morphia.internal
      * @hidden
      */
     @MorphiaInternal
-    public Mapper(MorphiaConfig config, Conversions conversions) {
+    public Mapper(MorphiaConfig config, ClassLoader classLoader) {
         this.config = config;
-        this.conversions = conversions;
-        discriminatorLookup = new DiscriminatorLookup(conversions.getClassLoader());
+        this.conversions = new Conversions(classLoader);
+        this.classLoader = classLoader;
+        discriminatorLookup = new DiscriminatorLookup(this.classLoader);
     }
 
     /**
@@ -102,9 +105,7 @@ public class Mapper {
      * @hidden
      */
     public Mapper(Mapper other) {
-        config = other.config;
-        conversions = other.conversions;
-        discriminatorLookup = new DiscriminatorLookup(other.getClassLoader());
+        this(other.config, other.classLoader);
         other.mappedEntities.values().forEach(entity -> clone(entity));
         listeners.addAll(other.listeners);
     }
@@ -175,10 +176,6 @@ public class Mapper {
             throw new MappingException(Sofia.idRequired(type.getName()));
         }
         return idField;
-    }
-
-    public ClassLoader getClassLoader() {
-        return conversions.getClassLoader();
     }
 
     /**
@@ -637,7 +634,7 @@ public class Mapper {
         try (ScanResult scanResult = classGraph.scan()) {
             for (ClassInfo classInfo : scanResult.getAllClasses()) {
                 try {
-                    classes.add(Class.forName(classInfo.getName(), true, conversions.getClassLoader()));
+                    classes.add(Class.forName(classInfo.getName(), true, classLoader));
                 } catch (Throwable ignored) {
                 }
             }
