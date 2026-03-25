@@ -6,10 +6,13 @@ on:
     # * is a special character in YAML so you have to quote this string
     - cron:  '0 0 * * *'
 
-
 jobs:
   CleanUp:
     runs-on: ubuntu-latest
     steps:
-      - name: Delete workflow runs
-        uses: dmvict/clean-workflow-runs@v1.0.0
+      - uses: actions/checkout@v4
+      - uses: yanovation/delete-old-actions@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          days-ago: 30
+          dry-run: true
