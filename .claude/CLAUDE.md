@@ -38,3 +38,6 @@
 
 ## Code Reviews
 - When reviewing code, summarize all concerns and recommended changes in a file so they don't get lost.
+
+## Git Operations
+- Never commit or push code without an explicit request from the user.
