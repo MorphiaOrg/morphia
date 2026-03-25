@@ -161,6 +161,10 @@ jobs:
     needs:
       - Release
     steps:
+      - name: Reenable the docs workflow
+        run: gh --repo MorphiaOrg/morphia-docs workflow enable Docs || true
+        env:
+          GH_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
       - name: Invoke antora build
         run: gh workflow run Docs --repo MorphiaOrg/morphia-docs --ref master
         env:
