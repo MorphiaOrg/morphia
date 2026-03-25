@@ -35,7 +35,6 @@ import dev.morphia.internal.CollectionConfigurable;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.internal.ReadConfigurable;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.NotMappableException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.sofia.Sofia;
 
@@ -145,11 +144,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
         iterable.skip(skip);
         if (sort != null) {
             Document mapped = new Document();
-            EntityModel model = null;
-            try {
-                model = mapper.getEntityModel(type);
-            } catch (NotMappableException ignored) {
-            }
+            EntityModel model = mapper.tryGetEntityModel(type).orElse(null);
 
             for (Entry<String, Object> entry : sort.entrySet()) {
                 Object value = entry.getValue();
