@@ -140,6 +140,10 @@ jobs:
     needs:
       - Release
     steps:
+      - name: Reenable the docs workflow
+        run: gh --repo MorphiaOrg/morphia-docs workflow enable Docs || true
+        env:
+          GH_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
       - name: Invoke antora build
         uses: benc-uk/workflow-dispatch@v1
         with:
