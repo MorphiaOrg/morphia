@@ -4,14 +4,16 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import dev.morphia.mapping.codec.pojo.PropertyModel;
-
 import net.bytebuddy.dynamic.loading.ByteArrayClassLoader;
 
 public class CritterClassLoader extends ByteArrayClassLoader.ChildFirst {
 
+    public CritterClassLoader(ClassLoader parent) {
+        super(parent, Collections.emptyMap());
+    }
+
     public CritterClassLoader() {
-        super(PropertyModel.class.getClassLoader(), Collections.emptyMap());
+        this(Thread.currentThread().getContextClassLoader());
     }
 
     public void register(String name, byte[] bytes) {

@@ -8,7 +8,6 @@ import java.util.List;
 import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import dev.morphia.MorphiaDatastore;
-import dev.morphia.config.ManualMorphiaConfig;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.config.MorphiaConfigHelper;
 import dev.morphia.mapping.MappingException;
@@ -48,19 +47,19 @@ public class TestConfig extends TestBase {
         var docsTarget = new File(root, "docs/modules/ROOT/examples");
 
         try (var writer = new FileWriter(new File(docsTarget, "complete-morphia-config.properties"))) {
-            var configContents = MorphiaConfigHelper.dumpConfigurationFile(new ManualMorphiaConfig(), true);
+            var configContents = MorphiaConfigHelper.dumpConfigurationFile(dev.morphia.config.MorphiaConfig.load(), true);
             writer.write(configContents);
             writer.flush();
         }
 
         try (var writer = new FileWriter(new File(docsTarget, "minimal-morphia-config.properties"))) {
-            var configContents = MorphiaConfigHelper.dumpConfigurationFile(new ManualMorphiaConfig(), false);
+            var configContents = MorphiaConfigHelper.dumpConfigurationFile(dev.morphia.config.MorphiaConfig.load(), false);
             writer.write(configContents);
             writer.flush();
         }
 
         try (var writer = new FileWriter(new File(docsTarget, "legacy-morphia-config.properties"))) {
-            var configContents = MorphiaConfigHelper.dumpConfigurationFile(new ManualMorphiaConfig()
+            var configContents = MorphiaConfigHelper.dumpConfigurationFile(dev.morphia.config.MorphiaConfig.load()
                     .legacy(), false);
             writer.write(configContents);
             writer.flush();

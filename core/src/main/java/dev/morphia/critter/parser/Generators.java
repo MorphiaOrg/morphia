@@ -1,9 +1,7 @@
 package dev.morphia.critter.parser;
 
 import dev.morphia.config.MorphiaConfig;
-import dev.morphia.config.MorphiaConfigHelper;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.ReflectiveMapper;
 import dev.morphia.mapping.conventions.MorphiaDefaultsConvention;
 
 import org.objectweb.asm.Type;
@@ -11,28 +9,20 @@ import org.objectweb.asm.Type;
 import static org.objectweb.asm.Type.ARRAY;
 
 public class Generators {
-    public static final Generators INSTANCE = new Generators();
+    private final MorphiaConfig config;
+    private final Mapper mapper;
+    public final MorphiaDefaultsConvention convention = new MorphiaDefaultsConvention();
 
-    public String configFile = MorphiaConfigHelper.MORPHIA_CONFIG_PROPERTIES;
-
-    private MorphiaConfig config;
-    private Mapper mapper;
-    public MorphiaDefaultsConvention convention = new MorphiaDefaultsConvention();
-
-    private Generators() {
+    public Generators(MorphiaConfig config, Mapper mapper) {
+        this.config = config;
+        this.mapper = mapper;
     }
 
-    public synchronized MorphiaConfig getConfig() {
-        if (config == null) {
-            config = MorphiaConfig.load(configFile);
-        }
+    public MorphiaConfig getConfig() {
         return config;
     }
 
-    public synchronized Mapper getMapper() {
-        if (mapper == null) {
-            mapper = new ReflectiveMapper(getConfig());
-        }
+    public Mapper getMapper() {
         return mapper;
     }
 
