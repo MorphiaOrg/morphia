@@ -1,5 +1,6 @@
 package dev.morphia.test.aggregation.expressions;
 
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.Expressions.value;
@@ -20,6 +21,11 @@ import static dev.morphia.aggregation.expressions.TrigonometryExpressions.tan;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.tanh;
 
 public class TrigonometryExpressionsTest extends ExpressionsTestBase {
+    @BeforeMethod
+    public void before() {
+        checkMinServerVersion("4.2.0");
+    }
+
     @Test
     public void testAcos() {
         assertAndCheckDocShape("{ $acos: 1 }", acos(value(1)), 0.0);

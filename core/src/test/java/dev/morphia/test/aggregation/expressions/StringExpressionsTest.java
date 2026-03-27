@@ -69,6 +69,7 @@ public class StringExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testLtrim() {
+        checkMinServerVersion("4.0.0");
         assertAndCheckDocShape("{ $ltrim: { input: '    winter wonderland' } }", ltrim(value("    winter wonderland")),
                 "winter wonderland");
         assertAndCheckDocShape("{ $ltrim: { input: 'winter wonderland' } }", ltrim(value("winter wonderland"))
@@ -78,6 +79,7 @@ public class StringExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testRegexFind() {
+        checkMinServerVersion("4.2.0");
         assertAndCheckDocShape("{ $regexFind: { input: 'winter wonderland', regex: /inter/ } }", regexFind(value("winter wonderland"))
                 .pattern("inter"),
                 parse("{match: 'inter', idx:1, captures:[]}"));
@@ -90,6 +92,7 @@ public class StringExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testRegexFindAll() {
+        checkMinServerVersion("4.2.0");
         assertAndCheckDocShape("{ $regexFindAll: { input: 'winter wonderland', regex: /inter/ } }",
                 regexFindAll(value("winter wonderland")).pattern("inter"),
                 List.of(parse("{match: 'inter', idx:1, captures:[]}")));
@@ -102,6 +105,7 @@ public class StringExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testRegexMatch() {
+        checkMinServerVersion("4.2.0");
         assertAndCheckDocShape("{ $regexMatch: { input: 'winter wonderland', regex: /inter/ } }",
                 regexMatch(value("winter wonderland")).pattern("inter"), true);
         assertAndCheckDocShape("{ $regexMatch: { input: 'winter wonderland', regex: /inter/ } }",
@@ -112,6 +116,7 @@ public class StringExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testReplaceAll() {
+        checkMinServerVersion("4.4.0");
         insert("myCollection", List.of(
                 parse("{ _id: 1, name: 'cafe' }"),
                 parse("{ _id: 2, name: 'Cafe' }"),
@@ -134,6 +139,7 @@ public class StringExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testReplaceOne() {
+        checkMinServerVersion("4.4.0");
         insert("myCollection", List.of(
                 parse("{ '_id' : 1, 'item' : 'blue paint' }"),
                 parse("{ '_id' : 2, 'item' : 'blue and green paint' }"),
@@ -159,6 +165,7 @@ public class StringExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testRtrim() {
+        checkMinServerVersion("4.0.0");
         assertAndCheckDocShape("{ $rtrim: { input: 'winter wonderland    ' } }", rtrim(value("winter wonderland    ")),
                 "winter wonderland");
         assertAndCheckDocShape("{ $rtrim: { input: 'winter wonderland' } }", rtrim(value("winter wonderland"))
@@ -206,6 +213,7 @@ public class StringExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testToString() {
+        checkMinServerVersion("4.0.0");
         assertAndCheckDocShape("{ $toString: 12345 }", StringExpressions.toString(value(12345)), "12345");
     }
 
@@ -216,6 +224,7 @@ public class StringExpressionsTest extends ExpressionsTestBase {
 
     @Test
     public void testTrim() {
+        checkMinServerVersion("4.0.0");
         assertAndCheckDocShape("{ $trim: { input: '   books   ' } }", trim(value("   books   ")), "books");
         assertAndCheckDocShape("{ $trim: { input: '===books===' } }", trim(value("===books===")).chars(value("===")), "books");
     }

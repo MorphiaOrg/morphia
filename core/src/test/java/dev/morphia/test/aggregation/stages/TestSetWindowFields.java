@@ -25,6 +25,7 @@ public class TestSetWindowFields extends AggregationTest {
 
     @Test
     public void testSetWindowFields() {
+        checkMinServerVersion("5.0.0");
         cakeSales();
 
         List<Document> actual = getDs().aggregate("cakeSales")
@@ -57,6 +58,8 @@ public class TestSetWindowFields extends AggregationTest {
 
     @Test
     public void testShift() {
+        checkMinServerVersion("5.0.0");
+
         cakeSales();
 
         List<Document> actual = getDs().aggregate("cakeSales")

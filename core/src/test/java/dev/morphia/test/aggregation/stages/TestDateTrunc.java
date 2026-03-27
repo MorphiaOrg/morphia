@@ -23,6 +23,8 @@ public class TestDateTrunc extends AggregationTest {
 
     @Test
     public void testDateTrunc() {
+        checkMinServerVersion("5.0.0");
+
         cakeSales();
 
         List<Document> actual = getDs().aggregate("cakeSales")

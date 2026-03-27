@@ -22,6 +22,8 @@ public class TestGetField extends AggregationTest {
 
     @Test
     public void testGetField() {
+        checkMinServerVersion("5.0.0");
+
         insert("inventory", parseDocs(
                 "{ '_id' : 1, 'item' : 'sweatshirt', 'price_usd': 45.99, qty: 300 }",
                 "{ '_id' : 2, 'item' : 'winter coat', 'price_usd': 499.99, qty: 200 }",

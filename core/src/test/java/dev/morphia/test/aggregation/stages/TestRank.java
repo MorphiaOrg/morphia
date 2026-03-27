@@ -22,6 +22,7 @@ public class TestRank extends AggregationTest {
 
     @Test
     public void testRank() {
+        checkMinServerVersion("5.0.0");
         cakeSales();
 
         List<Document> actual = getDs().aggregate("cakeSales")

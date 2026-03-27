@@ -34,6 +34,7 @@ import static org.testng.Assert.assertNull;
 public class TestTransactions extends TemplatedTestBase {
     @BeforeMethod
     public void before() {
+        checkMinServerVersion("4.0.0");
         checkForReplicaSet();
         getDs().save(new Rectangle(1, 1));
         getDs().find(Rectangle.class).findAndDelete();
@@ -258,6 +259,7 @@ public class TestTransactions extends TemplatedTestBase {
 
     @Test
     public void testTransactions() {
+        checkMinServerVersion("5.0.0");
         getDs().withTransaction(session -> {
             // save company
             Company company = new Company();
