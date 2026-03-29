@@ -14,7 +14,15 @@ import org.openrewrite.java.MethodMatcher;
 import org.openrewrite.java.tree.Expression;
 import org.openrewrite.java.tree.J.MethodInvocation;
 
+/**
+ * An OpenRewrite recipe that merges fluent-style {@code RegexFilter} expression and pattern calls
+ * into a single method call.
+ */
 public class RegexPatternMerge extends Recipe {
+    /** Creates a new instance. */
+    public RegexPatternMerge() {
+    }
+
     private static final MethodMatcher MATCHER = new MethodMatcher("dev.morphia.query.filters.RegexFilter *(..)");
 
     @NotNull
@@ -69,6 +77,13 @@ public class RegexPatternMerge extends Recipe {
         };
     }
 
+    /**
+     * Searches a method invocation chain for the first invocation with the given simple name.
+     *
+     * @param expression the expression to search, typically the tail of a method chain
+     * @param methodName the simple method name to find
+     * @return the matching invocation, or {@code null} if not found
+     */
     @Nullable
     public static MethodInvocation findInvocation(Expression expression, String methodName) {
         if (expression == null) {

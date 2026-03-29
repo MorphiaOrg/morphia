@@ -17,7 +17,15 @@ import static dev.morphia.rewrite.recipes.RewriteUtils.methodMatcher;
 import static dev.morphia.rewrite.recipes.pipeline.PipelineRewriteRecipes.AGGREGATION;
 import static dev.morphia.rewrite.recipes.pipeline.PipelineRewriteRecipes.addStage;
 
+/**
+ * An OpenRewrite recipe that rewrites {@code merge()} calls on an aggregation, moving their parameters
+ * into the {@code pipeline()} call as stage arguments.
+ */
 public class PipelineMergeRewrite extends Recipe {
+    /** Creates a new instance. */
+    public PipelineMergeRewrite() {
+    }
+
     private static final Logger LOG = LoggerFactory.getLogger(PipelineMergeRewrite.class);
 
     private static final MethodMatcher MERGE = new MethodMatcher(AGGREGATION + " merge(..)");

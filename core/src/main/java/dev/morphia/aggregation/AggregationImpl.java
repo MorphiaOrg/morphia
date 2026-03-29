@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @param <T> the source type of the aggregation
- * @param <T> the target type
  * @hidden
  * @morphia.internal
  * @since 2.0

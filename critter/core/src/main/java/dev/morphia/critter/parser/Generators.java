@@ -10,18 +10,29 @@ import org.objectweb.asm.Type;
 
 import static org.objectweb.asm.Type.ARRAY;
 
+/**
+ * Singleton providing shared Morphia configuration, mapper, and ASM type conversion utilities for Critter generators.
+ */
 public class Generators {
+    /** The singleton instance of this class. */
     public static final Generators INSTANCE = new Generators();
 
+    /** The path to the Morphia configuration properties file used to load {@link MorphiaConfig}. */
     public String configFile = MorphiaConfigHelper.MORPHIA_CONFIG_PROPERTIES;
 
     private MorphiaConfig config;
     private Mapper mapper;
+    /** The default Morphia naming convention applied during code generation. */
     public MorphiaDefaultsConvention convention = new MorphiaDefaultsConvention();
 
     private Generators() {
     }
 
+    /**
+     * Returns the lazily loaded {@link MorphiaConfig}, loading it from {@link #configFile} on first access.
+     *
+     * @return the Morphia configuration
+     */
     public synchronized MorphiaConfig getConfig() {
         if (config == null) {
             config = MorphiaConfig.load(configFile);
@@ -29,6 +40,11 @@ public class Generators {
         return config;
     }
 
+    /**
+     * Returns the lazily initialized {@link Mapper}, creating a reflective mapper on first access.
+     *
+     * @return the Morphia mapper
+     */
     public synchronized Mapper getMapper() {
         if (mapper == null) {
             mapper = new ReflectiveMapper(getConfig());
@@ -36,6 +52,13 @@ public class Generators {
         return mapper;
     }
 
+    /**
+     * Wraps a primitive ASM {@link Type} with its corresponding boxed wrapper type.
+     * Non-primitive types are returned unchanged.
+     *
+     * @param fieldType the ASM type to wrap
+     * @return the boxed wrapper type, or the original type if not primitive
+     */
     public static Type wrap(Type fieldType) {
         if (fieldType.equals(Type.VOID_TYPE))
             return Type.getType(Void.class);
@@ -58,14 +81,34 @@ public class Generators {
         return fieldType;
     }
 
+    /**
+     * Returns {@code true} if the given ASM type represents an array type.
+     *
+     * @param type the ASM type to check
+     * @return {@code true} if the type is an array
+     */
     public static boolean isArray(Type type) {
         return type.getSort() == ARRAY;
     }
 
+    /**
+     * Resolves an ASM {@link Type} to a {@link Class} using the current thread's context class loader.
+     *
+     * @param type the ASM type to resolve
+     * @return the corresponding Java class
+     */
     public static Class<?> asClass(Type type) {
         return asClass(type, Thread.currentThread().getContextClassLoader());
     }
 
+    /**
+     * Resolves an ASM {@link Type} to a {@link Class} using the given class loader.
+     *
+     * @param type        the ASM type to resolve
+     * @param classLoader the class loader used to locate the class
+     * @return the corresponding Java class
+     * @throws RuntimeException if the class cannot be found
+     */
     public static Class<?> asClass(Type type, ClassLoader classLoader) {
         if (type.equals(Type.VOID_TYPE))
             return void.class;

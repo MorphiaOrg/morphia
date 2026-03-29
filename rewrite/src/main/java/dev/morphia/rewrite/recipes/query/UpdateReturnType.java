@@ -19,7 +19,15 @@ import org.openrewrite.java.tree.JavaType;
 import org.openrewrite.java.tree.JavaType.Variable;
 import org.openrewrite.java.tree.TypeTree;
 
+/**
+ * An OpenRewrite recipe that updates variable declarations typed as {@code Update<T>} to use
+ * {@code UpdateResult} instead, reflecting the change in return type for update operations.
+ */
 public class UpdateReturnType extends Recipe {
+    /** Creates a new instance. */
+    public UpdateReturnType() {
+    }
+
     private static final TypeMatcher TYPE_MATCHER = new TypeMatcher("dev.morphia.query.Update");
     private static final String UPDATE_RESULT = UpdateResult.class.getName();
 

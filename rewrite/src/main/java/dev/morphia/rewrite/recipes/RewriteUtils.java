@@ -16,11 +16,23 @@ import org.semver4j.Semver;
 
 import io.github.classgraph.ClassGraph;
 
+/**
+ * Utility methods for OpenRewrite recipes used in the Morphia migration tooling.
+ */
 public class RewriteUtils {
+    /** @hidden */
+    private RewriteUtils() {
+    }
+
     private static List<URI> runtimeClasspath = new ClassGraph().disableNestedJarScanning().getClasspathURIs();
 
     private static LinkedHashSet<Path> dependencies = new LinkedHashSet<Path>();
 
+    /**
+     * Locates the most recent pre-3.0 morphia-core JAR from the local Maven repository along with MongoDB driver dependencies.
+     *
+     * @return the resolved set of dependency paths
+     */
     public static Set<Path> findMorphiaDependencies() {
         if (dependencies.isEmpty()) {
             var repo = new File(System.getProperty("user.home"), ".m2/repository/dev/morphia/morphia/morphia-core");
@@ -43,6 +55,11 @@ public class RewriteUtils {
         return dependencies;
     }
 
+    /**
+     * Returns the absolute paths of MongoDB and BSON library JARs found on the runtime classpath.
+     *
+     * @return a list of absolute path strings for MongoDB-related dependencies
+     */
     @NotNull
     protected static List<String> findMongoDependencies() {
         return runtimeClasspath.stream()
@@ -52,6 +69,13 @@ public class RewriteUtils {
                 .collect(ArrayList::new, List::add, List::addAll);
     }
 
+    /**
+     * Creates a {@link MethodMatcher} for the given fully-qualified type and method pattern.
+     *
+     * @param type    the fully-qualified type name
+     * @param pattern the method signature pattern
+     * @return a MethodMatcher for the combined pattern
+     */
     public static @NotNull MethodMatcher methodMatcher(String type, String pattern) {
         return new MethodMatcher(type + " " + pattern);
     }
@@ -60,6 +84,8 @@ public class RewriteUtils {
      * Returns the runtime classpath as paths, suitable for templates generating 3.x API code.
      * This includes the current project's classes (3.x morphia-core) unlike findMorphiaDependencies()
      * which only includes 2.x versions.
+     *
+     * @return the runtime classpath as a set of paths
      */
     public static Set<Path> runtimeClasspathPaths() {
         return runtimeClasspath.stream()

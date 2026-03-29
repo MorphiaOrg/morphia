@@ -23,7 +23,14 @@ import org.openrewrite.java.tree.JavaType.Method;
 
 import static dev.morphia.rewrite.recipes.RewriteUtils.findMorphiaDependencies;
 
+/**
+ * An OpenRewrite recipe that migrates {@code new ArraySlice(...)} constructor calls to the equivalent
+ * {@code ArraySlice.limit()} and {@code ArraySlice.limit().skip()} factory methods.
+ */
 public class ArraySliceMigration extends Recipe {
+    /** Creates a new instance. */
+    public ArraySliceMigration() {
+    }
 
     private static final MethodMatcher CONSTRUCTOR = new MethodMatcher(ArraySlice.class.getName() + " <init>(..)");
 

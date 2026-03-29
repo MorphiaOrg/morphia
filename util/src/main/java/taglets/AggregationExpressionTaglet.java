@@ -30,6 +30,10 @@ import com.sun.source.doctree.UnknownBlockTagTree;
  */
 public class AggregationExpressionTaglet extends ManualTaglet {
 
+    /** Creates a new instance. */
+    public AggregationExpressionTaglet() {
+    }
+
     @Override
     public String getName() {
         return "aggregation.expression";

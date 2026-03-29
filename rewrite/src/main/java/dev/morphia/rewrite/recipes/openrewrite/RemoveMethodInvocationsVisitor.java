@@ -51,10 +51,20 @@ import static org.openrewrite.Tree.randomId;
 public class RemoveMethodInvocationsVisitor extends JavaVisitor<ExecutionContext> {
     private final Map<MethodMatcher, Predicate<List<Expression>>> matchers;
 
+    /**
+     * Creates a visitor using a map of method matchers to argument predicates.
+     *
+     * @param matchers a map from method matcher to a predicate that further qualifies the arguments
+     */
     public RemoveMethodInvocationsVisitor(Map<MethodMatcher, Predicate<List<Expression>>> matchers) {
         this.matchers = matchers;
     }
 
+    /**
+     * Creates a visitor that removes all invocations matching any of the given method signatures.
+     *
+     * @param methodSignatures the method signature strings to match
+     */
     public RemoveMethodInvocationsVisitor(List<String> methodSignatures) {
         this(methodSignatures.stream().collect(Collectors.toMap(
                 MethodMatcher::new,
@@ -177,20 +187,42 @@ public class RemoveMethodInvocationsVisitor extends JavaVisitor<ExecutionContext
         }.reduce(method, new ArrayList<>()).get(0);
     }
 
+    /**
+     * Returns a predicate that matches method calls whose single argument is the boolean literal {@code true}.
+     *
+     * @return predicate matching a single {@code true} argument
+     */
     @SuppressWarnings("unused") // used in rewrite-spring / convenient for consumers
     public static Predicate<List<Expression>> isTrueArgument() {
         return args -> args.size() == 1 && isTrue(args.get(0));
     }
 
+    /**
+     * Returns a predicate that matches method calls whose single argument is the boolean literal {@code false}.
+     *
+     * @return predicate matching a single {@code false} argument
+     */
     @SuppressWarnings("unused") // used in rewrite-spring / convenient for consumers
     public static Predicate<List<Expression>> isFalseArgument() {
         return args -> args.size() == 1 && isFalse(args.get(0));
     }
 
+    /**
+     * Returns {@code true} if the given expression is the boolean literal {@code true}.
+     *
+     * @param expression the expression to test
+     * @return whether the expression is the literal {@code true}
+     */
     public static boolean isTrue(Expression expression) {
         return isBoolean(expression, Boolean.TRUE);
     }
 
+    /**
+     * Returns {@code true} if the given expression is the boolean literal {@code false}.
+     *
+     * @param expression the expression to test
+     * @return whether the expression is the literal {@code false}
+     */
     public static boolean isFalse(Expression expression) {
         return isBoolean(expression, Boolean.FALSE);
     }

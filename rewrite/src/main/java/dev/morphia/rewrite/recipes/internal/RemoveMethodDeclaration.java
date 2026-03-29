@@ -11,7 +11,14 @@ import org.openrewrite.java.MethodMatcher;
 import org.openrewrite.java.tree.J;
 import org.openrewrite.java.tree.J.MethodDeclaration;
 
+/**
+ * An OpenRewrite recipe that removes method declarations matching specified patterns.
+ */
 public class RemoveMethodDeclaration extends Recipe {
+    /** Creates a new instance. */
+    public RemoveMethodDeclaration() {
+    }
+
     @Option(displayName = "Method pattern", description = "A pattern to match method declarations for removal.", example = "java.lang.StringBuilder append(java.lang.String)")
     private List<String> methodPatterns;
 
@@ -25,10 +32,20 @@ public class RemoveMethodDeclaration extends Recipe {
         return "Remove method declarations.";
     }
 
+    /**
+     * Returns the method patterns used to identify declarations for removal.
+     *
+     * @return the list of method patterns
+     */
     public List<String> getMethodPatterns() {
         return methodPatterns;
     }
 
+    /**
+     * Sets the method patterns used to identify declarations for removal.
+     *
+     * @param methodPatterns the list of method patterns
+     */
     public void setMethodPatterns(List<String> methodPatterns) {
         this.methodPatterns = methodPatterns;
     }

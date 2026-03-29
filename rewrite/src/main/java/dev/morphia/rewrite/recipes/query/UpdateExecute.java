@@ -21,7 +21,15 @@ import org.openrewrite.java.tree.JavaType.Parameterized;
 
 import jakarta.annotation.Nullable;
 
+/**
+ * An OpenRewrite recipe that removes calls to {@code Update.execute()} and {@code Modify.execute()},
+ * moving any options argument into the preceding update/modify call.
+ */
 public class UpdateExecute extends Recipe {
+    /** Creates a new instance. */
+    public UpdateExecute() {
+    }
+
     private static final MethodMatcher UPDATE = new MethodMatcher("dev.morphia.query.Update execute(..)");
     private static final MethodMatcher MODIFY = new MethodMatcher("dev.morphia.query.Modify execute(..)");
 

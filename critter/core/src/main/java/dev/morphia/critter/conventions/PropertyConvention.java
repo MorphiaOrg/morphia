@@ -15,7 +15,7 @@ import dev.morphia.mapping.Mapper;
 
 /**
  * @since 3.0
- * @hidden @morphia.internal
+ * @hidden
  */
 @MorphiaInternal
 public class PropertyConvention {

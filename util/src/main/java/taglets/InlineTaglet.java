@@ -9,7 +9,14 @@ import com.sun.source.doctree.DocTree;
 
 import static jdk.javadoc.doclet.Taglet.Location.METHOD;
 
+/**
+ * A Javadoc taglet that renders a notice advising callers to inline the tagged method.
+ */
 public class InlineTaglet extends DocTaglet {
+
+    /** Creates a new instance. */
+    public InlineTaglet() {
+    }
 
     @Override
     public Set<Location> getAllowedLocations() {

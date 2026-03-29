@@ -19,8 +19,22 @@ import io.quarkus.gizmo.ResultHandle;
 
 import static io.quarkus.gizmo.MethodDescriptor.ofMethod;
 
+/**
+ * Static utility methods that bridge ASM annotation nodes and Morphia type data with the Gizmo bytecode generation API.
+ */
 public class GizmoExtensions {
 
+    /** @hidden */
+    private GizmoExtensions() {
+    }
+
+    /**
+     * Emits Gizmo bytecode that instantiates the Morphia annotation represented by the given ASM annotation node.
+     *
+     * @param annotationNode the ASM annotation node to convert
+     * @param creator        the Gizmo method creator in which the bytecode is emitted
+     * @return a result handle for the constructed annotation instance
+     */
     public static ResultHandle annotationBuilder(AnnotationNode annotationNode, MethodCreator creator) {
         Type type = Type.getType(annotationNode.desc);
         String classPackage = type.getClassName().substring(0, type.getClassName().lastIndexOf('.'));
@@ -37,10 +51,24 @@ public class GizmoExtensions {
         return creator.invokeVirtualMethod(ofMethod(builderType.getClassName(), "build", type.getClassName()), local);
     }
 
+    /**
+     * Populates the annotation builder with values from the ASM annotation node.
+     *
+     * @param annotationNode the ASM annotation node whose values should be applied
+     * @param creator        the Gizmo method creator in which the bytecode is emitted
+     * @param local          the result handle referencing the annotation builder instance
+     */
     public static void setBuilderValues(AnnotationNode annotationNode, MethodCreator creator, ResultHandle local) {
         dev.morphia.annotations.internal.AnnotationNodeExtensions.INSTANCE.setBuilderValues(annotationNode, creator, local);
     }
 
+    /**
+     * Emits Gizmo bytecode that constructs a {@link TypeData} instance matching the given type data.
+     *
+     * @param data          the type data to emit
+     * @param methodCreator the Gizmo method creator in which the bytecode is emitted
+     * @return a result handle for the constructed {@code TypeData} instance
+     */
     public static ResultHandle emitTypeData(TypeData<?> data, MethodCreator methodCreator) {
         ResultHandle array = methodCreator.newArray(TypeData.class, data.getTypeParameters().size());
         List<TypeData<?>> typeParameters = data.getTypeParameters();
@@ -57,6 +85,12 @@ public class GizmoExtensions {
         return methodCreator.newInstance(descriptor, list.toArray(new ResultHandle[0]));
     }
 
+    /**
+     * Returns the ASM type descriptor for the raw (erased) form of the given {@link java.lang.reflect.Type}.
+     *
+     * @param type the type to erase
+     * @return the ASM descriptor string for the raw type
+     */
     public static String rawType(java.lang.reflect.Type type) {
         if (type instanceof GenericArrayType arrayType) {
             ParameterizedType type1 = (ParameterizedType) arrayType.getGenericComponentType();
@@ -68,6 +102,14 @@ public class GizmoExtensions {
         }
     }
 
+    /**
+     * Returns the generic return type of the named annotation element method.
+     *
+     * @param type the annotation class containing the element
+     * @param name the name of the annotation element
+     * @return the generic return type of the element method
+     * @throws RuntimeException if the element method cannot be found
+     */
     public static java.lang.reflect.Type attributeType(Class<?> type, String name) {
         try {
             return type.getDeclaredMethod(name).getGenericReturnType();
@@ -76,6 +118,14 @@ public class GizmoExtensions {
         }
     }
 
+    /**
+     * Emits Gizmo bytecode that loads the given value as the specified {@link java.lang.reflect.Type}.
+     *
+     * @param creator the Gizmo method creator in which the bytecode is emitted
+     * @param type    the target type
+     * @param value   the value to load
+     * @return a result handle for the loaded value
+     */
     @SuppressWarnings("unchecked")
     public static ResultHandle load(MethodCreator creator, java.lang.reflect.Type type, Object value) {
         if (type instanceof Class<?> classType) {
@@ -101,6 +151,14 @@ public class GizmoExtensions {
         }
     }
 
+    /**
+     * Emits Gizmo bytecode that loads the given value as the specified class type.
+     *
+     * @param creator the Gizmo method creator in which the bytecode is emitted
+     * @param type    the target class type
+     * @param value   the value to load
+     * @return a result handle for the loaded value
+     */
     @SuppressWarnings("unchecked")
     public static ResultHandle load(MethodCreator creator, Class<?> type, Object value) {
         if (type == String.class) {
@@ -132,10 +190,25 @@ public class GizmoExtensions {
         }
     }
 
+    /**
+     * Creates a {@link TypeData} from the given ASM type with explicit type parameters.
+     *
+     * @param type           the ASM type to convert
+     * @param classLoader    the class loader used to resolve the type
+     * @param typeParameters the list of generic type parameters
+     * @return a {@code TypeData} representing the type with its parameters
+     */
     public static TypeData<?> typeDataFromType(Type type, ClassLoader classLoader, List<TypeData<?>> typeParameters) {
         return new TypeData<>(Generators.asClass(type, classLoader), typeParameters);
     }
 
+    /**
+     * Creates a {@link TypeData} from the given ASM type with no type parameters.
+     *
+     * @param type        the ASM type to convert
+     * @param classLoader the class loader used to resolve the type
+     * @return a {@code TypeData} representing the raw type
+     */
     public static TypeData<?> typeDataFromType(Type type, ClassLoader classLoader) {
         return typeDataFromType(type, classLoader, List.of());
     }

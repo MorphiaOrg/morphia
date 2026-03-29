@@ -25,7 +25,15 @@ import static dev.morphia.rewrite.recipes.pipeline.PipelineRewriteRecipes.AGGREG
 import static dev.morphia.rewrite.recipes.pipeline.PipelineRewriteRecipes.AGGREGATION;
 import static java.util.List.of;
 
+/**
+ * An OpenRewrite recipe that rewrites {@code execute()} calls on an aggregation pipeline, moving options
+ * to {@code Datastore.aggregate()} and renaming the terminal call to {@code iterator()}.
+ */
 public class PipelineExecuteRewrite extends Recipe {
+    /** Creates a new instance. */
+    public PipelineExecuteRewrite() {
+    }
+
     private static final Logger LOG = LoggerFactory.getLogger(PipelineExecuteRewrite.class);
 
     private static final MethodMatcher EXECUTE = methodMatcher(AGGREGATION, "execute(..)");

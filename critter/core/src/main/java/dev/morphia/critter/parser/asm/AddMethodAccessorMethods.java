@@ -21,10 +21,20 @@ import static org.objectweb.asm.Opcodes.IRETURN;
 import static org.objectweb.asm.Opcodes.NEW;
 import static org.objectweb.asm.Opcodes.RETURN;
 
+/**
+ * Generates synthetic {@code __readXxx} and {@code __writeXxx} accessor methods into an entity class
+ * bytecode for properties backed by getter/setter methods rather than direct fields.
+ */
 public class AddMethodAccessorMethods extends BaseGenerator {
     private final Class<?> entity;
     private final List<MethodNode> methods;
 
+    /**
+     * Creates a generator that will add accessor methods for the given getter methods to the entity class.
+     *
+     * @param entity  the entity class to augment
+     * @param methods the getter methods for which accessor methods should be generated
+     */
     public AddMethodAccessorMethods(Class<?> entity, List<MethodNode> methods) {
         super(entity);
         this.entity = entity;

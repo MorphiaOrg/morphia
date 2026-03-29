@@ -92,6 +92,15 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.12.0</version>
+                <configuration>
+                    <sourcepath>${project.build.sourceDirectory}:${project.build.directory}/generated-sources/morphia-annotations</sourcepath>
+                    <excludePackageNames>dev.morphia.annotations.internal</excludePackageNames>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

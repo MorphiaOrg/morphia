@@ -19,6 +19,13 @@ public interface Aggregation<T> extends AutoCloseable, Iterable<T> {
      */
     Aggregation<T> pipeline(Stage... stages);
 
+    /**
+     * Appends the stages to this aggregation's pipeline.
+     *
+     * @param stages the stages to add
+     * @return this
+     * @since 3.0
+     */
     default Aggregation<T> pipeline(List<Stage> stages) {
         return pipeline(stages.toArray(new Stage[0]));
     }
@@ -26,6 +33,11 @@ public interface Aggregation<T> extends AutoCloseable, Iterable<T> {
     @Override
     MorphiaCursor<T> iterator();
 
+    /**
+     * Executes the aggregation pipeline and collects all results into a list.
+     *
+     * @return a list containing all results of the aggregation
+     */
     default List<T> toList() {
         try (var iterator = iterator()) {
             return iterator.toList();

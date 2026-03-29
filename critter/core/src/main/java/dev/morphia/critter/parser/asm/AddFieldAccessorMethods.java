@@ -17,9 +17,19 @@ import static org.objectweb.asm.Opcodes.IRETURN;
 import static org.objectweb.asm.Opcodes.PUTFIELD;
 import static org.objectweb.asm.Opcodes.RETURN;
 
+/**
+ * Generates synthetic {@code __readXxx} and {@code __writeXxx} accessor methods directly
+ * into an entity class bytecode for each of its fields.
+ */
 public class AddFieldAccessorMethods extends BaseGenerator {
     private final List<FieldNode> fields;
 
+    /**
+     * Creates a generator that will add accessor methods for the given fields to the entity class.
+     *
+     * @param entity the entity class to augment
+     * @param fields the fields for which accessor methods should be generated
+     */
     public AddFieldAccessorMethods(Class<?> entity, List<FieldNode> fields) {
         super(entity);
         this.fields = fields;

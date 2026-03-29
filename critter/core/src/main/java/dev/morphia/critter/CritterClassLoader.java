@@ -8,12 +8,24 @@ import dev.morphia.mapping.codec.pojo.PropertyModel;
 
 import net.bytebuddy.dynamic.loading.ByteArrayClassLoader;
 
+/**
+ * A class loader that supports registering and loading dynamically generated Critter classes from byte arrays.
+ */
 public class CritterClassLoader extends ByteArrayClassLoader.ChildFirst {
 
+    /**
+     * Creates a new CritterClassLoader with the Morphia class loader as the parent.
+     */
     public CritterClassLoader() {
         super(PropertyModel.class.getClassLoader(), Collections.emptyMap());
     }
 
+    /**
+     * Registers a class by its binary name and bytecode so it can be loaded by this class loader.
+     *
+     * @param name  the binary class name (e.g., {@code com.example.Foo})
+     * @param bytes the class bytecode
+     */
     public void register(String name, byte[] bytes) {
         typeDefinitions.put(name, bytes);
     }
@@ -69,6 +81,11 @@ public class CritterClassLoader extends ByteArrayClassLoader.ChildFirst {
         return className.startsWith("dev.morphia.critter.");
     }
 
+    /**
+     * Returns a copy of all registered type definitions keyed by binary class name.
+     *
+     * @return a map of class name to bytecode
+     */
     public Map<String, byte[]> getTypeDefinitions() {
         return new HashMap<>(typeDefinitions);
     }

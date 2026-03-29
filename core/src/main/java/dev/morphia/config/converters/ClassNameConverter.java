@@ -8,6 +8,7 @@ import dev.morphia.mapping.MappingException;
 import org.eclipse.microprofile.config.spi.Converter;
 
 /**
+ * @param <T> the target type
  * @hidden
  * @morphia.internal
  */

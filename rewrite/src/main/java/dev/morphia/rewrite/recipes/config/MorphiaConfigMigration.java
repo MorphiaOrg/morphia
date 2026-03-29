@@ -9,7 +9,14 @@ import org.openrewrite.java.ChangeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * An OpenRewrite recipe that migrates {@code MapperOptions} usages to the new {@code MorphiaConfig} API.
+ */
 public class MorphiaConfigMigration extends Recipe {
+    /** Creates a new instance. */
+    public MorphiaConfigMigration() {
+    }
+
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaConfigMigration.class);
 
     private static final String OLD_TYPE = "dev.morphia.mapping.MapperOptions";

@@ -26,7 +26,14 @@ import org.openrewrite.java.search.UsesMethod;
 
 import static java.util.Collections.singletonList;
 
+/**
+ * An OpenRewrite recipe that removes method invocations matching the configured pattern when it is syntactically safe to do so.
+ */
 public class RemoveMethodInvocations extends Recipe {
+    /** Creates a new instance. */
+    public RemoveMethodInvocations() {
+    }
+
     @Option(displayName = "Method pattern", description = "A pattern to match method invocations for removal.", example = "java.lang.StringBuilder append(java.lang.String)")
     String methodPattern;
 
@@ -46,10 +53,20 @@ public class RemoveMethodInvocations extends Recipe {
                 new RemoveMethodInvocationsVisitor(singletonList(methodPattern)));
     }
 
+    /**
+     * Returns the method pattern used to identify invocations for removal.
+     *
+     * @return the method pattern
+     */
     public String getMethodPattern() {
         return methodPattern;
     }
 
+    /**
+     * Sets the method pattern used to identify invocations for removal.
+     *
+     * @param methodPattern the method pattern
+     */
     public void setMethodPattern(String methodPattern) {
         this.methodPattern = methodPattern;
     }

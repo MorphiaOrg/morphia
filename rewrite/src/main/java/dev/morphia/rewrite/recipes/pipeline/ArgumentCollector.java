@@ -20,6 +20,10 @@ import org.openrewrite.java.tree.JavaType.Method;
 import static dev.morphia.rewrite.recipes.RewriteUtils.findMorphiaDependencies;
 import static java.util.Arrays.stream;
 
+/**
+ * Collects aggregation stage method invocations and rewrites them as static factory method calls
+ * suitable for use as pipeline stage arguments.
+ */
 public class ArgumentCollector {
     @NotNull
     private final Class<?> type;
@@ -30,6 +34,13 @@ public class ArgumentCollector {
 
     private final JavaTemplate template;
 
+    /**
+     * Creates an ArgumentCollector for the given stage type and method name.
+     *
+     * @param type    the stage class that owns the factory method
+     * @param method  the factory method name on the stage class
+     * @param imports additional types required by the generated template
+     */
     public ArgumentCollector(Class<?> type, String method, Class<?>... imports) {
         this.type = type;
         this.method = method;
@@ -48,6 +59,14 @@ public class ArgumentCollector {
                 .build();
     }
 
+    /**
+     * Tests whether the given invocation matches this collector; if so, converts it to a stage argument and adds it to {@code args}.
+     *
+     * @param visitor    the current visitor, used for import management and cursor access
+     * @param args       the list of collected stage arguments to append to when matched
+     * @param invocation the method invocation to test and potentially collect
+     * @return {@code true} if the invocation matched and was collected
+     */
     public boolean matches(JavaIsoVisitor<ExecutionContext> visitor, List<Expression> args, MethodInvocation invocation) {
         try {
             if (!matcher.matches(invocation)) {

@@ -31,9 +31,20 @@ import static dev.morphia.rewrite.recipes.pipeline.PipelineRewriteRecipes.javaTy
 import static java.util.List.of;
 import static org.openrewrite.java.JavaParser.fromJavaVersion;
 
+/**
+ * An OpenRewrite recipe that moves an alternate collection name argument from {@code aggregate(String)} into a call
+ * to {@code AggregationOptions}.
+ */
 public class AlternateAggregationCollection extends Recipe {
+    /** Creates a new instance. */
+    public AlternateAggregationCollection() {
+    }
+
     private static final Logger LOG = LoggerFactory.getLogger(AlternateAggregationCollection.class);
 
+    /**
+     * Matcher for {@code aggregate(String)} overloads on Datastore and MorphiaDatastore.
+     */
     public static final MethodMatcher AGGREGATE = new MultiMethodMatcher(
             methodMatcher(DATASTORE, "aggregate(java.lang.String)"),
             methodMatcher(DATASTORE + "Impl", "aggregate(java.lang.String)"),

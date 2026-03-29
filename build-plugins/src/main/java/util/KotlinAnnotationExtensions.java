@@ -44,8 +44,15 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static util.AnnotationBuilders.methodCase;
 
+/**
+ * Maven Mojo that generates Kotlin extension functions for Morphia annotation types.
+ */
 @Mojo(name = "morphia-annotations-kotlin", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class KotlinAnnotationExtensions extends AbstractMojo {
+
+    /** Creates a new Mojo instance. */
+    public KotlinAnnotationExtensions() {
+    }
 
     private Map<String, JavaAnnotationSource> builders = new TreeMap<>();
 

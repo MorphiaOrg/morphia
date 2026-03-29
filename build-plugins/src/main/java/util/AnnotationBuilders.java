@@ -35,8 +35,15 @@ import org.jboss.forge.roaster.model.source.MethodSource;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 
+/**
+ * Maven Mojo that generates builder classes for Morphia annotation types.
+ */
 @Mojo(name = "morphia-annotations", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class AnnotationBuilders extends AbstractMojo {
+
+    /** Creates a new Mojo instance. */
+    public AnnotationBuilders() {
+    }
 
     private final Map<String, JavaClassSource> builders = new TreeMap<>();
 
@@ -356,6 +363,13 @@ public class AnnotationBuilders extends AbstractMojo {
 
     }
 
+    /**
+     * Converts a title-case or upper-camel-case name to method-case (lower camel-case).
+     * For example, {@code "GetName"} becomes {@code "getName"}.
+     *
+     * @param name the name to convert
+     * @return the converted method-case name
+     */
     public static String methodCase(String name) {
         return name.substring(0, 1).toLowerCase() + name.substring(1);
     }

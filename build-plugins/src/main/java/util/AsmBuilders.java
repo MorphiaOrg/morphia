@@ -35,8 +35,15 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static util.AnnotationBuilders.methodCase;
 
+/**
+ * Maven Mojo that generates ASM-based builder classes for Morphia annotation types.
+ */
 @Mojo(name = "morphia-annotations-asm", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class AsmBuilders extends AbstractMojo {
+
+    /** Creates a new Mojo instance. */
+    public AsmBuilders() {
+    }
 
     private final Map<String, JavaAnnotationSource> builders = new TreeMap<>();
 

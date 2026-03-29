@@ -13,7 +13,14 @@ import static jdk.javadoc.doclet.Taglet.Location.METHOD;
 import static jdk.javadoc.doclet.Taglet.Location.PACKAGE;
 import static jdk.javadoc.doclet.Taglet.Location.TYPE;
 
+/**
+ * A Javadoc taglet that renders a notice indicating that the tagged element is internal and subject to change.
+ */
 public class InternalTaglet extends DocTaglet {
+    /** Creates a new instance. */
+    public InternalTaglet() {
+    }
+
     @Override
     public Set<Location> getAllowedLocations() {
         return Set.of(METHOD, TYPE, PACKAGE, CONSTRUCTOR, FIELD);

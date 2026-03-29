@@ -20,7 +20,15 @@ import org.openrewrite.java.tree.JavaType.Method;
 
 import static java.util.Collections.emptyList;
 
+/**
+ * An OpenRewrite recipe that moves {@code FindOptions} arguments from terminal query methods
+ * ({@code first()}, {@code iterator()}, {@code stream()}) to {@code Datastore#find()}.
+ */
 public class QueryFindOptions extends Recipe {
+    /** Creates a new instance. */
+    public QueryFindOptions() {
+    }
+
     private static final MethodMatcher QUERY_METHOD = new MethodMatcher("dev.morphia.query.Query *(..)");
     private static final MethodMatcher MORPHIA_CURSOR_METHOD = new MethodMatcher("dev.morphia.query.MorphiaCursor *(..)");
 

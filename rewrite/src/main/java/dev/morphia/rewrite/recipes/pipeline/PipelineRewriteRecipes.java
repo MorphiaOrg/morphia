@@ -21,11 +21,23 @@ import org.openrewrite.java.tree.JavaType.Method;
 
 import static dev.morphia.rewrite.recipes.RewriteUtils.methodMatcher;
 
+/**
+ * The top-level OpenRewrite recipe that groups all pipeline rewrite sub-recipes.
+ */
 public class PipelineRewriteRecipes extends Recipe {
+    /** Creates a new instance. */
+    public PipelineRewriteRecipes() {
+    }
+
+    /** Fully-qualified name of the {@link Aggregation} interface. */
     public static final String AGGREGATION = Aggregation.class.getName();
     private static final JavaType AGGREGATION_TYPE = JavaType.buildType(AGGREGATION);
+    /** Fully-qualified name of the {@link Datastore} interface. */
     public static final String DATASTORE = Datastore.class.getName();
 
+    /**
+     * Matcher for all {@code aggregate(..)} overloads across Datastore, DatastoreImpl, and MorphiaDatastore.
+     */
     public static final MethodMatcher AGGREGATE_ANYTHING = new MultiMethodMatcher(
             methodMatcher(DATASTORE, "aggregate(..)"),
             methodMatcher(DATASTORE + "Impl", "aggregate(..)"),
@@ -35,6 +47,14 @@ public class PipelineRewriteRecipes extends Recipe {
     private static final Array STAGE_ARRAY_TYPE = new Array(null,
             JavaType.buildType(Stage.class.getName()), null);
 
+    /**
+     * Resolves and returns the OpenRewrite {@link JavaType} for the given class, optionally parameterized.
+     *
+     * @param <T>            the expected return type
+     * @param type           the class to resolve
+     * @param parameterTypes optional type parameter classes
+     * @return the resolved JavaType
+     */
     public static @NotNull <T> T javaType(Class<?> type, Class<?>... parameterTypes) {
         JavaType.Class javaType = (JavaType.Class) JavaType.buildType(type.getName());
         if (parameterTypes.length != 0) {
@@ -67,6 +87,13 @@ public class PipelineRewriteRecipes extends Recipe {
                 new AggregationOptionsConstructorToFactory());
     }
 
+    /**
+     * Adds a stage to an existing {@code pipeline()} call, or creates a new {@code pipeline()} call if none exists in the chain.
+     *
+     * @param invocation the current aggregation method invocation
+     * @param stage      the stage expression to add
+     * @return the updated expression with the stage included in the pipeline
+     */
     public static Expression addStage(MethodInvocation invocation, MethodInvocation stage) {
         var pipeline = findPipeline(invocation);
         if (pipeline != null) {

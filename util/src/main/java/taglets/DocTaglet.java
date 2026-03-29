@@ -35,7 +35,14 @@ import static jdk.javadoc.doclet.Taglet.Location.OVERVIEW;
 import static jdk.javadoc.doclet.Taglet.Location.PACKAGE;
 import static jdk.javadoc.doclet.Taglet.Location.TYPE;
 
+/**
+ * Base class for custom Javadoc taglets that generate links to external documentation.
+ */
 public abstract class DocTaglet implements Taglet {
+
+    /** Creates a new instance. */
+    protected DocTaglet() {
+    }
 
     @Override
     public Set<Location> getAllowedLocations() {
@@ -61,8 +68,19 @@ public abstract class DocTaglet implements Taglet {
         return buf.toString();
     }
 
+    /**
+     * Returns the header label displayed in the generated Javadoc section.
+     *
+     * @return the section header text
+     */
     protected abstract String getHeader();
 
+    /**
+     * Generates an HTML anchor element linking to the documentation page for the given tag text.
+     *
+     * @param text the tag content, optionally containing a path and a display label separated by a space
+     * @return the HTML link string
+     */
     protected String genLink(String text) {
         String relativePath = text;
         String display = text;
@@ -76,5 +94,10 @@ public abstract class DocTaglet implements Taglet {
         return String.format("<a href='%s%s'>%s</a>", getBaseDocURI(), relativePath, display);
     }
 
+    /**
+     * Returns the base URI for the documentation this taglet links to.
+     *
+     * @return the base documentation URI
+     */
     protected abstract String getBaseDocURI();
 }

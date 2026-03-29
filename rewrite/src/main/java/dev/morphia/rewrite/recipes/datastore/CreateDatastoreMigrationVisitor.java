@@ -26,7 +26,14 @@ import static dev.morphia.rewrite.recipes.RewriteUtils.findMorphiaDependencies;
 import static dev.morphia.rewrite.recipes.RewriteUtils.methodMatcher;
 import static org.openrewrite.java.JavaParser.fromJavaVersion;
 
+/**
+ * Visitor that rewrites {@code Morphia.createDatastore(...)} calls to use the new {@code MorphiaConfig}-based signatures.
+ */
 public class CreateDatastoreMigrationVisitor extends JavaIsoVisitor<ExecutionContext> {
+    /** Creates a new instance. */
+    public CreateDatastoreMigrationVisitor() {
+    }
+
     private static final Logger LOG = LoggerFactory.getLogger(CreateDatastoreMigrationVisitor.class);
     private static final MethodMatcher CREATE_DATASTORE = methodMatcher("dev.morphia.Morphia", "createDatastore(..)");
     private static final String OLD_TYPE = "dev.morphia.mapping.MapperOptions";
@@ -70,6 +77,12 @@ public class CreateDatastoreMigrationVisitor extends JavaIsoVisitor<ExecutionCon
         }
     }
 
+    /**
+     * Synthesizes a {@code MorphiaConfig.load().database(...)} call using the supplied database name expression.
+     *
+     * @param databaseName the expression representing the database name
+     * @return the synthesized MorphiaConfig expression
+     */
     public Expression synthesizeMorphiaConfig(Expression databaseName) {
         JavaTemplate databaseCall = JavaTemplate.builder("MorphiaConfig.load().database(#{any(java.lang.String)})")
                 .javaParser(fromJavaVersion()
@@ -80,6 +93,13 @@ public class CreateDatastoreMigrationVisitor extends JavaIsoVisitor<ExecutionCon
         return databaseCall.apply(new Cursor(getCursor(), databaseName), databaseName.getCoordinates().replace(), databaseName);
     }
 
+    /**
+     * Converts an existing MapperOptions builder expression to a {@code MorphiaConfig} expression with the given database name.
+     *
+     * @param databaseName the expression representing the database name, or null if none
+     * @param builder      the original builder expression to convert
+     * @return the converted MorphiaConfig expression
+     */
     public Expression convertToMorphiaConfig(@Nullable Expression databaseName, Expression builder) {
         if (builder instanceof Identifier identifier) {
             return reuseArgument(getCursor(), identifier, databaseName);
@@ -95,6 +115,14 @@ public class CreateDatastoreMigrationVisitor extends JavaIsoVisitor<ExecutionCon
         return applied.withSelect(builder);
     }
 
+    /**
+     * Reuses an existing identifier as the select target of a new {@code MorphiaConfig.load().database(...)} call.
+     *
+     * @param cursor       the current cursor position
+     * @param identifier   the identifier to reuse as the select
+     * @param databaseName the expression representing the database name, or null if none
+     * @return the constructed expression
+     */
     public static Expression reuseArgument(Cursor cursor, Identifier identifier, @Nullable Expression databaseName) {
         Builder dbBuilder = JavaTemplate.builder("MorphiaConfig.load().database(#{any()})");
         JavaTemplate databaseCall = dbBuilder
