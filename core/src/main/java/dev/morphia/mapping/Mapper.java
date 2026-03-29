@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -243,6 +244,34 @@ public class Mapper {
     }
 
     /**
+     * Tries to get the {@link EntityModel} for the object (type). If it isn't mapped, but can be mapped, create a new
+     * class and cache it (without validating). If it isn't mapped and cannot be mapped, return empty.
+     *
+     * @param type the type to process
+     * @return optional EntityModel for the object given or empty
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public Optional<EntityModel> tryGetEntityModel(Class type) {
+        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
+        if (actual == null && MorphiaProxy.class.equals(type)) {
+            return Optional.empty();
+        }
+        EntityModel model = mappedEntities.get(actual.getName());
+
+        if (model == null) {
+            if (!isMappable(actual)) {
+                return Optional.empty();
+            }
+            model = register(new EntityModelBuilder(this, type)
+                    .build());
+        }
+
+        return Optional.of(model);
+    }
+
+    /**
      * Gets the {@link EntityModel} for the object (type). If it isn't mapped, create a new class and cache it (without validating).
      *
      * @param type the type to process
@@ -252,21 +281,8 @@ public class Mapper {
      */
     @MorphiaInternal
     public EntityModel getEntityModel(Class type) {
-        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
-        if (actual == null && MorphiaProxy.class.equals(type)) {
-            throw new NotMappableException(type);
-        }
-        EntityModel model = mappedEntities.get(actual.getName());
-
-        if (model == null) {
-            if (!isMappable(actual)) {
-                throw new NotMappableException(type);
-            }
-            model = register(new EntityModelBuilder(this, type)
-                    .build());
-        }
-
-        return model;
+        return tryGetEntityModel(type)
+                .orElseThrow(() -> new NotMappableException(type));
     }
 
     /**
@@ -280,16 +296,10 @@ public class Mapper {
         if (entity == null) {
             return null;
         }
-        try {
-            final EntityModel model = getEntityModel(entity.getClass());
-            final PropertyModel idField = model.getIdProperty();
-            if (idField != null) {
-                return idField.getValue(entity);
-            }
-        } catch (NotMappableException ignored) {
-        }
-
-        return null;
+        return tryGetEntityModel(entity.getClass())
+                .map(EntityModel::getIdProperty)
+                .map((idField) -> idField.getValue(entity))
+                .orElse(null);
     }
 
     /**
@@ -487,12 +497,7 @@ public class Mapper {
         Sofia.logConfiguredOperation("Mapper#mapPackage");
         try {
             getClasses(packageName)
-                    .forEach(type -> {
-                        try {
-                            getEntityModel(type);
-                        } catch (NotMappableException ignored) {
-                        }
-                    });
+                    .forEach(this::tryGetEntityModel);
         } catch (ClassNotFoundException e) {
             throw new MappingException("Could not get map classes from package " + packageName, e);
         }
