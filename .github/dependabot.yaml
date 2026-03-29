@@ -3,12 +3,20 @@ updates:
   - package-ecosystem: maven
     directory: "/"
     schedule:
-      interval: daily
+      interval: weekly
+    groups:
+      maven-dependencies:
+        patterns:
+          - "*"
   - package-ecosystem: maven
     target-branch: 2.5.x
     directory: "/"
     schedule:
-      interval: daily
+      interval: weekly
+    groups:
+      maven-dependencies:
+        patterns:
+          - "*"
     ignore:
       - dependency-name: "*"
         update-types: [ "version-update:semver-major" ]
@@ -16,11 +24,19 @@ updates:
     target-branch: 2.4.x
     directory: "/"
     schedule:
-      interval: daily
+      interval: weekly
+    groups:
+      maven-dependencies:
+        patterns:
+          - "*"
     ignore:
       - dependency-name: "*"
         update-types: [ "version-update:semver-major" ]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: daily
+      interval: weekly
+    groups:
+      github-actions:
+        patterns:
+          - "*"
