@@ -146,6 +146,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         this.queryFactory = datastore.queryFactory;
         this.operations = datastore.operations;
         codecRegistry = buildRegistry();
+        this.database = this.database.withCodecRegistry(codecRegistry);
     }
 
     private CodecRegistry buildRegistry() {
@@ -348,8 +349,7 @@ public class DatastoreImpl implements AdvancedDatastore {
         EntityModel entityModel = mapper.getEntityModel(type);
         String collectionName = entityModel.getCollectionName();
 
-        MongoCollection<T> collection = getDatabase().getCollection(collectionName, type)
-                .withCodecRegistry(codecRegistry);
+        MongoCollection<T> collection = getDatabase().getCollection(collectionName, type);
 
         Entity annotation = entityModel.getEntityAnnotation();
         if (annotation != null && !annotation.concern().equals("")) {
