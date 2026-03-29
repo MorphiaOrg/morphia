@@ -7,7 +7,7 @@ jobs:
   Build:
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
-      maven-flags: "-e -DskipTests
+      maven-flags: "-e -DskipTests"
 
   Release:
     needs:
