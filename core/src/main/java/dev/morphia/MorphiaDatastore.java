@@ -476,7 +476,7 @@ public class MorphiaDatastore implements Datastore {
                 .iterator()
                 .next();
 
-        refreshCodec.decode(new DocumentReader(id), DecoderContext.builder().checkedDiscriminator(true).build());
+        refreshCodec.decode(new DocumentReader(id, mapper.getConversions()), DecoderContext.builder().checkedDiscriminator(true).build());
     }
 
     @Override

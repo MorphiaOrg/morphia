@@ -16,6 +16,7 @@ import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
+import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 
@@ -117,6 +118,14 @@ public interface Mapper {
      */
     @MorphiaInternal
     DiscriminatorLookup getDiscriminatorLookup();
+
+    /**
+     * @return the Conversions instance used by this Mapper
+     * @morphia.internal
+     * @hidden
+     */
+    @MorphiaInternal
+    Conversions getConversions();
 
     /**
      * Tries to get the {@link EntityModel} for the object (type). If it isn't mapped, but can be mapped, create a new

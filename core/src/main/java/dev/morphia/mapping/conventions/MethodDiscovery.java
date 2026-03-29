@@ -80,6 +80,7 @@ public class MethodDiscovery implements MorphiaConvention {
                     .annotations(discoverAnnotations(methods.getter, methods.setter))
                     .accessor(new MethodAccessor(getTargetMethod(model, target, methods.getter),
                             getTargetMethod(model, target, methods.setter)))
+                    .conversions(mapper.getConversions())
                     .mappedName(discoverMappedName(mapper, propertyModel)));
         }
     }

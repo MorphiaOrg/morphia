@@ -280,7 +280,8 @@ public abstract class TemplatedTestBase extends TestBase {
                     .filter(m -> m.getName().equals(key) && m.getParameterCount() == 1)
                     .findFirst().orElseThrow();
             try {
-                method.invoke(options, Conversions.convert(document.get(key), method.getParameterTypes()[0]));
+                method.invoke(options, new Conversions(Thread.currentThread().getContextClassLoader()).convert(document.get(key),
+                        method.getParameterTypes()[0]));
             } catch (ReflectiveOperationException e) {
                 throw new RuntimeException(e);
             }

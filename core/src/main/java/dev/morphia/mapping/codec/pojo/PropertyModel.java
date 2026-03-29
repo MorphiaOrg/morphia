@@ -72,6 +72,7 @@ public class PropertyModel {
     private final EntityModel entityModel;
     private Codec<? super Object> codec;
     private Class<?> normalizedType;
+    private Conversions conversions;
 
     public PropertyModel(EntityModel entityModel) {
         this.entityModel = entityModel;
@@ -79,6 +80,7 @@ public class PropertyModel {
 
     public PropertyModel(EntityModel owner, PropertyModel other) {
         entityModel = owner;
+        conversions = other.conversions;
 
         name = other.name;
         typeData = other.typeData;
@@ -383,7 +385,20 @@ public class PropertyModel {
      * @param value    the value to set
      */
     public void setValue(Object instance, @Nullable Object value) {
-        getAccessor().set(instance, Conversions.convert(value, getType()));
+        Conversions c = conversions != null ? conversions
+                : new Conversions(Thread.currentThread().getContextClassLoader());
+        getAccessor().set(instance, c.convert(value, getType()));
+    }
+
+    /**
+     * Sets the Conversions instance to use for type conversions.
+     *
+     * @param conversions the Conversions instance
+     * @return this PropertyModel
+     */
+    public PropertyModel conversions(Conversions conversions) {
+        this.conversions = conversions;
+        return this;
     }
 
     /**
