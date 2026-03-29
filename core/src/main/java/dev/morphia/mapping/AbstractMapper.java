@@ -63,8 +63,21 @@ public abstract class AbstractMapper implements Mapper {
      */
     @MorphiaInternal
     protected AbstractMapper(MorphiaConfig config) {
+        this(config, Thread.currentThread().getContextClassLoader());
+    }
+
+    /**
+     * Creates an AbstractMapper with the given config and classloader.
+     *
+     * @param config      the config to use
+     * @param classLoader the classloader to use for class and resource resolution
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    protected AbstractMapper(MorphiaConfig config, ClassLoader classLoader) {
         this.config = config;
-        this.contextClassLoader = Thread.currentThread().getContextClassLoader();
+        this.contextClassLoader = classLoader;
         this.discriminatorLookup = new DiscriminatorLookup();
     }
 

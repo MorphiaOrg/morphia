@@ -28,6 +28,19 @@ public class ReflectiveMapper extends AbstractMapper {
     }
 
     /**
+     * Creates a ReflectiveMapper with the given config and classloader.
+     *
+     * @param config      the config to use
+     * @param classLoader the classloader to use for class and resource resolution
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public ReflectiveMapper(MorphiaConfig config, ClassLoader classLoader) {
+        super(config, classLoader);
+    }
+
+    /**
      * Copy constructor.
      *
      * @param other the original to copy
