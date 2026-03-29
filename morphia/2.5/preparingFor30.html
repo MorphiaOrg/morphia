@@ -330,7 +330,7 @@ still exist and continue to clutter the API.  Morphia 3.0 will see the removal o
 <div class="paragraph">
 <p>One thing to note on a handful of deprecations is that the method isn&#8217;t going away as such as the usage of it will change in a breaking
 manner.  e.g.,
-<a href="https://github.com/MorphiaOrg/morphia/tree/2.5.x/core/src/main/java/dev/morphia/query/Query.java">Query#update(UpdateOperator first, UpdateOperator&#8230;&#8203; updates)</a>.  This method
+<a href="https://github.com/MorphiaOrg/morphia/blob/master/core/src/main/java/dev/morphia/query/Query.java">Query#update(UpdateOperator first, UpdateOperator&#8230;&#8203; updates)</a>.  This method
 will, in 3.0, return an <code>UpdateResult</code> like the <code>execute()</code> method you have to call today does.  Migrating to this new form when 3.0
 arrives should be as simple as removing that last method call in the chain.</p>
 </div>
@@ -358,11 +358,10 @@ property which can be removed at your leisure.</p>
   </div>
 </main>
 </div>
-<!--
 <footer class="footer">
-    <p>Copyright (C) 2020-2026
+    <img src="https://raw.githubusercontent.com/commonhaus/artwork/main/foundation/brand/svg/CF_logo_horizontal_single_default.svg" height="30" alt=""/><br />
+    Copyright © <a href="https://www.commonhaus.org">Morphia</a>. All rights reserved. For details on our trademarks, please visit our <a href="https://www.commonhaus.org/policies/trademark-policy/">Trademark Policy</a> and <a href="https://www.commonhaus.org/trademarks/">Trademark List</a>. Trademarks of third parties are owned by their respective holders and their mention here does not suggest any endorsement or association.
 </footer>
--->
 <script src="../../_/js/site.js"></script>
 <script async src="../../_/js/vendor/highlight.js"></script>
   </body>
