@@ -1,5 +1,12 @@
 name: Quick Build
 
+on:
+  push:
+    branches:
+      - 2.5.x
+    paths-ignore:
+      - '.github/**'
+
 jobs:
   Build:
     uses: evanchooly/workflows/.github/workflows/build.yml@master
