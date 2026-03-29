@@ -88,12 +88,6 @@
             <version>1.0.2</version>
         </dependency>
         <dependency>
-            <groupId>dev.morphia.morphia</groupId>
-            <artifactId>util</artifactId>
-            <version>${project.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
             <version>3.0.0</version>
