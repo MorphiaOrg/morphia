@@ -127,30 +127,6 @@
                         <forkCount>1C</forkCount>
                     </configuration>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.12.0</version>
-                    <configuration>
-                        <failOnError>true</failOnError>
-                        <failOnWarnings>false</failOnWarnings>
-                        <doclint>all</doclint>
-                        <doctitle>Morphia ${project.version}</doctitle>
-                        <links>
-                            <link>${driver-javadoc.link}/driver-core</link>
-                            <link>${driver-javadoc.link}/bson</link>
-                            <link>${driver-javadoc.link}/driver-sync</link>
-                        </links>
-                        <windowtitle>Morphia</windowtitle>
-                        <tagletArtifacts>
-                            <tagletArtifact>
-                                <groupId>${project.groupId}</groupId>
-                                <artifactId>util</artifactId>
-                                <version>${project.version}</version>
-                            </tagletArtifact>
-                        </tagletArtifacts>
-                    </configuration>
-                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
