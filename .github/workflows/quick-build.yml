@@ -2,10 +2,6 @@ name: Quick Build
 
 on:
   push:
-    branches:
-      - 2.5.x
-    paths-ignore:
-      - '.github/**'
 
 jobs:
   Build:
