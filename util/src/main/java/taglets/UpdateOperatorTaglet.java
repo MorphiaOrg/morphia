@@ -30,6 +30,10 @@ import com.sun.source.doctree.UnknownBlockTagTree;
  */
 public class UpdateOperatorTaglet extends ManualTaglet {
 
+    /** Creates a new instance. */
+    public UpdateOperatorTaglet() {
+    }
+
     @Override
     public String getName() {
         return "update.operator";

@@ -15,7 +15,14 @@ import org.openrewrite.java.JavaIsoVisitor;
 import org.openrewrite.java.MethodMatcher;
 import org.openrewrite.java.tree.J.MethodInvocation;
 
+/**
+ * An OpenRewrite recipe that renames method invocations, typically to migrate away from deprecated names.
+ */
 public class RenameMethod extends Recipe {
+
+    /** Creates a new instance. */
+    public RenameMethod() {
+    }
 
     @Option(displayName = "Method pattern", description = "A pattern to match method declarations for removal.", example = "java.lang.StringBuilder append(java.lang.String)")
     private List<String> methodPatterns;
@@ -30,6 +37,11 @@ public class RenameMethod extends Recipe {
         return "Renames a method usually due to deprecation.";
     }
 
+    /**
+     * Sets the method patterns used to identify invocations to rename.
+     *
+     * @param methodPatterns the method patterns
+     */
     public void setMethodPatterns(List<String> methodPatterns) {
         this.methodPatterns = methodPatterns;
     }

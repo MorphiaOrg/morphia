@@ -36,7 +36,14 @@ import static dev.morphia.rewrite.recipes.pipeline.PipelineRewriteRecipes.AGGREG
 import static dev.morphia.rewrite.recipes.pipeline.PipelineRewriteRecipes.DATASTORE;
 import static java.util.Collections.emptyList;
 
+/**
+ * An OpenRewrite recipe that rewrites aggregation pipelines from fluent stage-named methods to {@code pipeline(Stage...)} calls.
+ */
 public class PipelineRewrite extends Recipe {
+    /** Creates a new instance. */
+    public PipelineRewrite() {
+    }
+
     private static final Logger LOG = LoggerFactory.getLogger(PipelineRewrite.class);
 
     static final List<MethodMatcher> matchers = List.of(
@@ -84,6 +91,9 @@ public class PipelineRewrite extends Recipe {
         }
     };
 
+    /**
+     * Matchers for all {@code aggregate(..)} overloads on Datastore and MorphiaDatastore.
+     */
     public static final List<MethodMatcher> AGGREGATES = List.of(
             methodMatcher(DATASTORE, "aggregate(..)"),
             methodMatcher(MorphiaDatastore.class.getTypeName(), "aggregate(..)"));
@@ -128,6 +138,12 @@ public class PipelineRewrite extends Recipe {
         return new PipelineRewriteVisitor();
     }
 
+    /**
+     * Returns an indentation string derived from the whitespace in the given {@link Space}, suitable for formatting pipeline arguments.
+     *
+     * @param after the space following a select expression
+     * @return the indentation string
+     */
     public static String getIndent(Space after) {
         var whitespace = after.getWhitespace();
         if (!whitespace.startsWith("\n")) {

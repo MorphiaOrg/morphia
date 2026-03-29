@@ -226,7 +226,8 @@ public final class AccumulatorExpressions {
     /**
      * Returns the lowest expression value for each group.
      *
-     * @param value the value
+     * @param value  the value
+     * @param others additional values
      * @return the new expression
      * @aggregation.expression $min
      * @mongodb.server.release 5.0

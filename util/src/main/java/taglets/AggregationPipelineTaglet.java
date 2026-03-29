@@ -30,6 +30,10 @@ import com.sun.source.doctree.UnknownBlockTagTree;
  */
 public class AggregationPipelineTaglet extends ManualTaglet {
 
+    /** Creates a new instance. */
+    public AggregationPipelineTaglet() {
+    }
+
     @Override
     public String getName() {
         return "aggregation.stage";

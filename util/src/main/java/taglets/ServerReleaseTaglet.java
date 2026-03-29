@@ -21,6 +21,10 @@ package taglets;
  */
 public class ServerReleaseTaglet extends DocTaglet {
 
+    /** Creates a new instance. */
+    public ServerReleaseTaglet() {
+    }
+
     @Override
     public String getName() {
         return "mongodb.server.release";

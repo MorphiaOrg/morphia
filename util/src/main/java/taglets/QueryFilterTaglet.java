@@ -30,6 +30,10 @@ import com.sun.source.doctree.UnknownBlockTagTree;
  */
 public class QueryFilterTaglet extends ManualTaglet {
 
+    /** Creates a new instance. */
+    public QueryFilterTaglet() {
+    }
+
     @Override
     public String getName() {
         return "query.filter";

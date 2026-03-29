@@ -21,7 +21,6 @@ import static dev.morphia.mapping.DateStorage.UTC;
 import static dev.morphia.mapping.DiscriminatorFunction.simpleName;
 import static dev.morphia.mapping.NamingStrategy.camelCase;
 import static dev.morphia.mapping.NamingStrategy.identity;
-import static dev.morphia.mapping.PropertyDiscovery.FIELDS;
 import static java.lang.Boolean.FALSE;
 
 /**
@@ -183,7 +182,7 @@ public class ManualMorphiaConfig implements MorphiaConfig {
 
     @Override
     public PropertyDiscovery propertyDiscovery() {
-        return orDefault(propertyDiscovery, FIELDS);
+        return orDefault(propertyDiscovery, PropertyDiscovery.FIELDS);
     }
 
     @Override

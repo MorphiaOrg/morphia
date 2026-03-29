@@ -6,7 +6,15 @@ import dev.morphia.rewrite.recipes.config.MorphiaConfigMigration;
 
 import org.openrewrite.Recipe;
 
+/**
+ * An OpenRewrite recipe that migrates {@code createDatastore} calls to the current Morphia API,
+ * combining config migration with the datastore creation recipe.
+ */
 public class CreateDatastoreMigration extends Recipe {
+    /** Creates a new instance. */
+    public CreateDatastoreMigration() {
+    }
+
     @Override
     public String getDisplayName() {
         return "Update calls to createDatastore";

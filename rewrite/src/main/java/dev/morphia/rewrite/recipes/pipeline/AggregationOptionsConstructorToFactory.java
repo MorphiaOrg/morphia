@@ -16,12 +16,15 @@ import org.openrewrite.java.tree.JavaType;
 import static dev.morphia.rewrite.recipes.RewriteUtils.runtimeClasspathPaths;
 
 /**
- * Converts {@code new AggregationOptions()} to {@code AggregationOptions.aggregationOptions()}.
+ * An OpenRewrite recipe that converts {@code new AggregationOptions()} to {@code AggregationOptions.aggregationOptions()}.
  * <p>
- * In Morphia 3.x, the AggregationOptions constructor is private and the static factory method
- * must be used instead.
+ * In Morphia 3.x, the AggregationOptions constructor is private and the static factory method must be used instead.
  */
 public class AggregationOptionsConstructorToFactory extends Recipe {
+    /** Creates a new instance. */
+    public AggregationOptionsConstructorToFactory() {
+    }
+
     private static final String AGGREGATION_OPTIONS_TYPE = AggregationOptions.class.getName();
 
     @Override

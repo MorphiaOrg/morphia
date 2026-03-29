@@ -28,15 +28,24 @@ import org.semver4j.Semver;
 
 import static java.util.List.of;
 
+/**
+ * Maven Mojo that generates documentation configuration files for the Morphia docs site.
+ */
 @SuppressWarnings({ "rawtypes", "unchecked" })
 @Mojo(name = "docs-config", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class DocsConfig extends AbstractMojo {
+
+    /** Creates a new Mojo instance. */
+    public DocsConfig() {
+    }
+
     private static final File DOCS_ANTORA_YML;
 
     private final ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
 
     private boolean master;
 
+    /** The root directory of the project, resolved by locating the nearest {@code .git} directory. */
     protected static File PROJECT_ROOT = new File(".").getAbsoluteFile();
 
     static {

@@ -6,22 +6,47 @@ import java.util.regex.Pattern;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.MethodNode;
 
+/**
+ * Utility methods for string and ASM type transformations used during Critter code generation.
+ */
 public class ExtensionFunctions {
+
+    /** @hidden */
+    private ExtensionFunctions() {
+    }
 
     private static final Pattern SNAKE_CASE_REGEX = Pattern.compile("(?<=.)[A-Z]");
 
+    /**
+     * Converts a string to title case by capitalizing the first character.
+     *
+     * @param s the input string
+     * @return the string with the first character upper-cased, or the original string if null or empty
+     */
     public static String titleCase(String s) {
         if (s == null || s.isEmpty())
             return s;
         return "%c%s".formatted(Character.toUpperCase(s.charAt(0)), s.substring(1));
     }
 
+    /**
+     * Converts a string to method (camel) case by lower-casing the first character.
+     *
+     * @param s the input string
+     * @return the string with the first character lower-cased, or the original string if null or empty
+     */
     public static String methodCase(String s) {
         if (s == null || s.isEmpty())
             return s;
         return "%c%s".formatted(Character.toLowerCase(s.charAt(0)), s.substring(1));
     }
 
+    /**
+     * Converts a camelCase string to snake_case.
+     *
+     * @param s the camelCase input string
+     * @return the snake_case equivalent
+     */
     public static String snakeCase(String s) {
         return SNAKE_CASE_REGEX.matcher(s).replaceAll(m -> "_" + m.group().toLowerCase(Locale.getDefault()));
     }
@@ -36,6 +61,7 @@ public class ExtensionFunctions {
      * @param method the method node
      * @param entity the class to check for matching fields when method name doesn't follow standard
      *               getter naming
+     * @return the property name derived from the getter method
      */
     public static String getterToPropertyName(MethodNode method, Class<?> entity) {
         String methodName = method.name;

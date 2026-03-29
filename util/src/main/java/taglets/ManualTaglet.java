@@ -32,6 +32,10 @@ import static jdk.javadoc.doclet.Taglet.Location.PACKAGE;
  */
 public class ManualTaglet extends DocTaglet {
 
+    /** Creates a new instance. */
+    public ManualTaglet() {
+    }
+
     @Override
     public Set<Location> getAllowedLocations() {
         return new HashSet<>(asList(CONSTRUCTOR, METHOD, FIELD, PACKAGE));

@@ -8,7 +8,14 @@ import javax.lang.model.element.Element;
 
 import com.sun.source.doctree.DocTree;
 
+/**
+ * A Javadoc taglet that renders a notice indicating that the tagged element is experimental.
+ */
 public class ExperimentalTaglet extends DocTaglet {
+    /** Creates a new instance. */
+    public ExperimentalTaglet() {
+    }
+
     @Override
     public Set<Location> getAllowedLocations() {
         return EnumSet.allOf(Location.class);

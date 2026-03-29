@@ -20,11 +20,22 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
+/**
+ * Discovers entity properties (fields or getter methods) from a parsed ASM {@link ClassNode}
+ * and produces the corresponding {@link PropertyModelGenerator} instances.
+ */
 public class PropertyFinder {
     private final Map<Class<?>, Object> providerMap;
     private final CritterClassLoader classLoader;
     private final boolean runtimeMode;
 
+    /**
+     * Creates a new PropertyFinder.
+     *
+     * @param mapper      the Morphia mapper used to obtain property annotation providers
+     * @param classLoader the class loader for registering generated accessor classes
+     * @param runtimeMode {@code true} to generate VarHandle-based accessors instead of synthetic method accessors
+     */
     public PropertyFinder(Mapper mapper, CritterClassLoader classLoader, boolean runtimeMode) {
         this.providerMap = new LinkedHashMap<>();
         for (var provider : mapper.getConfig().propertyAnnotationProviders()) {
@@ -34,6 +45,13 @@ public class PropertyFinder {
         this.runtimeMode = runtimeMode;
     }
 
+    /**
+     * Discovers the properties for the given entity and returns a generator for each one.
+     *
+     * @param entityType the entity class being processed
+     * @param classNode  the ASM class node for the entity
+     * @return a list of property model generators, one per discovered property
+     */
     public List<PropertyModelGenerator> find(Class<?> entityType, ClassNode classNode) {
         List<PropertyModelGenerator> models = new ArrayList<>();
         List<MethodNode> methods = discoverPropertyMethods(classNode);

@@ -17,7 +17,15 @@ import org.slf4j.LoggerFactory;
 import static dev.morphia.rewrite.recipes.RewriteUtils.findMorphiaDependencies;
 import static dev.morphia.rewrite.recipes.RewriteUtils.methodMatcher;
 
+/**
+ * Visitor that rewrites {@code MapperOptions.builder()} calls to {@code MorphiaConfig.load()} and removes
+ * deprecated builder method invocations.
+ */
 public class MorphiaConfigMigrationVisitor extends JavaIsoVisitor<ExecutionContext> {
+    /** Creates a new instance. */
+    public MorphiaConfigMigrationVisitor() {
+    }
+
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaConfigMigrationVisitor.class);
 
     private static final String MAPPER_OPTIONS_BUILDER = "dev.morphia.mapping.MapperOptions.Builder";

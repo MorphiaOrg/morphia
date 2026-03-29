@@ -20,8 +20,16 @@ import org.apache.maven.plugins.annotations.Parameter;
 
 import static java.util.Collections.singletonList;
 
+/**
+ * Maven Mojo that generates the RevAPI configuration file used for binary compatibility checks.
+ */
 @Mojo(name = "revapi-config", defaultPhase = LifecyclePhase.GENERATE_RESOURCES)
 public class RevApiConfig extends AbstractMojo {
+
+    /** Creates a new Mojo instance. */
+    public RevApiConfig() {
+    }
+
     @Parameter(name = "input", defaultValue = "${project.basedir}/config/revapi-input.json")
     private File input;
     @Parameter(name = "seed", defaultValue = "${project.basedir}/../config/revapi-seed.json")
@@ -29,6 +37,12 @@ public class RevApiConfig extends AbstractMojo {
     @Parameter(name = "output", defaultValue = "${project.basedir}/config/revapi.json")
     private File output;
 
+    /**
+     * Entry point for running the RevAPI config generation standalone outside of a Maven build.
+     *
+     * @param args command-line arguments (unused)
+     * @throws MojoExecutionException if config generation fails
+     */
     public static void main(String[] args) throws MojoExecutionException {
         RevApiConfig config = new RevApiConfig();
         config.input = new File("../config/revapi-input-new.json");

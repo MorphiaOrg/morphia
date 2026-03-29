@@ -12,7 +12,15 @@ import org.openrewrite.java.tree.J;
 import org.openrewrite.java.tree.J.ClassDeclaration;
 import org.openrewrite.java.tree.J.MethodInvocation;
 
+/**
+ * An OpenRewrite recipe that unwraps {@code Expressions.field()} and {@code Expressions.value()} calls,
+ * replacing them with their single argument since field names can now be used directly.
+ */
 public class UnwrapFieldExpressions extends Recipe {
+    /** Creates a new instance. */
+    public UnwrapFieldExpressions() {
+    }
+
     @Override
     public String getDisplayName() {
         return "Unwrap field() and value()";

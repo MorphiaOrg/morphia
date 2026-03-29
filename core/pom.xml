@@ -79,6 +79,7 @@
                             <version>${project.version}</version>
                         </tagletArtifact>
                     </tagletArtifacts>
+                    <sourcepath>${project.build.sourceDirectory}:${project.build.directory}/generated-sources/sofia:${project.build.directory}/generated-sources/morphia-annotations</sourcepath>
                 </configuration>
             </plugin>
             <plugin>

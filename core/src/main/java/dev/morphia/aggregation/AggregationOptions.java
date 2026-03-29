@@ -44,6 +44,11 @@ public class AggregationOptions implements ReadConfigurable<AggregationOptions>,
     private AggregationOptions() {
     }
 
+    /**
+     * Creates a new {@code AggregationOptions} instance.
+     *
+     * @return a new {@code AggregationOptions}
+     */
     public static AggregationOptions aggregationOptions() {
         return new AggregationOptions();
     }

@@ -13,7 +13,15 @@ import org.openrewrite.java.MethodMatcher;
 import org.openrewrite.java.tree.Expression;
 import org.openrewrite.java.tree.J.MethodInvocation;
 
+/**
+ * An OpenRewrite recipe that collapses chained {@code LogicalFilter.add()} calls into the corresponding
+ * logical filter method ({@code and}, {@code or}, {@code nor}) as varargs.
+ */
 public class LogicalFilterAdd extends Recipe {
+    /** Creates a new instance. */
+    public LogicalFilterAdd() {
+    }
+
     private static final MethodMatcher MATCHER = new MethodMatcher("dev.morphia.query.filters.LogicalFilter add(..)");
 
     private static final List<String> LOGICAL = List.of("and", "nor", "or");
