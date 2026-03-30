@@ -48,8 +48,16 @@ public final class DiscriminatorLookup {
      *
      */
     public DiscriminatorLookup() {
-        this.classLoader = Thread.currentThread().getContextClassLoader();
+        this(Thread.currentThread().getContextClassLoader());
+    }
 
+    /**
+     * Creates a new lookup with the given ClassLoader.
+     *
+     * @param classLoader the ClassLoader to use for class resolution
+     */
+    public DiscriminatorLookup(ClassLoader classLoader) {
+        this.classLoader = classLoader;
     }
 
     /**

@@ -27,11 +27,11 @@ public class MorphiaTypesCodecProvider implements CodecProvider {
     public MorphiaTypesCodecProvider(MorphiaDatastore datastore) {
         this.datastore = datastore;
         addCodec(new MorphiaDateCodec(datastore));
-        addCodec(new MorphiaMapCodec(datastore));
+        addCodec(new MorphiaMapCodec(datastore, datastore.getMapper().getConversions()));
         addCodec(new MorphiaLocalDateTimeCodec(datastore));
         addCodec(new MorphiaLocalTimeCodec());
         addCodec(new PolygonCoordinatesCodec());
-        addCodec(new ClassCodec());
+        addCodec(new ClassCodec(datastore.getClassLoader()));
         addCodec(new LocaleCodec());
         addCodec(new ObjectCodec(datastore));
         //        addCodec(new PatternCodec());

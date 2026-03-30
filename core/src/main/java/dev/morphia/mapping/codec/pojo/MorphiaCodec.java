@@ -6,6 +6,7 @@ import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.DiscriminatorLookup;
 import dev.morphia.mapping.MappingException;
+import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.PropertyCodecRegistryImpl;
 import dev.morphia.sofia.Sofia;
 
@@ -23,7 +24,6 @@ import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static dev.morphia.mapping.codec.Conversions.convert;
 import static org.bson.codecs.configuration.CodecRegistries.fromCodecs;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
@@ -45,6 +45,7 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     private final CodecRegistry registry;
     private final PropertyCodecRegistry propertyCodecRegistry;
     private final DiscriminatorLookup discriminatorLookup;
+    private final Conversions conversions;
     private EntityEncoder<T> encoder;
     private EntityDecoder<T> decoder;
     private MorphiaDatastore datastore;
@@ -57,12 +58,15 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
      * @param propertyCodecProviders the codec provider for properties
      * @param discriminatorLookup    the discriminator to type lookup
      * @param registry               the codec registry for lookups
+     * @param conversions            the Conversions instance to use
      */
     public MorphiaCodec(MorphiaDatastore datastore, EntityModel model,
             List<PropertyCodecProvider> propertyCodecProviders,
-            DiscriminatorLookup discriminatorLookup, CodecRegistry registry) {
+            DiscriminatorLookup discriminatorLookup, CodecRegistry registry,
+            Conversions conversions) {
         this.datastore = datastore;
         this.discriminatorLookup = discriminatorLookup;
+        this.conversions = conversions;
 
         this.entityModel = model;
         this.registry = fromRegistries(fromCodecs(this), registry);
@@ -91,7 +95,7 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         if (!documentHasId(entity)) {
             if (idProperty != null) {
                 if (ObjectId.class.equals(idProperty.getType()) || String.class.equals(idProperty.getType())) {
-                    idProperty.setValue(entity, convert(new ObjectId(), idProperty.getType()));
+                    idProperty.setValue(entity, conversions.convert(new ObjectId(), idProperty.getType()));
                 } else {
                     LOG.warn(Sofia.noIdAndNotObjectId(entity.getClass().getName()));
                 }
@@ -119,6 +123,13 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
      */
     public MorphiaDatastore getDatastore() {
         return datastore;
+    }
+
+    /**
+     * @return the Conversions instance
+     */
+    public Conversions getConversions() {
+        return conversions;
     }
 
     /**

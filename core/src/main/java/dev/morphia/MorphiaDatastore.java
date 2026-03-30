@@ -113,6 +113,7 @@ public class MorphiaDatastore implements Datastore {
     private final QueryFactory queryFactory;
 
     public List<MorphiaCodecProvider> morphiaCodecProviders = new ArrayList<>();
+    private ClassLoader classLoader;
     private MongoDatabase database;
     private DatastoreOperations operations;
 
@@ -124,8 +125,21 @@ public class MorphiaDatastore implements Datastore {
      */
     @MorphiaInternal
     public MorphiaDatastore(MongoClient client, MorphiaConfig config) {
+        this(client, config, Thread.currentThread().getContextClassLoader());
+    }
+
+    /**
+     * @param client      the mongo client
+     * @param config      the config
+     * @param classLoader the classloader to use for class and resource resolution
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public MorphiaDatastore(MongoClient client, MorphiaConfig config, ClassLoader classLoader) {
+        this.classLoader = classLoader;
         this.mongoClient = client;
-        this.mapper = createMapper(config);
+        this.mapper = createMapper(config, classLoader);
         this.queryFactory = mapper.getConfig().queryFactory();
         importModels();
 
@@ -235,10 +249,17 @@ public class MorphiaDatastore implements Datastore {
         }
     }
 
-    private static Mapper createMapper(MorphiaConfig config) {
+    /**
+     * @return the classloader used by this Datastore
+     */
+    public ClassLoader getClassLoader() {
+        return classLoader;
+    }
+
+    private static Mapper createMapper(MorphiaConfig config, ClassLoader classLoader) {
         return switch (config.mapper()) {
             case CRITTER -> throw new MappingException(Sofia.mapperNotYetAvailable("CRITTER"));
-            case LEGACY -> new ReflectiveMapper(config);
+            case LEGACY -> new ReflectiveMapper(config, classLoader);
         };
     }
 
@@ -288,6 +309,7 @@ public class MorphiaDatastore implements Datastore {
      */
     public MorphiaDatastore(MorphiaDatastore datastore) {
         this.mongoClient = datastore.mongoClient;
+        this.classLoader = datastore.classLoader;
         this.database = mongoClient.getDatabase(datastore.mapper.getConfig().database());
         this.mapper = datastore.mapper.copy();
         this.queryFactory = datastore.queryFactory;
@@ -454,7 +476,7 @@ public class MorphiaDatastore implements Datastore {
                 .iterator()
                 .next();
 
-        refreshCodec.decode(new DocumentReader(id), DecoderContext.builder().checkedDiscriminator(true).build());
+        refreshCodec.decode(new DocumentReader(id, mapper.getConversions()), DecoderContext.builder().checkedDiscriminator(true).build());
     }
 
     @Override

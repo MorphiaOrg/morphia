@@ -20,6 +20,7 @@ import dev.morphia.EntityListener;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
+import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
@@ -53,6 +54,7 @@ public abstract class AbstractMapper implements Mapper {
     protected final MorphiaConfig config;
     protected final DiscriminatorLookup discriminatorLookup;
     protected final ClassLoader contextClassLoader;
+    private final Conversions conversions;
 
     /**
      * Creates an AbstractMapper with the given config.
@@ -63,9 +65,23 @@ public abstract class AbstractMapper implements Mapper {
      */
     @MorphiaInternal
     protected AbstractMapper(MorphiaConfig config) {
+        this(config, Thread.currentThread().getContextClassLoader());
+    }
+
+    /**
+     * Creates an AbstractMapper with the given config and classloader.
+     *
+     * @param config      the config to use
+     * @param classLoader the classloader to use for class and resource resolution
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    protected AbstractMapper(MorphiaConfig config, ClassLoader classLoader) {
         this.config = config;
-        this.contextClassLoader = Thread.currentThread().getContextClassLoader();
-        this.discriminatorLookup = new DiscriminatorLookup();
+        this.contextClassLoader = classLoader;
+        this.conversions = new Conversions(classLoader);
+        this.discriminatorLookup = new DiscriminatorLookup(classLoader);
     }
 
     /**
@@ -79,7 +95,8 @@ public abstract class AbstractMapper implements Mapper {
     protected AbstractMapper(AbstractMapper other) {
         this.config = other.config;
         this.contextClassLoader = other.contextClassLoader;
-        this.discriminatorLookup = new DiscriminatorLookup();
+        this.conversions = other.conversions;
+        this.discriminatorLookup = new DiscriminatorLookup(other.contextClassLoader);
         other.mappedEntities.values().forEach(this::clone);
         this.listeners.addAll(other.listeners);
     }
@@ -153,6 +170,17 @@ public abstract class AbstractMapper implements Mapper {
     @MorphiaInternal
     public DiscriminatorLookup getDiscriminatorLookup() {
         return discriminatorLookup;
+    }
+
+    /**
+     * @return the Conversions instance used by this Mapper
+     * @morphia.internal
+     * @hidden
+     */
+    @Override
+    @MorphiaInternal
+    public Conversions getConversions() {
+        return conversions;
     }
 
     @Override

@@ -8,6 +8,7 @@ import java.util.Set;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.internal.EntityBuilder;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
@@ -65,7 +66,7 @@ public class ExampleEntityModelTemplate extends CritterEntityModel {
     }
 
     @Override
-    public MorphiaInstanceCreator getInstanceCreator() {
+    public MorphiaInstanceCreator getInstanceCreator(Conversions conversions) {
         return null;
     }
 
