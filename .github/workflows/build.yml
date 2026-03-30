@@ -161,7 +161,7 @@ jobs:
     needs:
       - Release
     steps:
-      - name: Reenable the docs workflow
+      - name: Re-enable the docs workflow
         run: gh --repo MorphiaOrg/morphia-docs workflow enable Docs || true
         env:
           GH_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
@@ -177,6 +177,10 @@ jobs:
     needs:
       - Release
     steps:
+      - name: Re-enable the upgrade workflow
+        run: gh --repo MorphiaOrg/morphia-upgrade-testing workflow enable Upgrades || true
+        env:
+          GH_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
       - name: Invoke build
         run: gh workflow run Upgrades --repo MorphiaOrg/morphia-upgrade-testing --ref main
         env:

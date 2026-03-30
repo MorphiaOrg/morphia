@@ -1,0 +1,578 @@
+id: morphiaorg
+source_control:
+  settings:
+    - login: MorphiaOrg
+      id: 39916688
+      node_id: MDEyOk9yZ2FuaXphdGlvbjM5OTE2Njg4
+      url: https://api.github.com/orgs/MorphiaOrg
+      description: ""
+      name: null
+      company: null
+      blog: http://morphia.dev
+      location: null
+      email: null
+      twitter_username: null
+      is_verified: true
+      has_organization_projects: true
+      has_repository_projects: true
+      public_repos: 5
+      public_gists: 0
+      followers: 5
+      following: 0
+      created_at: 2018-06-04T15:15:17Z
+      updated_at: 2023-11-07T02:49:07Z
+      archived_at: null
+      type: Organization
+      total_private_repos: 3
+      owned_private_repos: 3
+      private_gists: 0
+      disk_usage: 492336
+      collaborators: 0
+      billing_email: jlee@antwerkz.com
+      default_repository_permission: read
+      members_can_create_repositories: true
+      two_factor_requirement_enabled: false
+      members_allowed_repository_creation_type: all
+      members_can_create_public_repositories: true
+      members_can_create_private_repositories: true
+      members_can_create_internal_repositories: false
+      members_can_create_pages: true
+      members_can_fork_private_repositories: false
+      web_commit_signoff_required: false
+      deploy_keys_enabled_for_repositories: false
+      members_can_delete_repositories: true
+      members_can_change_repo_visibility: true
+      members_can_invite_outside_collaborators: true
+      members_can_delete_issues: false
+      display_commenter_full_name_setting_enabled: false
+      readers_can_create_discussions: true
+      members_can_create_teams: true
+      members_can_view_dependency_insights: true
+      default_repository_branch: main
+      members_can_create_public_pages: true
+      members_can_create_private_pages: true
+      plan:
+        name: free
+        space: 976562499
+        private_repos: 10000
+        filled_seats: 2
+        seats: 0
+      advanced_security_enabled_for_new_repositories: false
+      dependabot_alerts_enabled_for_new_repositories: false
+      dependabot_security_updates_enabled_for_new_repositories: false
+      dependency_graph_enabled_for_new_repositories: false
+      secret_scanning_enabled_for_new_repositories: false
+      secret_scanning_push_protection_enabled_for_new_repositories: false
+      secret_scanning_push_protection_custom_link_enabled: false
+      secret_scanning_push_protection_custom_link: null
+      secret_scanning_validity_checks_enabled: false
+      repositories:
+        - id: 7252246
+          node_id: MDEwOlJlcG9zaXRvcnk3MjUyMjQ2
+          name: critter
+          full_name: MorphiaOrg/critter
+          private: false
+          description: Type safe criteria generator for morphia
+          fork: false
+          url: https://api.github.com/repos/MorphiaOrg/critter
+          created_at: 2012-12-20T04:40:05Z
+          updated_at: 2024-04-12T05:14:34Z
+          pushed_at: 2024-10-23T20:51:52Z
+          homepage: ""
+          size: 2112
+          stargazers_count: 14
+          watchers_count: 14
+          language: Kotlin
+          has_issues: true
+          has_projects: true
+          has_downloads: true
+          has_wiki: false
+          has_pages: false
+          has_discussions: false
+          forks_count: 2
+          archived: false
+          disabled: false
+          open_issues_count: 13
+          license:
+            key: other
+            name: Other
+            spdx_id: NOASSERTION
+            url: null
+            node_id: MDc6TGljZW5zZTA=
+          allow_forking: true
+          is_template: false
+          web_commit_signoff_required: false
+          has_pull_requests: true
+          pull_request_creation_policy: all
+          topics: []
+          visibility: public
+          forks: 2
+          open_issues: 13
+          watchers: 14
+          default_branch: master
+          permissions:
+            admin: true
+            maintain: true
+            push: true
+            triage: true
+            pull: true
+          security_and_analysis:
+            secret_scanning:
+              status: disabled
+            secret_scanning_push_protection:
+              status: disabled
+            dependabot_security_updates:
+              status: enabled
+            secret_scanning_non_provider_patterns:
+              status: disabled
+            secret_scanning_validity_checks:
+              status: disabled
+          custom_properties: {}
+          automated-security-fixes:
+            enabled: true
+            paused: true
+        - id: 9677593
+          node_id: MDEwOlJlcG9zaXRvcnk5Njc3NTkz
+          name: morphia
+          full_name: MorphiaOrg/morphia
+          private: false
+          description: MongoDB object-document mapper in Java based on https://github.com/mongodb/mongo-java-driver
+          fork: false
+          url: https://api.github.com/repos/MorphiaOrg/morphia
+          created_at: 2013-04-25T17:41:02Z
+          updated_at: 2026-03-06T20:43:59Z
+          pushed_at: 2026-03-06T20:43:55Z
+          homepage: ""
+          size: 480696
+          stargazers_count: 1676
+          watchers_count: 1676
+          language: Java
+          has_issues: true
+          has_projects: false
+          has_downloads: true
+          has_wiki: false
+          has_pages: true
+          has_discussions: true
+          forks_count: 454
+          archived: false
+          disabled: false
+          open_issues_count: 79
+          license:
+            key: apache-2.0
+            name: Apache License 2.0
+            spdx_id: Apache-2.0
+            url: https://api.github.com/licenses/apache-2.0
+            node_id: MDc6TGljZW5zZTI=
+          allow_forking: true
+          is_template: false
+          web_commit_signoff_required: false
+          has_pull_requests: true
+          pull_request_creation_policy: all
+          topics:
+            - java
+            - kotlin
+            - mongodb
+            - odm
+          visibility: public
+          forks: 454
+          open_issues: 79
+          watchers: 1676
+          default_branch: master
+          permissions:
+            admin: true
+            maintain: true
+            push: true
+            triage: true
+            pull: true
+          security_and_analysis:
+            secret_scanning:
+              status: enabled
+            secret_scanning_push_protection:
+              status: disabled
+            dependabot_security_updates:
+              status: enabled
+            secret_scanning_non_provider_patterns:
+              status: disabled
+            secret_scanning_validity_checks:
+              status: disabled
+          custom_properties: {}
+          automated-security-fixes:
+            enabled: true
+            paused: false
+        - id: 188264955
+          node_id: MDEwOlJlcG9zaXRvcnkxODgyNjQ5NTU=
+          name: reproducer
+          full_name: MorphiaOrg/reproducer
+          private: false
+          description: This repository provides a basic framework for building small
+            apps that showcase a particular issue.
+          fork: false
+          url: https://api.github.com/repos/MorphiaOrg/reproducer
+          created_at: 2019-05-23T15:54:00Z
+          updated_at: 2026-02-16T10:45:59Z
+          pushed_at: 2026-02-16T10:46:01Z
+          homepage: null
+          size: 182
+          stargazers_count: 1
+          watchers_count: 1
+          language: Java
+          has_issues: false
+          has_projects: false
+          has_downloads: true
+          has_wiki: false
+          has_pages: false
+          has_discussions: false
+          forks_count: 13
+          archived: false
+          disabled: false
+          open_issues_count: 2
+          license:
+            key: apache-2.0
+            name: Apache License 2.0
+            spdx_id: Apache-2.0
+            url: https://api.github.com/licenses/apache-2.0
+            node_id: MDc6TGljZW5zZTI=
+          allow_forking: true
+          is_template: true
+          web_commit_signoff_required: false
+          has_pull_requests: true
+          pull_request_creation_policy: all
+          topics: []
+          visibility: public
+          forks: 13
+          open_issues: 2
+          watchers: 1
+          default_branch: master
+          permissions:
+            admin: true
+            maintain: true
+            push: true
+            triage: true
+            pull: true
+          security_and_analysis:
+            secret_scanning:
+              status: disabled
+            secret_scanning_push_protection:
+              status: disabled
+            dependabot_security_updates:
+              status: enabled
+            secret_scanning_non_provider_patterns:
+              status: disabled
+            secret_scanning_validity_checks:
+              status: disabled
+          custom_properties: {}
+          automated-security-fixes:
+            enabled: true
+            paused: false
+        - id: 231254142
+          node_id: MDEwOlJlcG9zaXRvcnkyMzEyNTQxNDI=
+          name: morphia-audit
+          full_name: MorphiaOrg/morphia-audit
+          private: true
+          description: A (probably) temporary project to audit coverage of certain
+            aspects of Morphia and driver support
+          fork: false
+          url: https://api.github.com/repos/MorphiaOrg/morphia-audit
+          created_at: 2020-01-01T19:16:59Z
+          updated_at: 2023-01-28T04:24:15Z
+          pushed_at: 2021-08-23T21:15:21Z
+          homepage: null
+          size: 72
+          stargazers_count: 0
+          watchers_count: 0
+          language: Kotlin
+          has_issues: true
+          has_projects: true
+          has_downloads: true
+          has_wiki: false
+          has_pages: false
+          has_discussions: false
+          forks_count: 0
+          archived: true
+          disabled: false
+          open_issues_count: 2
+          license:
+            key: apache-2.0
+            name: Apache License 2.0
+            spdx_id: Apache-2.0
+            url: https://api.github.com/licenses/apache-2.0
+            node_id: MDc6TGljZW5zZTI=
+          allow_forking: false
+          is_template: false
+          web_commit_signoff_required: false
+          has_pull_requests: true
+          pull_request_creation_policy: all
+          topics: []
+          visibility: private
+          forks: 0
+          open_issues: 2
+          watchers: 0
+          default_branch: master
+          permissions:
+            admin: true
+            maintain: true
+            push: true
+            triage: true
+            pull: true
+          security_and_analysis:
+            secret_scanning:
+              status: disabled
+            secret_scanning_push_protection:
+              status: disabled
+            dependabot_security_updates:
+              status: disabled
+            secret_scanning_non_provider_patterns:
+              status: disabled
+            secret_scanning_validity_checks:
+              status: disabled
+          custom_properties: {}
+          automated-security-fixes:
+            enabled: false
+            paused: false
+        - id: 245568476
+          node_id: MDEwOlJlcG9zaXRvcnkyNDU1Njg0NzY=
+          name: morphia-docs
+          full_name: MorphiaOrg/morphia-docs
+          private: false
+          description: Repository for the website and reference materials for Morphia
+          fork: false
+          url: https://api.github.com/repos/MorphiaOrg/morphia-docs
+          created_at: 2020-03-07T04:32:28Z
+          updated_at: 2025-12-02T02:28:40Z
+          pushed_at: 2025-12-02T02:28:37Z
+          homepage: null
+          size: 8941
+          stargazers_count: 0
+          watchers_count: 0
+          language: HTML
+          has_issues: true
+          has_projects: true
+          has_downloads: true
+          has_wiki: true
+          has_pages: false
+          has_discussions: false
+          forks_count: 1
+          archived: false
+          disabled: false
+          open_issues_count: 2
+          license: null
+          allow_forking: true
+          is_template: false
+          web_commit_signoff_required: false
+          has_pull_requests: true
+          pull_request_creation_policy: all
+          topics: []
+          visibility: public
+          forks: 1
+          open_issues: 2
+          watchers: 0
+          default_branch: master
+          permissions:
+            admin: true
+            maintain: true
+            push: true
+            triage: true
+            pull: true
+          security_and_analysis:
+            secret_scanning:
+              status: disabled
+            secret_scanning_push_protection:
+              status: disabled
+            dependabot_security_updates:
+              status: enabled
+            secret_scanning_non_provider_patterns:
+              status: disabled
+            secret_scanning_validity_checks:
+              status: disabled
+          custom_properties: {}
+          automated-security-fixes:
+            enabled: true
+            paused: true
+        - id: 766707162
+          node_id: R_kgDOLbMF2g
+          name: morphia-upgrade-testing
+          full_name: MorphiaOrg/morphia-upgrade-testing
+          private: false
+          description: this repository provides for up to date testing of current
+            openrewrite recipes for the 3.0 upgrade of Morphia
+          fork: false
+          url: https://api.github.com/repos/MorphiaOrg/morphia-upgrade-testing
+          created_at: 2024-03-04T00:54:21Z
+          updated_at: 2026-03-02T02:41:58Z
+          pushed_at: 2026-03-02T02:41:53Z
+          homepage: null
+          size: 94
+          stargazers_count: 0
+          watchers_count: 0
+          language: Makefile
+          has_issues: true
+          has_projects: true
+          has_downloads: true
+          has_wiki: true
+          has_pages: false
+          has_discussions: false
+          forks_count: 0
+          archived: false
+          disabled: false
+          open_issues_count: 0
+          license: null
+          allow_forking: true
+          is_template: false
+          web_commit_signoff_required: false
+          has_pull_requests: true
+          pull_request_creation_policy: all
+          topics: []
+          visibility: public
+          forks: 0
+          open_issues: 0
+          watchers: 0
+          default_branch: main
+          permissions:
+            admin: true
+            maintain: true
+            push: true
+            triage: true
+            pull: true
+          security_and_analysis:
+            secret_scanning:
+              status: disabled
+            secret_scanning_push_protection:
+              status: disabled
+            dependabot_security_updates:
+              status: disabled
+            secret_scanning_non_provider_patterns:
+              status: disabled
+            secret_scanning_validity_checks:
+              status: disabled
+          custom_properties: {}
+          automated-security-fixes:
+            enabled: false
+            paused: true
+        - id: 796478488
+          node_id: R_kgDOL3lMGA
+          name: benchmarks
+          full_name: MorphiaOrg/benchmarks
+          private: true
+          description: null
+          fork: false
+          url: https://api.github.com/repos/MorphiaOrg/benchmarks
+          created_at: 2024-05-06T02:47:38Z
+          updated_at: 2024-12-15T20:33:21Z
+          pushed_at: 2025-03-05T01:24:16Z
+          homepage: null
+          size: 239
+          stargazers_count: 0
+          watchers_count: 0
+          language: Java
+          has_issues: true
+          has_projects: true
+          has_downloads: true
+          has_wiki: false
+          has_pages: false
+          has_discussions: false
+          forks_count: 0
+          archived: false
+          disabled: false
+          open_issues_count: 5
+          license:
+            key: apache-2.0
+            name: Apache License 2.0
+            spdx_id: Apache-2.0
+            url: https://api.github.com/licenses/apache-2.0
+            node_id: MDc6TGljZW5zZTI=
+          allow_forking: false
+          is_template: false
+          web_commit_signoff_required: false
+          has_pull_requests: true
+          pull_request_creation_policy: all
+          topics: []
+          visibility: private
+          forks: 0
+          open_issues: 5
+          watchers: 0
+          default_branch: main
+          permissions:
+            admin: true
+            maintain: true
+            push: true
+            triage: true
+            pull: true
+          security_and_analysis:
+            secret_scanning:
+              status: disabled
+            secret_scanning_push_protection:
+              status: disabled
+            dependabot_security_updates:
+              status: disabled
+            secret_scanning_non_provider_patterns:
+              status: disabled
+            secret_scanning_validity_checks:
+              status: disabled
+          custom_properties: {}
+          automated-security-fixes:
+            enabled: false
+            paused: true
+        - id: 1174780912
+          node_id: R_kgDORgW78A
+          name: .github
+          full_name: MorphiaOrg/.github
+          private: true
+          description: Root project for MorphiaOrg projects
+          fork: false
+          url: https://api.github.com/repos/MorphiaOrg/.github
+          created_at: 2026-03-06T20:46:08Z
+          updated_at: 2026-03-06T20:58:17Z
+          pushed_at: 2026-03-06T20:58:14Z
+          homepage: null
+          size: 0
+          stargazers_count: 0
+          watchers_count: 0
+          language: null
+          has_issues: true
+          has_projects: true
+          has_downloads: true
+          has_wiki: false
+          has_pages: false
+          has_discussions: false
+          forks_count: 0
+          archived: false
+          disabled: false
+          open_issues_count: 0
+          license:
+            key: apache-2.0
+            name: Apache License 2.0
+            spdx_id: Apache-2.0
+            url: https://api.github.com/licenses/apache-2.0
+            node_id: MDc6TGljZW5zZTI=
+          allow_forking: false
+          is_template: false
+          web_commit_signoff_required: false
+          has_pull_requests: true
+          pull_request_creation_policy: all
+          topics: []
+          visibility: private
+          forks: 0
+          open_issues: 0
+          watchers: 0
+          default_branch: main
+          permissions:
+            admin: true
+            maintain: true
+            push: true
+            triage: true
+            pull: true
+          security_and_analysis:
+            secret_scanning:
+              status: disabled
+            secret_scanning_push_protection:
+              status: disabled
+            dependabot_security_updates:
+              status: disabled
+            secret_scanning_non_provider_patterns:
+              status: disabled
+            secret_scanning_validity_checks:
+              status: disabled
+          custom_properties: {}
+          automated-security-fixes:
+            enabled: false
+            paused: false
