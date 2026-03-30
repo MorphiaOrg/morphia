@@ -234,7 +234,10 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     }
 
     @Nullable
-    private Object collectIdValues(Object value) {
+    private Object collectIdValues(@Nullable Object value) {
+        if (value == null) {
+            return null;
+        }
         if (value instanceof Collection) {
             return ((Collection<?>) value).stream()
                     .map(o -> collectIdValues(o))
