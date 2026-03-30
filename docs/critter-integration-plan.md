@@ -50,9 +50,9 @@ after every PR is merged that completes a task, to ensure the issue tracking ref
 
 | Phase | Issue | Tasks | Status |
 |---|---|---|---|
-| Phase 1: Mapper interface + config | #4184 | 9 | In Progress |
-| Phase 2: VarHandle accessor generator | #4185 | 6 | Pending |
-| Phase 3: Convert Kotlin to Java | #4195 | 2 | Pending |
+| Phase 1: Mapper interface + config | #4184 | 9 | Complete |
+| Phase 2: VarHandle accessor generator | #4185 | 6 | Complete |
+| Phase 3: Convert Kotlin to Java | #4195 | 2 | Complete |
 | Phase 4: Move critter-core into core | #4186 | 8 | Pending |
 | Phase 5: CritterMapper implementation | #4187 | 9 | Pending |
 | Phase 6: Wire into MorphiaDatastore | #4188 | 5 | Pending |
@@ -466,13 +466,26 @@ Move relevant test files from `critter/core/src/test/java/` to `core/src/test/ja
 
 **File:** `core/src/main/java/dev/morphia/critter/parser/Generators.java`
 
-Before (static singleton, as produced by Phase 3.2 conversion):
+Before (lazy-initialized singleton, as produced by Phase 3.2 conversion):
 ```java
 public class Generators {
-    public static final String CONFIG_FILE = MORPHIA_CONFIG_PROPERTIES;
-    public static MorphiaConfig config = MorphiaConfig.load(CONFIG_FILE);
-    public static Mapper mapper = new Mapper(config);
-    public static MorphiaDefaultsConvention convention = new MorphiaDefaultsConvention();
+    public static final Generators INSTANCE = new Generators();
+    public String configFile = MorphiaConfigHelper.MORPHIA_CONFIG_PROPERTIES;
+    private MorphiaConfig config;
+    private Mapper mapper;
+    public MorphiaDefaultsConvention convention = new MorphiaDefaultsConvention();
+
+    private Generators() {}
+
+    public synchronized MorphiaConfig getConfig() {
+        if (config == null) config = MorphiaConfig.load(configFile);
+        return config;
+    }
+    public synchronized Mapper getMapper() {
+        if (mapper == null) mapper = new ReflectiveMapper(getConfig());
+        return mapper;
+    }
+    // ... static utility methods: wrap(), isArray(), asClass()
 }
 ```
 
