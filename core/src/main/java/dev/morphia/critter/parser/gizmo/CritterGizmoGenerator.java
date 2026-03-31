@@ -146,7 +146,7 @@ public class CritterGizmoGenerator {
      * @return the emitted property model generator
      */
     public PropertyModelGenerator propertyModelGenerator(Class<?> entityType, CritterClassLoader critterClassLoader, FieldNode field) {
-        return new PropertyModelGenerator(generators.getConfig(), entityType, critterClassLoader, field).emit();
+        return new PropertyModelGenerator(generators.getMapper().getConfig(), entityType, critterClassLoader, field).emit();
     }
 
     /**
@@ -158,7 +158,7 @@ public class CritterGizmoGenerator {
      * @return the emitted property model generator
      */
     public PropertyModelGenerator propertyModelGenerator(Class<?> entityType, CritterClassLoader critterClassLoader, MethodNode method) {
-        return new PropertyModelGenerator(generators.getConfig(), entityType, critterClassLoader, method).emit();
+        return new PropertyModelGenerator(generators.getMapper().getConfig(), entityType, critterClassLoader, method).emit();
     }
 
     /**

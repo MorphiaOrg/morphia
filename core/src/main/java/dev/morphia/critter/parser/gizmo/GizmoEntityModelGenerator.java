@@ -140,7 +140,7 @@ public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
         try (MethodCreator mc = getCreator().getMethodCreator("discriminatorKey", String.class)) {
             String key = entityAnnotation.discriminator();
             String result = Mapper.IGNORED_FIELDNAME.equals(key)
-                    ? generators.getConfig().discriminatorKey()
+                    ? generators.getMapper().getConfig().discriminatorKey()
                     : key;
             mc.returnValue(mc.load(result));
         }
@@ -148,7 +148,7 @@ public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
 
     private void discriminator() {
         try (MethodCreator mc = getCreator().getMethodCreator("discriminator", String.class)) {
-            String discriminator = generators.getConfig().discriminator()
+            String discriminator = generators.getMapper().getConfig().discriminator()
                     .apply(entity, entityAnnotation.discriminator());
             mc.returnValue(mc.load(discriminator));
         }
@@ -158,7 +158,7 @@ public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
         try (MethodCreator mc = getCreator().getMethodCreator("collectionName", String.class)) {
             String key = entityAnnotation.value();
             String result = Mapper.IGNORED_FIELDNAME.equals(key)
-                    ? generators.getConfig().collectionNaming().apply(entity.getSimpleName())
+                    ? generators.getMapper().getConfig().collectionNaming().apply(entity.getSimpleName())
                     : key;
             mc.returnValue(mc.load(result));
         }

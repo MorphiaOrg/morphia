@@ -19,7 +19,7 @@ public class GeneratorsTestHelper {
             synchronized (GeneratorsTestHelper.class) {
                 if (instance == null) {
                     MorphiaConfig config = new ManualMorphiaConfig();
-                    instance = new Generators(config, new ReflectiveMapper(config));
+                    instance = new Generators(new ReflectiveMapper(config));
                 }
             }
         }
