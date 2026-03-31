@@ -1,7 +1,7 @@
 package dev.morphia.critter.parser;
 
+import dev.morphia.config.ManualMorphiaConfig;
 import dev.morphia.config.MorphiaConfig;
-import dev.morphia.config.MorphiaConfigHelper;
 import dev.morphia.mapping.ReflectiveMapper;
 
 /**
@@ -18,7 +18,7 @@ public class GeneratorsTestHelper {
         if (instance == null) {
             synchronized (GeneratorsTestHelper.class) {
                 if (instance == null) {
-                    MorphiaConfig config = MorphiaConfig.load(MorphiaConfigHelper.MORPHIA_CONFIG_PROPERTIES);
+                    MorphiaConfig config = new ManualMorphiaConfig();
                     instance = new Generators(config, new ReflectiveMapper(config));
                 }
             }
