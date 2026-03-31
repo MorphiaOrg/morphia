@@ -1,22 +1,24 @@
 name: Update Critter Integration Progress
 
-# Runs whenever a PR is merged or a tracked issue is edited (e.g. checkbox ticked).
+# Runs whenever a commit lands on master (including PR merges) or a tracked issue is edited.
 # Recomputes phase and parent percentages using the formulas in docs/critter-integration-plan.md.
 
 on:
-  pull_request:
-    types: [closed]
+  push:
+    branches: [master]
   issues:
     types: [edited]
+  workflow_dispatch:
 
 jobs:
   update-progress:
     runs-on: ubuntu-latest
     permissions:
       issues: write
-    # Run on merged PRs, or edits to the parent/phase issues only
+    # Run on pushes to master, manual dispatch, or edits to the parent/phase issues only
     if: |
-      (github.event_name == 'pull_request' && github.event.pull_request.merged == true) ||
+      github.event_name == 'push' ||
+      github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'issues' && contains(
         fromJson('[4179, 4184, 4185, 4195, 4186, 4187, 4188, 4189, 4190]'),
         github.event.issue.number
