@@ -42,6 +42,8 @@ public class CritterMapper extends AbstractMapper {
      * Creates a CritterMapper with the given config.
      *
      * @param config the config to use
+     * @hidden
+     * @morphia.internal
      */
     @MorphiaInternal
     public CritterMapper(MorphiaConfig config) {
@@ -63,8 +65,13 @@ public class CritterMapper extends AbstractMapper {
      * copy. If sharing custom converters becomes necessary, consider adding a package-private
      * accessor on {@code AbstractMapper} for its {@code conversions} field.
      * </p>
+     *
+     * @param other the original to copy
+     * @hidden
+     * @morphia.internal
      */
-    private CritterMapper(CritterMapper other) {
+    @MorphiaInternal
+    public CritterMapper(CritterMapper other) {
         super(other.config, other.contextClassLoader);
         this.critterClassLoader = other.critterClassLoader;
         this.gizmoGenerator = other.gizmoGenerator;
@@ -126,7 +133,7 @@ public class CritterMapper extends AbstractMapper {
         } catch (ClassNotFoundException e) {
             return null;
         } catch (Exception e) {
-            LOG.error("Failed to load pre-generated model for {}: {}", type.getName(), e.getMessage());
+            LOG.warn("Failed to load pre-generated model for {}: {}", type.getName(), e.getMessage());
             return null;
         }
     }
@@ -144,7 +151,7 @@ public class CritterMapper extends AbstractMapper {
             return (EntityModel) ctor.newInstance(this);
         } catch (Exception e) {
             if (fallbackTypes.add(type.getName())) {
-                LOG.error("Runtime bytecode generation failed for {}; falling back to reflection: {}",
+                LOG.warn("Runtime bytecode generation failed for {}; falling back to reflection: {}",
                         type.getName(), e.getMessage());
             }
             return null;
