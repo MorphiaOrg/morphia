@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import dev.morphia.critter.ClassfileOutput;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.ReflectiveMapper;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
 import org.slf4j.Logger;
@@ -18,7 +17,7 @@ public class TestEntityModelGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(TestEntityModelGenerator.class);
 
     private final CritterEntityModel control;
-    private final Mapper mapper = new ReflectiveMapper(GeneratorsTestHelper.defaultGenerators().getMapper().getConfig());
+    private final Mapper mapper = GeneratorsTestHelper.defaultMapper();
     private final CritterClassLoader critterClassLoader = new CritterClassLoader();
 
     public TestEntityModelGenerator() {

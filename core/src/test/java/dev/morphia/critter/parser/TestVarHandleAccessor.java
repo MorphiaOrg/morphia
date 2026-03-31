@@ -14,7 +14,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import static dev.morphia.critter.parser.GeneratorsTestHelper.defaultGenerators;
+import static dev.morphia.critter.parser.GeneratorsTestHelper.defaultMapper;
 
 public class TestVarHandleAccessor {
     private CritterClassLoader classLoader;
@@ -22,7 +22,7 @@ public class TestVarHandleAccessor {
     @BeforeClass
     public void setup() {
         classLoader = new CritterClassLoader();
-        new CritterGizmoGenerator(defaultGenerators()).generate(Example.class, classLoader, true);
+        new CritterGizmoGenerator(defaultMapper()).generate(Example.class, classLoader, true);
     }
 
     @Test

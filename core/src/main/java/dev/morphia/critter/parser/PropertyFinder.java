@@ -11,6 +11,7 @@ import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator;
 import dev.morphia.critter.parser.gizmo.PropertyModelGenerator;
 import dev.morphia.critter.parser.java.CritterParser;
+import dev.morphia.mapping.Mapper;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Type;
@@ -32,18 +33,18 @@ public class PropertyFinder {
     /**
      * Creates a new PropertyFinder.
      *
-     * @param generators  the shared Generators providing config and mapper
+     * @param mapper      the Morphia mapper
      * @param classLoader the class loader for registering generated accessor classes
      * @param runtimeMode {@code true} to generate VarHandle-based accessors instead of synthetic method accessors
      */
-    public PropertyFinder(Generators generators, CritterClassLoader classLoader, boolean runtimeMode) {
+    public PropertyFinder(Mapper mapper, CritterClassLoader classLoader, boolean runtimeMode) {
         this.providerMap = new LinkedHashMap<>();
-        for (var provider : generators.getMapper().getConfig().propertyAnnotationProviders()) {
+        for (var provider : mapper.getConfig().propertyAnnotationProviders()) {
             providerMap.put(provider.provides(), provider);
         }
         this.classLoader = classLoader;
         this.runtimeMode = runtimeMode;
-        this.critterGizmoGenerator = new CritterGizmoGenerator(generators);
+        this.critterGizmoGenerator = new CritterGizmoGenerator(mapper);
     }
 
     /**

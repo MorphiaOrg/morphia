@@ -1,37 +1,14 @@
 package dev.morphia.critter.parser;
 
-import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.conventions.MorphiaDefaultsConvention;
-
 import org.objectweb.asm.Type;
 
 import static org.objectweb.asm.Type.ARRAY;
 
 /**
- * Provides a shared mapper and ASM type conversion utilities for Critter generators.
- * Configuration is accessed via {@link #getMapper()}{@code .getConfig()}.
+ * Static ASM type conversion utilities for Critter generators.
  */
 public class Generators {
-    private final Mapper mapper;
-    /** The default Morphia naming convention applied during code generation. */
-    public final MorphiaDefaultsConvention convention = new MorphiaDefaultsConvention();
-
-    /**
-     * Creates a new Generators instance with the given mapper.
-     *
-     * @param mapper the Morphia mapper
-     */
-    public Generators(Mapper mapper) {
-        this.mapper = mapper;
-    }
-
-    /**
-     * Returns the {@link Mapper}.
-     *
-     * @return the Morphia mapper
-     */
-    public Mapper getMapper() {
-        return mapper;
+    private Generators() {
     }
 
     /**
