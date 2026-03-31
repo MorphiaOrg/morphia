@@ -320,6 +320,11 @@
                 <scope>compile</scope>
             </dependency>
             <dependency>
+                <groupId>io.quarkus.gizmo</groupId>
+                <artifactId>gizmo</artifactId>
+                <version>1.9.0</version>
+            </dependency>
+            <dependency>
                 <groupId>net.bytebuddy</groupId>
                 <artifactId>byte-buddy</artifactId>
                 <version>1.18.7</version>
