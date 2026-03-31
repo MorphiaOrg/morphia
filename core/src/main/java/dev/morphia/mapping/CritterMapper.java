@@ -54,6 +54,15 @@ public class CritterMapper extends AbstractMapper {
     /**
      * Copy constructor — shares immutable CritterEntityModel references,
      * creates a new DiscriminatorLookup for session isolation.
+     * <p>
+     * Note: calls {@code super(config, classLoader)} rather than {@code super(other)} because
+     * {@code AbstractMapper}'s copy constructor calls {@code new EntityModel(original)} for every
+     * entity, which is incorrect for {@code CritterEntityModel}. As a side effect, this creates a
+     * fresh {@code Conversions} instance instead of sharing {@code other.conversions}. Any custom
+     * converters registered on the original mapper after construction will not be visible in the
+     * copy. If sharing custom converters becomes necessary, consider adding a package-private
+     * accessor on {@code AbstractMapper} for its {@code conversions} field.
+     * </p>
      */
     private CritterMapper(CritterMapper other) {
         super(other.config, other.contextClassLoader);
@@ -76,6 +85,9 @@ public class CritterMapper extends AbstractMapper {
         return new CritterMapper(this);
     }
 
+    // Synchronized to prevent concurrent threads from both passing the initial
+    // mappedEntities.get() check and racing to register the same type, which
+    // would cause a duplicate discriminator value error in DiscriminatorLookup.
     @Override
     @Nullable
     public synchronized EntityModel mapEntity(@Nullable Class type) {
