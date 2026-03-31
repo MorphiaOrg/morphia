@@ -129,6 +129,12 @@
                         </goals>
                         <phase>generate-test-resources</phase>
                     </execution>
+                    <execution>
+                        <id>morphia-annotations-asm</id>
+                        <goals>
+                            <goal>morphia-annotation-node</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
