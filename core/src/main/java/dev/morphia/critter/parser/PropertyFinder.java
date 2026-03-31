@@ -11,7 +11,6 @@ import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator;
 import dev.morphia.critter.parser.gizmo.PropertyModelGenerator;
 import dev.morphia.critter.parser.java.CritterParser;
-import dev.morphia.mapping.Mapper;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Type;
@@ -28,21 +27,23 @@ public class PropertyFinder {
     private final Map<Class<?>, Object> providerMap;
     private final CritterClassLoader classLoader;
     private final boolean runtimeMode;
+    private final CritterGizmoGenerator critterGizmoGenerator;
 
     /**
      * Creates a new PropertyFinder.
      *
-     * @param mapper      the Morphia mapper used to obtain property annotation providers
+     * @param generators  the shared Generators providing config and mapper
      * @param classLoader the class loader for registering generated accessor classes
      * @param runtimeMode {@code true} to generate VarHandle-based accessors instead of synthetic method accessors
      */
-    public PropertyFinder(Mapper mapper, CritterClassLoader classLoader, boolean runtimeMode) {
+    public PropertyFinder(Generators generators, CritterClassLoader classLoader, boolean runtimeMode) {
         this.providerMap = new LinkedHashMap<>();
-        for (var provider : mapper.getConfig().propertyAnnotationProviders()) {
+        for (var provider : generators.getMapper().getConfig().propertyAnnotationProviders()) {
             providerMap.put(provider.provides(), provider);
         }
         this.classLoader = classLoader;
         this.runtimeMode = runtimeMode;
+        this.critterGizmoGenerator = new CritterGizmoGenerator(generators);
     }
 
     /**
@@ -58,27 +59,27 @@ public class PropertyFinder {
         if (methods.isEmpty()) {
             List<FieldNode> fields = discoverAllFields(entityType, classNode);
             if (!runtimeMode) {
-                classLoader.register(entityType.getName(), CritterGizmoGenerator.INSTANCE.fieldAccessors(entityType, fields));
+                classLoader.register(entityType.getName(), critterGizmoGenerator.fieldAccessors(entityType, fields));
             }
             for (FieldNode field : fields) {
                 if (runtimeMode) {
-                    CritterGizmoGenerator.INSTANCE.varHandleAccessor(entityType, classLoader, field);
+                    critterGizmoGenerator.varHandleAccessor(entityType, classLoader, field);
                 } else {
-                    CritterGizmoGenerator.INSTANCE.propertyAccessor(entityType, classLoader, field);
+                    critterGizmoGenerator.propertyAccessor(entityType, classLoader, field);
                 }
-                models.add(CritterGizmoGenerator.INSTANCE.propertyModelGenerator(entityType, classLoader, field));
+                models.add(critterGizmoGenerator.propertyModelGenerator(entityType, classLoader, field));
             }
         } else {
             if (!runtimeMode) {
-                classLoader.register(entityType.getName(), CritterGizmoGenerator.INSTANCE.methodAccessors(entityType, methods));
+                classLoader.register(entityType.getName(), critterGizmoGenerator.methodAccessors(entityType, methods));
             }
             for (MethodNode method : methods) {
                 if (runtimeMode) {
-                    CritterGizmoGenerator.INSTANCE.varHandleAccessor(entityType, classLoader, method);
+                    critterGizmoGenerator.varHandleAccessor(entityType, classLoader, method);
                 } else {
-                    CritterGizmoGenerator.INSTANCE.propertyAccessor(entityType, classLoader, method);
+                    critterGizmoGenerator.propertyAccessor(entityType, classLoader, method);
                 }
-                models.add(CritterGizmoGenerator.INSTANCE.propertyModelGenerator(entityType, classLoader, method));
+                models.add(critterGizmoGenerator.propertyModelGenerator(entityType, classLoader, method));
             }
         }
         return models;

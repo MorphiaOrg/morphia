@@ -1,9 +1,7 @@
 package dev.morphia.critter.parser;
 
 import dev.morphia.config.MorphiaConfig;
-import dev.morphia.config.MorphiaConfigHelper;
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.ReflectiveMapper;
 import dev.morphia.mapping.conventions.MorphiaDefaultsConvention;
 
 import org.objectweb.asm.Type;
@@ -11,44 +9,40 @@ import org.objectweb.asm.Type;
 import static org.objectweb.asm.Type.ARRAY;
 
 /**
- * Singleton providing shared Morphia configuration, mapper, and ASM type conversion utilities for Critter generators.
+ * Provides shared Morphia configuration, mapper, and ASM type conversion utilities for Critter generators.
  */
 public class Generators {
-    /** The singleton instance of this class. */
-    public static final Generators INSTANCE = new Generators();
-
-    /** The path to the Morphia configuration properties file used to load {@link MorphiaConfig}. */
-    public String configFile = MorphiaConfigHelper.MORPHIA_CONFIG_PROPERTIES;
-
-    private MorphiaConfig config;
-    private Mapper mapper;
+    private final MorphiaConfig config;
+    private final Mapper mapper;
     /** The default Morphia naming convention applied during code generation. */
-    public MorphiaDefaultsConvention convention = new MorphiaDefaultsConvention();
+    public final MorphiaDefaultsConvention convention = new MorphiaDefaultsConvention();
 
-    private Generators() {
+    /**
+     * Creates a new Generators instance with the given configuration and mapper.
+     *
+     * @param config the Morphia configuration
+     * @param mapper the Morphia mapper
+     */
+    public Generators(MorphiaConfig config, Mapper mapper) {
+        this.config = config;
+        this.mapper = mapper;
     }
 
     /**
-     * Returns the lazily loaded {@link MorphiaConfig}, loading it from {@link #configFile} on first access.
+     * Returns the {@link MorphiaConfig}.
      *
      * @return the Morphia configuration
      */
-    public synchronized MorphiaConfig getConfig() {
-        if (config == null) {
-            config = MorphiaConfig.load(configFile);
-        }
+    public MorphiaConfig getConfig() {
         return config;
     }
 
     /**
-     * Returns the lazily initialized {@link Mapper}, creating a reflective mapper on first access.
+     * Returns the {@link Mapper}.
      *
      * @return the Morphia mapper
      */
-    public synchronized Mapper getMapper() {
-        if (mapper == null) {
-            mapper = new ReflectiveMapper(getConfig());
-        }
+    public Mapper getMapper() {
         return mapper;
     }
 

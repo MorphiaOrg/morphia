@@ -18,6 +18,8 @@ import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
 import io.github.classgraph.ClassGraph;
 
+import static dev.morphia.critter.parser.GeneratorsTestHelper.defaultGenerators;
+
 public class GeneratorTest {
     public static final CritterEntityModel entityModel;
     public static final CritterClassLoader critterClassLoader = new CritterClassLoader();
@@ -38,12 +40,12 @@ public class GeneratorTest {
         } catch (Exception ignored) {
         }
 
-        GizmoEntityModelGenerator gen = CritterGizmoGenerator.INSTANCE.generate(Example.class, critterClassLoader, false);
+        GizmoEntityModelGenerator gen = new CritterGizmoGenerator(defaultGenerators()).generate(Example.class, critterClassLoader, false);
         try {
             entityModel = (CritterEntityModel) critterClassLoader
                     .loadClass(gen.getGeneratedType())
                     .getConstructors()[0]
-                    .newInstance(Generators.INSTANCE.getMapper());
+                    .newInstance(defaultGenerators().getMapper());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

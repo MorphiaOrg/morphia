@@ -14,13 +14,15 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import static dev.morphia.critter.parser.GeneratorsTestHelper.defaultGenerators;
+
 public class TestVarHandleAccessor {
     private CritterClassLoader classLoader;
 
     @BeforeClass
     public void setup() {
         classLoader = new CritterClassLoader();
-        CritterGizmoGenerator.INSTANCE.generate(Example.class, classLoader, true);
+        new CritterGizmoGenerator(defaultGenerators()).generate(Example.class, classLoader, true);
     }
 
     @Test

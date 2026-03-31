@@ -18,7 +18,7 @@ public class TestEntityModelGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(TestEntityModelGenerator.class);
 
     private final CritterEntityModel control;
-    private final Mapper mapper = new ReflectiveMapper(Generators.INSTANCE.getConfig());
+    private final Mapper mapper = new ReflectiveMapper(GeneratorsTestHelper.defaultGenerators().getConfig());
     private final CritterClassLoader critterClassLoader = new CritterClassLoader();
 
     public TestEntityModelGenerator() {

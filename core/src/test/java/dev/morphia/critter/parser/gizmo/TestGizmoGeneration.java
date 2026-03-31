@@ -21,7 +21,6 @@ import dev.morphia.annotations.internal.IndexOptionsBuilder;
 import dev.morphia.annotations.internal.IndexesBuilder;
 import dev.morphia.critter.ClassfileOutput;
 import dev.morphia.critter.CritterClassLoader;
-import dev.morphia.critter.parser.Generators;
 import dev.morphia.critter.parser.asm.AddMethodAccessorMethods;
 import dev.morphia.critter.sources.Example;
 import dev.morphia.critter.sources.MethodExample;
@@ -42,6 +41,7 @@ import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.MethodDescriptor;
 
 import static com.mongodb.client.model.CollationCaseFirst.LOWER;
+import static dev.morphia.critter.parser.GeneratorsTestHelper.defaultGenerators;
 import static io.quarkus.gizmo.MethodDescriptor.ofMethod;
 
 public class TestGizmoGeneration {
@@ -135,7 +135,7 @@ public class TestGizmoGeneration {
 
     @Test
     public void testGizmo() throws Exception {
-        CritterGizmoGenerator.INSTANCE.generate(Example.class, critterClassLoader, false);
+        new CritterGizmoGenerator(defaultGenerators()).generate(Example.class, critterClassLoader, false);
         critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.AgeModel");
         Class<?> nameModel = critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.NameModel");
         invokeAll(PropertyModel.class, nameModel);
@@ -145,7 +145,7 @@ public class TestGizmoGeneration {
         critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.SalaryAccessor").getConstructor().newInstance();
 
         Class<?> loadClass = critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.ExampleEntityModel");
-        EntityModel model = (EntityModel) loadClass.getConstructors()[0].newInstance(Generators.INSTANCE.getMapper());
+        EntityModel model = (EntityModel) loadClass.getConstructors()[0].newInstance(defaultGenerators().getMapper());
         validate(model);
     }
 
