@@ -4,8 +4,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import dev.morphia.mapping.codec.pojo.PropertyModel;
-
 import net.bytebuddy.dynamic.loading.ByteArrayClassLoader;
 
 /**
@@ -14,10 +12,19 @@ import net.bytebuddy.dynamic.loading.ByteArrayClassLoader;
 public class CritterClassLoader extends ByteArrayClassLoader.ChildFirst {
 
     /**
-     * Creates a new CritterClassLoader with the Morphia class loader as the parent.
+     * Creates a new CritterClassLoader with the given parent classloader.
+     *
+     * @param parent the parent classloader used for delegation
+     */
+    public CritterClassLoader(ClassLoader parent) {
+        super(parent, Collections.emptyMap());
+    }
+
+    /**
+     * Creates a new CritterClassLoader with the current thread's context classloader as parent.
      */
     public CritterClassLoader() {
-        super(PropertyModel.class.getClassLoader(), Collections.emptyMap());
+        this(Thread.currentThread().getContextClassLoader());
     }
 
     /**
