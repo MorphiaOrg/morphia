@@ -29,11 +29,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>dev.morphia.morphia</groupId>
-            <artifactId>critter-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
         </dependency>

@@ -129,6 +129,12 @@
                         </goals>
                         <phase>generate-test-resources</phase>
                     </execution>
+                    <execution>
+                        <id>morphia-annotations-asm</id>
+                        <goals>
+                            <goal>morphia-annotation-node</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -173,6 +179,18 @@
             <artifactId>byte-buddy</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.quarkus.gizmo</groupId>
+            <artifactId>gizmo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-tree</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-util</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
@@ -212,6 +230,12 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-model</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.windup.decompiler</groupId>
+            <artifactId>decompiler-fernflower</artifactId>
+            <version>6.3.9.Final</version>
             <scope>test</scope>
         </dependency>
         <dependency>

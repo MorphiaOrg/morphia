@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.util.List;
 
 import dev.morphia.critter.CritterClassLoader;
-import dev.morphia.critter.parser.Generators;
 import dev.morphia.critter.parser.PropertyFinder;
 import dev.morphia.critter.parser.asm.AddFieldAccessorMethods;
 import dev.morphia.critter.parser.asm.AddMethodAccessorMethods;
+import dev.morphia.mapping.Mapper;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.ClassNode;
@@ -15,14 +15,19 @@ import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
 /**
- * Singleton facade that orchestrates the full Gizmo-based code generation pipeline for a Morphia entity,
+ * Facade that orchestrates the full Gizmo-based code generation pipeline for a Morphia entity,
  * including field/method accessor injection and property/entity model generation.
  */
 public class CritterGizmoGenerator {
-    /** The singleton instance of this generator. */
-    public static final CritterGizmoGenerator INSTANCE = new CritterGizmoGenerator();
+    private final Mapper mapper;
 
-    private CritterGizmoGenerator() {
+    /**
+     * Creates a new CritterGizmoGenerator with the given mapper.
+     *
+     * @param mapper the Morphia mapper
+     */
+    public CritterGizmoGenerator(Mapper mapper) {
+        this.mapper = mapper;
     }
 
     /**
@@ -45,7 +50,7 @@ public class CritterGizmoGenerator {
         } catch (IOException e) {
             throw new RuntimeException("Failed to read class %s".formatted(type.getName()), e);
         }
-        PropertyFinder propertyFinder = new PropertyFinder(Generators.INSTANCE.getMapper(), critterClassLoader, runtimeMode);
+        PropertyFinder propertyFinder = new PropertyFinder(mapper, critterClassLoader, runtimeMode);
 
         return entityModel(type, critterClassLoader, classNode, propertyFinder.find(type, classNode));
     }
@@ -141,7 +146,7 @@ public class CritterGizmoGenerator {
      * @return the emitted property model generator
      */
     public PropertyModelGenerator propertyModelGenerator(Class<?> entityType, CritterClassLoader critterClassLoader, FieldNode field) {
-        return new PropertyModelGenerator(Generators.INSTANCE.getConfig(), entityType, critterClassLoader, field).emit();
+        return new PropertyModelGenerator(mapper.getConfig(), entityType, critterClassLoader, field).emit();
     }
 
     /**
@@ -153,7 +158,7 @@ public class CritterGizmoGenerator {
      * @return the emitted property model generator
      */
     public PropertyModelGenerator propertyModelGenerator(Class<?> entityType, CritterClassLoader critterClassLoader, MethodNode method) {
-        return new PropertyModelGenerator(Generators.INSTANCE.getConfig(), entityType, critterClassLoader, method).emit();
+        return new PropertyModelGenerator(mapper.getConfig(), entityType, critterClassLoader, method).emit();
     }
 
     /**
@@ -167,6 +172,6 @@ public class CritterGizmoGenerator {
      */
     public GizmoEntityModelGenerator entityModel(Class<?> type, CritterClassLoader critterClassLoader,
             ClassNode classNode, List<PropertyModelGenerator> properties) {
-        return new GizmoEntityModelGenerator(type, critterClassLoader, classNode, properties).emit();
+        return new GizmoEntityModelGenerator(mapper, type, critterClassLoader, classNode, properties).emit();
     }
 }

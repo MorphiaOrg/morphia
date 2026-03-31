@@ -85,11 +85,6 @@
             <artifactId>morphia-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>dev.morphia.morphia</groupId>
-            <artifactId>critter-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-plugin-api</artifactId>
             <version>${maven.version}</version>
