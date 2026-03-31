@@ -21,7 +21,7 @@ class CritterProcessor(
 
     private val logger: Logger = LoggerFactory.getLogger(CritterProcessor::class.java)
     private val critterClassLoader = CritterClassLoader()
-    private val gizmoGenerator = CritterGizmoGenerator(ReflectiveMapper(config))
+    private val gizmoGenerator = CritterGizmoGenerator(ReflectiveMapper(config, critterClassLoader))
 
     fun process() {
         val entityClasses = findEntityClasses()
