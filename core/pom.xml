@@ -191,10 +191,6 @@
             <artifactId>asm-util</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jboss.forge.roaster</groupId>
-            <artifactId>roaster-jdt</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
