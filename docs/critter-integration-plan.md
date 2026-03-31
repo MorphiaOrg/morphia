@@ -39,14 +39,14 @@ When a phase reaches 100%, close the sub-issue and check its box in the parent i
 The parent issue title (#4179) reflects progress across **all tasks in all phases**:
 
 ```
-parent_percentage = (total_completed_tasks_across_all_phases / 55) * 100, rounded to nearest integer
+parent_percentage = (total_completed_tasks_across_all_phases / 56) * 100, rounded to nearest integer
 gh issue edit 4179 --repo MorphiaOrg/morphia --title "[XX%] Integrate critter-core into morphia-core"
 ```
 
 Update the issue titles after every task completion, not just after a phase closes.  These checkboxes and updates should be performed
 after every PR is merged that completes a task, to ensure the issue tracking reflects the current state of the project.
 
-### Phase table (55 tasks total)
+### Phase table (56 tasks total)
 
 | Phase | Issue | Tasks | Status |
 |---|---|---|---|
@@ -56,10 +56,10 @@ after every PR is merged that completes a task, to ensure the issue tracking ref
 | Phase 4: Move critter-core into core | #4186 | 8 | Pending |
 | Phase 5: CritterMapper implementation | #4187 | 9 | Pending |
 | Phase 6: Wire into MorphiaDatastore | #4188 | 5 | Pending |
-| Phase 7: Test infrastructure + CI | #4189 | 7 | Pending |
+| Phase 7: Test infrastructure + CI | #4189 | 8 | Pending |
 | Phase 8: Cleanup + documentation | #4190 | 9 | Pending |
 
-As tasks are added or removed, update the task count in this table and the total (55) in the formula above.
+As tasks are added or removed, update the task count in this table and the total (56) in the formula above.
 ---
 
 # Implementation Plan
@@ -75,7 +75,7 @@ As tasks are added or removed, update the task count in this table and the total
 | Fallback granularity | **Entity-type level** | If any part of generation fails for a type, the entire type falls back to reflection. No mixed models. |
 | `copy()` semantics | **Share immutable models** | `CritterEntityModel` is immutable (setters throw). `CritterMapper.copy()` shares model references, creates new `DiscriminatorLookup`. |
 | Module removal | **Last step** | Only after full test matrix is green with both mapper values. |
-| Dependencies | **Optional + fail-fast** | Gizmo, ASM, ByteBuddy, Roaster marked `<optional>true</optional>` in POM. If user selects CRITTER mapper but deps are missing, throw clear error at startup listing required deps. |
+| Dependencies | **Required (non-optional)** | Gizmo, ASM, ByteBuddy, Roaster are regular (non-optional) deps of morphia-core. They are always on the classpath so there is no need for a fail-fast dep check at startup. |
 
 ## Phase 1: Extract Mapper Interface and Add Config Option
 
@@ -392,44 +392,34 @@ All tests (largely unchanged from 3.1) must continue to pass against the convert
 
 ## Phase 4: Move Critter-Core into Morphia-Core
 
-**Goal:** Physically move Java source (converted in Phase 3), configure the build with optional bytecode-generation dependencies, and refactor `Generators` singleton.
+**Goal:** Physically move Java source (converted in Phase 3), configure the build with required bytecode-generation dependencies, and refactor `Generators` singleton.
 
-### 4.1 Add optional bytecode-generation dependencies to core
+### 4.1 Add bytecode-generation dependencies to core
 
 **File:** `core/pom.xml`
 
-Since the moved code is now pure Java, no Kotlin plugin is needed. Add only the optional deps required for bytecode generation:
+Since the moved code is now pure Java, no Kotlin plugin is needed. Add the required deps for bytecode generation as regular (non-optional) dependencies:
 
 ```xml
-<!-- Optional: Only needed when mapper=CRITTER -->
 <dependency>
     <groupId>io.quarkus.gizmo</groupId>
     <artifactId>gizmo</artifactId>
-    <optional>true</optional>
 </dependency>
 <dependency>
     <groupId>org.ow2.asm</groupId>
     <artifactId>asm-tree</artifactId>
-    <optional>true</optional>
 </dependency>
 <dependency>
     <groupId>org.ow2.asm</groupId>
     <artifactId>asm-util</artifactId>
-    <optional>true</optional>
 </dependency>
 <dependency>
     <groupId>net.bytebuddy</groupId>
     <artifactId>byte-buddy</artifactId>
-    <optional>true</optional>
-</dependency>
-<dependency>
-    <groupId>org.jboss.forge.roaster</groupId>
-    <artifactId>roaster-jdt</artifactId>
-    <optional>true</optional>
 </dependency>
 ```
 
-**Fail-fast check in `CritterMapper` constructor:** Attempt to load a marker class (e.g., `io.quarkus.gizmo.ClassCreator`) and throw a clear `MappingException` if missing, listing the required dependencies.
+Note: `roaster-jdt` is **not** a dependency of `morphia-core` — it is only needed by `critter-maven` for source parsing.
 
 ### 4.2 Move Java source files
 
@@ -816,6 +806,43 @@ The `critter-integration-tests` module copies test sources from morphia-core and
 
 **Action:** Keep it for now (Phase 8 cleanup). Mark as deprecated in pom.xml comment.
 
+### 7.6 Add Kotlin entity invoker test to critter-maven
+
+**Goal:** Verify that the critter-maven plugin correctly generates accessors and entity models for Kotlin entity classes, not just Java ones. Kotlin classes have different bytecode characteristics (data classes, properties with backing fields, nullable types, companion objects) that may expose issues in the ASM/Gizmo generators.
+
+**New directory:** `critter/critter-maven/src/it/kotlin-entities/`
+
+Structure mirrors existing invoker tests (e.g., `generation-test`) but uses Kotlin source:
+
+```
+kotlin-entities/
+├── invoker.properties
+├── pom.xml           (Kotlin plugin + critter-maven plugin, depends on morphia-core)
+├── verify.groovy     (assert expected generated class files exist)
+└── src/main/kotlin/dev/morphia/critter/it/kotlin/
+    ├── KotlinEntity.kt       (basic @Entity data class: String, Int, nullable String?)
+    ├── CompanionEntity.kt    (@Entity class with companion object)
+    └── PropertyEntity.kt     (@Entity class with computed val property)
+```
+
+Fixture classes to cover:
+1. `KotlinEntity` — basic `@Entity data class` with `String`, `Int`, and `String?` fields
+2. `CompanionEntity` — `@Entity` class with a `companion object` (verify companion is not treated as a mappable field)
+3. `PropertyEntity` — `@Entity` class with a computed `val fullName get() = "$first $last"` property
+
+`verify.groovy` assertions:
+- Generated `*EntityModel` `.class` files exist in the output directory for each entity
+- Generated `*Accessor` `.class` files exist for each mapped field
+- Build log contains no errors about unresolvable types or NPEs
+
+**Verification:**
+
+```bash
+./mvnw verify -pl :critter-maven -Ddeploy.skip=true
+```
+
+The kotlin-entities invoker test must pass alongside the existing `generation-test` and `simple-test` ITs.
+
 ### Verification
 
 ```bash
@@ -894,7 +921,7 @@ Document the new option:
 ```
 
 - `morphia-core` JAR contains Java classes under `dev.morphia.critter`
-- `morphia-core` POM declares Gizmo/ASM/ByteBuddy dependencies as optional
+- `morphia-core` POM declares Gizmo/ASM/ByteBuddy dependencies as required (non-optional)
 - `critter-core` artifact no longer published
 - `critter-maven` still published, depends on `morphia-core`
 
@@ -926,7 +953,7 @@ Document the new option:
 | `core/.../critter/parser/PropertyFinder.kt` | 2 | Dual mode |
 | `critter/core/src/test/kotlin/**` | 3.1 | Convert to Java |
 | `critter/core/src/main/kotlin/**` | 3.2 | Convert to Java |
-| `core/pom.xml` | 4 | Optional bytecode-gen deps |
+| `core/pom.xml` | 4 | Required bytecode-gen deps |
 | `core/src/main/java/dev/morphia/critter/**` | 4 | Move from critter/core |
 | `core/.../critter/parser/Generators.java` | 4 | Refactor to instance |
 | `core/.../mapping/CritterMapper.java` | 5 | Create |
