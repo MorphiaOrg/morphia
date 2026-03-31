@@ -16,6 +16,7 @@ import org.testng.annotations.Test;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNotSame;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertTrue;
 
@@ -69,21 +70,21 @@ public class TestCritterMapper {
         original.mapEntity(CritterMapperTestEntity.class);
         CritterMapper copy = (CritterMapper) original.copy();
         assertNotNull(copy.getEntityModel(CritterMapperTestEntity.class));
-        assertNotSame(original, copy);
+        assertNotSame(original.getDiscriminatorLookup(), copy.getDiscriminatorLookup());
     }
 
     @Test
     public void testNullTypeReturnNull() {
         CritterMapper mapper = mapper();
         EntityModel model = mapper.mapEntity(null);
-        org.testng.Assert.assertNull(model);
+        assertNull(model);
     }
 
     @Test
     public void testNonEntityClassReturnNull() {
         CritterMapper mapper = mapper();
         EntityModel model = mapper.mapEntity(String.class);
-        org.testng.Assert.assertNull(model);
+        assertNull(model);
     }
 
     @Test
@@ -102,10 +103,14 @@ public class TestCritterMapper {
         }
 
         latch.countDown();
-        EntityModel first = futures.get(0).get();
+        List<EntityModel> results = new ArrayList<>();
         for (Future<EntityModel> f : futures) {
-            assertSame(f.get(), first, "All threads should see the same registered model");
+            results.add(f.get());
         }
         pool.shutdown();
+        EntityModel first = results.get(0);
+        for (EntityModel result : results) {
+            assertSame(result, first, "All threads should see the same registered model");
+        }
     }
 }

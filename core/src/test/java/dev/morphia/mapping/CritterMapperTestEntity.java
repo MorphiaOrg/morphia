@@ -11,4 +11,7 @@ public class CritterMapperTestEntity {
     private ObjectId id;
     private String name;
     private int value;
+
+    public CritterMapperTestEntity() {
+    }
 }
