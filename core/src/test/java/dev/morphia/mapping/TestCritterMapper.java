@@ -1,0 +1,111 @@
+package dev.morphia.mapping;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
+import dev.morphia.config.ManualMorphiaConfig;
+import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
+
+import org.testng.annotations.Test;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNotSame;
+import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertTrue;
+
+public class TestCritterMapper {
+
+    private CritterMapper mapper() {
+        return new CritterMapper(new ManualMorphiaConfig());
+    }
+
+    @Test
+    public void testRuntimeGenerationProducesCritterEntityModel() {
+        CritterMapper mapper = mapper();
+        EntityModel model = mapper.mapEntity(CritterMapperTestEntity.class);
+        assertNotNull(model);
+        assertTrue(model instanceof CritterEntityModel,
+                "Expected CritterEntityModel but got: " + model.getClass().getName());
+    }
+
+    @Test
+    public void testCollectionNameFromAnnotation() {
+        CritterMapper mapper = mapper();
+        EntityModel model = mapper.mapEntity(CritterMapperTestEntity.class);
+        assertNotNull(model);
+        assertEquals(model.collectionName(), "critter_test");
+    }
+
+    @Test
+    public void testMappedEntityCached() {
+        CritterMapper mapper = mapper();
+        EntityModel first = mapper.mapEntity(CritterMapperTestEntity.class);
+        EntityModel second = mapper.mapEntity(CritterMapperTestEntity.class);
+        assertNotNull(first);
+        assertSame(first, second, "mapEntity should return the same cached model on repeated calls");
+    }
+
+    @Test
+    public void testCopySharesCritterModels() {
+        CritterMapper original = mapper();
+        EntityModel model = original.mapEntity(CritterMapperTestEntity.class);
+        assertNotNull(model);
+
+        CritterMapper copy = (CritterMapper) original.copy();
+        EntityModel copiedModel = copy.getEntityModel(CritterMapperTestEntity.class);
+
+        assertSame(model, copiedModel, "copy() should share CritterEntityModel references");
+    }
+
+    @Test
+    public void testCopyHasIndependentDiscriminatorLookup() {
+        CritterMapper original = mapper();
+        original.mapEntity(CritterMapperTestEntity.class);
+        CritterMapper copy = (CritterMapper) original.copy();
+        assertNotNull(copy.getEntityModel(CritterMapperTestEntity.class));
+        assertNotSame(original, copy);
+    }
+
+    @Test
+    public void testNullTypeReturnNull() {
+        CritterMapper mapper = mapper();
+        EntityModel model = mapper.mapEntity(null);
+        org.testng.Assert.assertNull(model);
+    }
+
+    @Test
+    public void testNonEntityClassReturnNull() {
+        CritterMapper mapper = mapper();
+        EntityModel model = mapper.mapEntity(String.class);
+        org.testng.Assert.assertNull(model);
+    }
+
+    @Test
+    public void testConcurrentMappingProducesSingleModel() throws Exception {
+        CritterMapper mapper = mapper();
+        int threads = 8;
+        CountDownLatch latch = new CountDownLatch(1);
+        ExecutorService pool = Executors.newFixedThreadPool(threads);
+
+        List<Future<EntityModel>> futures = new ArrayList<>();
+        for (int i = 0; i < threads; i++) {
+            futures.add(pool.submit(() -> {
+                latch.await();
+                return mapper.mapEntity(CritterMapperTestEntity.class);
+            }));
+        }
+
+        latch.countDown();
+        EntityModel first = futures.get(0).get();
+        for (Future<EntityModel> f : futures) {
+            assertSame(f.get(), first, "All threads should see the same registered model");
+        }
+        pool.shutdown();
+    }
+}
