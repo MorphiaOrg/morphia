@@ -17,7 +17,6 @@ import dev.morphia.critter.Critter;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.conventions.PropertyConvention;
 import dev.morphia.critter.parser.ExtensionFunctions;
-import dev.morphia.critter.parser.Generators;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
@@ -35,6 +34,7 @@ import io.quarkus.gizmo.MethodDescriptor;
 import io.quarkus.gizmo.ResultHandle;
 
 import static io.quarkus.gizmo.MethodDescriptor.ofMethod;
+import static org.objectweb.asm.Type.ARRAY;
 import static org.objectweb.asm.Type.getReturnType;
 
 /**
@@ -101,6 +101,16 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
         generatedType = "%s.%sModel".formatted(baseName, Critter.titleCase(propertyName));
         accessorType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
         this.annotations = method.visibleAnnotations != null ? method.visibleAnnotations : Collections.emptyList();
+    }
+
+    /**
+     * Returns {@code true} if the given ASM type represents an array type.
+     *
+     * @param type the ASM type to check
+     * @return {@code true} if the type is an array
+     */
+    public static boolean isArray(Type type) {
+        return type.getSort() == ARRAY;
     }
 
     private Map<String, Annotation> getAnnotationMap() {
@@ -189,7 +199,7 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
 
     private void isArray() {
         try (MethodCreator methodCreator = getCreator().getMethodCreator("isArray", boolean.class)) {
-            methodCreator.returnValue(methodCreator.load(Generators.isArray(propertyType)));
+            methodCreator.returnValue(methodCreator.load(isArray(propertyType)));
         }
     }
 

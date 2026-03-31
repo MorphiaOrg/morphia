@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dev.morphia.critter.parser.ExtensionFunctions;
-import dev.morphia.critter.parser.Generators;
 import dev.morphia.mapping.codec.pojo.TypeData;
 
 import org.objectweb.asm.Type;
@@ -18,6 +17,7 @@ import io.quarkus.gizmo.MethodDescriptor;
 import io.quarkus.gizmo.ResultHandle;
 
 import static io.quarkus.gizmo.MethodDescriptor.ofMethod;
+import static org.objectweb.asm.Type.ARRAY;
 
 /**
  * Static utility methods that bridge ASM annotation nodes and Morphia type data with the Gizmo bytecode generation API.
@@ -49,6 +49,38 @@ public class GizmoExtensions {
         setBuilderValues(annotationNode, creator, local);
 
         return creator.invokeVirtualMethod(ofMethod(builderType.getClassName(), "build", type.getClassName()), local);
+    }
+
+    /**
+     * Resolves an ASM {@link Type} to a {@link Class} using the given class loader.
+     *
+     * @param type        the ASM type to resolve
+     * @param classLoader the class loader used to locate the class
+     * @return the corresponding Java class
+     * @throws RuntimeException if the class cannot be found
+     */
+    public static Class<?> asClass(Type type, ClassLoader classLoader) {
+        return switch (type.getSort()) {
+            case Type.VOID -> void.class;
+            case Type.BOOLEAN -> boolean.class;
+            case Type.CHAR -> char.class;
+            case Type.BYTE -> byte.class;
+            case Type.SHORT -> short.class;
+            case Type.INT -> int.class;
+            case Type.FLOAT -> float.class;
+            case Type.LONG -> long.class;
+            case Type.DOUBLE -> double.class;
+            default -> {
+                String className = type.getSort() == ARRAY
+                        ? type.getDescriptor().replace('/', '.')
+                        : type.getClassName();
+                try {
+                    yield Class.forName(className, false, classLoader);
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException("Could not find class: %s".formatted(className), e);
+                }
+            }
+        };
     }
 
     /**
@@ -199,7 +231,7 @@ public class GizmoExtensions {
      * @return a {@code TypeData} representing the type with its parameters
      */
     public static TypeData<?> typeDataFromType(Type type, ClassLoader classLoader, List<TypeData<?>> typeParameters) {
-        return new TypeData<>(Generators.asClass(type, classLoader), typeParameters);
+        return new TypeData<>(asClass(type, classLoader), typeParameters);
     }
 
     /**
