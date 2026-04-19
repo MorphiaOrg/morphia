@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.antwerkz</groupId>
         <artifactId>antwerkz-parent</artifactId>
-        <version>69</version>
+        <version>70</version>
     </parent>
 
     <groupId>dev.morphia.morphia</groupId>
@@ -49,10 +49,10 @@
     <properties>
         <asm.version>9.9.1</asm.version>
         <awaitility.version>1.7.0</awaitility.version>
-        <driver.version>5.6.4</driver.version>
+        <driver.version>5.6.5</driver.version>
         <driver.minor.version>5.5</driver.minor.version>
         <driver-javadoc.link>https://mongodb.github.io/mongo-java-driver/${driver.minor.version}/apidocs</driver-javadoc.link>
-        <gizmo.version>1.9.0</gizmo.version>
+        <gizmo.version>1.10.1</gizmo.version>
         <jackson.version>2.21.2</jackson.version>
         <jackson-annotations.version>2.21</jackson-annotations.version>
         <json.assert.version>1.5.3</json.assert.version>
@@ -127,6 +127,9 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
                         <forkCount>1C</forkCount>
+                        <systemPropertyVariables>
+                            <testcontainers.reuse.enable>true</testcontainers.reuse.enable>
+                        </systemPropertyVariables>
                     </configuration>
                 </plugin>
             </plugins>
@@ -202,7 +205,7 @@
             <dependency>
                 <groupId>io.smallrye.config</groupId>
                 <artifactId>smallrye-config</artifactId>
-                <version>3.16.0</version>
+                <version>3.17.0</version>
             </dependency>
 
             <dependency>
@@ -328,7 +331,7 @@
             <dependency>
                 <groupId>net.bytebuddy</groupId>
                 <artifactId>byte-buddy</artifactId>
-                <version>1.18.7</version>
+                <version>1.18.8</version>
             </dependency>
             <dependency>
                 <groupId>io.github.classgraph</groupId>

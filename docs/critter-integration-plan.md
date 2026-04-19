@@ -86,20 +86,20 @@ As tasks are added or removed, update the task count in this table and the total
 **New file:** `core/src/main/java/dev/morphia/mapping/MapperType.java`
 
 ```java
-public enum MapperType { LEGACY, CRITTER }
+public enum MapperType { REFLECTION, CRITTER }
 ```
 
 ### 1.2 Add `mapper()` to MorphiaConfig
 
 **File:** `core/src/main/java/dev/morphia/config/MorphiaConfig.java`
 
-- Add `MapperType mapper()` with default `LEGACY`
+- Add `MapperType mapper()` with default `REFLECTION`
 - Add update method `default MorphiaConfig mapper(MapperType value)` following existing pattern
 
 **File:** `core/src/main/java/dev/morphia/config/ManualMorphiaConfig.java`
 
 - Add `MapperType mapper` field
-- Copy in constructor, implement getter with `orDefault(mapper, MapperType.LEGACY)`
+- Copy in constructor, implement getter with `orDefault(mapper, MapperType.REFLECTION)`
 
 **File:** `core/src/main/java/dev/morphia/config/MorphiaConfigHelper.java`
 
@@ -234,7 +234,7 @@ this.mapper = createMapper(config);
 private static Mapper createMapper(MorphiaConfig config) {
     return switch (config.mapper()) {
         case CRITTER -> new CritterMapper(config);  // Phase 5
-        case LEGACY -> new ReflectiveMapper(config);
+        case REFLECTION -> new ReflectiveMapper(config);
     };
 }
 ```
@@ -245,7 +245,7 @@ For now (before Phase 5), default to `ReflectiveMapper` always. Wire `CritterMap
 
 **File:** `core/src/main/resources/sofia.properties`
 
-Add: `invalidMapperConfig=Invalid mapper configuration value: "{0}". Using LEGACY mapper.`
+Add: `invalidMapperConfig=Invalid mapper configuration value: "{0}". Using REFLECTION mapper.`
 
 ### Verification
 
@@ -254,7 +254,7 @@ Add: `invalidMapperConfig=Invalid mapper configuration value: "{0}". Using LEGAC
 ./mvnw test -pl :morphia-core -Ddeploy.skip=true
 ```
 
-All existing tests must pass unchanged (everything still uses `ReflectiveMapper` via `LEGACY` default).
+All existing tests must pass unchanged (everything still uses `ReflectiveMapper` via `REFLECTION` default).
 
 ---
 
@@ -693,7 +693,7 @@ Tests:
 private static Mapper createMapper(MorphiaConfig config) {
     return switch (config.mapper()) {
         case CRITTER -> new CritterMapper(config);
-        case LEGACY -> new ReflectiveMapper(config);
+        case REFLECTION -> new ReflectiveMapper(config);
     };
 }
 ```
@@ -713,7 +713,7 @@ The existing `mapper.copy()` call is already polymorphic (dispatches to `Critter
 ### Verification
 
 ```bash
-# Default (LEGACY) — all existing tests pass
+# Default (REFLECTION) — all existing tests pass
 ./mvnw test -pl :morphia-core -Ddeploy.skip=true
 
 # CRITTER — run a focused subset first
@@ -743,7 +743,7 @@ The existing `mapper.copy()` call is already polymorphic (dispatches to `Critter
 
 Default property in `<properties>`:
 ```xml
-<morphia.mapper>legacy</morphia.mapper>
+<morphia.mapper>reflection</morphia.mapper>
 ```
 
 ### 7.2 Update `MorphiaTestSetup` to read system property
@@ -754,7 +754,7 @@ In the default constructor's `buildConfig()` chain, add:
 
 ```java
 protected static MorphiaConfig buildConfig() {
-    String mapperProp = System.getProperty("morphia.mapper", "legacy");
+    String mapperProp = System.getProperty("morphia.mapper", "reflection");
     MapperType mapperType = MapperType.valueOf(mapperProp.toUpperCase());
     return MorphiaConfig.load()
         .database(...)
@@ -772,7 +772,7 @@ This means **all tests** automatically use the mapper specified by `-Dmorphia.ma
 @DataProvider(name = "mapperTypes")
 public static Object[][] mapperTypes() {
     return new Object[][] {
-        { MapperType.LEGACY },
+        { MapperType.REFLECTION },
         { MapperType.CRITTER }
     };
 }
@@ -791,7 +791,7 @@ strategy:
   matrix:
     mongo: [8.0, 7.0]
     driver: [5.6.4]
-    mapper: [legacy, critter]
+    mapper: [reflection, critter]
   # ... existing config
 env:
   maven-flags: >-
@@ -847,7 +847,7 @@ The kotlin-entities invoker test must pass alongside the existing `generation-te
 
 ```bash
 # Both mappers (full suite)
-./mvnw test -pl :morphia-core -Dmorphia.mapper=legacy -Ddeploy.skip=true
+./mvnw test -pl :morphia-core -Dmorphia.mapper=reflection -Ddeploy.skip=true
 ./mvnw test -pl :morphia-core -Dmorphia.mapper=critter -Ddeploy.skip=true
 ```
 
@@ -910,8 +910,8 @@ If all core tests pass with `-Dmorphia.mapper=critter`, this module is redundant
 
 Document the new option:
 ```properties
-# Mapper implementation: legacy (reflection) or critter (bytecode generation)
-# morphia.mapper=legacy
+# Mapper implementation: reflection or critter (bytecode generation)
+# morphia.mapper=reflection
 ```
 
 ### 8.6 Verify published artifact
@@ -932,7 +932,7 @@ Document the new option:
 ./mvnw clean install -Ddeploy.skip=true
 
 # Full test matrix
-./mvnw test -Dmorphia.mapper=legacy -Ddeploy.skip=true
+./mvnw test -Dmorphia.mapper=reflection -Ddeploy.skip=true
 ./mvnw test -Dmorphia.mapper=critter -Ddeploy.skip=true
 ```
 
