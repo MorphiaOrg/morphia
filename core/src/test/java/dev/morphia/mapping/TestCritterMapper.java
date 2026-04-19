@@ -8,12 +8,14 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import dev.morphia.config.MorphiaConfig;
+import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNotSame;
 import static org.testng.Assert.assertNull;
@@ -85,6 +87,28 @@ public class TestCritterMapper {
         CritterMapper mapper = mapper();
         EntityModel model = mapper.mapEntity(String.class);
         assertNull(model);
+    }
+
+    @Test
+    public void testReflectionFallbackWhenGenerationFails() {
+        // A CritterClassLoader that refuses to load generated classes, forcing
+        // tryRuntimeGeneration to fail and fall through to reflection.
+        CritterClassLoader failingLoader = new CritterClassLoader(Thread.currentThread().getContextClassLoader()) {
+            @Override
+            public Class<?> loadClass(String name) throws ClassNotFoundException {
+                if (name.contains("__morphia")) {
+                    throw new ClassNotFoundException("Simulated generation failure: " + name);
+                }
+                return super.loadClass(name);
+            }
+        };
+
+        CritterMapper mapper = new CritterMapper(MorphiaConfig.load().mapper(MapperType.CRITTER), failingLoader);
+        EntityModel model = mapper.mapEntity(CritterMapperTestEntity.class);
+
+        assertNotNull(model, "Should fall back to reflection and return a non-null model");
+        assertFalse(model instanceof CritterEntityModel,
+                "Fallback model should be a plain EntityModel, not CritterEntityModel");
     }
 
     @Test
