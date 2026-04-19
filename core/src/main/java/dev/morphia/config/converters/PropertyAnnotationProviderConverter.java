@@ -1,16 +1,10 @@
 package dev.morphia.config.converters;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.config.MorphiaPropertyAnnotationProvider;
 import dev.morphia.config.PropertyAnnotationProvider;
 import dev.morphia.mapping.MappingException;
 
 import org.eclipse.microprofile.config.spi.Converter;
-
-import static java.util.Arrays.asList;
 
 /**
  * @hidden
@@ -19,23 +13,16 @@ import static java.util.Arrays.asList;
  */
 @MorphiaInternal
 @SuppressWarnings("unchecked")
-public class PropertyAnnotationProviderConverter implements Converter<List<PropertyAnnotationProvider<?>>> {
+public class PropertyAnnotationProviderConverter implements Converter<PropertyAnnotationProvider<?>> {
     @Override
-    public List<PropertyAnnotationProvider<?>> convert(String value) {
-        List<String> list = new ArrayList<>(List.of(MorphiaPropertyAnnotationProvider.class.getName()));
-        list.addAll(asList(value.split(",")));
+    public PropertyAnnotationProvider<?> convert(String value) {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        return (List<PropertyAnnotationProvider<?>>) list.stream()
-                .distinct()
-                .map(s -> {
-                    try {
-                        return Class.forName(s.trim(), true, classLoader)
-                                .getConstructor()
-                                .newInstance();
-                    } catch (ReflectiveOperationException e) {
-                        throw new MappingException(e.getMessage(), e);
-                    }
-                })
-                .toList();
+        try {
+            return (PropertyAnnotationProvider<?>) Class.forName(value.trim(), true, classLoader)
+                    .getConstructor()
+                    .newInstance();
+        } catch (ReflectiveOperationException e) {
+            throw new MappingException(e.getMessage(), e);
+        }
     }
 }
