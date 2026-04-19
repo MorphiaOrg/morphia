@@ -53,7 +53,7 @@ public abstract class AbstractMapper implements Mapper {
     protected final List<EntityListener<?>> listeners = new ArrayList<>();
     protected final MorphiaConfig config;
     protected final DiscriminatorLookup discriminatorLookup;
-    protected final ClassLoader contextClassLoader;
+    protected final ClassLoader classLoader;
     private final Conversions conversions;
 
     /**
@@ -79,7 +79,7 @@ public abstract class AbstractMapper implements Mapper {
     @MorphiaInternal
     protected AbstractMapper(MorphiaConfig config, ClassLoader classLoader) {
         this.config = config;
-        this.contextClassLoader = classLoader;
+        this.classLoader = classLoader;
         this.conversions = new Conversions(classLoader);
         this.discriminatorLookup = new DiscriminatorLookup(classLoader);
     }
@@ -94,9 +94,9 @@ public abstract class AbstractMapper implements Mapper {
     @MorphiaInternal
     protected AbstractMapper(AbstractMapper other) {
         this.config = other.config;
-        this.contextClassLoader = other.contextClassLoader;
+        this.classLoader = other.classLoader;
         this.conversions = other.conversions;
-        this.discriminatorLookup = new DiscriminatorLookup(other.contextClassLoader);
+        this.discriminatorLookup = new DiscriminatorLookup(other.classLoader);
         other.mappedEntities.values().forEach(this::clone);
         this.listeners.addAll(other.listeners);
     }
@@ -296,7 +296,7 @@ public abstract class AbstractMapper implements Mapper {
     @Override
     public synchronized void map(String packageName) {
         try {
-            List<Class> classes = getClasses(contextClassLoader, packageName);
+            List<Class> classes = getClasses(classLoader, packageName);
             classes.forEach(type -> mapEntity(type));
         } catch (ClassNotFoundException e) {
             throw new MappingException("Could not get map classes from package " + packageName, e);
@@ -307,7 +307,7 @@ public abstract class AbstractMapper implements Mapper {
     public synchronized void mapPackage(String packageName) {
         Sofia.logConfiguredOperation("Mapper#mapPackage");
         try {
-            getClasses(contextClassLoader, packageName)
+            getClasses(classLoader, packageName)
                     .forEach(this::tryGetEntityModel);
         } catch (ClassNotFoundException e) {
             throw new MappingException("Could not get map classes from package " + packageName, e);

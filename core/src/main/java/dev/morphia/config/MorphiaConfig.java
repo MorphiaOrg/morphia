@@ -383,13 +383,13 @@ public interface MorphiaConfig {
     }
 
     /**
-     * The mapper implementation to use. Defaults to {@link MapperType#LEGACY} (reflection-based).
+     * The mapper implementation to use. Defaults to {@link MapperType#REFLECTION} (reflection-based).
      * Set to {@link MapperType#CRITTER} to use the bytecode-generated mapper (requires critter dependencies).
      *
      * @return the mapper type to use
      * @since 3.0
      */
-    @WithDefault("legacy")
+    @WithDefault("reflection")
     MapperType mapper();
 
     /**

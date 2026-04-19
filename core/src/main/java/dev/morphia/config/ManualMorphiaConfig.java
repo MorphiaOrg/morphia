@@ -57,14 +57,16 @@ public class ManualMorphiaConfig implements MorphiaConfig {
 
     /**
      * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal()
     public ManualMorphiaConfig() {
     }
 
     /**
      * @hidden
      */
-    public ManualMorphiaConfig(MorphiaConfig base) {
+    protected ManualMorphiaConfig(MorphiaConfig base) {
         applyCaps = base.applyCaps();
         applyDocumentValidations = base.applyDocumentValidations();
         applyIndexes = base.applyIndexes();
@@ -167,7 +169,7 @@ public class ManualMorphiaConfig implements MorphiaConfig {
 
     @Override
     public MapperType mapper() {
-        return orDefault(mapper, MapperType.LEGACY);
+        return orDefault(mapper, MapperType.REFLECTION);
     }
 
     @Override

@@ -47,10 +47,23 @@ public class CritterMapper extends AbstractMapper {
      */
     @MorphiaInternal
     public CritterMapper(MorphiaConfig config) {
-        super(config);
-        this.critterClassLoader = new CritterClassLoader(contextClassLoader);
+        this(config, new CritterClassLoader(Thread.currentThread().getContextClassLoader()));
+    }
+
+    /**
+     * Creates a CritterMapper with the given config.
+     *
+     * @param config the config to use
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public CritterMapper(MorphiaConfig config, ClassLoader classLoader) {
+        super(config, classLoader);
+        this.critterClassLoader = classLoader instanceof CritterClassLoader ccl ? ccl : new CritterClassLoader(classLoader);
         this.gizmoGenerator = new CritterGizmoGenerator(this);
         this.fallbackTypes = ConcurrentHashMap.newKeySet();
+
     }
 
     /**
@@ -72,7 +85,7 @@ public class CritterMapper extends AbstractMapper {
      */
     @MorphiaInternal
     public CritterMapper(CritterMapper other) {
-        super(other.config, other.contextClassLoader);
+        super(other.config, other.classLoader);
         this.critterClassLoader = other.critterClassLoader;
         this.gizmoGenerator = other.gizmoGenerator;
         this.fallbackTypes = other.fallbackTypes;

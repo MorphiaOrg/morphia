@@ -8,6 +8,7 @@ import java.util.Set;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MapperType;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 import dev.morphia.test.TestBase;
@@ -43,6 +44,7 @@ public class CritterCrudTest extends TestBase {
 
     private MorphiaDatastore createCritterDatastore() throws Exception {
         MorphiaConfig config = new ManualMorphiaTestConfig()
+                .mapper(MapperType.CRITTER)
                 .database(TEST_DB_NAME)
                 .packages(List.of());
 

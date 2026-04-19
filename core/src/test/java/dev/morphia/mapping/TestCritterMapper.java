@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import dev.morphia.config.ManualMorphiaConfig;
+import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
@@ -23,7 +23,7 @@ import static org.testng.Assert.assertTrue;
 public class TestCritterMapper {
 
     private CritterMapper mapper() {
-        return new CritterMapper(new ManualMorphiaConfig());
+        return new CritterMapper(MorphiaConfig.load().mapper(MapperType.CRITTER));
     }
 
     @Test
