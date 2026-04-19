@@ -127,6 +127,9 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
                         <forkCount>1C</forkCount>
+                        <systemPropertyVariables>
+                            <testcontainers.reuse.enable>true</testcontainers.reuse.enable>
+                        </systemPropertyVariables>
                     </configuration>
                 </plugin>
             </plugins>

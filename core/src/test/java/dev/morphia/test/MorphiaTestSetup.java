@@ -72,7 +72,8 @@ public class MorphiaTestSetup {
                     .asCompatibleSubstituteFor("mongo");
 
             LOG.info("Running tests using " + imageName);
-            mongoDBContainer = new MongoDBContainer(imageName);
+            mongoDBContainer = new MongoDBContainer(imageName)
+                    .withReuse(true);
             if (sharded) {
                 mongoDBContainer
                         .withSharding();
