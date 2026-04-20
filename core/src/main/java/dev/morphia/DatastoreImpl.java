@@ -1,6 +1,7 @@
 package dev.morphia;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 
 import com.mongodb.ClientSessionOptions;
 import com.mongodb.MongoCommandException;
+import com.mongodb.MongoDriverInformation;
 import com.mongodb.MongoException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.WriteConcern;
@@ -97,6 +99,33 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 @SuppressWarnings({ "unchecked", "rawtypes", "removal" })
 public class DatastoreImpl implements AdvancedDatastore {
     private static final Logger LOG = LoggerFactory.getLogger(Datastore.class);
+
+    private static final MongoDriverInformation DRIVER_INFO = buildDriverInfo();
+
+    private static MongoDriverInformation buildDriverInfo() {
+        MongoDriverInformation.Builder builder = MongoDriverInformation.builder().driverName("Morphia");
+        String version = DatastoreImpl.class.getPackage().getImplementationVersion();
+        if (version != null) {
+            builder.driverVersion(version);
+        }
+        return builder.build();
+    }
+
+    private static void appendMongoClientMetadata(MongoClient mongoClient) {
+        try {
+            Method getCluster = mongoClient.getClass().getMethod("getCluster");
+            Object cluster = getCluster.invoke(mongoClient);
+            Method getClientMetadata = cluster.getClass().getMethod("getClientMetadata");
+            Object clientMetadata = getClientMetadata.invoke(cluster);
+            Method append = clientMetadata.getClass().getMethod("append", MongoDriverInformation.class);
+            append.invoke(clientMetadata, DRIVER_INFO);
+            Method getBsonDocument = clientMetadata.getClass().getMethod("getBsonDocument");
+            LOG.info("MongoClient metadata has been updated to {}", getBsonDocument.invoke(clientMetadata));
+        } catch (Exception e) {
+            // appendMetadata not available in this driver version — skip silently
+        }
+    }
+
     private final MongoClient mongoClient;
     private final Mapper mapper;
     private final QueryFactory queryFactory;
@@ -107,6 +136,7 @@ public class DatastoreImpl implements AdvancedDatastore {
 
     public DatastoreImpl(MongoClient client, MorphiaConfig config) {
         this.mongoClient = client;
+        appendMongoClientMetadata(client);
         this.database = mongoClient.getDatabase(config.database());
         this.mapper = new Mapper(config);
         this.queryFactory = mapper.getConfig().queryFactory();
