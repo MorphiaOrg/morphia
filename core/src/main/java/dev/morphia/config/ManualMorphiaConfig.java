@@ -3,6 +3,7 @@ package dev.morphia.config;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.mongodb.lang.Nullable;
 
@@ -80,6 +81,9 @@ public class ManualMorphiaConfig implements MorphiaConfig {
         ignoreFinals = base.ignoreFinals();
         mapper = base.mapper();
         packages = new ArrayList<>(base.packages());
+        propertyAnnotationProviders = base.propertyAnnotationProviders().stream()
+                .filter(p -> !(p instanceof MorphiaPropertyAnnotationProvider))
+                .collect(Collectors.toCollection(ArrayList::new));
         propertyDiscovery = base.propertyDiscovery();
         propertyNaming = base.propertyNaming();
         queryFactory = base.queryFactory();
@@ -179,7 +183,11 @@ public class ManualMorphiaConfig implements MorphiaConfig {
 
     @Override
     public List<PropertyAnnotationProvider<?>> propertyAnnotationProviders() {
-        return orDefault(propertyAnnotationProviders, List.of(new MorphiaPropertyAnnotationProvider()));
+        var providers = new ArrayList<PropertyAnnotationProvider<?>>(List.of(new MorphiaPropertyAnnotationProvider()));
+        if (propertyAnnotationProviders != null) {
+            providers.addAll(propertyAnnotationProviders);
+        }
+        return providers;
     }
 
     @Override

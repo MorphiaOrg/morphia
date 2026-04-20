@@ -466,10 +466,10 @@ public interface MorphiaConfig {
     @MorphiaExperimental
     default MorphiaConfig propertyAnnotationProviders(List<PropertyAnnotationProvider<?>> list) {
         var newConfig = new ManualMorphiaConfig(this);
-        newConfig.propertyAnnotationProviders = list;
-        if (list.isEmpty() || list.stream().noneMatch(p -> p instanceof MorphiaPropertyAnnotationProvider)) {
-            newConfig.propertyAnnotationProviders.add(new MorphiaPropertyAnnotationProvider());
-        }
+        // Store only user-provided extras; MorphiaPropertyAnnotationProvider is always prepended by the getter
+        newConfig.propertyAnnotationProviders = list.stream()
+                .filter(p -> !(p instanceof MorphiaPropertyAnnotationProvider))
+                .collect(java.util.stream.Collectors.toCollection(java.util.ArrayList::new));
         return newConfig;
     }
 
