@@ -1,6 +1,7 @@
 package dev.morphia;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
 
 import com.mongodb.ClientSessionOptions;
 import com.mongodb.MongoCommandException;
+import com.mongodb.MongoDriverInformation;
 import com.mongodb.MongoException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.WriteConcern;
@@ -105,6 +107,26 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 public class MorphiaDatastore implements Datastore {
     private static final Logger LOG = LoggerFactory.getLogger(Datastore.class);
 
+    private static final MongoDriverInformation DRIVER_INFO = buildDriverInfo();
+
+    private static MongoDriverInformation buildDriverInfo() {
+        MongoDriverInformation.Builder builder = MongoDriverInformation.builder().driverName("Morphia");
+        String version = MorphiaDatastore.class.getPackage().getImplementationVersion();
+        if (version != null) {
+            builder.driverVersion(version);
+        }
+        return builder.build();
+    }
+
+    private static void appendMongoClientMetadata(MongoClient mongoClient) {
+        try {
+            Method method = mongoClient.getClass().getMethod("appendMetadata", MongoDriverInformation.class);
+            method.invoke(mongoClient, DRIVER_INFO);
+        } catch (Exception e) {
+            // appendMetadata not available in this driver version — skip silently
+        }
+    }
+
     private final CodecRegistry codecRegistry;
 
     private final Mapper mapper;
@@ -140,6 +162,7 @@ public class MorphiaDatastore implements Datastore {
     public MorphiaDatastore(MongoClient client, MorphiaConfig config, ClassLoader classLoader) {
         this.classLoader = classLoader;
         this.mongoClient = client;
+        appendMongoClientMetadata(client);
         this.mapper = createMapper(config, classLoader);
         this.queryFactory = mapper.getConfig().queryFactory();
         importModels();
