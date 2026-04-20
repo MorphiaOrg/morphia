@@ -1,7 +1,6 @@
 package dev.morphia;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -120,10 +119,9 @@ public class MorphiaDatastore implements Datastore {
 
     private static void appendMongoClientMetadata(MongoClient mongoClient) {
         try {
-            Method method = mongoClient.getClass().getMethod("appendMetadata", MongoDriverInformation.class);
-            method.invoke(mongoClient, DRIVER_INFO);
+            mongoClient.appendMetadata(DRIVER_INFO);
         } catch (Exception e) {
-            // appendMetadata not available in this driver version — skip silently
+            // appendMetadata is only available in driver 5.6+
         }
     }
 
