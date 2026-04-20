@@ -6,6 +6,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.critter.CritterClassLoader;
@@ -128,10 +129,14 @@ public class TestCritterMapper {
 
         latch.countDown();
         List<EntityModel> results = new ArrayList<>();
-        for (Future<EntityModel> f : futures) {
-            results.add(f.get());
+        try {
+            for (Future<EntityModel> f : futures) {
+                results.add(f.get());
+            }
+        } finally {
+            pool.shutdown();
+            pool.awaitTermination(5, TimeUnit.SECONDS);
         }
-        pool.shutdown();
         EntityModel first = results.get(0);
         for (EntityModel result : results) {
             assertSame(result, first, "All threads should see the same registered model");
