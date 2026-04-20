@@ -60,7 +60,7 @@ public class ManualMorphiaConfig implements MorphiaConfig {
      * @hidden
      * @morphia.internal
      */
-    @MorphiaInternal()
+    @MorphiaInternal
     public ManualMorphiaConfig() {
     }
 
