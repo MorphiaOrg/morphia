@@ -53,10 +53,10 @@ after every PR is merged that completes a task, to ensure the issue tracking ref
 | Phase 1: Mapper interface + config | #4184 | 9 | Complete |
 | Phase 2: VarHandle accessor generator | #4185 | 6 | Complete |
 | Phase 3: Convert Kotlin to Java | #4195 | 2 | Complete |
-| Phase 4: Move critter-core into core | #4186 | 8 | Pending |
-| Phase 5: CritterMapper implementation | #4187 | 9 | Pending |
-| Phase 6: Wire into MorphiaDatastore | #4188 | 5 | Pending |
-| Phase 7: Test infrastructure + CI | #4189 | 8 | Pending |
+| Phase 4: Move critter-core into core | #4186 | 8 | Complete |
+| Phase 5: CritterMapper implementation | #4187 | 9 | Complete |
+| Phase 6: Wire into MorphiaDatastore | #4188 | 3 | Complete |
+| Phase 7: Test infrastructure + CI | #4189 | 10 | Pending |
 | Phase 8: Cleanup + documentation | #4190 | 9 | Pending |
 
 As tasks are added or removed, update the task count in this table and the total (56) in the formula above.
@@ -708,16 +708,12 @@ The existing `mapper.copy()` call is already polymorphic (dispatches to `Critter
 
 **File:** `core/src/main/java/dev/morphia/MorphiaDatastore.java`
 
-`importModels()` uses `ServiceLoader<EntityModelImporter>` and calls `mapper.register()`. This already works with both mapper types since `register()` is in `AbstractMapper`. No changes needed.
+`importModels()` uses `ServiceLoader<EntityModelImporter>` and calls `mapper.register()`. This already works with both mapper types since `register()` is in `AbstractMapper`. No changes needed. Verified by `TestCritterMapper.testRegisterWorksForImportedModels()`.
 
 ### Verification
 
 ```bash
-# Default (REFLECTION) — all existing tests pass
-./mvnw test -pl :morphia-core -Ddeploy.skip=true
-
-# CRITTER — run a focused subset first
-./mvnw test -pl :morphia-core -Dtest="TestMapping,TestEntityModel" -Dmorphia.mapper=critter -Ddeploy.skip=true
+./mvnw test -pl :morphia-core -Dtest="TestCritterMapper" -Ddeploy.skip=true
 ```
 
 ---
@@ -800,13 +796,27 @@ env:
     -Dmorphia.mapper=${{ matrix.mapper }}
 ```
 
-### 7.5 Fold critter-integration-tests into core tests
+### 7.5 Run full test suite with REFLECTION (green gate)
+
+```bash
+./mvnw test -pl :morphia-core -Dmorphia.mapper=reflection -Ddeploy.skip=true
+```
+
+All tests must pass before proceeding.
+
+### 7.6 Run focused tests with CRITTER
+
+```bash
+./mvnw test -pl :morphia-core -Dtest="TestMapping,TestEntityModel" -Dmorphia.mapper=critter -Ddeploy.skip=true
+```
+
+### 7.7 Fold critter-integration-tests into core tests
 
 The `critter-integration-tests` module copies test sources from morphia-core and re-runs them with critter-generated models. With the new architecture, `./mvnw test -Dmorphia.mapper=critter` achieves the same thing. This module becomes redundant.
 
 **Action:** Keep it for now (Phase 8 cleanup). Mark as deprecated in pom.xml comment.
 
-### 7.6 Add Kotlin entity invoker test to critter-maven
+### 7.8 Add Kotlin entity invoker test to critter-maven
 
 **Goal:** Verify that the critter-maven plugin correctly generates accessors and entity models for Kotlin entity classes, not just Java ones. Kotlin classes have different bytecode characteristics (data classes, properties with backing fields, nullable types, companion objects) that may expose issues in the ASM/Gizmo generators.
 

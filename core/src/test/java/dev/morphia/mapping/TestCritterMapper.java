@@ -142,4 +142,47 @@ public class TestCritterMapper {
             assertSame(result, first, "All threads should see the same registered model");
         }
     }
+
+    /**
+     * Phase 6.2: verify that the session-datastore copy pattern works.
+     * SessionDatastore calls super(datastore) → MorphiaDatastore(MorphiaDatastore) → mapper.copy().
+     * The copy must be a CritterMapper and must carry over already-mapped entities.
+     */
+    @Test
+    public void testSessionDatastoreCopyPattern() {
+        CritterMapper original = mapper();
+        EntityModel model = original.mapEntity(CritterMapperTestEntity.class);
+        assertNotNull(model);
+        assertTrue(model instanceof CritterEntityModel);
+
+        // Simulate what new MorphiaDatastore(datastore) does — calls mapper.copy()
+        Mapper sessionMapper = original.copy();
+
+        assertTrue(sessionMapper instanceof CritterMapper,
+                "copy() must return a CritterMapper for the session datastore");
+        assertTrue(sessionMapper.isMapped(CritterMapperTestEntity.class),
+                "Session copy must preserve already-mapped entities");
+        assertSame(model, sessionMapper.getEntityModel(CritterMapperTestEntity.class),
+                "Session copy must share CritterEntityModel references, not re-map");
+    }
+
+    /**
+     * Phase 6.3: verify that register() works as importModels() uses it.
+     * importModels() calls mapper.register(model) for each model returned by EntityModelImporter.
+     * This must work regardless of mapper type since register() is in AbstractMapper.
+     */
+    @Test
+    public void testRegisterWorksForImportedModels() {
+        CritterMapper mapper = mapper();
+
+        // Simulate what importModels() does: create a model externally and register it
+        EntityModel imported = new EntityModel(mapper, CritterMapperTestEntity.class);
+        EntityModel registered = mapper.register(imported);
+
+        assertNotNull(registered);
+        assertTrue(mapper.isMapped(CritterMapperTestEntity.class),
+                "register() must make the entity discoverable via isMapped()");
+        assertSame(registered, mapper.getEntityModel(CritterMapperTestEntity.class),
+                "register() must make the model retrievable, as importModels() relies on it");
+    }
 }
