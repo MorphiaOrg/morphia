@@ -9,7 +9,7 @@ public enum MapperType {
     /**
      * The default reflection-based mapper.
      */
-    LEGACY,
+    REFLECTION,
 
     /**
      * The bytecode-generated mapper using critter. Requires critter dependencies on the classpath.

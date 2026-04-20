@@ -4,11 +4,17 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
+
 import net.bytebuddy.dynamic.loading.ByteArrayClassLoader;
 
 /**
  * A class loader that supports registering and loading dynamically generated Critter classes from byte arrays.
+ * 
+ * @morphia.internal
+ * @hidden
  */
+@MorphiaInternal
 public class CritterClassLoader extends ByteArrayClassLoader.ChildFirst {
 
     /**

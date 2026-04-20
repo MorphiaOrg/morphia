@@ -46,6 +46,7 @@ import dev.morphia.internal.CollectionConfigurable;
 import dev.morphia.internal.CollectionConfiguration;
 import dev.morphia.internal.ReadConfigurable;
 import dev.morphia.internal.WriteConfigurable;
+import dev.morphia.mapping.CritterMapper;
 import dev.morphia.mapping.EntityModelImporter;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
@@ -258,8 +259,8 @@ public class MorphiaDatastore implements Datastore {
 
     private static Mapper createMapper(MorphiaConfig config, ClassLoader classLoader) {
         return switch (config.mapper()) {
-            case CRITTER -> throw new MappingException(Sofia.mapperNotYetAvailable("CRITTER"));
-            case LEGACY -> new ReflectiveMapper(config, classLoader);
+            case CRITTER -> new CritterMapper(config, classLoader);
+            case REFLECTION -> new ReflectiveMapper(config, classLoader);
         };
     }
 

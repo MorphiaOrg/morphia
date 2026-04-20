@@ -16,7 +16,16 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 @MorphiaInternal
 @MorphiaExperimental
 public interface PropertyAnnotationProvider<T> {
-    Property convertToMorphia(T annotation);
+    /**
+     * This method converts external annotations to the morphia form necessary for the mapper to process them.
+     * 
+     * @param annotation the annotation to convert
+     * @return the converted form
+     */
+    @SuppressWarnings("unused")
+    default Property convertToMorphia(T annotation) {
+        return (Property) annotation;
+    }
 
     Class<T> provides();
 }
