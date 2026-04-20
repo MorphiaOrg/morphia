@@ -87,7 +87,7 @@ public class CritterMapper extends AbstractMapper {
     public CritterMapper(CritterMapper other) {
         super(other.config, other.classLoader);
         this.critterClassLoader = other.critterClassLoader;
-        this.gizmoGenerator = other.gizmoGenerator;
+        this.gizmoGenerator = new CritterGizmoGenerator(this);
         this.fallbackTypes = other.fallbackTypes;
         this.listeners.addAll(other.listeners);
         // Share CritterEntityModel refs; clone reflective fallback models
