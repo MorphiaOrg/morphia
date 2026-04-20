@@ -12,7 +12,7 @@
           <option name="goals">
             <list>
               <option value="surefire:test" />
-              <option value="-Ddriver.version=5.7.0-SNAPSHOT" />
+              <option value="-Ddriver.version=5.0.0" />
             </list>
           </option>
           <option name="multimoduleDir" />

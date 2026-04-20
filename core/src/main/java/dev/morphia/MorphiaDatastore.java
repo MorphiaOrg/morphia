@@ -120,7 +120,7 @@ public class MorphiaDatastore implements Datastore {
     private static void appendMongoClientMetadata(MongoClient mongoClient) {
         try {
             mongoClient.appendMetadata(DRIVER_INFO);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             // appendMetadata is only available in driver 5.6+
         }
     }
