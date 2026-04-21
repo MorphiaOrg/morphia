@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 import com.mongodb.ClientSessionOptions;
 import com.mongodb.MongoCommandException;
+import com.mongodb.MongoDriverInformation;
 import com.mongodb.MongoException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.WriteConcern;
@@ -97,6 +98,26 @@ import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 @SuppressWarnings({ "unchecked", "rawtypes", "removal" })
 public class DatastoreImpl implements AdvancedDatastore {
     private static final Logger LOG = LoggerFactory.getLogger(Datastore.class);
+
+    private static final MongoDriverInformation DRIVER_INFO = buildDriverInfo();
+
+    private static MongoDriverInformation buildDriverInfo() {
+        MongoDriverInformation.Builder builder = MongoDriverInformation.builder().driverName("Morphia");
+        String version = DatastoreImpl.class.getPackage().getImplementationVersion();
+        if (version != null) {
+            builder.driverVersion(version);
+        }
+        return builder.build();
+    }
+
+    private static void appendMongoClientMetadata(MongoClient mongoClient) {
+        try {
+            mongoClient.appendMetadata(DRIVER_INFO);
+        } catch (Throwable e) {
+            // appendMetadata is only available in driver 5.6+
+        }
+    }
+
     private final MongoClient mongoClient;
     private final Mapper mapper;
     private final QueryFactory queryFactory;
@@ -113,6 +134,7 @@ public class DatastoreImpl implements AdvancedDatastore {
     public DatastoreImpl(MongoClient client, MorphiaConfig config, ClassLoader classLoader) {
         this.classLoader = classLoader;
         this.mongoClient = client;
+        appendMongoClientMetadata(client);
         this.database = mongoClient.getDatabase(config.database());
         this.mapper = new Mapper(config, classLoader);
         this.queryFactory = mapper.getConfig().queryFactory();
