@@ -60,11 +60,14 @@ public class TestCritterMapper {
         CritterMapper original = mapper();
         EntityModel model = original.mapEntity(CritterMapperTestEntity.class);
         assertNotNull(model);
+        assertTrue(model instanceof CritterEntityModel, "Original model must be a CritterEntityModel");
 
         CritterMapper copy = (CritterMapper) original.copy();
         EntityModel copiedModel = copy.getEntityModel(CritterMapperTestEntity.class);
 
-        assertSame(model, copiedModel, "copy() should share CritterEntityModel references");
+        assertNotNull(copiedModel, "copy() must carry over already-mapped entities");
+        assertTrue(copiedModel instanceof CritterEntityModel, "Copied model must remain a CritterEntityModel");
+        assertNotSame(model, copiedModel, "copy() creates independent model instances for isolation");
     }
 
     @Test
@@ -162,8 +165,12 @@ public class TestCritterMapper {
                 "copy() must return a CritterMapper for the session datastore");
         assertTrue(sessionMapper.isMapped(CritterMapperTestEntity.class),
                 "Session copy must preserve already-mapped entities");
-        assertSame(model, sessionMapper.getEntityModel(CritterMapperTestEntity.class),
-                "Session copy must share CritterEntityModel references, not re-map");
+        EntityModel sessionModel = sessionMapper.getEntityModel(CritterMapperTestEntity.class);
+        assertNotNull(sessionModel, "Session copy must preserve already-mapped entities");
+        assertTrue(sessionModel instanceof CritterEntityModel,
+                "Session copy must produce CritterEntityModel instances, not reflection fallbacks");
+        assertNotSame(model, sessionModel,
+                "Session copy creates independent model instances for isolation");
     }
 
     /**

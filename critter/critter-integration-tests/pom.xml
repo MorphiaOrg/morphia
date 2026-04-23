@@ -10,6 +10,10 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
+    <!-- DEPRECATED: This module will be removed in Phase 8.
+         With the new architecture, running ./mvnw test -Dmorphia.mapper=critter
+         achieves the same coverage. This module becomes redundant once all core
+         tests pass with both mapper values. -->
     <artifactId>critter-integration-tests</artifactId>
 
     <properties>

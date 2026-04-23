@@ -23,6 +23,7 @@ import dev.morphia.MorphiaDatastore;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.internal.MorphiaInternals;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MapperType;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.test.mapping.codec.ZonedDateTimeCodec;
@@ -38,6 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 
 import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
 import static java.lang.String.format;
@@ -64,6 +66,14 @@ public abstract class TestBase extends MorphiaTestSetup {
             throw new RuntimeException(e.getMessage(), e);
         }
         LOG.info("Running tests using driver version " + MorphiaInternals.getDriverVersion());
+    }
+
+    @DataProvider(name = "mapperTypes")
+    public static Object[][] mapperTypes() {
+        return new Object[][] {
+                { MapperType.REFLECTION },
+                { MapperType.CRITTER }
+        };
     }
 
     public TestBase() {

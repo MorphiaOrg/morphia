@@ -1,8 +1,11 @@
 package dev.morphia.critter.parser.gizmo;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -145,9 +148,68 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
                 }
             }
             List<TypeData<?>> results = typeData(input, entity.getClassLoader());
-            typeData = results.isEmpty() ? new TypeData<>(Object.class, List.of()) : results.get(0);
+            TypeData<?> raw = results.isEmpty() ? new TypeData<>(Object.class, List.of()) : results.get(0);
+
+            // If the result is Object due to type-variable erasure, try to resolve
+            // the actual type argument via Java reflection (e.g., T → UUID when the
+            // entity subclass specifies GenericEntity<UUID>).
+            if (raw.getType() == Object.class && isTypeVariable(input)) {
+                String typeVarName = extractTypeVarName(input);
+                Class<?> resolved = resolveTypeVariable(typeVarName, entity);
+                if (resolved != null && resolved != Object.class) {
+                    raw = new TypeData<>(resolved, List.of());
+                }
+            }
+            typeData = raw;
         }
         return typeData;
+    }
+
+    /** Returns true if the signature string represents a single type variable (e.g., {@code TT;}). */
+    private static boolean isTypeVariable(String signature) {
+        return signature != null && signature.startsWith("T") && !signature.startsWith("T[")
+                && signature.endsWith(";") && !signature.contains("<") && !signature.contains("/");
+    }
+
+    /** Extracts the type-variable name from a signature like {@code TT;} → {@code T}. */
+    private static String extractTypeVarName(String signature) {
+        return signature.substring(1, signature.length() - 1);
+    }
+
+    /**
+     * Resolves a type-variable name (e.g., {@code "T"}) to its actual class by walking
+     * the generic superclass chain of {@code concreteClass}.
+     * Returns {@code null} if no concrete binding can be determined.
+     */
+    private static Class<?> resolveTypeVariable(String typeVarName, Class<?> concreteClass) {
+        // Build a map from type-variable name to its resolved type, layer by layer
+        Map<String, java.lang.reflect.Type> bindings = new HashMap<>();
+        Class<?> current = concreteClass;
+        while (current != null && current != Object.class) {
+            java.lang.reflect.Type genericSuper = current.getGenericSuperclass();
+            Class<?> superClass = current.getSuperclass();
+            if (superClass == null || superClass == Object.class) {
+                break;
+            }
+            if (genericSuper instanceof ParameterizedType paramType) {
+                TypeVariable<?>[] typeParams = superClass.getTypeParameters();
+                java.lang.reflect.Type[] typeArgs = paramType.getActualTypeArguments();
+                for (int i = 0; i < typeParams.length && i < typeArgs.length; i++) {
+                    // If the argument is itself a TypeVariable, resolve it through the accumulated bindings
+                    java.lang.reflect.Type arg = typeArgs[i];
+                    if (arg instanceof TypeVariable<?> tv && bindings.containsKey(tv.getName())) {
+                        arg = bindings.get(tv.getName());
+                    }
+                    bindings.put(typeParams[i].getName(), arg);
+                }
+            }
+            current = superClass;
+        }
+        java.lang.reflect.Type resolved = bindings.get(typeVarName);
+        if (resolved instanceof Class<?> c) {
+            return c;
+        }
+        return null;
     }
 
     private io.quarkus.gizmo.FieldCreator getModelField() {
@@ -217,7 +279,7 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
 
     private void getType() {
         try (MethodCreator methodCreator = getCreator().getMethodCreator("getType", Class.class)) {
-            methodCreator.returnValue(methodCreator.loadClass(getTypeData().getType()));
+            methodCreator.returnValue(emitClassRef(methodCreator, getTypeData().getType()));
         }
     }
 
@@ -241,13 +303,34 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
             methodCreator.writeArrayValue(array, index, emitTypeData(methodCreator, typeParameters.get(index)));
         }
         List<ResultHandle> list = new ArrayList<>();
-        list.add(methodCreator.loadClass(data.getType()));
+        list.add(emitClassRef(methodCreator, data.getType()));
         list.add(array);
         MethodDescriptor descriptor = MethodDescriptor.ofConstructor(
                 TypeData.class,
                 Class.class,
                 "[" + Type.getType(TypeData.class).getDescriptor());
         return methodCreator.newInstance(descriptor, list.toArray(new ResultHandle[0]));
+    }
+
+    /**
+     * Emits bytecode to load a {@link Class} reference. For non-public classes (e.g. private
+     * inner classes) that cannot be referenced via an LDC constant from a different classloader,
+     * generates a {@code Class.forName()} call instead.
+     */
+    private ResultHandle emitClassRef(MethodCreator methodCreator, Class<?> cls) {
+        if (java.lang.reflect.Modifier.isPublic(cls.getModifiers())) {
+            return methodCreator.loadClass(cls);
+        }
+        ResultHandle name = methodCreator.load(cls.getName());
+        ResultHandle falseHandle = methodCreator.load(false);
+        ResultHandle thread = methodCreator.invokeStaticMethod(
+                ofMethod(Thread.class, "currentThread", Thread.class));
+        ResultHandle tccl = methodCreator.invokeVirtualMethod(
+                ofMethod(Thread.class, "getContextClassLoader", ClassLoader.class),
+                thread);
+        return methodCreator.invokeStaticMethod(
+                ofMethod(Class.class, "forName", Class.class, String.class, boolean.class, ClassLoader.class),
+                name, falseHandle, tccl);
     }
 
     private void isCollection() {
@@ -286,7 +369,8 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
 
     private void getNormalizedType() {
         try (MethodCreator methodCreator = getCreator().getMethodCreator("getNormalizedType", Class.class)) {
-            methodCreator.returnValue(methodCreator.loadClass(PropertyModel.normalize(getTypeData())));
+            Class<?> normalizedType = PropertyModel.normalize(getTypeData());
+            methodCreator.returnValue(emitClassRef(methodCreator, normalizedType));
         }
     }
 

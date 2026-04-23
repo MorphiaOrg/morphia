@@ -90,10 +90,18 @@ public class CritterMapper extends AbstractMapper {
         this.gizmoGenerator = new CritterGizmoGenerator(this);
         this.fallbackTypes = other.fallbackTypes;
         this.listeners.addAll(other.listeners);
-        // Share CritterEntityModel refs; clone reflective fallback models
+        // Create independent copies of all entity models so that each mapper instance
+        // maintains its own model state (e.g. listeners, version tracking).
         other.mappedEntities.values().forEach(model -> {
             if (model instanceof CritterEntityModel) {
-                register(model, false);
+                try {
+                    java.lang.reflect.Constructor<?> ctor = model.getClass().getConstructor(Mapper.class);
+                    register((EntityModel) ctor.newInstance(this), false);
+                } catch (Exception e) {
+                    LOG.warn("Failed to clone CritterEntityModel for {}; sharing reference: {}",
+                            model.getType().getName(), e.getMessage());
+                    register(model, false);
+                }
             } else {
                 register(new EntityModel(model), false);
             }

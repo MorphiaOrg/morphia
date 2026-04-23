@@ -4,7 +4,9 @@ import java.lang.annotation.Annotation;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.MorphiaPropertySerialization;
 import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 
 /**
  * 0
@@ -20,6 +22,19 @@ public abstract class CritterEntityModel extends EntityModel {
     public CritterEntityModel(Mapper mapper, Class<?> type) {
         super(type);
         this.mapper = mapper;
+    }
+
+    /**
+     * Sets up {@link MorphiaPropertySerialization} on every property model.
+     * Must be called at the end of the generated subclass constructor, after all
+     * properties have been added via {@code addProperty()}.
+     *
+     * @param mapper the mapper whose configuration governs serialization behaviour
+     */
+    protected final void configureProperties(Mapper mapper) {
+        for (PropertyModel property : getProperties()) {
+            property.serialization(new MorphiaPropertySerialization(mapper.getConfig(), property));
+        }
     }
 
     @Override
