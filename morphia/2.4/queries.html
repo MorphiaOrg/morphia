@@ -171,7 +171,7 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Morphia</span>
-    <span class="version">2.4</span>
+    <span class="version">2.4-SNAPSHOT</span>
   </div>
   <ul class="components">
     <li class="component">
@@ -203,7 +203,7 @@
           <a href="../2.5/index.html">2.5</a>
         </li>
         <li class="version is-current">
-          <a href="index.html">2.4</a>
+          <a href="index.html">2.4-SNAPSHOT</a>
         </li>
         <li class="version">
           <a href="../2.3/index.html">2.3</a>
@@ -230,11 +230,11 @@
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">2.4</button>
+  <button class="version-menu-toggle" title="Show other versions of page">2.4-SNAPSHOT</button>
   <div class="version-menu">
     <a class="version" href="../3.0/queries.html">3.0-SNAPSHOT</a>
     <a class="version" href="../2.5/queries.html">2.5</a>
-    <a class="version is-current" href="queries.html">2.4</a>
+    <a class="version is-current" href="queries.html">2.4-SNAPSHOT</a>
     <a class="version" href="../2.3/queries.html">2.3</a>
     <a class="version is-missing" href="../1.6/index.html">1.6</a>
   </div>
@@ -330,7 +330,7 @@ Listed below are some of the options for modifying the query results in differen
 <p><a href="http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/">Projections</a> allow you to return only a subset of the fields in a document.
 This is useful when you need to only return a smaller view of a larger object.
 Borrowing from the
-<a href="https://github.com/MorphiaOrg/morphia/tree/2.4.x/morphia/src/test/java/dev/morphia/TestQuery.java">unit tests</a>, this is an example of this feature in action:</p>
+<a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/TestQuery.java">unit tests</a>, this is an example of this feature in action:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -415,7 +415,7 @@ For example, to sort by <code>age</code> (youngest to oldest) and then <code>inc
 <p>If you have a <a href="http://docs.mongodb.org/manual/core/capped-collections/">capped collection</a> it&#8217;s possible to "tail" a query so that when new documents are added to the collection that match your query, they&#8217;ll be returned by the
 <a href="http://docs.mongodb.org/manual/reference/glossary/#term-tailable-cursor">tailable cursor</a>.
 An example of this feature in action can be found in the
-<a href="https://github.com/MorphiaOrg/morphia/tree/2.4.x/morphia/src/test/java/dev/morphia/TestQuery.java">unit tests</a> in the <code>testTailableCursors()</code> test:</p>
+<a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/TestQuery.java">unit tests</a> in the <code>testTailableCursors()</code> test:</p>
 </div>
 <div class="listingblock">
 <div class="content">

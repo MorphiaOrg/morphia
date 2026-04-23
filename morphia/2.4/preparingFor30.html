@@ -171,7 +171,7 @@
 <div class="nav-panel-explore" data-panel="explore">
   <div class="context">
     <span class="title">Morphia</span>
-    <span class="version">2.4</span>
+    <span class="version">2.4-SNAPSHOT</span>
   </div>
   <ul class="components">
     <li class="component">
@@ -203,7 +203,7 @@
           <a href="../2.5/index.html">2.5</a>
         </li>
         <li class="version is-current">
-          <a href="index.html">2.4</a>
+          <a href="index.html">2.4-SNAPSHOT</a>
         </li>
         <li class="version">
           <a href="../2.3/index.html">2.3</a>
@@ -230,11 +230,11 @@
   </ul>
 </nav>
 <div class="page-versions">
-  <button class="version-menu-toggle" title="Show other versions of page">2.4</button>
+  <button class="version-menu-toggle" title="Show other versions of page">2.4-SNAPSHOT</button>
   <div class="version-menu">
     <a class="version is-missing" href="../3.0/index.html">3.0-SNAPSHOT</a>
     <a class="version" href="../2.5/preparingFor30.html">2.5</a>
-    <a class="version is-current" href="preparingFor30.html">2.4</a>
+    <a class="version is-current" href="preparingFor30.html">2.4-SNAPSHOT</a>
     <a class="version is-missing" href="../2.3/index.html">2.3</a>
     <a class="version is-missing" href="../1.6/index.html">1.6</a>
   </div>
@@ -330,7 +330,7 @@ still exist and continue to clutter the API.  Morphia 3.0 will see the removal o
 <div class="paragraph">
 <p>One thing to note on a handful of deprecations is that the method isn&#8217;t going away as such as the usage of it will change in a breaking
 manner.  e.g.,
-<a href="https://github.com/MorphiaOrg/morphia/tree/2.4.x/core/src/main/java/dev/morphia/query/Query.java">Query#update(UpdateOperator first, UpdateOperator&#8230;&#8203; updates)</a>.  This method
+<a href="https://github.com/MorphiaOrg/morphia/blob/master/core/src/main/java/dev/morphia/query/Query.java">Query#update(UpdateOperator first, UpdateOperator&#8230;&#8203; updates)</a>.  This method
 will, in 3.0, return an <code>UpdateResult</code> like the <code>execute()</code> method you have to call today does.  Migrating to this new form when 3.0
 arrives should be as simple as removing that last method call in the chain.</p>
 </div>
