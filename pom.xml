@@ -9,7 +9,7 @@
 
     <groupId>dev.morphia.morphia</groupId>
     <artifactId>morphia</artifactId>
-    <version>2.4.20-SNAPSHOT</version>
+    <version>2.4.20</version>
     <packaging>pom</packaging>
 
     <name>morphia</name>
