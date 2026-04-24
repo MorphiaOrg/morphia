@@ -91,14 +91,15 @@ jobs:
         mongo: ${{ fromJson(needs.matrix.outputs.version_matrix) }}
         driver: ${{ fromJson(needs.matrix.outputs.driver_latest) }}
         java: [ 17 ]
+        mapper: [ reflection, critter ]
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     secrets:
       DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
     with:
       java: ${{ matrix.java }}
       reuseBuild: true
-      archive-name: "${{matrix.mongo}}-${{matrix.driver}}-${{matrix.java}}-${{github.run_id}}"
-      maven-flags: "-e -Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }}"
+      archive-name: "${{matrix.mongo}}-${{matrix.driver}}-${{matrix.java}}-${{matrix.mapper}}-${{github.run_id}}"
+      maven-flags: "-e -Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }} -Dmorphia.mapper=${{ matrix.mapper }}"
 
   DriversTests:
     name: Driver

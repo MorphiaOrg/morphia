@@ -4,6 +4,7 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.invoke.VarHandle;
+import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Map;
 
@@ -12,10 +13,13 @@ import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.ExtensionFunctions;
 
 import org.bson.codecs.pojo.PropertyAccessor;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
 
+import io.quarkus.gizmo.BranchResult;
+import io.quarkus.gizmo.BytecodeCreator;
 import io.quarkus.gizmo.FieldCreator;
 import io.quarkus.gizmo.FieldDescriptor;
 import io.quarkus.gizmo.ResultHandle;
@@ -59,6 +63,7 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
     private final String propertyName;
     private final String propertyType;
     private final boolean isFieldBased;
+    private final boolean isFinalField;
     private final String getterName;
     private final String setterName;
 
@@ -74,6 +79,7 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
         this.propertyName = field.name;
         this.propertyType = Type.getType(field.desc).getClassName();
         this.isFieldBased = true;
+        this.isFinalField = (field.access & Opcodes.ACC_FINAL) != 0;
         this.getterName = null;
         this.setterName = null;
         generatedType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
@@ -91,6 +97,7 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
         this.propertyName = ExtensionFunctions.getterToPropertyName(method, entity);
         this.propertyType = Type.getReturnType(method.desc).getClassName();
         this.isFieldBased = false;
+        this.isFinalField = false;
         this.getterName = method.name;
         this.setterName = "set%s".formatted(Critter.titleCase(propertyName));
         generatedType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
@@ -264,6 +271,13 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
         method.setParameterNames(new String[] { "model" });
 
         ResultHandle model = method.getMethodParam(0);
+
+        // Guard against null model (e.g. unwrapped lazy proxy for a missing/deleted reference)
+        BranchResult nullCheck = method.ifNull(model);
+        try (BytecodeCreator nullBranch = nullCheck.trueBranch()) {
+            nullBranch.returnValue(nullBranch.loadNull());
+        }
+
         ResultHandle handleRef = method.readInstanceField(handleDesc, method.getThis());
 
         ResultHandle result;
@@ -298,6 +312,28 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
         if (!isFieldBased && setterHandleDesc == null) {
             // Read-only property — no setter
             method.throwException(UnsupportedOperationException.class, "Property '%s' is read-only".formatted(propertyName));
+            return;
+        }
+
+        // Final fields: VarHandle.set() is not supported; fall back to reflection
+        if (isFinalField) {
+            TryBlock tryBlock = method.tryBlock();
+            ResultHandle fieldRef = tryBlock.invokeVirtualMethod(
+                    ofMethod(Class.class, "getDeclaredField", Field.class, String.class),
+                    tryBlock.loadClass(entity),
+                    tryBlock.load(propertyName));
+            tryBlock.invokeVirtualMethod(
+                    ofMethod(Field.class, "setAccessible", void.class, boolean.class),
+                    fieldRef,
+                    tryBlock.load(true));
+            tryBlock.invokeVirtualMethod(
+                    ofMethod(Field.class, "set", void.class, Object.class, Object.class),
+                    fieldRef,
+                    tryBlock.getMethodParam(0),
+                    tryBlock.getMethodParam(1));
+            tryBlock.returnValue(null);
+            var catchBlock = tryBlock.addCatch(Exception.class);
+            catchBlock.throwException(RuntimeException.class, "Failed to set final field '%s'".formatted(propertyName));
             return;
         }
 

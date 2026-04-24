@@ -1,10 +1,14 @@
 package dev.morphia.critter.parser.gizmo;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.internal.AnnotationNodeExtensions;
@@ -14,6 +18,7 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
+import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;
 
@@ -178,6 +183,10 @@ public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
                     constructor.loadClass(entity));
             loadProperties(constructor);
             registerAnnotations(constructor);
+            constructor.invokeVirtualMethod(
+                    ofMethod(generatedType, "configureProperties", "void", Mapper.class),
+                    constructor.getThis(),
+                    constructor.getMethodParam(0));
             constructor.returnVoid();
         }
     }
@@ -193,11 +202,44 @@ public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
 
     private void registerAnnotations(MethodCreator constructor) {
         MethodDescriptor annotationMethod = ofMethod(generatedType, "annotation", "void", Annotation.class);
+        Set<String> registered = new LinkedHashSet<>();
+
+        // Register annotations directly on this class first
         for (AnnotationNode annotation : annotations) {
-            constructor.invokeVirtualMethod(
-                    annotationMethod,
-                    constructor.getThis(),
-                    GizmoExtensions.annotationBuilder(annotation, constructor));
+            if (registered.add(annotation.desc)) {
+                constructor.invokeVirtualMethod(
+                        annotationMethod,
+                        constructor.getThis(),
+                        GizmoExtensions.annotationBuilder(annotation, constructor));
+            }
+        }
+
+        // Walk parent class hierarchy to register inherited annotations not on this class
+        Class<?> parent = entity.getSuperclass();
+        while (parent != null && !parent.equals(Object.class)) {
+            String resourceName = "%s.class".formatted(parent.getName().replace('.', '/'));
+            InputStream inputStream = parent.getClassLoader() != null
+                    ? parent.getClassLoader().getResourceAsStream(resourceName)
+                    : ClassLoader.getSystemResourceAsStream(resourceName);
+            if (inputStream != null) {
+                try {
+                    ClassNode parentNode = new ClassNode();
+                    new ClassReader(inputStream).accept(parentNode, 0);
+                    if (parentNode.visibleAnnotations != null) {
+                        for (AnnotationNode annotation : parentNode.visibleAnnotations) {
+                            if (registered.add(annotation.desc)) {
+                                constructor.invokeVirtualMethod(
+                                        annotationMethod,
+                                        constructor.getThis(),
+                                        GizmoExtensions.annotationBuilder(annotation, constructor));
+                            }
+                        }
+                    }
+                } catch (IOException e) {
+                    // skip if parent class bytecode can't be read
+                }
+            }
+            parent = parent.getSuperclass();
         }
     }
 }

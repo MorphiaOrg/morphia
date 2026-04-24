@@ -8,6 +8,7 @@ import com.mongodb.client.MongoClient;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.internal.MorphiaInternals;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MapperType;
 import dev.morphia.test.TestBase.ZDTCodecProvider;
 import dev.morphia.test.config.ManualMorphiaTestConfig;
 import dev.morphia.test.config.MorphiaTestConfig;
@@ -179,8 +180,11 @@ public class MorphiaTestSetup {
     }
 
     protected static MorphiaConfig buildConfig(Class<?>... types) {
+        String mapperProp = System.getProperty("morphia.mapper", "reflection");
+        MapperType mapperType = MapperType.valueOf(mapperProp.toUpperCase());
         MorphiaConfig config = new ManualMorphiaTestConfig()
-                .database(TEST_DB_NAME);
+                .database(TEST_DB_NAME)
+                .mapper(mapperType);
         if (types.length != 0)
             config = config
                     .packages(stream(types)
