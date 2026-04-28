@@ -206,7 +206,7 @@ public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
 
         // Register annotations directly on this class first
         for (AnnotationNode annotation : annotations) {
-            if (registered.add(annotation.desc)) {
+            if (isMorphiaAnnotation(annotation) && registered.add(annotation.desc)) {
                 constructor.invokeVirtualMethod(
                         annotationMethod,
                         constructor.getThis(),
@@ -227,7 +227,7 @@ public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
                     new ClassReader(inputStream).accept(parentNode, 0);
                     if (parentNode.visibleAnnotations != null) {
                         for (AnnotationNode annotation : parentNode.visibleAnnotations) {
-                            if (registered.add(annotation.desc)) {
+                            if (isMorphiaAnnotation(annotation) && registered.add(annotation.desc)) {
                                 constructor.invokeVirtualMethod(
                                         annotationMethod,
                                         constructor.getThis(),
@@ -241,5 +241,9 @@ public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
             }
             parent = parent.getSuperclass();
         }
+    }
+
+    private static boolean isMorphiaAnnotation(AnnotationNode annotation) {
+        return annotation.desc.startsWith("Ldev/morphia/annotations/");
     }
 }

@@ -31,6 +31,7 @@ public abstract class CritterEntityModel extends EntityModel {
      *
      * @param mapper the mapper whose configuration governs serialization behaviour
      */
+    @SuppressWarnings("unused")
     protected final void configureProperties(Mapper mapper) {
         for (PropertyModel property : getProperties()) {
             property.serialization(new MorphiaPropertySerialization(mapper.getConfig(), property));
