@@ -116,20 +116,22 @@ jobs:
           - driver: ${{ fromJson(needs.matrix.outputs.driver_latest)[0] }}
             java: 21
             mongo: 8.0.0
+            mapper: reflection
           - driver: ${{ fromJson(needs.matrix.outputs.driver_latest)[0] }}
             java: 25
             mongo: 8.0.0
-            optional: true
-          - driver: ${{ needs.matrix.outputs.driver_snapshot }}
-            java: 17
-            mongo: 8.0.0
-            optional: true
             mapper: reflection
+            optional: true
           - driver: ${{ needs.matrix.outputs.driver_snapshot }}
             java: 17
             mongo: 8.0.0
+            mapper: reflection
             optional: true
+          - driver: ${{ needs.matrix.outputs.driver_snapshot }}
+            java: 17
+            mongo: 8.0.0
             mapper: critter
+            optional: true
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     secrets:
       DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
