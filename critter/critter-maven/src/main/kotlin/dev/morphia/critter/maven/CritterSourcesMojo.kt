@@ -30,19 +30,22 @@ class CritterSourcesMojo : AbstractMojo() {
     @Parameter(
         property = "critter.sourceOutputDirectory",
         defaultValue = "\${project.build.directory}/generated-sources/critter",
+        readonly = true,
     )
     private lateinit var sourceOutputDirectory: File
 
     @Parameter(
         property = "critter.resourceOutputDirectory",
         defaultValue = "\${project.build.directory}/generated-resources/critter",
+        readonly = true,
     )
     private lateinit var resourceOutputDirectory: File
 
-    @Parameter(property = "critter.includeTestSources", defaultValue = "false")
+    //    @Parameter(property = "critter.includeTestSources", defaultValue = "false")
     private var includeTestSources: Boolean = false
 
-    @Parameter(property = "critter.criteriaPackage") private var criteriaPackage: String? = null
+    //    @Parameter(property = "critter.criteriaPackage")
+    private var criteriaPackage: String? = null
 
     @Parameter(property = "critter.format", defaultValue = "true")
     private var format: Boolean = true

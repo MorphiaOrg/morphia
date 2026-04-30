@@ -32,7 +32,7 @@
                     <execution>
                         <id>generate-critter</id>
                         <goals>
-                            <goal>generate</goal>
+                            <goal>generate-models</goal>
                         </goals>
                     </execution>
                 </executions>

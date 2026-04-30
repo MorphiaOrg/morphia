@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory
  * process-classes phase by default.
  */
 @Mojo(
-    name = "generate",
+    name = "generate-models",
     defaultPhase = LifecyclePhase.PROCESS_CLASSES,
     requiresDependencyResolution = ResolutionScope.TEST,
 )
@@ -35,10 +35,11 @@ class CritterMojo : AbstractMojo() {
     @Parameter(
         property = "critter.outputDirectory",
         defaultValue = "\${project.build.directory}/generated-classes/critter",
+        readonly = true,
     )
     private lateinit var outputDirectory: File
 
-    @Parameter(property = "critter.includeTestClasses", defaultValue = "false")
+    //    @Parameter(property = "critter.includeTestClasses", defaultValue = "false")
     private var includeTestClasses: Boolean = false
 
     @Throws(MojoExecutionException::class)

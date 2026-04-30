@@ -24,8 +24,7 @@ The plugin is entirely optional; the runtime fallback produces identical results
 |Recommended for production deployments and fast-start environments (e.g., serverless, containers)
 |===
 
-Both paths produce `VarHandle`-based property accessors and identical `CritterEntityModel` instances.
-The plugin simply moves the generation work from JVM startup to the Maven build.
+Both paths generate the bytecode necessary to manage your entities. The plugin simply moves the generation work from JVM startup to build time.
 
 === Setup
 
@@ -41,7 +40,7 @@ Add the plugin to your `pom.xml` and set `morphia.mapper=critter` in your config
         <execution>
             <id>generate-critter</id>
             <goals>
-                <goal>generate</goal>
+                <goal>generate-models</goal>
             </goals>
         </execution>
     </executions>
@@ -58,7 +57,7 @@ When `morphia.mapper=critter` is active and the plugin has run, Morphia loads th
 
 === Goals
 
-==== `generate` (default phase: `process-classes`)
+==== `generate-models` (default phase: `process-classes`)
 
 Reads compiled `.class` files from the project's output directory and writes generated entity model and accessor classes alongside them.
 This is the standard goal for most projects.
@@ -67,17 +66,10 @@ This is the standard goal for most projects.
 |===
 |Parameter |Default |Description
 
-|`critter.outputDirectory`
-|`target/generated-classes/critter`
-|Directory where generated `.class` files are written
-
 |`critter.packages`
 |_(all packages)_
 |Restrict generation to specific packages (comma-separated)
 
-|`critter.includeTestClasses`
-|`false`
-|Also generate models for test-scoped entity classes
 |===
 
 ==== `sources` (default phase: `generate-sources`)
@@ -88,14 +80,6 @@ Useful when you want the generated sources checked into version control or need 
 [cols="1,1,3"]
 |===
 |Parameter |Default |Description
-
-|`critter.sourceOutputDirectory`
-|`target/generated-sources/critter`
-|Directory where generated `.java` files are written
-
-|`critter.resourceOutputDirectory`
-|`target/generated-resources/critter`
-|Directory where generated resource files are written
 
 |`critter.packages`
 |_(all packages)_
@@ -120,7 +104,7 @@ Useful when you want the generated sources checked into version control or need 
 ----
 Maven build
   └─ compile phase          → your entity .class files
-  └─ process-classes phase  → critter-maven:generate
+  └─ process-classes phase  → critter-maven:generate-models
        reads entity .class files
        writes *EntityModel.class + *Accessor.class files
   └─ package phase          → all .class files bundled in JAR

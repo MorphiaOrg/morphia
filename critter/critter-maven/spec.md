@@ -11,9 +11,9 @@
   * if no such file exists, default configuration should be used.
 * logging for these mojos should use sl4j as the logging facade.
 
-## Generate Mojo (`critter:generate`)
+## Generate Mojo (`critter:generate-models`)
 
-* create a maven mojo called named "generate" examines the compiled .class files in the project's output directory as defined in the
+* create a maven mojo called named "generate-models" examines the compiled .class files in the project's output directory as defined in the
   MavenProject passed to the mojo.
   * These classes should be passed to a CritterProcessor class that performs some processing on them.
   * The mojo should be bound to the "process-classes" phase of the Maven build lifecycle.
