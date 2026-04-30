@@ -1,8 +1,11 @@
 package dev.morphia.test.mapping;
 
+import dev.morphia.mapping.CritterMapperTestEntity;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MapperType;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.generics.ChildEntity;
 
@@ -13,6 +16,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotSame;
 import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
 
 public class TestMapper extends TestBase {
     @Test
@@ -28,6 +32,25 @@ public class TestMapper extends TestBase {
                 assertModelNotSame(originalEntity, cloned.getEntityModel(originalEntity.getType()));
             });
 
+        });
+    }
+
+    @Test
+    public void testMapperTypeProducesCorrectModelTypes() {
+        MapperType configuredType = MapperType.valueOf(System.getProperty("morphia.mapper", "reflection").toUpperCase());
+        withConfig(buildConfig(), () -> {
+            Mapper mapper = getMapper();
+            EntityModel model = mapper.mapEntity(CritterMapperTestEntity.class);
+            assertFalse(mapper.getMappedEntities().isEmpty());
+            if (configuredType == MapperType.CRITTER) {
+                assertTrue(model instanceof CritterEntityModel,
+                        format("Expected CritterEntityModel for CRITTER mapper but got %s",
+                                model.getClass().getName()));
+            } else {
+                assertFalse(model instanceof CritterEntityModel,
+                        format("Expected plain EntityModel for REFLECTION mapper but got CritterEntityModel for %s",
+                                model.getType().getName()));
+            }
         });
     }
 

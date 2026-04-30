@@ -76,6 +76,7 @@
         <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
         <asm.version>9.9.1</asm.version>
         <dokka.version>2.2.0</dokka.version>
+        <morphia.mapper>reflection</morphia.mapper>
     </properties>
 
     <build>

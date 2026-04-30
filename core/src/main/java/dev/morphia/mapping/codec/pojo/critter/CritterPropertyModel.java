@@ -89,6 +89,6 @@ public abstract class CritterPropertyModel extends PropertyModel {
 
     @Override
     public PropertyModel serialization(PropertySerialization serialization) {
-        throw new UnsupportedOperationException();
+        return super.serialization(serialization);
     }
 }
