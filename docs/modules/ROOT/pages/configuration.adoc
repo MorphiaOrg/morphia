@@ -87,6 +87,24 @@ Simple name is the fully qualified classname without the package name. These can
 link:++javadoc/dev/morphia/mapping/DiscriminatorFunction.html++[DiscriminatorFunction] and just like the `NamingStrategy` cases, if the
 provided options are not sufficient, you can implement your own by subclassing `DiscriminatorFunction` and implementing your own function.
 
+=== Mapper selection
+
+* `morphia.mapper`
+
+Morphia supports two mapper implementations, selectable via configuration:
+
+1. `reflection` *(default)* — the traditional reflection-based mapper. No additional dependencies required.
+2. `critter` — a bytecode-generation mapper that produces `VarHandle`-based accessors at runtime via Gizmo, with automatic fallback to reflection if generation fails for a given type. Pre-generated models from the `critter-maven` plugin are used when available (AOT path), otherwise models are generated at JVM startup.
+
+To enable the critter mapper, add the following to your `META-INF/morphia-config.properties`:
+
+[,txt]
+----
+morphia.mapper=critter
+----
+
+Or pass `-Dmorphia.mapper=critter` on the Maven command line when running tests.
+
 === User-defined Codecs
 
 * `morphia.codec-provider`
