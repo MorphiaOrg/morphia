@@ -1,0 +1,134 @@
+== critter-maven Plugin
+
+The `critter-maven` plugin generates Morphia entity models and property accessors at build time (AOT — ahead of time), so they are ready on the classpath before your application starts.
+Without the plugin, Morphia generates the same models at JVM startup using Gizmo bytecode generation.
+The plugin is entirely optional; the runtime fallback produces identical results.
+
+=== Why use it?
+
+[cols="1,1"]
+|===
+|Without plugin (runtime generation) |With plugin (AOT generation)
+
+|Models generated at JVM startup via Gizmo
+|Models generated once at build time, loaded instantly
+
+|Startup cost proportional to number of mapped entities
+|Zero startup cost — models are regular `.class` files on the classpath
+
+|No build-time dependency on the plugin
+|Build-time dependency, no runtime overhead
+
+|Good for development and smaller applications
+|Recommended for production deployments and fast-start environments (e.g., serverless, containers)
+|===
+
+Both paths produce `VarHandle`-based property accessors and identical `CritterEntityModel` instances.
+The plugin simply moves the generation work from JVM startup to the Maven build.
+
+=== Setup
+
+Add the plugin to your `pom.xml` and set `morphia.mapper=critter` in your config:
+
+[,xml]
+----
+<plugin>
+    <groupId>dev.morphia.morphia</groupId>
+    <artifactId>critter-maven</artifactId>
+    <version>${morphia.version}</version>
+    <executions>
+        <execution>
+            <id>generate-critter</id>
+            <goals>
+                <goal>generate</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+----
+
+[,properties]
+----
+# META-INF/morphia-config.properties
+morphia.mapper=critter
+----
+
+When `morphia.mapper=critter` is active and the plugin has run, Morphia loads the pre-generated models automatically — no code changes required.
+
+=== Goals
+
+==== `generate` (default phase: `process-classes`)
+
+Reads compiled `.class` files from the project's output directory and writes generated entity model and accessor classes alongside them.
+This is the standard goal for most projects.
+
+[cols="1,1,3"]
+|===
+|Parameter |Default |Description
+
+|`critter.outputDirectory`
+|`target/generated-classes/critter`
+|Directory where generated `.class` files are written
+
+|`critter.packages`
+|_(all packages)_
+|Restrict generation to specific packages (comma-separated)
+
+|`critter.includeTestClasses`
+|`false`
+|Also generate models for test-scoped entity classes
+|===
+
+==== `sources` (default phase: `generate-sources`)
+
+Reads Java source files and generates critter source code rather than bytecode.
+Useful when you want the generated sources checked into version control or need to inspect them.
+
+[cols="1,1,3"]
+|===
+|Parameter |Default |Description
+
+|`critter.sourceOutputDirectory`
+|`target/generated-sources/critter`
+|Directory where generated `.java` files are written
+
+|`critter.resourceOutputDirectory`
+|`target/generated-resources/critter`
+|Directory where generated resource files are written
+
+|`critter.packages`
+|_(all packages)_
+|Restrict generation to specific packages
+
+|`critter.includeTestSources`
+|`false`
+|Also generate models for test-scoped entity sources
+
+|`critter.criteriaPackage`
+|_(same as entity package)_
+|Override the package used for generated criteria classes
+
+|`critter.format`
+|`true`
+|Apply source formatting to generated files
+|===
+
+=== How it fits together
+
+[source]
+----
+Maven build
+  └─ compile phase          → your entity .class files
+  └─ process-classes phase  → critter-maven:generate
+       reads entity .class files
+       writes *EntityModel.class + *Accessor.class files
+  └─ package phase          → all .class files bundled in JAR
+
+Runtime (morphia.mapper=critter)
+  └─ CritterMapper.mapEntity(Hotel.class)
+       1. tryLoadPregenerated()  → finds HotelEntityModel on classpath ✓
+       2. (skipped)              → no runtime Gizmo generation needed
+       3. (skipped)              → no reflection fallback needed
+----
+
+If the plugin was not run (e.g., during a quick `mvn test-compile` without the full lifecycle), step 1 finds nothing and Morphia transparently falls back to runtime Gizmo generation at step 2.
