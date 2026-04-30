@@ -1,8 +1,9 @@
-== critter-maven Plugin
+== Maven Plugin
 
 The `critter-maven` plugin generates Morphia entity models and property accessors at build time (AOT — ahead of time), so they are ready on the classpath before your application starts.
-Without the plugin, Morphia generates the same models at JVM startup using Gizmo bytecode generation.
-The plugin is entirely optional; the runtime fallback produces identical results.
+Without the plugin, Morphia generates the same models at each JVM startup.
+
+The plugin is entirely optional; the runtime fallback produces identical results.  It is recommended to use the plugin, however.
 
 === Why use it?
 

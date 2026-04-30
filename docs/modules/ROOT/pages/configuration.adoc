@@ -105,7 +105,7 @@ morphia.mapper=critter
 
 Or pass `-Dmorphia.mapper=critter` on the Maven command line when running tests.
 
-For production deployments, consider using the xref:critter-maven.adoc[critter-maven plugin] to generate models at build time and eliminate the startup cost entirely.
+For production deployments, consider using the xref:maven-plugin.adoc[critter-maven plugin] to generate models at build time and eliminate the startup cost entirely.
 
 === User-defined Codecs
 
