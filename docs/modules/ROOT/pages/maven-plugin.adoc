@@ -72,7 +72,7 @@ This is the standard goal for most projects.
 
 |===
 
-==== `sources` (default phase: `generate-sources`)
+==== `generate-criteria` (default phase: `generate-sources`)
 
 Reads Java source files and generates critter source code rather than bytecode.
 Useful when you want the generated sources checked into version control or need to inspect them.
@@ -84,10 +84,6 @@ Useful when you want the generated sources checked into version control or need 
 |`critter.packages`
 |_(all packages)_
 |Restrict generation to specific packages
-
-|`critter.includeTestSources`
-|`false`
-|Also generate models for test-scoped entity sources
 
 |`critter.criteriaPackage`
 |_(same as entity package)_

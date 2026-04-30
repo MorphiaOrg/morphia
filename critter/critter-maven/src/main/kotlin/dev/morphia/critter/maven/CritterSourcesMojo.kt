@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory
  * Mojo that processes source files and generates critter source code. Bound to the generate-sources
  * phase by default.
  */
-@Mojo(name = "sources", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
+@Mojo(name = "generate-criteria", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 class CritterSourcesMojo : AbstractMojo() {
 
     private val logger: Logger = LoggerFactory.getLogger(CritterSourcesMojo::class.java)
