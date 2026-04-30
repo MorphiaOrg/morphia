@@ -15,14 +15,21 @@
 
 ## Build Commands
 - `./mvnw` - Use Maven wrapper (requires Maven 4.1.0+)
-- `-pl :artifactId` - Target specific module (e.g., `-pl :critter-core`)
+- `-pl :artifactId` - Target specific module (e.g., `-pl :morphia-core`)
 - `-am` - Also build dependencies that need rebuilding
 - Build with deps: `./mvnw install -pl :morphia-core -am -DskipTests`
+- Skip dokka: `-Ddeploy.skip=true`
+- Skip invoker tests: `-Dinvoker.skip=true`
+- Typical build: `./mvnw install -pl :morphia-core -DskipTests -Ddeploy.skip=true`
+- Run specific test: `./mvnw test -pl :morphia-core -Dtest="ClassName#method" -Ddeploy.skip=true`
+- Run with critter mapper: `-Dmorphia.mapper=critter` (e.g., `./mvnw test -pl :morphia-core -Dmorphia.mapper=critter -Ddeploy.skip=true`)
+- Don't use `-am` with `-Dtest=` — it applies the test filter to all modules causing failures
 
 ## Critter Code Generator
-- Changes to `build-plugins` require rebuild before `critter-core` (regenerates `AnnotationNodeExtensions.kt`)
-- Integration tests: `./mvnw test -pl :critter-integration-tests`
-- Build order: `build-plugins` → `critter-core` → `critter-maven` → `critter-integration-tests`
+- Critter bytecode generation is integrated into `morphia-core` (under `dev.morphia.critter` package)
+- The `critter-maven` plugin generates models at build time (AOT); runtime generation via Gizmo is the fallback
+- Build order for critter-maven: `morphia-core` → `critter-maven`
+- `morphia.mapper` config: `reflection` (default) or `critter` — selects `ReflectiveMapper` vs `CritterMapper`
 
 ## ASM Annotation Parsing Quirks
 - Enum annotation values: stored as `Array<String>` - use `(it as Array<String>)[1]` for enum name
@@ -32,7 +39,6 @@
 - Type parameters (e.g., `TT;`) cannot be converted to Class - use `Object.class` as erasure
 
 ## Code Patterns
-- Kotlin extension functions in `Generators.kt` for ASM Type conversions
 - `methodCase()` converts getter names like `getName` → `name`
 - `titleCase()` converts `name` → `Name` for generated class names
 
