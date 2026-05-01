@@ -30,8 +30,6 @@ class CritterMojo : AbstractMojo() {
     @Parameter(defaultValue = "\${project}", required = true, readonly = true)
     private lateinit var project: MavenProject
 
-    @Parameter(property = "critter.packages") private var packages: List<String> = emptyList()
-
     @Parameter(
         property = "critter.outputDirectory",
         defaultValue = "\${project.build.directory}/generated-classes/critter",
@@ -39,48 +37,29 @@ class CritterMojo : AbstractMojo() {
     )
     private lateinit var outputDirectory: File
 
-    //    @Parameter(property = "critter.includeTestClasses", defaultValue = "false")
-    private var includeTestClasses: Boolean = false
-
-    @Throws(MojoExecutionException::class)
     override fun execute() {
         try {
-            val classesDirectory =
-                if (includeTestClasses) {
-                    File(project.build.testOutputDirectory)
-                } else {
-                    File(project.build.outputDirectory)
-                }
+            val classesDirectory = File(project.build.outputDirectory)
 
             if (!classesDirectory.exists()) {
-                logger.info("Classes directory does not exist: ${classesDirectory.absolutePath}")
+                logger.error("Classes directory does not exist: ${classesDirectory.absolutePath}")
                 return
             }
 
-            val config = loadMorphiaConfig()
-            val classLoader = buildClassLoader()
-            val processor =
-                CritterProcessor(
+            CritterProcessor(
                     classesDirectory = classesDirectory,
                     outputDirectory = outputDirectory,
-                    packages = packages,
-                    classLoader = classLoader,
-                    config = config,
+                    classLoader = buildClassLoader(),
+                    config = loadMorphiaConfig(),
                 )
-
-            processor.process()
+                .process()
         } catch (e: Exception) {
             throw MojoExecutionException("Failed to generate critter code", e)
         }
     }
 
     private fun loadMorphiaConfig(): MorphiaConfig {
-        val resourcesDir =
-            if (includeTestClasses) {
-                File(project.build.testOutputDirectory)
-            } else {
-                File(project.build.outputDirectory)
-            }
+        val resourcesDir = File(project.build.outputDirectory)
 
         val configFile = File(resourcesDir, MORPHIA_CONFIG_PROPERTIES)
 
@@ -103,14 +82,7 @@ class CritterMojo : AbstractMojo() {
     }
 
     private fun buildClassLoader(): ClassLoader {
-        val classpathElements =
-            if (includeTestClasses) {
-                project.testClasspathElements
-            } else {
-                project.compileClasspathElements
-            }
-
-        val urls = classpathElements.map { File(it).toURI().toURL() }.toTypedArray()
+        val urls = project.compileClasspathElements.map { File(it).toURI().toURL() }.toTypedArray()
 
         return URLClassLoader(urls, Thread.currentThread().contextClassLoader)
     }

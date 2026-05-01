@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory
 class CritterProcessor(
     private val classesDirectory: File,
     private val outputDirectory: File,
-    private val packages: List<String>,
     private val classLoader: ClassLoader,
     private val config: MorphiaConfig,
 ) {
@@ -43,11 +42,7 @@ class CritterProcessor(
     }
 
     private fun findEntityClasses(): List<Class<*>> {
-        val packagesToScan =
-            packages.ifEmpty {
-                // Use packages from config if none specified
-                config.packages().filter { it != ".*" }
-            }
+        val packagesToScan = config.packages().filter { it != ".*" }
 
         val scanResult =
             ClassGraph()

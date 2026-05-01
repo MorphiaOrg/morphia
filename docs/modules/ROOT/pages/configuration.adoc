@@ -1,24 +1,7 @@
 == Configuration
 
-[NOTE]
-====
-After some feedback about some unexpected use cases, this transition has been postponed and the requisite `MapperOptions` based methods
-undeprecated.  Programmatic configuration is a much more popular, and in some cases vital, option than previously known.  So for now,
-those methods will stay while the future of configuration and mapping gets a rethink.  Apologies for the noise and dust.
-====
-
-Starting in Morphia 3.0, configuration will be driven via a configuration file rather than programmatic configuration. The file
-should live in your build's resources folder and be named `META-INF/morphia-config.properties`. This is being done for a number of reasons:
-
-1. Better align with usage in frameworks such as Quarkus and Spring Boot
-2. Allow for deployment specific variations based on the deployment environment.
-3. Allow for certain optimizations and simplifications because we know more about the runtime set up earlier in the process.
-
-The configuration mechanism, based on https://microprofile.io/microprofile-config/[Microprofile Config], allows for a number of
-variations which were awkward, at best, and usually downright impossible when using the traditional programmatic configuration.
-Reference documentation for the configuration file can be found in the link:++javadoc/dev/morphia/config/MorphiaConfig.html++[javadoc] but
-we'll go in depth on a few items here. An example configuration file is included below. All possible configuration elements are listed.
-However, if the default values are acceptable that element can be safely omitted from your file.
+Starting in Morphia 3.0, configuration will be driven via a configuration file.  However programmatic configuration is still supportedfor those who prefer, or need, a more flexible approach. The file should live in your build's resources folder and be named `META-INF/morphia-config.properties`. Reference documentation for the configuration file can be found in the link:++javadoc/dev/morphia/config/MorphiaConfig.html++[javadoc] but
+we'll go in depth on a few items here. An example configuration file is included below. All possible configuration elements are listed. However, if the default values are acceptable that element can be safely omitted from your file.
 
 `Morphia.createDatastore()` can be called link:++javadoc/dev/morphia/Morphia.html#createDatastore(com.mongodb.client.MongoClient,dev.morphia.config.MorphiaConfig)++[with]
 and link:++javadoc/dev/morphia/Morphia.html#createDatastore(com.mongodb.client.MongoClient)++[without] an explicit `MorphiaConfig`
