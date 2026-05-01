@@ -59,7 +59,7 @@
         <javapoet.version>1.13.0</javapoet.version>
         <kotlinpoet.version>1.19.1</kotlinpoet.version>
         <logback.version>1.5.32</logback.version>
-        <ksp.version>2.3.6</ksp.version>
+        <ksp.version>2.3.7</ksp.version>
         <maven.version>4.0.0-rc-5</maven.version>
         <revapi.maven.plugin.version>0.15.1</revapi.maven.plugin.version>
         <revapi.java.version>0.28.4</revapi.java.version>
@@ -76,6 +76,7 @@
         <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
         <asm.version>9.9.1</asm.version>
         <dokka.version>2.2.0</dokka.version>
+        <morphia.mapper>reflection</morphia.mapper>
     </properties>
 
     <build>
@@ -205,7 +206,7 @@
             <dependency>
                 <groupId>io.smallrye.config</groupId>
                 <artifactId>smallrye-config</artifactId>
-                <version>3.17.0</version>
+                <version>3.17.2</version>
             </dependency>
 
             <dependency>
@@ -299,7 +300,7 @@
             <dependency>
                 <groupId>org.jsoup</groupId>
                 <artifactId>jsoup</artifactId>
-                <version>1.22.1</version>
+                <version>1.22.2</version>
             </dependency>
             <dependency>
                 <groupId>org.asciidoctor</groupId>

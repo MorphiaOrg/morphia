@@ -12,6 +12,7 @@ import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator;
 import dev.morphia.critter.parser.gizmo.PropertyModelGenerator;
 import dev.morphia.critter.parser.java.CritterParser;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.PropertyDiscovery;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Type;
@@ -29,6 +30,7 @@ public class PropertyFinder {
     private final CritterClassLoader classLoader;
     private final boolean runtimeMode;
     private final CritterGizmoGenerator critterGizmoGenerator;
+    private final PropertyDiscovery propertyDiscovery;
 
     /**
      * Creates a new PropertyFinder.
@@ -45,6 +47,7 @@ public class PropertyFinder {
         this.classLoader = classLoader;
         this.runtimeMode = runtimeMode;
         this.critterGizmoGenerator = new CritterGizmoGenerator(mapper);
+        this.propertyDiscovery = mapper.getConfig().propertyDiscovery();
     }
 
     /**
@@ -145,12 +148,60 @@ public class PropertyFinder {
     private List<MethodNode> discoverPropertyMethods(ClassNode classNode) {
         List<MethodNode> result = new ArrayList<>();
         for (MethodNode method : classNode.methods) {
-            if (method.name.startsWith("get") && Type.getArgumentTypes(method.desc).length == 0) {
-                if (isPropertyAnnotated(method.visibleAnnotations, false)) {
-                    result.add(method);
+            if (!isGetter(method)) {
+                continue;
+            }
+            if (propertyDiscovery == PropertyDiscovery.METHODS) {
+                // In METHODS mode: include all getters that have a matching setter,
+                // merging annotations from both getter and setter so that annotations
+                // placed on the setter (e.g. @Version, @Text) are visible to downstream generators.
+                String propName = getterPropertyName(method);
+                MethodNode setter = findSetter(classNode, propName, Type.getReturnType(method.desc));
+                if (setter != null) {
+                    result.add(mergeAnnotations(method, setter));
                 }
+            } else if (isPropertyAnnotated(method.visibleAnnotations, false)) {
+                result.add(method);
             }
         }
         return result;
+    }
+
+    private boolean isGetter(MethodNode method) {
+        return (method.name.startsWith("get") || method.name.startsWith("is"))
+                && Type.getArgumentTypes(method.desc).length == 0
+                && !Type.getReturnType(method.desc).equals(Type.VOID_TYPE);
+    }
+
+    private String getterPropertyName(MethodNode method) {
+        String prefix = method.name.startsWith("is") ? "is" : "get";
+        String name = method.name.substring(prefix.length());
+        return Character.toLowerCase(name.charAt(0)) + name.substring(1);
+    }
+
+    private MethodNode findSetter(ClassNode classNode, String propertyName, Type returnType) {
+        String setterName = "set" + Character.toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
+        String setterDesc = "(" + returnType.getDescriptor() + ")V";
+        for (MethodNode method : classNode.methods) {
+            if (method.name.equals(setterName) && method.desc.equals(setterDesc)) {
+                return method;
+            }
+        }
+        return null;
+    }
+
+    private MethodNode mergeAnnotations(MethodNode getter, MethodNode setter) {
+        List<AnnotationNode> setterAnnotations = setter.visibleAnnotations != null ? setter.visibleAnnotations : List.of();
+        if (setterAnnotations.isEmpty()) {
+            return getter;
+        }
+        MethodNode merged = new MethodNode(getter.access, getter.name, getter.desc, getter.signature, null);
+        List<AnnotationNode> combined = new ArrayList<>();
+        if (getter.visibleAnnotations != null) {
+            combined.addAll(getter.visibleAnnotations);
+        }
+        combined.addAll(setterAnnotations);
+        merged.visibleAnnotations = combined;
+        return merged;
     }
 }
