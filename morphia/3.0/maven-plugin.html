@@ -95,7 +95,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="configuration.html">Configuration</a>
   </li>
-  <li class="nav-item" data-depth="2">
+  <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="maven-plugin.html">Maven Plugin</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -125,7 +125,7 @@
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="textSearches.html">Text Search</a>
   </li>
-  <li class="nav-item is-current-page" data-depth="2">
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="references.html">References</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -214,19 +214,19 @@
   <ul>
     <li><a href="index.html">Morphia</a></li>
     <li>Features</li>
-    <li><a href="references.html">References</a></li>
+    <li><a href="maven-plugin.html">Maven Plugin</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">3.0-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="references.html">3.0-SNAPSHOT</a>
-    <a class="version" href="../2.5/references.html">2.5</a>
-    <a class="version" href="../2.4/references.html">2.4</a>
-    <a class="version" href="../1.6/references.html">1.6</a>
+    <a class="version is-current" href="maven-plugin.html">3.0-SNAPSHOT</a>
+    <a class="version is-missing" href="../2.5/index.html">2.5</a>
+    <a class="version is-missing" href="../2.4/index.html">2.4</a>
+    <a class="version is-missing" href="../1.6/index.html">1.6</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/references.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/maven-plugin.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
@@ -234,71 +234,113 @@
 </aside>
 <article class="doc">
 <div class="sect1">
-<h2 id="_references"><a class="anchor" href="#_references"></a>References</h2>
+<h2 id="_maven_plugin"><a class="anchor" href="#_maven_plugin"></a>Maven Plugin</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>MongoDB tries to encourage self-contained documents so that data can be fetched much more efficiently via single reads from the database.
-However not every data model or application can adhere to this philosophy in its entirety.
-As such, MongoDB supports
-<a href="http://docs.mongodb.org/manual/reference/database-references/">database references</a>.Morphia supports two styles of defining references:</p>
+<p>The <code>critter-maven</code> plugin generates Morphia entity models and property accessors at build time (AOT — ahead of time), so they are ready on the classpath before your application starts.
+Without the plugin, Morphia generates the same models at each JVM startup.</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>the <a href="javadoc/dev/morphia/annotations/Reference.html">@Reference</a> annotation</p>
-</li>
-<li>
-<p>an experimental wrapper type <a href="javadoc/dev/morphia/mapping/experimental/MorphiaReference.html">MorphiaReference</a>.</p>
-</li>
-</ol>
+<div class="paragraph">
+<p>The plugin is entirely optional; the runtime fallback produces identical results.  It is recommended to use the plugin, however.</p>
 </div>
 <div class="sect2">
-<h3 id="_using_the_annotation"><a class="anchor" href="#_using_the_annotation"></a>Using the annotation</h3>
-<div class="paragraph">
-<p>The annotation based approach is the traditional approach.
-The <a href="javadoc/dev/morphia/annotations/Reference.html">@Reference</a> can be applied to any property whose type is a mappable Entity type.
-When this is done, instead of storing that objects information as a subdocument in the larger document sent to the database, a reference will be stored instead which points to where the document is actually stored.
-The referenced types are stored according to the mapping information configured by their
-<a href="javadoc/dev/morphia/annotations/Entity.html">@Entity</a> annotations.</p>
-</div>
-<div class="admonitionblock note">
-<table>
+<h3 id="_why_use_it"><a class="anchor" href="#_why_use_it"></a>Why use it?</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
 <tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>It can be helpful to think of references as a foreign key like you would find in a relational database.
-It&#8217;s important to note, however, that MongoDB does not enforce any notion of referential integrity with these keys.
-Those remote documents may or may not actually exist and you will have to tailor your application (and configure Morphia as we&#8217;ll see in a moment) to deal with those missing documents.</p>
-</div>
-</td>
+<th class="tableblock halign-left valign-top">Without plugin (runtime generation)</th>
+<th class="tableblock halign-left valign-top">With plugin (AOT generation)</th>
 </tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Models generated at JVM startup</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Models generated once at build time, loaded instantly</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Startup cost proportional to number of mapped entities</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Zero startup cost — models are regular <code>.class</code> files on the classpath</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No build-time dependency on the plugin</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Build-time dependency, no runtime overhead</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Good for development and smaller applications</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Recommended for production deployments and fast-start environments (e.g., serverless, containers)</p></td>
+</tr>
+</tbody>
 </table>
+<div class="paragraph">
+<p>Both paths generate the bytecode necessary to manage your entities. The plugin simply moves the generation work from JVM startup to build time.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_setup"><a class="anchor" href="#_setup"></a>Setup</h3>
+<div class="paragraph">
+<p>Add the plugin to your <code>pom.xml</code> and set <code>morphia.mapper=critter</code> in your config:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;plugin&gt;
+    &lt;groupId&gt;dev.morphia.morphia&lt;/groupId&gt;
+    &lt;artifactId&gt;critter-maven&lt;/artifactId&gt;
+    &lt;version&gt;${morphia.version}&lt;/version&gt;
+    &lt;executions&gt;
+        &lt;execution&gt;
+            &lt;id&gt;generate-critter&lt;/id&gt;
+            &lt;goals&gt;
+                &lt;goal&gt;generate-models&lt;/goal&gt;
+            &lt;/goals&gt;
+        &lt;/execution&gt;
+    &lt;/executions&gt;
+&lt;/plugin&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties"># META-INF/morphia-config.properties
+morphia.mapper=critter</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>The annotation provides a number of options to help tailor Morphia&#8217;s behavior to your liking.</p>
+<p>When <code>morphia.mapper=critter</code> is active and the plugin has run, Morphia loads the pre-generated models automatically — no code changes required.</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p><code>idOnly</code>&#8201;&#8212;&#8201;<em>defaults to false</em> When <code>true</code>, only the value of the ID field is stored in the enclosing documents.
-If the referenced entity type has no subclasses, setting this can help save disk space and network traffic.
-If there <strong>are</strong> subtypes, this setting may be overridden automatically so that type information can properly stored.</p>
-</li>
-<li>
-<p><code>ignoreMissing</code> <em>defaults to false</em> When <code>true</code>, references that can not be loaded are simply ignored.
-Otherwise an exception is thrown whenever the reference load is attempted.</p>
-</li>
-<li>
-<p><code>lazy</code> <em>defaults to false</em> When <code>true</code> the referenced entity will not be fetched until the property is explicitly referenced.
-Otherwise the referenced entity (or entities) are loaded as part of the query load cycle of the enclosing entity.</p>
-</li>
-</ol>
+</div>
+<div class="sect2">
+<h3 id="_goals"><a class="anchor" href="#_goals"></a>Goals</h3>
+<div class="sect3">
+<h4 id="_generate_models_default_phase_process_classes"><a class="anchor" href="#_generate_models_default_phase_process_classes"></a><code>generate-models</code> (default phase: <code>process-classes</code>)</h4>
+<div class="paragraph">
+<p>Reads compiled <code>.class</code> files from <code>${project.build.outputDirectory}</code> and writes generated entity model and accessor classes to <code>target/generated-classes/critter</code>.
+This is the standard goal for most projects. It has no user-configurable parameters.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_how_it_fits_together"><a class="anchor" href="#_how_it_fits_together"></a>How it fits together</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">Maven build
+  └─ compile phase          → your entity .class files
+  └─ process-classes phase  → critter-maven:generate-models
+       reads entity .class files
+       writes generated entity model class files
+  └─ package phase          → all .class files bundled in JAR
+
+Runtime (morphia.mapper=critter)
+  └─ CritterMapper.mapEntity(Hotel.class)
+       1. tryLoadPregenerated()  → finds HotelEntityModel on classpath ✓
+       2. (skipped)              → no runtime generation needed
+       3. (skipped)              → no reflection fallback needed</code></pre>
+</div>
 </div>
 <div class="paragraph">
-<p>A <code>String</code> may be passed to the annotation to define the document field name to be stored in the database.</p>
+<p>If the plugin was not run (e.g., during a quick <code>mvn test-compile</code> without the full lifecycle), step 1 finds nothing and Morphia transparently falls back to runtime generation at step 2.</p>
 </div>
 </div>
 </div>

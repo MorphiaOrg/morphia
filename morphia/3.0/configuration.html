@@ -96,6 +96,9 @@
     <a class="nav-link" href="configuration.html">Configuration</a>
   </li>
   <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="maven-plugin.html">Maven Plugin</a>
+  </li>
+  <li class="nav-item" data-depth="2">
     <a class="nav-link" href="kotlin.html">Kotlin</a>
   </li>
   <li class="nav-item" data-depth="2">
@@ -233,45 +236,9 @@
 <div class="sect1">
 <h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
 <div class="sectionbody">
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
 <div class="paragraph">
-<p>After some feedback about some unexpected use cases, this transition has been postponed and the requisite <code>MapperOptions</code> based methods
-undeprecated.  Programmatic configuration is a much more popular, and in some cases vital, option than previously known.  So for now,
-those methods will stay while the future of configuration and mapping gets a rethink.  Apologies for the noise and dust.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>Starting in Morphia 3.0, configuration will be driven via a configuration file rather than programmatic configuration. The file
-should live in your build&#8217;s resources folder and be named <code>META-INF/morphia-config.properties</code>. This is being done for a number of reasons:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Better align with usage in frameworks such as Quarkus and Spring Boot</p>
-</li>
-<li>
-<p>Allow for deployment specific variations based on the deployment environment.</p>
-</li>
-<li>
-<p>Allow for certain optimizations and simplifications because we know more about the runtime set up earlier in the process.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>The configuration mechanism, based on <a href="https://microprofile.io/microprofile-config/">Microprofile Config</a>, allows for a number of
-variations which were awkward, at best, and usually downright impossible when using the traditional programmatic configuration.
-Reference documentation for the configuration file can be found in the <a href="javadoc/dev/morphia/config/MorphiaConfig.html">javadoc</a> but
-we&#8217;ll go in depth on a few items here. An example configuration file is included below. All possible configuration elements are listed.
-However, if the default values are acceptable that element can be safely omitted from your file.</p>
+<p>Starting in Morphia 3.0, configuration will be driven via a configuration file.  However programmatic configuration is still supportedfor those who prefer, or need, a more flexible approach. The file should live in your build&#8217;s resources folder and be named <code>META-INF/morphia-config.properties</code>. Reference documentation for the configuration file can be found in the <a href="javadoc/dev/morphia/config/MorphiaConfig.html">javadoc</a> but
+we&#8217;ll go in depth on a few items here. An example configuration file is included below. All possible configuration elements are listed. However, if the default values are acceptable that element can be safely omitted from your file.</p>
 </div>
 <div class="paragraph">
 <p><code>Morphia.createDatastore()</code> can be called <a href="javadoc/dev/morphia/Morphia.html#createDatastore(com.mongodb.client.MongoClient,dev.morphia.config.MorphiaConfig)">with</a>
@@ -395,6 +362,43 @@ The choices here are simpler:</p>
 <p>Simple name is the fully qualified classname without the package name. These can all be accessed via their named methods on
 <a href="javadoc/dev/morphia/mapping/DiscriminatorFunction.html">DiscriminatorFunction</a> and just like the <code>NamingStrategy</code> cases, if the
 provided options are not sufficient, you can implement your own by subclassing <code>DiscriminatorFunction</code> and implementing your own function.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_mapper_selection"><a class="anchor" href="#_mapper_selection"></a>Mapper selection</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><code>morphia.mapper</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Morphia supports two mapper implementations, selectable via configuration:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>reflection</code> <strong>(default)</strong> — the traditional reflection-based mapper. No additional dependencies required.</p>
+</li>
+<li>
+<p><code>critter</code> — a bytecode-generation mapper that produces <code>VarHandle</code>-based accessors at runtime via Gizmo, with automatic fallback to reflection if generation fails for a given type. Pre-generated models from the <code>critter-maven</code> plugin are used when available (AOT path), otherwise models are generated at JVM startup.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>To enable the critter mapper, add the following to your <code>META-INF/morphia-config.properties</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-txt hljs" data-lang="txt">morphia.mapper=critter</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Or pass <code>-Dmorphia.mapper=critter</code> on the Maven command line when running tests.</p>
+</div>
+<div class="paragraph">
+<p>For production deployments, consider using the <a href="maven-plugin.html" class="xref page">critter-maven plugin</a> to generate models at build time and eliminate the startup cost entirely.</p>
 </div>
 </div>
 <div class="sect2">
