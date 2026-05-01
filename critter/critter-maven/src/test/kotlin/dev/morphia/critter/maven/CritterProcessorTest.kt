@@ -26,7 +26,6 @@ class CritterProcessorTest {
             CritterProcessor(
                 classesDirectory = classesDir,
                 outputDirectory = outputDir,
-                packages = emptyList(),
                 classLoader = Thread.currentThread().contextClassLoader,
                 config = MorphiaConfig.load(),
             )
@@ -52,7 +51,6 @@ class CritterProcessorTest {
             CritterProcessor(
                 classesDirectory = classesDir,
                 outputDirectory = outputDir,
-                packages = emptyList(),
                 classLoader = Thread.currentThread().contextClassLoader,
                 config = MorphiaConfig.load(),
             )

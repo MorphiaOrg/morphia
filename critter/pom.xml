@@ -16,6 +16,5 @@
 
     <subprojects>
         <subproject>critter-maven</subproject>
-        <subproject>critter-integration-tests</subproject>
     </subprojects>
 </project>

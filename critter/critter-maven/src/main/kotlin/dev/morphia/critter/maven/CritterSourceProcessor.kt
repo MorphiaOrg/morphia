@@ -18,8 +18,6 @@ class CritterSourceProcessor(
     private val sourceDirectories: List<File>,
     private val outputDirectory: File,
     private val resourceOutputDirectory: File,
-    private val packages: List<String>,
-    private val criteriaPackage: String?,
     private val format: Boolean,
     private val config: MorphiaConfig,
 ) {
@@ -71,11 +69,7 @@ class CritterSourceProcessor(
     }
 
     private fun scanDirectory(directory: File) {
-        val packagesToScan =
-            packages.ifEmpty {
-                // Use packages from config if none specified
-                config.packages().filter { it != ".*" }
-            }
+        val packagesToScan = config.packages().filter { it != ".*" }
 
         directory
             .walkTopDown()

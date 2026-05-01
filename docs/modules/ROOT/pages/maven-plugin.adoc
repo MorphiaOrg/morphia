@@ -1,0 +1,83 @@
+== Maven Plugin
+
+The `critter-maven` plugin generates Morphia entity models and property accessors at build time (AOT — ahead of time), so they are ready on the classpath before your application starts.
+Without the plugin, Morphia generates the same models at each JVM startup.
+
+The plugin is entirely optional; the runtime fallback produces identical results.  It is recommended to use the plugin, however.
+
+=== Why use it?
+
+[cols="1,1"]
+|===
+|Without plugin (runtime generation) |With plugin (AOT generation)
+
+|Models generated at JVM startup
+|Models generated once at build time, loaded instantly
+
+|Startup cost proportional to number of mapped entities
+|Zero startup cost — models are regular `.class` files on the classpath
+
+|No build-time dependency on the plugin
+|Build-time dependency, no runtime overhead
+
+|Good for development and smaller applications
+|Recommended for production deployments and fast-start environments (e.g., serverless, containers)
+|===
+
+Both paths generate the bytecode necessary to manage your entities. The plugin simply moves the generation work from JVM startup to build time.
+
+=== Setup
+
+Add the plugin to your `pom.xml` and set `morphia.mapper=critter` in your config:
+
+[,xml]
+----
+<plugin>
+    <groupId>dev.morphia.morphia</groupId>
+    <artifactId>critter-maven</artifactId>
+    <version>${morphia.version}</version>
+    <executions>
+        <execution>
+            <id>generate-critter</id>
+            <goals>
+                <goal>generate-models</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+----
+
+[,properties]
+----
+# META-INF/morphia-config.properties
+morphia.mapper=critter
+----
+
+When `morphia.mapper=critter` is active and the plugin has run, Morphia loads the pre-generated models automatically — no code changes required.
+
+=== Goals
+
+==== `generate-models` (default phase: `process-classes`)
+
+Reads compiled `.class` files from `${project.build.outputDirectory}` and writes generated entity model and accessor classes to `target/generated-classes/critter`.
+This is the standard goal for most projects. It has no user-configurable parameters.
+
+=== How it fits together
+
+[source]
+----
+Maven build
+  └─ compile phase          → your entity .class files
+  └─ process-classes phase  → critter-maven:generate-models
+       reads entity .class files
+       writes generated entity model class files
+  └─ package phase          → all .class files bundled in JAR
+
+Runtime (morphia.mapper=critter)
+  └─ CritterMapper.mapEntity(Hotel.class)
+       1. tryLoadPregenerated()  → finds HotelEntityModel on classpath ✓
+       2. (skipped)              → no runtime generation needed
+       3. (skipped)              → no reflection fallback needed
+----
+
+If the plugin was not run (e.g., during a quick `mvn test-compile` without the full lifecycle), step 1 finds nothing and Morphia transparently falls back to runtime generation at step 2.
