@@ -59,8 +59,17 @@ When `morphia.mapper=critter` is active and the plugin has run, Morphia loads th
 
 ==== `generate-models` (default phase: `process-classes`)
 
-Reads compiled `.class` files from the project's output directory and writes generated entity model and accessor classes alongside them.
+Reads compiled `.class` files from `${project.build.outputDirectory}` and writes generated entity model and accessor classes to a separate output directory.
 This is the standard goal for most projects.
+
+[cols="1,1,3"]
+|===
+|Parameter |Default |Description
+
+|`critter.outputDirectory`
+|`target/generated-classes/critter`
+|Directory where generated `.class` files are written
+|===
 
 === How it fits together
 
