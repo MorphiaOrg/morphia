@@ -29,8 +29,6 @@ class CritterSourceProcessorTest {
                 sourceDirectories = listOf(sourceDir),
                 outputDirectory = sourceOutputDir,
                 resourceOutputDirectory = resourceOutputDir,
-                packages = emptyList(),
-                criteriaPackage = null,
                 format = true,
                 config = MorphiaConfig.load(),
             )
@@ -78,10 +76,8 @@ class CritterSourceProcessorTest {
                 sourceDirectories = listOf(File(tempDir, "src/main/java")),
                 outputDirectory = sourceOutputDir,
                 resourceOutputDirectory = resourceOutputDir,
-                packages = listOf("com.example"),
-                criteriaPackage = null,
                 format = true,
-                config = MorphiaConfig.load(),
+                config = MorphiaConfig.load().packages(listOf("com.example")),
             )
 
         processor.process()
@@ -117,8 +113,6 @@ class CritterSourceProcessorTest {
                 sourceDirectories = listOf(sourceDir),
                 outputDirectory = sourceOutputDir,
                 resourceOutputDirectory = resourceOutputDir,
-                packages = emptyList(),
-                criteriaPackage = null,
                 format = true,
                 config = config,
             )
