@@ -1,10 +1,9 @@
+---
 name: morphia
 title: Morphia
-version: 1.6
-
+version: '1.6'
 nav:
-  - modules/ROOT/nav.adoc
-
+- modules/ROOT/nav.adoc
 asciidoc:
   attributes:
     branch: 1.6.x
@@ -12,4 +11,4 @@ asciidoc:
     artifactId: core
     version: 1.6.1
     docsRef: http://docs.mongodb.org/manual
-    srcRef: https://github.com/MorphiaOrg/morphia/blob/1.6.x
+    srcRef: https://github.com/MorphiaOrg/morphia/tree/1.6.x
