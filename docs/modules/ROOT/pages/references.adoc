@@ -3,7 +3,7 @@
 MongoDB tries to encourage self-contained documents so that data can be fetched much more efficiently via single reads from the database.
 However not every data model or application can adhere to this philosophy in its entirety.
 As such, MongoDB supports
-{docsRef}/reference/database-references/[database references].Morphia supports two styles of defining references:
+{docsRef}/reference/database-references/[database references]. Morphia supports two styles of defining references:
 
 1. the link:javadoc/dev/morphia/annotations/Reference.html[@Reference] annotation
 2. an experimental wrapper type link:javadoc/dev/morphia/mapping/experimental/MorphiaReference.html[MorphiaReference].
@@ -34,3 +34,32 @@ Otherwise an exception is thrown whenever the reference load is attempted.
 Otherwise the referenced entity (or entities) are loaded as part of the query load cycle of the enclosing entity.
 
 A `String` may be passed to the annotation to define the document field name to be stored in the database.
+
+== Using MorphiaReference
+
+NOTE: `MorphiaReference` is an experimental wrapper type. Its API may change in future releases.
+
+The `MorphiaReference<T>` wrapper type provides an alternative to the `@Reference` annotation.
+Instead of annotating a field whose type is the entity itself, you wrap the entity type in `MorphiaReference`:
+
+[source,java]
+----
+@Entity("employees")
+public class Employee {
+    @Id
+    private ObjectId id;
+
+    private MorphiaReference<Employee> manager;
+    private MorphiaReference<List<Employee>> directReports;
+}
+----
+
+The reference is resolved lazily by default — calling `.get()` on the wrapper triggers a load from the database.
+If the referenced document does not exist, `.get()` returns an empty `Optional` or empty collection depending on the field type.
+
+The wrapper supports the same `idOnly` semantics as the annotation: when only the IDs are relevant and you do not
+need to load the referenced entities, set `idOnly = true` on the enclosing entity's `@Reference` annotation.
+To suppress exceptions for documents that may not exist, annotate with `ignoreMissing = true`.
+
+For full API options, see the
+link:javadoc/dev/morphia/mapping/experimental/MorphiaReference.html[MorphiaReference javadoc].
