@@ -14,7 +14,7 @@ simple name.For example, to map a `UserProfile` entity under this strategy, the 
 Any type annotated with link:javadoc/dev/morphia/annotations/Entity.html[@Entity] may optionally have a field annotated with
 link:javadoc/dev/morphia/annotations/Id.html[@Id].The type of the field can be any type so long as Morphia, or the driver, has a codec
 that can map the data to and from mongodb.When mapping an entity, one can also define xref:indexing.adoc[indexes] and
-xref:schemaValidation.adoc[schema validations] as part of the entity declaration as well.
+xref:schema-validation.adoc[schema validations] as part of the entity declaration as well.
 
 [NOTE]
 ====
