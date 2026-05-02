@@ -2,18 +2,18 @@
 
 == Classes
 
-Mapping is triggered by annotating your type with the link:javadoc/dev/morphia/annotations/Entity.html[@Entity] annotation.This
-instructs Morphia to inspect your type compute various metadata items about it.If you wish use a particular type as "top level" type,
-you will need to annotate one field with the link:javadoc/dev/morphia/annotations/Id.html[@Id] annotation.Not every type will need to
+Mapping is triggered by annotating your type with the link:javadoc/dev/morphia/annotations/Entity.html[@Entity] annotation. This
+instructs Morphia to inspect your type compute various metadata items about it. If you wish use a particular type as "top level" type,
+you will need to annotate one field with the link:javadoc/dev/morphia/annotations/Id.html[@Id] annotation. Not every type will need to
 serve as a top level type (read: be mapped to a collection) and so this ID field is optional with the caveat mentioned in the call out
-note below.Top level types have their own collections whose names can be mapped via the `value` parameter.Leaving this value
+note below. Top level types have their own collections whose names can be mapped via the `value` parameter. Leaving this value
 blank will leave Morphia free to compute the collection name as defined by the collection naming strategy defined in
-link:javadoc/dev/morphia/mapping/MapperOptions.html[MapperOptions].That default is currently the camel case value of the class's
-simple name.For example, to map a `UserProfile` entity under this strategy, the collection name would be mapped to `userProfile`.
+link:javadoc/dev/morphia/config/MorphiaConfig.html[MorphiaConfig]. That default is currently the camel case value of the class's
+simple name. For example, to map a `UserProfile` entity under this strategy, the collection name would be mapped to `userProfile`.
 
 Any type annotated with link:javadoc/dev/morphia/annotations/Entity.html[@Entity] may optionally have a field annotated with
-link:javadoc/dev/morphia/annotations/Id.html[@Id].The type of the field can be any type so long as Morphia, or the driver, has a codec
-that can map the data to and from mongodb.When mapping an entity, one can also define xref:indexing.adoc[indexes] and
+link:javadoc/dev/morphia/annotations/Id.html[@Id]. The type of the field can be any type so long as Morphia, or the driver, has a codec
+that can map the data to and from mongodb. When mapping an entity, one can also define xref:indexing.adoc[indexes] and
 xref:schema-validation.adoc[schema validations] as part of the entity declaration as well.
 
 [NOTE]
@@ -45,7 +45,7 @@ That is, every field must be represented in the constructor signature.
 2. The names of the arguments must match the names of the fields.
 Here, there is a bit of flexibility.
 The argument name can match either the field name as found in the source or the mapped name as determined by any `@Property` annotation.
-While this is likely to be the most common case as it is the simplest, for various this won't always be possible or preferable.
+While this is likely to be the most common case as it is the simplest, for various reasons this won't always be possible or preferable.
 If a constructor argument name can't mirror the field name, using the link:javadoc/dev/morphia/annotations/Name.html[@Name] annotation,
 an explicit name can be given so that the argument can be properly matched to a field.
 
@@ -160,8 +160,8 @@ Similarly, if data is only intended to be loaded from the database but never wri
 
 If you do not specify a name via `@Property`, the default field naming strategy will be used.
 The default strategy is to use the field's name as defined in the source.
-This strategy can be changed globally via the field naming strategy option on
-link:javadoc/dev/morphia/mapping/MapperOptions.html[MapperOptions].
+This strategy can be changed globally via the field naming strategy option configured via
+link:javadoc/dev/morphia/config/MorphiaConfig.html[MorphiaConfig].
 Simple indexes can be defined on a field if all that is needed for the index is a single field.
 This can be done via the link:javadoc/dev/morphia/annotations/Indexed.html[@Indexed] annotation.
 
@@ -175,7 +175,7 @@ if you encounter such a case.
 ====
 
 As of 2.2, mapping information can be defined on methods instead of fields.
-All the same rules apply, simply the location of the annotations are moved to the getters and/or setters.Annotations can live on either the `get` or the `set` method and Morphia will detect them.
+All the same rules apply, simply the location of the annotations are moved to the getters and/or setters. Annotations can live on either the `get` or the `set` method and Morphia will detect them.
 If the same annotation is applied to both the `get` and the `set` behavior is unpredictable so care should be taken to avoid such a scenario.
 Customs in other libraries tend to favor annotating the `get` methods and this is also recommended here for consistency.
 
@@ -183,19 +183,19 @@ In order for methods to be considered as definitions of persistable properties, 
 This has some very basic rules for your methods:
 
 1. `get` methods take no parameters
-2. `set` methods take one parameter and the type of that parameter should generally match the return type of the getter.These setter methods also return void.
+2. `set` methods take one parameter and the type of that parameter should generally match the return type of the getter. These setter methods also return void.
 3. If a property is a boolean type, the getter often uses `is` rather than `get` yielding a method named, e.g., `isEnabled()` rather than
 `getEnabled()`.
 4. The type of the property is determined by the return value of the getter.
 5. The name of the property is determined by stripping the `get` prefix (or `is` for boolean types) and lower casing the first letter.
 This is the default name of the property subject to property naming rules as defined in
-link:javadoc/dev/morphia/mapping/MapperOptions.html[MapperOptions]
+link:javadoc/dev/morphia/config/MorphiaConfig.html[MorphiaConfig]
 
-To enable method mapping, a method has been added to link:javadoc/dev/morphia/mapping/MapperOptions.Builder.html[MapperOptions.Builder]
+To enable method mapping, a method has been added to link:javadoc/dev/morphia/config/MorphiaConfig.html[MorphiaConfig]
 allowing for the configuration of either field or method mapping.
 
 [NOTE]
 ====
-Mapping is currently done via either fields or by methods.It is not currently allowed to map using both schemes simultaneously.This will
+Mapping is currently done via either fields or by methods. It is not currently allowed to map using both schemes simultaneously. This will
 likely change in the future but for now is not allowed.
 ====
