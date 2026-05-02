@@ -105,7 +105,7 @@ These referenced entities must already be saved or at least have an ID assigned 
 
 [NOTE]
 ====
-There is a newer approach for defining references that is explained more fully xref:indexing.adoc[here].
+There is a newer approach for defining references that is explained more fully xref:references.adoc[here].
 ====
 
 == Saving Data
