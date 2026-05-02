@@ -1,4 +1,4 @@
-== Life Cycle Methods
+= Life Cycle Methods
 
 There are various annotations which can be used to register callbacks on certain life cycle events.
 These include Pre/Post-Persist (Save), and Pre/Post-Load.
@@ -8,13 +8,13 @@ These include Pre/Post-Persist (Save), and Pre/Post-Load.
 3. `@PreLoad` - Called before mapping the document from the database to the entity; the Document is passed as an argument (you can add/remove/change values)
 4. `@PostLoad` - Called after populating the entity with the values from the document
 
-=== Examples
+== Examples
 
 https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/TestQuery.java[Here] is a one of the test classes.
 
 All parameters and return values are options in your implemented methods.
 
-==== Example
+== Example
 
 Here is a simple example of an entity that always saves the Date it was last updated.
 Alternatively, the resulting serialized form can be passed back in just prior to sending the document to the database.
@@ -38,7 +38,7 @@ class BankAccount {
 }
 ----
 
-=== EntityListeners
+== EntityListeners
 
 If your application has more generalized life cycle events, these methods can be stored on classes external to your model.
 For example's sake, let's assume there's a need to digitally sign all documents before storing it in the database.

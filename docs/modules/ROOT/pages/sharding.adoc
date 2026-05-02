@@ -1,4 +1,4 @@
-== Sharding
+= Sharding
 
 [NOTE]
 ====
@@ -12,7 +12,7 @@ You don't need to use Morphia to shard your collections, but if your collection 
 
 Documentation on how to choose a proper shard key can be found in the {docsRef}/sharding[manual].
 
-=== Shard Definition
+== Shard Definition
 
 Sharding definitions are driven by the link:javadoc/dev/morphia/annotations/ShardKeys.html[@ShardKeys] annotation.
 This annotation takes two values: the shard keys themselves as defined by the link:javadoc/dev/morphia/annotations/ShardKey.html[@ShardKey] annotation and the options to apply when sharding the collection via the link:javadoc/dev/morphia/annotations/ShardOptions.html[@ShardOptions]
@@ -55,12 +55,12 @@ If you find yourself needing to mutate one of those properties, consult the {doc
 Morphia does not currently support redefining the shard key definition entirely.
 ====
 
-=== Sharding Options
+== Sharding Options
 
 `@ShardKeys` also has an `options` field which takes a link:javadoc/dev/morphia/annotations/ShardOptions.html[@ShardOptions].
 Using this annotation, you can configure the number of initial shards, {docsRef}/core/hashed-sharding/#shard-an-empty-collection[presplit the hashed zones], or {docsRef}/core/sharding-shard-key/#unique-indexes[enforce uniqueness] in your shard key.
 
-=== How is it used?
+== How is it used?
 
 Once you have your sharding configured, you have the choice of manually sharding it via the mongo shell or having Morphia shard it for you.
 For the latter, there is a new method link:++javadoc/dev/morphia/Datastore.html#shardCollections()++[shardCollections()] that will do

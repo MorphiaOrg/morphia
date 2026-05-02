@@ -1,4 +1,4 @@
-== References
+= References
 
 MongoDB tries to encourage self-contained documents so that data can be fetched much more efficiently via single reads from the database.
 However not every data model or application can adhere to this philosophy in its entirety.
@@ -8,7 +8,7 @@ As such, MongoDB supports
 1. the link:javadoc/dev/morphia/annotations/Reference.html[@Reference] annotation
 2. an experimental wrapper type link:javadoc/dev/morphia/mapping/experimental/MorphiaReference.html[MorphiaReference].
 
-=== Using the annotation
+== Using the annotation
 
 The annotation based approach is the traditional approach.
 The link:javadoc/dev/morphia/annotations/Reference.html[@Reference] can be applied to any property whose type is a mappable Entity type.

@@ -1,4 +1,4 @@
-== Text Searches
+= Text Searches
 
 Morphia also supports MongoDB's text search capabilities.
 In order to execute a text search against a collection, the collection must have a {docsRef}/core/index-text/[text index] defined first.

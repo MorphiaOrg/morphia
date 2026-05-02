@@ -1,6 +1,6 @@
-== Mapping
+= Mapping
 
-=== Classes
+== Classes
 
 Mapping is triggered by annotating your type with the link:javadoc/dev/morphia/annotations/Entity.html[@Entity] annotation.This
 instructs Morphia to inspect your type compute various metadata items about it.If you wish use a particular type as "top level" type,
@@ -34,7 +34,7 @@ perform proper updates on previously persisted entities.  Without that ID Morphi
 document in the database.
 ====
 
-==== Constructors
+== Constructors
 
 Morphia has traditionally required a 0-argument constructor on any mapped entity.
 In fact, Morphia still prefers to use such a constructor should one be available.
@@ -64,7 +64,7 @@ For maven users, it's as simple as adding one line to the Kotlin maven plugin `<
     <javaParameters>true</javaParameters>
 ----
 
-=== External types
+== External types
 
 Sometimes persisted types come from external libraries whose source is either unavailable or simply can't be modified.
 Using these types would be impossible give then annotation requirements as stated above.
@@ -127,7 +127,7 @@ The mix-in type can happily be ignored once you're done with mapping.
 This API is experimental and is likely to shift a bit as it sees usage and feedback from the community.
 ====
 
-=== Versioning
+== Versioning
 
 Entities can be versioned to ensure that changes are applied serially and that no other processes are modifying an object in between the time it's fetched, modified, and written back to the database.
 To achieve this, simply add a field to a type, it can be a `long` or a
@@ -142,7 +142,7 @@ Morphia checks the value of the version field or that the ID is null in order pr
 If neither of these conditions are true, the entity will not be persisted.
 ====
 
-=== Fields
+== Fields
 
 By default, any non-static field on a mapped class will be processed for persistence.
 If a field is to be excluded from the mapping, it can be decorated with the `transient` keyword, annotated with
@@ -165,7 +165,7 @@ link:javadoc/dev/morphia/mapping/MapperOptions.html[MapperOptions].
 Simple indexes can be defined on a field if all that is needed for the index is a single field.
 This can be done via the link:javadoc/dev/morphia/annotations/Indexed.html[@Indexed] annotation.
 
-=== Methods
+== Methods
 
 [WARNING]
 ====
