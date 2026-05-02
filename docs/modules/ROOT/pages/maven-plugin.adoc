@@ -1,11 +1,11 @@
-== Maven Plugin
+= Maven Plugin
 
 The `critter-maven` plugin generates Morphia entity models and property accessors at build time (AOT — ahead of time), so they are ready on the classpath before your application starts.
 Without the plugin, Morphia generates the same models at each JVM startup.
 
 The plugin is entirely optional; the runtime fallback produces identical results.  It is recommended to use the plugin, however.
 
-=== Why use it?
+== Why use it?
 
 [cols="1,1"]
 |===
@@ -26,7 +26,7 @@ The plugin is entirely optional; the runtime fallback produces identical results
 
 Both paths generate the bytecode necessary to manage your entities. The plugin simply moves the generation work from JVM startup to build time.
 
-=== Setup
+== Setup
 
 Add the plugin to your `pom.xml` and set `morphia.mapper=critter` in your config:
 
@@ -55,14 +55,14 @@ morphia.mapper=critter
 
 When `morphia.mapper=critter` is active and the plugin has run, Morphia loads the pre-generated models automatically — no code changes required.
 
-=== Goals
+== Goals
 
-==== `generate-models` (default phase: `process-classes`)
+== `generate-models` (default phase: `process-classes`)
 
 Reads compiled `.class` files from `${project.build.outputDirectory}` and writes generated entity model and accessor classes to `target/generated-classes/critter`.
 This is the standard goal for most projects. It has no user-configurable parameters.
 
-=== How it fits together
+== How it fits together
 
 [source]
 ----

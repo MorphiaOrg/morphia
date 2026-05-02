@@ -1,4 +1,4 @@
-== Text Searches
+= Text Searches
 
 Morphia also supports MongoDB's text search capabilities.
 In order to execute a text search against a collection, the collection must have a {docsRef}/core/index-text/[text index] defined first.
@@ -19,7 +19,7 @@ public static class Greeting {
 The `$**` value tells MongoDB to create a text index on all the text fields in a document.
 A more targeted index can be created, if desired, by explicitly listing which fields to index.
 Once the index is defined, we can start querying against it like this
-{srcRef}/legacy-tests/src/test/java/dev/morphia/query/TestTextSearching.java[test] does:
+{srcRef}/core/src/test/java/dev/morphia/query/TestTextSearching.java[test] does:
 
 [source,java]
 ----
@@ -31,14 +31,14 @@ datastore.save(new Greeting("good morning", "english"),
     new Greeting("good night", "english"),
     new Greeting("good riddance", "english"),
     new Greeting("guten Morgen", "german"),
-    new Greeting("guten Tag", "german")),
+    new Greeting("guten Tag", "german"),
     new Greeting("gute Nacht", "german"));
 
-List<Greeting> good = getDs().find(Greeting.class)
-                             .filter(text("good"))
-                             .execute(new FindOptions()
-                                          .sort(ascending("_id")))
-                             .toList();
+List<Greeting> good = datastore.find(Greeting.class)
+                               .filter(text("good"))
+                               .iterator(new FindOptions()
+                                             .sort(ascending("_id")))
+                               .toList();
 Assert.assertEquals(4, good.size());
 ----
 
@@ -51,11 +51,11 @@ If you would like to restrict your search to a specific language, that can also 
 
 [source,java]
 ----
-datastore.find(Greeting.class)
+datastore.find(Greeting.class, new FindOptions()
+                       .sort(ascending("_id")))
          .filter(text("good")
                      .language("english"))
-         .execute(new FindOptions()
-                      .sort(ascending("_id")))
+         .iterator()
          .toList();
 ----
 
