@@ -10,7 +10,7 @@ These include Pre/Post-Persist (Save), and Pre/Post-Load.
 
 == Examples
 
-https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/TestQuery.java[Here] is a one of the test classes.
+https://github.com/MorphiaOrg/morphia/blob/master/core/src/test/java/dev/morphia/TestQuery.java[Here] is a one of the test classes.
 
 All parameters and return values are options in your implemented methods.
 

@@ -67,7 +67,7 @@ Listed below are some of the options for modifying the query results in differen
 {docsRef}/tutorial/project-fields-from-query-results/[Projections] allow you to return only a subset of the fields in a document.
 This is useful when you need to only return a smaller view of a larger object.
 Borrowing from the
-{srcRef}/morphia/src/test/java/dev/morphia/TestQuery.java[unit tests], this is an example of this feature in action:
+{srcRef}/core/src/test/java/dev/morphia/TestQuery.java[unit tests], this is an example of this feature in action:
 
 [source,java]
 ----
@@ -135,7 +135,7 @@ getDs().find(User.class)
 If you have a {docsRef}/core/capped-collections/[capped collection] it's possible to "tail" a query so that when new documents are added to the collection that match your query, they'll be returned by the
 {docsRef}/reference/glossary/#term-tailable-cursor[tailable cursor].
 An example of this feature in action can be found in the
-{srcRef}/morphia/src/test/java/dev/morphia/TestQuery.java[unit tests] in the `testTailableCursors()` test:
+{srcRef}/core/src/test/java/dev/morphia/TestQuery.java[unit tests] in the `testTailableCursors()` test:
 
 [source,java]
 ----
