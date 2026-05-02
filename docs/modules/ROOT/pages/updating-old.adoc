@@ -1,3 +1,10 @@
+[WARNING]
+====
+This page documents the legacy update API that was removed in Morphia 3.0.
+It is preserved here for users migrating from 2.x.
+For the current update API, see xref:updates.adoc[Updates].
+====
+
 = Updating (Legacy)
 
 There are two basic ways to update your data: insert/save a whole Entity or issue an update operation.

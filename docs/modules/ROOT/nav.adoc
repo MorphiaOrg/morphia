@@ -1,6 +1,7 @@
 * xref:index.adoc[Getting Started]
-** xref:migrating.adoc[Migrating]
 ** xref:quicktour.adoc[Quick Tour]
+** xref:migrating.adoc[Migrating]
+*** xref:updating-old.adoc[Legacy Update API (pre-3.0)]
 
 * Features
 ** xref:configuration.adoc[Configuration]
@@ -13,11 +14,11 @@
 ** xref:updates.adoc[Updating]
 ** xref:deletes.adoc[Deleting]
 ** xref:aggregations.adoc[Aggregation]
-** xref:textSearches.adoc[Text Search]
+** xref:text-searches.adoc[Text Search]
 ** xref:references.adoc[References]
 ** xref:transactions.adoc[Transactions]
-** xref:lifeCycleMethods.adoc[Life Cycle Methods]
-** xref:schemaValidation.adoc[Schema Validation]
+** xref:life-cycle-methods.adoc[Life Cycle Methods]
+** xref:schema-validation.adoc[Schema Validation]
 
 * _Support_
 ** xref:issues-help.adoc[Issues & Support]

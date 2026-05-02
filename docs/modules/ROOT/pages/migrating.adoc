@@ -2,7 +2,7 @@
 
 == Migrating to 3.0
 
-More detailed information will be made available once those details stabilize but at the moment there two things to keep an eye on:
+More detailed information will be made available once those details stabilize but at the moment there are two things to keep an eye on:
 
 1. Upgrades will be as automatic as they can be made to be via openrewrite recipes that should take care of the almost all of the work if
  things go as well as hoped.
@@ -15,7 +15,7 @@ driver version of 5.x or greater.  If you need a 4.x driver for some reason, you
 support 5.x and greater.  In preparation for 3.0, deprecations will be incrementally made in the 2.5.x line with replacements where
 feasible.  Updating away from these deprecations will make the transition to 3.0 much smoother.  In the cases where the replacements can
 not feasibly be provided, migration scripts will be available as part of the 3.0 release to help reduce the impact of such changes.  Bug
-fixes will continue to be made on the 2.4.x series and 2 .5.x as necessary but the primary focus remains on 3.x.
+fixes will continue to be made on the 2.4.x series and 2.5.x as necessary but the primary focus remains on 3.x.
 
 == Migrating to 2.4
 
@@ -60,9 +60,10 @@ all sorts.  In our case, it's primarily just removing the `experimental` segment
 https://github.com/MorphiaOrg/morphia/blob/master/upgrading/UpgradeFrom22to23.yml[script] and save it as `rewrite.yml` in the root of
 your project.  Once that is done, run the following command:
 
-```shell
+[source,shell]
+----
 mvn org.openrewrite.maven:rewrite-maven-plugin:4.37.0:runNoFork -DactiveRecipes=dev.morphia.UpgradeFrom22to23
-```
+----
 
 This script will update the packages to reflect their new names.  It will also update your pom to the latest Morphia version for you
 if that has not been updated yet.
@@ -74,9 +75,10 @@ force than the openrewrite approach (it's literally just doing string replacemen
 kotlin user, you'll want to use this approach as openrewrite does not currently support kotlin source files.  To run this script, use the
 following command:
 
-```shell
+[source,shell]
+----
 jbang https://github.com/MorphiaOrg/morphia/blob/master/upgrading/UpgradeFrom22to23.kt
-```
+----
 
 You will likely be asked to specify the level of trust you have for this script and the MorphiaOrg github organization.  Choose whichever
 level you're comfortable with.
@@ -103,20 +105,22 @@ However, it will still be possible to configure your application with the old se
 update to this new configuration approach, rather than using `MappingOptions.legacy().build()` as you have perhaps been doing, simply
 replace it with something like the following:
 
-```java
+[source,java]
+----
     MapperOptions.builder()
         .discriminatorKey("className")
         .discriminator(DiscriminatorFunction.className())
         .collectionNaming(NamingStrategy.identity())
         .propertyNaming(NamingStrategy.identity())
-```
+----
 
 This will preserve the older mappings used by your data while enabling the modern query API implementation.  Some users will have
 date/time data stored under an older storage scheme.  Those users will also want to include the following option:
 
-```java
+[source,java]
+----
     .dateStorage(DateStorage.SYSTEM_DEFAULT)
-```
+----
 
 == Migrating to 2.0
 
