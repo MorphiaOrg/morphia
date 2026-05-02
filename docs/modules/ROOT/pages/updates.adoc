@@ -161,5 +161,5 @@ operators. To see an example of an operator in action, click through to see the 
 
 If an operator is missing and you think it should be included, please file an https://github.com/MorphiaOrg/morphia/issues[issue] for that operator.
 
-.Filters
+.Update Operators
 include::update-operators.adoc[]

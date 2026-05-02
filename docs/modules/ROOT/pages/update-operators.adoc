@@ -1,3 +1,5 @@
+:page-partial:
+
 [%header,cols="1,2,3"]
 |===
 |Operator|Docs|Test Examples
