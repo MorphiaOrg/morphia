@@ -161,10 +161,9 @@ be updated with more suitable values.
 include::example$legacy-morphia-config.properties[]
 ----
 
-[WARN]
+[WARNING]
 ====
-The legacy query factory is deprecated and will be removed in 3.0. It is advisable to switch to the newer query filters based API now to
-avoid breakage.
+The legacy query factory has been removed in 3.0. Switch to the newer query filters based API.
 ====
 
 === Some notes on ServiceLoader
@@ -175,6 +174,7 @@ because most users will not need to implement such features and so needn't be bo
 lucky ones that *does* need to know *and* you use Java modules, please be aware that the usual services file in `META-INF/services` won't
 work.  In order to export your service for Morphia to find you need an entry in your `module-info.java` file as shown below:
 
-```java
+[source,java]
+----
 provides dev.morphia.mapping.codec.MorphiaPropertyCodecProvider with com.foo.MyCodecProvider;
-```
+----

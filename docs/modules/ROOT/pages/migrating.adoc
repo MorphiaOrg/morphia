@@ -60,9 +60,10 @@ all sorts.  In our case, it's primarily just removing the `experimental` segment
 https://github.com/MorphiaOrg/morphia/blob/master/upgrading/UpgradeFrom22to23.yml[script] and save it as `rewrite.yml` in the root of
 your project.  Once that is done, run the following command:
 
-```shell
+[source,shell]
+----
 mvn org.openrewrite.maven:rewrite-maven-plugin:4.37.0:runNoFork -DactiveRecipes=dev.morphia.UpgradeFrom22to23
-```
+----
 
 This script will update the packages to reflect their new names.  It will also update your pom to the latest Morphia version for you
 if that has not been updated yet.
@@ -74,9 +75,10 @@ force than the openrewrite approach (it's literally just doing string replacemen
 kotlin user, you'll want to use this approach as openrewrite does not currently support kotlin source files.  To run this script, use the
 following command:
 
-```shell
+[source,shell]
+----
 jbang https://github.com/MorphiaOrg/morphia/blob/master/upgrading/UpgradeFrom22to23.kt
-```
+----
 
 You will likely be asked to specify the level of trust you have for this script and the MorphiaOrg github organization.  Choose whichever
 level you're comfortable with.
@@ -103,20 +105,22 @@ However, it will still be possible to configure your application with the old se
 update to this new configuration approach, rather than using `MappingOptions.legacy().build()` as you have perhaps been doing, simply
 replace it with something like the following:
 
-```java
+[source,java]
+----
     MapperOptions.builder()
         .discriminatorKey("className")
         .discriminator(DiscriminatorFunction.className())
         .collectionNaming(NamingStrategy.identity())
         .propertyNaming(NamingStrategy.identity())
-```
+----
 
 This will preserve the older mappings used by your data while enabling the modern query API implementation.  Some users will have
 date/time data stored under an older storage scheme.  Those users will also want to include the following option:
 
-```java
+[source,java]
+----
     .dateStorage(DateStorage.SYSTEM_DEFAULT)
-```
+----
 
 == Migrating to 2.0
 
