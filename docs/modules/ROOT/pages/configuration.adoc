@@ -1,11 +1,11 @@
 == Configuration
 
-Starting in Morphia 3.0, configuration will be driven via a configuration file.  However programmatic configuration is still supportedfor those who prefer, or need, a more flexible approach. The file should live in your build's resources folder and be named `META-INF/morphia-config.properties`. Reference documentation for the configuration file can be found in the link:++javadoc/dev/morphia/config/MorphiaConfig.html++[javadoc] but
+Starting in Morphia 3.0, configuration will be driven via a configuration file.  However programmatic configuration is still supported for those who prefer, or need, a more flexible approach. The file should live in your build's resources folder and be named `META-INF/morphia-config.properties`. Reference documentation for the configuration file can be found in the link:++javadoc/dev/morphia/config/MorphiaConfig.html++[javadoc] but
 we'll go in depth on a few items here. An example configuration file is included below. All possible configuration elements are listed. However, if the default values are acceptable that element can be safely omitted from your file.
 
 `Morphia.createDatastore()` can be called link:++javadoc/dev/morphia/Morphia.html#createDatastore(com.mongodb.client.MongoClient,dev.morphia.config.MorphiaConfig)++[with]
 and link:++javadoc/dev/morphia/Morphia.html#createDatastore(com.mongodb.client.MongoClient)++[without] an explicit `MorphiaConfig`
-argument.  When not explicitly given a `MorphiaConfig`, Morphia will attempt to load the configuration file at the location show above.
+argument.  When not explicitly given a `MorphiaConfig`, Morphia will attempt to load the configuration file at the location shown above.
 Failing to find a configuration file, it will create a new configuration using the default values which can be found in the javadoc.
 These values are unlikely to be suitable long term but should be sufficient for newcomers looking to test things out a little before
 committing to adopt Morphia.
@@ -66,7 +66,7 @@ The choices here are simpler:
 1. `className()`/`lowerClassName()`
 2. `simpleName()`/`lowerSimpleName()`
 
-Simple name is the fully qualified classname without the package name. These can all be accessed via their named methods on
+Simple name is the class name without the package name. These can all be accessed via their named methods on
 link:++javadoc/dev/morphia/mapping/DiscriminatorFunction.html++[DiscriminatorFunction] and just like the `NamingStrategy` cases, if the
 provided options are not sufficient, you can implement your own by subclassing `DiscriminatorFunction` and implementing your own function.
 
@@ -139,8 +139,6 @@ on that reference and use the resulting `MorphiaConfig` instance.
 include::example$complete-morphia-config.properties[]
 ----
 
----
-
 .Minimal config file
 [,txt]
 ----
@@ -149,11 +147,10 @@ include::example$minimal-morphia-config.properties[]
 
 [NOTE]
 ====
-The minimum config is, indeed, an empty (or even nonexistant) file as there are defaults for each value.  This is intended to "pave the
+The minimum config is, indeed, an empty (or even nonexistent) file as there are defaults for each value.  This is intended to "pave the
 on ramp" for those new to Morphia.  It is expected that some of those values, notably the database and packages fields, will eventually
 be updated with more suitable values.
 ====
----
 
 .Legacy config file
 [,txt]
