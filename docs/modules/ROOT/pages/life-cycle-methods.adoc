@@ -12,7 +12,7 @@ These include Pre/Post-Persist (Save), and Pre/Post-Load.
 
 {srcRef}/core/src/test/java/dev/morphia/TestQuery.java[Here] is a one of the test classes.
 
-All parameters and return values are options in your implemented methods.
+All parameters and return values are optional in your implemented methods.
 
 == Example
 
