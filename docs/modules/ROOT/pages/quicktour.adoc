@@ -165,14 +165,14 @@ Here's how to do that:
 
 [source,java]
 ----
-underpaid = datastore.createQuery(Employee.class)
+underpaid = datastore.find(Employee.class)
                      .filter(Filters.lte("salary", 30000))
                      .iterator()
                      .toList();
 ----
 
-Morphia supports all the query filters defined in the Mongodb query language.
-You can find helper methods for all these filers on the
+Morphia supports all the query filters defined in the MongoDB query language.
+You can find helper methods for all these filters on the
 link:javadoc/dev/morphia/query/filters/Filters.html[Filters class].
 The `filter()` method can take as many `Filter`
 references as you need to define your query.
