@@ -1,4 +1,4 @@
-== Deletes
+= Deletes
 
 Queries are used to delete documents from the database as well.
 Using
