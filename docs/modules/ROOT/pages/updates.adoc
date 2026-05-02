@@ -57,8 +57,7 @@ To change the name of the city in the address, one would use something like this
 ----
 datastore
     .find(Hotel.class)
-    .update(UpdateOperators.set("address.city", "Ottawa"))
-    .execute();
+    .update(UpdateOperators.set("address.city", "Ottawa"));
 ----
 
 Values can also be removed from documents as shown below:
@@ -67,8 +66,7 @@ Values can also be removed from documents as shown below:
 ----
 datastore
     .find(Hotel.class)
-    .update(UpdateOperators.unset("name"))
-    .execute();
+    .update(UpdateOperators.unset("name"));
 ----
 
 After this update, the name of the hotel would be `null` when the entity is loaded.
@@ -83,9 +81,8 @@ link:javadoc/dev/morphia/UpdateOptions.html[UpdateOptions] parameter on `execute
 ----
 datastore
     .find(Hotel.class)
-    .update(UpdateOperators.inc("stars"))
-    .execute(new UpdateOptions()
-        .multi(true));
+    .update(new UpdateOptions()
+        .multi(true), UpdateOperators.inc("stars"));
 ----
 
 == Upserts
@@ -98,11 +95,10 @@ Examples of this might include user high scores, e.g. In cases like this, we hav
 [source,java]
 ----
 datastore
-    .find(Hotel.class)
+    .find(Hotel.class, new UpdateOptions()
+        .upsert(true))
     .filter(gt("stars", 100))
-    .update()
-    .execute(new UpdateOptions()
-                     .upsert(true));
+    .update();
 
 // creates { "_id" : ObjectId("4c60629d2f1200000000161d"), "stars" : 50 }
 ----
@@ -127,10 +123,9 @@ This can be changed by passing in a `ModifyOptions` reference to the operation:
 [source,java]
 ----
 datastore
-    .find(Hotel.class)
-    .modify(UpdateOperators.set("address.city", "Ottawa"))
-    .execute(new ModifyOptions()
-        .returnDocument(ReturnDocument.AFTER));
+    .find(Hotel.class, new ModifyOptions()
+        .returnDocument(ReturnDocument.AFTER))
+    .modify(UpdateOperators.set("address.city", "Ottawa"));
 ----
 
 == Merges

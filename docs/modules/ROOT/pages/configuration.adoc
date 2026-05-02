@@ -77,7 +77,8 @@ provided options are not sufficient, you can implement your own by subclassing `
 Morphia supports two mapper implementations, selectable via configuration:
 
 1. `reflection` *(default)* — the traditional reflection-based mapper. No additional dependencies required.
-2. `critter` — a bytecode-generation mapper that produces `VarHandle`-based accessors at runtime via Gizmo, with automatic fallback to reflection if generation fails for a given type. Pre-generated models from the `critter-maven` plugin are used when available (AOT path), otherwise models are generated at JVM startup.
+2. `critter` — a bytecode-generation mapper that produces bytecode to handle serialization rather than using reflection.
+This option should give you better performance overall. Pre-generated models from the `critter-maven` plugin are used when available (AOT path), otherwise models are generated at JVM startup.
 
 To enable the critter mapper, add the following to your `META-INF/morphia-config.properties`:
 

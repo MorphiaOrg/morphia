@@ -51,11 +51,11 @@ If you would like to restrict your search to a specific language, that can also 
 
 [source,java]
 ----
-datastore.find(Greeting.class)
+datastore.find(Greeting.class, new FindOptions()
+                       .sort(ascending("_id")))
          .filter(text("good")
                      .language("english"))
-         .iterator(new FindOptions()
-                       .sort(ascending("_id")))
+         .iterator()
          .toList();
 ----
 
