@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
+    <title>Configuration :: Morphia Docs</title>
     <meta name="generator" content="Antora 3.1.4">
 <link rel="stylesheet" href="../../_/css/site.css">
 <link rel="stylesheet" href="../../_/css/morphia.css">
@@ -81,10 +81,16 @@
     <a class="nav-link" href="index.html">Getting Started</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="migrating.html">Migrating</a>
+    <a class="nav-link" href="quicktour.html">Quick Tour</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="quicktour.html">Quick Tour</a>
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="migrating.html">Migrating</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="updating-old.html">Legacy Update API (pre-3.0)</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -123,7 +129,7 @@
     <a class="nav-link" href="aggregations.html">Aggregation</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="textSearches.html">Text Search</a>
+    <a class="nav-link" href="text-searches.html">Text Search</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="references.html">References</a>
@@ -132,10 +138,10 @@
     <a class="nav-link" href="transactions.html">Transactions</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="lifeCycleMethods.html">Life Cycle Methods</a>
+    <a class="nav-link" href="life-cycle-methods.html">Life Cycle Methods</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="schemaValidation.html">Schema Validation</a>
+    <a class="nav-link" href="schema-validation.html">Schema Validation</a>
   </li>
 </ul>
   </li>
@@ -233,23 +239,26 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<div class="sect1">
-<h2 id="_configuration"><a class="anchor" href="#_configuration"></a>Configuration</h2>
+<h1 class="page">Configuration</h1>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
-<p>Starting in Morphia 3.0, configuration will be driven via a configuration file.  However programmatic configuration is still supportedfor those who prefer, or need, a more flexible approach. The file should live in your build&#8217;s resources folder and be named <code>META-INF/morphia-config.properties</code>. Reference documentation for the configuration file can be found in the <a href="javadoc/dev/morphia/config/MorphiaConfig.html">javadoc</a> but
+<p>Starting in Morphia 3.0, configuration will be driven via a configuration file.  However programmatic configuration is still supported for those who prefer, or need, a more flexible approach. The file should live in your build&#8217;s resources folder and be named <code>META-INF/morphia-config.properties</code>. Reference documentation for the configuration file can be found in the <a href="javadoc/dev/morphia/config/MorphiaConfig.html">javadoc</a> but
 we&#8217;ll go in depth on a few items here. An example configuration file is included below. All possible configuration elements are listed. However, if the default values are acceptable that element can be safely omitted from your file.</p>
 </div>
 <div class="paragraph">
 <p><code>Morphia.createDatastore()</code> can be called <a href="javadoc/dev/morphia/Morphia.html#createDatastore(com.mongodb.client.MongoClient,dev.morphia.config.MorphiaConfig)">with</a>
 and <a href="javadoc/dev/morphia/Morphia.html#createDatastore(com.mongodb.client.MongoClient)">without</a> an explicit <code>MorphiaConfig</code>
-argument.  When not explicitly given a <code>MorphiaConfig</code>, Morphia will attempt to load the configuration file at the location show above.
+argument.  When not explicitly given a <code>MorphiaConfig</code>, Morphia will attempt to load the configuration file at the location shown above.
 Failing to find a configuration file, it will create a new configuration using the default values which can be found in the javadoc.
 These values are unlikely to be suitable long term but should be sufficient for newcomers looking to test things out a little before
 committing to adopt Morphia.</p>
 </div>
-<div class="sect2">
-<h3 id="_manually_loading_configurations"><a class="anchor" href="#_manually_loading_configurations"></a>Manually loading configurations</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_manually_loading_configurations"><a class="anchor" href="#_manually_loading_configurations"></a>Manually loading configurations</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>In some cases, you might find the need for multiple configuration files.  Such scenarios include varying test
 environments/configurations, multiple dataset configurations, or externally supplied configurations.  In such cases, you can manually
@@ -257,8 +266,10 @@ load those configurations using <a href="javadoc/dev/morphia/config/MorphiaConfi
 can then pass this instance to <code>createDatastore()</code>.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_dynamic_configuration_creation"><a class="anchor" href="#_dynamic_configuration_creation"></a>Dynamic configuration creation</h3>
+</div>
+<div class="sect1">
+<h2 id="_dynamic_configuration_creation"><a class="anchor" href="#_dynamic_configuration_creation"></a>Dynamic configuration creation</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>For many, the ability to dynamically create <code>MorphiaConfig</code> instances is not just a nicety but a hard requirement.  In this case, there
 are methods on <code>MorphiaConfig</code> to return a new version of the configuration with the updated value.  <code>MorphiaConfig</code> is immutable,
@@ -266,8 +277,10 @@ however, so be sure to use the returned reference and not the original.  It shou
 a <code>MorphiaConfig</code>, that configuration is fixed and can not be changed.  A new <code>Datastore</code> would need to be created with the updated version.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_collection_and_property_naming"><a class="anchor" href="#_collection_and_property_naming"></a>Collection and property naming</h3>
+</div>
+<div class="sect1">
+<h2 id="_collection_and_property_naming"><a class="anchor" href="#_collection_and_property_naming"></a>Collection and property naming</h2>
+<div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
@@ -326,8 +339,10 @@ can enable it by giving the fully qualified classname (fqcn) instead. The same a
 </table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_discriminator_keys_and_values"><a class="anchor" href="#_discriminator_keys_and_values"></a>Discriminator keys and values</h3>
+</div>
+<div class="sect1">
+<h2 id="_discriminator_keys_and_values"><a class="anchor" href="#_discriminator_keys_and_values"></a>Discriminator keys and values</h2>
+<div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
@@ -359,13 +374,15 @@ The choices here are simpler:</p>
 </ol>
 </div>
 <div class="paragraph">
-<p>Simple name is the fully qualified classname without the package name. These can all be accessed via their named methods on
+<p>Simple name is the class name without the package name. These can all be accessed via their named methods on
 <a href="javadoc/dev/morphia/mapping/DiscriminatorFunction.html">DiscriminatorFunction</a> and just like the <code>NamingStrategy</code> cases, if the
 provided options are not sufficient, you can implement your own by subclassing <code>DiscriminatorFunction</code> and implementing your own function.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_mapper_selection"><a class="anchor" href="#_mapper_selection"></a>Mapper selection</h3>
+</div>
+<div class="sect1">
+<h2 id="_mapper_selection"><a class="anchor" href="#_mapper_selection"></a>Mapper selection</h2>
+<div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
@@ -382,7 +399,8 @@ provided options are not sufficient, you can implement your own by subclassing <
 <p><code>reflection</code> <strong>(default)</strong> — the traditional reflection-based mapper. No additional dependencies required.</p>
 </li>
 <li>
-<p><code>critter</code> — a bytecode-generation mapper that produces <code>VarHandle</code>-based accessors at runtime via Gizmo, with automatic fallback to reflection if generation fails for a given type. Pre-generated models from the <code>critter-maven</code> plugin are used when available (AOT path), otherwise models are generated at JVM startup.</p>
+<p><code>critter</code> — a bytecode-generation mapper that produces bytecode to handle serialization rather than using reflection.
+This option should give you better performance overall. Pre-generated models from the <code>critter-maven</code> plugin are used when available (AOT path), otherwise models are generated at JVM startup.</p>
 </li>
 </ol>
 </div>
@@ -401,8 +419,10 @@ provided options are not sufficient, you can implement your own by subclassing <
 <p>For production deployments, consider using the <a href="maven-plugin.html" class="xref page">critter-maven plugin</a> to generate models at build time and eliminate the startup cost entirely.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_user_defined_codecs"><a class="anchor" href="#_user_defined_codecs"></a>User-defined Codecs</h3>
+</div>
+<div class="sect1">
+<h2 id="_user_defined_codecs"><a class="anchor" href="#_user_defined_codecs"></a>User-defined Codecs</h2>
+<div class="sectionbody">
 <div class="ulist">
 <ul>
 <li>
@@ -442,8 +462,11 @@ the note below about using the ServiceLoader with Java 9 modules.</p>
 </tr>
 </table>
 </div>
-<div class="sect3">
-<h4 id="_property_codecs"><a class="anchor" href="#_property_codecs"></a>Property Codecs</h4>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_property_codecs"><a class="anchor" href="#_property_codecs"></a>Property Codecs</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>As unusual as is the need for a custom codec to handle types, there are rare cases where how Morphia processes a property on entity needs
 to be customized.  This processing is handled via the
@@ -452,8 +475,9 @@ custom implementations via SPI the details of which won&#8217;t be covered here.
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_legacy_configuration"><a class="anchor" href="#_legacy_configuration"></a>Legacy Configuration</h3>
+<div class="sect1">
+<h2 id="_legacy_configuration"><a class="anchor" href="#_legacy_configuration"></a>Legacy Configuration</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Morphia can be configured in one of two ways: the legacy mode and the modern mode. The defaults in the configuration code will give you
 the modern configuration and is the recommended way to configure Morphia. However, if you&#8217;re upgrading an older project, you very likely
@@ -466,8 +490,10 @@ you already have a <code>MorphiaConfig</code> in hand but would like to update i
 on that reference and use the resulting <code>MorphiaConfig</code> instance.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_sample_config_files"><a class="anchor" href="#_sample_config_files"></a>Sample config files</h3>
+</div>
+<div class="sect1">
+<h2 id="_sample_config_files"><a class="anchor" href="#_sample_config_files"></a>Sample config files</h2>
+<div class="sectionbody">
 <div class="listingblock">
 <div class="title">Complete with defaults</div>
 <div class="content">
@@ -555,7 +581,6 @@ morphia.store-empties=false
 morphia.store-nulls=false</code></pre>
 </div>
 </div>
-<hr>
 <div class="listingblock">
 <div class="title">Minimal config file</div>
 <div class="content">
@@ -570,7 +595,7 @@ morphia.store-nulls=false</code></pre>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>The minimum config is, indeed, an empty (or even nonexistant) file as there are defaults for each value.  This is intended to "pave the
+<p>The minimum config is, indeed, an empty (or even nonexistent) file as there are defaults for each value.  This is intended to "pave the
 on ramp" for those new to Morphia.  It is expected that some of those values, notably the database and packages fields, will eventually
 be updated with more suitable values.</p>
 </div>
@@ -578,7 +603,6 @@ be updated with more suitable values.</p>
 </tr>
 </table>
 </div>
-<hr>
 <div class="listingblock">
 <div class="title">Legacy config file</div>
 <div class="content">
@@ -603,17 +627,25 @@ morphia.discriminator=className
 morphia.discriminator-key=className</code></pre>
 </div>
 </div>
-<div class="exampleblock">
-<div class="content">
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
 <div class="paragraph">
-<p>The legacy query factory is deprecated and will be removed in 3.0. It is advisable to switch to the newer query filters based API now to
-avoid breakage.</p>
+<p>The legacy query factory has been removed in 3.0. Switch to the newer query filters based API.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
-</div>
-<div class="sect2">
-<h3 id="_some_notes_on_serviceloader"><a class="anchor" href="#_some_notes_on_serviceloader"></a>Some notes on ServiceLoader</h3>
+<div class="sect1">
+<h2 id="_some_notes_on_serviceloader"><a class="anchor" href="#_some_notes_on_serviceloader"></a>Some notes on ServiceLoader</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Morphia provides a number of extensibility points using <a href="https://docs.oracle.com/javase/tutorial/sound/SPI-intro.html">the SPI mechanism</a>
 available in the JVM.  This allows for seamless, config-free inclusion of different functionality.  In general, this works without notice
@@ -624,7 +656,6 @@ work.  In order to export your service for Morphia to find you need an entry in 
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">provides dev.morphia.mapping.codec.MorphiaPropertyCodecProvider with com.foo.MyCodecProvider;</code></pre>
-</div>
 </div>
 </div>
 </div>

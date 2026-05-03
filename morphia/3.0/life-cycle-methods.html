@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
+    <title>Life Cycle Methods :: Morphia Docs</title>
     <meta name="generator" content="Antora 3.1.4">
 <link rel="stylesheet" href="../../_/css/site.css">
 <link rel="stylesheet" href="../../_/css/morphia.css">
@@ -81,10 +81,16 @@
     <a class="nav-link" href="index.html">Getting Started</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="migrating.html">Migrating</a>
+    <a class="nav-link" href="quicktour.html">Quick Tour</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="quicktour.html">Quick Tour</a>
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="migrating.html">Migrating</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="updating-old.html">Legacy Update API (pre-3.0)</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -123,7 +129,7 @@
     <a class="nav-link" href="aggregations.html">Aggregation</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="textSearches.html">Text Search</a>
+    <a class="nav-link" href="text-searches.html">Text Search</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="references.html">References</a>
@@ -132,10 +138,10 @@
     <a class="nav-link" href="transactions.html">Transactions</a>
   </li>
   <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="lifeCycleMethods.html">Life Cycle Methods</a>
+    <a class="nav-link" href="life-cycle-methods.html">Life Cycle Methods</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="schemaValidation.html">Schema Validation</a>
+    <a class="nav-link" href="schema-validation.html">Schema Validation</a>
   </li>
 </ul>
   </li>
@@ -214,27 +220,27 @@
   <ul>
     <li><a href="index.html">Morphia</a></li>
     <li>Features</li>
-    <li><a href="lifeCycleMethods.html">Life Cycle Methods</a></li>
+    <li><a href="life-cycle-methods.html">Life Cycle Methods</a></li>
   </ul>
 </nav>
 <div class="page-versions">
   <button class="version-menu-toggle" title="Show other versions of page">3.0-SNAPSHOT</button>
   <div class="version-menu">
-    <a class="version is-current" href="lifeCycleMethods.html">3.0-SNAPSHOT</a>
-    <a class="version" href="../2.5/lifeCycleMethods.html">2.5</a>
-    <a class="version" href="../2.4/lifeCycleMethods.html">2.4</a>
-    <a class="version" href="../1.6/lifeCycleMethods.html">1.6</a>
+    <a class="version is-current" href="life-cycle-methods.html">3.0-SNAPSHOT</a>
+    <a class="version is-missing" href="../2.5/index.html">2.5</a>
+    <a class="version is-missing" href="../2.4/index.html">2.4</a>
+    <a class="version is-missing" href="../1.6/index.html">1.6</a>
   </div>
 </div>
-  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/lifeCycleMethods.adoc">Edit this Page</a></div>
+  <div class="edit-this-page"><a href="https://github.com/MorphiaOrg/morphia/edit/master/docs/modules/ROOT/pages/life-cycle-methods.adoc">Edit this Page</a></div>
   </div>
   <div class="content">
 <aside class="toc sidebar" data-title="Contents" data-levels="2">
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<div class="sect1">
-<h2 id="_life_cycle_methods"><a class="anchor" href="#_life_cycle_methods"></a>Life Cycle Methods</h2>
+<h1 class="page">Life Cycle Methods</h1>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>There are various annotations which can be used to register callbacks on certain life cycle events.
@@ -256,16 +262,22 @@ These include Pre/Post-Persist (Save), and Pre/Post-Load.</p>
 </li>
 </ol>
 </div>
-<div class="sect2">
-<h3 id="_examples"><a class="anchor" href="#_examples"></a>Examples</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_examples"><a class="anchor" href="#_examples"></a>Examples</h2>
+<div class="sectionbody">
 <div class="paragraph">
-<p><a href="https://github.com/MorphiaOrg/morphia/blob/master/morphia/src/test/java/dev/morphia/TestQuery.java">Here</a> is a one of the test classes.</p>
+<p><a href="https://github.com/MorphiaOrg/morphia/tree/master/core/src/test/java/dev/morphia/TestQuery.java">Here</a> is a one of the test classes.</p>
 </div>
 <div class="paragraph">
-<p>All parameters and return values are options in your implemented methods.</p>
+<p>All parameters and return values are optional in your implemented methods.</p>
 </div>
-<div class="sect3">
-<h4 id="_example"><a class="anchor" href="#_example"></a>Example</h4>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_example"><a class="anchor" href="#_example"></a>Example</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Here is a simple example of an entity that always saves the Date it was last updated.
 Alternatively, the resulting serialized form can be passed back in just prior to sending the document to the database.</p>
@@ -291,8 +303,9 @@ Alternatively, the resulting serialized form can be passed back in just prior to
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_entitylisteners"><a class="anchor" href="#_entitylisteners"></a>EntityListeners</h3>
+<div class="sect1">
+<h2 id="_entitylisteners"><a class="anchor" href="#_entitylisteners"></a>EntityListeners</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>If your application has more generalized life cycle events, these methods can be stored on classes external to your model.
 For example&#8217;s sake, let&#8217;s assume there&#8217;s a need to digitally sign all documents before storing it in the database.</p>
@@ -328,7 +341,6 @@ class DigitalSigner {
 </td>
 </tr>
 </table>
-</div>
 </div>
 </div>
 </div>

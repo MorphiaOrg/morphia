@@ -80,11 +80,17 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="index.html">Getting Started</a>
 <ul class="nav-list">
-  <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="migrating.html">Migrating</a>
-  </li>
   <li class="nav-item is-current-page" data-depth="2">
     <a class="nav-link" href="quicktour.html">Quick Tour</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="migrating.html">Migrating</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="updating-old.html">Legacy Update API (pre-3.0)</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -123,7 +129,7 @@
     <a class="nav-link" href="aggregations.html">Aggregation</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="textSearches.html">Text Search</a>
+    <a class="nav-link" href="text-searches.html">Text Search</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="references.html">References</a>
@@ -132,10 +138,10 @@
     <a class="nav-link" href="transactions.html">Transactions</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="lifeCycleMethods.html">Life Cycle Methods</a>
+    <a class="nav-link" href="life-cycle-methods.html">Life Cycle Methods</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="schemaValidation.html">Schema Validation</a>
+    <a class="nav-link" href="schema-validation.html">Schema Validation</a>
   </li>
 </ul>
   </li>
@@ -262,8 +268,7 @@ Using this instance, you can configure various aspects of how Morphia maps your 
 <p>This snippet creates the Morphia instance we&#8217;ll be using in our simple application.
 The <code>Morphia</code> class is a factory for <code>Datastore</code> instances, if you will.  Given this minimal setup, Morphia will use a database named
 <code>morphia</code> and will scan your entire classpath for entities to map.  Obviously this full scan is less than ideal long term but serves
-to get you up and running quickly.  For a more complete discussion on configuring Morphia, please see the xref:configuration.adoc for
-more details.</p>
+to get you up and running quickly.  For a more complete discussion on configuring Morphia, please see the <a href="configuration.html" class="xref page">configuration guide</a>.</p>
 </div>
 <div class="paragraph">
 <p>This default setup will connect to the mongod running on the local machine using the default port of <code>27017</code>.  When Morphia scans looking
@@ -339,9 +344,9 @@ This class is annotated with the
 In the annotation, you&#8217;ll see <code>"employees"</code>.
 By default, Morphia will use the camel case class name as the collection name.
 If you pass a String instead, it will use that value for the collection name.
-In this case, all <code>Containers</code> instances will be saved in to the <code>employees</code>
+In this case, all <code>Employee</code> instances will be saved in to the <code>employees</code>
 collection instead.
-There is a little more to this annotation but the <a href="javadoc/dev/morphia/annotations/Entity.html">@Entity</a> javadoc covers those details .  <a href="javadoc/dev/morphia/annotations/Entity.html">@Entity</a> should be used on any type you want Morphia to map including embedded types.
+There is a little more to this annotation but the <a href="javadoc/dev/morphia/annotations/Entity.html">@Entity</a> javadoc covers those details. <a href="javadoc/dev/morphia/annotations/Entity.html">@Entity</a> should be used on any type you want Morphia to map including embedded types.
 Embedded types are not required to have an <a href="javadoc/dev/morphia/annotations/Id.html">@Id</a> annotated field.</p>
 </div>
 <div class="paragraph">
@@ -379,7 +384,7 @@ These referenced entities must already be saved or at least have an ID assigned 
 </td>
 <td class="content">
 <div class="paragraph">
-<p>There is a newer approach for defining references that is explained more fully <a href="indexing.html" class="xref page">here</a>.</p>
+<p>There is a newer approach for defining references that is explained more fully <a href="references.html" class="xref page">here</a>.</p>
 </div>
 </td>
 </tr>
@@ -422,7 +427,7 @@ datastore.save(elmer);</code></pre>
 Morphia takes care of saving the keys in Elmer&#8217;s document that refer to Daffy and Pepé.
 Updating data in MongoDB is as simple as updating your Java objects and then calling <code>datastore.save()</code> with them again.
 For bulk updates (e.g., everyone gets a raise!) this is not the most efficient way of doing updates.
-It is possible to update directly in the database without having to pull in every document, convert to Java objects, update, convert back to a document, and write back to MongoDB.But in order to show you that piece, first we need to see how to query.</p>
+It is possible to update directly in the database without having to pull in every document, convert to Java objects, update, convert back to a document, and write back to MongoDB. But in order to show you that piece, first we need to see how to query.</p>
 </div>
 </div>
 </div>
@@ -453,15 +458,15 @@ Here&#8217;s how to do that:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">underpaid = datastore.createQuery(Employee.class)
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">underpaid = datastore.find(Employee.class)
                      .filter(Filters.lte("salary", 30000))
                      .iterator()
                      .toList();</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Morphia supports all the query filters defined in the Mongodb query language.
-You can find helper methods for all these filers on the
+<p>Morphia supports all the query filters defined in the MongoDB query language.
+You can find helper methods for all these filters on the
 <a href="javadoc/dev/morphia/query/filters/Filters.html">Filters class</a>.
 The <code>filter()</code> method can take as many <code>Filter</code>
 references as you need to define your query.

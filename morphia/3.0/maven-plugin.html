@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
+    <title>Maven Plugin :: Morphia Docs</title>
     <meta name="generator" content="Antora 3.1.4">
 <link rel="stylesheet" href="../../_/css/site.css">
 <link rel="stylesheet" href="../../_/css/morphia.css">
@@ -81,10 +81,16 @@
     <a class="nav-link" href="index.html">Getting Started</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="migrating.html">Migrating</a>
+    <a class="nav-link" href="quicktour.html">Quick Tour</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="quicktour.html">Quick Tour</a>
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="migrating.html">Migrating</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="updating-old.html">Legacy Update API (pre-3.0)</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -123,7 +129,7 @@
     <a class="nav-link" href="aggregations.html">Aggregation</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="textSearches.html">Text Search</a>
+    <a class="nav-link" href="text-searches.html">Text Search</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="references.html">References</a>
@@ -132,10 +138,10 @@
     <a class="nav-link" href="transactions.html">Transactions</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="lifeCycleMethods.html">Life Cycle Methods</a>
+    <a class="nav-link" href="life-cycle-methods.html">Life Cycle Methods</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="schemaValidation.html">Schema Validation</a>
+    <a class="nav-link" href="schema-validation.html">Schema Validation</a>
   </li>
 </ul>
   </li>
@@ -233,8 +239,8 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<div class="sect1">
-<h2 id="_maven_plugin"><a class="anchor" href="#_maven_plugin"></a>Maven Plugin</h2>
+<h1 class="page">Maven Plugin</h1>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>The <code>critter-maven</code> plugin generates Morphia entity models and property accessors at build time (AOT — ahead of time), so they are ready on the classpath before your application starts.
@@ -243,8 +249,11 @@ Without the plugin, Morphia generates the same models at each JVM startup.</p>
 <div class="paragraph">
 <p>The plugin is entirely optional; the runtime fallback produces identical results.  It is recommended to use the plugin, however.</p>
 </div>
-<div class="sect2">
-<h3 id="_why_use_it"><a class="anchor" href="#_why_use_it"></a>Why use it?</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_why_use_it"><a class="anchor" href="#_why_use_it"></a>Why use it?</h2>
+<div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
 <col style="width: 50%;">
@@ -279,8 +288,10 @@ Without the plugin, Morphia generates the same models at each JVM startup.</p>
 <p>Both paths generate the bytecode necessary to manage your entities. The plugin simply moves the generation work from JVM startup to build time.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_setup"><a class="anchor" href="#_setup"></a>Setup</h3>
+</div>
+<div class="sect1">
+<h2 id="_setup"><a class="anchor" href="#_setup"></a>Setup</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Add the plugin to your <code>pom.xml</code> and set <code>morphia.mapper=critter</code> in your config:</p>
 </div>
@@ -311,18 +322,25 @@ morphia.mapper=critter</code></pre>
 <p>When <code>morphia.mapper=critter</code> is active and the plugin has run, Morphia loads the pre-generated models automatically — no code changes required.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_goals"><a class="anchor" href="#_goals"></a>Goals</h3>
-<div class="sect3">
-<h4 id="_generate_models_default_phase_process_classes"><a class="anchor" href="#_generate_models_default_phase_process_classes"></a><code>generate-models</code> (default phase: <code>process-classes</code>)</h4>
+</div>
+<div class="sect1">
+<h2 id="_goals"><a class="anchor" href="#_goals"></a>Goals</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_generate_models_default_phase_process_classes"><a class="anchor" href="#_generate_models_default_phase_process_classes"></a><code>generate-models</code> (default phase: <code>process-classes</code>)</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Reads compiled <code>.class</code> files from <code>${project.build.outputDirectory}</code> and writes generated entity model and accessor classes to <code>target/generated-classes/critter</code>.
 This is the standard goal for most projects. It has no user-configurable parameters.</p>
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_how_it_fits_together"><a class="anchor" href="#_how_it_fits_together"></a>How it fits together</h3>
+<div class="sect1">
+<h2 id="_how_it_fits_together"><a class="anchor" href="#_how_it_fits_together"></a>How it fits together</h2>
+<div class="sectionbody">
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-none hljs">Maven build
@@ -341,7 +359,6 @@ Runtime (morphia.mapper=critter)
 </div>
 <div class="paragraph">
 <p>If the plugin was not run (e.g., during a quick <code>mvn test-compile</code> without the full lifecycle), step 1 finds nothing and Morphia transparently falls back to runtime generation at step 2.</p>
-</div>
 </div>
 </div>
 </div>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
+    <title>Queries :: Morphia Docs</title>
     <meta name="generator" content="Antora 3.1.4">
 <link rel="stylesheet" href="../../_/css/site.css">
 <link rel="stylesheet" href="../../_/css/morphia.css">
@@ -81,10 +81,16 @@
     <a class="nav-link" href="index.html">Getting Started</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="migrating.html">Migrating</a>
+    <a class="nav-link" href="quicktour.html">Quick Tour</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="quicktour.html">Quick Tour</a>
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="migrating.html">Migrating</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="updating-old.html">Legacy Update API (pre-3.0)</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -123,7 +129,7 @@
     <a class="nav-link" href="aggregations.html">Aggregation</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="textSearches.html">Text Search</a>
+    <a class="nav-link" href="text-searches.html">Text Search</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="references.html">References</a>
@@ -132,10 +138,10 @@
     <a class="nav-link" href="transactions.html">Transactions</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="lifeCycleMethods.html">Life Cycle Methods</a>
+    <a class="nav-link" href="life-cycle-methods.html">Life Cycle Methods</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="schemaValidation.html">Schema Validation</a>
+    <a class="nav-link" href="schema-validation.html">Schema Validation</a>
   </li>
 </ul>
   </li>
@@ -233,8 +239,8 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<div class="sect1">
-<h2 id="_queries"><a class="anchor" href="#_queries"></a>Queries</h2>
+<h1 class="page">Queries</h1>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>Morphia provides <a href="javadoc/dev/morphia/query/Query.html">Query&lt;T&gt;</a> class to build a query and map the results back to instances of your entity classes and attempts to provide as much type safety and validation as possible.
@@ -248,8 +254,11 @@ To create the <code>Query</code>, we invoke the following code:</p>
 <div class="paragraph">
 <p><code>find()</code> returns an instance of <code>Query</code> which we can use to build a query.</p>
 </div>
-<div class="sect2">
-<h3 id="_filter"><a class="anchor" href="#_filter"></a><code>filter()</code></h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_filter"><a class="anchor" href="#_filter"></a><code>filter()</code></h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>The most significant method <code>filter(Filter&#8230;&#8203;)</code>.
 This method takes a number of filters to apply to the query being built.
@@ -272,8 +281,10 @@ For example, to query for products whose prices is greater than or equal to 1000
 You can define as many filters in one call as you&#8217;d like or you may choose to append them in smaller groups based on whatever query building logic your application might have.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_complex_queries"><a class="anchor" href="#_complex_queries"></a>Complex Queries</h3>
+</div>
+<div class="sect1">
+<h2 id="_complex_queries"><a class="anchor" href="#_complex_queries"></a>Complex Queries</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Of course, queries are usually more complex than single field comparisons.
 Morphia offers both <code>and()</code> and <code>or()</code> to build up more complex queries.
@@ -304,7 +315,6 @@ The default is to "and" filter criteria together so if all you need is an <code>
 </div>
 </div>
 </div>
-</div>
 <div class="sect1">
 <h2 id="_other_query_options"><a class="anchor" href="#_other_query_options"></a>Other Query Options</h2>
 <div class="sectionbody">
@@ -312,13 +322,16 @@ The default is to "and" filter criteria together so if all you need is an <code>
 <p>There is more to querying than simply filtering against different document values.
 Listed below are some of the options for modifying the query results in different ways.</p>
 </div>
-<div class="sect2">
-<h3 id="_projections"><a class="anchor" href="#_projections"></a>Projections</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_projections"><a class="anchor" href="#_projections"></a>Projections</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p><a href="http://docs.mongodb.org/manual/tutorial/project-fields-from-query-results/">Projections</a> allow you to return only a subset of the fields in a document.
 This is useful when you need to only return a smaller view of a larger object.
 Borrowing from the
-<a href="https://github.com/MorphiaOrg/morphia/tree/master/morphia/src/test/java/dev/morphia/TestQuery.java">unit tests</a>, this is an example of this feature in action:</p>
+<a href="https://github.com/MorphiaOrg/morphia/tree/master/core/src/test/java/dev/morphia/TestQuery.java">unit tests</a>, this is an example of this feature in action:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -358,8 +371,10 @@ To save such instances back consider using
 </table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_limiting_and_skipping"><a class="anchor" href="#_limiting_and_skipping"></a>Limiting and Skipping</h3>
+</div>
+<div class="sect1">
+<h2 id="_limiting_and_skipping"><a class="anchor" href="#_limiting_and_skipping"></a>Limiting and Skipping</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Pagination of query results is often done as a combination of skips and limits.
 Morphia offers <code>FindOptions.limit(int)</code> and
@@ -380,8 +395,10 @@ There&#8217;s a caveat to using skip/limit for pagination, however.
 See the <a href="http://docs.mongodb.org/manual/reference/method/cursor.skip">skip</a> documentation for more detail.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_ordering"><a class="anchor" href="#_ordering"></a>Ordering</h3>
+</div>
+<div class="sect1">
+<h2 id="_ordering"><a class="anchor" href="#_ordering"></a>Ordering</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Ordering the results of a query is done via
 <a href="javadoc/dev/morphia/query/FindOptions.html#sort(dev.morphia.query.Sort...)">FindOptions.sort(Sort&#8230;&#8203;)</a>, etc.
@@ -397,13 +414,15 @@ For example, to sort by <code>age</code> (youngest to oldest) and then <code>inc
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_tailable_cursors"><a class="anchor" href="#_tailable_cursors"></a>Tailable Cursors</h3>
+</div>
+<div class="sect1">
+<h2 id="_tailable_cursors"><a class="anchor" href="#_tailable_cursors"></a>Tailable Cursors</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>If you have a <a href="http://docs.mongodb.org/manual/core/capped-collections/">capped collection</a> it&#8217;s possible to "tail" a query so that when new documents are added to the collection that match your query, they&#8217;ll be returned by the
 <a href="http://docs.mongodb.org/manual/reference/glossary/#term-tailable-cursor">tailable cursor</a>.
 An example of this feature in action can be found in the
-<a href="https://github.com/MorphiaOrg/morphia/tree/master/morphia/src/test/java/dev/morphia/TestQuery.java">unit tests</a> in the <code>testTailableCursors()</code> test:</p>
+<a href="https://github.com/MorphiaOrg/morphia/tree/master/core/src/test/java/dev/morphia/TestQuery.java">unit tests</a> in the <code>testTailableCursors()</code> test:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -437,8 +456,10 @@ In this version of the unit test, we tail the cursor waiting to pull out objects
 </ol>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_polymorphic_queries"><a class="anchor" href="#_polymorphic_queries"></a>Polymorphic Queries</h3>
+</div>
+<div class="sect1">
+<h2 id="_polymorphic_queries"><a class="anchor" href="#_polymorphic_queries"></a>Polymorphic Queries</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>By default, Morphia will only return documents of the type given in <code>find()</code>. However, if you want to retrieve subtypes as well, you can
 enable this in <code>MorphiaConfig</code> via
@@ -460,8 +481,10 @@ potential performance hits due to the wider scope of the query filter.</p>
 </table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_supported_operators"><a class="anchor" href="#_supported_operators"></a>Supported Operators</h3>
+</div>
+<div class="sect1">
+<h2 id="_supported_operators"><a class="anchor" href="#_supported_operators"></a>Supported Operators</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Every effort is made to provide 100% coverage of all the operators offered by MongoDB. Below is listed all the currently supported
 operators. To see an example of an operator in action, click through to see the test cases for that operator.</p>
@@ -736,7 +759,6 @@ operators. To see an example of an operator in action, click through to see the 
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 </div>
 </article>

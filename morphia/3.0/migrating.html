@@ -80,11 +80,17 @@
     <button class="nav-item-toggle"></button>
     <a class="nav-link" href="index.html">Getting Started</a>
 <ul class="nav-list">
-  <li class="nav-item is-current-page" data-depth="2">
-    <a class="nav-link" href="migrating.html">Migrating</a>
-  </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="quicktour.html">Quick Tour</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="migrating.html">Migrating</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="updating-old.html">Legacy Update API (pre-3.0)</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -123,7 +129,7 @@
     <a class="nav-link" href="aggregations.html">Aggregation</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="textSearches.html">Text Search</a>
+    <a class="nav-link" href="text-searches.html">Text Search</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="references.html">References</a>
@@ -132,10 +138,10 @@
     <a class="nav-link" href="transactions.html">Transactions</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="lifeCycleMethods.html">Life Cycle Methods</a>
+    <a class="nav-link" href="life-cycle-methods.html">Life Cycle Methods</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="schemaValidation.html">Schema Validation</a>
+    <a class="nav-link" href="schema-validation.html">Schema Validation</a>
   </li>
 </ul>
   </li>
@@ -238,7 +244,7 @@
 <h2 id="_migrating_to_3_0"><a class="anchor" href="#_migrating_to_3_0"></a>Migrating to 3.0</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>More detailed information will be made available once those details stabilize but at the moment there two things to keep an eye on:</p>
+<p>More detailed information will be made available once those details stabilize but at the moment there are two things to keep an eye on:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -263,7 +269,7 @@ driver version of 5.x or greater.  If you need a 4.x driver for some reason, you
 support 5.x and greater.  In preparation for 3.0, deprecations will be incrementally made in the 2.5.x line with replacements where
 feasible.  Updating away from these deprecations will make the transition to 3.0 much smoother.  In the cases where the replacements can
 not feasibly be provided, migration scripts will be available as part of the 3.0 release to help reduce the impact of such changes.  Bug
-fixes will continue to be made on the 2.4.x series and 2 .5.x as necessary but the primary focus remains on 3.x.</p>
+fixes will continue to be made on the 2.4.x series and 2.5.x as necessary but the primary focus remains on 3.x.</p>
 </div>
 </div>
 </div>

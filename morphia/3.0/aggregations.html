@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
+    <title>Aggregations :: Morphia Docs</title>
     <meta name="generator" content="Antora 3.1.4">
 <link rel="stylesheet" href="../../_/css/site.css">
 <link rel="stylesheet" href="../../_/css/morphia.css">
@@ -81,10 +81,16 @@
     <a class="nav-link" href="index.html">Getting Started</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="migrating.html">Migrating</a>
+    <a class="nav-link" href="quicktour.html">Quick Tour</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="quicktour.html">Quick Tour</a>
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="migrating.html">Migrating</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="updating-old.html">Legacy Update API (pre-3.0)</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -123,7 +129,7 @@
     <a class="nav-link" href="aggregations.html">Aggregation</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="textSearches.html">Text Search</a>
+    <a class="nav-link" href="text-searches.html">Text Search</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="references.html">References</a>
@@ -132,10 +138,10 @@
     <a class="nav-link" href="transactions.html">Transactions</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="lifeCycleMethods.html">Life Cycle Methods</a>
+    <a class="nav-link" href="life-cycle-methods.html">Life Cycle Methods</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="schemaValidation.html">Schema Validation</a>
+    <a class="nav-link" href="schema-validation.html">Schema Validation</a>
   </li>
 </ul>
   </li>
@@ -233,8 +239,8 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<div class="sect1">
-<h2 id="_aggregations"><a class="anchor" href="#_aggregations"></a>Aggregations</h2>
+<h1 class="page">Aggregations</h1>
+<div id="preamble">
 <div class="sectionbody">
 <div class="paragraph">
 <p>The <a href="http://docs.mongodb.org/manual/aggregation">aggregation framework</a> in MongoDB allows you to define a series (called a pipeline) of operations (called stages) against the data in a collection.
@@ -242,7 +248,7 @@ These pipelines can be used for analytics or they can be used to convert your da
 This guide will not go in to the details of how aggregation works, however.
 The official MongoDB <a href="http://docs.mongodb.org/manual/aggregation">documentation</a> has extensive tutorials on such details.
 Rather, this guide will focus on the Morphia API. The examples shown here are taken from the
-<a href="https://github.com/MorphiaOrg/morphia/tree/master/morphia/src/test/java/dev/morphia/aggregation/AggregationTest.java">tests</a> in Morphia itself. You can find the full list in the <a href="#_supported_operators">Supported Operators</a> section.</p>
+<a href="https://github.com/MorphiaOrg/morphia/tree/master/core/src/test/java/dev/morphia/aggregation/AggregationTest.java">tests</a> in Morphia itself. You can find the full list in the <a href="#_supported_operators">Supported Operators</a> section.</p>
 </div>
 <div class="paragraph">
 <p>Writing an aggregation pipeline starts just like writing a standard query.
@@ -261,8 +267,11 @@ As with querying, we start with the <code>Datastore</code>:</p>
 <div class="paragraph">
 <p><code>aggregate()</code> takes a <code>Class</code> literal. This lets Morphia know which collection to perform this aggregation against. Because of the transformational operations available in the aggregation <a href="http://docs.mongodb.org/manual/core/aggregation-pipeline">pipeline</a>, Morphia can not validate as much as it can with querying so care will need to be taken to ensure document fields actually exist when referencing them in your pipeline.</p>
 </div>
-<div class="sect2">
-<h3 id="_the_pipeline"><a class="anchor" href="#_the_pipeline"></a>The Pipeline</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_the_pipeline"><a class="anchor" href="#_the_pipeline"></a>The Pipeline</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Aggregation pipelines are comprised of a series stages.
 Our example here with the <code>group()</code> stage. This method is the Morphia equivalent of the
@@ -281,8 +290,10 @@ the Morphia equivalent of an <a href="http://docs.mongodb.org/manual/reference/o
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_executing_the_pipeline"><a class="anchor" href="#_executing_the_pipeline"></a>Executing the Pipeline</h3>
+</div>
+<div class="sect1">
+<h2 id="_executing_the_pipeline"><a class="anchor" href="#_executing_the_pipeline"></a>Executing the Pipeline</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Once your pipeline is complete, you can execute it via the <code>execute()</code> method.
 This method optionally takes a <code>Class</code> reference for the target type of your aggregation.
@@ -291,8 +302,11 @@ Additionally, you can also include some options to <code>execute()</code>.
 We can use the various options on the
 <a href="javadoc/dev/morphia/aggregation/AggregationOptions.html">AggregationOptions</a> class to configure how we want the pipeline to execute.</p>
 </div>
-<div class="sect3">
-<h4 id="_out"><a class="anchor" href="#_out"></a>$out</h4>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_out"><a class="anchor" href="#_out"></a>$out</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Depending your use case, you might not want to return the results of your aggregation but simply output them to another collection.
 That&#8217;s where <code>$out</code> comes in.  <a href="http://docs.mongodb.org/manual/reference/operator/aggregation/out/">$out</a> is an operator that allows the results of a pipeline to be stored in to a named collection.
@@ -332,8 +346,10 @@ your entities to determine that collection name.  You may also pass a String wit
 does not correspond to a mapped entity.</p>
 </div>
 </div>
-<div class="sect3">
-<h4 id="_merge"><a class="anchor" href="#_merge"></a>$merge</h4>
+</div>
+<div class="sect1">
+<h2 id="_merge"><a class="anchor" href="#_merge"></a>$merge</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p><a href="http://docs.mongodb.org/manual/reference/operator/aggregation/merge/">$merge</a> is a very similar option with a some major differences.
 The biggest difference is that <code>$merge</code> can write to existing collections without destroying the existing documents.  <code>$out</code> would
@@ -367,8 +383,9 @@ new documents in to the collection.  Other options are defined on <code>com.mong
 </div>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_supported_operators"><a class="anchor" href="#_supported_operators"></a>Supported Operators</h3>
+<div class="sect1">
+<h2 id="_supported_operators"><a class="anchor" href="#_supported_operators"></a>Supported Operators</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Every effort is made to provide 100% coverage of all the operators offered by MongoDB. A select handful of operators have been excluded
 for reasons of suitability in Morphia.  In short, some operators just don&#8217;t make sense in Morphia.  Below is listed all the currently
@@ -1480,7 +1497,6 @@ supported operators.  To see an example of an operator in action, click through 
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 </div>
 </article>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Untitled :: Morphia Docs</title>
+    <title>Sharding :: Morphia Docs</title>
     <meta name="generator" content="Antora 3.1.4">
 <link rel="stylesheet" href="../../_/css/site.css">
 <link rel="stylesheet" href="../../_/css/morphia.css">
@@ -81,10 +81,16 @@
     <a class="nav-link" href="index.html">Getting Started</a>
 <ul class="nav-list">
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="migrating.html">Migrating</a>
+    <a class="nav-link" href="quicktour.html">Quick Tour</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="quicktour.html">Quick Tour</a>
+    <button class="nav-item-toggle"></button>
+    <a class="nav-link" href="migrating.html">Migrating</a>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="3">
+    <a class="nav-link" href="updating-old.html">Legacy Update API (pre-3.0)</a>
+  </li>
+</ul>
   </li>
 </ul>
   </li>
@@ -123,7 +129,7 @@
     <a class="nav-link" href="aggregations.html">Aggregation</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="textSearches.html">Text Search</a>
+    <a class="nav-link" href="text-searches.html">Text Search</a>
   </li>
   <li class="nav-item" data-depth="2">
     <a class="nav-link" href="references.html">References</a>
@@ -132,10 +138,10 @@
     <a class="nav-link" href="transactions.html">Transactions</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="lifeCycleMethods.html">Life Cycle Methods</a>
+    <a class="nav-link" href="life-cycle-methods.html">Life Cycle Methods</a>
   </li>
   <li class="nav-item" data-depth="2">
-    <a class="nav-link" href="schemaValidation.html">Schema Validation</a>
+    <a class="nav-link" href="schema-validation.html">Schema Validation</a>
   </li>
 </ul>
   </li>
@@ -233,8 +239,8 @@
   <div class="toc-menu"></div>
 </aside>
 <article class="doc">
-<div class="sect1">
-<h2 id="_sharding"><a class="anchor" href="#_sharding"></a>Sharding</h2>
+<h1 class="page">Sharding</h1>
+<div id="preamble">
 <div class="sectionbody">
 <div class="admonitionblock note">
 <table>
@@ -244,9 +250,9 @@
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Sharding suport is new in 2.3 and should be considered experimental.
+<p>Morphia supports sharding via the <code>@ShardKeys</code> annotation.
 While all tests currently pass, the form and function of the sharding support might change as issues arise and any usability concerns are addressed.
-This is feature is safe to use just be aware that this API might change based on user feedback.</p>
+This feature is safe to use just be aware that this API might change based on user feedback.</p>
 </div>
 </td>
 </tr>
@@ -259,15 +265,18 @@ You don&#8217;t need to use Morphia to shard your collections, but if your colle
 <div class="paragraph">
 <p>Documentation on how to choose a proper shard key can be found in the <a href="http://docs.mongodb.org/manual/sharding">manual</a>.</p>
 </div>
-<div class="sect2">
-<h3 id="_shard_definition"><a class="anchor" href="#_shard_definition"></a>Shard Definition</h3>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_shard_definition"><a class="anchor" href="#_shard_definition"></a>Shard Definition</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Sharding definitions are driven by the <a href="javadoc/dev/morphia/annotations/ShardKeys.html">@ShardKeys</a> annotation.
 This annotation takes two values: the shard keys themselves as defined by the <a href="javadoc/dev/morphia/annotations/ShardKey.html">@ShardKey</a> annotation and the options to apply when sharding the collection via the <a href="javadoc/dev/morphia/annotations/ShardOptions.html">@ShardOptions</a>
 annotation.</p>
 </div>
 <div class="paragraph">
-<p>An shard definition might look something like this.</p>
+<p>A shard definition might look something like this.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -324,25 +333,28 @@ If you find yourself needing to mutate one of those properties, consult the <a h
 </table>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_sharding_options"><a class="anchor" href="#_sharding_options"></a>Sharding Options</h3>
+</div>
+<div class="sect1">
+<h2 id="_sharding_options"><a class="anchor" href="#_sharding_options"></a>Sharding Options</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p><code>@ShardKeys</code> also has an <code>options</code> field which takes a <a href="javadoc/dev/morphia/annotations/ShardOptions.html">@ShardOptions</a>.
 Using this annotation, you can configure the number of initial shards, <a href="http://docs.mongodb.org/manual/core/hashed-sharding/#shard-an-empty-collection">presplit the hashed zones</a>, or <a href="http://docs.mongodb.org/manual/core/sharding-shard-key/#unique-indexes">enforce uniqueness</a> in your shard key.</p>
 </div>
 </div>
-<div class="sect2">
-<h3 id="_how_is_it_used"><a class="anchor" href="#_how_is_it_used"></a>How is it used?</h3>
+</div>
+<div class="sect1">
+<h2 id="_how_is_it_used"><a class="anchor" href="#_how_is_it_used"></a>How is it used?</h2>
+<div class="sectionbody">
 <div class="paragraph">
 <p>Once you have your sharding configured, you have the choice of manually sharding it via the mongo shell or having Morphia shard it for you.
 For the latter, there is a new method <a href="javadoc/dev/morphia/Datastore.html#shardCollections()">shardCollections()</a> that will do
-thisfor you. It should be noted here that if your collection is not empty, there are certain administrative tasks you must perform on the collection first that Morphia does <strong>not</strong> handle.
+this for you. It should be noted here that if your collection is not empty, there are certain administrative tasks you must perform on the collection first that Morphia does <strong>not</strong> handle.
 You can find those details in the server documentation.</p>
 </div>
 <div class="paragraph">
 <p>Once your collection is sharded, Morphia uses the shard key definition to update certain operations (such as saves/upserts and find-and-modify among others) to include the relevant shard key information so that mongodb can quickly and efficiently find the documents in the database.
 This is done transparently for you so you needn&#8217;t worry about doing such things manually.</p>
-</div>
 </div>
 </div>
 </div>
