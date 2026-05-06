@@ -50,7 +50,7 @@
         <asm.version>9.9.1</asm.version>
         <awaitility.version>1.7.0</awaitility.version>
         <driver.version>5.7.0</driver.version>
-        <driver.minor.version>5.5</driver.minor.version>
+        <driver.minor.version>5.7</driver.minor.version>
         <driver-javadoc.link>https://mongodb.github.io/mongo-java-driver/${driver.minor.version}/apidocs</driver-javadoc.link>
         <gizmo.version>1.10.1</gizmo.version>
         <jackson.version>2.21.2</jackson.version>
