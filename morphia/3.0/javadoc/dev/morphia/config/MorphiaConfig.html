@@ -255,13 +255,13 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
 <div class="block">Updates this configuration with a new value and returns a new instance.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>@WithConverter(PropertyAnnotationProviderConverter.class) <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="PropertyAnnotationProvider.html" title="interface in dev.morphia.config">PropertyAnnotationProvider</a>&lt;?&gt;&gt;</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>@WithConverter(PropertyAnnotationProviderConverter.class) <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;dev.morphia.config.PropertyAnnotationProvider&lt;?&gt;&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#propertyAnnotationProviders()" class="member-name-link">propertyAnnotationProviders</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Specifies the providers of any external annotations to use as markers for properties for Morphia to consider while mapping.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#propertyAnnotationProviders(java.util.List)" class="member-name-link">propertyAnnotationProviders</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="PropertyAnnotationProvider.html" title="interface in dev.morphia.config">PropertyAnnotationProvider</a>&lt;?&gt;&gt;&nbsp;list)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#propertyAnnotationProviders(java.util.List)" class="member-name-link">propertyAnnotationProviders</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;dev.morphia.config.PropertyAnnotationProvider&lt;?&gt;&gt;&nbsp;list)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
 <div class="block">Updates this configuration to include the new annotation providers for property discovery.</div>
 </div>
@@ -805,7 +805,7 @@ loadScripts(document, 'script');</script>
 @MorphiaExperimental
 @WithConverter(PropertyAnnotationProviderConverter.class)
 @WithDefault("dev.morphia.config.MorphiaPropertyAnnotationProvider")
-</span><span class="return-type">@WithConverter(PropertyAnnotationProviderConverter.class) <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="PropertyAnnotationProvider.html" title="interface in dev.morphia.config">PropertyAnnotationProvider</a>&lt;?&gt;&gt;</span>&nbsp;<span class="element-name">propertyAnnotationProviders</span>()</div>
+</span><span class="return-type">@WithConverter(PropertyAnnotationProviderConverter.class) <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;dev.morphia.config.PropertyAnnotationProvider&lt;?&gt;&gt;</span>&nbsp;<span class="element-name">propertyAnnotationProviders</span>()</div>
 <div class="block">Specifies the providers of any external annotations to use as markers for properties for Morphia to consider while mapping. This
  method is marked as internal only to note that, as a relatively lower level hook in to Morphia functionality, the regular
  guarantees about stability do not apply. This property and its underlying types and behaviors are subject to potential change
@@ -820,7 +820,7 @@ loadScripts(document, 'script');</script>
 <dt>See Also:</dt>
 <dd>
 <ul class="see-list">
-<li><a href="PropertyAnnotationProvider.html" title="interface in dev.morphia.config"><code>PropertyAnnotationProvider</code></a></li>
+<li><code>PropertyAnnotationProvider</code></li>
 </ul>
 </dd>
 <div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an experimental item.  Its function and presence are subject to change.  Feedback on features and usability extremely welcome.</div> </div><div class="deprecationBlock"><span class="deprecatedLabel">Developer note.</span> <div class="deprecationComment">This is an internal item.  Its function and presence are subject to change without warning.  Its use is highly discouraged.</div> </div></dl>
@@ -831,7 +831,7 @@ loadScripts(document, 'script');</script>
 <h3>propertyAnnotationProviders</h3>
 <div class="member-signature"><span class="annotations">@MorphiaInternal
 @MorphiaExperimental
-</span><span class="modifiers">default</span>&nbsp;<span class="return-type"><a href="MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a></span>&nbsp;<span class="element-name">propertyAnnotationProviders</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="PropertyAnnotationProvider.html" title="interface in dev.morphia.config">PropertyAnnotationProvider</a>&lt;?&gt;&gt;&nbsp;list)</span></div>
+</span><span class="modifiers">default</span>&nbsp;<span class="return-type"><a href="MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a></span>&nbsp;<span class="element-name">propertyAnnotationProviders</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;dev.morphia.config.PropertyAnnotationProvider&lt;?&gt;&gt;&nbsp;list)</span></div>
 <div class="block">Updates this configuration to include the new annotation providers for property discovery. If the default morphia provider is not
  included it will be added.</div>
 <dl class="notes">

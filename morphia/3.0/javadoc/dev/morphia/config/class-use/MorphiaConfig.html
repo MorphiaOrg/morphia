@@ -63,12 +63,10 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="block">Configuration related types</div>
 </div>
-<div class="col-first even-row-color"><a href="#dev.morphia.critter.conventions">dev.morphia.critter.conventions</a></div>
+<div class="col-first even-row-color"><a href="#dev.morphia.critter.parser.gizmo">dev.morphia.critter.parser.gizmo</a></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="#dev.morphia.critter.parser.gizmo">dev.morphia.critter.parser.gizmo</a></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><a href="#dev.morphia.mapping">dev.morphia.mapping</a></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><a href="#dev.morphia.mapping">dev.morphia.mapping</a></div>
+<div class="col-last odd-row-color">
 <div class="block">Defines the mapping infrastructure used by Morphia.</div>
 </div>
 </div>
@@ -198,7 +196,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Updates this configuration with a new value and returns a new instance.</div>
 </div>
 <div class="col-first even-row-color"><code>default <a href="../MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">MorphiaConfig.</span><code><a href="../MorphiaConfig.html#propertyAnnotationProviders(java.util.List)" class="member-name-link">propertyAnnotationProviders</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../PropertyAnnotationProvider.html" title="interface in dev.morphia.config">PropertyAnnotationProvider</a>&lt;?&gt;&gt;&nbsp;list)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">MorphiaConfig.</span><code><a href="../MorphiaConfig.html#propertyAnnotationProviders(java.util.List)" class="member-name-link">propertyAnnotationProviders</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;dev.morphia.config.PropertyAnnotationProvider&lt;?&gt;&gt;&nbsp;list)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Updates this configuration to include the new annotation providers for property discovery.</div>
 </div>
@@ -235,22 +233,6 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static dev.morphia.config.ManualMorphiaConfig</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ManualMorphiaConfig.</span><code>configure<wbr>(<a href="../MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a>&nbsp;base)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="dev.morphia.critter.conventions">
-<h2>Uses of <a href="../MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a> in <a href="../../critter/conventions/package-summary.html">dev.morphia.critter.conventions</a></h2>
-<div class="caption"><span>Methods in <a href="../../critter/conventions/package-summary.html">dev.morphia.critter.conventions</a> with parameters of type <a href="../MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a></span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Method</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">PropertyConvention.</span><code>mappedName<wbr>(<a href="../MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a>&nbsp;config,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&gt;&nbsp;annotations,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;modelName)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>

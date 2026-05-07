@@ -290,6 +290,8 @@ T&gt;&nbsp;<a href="aggregation/Aggregation.html" title="interface in dev.morphi
 <div class="block">Returns a new aggregation bound without an initial type. Calls to this method define the collection to be used via the options
  passed.</div>
 <dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>options</code> - the aggregation options including the collection name</dd>
 <dt>Returns:</dt>
 <dd>the aggregation pipeline</dd>
 <dt>Since:</dt>
@@ -331,6 +333,7 @@ T&gt;&nbsp;<a href="aggregation/Aggregation.html" title="interface in dev.morphi
 <dd><code>S</code> - the source type</dd>
 <dt>Parameters:</dt>
 <dd><code>source</code> - The class to create aggregation against</dd>
+<dd><code>options</code> - the aggregation options</dd>
 <dt>Returns:</dt>
 <dd>the aggregation pipeline</dd>
 <dt>Since:</dt>
@@ -351,6 +354,7 @@ T&gt;</span>&nbsp;<span class="return-type"><a href="aggregation/Aggregation.htm
 <dd><code>T</code> - the target type</dd>
 <dt>Parameters:</dt>
 <dd><code>source</code> - The class to create aggregation against</dd>
+<dd><code>target</code> - The class to use as the result type</dd>
 <dt>Returns:</dt>
 <dd>the aggregation pipeline</dd>
 <dt>Since:</dt>
@@ -374,6 +378,8 @@ T&gt;</span>&nbsp;<span class="return-type"><a href="aggregation/Aggregation.htm
 <dd><code>T</code> - the target type</dd>
 <dt>Parameters:</dt>
 <dd><code>source</code> - The source type to aggregate. May be null if an alternate collection is being used.</dd>
+<dd><code>target</code> - The class to use as the result type</dd>
+<dd><code>options</code> - the aggregation options</dd>
 <dt>Returns:</dt>
 <dd>the aggregation pipeline</dd>
 <dt>Since:</dt>
