@@ -3,6 +3,7 @@ package dev.morphia.test;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -577,7 +578,13 @@ public class TestUpdateOperations extends TestBase {
         List<TranslationParams> list = new ArrayList<>();
 
         list.addAll(prepParams("stars", "s"));
-        assertEquals(list.size(), countUpdateOperators(), "Should have checks for all UpdateOperators methods");
+        // dec by 1 to exclude set(Entity) since there will be no path translation to check
+        var expected = Arrays.stream(UpdateOperators.class
+                .getDeclaredMethods())
+                .filter(m -> !m.getName().equals("$jacocoInit")
+                        && !(m.getName().equals("set") && m.getParameterCount() == 1))
+                .toList();
+        assertEquals(list.size(), expected.size(), "Should have checks for all UpdateOperators methods");
         list.addAll(prepParams("s", "s"));
 
         list.addAll(prepParams("address.street", "addr.address_street"));
@@ -587,11 +594,6 @@ public class TestUpdateOperations extends TestBase {
         list.addAll(prepParams("addr.address_street", "addr.address_street"));
 
         return list.iterator();
-    }
-
-    private static int countUpdateOperators() {
-        // dec by 1 to exclude set(Entity) since there will be no path translation to check
-        return UpdateOperators.class.getDeclaredMethods().length - 1;
     }
 
     @NotNull

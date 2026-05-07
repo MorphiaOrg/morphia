@@ -98,7 +98,9 @@ public class OptionsTest extends TestBase {
     private void beanScan(Class<?> driver, Class<?> morphia, List<String> filtered) {
         Method[] methods = driver.getDeclaredMethods();
         for (Method method : methods) {
-            if (!filtered.contains(method.getName()) && method.getAnnotation(Deprecated.class) == null) {
+            if (!method.getName().equals("$jacocoInit")
+                    && !filtered.contains(method.getName())
+                    && method.getAnnotation(Deprecated.class) == null) {
                 try {
                     morphia.getDeclaredMethod(method.getName(), convert(method.getParameterTypes()));
                 } catch (ReflectiveOperationException e) {
@@ -174,7 +176,10 @@ public class OptionsTest extends TestBase {
             Assert.assertEquals(driverType.equals(morphiaType.getSuperclass()), !Modifier.isFinal(driverType.getModifiers()),
                     "Options class should be a subclass");
             for (Method method : methods) {
-                if (method.getAnnotation(Deprecated.class) == null && !method.getName().equals("builder") && !getter(method)) {
+                if (method.getAnnotation(Deprecated.class) == null
+                        && !method.getName().equals("$jacocoInit")
+                        && !method.getName().equals("builder")
+                        && !getter(method)) {
                     checkOverride(driverType, morphiaType, method);
                 }
             }
