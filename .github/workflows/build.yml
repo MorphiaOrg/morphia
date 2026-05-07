@@ -136,16 +136,6 @@ jobs:
             mongo: 8.0.0
             mapper: critter
             optional: true
-          - driver: ${{ fromJson(needs.matrix.outputs.driver_latest)[0] }}
-            java: 17
-            mongo: ${{ fromJson(needs.matrix.outputs.version_matrix)[0] }}
-            mapper: reflection
-            coverage: true
-          - driver: ${{ fromJson(needs.matrix.outputs.driver_latest)[0] }}
-            java: 17
-            mongo: ${{ fromJson(needs.matrix.outputs.version_matrix)[0] }}
-            mapper: critter
-            coverage: true
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     secrets:
       DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
@@ -153,7 +143,7 @@ jobs:
       java: ${{ matrix.java }}
       reuseBuild: true
       archive-name: "${{matrix.mongo}}-${{matrix.driver}}-${{matrix.java}}-${{github.run_id}}"
-      maven-flags: "-e -Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }} -Dmorphia.mapper=${{ matrix.mapper }}${{ matrix.coverage == true && ' -Pcoverage' || '' }}"
+      maven-flags: "-e -Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }} -Dmorphia.mapper=${{ matrix.mapper }}"
       optional: ${{ matrix.optional == true }}
 
   Coverage:
@@ -163,24 +153,18 @@ jobs:
     needs:
       - Build
       - Matrix
+    strategy:
+      fail-fast: false
+      matrix:
+        mapper: [ reflection, critter ]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          java-version: 17
-          distribution: 'temurin'
-          cache: maven
-
       - name: Run Tests with Coverage
         run: >
           ./mvnw verify
           -pl :morphia-core -am
           -Pcoverage
           -Ddeploy.skip=true
-          -Dmorphia.mapper=reflection
+          -Dmorphia.mapper=${{ matrix.mapper }}
           -Dmongodb=${{ fromJson(needs.Matrix.outputs.version_matrix)[0] }}
           -Ddriver.version=${{ fromJson(needs.Matrix.outputs.driver_latest)[0] }}
 
