@@ -148,7 +148,6 @@ jobs:
 
   Coverage:
     name: Coverage Report
-    runs-on: ubuntu-latest
     timeout-minutes: 60
     needs:
       - Build
