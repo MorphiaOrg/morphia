@@ -148,7 +148,6 @@ jobs:
 
   Coverage:
     name: Coverage Report
-    timeout-minutes: 60
     needs:
       - Build
       - Matrix
@@ -161,8 +160,8 @@ jobs:
       DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
     with:
       java: 17
-      archive-name: "${{matrix.mongo}}-${{matrix.driver}}-${{matrix.java}}-${{github.run_id}}"
-      maven-flags: "-e -Dmongodb=${{ fromJson(needs.Matrix.outputs.version_matrix)[0] }} -Ddriver.version=${{ fromJson(needs.Matrix.outputs.driver_latest)[0] }} -Dmorphia.mapper=${{ matrix.mapper }}"
+      archive-name: "test-coverage-${{matrix.mapper}}-${{github.run_id}}"
+      maven-flags: "-e -Dmongodb=${{ fromJson(needs.Matrix.outputs.version_matrix)[0] }} -Ddriver.version=${{ fromJson(needs.Matrix.outputs.driver_latest)[0] }} -Dmorphia.mapper=${{ matrix.mapper }} -Pcoverage"
 
   Release:
     needs:
