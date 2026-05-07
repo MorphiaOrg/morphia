@@ -157,24 +157,13 @@ jobs:
       fail-fast: false
       matrix:
         mapper: [ reflection, critter ]
-    steps:
-      - name: Run Tests with Coverage
-        run: >
-          ./mvnw verify
-          -pl :morphia-core -am
-          -Pcoverage
-          -Ddeploy.skip=true
-          -Dmorphia.mapper=${{ matrix.mapper }}
-          -Dmongodb=${{ fromJson(needs.Matrix.outputs.version_matrix)[0] }}
-          -Ddriver.version=${{ fromJson(needs.Matrix.outputs.driver_latest)[0] }}
-
-      - name: Upload Coverage Report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: coverage-report
-          path: core/target/site/jacoco/
-          retention-days: 30
+    uses: evanchooly/workflows/.github/workflows/build.yml@master
+    secrets:
+      DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+    with:
+      java: 17
+      archive-name: "${{matrix.mongo}}-${{matrix.driver}}-${{matrix.java}}-${{github.run_id}}"
+      maven-flags: "-e -Dmongodb=${{ fromJson(needs.Matrix.outputs.version_matrix)[0] }} -Ddriver.version=${{ fromJson(needs.Matrix.outputs.driver_latest)[0] }} -Dmorphia.mapper=${{ matrix.mapper }}"
 
   Release:
     needs:
