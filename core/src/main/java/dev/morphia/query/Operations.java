@@ -32,10 +32,14 @@ public class Operations {
     private final List<UpdateOperator> updates = new ArrayList<>();
 
     /**
-     * @param model    the entity model
-     * @param updates  the updates
-     * @param validate validate or not
+     * @param datastore the datastore
+     * @param model     the entity model
+     * @param updates   the updates
+     * @param validate  validate or not
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     public Operations(MorphiaDatastore datastore, @Nullable EntityModel model, List<UpdateOperator> updates, boolean validate) {
         this.datastore = datastore;
         this.validate = validate;
@@ -43,6 +47,12 @@ public class Operations {
         updates.forEach(this::add);
     }
 
+    /**
+     * @param update the update operator to add
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public void add(UpdateOperator update) {
         update.validate(validate);
         update.model(model);
@@ -65,6 +75,13 @@ public class Operations {
         }
     }
 
+    /**
+     * @param datastore the datastore to use for encoding
+     * @return the update document
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public Document toDocument(MorphiaDatastore datastore) {
         var document = new Document();
         versionUpdate(model);

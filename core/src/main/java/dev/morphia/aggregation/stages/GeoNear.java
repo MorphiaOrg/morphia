@@ -37,6 +37,11 @@ public class GeoNear extends Stage {
         super("$geoNear");
     }
 
+    /**
+     * @param variable the variable name for the stage
+     * @hidden
+     * @morphia.internal
+     */
     @MorphiaInternal
     protected GeoNear(String variable) {
         this();
@@ -227,6 +232,11 @@ public class GeoNear extends Stage {
         return spherical;
     }
 
+    /**
+     * @return the variable name, or null if not set
+     * @hidden
+     * @morphia.internal
+     */
     @Nullable
     @MorphiaInternal
     public String getVariable() {

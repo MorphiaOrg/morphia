@@ -36,6 +36,9 @@ public class PushOperator extends UpdateOperator {
         super("$push", field, values);
     }
 
+    /**
+     * @return the position, or null if not set
+     */
     @Nullable
     public Integer position() {
         return position;
@@ -52,6 +55,9 @@ public class PushOperator extends UpdateOperator {
         return this;
     }
 
+    /**
+     * @return the slice value, or null if not set
+     */
     @Nullable
     public Integer slice() {
         return slice;
@@ -68,6 +74,9 @@ public class PushOperator extends UpdateOperator {
         return this;
     }
 
+    /**
+     * @return the sort order, or null if not set
+     */
     @Nullable
     public Integer sort() {
         return sort;
@@ -104,6 +113,9 @@ public class PushOperator extends UpdateOperator {
         return this;
     }
 
+    /**
+     * @return the sort document, or null if not set
+     */
     @Nullable
     public Document sortDocument() {
         return sortDocument;

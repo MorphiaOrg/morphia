@@ -56,6 +56,14 @@ public class AggregationImpl<T> implements Aggregation<T> {
         datastore = null;
     }
 
+    /**
+     * @param datastore  the datastore to use
+     * @param source     the source type, or null for collection-based aggregation
+     * @param targetType the result type
+     * @param options    the aggregation options
+     * @hidden
+     * @morphia.internal
+     */
     @MorphiaInternal
     @SuppressWarnings("unchecked")
     public AggregationImpl(MorphiaDatastore datastore, @Nullable Class<T> source, Class<T> targetType, AggregationOptions options) {

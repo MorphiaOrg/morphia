@@ -26,6 +26,7 @@ public class SetOnInsertOperator extends UpdateOperator {
     }
 
     /**
+     * @return the values to set on insert
      * @hidden
      * @morphia.internal
      */

@@ -34,7 +34,7 @@ public class Projection {
     }
 
     /**
-     * @param disableValidation
+     * @param disableValidation true to disable field name validation
      * @hidden
      * @morphia.internal
      */

@@ -29,6 +29,7 @@ public class RegexFilter extends Filter {
     }
 
     /**
+     * @return the regex pattern
      * @hidden
      */
     public Pattern pattern() {

@@ -36,6 +36,7 @@ public class CurrentDateOperator extends UpdateOperator {
     }
 
     /**
+     * @return the type specification
      * @hidden
      * @morphia.internal
      */

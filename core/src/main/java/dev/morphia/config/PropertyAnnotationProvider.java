@@ -8,6 +8,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * This type defines support for a given an annotation as usable to denoting an annotation on an entity and provides a conversion
  * function to map it to a standard Morphia {@link Property} annotation.
  *
+ * @hidden
  * @param <T> The type of annotation to use to denote a property
  * @since 3.0
  * @morphia.experimental
@@ -27,5 +28,8 @@ public interface PropertyAnnotationProvider<T> {
         return (Property) annotation;
     }
 
+    /**
+     * @return the annotation type this provider supports
+     */
     Class<T> provides();
 }

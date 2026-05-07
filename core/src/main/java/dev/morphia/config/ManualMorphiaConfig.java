@@ -65,6 +65,7 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     }
 
     /**
+     * @param base the base configuration to copy values from
      * @hidden
      */
     protected ManualMorphiaConfig(MorphiaConfig base) {

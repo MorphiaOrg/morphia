@@ -12,14 +12,20 @@ public class MetaExpression extends Expression {
 
     private final MetadataKeyword metadataKeyword;
 
+    /**
+     * @param metadataKeyword the metadata keyword to use
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public MetaExpression(MetadataKeyword metadataKeyword) {
         super("$meta");
         this.metadataKeyword = metadataKeyword;
     }
 
     /**
+     * @return the metadata keyword
      * @hidden
-     * @return
      * @morphia.internal
      */
     @MorphiaInternal

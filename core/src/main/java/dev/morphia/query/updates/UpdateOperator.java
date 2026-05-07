@@ -56,15 +56,34 @@ public class UpdateOperator {
         this.value = values;
     }
 
+    /**
+     * @return the datastore
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public MorphiaDatastore datastore() {
         return datastore;
     }
 
+    /**
+     * @param datastore the datastore to use
+     * @return this
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public UpdateOperator datastore(MorphiaDatastore datastore) {
         this.datastore = datastore;
         return this;
     }
 
+    /**
+     * @param model the entity model
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public void entityModel(@Nullable EntityModel model) {
         this.model = model;
     }
@@ -83,6 +102,7 @@ public class UpdateOperator {
     }
 
     /**
+     * @return the entity model
      * @hidden
      * @morphia.internal
      */
@@ -92,6 +112,13 @@ public class UpdateOperator {
         return model;
     }
 
+    /**
+     * @param model the entity model
+     * @return this
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public UpdateOperator model(@Nullable EntityModel model) {
         this.model = model;
         return this;
@@ -116,6 +143,7 @@ public class UpdateOperator {
     }
 
     /**
+     * @return true if validation is enabled
      * @hidden
      * @morphia.internal
      */
@@ -125,6 +153,8 @@ public class UpdateOperator {
     }
 
     /**
+     * @param validate true to enable validation
+     * @return this
      * @hidden
      * @morphia.internal
      */

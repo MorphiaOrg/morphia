@@ -53,7 +53,8 @@ public class CritterMapper extends AbstractMapper {
     /**
      * Creates a CritterMapper with the given config.
      *
-     * @param config the config to use
+     * @param config      the config to use
+     * @param classLoader the class loader to use for loading generated classes
      * @hidden
      * @morphia.internal
      */

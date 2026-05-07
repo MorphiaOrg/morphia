@@ -299,7 +299,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     }
 
     /**
-     * @param disable
+     * @param disable true to disable validation
      * @hidden
      * @morphia.internal
      */
@@ -663,10 +663,20 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
         return this;
     }
 
+    /**
+     * @return the timeout mode
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public TimeoutMode timeoutMode() {
         return timeoutMode;
     }
 
+    /**
+     * @param timeoutMode the timeout mode to use
+     * @return this
+     */
     public FindOptions timeoutMode(TimeoutMode timeoutMode) {
         this.timeoutMode = timeoutMode;
         return this;

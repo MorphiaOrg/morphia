@@ -15,11 +15,18 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 public class GetFieldExpression extends Expression {
     private Expression input;
 
+    /**
+     * @param field the field expression
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
     public GetFieldExpression(Expression field) {
         super("$getField", field);
     }
 
     /**
+     * @return the input expression
      * @hidden
      * @morphia.internal
      */

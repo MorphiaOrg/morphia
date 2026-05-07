@@ -26,6 +26,14 @@ public class PropertyConvention {
                 java.beans.Transient.class);
     }
 
+    /**
+     * @param config      the morphia config
+     * @param annotations the annotations on the property
+     * @param modelName   the property name from the model
+     * @return the mapped name for the property
+     * @hidden
+     * @morphia.internal
+     */
     @MorphiaInternal
     public static String mappedName(MorphiaConfig config, Map<String, Annotation> annotations, String modelName) {
         Property property = (Property) annotations.get(Property.class.getName());

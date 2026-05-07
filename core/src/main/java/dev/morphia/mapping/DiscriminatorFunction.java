@@ -50,9 +50,9 @@ public abstract class DiscriminatorFunction {
     /**
      * Applies the function to the given model to determine the discriminator value
      *
-     * @param type
-     * @param discriminator
-     * @return
+     * @param type          the entity type
+     * @param discriminator the configured discriminator value
+     * @return the computed discriminator value
      * @hidden
      */
     public final String apply(Class<?> type, String discriminator) {
@@ -61,9 +61,9 @@ public abstract class DiscriminatorFunction {
 
     /**
      * Computes the discriminator value for an Entity
-     * 
+     *
+     * @param type the entity type
      * @return the discriminator value
-     * @param type
      */
     public abstract String compute(Class<?> type);
 

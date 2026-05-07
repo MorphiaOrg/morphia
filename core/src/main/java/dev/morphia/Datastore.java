@@ -32,6 +32,7 @@ public interface Datastore {
      * Returns a new aggregation bound without an initial type. Calls to this method define the collection to be used via the options
      * passed.
      *
+     * @param options the aggregation options including the collection name
      * @return the aggregation pipeline
      * @since 3.0
      * @see AggregationOptions#collection(String)
@@ -56,8 +57,9 @@ public interface Datastore {
     /**
      * Returns a new aggregation bound to the kind (a specific {@link MongoCollection})
      *
-     * @param source The class to create aggregation against
-     * @param <S>    the source type
+     * @param source  The class to create aggregation against
+     * @param options the aggregation options
+     * @param <S>     the source type
      * @return the aggregation pipeline
      * @since 3.0
      */
@@ -69,6 +71,7 @@ public interface Datastore {
      * Returns a new query bound to the kind (a specific {@link MongoCollection})
      *
      * @param source The class to create aggregation against
+     * @param target The class to use as the result type
      * @param <S>    the source type
      * @param <T>    the target type
      * @return the aggregation pipeline
@@ -82,9 +85,11 @@ public interface Datastore {
      * Returns a new aggregation bound to the kind (a specific {@link MongoCollection}). To specify an alternate collection as the
      * source collection use {@link AggregationOptions#collection(String)}.
      *
-     * @param source The source type to aggregate. May be null if an alternate collection is being used.
-     * @param <S>    the source type
-     * @param <T>    the target type
+     * @param source  The source type to aggregate. May be null if an alternate collection is being used.
+     * @param target  The class to use as the result type
+     * @param options the aggregation options
+     * @param <S>     the source type
+     * @param <T>     the target type
      * @return the aggregation pipeline
      * @since 3.0
      */

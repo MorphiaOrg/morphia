@@ -132,6 +132,13 @@ public final class TypeExpressions {
         return StringExpressions.toString(input);
     }
 
+    /**
+     * Converts a value to a UUID.
+     *
+     * @param input the value to convert
+     * @return the new expression
+     * @aggregation.expression $toUUID
+     */
     public static Expression toUuid(Object input) {
         return new Expression("$toUUID", wrap(input));
     }

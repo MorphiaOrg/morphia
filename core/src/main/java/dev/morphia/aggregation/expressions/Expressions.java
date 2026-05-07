@@ -56,7 +56,7 @@ public final class Expressions {
      * @param cond  An expression that resolves to a boolean value used to determine if an element should be included in the output array.
      *              The expression references each element of the input array individually with the variable name specified in as.
      *
-     * @return
+     * @return the filter expression
      * @aggregation.expression $filter
      */
     public static FilterExpression filter(Object input, Object cond) {
@@ -126,9 +126,9 @@ public final class Expressions {
     }
 
     /**
+     * @param value the value to wrap
+     * @return the wrapped expression
      * @hidden
-     * @param value
-     * @return
      */
     public static Expression wrap(Object value) {
         if (value instanceof Expression expression) {
@@ -142,8 +142,8 @@ public final class Expressions {
     }
 
     /**
-     * @param values
-     * @return
+     * @param values the values to wrap
+     * @return the wrapped expressions
      * @hidden
      */
     public static List<Expression> wrap(List<Object> values) {
@@ -153,8 +153,8 @@ public final class Expressions {
     }
 
     /**
-     * @param value
-     * @return
+     * @param value the values to wrap
+     * @return the wrapped expressions
      * @hidden
      */
     public static List<Expression> wrap(Object... value) {
@@ -164,8 +164,9 @@ public final class Expressions {
     }
 
     /**
-     * @param value
-     * @return
+     * @param first the first value to wrap
+     * @param value additional values to wrap
+     * @return the wrapped expressions
      * @hidden
      */
     public static List<Expression> wrap(Object first, Object... value) {

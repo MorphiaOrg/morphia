@@ -367,7 +367,8 @@ public final class UpdateOperators {
     /**
      * The $unset operator deletes a particular field.
      *
-     * @param field the field to set
+     * @param field  the field to unset
+     * @param others additional fields to unset
      * @return the update operator
      * @update.operator $unset
      */

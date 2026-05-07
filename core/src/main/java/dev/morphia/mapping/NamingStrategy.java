@@ -62,8 +62,8 @@ public abstract class NamingStrategy {
     }
 
     /**
+     * @return a title-case naming strategy
      * @hidden
-     * @return
      */
     public static NamingStrategy title() {
         return new Title();

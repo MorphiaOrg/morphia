@@ -21,6 +21,7 @@ public interface QueryFactory {
      *
      * @param datastore the datastore
      * @param type      the query type
+     * @param options   the find options
      * @param <T>       the query type
      * @return the new query
      */
@@ -33,6 +34,7 @@ public interface QueryFactory {
      *
      * @param datastore the Datastore to use
      * @param type      the type of the result
+     * @param options   the find options
      * @param query     the Document containing the query structure
      * @param <T>       the type of the result
      * @return the query

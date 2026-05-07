@@ -10,6 +10,8 @@ public class FilterExpression extends Expression {
     private Expression limit;
 
     /**
+     * @param input the input array expression
+     * @param cond  the condition expression
      * @hidden
      */
     @MorphiaInternal
@@ -46,6 +48,10 @@ public class FilterExpression extends Expression {
         return as;
     }
 
+    /**
+     * @param as the variable name for the element alias
+     * @return this
+     */
     public FilterExpression as(String as) {
         this.as = as;
         return this;
@@ -60,6 +66,10 @@ public class FilterExpression extends Expression {
         return limit;
     }
 
+    /**
+     * @param limit the maximum number of elements to include
+     * @return this
+     */
     public FilterExpression limit(Object limit) {
         this.limit = Expressions.wrap(limit);
         return this;

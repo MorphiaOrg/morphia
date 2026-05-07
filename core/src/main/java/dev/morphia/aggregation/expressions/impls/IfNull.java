@@ -39,10 +39,18 @@ public class IfNull extends Expression implements FieldHolder<IfNull> {
         return this;
     }
 
+    /**
+     * @return the input expressions
+     */
     public List<Expression> input() {
         return input;
     }
 
+    /**
+     * @param input  the first input expression
+     * @param inputs additional input expressions
+     * @return this
+     */
     public IfNull input(Object input, Object... inputs) {
         this.input = Expressions.wrap(input, inputs);
         return this;

@@ -995,8 +995,25 @@ public class MorphiaDatastore implements Datastore {
      * Defines the various operations the driver performs on behalf of a Datastore
      */
     public abstract static class DatastoreOperations {
+        /**
+         * @param collection the collection to aggregate
+         * @param pipeline   the aggregation pipeline
+         * @param <T>        the result type
+         * @return the aggregate iterable
+         * @hidden
+         * @morphia.internal
+         */
         public abstract <T> AggregateIterable<T> aggregate(MongoCollection<?> collection, List<Document> pipeline);
 
+        /**
+         * @param collection the collection to aggregate
+         * @param pipeline   the aggregation pipeline
+         * @param resultType the result type class
+         * @param <T>        the result type
+         * @return the aggregate iterable
+         * @hidden
+         * @morphia.internal
+         */
         public abstract <T> AggregateIterable<T> aggregate(MongoCollection<?> collection, List<Document> pipeline, Class<?> resultType);
 
         /**
