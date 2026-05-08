@@ -72,6 +72,27 @@ public class TypeDataTest extends TestBase {
         TypeData.get(MyEmbeddedEntity.class);
     }
 
+    // Morphia-3787: TypeData.get() inserts a raw Class into typeParameters when processing
+    // self-referential generics (e.g. TypedId<T extends TypedId<T>>). The List<TypeData<?>>
+    // contract is violated, causing a ClassCastException when callers iterate and call getType().
+    @Test
+    public void testSelfReferentialGenericId() throws NoSuchFieldException {
+        TypeData<?> typeData = TypeData.get(EntityWithTypedId.class.getDeclaredField("id"));
+        for (TypeData<?> param : typeData.getTypeParameters()) {
+            param.getType(); // throws ClassCastException: Class cannot be cast to TypeData
+        }
+    }
+
+    private abstract static class TypedId<T extends TypedId<T>> {
+    }
+
+    private static class ConcreteId extends TypedId<ConcreteId> {
+    }
+
+    private static class EntityWithTypedId {
+        ConcreteId id;
+    }
+
     private static void typeData(Class<?> owner, String fieldName, Class<?> fieldType, Class<?>... parameterTypes)
             throws NoSuchFieldException {
         Field field = owner.getDeclaredField(fieldName);

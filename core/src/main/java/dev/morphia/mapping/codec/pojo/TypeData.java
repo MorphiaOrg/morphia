@@ -131,7 +131,7 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
         } else if (type instanceof Class) {
             var typeData = new TypeData((Class) type);
             for (Type argType : TypeParameters.of(type)) {
-                typeData.typeParameters.add(argType.equals(type) ? type : get(argType));
+                typeData.typeParameters.add(argType.equals(type) ? new TypeData<>((Class) argType) : get(argType));
             }
             return typeData;
         } else if (type instanceof GenericArrayType) {
