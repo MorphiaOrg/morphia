@@ -7,7 +7,6 @@ import java.util.Set;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
-import dev.morphia.mapping.experimental.MorphiaReference;
 
 import org.bson.types.ObjectId;
 
@@ -18,10 +17,14 @@ public class ClassA implements InterfaceA {
     @Reference(lazy = true)
     InterfaceB b;
 
-    MorphiaReference<InterfaceB> reference;
-    MorphiaReference<List<InterfaceB>> list;
-    MorphiaReference<Set<InterfaceB>> set;
-    MorphiaReference<Map<String, InterfaceB>> map;
+    @Reference(lazy = true)
+    InterfaceB reference;
+    @Reference(lazy = true)
+    List<InterfaceB> list;
+    @Reference(lazy = true)
+    Set<InterfaceB> set;
+    @Reference(lazy = true)
+    Map<String, InterfaceB> map;
 
     @Override
     public ObjectId getId() {

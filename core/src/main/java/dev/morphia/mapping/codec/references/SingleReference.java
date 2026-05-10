@@ -1,4 +1,4 @@
-package dev.morphia.mapping.experimental;
+package dev.morphia.mapping.codec.references;
 
 import java.util.List;
 
@@ -15,8 +15,6 @@ import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.Query;
 import dev.morphia.sofia.Sofia;
 
-import org.bson.Document;
-
 import static dev.morphia.query.filters.Filters.eq;
 
 /**
@@ -26,20 +24,12 @@ import static dev.morphia.query.filters.Filters.eq;
  */
 @MorphiaInternal
 @SuppressWarnings("unchecked")
-@Deprecated(forRemoval = true, since = "2.3")
-public class SingleReference<T> extends MorphiaReference<T> {
+class SingleReference<T> extends LazyReference<T> {
     private EntityModel entityModel;
     private Object id;
     private T value;
 
-    /**
-     * @param datastore
-     * @param entityModel the entity's mapped class
-     * @param id          the ID value
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    public SingleReference(MorphiaDatastore datastore, EntityModel entityModel, Object id) {
+    SingleReference(MorphiaDatastore datastore, EntityModel entityModel, Object id) {
         super(datastore);
         this.entityModel = entityModel;
         this.id = id;
@@ -58,26 +48,6 @@ public class SingleReference<T> extends MorphiaReference<T> {
     SingleReference(MorphiaDatastore datastore, T value) {
         super(datastore);
         this.value = value;
-    }
-
-    /**
-     * Decodes a document in to an entity
-     *
-     * @param datastore   the datastore
-     * @param mapper      the mapper
-     * @param mappedField the MappedField
-     * @param paramType   the type of the underlying entity
-     * @param document    the Document to decode
-     * @return the entity
-     */
-    public static MorphiaReference<?> decode(MorphiaDatastore datastore,
-            Mapper mapper,
-            PropertyModel mappedField,
-            Class<?> paramType, Document document) {
-        final EntityModel entityModel = mapper.getEntityModel(paramType);
-        Object id = document.get(mappedField.getMappedName());
-
-        return new SingleReference<>(datastore, entityModel, id);
     }
 
     @Override
@@ -147,5 +117,4 @@ public class SingleReference<T> extends MorphiaReference<T> {
 
         return entityModel;
     }
-
 }

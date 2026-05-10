@@ -12,7 +12,6 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Text;
 import dev.morphia.annotations.Validation;
 import dev.morphia.annotations.Version;
-import dev.morphia.mapping.experimental.MorphiaReference;
 
 import org.bson.types.ObjectId;
 
@@ -28,7 +27,7 @@ public class MethodMappedUser {
     private ObjectId id;
     private LocalDate joined;
     private MethodMappedFriend friend;
-    private MorphiaReference<List<MethodMappedFriend>> friends;
+    private List<MethodMappedFriend> friends;
 
     public MethodMappedUser() {
     }
@@ -50,12 +49,12 @@ public class MethodMappedUser {
         this.friend = friend;
     }
 
-    public MorphiaReference<List<MethodMappedFriend>> getFriends() {
+    public List<MethodMappedFriend> getFriends() {
         return friends;
     }
 
-    @Property("morphia_reference")
-    public void setFriends(MorphiaReference<List<MethodMappedFriend>> friends) {
+    @Reference(value = "morphia_reference")
+    public void setFriends(List<MethodMappedFriend> friends) {
         this.friends = friends;
     }
 

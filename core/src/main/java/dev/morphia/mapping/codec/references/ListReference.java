@@ -1,4 +1,4 @@
-package dev.morphia.mapping.experimental;
+package dev.morphia.mapping.codec.references;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,28 +13,14 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
  * @hidden
  */
 @MorphiaInternal
-@Deprecated(forRemoval = true, since = "2.3")
-public class ListReference<T> extends CollectionReference<List<T>> {
+class ListReference<T> extends CollectionReference<List<T>> {
     private List<T> values;
 
-    /**
-     * @param datastore
-     * @param model     the EntityModel for the entity type
-     * @param ids       the IDs of the entities
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    public ListReference(MorphiaDatastore datastore, EntityModel model, List ids) {
+    ListReference(MorphiaDatastore datastore, EntityModel model, List ids) {
         super(datastore, model, ids);
     }
 
-    /**
-     * Creates an instance with prepopulated values.
-     *
-     * @param values the values to use
-     */
-    public ListReference(MorphiaDatastore datastore, List<T> values) {
+    ListReference(MorphiaDatastore datastore, List<T> values) {
         super(datastore);
         this.values = values;
     }

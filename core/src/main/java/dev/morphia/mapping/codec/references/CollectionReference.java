@@ -1,4 +1,4 @@
-package dev.morphia.mapping.experimental;
+package dev.morphia.mapping.codec.references;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,7 +18,6 @@ import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.references.ReferenceCodec;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.sofia.Sofia;
 
@@ -32,8 +31,7 @@ import static java.util.Arrays.asList;
  */
 @MorphiaInternal
 @SuppressWarnings({ "rawtypes", "unchecked" })
-@Deprecated(forRemoval = true, since = "2.3")
-public abstract class CollectionReference<C extends Collection> extends MorphiaReference<C> {
+abstract class CollectionReference<C extends Collection> extends LazyReference<C> {
     private final Map<String, List<Object>> collections = new HashMap<>();
     private EntityModel entityModel;
     private List ids;
@@ -77,11 +75,6 @@ public abstract class CollectionReference<C extends Collection> extends MorphiaR
         super(datastore);
     }
 
-    /**
-     * Gets the referenced entities. This may require at least one request to the server.
-     *
-     * @return the referenced entities
-     */
     public abstract C get();
 
     @Override

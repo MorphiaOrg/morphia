@@ -28,11 +28,6 @@ import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
-import dev.morphia.mapping.experimental.ListReference;
-import dev.morphia.mapping.experimental.MapReference;
-import dev.morphia.mapping.experimental.MorphiaReference;
-import dev.morphia.mapping.experimental.SetReference;
-import dev.morphia.mapping.experimental.SingleReference;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.QueryException;
 import dev.morphia.sofia.Sofia;
@@ -258,7 +253,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         }
     }
 
-    private <T> T createProxy(MorphiaReference<?> reference) {
+    private <T> T createProxy(LazyReference<?> reference) {
         ReferenceProxy referenceProxy = new ReferenceProxy(reference);
         PropertyModel propertyModel = getPropertyModel();
         try {
@@ -331,7 +326,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
 
     @Nullable
     private Object fetch(Object value) {
-        MorphiaReference<?> reference;
+        LazyReference<?> reference;
         final Class<?> type = getPropertyModel().getType();
         if (List.class.isAssignableFrom(type)) {
             reference = readList((List<?>) value);
@@ -359,20 +354,20 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
                 .collect(Collectors.toList());
     }
 
-    MorphiaReference<?> readDocument(Document value) {
+    LazyReference<?> readDocument(Document value) {
         final Object id = getDatastore().getCodecRegistry().get(Object.class)
                 .decode(new DocumentReader(value, mapper.getConversions()), DecoderContext.builder().build());
         return readSingle(id);
     }
 
-    MorphiaReference<?> readList(List<?> value) {
+    LazyReference<?> readList(List<?> value) {
         List<?> mapped = mapToEntitiesIfNecessary(value);
         return mapped.isEmpty()
                 ? new ListReference<>(datastore, getEntityModelForField(), value)
                 : new ListReference<>(datastore, mapped);
     }
 
-    MorphiaReference<?> readMap(Map<Object, Object> value) {
+    LazyReference<?> readMap(Map<Object, Object> value) {
         final Map<Object, Object> ids = new LinkedHashMap<>();
         Class<?> keyType = getTypeData().getTypeParameters().get(0).getType();
         for (Entry<Object, Object> entry : value.entrySet()) {
@@ -382,14 +377,14 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         return new MapReference(datastore, ids, getEntityModelForField());
     }
 
-    MorphiaReference<?> readSet(List<?> value) {
+    LazyReference<?> readSet(List<?> value) {
         List<?> mapped = mapToEntitiesIfNecessary(value);
         return mapped.isEmpty()
                 ? new SetReference<>(datastore, getEntityModelForField(), value)
                 : new SetReference<>(datastore, new LinkedHashSet<>(mapped));
     }
 
-    MorphiaReference<?> readSingle(Object value) {
+    LazyReference<?> readSingle(Object value) {
         return new SingleReference<>(datastore, getEntityModelForField(), value);
     }
 }

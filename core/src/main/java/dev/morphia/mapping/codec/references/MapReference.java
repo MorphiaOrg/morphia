@@ -1,7 +1,6 @@
-package dev.morphia.mapping.experimental;
+package dev.morphia.mapping.codec.references;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -15,13 +14,8 @@ import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.pojo.PropertyModel;
-import dev.morphia.mapping.codec.references.ReferenceCodec;
-
-import org.bson.Document;
 
 import static dev.morphia.query.filters.Filters.eq;
-import static dev.morphia.query.filters.Filters.in;
 
 /**
  * @param <T>
@@ -30,30 +24,17 @@ import static dev.morphia.query.filters.Filters.in;
  */
 @MorphiaInternal
 @SuppressWarnings({ "rawtypes", "unchecked" })
-@Deprecated(forRemoval = true, since = "2.3")
-public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
+class MapReference<T> extends LazyReference<Map<Object, T>> {
     private Map<String, Object> ids;
 
     private EntityModel entityModel;
 
     private Map<Object, T> values;
-    private final Map<String, List<Object>> collections = new HashMap<>();
 
-    /**
-     * @param ids         the IDs of the entities
-     * @param entityModel the model of the entity type
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    public MapReference(MorphiaDatastore datastore, Map<String, Object> ids, EntityModel entityModel) {
+    MapReference(MorphiaDatastore datastore, Map<String, Object> ids, EntityModel entityModel) {
         super(datastore);
         this.ids = ids;
         this.entityModel = entityModel;
-    }
-
-    private void setValues(Map<String, Object> values) {
-        resolve();
     }
 
     MapReference(MorphiaDatastore datastore, Map<Object, T> values) {
@@ -61,31 +42,7 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
         this.values = values;
     }
 
-    /**
-     * Decodes a document in to entities
-     *
-     * @param datastore the datastore
-     * @param mapper    the mapper
-     * @param property  the property model
-     * @param document  the Document to decode
-     * @return the entities
-     */
-    public static MapReference decode(MorphiaDatastore datastore, Mapper mapper, PropertyModel property,
-            Document document) {
-        final Class subType = property.getTypeData().getTypeParameters().get(0).getType();
-
-        final Map<String, Object> ids = (Map<String, Object>) property.getDocumentValue(document);
-        MapReference reference = null;
-        if (ids != null) {
-            reference = new MapReference(datastore, ids, mapper.getEntityModel(subType));
-        }
-
-        return reference;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Map<Object, T> get() {
         if (values == null && ids != null) {
             values = new LinkedHashMap<>();
@@ -140,26 +97,4 @@ public class MapReference<T> extends MorphiaReference<Map<Object, T>> {
                 ? (DBRef) value
                 : new DBRef(entityModel.collectionName(), value);
     }
-
-    @SuppressWarnings("unchecked")
-    private void readFromSingleCollection(String collection, List<Object> collectionIds) {
-
-        try (MongoCursor<T> cursor = (MongoCursor<T>) getDatastore().find(collection)
-                .filter(in("_id", collectionIds)).iterator()) {
-            final Map<Object, T> idMap = new HashMap<>();
-            while (cursor.hasNext()) {
-                final T entity = cursor.next();
-                idMap.put(getDatastore().getMapper().getId(entity), entity);
-            }
-
-            for (Entry<String, Object> entry : ids.entrySet()) {
-                final Object id = entry.getValue();
-                final T value = idMap.get(id instanceof DBRef ? ((DBRef) id).getId() : id);
-                if (value != null) {
-                    values.put(entry.getKey(), value);
-                }
-            }
-        }
-    }
-
 }

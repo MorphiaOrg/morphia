@@ -41,7 +41,6 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
-import dev.morphia.mapping.experimental.MorphiaReference;
 
 import org.bson.Document;
 import org.bson.codecs.Codec;
@@ -104,8 +103,7 @@ public class PropertyModel {
     public static Class<?> normalize(TypeData<?> typeData) {
         while (!typeData.getTypeParameters().isEmpty()
                 && (Collection.class.isAssignableFrom(typeData.getType())
-                        || Map.class.isAssignableFrom(typeData.getType())
-                        || MorphiaReference.class.isAssignableFrom(typeData.getType()))) {
+                        || Map.class.isAssignableFrom(typeData.getType()))) {
             List<TypeData<?>> typeParameters = typeData.getTypeParameters();
             typeData = typeParameters.get(typeParameters.size() - 1);
         }

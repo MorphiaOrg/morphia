@@ -19,6 +19,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.LoadOnly;
 import dev.morphia.annotations.Name;
+import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Transient;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
@@ -27,9 +28,8 @@ import dev.morphia.mapping.NamingStrategy;
 import dev.morphia.mapping.NotMappableException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
-import dev.morphia.mapping.experimental.MorphiaReference;
-import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.Query;
+import dev.morphia.query.QueryException;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.mapping.shadowing.ShadowedChild;
 import dev.morphia.test.mapping.shadowing.ShadowedGrandChild;
@@ -71,7 +71,6 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.mapping.PropertyDiscovery.*;
 import static dev.morphia.mapping.PropertyDiscovery.METHODS;
-import static dev.morphia.mapping.experimental.MorphiaReference.wrap;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.exists;
 import static java.util.List.of;
@@ -147,7 +146,7 @@ public class TestMapping extends TestBase {
     @Test
     public void constructors() {
         ContainsFinalField value = new ContainsFinalField();
-        ConstructorBased instance = new ConstructorBased(new ObjectId(), "test instance", wrap(getDs(), value));
+        ConstructorBased instance = new ConstructorBased(new ObjectId(), "test instance", value);
 
         getDs().save(of(value, instance));
 
@@ -800,9 +799,9 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testReferenceWithoutIdValue() {
-        assertThrows(ReferenceException.class, () -> {
+        assertThrows(QueryException.class, () -> {
             final Book book = new Book();
-            book.author = wrap(getDs(), new Author());
+            book.author = new Author();
             getDs().save(book);
         });
     }
@@ -897,11 +896,12 @@ public class TestMapping extends TestBase {
         @Id
         private final ObjectId id;
         private final String name;
-        private final MorphiaReference<ContainsFinalField> reference;
+        @Reference
+        private final ContainsFinalField reference;
 
         public ConstructorBased(@Name("id") ObjectId id,
                 @Name("name") String name,
-                @Name("reference") MorphiaReference<ContainsFinalField> reference) {
+                @Name("reference") ContainsFinalField reference) {
             this.id = id;
             this.name = name;
             this.reference = reference;
@@ -998,6 +998,23 @@ public class TestMapping extends TestBase {
 
         ContainsFinalField(String name) {
             this.name = name;
+        }
+
+        @Override
+        public int hashCode() {
+            return java.util.Objects.hash(id, name);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof ContainsFinalField)) {
+                return false;
+            }
+            ContainsFinalField that = (ContainsFinalField) o;
+            return java.util.Objects.equals(id, that.id) && java.util.Objects.equals(name, that.name);
         }
     }
 

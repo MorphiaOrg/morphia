@@ -1,4 +1,4 @@
-package dev.morphia.mapping.experimental;
+package dev.morphia.mapping.codec.references;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -15,27 +15,14 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
  */
 @MorphiaInternal
 @SuppressWarnings("unchecked")
-@Deprecated(forRemoval = true, since = "2.3")
-public class SetReference<T> extends CollectionReference<Set<T>> {
+class SetReference<T> extends CollectionReference<Set<T>> {
     private Set<T> values;
 
-    /**
-     * @param datastore   the datastore to use
-     * @param entityModel the entity's mapped class
-     * @param ids         the IDs
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    public SetReference(MorphiaDatastore datastore, EntityModel entityModel, List ids) {
+    SetReference(MorphiaDatastore datastore, EntityModel entityModel, List ids) {
         super(datastore, entityModel, ids);
     }
 
-    /**
-     * Creates an instance with prepopulated values.
-     *
-     * @param values the values to use
-     */
-    public SetReference(MorphiaDatastore datastore, Set<T> values) {
+    SetReference(MorphiaDatastore datastore, Set<T> values) {
         super(datastore);
         this.values = values;
     }

@@ -41,19 +41,15 @@ import org.testng.annotations.Test;
 
 import static dev.morphia.Morphia.createDatastore;
 import static dev.morphia.aggregation.stages.Lookup.lookup;
-import static dev.morphia.aggregation.stages.Unwind.unwind;
-import static dev.morphia.mapping.experimental.MorphiaReference.wrap;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.in;
 import static dev.morphia.query.updates.UpdateOperators.setOnInsert;
 import static java.util.Arrays.asList;
 import static java.util.List.of;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertSame;
-import static org.testng.Assert.assertTrue;
 
 @SuppressWarnings("removal")
 public class TestReferences extends ProxyTestBase {
@@ -87,11 +83,11 @@ public class TestReferences extends ProxyTestBase {
         getDs().save(author);
 
         List<Book> books = List.of(
-                new Book("Sense and Sensibility", wrap(getDs(), author)),
-                new Book("Pride and Prejudice", wrap(getDs(), author)),
-                new Book("Mansfield Park", wrap(getDs(), author)),
-                new Book("Emma", wrap(getDs(), author)),
-                new Book("Northanger Abbey", wrap(getDs(), author)));
+                new Book("Sense and Sensibility", author),
+                new Book("Pride and Prejudice", author),
+                new Book("Mansfield Park", author),
+                new Book("Emma", author),
+                new Book("Northanger Abbey", author));
         getDs().save(books);
 
         author.setList(books);
@@ -122,19 +118,6 @@ public class TestReferences extends ProxyTestBase {
         assertListEquals(author.list, loaded.list);
 
         assertListEquals(author.set, loaded.set);
-
-        //        validateMap(map, loaded);
-
-        Book foundBook = getDs().aggregate(Book.class)
-                .pipeline(lookup(Author.class)
-                        .as("author")
-                        .foreignField("_id")
-                        .localField("author"),
-                        unwind("author"))
-                .iterator()
-                .next();
-        assertTrue(foundBook.author.isResolved());
-        assertEquals(author, foundBook.author.get());
     }
 
     @Test
@@ -323,14 +306,14 @@ public class TestReferences extends ProxyTestBase {
                     MethodMappedUser user = new MethodMappedUser();
                     MethodMappedFriend friend = new MethodMappedFriend();
                     user.setFriend(friend);
-                    user.setFriends(wrap(getDs(), List.of(friend)));
+                    user.setFriends(List.of(friend));
 
                     getDs().save(List.of(friend, user));
 
                     MethodMappedUser loaded = getDs().find(MethodMappedUser.class).first();
-                    assertFalse(loaded.getFriends().isResolved());
+                    assertNotNull(loaded.getFriends());
                     assertEquals(loaded.getFriend(), friend);
-                    assertEquals(loaded.getFriends().get().get(0), friend);
+                    assertEquals(loaded.getFriends().get(0), friend);
                     assertEquals(loaded, user);
                 });
     }

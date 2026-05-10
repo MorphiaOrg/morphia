@@ -9,8 +9,8 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Index;
 import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.Property;
+import dev.morphia.annotations.Reference;
 import dev.morphia.mapping.IndexType;
-import dev.morphia.mapping.experimental.MorphiaReference;
 
 import org.bson.types.ObjectId;
 
@@ -24,7 +24,8 @@ public final class Book {
     public ObjectId id;
     @Property("name")
     public String title;
-    public MorphiaReference<Author> author;
+    @Reference(lazy = true)
+    public Author author;
     public String authorString;
     public Integer copies;
     public List<String> tags;
@@ -37,12 +38,12 @@ public final class Book {
         this.authorString = authorString;
     }
 
-    public Book(String title, MorphiaReference<Author> author) {
+    public Book(String title, Author author) {
         this.title = title;
         this.author = author;
     }
 
-    public Book(String title, MorphiaReference<Author> author, Integer copies, String... tags) {
+    public Book(String title, Author author, Integer copies, String... tags) {
         this.title = title;
         this.author = author;
         this.copies = copies;
@@ -51,7 +52,7 @@ public final class Book {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, author, copies, tags);
+        return Objects.hash(id, title, copies, tags);
     }
 
     @Override
@@ -64,8 +65,7 @@ public final class Book {
         }
         Book book = (Book) o;
         return Objects.equals(id, book.id) && Objects.equals(title, book.title) &&
-                Objects.equals(author, book.author) && Objects.equals(copies, book.copies) &&
-                Objects.equals(tags, book.tags);
+                Objects.equals(copies, book.copies) && Objects.equals(tags, book.tags);
     }
 
     @Override
