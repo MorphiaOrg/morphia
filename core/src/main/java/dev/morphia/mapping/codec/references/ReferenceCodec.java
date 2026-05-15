@@ -5,15 +5,20 @@ import java.lang.reflect.InvocationHandler;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.mongodb.DBRef;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 
@@ -53,6 +58,8 @@ import net.bytebuddy.matcher.ElementMatcher.Junction;
 import net.bytebuddy.matcher.ElementMatchers;
 
 import static dev.morphia.mapping.codec.CodecHelper.document;
+import static dev.morphia.query.filters.Filters.eq;
+import static dev.morphia.query.filters.Filters.in;
 import static java.lang.String.format;
 
 /**
@@ -62,18 +69,12 @@ import static java.lang.String.format;
 @SuppressWarnings({ "unchecked", "removal" })
 @MorphiaInternal
 public class ReferenceCodec extends BaseReferenceCodec<Object> implements PropertyHandler {
+    private static final String FIELD_INVOCATION_HANDLER = "handler";
+
     private final Reference annotation;
     private final BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
     private final Mapper mapper;
     private final ClassLoader classLoader;
-
-    /**
-     * Name of instance field that holds the invocation handler of the proxy object.
-     */
-    private static final String FIELD_INVOCATION_HANDLER = "handler";
-    /**
-     * Type-cache for proxy classes generated w/ Byte Buddy.
-     */
     private final TypeCache<TypeCache.SimpleKey> typeCache = new TypeCache.WithInlineExpunction<>(Sort.SOFT);
     private MorphiaDatastore datastore;
 
@@ -253,16 +254,13 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         }
     }
 
-    private <T> T createProxy(LazyReference<?> reference) {
-        ReferenceProxy referenceProxy = new ReferenceProxy(reference);
+    private <T> T createProxy(Supplier<Object> loader, List<Object> ids, Class<?> referenceType) {
+        ReferenceProxy referenceProxy = new ReferenceProxy(loader, ids, referenceType);
         PropertyModel propertyModel = getPropertyModel();
         try {
             Class<?> type = propertyModel.getType();
-            // Get or create proxy class
             Class<T> proxyClass = (Class<T>) typeCache.findOrInsert(classLoader, getCacheKey(type), this::makeProxy, typeCache);
-            //... instantiate it
             final T proxy = proxyClass.getDeclaredConstructor().newInstance();
-            // .. and set the invocation handler
             final Field field = proxyClass.getDeclaredField(FIELD_INVOCATION_HANDLER);
             field.setAccessible(true);
             field.set(proxy, referenceProxy);
@@ -326,27 +324,143 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
 
     @Nullable
     private Object fetch(Object value) {
-        LazyReference<?> reference;
+        boolean lazy = annotation.lazy();
+        boolean ignoreMissing = annotation.ignoreMissing();
+        EntityModel entityModel = getEntityModelForField();
         final Class<?> type = getPropertyModel().getType();
-        if (List.class.isAssignableFrom(type)) {
-            reference = readList((List<?>) value);
-        } else if (Map.class.isAssignableFrom(type)) {
-            reference = readMap((Map<Object, Object>) value);
-        } else if (Set.class.isAssignableFrom(type)) {
-            reference = readSet((List<?>) value);
-        } else if (type.isArray()) {
-            reference = readList((List<?>) value);
-        } else if (value instanceof Document) {
-            reference = readDocument((Document) value);
-        } else {
-            reference = readSingle(value);
-        }
-        reference.ignoreMissing(annotation.ignoreMissing());
 
-        return !annotation.lazy() ? reference.get() : createProxy(reference);
+        if (List.class.isAssignableFrom(type) || type.isArray()) {
+            List<?> rawIds = (List<?>) value;
+            List<?> preDecoded = decodeEmbeddedEntities(rawIds);
+            if (!preDecoded.isEmpty()) {
+                return preDecoded;
+            }
+            List<Object> ids = stripDbRefs(rawIds);
+            Supplier<Object> loader = () -> fetchCollection(rawIds, entityModel, ignoreMissing);
+            return lazy ? createProxy(loader, ids, entityModel.getType()) : loader.get();
+
+        } else if (Set.class.isAssignableFrom(type)) {
+            List<?> rawIds = (List<?>) value;
+            List<?> preDecoded = decodeEmbeddedEntities(rawIds);
+            if (!preDecoded.isEmpty()) {
+                return new LinkedHashSet<>(preDecoded);
+            }
+            List<Object> ids = stripDbRefs(rawIds);
+            Supplier<Object> loader = () -> new LinkedHashSet<>(fetchCollection(rawIds, entityModel, ignoreMissing));
+            return lazy ? createProxy(loader, ids, entityModel.getType()) : loader.get();
+
+        } else if (Map.class.isAssignableFrom(type)) {
+            Map<Object, Object> rawMap = (Map<Object, Object>) value;
+            Class<?> keyType = getTypeData().getTypeParameters().get(0).getType();
+            Map<Object, Object> ids = new LinkedHashMap<>();
+            for (Entry<Object, Object> entry : rawMap.entrySet()) {
+                ids.put(mapper.getConversions().convert(entry.getKey(), keyType), entry.getValue());
+            }
+            List<Object> idList = stripDbRefs(new ArrayList<>(ids.values()));
+            Supplier<Object> loader = () -> fetchMap(ids, entityModel);
+            return lazy ? createProxy(loader, idList, entityModel.getType()) : loader.get();
+
+        } else {
+            Object id = value instanceof Document ? decodeDocument((Document) value) : value;
+            // If processId already decoded the value into an entity instance, return it directly
+            if (entityModel.getType().isInstance(id)) {
+                return id;
+            }
+            List<Object> ids = List.of(stripDbRef(id));
+            Supplier<Object> loader = () -> fetchSingle(id, entityModel, ignoreMissing);
+            return lazy ? createProxy(loader, ids, entityModel.getType()) : loader.get();
+        }
     }
 
-    private List<?> mapToEntitiesIfNecessary(List<?> value) {
+    private Object fetchSingle(Object id, EntityModel entityModel, boolean ignoreMissing) {
+        var query = id instanceof DBRef
+                ? datastore.find(mapper.getClassFromCollection(((DBRef) id).getCollectionName()))
+                : datastore.find(entityModel.getType());
+        Object result = query.filter(eq("_id", stripDbRef(id))).iterator().tryNext();
+        if (result == null && !ignoreMissing) {
+            throw new ReferenceException(Sofia.missingReferencedEntity(entityModel.getType().getSimpleName()));
+        }
+        return result;
+    }
+
+    private List<Object> fetchCollection(List<?> ids, EntityModel entityModel, boolean ignoreMissing) {
+        Map<String, List<Object>> byCollection = new HashMap<>();
+        for (Object id : ids) {
+            if (id instanceof DBRef) {
+                byCollection.computeIfAbsent(((DBRef) id).getCollectionName(), k -> new ArrayList<>()).add(((DBRef) id).getId());
+            } else {
+                // nested List items are stored as-is; extractFlatIds flattens them for the query
+                byCollection.computeIfAbsent(entityModel.collectionName(), k -> new ArrayList<>()).add(id);
+            }
+        }
+
+        Map<Object, Object> idMap = new HashMap<>();
+        for (Entry<String, List<Object>> entry : byCollection.entrySet()) {
+            idMap.putAll(queryCollection(entry.getKey(), extractFlatIds(entry.getValue()), entityModel, ignoreMissing));
+        }
+
+        return mapIdsToValues(ids, idMap).stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    private Map<Object, Object> queryCollection(String collection, List<Object> collectionIds, EntityModel entityModel,
+            boolean ignoreMissing) {
+        Map<Object, Object> idMap = new HashMap<>();
+        try (MongoCursor<?> cursor = datastore.find(collection).disableValidation().filter(in("_id", collectionIds)).iterator()) {
+            while (cursor.hasNext()) {
+                Object entity = cursor.next();
+                idMap.put(mapper.getId(entity), entity);
+            }
+            if (!ignoreMissing && idMap.size() != new HashSet<>(collectionIds).size()) {
+                throw new ReferenceException(Sofia.missingReferencedEntities(entityModel.getType().getSimpleName()));
+            }
+        }
+        return idMap;
+    }
+
+    private List<Object> mapIdsToValues(List<?> ids, Map<Object, Object> idMap) {
+        List<Object> values = new ArrayList<>(Arrays.asList(new Object[ids.size()]));
+        for (int i = 0; i < ids.size(); i++) {
+            Object id = ids.get(i);
+            Object resolved = id instanceof List
+                    ? mapIdsToValues((List<?>) id, idMap)
+                    : idMap.get(id instanceof DBRef ? ((DBRef) id).getId() : id);
+            if (resolved != null) {
+                values.set(i, resolved);
+            }
+        }
+        return values;
+    }
+
+    private Map<Object, Object> fetchMap(Map<Object, Object> ids, EntityModel entityModel) {
+        Map<Object, Object> values = new LinkedHashMap<>();
+        for (Entry<Object, Object> entry : ids.entrySet()) {
+            DBRef dbRef = entry.getValue() instanceof DBRef
+                    ? (DBRef) entry.getValue()
+                    : new DBRef(entityModel.collectionName(), entry.getValue());
+            try (MongoCursor<Object> cursor = (MongoCursor<Object>) datastore.find(dbRef.getCollectionName())
+                    .filter(eq("_id", dbRef.getId())).iterator()) {
+                values.put(entry.getKey(), cursor.next());
+            }
+        }
+        return values;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static List<Object> extractFlatIds(List<Object> ids) {
+        List<Object> flat = new ArrayList<>();
+        for (Object id : ids) {
+            if (id instanceof List) {
+                flat.addAll(extractFlatIds((List<Object>) id));
+            } else {
+                flat.add(id);
+            }
+        }
+        return flat;
+    }
+
+    private List<?> decodeEmbeddedEntities(List<?> value) {
         Codec<?> codec = getDatastore().getCodecRegistry().get(getEntityModelForField().getType());
         return value.stream()
                 .filter(v -> v instanceof Document && ((Document) v).containsKey("_id"))
@@ -354,37 +468,16 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
                 .collect(Collectors.toList());
     }
 
-    LazyReference<?> readDocument(Document value) {
-        final Object id = getDatastore().getCodecRegistry().get(Object.class)
+    private Object decodeDocument(Document value) {
+        return getDatastore().getCodecRegistry().get(Object.class)
                 .decode(new DocumentReader(value, mapper.getConversions()), DecoderContext.builder().build());
-        return readSingle(id);
     }
 
-    LazyReference<?> readList(List<?> value) {
-        List<?> mapped = mapToEntitiesIfNecessary(value);
-        return mapped.isEmpty()
-                ? new ListReference<>(datastore, getEntityModelForField(), value)
-                : new ListReference<>(datastore, mapped);
+    private static Object stripDbRef(Object id) {
+        return id instanceof DBRef ? ((DBRef) id).getId() : id;
     }
 
-    LazyReference<?> readMap(Map<Object, Object> value) {
-        final Map<Object, Object> ids = new LinkedHashMap<>();
-        Class<?> keyType = getTypeData().getTypeParameters().get(0).getType();
-        for (Entry<Object, Object> entry : value.entrySet()) {
-            ids.put(mapper.getConversions().convert(entry.getKey(), keyType), entry.getValue());
-        }
-
-        return new MapReference(datastore, ids, getEntityModelForField());
-    }
-
-    LazyReference<?> readSet(List<?> value) {
-        List<?> mapped = mapToEntitiesIfNecessary(value);
-        return mapped.isEmpty()
-                ? new SetReference<>(datastore, getEntityModelForField(), value)
-                : new SetReference<>(datastore, new LinkedHashSet<>(mapped));
-    }
-
-    LazyReference<?> readSingle(Object value) {
-        return new SingleReference<>(datastore, getEntityModelForField(), value);
+    private static List<Object> stripDbRefs(List<?> ids) {
+        return ids.stream().map(ReferenceCodec::stripDbRef).collect(Collectors.toList());
     }
 }

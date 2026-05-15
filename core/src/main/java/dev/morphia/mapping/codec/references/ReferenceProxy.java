@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.function.Supplier;
 
 import com.mongodb.lang.Nullable;
 
@@ -20,61 +21,61 @@ import dev.morphia.sofia.Sofia;
  */
 @MorphiaInternal
 public class ReferenceProxy implements MorphiaProxy, InvocationHandler {
-    private static final List<String> NONFETCHES = List.of("isEmpty", "size");
-    private final LazyReference<?> reference;
+    private final Supplier<Object> loader;
+    private final List<Object> ids;
+    private final Class<?> type;
+    private Object value;
+    private boolean fetched;
 
-    ReferenceProxy(LazyReference<?> reference) {
-        this.reference = reference;
+    ReferenceProxy(Supplier<Object> loader, List<Object> ids, Class<?> type) {
+        this.loader = loader;
+        this.ids = ids;
+        this.type = type;
     }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws InvocationTargetException, IllegalAccessException {
-        if (method.getName().equals("isFetched")) {
+        if ("isFetched".equals(method.getName())) {
             return isFetched();
         } else if (method.getAnnotation(IdGetter.class) != null) {
-            return reference.getIds().get(0);
+            return ids.isEmpty() ? null : ids.get(0);
         } else if ("isEmpty".equals(method.getName())) {
-            return isFetched() ? invoke(method, args) : reference.getIds().isEmpty();
+            return fetched ? invokeOnValue(method, args) : ids.isEmpty();
         } else if ("size".equals(method.getName())) {
-            return isFetched() ? invoke(method, args) : reference.getIds().size();
+            return fetched ? invokeOnValue(method, args) : ids.size();
         } else {
-            fetch(method);
-            return invoke(method, args);
+            load();
+            return invokeOnValue(method, args);
         }
     }
 
     @Override
     public boolean isFetched() {
-        return reference.isResolved();
+        return fetched;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public <T> T unwrap() {
-        return (T) reference.get();
+        return (T) load();
+    }
+
+    private Object load() {
+        if (!fetched) {
+            value = loader.get();
+            fetched = true;
+        }
+        return value;
     }
 
     @Nullable
-    private Object invoke(Method method, Object[] args) throws InvocationTargetException, IllegalAccessException {
+    private Object invokeOnValue(Method method, Object[] args) throws InvocationTargetException, IllegalAccessException {
         if (method.getDeclaringClass().isAssignableFrom(getClass())) {
             return method.invoke(this, args);
-        } else {
-            if (isFetched()) {
-                Object target = reference.get();
-                if (target == null) {
-                    throw new ReferenceException(Sofia.missingReferencedEntity(reference.getType()));
-                } else {
-                    return method.invoke(target, args);
-                }
-            } else {
-                return method.invoke(reference.getIds(), args);
-            }
         }
-    }
-
-    private void fetch(Method method) {
-        if (!isFetched() && !NONFETCHES.contains(method.getName())) {
-            reference.get();
+        if (value == null) {
+            throw new ReferenceException(Sofia.missingReferencedEntity(type));
         }
+        return method.invoke(value, args);
     }
 }
