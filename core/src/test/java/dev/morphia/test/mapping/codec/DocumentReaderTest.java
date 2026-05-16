@@ -1,6 +1,7 @@
 package dev.morphia.test.mapping.codec;
 
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -15,11 +16,13 @@ import dev.morphia.mapping.codec.reader.NameState;
 import dev.morphia.mapping.codec.reader.ValueState;
 import dev.morphia.test.TestBase;
 
+import org.bson.BsonBinary;
 import org.bson.BsonReader;
 import org.bson.BsonReaderMark;
 import org.bson.BsonType;
 import org.bson.Document;
 import org.bson.codecs.DecoderContext;
+import org.bson.types.Binary;
 import org.bson.types.ObjectId;
 import org.testng.annotations.Test;
 
@@ -152,6 +155,39 @@ public class DocumentReaderTest extends TestBase {
         step(r -> assertEquals(r.readName(), "second"));
         step(r -> assertEquals(r.readInt32(), 8));
         step(BsonReader::readEndDocument);
+    }
+
+    @Test
+    public void testBsonBinary() {
+        byte[] data = { 1, 2, 3, 4 };
+        BsonBinary bsonBinary = new BsonBinary(data);
+
+        setup(new Document("bin", bsonBinary));
+        step(BsonReader::readStartDocument);
+        step(r -> assertEquals(r.readName(), "bin"));
+        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.BINARY));
+        step(r -> assertEquals(r.readBinaryData(), bsonBinary));
+        step(BsonReader::readEndDocument);
+
+        Binary legacy = new Binary(data);
+        setup(new Document("bin", legacy));
+        step(BsonReader::readStartDocument);
+        step(r -> assertEquals(r.readName(), "bin"));
+        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.BINARY));
+        step(r -> assertTrue(Arrays.equals(r.readBinaryData().getData(), data)));
+        step(BsonReader::readEndDocument);
+    }
+
+    @Test
+    public void testBsonBinaryRoundTrip() {
+        HasBsonBinary entity = new HasBsonBinary();
+        entity.data = new BsonBinary(new byte[] { 5, 10, 15 });
+        getDs().save(entity);
+        Document first = getDs().getCollection(HasBsonBinary.class)
+                .withDocumentClass(Document.class)
+                .find().first();
+        HasBsonBinary decoded = fromDocument(HasBsonBinary.class, first);
+        assertEquals(decoded.data, entity.data);
     }
 
     @Test
@@ -308,6 +344,13 @@ public class DocumentReaderTest extends TestBase {
         public boolean equals(Object o) {
             return this == o || o instanceof Child;
         }
+    }
+
+    @Entity
+    private static class HasBsonBinary {
+        @Id
+        private ObjectId id;
+        private BsonBinary data;
     }
 
     @Entity
