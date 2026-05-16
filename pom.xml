@@ -47,7 +47,7 @@
     </repositories>
 
     <properties>
-        <asm.version>9.9.1</asm.version>
+        <asm.version>9.10</asm.version>
         <awaitility.version>1.7.0</awaitility.version>
         <driver.version>5.7.0</driver.version>
         <driver.minor.version>5.6</driver.minor.version>
@@ -59,12 +59,12 @@
         <javapoet.version>1.13.0</javapoet.version>
         <kotlinpoet.version>1.19.1</kotlinpoet.version>
         <logback.version>1.5.32</logback.version>
-        <ksp.version>2.3.7</ksp.version>
+        <ksp.version>2.3.8</ksp.version>
         <maven.version>4.0.0-rc-5</maven.version>
         <revapi.maven.plugin.version>0.15.1</revapi.maven.plugin.version>
         <revapi.java.version>0.28.4</revapi.java.version>
         <roaster.version>2.29.0.Final</roaster.version>
-        <slf4j.version>2.0.17</slf4j.version>
+        <slf4j.version>2.0.18</slf4j.version>
         <sofia.version>0.25</sofia.version>
         <surefire.version>3.1.0</surefire.version>
         <testng.version>7.12.0</testng.version>
@@ -74,7 +74,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
-        <asm.version>9.9.1</asm.version>
+        <asm.version>9.10</asm.version>
         <dokka.version>2.2.0</dokka.version>
         <morphia.mapper>reflection</morphia.mapper>
     </properties>
