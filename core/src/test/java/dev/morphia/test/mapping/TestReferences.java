@@ -206,6 +206,13 @@ public class TestReferences extends ProxyTestBase {
     }
 
     @Test
+    public void testEqWithNull() {
+        getDs().find(Container.class)
+                .filter(eq("singleRef", null))
+                .iterator();
+    }
+
+    @Test
     public void testFindByEntityReference() {
         final Ref ref = new Ref("refId");
         getDs().save(ref);
