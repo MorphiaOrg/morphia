@@ -21,7 +21,6 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -34,13 +33,12 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.Datastore;
 import dev.morphia.MorphiaDatastore;
-import dev.morphia.annotations.Handler;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Transient;
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
+import dev.morphia.mapping.codec.references.ReferenceCodec;
 
 import org.bson.Document;
 import org.bson.codecs.Codec;
@@ -415,37 +413,11 @@ public class PropertyModel {
     }
 
     private void configureCodec(Datastore datastore) {
-        Handler handler = getHandler();
-        if (handler != null) {
-            try {
-                codec = handler.value()
-                        .getDeclaredConstructor(MorphiaDatastore.class, PropertyModel.class)
-                        .newInstance(datastore, this);
-            } catch (ReflectiveOperationException e) {
-                throw new MappingException(e.getMessage(), e);
-            }
+        if (hasAnnotation(Reference.class)) {
+            codec = new ReferenceCodec((MorphiaDatastore) datastore, this);
         } else if (getTypeData().getTypeParameters().isEmpty()) {
             codec = (Codec<? super Object>) ((MorphiaDatastore) datastore).getCodecRegistry().get(getType());
         }
-    }
-
-    @Nullable
-    private Handler getHandler() {
-        Handler handler = getTypeData().getType().getAnnotation(Handler.class);
-
-        if (handler == null) {
-            handler = (Handler) annotationMap.values()
-                    .stream().filter(a -> a.getClass().equals(Handler.class))
-                    .findFirst().orElse(null);
-            if (handler == null) {
-                Iterator<Annotation> iterator = annotationMap.values().iterator();
-                while (handler == null && iterator.hasNext()) {
-                    handler = iterator.next().annotationType().getAnnotation(Handler.class);
-                }
-            }
-        }
-
-        return handler;
     }
 
     public boolean isCollection() {

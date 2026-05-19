@@ -21,7 +21,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.references.ReferenceCodec;
 
 /**
  * @author Olafur Gauti Gudmundsson
@@ -31,7 +30,6 @@ import dev.morphia.mapping.codec.references.ReferenceCodec;
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD, ElementType.METHOD })
-@Handler(ReferenceCodec.class)
 public @interface Reference {
 
     /**
