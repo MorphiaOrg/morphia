@@ -35,7 +35,7 @@ Gradle users can use the following dependency declaration:
 [source,groovy,subs="verbatim,attributes"]
 ----
 dependencies {
-    compile 'dev.morphia.morphia:morphia-core:{version}'
+    implementation 'dev.morphia.morphia:morphia-core:{version}'
 }
 ----
 
@@ -53,7 +53,7 @@ If you only need Morphia mapping annotations in a shared model jar, you can depe
 [source,groovy,subs="verbatim,attributes"]
 ----
 dependencies {
-    compile 'dev.morphia.morphia:morphia-annotations:{version}'
+    implementation 'dev.morphia.morphia:morphia-annotations:{version}'
 }
 ----
 
