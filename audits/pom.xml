@@ -8,6 +8,7 @@
     </parent>
 
     <artifactId>morphia-audits</artifactId>
+    <name>Morphia Audits</name>
     <packaging>jar</packaging>
     <properties>
         <jackson.version>2.18.2</jackson.version>

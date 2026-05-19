@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>morphia-rewrite</artifactId>
+    <name>Morphia Rewrite Recipes</name>
 
     <properties>
         <kotlin.version>1.9.25</kotlin.version>

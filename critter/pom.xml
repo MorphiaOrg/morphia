@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>morphia-critter</artifactId>
+    <name>Morphia Critter</name>
     <description>A buildtime code generator for various serde facilities</description>
     <packaging>pom</packaging>
 

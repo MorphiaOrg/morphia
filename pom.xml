@@ -52,6 +52,7 @@
         <driver.version>5.7.0</driver.version>
         <driver.minor.version>5.6</driver.minor.version>
         <driver-javadoc.link>https://mongodb.github.io/mongo-java-driver/${driver.minor.version}/apidocs</driver-javadoc.link>
+        <morphia-javadoc.link>https://morphia.dev/morphia/${morphia.minor.version}/javadoc</morphia-javadoc.link>
         <gizmo.version>1.10.1</gizmo.version>
         <jackson.version>2.21.3</jackson.version>
         <jackson-annotations.version>2.21</jackson-annotations.version>
@@ -61,6 +62,7 @@
         <logback.version>1.5.32</logback.version>
         <ksp.version>2.3.8</ksp.version>
         <maven.version>4.0.0-rc-5</maven.version>
+        <morphia.minor.version>3.0</morphia.minor.version>
         <revapi.maven.plugin.version>0.15.1</revapi.maven.plugin.version>
         <revapi.java.version>0.28.4</revapi.java.version>
         <roaster.version>2.29.0.Final</roaster.version>
@@ -131,6 +133,35 @@
                         <systemPropertyVariables>
                             <testcontainers.reuse.enable>true</testcontainers.reuse.enable>
                         </systemPropertyVariables>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.12.0</version>
+                    <configuration>
+                        <failOnError>true</failOnError>
+                        <failOnWarnings>false</failOnWarnings>
+                        <excludePackageNames>
+                            dev.morphia.utils:dev.morphia.sofia:*.internal:dev.morphia.mapping.*:dev.morphia.aggregation.codecs
+                        </excludePackageNames>
+                        <doclint>all</doclint>
+                        <doctitle>${project.name} ${project.version}</doctitle>
+                        <links>
+                            <link>${driver-javadoc.link}/driver-core</link>
+                            <link>${driver-javadoc.link}/bson</link>
+                            <link>${driver-javadoc.link}/driver-sync</link>
+                            <link>${morphia-javadoc.link}</link>
+                        </links>
+                        <windowtitle>${project.name}</windowtitle>
+                        <tagletArtifacts>
+                            <tagletArtifact>
+                                <groupId>dev.morphia.morphia</groupId>
+                                <artifactId>util</artifactId>
+                                <version>${project.version}</version>
+                            </tagletArtifact>
+                        </tagletArtifacts>
+                        <sourcepath>${project.build.sourceDirectory}:${project.build.directory}/generated-sources/sofia:${project.build.directory}/generated-sources/morphia-annotations</sourcepath>
                     </configuration>
                 </plugin>
             </plugins>

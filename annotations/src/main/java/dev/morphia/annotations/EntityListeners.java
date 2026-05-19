@@ -11,8 +11,6 @@ import dev.morphia.EntityListener;
 
 /**
  * Specifies other classes to participate in the @Entity's lifecycle
- *
- * @author Scott Hernandez
  */
 @Documented
 @Inherited

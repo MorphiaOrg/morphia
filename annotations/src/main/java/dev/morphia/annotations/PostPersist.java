@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  * BSON Document before it is saved.
  * <p>
  * Methods with this annotation may optionally take a parameter of type {@link org.bson.Document Document}
- * and/or a parameter of type {@link dev.morphia.Datastore Datastore}. If both parameters are used, the
+ * and/or a parameter of type Datastore. If both parameters are used, the
  * order is unimportant. For typical usage, the method should take a Document parameter.
  * <p>
  * The Document parameter (if used) will be the document that this object was saved to. You can alter
@@ -39,8 +39,6 @@ import java.lang.annotation.Target;
  * @see dev.morphia.annotations.PreLoad
  * @see dev.morphia.annotations.PostLoad
  * @see dev.morphia.annotations.PrePersist
- *
- * @author Scott Hernandez
  */
 @Documented
 @Inherited

@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>morphia-annotations</artifactId>
+    <name>Morphia Annotations</name>
 
     <dependencies>
         <dependency>

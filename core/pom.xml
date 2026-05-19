@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>morphia-core</artifactId>
+    <name>Morphia Core</name>
 
     <build>
         <plugins>
@@ -54,34 +55,6 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.12.0</version>
-                <configuration>
-                    <failOnError>true</failOnError>
-                    <failOnWarnings>false</failOnWarnings>
-                    <excludePackageNames>
-                        dev.morphia.utils:dev.morphia.sofia:*.internal:dev.morphia.mapping.*:dev.morphia.aggregation.codecs:dev.morphia.aggregation.codecs.stages
-                    </excludePackageNames>
-                    <doclint>all</doclint>
-                    <doctitle>Morphia ${project.version}</doctitle>
-                    <links>
-                        <link>${driver-javadoc.link}/driver-core</link>
-                        <link>${driver-javadoc.link}/bson</link>
-                        <link>${driver-javadoc.link}/driver-sync</link>
-                    </links>
-                    <windowtitle>Morphia</windowtitle>
-                    <tagletArtifacts>
-                        <tagletArtifact>
-                            <groupId>dev.morphia.morphia</groupId>
-                            <artifactId>util</artifactId>
-                            <version>${project.version}</version>
-                        </tagletArtifact>
-                    </tagletArtifacts>
-                    <sourcepath>${project.build.sourceDirectory}:${project.build.directory}/generated-sources/sofia:${project.build.directory}/generated-sources/morphia-annotations</sourcepath>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

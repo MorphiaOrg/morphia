@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>morphia-kotlin</artifactId>
+    <name>Morphia Kotlin</name>
 
     <dependencies>
         <dependency>

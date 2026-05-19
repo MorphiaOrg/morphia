@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>critter-maven</artifactId>
+    <name>Critter Maven Plugin</name>
     <packaging>maven-plugin</packaging>
     <description>Maven plugin for Critter code generation</description>
 

@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>morphia-validation</artifactId>
+    <name>Morphia Validation</name>
 
     <dependencies>
         <dependency>

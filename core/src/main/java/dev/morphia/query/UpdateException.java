@@ -2,8 +2,6 @@ package dev.morphia.query;
 
 /**
  * Error during update.
- *
- * @author ScottHernandez
  */
 public class UpdateException extends RuntimeException {
     /**

@@ -6,9 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * supposed to be used on a Long or long field for optimistic locking.
- *
- * @author Uwe Schaefer, (us@thomas-daily.de)
+ * Indicates the field to be used optimistic locking.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD, ElementType.METHOD })
