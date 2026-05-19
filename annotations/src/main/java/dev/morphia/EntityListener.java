@@ -33,7 +33,7 @@ public interface EntityListener<T> {
      * @see PostLoad
      * @since 2.3
      */
-    default void postLoad(T entity, Document document, Datastore datastore) {
+    default void postLoad(T entity, Document document, Object datastore) {
     };
 
     /**
@@ -43,7 +43,7 @@ public interface EntityListener<T> {
      * @see PostPersist
      * @since 2.3
      */
-    default void postPersist(T entity, Document document, Datastore datastore) {
+    default void postPersist(T entity, Document document, Object datastore) {
     };
 
     /**
@@ -53,7 +53,7 @@ public interface EntityListener<T> {
      * @see PreLoad
      * @since 2.3
      */
-    default void preLoad(T entity, Document document, Datastore datastore) {
+    default void preLoad(T entity, Document document, Object datastore) {
     };
 
     /**
@@ -63,7 +63,7 @@ public interface EntityListener<T> {
      * @see PrePersist
      * @since 2.3
      */
-    default void prePersist(T entity, Document document, Datastore datastore) {
+    default void prePersist(T entity, Document document, Object datastore) {
     };
 
 }

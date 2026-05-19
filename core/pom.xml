@@ -129,7 +129,7 @@
                         <goals>
                             <goal>morphia-annotations</goal>
                         </goals>
-                        <phase>generate-resources</phase>
+                        <phase>generate-sources</phase>
                     </execution>
                     <execution>
                         <id>docs-config</id>
@@ -167,6 +167,11 @@
         </plugins>
     </build>
     <dependencies>
+        <dependency>
+            <groupId>dev.morphia.morphia</groupId>
+            <artifactId>morphia-annotations</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>io.smallrye.config</groupId>
             <artifactId>smallrye-config</artifactId>

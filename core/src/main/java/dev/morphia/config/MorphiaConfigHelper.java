@@ -19,7 +19,7 @@ import io.smallrye.config.ConfigMapping;
 import io.smallrye.config.WithConverter;
 import io.smallrye.config.WithDefault;
 
-import static dev.morphia.annotations.internal.PossibleValuesBuilder.possibleValuesBuilder;
+import static dev.morphia.annotations.PossibleValuesBuilder.possibleValuesBuilder;
 import static java.lang.String.join;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;

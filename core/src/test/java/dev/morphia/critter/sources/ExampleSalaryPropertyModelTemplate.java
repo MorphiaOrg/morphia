@@ -8,7 +8,7 @@ import dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel;
 
 import org.bson.codecs.pojo.PropertyAccessor;
 
-import static dev.morphia.annotations.internal.PropertyBuilder.propertyBuilder;
+import static dev.morphia.annotations.PropertyBuilder.propertyBuilder;
 
 public class ExampleSalaryPropertyModelTemplate extends CritterPropertyModel {
 

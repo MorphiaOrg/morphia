@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.internal.EntityBuilder;
+import dev.morphia.annotations.EntityBuilder;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;

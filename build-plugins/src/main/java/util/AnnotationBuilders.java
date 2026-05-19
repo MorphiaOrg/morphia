@@ -68,7 +68,7 @@ public class AnnotationBuilders extends AbstractMojo {
     public void execute() throws MojoExecutionException {
         generated = new File(project.getBaseDirectory() + "/target/generated-sources/morphia-annotations/");
 
-        List<File> files = new ArrayList<>(find(project.getBaseDirectory() + "/src/main/java/dev/morphia/annotations"));
+        List<File> files = new ArrayList<>(find(annotationsModule() + "/src/main/java/dev/morphia/annotations"));
         project.addSourceRoot(ProjectScope.MAIN, Language.JAVA_FAMILY, generated.getAbsolutePath());
 
         try {
@@ -266,7 +266,7 @@ public class AnnotationBuilders extends AbstractMojo {
     private JavaClassSource createClass(String name) {
         var classBuilder = Roaster.create(JavaClassSource.class)
                 .setName(name)
-                .setPackage(source.getPackage() + ".internal")
+                .setPackage(source.getPackage())
                 .setFinal(true);
         classBuilder.addAnnotation("dev.morphia.annotations.internal.MorphiaInternal");
         JavaDocSource<JavaClassSource> javaDoc = classBuilder.getJavaDoc();
@@ -311,6 +311,14 @@ public class AnnotationBuilders extends AbstractMojo {
 
     }
 
+    private File annotationsModule() {
+        File dir = project.getBaseDirectory().toFile();
+        while (!new File(dir, ".git").exists()) {
+            dir = dir.getParentFile();
+        }
+        return new File(dir, "annotations");
+    }
+
     private List<File> find(String path) {
         File[] files = new File(path).listFiles(filter);
         return files != null ? asList(files) : List.of();
@@ -330,7 +338,7 @@ public class AnnotationBuilders extends AbstractMojo {
 
     private void output() throws IOException {
         var outputFile = new File(generated, source.getPackage().replace('.', '/')
-                + "/internal/" + builder.getName() + ".java");
+                + "/" + builder.getName() + ".java");
         if (!outputFile.getParentFile().mkdirs() && !outputFile.getParentFile().exists()) {
             throw new IOException(format("Could not create directory: %s", outputFile.getParentFile()));
         }
@@ -349,7 +357,7 @@ public class AnnotationBuilders extends AbstractMojo {
                 var annot = defaultValue.getAnnotation();
                 if (annot != null) {
                     literal = format("%sBuilder.%s().build()",
-                            annot.getQualifiedName().replace(annot.getName(), "") + "internal." + annot.getName(),
+                            annot.getQualifiedName(),
                             builderMethodName(annot.getName()));
                 } else if (literal != null && element.getType().isArray()) {
                     literal = format("new %s%s", element.getType().getName(), literal);

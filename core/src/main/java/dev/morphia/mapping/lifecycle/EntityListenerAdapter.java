@@ -53,7 +53,7 @@ public class EntityListenerAdapter implements EntityListener<Object> {
         return methods;
     }
 
-    protected Object[] collectArgs(Method method, Object entity, Document document, Datastore datastore) {
+    protected Object[] collectArgs(Method method, Object entity, Document document, Object datastore) {
         List<Object> args = new ArrayList<>();
         for (Class<?> parameterType : method.getParameterTypes()) {
             if (parameterType.equals(Document.class)) {
@@ -67,7 +67,7 @@ public class EntityListenerAdapter implements EntityListener<Object> {
         return args.toArray();
     }
 
-    void invoke(Class<? extends Annotation> annotation, Object entity, Document document, Datastore datastore) {
+    void invoke(Class<? extends Annotation> annotation, Object entity, Document document, Object datastore) {
         methods.get(annotation)
                 .forEach(method -> {
                     try {
@@ -92,22 +92,22 @@ public class EntityListenerAdapter implements EntityListener<Object> {
     }
 
     @Override
-    public void postLoad(@NonNull Object entity, @NonNull Document document, @NonNull Datastore datastore) {
+    public void postLoad(@NonNull Object entity, @NonNull Document document, @NonNull Object datastore) {
         invoke(PostLoad.class, entity, document, datastore);
     }
 
     @Override
-    public void postPersist(@NonNull Object entity, @NonNull Document document, @NonNull Datastore datastore) {
+    public void postPersist(@NonNull Object entity, @NonNull Document document, @NonNull Object datastore) {
         invoke(PostPersist.class, entity, document, datastore);
     }
 
     @Override
-    public void preLoad(@NonNull Object entity, @NonNull Document document, @NonNull Datastore datastore) {
+    public void preLoad(@NonNull Object entity, @NonNull Document document, @NonNull Object datastore) {
         invoke(PreLoad.class, entity, document, datastore);
     }
 
     @Override
-    public void prePersist(@NonNull Object entity, @NonNull Document document, @NonNull Datastore datastore) {
+    public void prePersist(@NonNull Object entity, @NonNull Document document, @NonNull Object datastore) {
         invoke(PrePersist.class, entity, document, datastore);
     }
 

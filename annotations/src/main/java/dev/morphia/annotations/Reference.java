@@ -20,9 +20,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import dev.morphia.mapping.Mapper;
-import dev.morphia.mapping.codec.references.ReferenceCodec;
-
 /**
  * @author Olafur Gauti Gudmundsson
  * @author Scott Hernandez
@@ -31,7 +28,6 @@ import dev.morphia.mapping.codec.references.ReferenceCodec;
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD, ElementType.METHOD })
-@Handler(ReferenceCodec.class)
 public @interface Reference {
 
     /**
@@ -52,5 +48,5 @@ public @interface Reference {
     /**
      * @return The name of the Mongo value to store the field. Defaults to the name of the field being annotated.
      */
-    String value() default Mapper.IGNORED_FIELDNAME;
+    String value() default ".";
 }
