@@ -5,7 +5,6 @@ import java.util.Set;
 
 import com.mongodb.lang.NonNull;
 
-import dev.morphia.Datastore;
 import dev.morphia.EntityListener;
 import dev.morphia.annotations.PrePersist;
 
@@ -39,7 +38,7 @@ public class ValidationExtension implements EntityListener<Object> {
     @Override
     @PrePersist
     @SuppressWarnings("unchecked")
-    public void prePersist(Object ent, Document document, Datastore datastore) {
+    public void prePersist(Object ent, Document document, Object datastore) {
         final Set validate = validationFactory.getValidator().validate(ent);
         if (!validate.isEmpty()) {
             throw new VerboseJSR303ConstraintViolationException(validate);

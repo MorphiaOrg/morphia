@@ -47,7 +47,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static dev.morphia.annotations.internal.ValidationBuilder.validationBuilder;
+import static dev.morphia.annotations.ValidationBuilder.validationBuilder;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.updates.UpdateOperators.set;
 import static dev.morphia.query.updates.UpdateOperators.unset;

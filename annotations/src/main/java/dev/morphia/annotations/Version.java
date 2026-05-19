@@ -5,8 +5,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import dev.morphia.mapping.Mapper;
-
 /**
  * supposed to be used on a Long or long field for optimistic locking.
  *
@@ -18,5 +16,5 @@ public @interface Version {
     /**
      * @return the field name to use in the document. Defaults to the java field name.
      */
-    String value() default Mapper.IGNORED_FIELDNAME;
+    String value() default ".";
 }

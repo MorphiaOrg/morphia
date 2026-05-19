@@ -20,8 +20,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import dev.morphia.mapping.Mapper;
-
 /**
  * @author Olafur Gauti Gudmundsson
  * @author Scott Hernandez
@@ -50,5 +48,5 @@ public @interface Reference {
     /**
      * @return The name of the Mongo value to store the field. Defaults to the name of the field being annotated.
      */
-    String value() default Mapper.IGNORED_FIELDNAME;
+    String value() default ".";
 }

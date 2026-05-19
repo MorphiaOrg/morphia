@@ -421,8 +421,8 @@
     <subprojects>
         <subproject>build-plugins</subproject>
         <subproject>util</subproject>
-        <subproject>core</subproject>
         <subproject>annotations</subproject>
+        <subproject>core</subproject>
         <subproject>kotlin</subproject>
         <subproject>rewrite</subproject>
         <subproject>critter</subproject>

@@ -20,8 +20,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import dev.morphia.mapping.Mapper;
-
 /**
  * Optional annotation for specifying persistence behavior
  *
@@ -42,5 +40,5 @@ public @interface Property {
     /**
      * @return the field name to use in the document. Defaults to the java field name.
      */
-    String value() default Mapper.IGNORED_FIELDNAME;
+    String value() default ".";
 }

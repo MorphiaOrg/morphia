@@ -13,7 +13,6 @@ import com.mongodb.client.model.geojson.Position;
 import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.Datastore;
 import dev.morphia.EntityListener;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.Entity;
@@ -269,7 +268,7 @@ public class TestLifecycles extends TestBase {
         }
 
         @Override
-        public void prePersist(@NonNull Object ent, @NonNull Document document, @NonNull Datastore datastore) {
+        public void prePersist(@NonNull Object ent, @NonNull Document document, @NonNull Object datastore) {
             final List<PropertyModel> fieldsToTest = ((MorphiaDatastore) datastore).getMapper().getEntityModel(ent.getClass())
                     .getProperties(NonNull.class);
             for (PropertyModel mf : fieldsToTest) {

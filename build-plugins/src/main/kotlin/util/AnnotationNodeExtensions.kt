@@ -45,7 +45,7 @@ class AnnotationNodeExtensions : AbstractMojo() {
         val files: MutableList<File> = ArrayList()
         generated =
             File(project!!.basedir.toString() + "/target/generated-sources/morphia-annotations/")
-        val path = core().toString() + "/src/main/java/dev/morphia/annotations"
+        val path = annotations().toString() + "/src/main/java/dev/morphia/annotations"
         files.addAll(find(path, filter))
         project.addCompileSourceRoot(generated!!.absolutePath)
 
@@ -66,12 +66,12 @@ class AnnotationNodeExtensions : AbstractMojo() {
         }
     }
 
-    private fun core(): File {
+    private fun annotations(): File {
         var dir = project!!.basedir
         while (!File(dir, ".git").exists()) {
             dir = dir.parentFile
         }
-        return File(dir, "core")
+        return File(dir, "annotations")
     }
 
     @Throws(Exception::class)
@@ -170,8 +170,7 @@ class AnnotationNodeExtensions : AbstractMojo() {
     }
 
     private fun emitToAnnotationMethod(sb: StringBuilder, source: JavaAnnotationSource) {
-        val builderClass =
-            "${source.qualifiedName.substringBeforeLast('.')}.internal.${source.name}Builder"
+        val builderClass = "${source.qualifiedName.substringBeforeLast('.')}.${source.name}Builder"
         val methodName = source.name.first().lowercaseChar() + source.name.substring(1) + "Builder"
 
         sb.appendLine(
@@ -197,8 +196,7 @@ class AnnotationNodeExtensions : AbstractMojo() {
     }
 
     private fun emitSetAnnotationValuesMethod(sb: StringBuilder, source: JavaAnnotationSource) {
-        val builderClass =
-            "${source.qualifiedName.substringBeforeLast('.')}.internal.${source.name}Builder"
+        val builderClass = "${source.qualifiedName.substringBeforeLast('.')}.${source.name}Builder"
 
         sb.appendLine(
             "    private void set${source.name}Values(org.objectweb.asm.tree.AnnotationNode annotationNode, io.quarkus.gizmo.MethodCreator creator, io.quarkus.gizmo.ResultHandle local) {"
