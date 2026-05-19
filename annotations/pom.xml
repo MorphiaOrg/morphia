@@ -34,7 +34,6 @@
                                     <outputDirectory>${project.build.outputDirectory}</outputDirectory>
                                     <includes>
                                         dev/morphia/annotations/*.class,
-                                        dev/morphia/annotations/package-info.class,
                                         dev/morphia/annotations/internal/MorphiaExperimental.class,
                                         dev/morphia/annotations/internal/MorphiaInternal.class,
                                         dev/morphia/annotations/internal/package-info.class,
