@@ -39,6 +39,24 @@ dependencies {
 }
 ----
 
+If you only need Morphia mapping annotations in a shared model jar, you can depend on the annotations-only artifact:
+
+[source,xml,subs="verbatim,attributes"]
+----
+<dependency>
+    <groupId>dev.morphia.morphia</groupId>
+    <artifactId>morphia-annotations</artifactId>
+    <version>{version}</version>
+</dependency>
+----
+
+[source,groovy,subs="verbatim,attributes"]
+----
+dependencies {
+    compile 'dev.morphia.morphia:morphia-annotations:{version}'
+}
+----
+
 To use `-SNAPSHOT` builds, an additional repository will be needed:
 
 [source,groovy]

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 http://maven.apache.org/xsd/maven-4.1.0.xsd">
+    <modelVersion>4.1.0</modelVersion>
+
+    <parent>
+        <groupId>dev.morphia.morphia</groupId>
+        <artifactId>morphia</artifactId>
+        <version>3.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>morphia-annotations</artifactId>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.9.0</version>
+                <executions>
+                    <execution>
+                        <id>extract-annotations</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>morphia-core</artifactId>
+                                    <version>${project.version}</version>
+                                    <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                                    <includes>
+                                        dev/morphia/annotations/*.class,
+                                        dev/morphia/annotations/package-info.class,
+                                        dev/morphia/annotations/internal/MorphiaExperimental.class,
+                                        dev/morphia/annotations/internal/MorphiaInternal.class,
+                                        dev/morphia/annotations/internal/package-info.class,
+                                        dev/morphia/EntityListener.class,
+                                        dev/morphia/mapping/IndexDirection.class,
+                                        dev/morphia/mapping/IndexType.class,
+                                        dev/morphia/mapping/ShardKeyType.class,
+                                        dev/morphia/mapping/codec/references/BaseReferenceCodec.class
+                                    </includes>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>dev.morphia.morphia</groupId>
+            <artifactId>morphia-core</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver-core</artifactId>
+            <version>${driver.version}</version>
+        </dependency>
+    </dependencies>
+</project>
