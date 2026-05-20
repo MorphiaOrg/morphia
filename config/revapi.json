@@ -1,24 +1,5 @@
 [
   {
-    "extension": "revapi.versions",
-    "configuration": {
-      "enabled": true,
-      "semantic0": true,
-      "strictSemver": true,
-      "versionIncreaseAllows": {
-        "major": {
-          "severity": "BREAKING"
-        },
-        "minor": {
-          "severity": "NON_BREAKING"
-        },
-        "patch": {
-          "severity": "EQUIVALENT"
-        }
-      }
-    }
-  },
-  {
     "extension": "revapi.filter",
     "configuration": {
       "elements": {
@@ -32,46 +13,19 @@
             "match": "@dev.morphia.annotations.internal.MorphiaExperimental ^*;"
           },
           {
-            "matcher": "java",
-            "match": "class dev.morphia.sofia.Sofia {}"
-          },
-          {
-            "matcher": "java",
-            "match": "type ^* implements com.mongodb.session.ClientSession {}"
+            "matcher": "java-package",
+            "match": "/.*\\.internal(\\..*)?/"
           },
           {
             "matcher": "java-package",
-            "match": "/.*codec.*/"
+            "match": "/.*\\.experimental(\\..*)?/"
           },
           {
             "matcher": "java-package",
-            "match": "/com.mongodb.*/"
-          },
-          {
-            "matcher": "java-package",
-            "match": "/org.bson.*/"
-          },
-          {
-            "matcher": "java-package",
-            "match": "/.*internal.*/"
-          },
-          {
-            "matcher": "java-package",
-            "match": "/.*experimental.*/"
-          },
-          {
-            "matcher": "java-package",
-            "match": "dev.morphia.annotations.internal"
+            "match": "/.*\\.codec(\\..*)?/"
           }
         ]
       }
-    }
-  },
-  {
-    "extension": "revapi.differences",
-    "configuration": {
-      "ignore": true,
-      "differences": []
     }
   }
 ]

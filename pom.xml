@@ -109,19 +109,9 @@
                             <version>${revapi.java.version}</version>
                         </dependency>
                     </dependencies>
-                    <executions>
-                        <execution>
-                            <id>revapi</id>
-                            <goals>
-                                <goal>check</goal>
-                            </goals>
-                            <phase>none</phase>
-                        </execution>
-                    </executions>
                     <configuration>
-                        <failBuildOnProblemsFound>true</failBuildOnProblemsFound>
                         <analysisConfigurationFiles>
-                            <analysisConfigurationFile>${maven.multiModuleProjectDirectory}/config/revapi.json</analysisConfigurationFile>
+                            <file>${maven.multiModuleProjectDirectory}/config/revapi.json</file>
                         </analysisConfigurationFiles>
                     </configuration>
                 </plugin>
