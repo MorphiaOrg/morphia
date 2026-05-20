@@ -2,7 +2,8 @@ package dev.morphia.test.aggregation.stages;
 
 import dev.morphia.test.TemplatedTestBase;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.expressions.Expressions.document;
@@ -17,7 +18,8 @@ public class TestUnionWith extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/stages/unionWith/example1
      */
-    @Test(testName = "Report 1: All Sales by Year and Stores and Items")
+    @Test
+    @DisplayName("Report 1: All Sales by Year and Stores and Items")
     public void testExample1() {
         loadData("sales_2018", 1);
         loadData("sales_2019", 2);
@@ -31,7 +33,8 @@ public class TestUnionWith extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/stages/unionWith/example2
      */
-    @Test(testName = "Report 2: Aggregated Sales by Items")
+    @Test
+    @DisplayName("Report 2: Aggregated Sales by Items")
     public void testExample2() {
         loadData("sales_2018", 1);
         loadData("sales_2019", 2);
@@ -44,7 +47,8 @@ public class TestUnionWith extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/stages/unionWith/example3
      */
-    @Test(testName = "Create a Union with Specified Documents")
+    @Test
+    @DisplayName("Create a Union with Specified Documents")
     public void testExample3() {
         checkMinServerVersion("6.0.0");
         testPipeline(
@@ -55,7 +59,8 @@ public class TestUnionWith extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/stages/unionWith/example4
      */
-    @Test(testName = "Namespaces in Subpipelines")
+    @Test
+    @DisplayName("Namespaces in Subpipelines")
     public void testExample4() {
         // this is just an error case in the docs. nothing to test.
     }

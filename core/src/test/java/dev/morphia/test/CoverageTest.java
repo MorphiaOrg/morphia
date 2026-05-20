@@ -8,10 +8,10 @@ import java.util.StringJoiner;
 
 import dev.morphia.mapping.NamingStrategy;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static java.util.Arrays.stream;
-import static org.testng.Assert.fail;
 
 public abstract class CoverageTest extends TestBase {
     public abstract List<String> locations();
@@ -25,7 +25,7 @@ public abstract class CoverageTest extends TestBase {
         });
 
         if (message.length() != 0) {
-            fail("\n" + message);
+            Assertions.fail("\n" + message);
         }
     }
 

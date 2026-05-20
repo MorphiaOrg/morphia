@@ -12,8 +12,8 @@ import dev.morphia.test.TestBase;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.updates.UpdateOperators.setOnInsert;
 
@@ -29,9 +29,9 @@ public class TestParentChildDisambiguation extends TestBase {
                             setOnInsert(Map.of("name", "Fred")));
             Parent parent = getDs().find(Parent.class).filter(Filters.eq("name", "Fred")).first();
 
-            Assert.assertNotNull(parent);
-            Assert.assertNotNull(parent.child);
-            Assert.assertEquals(parent.child.color, "purple");
+            Assertions.assertNotNull(parent);
+            Assertions.assertNotNull(parent.child);
+            Assertions.assertEquals("purple", parent.child.color);
         });
     }
 }

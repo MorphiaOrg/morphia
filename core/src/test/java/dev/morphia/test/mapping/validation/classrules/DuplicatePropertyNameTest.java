@@ -8,17 +8,22 @@ import dev.morphia.annotations.Property;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.test.TestBase;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class DuplicatePropertyNameTest extends TestBase {
-    @Test(expectedExceptions = MappingException.class)
+    @Test
     public void testDuplicatedPropertyNameDifferentType() {
-        getMapper().map(DuplicatedPropertyName2.class);
+        Assertions.assertThrows(MappingException.class, () -> {
+            getMapper().map(DuplicatedPropertyName2.class);
+        });
     }
 
-    @Test(expectedExceptions = MappingException.class)
+    @Test
     public void testDuplicatedPropertyNameSameType() {
-        getMapper().map(DuplicatedPropertyName.class);
+        Assertions.assertThrows(MappingException.class, () -> {
+            getMapper().map(DuplicatedPropertyName.class);
+        });
     }
 
     @Entity

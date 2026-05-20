@@ -2,14 +2,16 @@ package dev.morphia.test.query.filters;
 
 import dev.morphia.test.TemplatedTestBase;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 public class TestMaxDistance extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/filters/maxDistance/example1
      */
-    @Test(testName = "main")
+    @Test
+    @DisplayName("main")
     public void testExample1() {
         // legacy coordinates just won't be supported for now
 

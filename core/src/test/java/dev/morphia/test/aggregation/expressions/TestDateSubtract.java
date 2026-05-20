@@ -3,8 +3,9 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.eq;
 import static dev.morphia.aggregation.expressions.DateExpressions.dateSubtract;
@@ -19,7 +20,7 @@ import static dev.morphia.query.filters.Filters.expr;
 
 public class TestDateSubtract extends TemplatedTestBase {
 
-    @BeforeMethod
+    @BeforeEach
     public void versionCheck() {
         checkMinServerVersion("5.0.0");
     }
@@ -28,7 +29,8 @@ public class TestDateSubtract extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/dateSubtract/example1
      * 
      */
-    @Test(testName = "Subtract A Fixed Amount")
+    @Test
+    @DisplayName("Subtract A Fixed Amount")
     public void testExample1() {
         testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
@@ -40,7 +42,8 @@ public class TestDateSubtract extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/dateSubtract/example2
      * 
      */
-    @Test(testName = "Filter by Relative Dates")
+    @Test
+    @DisplayName("Filter by Relative Dates")
     public void testExample2() {
         // $$NOW is a little pointless
         /*
@@ -58,7 +61,8 @@ public class TestDateSubtract extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/dateSubtract/example3
      * 
      */
-    @Test(testName = "Adjust for Daylight Savings Time")
+    @Test
+    @DisplayName("Adjust for Daylight Savings Time")
     public void testExample3() {
         testPipeline((aggregation) -> aggregation.pipeline(project().suppressId().include("location")
                 .include("start", dateToString().date("$login").format("%Y-%m-%d %H:%M"))

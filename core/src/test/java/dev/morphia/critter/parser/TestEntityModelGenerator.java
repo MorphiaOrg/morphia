@@ -1,17 +1,19 @@
 package dev.morphia.critter.parser;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 import dev.morphia.critter.ClassfileOutput;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.NoInjection;
 
 public class TestEntityModelGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(TestEntityModelGenerator.class);
@@ -35,15 +37,16 @@ public class TestEntityModelGenerator {
         control = tmp;
     }
 
-    // @Test(dataProvider = "methods")
-    public void testEntityModel(String name, @NoInjection Method method) throws Exception {
+    // @ParameterizedTest
+    @MethodSource("methods")
+    public void testEntityModel(String name, Method method) throws Exception {
         Object expected = method.invoke(control);
         Object actual = method.invoke(GeneratorTest.entityModel);
-        Assert.assertEquals(actual, expected, method.getName() + " should return the same value");
+        Assertions.assertEquals(expected, actual, method.getName() + " should return the same value");
     }
 
-    @DataProvider(name = "methods")
-    public Object[][] methods() {
-        return GeneratorTest.methodNames(CritterEntityModel.class);
+    static Stream<Arguments> methods() {
+        return Arrays.stream(GeneratorTest.methodNames(CritterEntityModel.class))
+                .map(row -> Arguments.of(row));
     }
 }

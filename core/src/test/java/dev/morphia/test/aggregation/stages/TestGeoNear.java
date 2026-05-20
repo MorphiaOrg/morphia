@@ -6,7 +6,8 @@ import com.mongodb.client.model.geojson.Position;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.stages.GeoNear.geoNear;
 import static dev.morphia.aggregation.stages.Limit.limit;
@@ -19,7 +20,8 @@ public class TestGeoNear extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/geoNear/example1
      * 
      */
-    @Test(testName = "Maximum Distance")
+    @Test
+    @DisplayName("Maximum Distance")
     public void testExample1() {
         testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(geoNear(new Point(new Position(-73.99279, 40.719296)))
@@ -31,7 +33,8 @@ public class TestGeoNear extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/geoNear/example2
      * 
      */
-    @Test(testName = "Minimum Distance")
+    @Test
+    @DisplayName("Minimum Distance")
     public void testExample2() {
         // this example isn't representable in morphia as is
     }
@@ -40,7 +43,8 @@ public class TestGeoNear extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/geoNear/example3
      * 
      */
-    @Test(testName = "$geoNear with the ``let`` option")
+    @Test
+    @DisplayName("$geoNear with the ``let`` option")
     public void testExample3() {
         // let doesn't apply to morphia
     }
@@ -49,7 +53,8 @@ public class TestGeoNear extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/geoNear/example4
      *
      */
-    @Test(testName = "$geoNear with Bound ``let`` Option")
+    @Test
+    @DisplayName("$geoNear with Bound ``let`` Option")
     public void testExample4() {
         testPipeline(new ActionTestOptions().serverVersion("6.0.0").removeIds(true).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
@@ -62,7 +67,8 @@ public class TestGeoNear extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/geoNear/example3
      *
      */
-    @Test(testName = "Specify Which Geospatial Index to Use")
+    @Test
+    @DisplayName("Specify Which Geospatial Index to Use")
     public void testExample5() {
         testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false).skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(geoNear(new Point(new Position(-73.98142, 40.71782)))

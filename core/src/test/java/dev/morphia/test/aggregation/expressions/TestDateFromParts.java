@@ -2,7 +2,8 @@ package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.DateExpressions.dateFromParts;
 import static dev.morphia.aggregation.stages.Projection.project;
@@ -12,7 +13,8 @@ public class TestDateFromParts extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/dateFromParts/example1
      * 
      */
-    @Test(testName = "main")
+    @Test
+    @DisplayName("main")
     public void testExample1() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("date", dateFromParts().year(2017).month(2).day(8).hour(12))

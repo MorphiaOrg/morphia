@@ -69,7 +69,7 @@
         <slf4j.version>2.0.18</slf4j.version>
         <sofia.version>0.25</sofia.version>
         <surefire.version>3.1.0</surefire.version>
-        <testng.version>7.12.0</testng.version>
+        <junit.version>5.11.4</junit.version>
         <zt.exec.version>1.12</zt.exec.version>
 
         <maven.compiler.target>17</maven.compiler.target>
@@ -129,9 +129,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
+                        <useModulePath>false</useModulePath>
                         <forkCount>1C</forkCount>
                         <systemPropertyVariables>
                             <testcontainers.reuse.enable>true</testcontainers.reuse.enable>
+                            <junit.jupiter.testinstance.lifecycle.default>per_class</junit.jupiter.testinstance.lifecycle.default>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>
@@ -170,7 +172,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.6.2</version>
+                <version>3.6.3</version>
                 <executions>
                     <execution>
                         <id>enforce-java</id>
@@ -196,6 +198,14 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>dev.morphia.morphia</groupId>
                 <artifactId>morphia-core</artifactId>
                 <version>${project.version}</version>
@@ -220,12 +230,6 @@
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>${logback.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.testng</groupId>
-                <artifactId>testng</artifactId>
-                <version>${testng.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -405,6 +409,19 @@
         </dependencies>
     </dependencyManagement>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <profiles>
         <profile>
             <id>audits</id>
@@ -416,9 +433,9 @@
             <properties>
                 <skipTests>true</skipTests>
             </properties>
-            <modules>
-                <module>audits</module>
-            </modules>
+            <subprojects>
+                <subproject>audits</subproject>
+            </subprojects>
         </profile>
         <profile>
             <id>coverage</id>

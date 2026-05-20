@@ -9,14 +9,13 @@ import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.test.mapping.ProxyTestBase;
 import dev.morphia.test.models.TestEntity;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertThrows;
 
-@Test(groups = "references")
+@Tag("references")
 public class TestLazyIdOnly extends ProxyTestBase {
 
     @Test
@@ -44,16 +43,16 @@ public class TestLazyIdOnly extends ProxyTestBase {
         datastore.delete(reference);
 
         root = datastore.find(RootEntity.class).first();
-        assertNotNull(root);
+        Assertions.assertNotNull(root);
 
-        assertThrows(ReferenceException.class, () -> {
+        Assertions.assertThrows(ReferenceException.class, () -> {
             datastore.find(RootEntity.class).filter(eq("dontIgnoreMissing", p)).first();
         });
 
-        assertNull(datastore.find(RootEntity.class).filter(eq("ignoreMissing", p)).first());
+        Assertions.assertNull(datastore.find(RootEntity.class).filter(eq("ignoreMissing", p)).first());
 
         ReferencedEntity r = root.dontIgnoreMissing;
-        assertThrows(ReferenceException.class, () -> {
+        Assertions.assertThrows(ReferenceException.class, () -> {
             r.getFoo();
         });
     }

@@ -4,7 +4,8 @@ import dev.morphia.query.FindOptions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.Meta.textScore;
 import static dev.morphia.query.filters.Filters.*;
@@ -14,7 +15,8 @@ public class TestText extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/text/example1
      */
-    @Test(testName = "``$text`` with a Single Word")
+    @Test
+    @DisplayName("``$text`` with a Single Word")
     public void testExample1() {
         testQuery((query) -> query.filter(text("coffee")));
     }
@@ -22,7 +24,8 @@ public class TestText extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/text/example2
      */
-    @Test(testName = "Match Any of the ``$search`` Terms")
+    @Test
+    @DisplayName("Match Any of the ``$search`` Terms")
     public void testExample2() {
         testQuery(new ActionTestOptions().orderMatters(false), (query) -> query.filter(text("bake coffee cake")
 
@@ -32,7 +35,8 @@ public class TestText extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/text/example3
      */
-    @Test(testName = "``$text`` with an Exact String")
+    @Test
+    @DisplayName("``$text`` with an Exact String")
     public void testExample3() {
         testQuery(new ActionTestOptions().orderMatters(false), (query) -> query.filter(text("\"coffee shop\"")
 
@@ -42,7 +46,8 @@ public class TestText extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/text/example4
      */
-    @Test(testName = "Exclude Documents That Contain a Term")
+    @Test
+    @DisplayName("Exclude Documents That Contain a Term")
     public void testExample4() {
         testQuery(new ActionTestOptions().orderMatters(false), (query) -> query.filter(text("coffee -shop")
 
@@ -52,7 +57,8 @@ public class TestText extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/text/example5
      */
-    @Test(testName = "Query a Different Language")
+    @Test
+    @DisplayName("Query a Different Language")
     public void testExample5() {
         testQuery(new ActionTestOptions().orderMatters(false), (query) -> query.filter(text("leche").language("es")));
     }
@@ -60,7 +66,8 @@ public class TestText extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/text/example6
      */
-    @Test(testName = "Case and Diacritic Insensitivity")
+    @Test
+    @DisplayName("Case and Diacritic Insensitivity")
     public void testExample6() {
         testQuery(new ActionTestOptions().orderMatters(false), (query) -> query.filter(text("сы́рники CAFÉS")));
     }
@@ -68,7 +75,8 @@ public class TestText extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/text/example7
      */
-    @Test(testName = "Case Sensitivity")
+    @Test
+    @DisplayName("Case Sensitivity")
     public void testExample7() {
         testQuery((query) -> query.filter(text("Coffee").caseSensitive(true)));
     }
@@ -76,7 +84,8 @@ public class TestText extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/text/example8
      */
-    @Test(testName = "Diacritic Sensitive Search")
+    @Test
+    @DisplayName("Diacritic Sensitive Search")
     public void testExample8() {
         testQuery(new ActionTestOptions().orderMatters(false),
                 (query) -> query.filter(text("CAFÉ").diacriticSensitive(true)));
@@ -85,7 +94,8 @@ public class TestText extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/text/example9
      */
-    @Test(testName = "Relevance Score Examples")
+    @Test
+    @DisplayName("Relevance Score Examples")
     public void testExample9() {
         ActionTestOptions options = new ActionTestOptions()
                 .findOptions(new FindOptions().projection().project(textScore("score")));

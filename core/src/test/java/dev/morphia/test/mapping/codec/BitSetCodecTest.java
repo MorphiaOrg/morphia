@@ -8,12 +8,10 @@ import dev.morphia.query.filters.Filters;
 import dev.morphia.test.TestBase;
 
 import org.bson.Document;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static java.util.List.of;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
 
 public class BitSetCodecTest extends TestBase {
     public BitSetCodecTest() {
@@ -44,12 +42,12 @@ public class BitSetCodecTest extends TestBase {
         getMapper().map(ClassWithBitSet.class);
 
         ClassWithBitSet found = getDs().find(ClassWithBitSet.class).filter(Filters.eq("id", testClass.id)).first();
-        assertEquals(found.bits.get(3), false);
-        assertEquals(found.bits.get(4), true);
-        assertEquals(found.bits.get(5), false);
-        assertEquals(found.bits.get(43), false);
-        assertEquals(found.bits.get(44), true);
-        assertEquals(found.bits.get(45), false);
+        Assertions.assertEquals(false, found.bits.get(3));
+        Assertions.assertEquals(true, found.bits.get(4));
+        Assertions.assertEquals(false, found.bits.get(5));
+        Assertions.assertEquals(false, found.bits.get(43));
+        Assertions.assertEquals(true, found.bits.get(44));
+        Assertions.assertEquals(false, found.bits.get(45));
     }
 
     @Test
@@ -60,7 +58,7 @@ public class BitSetCodecTest extends TestBase {
 
         ClassWithBitSet found = getDs().find(ClassWithBitSet.class).filter(Filters.eq("id", testClass.id)).first();
         for (int i = 0; i < found.bits.size(); ++i) {
-            assertEquals(found.bits.get(i), false);
+            Assertions.assertEquals(false, found.bits.get(i));
         }
     }
 
@@ -71,8 +69,8 @@ public class BitSetCodecTest extends TestBase {
         getMapper().map(ClassWithBitSet.class);
 
         ClassWithBitSet found = getDs().find(ClassWithBitSet.class).filter(Filters.eq("id", testClass.id)).first();
-        assertNotNull(found);
-        assertNull(found.bits);
+        Assertions.assertNotNull(found);
+        Assertions.assertNull(found.bits);
     }
 
     @Test
@@ -87,13 +85,13 @@ public class BitSetCodecTest extends TestBase {
 
         // retrieve document, make sure it's still the same
         ClassWithBitSet result = getDs().find(ClassWithBitSet.class).filter(Filters.eq("_id", 2L)).first();
-        assertNotNull(result);
-        assertEquals(result.bits.get(3), false);
-        assertEquals(result.bits.get(4), true);
-        assertEquals(result.bits.get(5), false);
-        assertEquals(result.bits.get(64), true);
-        assertEquals(result.bits.get(65), false);
-        assertEquals(result.bits.get(66), true);
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(false, result.bits.get(3));
+        Assertions.assertEquals(true, result.bits.get(4));
+        Assertions.assertEquals(false, result.bits.get(5));
+        Assertions.assertEquals(true, result.bits.get(64));
+        Assertions.assertEquals(false, result.bits.get(65));
+        Assertions.assertEquals(true, result.bits.get(66));
     }
 
 }

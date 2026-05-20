@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -35,19 +36,19 @@ import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.provider.Arguments;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
 
 import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
 import static java.lang.String.format;
 import static java.nio.file.Files.lines;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.fail;
 
 public abstract class TestBase extends MorphiaTestSetup {
     private static final Logger LOG = LoggerFactory.getLogger(TestBase.class);
@@ -68,12 +69,10 @@ public abstract class TestBase extends MorphiaTestSetup {
         LOG.info("Running tests using driver version " + MorphiaInternals.getDriverVersion());
     }
 
-    @DataProvider(name = "mapperTypes")
-    public static Object[][] mapperTypes() {
-        return new Object[][] {
-                { MapperType.REFLECTION },
-                { MapperType.CRITTER }
-        };
+    public static Stream<Arguments> mapperTypes() {
+        return Stream.of(
+                Arguments.of(MapperType.REFLECTION),
+                Arguments.of(MapperType.CRITTER));
     }
 
     public TestBase() {
@@ -83,7 +82,72 @@ public abstract class TestBase extends MorphiaTestSetup {
         super(config);
     }
 
-    @BeforeMethod
+    public void assertDocumentEquals(String message, Document expected, Document actual) {
+        assertDocumentEquals(message, expected, actual, true);
+    }
+
+    public void assertDocumentEquals(String message, Document expected, Document actual, boolean strict) {
+        try {
+            JSONAssert.assertEquals(message, toJson(expected), toJson(actual), strict);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /*
+     * public void assertDocumentEquals(Document expected, Object actual) {
+     * if (actual instanceof Document actualDocument) {
+     * assertDocumentEquals(expected, actualDocument);
+     * } else {
+     * LOG.warn("Comparing Document to unexpected type: " + actual.getClass());
+     * Assertions.assertEquals(expected, actual);
+     * }
+     * }
+     */
+
+    public void assertDocumentEquals(Document expected, Document actual) {
+        assertDocumentEquals(expected, actual, true);
+    }
+
+    public void assertDocumentEquals(Document expected, Document actual, boolean strict) {
+        try {
+            JSONAssert.assertEquals(toJson(expected), toJson(actual), strict);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void assertDocumentListEquals(List<Document> expected, Object actual) {
+        assertDocumentListEquals(expected, actual, true);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void assertDocumentListEquals(List<Document> expected, Object actual, boolean strict) {
+        if (actual instanceof List<?> actualDocuments) {
+            try {
+                JSONAssert.assertEquals(toJson(expected), toJson((List<Document>) actualDocuments), strict);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            Assertions.assertEquals(expected, actual);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void assertDocumentListEquals(String message, List<Document> expected, Object actual, boolean strict) {
+        if (actual instanceof List<?> actualDocuments) {
+            try {
+                JSONAssert.assertEquals(message, toJson(expected), toJson((List<Document>) actualDocuments), strict);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            Assertions.assertEquals(expected, actual, message);
+        }
+    }
+
+    @BeforeEach
     public void beforeEach() {
         cleanup();
     }
@@ -142,7 +206,7 @@ public abstract class TestBase extends MorphiaTestSetup {
                                 .collect(toList()));
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage(), e);
         }
         assumeTrue(file.exists(), "Failed to process media files");
     }
@@ -159,9 +223,9 @@ public abstract class TestBase extends MorphiaTestSetup {
 
     protected void assertCapped(Class<?> type, Integer max) {
         Document result = getOptions(type);
-        Assert.assertTrue(result.getBoolean("capped"));
-        assertEquals(result.get("max"), max);
-        assertEquals(result.get("size"), 1048576);
+        Assertions.assertTrue(result.getBoolean("capped"));
+        Assertions.assertEquals(max, result.get("max"));
+        Assertions.assertEquals(1048576, result.get("size"));
     }
 
     protected void assertDocumentEquals(Object actual, Object expected) {
@@ -172,7 +236,7 @@ public abstract class TestBase extends MorphiaTestSetup {
         try {
             assertDocumentEquals("", actual, expected);
         } catch (AssertionError error) {
-            fail(message);
+            Assertions.fail(message);
         }
     }
 
@@ -180,12 +244,12 @@ public abstract class TestBase extends MorphiaTestSetup {
         try {
             assertion.run();
         } catch (AssertionError error) {
-            fail(messageSupplier.get(), error);
+            Assertions.fail(messageSupplier.get(), error);
         }
     }
 
     protected void assertListEquals(Collection<?> actual, Collection<?> expected) {
-        assertEquals(actual.size(), expected.size());
+        Assertions.assertEquals(expected.size(), actual.size());
         expected.forEach(
                 d -> assertTrueLazy(actual.contains(coerceToLong(d)), () -> {
                     String actualString = actual.stream()
@@ -200,7 +264,7 @@ public abstract class TestBase extends MorphiaTestSetup {
 
     public void assertTrueLazy(boolean condition, Supplier<String> messageSupplier) {
         if (!condition) {
-            fail(messageSupplier.get());
+            Assertions.fail(messageSupplier.get());
         }
     }
 
@@ -270,7 +334,7 @@ public abstract class TestBase extends MorphiaTestSetup {
         collection.deleteMany(new Document());
         if (!list.isEmpty()) {
             InsertManyResult insertManyResult = collection.insertMany(list);
-            assertEquals(insertManyResult.getInsertedIds().size(), list.size());
+            Assertions.assertEquals(list.size(), insertManyResult.getInsertedIds().size());
         }
     }
 
@@ -361,12 +425,13 @@ public abstract class TestBase extends MorphiaTestSetup {
                     }
                 }
                 if (!found) {
-                    fail("mismatch found at %s.\n\tactual = %s,\n\texpected = %s".formatted(newPath, actual, expected));
+                    Assertions.fail("mismatch found at %s.\n\tactual = %s,\n\texpected = %s".formatted(newPath, actual, expected));
                 }
             }
 
         } else {
-            assertEquals(coerceToLong(actual), coerceToLong(expected), format("mismatch found at %s:%n%s vs %s", path, expected, actual));
+            Assertions.assertEquals(coerceToLong(expected), coerceToLong(actual),
+                    format("mismatch found at %s:%n%s vs %s", path, expected, actual));
         }
     }
 
@@ -382,7 +447,7 @@ public abstract class TestBase extends MorphiaTestSetup {
     private void assertSameNullity(String path, Object expected, Object actual) {
         if (expected == null && actual != null
                 || actual == null && expected != null) {
-            assertEquals(actual, expected, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
+            Assertions.assertEquals(expected, actual, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
         }
     }
 
@@ -391,12 +456,13 @@ public abstract class TestBase extends MorphiaTestSetup {
             return;
         }
         if (!expected.getClass().equals(actual.getClass())) {
-            assertEquals(actual, expected, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
+            Assertions.assertEquals(expected, actual, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
         }
     }
 
     public static class ZDTCodecProvider implements CodecProvider {
         @Override
+        @SuppressWarnings("unchecked")
         public <T> Codec<T> get(Class<T> clazz, CodecRegistry registry) {
             if (clazz.equals(ZonedDateTime.class)) {
                 return (Codec<T>) new ZonedDateTimeCodec();

@@ -6,11 +6,10 @@ import dev.morphia.test.kotlin.models.DelegatedNull
 import dev.morphia.test.kotlin.models.MyClass
 import dev.morphia.test.kotlin.models.VersionedDataClass
 import org.bson.types.ObjectId
-import org.testng.Assert.assertEquals
-import org.testng.Assert.assertNotNull
-import org.testng.annotations.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Test
 
-@Test
 open class TestKotlinMapping :
     TestBase(configure().packages(listOf(DelegatedNull::class.java.packageName))) {
     @Test
@@ -18,7 +17,7 @@ open class TestKotlinMapping :
         val myClass = ds.save(MyClass(ObjectId(), 42))
         val loaded = ds.find(MyClass::class.java).first()
 
-        assertEquals(loaded, myClass)
+        assertEquals(myClass, loaded)
     }
 
     @Test
@@ -26,8 +25,8 @@ open class TestKotlinMapping :
         val versioned = ds.save(VersionedDataClass(null, "temp"))
         val loaded = ds.find(VersionedDataClass::class.java).first()
 
-        assertEquals(loaded, versioned)
-        assertEquals(loaded?.version, 1L)
+        assertEquals(versioned, loaded)
+        assertEquals(1L, loaded?.version)
     }
 
     @Test
@@ -38,6 +37,6 @@ open class TestKotlinMapping :
         val first = ds.find(DelegatedNull::class.java).first()
 
         assertNotNull(first)
-        assertEquals(first?.status, delegated.status)
+        assertEquals(delegated.status, first?.status)
     }
 }

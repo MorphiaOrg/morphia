@@ -2,14 +2,16 @@ package dev.morphia.test.query.filters;
 
 import dev.morphia.test.TemplatedTestBase;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 public class TestMinDistance extends TemplatedTestBase {
 
     /**
      * test data: dev/morphia/test/query/filters/minDistance/example1
      */
-    @Test(testName = "Use with ``$near``")
+    @Test
+    @DisplayName("Use with ``$near``")
     public void testExample1() {
         // already tested elsewhere
     }
@@ -17,7 +19,8 @@ public class TestMinDistance extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/minDistance/example2
      */
-    @Test(testName = "Use with ``$nearSphere``")
+    @Test
+    @DisplayName("Use with ``$nearSphere``")
     public void testExample2() {
         // legacy coordinates just won't be supported for now
     }

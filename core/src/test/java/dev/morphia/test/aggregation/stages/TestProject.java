@@ -3,7 +3,8 @@ package dev.morphia.test.aggregation.stages;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.eq;
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.condition;
@@ -17,7 +18,8 @@ public class TestProject extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/project/example1
      * 
      */
-    @Test(testName = "Include Specific Fields in Output Documents")
+    @Test
+    @DisplayName("Include Specific Fields in Output Documents")
     public void testExample1() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("title").include("author")));
     }
@@ -26,7 +28,8 @@ public class TestProject extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/project/example2
      * 
      */
-    @Test(testName = "Suppress ``_id`` Field in the Output Documents")
+    @Test
+    @DisplayName("Suppress ``_id`` Field in the Output Documents")
     public void testExample2() {
         testPipeline((aggregation) -> aggregation.pipeline(project().suppressId().include("title").include("author")));
     }
@@ -35,7 +38,8 @@ public class TestProject extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/project/example3
      * 
      */
-    @Test(testName = "Exclude Fields from Output Documents")
+    @Test
+    @DisplayName("Exclude Fields from Output Documents")
     public void testExample3() {
         testPipeline(new ActionTestOptions().skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(project().exclude("lastModified")));
@@ -45,7 +49,8 @@ public class TestProject extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/project/example4
      * 
      */
-    @Test(testName = "Conditionally Exclude Fields")
+    @Test
+    @DisplayName("Conditionally Exclude Fields")
     public void testExample4() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("title").include("author.first").include("author.last")
@@ -56,7 +61,8 @@ public class TestProject extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/project/example5
      * 
      */
-    @Test(testName = "Include Specific Fields from Embedded Documents")
+    @Test
+    @DisplayName("Include Specific Fields from Embedded Documents")
     public void testExample5() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("stop.title")));
     }
@@ -65,7 +71,8 @@ public class TestProject extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/project/example7
      *
      */
-    @Test(testName = "Include Specific Fields from Embedded Documents")
+    @Test
+    @DisplayName("Include Specific Fields from Embedded Documents")
     public void testExample6() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("stop.title")));
     }
@@ -74,7 +81,8 @@ public class TestProject extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/project/example6
      *
      */
-    @Test(testName = "Include Computed Fields")
+    @Test
+    @DisplayName("Include Computed Fields")
     public void testExample7() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("title")
                 .include("isbn", document().field("prefix", substrBytes("$isbn", 0, 3))
@@ -87,7 +95,8 @@ public class TestProject extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/project/example8
      * 
      */
-    @Test(testName = "Array Indexes are Unsupported")
+    @Test
+    @DisplayName("Array Indexes are Unsupported")
     public void testExample8() {
         testPipeline((aggregation) -> aggregation.pipeline(project().suppressId().include("x", "$name")));
     }
@@ -96,7 +105,8 @@ public class TestProject extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/project/example9
      * 
      */
-    @Test(testName = "Array Indexes are Unsupported")
+    @Test
+    @DisplayName("Array Indexes are Unsupported")
     public void testExample9() {
         // unsupported multiple examples here
         /*

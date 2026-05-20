@@ -6,13 +6,15 @@ import dev.morphia.test.TestBase;
 import dev.morphia.test.mapping.TestReferences.ReferencedEntity;
 import dev.morphia.test.models.TestEntity;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 
-@Test(groups = "references")
+@Tag("references")
 public class TestReferencesInEmbedded extends TestBase {
+    @Test
     public void testLazyReferencesInEmbedded() {
         final ContainerEntity container = new ContainerEntity();
         container.name = "lazy";
@@ -24,7 +26,7 @@ public class TestReferencesInEmbedded extends TestBase {
         container.embed.lazyRef = referencedEntity;
         getDs().save(container);
 
-        Assert.assertNotNull(getDs().find(ContainerEntity.class)
+        Assertions.assertNotNull(getDs().find(ContainerEntity.class)
                 .filter(eq("_id", container.getId()))
                 .first());
     }

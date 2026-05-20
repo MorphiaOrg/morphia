@@ -11,10 +11,8 @@ import dev.morphia.test.TestBase;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.testng.annotations.Test;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestCommonTypes extends TestBase {
     @Test
@@ -23,7 +21,7 @@ public class TestCommonTypes extends TestBase {
         money.amount = new BigDecimal("123456.7890");
 
         getDs().save(money);
-        assertNotNull(getDs().find(Money.class).first());
+        Assertions.assertNotNull(getDs().find(Money.class).first());
 
         MongoCollection<Document> collection = getDs()
                 .getCollection(Money.class)
@@ -35,7 +33,7 @@ public class TestCommonTypes extends TestBase {
 
         List<Money> monies = getDs().find(Money.class).iterator().toList();
 
-        assertEquals(monies.get(0).amount, monies.get(1).amount);
+        Assertions.assertEquals(monies.get(1).amount, monies.get(0).amount);
     }
 
     @Entity

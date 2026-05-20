@@ -50,8 +50,10 @@ import org.bson.types.ObjectId;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.MatcherAssert;
 import org.jetbrains.annotations.NotNull;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.updates.UpdateOperators.addToSet;
@@ -80,10 +82,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertThrows;
-import static org.testng.Assert.assertTrue;
 
 @SuppressWarnings({ "ConstantConditions", "unused" })
 public class TestUpdateOperations extends TestBase {
@@ -116,7 +114,7 @@ public class TestUpdateOperations extends TestBase {
                 .next();
     }
 
-    @Test(description = "see https://github.com/MorphiaOrg/morphia/issues/2472 for details")
+    @Test
     public void testUpdateWithDocumentConversion() {
         getDs().find(Hotel.class).filter(eq("_id", ObjectId.get()))
                 .disableValidation()
@@ -191,7 +189,7 @@ public class TestUpdateOperations extends TestBase {
     public void testInvalidPathsInUpdates() {
         Consumer<Datastore> test = (datastore) -> {
             Query<CappedPic> query = getDs().find(CappedPic.class);
-            assertThrows(ValidationException.class, () -> query.update(max("bad.name", 12)));
+            Assertions.assertThrows(ValidationException.class, () -> query.update(max("bad.name", 12)));
             query.first();
         };
 
@@ -205,7 +203,7 @@ public class TestUpdateOperations extends TestBase {
     public void testInvalidPathsInModify() {
         Consumer<Datastore> test = (datastore) -> {
             Query<CappedPic> query = getDs().find(CappedPic.class);
-            assertThrows(ValidationException.class, () -> query.modify(new ModifyOptions(), max("bad.name", 12)));
+            Assertions.assertThrows(ValidationException.class, () -> query.modify(new ModifyOptions(), max("bad.name", 12)));
             query.first();
         };
 
@@ -228,9 +226,9 @@ public class TestUpdateOperations extends TestBase {
                     assertInserted(query.update(new UpdateOptions().upsert(true), setOnInsert(Map.of("radius", originalValue))));
 
                     Shape first = ds.find(Shape.class).first();
-                    assertNotNull(first);
-                    assertTrue(first instanceof Circle);
-                    assertEquals(((Circle) first).getRadius(), originalValue);
+                    Assertions.assertNotNull(first);
+                    Assertions.assertTrue(first instanceof Circle);
+                    Assertions.assertEquals(originalValue, ((Circle) first).getRadius());
                 });
     }
 
@@ -248,7 +246,7 @@ public class TestUpdateOperations extends TestBase {
         Query<ContainsPic> query = getDs().find(ContainsPic.class)
                 .filter(eq("name", cp.getName()));
         UpdateResult result = query.update(set("pic", pic));
-        assertEquals(result.getModifiedCount(), 1);
+        Assertions.assertEquals(1, result.getModifiedCount());
 
         //test reading the object.
         final ContainsPic cp2 = getDs().find(ContainsPic.class).iterator()
@@ -280,15 +278,17 @@ public class TestUpdateOperations extends TestBase {
         final UpdateResult res = query.update(inc("val", 1.1D));
         assertUpdated(res);
 
-        assertEquals(query.iterator()
-                .next().val, 22);
+        Assertions.assertEquals(22, query.iterator()
+                .next().val);
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test
     public void testValidationBadFieldName() {
-        Query<Circle> query = getDs().find(Circle.class)
-                .filter(eq("radius", 0));
-        query.update(inc("rad", 1D));
+        Assertions.assertThrows(ValidationException.class, () -> {
+            Query<Circle> query = getDs().find(Circle.class)
+                    .filter(eq("radius", 0));
+            query.update(inc("rad", 1D));
+        });
     }
 
     @Test
@@ -302,7 +302,7 @@ public class TestUpdateOperations extends TestBase {
 
         Document shapes = getDs().find("shapes", Document.class)
                 .first();
-        assertTrue(shapes.containsKey("rad"));
+        Assertions.assertTrue(shapes.containsKey("rad"));
     }
 
     @Test
@@ -327,16 +327,16 @@ public class TestUpdateOperations extends TestBase {
                 new FindOptions()
                         .logQuery())
                 .filter(eq("values", new Integer[] { 4, 5, 7, 6 }));
-        assertNotNull(query.first(), query.getLoggedQuery());
+        Assertions.assertNotNull(query.first(), query.getLoggedQuery());
     }
 
     private void assertInserted(UpdateResult res) {
-        assertNotNull(res.getUpsertedId());
-        assertEquals(res.getModifiedCount(), 0);
+        Assertions.assertNotNull(res.getUpsertedId());
+        Assertions.assertEquals(0, res.getModifiedCount());
     }
 
     private void assertUpdated(UpdateResult res) {
-        assertEquals(1, res.getModifiedCount());
+        Assertions.assertEquals(res.getModifiedCount(), 1);
     }
 
     private void doUpdates(ContainsIntArray updated, ContainsIntArray control, UpdateResult result, Integer[] target) {
@@ -350,7 +350,7 @@ public class TestUpdateOperations extends TestBase {
                 .first().values,
                 is(new Integer[] { 1, 2, 3 }));
 
-        assertEquals(result.getMatchedCount(), 1);
+        Assertions.assertEquals(1, result.getMatchedCount());
         assertThat(getDs().find(ContainsIntArray.class)
                 .filter(eq("_id", updated.id))
                 .first().values,
@@ -573,7 +573,6 @@ public class TestUpdateOperations extends TestBase {
 
     }
 
-    @DataProvider
     private static Iterator<TranslationParams> paths() {
         List<TranslationParams> list = new ArrayList<>();
 
@@ -584,7 +583,7 @@ public class TestUpdateOperations extends TestBase {
                 .filter(m -> !m.getName().equals("$jacocoInit")
                         && !(m.getName().equals("set") && m.getParameterCount() == 1))
                 .toList();
-        assertEquals(list.size(), expected.size(), "Should have checks for all UpdateOperators methods");
+        Assertions.assertEquals(expected.size(), list.size(), "Should have checks for all UpdateOperators methods");
         list.addAll(prepParams("s", "s"));
 
         list.addAll(prepParams("address.street", "addr.address_street"));
@@ -634,7 +633,8 @@ public class TestUpdateOperations extends TestBase {
     public record TranslationParams(String updateName, String mappedName, UpdateOperator operator) {
     }
 
-    @Test(dataProvider = "paths")
+    @ParameterizedTest
+    @MethodSource("paths")
     public void testPathTranslations(TestUpdateOperations.TranslationParams params) {
         CodecRegistry registry = getDs().getCodecRegistry();
         Operations value = new Operations(getDs(), getMapper().getEntityModel(Hotel.class), List.of(params.operator), true);
@@ -643,7 +643,7 @@ public class TestUpdateOperations extends TestBase {
 
         String format = format("\"%s\"", params.mappedName);
         boolean contains = json.contains(format);
-        assertTrue(contains, format("failed to find '%s' in:%n%s", format, json));
+        Assertions.assertTrue(contains, format("failed to find '%s' in:%n%s", format, json));
     }
 
     private Document toDocument(Class type, UpdateOperator update) {

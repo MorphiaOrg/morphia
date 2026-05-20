@@ -3,7 +3,8 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.first;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.elementAt;
@@ -23,7 +24,8 @@ public class TestRegexFind extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/regexFind/example1
      * 
      */
-    @Test(testName = "``$regexFind`` and Its Options")
+    @Test
+    @DisplayName("``$regexFind`` and Its Options")
     public void testExample1() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
                 .pipeline(addFields().field("returnObject", regexFind("$description").pattern("line"))));
@@ -33,7 +35,8 @@ public class TestRegexFind extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/regexFind/example2
      * 
      */
-    @Test(testName = "Use ``$regexFind`` to Parse Email from String")
+    @Test
+    @DisplayName("Use ``$regexFind`` to Parse Email from String")
     public void testExample2() {
         testPipeline((aggregation) -> aggregation.pipeline(
                 addFields().field("email",
@@ -45,7 +48,8 @@ public class TestRegexFind extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/regexFind/example3
      * 
      */
-    @Test(testName = "Apply ``$regexFind`` to String Elements of an Array")
+    @Test
+    @DisplayName("Apply ``$regexFind`` to String Elements of an Array")
     public void testExample3() {
         testPipeline((aggregation) -> aggregation.pipeline(unwind("details"),
                 addFields()
@@ -63,7 +67,8 @@ public class TestRegexFind extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/regexFind/example4
      * 
      */
-    @Test(testName = "Use Captured Groupings to Parse User Name")
+    @Test
+    @DisplayName("Use Captured Groupings to Parse User Name")
     public void testExample4() {
         testPipeline(
                 (aggregation) -> aggregation

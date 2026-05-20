@@ -3,16 +3,16 @@ package dev.morphia.test.mapping;
 import dev.morphia.mapping.NamingStrategy;
 import dev.morphia.test.TestBase;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class NamingStrategyTest extends TestBase {
     @Test
     public void apply() {
-        Assert.assertEquals(NamingStrategy.identity().apply("TestValue"), "TestValue", "Should be unchanged");
-        Assert.assertEquals(NamingStrategy.snakeCase().apply("TestValue"), "test_value", "Should be in snake case");
-        Assert.assertEquals(NamingStrategy.camelCase().apply("TestValue"), "testValue", "Should be in camel case");
-        Assert.assertEquals(NamingStrategy.kebabCase().apply("TestValue"), "test-value", "Should be in kebab case");
-        Assert.assertEquals(NamingStrategy.lowerCase().apply("TestValue"), "testvalue", "Should be in lower case");
+        Assertions.assertEquals("TestValue", NamingStrategy.identity().apply("TestValue"), "Should be unchanged");
+        Assertions.assertEquals("test_value", NamingStrategy.snakeCase().apply("TestValue"), "Should be in snake case");
+        Assertions.assertEquals("testValue", NamingStrategy.camelCase().apply("TestValue"), "Should be in camel case");
+        Assertions.assertEquals("test-value", NamingStrategy.kebabCase().apply("TestValue"), "Should be in kebab case");
+        Assertions.assertEquals("testvalue", NamingStrategy.lowerCase().apply("TestValue"), "Should be in lower case");
     }
 }

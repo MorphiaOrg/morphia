@@ -17,24 +17,23 @@ import dev.morphia.test.mapping.codec.pojo.generics.Subtypes;
 import dev.morphia.test.models.Hotel;
 import dev.morphia.test.models.Hotel.Type;
 
-import org.testng.annotations.Test;
-
-import static org.testng.Assert.assertEquals;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TypeDataTest extends TestBase {
     @Test
     public void testWildcards() throws NoSuchFieldException {
         TypeData<?> typeData = TypeData.get(WildCard.class.getDeclaredField("listOfLists"));
 
-        assertEquals(typeData.getType(), List.class);
+        Assertions.assertEquals(List.class, typeData.getType());
         List<TypeData<?>> typeParameters = typeData.getTypeParameters();
 
         typeData = typeParameters.get(0);
-        assertEquals(typeData.getType(), List.class);
+        Assertions.assertEquals(List.class, typeData.getType());
         typeParameters = typeData.getTypeParameters();
 
         typeData = typeParameters.get(0);
-        assertEquals(typeData.getType(), String.class);
+        Assertions.assertEquals(String.class, typeData.getType());
 
     }
 
@@ -97,11 +96,11 @@ public class TypeDataTest extends TestBase {
             throws NoSuchFieldException {
         Field field = owner.getDeclaredField(fieldName);
         TypeData<?> typeData = TypeData.get(field);
-        assertEquals(typeData.getType(), fieldType);
+        Assertions.assertEquals(fieldType, typeData.getType());
         List<TypeData<?>> typeParameters = typeData.getTypeParameters();
-        assertEquals(typeParameters.size(), parameterTypes.length);
+        Assertions.assertEquals(parameterTypes.length, typeParameters.size());
         for (int i = 0; i < parameterTypes.length; i++) {
-            assertEquals(typeParameters.get(i).getType(), parameterTypes[i]);
+            Assertions.assertEquals(parameterTypes[i], typeParameters.get(i).getType());
         }
     }
 

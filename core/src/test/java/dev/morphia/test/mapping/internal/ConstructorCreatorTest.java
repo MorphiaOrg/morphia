@@ -33,15 +33,13 @@ import dev.morphia.test.TestBase;
 import org.bson.BsonString;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.Sort.ascending;
 import static dev.morphia.query.Sort.descending;
 import static dev.morphia.query.filters.Filters.lte;
 import static java.util.Arrays.asList;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
 
 public class ConstructorCreatorTest extends TestBase {
 
@@ -65,34 +63,34 @@ public class ConstructorCreatorTest extends TestBase {
                 .filter(lte("orderDate", LocalDateTime.now().plusDays(5)))
                 .iterator();
         List<Invoice> list = criteria1.toList();
-        assertEquals(list.get(0).getAddresses().get(0).getCity(), "NYC",
+        Assertions.assertEquals("NYC", list.get(0).getAddresses().get(0).getCity(),
                 list.stream().map(Invoice::getId).collect(Collectors.toList()).toString());
-        assertEquals(list.get(0), invoice, list.stream().map(Invoice::getId).collect(Collectors.toList()).toString());
+        Assertions.assertEquals(invoice, list.get(0), list.stream().map(Invoice::getId).collect(Collectors.toList()).toString());
 
         MorphiaCursor<Invoice> criteria2 = getDs().find(Invoice.class,
                 new FindOptions()
                         .sort(descending("addresses")))
                 .iterator();
-        assertEquals(criteria2.toList().get(0).getAddresses().get(0).getCity(), "New York City");
+        Assertions.assertEquals("New York City", criteria2.toList().get(0).getAddresses().get(0).getCity());
     }
 
     @Test
     public void testBestConstructor() {
 
         Constructor<?> constructor = ConstructorCreator.bestConstructor(getDs().getMapper().map(SomeProps.class).get(0));
-        assertNotNull(constructor);
-        assertEquals(constructor.getParameterCount(), 2);
+        Assertions.assertNotNull(constructor);
+        Assertions.assertEquals(2, constructor.getParameterCount());
 
         constructor = ConstructorCreator.bestConstructor(getDs().getMapper().map(AllProps.class).get(0));
-        assertNotNull(constructor);
-        assertEquals(constructor.getParameterCount(), 3);
+        Assertions.assertNotNull(constructor);
+        Assertions.assertEquals(3, constructor.getParameterCount());
 
         constructor = ConstructorCreator.bestConstructor(getDs().getMapper().map(NoProps.class).get(0));
-        assertNull(constructor);
+        Assertions.assertNull(constructor);
 
         constructor = ConstructorCreator.bestConstructor(getDs().getMapper().map(Default.class).get(0));
-        assertNotNull(constructor);
-        assertEquals(constructor.getParameterCount(), 0);
+        Assertions.assertNotNull(constructor);
+        Assertions.assertEquals(0, constructor.getParameterCount());
     }
 
     @Test
@@ -105,11 +103,11 @@ public class ConstructorCreatorTest extends TestBase {
         InsertOneResult result = collection
                 .withDocumentClass(Document.class)
                 .insertOne(document);
-        assertEquals(((BsonString) result.getInsertedId()).getValue(), "2");
+        Assertions.assertEquals("2", ((BsonString) result.getInsertedId()).getValue());
 
         var first = getDs().find(MyEntity.class).first();
-        assertEquals(first.id, 2L);
-        assertEquals(first.embedded.myId, 1234L);
+        Assertions.assertEquals(2L, first.id);
+        Assertions.assertEquals(1234L, first.embedded.myId);
 
     }
 

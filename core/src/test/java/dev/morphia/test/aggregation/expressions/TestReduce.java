@@ -3,7 +3,8 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
@@ -24,7 +25,8 @@ public class TestReduce extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/reduce/example1
      * 
      */
-    @Test(testName = "Multiplication")
+    @Test
+    @DisplayName("Multiplication")
     public void testExample1() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
@@ -37,7 +39,8 @@ public class TestReduce extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/reduce/example2
      * 
      */
-    @Test(testName = "String Concatenation")
+    @Test
+    @DisplayName("String Concatenation")
     public void testExample2() {
         testPipeline((aggregation) -> aggregation.pipeline(match(gt("hobbies", array())),
                 project().include("name").include("bio", reduce("$hobbies", "My hobbies include:",
@@ -48,7 +51,8 @@ public class TestReduce extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/reduce/example3
      * 
      */
-    @Test(testName = "Array Concatenation")
+    @Test
+    @DisplayName("Array Concatenation")
     public void testExample3() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
                 .pipeline(project().include("collapsed", reduce("$arr", array(), concatArrays("$$value", "$$this")))));

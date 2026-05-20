@@ -30,8 +30,8 @@ import dev.morphia.query.Query;
 import dev.morphia.test.TestBase;
 
 import org.bson.types.ObjectId;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.lte;
@@ -53,11 +53,11 @@ public class Java8EntityTest extends TestBase {
         Java8Entity created2 = createEntity(getDs(), null, localDate, localDateTime, null);
         final Java8Entity loaded2 = getDs().find(Java8Entity.class).first();
 
-        Assert.assertNotEquals(created, created2);
-        Assert.assertEquals(loaded.getLocalDate(), loaded2.getLocalDate());
-        Assert.assertEquals(loaded.getLocalDateTime(), loaded2.getLocalDateTime());
+        Assertions.assertNotEquals(created2, created);
+        Assertions.assertEquals(loaded2.getLocalDate(), loaded.getLocalDate());
+        Assertions.assertEquals(loaded2.getLocalDateTime(), loaded.getLocalDateTime());
 
-        Assert.assertEquals(loaded.getLocalDate(), loaded3.getLocalDate());
+        Assertions.assertEquals(loaded3.getLocalDate(), loaded.getLocalDate());
     }
 
     @Test
@@ -89,16 +89,16 @@ public class Java8EntityTest extends TestBase {
                     localDateTime.plus(i, DAYS),
                     localTime.plus(i, ChronoUnit.HOURS));
         }
-        Assert.assertEquals(getDs().find(Java8Entity.class).filter(lte("instant", instant.plus(1, DAYS))).count(), 2L);
-        Assert.assertEquals(getDs().find(Java8Entity.class).filter(eq("localDate", localDate.plus(1, DAYS))).count(), 1L);
-        Assert.assertEquals(getDs().find(Java8Entity.class).filter(eq("localDate", localDate.minus(1, DAYS))).count(), 0L);
-        Assert.assertEquals(getDs().find(Java8Entity.class).filter(ne("localDateTime", localDateTime.plus(6, DAYS))).count(), 9L);
+        Assertions.assertEquals(2L, getDs().find(Java8Entity.class).filter(lte("instant", instant.plus(1, DAYS))).count());
+        Assertions.assertEquals(1L, getDs().find(Java8Entity.class).filter(eq("localDate", localDate.plus(1, DAYS))).count());
+        Assertions.assertEquals(0L, getDs().find(Java8Entity.class).filter(eq("localDate", localDate.minus(1, DAYS))).count());
+        Assertions.assertEquals(9L, getDs().find(Java8Entity.class).filter(ne("localDateTime", localDateTime.plus(6, DAYS))).count());
     }
 
     private void compare(Datastore datastore, Java8Entity entity, String field, Object value) {
         Query<Java8Entity> query = datastore.find(Java8Entity.class, new FindOptions().logQuery().limit(1))
                 .filter(eq(field, value));
-        Assert.assertEquals(query.first(), entity, query.getLoggedQuery());
+        Assertions.assertEquals(entity, query.first(), query.getLoggedQuery());
     }
 
     private Java8Entity createEntity(Datastore ds, Instant instant, LocalDate localDate,

@@ -3,7 +3,8 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.last;
 import static dev.morphia.aggregation.stages.Group.group;
@@ -17,7 +18,8 @@ public class TestLast extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/last/example1
      * 
      */
-    @Test(testName = "Use in ``$group`` Stage")
+    @Test
+    @DisplayName("Use in ``$group`` Stage")
     public void testExample1() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(sort().ascending("item").ascending("date"),
@@ -28,7 +30,8 @@ public class TestLast extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/last/example2
      * 
      */
-    @Test(testName = "Use in ``$setWindowFields`` Stage")
+    @Test
+    @DisplayName("Use in ``$setWindowFields`` Stage")
     public void testExample2() {
         // this example starts importing a bunch of stuff and gets more complicated than
         // I care

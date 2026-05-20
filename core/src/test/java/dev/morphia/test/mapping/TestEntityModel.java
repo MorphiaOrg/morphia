@@ -12,11 +12,10 @@ import dev.morphia.test.models.generics.Child;
 import dev.morphia.test.models.generics.EmbeddedType;
 
 import org.bson.types.ObjectId;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static java.util.List.of;
-import static org.testng.Assert.assertEquals;
 
 @SuppressWarnings("DataFlowIssue")
 public class TestEntityModel extends TestBase {
@@ -26,7 +25,7 @@ public class TestEntityModel extends TestBase {
                 .packages(of(ChildLevel3a.class.getPackageName())), () -> {
                     EntityModel entityModel = getMapper().getEntityModel(RootParent.class);
                     Set<EntityModel> subtypes = entityModel.getSubtypes();
-                    assertEquals(subtypes.size(), 6);
+                    Assertions.assertEquals(6, subtypes.size());
                     checkParent(RootParent.class, ChildLevel1a.class, ChildLevel1b.class, ChildLevel1c.class);
                     checkParent(ChildLevel1a.class, ChildLevel2a.class, ChildLevel2b.class);
                     checkParent(ChildLevel2b.class, ChildLevel3a.class);
@@ -36,7 +35,7 @@ public class TestEntityModel extends TestBase {
 
     private void checkParent(Class<?> parent, Class<?>... classes) {
         for (var klass : classes) {
-            assertEquals(getMapper().getEntityModel(klass).getSuperClass().getType(), parent);
+            Assertions.assertEquals(parent, getMapper().getEntityModel(klass).getSuperClass().getType());
         }
     }
 
@@ -46,8 +45,8 @@ public class TestEntityModel extends TestBase {
 
         Mapper mapper = getMapper();
         Set<EntityModel> subTypes = mapper.getEntityModel(EmbeddedType.class).getSubtypes();
-        Assert.assertTrue(subTypes.contains(mapper.getEntityModel(Another.class)));
-        Assert.assertTrue(subTypes.contains(mapper.getEntityModel(Child.class)));
+        Assertions.assertTrue(subTypes.contains(mapper.getEntityModel(Another.class)));
+        Assertions.assertTrue(subTypes.contains(mapper.getEntityModel(Child.class)));
     }
 
     @Entity

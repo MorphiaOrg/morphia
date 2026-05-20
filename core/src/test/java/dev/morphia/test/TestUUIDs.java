@@ -10,12 +10,10 @@ import dev.morphia.test.models.FacebookUser;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 
 public class TestUUIDs extends TestBase {
 
@@ -31,10 +29,10 @@ public class TestUUIDs extends TestBase {
         final ContainsUUID loaded = getDs().find(ContainsUUID.class)
                 .iterator()
                 .next();
-        assertNotNull(loaded);
-        assertNotNull(loaded.id);
-        assertNotNull(loaded.uuid);
-        assertEquals(before, loaded.uuid);
+        Assertions.assertNotNull(loaded);
+        Assertions.assertNotNull(loaded.id);
+        Assertions.assertNotNull(loaded.uuid);
+        Assertions.assertEquals(loaded.uuid, before);
     }
 
     @Test
@@ -43,9 +41,9 @@ public class TestUUIDs extends TestBase {
         final UUID before = uuidId.id;
         getDs().save(uuidId);
         final ContainsUuidId loaded = getDs().find(ContainsUuidId.class).filter(eq("_id", before)).first();
-        assertNotNull(loaded);
-        assertNotNull(loaded.id);
-        assertEquals(before, loaded.id);
+        Assertions.assertNotNull(loaded);
+        Assertions.assertNotNull(loaded.id);
+        Assertions.assertEquals(loaded.id, before);
     }
 
     @Test
@@ -54,8 +52,8 @@ public class TestUUIDs extends TestBase {
         getDs().save(example);
 
         ContainsUuidId loaded = getDs().find(ContainsUuidId.class).first();
-        Assert.assertEquals(loaded.id, example.id);
-        Assert.assertTrue(loaded.preload);
+        Assertions.assertEquals(example.id, loaded.id);
+        Assertions.assertTrue(loaded.preload);
     }
 
     @Entity(useDiscriminator = false)

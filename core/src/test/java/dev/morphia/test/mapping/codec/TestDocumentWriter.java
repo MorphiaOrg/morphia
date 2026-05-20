@@ -10,18 +10,17 @@ import dev.morphia.test.TestBase;
 import dev.morphia.test.models.User;
 
 import org.bson.Document;
-import org.json.JSONException;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.mapping.codec.CodecHelper.array;
 import static dev.morphia.mapping.codec.CodecHelper.document;
 import static dev.morphia.query.filters.Filters.*;
 import static java.util.Arrays.asList;
 import static java.util.List.of;
-import static org.testng.Assert.assertEquals;
+import static org.bson.Document.parse;
 
+@SuppressWarnings("CodeBlock2Expr")
 public class TestDocumentWriter extends TestBase {
 
     @Test
@@ -34,8 +33,8 @@ public class TestDocumentWriter extends TestBase {
         query.filter(Filters.lt("field2", 2000));
 
         Document document = query.toDocument();
-        assertEquals(((Map<?, ?>) document.get("field1")).size(), 2);
-        assertEquals(((Map<?, ?>) document.get("field2")).size(), 2);
+        Assertions.assertEquals(2, ((Map<?, ?>) document.get("field1")).size());
+        Assertions.assertEquals(2, ((Map<?, ?>) document.get("field2")).size());
     }
 
     @Test
@@ -67,8 +66,7 @@ public class TestDocumentWriter extends TestBase {
             writer.writeString("something simple");
         });
 
-        Assert.assertEquals(writer.getDocument(), new Document("stuff", asList("hello", 42))
-                .append("next", "something simple"));
+        assertDocumentEquals(new Document("stuff", asList("hello", 42)).append("next", "something simple"), writer.getDocument());
     }
 
     @Test
@@ -83,7 +81,7 @@ public class TestDocumentWriter extends TestBase {
             });
         });
 
-        Assert.assertEquals(writer.getDocument(), new MergingDocument("stuff", of(new MergingDocument("doc", 42))));
+        assertDocumentEquals(new MergingDocument("stuff", of(new MergingDocument("doc", 42))), writer.getDocument());
     }
 
     @Test
@@ -99,7 +97,7 @@ public class TestDocumentWriter extends TestBase {
                     expected.put("entry " + j, j);
                 }
             });
-            Assert.assertEquals(expected, writer.getDocument());
+            assertDocumentEquals(expected, writer.getDocument());
         }
     }
 
@@ -113,21 +111,16 @@ public class TestDocumentWriter extends TestBase {
                     writer.writeInt32(1);
                     writer.writeInt32(2);
                     writer.writeInt32(3);
-                    document(writer, () -> {
-                        writer.writeString("nested", "string");
-                    });
+                    document(writer, () -> writer.writeString("nested", "string"));
                 });
             });
         });
         Document top = new MergingDocument("top", of(of(1, 2, 3, new MergingDocument("nested", "string"))));
-        Assert.assertEquals(top, writer.getDocument());
+        assertDocumentEquals(writer.getDocument(), top);
     }
 
     @Test
-    public void nesting() throws JSONException {
-        String expected = "{$group : {_id : {$dateToString: {format: \"%Y-%m-%d\", date: \"$date\"}}, totalSaleAmount: {$sum: "
-                + "{$multiply: [ \"$price\", \"$quantity\" ]}}, averageQuantity: {$avg: \"$quantity\"},count: {$sum: 1}}}";
-
+    public void nesting() {
         DocumentWriter writer = new DocumentWriter(getMapper().getConfig());
         document(writer, () -> {
             document(writer, "$group", () -> {
@@ -156,8 +149,9 @@ public class TestDocumentWriter extends TestBase {
 
             });
         });
-        String s = writer.getDocument().toJson();
-        JSONAssert.assertEquals(expected, s, false);
+        assertDocumentEquals(parse("{$group : {_id : {$dateToString: {format: \"%Y-%m-%d\", date: \"$date\"}}, totalSaleAmount: {$sum: "
+                + "{$multiply: [ \"$price\", \"$quantity\" ]}}, averageQuantity: {$avg: \"$quantity\"},count: {$sum: 1}}}"),
+                writer.getDocument(), false);
     }
 
     @Test
@@ -168,7 +162,7 @@ public class TestDocumentWriter extends TestBase {
             document(writer, () -> writer.writeInt32("nested", 42));
         });
 
-        Assert.assertEquals(writer.getDocument(), new MergingDocument("subdoc", new MergingDocument("nested", 42)));
+        assertDocumentEquals(new MergingDocument("subdoc", new MergingDocument("nested", 42)), writer.getDocument());
 
     }
 }

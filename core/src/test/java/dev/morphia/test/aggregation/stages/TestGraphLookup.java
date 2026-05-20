@@ -3,7 +3,8 @@ package dev.morphia.test.aggregation.stages;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.stages.GraphLookup.graphLookup;
 import static dev.morphia.aggregation.stages.Match.match;
@@ -15,7 +16,8 @@ public class TestGraphLookup extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/graphLookup/example1
      * 
      */
-    @Test(testName = "Within a Single Collection")
+    @Test
+    @DisplayName("Within a Single Collection")
     public void testExample1() {
         testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(graphLookup(EXAMPLE_TEST_COLLECTION).startWith("$reportsTo")
@@ -26,7 +28,8 @@ public class TestGraphLookup extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/graphLookup/example2
      * 
      */
-    @Test(testName = "Across Multiple Collections")
+    @Test
+    @DisplayName("Across Multiple Collections")
     public void testExample2() {
         loadData("airports", 2);
 
@@ -40,7 +43,8 @@ public class TestGraphLookup extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/graphLookup/example3
      * 
      */
-    @Test(testName = "With a Query Filter")
+    @Test
+    @DisplayName("With a Query Filter")
     public void testExample3() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation.pipeline(
                 match(eq("name", "Tanya Jordan")),

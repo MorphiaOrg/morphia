@@ -12,8 +12,8 @@ import dev.morphia.test.TestBase;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestInterceptors extends TestBase {
 
@@ -50,7 +50,7 @@ public class TestInterceptors extends TestBase {
 
         @Override
         public void prePersist(@NonNull Object ent, @NonNull Document document, @NonNull Object datastore) {
-            Assert.assertTrue(((E) ent).called);
+            Assertions.assertTrue(((E) ent).called);
         }
     }
 }

@@ -3,10 +3,8 @@ package dev.morphia.test;
 import dev.morphia.annotations.Entity;
 import dev.morphia.test.models.TestEntity;
 
-import org.testng.annotations.Test;
-
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestDiscriminatorLookup extends TestBase {
 
@@ -20,8 +18,8 @@ public class TestDiscriminatorLookup extends TestBase {
         });
 
         final SomeEntity entity = getDs().find(SomeEntity.class).first();
-        assertNotNull(entity);
-        assertTrue(Shape.Square.class.isInstance(entity.getShape()));
+        Assertions.assertNotNull(entity);
+        Assertions.assertTrue(Shape.Square.class.isInstance(entity.getShape()));
     }
 
     @Entity

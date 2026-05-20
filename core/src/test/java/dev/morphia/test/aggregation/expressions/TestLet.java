@@ -2,7 +2,8 @@ package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.condition;
 import static dev.morphia.aggregation.expressions.MathExpressions.add;
@@ -15,7 +16,8 @@ public class TestLet extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/let/example1
      * 
      */
-    @Test(testName = "main")
+    @Test
+    @DisplayName("main")
     public void testExample1() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("finalTotal",
                 let(multiply("$$total", "$$discounted")).variable("total", add("$price", "$tax")).variable("discounted",

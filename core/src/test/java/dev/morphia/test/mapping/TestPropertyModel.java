@@ -15,9 +15,9 @@ import dev.morphia.mapping.codec.pojo.TypeData;
 import dev.morphia.test.TestBase;
 
 import org.bson.types.ObjectId;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 
@@ -25,7 +25,7 @@ public class TestPropertyModel extends TestBase {
 
     private EntityModel entityModel;
 
-    @BeforeMethod
+    @BeforeEach
     public void mapEntity() {
         entityModel = getMapper().getEntityModel(TestEntity.class);
     }
@@ -34,59 +34,59 @@ public class TestPropertyModel extends TestBase {
     public void arrayFieldMapping() {
         final PropertyModel property = getMappedField("arrayOfInt");
 
-        Assert.assertFalse(property.isScalarValue());
-        Assert.assertTrue(property.isArray());
-        Assert.assertTrue(property.getType().isArray());
-        Assert.assertEquals(property.getName(), "arrayOfInt");
-        Assert.assertEquals(property.getMappedName(), "arrayOfInt");
+        Assertions.assertFalse(property.isScalarValue());
+        Assertions.assertTrue(property.isArray());
+        Assertions.assertTrue(property.getType().isArray());
+        Assertions.assertEquals("arrayOfInt", property.getName());
+        Assertions.assertEquals("arrayOfInt", property.getMappedName());
     }
 
     @Test
     public void basicFieldMapping() {
         final PropertyModel property = getMappedField("name");
 
-        Assert.assertTrue(property.isScalarValue());
-        Assert.assertSame(property.getType(), String.class);
-        Assert.assertEquals(property.getName(), "name");
-        Assert.assertEquals(property.getMappedName(), "n");
+        Assertions.assertTrue(property.isScalarValue());
+        Assertions.assertSame(String.class, property.getType());
+        Assertions.assertEquals("name", property.getName());
+        Assertions.assertEquals("n", property.getMappedName());
     }
 
     @Test
     public void collectionFieldMapping() {
         final PropertyModel property = getMappedField("listOfString");
 
-        Assert.assertFalse(property.isScalarValue());
-        Assert.assertFalse(property.isArray());
-        Assert.assertSame(property.getType(), List.class);
-        Assert.assertSame(property.getNormalizedType(), String.class);
-        Assert.assertEquals(property.getName(), "listOfString");
-        Assert.assertEquals(property.getMappedName(), "listOfString");
+        Assertions.assertFalse(property.isScalarValue());
+        Assertions.assertFalse(property.isArray());
+        Assertions.assertSame(List.class, property.getType());
+        Assertions.assertSame(String.class, property.getNormalizedType());
+        Assertions.assertEquals("listOfString", property.getName());
+        Assertions.assertEquals("listOfString", property.getMappedName());
     }
 
     @Test
     public void idFieldMapping() {
         final PropertyModel property = getMappedField("id");
 
-        Assert.assertTrue(property.isScalarValue());
-        Assert.assertSame(property.getType(), ObjectId.class);
-        Assert.assertEquals(property.getName(), "id");
-        Assert.assertEquals(property.getMappedName(), "_id");
+        Assertions.assertTrue(property.isScalarValue());
+        Assertions.assertSame(ObjectId.class, property.getType());
+        Assertions.assertEquals("id", property.getName());
+        Assertions.assertEquals("_id", property.getMappedName());
     }
 
     @Test
     public void nestedCollectionsMapping() {
         final PropertyModel property = getMappedField("listOfListOfString");
 
-        Assert.assertFalse(property.isScalarValue());
-        Assert.assertFalse(property.isArray());
-        Assert.assertSame(property.getType(), List.class);
+        Assertions.assertFalse(property.isScalarValue());
+        Assertions.assertFalse(property.isArray());
+        Assertions.assertSame(List.class, property.getType());
 
         final TypeData<?> typeData = property.getTypeData();
-        Assert.assertSame(typeData.getType(), List.class);
+        Assertions.assertSame(List.class, typeData.getType());
 
-        Assert.assertEquals(typeData.getTypeParameters().get(0).getTypeParameters().get(0).getType(), String.class);
-        Assert.assertEquals(property.getName(), "listOfListOfString");
-        Assert.assertEquals(property.getMappedName(), "listOfListOfString");
+        Assertions.assertEquals(String.class, typeData.getTypeParameters().get(0).getTypeParameters().get(0).getType());
+        Assertions.assertEquals("listOfListOfString", property.getName());
+        Assertions.assertEquals("listOfListOfString", property.getMappedName());
 
         final List<List<String>> list = new ArrayList<>();
         list.add(dbList("a", "b", "c"));
@@ -95,19 +95,19 @@ public class TestPropertyModel extends TestBase {
         testEntity.listOfListOfString = list;
         getDs().save(testEntity);
 
-        Assert.assertEquals(list, getDs().find(TestEntity.class)
+        Assertions.assertEquals(getDs().find(TestEntity.class)
                 .filter(eq("_id", testEntity.id))
-                .first().listOfListOfString);
+                .first().listOfListOfString, list);
     }
 
     @Test
     public void nestedGenerics() {
         final PropertyModel property = getMappedField("nestedList");
 
-        Assert.assertFalse(property.isScalarValue());
-        Assert.assertFalse(property.isArray());
-        Assert.assertSame(property.getType(), List.class);
-        Assert.assertSame(property.getNormalizedType(), Nested.class);
+        Assertions.assertFalse(property.isScalarValue());
+        Assertions.assertFalse(property.isArray());
+        Assertions.assertSame(List.class, property.getType());
+        Assertions.assertSame(Nested.class, property.getNormalizedType());
     }
 
     private PropertyModel getMappedField(String name) {

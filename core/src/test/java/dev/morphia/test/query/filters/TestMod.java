@@ -2,7 +2,8 @@ package dev.morphia.test.query.filters;
 
 import dev.morphia.test.TemplatedTestBase;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.mod;
 
@@ -11,7 +12,8 @@ public class TestMod extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/mod/example1
      */
-    @Test(testName = "Use ``$mod`` to Select Documents")
+    @Test
+    @DisplayName("Use ``$mod`` to Select Documents")
     public void testExample1() {
         testQuery((query) -> query.filter(mod("qty", 4, 0)));
     }
@@ -19,7 +21,8 @@ public class TestMod extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/mod/example2
      */
-    @Test(testName = "Not Enough Elements Error")
+    @Test
+    @DisplayName("Not Enough Elements Error")
     public void testExample2() {
         // ignored
     }
@@ -27,7 +30,8 @@ public class TestMod extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/mod/example3
      */
-    @Test(testName = "Too Many Elements Error")
+    @Test
+    @DisplayName("Too Many Elements Error")
     public void testExample3() {
         // ignored
     }
@@ -35,7 +39,8 @@ public class TestMod extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/mod/example4
      */
-    @Test(testName = "Floating Point Arguments")
+    @Test
+    @DisplayName("Floating Point Arguments")
     public void testExample4() {
         testQuery((query) -> query.filter(mod("qty", 4.0, 0.0)));
     }
@@ -43,7 +48,8 @@ public class TestMod extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/mod/example5
      */
-    @Test(testName = "Negative Dividend")
+    @Test
+    @DisplayName("Negative Dividend")
     public void testExample5() {
         testQuery((query) -> query.filter(mod("qty", -4, -0)));
     }

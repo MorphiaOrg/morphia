@@ -11,12 +11,11 @@ import dev.morphia.annotations.Version;
 import dev.morphia.query.filters.Filters;
 
 import org.bson.types.ObjectId;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.updates.UpdateOperators.set;
-import static org.testng.Assert.assertNotNull;
 
 public class TestDatastoreMerge extends TestBase {
 
@@ -29,15 +28,15 @@ public class TestDatastoreMerge extends TestBase {
         ds.save(test1);
 
         Test2 test2 = ds.find(Test2.class).first();
-        assertNotNull(test2.id);
+        Assertions.assertNotNull(test2.id);
         test2.blarg = "barfoo";
         long version = test2.version;
         ds.merge(test2);
 
-        Assert.assertEquals(version + 1, test2.version);
+        Assertions.assertEquals(test2.version, version + 1);
         test1 = ds.find(Test1.class).filter(eq("_id", test1.id)).first();
 
-        assertNotNull(test1.name);
+        Assertions.assertNotNull(test1.name);
     }
 
     @Test
@@ -48,7 +47,7 @@ public class TestDatastoreMerge extends TestBase {
         te.position = 1;
         getDs().save(te);
 
-        Assert.assertEquals(getDs().find(te.getClass()).count(), 1);
+        Assertions.assertEquals(1, getDs().find(te.getClass()).count());
 
         //only update the position field with merge, normally save would override the whole object.
         final Merger te2 = new Merger();
@@ -56,9 +55,9 @@ public class TestDatastoreMerge extends TestBase {
         te2.position = 5;
         Merger merge = getDs().merge(te2);
 
-        Assert.assertEquals(te.name, merge.name);
-        Assert.assertEquals(te.foo, merge.foo);
-        Assert.assertEquals(te2.position, merge.position);
+        Assertions.assertEquals(merge.name, te.name);
+        Assertions.assertEquals(merge.foo, te.foo);
+        Assertions.assertEquals(merge.position, te2.position);
     }
 
     @Test
@@ -69,7 +68,7 @@ public class TestDatastoreMerge extends TestBase {
         te.position = 1;
         getDs().save(te);
 
-        Assert.assertEquals(getDs().find(te.getClass()).count(), 1);
+        Assertions.assertEquals(1, getDs().find(te.getClass()).count());
 
         //only update the position field with merge, normally save would override the whole object.
         final Merger te2 = new Merger();
@@ -77,10 +76,10 @@ public class TestDatastoreMerge extends TestBase {
         te2.position = 5;
         Merger merge = getDs().merge(te2, new InsertOneOptions().unsetMissing(true));
 
-        Assert.assertNull(merge.name);
-        Assert.assertNull(merge.foo);
-        Assert.assertEquals(te2.id, merge.id);
-        Assert.assertEquals(te2.position, merge.position);
+        Assertions.assertNull(merge.name);
+        Assertions.assertNull(merge.foo);
+        Assertions.assertEquals(merge.id, te2.id);
+        Assertions.assertEquals(merge.position, te2.position);
     }
 
     @Test
@@ -99,7 +98,7 @@ public class TestDatastoreMerge extends TestBase {
         LoadOnlyEntity updatedEntity1 = ds.find(LoadOnlyEntity.class)
                 .filter(Filters.eq("_id", entity.id))
                 .first();
-        assertNotNull(updatedEntity1.loadOnlyValue); // PASSES
+        Assertions.assertNotNull(updatedEntity1.loadOnlyValue); // PASSES
 
         // Updates the name value using the datastore's "merge()" method:
         entity.name = "TestB";
@@ -107,7 +106,7 @@ public class TestDatastoreMerge extends TestBase {
         LoadOnlyEntity updatedEntity2 = ds.find(LoadOnlyEntity.class)
                 .filter(Filters.eq("_id", entity.id))
                 .first();
-        assertNotNull(updatedEntity2.loadOnlyValue); // FAILS
+        Assertions.assertNotNull(updatedEntity2.loadOnlyValue); // FAILS
     }
 
     @Entity

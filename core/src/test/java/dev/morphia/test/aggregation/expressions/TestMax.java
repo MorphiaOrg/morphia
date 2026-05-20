@@ -3,7 +3,8 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.max;
 import static dev.morphia.aggregation.expressions.MathExpressions.multiply;
@@ -19,7 +20,8 @@ public class TestMax extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/max/example1
      * 
      */
-    @Test(testName = "Use in ``$group`` Stage")
+    @Test
+    @DisplayName("Use in ``$group`` Stage")
     public void testExample1() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation
@@ -31,7 +33,8 @@ public class TestMax extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/max/example2
      * 
      */
-    @Test(testName = "Use in ``$project`` Stage")
+    @Test
+    @DisplayName("Use in ``$project`` Stage")
     public void testExample2() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("quizMax", max("$quizzes"))
                 .include("labMax", max("$labs")).include("examMax", max("$final", "$midterm"))));
@@ -41,7 +44,8 @@ public class TestMax extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/max/example3
      * 
      */
-    @Test(testName = "Use in ``$setWindowFields`` Stage")
+    @Test
+    @DisplayName("Use in ``$setWindowFields`` Stage")
     public void testExample3() {
         checkMinServerVersion("5.0.0");
         testPipeline(new ActionTestOptions(),

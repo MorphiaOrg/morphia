@@ -11,12 +11,13 @@ import dev.morphia.test.mapping.ProxyTestBase;
 import dev.morphia.test.models.TestEntity;
 
 import org.bson.types.ObjectId;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
-import static org.testng.Assert.assertEquals;
 
-@Test(groups = "references")
+@Tag("references")
 public class TestLazyIdOnlyIgnoreMissing extends ProxyTestBase {
     @Test
     public void testDuplicatesInList() {
@@ -32,9 +33,10 @@ public class TestLazyIdOnlyIgnoreMissing extends ProxyTestBase {
 
         ListReferences first = getDs().find(ListReferences.class).first();
 
-        assertEquals(first, references);
+        Assertions.assertEquals(references, first);
     }
 
+    @Test
     public void testSaveAfterReferentIsGone() {
         checkForProxyTypes();
 

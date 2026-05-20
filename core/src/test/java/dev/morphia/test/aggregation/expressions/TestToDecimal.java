@@ -2,7 +2,8 @@ package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.MathExpressions.multiply;
 import static dev.morphia.aggregation.expressions.TypeExpressions.toDecimal;
@@ -15,7 +16,8 @@ public class TestToDecimal extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/toDecimal/example1
      * 
      */
-    @Test(testName = "main")
+    @Test
+    @DisplayName("main")
     public void testExample1() {
         testPipeline((aggregation) -> aggregation.pipeline(
                 addFields().field("convertedPrice", toDecimal("$price")).field("convertedQty", toInt("$qty")),

@@ -1,6 +1,6 @@
 package dev.morphia.audits
 
-import org.testng.annotations.Test
+import org.junit.jupiter.api.Test
 
 class OperationAuditTest {
     @Test
@@ -33,6 +33,6 @@ class OperationAuditTest {
         }
 
         println("$remaining items to handle")
-        //        assertEquals(created, 0)
+        //        assertEquals(0, created)
     }
 }

@@ -3,8 +3,9 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.WindowExpressions.expMovingAvg;
 import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
@@ -13,7 +14,7 @@ import static dev.morphia.query.Sort.*;
 
 public class TestExpMovingAvg extends TemplatedTestBase {
 
-    @BeforeMethod
+    @BeforeEach
     public void versionCheck() {
         checkMinServerVersion("5.0.0");
     }
@@ -22,7 +23,8 @@ public class TestExpMovingAvg extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/expMovingAvg/example1
      * 
      */
-    @Test(testName = "Exponential Moving Average Using ``N``")
+    @Test
+    @DisplayName("Exponential Moving Average Using ``N``")
     public void testExample1() {
         testPipeline(new ActionTestOptions().removeIds(true),
                 (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$stock").sortBy(ascending("date"))
@@ -33,7 +35,8 @@ public class TestExpMovingAvg extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/expMovingAvg/example2
      * 
      */
-    @Test(testName = "Exponential Moving Average Using ``alpha``")
+    @Test
+    @DisplayName("Exponential Moving Average Using ``alpha``")
     public void testExample2() {
         testPipeline(new ActionTestOptions().removeIds(true),
                 (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$stock").sortBy(ascending("date"))

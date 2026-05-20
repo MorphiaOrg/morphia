@@ -5,85 +5,86 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import dev.morphia.critter.parser.gizmo.GizmoExtensions;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.objectweb.asm.Type;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
 
 public class TypesTest {
 
-    @DataProvider(name = "types")
-    public Object[][] typeProvider() {
-        return new Object[][] {
+    static Stream<Arguments> types() {
+        return Stream.of(
                 // Primitive types
-                { boolean.class },
-                { char.class },
-                { byte.class },
-                { short.class },
-                { int.class },
-                { float.class },
-                { long.class },
-                { double.class },
+                Arguments.of(boolean.class),
+                Arguments.of(char.class),
+                Arguments.of(byte.class),
+                Arguments.of(short.class),
+                Arguments.of(int.class),
+                Arguments.of(float.class),
+                Arguments.of(long.class),
+                Arguments.of(double.class),
 
                 // Object types
-                { String.class },
-                { Locale.class },
-                { Date.class },
-                { UUID.class },
-                { BigDecimal.class },
-                { Instant.class },
+                Arguments.of(String.class),
+                Arguments.of(Locale.class),
+                Arguments.of(Date.class),
+                Arguments.of(UUID.class),
+                Arguments.of(BigDecimal.class),
+                Arguments.of(Instant.class),
 
                 // Arrays of boxed primitives (Kotlin Array<X> = Java boxed X[])
-                { Boolean[].class },
-                { Character[].class },
-                { Byte[].class },
-                { Short[].class },
-                { Integer[].class },
-                { Float[].class },
-                { Long[].class },
-                { Double[].class },
+                Arguments.of(Boolean[].class),
+                Arguments.of(Character[].class),
+                Arguments.of(Byte[].class),
+                Arguments.of(Short[].class),
+                Arguments.of(Integer[].class),
+                Arguments.of(Float[].class),
+                Arguments.of(Long[].class),
+                Arguments.of(Double[].class),
 
                 // Primitive arrays (Kotlin XArray = Java primitive x[])
-                { boolean[].class },
-                { char[].class },
-                { byte[].class },
-                { short[].class },
-                { int[].class },
-                { float[].class },
-                { long[].class },
-                { double[].class },
+                Arguments.of(boolean[].class),
+                Arguments.of(char[].class),
+                Arguments.of(byte[].class),
+                Arguments.of(short[].class),
+                Arguments.of(int[].class),
+                Arguments.of(float[].class),
+                Arguments.of(long[].class),
+                Arguments.of(double[].class),
 
                 // 2D primitive arrays (Kotlin Array<XArray> = Java primitive x[][])
-                { boolean[][].class },
-                { int[][].class },
+                Arguments.of(boolean[][].class),
+                Arguments.of(int[][].class),
 
                 // Arrays of objects
-                { String[].class },
-                { Locale[].class },
-                { Date[].class },
-                { UUID[].class },
-                { BigDecimal[].class },
-                { Instant[].class },
+                Arguments.of(String[].class),
+                Arguments.of(Locale[].class),
+                Arguments.of(Date[].class),
+                Arguments.of(UUID[].class),
+                Arguments.of(BigDecimal[].class),
+                Arguments.of(Instant[].class),
 
                 // Arrays of arrays (2D)
-                { Boolean[][].class },
-                { Integer[][].class },
-                { String[][].class },
-                { Locale[][].class },
+                Arguments.of(Boolean[][].class),
+                Arguments.of(Integer[][].class),
+                Arguments.of(String[][].class),
+                Arguments.of(Locale[][].class),
 
                 // Arrays of arrays of arrays (3D)
-                { Integer[][][].class },
-                { String[][][].class },
-        };
+                Arguments.of(Integer[][][].class),
+                Arguments.of(String[][][].class));
     }
 
-    @Test(dataProvider = "types")
+    @ParameterizedTest
+    @MethodSource("types")
     public void asClassConversion(Class<?> expected) {
         Type type = Type.getType(expected);
         Class<?> actual = GizmoExtensions.asClass(type, Thread.currentThread().getContextClassLoader());
-        Assert.assertEquals(actual, expected, "Type " + type.getDescriptor() + " should convert to " + expected.getName());
+        Assertions.assertEquals(expected, actual, "Type " + type.getDescriptor() + " should convert to " + expected.getName());
     }
 }

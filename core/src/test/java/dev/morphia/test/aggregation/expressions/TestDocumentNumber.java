@@ -2,8 +2,9 @@ package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.WindowExpressions.documentNumber;
 import static dev.morphia.aggregation.stages.SetWindowFields.Output.*;
@@ -12,7 +13,7 @@ import static dev.morphia.query.Sort.*;
 
 public class TestDocumentNumber extends TemplatedTestBase {
 
-    @BeforeMethod
+    @BeforeEach
     public void versionCheck() {
         checkMinServerVersion("5.0.0");
     }
@@ -21,7 +22,8 @@ public class TestDocumentNumber extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/documentNumber/example1
      * 
      */
-    @Test(testName = "Document Number for Each State")
+    @Test
+    @DisplayName("Document Number for Each State")
     public void testExample1() {
         testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                 .sortBy(descending("quantity")).output(output("documentNumberForState").operator(documentNumber()))));
@@ -31,7 +33,8 @@ public class TestDocumentNumber extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/documentNumber/example2
      * 
      */
-    @Test(testName = "Document Number for Duplicate, Null, and Missing Values")
+    @Test
+    @DisplayName("Document Number for Duplicate, Null, and Missing Values")
     public void testExample2() {
         testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                 .sortBy(descending("quantity")).output(output("documentNumberForState").operator(documentNumber()))));

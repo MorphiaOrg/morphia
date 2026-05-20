@@ -2,7 +2,8 @@ package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.MathExpressions.add;
 import static dev.morphia.aggregation.expressions.MathExpressions.pow;
@@ -15,7 +16,8 @@ public class TestSqrt extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/sqrt/example1
      * 
      */
-    @Test(testName = "main")
+    @Test
+    @DisplayName("main")
     public void testExample1() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("distance",
                 sqrt(add(pow(subtract("$p2.y", "$p1.y"), 2), pow(subtract("$p2.x", "$p1.x"), 2))))));
