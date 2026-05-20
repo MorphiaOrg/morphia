@@ -276,7 +276,26 @@ To use Morphia using either build tool, you will need to update your build confi
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">dependencies {
-    compile 'dev.morphia.morphia:morphia-core:3.0.0-SNAPSHOT'
+    implementation 'dev.morphia.morphia:morphia-core:3.0.0-SNAPSHOT'
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>If you only need Morphia mapping annotations in a shared model jar, you can depend on the annotations-only artifact:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+    &lt;groupId&gt;dev.morphia.morphia&lt;/groupId&gt;
+    &lt;artifactId&gt;morphia-annotations&lt;/artifactId&gt;
+    &lt;version&gt;3.0.0-SNAPSHOT&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">dependencies {
+    implementation 'dev.morphia.morphia:morphia-annotations:3.0.0-SNAPSHOT'
 }</code></pre>
 </div>
 </div>
