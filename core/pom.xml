@@ -105,13 +105,6 @@
                         <phase>generate-sources</phase>
                     </execution>
                     <execution>
-                        <id>docs-config</id>
-                        <goals>
-                            <goal>docs-config</goal>
-                        </goals>
-                        <phase>generate-test-resources</phase>
-                    </execution>
-                    <execution>
                         <id>morphia-annotations-asm</id>
                         <goals>
                             <goal>morphia-annotation-node</goal>
