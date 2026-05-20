@@ -3,7 +3,6 @@ dev.morphia.aggregation
 dev.morphia.aggregation.expressions
 dev.morphia.aggregation.expressions.impls
 dev.morphia.aggregation.stages
-dev.morphia.annotations
 dev.morphia.config
 dev.morphia.config.converters
 dev.morphia.critter
