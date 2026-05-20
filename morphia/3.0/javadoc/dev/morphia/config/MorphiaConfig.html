@@ -460,7 +460,7 @@ loadScripts(document, 'script');</script>
 <dt>See Also:</dt>
 <dd>
 <ul class="see-list">
-<li><a href="https://morphia.dev/morphia/3.0/javadoc/dev/morphia/annotations/Validation.html" title="class or interface in dev.morphia.annotations" class="external-link"><code>Validation</code></a></li>
+<li><code>Validation</code></li>
 </ul>
 </dd>
 <dl><dt><span class="strong">MongoDB documentation</span></dt><dd><a href='http://docs.mongodb.org/manual/core/document-validation/'>core/document-validation/</a></dd></dl>
@@ -547,7 +547,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="collectionNaming()">
 <h3>collectionNaming</h3>
 <div class="member-signature"><span class="annotations">@WithDefault("camelCase")
-<a href="https://morphia.dev/morphia/3.0/javadoc/dev/morphia/annotations/PossibleValues.html" title="class or interface in dev.morphia.annotations" class="external-link">@PossibleValues</a>({"camelCase","identity","kebabCase","lowerCase","snakeCase","fqcn"})
+@PossibleValues({"camelCase","identity","kebabCase","lowerCase","snakeCase","fqcn"})
 @WithConverter(NamingStrategyConverter.class)
 </span><span class="return-type">@WithConverter(NamingStrategyConverter.class) <a href="../mapping/NamingStrategy.html" title="class in dev.morphia.mapping">NamingStrategy</a></span>&nbsp;<span class="element-name">collectionNaming</span>()</div>
 <div class="block">Sets the naming strategy to be used when generating collection names for entities if name is not explicitly given in the <code>
@@ -560,7 +560,7 @@ loadScripts(document, 'script');</script>
 <dt>See Also:</dt>
 <dd>
 <ul class="see-list">
-<li><a href="https://morphia.dev/morphia/3.0/javadoc/dev/morphia/annotations/Entity.html" title="class or interface in dev.morphia.annotations" class="external-link"><code>Entity</code></a></li>
+<li><code>Entity</code></li>
 <li><a href="../mapping/NamingStrategy.html" title="class in dev.morphia.mapping"><code>NamingStrategy</code></a></li>
 </ul>
 </dd>
@@ -614,7 +614,7 @@ loadScripts(document, 'script');</script>
 <h3>discriminator</h3>
 <div class="member-signature"><span class="annotations">@WithDefault("simpleName")
 @WithConverter(DiscriminatorFunctionConverter.class)
-<a href="https://morphia.dev/morphia/3.0/javadoc/dev/morphia/annotations/PossibleValues.html" title="class or interface in dev.morphia.annotations" class="external-link">@PossibleValues</a>({"className","lowerClassName","lowerSimpleName","simpleName","fqcn"})
+@PossibleValues({"className","lowerClassName","lowerSimpleName","simpleName","fqcn"})
 </span><span class="return-type">@WithConverter(DiscriminatorFunctionConverter.class) <a href="../mapping/DiscriminatorFunction.html" title="class in dev.morphia.mapping">DiscriminatorFunction</a></span>&nbsp;<span class="element-name">discriminator</span>()</div>
 <div class="block">The function to use when calculating the discriminator value for an entity</div>
 <dl class="notes">
@@ -855,8 +855,8 @@ loadScripts(document, 'script');</script>
 <h3>propertyDiscovery</h3>
 <div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
 @WithDefault("fields")
-<a href="https://morphia.dev/morphia/3.0/javadoc/dev/morphia/annotations/PossibleValues.html" title="class or interface in dev.morphia.annotations" class="external-link">@PossibleValues</a>(<a href="https://morphia.dev/morphia/3.0/javadoc/dev/morphia/annotations/PossibleValues.html#value()" title="class or interface in dev.morphia.annotations" class="external-link">value</a>={"fields","methods"},
-                <a href="https://morphia.dev/morphia/3.0/javadoc/dev/morphia/annotations/PossibleValues.html#fqcn()" title="class or interface in dev.morphia.annotations" class="external-link">fqcn</a>=false)
+@PossibleValues(value={"fields","methods"},
+                fqcn=false)
 </span><span class="return-type"><a href="../mapping/PropertyDiscovery.html" title="enum class in dev.morphia.mapping">PropertyDiscovery</a></span>&nbsp;<span class="element-name">propertyDiscovery</span>()</div>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
 <div class="block">Determines how properties are discovered. The traditional value is by scanning for fields which involves a bit more reflective
@@ -893,7 +893,7 @@ loadScripts(document, 'script');</script>
 <h3>propertyNaming</h3>
 <div class="member-signature"><span class="annotations">@WithDefault("identity")
 @WithConverter(NamingStrategyConverter.class)
-<a href="https://morphia.dev/morphia/3.0/javadoc/dev/morphia/annotations/PossibleValues.html" title="class or interface in dev.morphia.annotations" class="external-link">@PossibleValues</a>({"camelCase","identity","kebabCase","lowerCase","snakeCase","fqcn"})
+@PossibleValues({"camelCase","identity","kebabCase","lowerCase","snakeCase","fqcn"})
 </span><span class="return-type">@WithConverter(NamingStrategyConverter.class) <a href="../mapping/NamingStrategy.html" title="class in dev.morphia.mapping">NamingStrategy</a></span>&nbsp;<span class="element-name">propertyNaming</span>()</div>
 <div class="block">Defines the strategy to use when generating property names to document field names for storage in the database when not explicitly
  set using <code>Property</code>.
@@ -905,7 +905,7 @@ loadScripts(document, 'script');</script>
 <dt>See Also:</dt>
 <dd>
 <ul class="see-list">
-<li><a href="https://morphia.dev/morphia/3.0/javadoc/dev/morphia/annotations/Property.html" title="class or interface in dev.morphia.annotations" class="external-link"><code>Property</code></a></li>
+<li><code>Property</code></li>
 <li><a href="../mapping/NamingStrategy.html" title="class in dev.morphia.mapping"><code>NamingStrategy</code></a></li>
 </ul>
 </dd>
