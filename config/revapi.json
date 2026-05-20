@@ -22,7 +22,7 @@
           },
           {
             "matcher": "java-package",
-            "match": "/.*\\.codec(\\..*)?/"
+            "match": "/.*codec.*/"
           }
         ]
       }
