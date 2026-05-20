@@ -117,6 +117,39 @@ jobs:
         mongo: [ 8.0.0 ]
         mapper: [ reflection, critter ]
         include:
+          - driver: ${{ needs.matrix.outputs.driver_snapshot }}
+            java: 17
+            mongo: 8.0.0
+            mapper: reflection
+            optional: true
+          - driver: ${{ needs.matrix.outputs.driver_snapshot }}
+            java: 17
+            mongo: 8.0.0
+            mapper: critter
+            optional: true
+    uses: evanchooly/workflows/.github/workflows/build.yml@master
+    secrets:
+      DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+    with:
+      java: ${{ matrix.java }}
+      reuseBuild: true
+      archive-name: "${{matrix.mongo}}-${{matrix.driver}}-${{matrix.java}}-${{github.run_id}}"
+      maven-flags: "-e -Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }} -Dmorphia.mapper=${{ matrix.mapper }}"
+      optional: ${{ matrix.optional == true }}
+
+  JdkTests:
+    name: JDK
+    needs:
+      - Build
+      - Matrix
+    strategy:
+      fail-fast: false
+      matrix:
+        driver: ${{ fromJson(needs.matrix.outputs.driver_latest)[0] }}
+        java: [ 17, 21, 25 ]
+        mongo: [ 8.0.0 ]
+        mapper: [ reflection, critter ]
+        include:
           - driver: ${{ fromJson(needs.matrix.outputs.driver_latest)[0] }}
             java: 21
             mongo: 8.0.0
@@ -170,6 +203,7 @@ jobs:
       - CodeAudits
       - ServerTests
       - DriversTests
+      - JdkTests
     if: needs.Matrix.outputs.releasable == 'true'
     uses: evanchooly/workflows/.github/workflows/jreleaser.yml@master
     concurrency:
