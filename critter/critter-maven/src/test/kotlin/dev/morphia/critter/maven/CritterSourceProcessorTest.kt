@@ -14,7 +14,7 @@ class CritterSourceProcessorTest {
 
     @BeforeMethod
     fun setUp() {
-        tempDir = createTempDir("critter-source-test")
+        tempDir = kotlin.io.path.createTempDirectory("critter-source-test").toFile()
         sourceOutputDir = File(tempDir, "generated-sources/critter")
         resourceOutputDir = File(tempDir, "generated-resources/critter")
     }

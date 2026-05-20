@@ -39,7 +39,7 @@ public class GizmoExtensions {
         Type type = Type.getType(annotationNode.desc);
         String classPackage = type.getClassName().substring(0, type.getClassName().lastIndexOf('.'));
         String className = type.getClassName().substring(type.getClassName().lastIndexOf('.') + 1);
-        Type builderType = Type.getType("L%s.%sBuilder;".formatted(classPackage, className).replace('.', '/'));
+        Type builderType = Type.getType("L%s.internal.%sBuilder;".formatted(classPackage, className).replace('.', '/'));
         MethodDescriptor builder = ofMethod(
                 builderType.getClassName(),
                 ExtensionFunctions.methodCase(className) + "Builder",

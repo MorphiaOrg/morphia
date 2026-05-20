@@ -266,7 +266,7 @@ public class AnnotationBuilders extends AbstractMojo {
     private JavaClassSource createClass(String name) {
         var classBuilder = Roaster.create(JavaClassSource.class)
                 .setName(name)
-                .setPackage(source.getPackage())
+                .setPackage(source.getPackage() + ".internal")
                 .setFinal(true);
         classBuilder.addAnnotation("dev.morphia.annotations.internal.MorphiaInternal");
         JavaDocSource<JavaClassSource> javaDoc = classBuilder.getJavaDoc();
@@ -337,7 +337,7 @@ public class AnnotationBuilders extends AbstractMojo {
     }
 
     private void output() throws IOException {
-        var outputFile = new File(generated, source.getPackage().replace('.', '/')
+        var outputFile = new File(generated, builder.getPackage().replace('.', '/')
                 + "/" + builder.getName() + ".java");
         if (!outputFile.getParentFile().mkdirs() && !outputFile.getParentFile().exists()) {
             throw new IOException(format("Could not create directory: %s", outputFile.getParentFile()));
@@ -356,8 +356,10 @@ public class AnnotationBuilders extends AbstractMojo {
                 String literal = defaultValue.getLiteral();
                 var annot = defaultValue.getAnnotation();
                 if (annot != null) {
-                    literal = format("%sBuilder.%s().build()",
-                            annot.getQualifiedName(),
+                    var pkg = annot.getQualifiedName().substring(0, annot.getQualifiedName().lastIndexOf('.'));
+                    literal = format("%s.internal.%sBuilder.%s().build()",
+                            pkg,
+                            annot.getName(),
                             builderMethodName(annot.getName()));
                 } else if (literal != null && element.getType().isArray()) {
                     literal = format("new %s%s", element.getType().getName(), literal);

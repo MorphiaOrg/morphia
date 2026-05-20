@@ -170,7 +170,8 @@ class AnnotationNodeExtensions : AbstractMojo() {
     }
 
     private fun emitToAnnotationMethod(sb: StringBuilder, source: JavaAnnotationSource) {
-        val builderClass = "${source.qualifiedName.substringBeforeLast('.')}.${source.name}Builder"
+        val builderClass =
+            "${source.qualifiedName.substringBeforeLast('.')}.internal.${source.name}Builder"
         val methodName = source.name.first().lowercaseChar() + source.name.substring(1) + "Builder"
 
         sb.appendLine(
@@ -196,7 +197,8 @@ class AnnotationNodeExtensions : AbstractMojo() {
     }
 
     private fun emitSetAnnotationValuesMethod(sb: StringBuilder, source: JavaAnnotationSource) {
-        val builderClass = "${source.qualifiedName.substringBeforeLast('.')}.${source.name}Builder"
+        val builderClass =
+            "${source.qualifiedName.substringBeforeLast('.')}.internal.${source.name}Builder"
 
         sb.appendLine(
             "    private void set${source.name}Values(org.objectweb.asm.tree.AnnotationNode annotationNode, io.quarkus.gizmo.MethodCreator creator, io.quarkus.gizmo.ResultHandle local) {"

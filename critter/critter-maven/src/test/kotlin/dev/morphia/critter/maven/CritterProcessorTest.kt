@@ -13,7 +13,7 @@ class CritterProcessorTest {
 
     @BeforeMethod
     fun setUp() {
-        tempDir = createTempDir("critter-test")
+        tempDir = kotlin.io.path.createTempDirectory("critter-test").toFile()
         outputDir = File(tempDir, "generated-classes/critter")
     }
 
