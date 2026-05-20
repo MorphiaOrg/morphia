@@ -143,7 +143,7 @@
                         <failOnError>true</failOnError>
                         <failOnWarnings>false</failOnWarnings>
                         <excludePackageNames>
-                            dev.morphia.utils:dev.morphia.sofia:*.internal:dev.morphia.mapping.*:dev.morphia.aggregation.codecs
+                            dev.morphia.utils:dev.morphia.sofia:*.internal:dev.morphia.mapping.*:dev.morphia.aggregation.codecs:dev.morphia.aggregation.codecs.stages
                         </excludePackageNames>
                         <doclint>all</doclint>
                         <doctitle>${project.name} ${project.version}</doctitle>
@@ -450,8 +450,8 @@
     </profiles>
 
     <subprojects>
-        <subproject>build-plugins</subproject>
         <subproject>util</subproject>
+        <subproject>build-plugins</subproject>
         <subproject>annotations</subproject>
         <subproject>core</subproject>
         <subproject>kotlin</subproject>
