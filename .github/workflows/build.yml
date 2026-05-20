@@ -93,16 +93,14 @@ jobs:
       fail-fast: false
       matrix:
         mongo: ${{ fromJson(needs.matrix.outputs.version_matrix) }}
-        driver: ${{ fromJson(needs.matrix.outputs.driver_latest) }}
-        java: [ 17 ]
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     secrets:
       DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
     with:
-      java: ${{ matrix.java }}
+      java: 17
       reuseBuild: true
-      archive-name: "${{matrix.mongo}}-${{matrix.driver}}-${{matrix.java}}-${{matrix.mapper}}-${{github.run_id}}"
-      maven-flags: "-e -Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }}"
+      archive-name: "${{matrix.mongo}}-${{github.run_id}}"
+      maven-flags: "-e -Dmongodb=${{ matrix.mongo }}"
 
   DriversTests:
     name: Driver
@@ -113,28 +111,20 @@ jobs:
       fail-fast: false
       matrix:
         driver: ${{ fromJson(needs.matrix.outputs.driver_matrix) }}
-        java: [ 17 ]
-        mongo: [ 8.0.0 ]
         mapper: [ reflection, critter ]
         include:
           - driver: ${{ needs.matrix.outputs.driver_snapshot }}
-            java: 17
-            mongo: 8.0.0
             mapper: reflection
-            optional: true
           - driver: ${{ needs.matrix.outputs.driver_snapshot }}
-            java: 17
-            mongo: 8.0.0
             mapper: critter
-            optional: true
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     secrets:
       DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
     with:
-      java: ${{ matrix.java }}
+      java: 17
       reuseBuild: true
-      archive-name: "${{matrix.mongo}}-${{matrix.driver}}-${{matrix.java}}-${{github.run_id}}"
-      maven-flags: "-e -Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }} -Dmorphia.mapper=${{ matrix.mapper }}"
+      archive-name: "${{matrix.driver}}-${{github.run_id}}"
+      maven-flags: "-e -Ddriver.version=${{ matrix.driver }} -Dmorphia.mapper=${{ matrix.mapper }}"
       optional: ${{ matrix.optional == true }}
 
   JdkTests:
@@ -145,39 +135,16 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        driver: ${{ fromJson(needs.matrix.outputs.driver_latest)[0] }}
         java: [ 17, 21, 25 ]
-        mongo: [ 8.0.0 ]
         mapper: [ reflection, critter ]
-        include:
-          - driver: ${{ fromJson(needs.matrix.outputs.driver_latest)[0] }}
-            java: 21
-            mongo: 8.0.0
-            mapper: reflection
-          - driver: ${{ fromJson(needs.matrix.outputs.driver_latest)[0] }}
-            java: 25
-            mongo: 8.0.0
-            mapper: reflection
-            optional: true
-          - driver: ${{ needs.matrix.outputs.driver_snapshot }}
-            java: 17
-            mongo: 8.0.0
-            mapper: reflection
-            optional: true
-          - driver: ${{ needs.matrix.outputs.driver_snapshot }}
-            java: 17
-            mongo: 8.0.0
-            mapper: critter
-            optional: true
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     secrets:
       DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
     with:
-      java: ${{ matrix.java }}
+      java: 17
       reuseBuild: true
-      archive-name: "${{matrix.mongo}}-${{matrix.driver}}-${{matrix.java}}-${{github.run_id}}"
-      maven-flags: "-e -Dmongodb=${{ matrix.mongo }} -Ddriver.version=${{ matrix.driver }} -Dmorphia.mapper=${{ matrix.mapper }}"
-      optional: ${{ matrix.optional == true }}
+      archive-name: "${{matrix.mapper}}-${{matrix.java}}-${{github.run_id}}"
+      maven-flags: "-e -Dmorphia.mapper=${{ matrix.mapper }}"
 
   Coverage:
     name: Coverage Report
