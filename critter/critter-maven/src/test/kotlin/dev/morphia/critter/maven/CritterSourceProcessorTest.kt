@@ -67,7 +67,7 @@ class CritterSourceProcessorTest {
                 public String getName() { return name; }
                 public void setName(String name) { this.name = name; }
             }
-        """
+            """
                 .trimIndent()
         )
 
@@ -101,7 +101,7 @@ class CritterSourceProcessorTest {
             morphia.database=testdb
             morphia.collection-naming=snakeCase
             morphia.discriminator=className
-        """
+            """
                 .trimIndent()
         )
 
