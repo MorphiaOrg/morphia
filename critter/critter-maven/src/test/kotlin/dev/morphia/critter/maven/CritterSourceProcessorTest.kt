@@ -2,9 +2,9 @@ package dev.morphia.critter.maven
 
 import dev.morphia.config.MorphiaConfig
 import java.io.File
-import org.testng.Assert.assertTrue
-import org.testng.annotations.BeforeMethod
-import org.testng.annotations.Test
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class CritterSourceProcessorTest {
 
@@ -12,7 +12,7 @@ class CritterSourceProcessorTest {
     private lateinit var sourceOutputDir: File
     private lateinit var resourceOutputDir: File
 
-    @BeforeMethod
+    @BeforeEach
     fun setUp() {
         tempDir = kotlin.io.path.createTempDirectory("critter-source-test").toFile()
         sourceOutputDir = File(tempDir, "generated-sources/critter")

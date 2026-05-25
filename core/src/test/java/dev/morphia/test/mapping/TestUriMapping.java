@@ -10,10 +10,8 @@ import dev.morphia.annotations.Id;
 import dev.morphia.test.TestBase;
 
 import org.bson.types.ObjectId;
-import org.testng.annotations.Test;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestUriMapping extends TestBase {
 
@@ -25,8 +23,8 @@ public class TestUriMapping extends TestBase {
         entity.uri = testURI;
         getDs().save(entity);
         final ContainsURI loaded = getDs().find(ContainsURI.class).iterator().tryNext();
-        assertNotNull(loaded.uri);
-        assertEquals(testURI, loaded.uri);
+        Assertions.assertNotNull(loaded.uri);
+        Assertions.assertEquals(loaded.uri, testURI);
 
     }
 
@@ -38,9 +36,9 @@ public class TestUriMapping extends TestBase {
         entity.uris.put(testURI, "first");
         getDs().save(entity);
         final ContainsURIKeyedMap loaded = getDs().find(ContainsURIKeyedMap.class).iterator().tryNext();
-        assertNotNull(loaded.uris);
-        assertEquals(loaded.uris.size(), 1);
-        assertEquals(testURI, loaded.uris.keySet().iterator().next());
+        Assertions.assertNotNull(loaded.uris);
+        Assertions.assertEquals(1, loaded.uris.size());
+        Assertions.assertEquals(loaded.uris.keySet().iterator().next(), testURI);
 
     }
 

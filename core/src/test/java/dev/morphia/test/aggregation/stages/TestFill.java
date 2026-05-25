@@ -5,8 +5,9 @@ import dev.morphia.aggregation.stages.Fill.Method;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.ifNull;
 import static dev.morphia.aggregation.expressions.Expressions.document;
@@ -16,7 +17,7 @@ import static dev.morphia.aggregation.stages.Set.set;
 import static dev.morphia.query.Sort.ascending;
 
 public class TestFill extends TemplatedTestBase {
-    @BeforeMethod
+    @BeforeEach
     public void versionCheck() {
         checkMinServerVersion("5.3.0");
     }
@@ -25,7 +26,8 @@ public class TestFill extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/fill/example1
      * 
      */
-    @Test(testName = "Fill Missing Field Values with a Constant Value")
+    @Test
+    @DisplayName("Fill Missing Field Values with a Constant Value")
     public void testExample1() {
         testPipeline(new ActionTestOptions().removeIds(true), aggregation -> aggregation
                 .pipeline(fill().field("bootsSold", 0).field("sandalsSold", 0).field("sneakersSold", 0)));
@@ -35,7 +37,8 @@ public class TestFill extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/fill/example2
      * 
      */
-    @Test(testName = "Fill Missing Field Values with Linear Interpolation")
+    @Test
+    @DisplayName("Fill Missing Field Values with Linear Interpolation")
     public void testExample2() {
         testPipeline(new ActionTestOptions().removeIds(true),
                 aggregation -> aggregation.pipeline(fill().sortBy(ascending("time")).field("price", Method.LINEAR)));
@@ -45,7 +48,8 @@ public class TestFill extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/fill/example3
      * 
      */
-    @Test(testName = "Fill Missing Field Values Based on the Last Observed Value")
+    @Test
+    @DisplayName("Fill Missing Field Values Based on the Last Observed Value")
     public void testExample3() {
         testPipeline(new ActionTestOptions().removeIds(true),
                 aggregation -> aggregation.pipeline(fill().sortBy(ascending("date")).field("score", Method.LOCF)));
@@ -55,7 +59,8 @@ public class TestFill extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/fill/example4
      * 
      */
-    @Test(testName = "Fill Data for Distinct Partitions")
+    @Test
+    @DisplayName("Fill Data for Distinct Partitions")
     public void testExample4() {
         testPipeline(new ActionTestOptions().removeIds(true),
                 aggregation -> aggregation.pipeline(fill().sortBy(ascending("date"))
@@ -66,7 +71,8 @@ public class TestFill extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/fill/example5
      * 
      */
-    @Test(testName = "Indicate if a Field was Populated Using ``$fill``")
+    @Test
+    @DisplayName("Indicate if a Field was Populated Using ``$fill``")
     public void testExample5() {
         testPipeline(new ActionTestOptions().removeIds(true),
                 (aggregation) -> aggregation
@@ -81,7 +87,8 @@ public class TestFill extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/fill/example6
      * 
      */
-    @Test(testName = "Interpolate Identical Values in Different Partitions")
+    @Test
+    @DisplayName("Interpolate Identical Values in Different Partitions")
     public void testExample6() {
         testPipeline(new ActionTestOptions().removeIds(true),
                 aggregation -> aggregation.pipeline(fill().sortBy(ascending("date"))

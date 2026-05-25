@@ -4,7 +4,7 @@ import dev.morphia.audits.model.Operator
 import dev.morphia.audits.model.OperatorType.EXPRESSION
 import dev.morphia.audits.model.OperatorType.STAGE
 import java.io.File
-import org.testng.annotations.Test
+import org.junit.jupiter.api.Test
 
 class AggregationAuditTest : BaseAuditTest() {
 

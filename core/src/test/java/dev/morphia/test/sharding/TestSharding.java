@@ -10,16 +10,15 @@ import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.test.TestBase;
 
 import org.bson.types.ObjectId;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.mapping.ShardKeyType.HASHED;
-import static org.testng.Assert.assertEquals;
 
 public class TestSharding extends TestBase {
     @Test
     public void testMapping() {
-        Assert.assertThrows(ConstraintViolationException.class, () -> {
+        Assertions.assertThrows(ConstraintViolationException.class, () -> {
             getMapper().map(BadShardKeys.class);
         });
     }
@@ -36,11 +35,11 @@ public class TestSharding extends TestBase {
             datastore.insert(new Sharded(new ObjectId(), "Linda Belcher"));
 
             Sharded bob = datastore.save(new Sharded(new ObjectId(), "Bob Belcher"));
-            assertEquals(bob.name, "Bob Belcher");
+            Assertions.assertEquals("Bob Belcher", bob.name);
 
             bob.nickName = "Bob 'The Burger Guy' Belcher";
             Sharded replaced = datastore.replace(bob);
-            assertEquals(replaced.nickName, "Bob 'The Burger Guy' Belcher");
+            Assertions.assertEquals("Bob 'The Burger Guy' Belcher", replaced.nickName);
 
             datastore.delete(bob);
         });

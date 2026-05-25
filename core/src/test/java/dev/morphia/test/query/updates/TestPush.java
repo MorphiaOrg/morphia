@@ -5,7 +5,8 @@ import java.util.List;
 import dev.morphia.UpdateOptions;
 import dev.morphia.test.TemplatedTestBase;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.Expressions.document;
 import static dev.morphia.query.Sort.descending;
@@ -17,7 +18,8 @@ public class TestPush extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/updates/push/example1
      */
-    @Test(testName = "Append a Value to an Array")
+    @Test
+    @DisplayName("Append a Value to an Array")
     public void testExample1() {
         testUpdate((query) -> query.filter(eq("_id", 1)), push("scores", 89));
     }
@@ -25,7 +27,8 @@ public class TestPush extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/updates/push/example2
      */
-    @Test(testName = "Append a Value to Arrays in Multiple Documents")
+    @Test
+    @DisplayName("Append a Value to Arrays in Multiple Documents")
     public void testExample2() {
         UpdateOptions updateOptions = new UpdateOptions().multi(true);
         testUpdate((query) -> query.filter(), push("scores", 95));
@@ -34,7 +37,8 @@ public class TestPush extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/updates/push/example3
      */
-    @Test(testName = "Append Multiple Values to an Array")
+    @Test
+    @DisplayName("Append Multiple Values to an Array")
     public void testExample3() {
         testUpdate((query) -> query.filter(eq("_id", 1)), push("scores", List.of(90, 92, 85)));
     }
@@ -42,7 +46,8 @@ public class TestPush extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/updates/push/example4
      */
-    @Test(testName = "Use ``$push`` Operator with Multiple Modifiers")
+    @Test
+    @DisplayName("Use ``$push`` Operator with Multiple Modifiers")
     public void testExample4() {
         testUpdate((query) -> query.filter(eq("_id", 5)),
                 push("quizzes", List.of(document("wk", 5).field("score", 8), document("wk", 6).field("score", 7),

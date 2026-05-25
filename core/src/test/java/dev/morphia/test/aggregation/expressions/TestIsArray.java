@@ -2,7 +2,8 @@ package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.concatArrays;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.isArray;
@@ -15,7 +16,8 @@ public class TestIsArray extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/isArray/example1
      * 
      */
-    @Test(testName = "main")
+    @Test
+    @DisplayName("main")
     public void testExample1() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("items", condition(and(isArray("$instock"), isArray("$ordered")),

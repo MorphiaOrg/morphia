@@ -1,19 +1,22 @@
 package dev.morphia.critter.parser;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import dev.morphia.critter.Critter;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.sources.Example;
 
 import org.bson.codecs.pojo.PropertyAccessor;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 public class TestAccessorsMutators extends BaseCritterTest {
     private final CritterClassLoader critterClassLoader = new CritterClassLoader();
 
-    // @Test(dataProvider = "classes")
+    // @ParameterizedTest
+    @MethodSource("classes")
     public void testPropertyAccessors(Class<?> type) throws Exception {
         List<List<Object>> testFields = List.of(
                 List.of("name", String.class, "set externally"),
@@ -42,14 +45,13 @@ public class TestAccessorsMutators extends BaseCritterTest {
         PropertyAccessor<Object> accessor = accessorClass.getConstructor().newInstance();
 
         accessor.set(entity, testValue);
-        Assert.assertEquals(accessor.get(entity), testValue);
-        Assert.assertTrue(
+        Assertions.assertEquals(testValue, accessor.get(entity));
+        Assertions.assertTrue(
                 entity.toString().contains(testValue.toString()),
                 "Could not find '" + testValue + "` in :" + entity);
     }
 
-    @DataProvider(name = "classes")
-    public Object[][] names() {
-        return new Object[][] { { Example.class } };
+    static Stream<Arguments> classes() {
+        return Stream.of(Arguments.of(Example.class));
     }
 }

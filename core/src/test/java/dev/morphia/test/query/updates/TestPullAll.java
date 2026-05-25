@@ -4,7 +4,8 @@ import java.util.List;
 
 import dev.morphia.test.TemplatedTestBase;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.updates.UpdateOperators.pullAll;
@@ -14,7 +15,8 @@ public class TestPullAll extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/updates/pullAll/example1
      */
-    @Test(testName = "main")
+    @Test
+    @DisplayName("main")
     public void testExample1() {
         testUpdate((query) -> query.filter(eq("_id", 1)), pullAll("scores", List.of(0, 5)));
     }

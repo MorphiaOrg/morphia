@@ -7,7 +7,7 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.javaField
-import org.testng.annotations.Test
+import org.junit.jupiter.api.Test
 
 class KotlinTypeDataTest : TestBase() {
     @Test
@@ -35,11 +35,11 @@ class KotlinTypeDataTest : TestBase() {
         val typeData = TypeData.builder(field.javaField?.type).build()
 
         //        val typeData = TypeData.get(field)
-        //        Assert.assertEquals(typeData.type, fieldType)
+        //        Assertions.assertEquals(fieldType, typeData.type)
         //        val typeParameters = typeData.typeParameters
-        //        Assert.assertEquals(typeParameters.size, parameterTypes.size)
+        //        Assertions.assertEquals(parameterTypes.size, typeParameters.size)
         //        for (i in parameterTypes.indices) {
-        //            Assert.assertEquals(typeParameters[i].type, parameterTypes[i])
+        //            Assertions.assertEquals(parameterTypes[i], typeParameters[i].type)
         //        }
     }
 }

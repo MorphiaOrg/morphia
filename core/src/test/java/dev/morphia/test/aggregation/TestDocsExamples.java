@@ -5,7 +5,7 @@ import dev.morphia.test.TestBase;
 import dev.morphia.test.aggregation.model.Author;
 import dev.morphia.test.aggregation.model.Book;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.mongodb.client.model.MergeOptions.WhenMatched.REPLACE;
 import static com.mongodb.client.model.MergeOptions.WhenNotMatched.INSERT;

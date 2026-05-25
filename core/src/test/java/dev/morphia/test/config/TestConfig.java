@@ -14,11 +14,8 @@ import dev.morphia.config.MorphiaConfigHelper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.test.TestBase;
 
-import org.testng.annotations.Test;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertThrows;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestConfig extends TestBase {
     @Test
@@ -30,14 +27,14 @@ public class TestConfig extends TestBase {
     public void loadSpecificConfigFiles() {
         var config = MorphiaConfig.load("META-INF/morphia-config-packageless.properties");
 
-        assertEquals(config.database(), "morphia");
-        assertEquals(config.packages(), List.of(".*"));
+        Assertions.assertEquals("morphia", config.database());
+        Assertions.assertEquals(List.of(".*"), config.packages());
 
         // this will fail because some of the test entities are intentionally invalid to test validations.  But that it fails at all
         // means that the mapper is scanning *all* the classes as expected when no packages are specified.
-        assertThrows(MappingException.class, () -> {
+        Assertions.assertThrows(MappingException.class, () -> {
             MorphiaDatastore datastore = (MorphiaDatastore) Morphia.createDatastore(getMongoClient(), config);
-            assertFalse(datastore.getMapper().getMappedEntities().isEmpty(), "Should find packages to map by default");
+            Assertions.assertFalse(datastore.getMapper().getMappedEntities().isEmpty(), "Should find packages to map by default");
         });
     }
 

@@ -7,7 +7,8 @@ import dev.morphia.aggregation.expressions.AccumulatorExpressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
@@ -26,7 +27,8 @@ public class TestGroup extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/group/example1
      * 
      */
-    @Test(testName = "Count the Number of Documents in a Collection")
+    @Test
+    @DisplayName("Count the Number of Documents in a Collection")
     public void testExample1() {
         checkMinServerVersion("5.0.0");
         testPipeline(
@@ -37,7 +39,8 @@ public class TestGroup extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/group/example2
      * 
      */
-    @Test(testName = "Retrieve Distinct Values")
+    @Test
+    @DisplayName("Retrieve Distinct Values")
     public void testExample2() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(group(id("$item"))));
@@ -47,7 +50,8 @@ public class TestGroup extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/group/example3
      * 
      */
-    @Test(testName = "Group by Item Having")
+    @Test
+    @DisplayName("Group by Item Having")
     public void testExample3() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
@@ -59,7 +63,8 @@ public class TestGroup extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/group/example4
      * 
      */
-    @Test(testName = "Calculate Count, Sum, and Average")
+    @Test
+    @DisplayName("Calculate Count, Sum, and Average")
     public void testExample4() {
         testPipeline((aggregation) -> aggregation.pipeline(
                 match(gte("date", LocalDate.of(2014, Month.JANUARY, 1)),
@@ -74,7 +79,8 @@ public class TestGroup extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/group/example5
      * 
      */
-    @Test(testName = "Pivot Data")
+    @Test
+    @DisplayName("Pivot Data")
     public void testExample5() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(group(id("$author")).field("books", push("$title"))));

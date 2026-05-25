@@ -4,10 +4,10 @@ import dev.morphia.test.TestBase;
 import dev.morphia.test.models.Author;
 
 import org.bson.Document;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.stages.CollectionStats.collStats;
-import static org.testng.Assert.assertNotNull;
 
 public class TestCollectionStats extends TestBase {
     @Test
@@ -20,6 +20,6 @@ public class TestCollectionStats extends TestBase {
                         .count(true))
                 .iterator()
                 .tryNext();
-        assertNotNull(stats);
+        Assertions.assertNotNull(stats);
     }
 }

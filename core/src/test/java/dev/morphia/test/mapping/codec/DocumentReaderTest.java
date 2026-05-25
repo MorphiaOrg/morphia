@@ -24,12 +24,11 @@ import org.bson.Document;
 import org.bson.codecs.DecoderContext;
 import org.bson.types.Binary;
 import org.bson.types.ObjectId;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static org.bson.Document.parse;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
 public class DocumentReaderTest extends TestBase {
 
@@ -43,16 +42,16 @@ public class DocumentReaderTest extends TestBase {
         step(BsonReader::readStartDocument);
         BsonReaderMark docMark = reader.getMark();
 
-        step(r -> assertEquals(r.readName(), "key"));
-        step(r -> assertEquals(r.readString(), "value"));
+        step(r -> Assertions.assertEquals("key", r.readName()));
+        step(r -> Assertions.assertEquals("value", r.readString()));
 
         docMark.reset();
 
-        step(r -> assertEquals(r.readName(), "key"));
-        step(r -> assertEquals(r.readString(), "value"));
+        step(r -> Assertions.assertEquals("key", r.readName()));
+        step(r -> Assertions.assertEquals("value", r.readString()));
 
-        step(r -> assertEquals(r.readName(), "nested"));
-        step(r -> assertEquals(r.readString(), "detsen"));
+        step(r -> Assertions.assertEquals("nested", r.readName()));
+        step(r -> Assertions.assertEquals("detsen", r.readString()));
 
         step(BsonReader::readEndDocument);
     }
@@ -66,13 +65,13 @@ public class DocumentReaderTest extends TestBase {
                         new Document("list3", "value3"))));
 
         step(BsonReader::readStartDocument);
-        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.DOCUMENT));
-        step(r -> assertEquals(r.readName(), "key"));
+        step(r -> Assertions.assertEquals(BsonType.DOCUMENT, r.getCurrentBsonType()));
+        step(r -> Assertions.assertEquals("key", r.readName()));
         step(BsonReader::readStartDocument);
-        step(r -> assertEquals(r.readName(), "nested"));
-        step(r -> assertEquals(r.readString(), "detsen"));
+        step(r -> Assertions.assertEquals("nested", r.readName()));
+        step(r -> Assertions.assertEquals("detsen", r.readString()));
         step(BsonReader::readEndDocument);
-        step(r -> assertEquals(r.readName(), "list"));
+        step(r -> Assertions.assertEquals("list", r.readName()));
         step(BsonReader::readStartArray);
         readDocument(1);
         readDocument(2);
@@ -98,7 +97,7 @@ public class DocumentReaderTest extends TestBase {
         Parent decode = getDs().getCodecRegistry().get(Parent.class)
                 .decode(new DocumentReader(first, getDs().getMapper().getConversions()), DecoderContext.builder().build());
 
-        assertEquals(parent, decode);
+        Assertions.assertEquals(decode, parent);
     }
 
     @Test
@@ -108,18 +107,18 @@ public class DocumentReaderTest extends TestBase {
                 .append("another", "entry"));
 
         step(BsonReader::readStartDocument);
-        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.STRING));
-        step(r -> assertEquals(r.readName(), "key"));
-        step(r -> assertEquals(r.readString(), "value"));
-        step(r -> assertEquals(r.readName(), "numbers"));
+        step(r -> Assertions.assertEquals(BsonType.STRING, r.getCurrentBsonType()));
+        step(r -> Assertions.assertEquals("key", r.readName()));
+        step(r -> Assertions.assertEquals("value", r.readString()));
+        step(r -> Assertions.assertEquals("numbers", r.readName()));
         step(BsonReader::readStartArray);
         for (int i = 1; i < 6; i++) {
             final int finalI = i;
-            step(r -> assertEquals(finalI, r.readInt32()));
+            step(r -> Assertions.assertEquals(r.readInt32(), finalI));
         }
         step(BsonReader::readEndArray);
-        step(r -> assertEquals(r.readName(), "another"));
-        step(r -> assertEquals(r.readString(), "entry"));
+        step(r -> Assertions.assertEquals("another", r.readName()));
+        step(r -> Assertions.assertEquals("entry", r.readString()));
         step(BsonReader::readEndDocument);
     }
 
@@ -127,33 +126,33 @@ public class DocumentReaderTest extends TestBase {
     public void testBookmarkingAndSkips() {
         setup(Document.parse("{ key: { subKey: 3 }, second: 2 }"));
 
-        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.DOCUMENT));
+        step(r -> Assertions.assertEquals(BsonType.DOCUMENT, r.getCurrentBsonType()));
         step(BsonReader::readStartDocument);
-        step(r -> assertEquals(r.readName(), "key"));
+        step(r -> Assertions.assertEquals("key", r.readName()));
         BsonReaderMark mark = reader.getMark();
         step(BsonReader::readStartDocument);
-        step(r -> assertEquals(r.readName(), "subKey"));
-        step(r -> assertEquals(r.readInt32(), 3));
+        step(r -> Assertions.assertEquals("subKey", r.readName()));
+        step(r -> Assertions.assertEquals(3, r.readInt32()));
         step(BsonReader::readEndDocument);
         mark.reset();
         reader.skipValue();
-        step(r -> assertEquals(r.readName(), "second"));
-        step(r -> assertEquals(r.readInt32(), 2));
+        step(r -> Assertions.assertEquals("second", r.readName()));
+        step(r -> Assertions.assertEquals(2, r.readInt32()));
         step(BsonReader::readEndDocument);
 
         setup(Document.parse("{ key: [ 1, 2, 3 ], second: 8 }"));
 
-        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.DOCUMENT));
+        step(r -> Assertions.assertEquals(BsonType.DOCUMENT, r.getCurrentBsonType()));
         step(BsonReader::readStartDocument);
-        step(r -> assertEquals(r.readName(), "key"));
+        step(r -> Assertions.assertEquals("key", r.readName()));
         mark = reader.getMark();
         step(BsonReader::readStartArray);
-        step(r -> assertEquals(r.readInt32(), 1));
-        step(r -> assertEquals(r.readInt32(), 2));
+        step(r -> Assertions.assertEquals(1, r.readInt32()));
+        step(r -> Assertions.assertEquals(2, r.readInt32()));
         mark.reset();
         reader.skipValue();
-        step(r -> assertEquals(r.readName(), "second"));
-        step(r -> assertEquals(r.readInt32(), 8));
+        step(r -> Assertions.assertEquals("second", r.readName()));
+        step(r -> Assertions.assertEquals(8, r.readInt32()));
         step(BsonReader::readEndDocument);
     }
 
@@ -164,17 +163,17 @@ public class DocumentReaderTest extends TestBase {
 
         setup(new Document("bin", bsonBinary));
         step(BsonReader::readStartDocument);
-        step(r -> assertEquals(r.readName(), "bin"));
-        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.BINARY));
-        step(r -> assertEquals(r.readBinaryData(), bsonBinary));
+        step(r -> Assertions.assertEquals("bin", r.readName()));
+        step(r -> Assertions.assertEquals(BsonType.BINARY, r.getCurrentBsonType()));
+        step(r -> Assertions.assertEquals(bsonBinary, r.readBinaryData()));
         step(BsonReader::readEndDocument);
 
         Binary legacy = new Binary(data);
         setup(new Document("bin", legacy));
         step(BsonReader::readStartDocument);
-        step(r -> assertEquals(r.readName(), "bin"));
-        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.BINARY));
-        step(r -> assertTrue(Arrays.equals(r.readBinaryData().getData(), data)));
+        step(r -> Assertions.assertEquals("bin", r.readName()));
+        step(r -> Assertions.assertEquals(BsonType.BINARY, r.getCurrentBsonType()));
+        step(r -> Assertions.assertTrue(Arrays.equals(r.readBinaryData().getData(), data)));
         step(BsonReader::readEndDocument);
     }
 
@@ -187,7 +186,7 @@ public class DocumentReaderTest extends TestBase {
                 .withDocumentClass(Document.class)
                 .find().first();
         HasBsonBinary decoded = fromDocument(HasBsonBinary.class, first);
-        assertEquals(decoded.data, entity.data);
+        Assertions.assertEquals(entity.data, decoded.data);
     }
 
     @Test
@@ -247,14 +246,14 @@ public class DocumentReaderTest extends TestBase {
     public void testNestedArrays() {
         setup(parse("{ coordinates : [ [ [ 0, 1 ], [ 1, 2 ], [ 2, 3 ], [ 3, 4 ], [ 4, 5 ] ] ] }"));
 
-        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.DOCUMENT));
+        step(r -> Assertions.assertEquals(BsonType.DOCUMENT, r.getCurrentBsonType()));
         step(BsonReader::readStartDocument);
-        step(r -> assertEquals(r.readName(), "coordinates"));
+        step(r -> Assertions.assertEquals("coordinates", r.readName()));
 
-        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.ARRAY));
+        step(r -> Assertions.assertEquals(BsonType.ARRAY, r.getCurrentBsonType()));
         step(BsonReader::readStartArray);
 
-        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.ARRAY));
+        step(r -> Assertions.assertEquals(BsonType.ARRAY, r.getCurrentBsonType()));
         step(BsonReader::readStartArray);
 
         for (int i = 0; i < 5; i++) {
@@ -270,22 +269,22 @@ public class DocumentReaderTest extends TestBase {
     public void testNulls() {
         setup(Document.parse("{ key: null, another: 'fun' }"));
 
-        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.DOCUMENT));
+        step(r -> Assertions.assertEquals(BsonType.DOCUMENT, r.getCurrentBsonType()));
         step(BsonReader::readStartDocument);
-        assertTrue(reader.currentState() instanceof NameState);
+        Assertions.assertTrue(reader.currentState() instanceof NameState);
         step(r -> {
-            assertEquals(r.readName(), "key");
-            assertTrue(reader.currentState() instanceof ValueState);
+            Assertions.assertEquals("key", r.readName());
+            Assertions.assertTrue(reader.currentState() instanceof ValueState);
         });
         step(r -> {
             r.readNull();
-            assertTrue(reader.currentState() instanceof NameState);
+            Assertions.assertTrue(reader.currentState() instanceof NameState);
         });
         step(r -> {
-            assertEquals(r.readName(), "another");
-            assertTrue(reader.currentState() instanceof ValueState);
+            Assertions.assertEquals("another", r.readName());
+            Assertions.assertTrue(reader.currentState() instanceof ValueState);
         });
-        step(r -> assertEquals(r.readString(), "fun"));
+        step(r -> Assertions.assertEquals("fun", r.readString()));
         step(BsonReader::readEndDocument);
     }
 
@@ -294,24 +293,24 @@ public class DocumentReaderTest extends TestBase {
         setup(Document.parse("{ key: 'value', second: 2 }"));
 
         step(r -> {
-            assertEquals(r.getCurrentBsonType(), BsonType.DOCUMENT);
+            Assertions.assertEquals(BsonType.DOCUMENT, r.getCurrentBsonType());
             r.readStartDocument();
-            assertTrue(reader.currentState() instanceof NameState);
+            Assertions.assertTrue(reader.currentState() instanceof NameState);
         });
         step(r -> {
             r.skipName();
-            assertTrue(reader.currentState() instanceof ValueState);
+            Assertions.assertTrue(reader.currentState() instanceof ValueState);
         });
         step(r -> {
             r.skipValue();
-            assertTrue(reader.currentState() instanceof NameState);
+            Assertions.assertTrue(reader.currentState() instanceof NameState);
         });
     }
 
     private void readDocument(int count) {
         step(BsonReader::readStartDocument);
-        step(r -> assertEquals("list" + count, r.readName()));
-        step(r -> assertEquals("value" + count, r.readString()));
+        step(r -> Assertions.assertEquals(r.readName(), "list" + count));
+        step(r -> Assertions.assertEquals(r.readString(), "value" + count));
         step(BsonReader::readEndDocument);
     }
 
@@ -324,12 +323,12 @@ public class DocumentReaderTest extends TestBase {
     }
 
     private void testArray(int i) {
-        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.ARRAY));
+        step(r -> Assertions.assertEquals(BsonType.ARRAY, r.getCurrentBsonType()));
         step(BsonReader::readStartArray);
-        step(r -> assertEquals(r.getCurrentBsonType(), BsonType.INT32));
+        step(r -> Assertions.assertEquals(BsonType.INT32, r.getCurrentBsonType()));
         int expected = i;
-        step(r -> assertEquals(r.readInt32(), expected));
-        step(r -> assertEquals(r.readInt32(), expected + 1));
+        step(r -> Assertions.assertEquals(expected, r.readInt32()));
+        step(r -> Assertions.assertEquals(expected + 1, r.readInt32()));
         step(BsonReader::readEndArray);
     }
 

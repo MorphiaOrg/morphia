@@ -3,19 +3,19 @@ package dev.morphia.test.mapping;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.test.TestBase;
 
-import org.testng.Assert;
+import org.junit.jupiter.api.Assertions;
 
 public class ProxyTestBase extends TestBase {
     protected void assertFetched(Object e) {
-        Assert.assertTrue(isFetched(e));
+        Assertions.assertTrue(isFetched(e));
     }
 
     protected void assertIsProxy(Object p) {
-        Assert.assertTrue(p instanceof MorphiaProxy, "Should be a proxy: " + p.getClass());
+        Assertions.assertTrue(p instanceof MorphiaProxy, "Should be a proxy: " + p.getClass());
     }
 
     protected void assertNotFetched(Object e) {
-        Assert.assertFalse(isFetched(e));
+        Assertions.assertFalse(isFetched(e));
     }
 
     private MorphiaProxy asMorphiaProxy(Object e) {

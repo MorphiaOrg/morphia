@@ -1,6 +1,6 @@
 package dev.morphia.audits.rst
 
-import org.testng.Assert
+import org.junit.jupiter.api.Assertions
 
 data class ExampleValidator(
     val data: Boolean = true,
@@ -12,12 +12,12 @@ data class ExampleValidator(
 
     fun action(example: OperatorExample) {
         if (action) {
-            Assert.assertNotNull(
+            Assertions.assertNotNull(
                 example.actionBlock,
                 "Should have an action block for ${example.name}",
             )
         } else {
-            Assert.assertNull(
+            Assertions.assertNull(
                 example.actionBlock,
                 "Should not have an action block for ${example.name}",
             )
@@ -26,20 +26,26 @@ data class ExampleValidator(
 
     fun data(example: OperatorExample) {
         if (data) {
-            Assert.assertNotNull(example.dataBlock, "Should have a data block for ${example.name}")
+            Assertions.assertNotNull(
+                example.dataBlock,
+                "Should have a data block for ${example.name}",
+            )
         } else {
-            Assert.assertNull(example.dataBlock, "Should not have a data block for ${example.name}")
+            Assertions.assertNull(
+                example.dataBlock,
+                "Should not have a data block for ${example.name}",
+            )
         }
     }
 
     fun expected(example: OperatorExample) {
         if (expected) {
-            Assert.assertNotNull(
+            Assertions.assertNotNull(
                 example.expectedBlock,
                 "Should have an expected block for ${example.name}",
             )
         } else {
-            Assert.assertNull(
+            Assertions.assertNull(
                 example.expectedBlock,
                 "Should not have an expected block for ${example.name}",
             )
@@ -48,12 +54,12 @@ data class ExampleValidator(
 
     fun index(example: OperatorExample) {
         if (index) {
-            Assert.assertNotNull(
+            Assertions.assertNotNull(
                 example.indexBlock,
                 "Should have a index block for ${example.name}",
             )
         } else {
-            Assert.assertNull(
+            Assertions.assertNull(
                 example.indexBlock,
                 "Should not have a index block for ${example.name}",
             )
@@ -61,6 +67,6 @@ data class ExampleValidator(
     }
 
     fun name(example: OperatorExample, name: String) {
-        Assert.assertEquals(example.name, name, "Should have the correct name")
+        Assertions.assertEquals(name, example.name, "Should have the correct name")
     }
 }

@@ -14,12 +14,12 @@ import dev.morphia.test.TestBase;
 import dev.morphia.test.models.Book;
 
 import org.bson.types.ObjectId;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.Sort.ascending;
 import static dev.morphia.query.filters.Filters.text;
 import static java.util.Arrays.asList;
-import static org.testng.Assert.assertEquals;
 
 public class TestTextSearching extends TestBase {
     @Test
@@ -44,33 +44,33 @@ public class TestTextSearching extends TestBase {
                 .filter(text("good"))
                 .iterator()
                 .toList();
-        assertEquals(good.size(), 4);
-        assertEquals(good.get(0).value, "good morning");
-        assertEquals(good.get(1).value, "good afternoon");
-        assertEquals(good.get(2).value, "good night");
-        assertEquals(good.get(3).value, "good riddance");
+        Assertions.assertEquals(4, good.size());
+        Assertions.assertEquals("good morning", good.get(0).value);
+        Assertions.assertEquals("good afternoon", good.get(1).value);
+        Assertions.assertEquals("good night", good.get(2).value);
+        Assertions.assertEquals("good riddance", good.get(3).value);
 
         good = getDs().find(Greeting.class, new FindOptions().sort(ascending("_id")))
                 .filter(text("good")
                         .language("english"))
                 .iterator()
                 .toList();
-        assertEquals(good.size(), 4);
-        assertEquals(good.get(0).value, "good morning");
-        assertEquals(good.get(1).value, "good afternoon");
-        assertEquals(good.get(2).value, "good night");
-        assertEquals(good.get(3).value, "good riddance");
+        Assertions.assertEquals(4, good.size());
+        Assertions.assertEquals("good morning", good.get(0).value);
+        Assertions.assertEquals("good afternoon", good.get(1).value);
+        Assertions.assertEquals("good night", good.get(2).value);
+        Assertions.assertEquals("good riddance", good.get(3).value);
 
-        assertEquals(getDs().find(Greeting.class)
+        Assertions.assertEquals(1, getDs().find(Greeting.class)
                 .filter(text("riddance"))
-                .iterator().toList().size(), 1);
-        assertEquals(getDs().find(Greeting.class)
+                .iterator().toList().size());
+        Assertions.assertEquals(1, getDs().find(Greeting.class)
                 .filter(text("noches")
                         .language("spanish"))
-                .iterator().toList().size(), 1);
-        assertEquals(getDs().find(Greeting.class)
+                .iterator().toList().size());
+        Assertions.assertEquals(1, getDs().find(Greeting.class)
                 .filter(text("Tag"))
-                .iterator().toList().size(), 1);
+                .iterator().toList().size());
     }
 
     @Test
@@ -89,8 +89,8 @@ public class TestTextSearching extends TestBase {
                 .filter(text("Dante Comedy"))
                 .iterator()
                 .toList();
-        assertEquals(books.size(), 3);
-        assertEquals(books.get(0).title, "Divine Comedy");
+        Assertions.assertEquals(3, books.size());
+        Assertions.assertEquals("Divine Comedy", books.get(0).title);
     }
 
     @Test
@@ -109,8 +109,8 @@ public class TestTextSearching extends TestBase {
                 .filter(text("Dante"))
                 .iterator()
                 .toList();
-        assertEquals(books.size(), 3);
-        assertEquals(books.get(0).authorString, "Dante");
+        Assertions.assertEquals(3, books.size());
+        Assertions.assertEquals("Dante", books.get(0).authorString);
     }
 
     @Test
@@ -129,9 +129,9 @@ public class TestTextSearching extends TestBase {
                 .filter(text("Dante"))
                 .iterator()
                 .toList();
-        assertEquals(books.size(), 3);
+        Assertions.assertEquals(3, books.size());
         for (Book book : books) {
-            assertEquals(book.authorString, "Dante");
+            Assertions.assertEquals("Dante", book.authorString);
         }
     }
 

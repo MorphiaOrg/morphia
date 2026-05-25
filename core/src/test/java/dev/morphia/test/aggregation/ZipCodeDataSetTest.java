@@ -12,10 +12,11 @@ import dev.morphia.test.models.City;
 import dev.morphia.test.models.Population;
 import dev.morphia.test.models.State;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.annotations.Ignore;
-import org.testng.annotations.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.first;
@@ -27,8 +28,6 @@ import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.aggregation.stages.Projection.project;
 import static dev.morphia.aggregation.stages.Sort.sort;
 import static dev.morphia.query.filters.Filters.gte;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
 /**
  * These tests recreate the example zip code data set aggregations as found in the official documentation.
@@ -36,7 +35,7 @@ import static org.testng.Assert.assertTrue;
  * @mongodb.driver.manual tutorial/aggregation-zip-code-data-set/ Aggregation with the Zip Code Data Set
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-@Ignore
+@Disabled
 public class ZipCodeDataSetTest extends TestBase {
     private static final Logger LOG = LoggerFactory.getLogger(ZipCodeDataSetTest.class);
 
@@ -101,11 +100,11 @@ public class ZipCodeDataSetTest extends TestBase {
 
             State state = states.get("SD");
 
-            assertEquals(state.getBiggest().getName(), "SIOUX FALLS");
-            assertEquals(state.getBiggest().getPopulation().longValue(), 102046);
+            Assertions.assertEquals("SIOUX FALLS", state.getBiggest().getName());
+            Assertions.assertEquals(102046, state.getBiggest().getPopulation().longValue());
 
-            assertEquals(state.getSmallest().getName(), "ZEONA");
-            assertEquals(state.getSmallest().getPopulation().longValue(), 8);
+            Assertions.assertEquals("ZEONA", state.getSmallest().getName());
+            Assertions.assertEquals(8, state.getSmallest().getPopulation().longValue());
         }
     }
 
@@ -114,11 +113,11 @@ public class ZipCodeDataSetTest extends TestBase {
         for (Population population : cursor) {
             if (population.getState().equals(state)) {
                 found = true;
-                assertEquals(population.getPopulation(), Long.valueOf(value));
+                Assertions.assertEquals(Long.valueOf(value), population.getPopulation());
             }
             LOG.debug("population = " + population);
         }
-        assertTrue(found, "Should have found " + state);
+        Assertions.assertTrue(found, "Should have found " + state);
     }
 
 }

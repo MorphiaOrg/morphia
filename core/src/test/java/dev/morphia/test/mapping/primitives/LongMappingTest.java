@@ -9,8 +9,8 @@ import dev.morphia.annotations.Id;
 import dev.morphia.test.TestBase;
 
 import org.bson.types.ObjectId;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 
@@ -33,18 +33,18 @@ public class LongMappingTest extends TestBase {
                 .filter(eq("_id", ent.id))
                 .first();
 
-        Assert.assertNotNull(loaded.id);
+        Assertions.assertNotNull(loaded.id);
 
-        Assert.assertEquals(loaded.listWrapperArray.get(0), ent.listWrapperArray.get(0));
-        Assert.assertEquals(loaded.listPrimitiveArray.get(0), ent.listPrimitiveArray.get(0));
+        Assertions.assertArrayEquals(ent.listWrapperArray.get(0), loaded.listWrapperArray.get(0));
+        Assertions.assertArrayEquals(ent.listPrimitiveArray.get(0), loaded.listPrimitiveArray.get(0));
 
-        Assert.assertEquals(loaded.singlePrimitive, ent.singlePrimitive, 0);
-        Assert.assertEquals(loaded.singleWrapper, ent.singleWrapper, 0);
+        Assertions.assertEquals(ent.singlePrimitive, loaded.singlePrimitive, 0);
+        Assertions.assertEquals(ent.singleWrapper, loaded.singleWrapper, 0);
 
-        Assert.assertEquals(loaded.primitiveArray, ent.primitiveArray);
-        Assert.assertEquals(loaded.wrapperArray, ent.wrapperArray);
-        Assert.assertEquals(loaded.nestedPrimitiveArray, ent.nestedPrimitiveArray);
-        Assert.assertEquals(loaded.nestedWrapperArray, ent.nestedWrapperArray);
+        Assertions.assertArrayEquals(ent.primitiveArray, loaded.primitiveArray);
+        Assertions.assertArrayEquals(ent.wrapperArray, loaded.wrapperArray);
+        Assertions.assertArrayEquals(ent.nestedPrimitiveArray, loaded.nestedPrimitiveArray);
+        Assertions.assertArrayEquals(ent.nestedWrapperArray, loaded.nestedWrapperArray);
     }
 
     @Entity

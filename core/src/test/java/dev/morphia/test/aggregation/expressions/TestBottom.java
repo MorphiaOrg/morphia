@@ -3,7 +3,8 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.bottom;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
@@ -18,7 +19,8 @@ public class TestBottom extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/bottom/example1
      * 
      */
-    @Test(testName = "Find the Bottom ``Score``")
+    @Test
+    @DisplayName("Find the Bottom ``Score``")
     public void testExample1() {
         checkMinServerVersion("5.2.0");
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation.pipeline(
@@ -30,7 +32,8 @@ public class TestBottom extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/bottom/example2
      * 
      */
-    @Test(testName = "Finding the Bottom ``Score`` Across Multiple Games")
+    @Test
+    @DisplayName("Finding the Bottom ``Score`` Across Multiple Games")
     public void testExample2() {
         checkMinServerVersion("5.2.0");
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation.pipeline(

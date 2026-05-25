@@ -6,7 +6,8 @@ import java.util.Map;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.Sort.ascending;
 import static dev.morphia.query.Sort.descending;
@@ -18,7 +19,8 @@ public class TestSort extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/updates/sort/example1
      */
-    @Test(testName = "Sort Array of Documents by a Field in the Documents")
+    @Test
+    @DisplayName("Sort Array of Documents by a Field in the Documents")
     public void testExample1() {
         // the Map order throws off structural checks
         testUpdate(new ActionTestOptions().skipActionCheck(true), (query) -> query.filter(eq("_id", 1)),
@@ -30,7 +32,8 @@ public class TestSort extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/updates/sort/example2
      */
-    @Test(testName = "Sort Array Elements That Are Not Documents")
+    @Test
+    @DisplayName("Sort Array Elements That Are Not Documents")
     public void testExample2() {
         testUpdate((query) -> query.filter(eq("_id", 2)), push("tests", List.of(40, 60)).sort(1));
     }
@@ -38,7 +41,8 @@ public class TestSort extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/updates/sort/example3
      */
-    @Test(testName = "Update Array Using Sort Only")
+    @Test
+    @DisplayName("Update Array Using Sort Only")
     public void testExample3() {
         testUpdate((query) -> query.filter(eq("_id", 3)), push("tests", List.of()).sort(-1));
     }
@@ -46,7 +50,8 @@ public class TestSort extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/updates/sort/example4
      */
-    @Test(testName = "Use ``$sort`` with Other ``$push`` Modifiers")
+    @Test
+    @DisplayName("Use ``$sort`` with Other ``$push`` Modifiers")
     public void testExample4() {
         // the Map order throws off structural checks
         testUpdate(new ActionTestOptions().skipActionCheck(true), (query) -> query.filter(eq("_id", 5)),

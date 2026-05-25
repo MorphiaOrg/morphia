@@ -3,7 +3,8 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.eq;
@@ -20,7 +21,8 @@ public class TestIsNumber extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/isNumber/example1
      * 
      */
-    @Test(testName = "Use $isNumber to Check if a Field is Numeric")
+    @Test
+    @DisplayName("Use $isNumber to Check if a Field is Numeric")
     public void testExample1() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(addFields().field("isNumber", isNumber("$reading")).field("hasType", type("$reading"))));
@@ -30,7 +32,8 @@ public class TestIsNumber extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/isNumber/example2
      * 
      */
-    @Test(testName = "Conditionally Modify Fields using $isNumber")
+    @Test
+    @DisplayName("Conditionally Modify Fields using $isNumber")
     public void testExample2() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(

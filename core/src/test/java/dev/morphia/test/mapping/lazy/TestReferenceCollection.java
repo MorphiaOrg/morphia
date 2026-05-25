@@ -10,8 +10,8 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.test.mapping.ProxyTestBase;
 import dev.morphia.test.models.TestEntity;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 
@@ -33,16 +33,16 @@ public class TestReferenceCollection extends ProxyTestBase {
         getDs().save(endpoint1);
         getDs().save(endpoint2);
 
-        Assert.assertEquals("b1", origin.lazyList.iterator().next().foo);
+        Assertions.assertEquals(origin.lazyList.iterator().next().foo, "b1");
 
         getDs().save(origin);
 
         Origin reloaded = getDs().find(Origin.class)
                 .filter(eq("_id", origin.getId()))
                 .first();
-        Assert.assertEquals("b1", reloaded.lazyList.iterator().next().foo);
+        Assertions.assertEquals(reloaded.lazyList.iterator().next().foo, "b1");
         Collections.swap(reloaded.lazyList, 0, 1);
-        Assert.assertEquals("b2", reloaded.lazyList.iterator().next().foo);
+        Assertions.assertEquals(reloaded.lazyList.iterator().next().foo, "b2");
 
         getDs().save(reloaded);
 
@@ -50,9 +50,9 @@ public class TestReferenceCollection extends ProxyTestBase {
                 .filter(eq("_id", origin.getId()))
                 .first();
         final Collection<Endpoint> lbs = reloaded.lazyList;
-        Assert.assertEquals(2, lbs.size());
+        Assertions.assertEquals(lbs.size(), 2);
         final Iterator<Endpoint> iterator = lbs.iterator();
-        Assert.assertEquals("b2", iterator.next().foo);
+        Assertions.assertEquals(iterator.next().foo, "b2");
 
     }
 

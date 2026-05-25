@@ -3,7 +3,8 @@ package dev.morphia.test.aggregation.stages;
 import dev.morphia.aggregation.expressions.ComparisonExpressions;
 import dev.morphia.test.TemplatedTestBase;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.size;
@@ -21,7 +22,8 @@ public class TestRedact extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/redact/example1
      * 
      */
-    @Test(testName = "Evaluate Access at Every Document Level")
+    @Test
+    @DisplayName("Evaluate Access at Every Document Level")
     public void testExample1() {
         testPipeline((aggregation) -> aggregation.pipeline(match(eq("year", 2014)),
                 redact(condition(gt(size(setIntersection("$tags", array("STLW", "G"))), 0), DESCEND, PRUNE))));
@@ -31,7 +33,8 @@ public class TestRedact extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/redact/example2
      * 
      */
-    @Test(testName = "Exclude All Fields at a Given Level")
+    @Test
+    @DisplayName("Exclude All Fields at a Given Level")
     public void testExample2() {
         testPipeline((aggregation) -> aggregation.pipeline(match(eq("status", "A")),
                 redact(condition(ComparisonExpressions.eq("$level", 5), PRUNE, DESCEND))));

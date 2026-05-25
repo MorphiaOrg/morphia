@@ -71,6 +71,7 @@
                 <configuration>
                     <systemPropertyVariables>
                         <morphia.mapper>${morphia.mapper}</morphia.mapper>
+                        <junit.jupiter.testinstance.lifecycle.default>per_class</junit.jupiter.testinstance.lifecycle.default>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
@@ -177,11 +178,6 @@
         <dependency>
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs-annotations</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
         </dependency>
         <dependency>
             <groupId>org.skyscreamer</groupId>

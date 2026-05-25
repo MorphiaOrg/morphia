@@ -3,7 +3,8 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
 import static dev.morphia.aggregation.expressions.MathExpressions.median;
@@ -17,7 +18,8 @@ public class TestMedian extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/median/example1
      */
-    @Test(testName = "Use |operatorName| as an Accumulator")
+    @Test
+    @DisplayName("Use |operatorName| as an Accumulator")
     public void testExample1() {
         testPipeline(new ActionTestOptions().serverVersion("7.0.0").orderMatters(false),
                 aggregation -> aggregation.pipeline(group().field("test01_median", median("$test01"))));
@@ -27,7 +29,8 @@ public class TestMedian extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/median/example2
      *
      */
-    @Test(testName = "Use |operatorName| in a ``$project`` Stage")
+    @Test
+    @DisplayName("Use |operatorName| in a ``$project`` Stage")
     public void testExample2() {
         testPipeline(new ActionTestOptions().serverVersion("7.0.0"),
                 aggregation -> aggregation.pipeline(project().suppressId().include("studentId").include("testMedians",
@@ -38,7 +41,8 @@ public class TestMedian extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/median/example3
      *
      */
-    @Test(testName = "Use |operatorName| in a ``$setWindowField`` Stage")
+    @Test
+    @DisplayName("Use |operatorName| in a ``$setWindowField`` Stage")
     public void testExample3() {
         testPipeline(new ActionTestOptions().serverVersion("7.0.0"),
                 aggregation -> aggregation.pipeline(

@@ -39,8 +39,8 @@ import dev.morphia.test.models.generics.EmbeddedType;
 import dev.morphia.test.models.generics.FatherEntity;
 
 import org.bson.types.ObjectId;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static java.util.Arrays.asList;
 
@@ -53,11 +53,11 @@ public class PathTargetTest extends TestBase {
             EntityModel entityModel = mapper.getEntityModel(EntityWithListsAndArrays.class);
 
             PathTarget pathTarget = new PathTarget(mapper, entityModel, "listEmbeddedType.1.anotherField");
-            Assert.assertEquals(pathTarget.translatedPath(), "listEmbeddedType.1.anotherField");
-            Assert.assertEquals(mapper.getEntityModel(Another.class).getProperty("anotherField"), pathTarget.target());
+            Assertions.assertEquals("listEmbeddedType.1.anotherField", pathTarget.translatedPath());
+            Assertions.assertEquals(pathTarget.target(), mapper.getEntityModel(Another.class).getProperty("anotherField"));
 
-            Assert.assertEquals(new PathTarget(mapper, entityModel, "listEmbeddedType.$").translatedPath(), "listEmbeddedType.$");
-            Assert.assertEquals(new PathTarget(mapper, entityModel, "listEmbeddedType.1").translatedPath(), "listEmbeddedType.1");
+            Assertions.assertEquals("listEmbeddedType.$", new PathTarget(mapper, entityModel, "listEmbeddedType.$").translatedPath());
+            Assertions.assertEquals("listEmbeddedType.1", new PathTarget(mapper, entityModel, "listEmbeddedType.1").translatedPath());
         });
     }
 
@@ -67,8 +67,8 @@ public class PathTargetTest extends TestBase {
             Mapper mapper = getMapper();
 
             final PathTarget pathTarget = new PathTarget(mapper, FatherEntity.class, "nested.field.fail", false);
-            Assert.assertEquals(pathTarget.translatedPath(), "nested.field.fail");
-            Assert.assertNull(pathTarget.target());
+            Assertions.assertEquals("nested.field.fail", pathTarget.translatedPath());
+            Assertions.assertNull(pathTarget.target());
         });
     }
 
@@ -78,8 +78,8 @@ public class PathTargetTest extends TestBase {
             Mapper mapper = getMapper();
 
             PathTarget pathTarget = new PathTarget(mapper, State.class, "biggestCity.population");
-            Assert.assertEquals(pathTarget.translatedPath(), "biggestCity.pop");
-            Assert.assertEquals(mapper.getEntityModel(CityPopulation.class).getProperty("population"), pathTarget.target());
+            Assertions.assertEquals("biggestCity.pop", pathTarget.translatedPath());
+            Assertions.assertEquals(pathTarget.target(), mapper.getEntityModel(CityPopulation.class).getProperty("population"));
         });
     }
 
@@ -92,12 +92,12 @@ public class PathTargetTest extends TestBase {
                     EntityModel entityModel = mapper.getEntityModel(HoldsAnInterface.class);
 
                     PathTarget pathTarget = new PathTarget(mapper, entityModel, "mapped.value");
-                    Assert.assertEquals(pathTarget.translatedPath(), "mapped.value");
-                    Assert.assertEquals(mapper.getEntityModel(InterfaceTypeB.class).getProperty("value"), pathTarget.target());
+                    Assertions.assertEquals("mapped.value", pathTarget.translatedPath());
+                    Assertions.assertEquals(pathTarget.target(), mapper.getEntityModel(InterfaceTypeB.class).getProperty("value"));
 
                     pathTarget = new PathTarget(mapper, entityModel, "mapped.field");
-                    Assert.assertEquals(pathTarget.translatedPath(), "mapped.field");
-                    Assert.assertEquals(mapper.getEntityModel(InterfaceTypeA.class).getProperty("field"), pathTarget.target());
+                    Assertions.assertEquals("mapped.field", pathTarget.translatedPath());
+                    Assertions.assertEquals(pathTarget.target(), mapper.getEntityModel(InterfaceTypeA.class).getProperty("field"));
                 });
     }
 
@@ -108,12 +108,12 @@ public class PathTargetTest extends TestBase {
             EntityModel entityModel = mapper.getEntityModel(Student.class);
 
             PathTarget pathTarget = new PathTarget(mapper, entityModel, "grades.$.data.name");
-            Assert.assertEquals(pathTarget.translatedPath(), "grades.$.d.name");
-            Assert.assertEquals(mapper.getEntityModel(Grade.class).getProperty("data"), pathTarget.target());
+            Assertions.assertEquals("grades.$.d.name", pathTarget.translatedPath());
+            Assertions.assertEquals(pathTarget.target(), mapper.getEntityModel(Grade.class).getProperty("data"));
 
             pathTarget = new PathTarget(mapper, entityModel, "grades.$.d.name");
-            Assert.assertEquals(pathTarget.translatedPath(), "grades.$.d.name");
-            Assert.assertEquals(mapper.getEntityModel(Grade.class).getProperty("d"), pathTarget.target());
+            Assertions.assertEquals("grades.$.d.name", pathTarget.translatedPath());
+            Assertions.assertEquals(pathTarget.target(), mapper.getEntityModel(Grade.class).getProperty("d"));
         });
     }
 
@@ -124,12 +124,12 @@ public class PathTargetTest extends TestBase {
             EntityModel entityModel = mapper.getEntityModel(City.class);
 
             PathTarget pathTarget = new PathTarget(mapper, entityModel, "name");
-            Assert.assertEquals(pathTarget.translatedPath(), "city");
-            Assert.assertEquals(entityModel.getProperty("name"), pathTarget.target());
+            Assertions.assertEquals("city", pathTarget.translatedPath());
+            Assertions.assertEquals(pathTarget.target(), entityModel.getProperty("name"));
 
             pathTarget = new PathTarget(mapper, entityModel, "city");
-            Assert.assertEquals(pathTarget.translatedPath(), "city");
-            Assert.assertEquals(entityModel.getProperty("city"), pathTarget.target());
+            Assertions.assertEquals("city", pathTarget.translatedPath());
+            Assertions.assertEquals(pathTarget.target(), entityModel.getProperty("city"));
         });
     }
 
@@ -139,8 +139,8 @@ public class PathTargetTest extends TestBase {
             Mapper mapper = getMapper();
 
             PathTarget pathTarget = new PathTarget(mapper, FatherEntity.class, "embedded.anotherField");
-            Assert.assertEquals(pathTarget.translatedPath(), "embedded.anotherField");
-            Assert.assertEquals(mapper.getEntityModel(Another.class).getProperty("anotherField"), pathTarget.target());
+            Assertions.assertEquals("embedded.anotherField", pathTarget.translatedPath());
+            Assertions.assertEquals(pathTarget.target(), mapper.getEntityModel(Another.class).getProperty("anotherField"));
         });
     }
 

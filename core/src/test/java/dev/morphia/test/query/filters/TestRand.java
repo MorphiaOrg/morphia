@@ -5,7 +5,8 @@ import dev.morphia.query.updates.UpdateOperators;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.lt;
 import static dev.morphia.aggregation.expressions.MathExpressions.floor;
@@ -19,7 +20,8 @@ public class TestRand extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/rand/example1
      */
-    @Test(testName = "Generate Random Data Points")
+    @Test
+    @DisplayName("Generate Random Data Points")
     public void testExample1() {
         ActionTestOptions options = new ActionTestOptions().skipDataCheck(true)
                 .findOptions(new FindOptions().projection().include("name", "registered"));
@@ -29,7 +31,8 @@ public class TestRand extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/rand/example2
      */
-    @Test(testName = "Select Random Items From a Collection")
+    @Test
+    @DisplayName("Select Random Items From a Collection")
     public void testExample2() {
         ActionTestOptions options = new ActionTestOptions().orderMatters(false).removeIds(true).skipDataCheck(true)
                 .findOptions(new FindOptions().projection().include("name", "registered"));

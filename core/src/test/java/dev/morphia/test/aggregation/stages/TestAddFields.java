@@ -7,7 +7,8 @@ import dev.morphia.test.aggregation.model.Score;
 import dev.morphia.test.util.ActionTestOptions;
 
 import org.bson.Document;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
@@ -18,14 +19,14 @@ import static dev.morphia.aggregation.stages.AddFields.addFields;
 import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.query.filters.Filters.eq;
 import static org.bson.Document.parse;
-import static org.testng.Assert.assertEquals;
 
 public class TestAddFields extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/stages/addFields/example1
      * 
      */
-    @Test(testName = "Using Two ``$addFields`` Stages")
+    @Test
+    @DisplayName("Using Two ``$addFields`` Stages")
     public void testExample1() {
         List<Document> list = List.of(
                 parse("{ _id: 1, student: 'Maya', homework: [ 10, 5, 10 ],quiz: [ 10, 8 ],extraCredit: 0 }"),
@@ -44,14 +45,15 @@ public class TestAddFields extends TemplatedTestBase {
                 parse("{ '_id' : 2, 'student' : 'Ryan', 'homework' : [ 5, 6, 5 ],'quiz' : [ 8, 8 ],'extraCredit' : 8, 'totalHomework' : 16, "
                         + "'totalQuiz' : 16, 'totalScore' : 40 }"));
 
-        assertEquals(result, list);
+        assertDocumentListEquals(list, result);
     }
 
     /**
      * test data: dev/morphia/test/aggregation/stages/addFields/example2
      * 
      */
-    @Test(testName = "Adding Fields to an Embedded Document")
+    @Test
+    @DisplayName("Adding Fields to an Embedded Document")
     public void testExample2() {
         testPipeline((aggregation) -> aggregation.pipeline(addFields().field("specs.fuel_type", "unleaded")));
     }
@@ -60,7 +62,8 @@ public class TestAddFields extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/addFields/example3
      * 
      */
-    @Test(testName = "Overwriting an existing field")
+    @Test
+    @DisplayName("Overwriting an existing field")
     public void testExample3() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(addFields().field("cats", 20)));
@@ -70,7 +73,8 @@ public class TestAddFields extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/addFields/example4
      * 
      */
-    @Test(testName = "Add Element to an Array")
+    @Test
+    @DisplayName("Add Element to an Array")
     public void testExample4() {
         testPipeline((aggregation) -> aggregation.pipeline(match(eq("_id", 1)),
                 addFields().field("homework", concatArrays("$homework", array(7)))));
@@ -81,7 +85,8 @@ public class TestAddFields extends TemplatedTestBase {
      * 
      * db.labReadings.aggregate( [ { $addFields: { date: "$$REMOVE" } } ] )
      */
-    @Test(testName = "Remove Fields")
+    @Test
+    @DisplayName("Remove Fields")
     public void testExample5() {
         testPipeline(new ActionTestOptions().removeIds(true),
                 aggregation -> aggregation.pipeline(addFields().field("date", REMOVE)));

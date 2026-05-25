@@ -3,8 +3,9 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.WindowExpressions.rank;
 import static dev.morphia.aggregation.stages.SetWindowFields.Output.output;
@@ -14,7 +15,7 @@ import static dev.morphia.query.Sort.descending;
 
 public class TestRank extends TemplatedTestBase {
 
-    @BeforeMethod
+    @BeforeEach
     public void versionCheck() {
         checkMinServerVersion("5.0.0");
     }
@@ -23,7 +24,8 @@ public class TestRank extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/rank/example1
      * 
      */
-    @Test(testName = "Rank Partitions by an Integer Field")
+    @Test
+    @DisplayName("Rank Partitions by an Integer Field")
     public void testExample1() {
         testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                 .sortBy(descending("quantity")).output(output("rankQuantityForState").operator(rank()))));
@@ -33,7 +35,8 @@ public class TestRank extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/rank/example2
      * 
      */
-    @Test(testName = "Rank Partitions by a Date Field")
+    @Test
+    @DisplayName("Rank Partitions by a Date Field")
     public void testExample2() {
         testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                 .sortBy(ascending("orderDate")).output(output("rankOrderDateForState").operator(rank()))));
@@ -43,7 +46,8 @@ public class TestRank extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/rank/example3
      * 
      */
-    @Test(testName = "Rank Partitions Containing Duplicate Values, Nulls, or Missing Data")
+    @Test
+    @DisplayName("Rank Partitions Containing Duplicate Values, Nulls, or Missing Data")
     public void testExample3() {
         testPipeline(new ActionTestOptions().serverVersion("8.0.0").orderMatters(false),
                 (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")

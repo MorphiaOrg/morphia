@@ -3,8 +3,9 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.sortArray;
@@ -16,7 +17,7 @@ import static dev.morphia.query.Sort.naturalAscending;
 
 public class TestSortArray extends TemplatedTestBase {
 
-    @BeforeMethod
+    @BeforeEach
     public void versionCheck() {
         checkMinServerVersion("5.2.0");
     }
@@ -25,7 +26,8 @@ public class TestSortArray extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/sortArray/example1
      * 
      */
-    @Test(testName = "Sort on a Field ")
+    @Test
+    @DisplayName("Sort on a Field ")
     public void testExample1() {
         testPipeline(new ActionTestOptions(), (aggregation) -> aggregation
                 .pipeline(project().suppressId().include("result", sortArray("$team", ascending("name")))));
@@ -36,7 +38,8 @@ public class TestSortArray extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/sortArray/example2
      * 
      */
-    @Test(testName = "Sort on a Subfield")
+    @Test
+    @DisplayName("Sort on a Subfield")
     public void testExample2() {
         testPipeline(new ActionTestOptions(), (aggregation) -> {
             return aggregation
@@ -49,7 +52,8 @@ public class TestSortArray extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/sortArray/example3
      * 
      */
-    @Test(testName = "Sort on Multiple Fields")
+    @Test
+    @DisplayName("Sort on Multiple Fields")
     public void testExample3() {
         testPipeline(new ActionTestOptions(), (aggregation) -> aggregation.pipeline(
                 project().suppressId().include("result", sortArray("$team", descending("age"), ascending("name")))));
@@ -59,7 +63,8 @@ public class TestSortArray extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/sortArray/example4
      * 
      */
-    @Test(testName = "Sort an Array of Integers")
+    @Test
+    @DisplayName("Sort an Array of Integers")
     public void testExample4() {
         testPipeline(new ActionTestOptions(), (aggregation) -> {
             return aggregation.pipeline(
@@ -72,7 +77,8 @@ public class TestSortArray extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/sortArray/example5
      * 
      */
-    @Test(testName = "Sort on Mixed Type Fields")
+    @Test
+    @DisplayName("Sort on Mixed Type Fields")
     public void testExample5() {
         testPipeline(
                 new ActionTestOptions().orderMatters(false), (

@@ -7,7 +7,9 @@ import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.aggregation.model.Inventory;
 import dev.morphia.test.aggregation.model.Order;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.elementAt;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.in;
@@ -24,14 +26,14 @@ import static dev.morphia.aggregation.stages.Sort.sort;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.expr;
 import static java.util.Arrays.asList;
-import static org.testng.Assert.assertEquals;
 
 public class TestLookup extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/stages/lookup/example1
      * 
      */
-    @Test(testName = "Perform a Single Equality Join with ``$lookup``")
+    @Test
+    @DisplayName("Perform a Single Equality Join with ``$lookup``")
     public void testExample1() {
         loadData("inventory", 2);
         testPipeline((aggregation) -> aggregation
@@ -42,7 +44,8 @@ public class TestLookup extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/lookup/example2
      * 
      */
-    @Test(testName = "Use ``$lookup`` with an Array")
+    @Test
+    @DisplayName("Use ``$lookup`` with an Array")
     public void testExample2() {
         loadData("members", 2);
         testPipeline((aggregation) -> aggregation
@@ -53,7 +56,8 @@ public class TestLookup extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/lookup/example3
      * 
      */
-    @Test(testName = "Use ``$lookup`` with ``$mergeObjects``")
+    @Test
+    @DisplayName("Use ``$lookup`` with ``$mergeObjects``")
     public void testExample3() {
         loadData("items", 2);
         testPipeline((aggregation) -> aggregation.pipeline(
@@ -65,7 +69,8 @@ public class TestLookup extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/lookup/example4
      * 
      */
-    @Test(testName = "Perform Multiple Joins and a Correlated Subquery with ``$lookup``")
+    @Test
+    @DisplayName("Perform Multiple Joins and a Correlated Subquery with ``$lookup``")
     public void testExample4() {
         loadData("warehouses", 2);
         testPipeline(
@@ -82,7 +87,8 @@ public class TestLookup extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/lookup/example5
      * 
      */
-    @Test(testName = "Perform an Uncorrelated Subquery with ``$lookup``")
+    @Test
+    @DisplayName("Perform an Uncorrelated Subquery with ``$lookup``")
     public void testExample5() {
         loadData("holidays", 2);
         testPipeline((aggregation) -> aggregation.pipeline(lookup("holidays")
@@ -97,7 +103,8 @@ public class TestLookup extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/lookup/example6
      * 
      */
-    @Test(testName = "Perform a Concise Correlated Subquery with ``$lookup``")
+    @Test
+    @DisplayName("Perform a Concise Correlated Subquery with ``$lookup``")
     public void testExample6() {
         checkMinServerVersion("6.0.0");
         loadData("restaurants", 2);
@@ -120,10 +127,10 @@ public class TestLookup extends TemplatedTestBase {
                 .pipeline(lookup(Inventory.class).localField("item").foreignField("sku").as("inventoryDocs"),
                         sort().ascending("_id"))
                 .toList();
-        assertEquals(lookups.get(0).getInventoryDocs().get(0), inventories.get(0));
-        assertEquals(lookups.get(1).getInventoryDocs().get(0), inventories.get(3));
-        assertEquals(lookups.get(2).getInventoryDocs().get(0), inventories.get(4));
-        assertEquals(lookups.get(2).getInventoryDocs().get(1), inventories.get(5));
+        Assertions.assertEquals(inventories.get(0), lookups.get(0).getInventoryDocs().get(0));
+        Assertions.assertEquals(inventories.get(3), lookups.get(1).getInventoryDocs().get(0));
+        Assertions.assertEquals(inventories.get(4), lookups.get(2).getInventoryDocs().get(0));
+        Assertions.assertEquals(inventories.get(5), lookups.get(2).getInventoryDocs().get(1));
     }
 
     /**
@@ -132,7 +139,8 @@ public class TestLookup extends TemplatedTestBase {
      * db.cakeFlavors.aggregate( [ { $lookup: { from: "cakeFlavors", pipeline: [ {
      * $documents: [ {} ] } ], as: "test" } } ] )
      */
-    @Test(testName = "Namespaces in Subpipelines")
+    @Test
+    @DisplayName("Namespaces in Subpipelines")
     public void testExample7() {
         // this is just an error case in the docs. nothing to test.
     }

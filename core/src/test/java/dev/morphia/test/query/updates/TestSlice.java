@@ -6,7 +6,8 @@ import java.util.Map;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.Sort.descending;
 import static dev.morphia.query.filters.Filters.eq;
@@ -17,7 +18,8 @@ public class TestSlice extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/updates/slice/example1
      */
-    @Test(testName = "Slice from the End of the Array")
+    @Test
+    @DisplayName("Slice from the End of the Array")
     public void testExample1() {
         testUpdate((query) -> query.filter(eq("_id", 1)), push("scores", List.of(80, 78, 86)).slice(-5));
     }
@@ -25,7 +27,8 @@ public class TestSlice extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/updates/slice/example2
      */
-    @Test(testName = "Slice from the Front of the Array")
+    @Test
+    @DisplayName("Slice from the Front of the Array")
     public void testExample2() {
         testUpdate((query) -> query.filter(eq("_id", 2)), push("scores", List.of(100, 20)).slice(3));
     }
@@ -33,7 +36,8 @@ public class TestSlice extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/updates/slice/example3
      */
-    @Test(testName = "Update Array Using Slice Only")
+    @Test
+    @DisplayName("Update Array Using Slice Only")
     public void testExample3() {
         testUpdate((query) -> query.filter(eq("_id", 3)), push("scores", List.of()).slice(-3));
     }
@@ -41,7 +45,8 @@ public class TestSlice extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/updates/slice/example4
      */
-    @Test(testName = "Use ``$slice`` with Other ``$push`` Modifiers")
+    @Test
+    @DisplayName("Use ``$slice`` with Other ``$push`` Modifiers")
     public void testExample4() {
         // the Map order throws off structural checks
         testUpdate(new ActionTestOptions().skipActionCheck(true), (query) -> query.filter(eq("_id", 5)),

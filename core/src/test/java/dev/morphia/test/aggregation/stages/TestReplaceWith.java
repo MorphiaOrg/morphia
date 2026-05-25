@@ -3,7 +3,9 @@ package dev.morphia.test.aggregation.stages;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.Expressions.document;
 import static dev.morphia.aggregation.expressions.MathExpressions.multiply;
@@ -21,7 +23,8 @@ public class TestReplaceWith extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/replaceWith/example1
      * 
      */
-    @Test(testName = "``$replaceWith`` an Embedded Document Field")
+    @Test
+    @DisplayName("``$replaceWith`` an Embedded Document Field")
     public void testExample1() {
         testPipeline((aggregation) -> aggregation.pipeline(replaceWith(mergeObjects()
                 .add(document().field("dogs", 0).field("cats", 0).field("birds", 0).field("fish", 0)).add("$pets"))));
@@ -31,7 +34,8 @@ public class TestReplaceWith extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/replaceWith/example2
      * 
      */
-    @Test(testName = "``$replaceWith`` a Document Nested in an Array")
+    @Test
+    @DisplayName("``$replaceWith`` a Document Nested in an Array")
     public void testExample2() {
         testPipeline((aggregation) -> aggregation.pipeline(unwind("grades"), match(gte("grades.grade", 90)),
                 replaceWith("$grades")));
@@ -41,7 +45,8 @@ public class TestReplaceWith extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/replaceWith/example3
      * 
      */
-    @Test(testName = "``$replaceWith`` a Newly Created Document")
+    @Test
+    @DisplayName("``$replaceWith`` a Newly Created Document")
     public void testExample3() {
         testPipeline(new ActionTestOptions().orderMatters(false).skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(match(eq("status", "C")),
@@ -54,7 +59,9 @@ public class TestReplaceWith extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/replaceWith/example4
      * 
      */
-    @Test(testName = "``$replaceWith`` a New Document Created from ``$$ROOT`` and a Default Document", enabled = false, description = "failing oddly")
+    @Disabled("failing oddly")
+    @Test
+    @DisplayName("``$replaceWith`` a New Document Created from ``$$ROOT`` and a Default Document")
     public void testExample4() {
         testPipeline((aggregation) -> aggregation.pipeline(replaceWith(mergeObjects().add(
                 document().field("_id", "").field("name", "").field("email", "").field("cell", "").field("home", ""))

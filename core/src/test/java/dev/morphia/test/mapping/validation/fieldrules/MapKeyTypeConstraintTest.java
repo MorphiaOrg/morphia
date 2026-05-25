@@ -9,18 +9,25 @@ import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.TestEntity;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 public class MapKeyTypeConstraintTest extends TestBase {
 
-    @Test(expectedExceptions = ConstraintViolationException.class)
+    @Test
     public void testInvalidKeyType() {
-        getMapper().map(MapWithWrongKeyType3.class);
+        Assertions.assertThrows(ConstraintViolationException.class, () -> {
+            getMapper().map(MapWithWrongKeyType3.class);
+        });
     }
 
-    @Test(groups = "references", expectedExceptions = ConstraintViolationException.class)
+    @Test
+    @Tag("references")
     public void testInvalidReferenceType() {
-        getMapper().map(MapWithWrongKeyType2.class);
+        Assertions.assertThrows(ConstraintViolationException.class, () -> {
+            getMapper().map(MapWithWrongKeyType2.class);
+        });
     }
 
     private static class MapWithWrongKeyType2 extends TestEntity {

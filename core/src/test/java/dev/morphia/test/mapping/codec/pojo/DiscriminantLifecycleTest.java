@@ -1,5 +1,7 @@
 package dev.morphia.test.mapping.codec.pojo;
 
+import java.util.stream.Stream;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PostLoad;
@@ -10,9 +12,10 @@ import dev.morphia.test.TestBase;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecConfigurationException;
 import org.bson.types.ObjectId;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static java.util.List.of;
 
@@ -26,34 +29,39 @@ public class DiscriminantLifecycleTest extends TestBase {
                 .packages(of("dev.morphia.test.mapping.codec.pojo")));
     }
 
-    @DataProvider(name = "classes")
-    public Object[][] classes() {
-        return new Object[][] {
-                { BaseLifecycleEntity.class, ChildLifecycleEntity.class },
-                { BaseEntity.class, ChildEntity.class }
-        };
+    static Stream<Arguments> classes() {
+        return Stream.of(
+                Arguments.of(BaseLifecycleEntity.class, ChildLifecycleEntity.class),
+                Arguments.of(BaseEntity.class, ChildEntity.class));
     }
 
-    @Test(dataProvider = "classes")
+    @ParameterizedTest
+    @MethodSource("classes")
     public void testCorrectEntity(Class<?> baseClass, Class<?> childClass) {
         ObjectId id = saveChildEntity(childClass);
         Child saved = (Child) getDs().find(baseClass).filter(Filters.eq("_id", id)).first();
-        Assert.assertTrue(childClass.isInstance(saved));
-        Assert.assertTrue(saved.getAudited());
-        Assert.assertEquals("embedded", saved.getEmbed().embeddedValue);
+        Assertions.assertTrue(childClass.isInstance(saved));
+        Assertions.assertTrue(saved.getAudited());
+        Assertions.assertEquals(saved.getEmbed().embeddedValue, "embedded");
     }
 
-    @Test(expectedExceptions = CodecConfigurationException.class, dataProvider = "classes")
+    @ParameterizedTest
+    @MethodSource("classes")
     public void testWrongDiscriminator(Class<?> baseClass, Class<?> childClass) {
-        Document entity = new Document("_t", "Nonsense");
-        ObjectId id = getDatabase().getCollection("entity").insertOne(entity).getInsertedId().asObjectId().getValue();
-        getDs().find(baseClass).filter(Filters.eq("_id", id)).first();
+        Assertions.assertThrows(CodecConfigurationException.class, () -> {
+            Document entity = new Document("_t", "Nonsense");
+            ObjectId id = getDatabase().getCollection("entity").insertOne(entity).getInsertedId().asObjectId().getValue();
+            getDs().find(baseClass).filter(Filters.eq("_id", id)).first();
+        });
     }
 
-    @Test(expectedExceptions = CodecConfigurationException.class, dataProvider = "classes")
+    @ParameterizedTest
+    @MethodSource("classes")
     public void testNonEntityDiscriminator(Class<?> baseClass, Class<?> childClass) {
-        ObjectId id = saveChildEntity(NonEntity.class);
-        getDs().find(baseClass).filter(Filters.eq("_id", id)).first();
+        Assertions.assertThrows(CodecConfigurationException.class, () -> {
+            ObjectId id = saveChildEntity(NonEntity.class);
+            getDs().find(baseClass).filter(Filters.eq("_id", id)).first();
+        });
     }
 
     private ObjectId saveChildEntity(Class<?> entityClass) {

@@ -28,14 +28,12 @@ import dev.morphia.test.TestBase;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
 
 @SuppressWarnings({ "resource", "DataFlowIssue", "unused", "removal" })
 public class TestLifecycles extends TestBase {
@@ -54,8 +52,8 @@ public class TestLifecycles extends TestBase {
 
             SimpleBean reloaded = getDs().find(SimpleBean.class).first();
 
-            Assert.assertEquals(reloaded.ldt.getHour(), simpleBean.ldt.getHour(), format("'%s' vs '%s'", reloaded.ldt, simpleBean.ldt));
-            Assert.assertEquals(reloaded.date, simpleBean.date, format("'%s' vs '%s'", reloaded.date, simpleBean.date));
+            Assertions.assertEquals(simpleBean.ldt.getHour(), reloaded.ldt.getHour(), format("'%s' vs '%s'", reloaded.ldt, simpleBean.ldt));
+            Assertions.assertEquals(simpleBean.date, reloaded.date, format("'%s' vs '%s'", reloaded.date, simpleBean.date));
         });
 
     }
@@ -66,8 +64,8 @@ public class TestLifecycles extends TestBase {
             var parent = getMapper().getEntityModel(Parent.class);
             var child = getMapper().getEntityModel(Child.class);
 
-            assertTrue(parent.hasLifecycle(PrePersist.class));
-            assertFalse(child.hasLifecycle(PrePersist.class));
+            Assertions.assertTrue(parent.hasLifecycle(PrePersist.class));
+            Assertions.assertFalse(child.hasLifecycle(PrePersist.class));
         });
     }
 
@@ -77,51 +75,51 @@ public class TestLifecycles extends TestBase {
         a.b = new LifecycleB();
         a.bs.add(new LifecycleB());
 
-        Assert.assertFalse(a.isPostLoad());
-        Assert.assertFalse(a.b.isPostLoad());
-        Assert.assertFalse(a.bs.get(0).isPostLoad());
+        Assertions.assertFalse(a.isPostLoad());
+        Assertions.assertFalse(a.b.isPostLoad());
+        Assertions.assertFalse(a.bs.get(0).isPostLoad());
 
-        Assert.assertFalse(a.isPostPersist());
-        Assert.assertFalse(a.b.isPostPersist());
-        Assert.assertFalse(a.bs.get(0).isPostPersist());
+        Assertions.assertFalse(a.isPostPersist());
+        Assertions.assertFalse(a.b.isPostPersist());
+        Assertions.assertFalse(a.bs.get(0).isPostPersist());
 
-        Assert.assertFalse(a.isPreLoad());
-        Assert.assertFalse(a.b.isPreLoad());
-        Assert.assertFalse(a.bs.get(0).isPreLoad());
+        Assertions.assertFalse(a.isPreLoad());
+        Assertions.assertFalse(a.b.isPreLoad());
+        Assertions.assertFalse(a.bs.get(0).isPreLoad());
 
-        Assert.assertFalse(a.isPrePersist());
-        Assert.assertFalse(a.b.isPrePersist());
-        Assert.assertFalse(a.bs.get(0).isPrePersist());
+        Assertions.assertFalse(a.isPrePersist());
+        Assertions.assertFalse(a.b.isPrePersist());
+        Assertions.assertFalse(a.bs.get(0).isPrePersist());
 
         getDs().save(a);
 
-        Assert.assertFalse(a.isPreLoad());
-        Assert.assertFalse(a.b.isPreLoad());
-        Assert.assertFalse(a.bs.get(0).isPreLoad());
+        Assertions.assertFalse(a.isPreLoad());
+        Assertions.assertFalse(a.b.isPreLoad());
+        Assertions.assertFalse(a.bs.get(0).isPreLoad());
 
-        Assert.assertTrue(a.isPostPersist());
-        Assert.assertTrue(a.b.isPostPersist()); //PostPersist in not only called on entities
-        Assert.assertTrue(a.bs.get(0).isPostPersist()); //PostPersist is not only called on entities
+        Assertions.assertTrue(a.isPostPersist());
+        Assertions.assertTrue(a.b.isPostPersist()); //PostPersist in not only called on entities
+        Assertions.assertTrue(a.bs.get(0).isPostPersist()); //PostPersist is not only called on entities
 
-        Assert.assertFalse(a.isPreLoad());
-        Assert.assertFalse(a.b.isPreLoad());
-        Assert.assertFalse(a.bs.get(0).isPreLoad());
+        Assertions.assertFalse(a.isPreLoad());
+        Assertions.assertFalse(a.b.isPreLoad());
+        Assertions.assertFalse(a.bs.get(0).isPreLoad());
 
-        Assert.assertTrue(a.isPrePersist());
-        Assert.assertTrue(a.b.isPrePersist());
-        Assert.assertTrue(a.bs.get(0).isPrePersist());
+        Assertions.assertTrue(a.isPrePersist());
+        Assertions.assertTrue(a.b.isPrePersist());
+        Assertions.assertTrue(a.bs.get(0).isPrePersist());
 
         a = getDs().find(LifecyleA.class)
                 .filter(eq("_id", a.id)).iterator()
                 .tryNext();
 
-        Assert.assertTrue(a.isPostLoad());
-        Assert.assertTrue(a.b.isPostLoad());
-        Assert.assertTrue(a.bs.get(0).isPostLoad());
+        Assertions.assertTrue(a.isPostLoad());
+        Assertions.assertTrue(a.b.isPostLoad());
+        Assertions.assertTrue(a.bs.get(0).isPostLoad());
 
-        Assert.assertTrue(a.isPreLoad());
-        Assert.assertTrue(a.b.isPreLoad());
-        Assert.assertTrue(a.bs.get(0).isPreLoad());
+        Assertions.assertTrue(a.isPreLoad());
+        Assertions.assertTrue(a.b.isPreLoad());
+        Assertions.assertTrue(a.bs.get(0).isPreLoad());
     }
 
     @Test
@@ -132,7 +130,7 @@ public class TestLifecycles extends TestBase {
         getDs().save(new ValidNullHolder());
         try {
             getDs().save(new InvalidNullHolder());
-            Assert.fail();
+            Assertions.fail();
         } catch (NonNullValidationException e) {
             // expected
         }
@@ -142,13 +140,13 @@ public class TestLifecycles extends TestBase {
     @Test
     public void testMultipleCallbackAnnotation() {
         final SomeEntity entity = new SomeEntity();
-        Assert.assertFalse(entity.isPersistent());
+        Assertions.assertFalse(entity.isPersistent());
         getDs().save(entity);
-        Assert.assertTrue(entity.isPersistent());
+        Assertions.assertTrue(entity.isPersistent());
         final SomeEntity reloaded = getDs().find(SomeEntity.class)
                 .filter(eq("id", entity.getId())).iterator()
                 .tryNext();
-        Assert.assertTrue(reloaded.isPersistent());
+        Assertions.assertTrue(reloaded.isPersistent());
     }
 
     @Test
@@ -157,9 +155,9 @@ public class TestLifecycles extends TestBase {
                 asList(new Position(0d, 0d), new Position(1d, 1d), new Position(2d, 2d), new Position(3d, 3d), new Position(0d, 0d)));
         getDs().save(new HoldsPolygon(ObjectId.get(), polygon));
 
-        Assert.assertFalse(HoldsPolygon.lifecycle);
-        Assert.assertNotNull(getDs().find(HoldsPolygon.class).first());
-        Assert.assertTrue(HoldsPolygon.lifecycle);
+        Assertions.assertFalse(HoldsPolygon.lifecycle);
+        Assertions.assertNotNull(getDs().find(HoldsPolygon.class).first());
+        Assertions.assertTrue(HoldsPolygon.lifecycle);
     }
 
     private static class Callbacks {

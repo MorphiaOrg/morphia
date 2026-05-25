@@ -6,17 +6,19 @@ import dev.morphia.test.mapping.ProxyTestBase;
 import dev.morphia.test.models.TestEntity;
 
 import org.bson.types.ObjectId;
-import org.testng.annotations.Ignore;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static java.util.Arrays.asList;
-import static org.testng.Assert.assertEquals;
 
-@Test(groups = "references")
-@Ignore("references need caching")
+@Tag("references")
+@Disabled("references need caching")
 public class TestLazyCircularReference extends ProxyTestBase {
 
+    @Test
     public void testCircularReferences() {
         RootEntity root = new RootEntity();
         ReferencedEntity first = new ReferencedEntity();
@@ -31,11 +33,12 @@ public class TestLazyCircularReference extends ProxyTestBase {
         getDs().save(asList(root, first, second));
 
         RootEntity rootEntity = getDs().find(RootEntity.class).iterator().tryNext();
-        assertEquals(first.getId(), rootEntity.getR().getId());
-        assertEquals(second.getId(), rootEntity.getSecondReference().getId());
-        assertEquals(root.getId(), rootEntity.getR().getParent().getId());
+        Assertions.assertEquals(rootEntity.getR().getId(), first.getId());
+        Assertions.assertEquals(rootEntity.getSecondReference().getId(), second.getId());
+        Assertions.assertEquals(rootEntity.getR().getParent().getId(), root.getId());
     }
 
+    @Test
     public void testGetKeyWithoutFetching() {
         checkForProxyTypes();
 

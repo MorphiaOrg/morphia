@@ -11,10 +11,10 @@ import dev.morphia.annotations.Id;
 import dev.morphia.test.TestBase;
 
 import org.bson.types.ObjectId;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
-import static org.testng.Assert.assertEquals;
 
 public class LocaleMappingTest extends TestBase {
 
@@ -31,15 +31,15 @@ public class LocaleMappingTest extends TestBase {
                 .filter(eq("_id", e.id))
                 .first();
 
-        assertEquals(e.l1, Locale.CANADA_FRENCH);
+        Assertions.assertEquals(Locale.CANADA_FRENCH, e.l1);
 
-        assertEquals(e.l2.size(), 2);
-        assertEquals(e.l2.get(0), Locale.GERMANY);
-        assertEquals(e.l2.get(1), Locale.TRADITIONAL_CHINESE);
+        Assertions.assertEquals(2, e.l2.size());
+        Assertions.assertEquals(Locale.GERMANY, e.l2.get(0));
+        Assertions.assertEquals(Locale.TRADITIONAL_CHINESE, e.l2.get(1));
 
-        assertEquals(e.l3.length, 2);
-        assertEquals(e.l3[0], Locale.TRADITIONAL_CHINESE);
-        assertEquals(e.l3[1], Locale.FRENCH);
+        Assertions.assertEquals(2, e.l3.length);
+        Assertions.assertEquals(Locale.TRADITIONAL_CHINESE, e.l3[0]);
+        Assertions.assertEquals(Locale.FRENCH, e.l3[1]);
 
     }
 

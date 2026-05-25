@@ -2,7 +2,8 @@ package dev.morphia.test.aggregation.stages;
 
 import dev.morphia.test.TemplatedTestBase;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.Expressions.document;
 import static dev.morphia.aggregation.expressions.ObjectExpressions.mergeObjects;
@@ -18,7 +19,8 @@ public class TestReplaceRoot extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/replaceRoot/example1
      * 
      */
-    @Test(testName = "``$replaceRoot`` with an Embedded Document Field")
+    @Test
+    @DisplayName("``$replaceRoot`` with an Embedded Document Field")
     public void testExample1() {
         testPipeline((aggregation) -> aggregation.pipeline(replaceRoot(mergeObjects()
                 .add(document().field("dogs", 0).field("cats", 0).field("birds", 0).field("fish", 0)).add("$pets"))));
@@ -28,7 +30,8 @@ public class TestReplaceRoot extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/replaceRoot/example2
      * 
      */
-    @Test(testName = "``$replaceRoot`` with a Document Nested in an Array")
+    @Test
+    @DisplayName("``$replaceRoot`` with a Document Nested in an Array")
     public void testExample2() {
         testPipeline((aggregation) -> aggregation.pipeline(unwind("grades"), match(gte("grades.grade", 90)),
                 replaceRoot("$grades")));
@@ -38,7 +41,8 @@ public class TestReplaceRoot extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/replaceRoot/example3
      * 
      */
-    @Test(testName = "``$replaceRoot`` with a newly created document")
+    @Test
+    @DisplayName("``$replaceRoot`` with a newly created document")
     public void testExample3() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(replaceRoot().field("full_name", concat("$first_name", " ", "$last_name"))));
@@ -48,7 +52,8 @@ public class TestReplaceRoot extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/replaceRoot/example4
      * 
      */
-    @Test(testName = "``$replaceRoot`` with a New Document Created from ``$$ROOT`` and a Default Document")
+    @Test
+    @DisplayName("``$replaceRoot`` with a New Document Created from ``$$ROOT`` and a Default Document")
     public void testExample4() {
         testPipeline((aggregation) -> aggregation.pipeline(replaceRoot(mergeObjects().add(
                 document().field("_id", "").field("name", "").field("email", "").field("cell", "").field("home", ""))

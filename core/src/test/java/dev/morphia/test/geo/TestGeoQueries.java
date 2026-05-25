@@ -20,8 +20,8 @@ import dev.morphia.query.filters.Filters;
 import dev.morphia.test.TestBase;
 
 import org.bson.types.ObjectId;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.box;
 import static dev.morphia.query.filters.Filters.center;
@@ -95,7 +95,7 @@ public class TestGeoQueries extends TestBase {
                 .filter(box("loc", new Point(new Position(0, 0)), new Point(new Position(2, 2))))
                 .iterator()
                 .next();
-        Assert.assertNotNull(found);
+        Assertions.assertNotNull(found);
     }
 
     @Test
@@ -106,7 +106,7 @@ public class TestGeoQueries extends TestBase {
                 .filter(box("loc", new Point(new Position(0, 0)), new Point(new Position(.4, .5))))
                 .iterator()
                 .tryNext();
-        Assert.assertNull(found);
+        Assertions.assertNull(found);
     }
 
     @Test
@@ -121,7 +121,7 @@ public class TestGeoQueries extends TestBase {
                         new Point(new Position(2, 0))))
                 .iterator()
                 .next();
-        Assert.assertNotNull(found);
+        Assertions.assertNotNull(found);
     }
 
     @Test
@@ -136,7 +136,7 @@ public class TestGeoQueries extends TestBase {
                         new Point(new Position(2, 0))))
                 .iterator()
                 .tryNext();
-        Assert.assertNull(found);
+        Assertions.assertNull(found);
     }
 
     @Test
@@ -146,7 +146,7 @@ public class TestGeoQueries extends TestBase {
         final Place found = getDs().find(Place.class)
                 .filter(center("loc", new Point(new Position(0, 1)), 1.1)).iterator()
                 .next();
-        Assert.assertNotNull(found);
+        Assertions.assertNotNull(found);
     }
 
     @Test
@@ -156,7 +156,7 @@ public class TestGeoQueries extends TestBase {
         final Place found = getDs().find(Place.class)
                 .filter(center("loc", new Point(new Position(0.5, 0.5)), 0.77)).iterator()
                 .next();
-        Assert.assertNotNull(found);
+        Assertions.assertNotNull(found);
     }
 
     @Test
@@ -166,7 +166,7 @@ public class TestGeoQueries extends TestBase {
         final Place found = getDs().find(Place.class)
                 .filter(centerSphere("loc", new Point(new Position(0, 1)), 1)).iterator()
                 .next();
-        Assert.assertNotNull(found);
+        Assertions.assertNotNull(found);
     }
 
     @Test
@@ -176,7 +176,7 @@ public class TestGeoQueries extends TestBase {
         final Place found = getDs().find(Place.class)
                 .filter(near("loc", new Point(new Position(0, 0)))).iterator()
                 .next();
-        Assert.assertNotNull(found);
+        Assertions.assertNotNull(found);
     }
 
     @Test
@@ -189,23 +189,25 @@ public class TestGeoQueries extends TestBase {
         Query<Place> query = getDs().find(Place.class, options)
                 .filter(near("loc", new Point(new Position(1, 1)))
                         .maxDistance(2.0));
-        Assert.assertNotNull(query.iterator().tryNext(), query.getLoggedQuery());
+        Assertions.assertNotNull(query.iterator().tryNext(), query.getLoggedQuery());
 
         query = getDs().find(Place.class, options)
                 .filter(near("loc", new Point(new Position(0, 0)))
                         .maxDistance(1.0));
-        Assert.assertNull(query.first(), query.getLoggedQuery());
+        Assertions.assertNull(query.first(), query.getLoggedQuery());
     }
 
-    @Test(expectedExceptions = MongoQueryException.class)
+    @Test
     public void testNearNoIndex() {
-        getDs().getCollection(Place.class).drop();
-        final Place place1 = new Place("place1", new double[] { 1, 1 });
-        getDs().save(place1);
-        Place found = getDs().find(Place.class)
-                .filter(near("loc", new Point(new Position(0, 0)))).iterator()
-                .tryNext();
-        Assert.assertNull(found);
+        Assertions.assertThrows(MongoQueryException.class, () -> {
+            getDs().getCollection(Place.class).drop();
+            final Place place1 = new Place("place1", new double[] { 1, 1 });
+            getDs().save(place1);
+            Place found = getDs().find(Place.class)
+                    .filter(near("loc", new Point(new Position(0, 0)))).iterator()
+                    .tryNext();
+            Assertions.assertNull(found);
+        });
     }
 
     @Test
@@ -218,7 +220,7 @@ public class TestGeoQueries extends TestBase {
                         new Point(new Position(2, 2))))
                 .iterator()
                 .next();
-        Assert.assertNotNull(found);
+        Assertions.assertNotNull(found);
     }
 
     @Test
@@ -231,7 +233,7 @@ public class TestGeoQueries extends TestBase {
                         new Point(new Position(.4, .5))))
                 .iterator()
                 .tryNext();
-        Assert.assertNull(found);
+        Assertions.assertNull(found);
     }
 
     @Test
@@ -241,7 +243,7 @@ public class TestGeoQueries extends TestBase {
         final Place found = getDs().find(Place.class)
                 .filter(center("loc", new Point(new Position(2, 2)), 0.4)).iterator()
                 .tryNext();
-        Assert.assertNull(found);
+        Assertions.assertNull(found);
     }
 
     @Test
@@ -251,7 +253,7 @@ public class TestGeoQueries extends TestBase {
         final Place found = getDs().find(Place.class)
                 .filter(center("loc", new Point(new Position(0, 1)), 1.1)).iterator()
                 .next();
-        Assert.assertNotNull(found);
+        Assertions.assertNotNull(found);
     }
 
     @Test
@@ -261,7 +263,7 @@ public class TestGeoQueries extends TestBase {
         final Place found = getDs().find(Place.class)
                 .filter(center("loc", new Point(new Position(0.5, 0.5)), 0.77)).iterator()
                 .next();
-        Assert.assertNotNull(found);
+        Assertions.assertNotNull(found);
     }
 
     @Test
@@ -271,7 +273,7 @@ public class TestGeoQueries extends TestBase {
         final Place found = getDs().find(Place.class)
                 .filter(centerSphere("loc", new Point(new Position(0, 1)), 1)).iterator()
                 .next();
-        Assert.assertNotNull(found);
+        Assertions.assertNotNull(found);
     }
 
     @Test

@@ -4,7 +4,7 @@ import dev.morphia.audits.model.Operator
 import dev.morphia.audits.model.OperatorType.FILTER
 import dev.morphia.audits.model.OperatorType.UPDATE
 import java.io.File
-import org.testng.annotations.Test
+import org.junit.jupiter.api.Test
 
 class QueryAuditTest : BaseAuditTest() {
     @Test

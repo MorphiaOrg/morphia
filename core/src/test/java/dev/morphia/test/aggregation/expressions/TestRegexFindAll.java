@@ -3,7 +3,8 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.concatArrays;
@@ -17,7 +18,8 @@ public class TestRegexFindAll extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/regexFindAll/example1
      * 
      */
-    @Test(testName = "``$regexFindAll`` and Its Options")
+    @Test
+    @DisplayName("``$regexFindAll`` and Its Options")
     public void testExample1() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
                 .pipeline(addFields().field("returnObject", regexFindAll("$description").pattern("line"))));
@@ -28,7 +30,8 @@ public class TestRegexFindAll extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/regexFindAll/example2
      * 
      */
-    @Test(testName = "Use ``$regexFindAll`` to Parse Email from String")
+    @Test
+    @DisplayName("Use ``$regexFindAll`` to Parse Email from String")
     public void testExample2() {
         testPipeline((aggregation) -> aggregation.pipeline(
                 addFields().field("email",
@@ -40,7 +43,8 @@ public class TestRegexFindAll extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/regexFindAll/example3
      * 
      */
-    @Test(testName = "Use Captured Groupings to Parse User Name")
+    @Test
+    @DisplayName("Use Captured Groupings to Parse User Name")
     public void testExample3() {
         testPipeline(
                 (aggregation) -> aggregation.pipeline(

@@ -31,8 +31,8 @@ import dev.morphia.test.models.methods.MethodMappedUser;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static com.mongodb.client.model.CollationAlternate.SHIFTED;
 import static dev.morphia.mapping.IndexType.DESC;
@@ -41,9 +41,6 @@ import static dev.morphia.test.util.IndexMatcher.hasIndexNamed;
 import static org.bson.Document.parse;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
 
 public class TestIndexes extends TestBase {
     public TestIndexes() {
@@ -54,12 +51,12 @@ public class TestIndexes extends TestBase {
 
     @Test
     public void indexTypefromValue() {
-        assertEquals(IndexType.fromValue(1), IndexType.ASC);
-        assertEquals(IndexType.fromValue(-1), IndexType.DESC);
-        assertEquals(IndexType.fromValue("2d"), IndexType.GEO2D);
-        assertEquals(IndexType.fromValue("2dsphere"), IndexType.GEO2DSPHERE);
-        assertEquals(IndexType.fromValue("hashed"), IndexType.HASHED);
-        assertEquals(IndexType.fromValue("text"), IndexType.TEXT);
+        Assertions.assertEquals(IndexType.ASC, IndexType.fromValue(1));
+        Assertions.assertEquals(IndexType.DESC, IndexType.fromValue(-1));
+        Assertions.assertEquals(IndexType.GEO2D, IndexType.fromValue("2d"));
+        Assertions.assertEquals(IndexType.GEO2DSPHERE, IndexType.fromValue("2dsphere"));
+        Assertions.assertEquals(IndexType.HASHED, IndexType.fromValue("hashed"));
+        Assertions.assertEquals(IndexType.TEXT, IndexType.fromValue("text"));
     }
 
     @Test
@@ -77,7 +74,7 @@ public class TestIndexes extends TestBase {
             entityWithSameName.setUnique(2);
             getDs().save(entityWithSameName);
 
-            Assert.fail("Should have gotten a duplicate key exception");
+            Assertions.fail("Should have gotten a duplicate key exception");
         } catch (Exception ignored) {
         }
 
@@ -93,27 +90,31 @@ public class TestIndexes extends TestBase {
             second.setUnique(value);
             getDs().save(second);
 
-            Assert.fail("Should have gotten a duplicate key exception");
+            Assertions.fail("Should have gotten a duplicate key exception");
         } catch (Exception ignored) {
         }
     }
 
-    @Test(expectedExceptions = MongoCommandException.class)
+    @Test
     public void shouldErrorWhenCreatingA2dIndexOnGeoJson() {
-        withConfig(buildConfig(Place2D.class)
-                .applyIndexes(false), () -> {
-                    Place2D pointB = new Place2D(new Point(new Position(3.1, 7.5)), "Point B");
-                    getDs().save(pointB);
+        Assertions.assertThrows(MongoCommandException.class, () -> {
+            withConfig(buildConfig(Place2D.class)
+                    .applyIndexes(false), () -> {
+                        Place2D pointB = new Place2D(new Point(new Position(3.1, 7.5)), "Point B");
+                        getDs().save(pointB);
 
-                    getDs().applyIndexes();
-                });
+                        getDs().applyIndexes();
+                    });
+        });
     }
 
-    @Test(expectedExceptions = MongoCommandException.class)
+    @Test
     public void shouldNotAllowMultipleTextIndexes() {
-        withTestConfig(buildConfig()
-                .applyIndexes(true), List.of(MultipleTextIndexes.class), () -> {
-                });
+        Assertions.assertThrows(MongoCommandException.class, () -> {
+            withTestConfig(buildConfig()
+                    .applyIndexes(true), List.of(MultipleTextIndexes.class), () -> {
+                    });
+        });
     }
 
     @Test
@@ -132,16 +133,15 @@ public class TestIndexes extends TestBase {
     @Test
     public void testClassIndexInherit() {
         final EntityModel entityModel = getMapper().getEntityModel(Circle.class);
-        assertNotNull(entityModel);
+        Assertions.assertNotNull(entityModel);
 
-        assertNotNull(entityModel.getAnnotation(Indexes.class));
+        Assertions.assertNotNull(entityModel.getAnnotation(Indexes.class));
 
-        assertEquals(getIndexInfo(Circle.class)
+        Assertions.assertEquals(List.of("_id_", "description_1", "foo_1", "radius_1"), getIndexInfo(Circle.class)
                 .stream()
                 .map(i -> (String) i.get("name"))
                 .sorted()
-                .collect(Collectors.toList()),
-                List.of("_id_", "description_1", "foo_1", "radius_1"));
+                .collect(Collectors.toList()));
     }
 
     @Test
@@ -149,16 +149,16 @@ public class TestIndexes extends TestBase {
         getDs().save(new ClassAnnotation());
 
         final List<Document> indexes = getIndexInfo(ClassAnnotation.class);
-        assertEquals(indexes.size(), 2);
+        Assertions.assertEquals(2, indexes.size());
         Document index = null;
         for (Document candidateIndex : indexes) {
             if (candidateIndex.containsKey("expireAfterSeconds")) {
                 index = candidateIndex;
             }
         }
-        assertNotNull(index);
-        assertTrue(index.containsKey("expireAfterSeconds"));
-        assertEquals(((Number) index.get("expireAfterSeconds")).intValue(), 5);
+        Assertions.assertNotNull(index);
+        Assertions.assertTrue(index.containsKey("expireAfterSeconds"));
+        Assertions.assertEquals(5, ((Number) index.get("expireAfterSeconds")).intValue());
     }
 
     @Test
@@ -167,16 +167,16 @@ public class TestIndexes extends TestBase {
 
         final List<Document> indexes = getIndexInfo(HasExpiryField.class);
 
-        assertNotNull(indexes);
-        assertEquals(indexes.size(), 2);
+        Assertions.assertNotNull(indexes);
+        Assertions.assertEquals(2, indexes.size());
         Document index = null;
         for (Document candidateIndex : indexes) {
             if (candidateIndex.containsKey("expireAfterSeconds")) {
                 index = candidateIndex;
             }
         }
-        assertNotNull(index);
-        assertEquals(((Number) index.get("expireAfterSeconds")).intValue(), 5);
+        Assertions.assertNotNull(index);
+        Assertions.assertEquals(5, ((Number) index.get("expireAfterSeconds")).intValue());
     }
 
     @Test
@@ -191,12 +191,11 @@ public class TestIndexes extends TestBase {
     public void testIndexes() {
         getDs().ensureIndexes(TestWithIndexOption.class);
         List<Document> indexInfo = getIndexInfo(TestWithIndexOption.class);
-        assertEquals(indexInfo.size(), 2);
+        Assertions.assertEquals(2, indexInfo.size());
         assertBackground(indexInfo);
         for (Document document : indexInfo) {
             if (document.get("name").equals("collated")) {
-                assertEquals(document.get("partialFilterExpression"),
-                        parse("{ name : { $exists : true } }"));
+                Assertions.assertEquals(parse("{ name : { $exists : true } }"), document.get("partialFilterExpression"));
                 Document collation = (Document) document.get("collation");
                 collation.remove("version");
 
@@ -209,23 +208,23 @@ public class TestIndexes extends TestBase {
                         + "'normalization': true,"
                         + "'numericOrdering': true,"
                         + "'strength': 5 }");
-                assertEquals(collation, parse, collation.toJson());
+                assertDocumentEquals(toJson(collation), parse, collation);
             }
         }
 
         getDs().ensureIndexes(TestWithDeprecatedIndex.class);
-        assertEquals(getIndexInfo(TestWithDeprecatedIndex.class).size(), 2);
+        Assertions.assertEquals(2, getIndexInfo(TestWithDeprecatedIndex.class).size());
         assertBackground(getIndexInfo(TestWithDeprecatedIndex.class));
 
         getDs().ensureIndexes(TestWithHashedIndex.class);
-        assertEquals(getIndexInfo(TestWithHashedIndex.class).size(), 2);
+        Assertions.assertEquals(2, getIndexInfo(TestWithHashedIndex.class).size());
         assertHashed(getIndexInfo(TestWithHashedIndex.class));
     }
 
     private void assertBackground(List<Document> indexInfo) {
         for (Document document : indexInfo) {
             if (!document.getString("name").equals("_id_")) {
-                assertTrue(document.getBoolean("background"));
+                Assertions.assertTrue(document.getBoolean("background"));
             }
         }
     }
@@ -233,14 +232,14 @@ public class TestIndexes extends TestBase {
     private void assertHashed(List<Document> indexInfo) {
         for (Document document : indexInfo) {
             if (!document.getString("name").equals("_id_")) {
-                assertEquals(((Document) document.get("key")).get("hashedValue"), "hashed");
+                Assertions.assertEquals("hashed", ((Document) document.get("key")).get("hashedValue"));
             }
         }
     }
 
     @Test
     public void testInheritedFieldIndex() {
-        assertEquals(getIndexInfo(Circle.class).size(), 4);
+        Assertions.assertEquals(4, getIndexInfo(Circle.class).size());
     }
 
     @Test
@@ -248,7 +247,7 @@ public class TestIndexes extends TestBase {
         withConfig(buildConfig(MethodMappedUser.class)
                 .applyIndexes(true)
                 .propertyDiscovery(PropertyDiscovery.METHODS), () -> {
-                    assertEquals(getIndexInfo(MethodMappedUser.class).size(), 3);
+                    Assertions.assertEquals(3, getIndexInfo(MethodMappedUser.class).size());
                 });
     }
 
@@ -266,19 +265,19 @@ public class TestIndexes extends TestBase {
     @Test
     public void testSingleAnnotation() {
         List<Document> indexInfo = getIndexInfo(CompoundTextIndex.class);
-        Assert.assertEquals(indexInfo.size(), 2);
+        Assertions.assertEquals(2, indexInfo.size());
         boolean found = false;
         for (Document document : indexInfo) {
             if (document.get("name").equals("indexing_test")) {
                 found = true;
-                Assert.assertEquals(document.get("default_language"), "russian", document.toString());
-                Assert.assertEquals(document.get("language_override"), "nativeTongue", document.toString());
-                Assert.assertEquals(((Document) document.get("weights")).get("name"), 1, document.toString());
-                Assert.assertEquals(((Document) document.get("weights")).get("nick"), 10, document.toString());
-                Assert.assertEquals(((Document) document.get("key")).get("age"), 1, document.toString());
+                Assertions.assertEquals("russian", document.get("default_language"), document.toString());
+                Assertions.assertEquals("nativeTongue", document.get("language_override"), document.toString());
+                Assertions.assertEquals(1, ((Document) document.get("weights")).get("name"), document.toString());
+                Assertions.assertEquals(10, ((Document) document.get("weights")).get("nick"), document.toString());
+                Assertions.assertEquals(1, ((Document) document.get("key")).get("age"), document.toString());
             }
         }
-        Assert.assertTrue(found);
+        Assertions.assertTrue(found);
     }
 
     @Test
@@ -286,17 +285,17 @@ public class TestIndexes extends TestBase {
         Class<SingleFieldTextIndex> clazz = SingleFieldTextIndex.class;
 
         List<Document> indexInfo = getIndexInfo(clazz);
-        Assert.assertEquals(indexInfo.size(), 2, indexInfo.toString());
+        Assertions.assertEquals(2, indexInfo.size(), indexInfo.toString());
         boolean found = false;
         for (Document document : indexInfo) {
             if (document.get("name").equals("single_annotation")) {
                 found = true;
-                Assert.assertEquals(document.get("default_language"), "english", document.toString());
-                Assert.assertEquals(document.get("language_override"), "nativeTongue", document.toString());
-                Assert.assertEquals(((Document) document.get("weights")).get("nickName"), 10, document.toString());
+                Assertions.assertEquals("english", document.get("default_language"), document.toString());
+                Assertions.assertEquals("nativeTongue", document.get("language_override"), document.toString());
+                Assertions.assertEquals(10, ((Document) document.get("weights")).get("nickName"), document.toString());
             }
         }
-        Assert.assertTrue(found, indexInfo.toString());
+        Assertions.assertTrue(found, indexInfo.toString());
 
     }
 

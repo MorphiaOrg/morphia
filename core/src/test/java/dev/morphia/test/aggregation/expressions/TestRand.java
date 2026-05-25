@@ -3,7 +3,8 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.lt;
 import static dev.morphia.aggregation.expressions.MathExpressions.floor;
@@ -21,7 +22,8 @@ public class TestRand extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/rand/example1
      * 
      */
-    @Test(testName = "Generate Random Data Points")
+    @Test
+    @DisplayName("Generate Random Data Points")
     public void testExample1() {
         testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false).skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(set().field("amount", multiply(rand(), 100)),
@@ -32,7 +34,8 @@ public class TestRand extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/rand/example2
      * 
      */
-    @Test(testName = "Select Random Items From a Collection")
+    @Test
+    @DisplayName("Select Random Items From a Collection")
     public void testExample2() {
         testPipeline(new ActionTestOptions().orderMatters(false).skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(match(eq("district", 3)), match(expr(lt(0.5, rand()))),

@@ -3,7 +3,8 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.first;
 import static dev.morphia.aggregation.stages.Group.group;
@@ -16,7 +17,8 @@ public class TestFirst extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/first/example1
      * 
      */
-    @Test(testName = "Use in ``$group`` Stage")
+    @Test
+    @DisplayName("Use in ``$group`` Stage")
     public void testExample1() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
                 .pipeline(sort().ascending("item", "date"), group(id("$item")).field("firstSale", first("$date"))));
@@ -26,7 +28,8 @@ public class TestFirst extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/first/example2
      * 
      */
-    @Test(testName = "Missing Data")
+    @Test
+    @DisplayName("Missing Data")
     public void testExample2() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
                 .pipeline(sort().ascending("item", "price"), group(id("$item")).field("inStock", first("$quantity"))
@@ -38,7 +41,8 @@ public class TestFirst extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/first/example3
      * 
      */
-    @Test(testName = "Use in ``$setWindowFields`` Stage")
+    @Test
+    @DisplayName("Use in ``$setWindowFields`` Stage")
     public void testExample3() {
         // this example starts importing a bunch of stuff and gets more complicated than
         // I care

@@ -3,7 +3,8 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.MathExpressions.add;
 import static dev.morphia.aggregation.expressions.MathExpressions.subtract;
@@ -14,7 +15,8 @@ public class TestSubtract extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/subtract/example1
      * 
      */
-    @Test(testName = "Subtract Numbers")
+    @Test
+    @DisplayName("Subtract Numbers")
     public void testExample1() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("item").include("total", subtract(add("$price", "$fee"), "$discount"))));
@@ -24,7 +26,8 @@ public class TestSubtract extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/subtract/example2
      * 
      */
-    @Test(testName = "Subtract Two Dates")
+    @Test
+    @DisplayName("Subtract Two Dates")
     public void testExample2() {
         testPipeline(new ActionTestOptions().skipDataCheck(true), (aggregation) -> aggregation
                 .pipeline(project().include("item").include("dateDifference", subtract("$$NOW", "$date"))));
@@ -34,7 +37,8 @@ public class TestSubtract extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/subtract/example3
      * 
      */
-    @Test(testName = "Subtract Milliseconds from a Date")
+    @Test
+    @DisplayName("Subtract Milliseconds from a Date")
     public void testExample3() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("item").include("dateDifference", subtract("$date", 5 * 60 * 1000))));

@@ -5,14 +5,18 @@ import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.TestEntity;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
-@Test(groups = "references")
+@Tag("references")
 public class LazyReferenceOnArrayTest extends TestBase {
 
-    @Test(expectedExceptions = ConstraintViolationException.class)
+    @Test
     public void testLazyRefOnArray() {
-        getMapper().map(LazyOnArray.class);
+        Assertions.assertThrows(ConstraintViolationException.class, () -> {
+            getMapper().map(LazyOnArray.class);
+        });
     }
 
     private static class LazyOnArray extends TestEntity {
