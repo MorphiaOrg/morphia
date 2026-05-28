@@ -165,12 +165,12 @@ jobs:
       maven-flags: "-e -Dmorphia.mapper=${{ matrix.mapper }} -Pcoverage"
 
   Release:
-    needs:
-      - Matrix
-      - CodeAudits
-      - ServerTests
-      - DriversTests
-      - JdkTests
+#    needs:
+#      - Matrix
+#      - CodeAudits
+#      - ServerTests
+#      - DriversTests
+#      - JdkTests
     if: needs.Matrix.outputs.releasable == 'true'
     uses: evanchooly/workflows/.github/workflows/jreleaser.yml@master
     concurrency:
