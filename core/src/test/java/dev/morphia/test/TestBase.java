@@ -7,6 +7,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +15,9 @@ import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import com.mongodb.ConnectionString;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
@@ -27,9 +31,12 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperType;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
+import dev.morphia.test.config.ManualMorphiaTestConfig;
+import dev.morphia.test.config.MorphiaTestConfig;
 import dev.morphia.test.mapping.codec.ZonedDateTimeCodec;
 
 import org.bson.Document;
+import org.bson.UuidRepresentation;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
@@ -39,20 +46,25 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.provider.Arguments;
+import org.semver4j.Semver;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testcontainers.containers.MongoDBContainer;
+import org.testcontainers.utility.DockerImageName;
 
+import static com.mongodb.MongoClientSettings.builder;
 import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
 import static java.lang.String.format;
 import static java.nio.file.Files.lines;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 
-public abstract class TestBase extends MorphiaTestSetup {
+@ExtendWith(MongoExtension.class)
+public abstract class TestBase {
     private static final Logger LOG = LoggerFactory.getLogger(TestBase.class);
-    protected static final String TEST_DB_NAME = "morphia_test_" + ProcessHandle.current().pid();
 
     public static File GIT_ROOT = new File(".").getAbsoluteFile();
     protected static File CORE_ROOT;
@@ -69,18 +81,226 @@ public abstract class TestBase extends MorphiaTestSetup {
         LOG.info("Running tests using driver version " + MorphiaInternals.getDriverVersion());
     }
 
+    private MorphiaDatastore datastore;
+    private MongoDatabase database;
+    protected MorphiaConfig morphiaConfig;
+
+    public TestBase() {
+        morphiaConfig = buildConfig().codecProvider(new ZDTCodecProvider());
+    }
+
+    public TestBase(MorphiaConfig config) {
+        morphiaConfig = config;
+    }
+
     public static Stream<Arguments> mapperTypes() {
         return Stream.of(
                 Arguments.of(MapperType.REFLECTION),
                 Arguments.of(MapperType.CRITTER));
     }
 
-    public TestBase() {
+    // -------------------------------------------------------------------------
+    // Infrastructure
+    // -------------------------------------------------------------------------
+
+    protected static MorphiaConfig buildConfig(Class<?>... entityTypes) {
+        StackTraceElement[] stack = new Exception().getStackTrace();
+        Class<?> testClass = Arrays.stream(stack)
+                .map(StackTraceElement::getClassName)
+                .filter(name -> !name.equals(TestBase.class.getName()))
+                .map(name -> {
+                    try {
+                        return Class.forName(name);
+                    } catch (ClassNotFoundException e) {
+                        return null;
+                    }
+                })
+                .filter(cls -> cls != null && TestBase.class.isAssignableFrom(cls)
+                        && !java.lang.reflect.Modifier.isAbstract(cls.getModifiers()))
+                .reduce((a, b) -> b)
+                .orElseThrow(() -> new RuntimeException("Could not determine test class from stack"));
+        String dbName = testClass.getName().replaceFirst("^dev\\.morphia\\.", "").replace('.', '_');
+        String mapperProp = System.getProperty("morphia.mapper", "reflection");
+        MorphiaConfig config = new ManualMorphiaTestConfig()
+                .database(dbName)
+                .mapper(MapperType.valueOf(mapperProp.toUpperCase()));
+        if (entityTypes.length != 0) {
+            config = config.packages(Arrays.stream(entityTypes)
+                    .map(Class::getPackageName)
+                    .collect(toList()));
+        }
+        return config;
     }
 
-    public TestBase(MorphiaConfig config) {
-        super(config);
+    protected MongoClient getMongoClient() {
+        return MongoExtension.getMongoClient();
     }
+
+    public MorphiaDatastore getDs() {
+        if (datastore == null) {
+            datastore = new MorphiaDatastore(MongoExtension.getMongoClient(), morphiaConfig);
+        }
+        return datastore;
+    }
+
+    public MongoDatabase getDatabase() {
+        if (database == null) {
+            database = getDs().getDatabase();
+        }
+        return database;
+    }
+
+    public MongoDatabase getDatabase(String databaseName) {
+        return MongoExtension.getMongoClient().getDatabase(databaseName);
+    }
+
+    public Mapper getMapper() {
+        return getDs().getMapper();
+    }
+
+    public void reset() {
+        database = null;
+        datastore = null;
+    }
+
+    protected Semver getServerVersion() {
+        String version = (String) MongoExtension.getMongoClient()
+                .getDatabase("admin")
+                .runCommand(new Document("serverStatus", 1))
+                .get("version");
+        return Semver.parse(version);
+    }
+
+    public Document runIsMaster() {
+        return MongoExtension.getMongoClient()
+                .getDatabase("admin")
+                .runCommand(new Document("ismaster", 1));
+    }
+
+    protected boolean isReplicaSet() {
+        return runIsMaster().get("setName") != null;
+    }
+
+    protected boolean serverIsAtLeastVersion(Semver version) {
+        return getServerVersion().isGreaterThanOrEqualTo(version);
+    }
+
+    protected void assumeTrue(boolean condition, String message) {
+        if (!condition) {
+            org.junit.jupiter.api.Assumptions.assumeTrue(false, message);
+        }
+    }
+
+    protected void checkMinDriverVersion(String version) {
+        checkMinDriverVersion(Semver.parse(version));
+    }
+
+    protected void checkMinDriverVersion(Semver version) {
+        assumeTrue(driverIsAtLeastVersion(version),
+                format("Driver should be at least %s but found %s", version, MorphiaInternals.getDriverVersion()));
+    }
+
+    protected void checkMinServerVersion(String version) {
+        checkMinServerVersion(Semver.parse(version));
+    }
+
+    protected void checkMinServerVersion(Semver version) {
+        assumeTrue(serverIsAtLeastVersion(version),
+                format("Server should be at least %s but found %s", version, getServerVersion()));
+    }
+
+    private boolean driverIsAtLeastVersion(Semver version) {
+        return MorphiaInternals.getDriverVersion().isGreaterThanOrEqualTo(version);
+    }
+
+    protected void withSharding(Runnable body) {
+        var savedConfig = morphiaConfig;
+        var savedDatastore = datastore;
+        var savedDatabase = database;
+        try {
+            String mongodb = System.getProperty("mongodb", "8.0.0");
+            if ("local".equals(mongodb)) {
+                morphiaConfig = MorphiaConfig.load();
+                datastore = null;
+                database = null;
+                body.run();
+            } else {
+                int version = Semver.parse(mongodb).getMajor();
+                DockerImageName imageName = DockerImageName.parse("mongo:" + version)
+                        .asCompatibleSubstituteFor("mongo");
+                MongoDBContainer shardedContainer = new MongoDBContainer(imageName).withSharding();
+                shardedContainer.start();
+                try (MongoClient shardedClient = MongoClients.create(builder()
+                        .uuidRepresentation(UuidRepresentation.STANDARD)
+                        .applyConnectionString(new ConnectionString(shardedContainer.getConnectionString()))
+                        .build())) {
+                    morphiaConfig = MorphiaConfig.load();
+                    datastore = new MorphiaDatastore(shardedClient, morphiaConfig);
+                    database = datastore.getDatabase();
+                    body.run();
+                } finally {
+                    shardedContainer.close();
+                }
+            }
+        } finally {
+            morphiaConfig = savedConfig;
+            datastore = savedDatastore;
+            database = savedDatabase;
+        }
+    }
+
+    protected void withTestConfig(MorphiaConfig config, List<Class<?>> types, Runnable body) {
+        withConfig(new ManualMorphiaTestConfig(config).classes(types), body);
+    }
+
+    protected void withTestConfig(List<Class<?>> types, Runnable body) {
+        withTestConfig(buildConfig(), types, body);
+    }
+
+    protected void withConfig(MorphiaConfig config, Runnable body) {
+        var savedConfig = morphiaConfig;
+        var savedDatastore = datastore;
+        var savedDatabase = database;
+        try {
+            morphiaConfig = config;
+            datastore = null;
+            database = null;
+            if (config instanceof MorphiaTestConfig testConfig) {
+                List<Class<?>> classes = testConfig.classes();
+                if (classes != null) {
+                    getDs().getMapper().map(classes);
+                }
+                if (config.applyIndexes()) {
+                    getDs().applyIndexes();
+                }
+            }
+            body.run();
+        } finally {
+            morphiaConfig = savedConfig;
+            datastore = savedDatastore;
+            database = savedDatabase;
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Setup / teardown
+    // -------------------------------------------------------------------------
+
+    @BeforeEach
+    public void beforeEach() {
+        cleanup();
+    }
+
+    protected void cleanup() {
+        MongoDatabase db = MongoExtension.getMongoClient().getDatabase(morphiaConfig.database());
+        db.runCommand(new Document("profile", 0).append("slowms", 0));
+        db.drop();
+        reset();
+    }
+
+    // -------------------------------------------------------------------------
+    // Assertions
+    // -------------------------------------------------------------------------
 
     public void assertDocumentEquals(String message, Document expected, Document actual) {
         assertDocumentEquals(message, expected, actual, true);
@@ -93,17 +313,6 @@ public abstract class TestBase extends MorphiaTestSetup {
             throw new RuntimeException(e);
         }
     }
-
-    /*
-     * public void assertDocumentEquals(Document expected, Object actual) {
-     * if (actual instanceof Document actualDocument) {
-     * assertDocumentEquals(expected, actualDocument);
-     * } else {
-     * LOG.warn("Comparing Document to unexpected type: " + actual.getClass());
-     * Assertions.assertEquals(expected, actual);
-     * }
-     * }
-     */
 
     public void assertDocumentEquals(Document expected, Document actual) {
         assertDocumentEquals(expected, actual, true);
@@ -147,33 +356,64 @@ public abstract class TestBase extends MorphiaTestSetup {
         }
     }
 
-    @BeforeEach
-    public void beforeEach() {
-        cleanup();
+    protected void assertCapped(Class<?> type, Integer max) {
+        Document result = getOptions(type);
+        Assertions.assertTrue(result.getBoolean("capped"));
+        Assertions.assertEquals(max, result.get("max"));
+        Assertions.assertEquals(1048576, result.get("size"));
     }
 
-    protected void cleanup() {
-        MongoDatabase db = getMongoClient().getDatabase(getMorphiaContainer().getMorphiaConfig().database());
-        db.runCommand(new Document("profile", 0).append("slowms", 0));
-        db.drop();
-        getMorphiaContainer().reset();
+    protected void assertDocumentEquals(Object actual, Object expected) {
+        assertDocumentEquals("", actual, expected);
     }
 
-    public MorphiaDatastore getDs() {
-        return getMorphiaContainer().getDs();
+    protected void assertDocumentEquals(Object actual, Object expected, String message) {
+        try {
+            assertDocumentEquals("", actual, expected);
+        } catch (AssertionError error) {
+            Assertions.fail(message);
+        }
     }
 
-    public MongoDatabase getDatabase() {
-        return getMorphiaContainer().getDatabase();
+    protected void assertLazy(Supplier<String> messageSupplier, Runnable assertion) {
+        try {
+            assertion.run();
+        } catch (AssertionError error) {
+            Assertions.fail(messageSupplier.get(), error);
+        }
     }
 
-    public MongoDatabase getDatabase(String databaseName) {
-        return getMongoHolder().getMongoClient().getDatabase(databaseName);
+    protected void assertListEquals(Collection<?> actual, Collection<?> expected) {
+        Assertions.assertEquals(expected.size(), actual.size());
+        expected.forEach(
+                d -> assertTrueLazy(actual.contains(coerceToLong(d)), () -> {
+                    String actualString = actual.stream()
+                            .map(Object::toString)
+                            .collect(joining("\n\t", "actual list:\n\t", ""));
+                    String expectedString = expected.stream()
+                            .map(Object::toString)
+                            .collect(joining("\n\t", "expected list:\n\t", ""));
+                    return format("Lists do not match:\n%s \n%s", actualString, expectedString);
+                }));
     }
 
-    public Mapper getMapper() {
-        return getDs().getMapper();
+    public void assertTrueLazy(boolean condition, Supplier<String> messageSupplier) {
+        if (!condition) {
+            Assertions.fail(messageSupplier.get());
+        }
     }
+
+    protected void checkForProxyTypes() {
+        assumeTrue(proxyClassesPresent(), "Proxy classes are needed for this test");
+    }
+
+    protected void checkForReplicaSet() {
+        assumeTrue(isReplicaSet(), "This test requires a replica set");
+    }
+
+    // -------------------------------------------------------------------------
+    // Utilities
+    // -------------------------------------------------------------------------
 
     protected void download(URL url, File file) throws IOException {
         LOG.info("Downloading zip data set to " + file);
@@ -221,61 +461,6 @@ public abstract class TestBase extends MorphiaTestSetup {
         return (T) value;
     }
 
-    protected void assertCapped(Class<?> type, Integer max) {
-        Document result = getOptions(type);
-        Assertions.assertTrue(result.getBoolean("capped"));
-        Assertions.assertEquals(max, result.get("max"));
-        Assertions.assertEquals(1048576, result.get("size"));
-    }
-
-    protected void assertDocumentEquals(Object actual, Object expected) {
-        assertDocumentEquals("", actual, expected);
-    }
-
-    protected void assertDocumentEquals(Object actual, Object expected, String message) {
-        try {
-            assertDocumentEquals("", actual, expected);
-        } catch (AssertionError error) {
-            Assertions.fail(message);
-        }
-    }
-
-    protected void assertLazy(Supplier<String> messageSupplier, Runnable assertion) {
-        try {
-            assertion.run();
-        } catch (AssertionError error) {
-            Assertions.fail(messageSupplier.get(), error);
-        }
-    }
-
-    protected void assertListEquals(Collection<?> actual, Collection<?> expected) {
-        Assertions.assertEquals(expected.size(), actual.size());
-        expected.forEach(
-                d -> assertTrueLazy(actual.contains(coerceToLong(d)), () -> {
-                    String actualString = actual.stream()
-                            .map(c -> c.toString())
-                            .collect(joining("\n\t", "actual list:\n\t", ""));
-                    String expectedString = expected.stream()
-                            .map(c -> c.toString())
-                            .collect(joining("\n\t", "expected list:\n\t", ""));
-                    return format("Lists do not match:\n%s \n%s", actualString, expectedString);
-                }));
-    }
-
-    public void assertTrueLazy(boolean condition, Supplier<String> messageSupplier) {
-        if (!condition) {
-            Assertions.fail(messageSupplier.get());
-        }
-    }
-
-    protected void checkForProxyTypes() {
-        assumeTrue(proxyClassesPresent(), "Proxy classes are needed for this test");
-    }
-
-    protected void checkForReplicaSet() {
-        assumeTrue(isReplicaSet(), "This test requires a replica set");
-    }
-
     protected int count(MongoCursor<?> cursor) {
         int count = 0;
         while (cursor.hasNext()) {
@@ -300,9 +485,7 @@ public abstract class TestBase extends MorphiaTestSetup {
         if (document.containsKey(mapper.getConfig().discriminatorKey())) {
             aClass = mapper.getClass(document);
         }
-
         DocumentReader reader = new DocumentReader(document, getMapper().getConversions());
-
         return getDs().getCodecRegistry()
                 .get(aClass)
                 .decode(reader, DecoderContext.builder().build());
@@ -320,9 +503,7 @@ public abstract class TestBase extends MorphiaTestSetup {
     protected Document getOptions(Class<?> type) {
         String collection = getMapper().getEntityModel(type).collectionName();
         Document result = getDatabase().runCommand(new Document("listCollections", 1.0)
-                .append("filter",
-                        new Document("name", collection)));
-
+                .append("filter", new Document("name", collection)));
         Document cursor = (Document) result.get("cursor");
         return (Document) cursor.getList("firstBatch", Document.class)
                 .get(0)
@@ -362,10 +543,8 @@ public abstract class TestBase extends MorphiaTestSetup {
 
     protected Document toDocument(Object entity) {
         final Class<?> type = getMapper().getEntityModel(entity.getClass()).getType();
-
         DocumentWriter writer = new DocumentWriter(getMapper().getConfig());
         ((Codec) getDs().getCodecRegistry().get(type)).encode(writer, entity, EncoderContext.builder().build());
-
         return writer.getDocument();
     }
 
@@ -397,7 +576,6 @@ public abstract class TestBase extends MorphiaTestSetup {
         if (expected == null) {
             return;
         }
-
         if (expected instanceof Document document) {
             document.entrySet()
                     .forEach(entry -> {
@@ -408,7 +586,6 @@ public abstract class TestBase extends MorphiaTestSetup {
                     });
         } else if (expected instanceof List list) {
             List copy = new ArrayList<>((List) actual);
-
             Object o;
             for (int i = 0; i < list.size(); i++) {
                 o = list.get(i);
@@ -428,7 +605,6 @@ public abstract class TestBase extends MorphiaTestSetup {
                     Assertions.fail("mismatch found at %s.\n\tactual = %s,\n\texpected = %s".formatted(newPath, actual, expected));
                 }
             }
-
         } else {
             Assertions.assertEquals(coerceToLong(expected), coerceToLong(actual),
                     format("mismatch found at %s:%n%s vs %s", path, expected, actual));
@@ -447,15 +623,6 @@ public abstract class TestBase extends MorphiaTestSetup {
     private void assertSameNullity(String path, Object expected, Object actual) {
         if (expected == null && actual != null
                 || actual == null && expected != null) {
-            Assertions.assertEquals(expected, actual, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
-        }
-    }
-
-    private void assertSameType(String path, Object actual, Object expected) {
-        if (expected instanceof List && actual instanceof List) {
-            return;
-        }
-        if (!expected.getClass().equals(actual.getClass())) {
             Assertions.assertEquals(expected, actual, format("mismatch found at %s:%n%s vs %s", path, expected, actual));
         }
     }
