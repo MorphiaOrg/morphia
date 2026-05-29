@@ -57,8 +57,6 @@ public abstract class TemplatedTestBase extends TestBase {
     protected final ObjectMapper mapper = new ObjectMapper();
 
     public TemplatedTestBase() {
-        buildConfig()
-                .codecProvider(new ZDTCodecProvider());
     }
 
     protected static String toString(List<Document> actual, String prefix) {
