@@ -115,14 +115,15 @@ public abstract class TestBase {
                         return null;
                     }
                 })
-                .filter(cls -> cls != null && TestBase.class.isAssignableFrom(cls))
-                .findFirst()
+                .filter(cls -> cls != null && TestBase.class.isAssignableFrom(cls)
+                        && !java.lang.reflect.Modifier.isAbstract(cls.getModifiers()))
+                .reduce((a, b) -> b)
                 .orElseThrow(() -> new RuntimeException("Could not determine test class from stack"));
+        String dbName = testClass.getName().replaceFirst("^dev\\.morphia\\.", "").replace('.', '_');
         String mapperProp = System.getProperty("morphia.mapper", "reflection");
-        MapperType mapperType = MapperType.valueOf(mapperProp.toUpperCase());
         MorphiaConfig config = new ManualMorphiaTestConfig()
-                .database(testClass.getName().replaceFirst("^dev\\.morphia\\.", "").replace('.', '_'))
-                .mapper(mapperType);
+                .database(dbName)
+                .mapper(MapperType.valueOf(mapperProp.toUpperCase()));
         if (entityTypes.length != 0) {
             config = config.packages(Arrays.stream(entityTypes)
                     .map(Class::getPackageName)
