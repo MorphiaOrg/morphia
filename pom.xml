@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.antwerkz</groupId>
         <artifactId>antwerkz-parent</artifactId>
-        <version>71</version>
+        <version>73</version>
     </parent>
 
     <groupId>dev.morphia.morphia</groupId>
@@ -49,6 +49,7 @@
     <properties>
         <asm.version>9.10</asm.version>
         <awaitility.version>1.7.0</awaitility.version>
+        <dokka.version>2.2.0</dokka.version>
         <driver.version>5.7.0</driver.version>
         <driver.minor.version>5.6</driver.minor.version>
         <driver-javadoc.link>https://mongodb.github.io/mongo-java-driver/${driver.minor.version}/apidocs</driver-javadoc.link>
@@ -76,9 +77,9 @@
         <maven.compiler.source>17</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
-        <asm.version>9.10</asm.version>
-        <dokka.version>2.2.0</dokka.version>
         <morphia.mapper>reflection</morphia.mapper>
+
+        <jreleaser.verify.pom>false</jreleaser.verify.pom>
     </properties>
 
     <build>
