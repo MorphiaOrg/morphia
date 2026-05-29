@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>morphia-kotlin</artifactId>
+    <name>Morphia Kotlin</name>
 
     <build>
         <plugins>
@@ -39,10 +40,6 @@
             <artifactId>kotlin-reflect</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>mongodb</artifactId>
         </dependency>
@@ -60,6 +57,10 @@
         <dependency>
             <groupId>org.semver4j</groupId>
             <artifactId>semver4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.skyscreamer</groupId>
+            <artifactId>jsonassert</artifactId>
         </dependency>
     </dependencies>
 </project>

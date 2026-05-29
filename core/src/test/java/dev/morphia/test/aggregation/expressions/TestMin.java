@@ -4,7 +4,8 @@ import dev.morphia.query.Sort;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.min;
 import static dev.morphia.aggregation.stages.Group.group;
@@ -18,7 +19,8 @@ public class TestMin extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/min/example1
      * 
      */
-    @Test(testName = "Use in ``$group`` Stage")
+    @Test
+    @DisplayName("Use in ``$group`` Stage")
     public void testExample1() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(group(id("$item")).field("minQuantity", min("$quantity"))));
@@ -28,7 +30,8 @@ public class TestMin extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/min/example2
      * 
      */
-    @Test(testName = "Use in ``$project`` Stage")
+    @Test
+    @DisplayName("Use in ``$project`` Stage")
     public void testExample2() {
         testPipeline(new ActionTestOptions(),
                 (aggregation) -> aggregation.pipeline(project().include("quizMin", min("$quizzes"))
@@ -39,7 +42,8 @@ public class TestMin extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/min/example3
      * 
      */
-    @Test(testName = "Use in ``$setWindowFields`` Stage")
+    @Test
+    @DisplayName("Use in ``$setWindowFields`` Stage")
     public void testExample3() {
         checkMinServerVersion("5.0.0");
         testPipeline(new ActionTestOptions(),

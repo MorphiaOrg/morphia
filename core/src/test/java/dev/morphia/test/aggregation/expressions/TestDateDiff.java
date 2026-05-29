@@ -3,8 +3,9 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.aggregation.expressions.TimeUnit;
 import dev.morphia.test.TemplatedTestBase;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
 import static dev.morphia.aggregation.expressions.DateExpressions.dateDiff;
@@ -21,7 +22,7 @@ import static java.time.DayOfWeek.FRIDAY;
 
 public class TestDateDiff extends TemplatedTestBase {
 
-    @BeforeMethod
+    @BeforeEach
     public void versionCheck() {
         checkMinServerVersion("5.0.0");
     }
@@ -30,7 +31,8 @@ public class TestDateDiff extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/dateDiff/example1
      * 
      */
-    @Test(testName = "Elapsed Time")
+    @Test
+    @DisplayName("Elapsed Time")
     public void testExample1() {
         testPipeline((aggregation) -> aggregation.pipeline(
                 group(id(null)).field("averageTime", avg(dateDiff("$purchased", "$delivered", TimeUnit.DAY))),
@@ -43,7 +45,8 @@ public class TestDateDiff extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/dateDiff/example2
      * 
      */
-    @Test(testName = "Result Precision")
+    @Test
+    @DisplayName("Result Precision")
     public void testExample2() {
         testPipeline((aggregation) -> aggregation.pipeline(project().suppressId().include("start", "$start")
                 .include("end", "$end").include("years", dateDiff("$start", "$end", YEAR))
@@ -55,7 +58,8 @@ public class TestDateDiff extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/dateDiff/example3
      * 
      */
-    @Test(testName = "Weeks Per Month")
+    @Test
+    @DisplayName("Weeks Per Month")
     public void testExample3() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().suppressId().include("wks_default", dateDiff("$start", "$end", WEEK))

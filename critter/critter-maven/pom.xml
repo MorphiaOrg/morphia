@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>critter-maven</artifactId>
+    <name>Critter Maven Plugin</name>
     <packaging>maven-plugin</packaging>
     <description>Maven plugin for Critter code generation</description>
 
@@ -54,6 +55,13 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-invoker-plugin</artifactId>
                 <version>3.8.1</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.groovy</groupId>
+                        <artifactId>groovy</artifactId>
+                        <version>4.0.27</version>
+                    </dependency>
+                </dependencies>
                 <configuration>
                     <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
                     <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
@@ -121,10 +129,6 @@
         </dependency>
 
         <!-- Test dependencies -->
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-        </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>

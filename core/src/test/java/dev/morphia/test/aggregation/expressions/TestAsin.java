@@ -2,7 +2,8 @@ package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.MathExpressions.divide;
 import static dev.morphia.aggregation.expressions.TrigonometryExpressions.asin;
@@ -14,7 +15,8 @@ public class TestAsin extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/asin/example1
      * 
      */
-    @Test(testName = "main :: Inverse Sine of Value in Degrees")
+    @Test
+    @DisplayName("main :: Inverse Sine of Value in Degrees")
     public void testExample1() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(addFields().field("angle_a", radiansToDegrees(asin(divide("$side_a", "$hypotenuse"))))));
@@ -24,7 +26,8 @@ public class TestAsin extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/asin/example2
      * 
      */
-    @Test(testName = "main :: Inverse Sine of Value in Radians")
+    @Test
+    @DisplayName("main :: Inverse Sine of Value in Radians")
     public void testExample2() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(addFields().field("angle_a", asin(divide("$side_a", "$hypotenuse")))));

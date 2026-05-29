@@ -11,8 +11,6 @@ import dev.morphia.mapping.IndexDirection;
 
 /**
  * Specified on fields that should be Indexed.
- *
- * @author Scott Hernandez
  */
 @Documented
 @Inherited

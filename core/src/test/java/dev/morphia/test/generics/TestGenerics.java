@@ -17,14 +17,12 @@ import dev.morphia.test.models.generics.ChildEntity;
 import dev.morphia.test.models.methods.MethodMappedSpecializedEntity;
 
 import org.bson.types.ObjectId;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static java.util.Arrays.asList;
 import static java.util.List.of;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 
 public class TestGenerics extends TestBase {
     public TestGenerics() {
@@ -42,7 +40,7 @@ public class TestGenerics extends TestBase {
                 .iterator()
                 .next();
 
-        Assert.assertEquals(childEntity, entity);
+        Assertions.assertEquals(entity, childEntity);
     }
 
     @Test
@@ -56,7 +54,7 @@ public class TestGenerics extends TestBase {
         EntityModel entityModel = getMapper().getEntityModel(SpecializedEntity.class);
 
         PropertyModel test = entityModel.getProperty("test");
-        assertEquals(test.getType(), UUID.class);
+        Assertions.assertEquals(UUID.class, test.getType());
 
         SpecializedEntity beforeDB = new SpecializedEntity();
         beforeDB.setId(UUID.randomUUID());
@@ -67,9 +65,9 @@ public class TestGenerics extends TestBase {
                 .filter(eq("_id", beforeDB.getId()))
                 .first();
 
-        assertEquals(loaded.getId(), beforeDB.getId());
+        Assertions.assertEquals(beforeDB.getId(), loaded.getId());
 
-        assertEquals(loaded.getTest(), beforeDB.getTest());
+        Assertions.assertEquals(beforeDB.getTest(), loaded.getTest());
     }
 
     @Test
@@ -83,14 +81,14 @@ public class TestGenerics extends TestBase {
         ct.integerThing = hai;
 
         getDs().save(ct);
-        assertNotNull(ct.id);
-        assertEquals(getDs().find(ContainsThings.class).count(), 1);
+        Assertions.assertNotNull(ct.id);
+        Assertions.assertEquals(1, getDs().find(ContainsThings.class).count());
         final ContainsThings ctLoaded = getDs().find(ContainsThings.class).iterator()
                 .next();
-        assertNotNull(ctLoaded);
-        assertNotNull(ctLoaded.id);
-        assertNotNull(ctLoaded.stringThing);
-        assertNotNull(ctLoaded.integerThing);
+        Assertions.assertNotNull(ctLoaded);
+        Assertions.assertNotNull(ctLoaded.id);
+        Assertions.assertNotNull(ctLoaded.stringThing);
+        Assertions.assertNotNull(ctLoaded.integerThing);
     }
 
     @Test
@@ -102,7 +100,7 @@ public class TestGenerics extends TestBase {
                     EntityModel entityModel = getMapper().getEntityModel(MethodMappedSpecializedEntity.class);
 
                     PropertyModel test = entityModel.getProperty("test");
-                    assertEquals(test.getType(), UUID.class);
+                    Assertions.assertEquals(UUID.class, test.getType());
 
                     MethodMappedSpecializedEntity beforeDB = new MethodMappedSpecializedEntity();
                     beforeDB.setId(UUID.randomUUID());
@@ -113,9 +111,9 @@ public class TestGenerics extends TestBase {
                             .filter(eq("_id", beforeDB.getId()))
                             .first();
 
-                    assertEquals(loaded.getId(), beforeDB.getId());
+                    Assertions.assertEquals(beforeDB.getId(), loaded.getId());
 
-                    assertEquals(loaded.getTest(), beforeDB.getTest());
+                    Assertions.assertEquals(beforeDB.getTest(), loaded.getTest());
                 });
 
     }
@@ -127,13 +125,13 @@ public class TestGenerics extends TestBase {
 
         getDs().save(status);
 
-        assertNotNull(getDs().find(EmailStatus.class).first());
+        Assertions.assertNotNull(getDs().find(EmailStatus.class).first());
     }
 
     @Test
     public void testWildCards() {
         EntityModel model = getMapper().getEntityModel(WildCards.class);
-        assertEquals(model.getProperties().size(), 1);
+        Assertions.assertEquals(1, model.getProperties().size());
     }
 
     @Entity

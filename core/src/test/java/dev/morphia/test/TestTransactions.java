@@ -21,32 +21,24 @@ import dev.morphia.test.util.ActionTestOptions;
 import dev.morphia.transactions.MorphiaSession;
 
 import org.bson.types.ObjectId;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static com.mongodb.ClientSessionOptions.builder;
 import static com.mongodb.WriteConcern.MAJORITY;
 import static dev.morphia.query.updates.UpdateOperators.inc;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
 
-//@Tags(@Tag("transactions"))
+/*@Tags(@Tag("transactions"))*/
 public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
-    @BeforeMethod
+    @BeforeEach
     public void before() {
         checkForReplicaSet();
         getDs().save(new Rectangle(1, 1));
         getDs().find(Rectangle.class).findAndDelete();
         getDs().save(new User("", LocalDate.now()));
         getDs().find(User.class).findAndDelete();
-    }
-
-    @AfterClass
-    @Override
-    public void testCoverage() {
     }
 
     @Test
@@ -61,13 +53,13 @@ public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
                         .build())
                 .build(), session -> {
 
-                    assertNotNull(datastore.find(Rectangle.class).first());
-                    assertNotNull(session.find(Rectangle.class).first());
+                    Assertions.assertNotNull(datastore.find(Rectangle.class).first());
+                    Assertions.assertNotNull(session.find(Rectangle.class).first());
 
                     session.delete(rectangle);
 
-                    assertNotNull(datastore.find(Rectangle.class).first());
-                    assertNull(session.find(Rectangle.class).first());
+                    Assertions.assertNotNull(datastore.find(Rectangle.class).first());
+                    Assertions.assertNull(session.find(Rectangle.class).first());
                     return null;
                 });
 
@@ -80,13 +72,13 @@ public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
         getDs().withTransaction(session -> {
             session.insert(rectangle);
 
-            assertNull(getDs().find(Rectangle.class).first());
-            assertEquals(session.find(Rectangle.class).count(), 1);
+            Assertions.assertNull(getDs().find(Rectangle.class).first());
+            Assertions.assertEquals(1, session.find(Rectangle.class).count());
 
             return null;
         });
 
-        assertNotNull(getDs().find(Rectangle.class).first());
+        Assertions.assertNotNull(getDs().find(Rectangle.class).first());
     }
 
     @Test
@@ -97,13 +89,13 @@ public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
         getDs().withTransaction(session -> {
             session.insert(rectangles);
 
-            assertNull(getDs().find(Rectangle.class).first());
-            assertEquals(session.find(Rectangle.class).iterator().toList(), rectangles);
+            Assertions.assertNull(getDs().find(Rectangle.class).first());
+            Assertions.assertEquals(rectangles, session.find(Rectangle.class).iterator().toList());
 
             return null;
         });
 
-        assertEquals(getDs().find(Rectangle.class).count(), 2);
+        Assertions.assertEquals(2, getDs().find(Rectangle.class).count());
     }
 
     @Test
@@ -119,10 +111,10 @@ public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
 
                 session.save(new User("transactions", LocalDate.now()));
 
-                assertNull(getDs().find(Rectangle.class).first());
-                assertNull(getDs().find(User.class).first());
-                assertNotNull(session.find(Rectangle.class).first());
-                assertNotNull(session.find(User.class).first());
+                Assertions.assertNull(getDs().find(Rectangle.class).first());
+                Assertions.assertNull(getDs().find(User.class).first());
+                Assertions.assertNotNull(session.find(Rectangle.class).first());
+                Assertions.assertNotNull(session.find(User.class).first());
 
                 session.commitTransaction();
                 success = true;
@@ -137,8 +129,8 @@ public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
             }
         }
 
-        assertNotNull(getDs().find(Rectangle.class).first());
-        assertNotNull(getDs().find(User.class).first());
+        Assertions.assertNotNull(getDs().find(Rectangle.class).first());
+        Assertions.assertNotNull(getDs().find(User.class).first());
     }
 
     @Test
@@ -146,26 +138,27 @@ public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
         Rectangle rectangle = new Rectangle(1, 1);
 
         getDs().save(rectangle);
-        assertEquals(getDs().find(Rectangle.class).count(), 1);
+        Assertions.assertEquals(1, getDs().find(Rectangle.class).count());
 
         getDs().withTransaction(session -> {
 
-            assertEquals(getDs().find(Rectangle.class).first(), new Rectangle(1, 1));
-            assertEquals(session.find(Rectangle.class).first(), new Rectangle(1, 1));
+            Assertions.assertEquals(new Rectangle(1, 1), getDs().find(Rectangle.class).first());
+            Assertions.assertEquals(new Rectangle(1, 1), session.find(Rectangle.class).first());
 
             rectangle.setWidth(20);
             session.merge(rectangle);
 
-            assertEquals(getDs().find(Rectangle.class).first().getWidth(), 1, 0.5);
-            assertEquals(session.find(Rectangle.class).first().getWidth(), 20, 0.5);
+            Assertions.assertEquals(1, getDs().find(Rectangle.class).first().getWidth(), 0.5);
+            Assertions.assertEquals(20, session.find(Rectangle.class).first().getWidth(), 0.5);
 
             return null;
         });
 
-        assertEquals(getDs().find(Rectangle.class).first().getWidth(), 20, 0.5);
+        Assertions.assertEquals(20, getDs().find(Rectangle.class).first().getWidth(), 0.5);
     }
 
-    @Test(testName = "transactional aggregations")
+    @Test
+    @DisplayName("transactional aggregations")
     public void aggregation() {
         getDs().withTransaction(session -> {
             testPipeline(
@@ -189,20 +182,20 @@ public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
         getDs().withTransaction(session -> {
             session.save(rectangle);
 
-            assertNull(getDs().find(Rectangle.class).first());
+            Assertions.assertNull(getDs().find(Rectangle.class).first());
 
             Rectangle modified = session.find(Rectangle.class)
                     .modify(inc("width", 13));
 
-            assertNull(getDs().find(Rectangle.class).first());
-            assertEquals(rectangle.getWidth(), modified.getWidth(), 0.5);
-            assertEquals(rectangle.getWidth() + 13, session.find(Rectangle.class)
-                    .first().getWidth(), 0.5);
+            Assertions.assertNull(getDs().find(Rectangle.class).first());
+            Assertions.assertEquals(modified.getWidth(), rectangle.getWidth(), 0.5);
+            Assertions.assertEquals(session.find(Rectangle.class)
+                    .first().getWidth(), rectangle.getWidth() + 13, 0.5);
 
             return null;
         });
 
-        assertEquals(getDs().find(Rectangle.class).first().getWidth(), rectangle.getWidth() + 13, 0.5);
+        Assertions.assertEquals(rectangle.getWidth() + 13, getDs().find(Rectangle.class).first().getWidth(), 0.5);
     }
 
     @Test
@@ -212,18 +205,18 @@ public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
 
         getDs().withTransaction(session -> {
 
-            assertNotNull(getDs().find(Rectangle.class).first());
-            assertNotNull(session.find(Rectangle.class).first());
+            Assertions.assertNotNull(getDs().find(Rectangle.class).first());
+            Assertions.assertNotNull(session.find(Rectangle.class).first());
 
             session.find(Rectangle.class)
                     .delete();
 
-            assertNotNull(getDs().find(Rectangle.class).first());
-            assertNull(session.find(Rectangle.class).first());
+            Assertions.assertNotNull(getDs().find(Rectangle.class).first());
+            Assertions.assertNull(session.find(Rectangle.class).first());
             return null;
         });
 
-        assertNull(getDs().find(Rectangle.class).first());
+        Assertions.assertNull(getDs().find(Rectangle.class).first());
     }
 
     @Test
@@ -233,19 +226,19 @@ public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
         getDs().withTransaction(session -> {
             session.save(rectangle);
 
-            assertNull(getDs().find(Rectangle.class).first());
-            assertNotNull(session.find(Rectangle.class).first());
+            Assertions.assertNull(getDs().find(Rectangle.class).first());
+            Assertions.assertNotNull(session.find(Rectangle.class).first());
 
             rectangle.setWidth(42);
             session.save(rectangle);
 
-            assertNull(getDs().find(Rectangle.class).first());
-            assertEquals(session.find(Rectangle.class).first().getWidth(), 42, 0.5);
+            Assertions.assertNull(getDs().find(Rectangle.class).first());
+            Assertions.assertEquals(42, session.find(Rectangle.class).first().getWidth(), 0.5);
 
             return null;
         });
 
-        assertNotNull(getDs().find(Rectangle.class).first());
+        Assertions.assertNotNull(getDs().find(Rectangle.class).first());
     }
 
     @Test
@@ -256,13 +249,13 @@ public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
         getDs().withTransaction(session -> {
             session.save(rectangles);
 
-            assertNull(getDs().find(Rectangle.class).first());
-            assertEquals(session.find(Rectangle.class).count(), 2);
+            Assertions.assertNull(getDs().find(Rectangle.class).first());
+            Assertions.assertEquals(2, session.find(Rectangle.class).count());
 
             return null;
         });
 
-        assertEquals(getDs().find(Rectangle.class).count(), 2);
+        Assertions.assertEquals(2, getDs().find(Rectangle.class).count());
     }
 
     @Test
@@ -281,7 +274,7 @@ public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
 
             var list = session.find(Employee.class).iterator().toList();
 
-            assertEquals(list.size(), 1);
+            Assertions.assertEquals(1, list.size());
 
             return null;
         });
@@ -294,18 +287,18 @@ public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
         getDs().withTransaction(session -> {
             session.save(rectangle);
 
-            assertNull(getDs().find(Rectangle.class).first());
+            Assertions.assertNull(getDs().find(Rectangle.class).first());
 
             session.find(Rectangle.class)
                     .update(inc("width", 13));
 
-            assertEquals(session.find(Rectangle.class).first().getWidth(), rectangle.getWidth() + 13, 0.5);
+            Assertions.assertEquals(rectangle.getWidth() + 13, session.find(Rectangle.class).first().getWidth(), 0.5);
 
-            assertNull(getDs().find(Rectangle.class).first());
+            Assertions.assertNull(getDs().find(Rectangle.class).first());
             return null;
         });
 
-        assertEquals(getDs().find(Rectangle.class).first().getWidth(), rectangle.getWidth() + 13, 0.5);
+        Assertions.assertEquals(rectangle.getWidth() + 13, getDs().find(Rectangle.class).first().getWidth(), 0.5);
     }
 
     @Test
@@ -325,9 +318,9 @@ public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
         root = getDs().find(RootEntity.class).filter(Filters.eq("_id", rootId)).first();
 
         final DeleteResult deleteResult = getDs().withTransaction((session) -> session.find(RootEntity.class).delete());
-        Assert.assertEquals(deleteResult.getDeletedCount(), 1);
+        Assertions.assertEquals(1, deleteResult.getDeletedCount());
 
-        Assert.assertEquals(root.getR().getId(), refId);
+        Assertions.assertEquals(refId, root.getR().getId());
     }
 
     @Entity

@@ -12,37 +12,37 @@ import dev.morphia.test.TestBase;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static java.util.stream.Collectors.joining;
-import static org.testng.Assert.assertEquals;
 
 public class EntityModelTest extends TestBase {
     @Test
     public void testFindParameterization() {
         EntityModel model = getMapper().mapEntity(Child.class);
-        assertEquals(model.getProperty("someField").getType(), LocalDate.class);
+        Assertions.assertEquals(LocalDate.class, model.getProperty("someField").getType());
     }
 
     @Test
     public void testGenericFields() {
         EntityModel model = getDs().getMapper().map(Base.class).get(0);
-        assertEquals(model.getProperties().size(), 3, model.getProperties().stream()
+        Assertions.assertEquals(3, model.getProperties().size(), model.getProperties().stream()
                 .map(PropertyModel::getName)
                 .collect(joining(", ")));
 
         model = getDs().getMapper().map(Parent.class).get(0);
-        assertEquals(model.getProperties().size(), 4, model.getProperties().stream()
+        Assertions.assertEquals(4, model.getProperties().size(), model.getProperties().stream()
                 .map(PropertyModel::getName)
                 .collect(joining(", ")));
 
         model = getDs().getMapper().map(Child.class).get(0);
-        assertEquals(model.getProperties().size(), 5, model.getProperties().stream()
+        Assertions.assertEquals(5, model.getProperties().size(), model.getProperties().stream()
                 .map(PropertyModel::getName)
                 .collect(joining(", ")));
 
-        assertEquals(model.getProperty("t").getType(), String.class);
-        assertEquals(model.getProperty("someField").getType(), LocalDate.class);
+        Assertions.assertEquals(String.class, model.getProperty("t").getType());
+        Assertions.assertEquals(LocalDate.class, model.getProperty("someField").getType());
     }
 
     @Test
@@ -56,9 +56,9 @@ public class EntityModelTest extends TestBase {
         beforeDB.setNumber2(14);
         getDs().save(beforeDB);
 
-        assertEquals(model.getProperty("id").getType(), UUID.class);
-        assertEquals(model.getProperty("test").getType(), String.class);
-        assertEquals(model.getProperty("test2").getType(), UUID.class);
+        Assertions.assertEquals(UUID.class, model.getProperty("id").getType());
+        Assertions.assertEquals(String.class, model.getProperty("test").getType());
+        Assertions.assertEquals(UUID.class, model.getProperty("test2").getType());
 
         getDs().getDatabase()
                 .getCollection("specificEntity")

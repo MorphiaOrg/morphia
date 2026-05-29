@@ -4,8 +4,9 @@ import dev.morphia.aggregation.expressions.ComparisonExpressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.maxN;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
@@ -18,7 +19,7 @@ import static dev.morphia.query.filters.Filters.eq;
 
 public class TestMaxN extends TemplatedTestBase {
 
-    @BeforeMethod
+    @BeforeEach
     public void versionCheck() {
         checkMinServerVersion("5.2.0");
     }
@@ -27,7 +28,8 @@ public class TestMaxN extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/maxN/example1
      * 
      */
-    @Test(testName = "Find the Maximum Three ``Scores`` for a Single Game")
+    @Test
+    @DisplayName("Find the Maximum Three ``Scores`` for a Single Game")
     public void testExample1() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(match(eq("gameId", "G1")),
@@ -39,7 +41,8 @@ public class TestMaxN extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/maxN/example2
      * 
      */
-    @Test(testName = "Finding the Maximum Three Scores Across Multiple Games")
+    @Test
+    @DisplayName("Finding the Maximum Three Scores Across Multiple Games")
     public void testExample2() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
                 .pipeline(group(id("$gameId")).field("maxScores", maxN(3, array("$score", "$playerId")))));
@@ -50,7 +53,8 @@ public class TestMaxN extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/maxN/example3
      * 
      */
-    @Test(testName = "Computing ``n`` Based on the Group Key for ``$group``")
+    @Test
+    @DisplayName("Computing ``n`` Based on the Group Key for ``$group``")
     public void testExample3() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(group(id().field("gameId", "$gameId")).field("gamescores", maxN(

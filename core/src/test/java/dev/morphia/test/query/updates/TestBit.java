@@ -2,7 +2,8 @@ package dev.morphia.test.query.updates;
 
 import dev.morphia.test.TemplatedTestBase;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.updates.UpdateOperators.and;
@@ -14,7 +15,8 @@ public class TestBit extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/updates/bit/example1
      */
-    @Test(testName = "Bitwise AND")
+    @Test
+    @DisplayName("Bitwise AND")
     public void testExample1() {
         testUpdate((query) -> query.filter(eq("_id", 1)), and("expdata", 10));
     }
@@ -22,7 +24,8 @@ public class TestBit extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/updates/bit/example2
      */
-    @Test(testName = "Bitwise OR")
+    @Test
+    @DisplayName("Bitwise OR")
     public void testExample2() {
         testUpdate((query) -> query.filter(eq("_id", 2)), or("expdata", 5));
     }
@@ -30,7 +33,8 @@ public class TestBit extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/updates/bit/example3
      */
-    @Test(testName = "Bitwise XOR")
+    @Test
+    @DisplayName("Bitwise XOR")
     public void testExample3() {
         testUpdate((query) -> query.filter(eq("_id", 3)), xor("expdata", 5));
     }

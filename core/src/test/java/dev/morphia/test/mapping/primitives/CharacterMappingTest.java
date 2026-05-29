@@ -9,8 +9,8 @@ import dev.morphia.annotations.Id;
 import dev.morphia.test.TestBase;
 
 import org.bson.types.ObjectId;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 
@@ -33,16 +33,16 @@ public class CharacterMappingTest extends TestBase {
         final Characters loaded = getDs().find(Characters.class)
                 .filter(eq("_id", entity.id))
                 .first();
-        Assert.assertNotNull(loaded.id);
-        Assert.assertEquals(loaded.listWrapperArray.get(0), entity.listWrapperArray.get(0));
-        Assert.assertEquals(loaded.listPrimitiveArray.get(0), entity.listPrimitiveArray.get(0));
-        Assert.assertEquals(loaded.listWrapper, entity.listWrapper);
-        Assert.assertEquals(loaded.singlePrimitive, entity.singlePrimitive);
-        Assert.assertEquals(loaded.singleWrapper, entity.singleWrapper);
-        Assert.assertEquals(loaded.primitiveArray, entity.primitiveArray);
-        Assert.assertEquals(loaded.wrapperArray, entity.wrapperArray);
-        Assert.assertEquals(loaded.nestedPrimitiveArray, entity.nestedPrimitiveArray);
-        Assert.assertEquals(loaded.nestedWrapperArray, entity.nestedWrapperArray);
+        Assertions.assertNotNull(loaded.id);
+        Assertions.assertArrayEquals(entity.listWrapperArray.get(0), loaded.listWrapperArray.get(0));
+        Assertions.assertArrayEquals(entity.listPrimitiveArray.get(0), loaded.listPrimitiveArray.get(0));
+        Assertions.assertEquals(entity.listWrapper, loaded.listWrapper);
+        Assertions.assertEquals(entity.singlePrimitive, loaded.singlePrimitive);
+        Assertions.assertEquals(entity.singleWrapper, loaded.singleWrapper);
+        Assertions.assertArrayEquals(entity.primitiveArray, loaded.primitiveArray);
+        Assertions.assertArrayEquals(entity.wrapperArray, loaded.wrapperArray);
+        Assertions.assertArrayEquals(entity.nestedPrimitiveArray, loaded.nestedPrimitiveArray);
+        Assertions.assertArrayEquals(entity.nestedWrapperArray, loaded.nestedWrapperArray);
     }
 
     @Entity

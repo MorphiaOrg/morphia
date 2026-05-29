@@ -25,8 +25,6 @@ import java.lang.annotation.Target;
 
 /**
  * Defines indexes for this entity type (on the collection)
- *
- * @author Scott Hernandez
  */
 @Documented
 @Inherited

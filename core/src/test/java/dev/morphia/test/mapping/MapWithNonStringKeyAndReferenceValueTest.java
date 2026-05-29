@@ -7,15 +7,14 @@ import java.util.Set;
 import dev.morphia.annotations.Reference;
 import dev.morphia.test.models.TestEntity;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static java.util.Arrays.asList;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
 
-@Test(groups = "references")
+@Tag("references")
 public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
     @Test
     public void testMapKeyShouldBeInteger() {
@@ -33,13 +32,13 @@ public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
         getDs().save(asList(ce1, ce2, pe));
 
         final ParentEntity fetched = getDs().find(ParentEntity.class).filter(eq("_id", pe.getId())).first();
-        assertNotNull(fetched);
-        assertNotNull(fetched.childMap);
-        assertEquals(fetched.childMap.size(), 2);
+        Assertions.assertNotNull(fetched);
+        Assertions.assertNotNull(fetched.childMap);
+        Assertions.assertEquals(2, fetched.childMap.size());
         //it is really String without fixing the reference mapper
         //so ignore IDE's complains if any
         Set<Integer> set = fetched.childMap.keySet();
-        assertTrue(set.iterator().next() != null);
+        Assertions.assertTrue(set.iterator().next() != null);
     }
 
     @Test
@@ -62,12 +61,12 @@ public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
         final ParentEntity fetched = getDs().find(ParentEntity.class)
                 .filter(eq("_id", pe.getId()))
                 .first();
-        assertNotNull(fetched);
+        Assertions.assertNotNull(fetched);
         assertIsProxy(fetched.lazyChildMap);
         assertNotFetched(fetched.lazyChildMap);
-        assertEquals(fetched.lazyChildMap.size(), 2);
+        Assertions.assertEquals(2, fetched.lazyChildMap.size());
         assertNotFetched(fetched.lazyChildMap);
-        assertNotNull(fetched.lazyChildMap.keySet().iterator().next());
+        Assertions.assertNotNull(fetched.lazyChildMap.keySet().iterator().next());
     }
 
     private static class ParentEntity extends TestEntity {

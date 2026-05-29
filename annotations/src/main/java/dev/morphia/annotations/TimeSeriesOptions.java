@@ -9,7 +9,6 @@ import java.lang.annotation.Target;
 import com.mongodb.client.model.TimeSeriesGranularity;
 
 import dev.morphia.annotations.internal.MorphiaExperimental;
-import dev.morphia.mapping.Mapper;
 
 import static com.mongodb.client.model.TimeSeriesGranularity.SECONDS;
 
@@ -26,7 +25,7 @@ import static com.mongodb.client.model.TimeSeriesGranularity.SECONDS;
 @interface TimeSeriesOptions {
     TimeSeriesGranularity granularity() default SECONDS;
 
-    String metaField() default Mapper.IGNORED_FIELDNAME;
+    String metaField() default ".";
 
-    String timeField() default Mapper.IGNORED_FIELDNAME;
+    String timeField() default ".";
 }

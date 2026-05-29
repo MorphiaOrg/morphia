@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>docs</artifactId>
+    <name>Morphia Docs</name>
 
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>

@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>morphia-core</artifactId>
+    <name>Morphia Core</name>
 
     <build>
         <plugins>
@@ -62,34 +63,6 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.12.0</version>
-                <configuration>
-                    <failOnError>true</failOnError>
-                    <failOnWarnings>false</failOnWarnings>
-                    <excludePackageNames>
-                        dev.morphia.utils:dev.morphia.sofia:*.internal:dev.morphia.mapping.*:dev.morphia.aggregation.codecs:dev.morphia.aggregation.codecs.stages
-                    </excludePackageNames>
-                    <doclint>all</doclint>
-                    <doctitle>Morphia ${project.version}</doctitle>
-                    <links>
-                        <link>${driver-javadoc.link}/driver-core</link>
-                        <link>${driver-javadoc.link}/bson</link>
-                        <link>${driver-javadoc.link}/driver-sync</link>
-                    </links>
-                    <windowtitle>Morphia</windowtitle>
-                    <tagletArtifacts>
-                        <tagletArtifact>
-                            <groupId>dev.morphia.morphia</groupId>
-                            <artifactId>util</artifactId>
-                            <version>${project.version}</version>
-                        </tagletArtifact>
-                    </tagletArtifacts>
-                    <sourcepath>${project.build.sourceDirectory}:${project.build.directory}/generated-sources/sofia:${project.build.directory}/generated-sources/morphia-annotations</sourcepath>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.14.1</version>
                 <configuration>
@@ -104,6 +77,7 @@
                 <configuration>
                     <systemPropertyVariables>
                         <morphia.mapper>${morphia.mapper}</morphia.mapper>
+                        <junit.jupiter.testinstance.lifecycle.default>per_class</junit.jupiter.testinstance.lifecycle.default>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
@@ -135,14 +109,7 @@
                         <goals>
                             <goal>morphia-annotations</goal>
                         </goals>
-                        <phase>generate-resources</phase>
-                    </execution>
-                    <execution>
-                        <id>docs-config</id>
-                        <goals>
-                            <goal>docs-config</goal>
-                        </goals>
-                        <phase>generate-test-resources</phase>
+                        <phase>generate-sources</phase>
                     </execution>
                     <execution>
                         <id>morphia-annotations-asm</id>
@@ -173,6 +140,11 @@
         </plugins>
     </build>
     <dependencies>
+        <dependency>
+            <groupId>dev.morphia.morphia</groupId>
+            <artifactId>morphia-annotations</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>io.smallrye.config</groupId>
             <artifactId>smallrye-config</artifactId>
@@ -212,11 +184,6 @@
         <dependency>
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs-annotations</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
         </dependency>
         <dependency>
             <groupId>org.skyscreamer</groupId>

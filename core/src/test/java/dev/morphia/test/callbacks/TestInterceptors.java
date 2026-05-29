@@ -4,7 +4,6 @@ import java.lang.annotation.Annotation;
 
 import com.mongodb.lang.NonNull;
 
-import dev.morphia.Datastore;
 import dev.morphia.EntityListener;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -13,8 +12,8 @@ import dev.morphia.test.TestBase;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestInterceptors extends TestBase {
 
@@ -50,8 +49,8 @@ public class TestInterceptors extends TestBase {
         }
 
         @Override
-        public void prePersist(@NonNull Object ent, @NonNull Document document, @NonNull Datastore datastore) {
-            Assert.assertTrue(((E) ent).called);
+        public void prePersist(@NonNull Object ent, @NonNull Document document, @NonNull Object datastore) {
+            Assertions.assertTrue(((E) ent).called);
         }
     }
 }

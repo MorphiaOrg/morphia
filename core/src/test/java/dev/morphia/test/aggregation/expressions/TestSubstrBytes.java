@@ -2,7 +2,8 @@ package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.MathExpressions.subtract;
 import static dev.morphia.aggregation.expressions.StringExpressions.strLenBytes;
@@ -14,7 +15,8 @@ public class TestSubstrBytes extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/substrBytes/example1
      * 
      */
-    @Test(testName = "Single-Byte Character Set")
+    @Test
+    @DisplayName("Single-Byte Character Set")
     public void testExample1() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("item").include("yearSubstring", substrBytes("$quarter", 0, 2))
@@ -25,7 +27,8 @@ public class TestSubstrBytes extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/substrBytes/example2
      * 
      */
-    @Test(testName = "Single-Byte and Multibyte Character Set")
+    @Test
+    @DisplayName("Single-Byte and Multibyte Character Set")
     public void testExample2() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("name").include("menuCode", substrBytes("$name", 0, 3))));

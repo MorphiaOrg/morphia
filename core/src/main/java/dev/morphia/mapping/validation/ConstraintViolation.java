@@ -6,9 +6,6 @@ import dev.morphia.sofia.Sofia;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-/**
- * @author Uwe Schaefer, (us@thomas-daily.de)
- */
 public class ConstraintViolation {
     private final EntityModel type;
     private final Class<? extends ClassConstraint> validator;

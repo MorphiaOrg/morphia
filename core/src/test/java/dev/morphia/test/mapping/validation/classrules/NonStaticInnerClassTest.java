@@ -6,13 +6,16 @@ import dev.morphia.mapping.MappingException;
 import dev.morphia.test.TestBase;
 
 import org.bson.types.ObjectId;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class NonStaticInnerClassTest extends TestBase {
 
-    @Test(expectedExceptions = MappingException.class)
+    @Test
     public void testInValidInnerClass() {
-        getMapper().map(InValid.class);
+        Assertions.assertThrows(MappingException.class, () -> {
+            getMapper().map(InValid.class);
+        });
     }
 
     @Test

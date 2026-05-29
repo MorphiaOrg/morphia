@@ -7,20 +7,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import dev.morphia.EntityListener;
-
 /**
- * Specifies other classes to participate in the @Entity's lifecycle
- *
- * @author Scott Hernandez
+ * Marks a field as transient and indicates that morphia should ignore it.
  */
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE })
-public @interface EntityListeners {
-    /**
-     * @return The listeners to use for this entity
-     */
-    Class<? extends EntityListener<?>>[] value() default {};
+@Target({ ElementType.FIELD, ElementType.METHOD })
+public @interface Transient {
+
 }

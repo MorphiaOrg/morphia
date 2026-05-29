@@ -5,7 +5,8 @@ import dev.morphia.query.Meta;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.expressions.Expressions.meta;
@@ -23,7 +24,8 @@ public class TestMeta extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/meta/example1
      * 
      */
-    @Test(testName = "``$meta: \"textScore\"`` :: Aggregation")
+    @Test
+    @DisplayName("``$meta: \"textScore\"`` :: Aggregation")
     public void testExample1() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(match(text("cake")), group(id(meta())).field("count", sum(1))));
@@ -33,7 +35,8 @@ public class TestMeta extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/meta/example2
      * 
      */
-    @Test(testName = "``$meta: \"textScore\"`` :: Find and Project")
+    @Test
+    @DisplayName("``$meta: \"textScore\"`` :: Find and Project")
     public void testExample2() {
         testQuery(
                 new ActionTestOptions().orderMatters(false)
@@ -44,7 +47,8 @@ public class TestMeta extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/meta/example3
      */
-    @Test(testName = "``$meta: \"indexKey\"`` :: Aggregation")
+    @Test
+    @DisplayName("``$meta: \"indexKey\"`` :: Aggregation")
     public void testExample3() {
         testPipeline(new ActionTestOptions().removeIds(true), aggregation -> aggregation
                 .pipeline(match(eq("type", "apparel")), addFields().field("idxKey", meta(INDEXKEY))));
@@ -53,7 +57,8 @@ public class TestMeta extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/meta/example4
      */
-    @Test(testName = "``$meta: \"indexKey\"`` :: Find and Project")
+    @Test
+    @DisplayName("``$meta: \"indexKey\"`` :: Find and Project")
     public void testExample4() {
         testQuery(
                 new ActionTestOptions().orderMatters(false).removeIds(true)
@@ -64,7 +69,8 @@ public class TestMeta extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/meta/example5
      */
-    @Test(testName = "``$meta: \"indexKey\"`` :: Aggregation [1]")
+    @Test
+    @DisplayName("``$meta: \"indexKey\"`` :: Aggregation [1]")
     public void testExample5() {
         testPipeline(new ActionTestOptions().removeIds(true), (aggregation) -> aggregation
                 .pipeline(match(gte("price", 10)), addFields().field("idxKey", meta(INDEXKEY))));
@@ -73,7 +79,8 @@ public class TestMeta extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/meta/example6
      */
-    @Test(testName = "``$meta: \"indexKey\"`` :: Find and Project [1]")
+    @Test
+    @DisplayName("``$meta: \"indexKey\"`` :: Find and Project [1]")
     public void testExample6() {
         testQuery(
                 new ActionTestOptions().orderMatters(false).removeIds(true)

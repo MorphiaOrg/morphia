@@ -36,8 +36,10 @@ import dev.morphia.test.models.methods.MethodMappedUser;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.testng.annotations.Ignore;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.Morphia.createDatastore;
 import static dev.morphia.aggregation.stages.Lookup.lookup;
@@ -46,10 +48,6 @@ import static dev.morphia.query.filters.Filters.in;
 import static dev.morphia.query.updates.UpdateOperators.setOnInsert;
 import static java.util.Arrays.asList;
 import static java.util.List.of;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertSame;
 
 @SuppressWarnings("removal")
 public class TestReferences extends ProxyTestBase {
@@ -65,7 +63,7 @@ public class TestReferences extends ProxyTestBase {
         getDs().save(sets);
 
         // this query throws a NullPointerException
-        assertNotNull(getDs().find(Sets.class)
+        Assertions.assertNotNull(getDs().find(Sets.class)
                 .filter(eq("refs", ref))
                 .first());
 
@@ -74,7 +72,7 @@ public class TestReferences extends ProxyTestBase {
         map.strings.put("name", new TreeSet<>(asList("one", "two", "three")));
         getDs().save(map);
         final MapOfSet first = getDs().find(MapOfSet.class).first();
-        assertEquals(map, first);
+        Assertions.assertEquals(first, map);
     }
 
     @Test
@@ -159,7 +157,7 @@ public class TestReferences extends ProxyTestBase {
         assertNotFetched(p);
 
         ObjectId idFromProxy = p.getId();
-        assertEquals(id, idFromProxy);
+        Assertions.assertEquals(idFromProxy, id);
 
         // Since getId() is annotated with @IdGetter, it should not cause the
         // referenced entity to be fetched
@@ -187,7 +185,7 @@ public class TestReferences extends ProxyTestBase {
         ComplexParent loaded = getDs().find(ComplexParent.class)
                 .filter(eq("_id", parent.id))
                 .first();
-        assertEquals(loaded, parent);
+        Assertions.assertEquals(parent, loaded);
     }
 
     @Test
@@ -202,7 +200,7 @@ public class TestReferences extends ProxyTestBase {
                 .find(new Document("_id", 1))
                 .first();
         ((List<Object>) loaded.get("friends"))
-                .forEach(f -> assertEquals(f.getClass(), DBRef.class));
+                .forEach(f -> Assertions.assertEquals(DBRef.class, f.getClass()));
     }
 
     @Test
@@ -221,7 +219,7 @@ public class TestReferences extends ProxyTestBase {
         container.singleRef = ref;
         getDs().save(container);
 
-        assertNotNull(getDs().find(Container.class)
+        Assertions.assertNotNull(getDs().find(Container.class)
                 .filter(eq("singleRef", ref)).iterator()
                 .next());
     }
@@ -265,7 +263,7 @@ public class TestReferences extends ProxyTestBase {
                 .find(new Document())
                 .first();
         ((List<Object>) loaded.get("list"))
-                .forEach(f -> assertEquals(f.getClass(), Long.class));
+                .forEach(f -> Assertions.assertEquals(Long.class, f.getClass()));
     }
 
     @Test
@@ -278,13 +276,13 @@ public class TestReferences extends ProxyTestBase {
         getDs().save(new Org("Test Org2", plan2));
 
         long count = getDs().find(Org.class).filter(eq("name", "Test Org1")).count();
-        assertEquals(count, 1);
+        Assertions.assertEquals(1, count);
 
         count = getDs().find(Org.class).filter(in("plan", of(plan1))).count();
-        assertEquals(count, 1);
+        Assertions.assertEquals(1, count);
 
         count = getDs().find(Org.class).filter(in("plan", of(plan1, plan2))).count();
-        assertEquals(count, 2);
+        Assertions.assertEquals(2, count);
     }
 
     @Test
@@ -297,11 +295,11 @@ public class TestReferences extends ProxyTestBase {
 
         var entities = datastore.find(Entity2.class).iterator().toList();
 
-        assertNotNull(entities.get(0));
+        Assertions.assertNotNull(entities.get(0));
         Entity1 reference = entities.get(0).getReference();
-        assertNotNull(reference);
-        assertEquals(reference.getName(), "entity1", "name should cause a fetch");
-        assertNotNull(reference.getId(), "ID shouldn't be null");
+        Assertions.assertNotNull(reference);
+        Assertions.assertEquals("entity1", reference.getName(), "name should cause a fetch");
+        Assertions.assertNotNull(reference.getId(), "ID shouldn't be null");
     }
 
     @Test
@@ -318,42 +316,48 @@ public class TestReferences extends ProxyTestBase {
                     getDs().save(List.of(friend, user));
 
                     MethodMappedUser loaded = getDs().find(MethodMappedUser.class).first();
-                    assertNotNull(loaded.getFriends());
-                    assertEquals(loaded.getFriend(), friend);
-                    assertEquals(loaded.getFriends().get(0), friend);
-                    assertEquals(loaded, user);
+                    Assertions.assertNotNull(loaded.getFriends());
+                    Assertions.assertEquals(friend, loaded.getFriend());
+                    Assertions.assertEquals(friend, loaded.getFriends().get(0));
+                    Assertions.assertEquals(user, loaded);
                 });
     }
 
-    @Test(expectedExceptions = ReferenceException.class)
+    @Test
     public void testMissingRef() {
-        final Source source = new Source();
-        source.setTarget(new Target());
+        Assertions.assertThrows(ReferenceException.class, () -> {
+            final Source source = new Source();
+            source.setTarget(new Target());
 
-        getDs().save(source);
+            getDs().save(source);
 
-        getDs().find(Source.class).iterator().toList();
+            getDs().find(Source.class).iterator().toList();
+        });
     }
 
-    @Test(expectedExceptions = ReferenceException.class)
+    @Test
     public void testMissingRefLazy() {
-        final Source e = new Source();
-        e.setLazy(new Target());
+        Assertions.assertThrows(ReferenceException.class, () -> {
+            final Source e = new Source();
+            e.setLazy(new Target());
 
-        getDs().save(e);
-        Source source = getDs().find(Source.class).first();
-        assertNull(source.getLazy().getFoo());
+            getDs().save(e);
+            Source source = getDs().find(Source.class).first();
+            Assertions.assertNull(source.getLazy().getFoo());
+        });
     }
 
-    @Test(expectedExceptions = ReferenceException.class)
+    @Test
     public void testMissingRefLazyIgnoreMissing() {
-        final Source e = new Source();
-        e.setIgnoreMissing(new Target());
+        Assertions.assertThrows(ReferenceException.class, () -> {
+            final Source e = new Source();
+            e.setIgnoreMissing(new Target());
 
-        getDs().save(e); // does not fail due to pre-initialized Ids
+            getDs().save(e); // does not fail due to pre-initialized Ids
 
-        Source source = getDs().find(Source.class).first();
-        source.getIgnoreMissing().getFoo();
+            Source source = getDs().find(Source.class).first();
+            source.getIgnoreMissing().getFoo();
+        });
     }
 
     @Test
@@ -370,9 +374,9 @@ public class TestReferences extends ProxyTestBase {
         a.lists = List.of(List.of(List.of(ref1), List.of(ref2)));
         getDs().save(asList(ref2, ref1, a));
 
-        assertEquals(a, getDs().find(MultiDimArrayOfReferences.class)
+        Assertions.assertEquals(getDs().find(MultiDimArrayOfReferences.class)
                 .filter(eq("_id", a.getId()))
-                .first());
+                .first(), a);
     }
 
     @Test
@@ -396,7 +400,7 @@ public class TestReferences extends ProxyTestBase {
         testSecondDatastore(ds2);
 
         for (int i = 1; i <= 4; i++) {
-            assertNull(getDs().find(FacebookUser.class).filter(eq("id", i)).first());
+            Assertions.assertNull(getDs().find(FacebookUser.class).filter(eq("id", i)).first());
         }
         getMongoClient().getDatabase("db1").drop();
         getMongoClient().getDatabase("db2").drop();
@@ -404,28 +408,29 @@ public class TestReferences extends ProxyTestBase {
 
     private void testFirstDatastore(Datastore datastore) {
         final FacebookUser user = datastore.find(FacebookUser.class).filter(eq("id", 1)).first();
-        assertNotNull(user);
-        assertNotNull(datastore.find(FacebookUser.class).filter(eq("id", 3)).first());
+        Assertions.assertNotNull(user);
+        Assertions.assertNotNull(datastore.find(FacebookUser.class).filter(eq("id", 3)).first());
 
-        assertEquals(user.friends.size(), 1, "Should find 1 friend");
-        assertEquals(user.friends.get(0).id, 3, "Should find the right friend");
+        Assertions.assertEquals(1, user.friends.size(), "Should find 1 friend");
+        Assertions.assertEquals(3, user.friends.get(0).id, "Should find the right friend");
 
-        assertNull(datastore.find(FacebookUser.class).filter(eq("id", 2)).first());
-        assertNull(datastore.find(FacebookUser.class).filter(eq("id", 4)).first());
+        Assertions.assertNull(datastore.find(FacebookUser.class).filter(eq("id", 2)).first());
+        Assertions.assertNull(datastore.find(FacebookUser.class).filter(eq("id", 4)).first());
     }
 
     private void testSecondDatastore(Datastore datastore) {
-        assertNull(datastore.find(FacebookUser.class).filter(eq("id", 1)).first());
-        assertNull(datastore.find(FacebookUser.class).filter(eq("id", 3)).first());
+        Assertions.assertNull(datastore.find(FacebookUser.class).filter(eq("id", 1)).first());
+        Assertions.assertNull(datastore.find(FacebookUser.class).filter(eq("id", 3)).first());
 
         final FacebookUser db2FoundUser = datastore.find(FacebookUser.class).filter(eq("id", 2)).first();
-        assertNotNull(db2FoundUser);
-        assertNotNull(datastore.find(FacebookUser.class).filter(eq("id", 4)).first());
-        assertEquals(db2FoundUser.friends.size(), 1, "Should find 1 friend");
-        assertEquals(db2FoundUser.friends.get(0).id, 4, "Should find the right friend");
+        Assertions.assertNotNull(db2FoundUser);
+        Assertions.assertNotNull(datastore.find(FacebookUser.class).filter(eq("id", 4)).first());
+        Assertions.assertEquals(1, db2FoundUser.friends.size(), "Should find 1 friend");
+        Assertions.assertEquals(4, db2FoundUser.friends.get(0).id, "Should find the right friend");
     }
 
-    @Test(groups = "references")
+    @Test
+    @Tag("references")
     public void testReference() {
         getMapper().map(CompoundIdEntity.class, CompoundId.class);
 
@@ -439,7 +444,7 @@ public class TestReferences extends ProxyTestBase {
         entity.sibling = sibling;
         getDs().save(entity);
 
-        assertEquals(entity, getDs().find(entity.getClass()).filter(eq("_id", entity.id)).first());
+        Assertions.assertEquals(getDs().find(entity.getClass()).filter(eq("_id", entity.id)).first(), entity);
     }
 
     @Test
@@ -452,15 +457,15 @@ public class TestReferences extends ProxyTestBase {
         getDs().save(parent1);
 
         List<Parent> parentList = getDs().find(Parent.class).iterator().toList();
-        assertEquals(parentList.size(), 1);
+        Assertions.assertEquals(1, parentList.size());
 
         withConfig(buildConfig(), () -> {
-            assertEquals(getDs().find(Parent.class).iterator().toList().size(), 1);
+            Assertions.assertEquals(1, getDs().find(Parent.class).iterator().toList().size());
         });
     }
 
     @Test
-    @Ignore("entity caching needs to be implemented")
+    @Disabled("entity caching needs to be implemented")
     public final void testSameProxy() {
         checkForProxyTypes();
 
@@ -477,7 +482,7 @@ public class TestReferences extends ProxyTestBase {
         root = getDs().find(RootEntity.class)
                 .filter(eq("_id", root.getId()))
                 .first();
-        assertSame(root.r, root.secondReference);
+        Assertions.assertSame(root.secondReference, root.r);
     }
 
     @Test
@@ -493,8 +498,8 @@ public class TestReferences extends ProxyTestBase {
                         .upsert(true),
                         setOnInsert(Map.of("unique", id, "child", child)));
 
-        assertEquals(parent.unique, id.toString());
-        assertEquals(parent.child.name, child.name);
+        Assertions.assertEquals(id.toString(), parent.unique);
+        Assertions.assertEquals(child.name, parent.child.name);
     }
 
     @Test
@@ -713,7 +718,7 @@ public class TestReferences extends ProxyTestBase {
                     Objects.equals(complex, that.complex) &&
                     Objects.equals(list, that.list));
 
-            assertEquals(lazyList.size(), that.lazyList.size());
+            Assertions.assertEquals(that.lazyList.size(), lazyList.size());
             lazyList.forEach(
                     d -> equals.set(equals.get() && that.lazyList.contains(d)));
 

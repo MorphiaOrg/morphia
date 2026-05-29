@@ -7,12 +7,12 @@ import dev.morphia.MorphiaVersion30;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.semver4j.Semver;
-import org.testng.annotations.Test;
 
 import static dev.morphia.test.TestBase.GIT_ROOT;
 import static java.lang.String.format;
-import static org.testng.Assert.assertEquals;
 
 public class MorphiaVersionTest {
     @Test
@@ -23,6 +23,6 @@ public class MorphiaVersionTest {
         var version = Semver.parse(model.getVersion());
         String minorVersion = format("%s%s", version.getMajor(), version.getMinor());
         //noinspection MisorderedAssertEqualsArguments
-        assertEquals(MorphiaVersion30.class.getSimpleName().replaceAll("\\D", ""), minorVersion);
+        Assertions.assertEquals(minorVersion, MorphiaVersion30.class.getSimpleName().replaceAll("\\D", ""));
     }
 }

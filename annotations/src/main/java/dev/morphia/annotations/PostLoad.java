@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  * initialization and sanity-checking of the object.
  * <p>
  * Methods with this annotation may optionally take a parameter of type {@link org.bson.Document Document}
- * and/or a parameter of type {@link dev.morphia.Datastore Datastore}. If both parameters are used,
+ * and/or a parameter of type Datastore. If both parameters are used,
  * the order is unimportant.
  * <p>
  * The Document parameter (if used) will be the document that this object was loaded from. The Datastore
@@ -45,8 +45,6 @@ import java.lang.annotation.Target;
  * @see dev.morphia.annotations.PreLoad
  * @see dev.morphia.annotations.PrePersist
  * @see dev.morphia.annotations.PostPersist
- *
- * @author Scott Hernandez
  */
 @Documented
 @Inherited

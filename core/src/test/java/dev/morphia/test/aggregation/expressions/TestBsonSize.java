@@ -2,7 +2,8 @@ package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.expressions.DataSizeExpressions.bsonSize;
@@ -18,7 +19,8 @@ public class TestBsonSize extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/bsonSize/example1
      * 
      */
-    @Test(testName = "Return Sizes of Documents")
+    @Test
+    @DisplayName("Return Sizes of Documents")
     public void testExample1() {
         testPipeline(
                 aggregation -> aggregation.pipeline(project().include("name").include("object_size", bsonSize(ROOT))));
@@ -29,7 +31,8 @@ public class TestBsonSize extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/bsonSize/example2
      * 
      */
-    @Test(testName = "Return Combined Size of All Documents in a Collection")
+    @Test
+    @DisplayName("Return Combined Size of All Documents in a Collection")
     public void testExample2() {
         testPipeline(aggregation -> aggregation
                 .pipeline(group(id(null)).field("combined_object_size", sum(bsonSize(ROOT)))));
@@ -40,7 +43,8 @@ public class TestBsonSize extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/bsonSize/example3
      * 
      */
-    @Test(testName = "Return Document with Largest Specified Field")
+    @Test
+    @DisplayName("Return Document with Largest Specified Field")
     public void testExample3() {
         testPipeline(aggregation -> aggregation.pipeline(
                 project().include("name", "$name").include("task_object_size", bsonSize("$$CURRENT")),

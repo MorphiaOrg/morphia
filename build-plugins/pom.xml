@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>build-plugins</artifactId>
+    <name>Morphia Build Plugins</name>
     <packaging>maven-plugin</packaging>
 
     <properties>

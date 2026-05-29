@@ -4,7 +4,8 @@ import dev.morphia.aggregation.stages.Match;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
@@ -20,7 +21,8 @@ public class TestFacet extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/facet/example1
      * 
      */
-    @Test(testName = "main")
+    @Test
+    @DisplayName("main")
     public void testExample1() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(facet()

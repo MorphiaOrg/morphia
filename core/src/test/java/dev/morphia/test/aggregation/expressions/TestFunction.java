@@ -3,7 +3,8 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.function;
 import static dev.morphia.aggregation.stages.AddFields.addFields;
@@ -13,7 +14,8 @@ public class TestFunction extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/function/example1
      * 
      */
-    @Test(testName = "Example 1: Usage Example")
+    @Test
+    @DisplayName("Example 1: Usage Example")
     public void testExample1() {
         testPipeline(new ActionTestOptions().skipActionCheck(true),
                 (aggregation) -> aggregation.pipeline(addFields().field("isFound", function("""
@@ -30,7 +32,8 @@ public class TestFunction extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/function/example2
      * 
      */
-    @Test(testName = "Example 2: Alternative to ``$where``")
+    @Test
+    @DisplayName("Example 2: Alternative to ``$where``")
     public void testExample2() {
         // example doesn't really apply to morphia
     }

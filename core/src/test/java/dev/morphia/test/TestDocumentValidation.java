@@ -43,9 +43,8 @@ import dev.morphia.test.models.User;
 
 import org.bson.Document;
 import org.bson.json.JsonWriterSettings;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.annotations.internal.ValidationBuilder.validationBuilder;
 import static dev.morphia.query.filters.Filters.eq;
@@ -53,10 +52,6 @@ import static dev.morphia.query.updates.UpdateOperators.set;
 import static dev.morphia.query.updates.UpdateOperators.unset;
 import static java.util.Arrays.asList;
 import static org.bson.Document.parse;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
 
 public class TestDocumentValidation extends TestBase {
     public TestDocumentValidation() {
@@ -64,21 +59,16 @@ public class TestDocumentValidation extends TestBase {
                 .applyDocumentValidations(true));
     }
 
-    @BeforeMethod
-    public void checkVersion() {
-        checkMinDriverVersion("4.3.0");
-    }
-
     @Test
     public void createValidation() {
         getDs().enableDocumentValidation();
-        assertEquals(parse(DocumentValidation.class.getAnnotation(Validation.class).value()), getValidator());
+        Assertions.assertEquals(getValidator(), parse(DocumentValidation.class.getAnnotation(Validation.class).value()));
 
         try {
             getDs().save(new DocumentValidation("John", 1, new Date()));
-            fail("Document should have failed validation");
+            Assertions.fail("Document should have failed validation");
         } catch (MongoWriteException e) {
-            assertTrue(e.getMessage().contains("Document failed validation"));
+            Assertions.assertTrue(e.getMessage().contains("Document failed validation"));
         }
 
         getDs().save(new DocumentValidation("Harold", 100, new Date()));
@@ -95,7 +85,7 @@ public class TestDocumentValidation extends TestBase {
 
         try {
             query.modify(options, set("number", 5));
-            fail("Document validation should have complained");
+            Assertions.fail("Document validation should have complained");
         } catch (MongoCommandException e) {
             // expected
         }
@@ -103,7 +93,7 @@ public class TestDocumentValidation extends TestBase {
         options.bypassDocumentValidation(true);
         query.modify(options, set("number", 5));
 
-        Assert.assertNotNull(query.filter(eq("number", 5))
+        Assertions.assertNotNull(query.filter(eq("number", 5))
                 .iterator()
                 .next());
     }
@@ -112,7 +102,7 @@ public class TestDocumentValidation extends TestBase {
     public void insert() {
         try {
             getDs().insert(new DocumentValidation("Harold", 8, new Date()));
-            fail("Document validation should have complained");
+            Assertions.fail("Document validation should have complained");
         } catch (MongoWriteException e) {
             // expected
         }
@@ -122,7 +112,7 @@ public class TestDocumentValidation extends TestBase {
 
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
                 .filter(eq("number", 8));
-        Assert.assertNotNull(query.iterator().tryNext());
+        Assertions.assertNotNull(query.iterator().tryNext());
 
         List<DocumentValidation> list = asList(new DocumentValidation("Harold", 8, new Date()),
                 new DocumentValidation("John", 8, new Date()),
@@ -132,7 +122,7 @@ public class TestDocumentValidation extends TestBase {
 
         try {
             getDs().insert(list);
-            fail("Document validation should have complained");
+            Assertions.fail("Document validation should have complained");
         } catch (MongoBulkWriteException e) {
             // expected
         }
@@ -140,7 +130,7 @@ public class TestDocumentValidation extends TestBase {
         getDs().insert(list, new InsertManyOptions()
                 .bypassDocumentValidation(true));
 
-        assertTrue(query.filter(eq("number", 8)).iterator().hasNext());
+        Assertions.assertTrue(query.filter(eq("number", 8)).iterator().hasNext());
     }
 
     @Test
@@ -151,7 +141,7 @@ public class TestDocumentValidation extends TestBase {
                     parse("{ '_id': 2, 'name': 'Ivan', 'city': 'Vancouver' }")));
             getDs().applyDocumentValidations();
 
-            Assert.assertThrows(MongoWriteException.class,
+            Assertions.assertThrows(MongoWriteException.class,
                     () -> getDs().find(Contact.class)
                             .filter(eq("_id", 1))
                             .update(set("age", 42)));
@@ -168,31 +158,31 @@ public class TestDocumentValidation extends TestBase {
             Document validator = parse("{ \"jelly\" : { \"$ne\" : \"rhubarb\" } }");
             MongoDatabase database = addValidation(validator);
 
-            assertEquals(validator, getValidator());
+            Assertions.assertEquals(getValidator(), validator);
 
             Document rhubarb = new Document("jelly", "rhubarb").append("number", 20);
             database.getCollection("validation").insertOne(new Document("jelly", "grape"));
             try {
                 database.getCollection("validation").insertOne(rhubarb);
-                fail("Document should have failed validation");
+                Assertions.fail("Document should have failed validation");
             } catch (MongoWriteException e) {
-                assertTrue(e.getMessage().contains("Document failed validation"));
+                Assertions.assertTrue(e.getMessage().contains("Document failed validation"));
             }
 
             getDs().applyDocumentValidations();
-            assertEquals(parse(DocumentValidation.class.getAnnotation(Validation.class).value()), getValidator());
+            Assertions.assertEquals(getValidator(), parse(DocumentValidation.class.getAnnotation(Validation.class).value()));
 
             try {
                 database.getCollection("validation").insertOne(rhubarb);
             } catch (MongoWriteException e) {
-                assertFalse(e.getMessage().contains("Document failed validation"));
+                Assertions.assertFalse(e.getMessage().contains("Document failed validation"));
             }
 
             try {
                 getDs().save(new DocumentValidation("John", 1, new Date()));
-                fail("Document should have failed validation");
+                Assertions.fail("Document should have failed validation");
             } catch (MongoWriteException e) {
-                assertTrue(e.getMessage().contains("Document failed validation"));
+                Assertions.assertTrue(e.getMessage().contains("Document failed validation"));
             }
         });
     }
@@ -201,7 +191,7 @@ public class TestDocumentValidation extends TestBase {
     public void save() {
         try {
             getDs().save(new DocumentValidation("Harold", 8, new Date()));
-            fail("Document validation should have complained");
+            Assertions.fail("Document validation should have complained");
         } catch (MongoWriteException e) {
             // expected
         }
@@ -211,7 +201,7 @@ public class TestDocumentValidation extends TestBase {
 
         Query<DocumentValidation> query = getDs().find(DocumentValidation.class)
                 .filter(eq("number", 8));
-        Assert.assertNotNull(query.iterator().tryNext());
+        Assertions.assertNotNull(query.iterator().tryNext());
 
         List<DocumentValidation> list = asList(new DocumentValidation("Harold", 8, new Date()),
                 new DocumentValidation("Harold", 8, new Date()),
@@ -220,14 +210,14 @@ public class TestDocumentValidation extends TestBase {
                 new DocumentValidation("Harold", 8, new Date()));
         try {
             getDs().save(list);
-            fail("Document validation should have complained");
+            Assertions.fail("Document validation should have complained");
         } catch (MongoBulkWriteException e) {
             // expected
         }
 
         getDs().save(list, new InsertManyOptions().bypassDocumentValidation(true));
 
-        assertTrue(query.filter(eq("number", 8)).iterator().hasNext());
+        Assertions.assertTrue(query.filter(eq("number", 8)).iterator().hasNext());
     }
 
     @Test
@@ -237,13 +227,13 @@ public class TestDocumentValidation extends TestBase {
 
         try {
             getDs().save(user);
-            fail("Document validation should have rejected the document");
+            Assertions.fail("Document validation should have rejected the document");
         } catch (MongoWriteException ignored) {
         }
 
         getDs().save(user, new InsertOneOptions().bypassDocumentValidation(true));
 
-        assertEquals(getDs().find(User.class).count(), 1);
+        Assertions.assertEquals(1, getDs().find(User.class).count());
     }
 
     @Test
@@ -256,7 +246,7 @@ public class TestDocumentValidation extends TestBase {
                 .bypassDocumentValidation(false);
         try {
             query.update(options, set("number", 5));
-            fail("Document validation should have complained");
+            Assertions.fail("Document validation should have complained");
         } catch (MongoWriteException e) {
             // expected
         }
@@ -264,7 +254,7 @@ public class TestDocumentValidation extends TestBase {
         options.bypassDocumentValidation(true);
         query.update(options, set("number", 5));
 
-        Assert.assertNotNull(query.filter(eq("number", 5)).iterator()
+        Assertions.assertNotNull(query.filter(eq("number", 5)).iterator()
                 .tryNext());
     }
 
@@ -300,7 +290,7 @@ public class TestDocumentValidation extends TestBase {
 
         Document validation = getValidation();
         for (String key : expected.keySet()) {
-            assertEquals(expected.get(key), validation.get(key));
+            Assertions.assertEquals(validation.get(key), expected.get(key));
         }
     }
 
@@ -312,7 +302,7 @@ public class TestDocumentValidation extends TestBase {
 
         Document cursor = (Document) document.get("cursor");
         List<Document> firstBatch = (List<Document>) cursor.get("firstBatch");
-        assertFalse(firstBatch.isEmpty(), cursor.toJson(JsonWriterSettings.builder().indent(true).build()));
+        Assertions.assertFalse(firstBatch.isEmpty(), cursor.toJson(JsonWriterSettings.builder().indent(true).build()));
         return (Document) firstBatch.get(0).get("options");
     }
 

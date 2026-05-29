@@ -15,11 +15,11 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.test.TestBase;
 
 import org.bson.Document;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import static org.testng.Assert.assertEquals;
 
 //this is a random annotation which doesn't play any role beside separating @Reference and field
 @Target({ FIELD })
@@ -94,7 +94,7 @@ public class TestReferenceAnnotationOrdering extends TestBase {
         Object items = firstDoc.get("items");
         Object moreItems = firstDoc.get("moreItems");
 
-        assertEquals(items, moreItems, "Items should be stored as the same documents");
+        Assertions.assertEquals(moreItems, items, "Items should be stored as the same documents");
     }
 
 }

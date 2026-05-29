@@ -28,8 +28,8 @@ import dev.morphia.query.FindOptions;
 import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("SameParameterValue")
 public class OptionsTest extends TestBase {
@@ -117,11 +117,11 @@ public class OptionsTest extends TestBase {
     private void checkOverride(Class<?> driverType, Class<?> morphiaType, Method method) throws NoSuchMethodException {
         Class<?>[] parameterTypes = method.getParameterTypes();
         Method morphiaMethod = morphiaType.getMethod(method.getName(), parameterTypes);
-        Assert.assertTrue(!method.getReturnType().equals(driverType)
+        Assertions.assertTrue(!method.getReturnType().equals(driverType)
                 || morphiaMethod.getReturnType().equals(morphiaType), method.toString());
 
         if (parameterTypes.equals(new Class[] { Bson.class })) {
-            Assert.assertTrue(!method.getReturnType().equals(driverType)
+            Assertions.assertTrue(!method.getReturnType().equals(driverType)
                     || morphiaType.getMethod(method.getName(), Document.class)
                             .getReturnType().equals(morphiaType),
                     method.toString());
@@ -173,7 +173,7 @@ public class OptionsTest extends TestBase {
     private void scan(Class<?> driverType, Class<?> morphiaType, List<Class<?>> localFields) {
         try {
             Method[] methods = driverType.getDeclaredMethods();
-            Assert.assertEquals(driverType.equals(morphiaType.getSuperclass()), !Modifier.isFinal(driverType.getModifiers()),
+            Assertions.assertEquals(!Modifier.isFinal(driverType.getModifiers()), driverType.equals(morphiaType.getSuperclass()),
                     "Options class should be a subclass");
             for (Method method : methods) {
                 if (method.getAnnotation(Deprecated.class) == null
@@ -189,13 +189,13 @@ public class OptionsTest extends TestBase {
                 name = name.substring(0, 1).toLowerCase() + name.substring(1);
 
                 Field field = morphiaType.getDeclaredField(name);
-                Assert.assertEquals(localField, field.getType(), localField.getName());
+                Assertions.assertEquals(field.getType(), localField, localField.getName());
 
                 Method declaredMethod = morphiaType.getDeclaredMethod(name);
-                Assert.assertEquals(localField, declaredMethod.getReturnType(), declaredMethod.toString());
+                Assertions.assertEquals(declaredMethod.getReturnType(), localField, declaredMethod.toString());
 
                 declaredMethod = morphiaType.getDeclaredMethod(name, localField);
-                Assert.assertEquals(morphiaType, declaredMethod.getReturnType(), declaredMethod.toString());
+                Assertions.assertEquals(declaredMethod.getReturnType(), morphiaType, declaredMethod.toString());
             }
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e.getMessage(), e);

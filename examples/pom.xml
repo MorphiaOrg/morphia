@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>examples</artifactId>
+    <name>Morphia Examples</name>
 
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
@@ -43,11 +44,6 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>mongodb</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>

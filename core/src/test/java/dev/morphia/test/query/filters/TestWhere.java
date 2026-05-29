@@ -3,7 +3,8 @@ package dev.morphia.test.query.filters;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.where;
 
@@ -12,7 +13,8 @@ public class TestWhere extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/where/example1
      */
-    @Test(testName = "main")
+    @Test
+    @DisplayName("main")
     public void testExample1() {
         testQuery(new ActionTestOptions().skipActionCheck(true), (query) -> query.filter(where("""
                 function() {

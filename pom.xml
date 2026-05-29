@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.antwerkz</groupId>
         <artifactId>antwerkz-parent</artifactId>
-        <version>70</version>
+        <version>73</version>
     </parent>
 
     <groupId>dev.morphia.morphia</groupId>
@@ -49,9 +49,11 @@
     <properties>
         <asm.version>9.10</asm.version>
         <awaitility.version>1.7.0</awaitility.version>
+        <dokka.version>2.2.0</dokka.version>
         <driver.version>5.7.0</driver.version>
         <driver.minor.version>5.6</driver.minor.version>
         <driver-javadoc.link>https://mongodb.github.io/mongo-java-driver/${driver.minor.version}/apidocs</driver-javadoc.link>
+        <morphia-javadoc.link>https://morphia.dev/morphia/${morphia.minor.version}/javadoc</morphia-javadoc.link>
         <gizmo.version>1.10.1</gizmo.version>
         <jackson.version>2.21.3</jackson.version>
         <jackson-annotations.version>2.21</jackson-annotations.version>
@@ -61,22 +63,23 @@
         <logback.version>1.5.32</logback.version>
         <ksp.version>2.3.8</ksp.version>
         <maven.version>4.0.0-rc-5</maven.version>
+        <morphia.minor.version>3.0</morphia.minor.version>
         <revapi.maven.plugin.version>0.15.1</revapi.maven.plugin.version>
         <revapi.java.version>0.28.4</revapi.java.version>
         <roaster.version>2.29.0.Final</roaster.version>
         <slf4j.version>2.0.18</slf4j.version>
         <sofia.version>0.25</sofia.version>
         <surefire.version>3.1.0</surefire.version>
-        <testng.version>7.12.0</testng.version>
+        <junit.version>5.11.4</junit.version>
         <zt.exec.version>1.12</zt.exec.version>
 
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.compiler.jvmTarget>17</kotlin.compiler.jvmTarget>
-        <asm.version>9.10</asm.version>
-        <dokka.version>2.2.0</dokka.version>
         <morphia.mapper>reflection</morphia.mapper>
+
+        <jreleaser.verify.pom>false</jreleaser.verify.pom>
     </properties>
 
     <build>
@@ -132,10 +135,41 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
+                        <useModulePath>false</useModulePath>
                         <forkCount>1C</forkCount>
                         <systemPropertyVariables>
                             <testcontainers.reuse.enable>true</testcontainers.reuse.enable>
+                            <junit.jupiter.testinstance.lifecycle.default>per_class</junit.jupiter.testinstance.lifecycle.default>
                         </systemPropertyVariables>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.12.0</version>
+                    <configuration>
+                        <failOnError>true</failOnError>
+                        <failOnWarnings>false</failOnWarnings>
+                        <excludePackageNames>
+                            dev.morphia.utils:dev.morphia.sofia:*.internal:dev.morphia.mapping.*:dev.morphia.aggregation.codecs:dev.morphia.aggregation.codecs.stages
+                        </excludePackageNames>
+                        <doclint>all</doclint>
+                        <doctitle>${project.name} ${project.version}</doctitle>
+                        <links>
+                            <link>${driver-javadoc.link}/driver-core</link>
+                            <link>${driver-javadoc.link}/bson</link>
+                            <link>${driver-javadoc.link}/driver-sync</link>
+                            <link>${morphia-javadoc.link}</link>
+                        </links>
+                        <windowtitle>${project.name}</windowtitle>
+                        <tagletArtifacts>
+                            <tagletArtifact>
+                                <groupId>dev.morphia.morphia</groupId>
+                                <artifactId>util</artifactId>
+                                <version>${project.version}</version>
+                            </tagletArtifact>
+                        </tagletArtifacts>
+                        <sourcepath>${project.build.sourceDirectory}:${project.build.directory}/generated-sources/sofia:${project.build.directory}/generated-sources/morphia-annotations</sourcepath>
                     </configuration>
                 </plugin>
             </plugins>
@@ -144,7 +178,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.6.2</version>
+                <version>3.6.3</version>
                 <executions>
                     <execution>
                         <id>enforce-java</id>
@@ -170,8 +204,21 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>dev.morphia.morphia</groupId>
                 <artifactId>morphia-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>dev.morphia.morphia</groupId>
+                <artifactId>morphia-annotations</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -189,12 +236,6 @@
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>${logback.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.testng</groupId>
-                <artifactId>testng</artifactId>
-                <version>${testng.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -374,6 +415,19 @@
         </dependencies>
     </dependencyManagement>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <profiles>
         <profile>
             <id>audits</id>
@@ -385,9 +439,9 @@
             <properties>
                 <skipTests>true</skipTests>
             </properties>
-            <modules>
-                <module>audits</module>
-            </modules>
+            <subprojects>
+                <subproject>audits</subproject>
+            </subprojects>
         </profile>
         <profile>
             <id>coverage</id>
@@ -419,8 +473,9 @@
     </profiles>
 
     <subprojects>
-        <subproject>build-plugins</subproject>
         <subproject>util</subproject>
+        <subproject>build-plugins</subproject>
+        <subproject>annotations</subproject>
         <subproject>core</subproject>
         <subproject>kotlin</subproject>
         <subproject>rewrite</subproject>

@@ -3,7 +3,8 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
@@ -22,7 +23,8 @@ public class TestObjectToArray extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/objectToArray/example1
      * 
      */
-    @Test(testName = "``$objectToArray`` Example")
+    @Test
+    @DisplayName("``$objectToArray`` Example")
     public void testExample1() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("item").include("dimensions", objectToArray("$dimensions"))));
@@ -32,7 +34,8 @@ public class TestObjectToArray extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/objectToArray/example2
      * 
      */
-    @Test(testName = "``$objectToArray`` to Sum Nested Fields")
+    @Test
+    @DisplayName("``$objectToArray`` to Sum Nested Fields")
     public void testExample2() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(project().include("warehouses", objectToArray("$instock")),
@@ -43,7 +46,8 @@ public class TestObjectToArray extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/objectToArray/example3
      * 
      */
-    @Test(testName = "``$objectToArray`` + ``$arrayToObject`` Example")
+    @Test
+    @DisplayName("``$objectToArray`` + ``$arrayToObject`` Example")
     public void testExample3() {
         testPipeline((aggregation) -> aggregation.pipeline(addFields().field("instock", objectToArray("$instock")),
                 addFields().field("instock",

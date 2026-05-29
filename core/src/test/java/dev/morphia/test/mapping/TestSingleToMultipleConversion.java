@@ -9,8 +9,8 @@ import dev.morphia.annotations.Id;
 import dev.morphia.test.TestBase;
 
 import org.bson.types.ObjectId;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestSingleToMultipleConversion extends TestBase {
     @Test
@@ -18,37 +18,37 @@ public class TestSingleToMultipleConversion extends TestBase {
         getDs().find(HasSingleString.class)
                 .delete();
         getDs().save(new HasSingleString());
-        Assert.assertNotNull(getDs().find(HasSingleString.class).iterator()
+        Assertions.assertNotNull(getDs().find(HasSingleString.class).iterator()
                 .next());
-        Assert.assertEquals(getDs().find(HasSingleString.class).count(), 1);
+        Assertions.assertEquals(1, getDs().find(HasSingleString.class).count());
         final HasManyStringsArray hms = getDs().find(HasManyStringsArray.class).iterator()
                 .next();
-        Assert.assertNotNull(hms);
-        Assert.assertNotNull(hms.strings);
-        Assert.assertEquals(hms.strings.length, 1);
+        Assertions.assertNotNull(hms);
+        Assertions.assertNotNull(hms.strings);
+        Assertions.assertEquals(1, hms.strings.length);
 
         final HasManyStringsList hms2 = getDs().find(HasManyStringsList.class).iterator()
                 .next();
-        Assert.assertNotNull(hms2);
-        Assert.assertNotNull(hms2.strings);
-        Assert.assertEquals(hms2.strings.size(), 1);
+        Assertions.assertNotNull(hms2);
+        Assertions.assertNotNull(hms2.strings);
+        Assertions.assertEquals(1, hms2.strings.size());
     }
 
     @Test
     public void testEmbeddedType() {
         getDs().save(new HasEmbeddedStringy());
-        Assert.assertNotNull(getDs().find(HasEmbeddedStringy.class).iterator()
+        Assertions.assertNotNull(getDs().find(HasEmbeddedStringy.class).iterator()
                 .next());
-        Assert.assertEquals(getDs().find(HasEmbeddedStringy.class).count(), 1);
+        Assertions.assertEquals(1, getDs().find(HasEmbeddedStringy.class).count());
         final HasEmbeddedStringyArray has = getDs().find(HasEmbeddedStringyArray.class).first();
-        Assert.assertNotNull(has);
-        Assert.assertNotNull(has.hss);
-        Assert.assertEquals(has.hss.length, 1);
+        Assertions.assertNotNull(has);
+        Assertions.assertNotNull(has.hss);
+        Assertions.assertEquals(1, has.hss.length);
 
         final HasEmbeddedStringySet has2 = getDs().find(HasEmbeddedStringySet.class).first();
-        Assert.assertNotNull(has2);
-        Assert.assertNotNull(has2.hss);
-        Assert.assertEquals(has2.hss.size(), 1);
+        Assertions.assertNotNull(has2);
+        Assertions.assertNotNull(has2.hss);
+        Assertions.assertEquals(1, has2.hss.size());
     }
 
     @Entity(value = "B", useDiscriminator = false)

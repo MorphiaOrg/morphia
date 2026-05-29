@@ -18,9 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.utility.DockerImageName;
-import org.testng.SkipException;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeSuite;
 
 import static dev.morphia.test.TestBase.TEST_DB_NAME;
 import static java.lang.String.format;
@@ -44,7 +41,6 @@ public class MorphiaTestSetup {
         morphiaConfig = config;
     }
 
-    @BeforeSuite
     public MorphiaContainer getMorphiaContainer() {
         if (morphiaContainer == null) {
             morphiaContainer = new MorphiaContainer(getMongoHolder().getMongoClient(), morphiaConfig);
@@ -85,14 +81,13 @@ public class MorphiaTestSetup {
         return new MongoHolder(mongoDBContainer, connectionString);
     }
 
-    @AfterSuite
     public void stopContainer() {
         morphiaContainer = null;
     }
 
     protected void assumeTrue(boolean condition, String message) {
         if (!condition) {
-            throw new SkipException(message);
+            org.junit.jupiter.api.Assumptions.assumeTrue(false, message);
         }
     }
 

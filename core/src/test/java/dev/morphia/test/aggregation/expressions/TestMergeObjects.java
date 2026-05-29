@@ -3,7 +3,8 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.elementAt;
 import static dev.morphia.aggregation.expressions.ObjectExpressions.mergeObjects;
@@ -19,7 +20,8 @@ public class TestMergeObjects extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/mergeObjects/example1
      * 
      */
-    @Test(testName = "``$mergeObjects``")
+    @Test
+    @DisplayName("``$mergeObjects``")
     public void testExample1() {
         loadData("items", 2);
         testPipeline((aggregation) -> aggregation.pipeline(
@@ -31,7 +33,8 @@ public class TestMergeObjects extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/mergeObjects/example2
      * 
      */
-    @Test(testName = "``$mergeObjects`` as an Accumulator")
+    @Test
+    @DisplayName("``$mergeObjects`` as an Accumulator")
     public void testExample2() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
                 .pipeline(group(id("$item")).field("mergedSales", mergeObjects().add("$quantity"))));

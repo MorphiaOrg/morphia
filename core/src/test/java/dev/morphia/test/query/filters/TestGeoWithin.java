@@ -10,7 +10,8 @@ import com.mongodb.client.model.geojson.Position;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.geoWithin;
 
@@ -19,7 +20,8 @@ public class TestGeoWithin extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/geoWithin/example1
      */
-    @Test(testName = "Within a Polygon")
+    @Test
+    @DisplayName("Within a Polygon")
     public void testExample1() {
         var points = List.of(new Position(0, 0), new Position(3, 6), new Position(6, 1), new Position(0, 0));
         testQuery(new ActionTestOptions().skipDataCheck(true),
@@ -29,7 +31,8 @@ public class TestGeoWithin extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/query/filters/geoWithin/example2
      */
-    @Test(testName = "Within a \"Big\" Polygon")
+    @Test
+    @DisplayName("Within a \"Big\" Polygon")
     public void testExample2() {
         var coords = new PolygonCoordinates(List.of(new Position(-100, 60), new Position(-100, 0),
                 new Position(-100, -60), new Position(100, -60), new Position(100, 60), new Position(-100, 60)));

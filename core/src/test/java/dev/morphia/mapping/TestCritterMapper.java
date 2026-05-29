@@ -13,15 +13,8 @@ import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
-import org.testng.annotations.Test;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNotSame;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertSame;
-import static org.testng.Assert.assertTrue;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class TestCritterMapper {
 
@@ -33,8 +26,8 @@ public class TestCritterMapper {
     public void testRuntimeGenerationProducesCritterEntityModel() {
         CritterMapper mapper = mapper();
         EntityModel model = mapper.mapEntity(CritterMapperTestEntity.class);
-        assertNotNull(model);
-        assertTrue(model instanceof CritterEntityModel,
+        Assertions.assertNotNull(model);
+        Assertions.assertTrue(model instanceof CritterEntityModel,
                 "Expected CritterEntityModel but got: " + model.getClass().getName());
     }
 
@@ -42,8 +35,8 @@ public class TestCritterMapper {
     public void testCollectionNameFromAnnotation() {
         CritterMapper mapper = mapper();
         EntityModel model = mapper.mapEntity(CritterMapperTestEntity.class);
-        assertNotNull(model);
-        assertEquals(model.collectionName(), "critter_test");
+        Assertions.assertNotNull(model);
+        Assertions.assertEquals("critter_test", model.collectionName());
     }
 
     @Test
@@ -51,23 +44,23 @@ public class TestCritterMapper {
         CritterMapper mapper = mapper();
         EntityModel first = mapper.mapEntity(CritterMapperTestEntity.class);
         EntityModel second = mapper.mapEntity(CritterMapperTestEntity.class);
-        assertNotNull(first);
-        assertSame(first, second, "mapEntity should return the same cached model on repeated calls");
+        Assertions.assertNotNull(first);
+        Assertions.assertSame(first, second, "mapEntity should return the same cached model on repeated calls");
     }
 
     @Test
     public void testCopySharesCritterModels() {
         CritterMapper original = mapper();
         EntityModel model = original.mapEntity(CritterMapperTestEntity.class);
-        assertNotNull(model);
-        assertTrue(model instanceof CritterEntityModel, "Original model must be a CritterEntityModel");
+        Assertions.assertNotNull(model);
+        Assertions.assertTrue(model instanceof CritterEntityModel, "Original model must be a CritterEntityModel");
 
         CritterMapper copy = (CritterMapper) original.copy();
         EntityModel copiedModel = copy.getEntityModel(CritterMapperTestEntity.class);
 
-        assertNotNull(copiedModel, "copy() must carry over already-mapped entities");
-        assertTrue(copiedModel instanceof CritterEntityModel, "Copied model must remain a CritterEntityModel");
-        assertNotSame(model, copiedModel, "copy() creates independent model instances for isolation");
+        Assertions.assertNotNull(copiedModel, "copy() must carry over already-mapped entities");
+        Assertions.assertTrue(copiedModel instanceof CritterEntityModel, "Copied model must remain a CritterEntityModel");
+        Assertions.assertNotSame(copiedModel, model, "copy() creates independent model instances for isolation");
     }
 
     @Test
@@ -75,22 +68,22 @@ public class TestCritterMapper {
         CritterMapper original = mapper();
         original.mapEntity(CritterMapperTestEntity.class);
         CritterMapper copy = (CritterMapper) original.copy();
-        assertNotNull(copy.getEntityModel(CritterMapperTestEntity.class));
-        assertNotSame(original.getDiscriminatorLookup(), copy.getDiscriminatorLookup());
+        Assertions.assertNotNull(copy.getEntityModel(CritterMapperTestEntity.class));
+        Assertions.assertNotSame(copy.getDiscriminatorLookup(), original.getDiscriminatorLookup());
     }
 
     @Test
     public void testNullTypeReturnNull() {
         CritterMapper mapper = mapper();
         EntityModel model = mapper.mapEntity(null);
-        assertNull(model);
+        Assertions.assertNull(model);
     }
 
     @Test
     public void testNonEntityClassReturnNull() {
         CritterMapper mapper = mapper();
         EntityModel model = mapper.mapEntity(String.class);
-        assertNull(model);
+        Assertions.assertNull(model);
     }
 
     @Test
@@ -110,8 +103,8 @@ public class TestCritterMapper {
         CritterMapper mapper = new CritterMapper(MorphiaConfig.load().mapper(MapperType.CRITTER), failingLoader);
         EntityModel model = mapper.mapEntity(CritterMapperTestEntity.class);
 
-        assertNotNull(model, "Should fall back to reflection and return a non-null model");
-        assertFalse(model instanceof CritterEntityModel,
+        Assertions.assertNotNull(model, "Should fall back to reflection and return a non-null model");
+        Assertions.assertFalse(model instanceof CritterEntityModel,
                 "Fallback model should be a plain EntityModel, not CritterEntityModel");
     }
 
@@ -142,7 +135,7 @@ public class TestCritterMapper {
         }
         EntityModel first = results.get(0);
         for (EntityModel result : results) {
-            assertSame(result, first, "All threads should see the same registered model");
+            Assertions.assertSame(first, result, "All threads should see the same registered model");
         }
     }
 
@@ -155,22 +148,21 @@ public class TestCritterMapper {
     public void testSessionDatastoreCopyPattern() {
         CritterMapper original = mapper();
         EntityModel model = original.mapEntity(CritterMapperTestEntity.class);
-        assertNotNull(model);
-        assertTrue(model instanceof CritterEntityModel);
+        Assertions.assertNotNull(model);
+        Assertions.assertTrue(model instanceof CritterEntityModel);
 
         // Simulate what new MorphiaDatastore(datastore) does — calls mapper.copy()
         Mapper sessionMapper = original.copy();
 
-        assertTrue(sessionMapper instanceof CritterMapper,
+        Assertions.assertTrue(sessionMapper instanceof CritterMapper,
                 "copy() must return a CritterMapper for the session datastore");
-        assertTrue(sessionMapper.isMapped(CritterMapperTestEntity.class),
+        Assertions.assertTrue(sessionMapper.isMapped(CritterMapperTestEntity.class),
                 "Session copy must preserve already-mapped entities");
         EntityModel sessionModel = sessionMapper.getEntityModel(CritterMapperTestEntity.class);
-        assertNotNull(sessionModel, "Session copy must preserve already-mapped entities");
-        assertTrue(sessionModel instanceof CritterEntityModel,
+        Assertions.assertNotNull(sessionModel, "Session copy must preserve already-mapped entities");
+        Assertions.assertTrue(sessionModel instanceof CritterEntityModel,
                 "Session copy must produce CritterEntityModel instances, not reflection fallbacks");
-        assertNotSame(model, sessionModel,
-                "Session copy creates independent model instances for isolation");
+        Assertions.assertNotSame(sessionModel, model, "Session copy creates independent model instances for isolation");
     }
 
     /**
@@ -186,10 +178,10 @@ public class TestCritterMapper {
         EntityModel imported = new EntityModel(mapper, CritterMapperTestEntity.class);
         EntityModel registered = mapper.register(imported);
 
-        assertNotNull(registered);
-        assertTrue(mapper.isMapped(CritterMapperTestEntity.class),
+        Assertions.assertNotNull(registered);
+        Assertions.assertTrue(mapper.isMapped(CritterMapperTestEntity.class),
                 "register() must make the entity discoverable via isMapped()");
-        assertSame(registered, mapper.getEntityModel(CritterMapperTestEntity.class),
+        Assertions.assertSame(mapper.getEntityModel(CritterMapperTestEntity.class), registered,
                 "register() must make the model retrievable, as importModels() relies on it");
     }
 }

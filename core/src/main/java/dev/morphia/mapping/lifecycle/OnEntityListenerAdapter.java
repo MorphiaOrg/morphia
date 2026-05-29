@@ -6,8 +6,6 @@ import java.util.List;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.Datastore;
-
 import org.bson.Document;
 
 import static java.lang.String.format;
@@ -25,7 +23,7 @@ public class OnEntityListenerAdapter extends EntityListenerAdapter {
     }
 
     @Override
-    void invoke(Class<? extends Annotation> annotation, Object entity, Document document, Datastore datastore) {
+    void invoke(Class<? extends Annotation> annotation, Object entity, Document document, Object datastore) {
         List<Method> list = getMethods().get(annotation);
         if (list != null) {
             list

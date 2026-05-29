@@ -4,9 +4,6 @@ import java.util.Collection;
 
 import dev.morphia.mapping.MappingException;
 
-/**
- * @author Uwe Schaefer, (us@thomas-daily.de)
- */
 public class ConstraintViolationException extends MappingException {
 
     private static final long serialVersionUID = 1L;

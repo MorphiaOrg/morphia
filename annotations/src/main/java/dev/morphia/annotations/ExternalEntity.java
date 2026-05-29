@@ -7,16 +7,23 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import dev.morphia.mapping.Mapper;
+import dev.morphia.annotations.internal.MorphiaExperimental;
 
 /**
- * Marks a class as a Morphia entity indicating it should be mapped.
+ * Marks a class as a "stand in" for an external class whose source can not be properly annotated. A class annotated with this
+ * annotation will be processed like any class annotated with {@link Entity} however, the resulting information stored will reference the
+ * target type instead of the annotated type. In this way third party classes can be mapped properly in spite of not having access to the
+ * source. See the documentation for more detail.
+ *
+ * @morphia.experimental
+ * @since 2.3
  */
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE })
-public @interface Entity {
+@MorphiaExperimental
+public @interface ExternalEntity {
     /**
      * @return The capped collection configuration options
      */
@@ -30,12 +37,19 @@ public @interface Entity {
     /**
      * @return the discriminator value to use for this type.
      */
-    String discriminator() default Mapper.IGNORED_FIELDNAME;
+    String discriminator() default ".";
 
     /**
      * @return the discriminator key to use for this type.
      */
-    String discriminatorKey() default Mapper.IGNORED_FIELDNAME;
+    String discriminatorKey() default ".";
+
+    /**
+     * The external target type being mapped.
+     *
+     * @return the external target type
+     */
+    Class<?> target();
 
     /**
      * @return true if the discriminator for this type should be stored
@@ -46,5 +60,5 @@ public @interface Entity {
      * @return the collection name to for this entity. Defaults to the class's simple name
      * @see Class#getSimpleName()
      */
-    String value() default Mapper.IGNORED_FIELDNAME;
+    String value() default ".";
 }

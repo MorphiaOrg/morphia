@@ -19,16 +19,13 @@ import dev.morphia.test.TestBase;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.Morphia.*;
 import static dev.morphia.mapping.DiscriminatorFunction.lowerSimpleName;
 import static dev.morphia.mapping.NamingStrategy.lowerCase;
 import static dev.morphia.query.filters.Filters.ne;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 @SuppressWarnings({ "ConstantConditions", "unused" })
 public class TestMappingOptions extends TestBase {
@@ -148,7 +145,7 @@ public class TestMappingOptions extends TestBase {
         Query<EntityDiscriminator2> query = getDs().find(EntityDiscriminator2.class, new FindOptions().logQuery())
                 .filter(ne("name", "hi"));
         List<EntityDiscriminator2> list = query.iterator().toList();
-        assertEquals(list.size(), 1, query.getLoggedQuery());
+        Assertions.assertEquals(1, list.size(), query.getLoggedQuery());
     }
 
     @Test
@@ -202,16 +199,16 @@ public class TestMappingOptions extends TestBase {
         datastore.getMapper().map(EntityDiscriminator.class, EmbeddedDiscriminator.class, HasMap.class);
 
         EntityModel entityModel = datastore.getMapper().getEntityModel(EntityDiscriminator.class);
-        assertEquals(entityModel.discriminatorKey(), "_t");
-        assertEquals(entityModel.discriminator(), "h");
+        Assertions.assertEquals("_t", entityModel.discriminatorKey());
+        Assertions.assertEquals("h", entityModel.discriminator());
 
         entityModel = datastore.getMapper().getEntityModel(EmbeddedDiscriminator.class);
-        assertEquals(entityModel.discriminatorKey(), "_e");
-        assertEquals(entityModel.discriminator(), "b");
+        Assertions.assertEquals("_e", entityModel.discriminatorKey());
+        Assertions.assertEquals("b", entityModel.discriminator());
 
         entityModel = datastore.getMapper().getEntityModel(HasMap.class);
-        assertEquals(entityModel.discriminatorKey(), "_t");
-        assertEquals(entityModel.discriminator(), HasMap.class.getSimpleName().toLowerCase());
+        Assertions.assertEquals("_t", entityModel.discriminatorKey());
+        Assertions.assertEquals(HasMap.class.getSimpleName().toLowerCase(), entityModel.discriminator());
     }
 
     @Test
@@ -219,21 +216,21 @@ public class TestMappingOptions extends TestBase {
         DummyEntity entity = new DummyEntity();
 
         String collectionName = getMapper().getEntityModel(entity.getClass()).collectionName();
-        assertEquals(collectionName, "dummyEntity", "camelCase");
+        Assertions.assertEquals("dummyEntity", collectionName, "camelCase");
 
         withConfig(buildConfig()
                 .collectionNaming(lowerCase()), () -> {
 
                     String name = getMapper().getEntityModel(entity.getClass()).collectionName();
-                    assertEquals(name, "dummyentity", "lowercase");
+                    Assertions.assertEquals("dummyentity", name, "lowercase");
                 });
     }
 
     private void shouldFindField(Datastore datastore, HasList hl, List<String> expected) {
         datastore.save(hl);
         final Document document = getDocumentCollection(HasList.class).find().first();
-        assertTrue(document.containsKey("names"), "Should find the field");
-        assertEquals(datastore.find(HasList.class).first().names, expected);
+        Assertions.assertTrue(document.containsKey("names"), "Should find the field");
+        Assertions.assertEquals(expected, datastore.find(HasList.class).first().names);
         cleanup();
     }
 
@@ -241,9 +238,9 @@ public class TestMappingOptions extends TestBase {
         final Document document;
         datastore.save(hl);
         document = getDocumentCollection(HasMap.class).find().first();
-        assertTrue(document.containsKey("properties"), "Should find the field");
-        assertEquals(datastore.find(HasMap.class).iterator()
-                .tryNext().properties, expected);
+        Assertions.assertTrue(document.containsKey("properties"), "Should find the field");
+        Assertions.assertEquals(expected, datastore.find(HasMap.class).iterator()
+                .tryNext().properties);
         cleanup();
     }
 
@@ -253,8 +250,8 @@ public class TestMappingOptions extends TestBase {
         final Document document;
         datastore.save(hm);
         document = getDocumentCollection(HasCollectionValuedMap.class).find().first();
-        assertTrue(document.containsKey("properties"), "Should find the field");
-        assertEquals(datastore.find(HasCollectionValuedMap.class).first().properties, expected);
+        Assertions.assertTrue(document.containsKey("properties"), "Should find the field");
+        Assertions.assertEquals(expected, datastore.find(HasCollectionValuedMap.class).first().properties);
         cleanup();
     }
 
@@ -262,42 +259,42 @@ public class TestMappingOptions extends TestBase {
         final Document document;
         datastore.save(hm);
         document = getDocumentCollection(HasComplexObjectValuedMap.class).find().first();
-        assertTrue(document.containsKey("properties"), "Should find the field");
-        assertEquals(datastore.find(HasComplexObjectValuedMap.class).first().properties, expected);
+        Assertions.assertTrue(document.containsKey("properties"), "Should find the field");
+        Assertions.assertEquals(expected, datastore.find(HasComplexObjectValuedMap.class).first().properties);
         cleanup();
     }
 
     private void shouldNotFindField(Datastore datastore, HasCollectionValuedMap hm) {
         datastore.save(hm);
         Document document = getDocumentCollection(HasCollectionValuedMap.class).find().first();
-        assertFalse(document.containsKey("properties"), "field should not exist, value = " + document.get("properties"));
-        assertNull(datastore.find(HasCollectionValuedMap.class).first().properties);
+        Assertions.assertFalse(document.containsKey("properties"), "field should not exist, value = " + document.get("properties"));
+        Assertions.assertNull(datastore.find(HasCollectionValuedMap.class).first().properties);
         cleanup();
     }
 
     private void shouldNotFindField(Datastore datastore, HasMap hl) {
         datastore.save(hl);
         Document document = getDocumentCollection(HasMap.class).find().first();
-        assertFalse(document.containsKey("properties"), "field should not exist, value = " + document.get("properties"));
-        assertNull(datastore.find(HasMap.class).first().properties);
+        Assertions.assertFalse(document.containsKey("properties"), "field should not exist, value = " + document.get("properties"));
+        Assertions.assertNull(datastore.find(HasMap.class).first().properties);
         cleanup();
     }
 
     private void shouldNotFindField(Datastore datastore, HasComplexObjectValuedMap hm) {
         datastore.save(hm);
         Document document = getDocumentCollection(HasComplexObjectValuedMap.class).find().first();
-        assertFalse(document.containsKey("properties"), "field should not exist, value = " + document.get("properties"));
-        assertNull(datastore.find(HasComplexObjectValuedMap.class).first().properties);
+        Assertions.assertFalse(document.containsKey("properties"), "field should not exist, value = " + document.get("properties"));
+        Assertions.assertNull(datastore.find(HasComplexObjectValuedMap.class).first().properties);
         cleanup();
     }
 
     private void shouldNotFindField(Datastore datastore, HasList hl) {
         datastore.save(hl);
         Document document = getDocumentCollection(HasList.class).find().first();
-        assertFalse(document.containsKey("names"), "field should not exist, value = " + document.get("names"));
+        Assertions.assertFalse(document.containsKey("names"), "field should not exist, value = " + document.get("names"));
         HasList hasList = datastore.find(HasList.class).iterator()
                 .tryNext();
-        assertNull(hasList.names);
+        Assertions.assertNull(hasList.names);
         cleanup();
     }
 

@@ -16,20 +16,18 @@ import dev.morphia.test.TemplatedTestBase;
 import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
 import static dev.morphia.aggregation.stages.ChangeStream.changeStream;
 import static java.lang.String.format;
 import static java.time.LocalDateTime.now;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
 public class TestChangeStream extends TemplatedTestBase {
     @Test
     @SuppressWarnings("unchecked")
     public void testChangeStream() {
-        checkMinDriverVersion("4.7.0");
         checkForReplicaSet();
 
         Iterator<Document> input = loadJson(format("%s/%s/data.json", prefix(), "changeStream"), "data", true).iterator();
@@ -49,7 +47,6 @@ public class TestChangeStream extends TemplatedTestBase {
 
     @Test
     public void testChangeStreamOptions() {
-        checkMinDriverVersion("4.7.0");
         LocalDateTime startAtOperationTime = now();
         ChangeStream changeStream = changeStream().allChangesForCluster(true)
                 .fullDocument(FullDocument.REQUIRED)
@@ -63,11 +60,12 @@ public class TestChangeStream extends TemplatedTestBase {
         DocumentWriter writer = new DocumentWriter(getMapper().getConfig());
         codec.encode(writer, changeStream, EncoderContext.builder().build());
         Document document = writer.getDocument().get("$changeStream", Document.class);
-        assertTrue(document.getBoolean("allChangesForCluster"));
-        assertEquals(document.getString("fullDocument"), FullDocument.REQUIRED.getValue());
-        assertEquals(document.getString("fullDocumentBeforeChange"), FullDocumentBeforeChange.REQUIRED.getValue());
-        assertEquals(document.get("resumeAfter", Document.class), new Document("resume", "after"));
-        assertEquals(document.get("startAfter", Document.class), new Document("start", "after"));
-        assertEquals(document.get("startAtOperationTime", LocalDateTime.class), startAtOperationTime.truncatedTo(ChronoUnit.MILLIS));
+        Assertions.assertTrue(document.getBoolean("allChangesForCluster"));
+        Assertions.assertEquals(FullDocument.REQUIRED.getValue(), document.getString("fullDocument"));
+        Assertions.assertEquals(FullDocumentBeforeChange.REQUIRED.getValue(), document.getString("fullDocumentBeforeChange"));
+        assertDocumentEquals(new Document("resume", "after"), document.get("resumeAfter", Document.class));
+        assertDocumentEquals(new Document("start", "after"), document.get("startAfter", Document.class));
+        Assertions.assertEquals(startAtOperationTime.truncatedTo(ChronoUnit.MILLIS),
+                document.get("startAtOperationTime", LocalDateTime.class));
     }
 }

@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  * Here you can alter your class members prior to being saved.
  * <p>
  * Methods with this annotation may optionally take a parameter of type
- * {@link dev.morphia.Datastore Datastore}. This is the Datastore that
+ * Datastore. This is the Datastore that
  * data will be persisted to.
  * <p>
  * <strong>Example declarations (in order of most to least typical):</strong>
@@ -34,8 +34,6 @@ import java.lang.annotation.Target;
  * @see dev.morphia.annotations.PreLoad
  * @see dev.morphia.annotations.PostLoad
  * @see dev.morphia.annotations.PostPersist
- *
- * @author Scott Hernandez
  */
 @Documented
 @Inherited

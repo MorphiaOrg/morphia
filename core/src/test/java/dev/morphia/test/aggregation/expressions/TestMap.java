@@ -3,7 +3,8 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.*;
 import static dev.morphia.aggregation.expressions.MathExpressions.add;
@@ -17,7 +18,8 @@ public class TestMap extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/map/example1
      * 
      */
-    @Test(testName = "Add to Each Element of an Array")
+    @Test
+    @DisplayName("Add to Each Element of an Array")
     public void testExample1() {
         testPipeline(new ActionTestOptions().removeIds(true), (aggregation) -> aggregation
                 .pipeline(project().include("adjustedGrades", map("$quizzes", add("$$grade", 2)).as("grade"))));
@@ -27,7 +29,8 @@ public class TestMap extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/map/example2
      * 
      */
-    @Test(testName = "Truncate Each Array Element")
+    @Test
+    @DisplayName("Truncate Each Array Element")
     public void testExample2() {
         testPipeline(new ActionTestOptions().removeIds(true),
                 (aggregation) -> aggregation.pipeline(project().include("city", "$city").include("integerValues",
@@ -38,7 +41,8 @@ public class TestMap extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/map/example3
      * 
      */
-    @Test(testName = "Convert Celsius Temperatures to Fahrenheit")
+    @Test
+    @DisplayName("Convert Celsius Temperatures to Fahrenheit")
     public void testExample3() {
         testPipeline(new ActionTestOptions().removeIds(true), (aggregation) -> aggregation.pipeline(addFields()
                 .field("tempsF", map("$tempsC", add(multiply("$$tempInCelsius", 1.8), 32)).as("tempInCelsius"))));

@@ -5,9 +5,6 @@ import java.util.List;
 
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 
-/**
- * @author Uwe Schaefer, (us@thomas-daily.de)
- */
 public class FieldEnumString {
     private final String display;
 

@@ -7,8 +7,9 @@ import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.models.User;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
@@ -21,14 +22,14 @@ import static dev.morphia.aggregation.stages.Unwind.unwind;
 import static java.time.LocalDate.parse;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Arrays.asList;
-import static org.testng.Assert.assertEquals;
 
 public class TestUnwind extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/stages/unwind/example1
      * 
      */
-    @Test(testName = "Unwind Array")
+    @Test
+    @DisplayName("Unwind Array")
     public void testExample1() {
         testPipeline((aggregation) -> aggregation.pipeline(unwind("sizes")));
     }
@@ -37,7 +38,8 @@ public class TestUnwind extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/unwind/example2
      * 
      */
-    @Test(testName = "Missing or Non-array Values")
+    @Test
+    @DisplayName("Missing or Non-array Values")
     public void testExample2() {
         testPipeline((aggregation) -> aggregation.pipeline(unwind("sizes")));
     }
@@ -46,7 +48,8 @@ public class TestUnwind extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/unwind/example3
      * 
      */
-    @Test(testName = "``preserveNullAndEmptyArrays`` and ``includeArrayIndex``")
+    @Test
+    @DisplayName("``preserveNullAndEmptyArrays`` and ``includeArrayIndex``")
     public void testExample3() {
         testPipeline((aggregation) -> aggregation.pipeline(unwind("sizes").preserveNullAndEmptyArrays(true)));
     }
@@ -55,7 +58,8 @@ public class TestUnwind extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/unwind/example4
      * 
      */
-    @Test(testName = "Group by Unwound Values")
+    @Test
+    @DisplayName("Group by Unwound Values")
     public void testExample4() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(unwind("sizes").preserveNullAndEmptyArrays(true),
@@ -66,7 +70,8 @@ public class TestUnwind extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/unwind/example5
      * 
      */
-    @Test(testName = "Unwind Embedded Arrays")
+    @Test
+    @DisplayName("Unwind Embedded Arrays")
     public void testExample5() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation.pipeline(unwind("items"),
                 unwind("items.tags"),
@@ -87,27 +92,27 @@ public class TestUnwind extends TemplatedTestBase {
             User user = aggregate.next();
             switch (count) {
                 case 0:
-                    assertEquals(user.name, "jane");
-                    assertEquals(user.likes.get(0), "golf");
+                    Assertions.assertEquals("jane", user.name);
+                    Assertions.assertEquals("golf", user.likes.get(0));
                     break;
                 case 1:
-                    assertEquals(user.name, "jane");
-                    assertEquals(user.likes.get(0), "racquetball");
+                    Assertions.assertEquals("jane", user.name);
+                    Assertions.assertEquals("racquetball", user.likes.get(0));
                     break;
                 case 2:
-                    assertEquals(user.name, "joe");
-                    assertEquals(user.likes.get(0), "tennis");
+                    Assertions.assertEquals("joe", user.name);
+                    Assertions.assertEquals("tennis", user.likes.get(0));
                     break;
                 case 3:
-                    assertEquals(user.name, "joe");
-                    assertEquals(user.likes.get(0), "golf");
+                    Assertions.assertEquals("joe", user.name);
+                    Assertions.assertEquals("golf", user.likes.get(0));
                     break;
                 case 4:
-                    assertEquals(user.name, "joe");
-                    assertEquals(user.likes.get(0), "swimming");
+                    Assertions.assertEquals("joe", user.name);
+                    Assertions.assertEquals("swimming", user.likes.get(0));
                     break;
                 default:
-                    Assert.fail("Should only find 5 elements");
+                    Assertions.fail("Should only find 5 elements");
             }
             count++;
         }
@@ -119,31 +124,31 @@ public class TestUnwind extends TemplatedTestBase {
             User user = aggregate.next();
             switch (count) {
                 case 0:
-                    assertEquals(user.name, "jane");
-                    assertEquals(user.likes.get(0), "golf");
+                    Assertions.assertEquals("jane", user.name);
+                    Assertions.assertEquals("golf", user.likes.get(0));
                     break;
                 case 1:
-                    assertEquals(user.name, "jane");
-                    assertEquals(user.likes.get(0), "racquetball");
+                    Assertions.assertEquals("jane", user.name);
+                    Assertions.assertEquals("racquetball", user.likes.get(0));
                     break;
                 case 2:
-                    assertEquals(user.name, "joe");
-                    assertEquals(user.likes.get(0), "tennis");
+                    Assertions.assertEquals("joe", user.name);
+                    Assertions.assertEquals("tennis", user.likes.get(0));
                     break;
                 case 3:
-                    assertEquals(user.name, "joe");
-                    assertEquals(user.likes.get(0), "golf");
+                    Assertions.assertEquals("joe", user.name);
+                    Assertions.assertEquals("golf", user.likes.get(0));
                     break;
                 case 4:
-                    assertEquals(user.name, "joe");
-                    assertEquals(user.likes.get(0), "swimming");
+                    Assertions.assertEquals("joe", user.name);
+                    Assertions.assertEquals("swimming", user.likes.get(0));
                     break;
                 case 5:
-                    assertEquals(user.name, "john");
-                    Assert.assertNull(user.likes);
+                    Assertions.assertEquals("john", user.name);
+                    Assertions.assertNull(user.likes);
                     break;
                 default:
-                    Assert.fail("Should only find 6 elements");
+                    Assertions.fail("Should only find 6 elements");
             }
             count++;
         }

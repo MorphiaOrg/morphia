@@ -5,7 +5,7 @@ import dev.morphia.annotations.Id;
 import dev.morphia.test.TestBase;
 
 import org.bson.types.ObjectId;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
 
 public class PolymorphismWithGenericsTest extends TestBase {
 

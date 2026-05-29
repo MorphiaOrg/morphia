@@ -45,7 +45,7 @@ class AnnotationNodeExtensions : AbstractMojo() {
         val files: MutableList<File> = ArrayList()
         generated =
             File(project!!.basedir.toString() + "/target/generated-sources/morphia-annotations/")
-        val path = core().toString() + "/src/main/java/dev/morphia/annotations"
+        val path = annotations().toString() + "/src/main/java/dev/morphia/annotations"
         files.addAll(find(path, filter))
         project.addCompileSourceRoot(generated!!.absolutePath)
 
@@ -66,12 +66,12 @@ class AnnotationNodeExtensions : AbstractMojo() {
         }
     }
 
-    private fun core(): File {
+    private fun annotations(): File {
         var dir = project!!.basedir
         while (!File(dir, ".git").exists()) {
             dir = dir.parentFile
         }
-        return File(dir, "core")
+        return File(dir, "annotations")
     }
 
     @Throws(Exception::class)

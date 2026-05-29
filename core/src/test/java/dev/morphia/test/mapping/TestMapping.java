@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.mongodb.client.model.Filters;
 
@@ -64,40 +65,35 @@ import dev.morphia.test.models.versioned.subversioned.VersionedToo;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.testng.Assert;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Ignore;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
-import static dev.morphia.mapping.PropertyDiscovery.*;
+import static dev.morphia.mapping.PropertyDiscovery.FIELDS;
 import static dev.morphia.mapping.PropertyDiscovery.METHODS;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.exists;
 import static java.util.List.of;
 import static java.util.stream.Collectors.toList;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertThrows;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
 
 @SuppressWarnings({ "unchecked", "unused" })
 public class TestMapping extends TestBase {
-    @DataProvider
-    public static Object[][] discovery() {
-        return new Object[][] {
-                new Object[] { buildConfig()
+    static Stream<Arguments> discovery() {
+        return Stream.of(
+                Arguments.of(buildConfig()
                         .packages(of(ShadowedGrandParent.class.getPackageName()))
-                        .propertyDiscovery(FIELDS) },
-                new Object[] { buildConfig()
+                        .propertyDiscovery(FIELDS)),
+                Arguments.of(buildConfig()
                         .packages(of(ShadowedGrandParent.class.getPackageName()))
-                        .propertyDiscovery(METHODS) }
-        };
+                        .propertyDiscovery(METHODS)));
     }
 
-    @Test(dataProvider = "discovery")
+    @ParameterizedTest
+    @MethodSource("discovery")
     public void testShadowing(MorphiaConfig config) {
         assumeTrue(config.propertyDiscovery() != FIELDS, "Shadowing only works with METHODS discovery");
         withTestConfig(config, List.of(ShadowedGrandParent.class, ShadowedChild.class, ShadowedGrandChild.class),
@@ -112,7 +108,7 @@ public class TestMapping extends TestBase {
     private void checkShadowing(String name, Class<?> classType, Class<?> propertyType) {
         try {
             Class<?> actual = getMapper().getEntityModel(classType).getProperty(name).getType();
-            assertEquals(actual, propertyType, "Expected the field '%s' to be type '%s' on '%s' but was '%s'".formatted(
+            Assertions.assertEquals(propertyType, actual, "Expected the field '%s' to be type '%s' on '%s' but was '%s'".formatted(
                     name, propertyType.getSimpleName(), classType.getSimpleName(), actual.getSimpleName()));
         } catch (NullPointerException e) {
             throw e;
@@ -121,8 +117,8 @@ public class TestMapping extends TestBase {
 
     @Test
     public void childMapping() {
-        assertEquals(getMapper().getEntityModel(User.class).collectionName(), "users");
-        assertEquals(getMapper().getEntityModel(BannedUser.class).collectionName(), "banned");
+        Assertions.assertEquals("users", getMapper().getEntityModel(User.class).collectionName());
+        Assertions.assertEquals("banned", getMapper().getEntityModel(BannedUser.class).collectionName());
     }
 
     @Test
@@ -130,16 +126,16 @@ public class TestMapping extends TestBase {
         withConfig(buildConfig()
                 .packages(of(ContainsMapWithEmbeddedInterface.class.getPackageName()))
                 .collectionNaming(NamingStrategy.lowerCase()), () -> {
-                    assertEquals(getMapper().getEntityModel(ContainsMapWithEmbeddedInterface.class).collectionName(),
-                            "containsmapwithembeddedinterface");
-                    assertEquals(getMapper().getEntityModel(ContainsIntegerList.class).collectionName(), "cil");
+                    Assertions.assertEquals("containsmapwithembeddedinterface",
+                            getMapper().getEntityModel(ContainsMapWithEmbeddedInterface.class).collectionName());
+                    Assertions.assertEquals("cil", getMapper().getEntityModel(ContainsIntegerList.class).collectionName());
                 });
         withConfig(buildConfig()
                 .packages(of(ContainsMapWithEmbeddedInterface.class.getPackageName()))
                 .collectionNaming(NamingStrategy.kebabCase()), () -> {
-                    assertEquals(getMapper().getEntityModel(ContainsMapWithEmbeddedInterface.class).collectionName(),
-                            "contains-map-with-embedded-interface");
-                    assertEquals(getMapper().getEntityModel(ContainsIntegerList.class).collectionName(), "cil");
+                    Assertions.assertEquals("contains-map-with-embedded-interface",
+                            getMapper().getEntityModel(ContainsMapWithEmbeddedInterface.class).collectionName());
+                    Assertions.assertEquals("cil", getMapper().getEntityModel(ContainsIntegerList.class).collectionName());
                 });
     }
 
@@ -151,14 +147,16 @@ public class TestMapping extends TestBase {
         getDs().save(of(value, instance));
 
         ConstructorBased first = getDs().find(ConstructorBased.class).first();
-        assertNotNull(first);
-        assertEquals(instance, first);
+        Assertions.assertNotNull(first);
+        Assertions.assertEquals(first, instance);
     }
 
-    @Test(expectedExceptions = MappingException.class)
+    @Test
     public final void multipleIds() {
-        withConfig(buildConfig().packages(of(TwoIds.class.getPackageName())), () -> {
-            getMapper().getEntityModel(TwoIds.class);
+        Assertions.assertThrows(MappingException.class, () -> {
+            withConfig(buildConfig().packages(of(TwoIds.class.getPackageName())), () -> {
+                getMapper().getEntityModel(TwoIds.class);
+            });
         });
     }
 
@@ -180,25 +178,25 @@ public class TestMapping extends TestBase {
                     List<EntityModel> list = getMapper().getMappedEntities();
                     Collection<Class<?>> classes = list.stream().map(EntityModel::getType)
                             .collect(Collectors.toList());
-                    assertEquals(classes.size(), 3);
-                    assertTrue(classes.contains(AbstractVersionedBase.class));
-                    assertTrue(classes.contains(Versioned.class));
-                    assertTrue(classes.contains(VersionedChildEntity.class));
+                    Assertions.assertEquals(3, classes.size());
+                    Assertions.assertTrue(classes.contains(AbstractVersionedBase.class));
+                    Assertions.assertTrue(classes.contains(Versioned.class));
+                    Assertions.assertTrue(classes.contains(VersionedChildEntity.class));
                 });
     }
 
     @Test
     public void shouldSupportGenericArrays() {
-        assertNotNull(getMapper().getEntityModel(MyEntity.class));
+        Assertions.assertNotNull(getMapper().getEntityModel(MyEntity.class));
     }
 
     @Test
     public void subtypes() {
         EntityModel model = getMapper().getEntityModel(MappedInterface.class);
-        assertEquals(model.getSubtypes().size(), 1, "Should find 1 subtype: " + model);
+        Assertions.assertEquals(1, model.getSubtypes().size(), "Should find 1 subtype: " + model);
 
         model = getMapper().getEntityModel(User.class);
-        assertEquals(model.getSubtypes().size(), 1, "Should find 1 subtype: " + model);
+        Assertions.assertEquals(1, model.getSubtypes().size(), "Should find 1 subtype: " + model);
     }
 
     @Test
@@ -209,39 +207,39 @@ public class TestMapping extends TestBase {
         final ContainsIntegerList cilLoaded = getDs().find(ContainsIntegerList.class)
                 .filter(eq("_id", cil.id))
                 .first();
-        assertNotNull(cilLoaded);
-        assertNotNull(cilLoaded.intList);
-        assertEquals(cilLoaded.intList.size(), cil.intList.size());
-        assertEquals(cilLoaded.intList.get(0), cil.intList.get(0));
+        Assertions.assertNotNull(cilLoaded);
+        Assertions.assertNotNull(cilLoaded.intList);
+        Assertions.assertEquals(cil.intList.size(), cilLoaded.intList.size());
+        Assertions.assertEquals(cil.intList.get(0), cilLoaded.intList.get(0));
 
         final ContainsIntegerListNew cilNew = getDs().find(ContainsIntegerListNew.class).filter(eq("_id", cil.id)).first();
-        assertNotNull(cilNew);
-        assertNotNull(cilNew.integers);
-        assertEquals(cilNew.integers.size(), 1);
-        assertEquals((int) cil.intList.get(0), 1);
+        Assertions.assertNotNull(cilNew);
+        Assertions.assertNotNull(cilNew.integers);
+        Assertions.assertEquals(1, cilNew.integers.size());
+        Assertions.assertEquals(1, (int) cil.intList.get(0));
     }
 
     @Test
     public void testBadMappings() {
         withConfig(buildConfig()
                 .packages(of(UnannotatedEntity.class.getPackageName())), () -> {
-                    assertThrows(NotMappableException.class, () -> {
+                    Assertions.assertThrows(NotMappableException.class, () -> {
                         getMapper().getEntityModel(UnannotatedEntity.class);
-                        fail("Missing @Entity and @Embedded should have been caught");
+                        Assertions.fail("Missing @Entity and @Embedded should have been caught");
                     });
                 });
         withConfig(buildConfig()
                 .packages(of(ThirdPartyEmbedded.class.getPackageName())), () -> {
-                    assertThrows(NotMappableException.class, () -> {
+                    Assertions.assertThrows(NotMappableException.class, () -> {
                         getMapper().getEntityModel(ThirdPartyEmbedded.class);
-                        fail("Missing @Entity and @Embedded should have been caught");
+                        Assertions.fail("Missing @Entity and @Embedded should have been caught");
                     });
                 });
         withConfig(buildConfig()
                 .packages(of(NonStaticInnerClass.class.getPackageName())), () -> {
-                    assertThrows(MappingException.class, () -> {
+                    Assertions.assertThrows(MappingException.class, () -> {
                         getMapper().getEntityModel(NonStaticInnerClass.class);
-                        fail("Validation: Non-static inner class allowed");
+                        Assertions.fail("Validation: Non-static inner class allowed");
                     });
                 });
     }
@@ -261,12 +259,12 @@ public class TestMapping extends TestBase {
                 .filter(eq("_id", state.id));
         State loaded = query.first();
 
-        assertEquals(loaded, state);
+        Assertions.assertEquals(state, loaded);
 
-        assertEquals(mapper.getEntityModel(State.class)
+        Assertions.assertEquals(of("_id", "state", "biggestCity", "smallestCity"), mapper.getEntityModel(State.class)
                 .getProperties().stream()
                 .map(PropertyModel::getMappedName)
-                .collect(toList()), of("_id", "state", "biggestCity", "smallestCity"));
+                .collect(toList()));
     }
 
     @Test
@@ -275,8 +273,8 @@ public class TestMapping extends TestBase {
         final ContainsByteArray loaded = getDs().find(ContainsByteArray.class)
                 .filter(eq("_id", savedKey))
                 .first();
-        assertEquals(new String(loaded.bytes), new String((new ContainsByteArray()).bytes));
-        assertNotNull(loaded.id);
+        Assertions.assertEquals(new String((new ContainsByteArray()).bytes), new String(loaded.bytes));
+        Assertions.assertNotNull(loaded.id);
     }
 
     @Test
@@ -300,8 +298,8 @@ public class TestMapping extends TestBase {
         final ContainsCollection loaded = getDs().find(ContainsCollection.class)
                 .filter(eq("_id", savedKey))
                 .first();
-        assertEquals((new ContainsCollection()).coll, loaded.coll);
-        assertNotNull(loaded.id);
+        Assertions.assertEquals(loaded.coll, (new ContainsCollection()).coll);
+        Assertions.assertNotNull(loaded.id);
     }
 
     @Test
@@ -311,14 +309,14 @@ public class TestMapping extends TestBase {
 
         final Document document = toDocument(cea);
         List<Document> res = (List<Document>) document.get("res");
-        assertFalse(res.get(0).containsKey(getMapper().getConfig().discriminatorKey()));
+        Assertions.assertFalse(res.get(0).containsKey(getMapper().getConfig().discriminatorKey()));
     }
 
     @Test
     public void testEmbeddedDocument() {
         withConfig(buildConfig(ContainsDocument.class), () -> {
             getDs().save(new ContainsDocument());
-            assertNotNull(getDs().find(ContainsDocument.class).iterator()
+            Assertions.assertNotNull(getDs().find(ContainsDocument.class).iterator()
                     .next());
         });
     }
@@ -329,10 +327,10 @@ public class TestMapping extends TestBase {
         final ContainsEmbeddedEntity ceeLoaded = getDs().find(ContainsEmbeddedEntity.class)
                 .iterator()
                 .next();
-        assertNotNull(ceeLoaded);
-        assertNotNull(ceeLoaded.id);
-        assertNotNull(ceeLoaded.cil);
-        assertNull(ceeLoaded.cil.id);
+        Assertions.assertNotNull(ceeLoaded);
+        Assertions.assertNotNull(ceeLoaded.id);
+        Assertions.assertNotNull(ceeLoaded.cil);
+        Assertions.assertNull(ceeLoaded.cil.id);
 
     }
 
@@ -342,7 +340,7 @@ public class TestMapping extends TestBase {
         cee.cil = new ContainsIntegerList();
         cee.cil.intList = Collections.singletonList(1);
         final Document document = toDocument(cee);
-        assertFalse(((Document) document.get("cil")).containsKey(getMapper().getConfig().discriminatorKey()));
+        Assertions.assertFalse(((Document) document.get("cil")).containsKey(getMapper().getConfig().discriminatorKey()));
     }
 
     @Test
@@ -357,29 +355,29 @@ public class TestMapping extends TestBase {
 
         final ContainsEnum1KeyMap mapLoaded = getDs().find(ContainsEnum1KeyMap.class).filter(eq("_id", map.id)).first();
 
-        assertNotNull(mapLoaded);
-        assertEquals(mapLoaded.values.size(), 2);
-        assertNotNull(mapLoaded.values.get(Enum1.A));
-        assertNotNull(mapLoaded.values.get(Enum1.B));
-        assertEquals(mapLoaded.embeddedValues.size(), 2);
-        assertNotNull(mapLoaded.embeddedValues.get(Enum1.A));
-        assertNotNull(mapLoaded.embeddedValues.get(Enum1.B));
+        Assertions.assertNotNull(mapLoaded);
+        Assertions.assertEquals(2, mapLoaded.values.size());
+        Assertions.assertNotNull(mapLoaded.values.get(Enum1.A));
+        Assertions.assertNotNull(mapLoaded.values.get(Enum1.B));
+        Assertions.assertEquals(2, mapLoaded.embeddedValues.size());
+        Assertions.assertNotNull(mapLoaded.embeddedValues.get(Enum1.A));
+        Assertions.assertNotNull(mapLoaded.embeddedValues.get(Enum1.B));
     }
 
     @Test
     public void testExternalClass() {
-        assertFalse(getDs().getMapper().isMapped(HoldsUnannotated.class));
-        assertFalse(getDs().getMapper().isMapped(ThirdPartyEmbedded.class));
-        assertFalse(getDs().getMapper().isMapped(ThirdPartyEntity.class));
+        Assertions.assertFalse(getDs().getMapper().isMapped(HoldsUnannotated.class));
+        Assertions.assertFalse(getDs().getMapper().isMapped(ThirdPartyEmbedded.class));
+        Assertions.assertFalse(getDs().getMapper().isMapped(ThirdPartyEntity.class));
 
-        assertThrows(MappingException.class, () -> withTestConfig(List.of(ThirdPartyEntity.class), () -> {
+        Assertions.assertThrows(MappingException.class, () -> withTestConfig(List.of(ThirdPartyEntity.class), () -> {
         }));
-        assertThrows(MappingException.class, () -> withTestConfig(List.of(ThirdPartyEmbedded.class), () -> {
+        Assertions.assertThrows(MappingException.class, () -> withTestConfig(List.of(ThirdPartyEmbedded.class), () -> {
         }));
 
         withConfig(buildConfig(HoldsUnannotated.class), () -> {
-            assertTrue(getDs().getMapper().isMapped(ThirdPartyEmbedded.class));
-            assertTrue(getDs().getMapper().isMapped(ThirdPartyEntity.class));
+            Assertions.assertTrue(getDs().getMapper().isMapped(ThirdPartyEmbedded.class));
+            Assertions.assertTrue(getDs().getMapper().isMapped(ThirdPartyEntity.class));
 
             HoldsUnannotated holdsUnannotated = new HoldsUnannotated();
             holdsUnannotated.embedded = new ThirdPartyEmbedded();
@@ -387,26 +385,26 @@ public class TestMapping extends TestBase {
             holdsUnannotated.embedded.field = "Left";
             getDs().save(holdsUnannotated);
 
-            assertEquals(getDs().find(HoldsUnannotated.class).first(), holdsUnannotated);
+            Assertions.assertEquals(holdsUnannotated, getDs().find(HoldsUnannotated.class).first());
 
         });
 
         withTestConfig(List.of(ThirdPartyEntityProxy.class, ThirdPartyEmbeddedProxy.class), () -> {
             EntityModel model = getDs().getMapper().getEntityModel(ThirdPartyEntity.class);
-            assertEquals(model.collectionName(), "extEnt");
-            assertEquals(model.discriminator(), "ext");
-            assertEquals(model.discriminatorKey(), "_xt");
+            Assertions.assertEquals("extEnt", model.collectionName());
+            Assertions.assertEquals("ext", model.discriminator());
+            Assertions.assertEquals("_xt", model.discriminatorKey());
             Entity annotation = model.getAnnotation(Entity.class);
-            assertEquals(annotation.concern(), "JOURNALED");
-            assertEquals(annotation.cap().count(), 123);
-            assertEquals(annotation.cap().value(), 456);
+            Assertions.assertEquals("JOURNALED", annotation.concern());
+            Assertions.assertEquals(123, annotation.cap().count());
+            Assertions.assertEquals(456, annotation.cap().value());
 
             ThirdPartyEntity entity = new ThirdPartyEntity();
             entity.field = "hi";
             entity.number = 42L;
             getDs().save(entity);
 
-            assertEquals(getDs().find(ThirdPartyEntity.class).first(), entity);
+            Assertions.assertEquals(entity, getDs().find(ThirdPartyEntity.class).first());
         });
     }
 
@@ -415,7 +413,7 @@ public class TestMapping extends TestBase {
         withConfig(buildConfig(ThirdPartyEntityProxy.class)
                 .propertyDiscovery(METHODS), () -> {
                     List<EntityModel> mappedEntities = getMapper().getMappedEntities();
-                    assertFalse(mappedEntities.stream()
+                    Assertions.assertFalse(mappedEntities.stream()
                             .map(EntityModel::getType)
                             .anyMatch(type -> type.equals(ThirdPartyEntityProxy.class) || type.equals(ThirdPartyEmbeddedProxy.class)));
 
@@ -424,20 +422,20 @@ public class TestMapping extends TestBase {
                             .findFirst()
                             .orElseThrow(
                                     () -> new MappingException(ThirdPartyEntity.class.getName() + " was not found"));
-                    assertEquals(model.collectionName(), "extEnt");
-                    assertEquals(model.discriminator(), "ext");
-                    assertEquals(model.discriminatorKey(), "_xt");
+                    Assertions.assertEquals("extEnt", model.collectionName());
+                    Assertions.assertEquals("ext", model.discriminator());
+                    Assertions.assertEquals("_xt", model.discriminatorKey());
                     Entity annotation = model.getAnnotation(Entity.class);
-                    assertEquals(annotation.concern(), "JOURNALED");
-                    assertEquals(annotation.cap().count(), 123);
-                    assertEquals(annotation.cap().value(), 456);
+                    Assertions.assertEquals("JOURNALED", annotation.concern());
+                    Assertions.assertEquals(123, annotation.cap().count());
+                    Assertions.assertEquals(456, annotation.cap().value());
 
                     ThirdPartyEntity entity = new ThirdPartyEntity();
                     entity.setField("hi");
                     entity.setNumber(42L);
                     getDs().save(entity);
 
-                    assertEquals(getDs().find(ThirdPartyEntity.class).first(), entity);
+                    Assertions.assertEquals(entity, getDs().find(ThirdPartyEntity.class).first());
                 });
     }
 
@@ -455,7 +453,7 @@ public class TestMapping extends TestBase {
                     findFirst(getDs(), Png.class, png);
                     findFirst(getDs(), Jpg.class, jpg);
                     Query<BlogImage> query = getDs().find(BlogImage.class);
-                    assertEquals(query.count(), 2, query.toString());
+                    Assertions.assertEquals(2, query.count(), query.toString());
                     assertListEquals(query.iterator().toList(), of(jpg, png));
                 });
 
@@ -467,9 +465,9 @@ public class TestMapping extends TestBase {
         final ContainsFinalField loaded = getDs().find(ContainsFinalField.class)
                 .filter(eq("_id", savedKey))
                 .first();
-        assertNotNull(loaded);
-        assertNotNull(loaded.name);
-        assertEquals(loaded.name, "blah");
+        Assertions.assertNotNull(loaded);
+        Assertions.assertNotNull(loaded.name);
+        Assertions.assertEquals("blah", loaded.name);
     }
 
     @Test
@@ -481,8 +479,8 @@ public class TestMapping extends TestBase {
                             .withDocumentClass(Document.class)
                             .find(Filters.eq("_id", savedKey))
                             .first();
-                    assertNotNull(loaded);
-                    assertNull(loaded.get("name"));
+                    Assertions.assertNotNull(loaded);
+                    Assertions.assertNull(loaded.get("name"));
                 });
     }
 
@@ -492,12 +490,12 @@ public class TestMapping extends TestBase {
         final HasFinalFieldId loaded = getDs().find(HasFinalFieldId.class)
                 .filter(eq("_id", savedKey))
                 .first();
-        assertNotNull(loaded);
-        assertEquals(loaded.id, 12);
+        Assertions.assertNotNull(loaded);
+        Assertions.assertEquals(12, loaded.id);
     }
 
     @Test
-    @Ignore("need to add this feature")
+    @Disabled("need to add this feature")
     @SuppressWarnings("unchecked")
     public void testGenericKeyedMap() {
         final ContainsXKeyMap<Integer> map = new ContainsXKeyMap<>();
@@ -508,12 +506,12 @@ public class TestMapping extends TestBase {
 
         final ContainsXKeyMap<Integer> mapLoaded = getDs().find(ContainsXKeyMap.class).filter(eq("_id", map.id)).first();
 
-        assertNotNull(mapLoaded);
+        Assertions.assertNotNull(mapLoaded);
 
         Map<?, ?> values = mapLoaded.values;
-        assertEquals(values.size(), 2);
-        assertNotNull(values.get(1));
-        assertNotNull(values.get(2));
+        Assertions.assertEquals(2, values.size());
+        Assertions.assertNotNull(values.get(1));
+        Assertions.assertNotNull(values.get(2));
     }
 
     @Test
@@ -528,16 +526,16 @@ public class TestMapping extends TestBase {
                 .filter(eq("_id", map.id))
                 .first();
 
-        assertNotNull(mapLoaded);
-        assertEquals(mapLoaded.values.size(), 2);
-        assertNotNull(mapLoaded.values.get(1));
-        assertNotNull(mapLoaded.values.get(2));
-        assertEquals(mapLoaded.values.get(1).size(), 1);
+        Assertions.assertNotNull(mapLoaded);
+        Assertions.assertEquals(2, mapLoaded.values.size());
+        Assertions.assertNotNull(mapLoaded.values.get(1));
+        Assertions.assertNotNull(mapLoaded.values.get(2));
+        Assertions.assertEquals(1, mapLoaded.values.get(1).size());
 
-        assertNotNull(getDs().find(ContainsIntKeyMap.class).filter(exists("values.2")));
-        assertEquals(getDs().find(ContainsIntKeyMap.class).filter(exists("values.2").not()).count(), 0);
-        assertNotNull(getDs().find(ContainsIntKeyMap.class).filter(exists("values.4").not()));
-        assertEquals(getDs().find(ContainsIntKeyMap.class).filter(exists("values.4")).count(), 0);
+        Assertions.assertNotNull(getDs().find(ContainsIntKeyMap.class).filter(exists("values.2")));
+        Assertions.assertEquals(0, getDs().find(ContainsIntKeyMap.class).filter(exists("values.2").not()).count());
+        Assertions.assertNotNull(getDs().find(ContainsIntKeyMap.class).filter(exists("values.4").not()));
+        Assertions.assertEquals(0, getDs().find(ContainsIntKeyMap.class).filter(exists("values.4")).count());
     }
 
     @Test
@@ -552,21 +550,21 @@ public class TestMapping extends TestBase {
                 .filter(eq("_id", map.id))
                 .first();
 
-        assertNotNull(mapLoaded);
-        assertEquals(mapLoaded.values.size(), 2);
-        assertNotNull(mapLoaded.values.get(1));
-        assertNotNull(mapLoaded.values.get(2));
+        Assertions.assertNotNull(mapLoaded);
+        Assertions.assertEquals(2, mapLoaded.values.size());
+        Assertions.assertNotNull(mapLoaded.values.get(1));
+        Assertions.assertNotNull(mapLoaded.values.get(2));
 
-        assertNotNull(getDs().find(ContainsIntKeyMap.class)
+        Assertions.assertNotNull(getDs().find(ContainsIntKeyMap.class)
                 .filter(exists("values.2")));
-        assertEquals(getDs().find(ContainsIntKeyMap.class)
+        Assertions.assertEquals(0, getDs().find(ContainsIntKeyMap.class)
                 .filter(exists("values.2").not())
-                .count(), 0);
-        assertNotNull(getDs().find(ContainsIntKeyMap.class)
+                .count());
+        Assertions.assertNotNull(getDs().find(ContainsIntKeyMap.class)
                 .filter(exists("values.4").not()));
-        assertEquals(getDs().find(ContainsIntKeyMap.class)
+        Assertions.assertEquals(0, getDs().find(ContainsIntKeyMap.class)
                 .filter(exists("values.4"))
-                .count(), 0);
+                .count());
     }
 
     @Test
@@ -576,9 +574,9 @@ public class TestMapping extends TestBase {
         ContainsIntegerList cilLoaded = getDs().find(ContainsIntegerList.class)
                 .filter(eq("_id", cil.id))
                 .first();
-        assertNotNull(cilLoaded);
-        assertNotNull(cilLoaded.intList);
-        assertEquals(cilLoaded.intList.size(), cil.intList.size());
+        Assertions.assertNotNull(cilLoaded);
+        Assertions.assertNotNull(cilLoaded.intList);
+        Assertions.assertEquals(cil.intList.size(), cilLoaded.intList.size());
 
         cil = new ContainsIntegerList();
         cil.intList = null;
@@ -586,9 +584,9 @@ public class TestMapping extends TestBase {
         cilLoaded = getDs().find(ContainsIntegerList.class)
                 .filter(eq("_id", cil.id))
                 .first();
-        assertNotNull(cilLoaded);
-        assertNotNull(cilLoaded.intList);
-        assertEquals(cilLoaded.intList.size(), 0);
+        Assertions.assertNotNull(cilLoaded);
+        Assertions.assertNotNull(cilLoaded.intList);
+        Assertions.assertEquals(0, cilLoaded.intList.size());
 
         cil = new ContainsIntegerList();
         cil.intList.add(1);
@@ -596,10 +594,10 @@ public class TestMapping extends TestBase {
         cilLoaded = getDs().find(ContainsIntegerList.class)
                 .filter(eq("_id", cil.id))
                 .first();
-        assertNotNull(cilLoaded);
-        assertNotNull(cilLoaded.intList);
-        assertEquals(cilLoaded.intList.size(), 1);
-        assertEquals((int) cilLoaded.intList.get(0), 1);
+        Assertions.assertNotNull(cilLoaded);
+        Assertions.assertNotNull(cilLoaded.intList);
+        Assertions.assertEquals(1, cilLoaded.intList.size());
+        Assertions.assertEquals(1, (int) cilLoaded.intList.get(0));
     }
 
     @Test
@@ -607,21 +605,21 @@ public class TestMapping extends TestBase {
         getDs().save(new Normal("value"));
         Normal n = getDs().find(Normal.class).iterator()
                 .next();
-        assertNotNull(n);
-        assertNotNull(n.name);
+        Assertions.assertNotNull(n);
+        Assertions.assertNotNull(n.name);
         getDs().delete(n);
         getDs().save(new NormalWithLoadOnly());
         n = getDs().find(Normal.class).iterator()
                 .next();
-        assertNotNull(n);
-        assertNull(n.name);
+        Assertions.assertNotNull(n);
+        Assertions.assertNull(n.name);
         getDs().delete(n);
         getDs().save(new Normal("value21"));
         final NormalWithLoadOnly notSaved = getDs().find(NormalWithLoadOnly.class).iterator()
                 .next();
-        assertNotNull(notSaved);
-        assertNotNull(notSaved.name);
-        assertEquals(notSaved.name, "never");
+        Assertions.assertNotNull(notSaved);
+        Assertions.assertNotNull(notSaved.name);
+        Assertions.assertEquals("never", notSaved.name);
     }
 
     @Test
@@ -629,8 +627,8 @@ public class TestMapping extends TestBase {
         getDs().save(new ContainsLongAndStringArray());
         ContainsLongAndStringArray loaded = getDs().find(ContainsLongAndStringArray.class).iterator()
                 .next();
-        assertEquals((new ContainsLongAndStringArray()).longs, loaded.longs);
-        assertEquals((new ContainsLongAndStringArray()).strings, loaded.strings);
+        Assertions.assertArrayEquals((new ContainsLongAndStringArray()).longs, loaded.longs);
+        Assertions.assertArrayEquals((new ContainsLongAndStringArray()).strings, loaded.strings);
 
         final ContainsLongAndStringArray array = new ContainsLongAndStringArray();
         array.strings = new String[] { "a", "B", "c" };
@@ -639,18 +637,18 @@ public class TestMapping extends TestBase {
         loaded = getDs().find(ContainsLongAndStringArray.class)
                 .filter(eq("_id", array.id))
                 .first();
-        assertEquals(loaded.longs, array.longs);
-        assertEquals(loaded.strings, array.strings);
+        Assertions.assertArrayEquals(array.longs, loaded.longs);
+        Assertions.assertArrayEquals(array.strings, loaded.strings);
 
-        assertNotNull(loaded.id);
+        Assertions.assertNotNull(loaded.id);
     }
 
     @Test
     public void testMapAsId() {
         final MapAsId mai = new MapAsId();
         mai.id.put("test", "string");
-        assertNotNull(getDs().save(mai));
-        assertNotNull(getDs().find(MapAsId.class)
+        Assertions.assertNotNull(getDs().save(mai));
+        Assertions.assertNotNull(getDs().find(MapAsId.class)
                 .filter(eq("_id", new Document("test", "string")))
                 .first());
     }
@@ -662,9 +660,9 @@ public class TestMapping extends TestBase {
         getDs().save(ml);
         final ContainsMapLike mlLoaded = getDs().find(ContainsMapLike.class).iterator()
                 .next();
-        assertNotNull(mlLoaded);
-        assertNotNull(mlLoaded.m);
-        assertTrue(mlLoaded.m.containsKey("first"));
+        Assertions.assertNotNull(mlLoaded);
+        Assertions.assertNotNull(mlLoaded.m);
+        Assertions.assertTrue(mlLoaded.m.containsKey("first"));
     }
 
     @Test
@@ -681,10 +679,10 @@ public class TestMapping extends TestBase {
                 .iterator()
                 .next();
 
-        assertNotNull(mapLoaded);
-        assertEquals(mapLoaded.embeddedValues.size(), 2);
-        assertTrue(mapLoaded.embeddedValues.get("first") instanceof Foo1);
-        assertTrue(mapLoaded.embeddedValues.get("second") instanceof Foo2);
+        Assertions.assertNotNull(mapLoaded);
+        Assertions.assertEquals(2, mapLoaded.embeddedValues.size());
+        Assertions.assertTrue(mapLoaded.embeddedValues.get("first") instanceof Foo1);
+        Assertions.assertTrue(mapLoaded.embeddedValues.get("second") instanceof Foo2);
 
     }
 
@@ -692,12 +690,12 @@ public class TestMapping extends TestBase {
     public void testMethodMapping() {
         withConfig(buildConfig(MethodMappedUser.class).propertyDiscovery(METHODS), () -> {
             EntityModel model = getDs().getMapper().getEntityModel(MethodMappedUser.class);
-            assertTrue(model.getProperties().size() > 0);
-            assertNotNull(model.getVersionProperty(), model.getProperties().toString());
-            assertNotNull(model.getProperty("dateJoined"));
-            assertNotNull(model.getProperty("joined"));
-            assertNotNull(model.getProperty("friend_reference"));
-            assertNotNull(model.getProperty("morphia_reference"));
+            Assertions.assertTrue(model.getProperties().size() > 0);
+            Assertions.assertNotNull(model.getVersionProperty(), model.getProperties().toString());
+            Assertions.assertNotNull(model.getProperty("dateJoined"));
+            Assertions.assertNotNull(model.getProperty("joined"));
+            Assertions.assertNotNull(model.getProperty("friend_reference"));
+            Assertions.assertNotNull(model.getProperty("morphia_reference"));
         });
 
     }
@@ -714,15 +712,15 @@ public class TestMapping extends TestBase {
 
         final ContainsObjectIdKeyMap mapLoaded = getDs().find(ContainsObjectIdKeyMap.class).filter(eq("_id", map.id)).first();
 
-        assertNotNull(mapLoaded);
-        assertEquals(mapLoaded.values.size(), 2);
-        assertNotNull(mapLoaded.values.get(o1));
-        assertNotNull(mapLoaded.values.get(o2));
+        Assertions.assertNotNull(mapLoaded);
+        Assertions.assertEquals(2, mapLoaded.values.size());
+        Assertions.assertNotNull(mapLoaded.values.get(o1));
+        Assertions.assertNotNull(mapLoaded.values.get(o2));
 
-        assertNotNull(getDs().find(ContainsIntKeyMap.class).filter(exists("values.111111111111111111111111")));
-        assertEquals(getDs().find(ContainsIntKeyMap.class).filter(exists("values.111111111111111111111111").not()).count(), 0);
-        assertNotNull(getDs().find(ContainsIntKeyMap.class).filter(exists("values.4").not()));
-        assertEquals(getDs().find(ContainsIntKeyMap.class).filter(exists("values.4")).count(), 0);
+        Assertions.assertNotNull(getDs().find(ContainsIntKeyMap.class).filter(exists("values.111111111111111111111111")));
+        Assertions.assertEquals(0, getDs().find(ContainsIntKeyMap.class).filter(exists("values.111111111111111111111111").not()).count());
+        Assertions.assertNotNull(getDs().find(ContainsIntKeyMap.class).filter(exists("values.4").not()));
+        Assertions.assertEquals(0, getDs().find(ContainsIntKeyMap.class).filter(exists("values.4")).count());
     }
 
     @Test
@@ -738,9 +736,9 @@ public class TestMapping extends TestBase {
                 .filter(eq("_id", primMap.id))
                 .first();
 
-        assertNotNull(primMapLoaded);
-        assertEquals(primMapLoaded.embeddedValues.size(), 2);
-        assertEquals(primMapLoaded.values.size(), 2);
+        Assertions.assertNotNull(primMapLoaded);
+        Assertions.assertEquals(2, primMapLoaded.embeddedValues.size());
+        Assertions.assertEquals(2, primMapLoaded.values.size());
     }
 
     @Test
@@ -756,14 +754,14 @@ public class TestMapping extends TestBase {
                 .filter(eq("_id", primMap.id))
                 .first();
 
-        assertNotNull(primMapLoaded);
-        assertEquals(primMapLoaded.embeddedValues.size(), 2);
-        assertEquals(primMapLoaded.values.size(), 2);
+        Assertions.assertNotNull(primMapLoaded);
+        Assertions.assertEquals(2, primMapLoaded.embeddedValues.size());
+        Assertions.assertEquals(2, primMapLoaded.values.size());
     }
 
     @Test
-    //    @Tag("references")
-    @Ignore("entity caching needs to be implemented")
+    @Tag("references")
+    @Disabled("entity caching needs to be implemented")
     public void testRecursiveReference() {
         /*
          * getMapper().map(RecursiveParent.class, RecursiveChild.class);
@@ -799,7 +797,7 @@ public class TestMapping extends TestBase {
 
     @Test
     public void testReferenceWithoutIdValue() {
-        assertThrows(QueryException.class, () -> {
+        Assertions.assertThrows(QueryException.class, () -> {
             final Book book = new Book();
             book.author = new Author();
             getDs().save(book);
@@ -814,13 +812,13 @@ public class TestMapping extends TestBase {
 
                     // then
                     List<EntityModel> list = getMapper().getMappedEntities();
-                    assertEquals(list.size(), 4, list.toString());
+                    Assertions.assertEquals(4, list.size(), list.toString());
                     Collection<Class<?>> classes = list.stream().map(EntityModel::getType)
                             .collect(Collectors.toList());
-                    assertTrue(classes.contains(AbstractVersionedBase.class));
-                    assertTrue(classes.contains(Versioned.class));
-                    assertTrue(classes.contains(VersionedToo.class));
-                    assertTrue(classes.contains(VersionedChildEntity.class));
+                    Assertions.assertTrue(classes.contains(AbstractVersionedBase.class));
+                    Assertions.assertTrue(classes.contains(Versioned.class));
+                    Assertions.assertTrue(classes.contains(VersionedToo.class));
+                    Assertions.assertTrue(classes.contains(VersionedChildEntity.class));
 
                 });
     }
@@ -836,20 +834,20 @@ public class TestMapping extends TestBase {
         getDs().save(entity);
         Document document = getDocumentCollection(HasTransientFields.class).find().first();
         String string = toString(document);
-        Assert.assertFalse(document.containsKey("morphiaTransientString"), string);
-        Assert.assertFalse(document.containsKey("morphiaTransientInt"), string);
-        Assert.assertFalse(document.containsKey("javaTransientString"), string);
-        Assert.assertFalse(document.containsKey("javaTransientInt"), string);
+        Assertions.assertFalse(document.containsKey("morphiaTransientString"), string);
+        Assertions.assertFalse(document.containsKey("morphiaTransientInt"), string);
+        Assertions.assertFalse(document.containsKey("javaTransientString"), string);
+        Assertions.assertFalse(document.containsKey("javaTransientInt"), string);
     }
 
     protected void findFirst(Datastore datastore, Class<?> type, BlogImage expected) {
         Query<?> query = datastore.find(type);
-        assertEquals(query.count(), 1, query.toString());
-        assertEquals(query.first(), expected, query.toString());
+        Assertions.assertEquals(1, query.count(), query.toString());
+        Assertions.assertEquals(expected, query.first(), query.toString());
     }
 
     private void validateField(List<PropertyModel> fields, String mapped, String java) {
-        assertNotNull(fields.stream().filter(f -> f.getMappedName().equals(mapped)
+        Assertions.assertNotNull(fields.stream().filter(f -> f.getMappedName().equals(mapped)
                 && f.getName().equals(java)),
                 mapped);
     }

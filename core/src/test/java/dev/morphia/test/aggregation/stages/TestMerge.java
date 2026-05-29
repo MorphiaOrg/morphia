@@ -6,7 +6,8 @@ import java.time.Month;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static com.mongodb.client.model.MergeOptions.WhenMatched.FAIL;
 import static com.mongodb.client.model.MergeOptions.WhenMatched.MERGE;
@@ -31,7 +32,8 @@ public class TestMerge extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/merge/example1
      * 
      */
-    @Test(testName = "On-Demand Materialized View: Initial Creation")
+    @Test
+    @DisplayName("On-Demand Materialized View: Initial Creation")
     public void testExample1() {
         testPipeline(new ActionTestOptions().skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(
@@ -44,7 +46,8 @@ public class TestMerge extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/merge/example2
      * 
      */
-    @Test(testName = "On-Demand Materialized View: Update/Replace Data")
+    @Test
+    @DisplayName("On-Demand Materialized View: Update/Replace Data")
     public void testExample2() {
         testPipeline(new ActionTestOptions().skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(match(gte("fiscal_year", 2019)),
@@ -57,7 +60,8 @@ public class TestMerge extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/merge/example3
      * 
      */
-    @Test(testName = "Only Insert New Data")
+    @Test
+    @DisplayName("Only Insert New Data")
     public void testExample3() {
         loadData("orgArchive", 1);
         loadData("salaries", 2);
@@ -75,7 +79,8 @@ public class TestMerge extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/merge/example4
      * 
      */
-    @Test(testName = "Merge Results from Multiple Collections")
+    @Test
+    @DisplayName("Merge Results from Multiple Collections")
     public void testExample4() {
         testPipeline(new ActionTestOptions().skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(group().field("_id", "$quarter").field("purchased", sum("$qty")),
@@ -86,7 +91,8 @@ public class TestMerge extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/merge/example5
      * 
      */
-    @Test(testName = "Use the Pipeline to Customize the Merge")
+    @Test
+    @DisplayName("Use the Pipeline to Customize the Merge")
     public void testExample5() {
         testPipeline(new ActionTestOptions().skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(
@@ -104,7 +110,8 @@ public class TestMerge extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/merge/example6
      * 
      */
-    @Test(testName = "Use Variables to Customize the Merge :: Merge Stage")
+    @Test
+    @DisplayName("Use Variables to Customize the Merge :: Merge Stage")
     public void testExample6() {
         // merging in to another db complicates the test infra and doesn't really
         // provide much value as another test
@@ -114,7 +121,8 @@ public class TestMerge extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/merge/example7
      * 
      */
-    @Test(testName = "Use Variables to Customize the Merge :: Aggregate Command")
+    @Test
+    @DisplayName("Use Variables to Customize the Merge :: Aggregate Command")
     public void testExample7() {
         // merging in to another db complicates the test infra and doesn't really
         // provide much value as another test
@@ -124,7 +132,8 @@ public class TestMerge extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/merge/example8
      * 
      */
-    @Test(testName = "Use Variables to Customize the Merge :: Merge and Aggregate")
+    @Test
+    @DisplayName("Use Variables to Customize the Merge :: Merge and Aggregate")
     public void testExample8() {
         // merging in to another db complicates the test infra and doesn't really
         // provide much value as another test

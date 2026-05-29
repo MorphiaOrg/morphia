@@ -58,8 +58,8 @@ public class DriverVersions {
                             .collect(toList());
         Collections.reverse(result);
 
-        var latest = result.get(0);
-        var map = new TreeMap<>(Map.of("latest", List.of(latest), "versions", result));
+        var latest = result.get(0).replace("'", "");
+        var map = new TreeMap<>(Map.of("latest", latest, "versions", result));
         if (args.length != 0) {
             if (args[0].equals("all")) {
                 System.out.println(map.get("versions"));

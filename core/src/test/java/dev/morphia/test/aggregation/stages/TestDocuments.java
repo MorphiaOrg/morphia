@@ -3,8 +3,9 @@ package dev.morphia.test.aggregation.stages;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.Expressions.document;
 import static dev.morphia.aggregation.stages.AutoBucket.autoBucket;
@@ -13,7 +14,7 @@ import static dev.morphia.aggregation.stages.Lookup.lookup;
 import static dev.morphia.aggregation.stages.Match.match;
 
 public class TestDocuments extends TemplatedTestBase {
-    @BeforeMethod
+    @BeforeEach
     public void versionCheck() {
         checkMinServerVersion("6.0.0");
     }
@@ -22,7 +23,8 @@ public class TestDocuments extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/documents/example1
      * 
      */
-    @Test(testName = "Test a Pipeline Stage")
+    @Test
+    @DisplayName("Test a Pipeline Stage")
     public void testExample1() {
         testPipeline(new ActionTestOptions().skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(
@@ -34,7 +36,8 @@ public class TestDocuments extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/documents/example2
      * 
      */
-    @Test(testName = "Use a ``$documents`` Stage in a ``$lookup`` Stage")
+    @Test
+    @DisplayName("Use a ``$documents`` Stage in a ``$lookup`` Stage")
     public void testExample2() {
         testPipeline(new ActionTestOptions().removeIds(true), aggregation -> {
             return aggregation.pipeline(match(),

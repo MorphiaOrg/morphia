@@ -6,7 +6,8 @@ import dev.morphia.aggregation.stages.Group;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.accumulator;
 
@@ -15,7 +16,8 @@ public class TestAccumulator extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/accumulator/example1
      * 
      */
-    @Test(testName = "Use ``$accumulator`` to Implement the ``$avg`` Operator")
+    @Test
+    @DisplayName("Use ``$accumulator`` to Implement the ``$avg`` Operator")
     public void testExample1() {
         testPipeline(new ActionTestOptions().orderMatters(false).skipActionCheck(true),
                 aggregation -> aggregation.pipeline(Group.group(Group.id("$author")).field("avgCopies", accumulator("""
@@ -44,7 +46,8 @@ public class TestAccumulator extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/accumulator/example2
      * 
      */
-    @Test(testName = "Use ``initArgs`` to Vary the Initial State by Group")
+    @Test
+    @DisplayName("Use ``initArgs`` to Vary the Initial State by Group")
     public void testExample2() {
         testPipeline(new ActionTestOptions().orderMatters(false).skipActionCheck(true), aggregation -> aggregation
                 .pipeline(Group.group(Group.id().field("city", "$city")).field("restaurants", accumulator("""

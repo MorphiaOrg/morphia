@@ -3,7 +3,8 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.WindowExpressions.stdDevPop;
 import static dev.morphia.aggregation.stages.Group.group;
@@ -18,7 +19,8 @@ public class TestStdDevPop extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/stdDevPop/example1
      * 
      */
-    @Test(testName = "Use in ``$group`` Stage")
+    @Test
+    @DisplayName("Use in ``$group`` Stage")
     public void testExample1() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(group(id("$quiz")).field("stdDev", stdDevPop("$score"))));
@@ -28,7 +30,8 @@ public class TestStdDevPop extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/stdDevPop/example2
      * 
      */
-    @Test(testName = "Use in ``$project`` Stage")
+    @Test
+    @DisplayName("Use in ``$project`` Stage")
     public void testExample2() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("stdDev", stdDevPop("$scores.score"))));
     }
@@ -37,7 +40,8 @@ public class TestStdDevPop extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/stdDevPop/example3
      * 
      */
-    @Test(testName = "Use in ``$setWindowFields`` Stage")
+    @Test
+    @DisplayName("Use in ``$setWindowFields`` Stage")
     public void testExample3() {
         checkMinServerVersion("5.0.0");
         testPipeline(new ActionTestOptions().orderMatters(false),

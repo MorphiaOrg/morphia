@@ -3,7 +3,8 @@ package dev.morphia.test.aggregation.stages;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.stages.Group.group;
@@ -20,7 +21,8 @@ public class TestMatch extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/stages/match/example1
      */
-    @Test(testName = "Equality Match")
+    @Test
+    @DisplayName("Equality Match")
     public void testExample1() {
         testPipeline(aggregation -> aggregation.pipeline(match(eq("author", "dave"))));
     }
@@ -29,7 +31,8 @@ public class TestMatch extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/match/example2
      *
      */
-    @Test(testName = "Perform a Count")
+    @Test
+    @DisplayName("Perform a Count")
     public void testExample2() {
         testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(

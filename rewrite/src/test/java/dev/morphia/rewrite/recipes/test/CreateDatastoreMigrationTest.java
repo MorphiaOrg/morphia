@@ -150,7 +150,7 @@ public class CreateDatastoreMigrationTest extends MorphiaRewriteTest {
                                     public void update() {
                                         MongoClient client = null;
                                         var config = MorphiaConfig.load();
-                                        Datastore datastore = createDatastore(client,  config.database("testing"));
+                                        Datastore datastore = createDatastore(client, config.database("testing"));
                                     }
                                 }
                                 """));

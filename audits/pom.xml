@@ -8,6 +8,7 @@
     </parent>
 
     <artifactId>morphia-audits</artifactId>
+    <name>Morphia Audits</name>
     <packaging>jar</packaging>
     <properties>
         <jackson.version>2.18.2</jackson.version>
@@ -51,15 +52,15 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.antwerkz.super-expressive</groupId>
             <artifactId>super-expressive</artifactId>
             <version>0.3.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

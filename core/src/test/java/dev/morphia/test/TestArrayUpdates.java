@@ -6,14 +6,13 @@ import dev.morphia.query.Query;
 import dev.morphia.test.models.Grade;
 import dev.morphia.test.models.Student;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.lt;
 import static dev.morphia.query.updates.UpdateOperators.inc;
 import static java.util.Collections.singletonMap;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
 
 public class TestArrayUpdates extends TestBase {
 
@@ -31,8 +30,8 @@ public class TestArrayUpdates extends TestBase {
                 .filter(eq("_id", 1L),
                         eq("grades.marks", 90));
 
-        assertNotNull(grade80.iterator().tryNext());
-        assertNotNull(grade90.iterator().tryNext());
+        Assertions.assertNotNull(grade80.iterator().tryNext());
+        Assertions.assertNotNull(grade90.iterator().tryNext());
 
         Query<Student> student = datastore.find(Student.class).filter(eq("_id", 1L));
 
@@ -40,22 +39,22 @@ public class TestArrayUpdates extends TestBase {
                 .arrayFilter(lt("elem.marks", 90)),
                 inc("grades.$[elem].marks", 5));
 
-        assertNull(grade80.iterator().tryNext());
-        assertNotNull(grade90.iterator().tryNext());
+        Assertions.assertNull(grade80.iterator().tryNext());
+        Assertions.assertNotNull(grade90.iterator().tryNext());
 
-        assertNotNull(datastore.find(Student.class)
+        Assertions.assertNotNull(datastore.find(Student.class)
                 .filter(eq("_id", 1L),
                         eq("grades.marks", 85))
                 .iterator()
                 .tryNext());
-        assertNotNull(grade90.iterator().tryNext());
+        Assertions.assertNotNull(grade90.iterator().tryNext());
 
         student.update(new UpdateOptions()
                 .arrayFilter(lt("elem.marks", 90).not()),
                 inc("grades.$[elem].marks", 5));
 
-        assertNull(grade90.iterator().tryNext());
-        assertNotNull(datastore.find(Student.class)
+        Assertions.assertNull(grade90.iterator().tryNext());
+        Assertions.assertNotNull(datastore.find(Student.class)
                 .filter(eq("_id", 1L),
                         eq("grades.marks", 95))
                 .iterator()
