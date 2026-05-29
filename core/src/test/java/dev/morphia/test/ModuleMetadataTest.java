@@ -26,6 +26,26 @@ public class ModuleMetadataTest {
         assertAutomaticModuleName("kotlin/pom.xml", "dev.morphia.kotlin");
     }
 
+    @Test
+    public void annotationsJarDefinesAutomaticModuleName() throws Exception {
+        assertAutomaticModuleName("annotations/pom.xml", "dev.morphia.annotations");
+    }
+
+    @Test
+    public void validationJarDefinesAutomaticModuleName() throws Exception {
+        assertAutomaticModuleName("validation/pom.xml", "dev.morphia.validation");
+    }
+
+    @Test
+    public void rewriteJarDefinesAutomaticModuleName() throws Exception {
+        assertAutomaticModuleName("rewrite/pom.xml", "dev.morphia.rewrite");
+    }
+
+    @Test
+    public void critterMavenJarDefinesAutomaticModuleName() throws Exception {
+        assertAutomaticModuleName("critter/critter-maven/pom.xml", "dev.morphia.critter.maven");
+    }
+
     private static void assertAutomaticModuleName(String path, String expectedValue) throws Exception {
         MavenXpp3Reader reader = new MavenXpp3Reader();
         Model model;
