@@ -13,6 +13,22 @@
     <artifactId>morphia-kotlin</artifactId>
     <name>Morphia Kotlin</name>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Automatic-Module-Name>dev.morphia.kotlin</Automatic-Module-Name>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>dev.morphia.morphia</groupId>
@@ -48,4 +64,3 @@
         </dependency>
     </dependencies>
 </project>
-
