@@ -59,7 +59,7 @@ public class PropertyFinder {
      */
     public List<PropertyModelGenerator> find(Class<?> entityType, ClassNode classNode) {
         List<PropertyModelGenerator> models = new ArrayList<>();
-        List<MethodNode> methods = discoverPropertyMethods(classNode);
+        List<MethodNode> methods = discoverPropertyMethods(entityType, classNode);
         if (methods.isEmpty()) {
             List<FieldNode> fields = discoverAllFields(entityType, classNode);
             if (!runtimeMode) {
@@ -145,24 +145,41 @@ public class PropertyFinder {
         return result;
     }
 
-    private List<MethodNode> discoverPropertyMethods(ClassNode classNode) {
+    private List<MethodNode> discoverPropertyMethods(Class<?> entityType, ClassNode classNode) {
         List<MethodNode> result = new ArrayList<>();
-        for (MethodNode method : classNode.methods) {
-            if (!isGetter(method)) {
-                continue;
-            }
-            if (propertyDiscovery == PropertyDiscovery.METHODS) {
-                // In METHODS mode: include all getters that have a matching setter,
-                // merging annotations from both getter and setter so that annotations
-                // placed on the setter (e.g. @Version, @Text) are visible to downstream generators.
+        Map<String, Boolean> seen = new LinkedHashMap<>();
+
+        Class<?> current = entityType;
+        ClassNode currentNode = classNode;
+
+        while (current != null && current != Object.class) {
+            ClassNode node = currentNode != null ? currentNode : readClassNode(current);
+            if (node == null)
+                break;
+
+            for (MethodNode method : node.methods) {
+                if (!isGetter(method))
+                    continue;
                 String propName = getterPropertyName(method);
-                MethodNode setter = findSetter(classNode, propName, Type.getReturnType(method.desc));
-                if (setter != null) {
-                    result.add(mergeAnnotations(method, setter));
+                // Subclass method takes precedence — skip if already seen
+                if (seen.putIfAbsent(propName, Boolean.TRUE) != null)
+                    continue;
+
+                if (propertyDiscovery == PropertyDiscovery.METHODS) {
+                    // In METHODS mode: include all getters that have a matching setter,
+                    // merging annotations from both getter and setter so that annotations
+                    // placed on the setter (e.g. @Version, @Text) are visible to downstream generators.
+                    MethodNode setter = findSetter(node, propName, Type.getReturnType(method.desc));
+                    if (setter != null) {
+                        result.add(mergeAnnotations(method, setter));
+                    }
+                } else if (isPropertyAnnotated(method.visibleAnnotations, false)) {
+                    result.add(method);
                 }
-            } else if (isPropertyAnnotated(method.visibleAnnotations, false)) {
-                result.add(method);
             }
+
+            current = current.getSuperclass();
+            currentNode = null;
         }
         return result;
     }

@@ -8,11 +8,14 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -183,5 +186,41 @@ public class TestCritterMapper {
                 "register() must make the entity discoverable via isMapped()");
         Assertions.assertSame(mapper.getEntityModel(CritterMapperTestEntity.class), registered,
                 "register() must make the model retrievable, as importModels() relies on it");
+    }
+
+    /**
+     * Verify that inherited getter/setter pairs are discovered when METHODS mode is used.
+     * Before the fix, PropertyFinder.discoverPropertyMethods() only inspected the immediate
+     * class's methods and missed getters defined in parent classes.
+     */
+    @Test
+    public void testInheritedGetterDiscoveryInMethodsMode() {
+        CritterMapper mapper = new CritterMapper(
+                MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
+        EntityModel model = mapper.mapEntity(MethodsChild.class);
+        Assertions.assertNotNull(model, "mapEntity should return a model for MethodsChild");
+        Assertions.assertTrue(model instanceof CritterEntityModel,
+                "Expected CritterEntityModel but got: " + model.getClass().getName());
+        Assertions.assertNotNull(model.getProperty("name"),
+                "Property 'name' inherited from MethodsBase should be discovered in METHODS mode");
+    }
+
+    /** Base class with a getter/setter pair that the subclass inherits. */
+    public static class MethodsBase {
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
+    @Entity("methods_child")
+    public static class MethodsChild extends MethodsBase {
+        @Id
+        ObjectId id;
     }
 }
