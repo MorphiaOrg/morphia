@@ -279,7 +279,7 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
 
     private void getType() {
         try (MethodCreator methodCreator = getCreator().getMethodCreator("getType", Class.class)) {
-            methodCreator.returnValue(emitClassRef(methodCreator, getTypeData().getType()));
+            methodCreator.returnValue(GizmoExtensions.emitClassRef(methodCreator, getTypeData().getType()));
         }
     }
 
@@ -292,45 +292,8 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
 
     private void emitGetTypeData() {
         try (MethodCreator methodCreator = getCreator().getMethodCreator("getTypeData", TypeData.class)) {
-            methodCreator.returnValue(emitTypeData(methodCreator, this.getTypeData()));
+            methodCreator.returnValue(GizmoExtensions.emitTypeData(this.getTypeData(), methodCreator));
         }
-    }
-
-    private ResultHandle emitTypeData(MethodCreator methodCreator, TypeData<?> data) {
-        ResultHandle array = methodCreator.newArray(TypeData.class, data.getTypeParameters().size());
-        List<TypeData<?>> typeParameters = data.getTypeParameters();
-        for (int index = 0; index < typeParameters.size(); index++) {
-            methodCreator.writeArrayValue(array, index, emitTypeData(methodCreator, typeParameters.get(index)));
-        }
-        List<ResultHandle> list = new ArrayList<>();
-        list.add(emitClassRef(methodCreator, data.getType()));
-        list.add(array);
-        MethodDescriptor descriptor = MethodDescriptor.ofConstructor(
-                TypeData.class,
-                Class.class,
-                "[" + Type.getType(TypeData.class).getDescriptor());
-        return methodCreator.newInstance(descriptor, list.toArray(new ResultHandle[0]));
-    }
-
-    /**
-     * Emits bytecode to load a {@link Class} reference. For non-public classes (e.g. private
-     * inner classes) that cannot be referenced via an LDC constant from a different classloader,
-     * generates a {@code Class.forName()} call instead.
-     */
-    private ResultHandle emitClassRef(MethodCreator methodCreator, Class<?> cls) {
-        if (java.lang.reflect.Modifier.isPublic(cls.getModifiers())) {
-            return methodCreator.loadClass(cls);
-        }
-        ResultHandle name = methodCreator.load(cls.getName());
-        ResultHandle falseHandle = methodCreator.load(false);
-        ResultHandle thread = methodCreator.invokeStaticMethod(
-                ofMethod(Thread.class, "currentThread", Thread.class));
-        ResultHandle tccl = methodCreator.invokeVirtualMethod(
-                ofMethod(Thread.class, "getContextClassLoader", ClassLoader.class),
-                thread);
-        return methodCreator.invokeStaticMethod(
-                ofMethod(Class.class, "forName", Class.class, String.class, boolean.class, ClassLoader.class),
-                name, falseHandle, tccl);
     }
 
     private void isCollection() {
@@ -370,7 +333,7 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
     private void getNormalizedType() {
         try (MethodCreator methodCreator = getCreator().getMethodCreator("getNormalizedType", Class.class)) {
             Class<?> normalizedType = PropertyModel.normalize(getTypeData());
-            methodCreator.returnValue(emitClassRef(methodCreator, normalizedType));
+            methodCreator.returnValue(GizmoExtensions.emitClassRef(methodCreator, normalizedType));
         }
     }
 
