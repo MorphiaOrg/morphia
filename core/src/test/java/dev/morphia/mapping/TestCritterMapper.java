@@ -8,11 +8,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.PrePersist;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -183,5 +187,32 @@ public class TestCritterMapper {
                 "register() must make the entity discoverable via isMapped()");
         Assertions.assertSame(mapper.getEntityModel(CritterMapperTestEntity.class), registered,
                 "register() must make the model retrievable, as importModels() relies on it");
+    }
+
+    /**
+     * Verifies that CritterMapper correctly reports lifecycle methods.
+     * Previously, GizmoEntityModelGenerator hard-coded hasLifecycle() to always return false,
+     * silently skipping @PrePersist/@PostLoad/@PreLoad/@PostPersist callbacks for CritterMapper.
+     */
+    @Test
+    public void testHasLifecycleDetectedByCritterMapper() {
+        CritterMapper mapper = mapper();
+        EntityModel model = mapper.mapEntity(LifecycleEntity.class);
+
+        Assertions.assertNotNull(model);
+        Assertions.assertTrue(model instanceof CritterEntityModel,
+                "Expected CritterEntityModel but got: " + model.getClass().getName());
+        Assertions.assertTrue(model.hasLifecycle(PrePersist.class),
+                "CritterMapper must detect @PrePersist lifecycle methods on entities");
+    }
+
+    @Entity("lifecycle_test")
+    static class LifecycleEntity {
+        @Id
+        private ObjectId id;
+
+        @PrePersist
+        public void prePersist() {
+        }
     }
 }

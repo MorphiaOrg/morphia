@@ -1,7 +1,5 @@
 package dev.morphia.mapping.codec.pojo.critter;
 
-import java.lang.annotation.Annotation;
-
 import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.MorphiaPropertySerialization;
@@ -36,6 +34,7 @@ public abstract class CritterEntityModel extends EntityModel {
         for (PropertyModel property : getProperties()) {
             property.serialization(new MorphiaPropertySerialization(mapper.getConfig(), property));
         }
+        initializeListeners();
     }
 
     @Override
@@ -66,9 +65,6 @@ public abstract class CritterEntityModel extends EntityModel {
 
     @Override
     public abstract String discriminatorKey();
-
-    @Override
-    public abstract boolean hasLifecycle(Class<? extends Annotation> type);
 
     @Override
     public abstract boolean isAbstract();

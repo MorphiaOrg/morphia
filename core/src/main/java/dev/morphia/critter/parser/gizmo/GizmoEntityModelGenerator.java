@@ -106,7 +106,6 @@ public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
             collectionName();
             discriminator();
             discriminatorKey();
-            hasLifecycle();
             isAbstract();
             isInterface();
             useDiscriminator();
@@ -124,13 +123,6 @@ public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
     private void isInterface() {
         try (MethodCreator mc = getCreator().getMethodCreator("isInterface", boolean.class)) {
             mc.returnValue(mc.load(entity.isInterface()));
-        }
-    }
-
-    private void hasLifecycle() {
-        try (MethodCreator mc = getCreator().getMethodCreator("hasLifecycle", boolean.class, Class.class)) {
-            mc.setParameterNames(new String[] { "type" });
-            mc.returnValue(mc.load(false));
         }
     }
 
@@ -174,13 +166,13 @@ public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
                     MethodDescriptor.ofConstructor(CritterEntityModel.class, Mapper.class, Class.class),
                     constructor.getThis(),
                     constructor.getMethodParam(0),
-                    constructor.loadClass(entity));
+                    GizmoExtensions.emitClassRef(constructor, entity));
             constructor.setParameterNames(new String[] { "mapper" });
 
             constructor.invokeVirtualMethod(
                     ofMethod(generatedType, "setType", "void", Class.class),
                     constructor.getThis(),
-                    constructor.loadClass(entity));
+                    GizmoExtensions.emitClassRef(constructor, entity));
             loadProperties(constructor);
             registerAnnotations(constructor);
             constructor.invokeVirtualMethod(
