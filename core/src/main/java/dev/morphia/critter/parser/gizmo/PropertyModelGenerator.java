@@ -433,9 +433,13 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
     public static List<TypeData<?>> typeData(String input, ClassLoader classLoader) {
         if (input.isEmpty())
             return Collections.emptyList();
-        TypeDataVisitor visitor = new TypeDataVisitor(classLoader);
-        new SignatureReader(input).acceptType(visitor);
-        return visitor.result != null ? List.of(visitor.result) : Collections.emptyList();
+        try {
+            TypeDataVisitor visitor = new TypeDataVisitor(classLoader);
+            new SignatureReader(input).acceptType(visitor);
+            return visitor.result != null ? List.of(visitor.result) : Collections.emptyList();
+        } catch (Exception e) {
+            return Collections.emptyList();
+        }
     }
 
     private static class TypeDataVisitor extends SignatureVisitor {
@@ -489,38 +493,54 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
 
         @Override
         public SignatureVisitor visitArrayType() {
-            TypeDataVisitor outer = this;
-            return new TypeDataVisitor(classLoader) {
-                private void propagate() {
-                    if (this.result != null) {
-                        try {
-                            Class<?> arrayClass = java.lang.reflect.Array.newInstance(this.result.getType(), 0)
-                                    .getClass();
-                            outer.result = new TypeData<>(arrayClass, List.of());
-                        } catch (Exception ignored) {
-                            outer.result = new TypeData<>(Object.class, List.of());
-                        }
+            return new ArrayVisitor(classLoader, this);
+        }
+
+        private static class ArrayVisitor extends TypeDataVisitor {
+            private final TypeDataVisitor outer;
+
+            ArrayVisitor(ClassLoader classLoader, TypeDataVisitor outer) {
+                super(classLoader);
+                this.outer = outer;
+            }
+
+            private void propagate() {
+                if (result != null) {
+                    try {
+                        Class<?> arrayClass = java.lang.reflect.Array.newInstance(result.getType(), 0).getClass();
+                        outer.result = new TypeData<>(arrayClass, List.of());
+                    } catch (Exception ignored) {
+                        outer.result = new TypeData<>(Object.class, List.of());
+                    }
+                    // If outer is itself an ArrayVisitor, propagate the chain upward.
+                    if (outer instanceof ArrayVisitor av) {
+                        av.propagate();
                     }
                 }
+            }
 
-                @Override
-                public void visitBaseType(char descriptor) {
-                    super.visitBaseType(descriptor);
-                    propagate();
-                }
+            @Override
+            public void visitBaseType(char descriptor) {
+                super.visitBaseType(descriptor);
+                propagate();
+            }
 
-                @Override
-                public void visitEnd() {
-                    super.visitEnd();
-                    propagate();
-                }
+            @Override
+            public void visitEnd() {
+                super.visitEnd();
+                propagate();
+            }
 
-                @Override
-                public void visitTypeVariable(String name) {
-                    super.visitTypeVariable(name);
-                    propagate();
-                }
-            };
+            @Override
+            public void visitTypeVariable(String name) {
+                super.visitTypeVariable(name);
+                propagate();
+            }
+
+            @Override
+            public SignatureVisitor visitArrayType() {
+                return new ArrayVisitor(outer.classLoader, this);
+            }
         }
 
         @Override
