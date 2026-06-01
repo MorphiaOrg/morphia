@@ -28,6 +28,8 @@ import dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel;
 import org.bson.codecs.pojo.PropertyAccessor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+import org.objectweb.asm.signature.SignatureReader;
+import org.objectweb.asm.signature.SignatureVisitor;
 import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -421,72 +423,115 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
 
     // ---- Static utility methods (formerly package-level functions) ----
 
-    private static String balanced(String s) {
-        if (!s.contains("<"))
-            return "";
-        int start = s.indexOf('<') + 1;
-        int index = start;
-        int count = 1;
-
-        while (index < s.length() && count != 0) {
-            char c = s.charAt(++index);
-            if (c == '>')
-                count--;
-            else if (c == '<')
-                count++;
-        }
-
-        return s.substring(start, index);
-    }
-
     /**
      * Parses an ASM type signature string into a list of {@link TypeData} instances.
      *
-     * @param input       the ASM type signature to parse
+     * @param input       the ASM type signature to parse (field/return-type signature)
      * @param classLoader the class loader used to resolve referenced types
-     * @return the list of type data values parsed from the signature
+     * @return a single-element list containing the parsed type data, or empty if parsing fails
      */
     public static List<TypeData<?>> typeData(String input, ClassLoader classLoader) {
         if (input.isEmpty())
             return Collections.emptyList();
-        List<TypeData<?>> types = new ArrayList<>();
-        String value = input;
+        TypeDataVisitor visitor = new TypeDataVisitor(classLoader);
+        new SignatureReader(input).acceptType(visitor);
+        return visitor.result != null ? List.of(visitor.result) : Collections.emptyList();
+    }
 
-        while (!value.isEmpty()) {
-            // Strip wildcard bound prefixes (+ = extends, - = super, * = unbounded)
-            if (value.startsWith("+") || value.startsWith("-")) {
-                value = value.substring(1);
-                continue;
-            }
-            if (value.startsWith("*")) {
-                value = value.substring(1);
-                types.add(GizmoExtensions.typeDataFromType(Type.getType(Object.class), classLoader));
-                continue;
-            }
-            int bracket = value.indexOf('<');
-            int semicolon = value.indexOf(';');
-            // Handle type parameters (e.g., TT; for type param T) - use Object as erasure
-            if (value.startsWith("T") && !value.startsWith("T[")) {
-                value = (semicolon != -1) ? value.substring(semicolon + 1) : "";
-                types.add(GizmoExtensions.typeDataFromType(Type.getType(Object.class), classLoader));
-            } else if (bracket == -1 || (semicolon != -1 && bracket > semicolon)) {
-                String type = value.substring(0, semicolon != -1 ? semicolon : value.length());
-                boolean hadSemicolon = semicolon != -1 && semicolon < value.length();
-                if (hadSemicolon && type.length() > 2) {
-                    type += ";";
+    private static class TypeDataVisitor extends SignatureVisitor {
+        private final ClassLoader classLoader;
+        TypeData<?> result;
+
+        private String pendingClass;
+        private final List<TypeDataVisitor> typeArgVisitors = new ArrayList<>();
+
+        TypeDataVisitor(ClassLoader classLoader) {
+            super(Opcodes.ASM9);
+            this.classLoader = classLoader;
+        }
+
+        @Override
+        public void visitClassType(String name) {
+            pendingClass = "L" + name + ";";
+            typeArgVisitors.clear();
+        }
+
+        @Override
+        public void visitInnerClassType(String name) {
+            // Strip trailing ';' and append '$Name;'
+            pendingClass = pendingClass.substring(0, pendingClass.length() - 1) + "$" + name + ";";
+        }
+
+        @Override
+        public SignatureVisitor visitTypeArgument(char wildcard) {
+            TypeDataVisitor child = new TypeDataVisitor(classLoader);
+            typeArgVisitors.add(child);
+            return child;
+        }
+
+        @Override
+        public void visitTypeArgument() {
+            // Unbounded wildcard '*': use Object as erasure
+            TypeDataVisitor child = new TypeDataVisitor(classLoader);
+            child.result = new TypeData<>(Object.class, List.of());
+            typeArgVisitors.add(child);
+        }
+
+        @Override
+        public void visitTypeVariable(String name) {
+            result = new TypeData<>(Object.class, List.of());
+        }
+
+        @Override
+        public void visitBaseType(char descriptor) {
+            result = GizmoExtensions.typeDataFromType(Type.getType(String.valueOf(descriptor)), classLoader);
+        }
+
+        @Override
+        public SignatureVisitor visitArrayType() {
+            TypeDataVisitor outer = this;
+            return new TypeDataVisitor(classLoader) {
+                private void propagate() {
+                    if (this.result != null) {
+                        try {
+                            Class<?> arrayClass = java.lang.reflect.Array.newInstance(this.result.getType(), 0)
+                                    .getClass();
+                            outer.result = new TypeData<>(arrayClass, List.of());
+                        } catch (Exception ignored) {
+                            outer.result = new TypeData<>(Object.class, List.of());
+                        }
+                    }
                 }
-                value = hadSemicolon ? value.substring(type.length()) : "";
-                types.add(GizmoExtensions.typeDataFromType(Type.getType(type), classLoader));
-            } else {
-                String paramString = balanced(value);
-                value = value.replace("<" + paramString + ">", "");
-                types.add(GizmoExtensions.typeDataFromType(
-                        Type.getType(value),
-                        classLoader,
-                        typeData(paramString, classLoader)));
-                value = value.contains(";") ? value.substring(value.indexOf(';') + 1) : "";
+
+                @Override
+                public void visitBaseType(char descriptor) {
+                    super.visitBaseType(descriptor);
+                    propagate();
+                }
+
+                @Override
+                public void visitEnd() {
+                    super.visitEnd();
+                    propagate();
+                }
+
+                @Override
+                public void visitTypeVariable(String name) {
+                    super.visitTypeVariable(name);
+                    propagate();
+                }
+            };
+        }
+
+        @Override
+        public void visitEnd() {
+            if (pendingClass != null) {
+                List<TypeData<?>> params = typeArgVisitors.stream()
+                        .map(v -> v.result != null ? v.result : new TypeData<>(Object.class, List.of()))
+                        .toList();
+                result = GizmoExtensions.typeDataFromType(Type.getType(pendingClass), classLoader, params);
+                pendingClass = null;
             }
         }
-        return types;
     }
 }
