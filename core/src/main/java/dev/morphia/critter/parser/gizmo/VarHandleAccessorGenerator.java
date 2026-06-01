@@ -184,9 +184,38 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
     private void ctor(FieldDescriptor handleDesc, FieldDescriptor setterHandleDesc) {
         var constructor = getCreator().getConstructorCreator(new String[0]);
         constructor.invokeSpecialMethod(ofConstructor(Object.class), constructor.getThis());
-
         TryBlock tryBlock = constructor.tryBlock();
 
+        ResultHandle[] lookupHandles = emitPrivateLookup(tryBlock);
+        ResultHandle entityClass = lookupHandles[0];
+        ResultHandle privateLookup = lookupHandles[1];
+
+        if (isFieldBased) {
+            emitVarHandleLookup(tryBlock, privateLookup, entityClass, handleDesc);
+        } else {
+            emitGetterHandleLookup(tryBlock, privateLookup, entityClass, handleDesc);
+            if (setterHandleDesc != null) {
+                emitSetterHandleLookup(tryBlock, privateLookup, entityClass, setterHandleDesc);
+            }
+        }
+
+        var catchBlock = tryBlock.addCatch(ReflectiveOperationException.class);
+        ResultHandle ex = catchBlock.getCaughtException();
+        ResultHandle wrapped = catchBlock.newInstance(
+                ofConstructor(RuntimeException.class, Throwable.class), ex);
+        catchBlock.throwException(wrapped);
+
+        constructor.returnVoid();
+        constructor.close();
+    }
+
+    /**
+     * Emits bytecode to obtain a private {@link MethodHandles.Lookup} for the entity class.
+     * The entity class is loaded via the thread context class loader to avoid classloader mismatches.
+     *
+     * @return a two-element array: {@code [entityClass, privateLookup]}
+     */
+    private ResultHandle[] emitPrivateLookup(TryBlock tryBlock) {
         ResultHandle callerLookup = tryBlock.invokeStaticMethod(
                 ofMethod(MethodHandles.class, "lookup", MethodHandles.Lookup.class));
 
@@ -205,58 +234,51 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
                 ofMethod(MethodHandles.class, "privateLookupIn", MethodHandles.Lookup.class, Class.class, MethodHandles.Lookup.class),
                 entityClass,
                 callerLookup);
+        return new ResultHandle[] { entityClass, privateLookup };
+    }
 
-        if (isFieldBased) {
-            ResultHandle fieldTypeClass = tryBlock.loadClass(propertyType);
-            ResultHandle handle = tryBlock.invokeVirtualMethod(
-                    ofMethod(MethodHandles.Lookup.class, "findVarHandle", VarHandle.class, Class.class, String.class, Class.class),
-                    privateLookup,
-                    entityClass,
-                    tryBlock.load(propertyName),
-                    fieldTypeClass);
-            tryBlock.writeInstanceField(handleDesc, tryBlock.getThis(), handle);
-        } else {
-            // Getter MethodHandle
-            ResultHandle returnTypeClass = tryBlock.loadClass(propertyType);
-            ResultHandle getterMethodType = tryBlock.invokeStaticMethod(
-                    ofMethod(MethodType.class, "methodType", MethodType.class, Class.class),
-                    returnTypeClass);
-            ResultHandle getterHandle = tryBlock.invokeVirtualMethod(
-                    ofMethod(MethodHandles.Lookup.class, "findVirtual", MethodHandle.class, Class.class, String.class, MethodType.class),
-                    privateLookup,
-                    entityClass,
-                    tryBlock.load(getterName),
-                    getterMethodType);
-            tryBlock.writeInstanceField(handleDesc, tryBlock.getThis(), getterHandle);
+    private void emitVarHandleLookup(TryBlock tryBlock, ResultHandle privateLookup, ResultHandle entityClass,
+            FieldDescriptor handleDesc) {
+        ResultHandle fieldTypeClass = tryBlock.loadClass(propertyType);
+        ResultHandle handle = tryBlock.invokeVirtualMethod(
+                ofMethod(MethodHandles.Lookup.class, "findVarHandle", VarHandle.class, Class.class, String.class, Class.class),
+                privateLookup,
+                entityClass,
+                tryBlock.load(propertyName),
+                fieldTypeClass);
+        tryBlock.writeInstanceField(handleDesc, tryBlock.getThis(), handle);
+    }
 
-            // Setter MethodHandle (if applicable)
-            if (setterHandleDesc != null) {
-                ResultHandle voidClass = tryBlock.loadClass(void.class);
-                ResultHandle paramTypeClass = tryBlock.loadClass(propertyType);
-                ResultHandle setterMethodType = tryBlock.invokeStaticMethod(
-                        ofMethod(MethodType.class, "methodType", MethodType.class, Class.class, Class.class),
-                        voidClass,
-                        paramTypeClass);
-                ResultHandle setterHandle = tryBlock.invokeVirtualMethod(
-                        ofMethod(MethodHandles.Lookup.class, "findVirtual", MethodHandle.class, Class.class, String.class,
-                                MethodType.class),
-                        privateLookup,
-                        entityClass,
-                        tryBlock.load(setterName),
-                        setterMethodType);
-                tryBlock.writeInstanceField(setterHandleDesc, tryBlock.getThis(), setterHandle);
-            }
-        }
+    private void emitGetterHandleLookup(TryBlock tryBlock, ResultHandle privateLookup, ResultHandle entityClass,
+            FieldDescriptor handleDesc) {
+        ResultHandle returnTypeClass = tryBlock.loadClass(propertyType);
+        ResultHandle getterMethodType = tryBlock.invokeStaticMethod(
+                ofMethod(MethodType.class, "methodType", MethodType.class, Class.class),
+                returnTypeClass);
+        ResultHandle getterHandle = tryBlock.invokeVirtualMethod(
+                ofMethod(MethodHandles.Lookup.class, "findVirtual", MethodHandle.class, Class.class, String.class, MethodType.class),
+                privateLookup,
+                entityClass,
+                tryBlock.load(getterName),
+                getterMethodType);
+        tryBlock.writeInstanceField(handleDesc, tryBlock.getThis(), getterHandle);
+    }
 
-        var catchBlock = tryBlock.addCatch(ReflectiveOperationException.class);
-        ResultHandle ex = catchBlock.getCaughtException();
-        ResultHandle wrapped = catchBlock.newInstance(
-                ofConstructor(RuntimeException.class, Throwable.class),
-                ex);
-        catchBlock.throwException(wrapped);
-
-        constructor.returnVoid();
-        constructor.close();
+    private void emitSetterHandleLookup(TryBlock tryBlock, ResultHandle privateLookup, ResultHandle entityClass,
+            FieldDescriptor setterHandleDesc) {
+        ResultHandle voidClass = tryBlock.loadClass(void.class);
+        ResultHandle paramTypeClass = tryBlock.loadClass(propertyType);
+        ResultHandle setterMethodType = tryBlock.invokeStaticMethod(
+                ofMethod(MethodType.class, "methodType", MethodType.class, Class.class, Class.class),
+                voidClass,
+                paramTypeClass);
+        ResultHandle setterHandle = tryBlock.invokeVirtualMethod(
+                ofMethod(MethodHandles.Lookup.class, "findVirtual", MethodHandle.class, Class.class, String.class, MethodType.class),
+                privateLookup,
+                entityClass,
+                tryBlock.load(setterName),
+                setterMethodType);
+        tryBlock.writeInstanceField(setterHandleDesc, tryBlock.getThis(), setterHandle);
     }
 
     private void get(FieldDescriptor handleDesc) {

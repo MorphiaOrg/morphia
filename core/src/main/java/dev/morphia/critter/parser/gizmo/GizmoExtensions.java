@@ -95,6 +95,31 @@ public class GizmoExtensions {
     }
 
     /**
+     * Emits Gizmo bytecode that loads a {@link Class} reference. Non-public classes (e.g. private
+     * inner classes) cannot be referenced via an LDC constant from a different classloader, so this
+     * generates a {@code Class.forName()} call in that case.
+     *
+     * @param methodCreator the Gizmo method creator in which the bytecode is emitted
+     * @param cls           the class to load
+     * @return a result handle for the class reference
+     */
+    public static ResultHandle emitClassRef(MethodCreator methodCreator, Class<?> cls) {
+        if (java.lang.reflect.Modifier.isPublic(cls.getModifiers())) {
+            return methodCreator.loadClass(cls);
+        }
+        ResultHandle name = methodCreator.load(cls.getName());
+        ResultHandle falseHandle = methodCreator.load(false);
+        ResultHandle thread = methodCreator.invokeStaticMethod(
+                ofMethod(Thread.class, "currentThread", Thread.class));
+        ResultHandle tccl = methodCreator.invokeVirtualMethod(
+                ofMethod(Thread.class, "getContextClassLoader", ClassLoader.class),
+                thread);
+        return methodCreator.invokeStaticMethod(
+                ofMethod(Class.class, "forName", Class.class, String.class, boolean.class, ClassLoader.class),
+                name, falseHandle, tccl);
+    }
+
+    /**
      * Emits Gizmo bytecode that constructs a {@link TypeData} instance matching the given type data.
      *
      * @param data          the type data to emit
@@ -108,7 +133,7 @@ public class GizmoExtensions {
             methodCreator.writeArrayValue(array, index, emitTypeData(typeParameters.get(index), methodCreator));
         }
         List<ResultHandle> list = new ArrayList<>();
-        list.add(methodCreator.loadClass(data.getType()));
+        list.add(emitClassRef(methodCreator, data.getType()));
         list.add(array);
         MethodDescriptor descriptor = MethodDescriptor.ofConstructor(
                 TypeData.class,

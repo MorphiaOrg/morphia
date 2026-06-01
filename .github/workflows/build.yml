@@ -93,6 +93,7 @@ jobs:
       fail-fast: false
       matrix:
         mongo: ${{ fromJson(needs.matrix.outputs.version_matrix) }}
+        mapper: [ reflection, critter ]
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     secrets:
       DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
@@ -100,7 +101,7 @@ jobs:
       java: 17
       reuseBuild: true
       archive-name: "${{matrix.mongo}}-${{github.run_id}}"
-      maven-flags: "-e -Dmongodb=${{ matrix.mongo }}"
+      maven-flags: "-e -Dmongodb=${{ matrix.mongo }} -Dmorphia.mapper=${{ matrix.mapper }}"
 
   DriversTests:
     name: Driver

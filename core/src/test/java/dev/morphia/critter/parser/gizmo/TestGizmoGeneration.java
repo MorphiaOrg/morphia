@@ -97,6 +97,21 @@ public class TestGizmoGeneration {
     }
 
     @Test
+    public void testMultiDimensionalArray() {
+        // int[][] — verifies that nested visitArrayType() calls propagate correctly
+        TypeData<?> typeData = PropertyModelGenerator.typeData("[[I", Thread.currentThread().getContextClassLoader()).get(0);
+        Assertions.assertTrue(typeData.isArray());
+        Assertions.assertEquals(int[][].class, typeData.getType());
+    }
+
+    @Test
+    public void testMalformedSignatureReturnsEmpty() {
+        // Malformed signatures must return empty rather than throw
+        var result = PropertyModelGenerator.typeData("!!not-a-valid-signature!!", Thread.currentThread().getContextClassLoader());
+        Assertions.assertTrue(result.isEmpty());
+    }
+
+    @Test
     public void testAnnotationBuilding() throws Exception {
         AnnotationNode index = new AnnotationNode("Ldev/morphia/annotations/Index;");
         AnnotationNode field = new AnnotationNode("Ldev/morphia/annotations/Field;");
