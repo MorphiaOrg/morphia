@@ -15,4 +15,4 @@ jobs:
     uses: evanchooly/workflows/.github/workflows/pull-request.yml@master
     with:
       java: 17
-      mapper: ${{ matrix.mapper }}
+      maven-flags: "-e -Dmorphia.mapper=${{ matrix.mapper }}"
