@@ -134,7 +134,7 @@ public class GizmoExtensions {
             methodCreator.writeArrayValue(array, index, emitTypeData(typeParameters.get(index), methodCreator));
         }
         List<ResultHandle> list = new ArrayList<>();
-        list.add(methodCreator.loadClass(data.getType()));
+        list.add(emitClassRef(methodCreator, data.getType()));
         list.add(array);
         MethodDescriptor descriptor = MethodDescriptor.ofConstructor(
                 TypeData.class,
