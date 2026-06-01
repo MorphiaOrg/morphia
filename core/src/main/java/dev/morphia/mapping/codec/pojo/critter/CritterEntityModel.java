@@ -1,5 +1,7 @@
 package dev.morphia.mapping.codec.pojo.critter;
 
+import java.util.List;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.MorphiaPropertySerialization;
@@ -32,6 +34,10 @@ public abstract class CritterEntityModel extends EntityModel {
     @SuppressWarnings("unused")
     protected final void configureProperties(Mapper mapper) {
         for (PropertyModel property : getProperties()) {
+            List<String> loadNames = property.getLoadNames();
+            if (!loadNames.isEmpty()) {
+                property.alternateNames(loadNames.toArray(new String[0]));
+            }
             property.serialization(new MorphiaPropertySerialization(mapper.getConfig(), property));
         }
         initializeListeners();

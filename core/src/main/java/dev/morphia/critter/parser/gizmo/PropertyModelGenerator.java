@@ -157,7 +157,8 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
             // entity subclass specifies GenericEntity<UUID>).
             if (raw.getType() == Object.class && isTypeVariable(input)) {
                 String typeVarName = extractTypeVarName(input);
-                Class<?> resolved = resolveTypeVariable(typeVarName, entity);
+                Class<?> declaringClass = field != null ? findDeclaringClass(field.name, entity) : null;
+                Class<?> resolved = resolveTypeVariable(typeVarName, entity, declaringClass);
                 if (resolved != null && resolved != Object.class) {
                     raw = new TypeData<>(resolved, List.of());
                 }
@@ -179,11 +180,31 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
     }
 
     /**
+     * Finds the class in the hierarchy of {@code concreteClass} that declares a field with the given name.
+     * Returns {@code null} if not found.
+     */
+    private static Class<?> findDeclaringClass(String fieldName, Class<?> concreteClass) {
+        Class<?> current = concreteClass;
+        while (current != null && current != Object.class) {
+            try {
+                current.getDeclaredField(fieldName);
+                return current;
+            } catch (NoSuchFieldException e) {
+                current = current.getSuperclass();
+            }
+        }
+        return null;
+    }
+
+    /**
      * Resolves a type-variable name (e.g., {@code "T"}) to its actual class by walking
      * the generic superclass chain of {@code concreteClass}.
+     * Stops traversal after binding {@code declaringClass}'s type parameters so that a
+     * type variable declared on a closer ancestor is not overwritten by a same-named
+     * variable on a more distant one.
      * Returns {@code null} if no concrete binding can be determined.
      */
-    private static Class<?> resolveTypeVariable(String typeVarName, Class<?> concreteClass) {
+    private static Class<?> resolveTypeVariable(String typeVarName, Class<?> concreteClass, Class<?> declaringClass) {
         // Build a map from type-variable name to its resolved type, layer by layer
         Map<String, java.lang.reflect.Type> bindings = new HashMap<>();
         Class<?> current = concreteClass;
@@ -204,6 +225,11 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
                     }
                     bindings.put(typeParams[i].getName(), arg);
                 }
+            }
+            // Stop after binding the declaring class's own type parameters so a same-named
+            // variable on a more distant ancestor does not overwrite the correct binding.
+            if (declaringClass != null && superClass == declaringClass) {
+                break;
             }
             current = superClass;
         }

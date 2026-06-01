@@ -134,7 +134,7 @@ public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
 
     private void discriminatorKey() {
         try (MethodCreator mc = getCreator().getMethodCreator("discriminatorKey", String.class)) {
-            String key = entityAnnotation.discriminator();
+            String key = entityAnnotation.discriminatorKey();
             String result = Mapper.IGNORED_FIELDNAME.equals(key)
                     ? mapper.getConfig().discriminatorKey()
                     : key;
