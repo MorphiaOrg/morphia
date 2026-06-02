@@ -157,7 +157,9 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
             // entity subclass specifies GenericEntity<UUID>).
             if (raw.getType() == Object.class && isTypeVariable(input)) {
                 String typeVarName = extractTypeVarName(input);
-                Class<?> declaringClass = field != null ? findDeclaringClass(field.name, entity) : null;
+                Class<?> declaringClass = field != null
+                        ? findDeclaringClass(field.name, entity)
+                        : findDeclaringMethod(method.name, entity);
                 Class<?> resolved = resolveTypeVariable(typeVarName, entity, declaringClass);
                 if (resolved != null && resolved != Object.class) {
                     raw = new TypeData<>(resolved, List.of());
@@ -190,6 +192,19 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
                 current.getDeclaredField(fieldName);
                 return current;
             } catch (NoSuchFieldException e) {
+                current = current.getSuperclass();
+            }
+        }
+        return null;
+    }
+
+    private static Class<?> findDeclaringMethod(String methodName, Class<?> concreteClass) {
+        Class<?> current = concreteClass;
+        while (current != null && current != Object.class) {
+            try {
+                current.getDeclaredMethod(methodName);
+                return current;
+            } catch (NoSuchMethodException e) {
                 current = current.getSuperclass();
             }
         }
