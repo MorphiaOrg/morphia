@@ -11,6 +11,7 @@ import dev.morphia.mapping.codec.pojo.TypeData;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AnnotationNode;
 
+import io.quarkus.gizmo.BytecodeCreator;
 import io.quarkus.gizmo.FieldDescriptor;
 import io.quarkus.gizmo.MethodCreator;
 import io.quarkus.gizmo.MethodDescriptor;
@@ -99,22 +100,22 @@ public class GizmoExtensions {
      * inner classes) cannot be referenced via an LDC constant from a different classloader, so this
      * generates a {@code Class.forName()} call in that case.
      *
-     * @param methodCreator the Gizmo method creator in which the bytecode is emitted
-     * @param cls           the class to load
+     * @param creator the Gizmo bytecode creator in which the bytecode is emitted
+     * @param cls     the class to load
      * @return a result handle for the class reference
      */
-    public static ResultHandle emitClassRef(MethodCreator methodCreator, Class<?> cls) {
+    public static ResultHandle emitClassRef(BytecodeCreator creator, Class<?> cls) {
         if (java.lang.reflect.Modifier.isPublic(cls.getModifiers())) {
-            return methodCreator.loadClass(cls);
+            return creator.loadClass(cls);
         }
-        ResultHandle name = methodCreator.load(cls.getName());
-        ResultHandle falseHandle = methodCreator.load(false);
-        ResultHandle thread = methodCreator.invokeStaticMethod(
+        ResultHandle name = creator.load(cls.getName());
+        ResultHandle falseHandle = creator.load(false);
+        ResultHandle thread = creator.invokeStaticMethod(
                 ofMethod(Thread.class, "currentThread", Thread.class));
-        ResultHandle tccl = methodCreator.invokeVirtualMethod(
+        ResultHandle tccl = creator.invokeVirtualMethod(
                 ofMethod(Thread.class, "getContextClassLoader", ClassLoader.class),
                 thread);
-        return methodCreator.invokeStaticMethod(
+        return creator.invokeStaticMethod(
                 ofMethod(Class.class, "forName", Class.class, String.class, boolean.class, ClassLoader.class),
                 name, falseHandle, tccl);
     }

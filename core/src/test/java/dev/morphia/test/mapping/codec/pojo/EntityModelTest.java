@@ -65,6 +65,27 @@ public class EntityModelTest extends TestBase {
                 .deleteMany(new Document());
     }
 
+    @Test
+    public void testGenericRoundTrip() {
+        EntityModel model = getDs().getMapper().map(GenericLeaf.class).get(0);
+        Assertions.assertEquals(LocalDate.class, model.getProperty("baseField").getType());
+        Assertions.assertEquals(String.class, model.getProperty("midField").getType());
+
+        GenericLeaf leaf = new GenericLeaf();
+        leaf.setBaseField(LocalDate.of(2024, 6, 1));
+        leaf.setMidField("hello");
+        leaf.setLeafValue(42);
+        getDs().save(leaf);
+
+        GenericLeaf found = getDs().find(GenericLeaf.class).first();
+        Assertions.assertNotNull(found);
+        Assertions.assertEquals(LocalDate.of(2024, 6, 1), found.getBaseField());
+        Assertions.assertEquals("hello", found.getMidField());
+        Assertions.assertEquals(42, found.getLeafValue());
+
+        getDs().getDatabase().getCollection("genericLeaf").deleteMany(new Document());
+    }
+
     @Entity
     private static class Base<T> {
         @Id
@@ -75,6 +96,54 @@ public class EntityModelTest extends TestBase {
 
     private static class Child extends Parent<String> {
         private int age;
+    }
+
+    @Entity
+    private static class GenericBase<T> {
+        @Id
+        private ObjectId id;
+        private T baseField;
+
+        public ObjectId getId() {
+            return id;
+        }
+
+        public void setId(ObjectId id) {
+            this.id = id;
+        }
+
+        public T getBaseField() {
+            return baseField;
+        }
+
+        public void setBaseField(T baseField) {
+            this.baseField = baseField;
+        }
+    }
+
+    private static class GenericMid<T> extends GenericBase<LocalDate> {
+        private T midField;
+
+        public T getMidField() {
+            return midField;
+        }
+
+        public void setMidField(T midField) {
+            this.midField = midField;
+        }
+    }
+
+    @Entity
+    private static class GenericLeaf extends GenericMid<String> {
+        private int leafValue;
+
+        public int getLeafValue() {
+            return leafValue;
+        }
+
+        public void setLeafValue(int leafValue) {
+            this.leafValue = leafValue;
+        }
     }
 
     @Entity
