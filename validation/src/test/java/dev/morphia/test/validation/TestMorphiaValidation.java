@@ -5,19 +5,19 @@ import dev.morphia.test.TestBase;
 import dev.morphia.validation.ValidationExtension;
 
 import org.bson.Document;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import jakarta.validation.ValidationException;
 
-import static org.testng.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Test
 public class TestMorphiaValidation extends TestBase {
 
     /**
      * Test method for {@link ValidationExtension#prePersist(Object, Document, Mapper)}.
      */
+    @Test
     public void testValidation() {
         final Data data = new Data();
         data.email = "not an email";
@@ -26,7 +26,7 @@ public class TestMorphiaValidation extends TestBase {
 
         try {
             getDs().save(data);
-            Assert.fail("Should have failed validation");
+            Assertions.fail("Should have failed validation");
         } catch (ValidationException exception) {
             String message = exception.getMessage();
             assertTrue(message.contains("Data.email:must be a well-formed email address ('not an email')"), message);

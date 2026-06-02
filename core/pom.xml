@@ -18,7 +18,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.5.0</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Automatic-Module-Name>dev.morphia.core</Automatic-Module-Name>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
                 <executions>
                     <execution>
                         <id>test-jar</id>
@@ -71,6 +77,7 @@
                 <configuration>
                     <systemPropertyVariables>
                         <morphia.mapper>${morphia.mapper}</morphia.mapper>
+                        <junit.jupiter.testinstance.lifecycle.default>per_class</junit.jupiter.testinstance.lifecycle.default>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
@@ -177,11 +184,6 @@
         <dependency>
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs-annotations</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
         </dependency>
         <dependency>
             <groupId>org.skyscreamer</groupId>

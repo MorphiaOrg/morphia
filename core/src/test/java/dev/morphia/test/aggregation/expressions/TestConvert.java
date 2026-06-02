@@ -3,7 +3,8 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.aggregation.expressions.StringExpressions;
 import dev.morphia.test.TemplatedTestBase;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.ComparisonExpressions.eq;
 import static dev.morphia.aggregation.expressions.ConditionalExpressions.switchExpression;
@@ -21,7 +22,8 @@ public class TestConvert extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/convert/example1
      * 
      */
-    @Test(testName = "main")
+    @Test
+    @DisplayName("main")
     public void testExample1() {
         testPipeline((aggregation) -> aggregation.pipeline(
                 addFields().field("convertedPrice", convert("$price", DECIMAL).onError("Error").onNull(0.0))

@@ -21,6 +21,7 @@ import org.jboss.forge.roaster.model.Visibility.PUBLIC
 import org.jboss.forge.roaster.model.source.JavaClassSource
 import org.jboss.forge.roaster.model.source.MethodSource
 import org.jboss.forge.roaster.model.source.ParameterSource
+import org.junit.jupiter.api.Test
 
 class RstAuditor(val type: OperatorType) {
     companion object {
@@ -116,11 +117,11 @@ class RstAuditor(val type: OperatorType) {
         val docRoot = File(DOC_ROOT, "modules/ROOT/pages/${type.docsName()}.adoc")
         docRoot.writeText(
             """
-                [%header,cols="1,2,3"]
-                |===
-                |Operator|Docs|Test Examples
-                
-                
+            [%header,cols="1,2,3"]
+            |===
+            |Operator|Docs|Test Examples
+
+
             """
                 .trimIndent()
         )
@@ -240,7 +241,7 @@ class RstAuditor(val type: OperatorType) {
         method: MethodSource<JavaClassSource>,
         example: OperatorExample,
     ) {
-        val annotation = method.getAnnotation("org.testng.annotations.Test")
+        val annotation = method.getAnnotation(Test::class.java)
         if (annotation.getStringValue("testName") == null) {
             annotation.setStringValue("testName", example.name)
         }
@@ -252,22 +253,24 @@ class RstAuditor(val type: OperatorType) {
         val text = "test data: ${example.folder.relativeTo(coreTestRoot)}\n\n"
         method.javaDoc.text = text + example.actionBlock?.lines?.joinToString("\n")
 
-        method.addAnnotation("org.testng.annotations.Test").setStringValue("testName", example.name)
+        method.addAnnotation(Test::class.java).setStringValue("testName", example.name)
 
         if (!example.folder.path.contains("aggregation")) {
             method.setBody(
                 """
-                        |testQuery((query) -> query.filter(  ));
-                        | """
+                |testQuery((query) -> query.filter(  ));
+                | 
+                """
                     .trimMargin()
             )
         } else {
             method.setBody(
                 """
-                    |testPipeline(aggregation -> aggregation
-                    |   .pipeline(
-                    |
-                    |)); """
+                |testPipeline(aggregation -> aggregation
+                |   .pipeline(
+                |
+                |)); 
+                """
                     .trimMargin()
             )
         }

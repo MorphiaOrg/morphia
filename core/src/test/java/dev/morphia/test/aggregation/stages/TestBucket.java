@@ -10,8 +10,9 @@ import dev.morphia.test.aggregation.model.Artwork;
 import dev.morphia.test.aggregation.model.Book;
 
 import org.bson.Document;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.avg;
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
@@ -24,14 +25,14 @@ import static dev.morphia.query.filters.Filters.gt;
 import static java.lang.Integer.valueOf;
 import static java.util.Arrays.asList;
 import static org.bson.Document.parse;
-import static org.testng.Assert.assertEquals;
 
 public class TestBucket extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/stages/bucket/example1
      * 
      */
-    @Test(testName = "Bucket by Year and Filter by Bucket Results")
+    @Test
+    @DisplayName("Bucket by Year and Filter by Bucket Results")
     public void testExample1() {
         testPipeline((aggregation) -> aggregation.pipeline(bucket()
                 .groupBy("$year_born").boundaries(1840, 1850, 1860, 1870, 1880).defaultValue("Other")
@@ -44,7 +45,8 @@ public class TestBucket extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/stages/bucket/example2
      * 
      */
-    @Test(testName = "Use $bucket with $facet to Bucket by Multiple Fields")
+    @Test
+    @DisplayName("Use $bucket with $facet to Bucket by Multiple Fields")
     public void testExample2() {
         testPipeline(
                 (aggregation) -> aggregation.pipeline(facet()
@@ -83,15 +85,17 @@ public class TestBucket extends TemplatedTestBase {
                 "{'_id': 0, 'count': 4, 'titles': ['The Pillars of Society', 'Dancer', 'The Great Wave off Kanagawa', 'Blue Flower']}"),
                 parse("{'_id': 200, 'count': 2, 'titles': ['Melancholy III', 'Composition VII']}"),
                 parse("{'_id': 'Other', 'count': 2, 'titles': ['The Persistence of Memory', 'The Scream']}"));
-        assertEquals(results, documents);
+        assertDocumentListEquals(documents, results);
     }
 
-    @Test(expectedExceptions = RuntimeException.class)
+    @Test
     public void testBucketWithBoundariesWithSizeLessThanTwo() {
-        homer();
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            homer();
 
-        getDs().aggregate(Book.class, BucketResult.class)
-                .pipeline(bucket().groupBy("$copies").boundaries(10).outputField("count", sum(1))).iterator();
+            getDs().aggregate(Book.class, BucketResult.class)
+                    .pipeline(bucket().groupBy("$copies").boundaries(10).outputField("count", sum(1))).iterator();
+        });
     }
 
     private void homer() {
@@ -110,22 +114,24 @@ public class TestBucket extends TemplatedTestBase {
                 .iterator();
 
         BucketResult result2 = aggregate.next();
-        Assert.assertEquals(result2.getId(), valueOf(-1));
-        Assert.assertEquals(result2.getCount(), 2);
+        Assertions.assertEquals(valueOf(-1), result2.getId());
+        Assertions.assertEquals(2, result2.getCount());
 
         BucketResult result1 = aggregate.next();
-        Assert.assertEquals(result1.getId(), valueOf(1));
-        Assert.assertEquals(result1.getCount(), 3);
+        Assertions.assertEquals(valueOf(1), result1.getId());
+        Assertions.assertEquals(3, result1.getCount());
 
     }
 
-    @Test(expectedExceptions = RuntimeException.class)
+    @Test
     public void testBucketWithUnsortedBoundaries() {
-        homer();
+        Assertions.assertThrows(RuntimeException.class, () -> {
+            homer();
 
-        Iterator<BucketResult> aggregate = getDs().aggregate(Book.class, BucketResult.class).pipeline(
-                bucket().groupBy("$copies").boundaries(5, 1, 10).defaultValue("test").outputField("count", sum(1)))
-                .iterator();
+            Iterator<BucketResult> aggregate = getDs().aggregate(Book.class, BucketResult.class).pipeline(
+                    bucket().groupBy("$copies").boundaries(5, 1, 10).defaultValue("test").outputField("count", sum(1)))
+                    .iterator();
+        });
     }
 
     @Test
@@ -135,12 +141,12 @@ public class TestBucket extends TemplatedTestBase {
         Iterator<BucketResult> aggregate = getDs().aggregate(Book.class, BucketResult.class)
                 .pipeline(bucket().groupBy("$copies").boundaries(1, 5, 12)).iterator();
         BucketResult result1 = aggregate.next();
-        Assert.assertEquals(result1.getId(), 1);
-        Assert.assertEquals(result1.getCount(), 3);
+        Assertions.assertEquals(1, result1.getId());
+        Assertions.assertEquals(3, result1.getCount());
 
         BucketResult result2 = aggregate.next();
-        Assert.assertEquals(result2.getId(), valueOf(5));
-        Assert.assertEquals(result2.getCount(), 2);
+        Assertions.assertEquals(valueOf(5), result2.getId());
+        Assertions.assertEquals(2, result2.getCount());
     }
 
     @Entity

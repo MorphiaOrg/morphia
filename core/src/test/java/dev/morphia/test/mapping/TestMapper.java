@@ -9,24 +9,20 @@ import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.generics.ChildEntity;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static java.lang.String.format;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotSame;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 public class TestMapper extends TestBase {
     @Test
     public void testMapperCopying() {
         withConfig(buildConfig(ChildEntity.class), () -> {
             Mapper mapper = getMapper();
-            assertFalse(mapper.getMappedEntities().isEmpty());
+            Assertions.assertFalse(mapper.getMappedEntities().isEmpty());
 
             var cloned = mapper.copy();
-            assertEquals(cloned.getMappedEntities().size(), mapper.getMappedEntities().size(),
+            Assertions.assertEquals(mapper.getMappedEntities().size(), cloned.getMappedEntities().size(),
                     "Should find an equal number of mapped entities");
             mapper.getMappedEntities().forEach(originalEntity -> {
                 assertModelNotSame(originalEntity, cloned.getEntityModel(originalEntity.getType()));
@@ -41,13 +37,13 @@ public class TestMapper extends TestBase {
         withConfig(buildConfig(), () -> {
             Mapper mapper = getMapper();
             EntityModel model = mapper.mapEntity(CritterMapperTestEntity.class);
-            assertFalse(mapper.getMappedEntities().isEmpty());
+            Assertions.assertFalse(mapper.getMappedEntities().isEmpty());
             if (configuredType == MapperType.CRITTER) {
-                assertTrue(model instanceof CritterEntityModel,
+                Assertions.assertTrue(model instanceof CritterEntityModel,
                         format("Expected CritterEntityModel for CRITTER mapper but got %s",
                                 model.getClass().getName()));
             } else {
-                assertFalse(model instanceof CritterEntityModel,
+                Assertions.assertFalse(model instanceof CritterEntityModel,
                         format("Expected plain EntityModel for REFLECTION mapper but got CritterEntityModel for %s",
                                 model.getType().getName()));
             }
@@ -55,18 +51,18 @@ public class TestMapper extends TestBase {
     }
 
     private static void assertModelNotSame(EntityModel originalEntity, EntityModel clonedEntity) {
-        assertNotSame(originalEntity, clonedEntity,
+        Assertions.assertNotSame(clonedEntity, originalEntity,
                 format("The models for %s should not be the same object reference", clonedEntity.getType().getName()));
         if (originalEntity.superClass == null) {
-            assertNull(clonedEntity.superClass, "Cloned entity's superClass should also be null");
+            Assertions.assertNull(clonedEntity.superClass, "Cloned entity's superClass should also be null");
         } else {
-            assertNotSame(originalEntity.superClass, clonedEntity.superClass);
+            Assertions.assertNotSame(clonedEntity.superClass, originalEntity.superClass);
         }
         originalEntity.getSubtypes().forEach(subtype -> {
-            assertNotSame(subtype, findSubtype(clonedEntity, subtype));
+            Assertions.assertNotSame(findSubtype(clonedEntity, subtype), subtype);
         });
         originalEntity.getProperties().forEach(propertyModel -> {
-            assertNotSame(propertyModel, clonedEntity.getProperty(propertyModel.getName()),
+            Assertions.assertNotSame(clonedEntity.getProperty(propertyModel.getName()), propertyModel,
                     format("The %s property on %s should not be the same", propertyModel.getName(), originalEntity.getType().getName()));
         });
     }

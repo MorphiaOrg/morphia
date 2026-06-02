@@ -9,8 +9,10 @@ jobs:
     with:
       java: 17
   Build:
-    needs:
-      - CodeAudits
+    strategy:
+      matrix:
+        mapper: [reflection, critter]
     uses: evanchooly/workflows/.github/workflows/pull-request.yml@master
     with:
       java: 17
+      maven-flags: "-e -Dmorphia.mapper=${{ matrix.mapper }}"

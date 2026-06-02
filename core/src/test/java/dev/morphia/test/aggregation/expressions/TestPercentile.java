@@ -5,7 +5,8 @@ import java.util.List;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.MathExpressions.percentile;
 import static dev.morphia.aggregation.stages.Group.group;
@@ -19,7 +20,8 @@ public class TestPercentile extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/percentile/example1
      */
-    @Test(testName = "Calculate a Single Value as an Accumulator")
+    @Test
+    @DisplayName("Calculate a Single Value as an Accumulator")
     public void testExample1() {
         testPipeline(new ActionTestOptions().serverVersion("7.0.0").orderMatters(false), aggregation -> aggregation
                 .pipeline(group().field("test01_percentiles", percentile("$test01", of(0.95)))));
@@ -29,7 +31,8 @@ public class TestPercentile extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/percentile/example2
      *
      */
-    @Test(testName = "Calculate Multiple Values as an Accumulator")
+    @Test
+    @DisplayName("Calculate Multiple Values as an Accumulator")
     public void testExample2() {
         testPipeline(new ActionTestOptions().serverVersion("7.0.0").orderMatters(false),
                 aggregation -> aggregation
@@ -43,7 +46,8 @@ public class TestPercentile extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/percentile/example3
      *
      */
-    @Test(testName = "Use |operatorName| in a ``$project`` Stage")
+    @Test
+    @DisplayName("Use |operatorName| in a ``$project`` Stage")
     public void testExample3() {
         testPipeline(new ActionTestOptions().serverVersion("7.0.0").orderMatters(false),
                 aggregation -> aggregation.pipeline(project().suppressId().include("studentId").include(
@@ -54,7 +58,8 @@ public class TestPercentile extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/percentile/example4
      *
      */
-    @Test(testName = "Use |operatorName| in a ``$setWindowField`` Stage")
+    @Test
+    @DisplayName("Use |operatorName| in a ``$setWindowField`` Stage")
     public void testExample4() {
 
         testPipeline(new ActionTestOptions().serverVersion("7.0.0").orderMatters(false),
@@ -67,7 +72,8 @@ public class TestPercentile extends TemplatedTestBase {
                 ));
     }
 
-    @Test(testName = "Use |operatorName| in a ``$setWindowField`` Stage")
+    @Test
+    @DisplayName("Use |operatorName| in a ``$setWindowField`` Stage")
     public void testExample5() {
 
     }

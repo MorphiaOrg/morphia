@@ -3,8 +3,9 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.WindowExpressions.linearFill;
 import static dev.morphia.aggregation.expressions.WindowExpressions.locf;
@@ -14,7 +15,7 @@ import static dev.morphia.query.Sort.ascending;
 
 public class TestLinearFill extends TemplatedTestBase {
 
-    @BeforeMethod
+    @BeforeEach
     public void versionCheck() {
         checkMinServerVersion("5.3.0");
     }
@@ -22,7 +23,8 @@ public class TestLinearFill extends TemplatedTestBase {
     /**
      * test data: dev/morphia/test/aggregation/expressions/linearFill/example1
      */
-    @Test(testName = "Fill Missing Values with Linear Interpolation")
+    @Test
+    @DisplayName("Fill Missing Values with Linear Interpolation")
     public void testExample1() {
         testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false), (aggregation) -> aggregation.pipeline(
                 setWindowFields().sortBy(ascending("time")).output(output("price").operator(linearFill("$price")))));
@@ -33,7 +35,8 @@ public class TestLinearFill extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/linearFill/example2
      *
      */
-    @Test(testName = "Use Multiple Fill Methods in a Single Stage")
+    @Test
+    @DisplayName("Use Multiple Fill Methods in a Single Stage")
     public void testExample2() {
         testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(setWindowFields().sortBy(ascending("time")).output(

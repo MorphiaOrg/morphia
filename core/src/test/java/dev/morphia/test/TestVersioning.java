@@ -34,18 +34,14 @@ import dev.morphia.test.models.versioned.Versioned;
 import dev.morphia.test.models.versioned.VersionedChildEntity;
 
 import org.bson.types.ObjectId;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.updates.UpdateOperators.inc;
 import static dev.morphia.query.updates.UpdateOperators.set;
 import static java.util.Arrays.asList;
 import static java.util.List.of;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertThrows;
-import static org.testng.Assert.assertTrue;
 
 public class TestVersioning extends TestBase {
     public TestVersioning() {
@@ -62,23 +58,23 @@ public class TestVersioning extends TestBase {
         datastore.save(entity);
 
         entity = datastore.find(Versioned.class).filter(eq("_id", entity.getId())).first();
-        assertEquals(entity.getName(), "Value 1");
-        assertEquals(entity.getVersion().longValue(), 1);
+        Assertions.assertEquals("Value 1", entity.getName());
+        Assertions.assertEquals(1, entity.getVersion().longValue());
 
         entity.setName("Value 2");
         datastore.save(entity);
 
         entity = datastore.find(Versioned.class).filter(eq("_id", entity.getId())).first();
-        assertEquals(entity.getName(), "Value 2");
-        assertEquals(entity.getVersion().longValue(), 2);
+        Assertions.assertEquals("Value 2", entity.getName());
+        Assertions.assertEquals(2, entity.getVersion().longValue());
 
         Query<Versioned> query = datastore.find(Versioned.class);
         query.filter(eq("id", entity.getId()));
         query.update(set("name", "Value 3"));
 
         entity = datastore.find(Versioned.class).filter(eq("_id", entity.getId())).first();
-        assertEquals(entity.getName(), "Value 3");
-        assertEquals(entity.getVersion().longValue(), 3);
+        Assertions.assertEquals("Value 3", entity.getName());
+        Assertions.assertEquals(3, entity.getVersion().longValue());
     }
 
     @Test
@@ -88,8 +84,8 @@ public class TestVersioning extends TestBase {
         for (EntityModel entityModel : entities) {
             list.add(entityModel.getType());
         }
-        assertTrue(list.contains(VersionedChildEntity.class));
-        assertTrue(list.contains(AbstractVersionedBase.class));
+        Assertions.assertTrue(list.contains(VersionedChildEntity.class));
+        Assertions.assertTrue(list.contains(AbstractVersionedBase.class));
     }
 
     @Test
@@ -97,7 +93,7 @@ public class TestVersioning extends TestBase {
         withTestConfig(buildConfig()
                 .applyIndexes(true),
                 List.of(Country.class), () -> {
-                    assertThrows(MongoWriteException.class, () -> {
+                    Assertions.assertThrows(MongoWriteException.class, () -> {
                         getDs().save(new Country("USA"));
                         getDs().save(new Country("Sweden"));
 
@@ -135,23 +131,23 @@ public class TestVersioning extends TestBase {
         for (EntityModel entityModel : mappedEntities) {
             list.add(entityModel.getType());
         }
-        assertTrue(list.contains(VersionedChildEntity.class));
-        assertTrue(list.contains(AbstractVersionedBase.class));
+        Assertions.assertTrue(list.contains(VersionedChildEntity.class));
+        Assertions.assertTrue(list.contains(AbstractVersionedBase.class));
     }
 
     @Test
     public void testConcurrentModification() {
-        assertThrows(VersionMismatchException.class, () -> {
+        Assertions.assertThrows(VersionMismatchException.class, () -> {
             final VersionedType a = new VersionedType();
-            assertEquals(a.version, 0);
+            Assertions.assertEquals(0, a.version);
             getDs().save(a);
-            assertEquals(a.version, 1);
+            Assertions.assertEquals(1, a.version);
 
             Query<VersionedType> query = getDs().find(VersionedType.class)
                     .filter(eq("_id", a.getId()));
             getDs().save(query.iterator().next());
 
-            assertEquals(query.iterator().next().version, 2);
+            Assertions.assertEquals(2, query.iterator().next().version);
 
             getDs().save(a);
         });
@@ -171,9 +167,9 @@ public class TestVersioning extends TestBase {
                 .upsert(true),
                 set("name", "Value 3"));
 
-        assertEquals(entity.getName(), "Value 3");
-        assertEquals(entity.getVersion().longValue(), 1);
-        assertNotNull(entity.getId());
+        Assertions.assertEquals("Value 3", entity.getName());
+        Assertions.assertEquals(1, entity.getVersion().longValue());
+        Assertions.assertNotNull(entity.getId());
     }
 
     @Test
@@ -182,8 +178,8 @@ public class TestVersioning extends TestBase {
         version1.setCount(0);
         getDs().save(version1);
 
-        assertEquals(version1.getVersion(), Long.valueOf(1));
-        assertEquals(version1.getCount(), 0);
+        Assertions.assertEquals(Long.valueOf(1), version1.getVersion());
+        Assertions.assertEquals(0, version1.getCount());
 
         Query<Versioned> query = getDs().find(Versioned.class);
         query.filter(eq("_id", version1.getId()));
@@ -193,8 +189,8 @@ public class TestVersioning extends TestBase {
                 .filter(eq("_id", version1.getId()))
                 .first();
 
-        assertEquals(version2.getVersion(), Long.valueOf(2));
-        assertEquals(version2.getCount(), 1);
+        Assertions.assertEquals(Long.valueOf(2), version2.getVersion());
+        Assertions.assertEquals(1, version2.getCount());
     }
 
     @Test
@@ -205,7 +201,7 @@ public class TestVersioning extends TestBase {
         InittedPrimitive first = getDs().find(InittedPrimitive.class)
                 .first();
 
-        assertEquals(first.hubba, Primitive.hubba);
+        Assertions.assertEquals(Primitive.hubba, first.hubba);
     }
 
     @Test
@@ -216,9 +212,9 @@ public class TestVersioning extends TestBase {
         InittedWrapper first = getDs().find(InittedWrapper.class)
                 .first();
 
-        assertEquals(first.hubba, wrapper.hubba);
+        Assertions.assertEquals(wrapper.hubba, first.hubba);
 
-        assertThrows(VersionMismatchException.class, () -> {
+        Assertions.assertThrows(VersionMismatchException.class, () -> {
             InittedWrapper hasId = new InittedWrapper();
             hasId.id = new ObjectId();
             getDs().save(hasId);
@@ -228,14 +224,14 @@ public class TestVersioning extends TestBase {
     @Test
     public void testInvalidVersionUse() {
         withConfig(buildConfig(InvalidVersionUse.class), () -> {
-            assertThrows(ConstraintViolationException.class, () -> getMapper().getEntityModel(InvalidVersionUse.class));
+            Assertions.assertThrows(ConstraintViolationException.class, () -> getMapper().getEntityModel(InvalidVersionUse.class));
         });
 
     }
 
     @Test
     public void testManuallyIdentified() {
-        assertThrows(MongoWriteException.class, () -> {
+        Assertions.assertThrows(MongoWriteException.class, () -> {
 
             final NamedVersion entity1 = new NamedVersion();
             final NamedVersion entity2 = new NamedVersion();
@@ -251,9 +247,9 @@ public class TestVersioning extends TestBase {
 
     @Test
     public void testMerge() {
-        assertThrows(VersionMismatchException.class, () -> {
+        Assertions.assertThrows(VersionMismatchException.class, () -> {
             final NamedVersion a = new NamedVersion();
-            Assert.assertNull(a.v);
+            Assertions.assertNull(a.v);
             getDs().save(a);
 
             a.text = " foosdfds ";
@@ -270,9 +266,9 @@ public class TestVersioning extends TestBase {
     public void testMethodMapping() {
         withConfig(buildConfig(MethodMappedUser.class).propertyDiscovery(PropertyDiscovery.METHODS), () -> {
             MethodMappedUser user = new MethodMappedUser();
-            assertEquals(user.getVersion(), null);
+            Assertions.assertEquals(null, user.getVersion());
             getDs().save(user);
-            assertEquals(user.getVersion(), Long.valueOf(1L));
+            Assertions.assertEquals(Long.valueOf(1L), user.getVersion());
         });
     }
 
@@ -289,11 +285,11 @@ public class TestVersioning extends TestBase {
 
         for (int i = 0, loadedSize = loaded.size(); i < loadedSize; i++) {
             final VersionedType type = loaded.get(i);
-            assertEquals(type.id, initial.get(i).id);
-            assertEquals(type.version, initial.get(i).version + 1);
+            Assertions.assertEquals(initial.get(i).id, type.id);
+            Assertions.assertEquals(initial.get(i).version + 1, type.version);
         }
 
-        assertThrows(VersionMismatchException.class, () -> getDs().save(initial));
+        Assertions.assertThrows(VersionMismatchException.class, () -> getDs().save(initial));
     }
 
     @Test
@@ -304,12 +300,12 @@ public class TestVersioning extends TestBase {
         Primitive first = getDs().find(Primitive.class)
                 .first();
 
-        assertEquals(first.hubba, Primitive.hubba);
+        Assertions.assertEquals(Primitive.hubba, first.hubba);
     }
 
     @Test
     public void testThrowsExceptionWhenTryingToSaveAnOldVersion() {
-        assertThrows(VersionMismatchException.class, () -> {
+        Assertions.assertThrows(VersionMismatchException.class, () -> {
             getDs().find(Versioned.class).delete(new DeleteOptions().multi(true));
             // given
             final Versioned version1 = new Versioned();
@@ -330,7 +326,7 @@ public class TestVersioning extends TestBase {
 
         UpdateResult results = ds.find(VersionedType.class)
                 .update(set("text", "some new value"));
-        assertEquals(results.getModifiedCount(), 1);
+        Assertions.assertEquals(1, results.getModifiedCount());
         List<VersionedType> postUpdate = ds.find(VersionedType.class,
                 new FindOptions()
                         .sort(Sort.ascending("_id")))
@@ -340,7 +336,7 @@ public class TestVersioning extends TestBase {
 
         for (int i = 0, postUpdateSize = postUpdate.size(); i < postUpdateSize; i++) {
             final VersionedType versionedType = postUpdate.get(i);
-            assertEquals(versionedType.version, initial.get(i).version + 1);
+            Assertions.assertEquals(initial.get(i).version + 1, versionedType.version);
         }
     }
 
@@ -357,13 +353,13 @@ public class TestVersioning extends TestBase {
         this.getDs().merge(version1Updated);
 
         final Versioned versionedEntityFromDs = this.getDs().find(Versioned.class).filter(eq("_id", version1.getId())).first();
-        assertEquals(version1Updated.getName(), versionedEntityFromDs.getName());
+        Assertions.assertEquals(versionedEntityFromDs.getName(), version1Updated.getName());
     }
 
     @Test
     public void testVersionFieldNameContribution() {
         final PropertyModel mappedFieldByJavaField = getMapper().getEntityModel(NamedVersion.class).getProperty("v");
-        assertEquals(mappedFieldByJavaField.getMappedName(), "v");
+        Assertions.assertEquals("v", mappedFieldByJavaField.getMappedName());
     }
 
     @Test
@@ -373,18 +369,18 @@ public class TestVersioning extends TestBase {
         final VersionInHashcode model = new VersionInHashcode();
         model.data = "whatever";
         getDs().save(model);
-        Assert.assertNotNull(model.version);
+        Assertions.assertNotNull(model.version);
     }
 
     @Test
     public void testVersionNumbersIncrementWithEachSave() {
         final Versioned version1 = new Versioned();
         getDs().save(version1);
-        assertEquals(version1.getVersion(), Long.valueOf(1));
+        Assertions.assertEquals(Long.valueOf(1), version1.getVersion());
 
         final Versioned version2 = getDs().find(Versioned.class).filter(eq("_id", version1.getId())).first();
         getDs().save(version2);
-        assertEquals(version2.getVersion(), Long.valueOf(2));
+        Assertions.assertEquals(Long.valueOf(2), version2.getVersion());
     }
 
     @Test
@@ -392,7 +388,7 @@ public class TestVersioning extends TestBase {
         List<Versioned> list = asList(new Versioned(), new Versioned(), new Versioned(), new Versioned(), new Versioned());
         getDs().insert(list);
         for (Versioned versioned : list) {
-            assertNotNull(versioned.getVersion());
+            Assertions.assertNotNull(versioned.getVersion());
         }
     }
 
@@ -409,23 +405,23 @@ public class TestVersioning extends TestBase {
         query.update(new UpdateOptions().upsert(true), set("name", "Value 3"));
 
         entity = datastore.find(Versioned.class).iterator().tryNext();
-        assertEquals(entity.getName(), "Value 3");
-        assertEquals(entity.getVersion().longValue(), 1);
+        Assertions.assertEquals("Value 3", entity.getName());
+        Assertions.assertEquals(1, entity.getVersion().longValue());
     }
 
     @Test
     public void testVersions() {
         final VersionedType a = new VersionedType();
-        assertEquals(a.version, 0);
+        Assertions.assertEquals(0, a.version);
         getDs().save(a);
-        assertEquals(a.version, 1);
+        Assertions.assertEquals(1, a.version);
         final long version1 = a.version;
 
         getDs().save(a);
-        assertEquals(a.version, 2);
+        Assertions.assertEquals(2, a.version);
         final long version2 = a.version;
 
-        Assert.assertNotEquals(version1, version2);
+        Assertions.assertNotEquals(version2, version1);
     }
 
     @Test
@@ -436,7 +432,7 @@ public class TestVersioning extends TestBase {
         Wrapper first = getDs().find(Wrapper.class)
                 .first();
 
-        assertEquals(first.hubba, wrapper.hubba);
+        Assertions.assertEquals(wrapper.hubba, first.hubba);
     }
 
     private static class InittedPrimitive extends TestEntity {

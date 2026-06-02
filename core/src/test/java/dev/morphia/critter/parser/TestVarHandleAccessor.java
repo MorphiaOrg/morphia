@@ -13,16 +13,18 @@ import dev.morphia.critter.sources.Example;
 
 import org.bson.codecs.pojo.PropertyAccessor;
 import org.bson.types.ObjectId;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import static dev.morphia.critter.parser.GeneratorsTestHelper.defaultMapper;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TestVarHandleAccessor {
     private CritterClassLoader classLoader;
 
-    @BeforeClass
+    @BeforeAll
     public void setup() {
         classLoader = new CritterClassLoader();
         new CritterGizmoGenerator(defaultMapper()).generate(Example.class, classLoader, true);
@@ -41,9 +43,9 @@ public class TestVarHandleAccessor {
                 .filter(name -> name.startsWith("__write") && !name.endsWith("Template"))
                 .collect(Collectors.toList());
 
-        Assert.assertTrue(syntheticRead.isEmpty(),
+        Assertions.assertTrue(syntheticRead.isEmpty(),
                 "Entity class should not have synthetic __read methods but found: " + syntheticRead);
-        Assert.assertTrue(syntheticWrite.isEmpty(),
+        Assertions.assertTrue(syntheticWrite.isEmpty(),
                 "Entity class should not have synthetic __write methods but found: " + syntheticWrite);
     }
 
@@ -52,9 +54,9 @@ public class TestVarHandleAccessor {
         Example entity = new Example();
         PropertyAccessor<String> accessor = loadAccessor(Example.class, "name");
 
-        Assert.assertNull(accessor.get(entity));
+        Assertions.assertNull(accessor.get(entity));
         accessor.set(entity, "hello");
-        Assert.assertEquals(accessor.get(entity), "hello");
+        Assertions.assertEquals("hello", accessor.get(entity));
     }
 
     @Test
@@ -62,9 +64,9 @@ public class TestVarHandleAccessor {
         Example entity = new Example();
         PropertyAccessor<Object> accessor = loadAccessor(Example.class, "age");
 
-        Assert.assertEquals(accessor.get(entity), 21);
+        Assertions.assertEquals(21, accessor.get(entity));
         accessor.set(entity, 42);
-        Assert.assertEquals(accessor.get(entity), 42);
+        Assertions.assertEquals(42, accessor.get(entity));
     }
 
     @Test
@@ -72,9 +74,9 @@ public class TestVarHandleAccessor {
         Example entity = new Example();
         PropertyAccessor<Object> accessor = loadAccessor(Example.class, "salary");
 
-        Assert.assertEquals(accessor.get(entity), 2L);
+        Assertions.assertEquals(2L, accessor.get(entity));
         accessor.set(entity, 100_000L);
-        Assert.assertEquals(accessor.get(entity), 100_000L);
+        Assertions.assertEquals(100_000L, accessor.get(entity));
     }
 
     @Test

@@ -3,7 +3,7 @@ package dev.morphia.audits
 import dev.morphia.audits.model.MorphiaMethod
 import dev.morphia.audits.model.State
 import dev.morphia.audits.model.Version
-import org.testng.Assert
+import org.junit.jupiter.api.Assertions
 
 class SinceAuditTest {
     fun deprecations() {
@@ -15,7 +15,7 @@ class SinceAuditTest {
                     "dev.morphia.query.LegacyQuery#execute()Ldev/morphia/query/internal/MorphiaCursor;"]
 
         method as MorphiaMethod
-        Assert.assertEquals(State.DEPRECATED, method.versions[Version.v2_1_0_SNAPSHOT])
-        Assert.assertEquals(State.ABSENT, method.versions[Version.v1_6_0_SNAPSHOT])
+        Assertions.assertEquals(method.versions[Version.v2_1_0_SNAPSHOT], State.DEPRECATED)
+        Assertions.assertEquals(method.versions[Version.v1_6_0_SNAPSHOT], State.ABSENT)
     }
 }

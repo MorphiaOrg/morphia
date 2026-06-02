@@ -8,14 +8,15 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.test.TestBase;
 
 import org.bson.types.ObjectId;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 
-@Test(groups = "references")
+@Tag("references")
 public class TestIgnoreMissingReferences extends TestBase {
+    @Test
     public void testMissingReference() {
         final Container c = new Container();
         c.refs = new StringHolder[] { new StringHolder(), new StringHolder() };
@@ -24,20 +25,20 @@ public class TestIgnoreMissingReferences extends TestBase {
 
         Container reloadedContainer = getDs().find(Container.class).iterator()
                 .tryNext();
-        assertNotNull(reloadedContainer);
-        assertNotNull(reloadedContainer.refs);
-        assertEquals(reloadedContainer.refs.length, 1);
+        Assertions.assertNotNull(reloadedContainer);
+        Assertions.assertNotNull(reloadedContainer.refs);
+        Assertions.assertEquals(1, reloadedContainer.refs.length);
 
         reloadedContainer = getDs().find(Container.class)
                 .filter(eq("_id", c.id))
                 .first();
-        assertNotNull(reloadedContainer);
-        assertNotNull(reloadedContainer.refs);
-        assertEquals(reloadedContainer.refs.length, 1);
+        Assertions.assertNotNull(reloadedContainer);
+        Assertions.assertNotNull(reloadedContainer.refs);
+        Assertions.assertEquals(1, reloadedContainer.refs.length);
 
         final List<Container> cs = getDs().find(Container.class).iterator().toList();
-        assertNotNull(cs);
-        assertEquals(cs.size(), 1);
+        Assertions.assertNotNull(cs);
+        Assertions.assertEquals(1, cs.size());
 
     }
 

@@ -58,7 +58,8 @@ import dev.morphia.test.models.User;
 import org.bson.Document;
 import org.bson.codecs.EncoderContext;
 import org.bson.types.ObjectId;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static com.mongodb.client.model.ReturnDocument.AFTER;
@@ -69,12 +70,6 @@ import static dev.morphia.query.updates.UpdateOperators.set;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.List.of;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNotSame;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertThrows;
-import static org.testng.Assert.assertTrue;
 
 @SuppressWarnings({ "rawtypes", "ConstantConditions" })
 public class TestDatastore extends TestBase {
@@ -89,17 +84,17 @@ public class TestDatastore extends TestBase {
     @Test
     public void testDatastoreClones() {
         withConfig(buildConfig(MultipleDSEntity.class), () -> {
-            assertEquals(getMapper().getMappedEntities().size(), 1);
+            Assertions.assertEquals(1, getMapper().getMappedEntities().size());
 
             MorphiaDatastore copied = new MorphiaDatastore(getDs());
 
             EntityModel model = getMapper().getEntityModel(MultipleDSEntity.class);
             EntityModel copiedModel = copied.getMapper().getEntityModel(MultipleDSEntity.class);
 
-            assertNotSame(model, copiedModel);
-            assertNotSame(model.getProperty("_id"), copiedModel.getProperty("_id"));
-            assertNotSame(model.getProperty("name"), copiedModel.getProperty("name"));
-            assertNotSame(model.getProperty("count"), copiedModel.getProperty("count"));
+            Assertions.assertNotSame(copiedModel, model);
+            Assertions.assertNotSame(copiedModel.getProperty("_id"), model.getProperty("_id"));
+            Assertions.assertNotSame(copiedModel.getProperty("name"), model.getProperty("name"));
+            Assertions.assertNotSame(copiedModel.getProperty("count"), model.getProperty("count"));
         });
     }
 
@@ -114,7 +109,7 @@ public class TestDatastore extends TestBase {
                 new FindOptions().collection(alternateName))
                 .filter(eq("_id", book.id))
                 .first();
-        assertEquals(first, book);
+        Assertions.assertEquals(book, first);
 
         getDs().find(Book.class)
                 .delete(new DeleteOptions()
@@ -123,7 +118,7 @@ public class TestDatastore extends TestBase {
                 .find(Book.class)
                 .filter(eq("_id", book.id))
                 .count(new CountOptions().collection(alternateName));
-        assertEquals(count, 0);
+        Assertions.assertEquals(0, count);
 
         book = new Book();
         User user = new User();
@@ -134,10 +129,9 @@ public class TestDatastore extends TestBase {
                 .projection(new Document("_id", 1))
                 .into(new ArrayList<>());
 
-        assertEquals(list.stream()
+        Assertions.assertEquals(of(book.id, user.getId()), list.stream()
                 .map(d -> d.getObjectId("_id"))
-                .collect(Collectors.toList()),
-                of(book.id, user.getId()));
+                .collect(Collectors.toList()));
 
         getDs().find(Book.class)
                 .delete(new DeleteOptions()
@@ -153,7 +147,7 @@ public class TestDatastore extends TestBase {
                         .returnDocument(AFTER),
                         inc("copies", 10));
 
-        assertEquals(modify.copies, 10);
+        Assertions.assertEquals(10, modify.copies);
 
         getDs().find(Book.class, new FindOptions().collection(alternateName))
                 .update(new UpdateOptions()
@@ -162,14 +156,14 @@ public class TestDatastore extends TestBase {
 
         book = getDs().find(Book.class, new FindOptions().collection(alternateName)).first();
 
-        assertEquals(book.copies, 42);
+        Assertions.assertEquals(42, book.copies);
 
         Book delete = getDs().find(Book.class)
                 .filter(eq("_id", book.id))
                 .findAndDelete(new FindAndDeleteOptions()
                         .collection(alternateName));
 
-        assertEquals(delete, book);
+        Assertions.assertEquals(book, delete);
     }
 
     @Test
@@ -178,15 +172,15 @@ public class TestDatastore extends TestBase {
         MongoCollection population = getDs().getCollection(Population.class);
         this.getDs().insert(asList(new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity(), new TestEntity()),
                 new InsertManyOptions().writeConcern(WriteConcern.ACKNOWLEDGED));
-        assertEquals(testEntity.countDocuments(), 5);
+        Assertions.assertEquals(5, testEntity.countDocuments());
 
         testEntity.drop();
         population.drop();
         this.getDs().insert(asList(new TestEntity(), new TestEntity(), new Population(), new Population(), new Population()),
                 new InsertManyOptions()
                         .writeConcern(WriteConcern.ACKNOWLEDGED));
-        assertEquals(testEntity.countDocuments(), 2);
-        assertEquals(population.countDocuments(), 3);
+        Assertions.assertEquals(2, testEntity.countDocuments());
+        Assertions.assertEquals(3, population.countDocuments());
     }
 
     @Test
@@ -197,27 +191,27 @@ public class TestDatastore extends TestBase {
         Query<CurrentStatus> query = getDs().find(CurrentStatus.class);
 
         getDs().save(new CurrentStatus("All Good"));
-        assertEquals(query.count(), 1);
+        Assertions.assertEquals(1, query.count());
 
         getDs().save(new CurrentStatus("Kinda Bad"));
-        assertEquals(query.count(), 1);
+        Assertions.assertEquals(1, query.count());
 
-        assertTrue(query.iterator()
+        Assertions.assertTrue(query.iterator()
                 .next().message.contains("Bad"));
 
         getDs().save(new CurrentStatus("Kinda Bad2"));
-        assertEquals(query.count(), 1);
+        Assertions.assertEquals(1, query.count());
 
         getDs().save(new CurrentStatus("Kinda Bad3"));
-        assertEquals(query.count(), 1);
+        Assertions.assertEquals(1, query.count());
 
         getDs().save(new CurrentStatus("Kinda Bad4"));
-        assertEquals(query.count(), 1);
+        Assertions.assertEquals(1, query.count());
     }
 
     @Test
     public void testCollectionNames() {
-        assertEquals(getMapper().getEntityModel(FacebookUser.class).collectionName(), "facebook_users");
+        Assertions.assertEquals("facebook_users", getMapper().getEntityModel(FacebookUser.class).collectionName());
     }
 
     @Test
@@ -225,11 +219,11 @@ public class TestDatastore extends TestBase {
         getDs().save(new User("Christopher Turk", LocalDate.of(1974, Month.JUNE, 22)));
         withConfig(buildConfig()
                 .codecProvider(new AlwaysFailingCodecProvider()), () -> {
-                    assertThrows(QueryException.class,
+                    Assertions.assertThrows(QueryException.class,
                             () -> getDs().save(new User("John \"J.D.\" Dorian", LocalDate.of(1974, Month.APRIL, 6))));
-                    assertThrows(QueryException.class, () -> getDs().find(User.class).first());
+                    Assertions.assertThrows(QueryException.class, () -> getDs().find(User.class).first());
 
-                    assertThrows(QueryException.class, () -> getDs().getCodecRegistry()
+                    Assertions.assertThrows(QueryException.class, () -> getDs().getCodecRegistry()
                             .get(String.class)
                             .encode(new DocumentWriter(getMapper().getConfig()), "this should fail", EncoderContext.builder().build()));
                 });
@@ -242,14 +236,14 @@ public class TestDatastore extends TestBase {
 
         Query<FacebookUser> query = getDs().find(FacebookUser.class)
                 .filter(eq("username", "john doe"));
-        assertEquals(query.delete().getDeletedCount(), 1);
+        Assertions.assertEquals(1, query.delete().getDeletedCount());
 
-        assertEquals(query.delete(new DeleteOptions()
+        Assertions.assertEquals(1, query.delete(new DeleteOptions()
                 .collation(Collation.builder()
                         .locale("en")
                         .collationStrength(SECONDARY)
                         .build()))
-                .getDeletedCount(), 1);
+                .getDeletedCount());
     }
 
     @Test
@@ -258,18 +252,18 @@ public class TestDatastore extends TestBase {
             getDs().save(new City());
         }
         DeleteResult delete = getDs().find(City.class).delete();
-        assertEquals(delete.getDeletedCount(), 1, "Should only delete 1");
+        Assertions.assertEquals(1, delete.getDeletedCount(), "Should only delete 1");
 
         City first = getDs().find(City.class).first();
         delete = getDs().delete(first);
-        assertEquals(delete.getDeletedCount(), 1, "Should only delete 1");
+        Assertions.assertEquals(1, delete.getDeletedCount(), "Should only delete 1");
 
         first = getDs().find(City.class).first();
         delete = getDs().delete(first, new DeleteOptions().multi(true));
-        assertEquals(delete.getDeletedCount(), 1, "Should only delete 1");
+        Assertions.assertEquals(1, delete.getDeletedCount(), "Should only delete 1");
 
         delete = getDs().find(City.class).delete(new DeleteOptions().multi(true));
-        assertTrue(delete.getDeletedCount() > 1, "Should the rest");
+        Assertions.assertTrue(delete.getDeletedCount() > 1, "Should the rest");
     }
 
     @Test
@@ -282,7 +276,7 @@ public class TestDatastore extends TestBase {
         getDs().find(FacebookUser.class).findAndDelete();
 
         // then
-        assertNull(getDs().find(FacebookUser.class)
+        Assertions.assertNull(getDs().find(FacebookUser.class)
                 .filter(eq("_id", key))
                 .first(), "Shouldn't exist after delete");
     }
@@ -302,14 +296,14 @@ public class TestDatastore extends TestBase {
         borg.setAddress(address);
 
         getDs().save(borg);
-        assertEquals(getDs().find(Hotel.class).count(), 1);
-        assertNotNull(borg.getId());
+        Assertions.assertEquals(1, getDs().find(Hotel.class).count());
+        Assertions.assertNotNull(borg.getId());
 
         final Hotel hotelLoaded = getDs().find(Hotel.class)
                 .filter(eq("_id", borg.getId()))
                 .first();
-        assertEquals(borg.getName(), hotelLoaded.getName());
-        assertEquals(borg.getAddress().getPostCode(), hotelLoaded.getAddress().getPostCode());
+        Assertions.assertEquals(hotelLoaded.getName(), borg.getName());
+        Assertions.assertEquals(hotelLoaded.getAddress().getPostCode(), borg.getAddress().getPostCode());
     }
 
     @Test
@@ -319,21 +313,21 @@ public class TestDatastore extends TestBase {
 
         Query<FacebookUser> query = getDs().find(FacebookUser.class)
                 .filter(eq("username", "john doe"));
-        assertNotNull(query.findAndDelete());
-        assertNull(query.findAndDelete());
+        Assertions.assertNotNull(query.findAndDelete());
+        Assertions.assertNull(query.findAndDelete());
 
         FindAndDeleteOptions options = new FindAndDeleteOptions()
                 .collation(Collation.builder()
                         .locale("en")
                         .collationStrength(SECONDARY)
                         .build());
-        assertNotNull(query.findAndDelete(options));
-        assertNull(query.iterator().tryNext());
+        Assertions.assertNotNull(query.findAndDelete(options));
+        Assertions.assertNull(query.iterator().tryNext());
     }
 
     @Test
     public void testFindAndDeleteWithNoQueryMatch() {
-        assertNull(getDs().find(FacebookUser.class)
+        Assertions.assertNull(getDs().find(FacebookUser.class)
                 .filter(eq("username", "David S. Pumpkins"))
                 .findAndDelete());
     }
@@ -347,16 +341,16 @@ public class TestDatastore extends TestBase {
                 .filter(eq("username", "john doe"));
 
         FacebookUser modified = query.modify(inc("loginCount"));
-        assertEquals(modified.loginCount, 0);
-        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).first().loginCount, 0);
-        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 2)).first().loginCount, 1);
+        Assertions.assertEquals(0, modified.loginCount);
+        Assertions.assertEquals(0, getDs().find(FacebookUser.class).filter(eq("id", 1)).first().loginCount);
+        Assertions.assertEquals(1, getDs().find(FacebookUser.class).filter(eq("id", 2)).first().loginCount);
 
         modified = query.modify(new ModifyOptions().returnDocument(AFTER), inc("loginCount"));
-        assertEquals(modified.loginCount, 2);
-        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).first().loginCount, 0);
-        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 2)).first().loginCount, 2);
+        Assertions.assertEquals(2, modified.loginCount);
+        Assertions.assertEquals(0, getDs().find(FacebookUser.class).filter(eq("id", 1)).first().loginCount);
+        Assertions.assertEquals(2, getDs().find(FacebookUser.class).filter(eq("id", 2)).first().loginCount);
 
-        assertNull(getDs().find(FacebookUser.class)
+        Assertions.assertNull(getDs().find(FacebookUser.class)
                 .filter(eq("id", 3L),
                         eq("username", "Jon Snow"))
                 .modify(new ModifyOptions()
@@ -365,8 +359,8 @@ public class TestDatastore extends TestBase {
                         inc("loginCount", 4)));
 
         FacebookUser user = getDs().find(FacebookUser.class).filter(eq("id", 3)).first();
-        assertEquals(user.loginCount, 4);
-        assertEquals(user.username, "Jon Snow");
+        Assertions.assertEquals(4, user.loginCount);
+        Assertions.assertEquals("Jon Snow", user.username);
 
         FacebookUser results = getDs().find(FacebookUser.class)
                 .filter(eq("id", 4L),
@@ -375,12 +369,12 @@ public class TestDatastore extends TestBase {
                         .returnDocument(AFTER)
                         .upsert(true),
                         inc("loginCount"));
-        assertEquals(results.loginCount, 1);
-        assertEquals(results.username, "Ron Swanson");
+        Assertions.assertEquals(1, results.loginCount);
+        Assertions.assertEquals("Ron Swanson", results.username);
 
         user = getDs().find(FacebookUser.class).filter(eq("id", 4)).iterator().next();
-        assertEquals(user.loginCount, 1);
-        assertEquals(user.username, "Ron Swanson");
+        Assertions.assertEquals(1, user.loginCount);
+        Assertions.assertEquals("Ron Swanson", user.username);
     }
 
     @Test
@@ -392,11 +386,11 @@ public class TestDatastore extends TestBase {
                 .filter(eq("username", "john doe"))
                 .modify(inc("loginCount"));
 
-        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).iterator()
-                .next().loginCount, 0);
-        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 2)).iterator()
-                .next().loginCount, 1);
-        assertEquals(result.loginCount, 0);
+        Assertions.assertEquals(0, getDs().find(FacebookUser.class).filter(eq("id", 1)).iterator()
+                .next().loginCount);
+        Assertions.assertEquals(1, getDs().find(FacebookUser.class).filter(eq("id", 2)).iterator()
+                .next().loginCount);
+        Assertions.assertEquals(0, result.loginCount);
 
         result = getDs().find(FacebookUser.class)
                 .filter(eq("username", "john doe"))
@@ -407,11 +401,11 @@ public class TestDatastore extends TestBase {
                                 .collationStrength(SECONDARY)
                                 .build()),
                         inc("loginCount"));
-        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).iterator()
-                .next().loginCount, 1);
-        assertEquals(result.loginCount, 0);
-        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 2)).iterator()
-                .next().loginCount, 1);
+        Assertions.assertEquals(1, getDs().find(FacebookUser.class).filter(eq("id", 1)).iterator()
+                .next().loginCount);
+        Assertions.assertEquals(0, result.loginCount);
+        Assertions.assertEquals(1, getDs().find(FacebookUser.class).filter(eq("id", 2)).iterator()
+                .next().loginCount);
 
         result = getDs().find(FacebookUser.class)
                 .filter(eq("id", 3L),
@@ -421,11 +415,11 @@ public class TestDatastore extends TestBase {
                         .upsert(true),
                         inc("loginCount"));
 
-        assertNull(result);
+        Assertions.assertNull(result);
         FacebookUser user = getDs().find(FacebookUser.class).filter(eq("id", 3)).iterator()
                 .next();
-        assertEquals(user.loginCount, 1);
-        assertEquals(user.username, "Jon Snow");
+        Assertions.assertEquals(1, user.loginCount);
+        Assertions.assertEquals("Jon Snow", user.username);
 
         result = getDs().find(FacebookUser.class)
                 .filter(eq("id", 4L),
@@ -435,30 +429,30 @@ public class TestDatastore extends TestBase {
                         .upsert(true),
                         inc("loginCount"));
 
-        assertNotNull(result);
+        Assertions.assertNotNull(result);
         user = getDs().find(FacebookUser.class).filter(eq("id", 4)).iterator()
                 .next();
-        assertEquals(result.loginCount, 1);
-        assertEquals(result.username, "Ron Swanson");
-        assertEquals(user.loginCount, 1);
-        assertEquals(user.username, "Ron Swanson");
+        Assertions.assertEquals(1, result.loginCount);
+        Assertions.assertEquals("Ron Swanson", result.username);
+        Assertions.assertEquals(1, user.loginCount);
+        Assertions.assertEquals("Ron Swanson", user.username);
     }
 
     @Test
     public void testIdUpdatedOnSave() {
         final Rectangle rect = new Rectangle(10, 10);
         getDs().save(rect);
-        assertNotNull(rect.getId());
+        Assertions.assertNotNull(rect.getId());
     }
 
     @Test
     public void testInsert() {
         MongoCollection collection = getDs().getCollection(TestEntity.class);
         this.getDs().insert(new TestEntity());
-        assertEquals(collection.countDocuments(), 1);
+        Assertions.assertEquals(1, collection.countDocuments());
         this.getDs().insert(new TestEntity(), new InsertOneOptions()
                 .writeConcern(WriteConcern.ACKNOWLEDGED));
-        assertEquals(collection.countDocuments(), 2);
+        Assertions.assertEquals(2, collection.countDocuments());
     }
 
     @Test
@@ -466,17 +460,17 @@ public class TestDatastore extends TestBase {
         User bob = new User("bob", LocalDate.now());
         User linda = new User("linda", LocalDate.now());
 
-        assertThrows(MissingIdException.class, () -> this.getDs().replace(bob));
+        Assertions.assertThrows(MissingIdException.class, () -> this.getDs().replace(bob));
 
-        assertThrows(MissingIdException.class, () -> this.getDs().replace(List.of(bob, linda)));
+        Assertions.assertThrows(MissingIdException.class, () -> this.getDs().replace(List.of(bob, linda)));
 
         this.getDs().insert(bob);
-        assertEquals(getDs().find(User.class).count(), 1);
+        Assertions.assertEquals(1, getDs().find(User.class).count());
         this.getDs().insert(linda);
 
         bob.setLikes(List.of("burgers"));
         getDs().replace(bob);
-        assertEquals(getDs().find(User.class).first().getLikes(), List.of("burgers"));
+        Assertions.assertEquals(List.of("burgers"), getDs().find(User.class).first().getLikes());
 
         bob.setLikes(List.of("burgers", "linda"));
         linda.setLikes(List.of("bob", "tina", "gene", "louise"));
@@ -484,9 +478,9 @@ public class TestDatastore extends TestBase {
 
         for (User user : getDs().find(User.class)) {
             if (user.name.equals("bob")) {
-                assertEquals(user.getLikes(), List.of("burgers", "linda"));
+                Assertions.assertEquals(List.of("burgers", "linda"), user.getLikes());
             } else {
-                assertEquals(user.getLikes(), List.of("bob", "tina", "gene", "louise"));
+                Assertions.assertEquals(List.of("bob", "tina", "gene", "louise"), user.getLikes());
             }
         }
     }
@@ -502,37 +496,37 @@ public class TestDatastore extends TestBase {
     public void testLifecycle() {
         final LifecycleTestObj life1 = new LifecycleTestObj();
         getDs().save(life1);
-        assertTrue(LifecycleListener.foundDatastore);
-        assertTrue(life1.prePersist);
-        assertTrue(life1.prePersistWithParam);
-        assertTrue(life1.prePersistWithParamAndReturn);
-        assertTrue(life1.postPersist);
-        assertTrue(life1.postPersistWithParam);
+        Assertions.assertTrue(LifecycleListener.foundDatastore);
+        Assertions.assertTrue(life1.prePersist);
+        Assertions.assertTrue(life1.prePersistWithParam);
+        Assertions.assertTrue(life1.prePersistWithParamAndReturn);
+        Assertions.assertTrue(life1.postPersist);
+        Assertions.assertTrue(life1.postPersistWithParam);
 
         final Datastore datastore = getDs();
 
         final LifecycleTestObj loaded = datastore.find(LifecycleTestObj.class)
                 .filter(eq("_id", life1.id))
                 .first();
-        assertTrue(loaded.preLoad);
-        assertTrue(loaded.preLoadWithParam);
-        assertTrue(loaded.postLoad);
-        assertTrue(loaded.postLoadWithParam);
+        Assertions.assertTrue(loaded.preLoad);
+        Assertions.assertTrue(loaded.preLoadWithParam);
+        Assertions.assertTrue(loaded.postLoad);
+        Assertions.assertTrue(loaded.postLoadWithParam);
     }
 
     @Test
     public void testLifecycleListeners() {
         final LifecycleTestObj life1 = new LifecycleTestObj();
         getDs().save(life1);
-        assertTrue(LifecycleListener.prePersist);
-        assertTrue(LifecycleListener.prePersistWithEntity);
+        Assertions.assertTrue(LifecycleListener.prePersist);
+        Assertions.assertTrue(LifecycleListener.prePersistWithEntity);
     }
 
     @Test
     public void testModifyWithBadPaths() {
         Query<LifecycleTestObj> query = getDs().find(LifecycleTestObj.class);
 
-        assertThrows(ValidationException.class, () -> query.modify(inc("some.field", 2)));
+        Assertions.assertThrows(ValidationException.class, () -> query.modify(inc("some.field", 2)));
 
         query.first();
     }
@@ -541,24 +535,24 @@ public class TestDatastore extends TestBase {
     public void testRefresh() {
         FacebookUser steve = getDs().save(new FacebookUser(1, "Steve"));
 
-        assertEquals(steve.loginCount, 0);
+        Assertions.assertEquals(0, steve.loginCount);
         UpdateResult loginCount = getDs().find(FacebookUser.class)
                 .update(inc("loginCount", 10));
 
-        assertEquals(loginCount.getModifiedCount(), 1);
+        Assertions.assertEquals(1, loginCount.getModifiedCount());
 
         getDs().refresh(steve);
-        assertEquals(steve.loginCount, 10);
+        Assertions.assertEquals(10, steve.loginCount);
 
         loginCount = getDs().find(FacebookUser.class)
                 .update(
                         set("username", "Mark"),
                         set("loginCount", 1));
 
-        assertEquals(loginCount.getModifiedCount(), 1);
+        Assertions.assertEquals(1, loginCount.getModifiedCount());
         getDs().refresh(steve);
-        assertEquals(steve.loginCount, 1);
-        assertEquals(steve.username, "Mark");
+        Assertions.assertEquals(1, steve.loginCount);
+        Assertions.assertEquals("Mark", steve.username);
 
     }
 
@@ -567,9 +561,9 @@ public class TestDatastore extends TestBase {
         Grade grade = new Grade();
         grade.marks = 80;
 
-        assertThrows(MappingException.class, () -> getDs().save(grade));
+        Assertions.assertThrows(MappingException.class, () -> getDs().save(grade));
 
-        assertThrows(MappingException.class, () -> getDs().save(of(grade, grade)));
+        Assertions.assertThrows(MappingException.class, () -> getDs().save(of(grade, grade)));
 
     }
 
@@ -583,10 +577,10 @@ public class TestDatastore extends TestBase {
 
         UpdateResult results = query.update(inc("loginCount"));
 
-        assertEquals(results.getModifiedCount(), 1);
-        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).iterator().next().loginCount, 0);
-        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 2)).iterator()
-                .next().loginCount, 1);
+        Assertions.assertEquals(1, results.getModifiedCount());
+        Assertions.assertEquals(0, getDs().find(FacebookUser.class).filter(eq("id", 1)).iterator().next().loginCount);
+        Assertions.assertEquals(1, getDs().find(FacebookUser.class).filter(eq("id", 2)).iterator()
+                .next().loginCount);
 
         results = query.update(new UpdateOptions()
                 .multi(true)
@@ -595,11 +589,11 @@ public class TestDatastore extends TestBase {
                         .collationStrength(SECONDARY)
                         .build()),
                 inc("loginCount"));
-        assertEquals(results.getModifiedCount(), 2);
-        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 1)).iterator()
-                .next().loginCount, 1);
-        assertEquals(getDs().find(FacebookUser.class).filter(eq("id", 2)).iterator()
-                .next().loginCount, 2);
+        Assertions.assertEquals(2, results.getModifiedCount());
+        Assertions.assertEquals(1, getDs().find(FacebookUser.class).filter(eq("id", 1)).iterator()
+                .next().loginCount);
+        Assertions.assertEquals(2, getDs().find(FacebookUser.class).filter(eq("id", 2)).iterator()
+                .next().loginCount);
     }
 
     private static class LifecycleListener implements EntityListener<LifecycleTestObj> {

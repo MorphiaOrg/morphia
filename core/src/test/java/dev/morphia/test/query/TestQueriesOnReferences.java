@@ -15,14 +15,12 @@ import dev.morphia.test.query.TestQuery.ContainsPic;
 import dev.morphia.test.query.TestQuery.Pic;
 import dev.morphia.test.query.TestQuery.PicWithObjectId;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.exists;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
 
 public class TestQueriesOnReferences extends TestBase {
     @Test
@@ -32,7 +30,7 @@ public class TestQueriesOnReferences extends TestBase {
         cpk.setPic(p);
         getDs().save(List.of(p, cpk));
 
-        assertNotNull(getDs().find(ContainsPic.class).filter(Filters.eq("pic", p)).first());
+        Assertions.assertNotNull(getDs().find(ContainsPic.class).filter(Filters.eq("pic", p)).first());
     }
 
     @Test
@@ -52,10 +50,10 @@ public class TestQueriesOnReferences extends TestBase {
         var e2 = getDs().find(Entity2.class).filter(Filters.eq("reference", e1)).first();
         var e2_i = getDs().find(Entity2.class).filter(Filters.eq("reference", e1.getId())).first();
 
-        assertNotNull(e1, "e1");
-        assertNotNull(e2, "e2");
-        assertNotNull(e2_i, "e2_1");
-        assertEquals(e2.getId(), e2_i.getId());
+        Assertions.assertNotNull(e1, "e1");
+        Assertions.assertNotNull(e2, "e2");
+        Assertions.assertNotNull(e2_i, "e2_1");
+        Assertions.assertEquals(e2_i.getId(), e2.getId());
     }
 
     @Test
@@ -66,7 +64,7 @@ public class TestQueriesOnReferences extends TestBase {
         getDs().save(p);
         getDs().save(cpk);
 
-        assertNotNull(getDs().find(ContainsPic.class,
+        Assertions.assertNotNull(getDs().find(ContainsPic.class,
                 new FindOptions()
                         .projection()
                         .include("pic")
@@ -74,7 +72,7 @@ public class TestQueriesOnReferences extends TestBase {
                 .filter(exists("pic"))
                 .iterator()
                 .tryNext());
-        assertNull(getDs().find(ContainsPic.class,
+        Assertions.assertNull(getDs().find(ContainsPic.class,
                 new FindOptions()
                         .projection()
                         .include("pic")
@@ -107,23 +105,25 @@ public class TestQueriesOnReferences extends TestBase {
                 .iterator()
                 .tryNext();
 
-        assertNotNull(e1, "e1");
-        assertNotNull(e2, "e2");
-        assertNotNull(e2_i, "e2_1");
-        assertEquals(e2.getId(), e2_i.getId());
+        Assertions.assertNotNull(e1, "e1");
+        Assertions.assertNotNull(e2, "e2");
+        Assertions.assertNotNull(e2_i, "e2_1");
+        Assertions.assertEquals(e2_i.getId(), e2.getId());
     }
 
-    @Test(expectedExceptions = ReferenceException.class)
+    @Test
     public void testMissingReferences() {
-        final ContainsPic cpk = new ContainsPic();
-        final Pic p = new Pic();
-        cpk.setPic(p);
-        getDs().save(p);
-        getDs().save(cpk);
+        Assertions.assertThrows(ReferenceException.class, () -> {
+            final ContainsPic cpk = new ContainsPic();
+            final Pic p = new Pic();
+            cpk.setPic(p);
+            getDs().save(p);
+            getDs().save(cpk);
 
-        getDs().delete(p);
+            getDs().delete(p);
 
-        getDs().find(ContainsPic.class).iterator().toList();
+            getDs().find(ContainsPic.class).iterator().toList();
+        });
     }
 
     @Test
@@ -139,11 +139,11 @@ public class TestQueriesOnReferences extends TestBase {
         getDs().save(cpk);
 
         Query<ContainsPic> query = getDs().find(ContainsPic.class);
-        assertNotNull(query.filter(eq("lazyPic", p)).iterator()
+        Assertions.assertNotNull(query.filter(eq("lazyPic", p)).iterator()
                 .tryNext());
 
         query = getDs().find(ContainsPic.class);
-        assertNotNull(query.filter(eq("lazyObjectIdPic", withObjectId)).iterator()
+        Assertions.assertNotNull(query.filter(eq("lazyObjectIdPic", withObjectId)).iterator()
                 .tryNext());
     }
 
@@ -159,7 +159,7 @@ public class TestQueriesOnReferences extends TestBase {
         final Query<ContainsPic> query = getDs().find(ContainsPic.class);
         final ContainsPic object = query.filter(eq("pic", p)).iterator()
                 .tryNext();
-        assertNotNull(object);
+        Assertions.assertNotNull(object);
 
     }
 

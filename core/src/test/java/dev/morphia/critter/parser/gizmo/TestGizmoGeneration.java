@@ -29,13 +29,13 @@ import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
 import dev.morphia.mapping.lifecycle.EntityListenerAdapter;
 
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import io.quarkus.gizmo.ClassCreator;
 import io.quarkus.gizmo.MethodDescriptor;
@@ -55,11 +55,9 @@ public class TestGizmoGeneration {
                 descriptor(String.class),
                 descriptor(Example.class));
 
-        Assert.assertEquals(descriptor, descString);
+        Assertions.assertEquals(descString, descriptor);
         TypeData<?> typeData = PropertyModelGenerator.typeData(descString, Thread.currentThread().getContextClassLoader()).get(0);
-        Assert.assertEquals(
-                typeData,
-                typeDataHelper(java.util.Map.class, typeDataHelper(String.class), typeDataHelper(Example.class)));
+        Assertions.assertEquals(typeDataHelper(java.util.Map.class, typeDataHelper(String.class), typeDataHelper(Example.class)), typeData);
     }
 
     @Test
@@ -71,13 +69,11 @@ public class TestGizmoGeneration {
                         java.util.Map.class,
                         descriptor(String.class),
                         descriptor(Example.class)));
-        Assert.assertEquals(descriptor, descString);
+        Assertions.assertEquals(descString, descriptor);
 
         TypeData<?> typeData = PropertyModelGenerator.typeData(descString, Thread.currentThread().getContextClassLoader()).get(0);
-        Assert.assertEquals(
-                typeData,
-                typeDataHelper(java.util.List.class,
-                        typeDataHelper(java.util.Map.class, typeDataHelper(String.class), typeDataHelper(Example.class))));
+        Assertions.assertEquals(typeDataHelper(java.util.List.class,
+                typeDataHelper(java.util.Map.class, typeDataHelper(String.class), typeDataHelper(Example.class))), typeData);
     }
 
     @Test
@@ -87,19 +83,32 @@ public class TestGizmoGeneration {
                 java.util.Map.class,
                 descriptor(String.class),
                 descriptor(java.util.List.class, descriptor(Example.class)));
-        Assert.assertEquals(descriptor, descString);
+        Assertions.assertEquals(descString, descriptor);
         TypeData<?> typeData = PropertyModelGenerator.typeData(descriptor, Thread.currentThread().getContextClassLoader()).get(0);
-        Assert.assertEquals(
-                typeData,
-                typeDataHelper(java.util.Map.class,
-                        typeDataHelper(String.class),
-                        typeDataHelper(java.util.List.class, typeDataHelper(Example.class))));
+        Assertions.assertEquals(typeDataHelper(java.util.Map.class,
+                typeDataHelper(String.class),
+                typeDataHelper(java.util.List.class, typeDataHelper(Example.class))), typeData);
     }
 
     @Test
     public void testPrimitiveArray() {
         TypeData<?> typeData = PropertyModelGenerator.typeData("[I", Thread.currentThread().getContextClassLoader()).get(0);
-        Assert.assertTrue(typeData.isArray());
+        Assertions.assertTrue(typeData.isArray());
+    }
+
+    @Test
+    public void testMultiDimensionalArray() {
+        // int[][] — verifies that nested visitArrayType() calls propagate correctly
+        TypeData<?> typeData = PropertyModelGenerator.typeData("[[I", Thread.currentThread().getContextClassLoader()).get(0);
+        Assertions.assertTrue(typeData.isArray());
+        Assertions.assertEquals(int[][].class, typeData.getType());
+    }
+
+    @Test
+    public void testMalformedSignatureReturnsEmpty() {
+        // Malformed signatures must return empty rather than throw
+        var result = PropertyModelGenerator.typeData("!!not-a-valid-signature!!", Thread.currentThread().getContextClassLoader());
+        Assertions.assertTrue(result.isEmpty());
     }
 
     @Test
@@ -150,33 +159,28 @@ public class TestGizmoGeneration {
     }
 
     private void validate(EntityModel model) {
-        Assert.assertEquals(
-                model.getAnnotation(EntityListeners.class),
-                EntityListenersBuilder.entityListenersBuilder().value(EntityListenerAdapter.class).build());
-        Assert.assertEquals(
-                model.getAnnotation(Entity.class),
-                EntityBuilder.entityBuilder().value("examples").build());
-        Assert.assertEquals(
-                model.getAnnotation(Indexes.class),
-                IndexesBuilder.indexesBuilder()
-                        .value(IndexBuilder.indexBuilder()
-                                .fields(FieldBuilder.fieldBuilder().value("name").weight(42).build())
-                                .options(IndexOptionsBuilder.indexOptionsBuilder()
-                                        .partialFilter("partial filter")
-                                        .collation(CollationBuilder.collationBuilder().caseFirst(LOWER).build())
-                                        .build())
+        Assertions.assertEquals(EntityListenersBuilder.entityListenersBuilder().value(EntityListenerAdapter.class).build(),
+                model.getAnnotation(EntityListeners.class));
+        Assertions.assertEquals(EntityBuilder.entityBuilder().value("examples").build(), model.getAnnotation(Entity.class));
+        Assertions.assertEquals(IndexesBuilder.indexesBuilder()
+                .value(IndexBuilder.indexBuilder()
+                        .fields(FieldBuilder.fieldBuilder().value("name").weight(42).build())
+                        .options(IndexOptionsBuilder.indexOptionsBuilder()
+                                .partialFilter("partial filter")
+                                .collation(CollationBuilder.collationBuilder().caseFirst(LOWER).build())
                                 .build())
-                        .build());
-        Assert.assertEquals(model.collectionName(), "examples");
-        Assert.assertEquals(model.discriminator(), "Example");
-        Assert.assertEquals(model.discriminatorKey(), "_t");
-        Assert.assertEquals(model.getType().getName(), Example.class.getName());
-        Assert.assertFalse(model.getProperties().isEmpty(), "Should have properties");
-        Assert.assertNotNull(model.getIdProperty(), "Should have an ID property");
-        Assert.assertFalse(model.isAbstract(), "Should not be abstract");
-        Assert.assertFalse(model.isInterface(), "Should not be an interface");
-        Assert.assertTrue(model.useDiscriminator(), "Should use the discriminator");
-        Assert.assertTrue(model.classHierarchy().isEmpty(), "Should not have a class hierarchy");
+                        .build())
+                .build(), model.getAnnotation(Indexes.class));
+        Assertions.assertEquals("examples", model.collectionName());
+        Assertions.assertEquals("Example", model.discriminator());
+        Assertions.assertEquals("_t", model.discriminatorKey());
+        Assertions.assertEquals(Example.class.getName(), model.getType().getName());
+        Assertions.assertFalse(model.getProperties().isEmpty(), "Should have properties");
+        Assertions.assertNotNull(model.getIdProperty(), "Should have an ID property");
+        Assertions.assertFalse(model.isAbstract(), "Should not be abstract");
+        Assertions.assertFalse(model.isInterface(), "Should not be an interface");
+        Assertions.assertTrue(model.useDiscriminator(), "Should use the discriminator");
+        Assertions.assertTrue(model.classHierarchy().isEmpty(), "Should not have a class hierarchy");
     }
 
     private void invokeAll(Class<?> type, Class<?> klass) {
@@ -184,7 +188,7 @@ public class TestGizmoGeneration {
         try {
             instance = klass.getConstructors()[0].newInstance(new Object[] { null });
         } catch (Exception e) {
-            Assert.fail("Could not instantiate " + klass.getName() + ": " + e.getMessage());
+            Assertions.fail("Could not instantiate " + klass.getName() + ": " + e.getMessage());
             return;
         }
         List<String> results = Arrays.stream(type.getDeclaredMethods())
@@ -205,7 +209,7 @@ public class TestGizmoGeneration {
                 .collect(Collectors.toList());
 
         if (!results.isEmpty()) {
-            Assert.fail("Missing methods from " + type.getName() + ": \n" + String.join("\n", results));
+            Assertions.fail("Missing methods from " + type.getName() + ": \n" + String.join("\n", results));
         }
     }
 
@@ -252,7 +256,7 @@ public class TestGizmoGeneration {
         Object instance = critterClassLoader.loadClass(className)
                 .getConstructor(String.class)
                 .newInstance("This is my name");
-        Assert.assertNotNull(instance);
+        Assertions.assertNotNull(instance);
     }
 
     @Test
@@ -273,36 +277,36 @@ public class TestGizmoGeneration {
                 .collect(Collectors.toList());
 
         List<String> methodNames = methodNodes.stream().map(n -> n.name).collect(Collectors.toList());
-        Assert.assertTrue(methodNames.contains("getId"), "Should find getId method");
-        Assert.assertTrue(methodNames.contains("getCount"), "Should find getCount method");
-        Assert.assertTrue(methodNames.contains("getScore"), "Should find getScore method");
-        Assert.assertTrue(methodNames.contains("getComputedValue"), "Should find getComputedValue method");
-        Assert.assertEquals(4, methodNodes.size(), "Should find exactly 4 annotated getter methods");
+        Assertions.assertTrue(methodNames.contains("getId"), "Should find getId method");
+        Assertions.assertTrue(methodNames.contains("getCount"), "Should find getCount method");
+        Assertions.assertTrue(methodNames.contains("getScore"), "Should find getScore method");
+        Assertions.assertTrue(methodNames.contains("getComputedValue"), "Should find getComputedValue method");
+        Assertions.assertEquals(methodNodes.size(), 4, "Should find exactly 4 annotated getter methods");
 
         byte[] bytecode = new AddMethodAccessorMethods(MethodExample.class, methodNodes).emit();
 
         classLoader.register(MethodExample.class.getName(), bytecode);
         Class<?> modifiedClass = classLoader.loadClass(MethodExample.class.getName());
 
-        Assert.assertNotNull(modifiedClass.getMethod("__readId"), "Should have __readId method");
-        Assert.assertNotNull(modifiedClass.getMethod("__readCount"), "Should have __readCount method");
-        Assert.assertNotNull(modifiedClass.getMethod("__readScore"), "Should have __readScore method");
-        Assert.assertNotNull(modifiedClass.getMethod("__readComputedValue"), "Should have __readComputedValue method");
+        Assertions.assertNotNull(modifiedClass.getMethod("__readId"), "Should have __readId method");
+        Assertions.assertNotNull(modifiedClass.getMethod("__readCount"), "Should have __readCount method");
+        Assertions.assertNotNull(modifiedClass.getMethod("__readScore"), "Should have __readScore method");
+        Assertions.assertNotNull(modifiedClass.getMethod("__readComputedValue"), "Should have __readComputedValue method");
 
-        Assert.assertNotNull(modifiedClass.getMethod("__writeId", org.bson.types.ObjectId.class), "Should have __writeId method");
-        Assert.assertNotNull(modifiedClass.getMethod("__writeCount", long.class), "Should have __writeCount method");
-        Assert.assertNotNull(modifiedClass.getMethod("__writeScore", double.class), "Should have __writeScore method");
+        Assertions.assertNotNull(modifiedClass.getMethod("__writeId", org.bson.types.ObjectId.class), "Should have __writeId method");
+        Assertions.assertNotNull(modifiedClass.getMethod("__writeCount", long.class), "Should have __writeCount method");
+        Assertions.assertNotNull(modifiedClass.getMethod("__writeScore", double.class), "Should have __writeScore method");
 
         Object instance = modifiedClass.getConstructor().newInstance();
         Method writeComputedMethod = modifiedClass.getMethod("__writeComputedValue", String.class);
 
         try {
             writeComputedMethod.invoke(instance, "test value");
-            Assert.fail("Should throw UnsupportedOperationException for read-only property");
+            Assertions.fail("Should throw UnsupportedOperationException for read-only property");
         } catch (InvocationTargetException e) {
-            Assert.assertTrue(e.getCause() instanceof UnsupportedOperationException,
+            Assertions.assertTrue(e.getCause() instanceof UnsupportedOperationException,
                     "Should throw UnsupportedOperationException, got: " + e.getCause());
-            Assert.assertTrue(
+            Assertions.assertTrue(
                     e.getCause().getMessage() != null && e.getCause().getMessage().contains("read-only"),
                     "Exception message should mention read-only");
         }

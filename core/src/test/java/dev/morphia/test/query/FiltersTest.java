@@ -21,9 +21,8 @@ import dev.morphia.test.models.Budget;
 import dev.morphia.test.models.User;
 
 import org.bson.Document;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
 import static dev.morphia.aggregation.expressions.Miscellaneous.rand;
@@ -43,18 +42,10 @@ import static dev.morphia.query.filters.Filters.where;
 import static java.util.Arrays.asList;
 import static java.util.List.of;
 import static org.bson.Document.parse;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
 
 @Deprecated
 @SuppressWarnings("resource")
 public class FiltersTest extends TemplatedTestBase {
-    @AfterClass
-    @Override
-    public void testCoverage() {
-    }
-
     @Test
     public void testType() {
         User entity = new User();
@@ -65,7 +56,7 @@ public class FiltersTest extends TemplatedTestBase {
 
         Query<User> query = getDs().find(User.class);
         query.filter(type("name", Type.STRING));
-        Assert.assertTrue(query.count() > 0);
+        Assertions.assertTrue(query.count() > 0);
     }
 
     @Test
@@ -81,7 +72,7 @@ public class FiltersTest extends TemplatedTestBase {
                 .filter(expr(ComparisonExpressions.gt("$spent", "$budget"))).iterator()
                 .toList();
 
-        assertEquals(budgets.size(), 3);
+        Assertions.assertEquals(3, budgets.size());
     }
 
     @Test
@@ -118,7 +109,7 @@ public class FiltersTest extends TemplatedTestBase {
                 .iterator()
                 .toList();
 
-        Assert.assertFalse(inventory.isEmpty(), "Should find some matches");
+        Assertions.assertFalse(inventory.isEmpty(), "Should find some matches");
     }
 
     @Test
@@ -142,11 +133,11 @@ public class FiltersTest extends TemplatedTestBase {
         List<Document> list = query
                 .iterator()
                 .toList();
-        assertEquals(list.size(), 4, query.getLoggedQuery());
+        Assertions.assertEquals(4, list.size(), query.getLoggedQuery());
         Document document = list.stream().filter(d -> d.get("_id").equals(4))
                 .findFirst()
                 .orElseThrow();
-        assertEquals(document.get("score"), 1.0, query.getLoggedQuery());
+        Assertions.assertEquals(1.0, document.get("score"), query.getLoggedQuery());
 
     }
 
@@ -182,11 +173,11 @@ public class FiltersTest extends TemplatedTestBase {
         }
         String collectionName = "rand";
         InsertManyResult bulk = getDatabase().getCollection(collectionName).insertMany(list, new InsertManyOptions().ordered(false));
-        assertEquals(bulk.getInsertedIds().size(), count);
+        Assertions.assertEquals(count, bulk.getInsertedIds().size());
         long matches = getDs().find(collectionName, Document.class)
                 .filter(expr(ComparisonExpressions.lt(0.5, rand())))
                 .count();
-        assertTrue(matches < 100);
+        Assertions.assertTrue(matches < 100);
     }
 
     @Test
@@ -198,13 +189,13 @@ public class FiltersTest extends TemplatedTestBase {
         }
         String collectionName = "sampleRate";
         InsertManyResult bulk = getDatabase().getCollection(collectionName).insertMany(list, new InsertManyOptions().ordered(false));
-        assertEquals(bulk.getInsertedIds().size(), count);
+        Assertions.assertEquals(count, bulk.getInsertedIds().size());
         Document matches = getDs().aggregate(aggregationOptions().collection(collectionName)).pipeline(
                 match(sampleRate(0.33)),
                 Count.count("numMatches"))
                 .iterator()
                 .next();
-        assertTrue(matches.getInteger("numMatches") < 100);
+        Assertions.assertTrue(matches.getInteger("numMatches") < 100);
     }
 
     @Test
@@ -216,19 +207,19 @@ public class FiltersTest extends TemplatedTestBase {
                 .filter(size("likes", 3)).iterator()
                 .next();
 
-        assertEquals(likes.name, "John");
+        Assertions.assertEquals("John", likes.name);
 
         likes = getDs().find(User.class)
                 .filter(size("likes", 2)).iterator()
                 .next();
 
-        assertEquals(likes.name, "Janice");
+        Assertions.assertEquals("Janice", likes.name);
 
         likes = getDs().find(User.class)
                 .filter(size("likes", 20)).iterator()
                 .tryNext();
 
-        assertNull(likes);
+        Assertions.assertNull(likes);
     }
 
     @Test
@@ -242,7 +233,7 @@ public class FiltersTest extends TemplatedTestBase {
                 .filter(where("return (hex_md5(this.name) == '9b53e667f30cd329dca1ec9e6a83e994')"))
                 .first();
 
-        assertEquals(player.name, "Anya");
+        Assertions.assertEquals("Anya", player.name);
     }
 
     @Entity(value = "players", useDiscriminator = false)

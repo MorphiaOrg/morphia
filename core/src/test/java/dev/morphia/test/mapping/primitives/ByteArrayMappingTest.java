@@ -5,8 +5,8 @@ import dev.morphia.annotations.Id;
 import dev.morphia.test.TestBase;
 
 import org.bson.types.ObjectId;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.query.filters.Filters.eq;
 
@@ -22,9 +22,9 @@ public class ByteArrayMappingTest extends TestBase {
                 .first();
 
         for (int i = 0; i < entity.ba.length; i++) {
-            Assert.assertEquals(loaded.ba[i], entity.ba[i]);
+            Assertions.assertEquals(entity.ba[i], loaded.ba[i]);
         }
-        Assert.assertNotNull(loaded.id);
+        Assertions.assertNotNull(loaded.id);
     }
 
     @Entity

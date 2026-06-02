@@ -12,37 +12,37 @@ import dev.morphia.test.TestBase;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static java.util.stream.Collectors.joining;
-import static org.testng.Assert.assertEquals;
 
 public class EntityModelTest extends TestBase {
     @Test
     public void testFindParameterization() {
         EntityModel model = getMapper().mapEntity(Child.class);
-        assertEquals(model.getProperty("someField").getType(), LocalDate.class);
+        Assertions.assertEquals(LocalDate.class, model.getProperty("someField").getType());
     }
 
     @Test
     public void testGenericFields() {
         EntityModel model = getDs().getMapper().map(Base.class).get(0);
-        assertEquals(model.getProperties().size(), 3, model.getProperties().stream()
+        Assertions.assertEquals(3, model.getProperties().size(), model.getProperties().stream()
                 .map(PropertyModel::getName)
                 .collect(joining(", ")));
 
         model = getDs().getMapper().map(Parent.class).get(0);
-        assertEquals(model.getProperties().size(), 4, model.getProperties().stream()
+        Assertions.assertEquals(4, model.getProperties().size(), model.getProperties().stream()
                 .map(PropertyModel::getName)
                 .collect(joining(", ")));
 
         model = getDs().getMapper().map(Child.class).get(0);
-        assertEquals(model.getProperties().size(), 5, model.getProperties().stream()
+        Assertions.assertEquals(5, model.getProperties().size(), model.getProperties().stream()
                 .map(PropertyModel::getName)
                 .collect(joining(", ")));
 
-        assertEquals(model.getProperty("t").getType(), String.class);
-        assertEquals(model.getProperty("someField").getType(), LocalDate.class);
+        Assertions.assertEquals(String.class, model.getProperty("t").getType());
+        Assertions.assertEquals(LocalDate.class, model.getProperty("someField").getType());
     }
 
     @Test
@@ -56,13 +56,34 @@ public class EntityModelTest extends TestBase {
         beforeDB.setNumber2(14);
         getDs().save(beforeDB);
 
-        assertEquals(model.getProperty("id").getType(), UUID.class);
-        assertEquals(model.getProperty("test").getType(), String.class);
-        assertEquals(model.getProperty("test2").getType(), UUID.class);
+        Assertions.assertEquals(UUID.class, model.getProperty("id").getType());
+        Assertions.assertEquals(String.class, model.getProperty("test").getType());
+        Assertions.assertEquals(UUID.class, model.getProperty("test2").getType());
 
         getDs().getDatabase()
                 .getCollection("specificEntity")
                 .deleteMany(new Document());
+    }
+
+    @Test
+    public void testGenericRoundTrip() {
+        EntityModel model = getDs().getMapper().map(GenericLeaf.class).get(0);
+        Assertions.assertEquals(LocalDate.class, model.getProperty("baseField").getType());
+        Assertions.assertEquals(String.class, model.getProperty("midField").getType());
+
+        GenericLeaf leaf = new GenericLeaf();
+        leaf.setBaseField(LocalDate.of(2024, 6, 1));
+        leaf.setMidField("hello");
+        leaf.setLeafValue(42);
+        getDs().save(leaf);
+
+        GenericLeaf found = getDs().find(GenericLeaf.class).first();
+        Assertions.assertNotNull(found);
+        Assertions.assertEquals(LocalDate.of(2024, 6, 1), found.getBaseField());
+        Assertions.assertEquals("hello", found.getMidField());
+        Assertions.assertEquals(42, found.getLeafValue());
+
+        getDs().getDatabase().getCollection("genericLeaf").deleteMany(new Document());
     }
 
     @Entity
@@ -75,6 +96,54 @@ public class EntityModelTest extends TestBase {
 
     private static class Child extends Parent<String> {
         private int age;
+    }
+
+    @Entity
+    private static class GenericBase<T> {
+        @Id
+        private ObjectId id;
+        private T baseField;
+
+        public ObjectId getId() {
+            return id;
+        }
+
+        public void setId(ObjectId id) {
+            this.id = id;
+        }
+
+        public T getBaseField() {
+            return baseField;
+        }
+
+        public void setBaseField(T baseField) {
+            this.baseField = baseField;
+        }
+    }
+
+    private static class GenericMid<T> extends GenericBase<LocalDate> {
+        private T midField;
+
+        public T getMidField() {
+            return midField;
+        }
+
+        public void setMidField(T midField) {
+            this.midField = midField;
+        }
+    }
+
+    @Entity
+    private static class GenericLeaf extends GenericMid<String> {
+        private int leafValue;
+
+        public int getLeafValue() {
+            return leafValue;
+        }
+
+        public void setLeafValue(int leafValue) {
+            this.leafValue = leafValue;
+        }
     }
 
     @Entity

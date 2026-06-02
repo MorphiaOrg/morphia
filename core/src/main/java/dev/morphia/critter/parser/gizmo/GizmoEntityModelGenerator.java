@@ -106,7 +106,6 @@ public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
             collectionName();
             discriminator();
             discriminatorKey();
-            hasLifecycle();
             isAbstract();
             isInterface();
             useDiscriminator();
@@ -127,13 +126,6 @@ public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
         }
     }
 
-    private void hasLifecycle() {
-        try (MethodCreator mc = getCreator().getMethodCreator("hasLifecycle", boolean.class, Class.class)) {
-            mc.setParameterNames(new String[] { "type" });
-            mc.returnValue(mc.load(false));
-        }
-    }
-
     private void isAbstract() {
         try (MethodCreator mc = getCreator().getMethodCreator("isAbstract", boolean.class)) {
             mc.returnValue(mc.load(Modifier.isAbstract(entity.getModifiers())));
@@ -142,7 +134,7 @@ public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
 
     private void discriminatorKey() {
         try (MethodCreator mc = getCreator().getMethodCreator("discriminatorKey", String.class)) {
-            String key = entityAnnotation.discriminator();
+            String key = entityAnnotation.discriminatorKey();
             String result = Mapper.IGNORED_FIELDNAME.equals(key)
                     ? mapper.getConfig().discriminatorKey()
                     : key;
@@ -174,13 +166,13 @@ public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
                     MethodDescriptor.ofConstructor(CritterEntityModel.class, Mapper.class, Class.class),
                     constructor.getThis(),
                     constructor.getMethodParam(0),
-                    constructor.loadClass(entity));
+                    GizmoExtensions.emitClassRef(constructor, entity));
             constructor.setParameterNames(new String[] { "mapper" });
 
             constructor.invokeVirtualMethod(
                     ofMethod(generatedType, "setType", "void", Class.class),
                     constructor.getThis(),
-                    constructor.loadClass(entity));
+                    GizmoExtensions.emitClassRef(constructor, entity));
             loadProperties(constructor);
             registerAnnotations(constructor);
             constructor.invokeVirtualMethod(

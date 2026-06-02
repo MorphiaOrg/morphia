@@ -9,14 +9,14 @@ import dev.morphia.aggregation.AggregationOptions;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.User;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static com.mongodb.client.model.CollationStrength.SECONDARY;
 import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
 import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.query.filters.Filters.eq;
 import static java.util.Arrays.asList;
-import static org.testng.Assert.assertEquals;
 
 public class TestCollation extends TestBase {
     @Test
@@ -26,7 +26,7 @@ public class TestCollation extends TestBase {
         Aggregation<User> pipeline = getDs()
                 .aggregate(User.class)
                 .pipeline(match(eq("name", "john doe")));
-        assertEquals(count(pipeline.iterator()), 1);
+        Assertions.assertEquals(1, count(pipeline.iterator()));
 
         AggregationOptions options = aggregationOptions()
                 .collation(Collation.builder()
@@ -36,8 +36,7 @@ public class TestCollation extends TestBase {
         pipeline = getDs()
                 .aggregate(User.class, options)
                 .pipeline(match(eq("name", "john doe")));
-        assertEquals(count(pipeline.iterator()),
-                2);
+        Assertions.assertEquals(2, count(pipeline.iterator()));
     }
 
 }

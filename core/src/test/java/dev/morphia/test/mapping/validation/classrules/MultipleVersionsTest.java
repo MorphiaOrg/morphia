@@ -5,12 +5,15 @@ import dev.morphia.mapping.validation.ConstraintViolationException;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.models.TestEntity;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class MultipleVersionsTest extends TestBase {
-    @Test(expectedExceptions = ConstraintViolationException.class)
+    @Test
     public void testCheck() {
-        getMapper().map(OK1.class, Fail1.class);
+        Assertions.assertThrows(ConstraintViolationException.class, () -> {
+            getMapper().map(OK1.class, Fail1.class);
+        });
     }
 
     private static class Fail1 extends TestEntity {

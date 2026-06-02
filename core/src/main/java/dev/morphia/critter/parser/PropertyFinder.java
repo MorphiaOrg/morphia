@@ -137,7 +137,8 @@ public class PropertyFinder {
         List<FieldNode> result = new ArrayList<>();
         for (FieldNode field : classNode.fields) {
             List<AnnotationNode> visible = field.visibleAnnotations != null ? field.visibleAnnotations : List.of();
-            boolean isTransient = visible.stream().map(a -> a.desc).anyMatch(transientDescs::contains);
+            boolean isTransient = (field.access & org.objectweb.asm.Opcodes.ACC_TRANSIENT) != 0
+                    || visible.stream().map(a -> a.desc).anyMatch(transientDescs::contains);
             if (!isTransient && isPropertyAnnotated(field.visibleAnnotations, true)) {
                 result.add(field);
             }

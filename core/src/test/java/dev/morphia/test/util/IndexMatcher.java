@@ -6,9 +6,9 @@ import org.bson.Document;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.junit.jupiter.api.Assertions;
 
 import static java.lang.String.format;
-import static org.testng.Assert.fail;
 
 /**
  * Hamcrest matcher that can be used with a List of Documents representing the indexes on a Collection. This list, for example, might be
@@ -63,6 +63,6 @@ public final class IndexMatcher extends TypeSafeMatcher<List<Document>> {
 
     @Override
     protected void describeMismatchSafely(List<Document> indexes, Description mismatchDescription) {
-        fail(format("Expected %s to find index with name '%s' in %s", indexShouldBePresent ? "" : "not", indexName, indexes));
+        Assertions.fail(format("Expected %s to find index with name '%s' in %s", indexShouldBePresent ? "" : "not", indexName, indexes));
     }
 }

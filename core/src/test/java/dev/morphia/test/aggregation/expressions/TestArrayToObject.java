@@ -2,7 +2,8 @@ package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.sum;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.array;
@@ -18,7 +19,8 @@ public class TestArrayToObject extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/arrayToObject/example1
      * 
      */
-    @Test(testName = "``$arrayToObject``  Example")
+    @Test
+    @DisplayName("``$arrayToObject``  Example")
     public void testExample1() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("item").include("dimensions", arrayToObject("$dimensions"))));
@@ -28,7 +30,8 @@ public class TestArrayToObject extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/arrayToObject/example2
      * 
      */
-    @Test(testName = "``$objectToArray`` + ``$arrayToObject`` Example")
+    @Test
+    @DisplayName("``$objectToArray`` + ``$arrayToObject`` Example")
     public void testExample2() {
         testPipeline((aggregation) -> aggregation.pipeline(addFields().field("instock", objectToArray("$instock")),
                 addFields().field("instock",

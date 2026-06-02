@@ -28,6 +28,8 @@ import dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel;
 import org.bson.codecs.pojo.PropertyAccessor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+import org.objectweb.asm.signature.SignatureReader;
+import org.objectweb.asm.signature.SignatureVisitor;
 import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -155,7 +157,9 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
             // entity subclass specifies GenericEntity<UUID>).
             if (raw.getType() == Object.class && isTypeVariable(input)) {
                 String typeVarName = extractTypeVarName(input);
-                Class<?> resolved = resolveTypeVariable(typeVarName, entity);
+                String lookupName = field != null ? field.name : ExtensionFunctions.getterToPropertyName(method, entity);
+                Class<?> declaringClass = findDeclaringClass(lookupName, entity);
+                Class<?> resolved = resolveTypeVariable(typeVarName, entity, declaringClass);
                 if (resolved != null && resolved != Object.class) {
                     raw = new TypeData<>(resolved, List.of());
                 }
@@ -177,11 +181,31 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
     }
 
     /**
+     * Finds the class in the hierarchy of {@code concreteClass} that declares a field with the given name.
+     * Returns {@code null} if not found.
+     */
+    private static Class<?> findDeclaringClass(String fieldName, Class<?> concreteClass) {
+        Class<?> current = concreteClass;
+        while (current != null && current != Object.class) {
+            try {
+                current.getDeclaredField(fieldName);
+                return current;
+            } catch (NoSuchFieldException e) {
+                current = current.getSuperclass();
+            }
+        }
+        return null;
+    }
+
+    /**
      * Resolves a type-variable name (e.g., {@code "T"}) to its actual class by walking
      * the generic superclass chain of {@code concreteClass}.
+     * Stops traversal after binding {@code declaringClass}'s type parameters so that a
+     * type variable declared on a closer ancestor is not overwritten by a same-named
+     * variable on a more distant one.
      * Returns {@code null} if no concrete binding can be determined.
      */
-    private static Class<?> resolveTypeVariable(String typeVarName, Class<?> concreteClass) {
+    private static Class<?> resolveTypeVariable(String typeVarName, Class<?> concreteClass, Class<?> declaringClass) {
         // Build a map from type-variable name to its resolved type, layer by layer
         Map<String, java.lang.reflect.Type> bindings = new HashMap<>();
         Class<?> current = concreteClass;
@@ -202,6 +226,11 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
                     }
                     bindings.put(typeParams[i].getName(), arg);
                 }
+            }
+            // Stop after binding the declaring class's own type parameters so a same-named
+            // variable on a more distant ancestor does not overwrite the correct binding.
+            if (declaringClass != null && superClass == declaringClass) {
+                break;
             }
             current = superClass;
         }
@@ -279,7 +308,7 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
 
     private void getType() {
         try (MethodCreator methodCreator = getCreator().getMethodCreator("getType", Class.class)) {
-            methodCreator.returnValue(emitClassRef(methodCreator, getTypeData().getType()));
+            methodCreator.returnValue(GizmoExtensions.emitClassRef(methodCreator, getTypeData().getType()));
         }
     }
 
@@ -292,45 +321,8 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
 
     private void emitGetTypeData() {
         try (MethodCreator methodCreator = getCreator().getMethodCreator("getTypeData", TypeData.class)) {
-            methodCreator.returnValue(emitTypeData(methodCreator, this.getTypeData()));
+            methodCreator.returnValue(GizmoExtensions.emitTypeData(this.getTypeData(), methodCreator));
         }
-    }
-
-    private ResultHandle emitTypeData(MethodCreator methodCreator, TypeData<?> data) {
-        ResultHandle array = methodCreator.newArray(TypeData.class, data.getTypeParameters().size());
-        List<TypeData<?>> typeParameters = data.getTypeParameters();
-        for (int index = 0; index < typeParameters.size(); index++) {
-            methodCreator.writeArrayValue(array, index, emitTypeData(methodCreator, typeParameters.get(index)));
-        }
-        List<ResultHandle> list = new ArrayList<>();
-        list.add(emitClassRef(methodCreator, data.getType()));
-        list.add(array);
-        MethodDescriptor descriptor = MethodDescriptor.ofConstructor(
-                TypeData.class,
-                Class.class,
-                "[" + Type.getType(TypeData.class).getDescriptor());
-        return methodCreator.newInstance(descriptor, list.toArray(new ResultHandle[0]));
-    }
-
-    /**
-     * Emits bytecode to load a {@link Class} reference. For non-public classes (e.g. private
-     * inner classes) that cannot be referenced via an LDC constant from a different classloader,
-     * generates a {@code Class.forName()} call instead.
-     */
-    private ResultHandle emitClassRef(MethodCreator methodCreator, Class<?> cls) {
-        if (java.lang.reflect.Modifier.isPublic(cls.getModifiers())) {
-            return methodCreator.loadClass(cls);
-        }
-        ResultHandle name = methodCreator.load(cls.getName());
-        ResultHandle falseHandle = methodCreator.load(false);
-        ResultHandle thread = methodCreator.invokeStaticMethod(
-                ofMethod(Thread.class, "currentThread", Thread.class));
-        ResultHandle tccl = methodCreator.invokeVirtualMethod(
-                ofMethod(Thread.class, "getContextClassLoader", ClassLoader.class),
-                thread);
-        return methodCreator.invokeStaticMethod(
-                ofMethod(Class.class, "forName", Class.class, String.class, boolean.class, ClassLoader.class),
-                name, falseHandle, tccl);
     }
 
     private void isCollection() {
@@ -370,7 +362,7 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
     private void getNormalizedType() {
         try (MethodCreator methodCreator = getCreator().getMethodCreator("getNormalizedType", Class.class)) {
             Class<?> normalizedType = PropertyModel.normalize(getTypeData());
-            methodCreator.returnValue(emitClassRef(methodCreator, normalizedType));
+            methodCreator.returnValue(GizmoExtensions.emitClassRef(methodCreator, normalizedType));
         }
     }
 
@@ -458,72 +450,135 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
 
     // ---- Static utility methods (formerly package-level functions) ----
 
-    private static String balanced(String s) {
-        if (!s.contains("<"))
-            return "";
-        int start = s.indexOf('<') + 1;
-        int index = start;
-        int count = 1;
-
-        while (index < s.length() && count != 0) {
-            char c = s.charAt(++index);
-            if (c == '>')
-                count--;
-            else if (c == '<')
-                count++;
-        }
-
-        return s.substring(start, index);
-    }
-
     /**
      * Parses an ASM type signature string into a list of {@link TypeData} instances.
      *
-     * @param input       the ASM type signature to parse
+     * @param input       the ASM type signature to parse (field/return-type signature)
      * @param classLoader the class loader used to resolve referenced types
-     * @return the list of type data values parsed from the signature
+     * @return a single-element list containing the parsed type data, or empty if parsing fails
      */
     public static List<TypeData<?>> typeData(String input, ClassLoader classLoader) {
         if (input.isEmpty())
             return Collections.emptyList();
-        List<TypeData<?>> types = new ArrayList<>();
-        String value = input;
+        try {
+            TypeDataVisitor visitor = new TypeDataVisitor(classLoader);
+            new SignatureReader(input).acceptType(visitor);
+            return visitor.result != null ? List.of(visitor.result) : Collections.emptyList();
+        } catch (Exception e) {
+            return Collections.emptyList();
+        }
+    }
 
-        while (!value.isEmpty()) {
-            // Strip wildcard bound prefixes (+ = extends, - = super, * = unbounded)
-            if (value.startsWith("+") || value.startsWith("-")) {
-                value = value.substring(1);
-                continue;
+    private static class TypeDataVisitor extends SignatureVisitor {
+        private final ClassLoader classLoader;
+        TypeData<?> result;
+
+        private String pendingClass;
+        private final List<TypeDataVisitor> typeArgVisitors = new ArrayList<>();
+
+        TypeDataVisitor(ClassLoader classLoader) {
+            super(Opcodes.ASM9);
+            this.classLoader = classLoader;
+        }
+
+        @Override
+        public void visitClassType(String name) {
+            pendingClass = "L" + name + ";";
+            typeArgVisitors.clear();
+        }
+
+        @Override
+        public void visitInnerClassType(String name) {
+            // Strip trailing ';' and append '$Name;'
+            pendingClass = pendingClass.substring(0, pendingClass.length() - 1) + "$" + name + ";";
+        }
+
+        @Override
+        public SignatureVisitor visitTypeArgument(char wildcard) {
+            TypeDataVisitor child = new TypeDataVisitor(classLoader);
+            typeArgVisitors.add(child);
+            return child;
+        }
+
+        @Override
+        public void visitTypeArgument() {
+            // Unbounded wildcard '*': use Object as erasure
+            TypeDataVisitor child = new TypeDataVisitor(classLoader);
+            child.result = new TypeData<>(Object.class, List.of());
+            typeArgVisitors.add(child);
+        }
+
+        @Override
+        public void visitTypeVariable(String name) {
+            result = new TypeData<>(Object.class, List.of());
+        }
+
+        @Override
+        public void visitBaseType(char descriptor) {
+            result = GizmoExtensions.typeDataFromType(Type.getType(String.valueOf(descriptor)), classLoader);
+        }
+
+        @Override
+        public SignatureVisitor visitArrayType() {
+            return new ArrayVisitor(classLoader, this);
+        }
+
+        private static class ArrayVisitor extends TypeDataVisitor {
+            private final TypeDataVisitor outer;
+
+            ArrayVisitor(ClassLoader classLoader, TypeDataVisitor outer) {
+                super(classLoader);
+                this.outer = outer;
             }
-            if (value.startsWith("*")) {
-                value = value.substring(1);
-                types.add(GizmoExtensions.typeDataFromType(Type.getType(Object.class), classLoader));
-                continue;
-            }
-            int bracket = value.indexOf('<');
-            int semicolon = value.indexOf(';');
-            // Handle type parameters (e.g., TT; for type param T) - use Object as erasure
-            if (value.startsWith("T") && !value.startsWith("T[")) {
-                value = (semicolon != -1) ? value.substring(semicolon + 1) : "";
-                types.add(GizmoExtensions.typeDataFromType(Type.getType(Object.class), classLoader));
-            } else if (bracket == -1 || (semicolon != -1 && bracket > semicolon)) {
-                String type = value.substring(0, semicolon != -1 ? semicolon : value.length());
-                boolean hadSemicolon = semicolon != -1 && semicolon < value.length();
-                if (hadSemicolon && type.length() > 2) {
-                    type += ";";
+
+            private void propagate() {
+                if (result != null) {
+                    try {
+                        Class<?> arrayClass = java.lang.reflect.Array.newInstance(result.getType(), 0).getClass();
+                        outer.result = new TypeData<>(arrayClass, List.of());
+                    } catch (Exception ignored) {
+                        outer.result = new TypeData<>(Object.class, List.of());
+                    }
+                    // If outer is itself an ArrayVisitor, propagate the chain upward.
+                    if (outer instanceof ArrayVisitor av) {
+                        av.propagate();
+                    }
                 }
-                value = hadSemicolon ? value.substring(type.length()) : "";
-                types.add(GizmoExtensions.typeDataFromType(Type.getType(type), classLoader));
-            } else {
-                String paramString = balanced(value);
-                value = value.replace("<" + paramString + ">", "");
-                types.add(GizmoExtensions.typeDataFromType(
-                        Type.getType(value),
-                        classLoader,
-                        typeData(paramString, classLoader)));
-                value = value.contains(";") ? value.substring(value.indexOf(';') + 1) : "";
+            }
+
+            @Override
+            public void visitBaseType(char descriptor) {
+                super.visitBaseType(descriptor);
+                propagate();
+            }
+
+            @Override
+            public void visitEnd() {
+                super.visitEnd();
+                propagate();
+            }
+
+            @Override
+            public void visitTypeVariable(String name) {
+                super.visitTypeVariable(name);
+                propagate();
+            }
+
+            @Override
+            public SignatureVisitor visitArrayType() {
+                return new ArrayVisitor(outer.classLoader, this);
             }
         }
-        return types;
+
+        @Override
+        public void visitEnd() {
+            if (pendingClass != null) {
+                List<TypeData<?>> params = typeArgVisitors.stream()
+                        .map(v -> v.result != null ? v.result : new TypeData<>(Object.class, List.of()))
+                        .toList();
+                result = GizmoExtensions.typeDataFromType(Type.getType(pendingClass), classLoader, params);
+                pendingClass = null;
+            }
+        }
     }
 }

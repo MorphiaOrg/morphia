@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
@@ -21,7 +20,6 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.AggregationImpl;
 import dev.morphia.mapping.codec.Conversions;
-import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaQuery;
 import dev.morphia.query.Operations;
 import dev.morphia.query.Query;
@@ -33,10 +31,10 @@ import org.bson.Document;
 import org.bson.json.JsonParseException;
 import org.bson.json.JsonWriterSettings;
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
 import static java.lang.Character.toLowerCase;
@@ -47,10 +45,8 @@ import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.bson.json.JsonWriterSettings.builder;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.fail;
 
+@ExtendWith(TestCoverageExtension.class)
 public abstract class TemplatedTestBase extends TestBase {
     public static final JsonWriterSettings JSON_WRITER_SETTINGS = builder()
             .indent(true)
@@ -61,8 +57,6 @@ public abstract class TemplatedTestBase extends TestBase {
     protected final ObjectMapper mapper = new ObjectMapper();
 
     public TemplatedTestBase() {
-        buildConfig()
-                .codecProvider(new ZDTCodecProvider());
     }
 
     protected static String toString(List<Document> actual, String prefix) {
@@ -83,41 +77,6 @@ public abstract class TemplatedTestBase extends TestBase {
         }
 
         return resource;
-    }
-
-    @AfterClass
-    public void testCoverage() {
-        var type = getClass();
-        var methods = stream(type.getDeclaredMethods())
-                .filter(m -> m.getName().startsWith("testExample"))
-                .map(m -> {
-                    String name = m.getName().substring(4);
-                    return toLowerCase(name.charAt(0)) + name.substring(1);
-                })
-                .toList();
-        String path = type.getPackageName();
-        String simpleName = type.getSimpleName().substring(4);
-        var operatorName = toLowerCase(simpleName.charAt(0)) + simpleName.substring(1);
-        var resourceFolder = TemplatedTestBase.rootToCore("src/test/resources/%s/%s".formatted(path.replace('.', '/'), operatorName));
-
-        if (!resourceFolder.exists()) {
-            throw new IllegalStateException("%s does not exist inside %s".formatted(resourceFolder,
-                    new File(".").getAbsolutePath()));
-        }
-        List<File> list = Arrays.stream(resourceFolder.list())
-                .map(s -> new File(resourceFolder, s))
-                .toList();
-
-        List<String> examples = list.stream()
-                .filter(d -> new File(d, "action.json").exists())
-                .map(File::getName)
-                .toList();
-        var missing = examples.stream()
-                .filter(example -> !methods.contains(example))
-                .collect(joining(", "));
-        if (!missing.isEmpty()) {
-            fail("Missing test cases for $%s: %s".formatted(operatorName, missing));
-        }
     }
 
     @NotNull
@@ -178,7 +137,7 @@ public abstract class TemplatedTestBase extends TestBase {
         InputStream stream = getClass().getResourceAsStream(name);
         if (stream == null) {
             if (failOnMissing) {
-                fail(format("missing " + type + " file: src/test/resources/%s/%s",
+                Assertions.fail(format("missing " + type + " file: src/test/resources/%s/%s",
                         getClass().getPackageName().replace('.', '/'), name));
             }
         } else {
@@ -245,7 +204,7 @@ public abstract class TemplatedTestBase extends TestBase {
 
         Query<Document> query = function.apply(getDs().find(EXAMPLE_TEST_COLLECTION, Document.class)
                 .disableValidation());
-        List<Document> actual = runUpdate(options, resourceName, query, options.findOptions(), operators);
+        List<Document> actual = runUpdate(options, resourceName, query, operators);
 
         checkExpected(options, resourceName, actual);
     }
@@ -292,7 +251,7 @@ public abstract class TemplatedTestBase extends TestBase {
     protected void loadIndex(String resourceName, String databaseName, String collectionName) {
         MongoCollection<Document> collection = getDatabase(databaseName).getCollection(collectionName);
         List<Document> documents = loadJson("%s/%s/index.json".formatted(prefix(), resourceName), "index", false);
-        documents.forEach(document -> assertNotNull(collection.createIndex(document)));
+        documents.forEach(document -> Assertions.assertNotNull(collection.createIndex(document)));
     }
 
     protected Document loadQuery(String pipelineName) {
@@ -302,7 +261,7 @@ public abstract class TemplatedTestBase extends TestBase {
     protected List<String> loadResource(String pipelineName) {
         InputStream stream = getClass().getResourceAsStream(pipelineName);
         if (stream == null) {
-            fail(format("missing action file: src/test/resources/%s/%s", getClass().getPackageName().replace('.', '/'),
+            Assertions.fail(format("missing action file: src/test/resources/%s/%s", getClass().getPackageName().replace('.', '/'),
                     pipelineName));
         }
         return new BufferedReader(new InputStreamReader(stream))
@@ -315,7 +274,7 @@ public abstract class TemplatedTestBase extends TestBase {
 
         InputStream stream = getClass().getResourceAsStream(name);
         if (stream == null) {
-            fail(format("missing name file: %s", name));
+            Assertions.fail(format("missing name file: %s", name));
         }
 
         try (var reader = new BufferedReader(new InputStreamReader(stream))) {
@@ -332,17 +291,8 @@ public abstract class TemplatedTestBase extends TestBase {
 
         if (!options.skipActionCheck()) {
             List<Document> target = loadAction(pipelineName);
-            try {
-                String expected = toJson(pipeline);
-                String actual = toJson(target);
 
-                toFile("actual", pipeline);
-                toFile("expected", target);
-
-                JSONAssert.assertEquals("Should generate the same pipeline", actual, expected, false);
-            } catch (JSONException e) {
-                throw new RuntimeException(e);
-            }
+            assertDocumentListEquals("Should generate the same pipeline", target, pipeline, false);
         }
 
         if (!options.skipDataCheck()) {
@@ -359,7 +309,7 @@ public abstract class TemplatedTestBase extends TestBase {
 
         if (!testOptions.skipActionCheck()) {
             Document target = loadQuery(resourceName);
-            assertEquals(toJson(document), toJson(target), "Should generate the same query document");
+            assertDocumentEquals("Should generate the same query document", target, document);
         }
 
         if (!testOptions.skipDataCheck()) {
@@ -373,14 +323,14 @@ public abstract class TemplatedTestBase extends TestBase {
 
     @SuppressWarnings({ "rawtypes" })
     protected List<Document> runUpdate(ActionTestOptions testOptions, String pipelineTemplate, Query<Document> query,
-            FindOptions options, UpdateOperator... operators) {
+            UpdateOperator... operators) {
         String resourceName = format("%s/%s/action.json", prefix(), pipelineTemplate);
         Document document = ((MorphiaQuery) query).toDocument();
 
         checkAction(testOptions, resourceName, document, operators);
 
         if (!testOptions.skipDataCheck()) {
-            var resource = loadResource(resourceName).stream().collect(joining());
+            var resource = String.join("", loadResource(resourceName));
             query.update(testOptions.updateOptions().multi(resource.contains("updateMany")), operators);
             try (var cursor = query.iterator()) {
                 return cursor.toList();
@@ -396,20 +346,20 @@ public abstract class TemplatedTestBase extends TestBase {
             UpdateOperator... operators) {
         if (!testOptions.skipActionCheck()) {
             List<Document> action = loadAction(resourceName);
-            assertEquals(toJson(document), toJson(action.get(0)), "Should generate the same query document");
+            assertDocumentEquals("Should generate the same query document", action.get(0), document);
             Operations operations = new Operations(getDs(), null, asList(operators), false);
             Document updates = operations.toDocument(getDs());
-            assertEquals(toJson(updates), toJson(action.get(1)), "Should generate the same update document");
+            assertDocumentEquals("Should generate the same update document", action.get(1), updates);
         }
     }
 
     protected void validateTestName(String resourceName) {
         Method method = findTestMethod();
-        Test test = method.getAnnotation(Test.class);
-        assertEquals(
-                test.testName(), loadTestName(resourceName),
-                "%s#%s does not have a name configured on the test.".formatted(method.getDeclaringClass().getName(),
-                        method.getName()));
+        DisplayName displayName = method.getAnnotation(DisplayName.class);
+        String testName = displayName != null ? displayName.value() : "";
+        Assertions.assertEquals(loadTestName(resourceName), testName,
+                "%s#%s does not have a @DisplayName configured on the test.".formatted(
+                        method.getDeclaringClass().getName(), method.getName()));
     }
 
     private boolean balanced(String input) {
@@ -436,7 +386,7 @@ public abstract class TemplatedTestBase extends TestBase {
                 toFile("actual", actual);
                 toFile("expected", expected);
 
-                JSONAssert.assertEquals(toJson(expected), toJson(actual), options.orderMatters());
+                assertDocumentListEquals(expected, actual, options.orderMatters());
             } catch (Exception e) {
                 throw new RuntimeException(e.getMessage(), e);
             }

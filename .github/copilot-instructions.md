@@ -32,7 +32,7 @@ The current development branch targets **Java 17**, **Maven 4**, and the **Mongo
 - **Java 17** (Temurin) — enforced in `.sdkmanrc` and `pom.xml`
 - **Maven 4** (wrapper at `./mvnw`) — use the wrapper, not a system Maven
 - **Kotlin** — compiled alongside Java in the `kotlin/` subproject
-- **TestNG** — test framework (not JUnit)
+- **JUnit** — test framework 
 - **Testcontainers** — spins up a real `mongo:<major>` Docker container for tests
 - **SmallRye Config** — drives `MorphiaConfig` via `morphia-config.properties` on the classpath
 
@@ -65,7 +65,7 @@ Use `test-all.sh` for an interactive matrix test across multiple server / driver
 
 ### Framework and conventions
 
-- **TestNG** is used; no JUnit.
+- **JUnit** is used
 - Tests that need a running MongoDB instance extend `TestBase` (in `core/src/test/java/dev/morphia/test/`).
 - `MorphiaTestSetup` (parent of `TestBase`) starts a Testcontainers `MongoDBContainer` in `@BeforeSuite`; tests share a single container per suite run.
 - Pass `-Dmongodb=local` to point at a local `mongod` on `27017` instead of a container.

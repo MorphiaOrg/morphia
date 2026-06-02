@@ -9,22 +9,21 @@ import dev.morphia.Datastore;
 import dev.morphia.Morphia;
 import dev.morphia.query.Query;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.MongoDBContainer;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 
 import static com.mongodb.MongoClientSettings.builder;
 import static dev.morphia.query.filters.Filters.gt;
 import static dev.morphia.query.filters.Filters.lte;
 import static dev.morphia.query.updates.UpdateOperators.inc;
 import static org.bson.UuidRepresentation.STANDARD;
-import static org.testng.Assert.assertEquals;
 
 /**
  * This class is used in the Quick Tour documentation and is used to demonstrate various Morphia features.
  */
-@Test
 public class QuickTourTest {
     private static MongoDBContainer mongoDBContainer;
 
@@ -32,7 +31,7 @@ public class QuickTourTest {
 
     private static MongoClient mongoClient;
 
-    @BeforeClass
+    @BeforeAll
     public static void start() {
         mongoDBContainer = new MongoDBContainer("mongo:7");
         mongoDBContainer.start();
@@ -43,12 +42,13 @@ public class QuickTourTest {
                 .build());
     }
 
-    @AfterClass
-    public void stop() {
+    @AfterAll
+    public static void stop() {
         mongoClient.close();
         mongoDBContainer.stop();
     }
 
+    @Test
     public void demo() {
         final Datastore datastore = Morphia.createDatastore(mongoClient);
         datastore.getDatabase().drop();
@@ -65,18 +65,18 @@ public class QuickTourTest {
         Query<Employee> query = datastore.find(Employee.class);
         final long employees = query.count();
 
-        assertEquals(employees, 3);
+        Assertions.assertEquals(3, employees);
 
         long underpaid = datastore.find(Employee.class)
                 .filter(lte("salary", 30000))
                 .count();
-        assertEquals(underpaid, 1);
+        Assertions.assertEquals(1, underpaid);
 
         final Query<Employee> underPaidQuery = datastore.find(Employee.class)
                 .filter(lte("salary", 30000));
         final UpdateResult results = underPaidQuery.update(inc("salary", 10000));
 
-        assertEquals(results.getModifiedCount(), 1);
+        Assertions.assertEquals(1, results.getModifiedCount());
 
         datastore.find(Employee.class)
                 .filter(gt("salary", 100000))

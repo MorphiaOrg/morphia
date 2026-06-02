@@ -2,7 +2,8 @@ package dev.morphia.test.aggregation.expressions;
 
 import dev.morphia.test.TemplatedTestBase;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.ArrayExpressions.elementAt;
 import static dev.morphia.aggregation.expressions.ArrayExpressions.range;
@@ -18,7 +19,8 @@ public class TestZip extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/zip/example1
      * 
      */
-    @Test(testName = "Matrix Transposition")
+    @Test
+    @DisplayName("Matrix Transposition")
     public void testExample1() {
         testPipeline((aggregation) -> aggregation.pipeline(project().suppressId().include("transposed",
                 zip(elementAt("$matrix", 0), elementAt("$matrix", 1), elementAt("$matrix", 2)))));
@@ -28,7 +30,8 @@ public class TestZip extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/zip/example2
      * 
      */
-    @Test(testName = "Filtering and Preserving Indexes")
+    @Test
+    @DisplayName("Filtering and Preserving Indexes")
     public void testExample2() {
         testPipeline((aggregation) -> {
             return aggregation.pipeline(project().suppressId().include("pages",

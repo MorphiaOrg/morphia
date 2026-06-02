@@ -3,7 +3,8 @@ package dev.morphia.test.aggregation.expressions;
 import dev.morphia.test.TemplatedTestBase;
 import dev.morphia.test.util.ActionTestOptions;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static dev.morphia.aggregation.expressions.AccumulatorExpressions.push;
 import static dev.morphia.aggregation.expressions.DateExpressions.dayOfYear;
@@ -21,7 +22,8 @@ public class TestPush extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/push/example1
      * 
      */
-    @Test(testName = "Use in ``$group`` Stage")
+    @Test
+    @DisplayName("Use in ``$group`` Stage")
     public void testExample1() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(sort().ascending("date").ascending("item"),
@@ -33,7 +35,8 @@ public class TestPush extends TemplatedTestBase {
      * test data: dev/morphia/test/aggregation/expressions/push/example2
      * 
      */
-    @Test(testName = "Use in ``$setWindowFields`` Stage")
+    @Test
+    @DisplayName("Use in ``$setWindowFields`` Stage")
     public void testExample2() {
         checkMinServerVersion("5.0.0");
         testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
