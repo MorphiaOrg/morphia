@@ -14,6 +14,8 @@
 - Run specific test: `./mvnw test -pl :morphia-core -Dtest="ClassName#method" -Ddeploy.skip=true`
 - Run with critter mapper: `-Dmorphia.mapper=critter` (e.g., `./mvnw test -pl :morphia-core -Dmorphia.mapper=critter -Ddeploy.skip=true`)
 - Don't use `-am` with `-Dtest=` — it applies the test filter to all modules causing failures
+- When running tests to verify a fix, be sure to run it once with mapper=reflection and once with mapper=critter to ensure both work correctly.
+  - run the critter mapper first as it's more likely to have issues and you want to catch those early
 
 ## Critter Code Generator
 - Critter bytecode generation is integrated into `morphia-core` (under `dev.morphia.critter` package)
