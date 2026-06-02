@@ -24,6 +24,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.jboss.forge.roaster.ParserException;
 import org.jboss.forge.roaster.Roaster;
+import org.jboss.forge.roaster.model.ValuePair;
 import org.jboss.forge.roaster.model.source.AnnotationElementSource;
 import org.jboss.forge.roaster.model.source.AnnotationElementSource.DefaultValue;
 import org.jboss.forge.roaster.model.source.Import;
@@ -357,10 +358,14 @@ public class AnnotationBuilders extends AbstractMojo {
                 var annot = defaultValue.getAnnotation();
                 if (annot != null) {
                     var pkg = annot.getQualifiedName().substring(0, annot.getQualifiedName().lastIndexOf('.'));
-                    literal = format("%s.internal.%sBuilder.%s().build()",
+                    StringBuilder builderCall = new StringBuilder(format("%s.internal.%sBuilder.%s()",
                             pkg,
                             annot.getName(),
-                            builderMethodName(annot.getName()));
+                            builderMethodName(annot.getName())));
+                    for (ValuePair valuePair : annot.getValues()) {
+                        builderCall.append(format(".%s(%s)", valuePair.getName(), valuePair.getLiteralValue()));
+                    }
+                    literal = builderCall.append(".build()").toString();
                 } else if (literal != null && element.getType().isArray()) {
                     literal = format("new %s%s", element.getType().getName(), literal);
                 }

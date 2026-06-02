@@ -342,7 +342,7 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
             TryBlock tryBlock = method.tryBlock();
             ResultHandle fieldRef = tryBlock.invokeVirtualMethod(
                     ofMethod(Class.class, "getDeclaredField", Field.class, String.class),
-                    tryBlock.loadClass(entity),
+                    GizmoExtensions.emitClassRef(tryBlock, entity),
                     tryBlock.load(propertyName));
             tryBlock.invokeVirtualMethod(
                     ofMethod(Field.class, "setAccessible", void.class, boolean.class),

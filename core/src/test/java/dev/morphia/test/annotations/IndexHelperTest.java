@@ -438,7 +438,7 @@ public class IndexHelperTest extends TestBase {
     }
 
     @BeforeEach
-    private void clear() {
+    public void clear() {
         indexHelper = null;
     }
 

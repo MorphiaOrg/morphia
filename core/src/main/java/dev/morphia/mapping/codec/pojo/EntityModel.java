@@ -149,21 +149,7 @@ public class EntityModel {
         PropertyModel otherVersion = other.versionProperty;
         versionProperty = otherVersion != null ? getProperty(otherVersion.getName()) : null;
 
-        final EntityListeners entityLisAnn = getAnnotation(EntityListeners.class);
-        if (entityLisAnn != null) {
-            for (Class<?> aClass : entityLisAnn.value()) {
-                if (EntityListener.class.isAssignableFrom(aClass)) {
-                    listeners.add(new EntityListenerAdapter(aClass));
-                } else {
-                    listeners.add(new UntypedEntityListenerAdapter(aClass));
-                }
-            }
-        }
-
-        OnEntityListenerAdapter adapter = OnEntityListenerAdapter.listen(getType());
-        if (adapter != null) {
-            listeners.add(adapter);
-        }
+        initializeListeners();
     }
 
     public boolean addProperty(PropertyModel property) {
@@ -427,6 +413,29 @@ public class EntityModel {
                 .anyMatch(listener -> listener.hasAnnotation(type));
     }
 
+    /**
+     * Populates the {@code listeners} list from {@code @EntityListeners} and on-entity lifecycle methods.
+     * Subclasses that bypass the normal {@link MappingUtil} pipeline (e.g. {@code CritterEntityModel}) must
+     * call this after their properties have been set up.
+     */
+    protected void initializeListeners() {
+        final EntityListeners entityLisAnn = getAnnotation(EntityListeners.class);
+        if (entityLisAnn != null) {
+            for (Class<?> aClass : entityLisAnn.value()) {
+                if (EntityListener.class.isAssignableFrom(aClass)) {
+                    listeners.add(new EntityListenerAdapter(aClass));
+                } else {
+                    listeners.add(new UntypedEntityListenerAdapter(aClass));
+                }
+            }
+        }
+
+        OnEntityListenerAdapter adapter = OnEntityListenerAdapter.listen(getType());
+        if (adapter != null) {
+            listeners.add(adapter);
+        }
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(annotations, propertyModelsByName, propertyModelsByMappedName, creatorFactory,
@@ -551,21 +560,7 @@ public class EntityModel {
             //                superClass.addSubtype(EntityModel.this);
             //            }
 
-            final EntityListeners entityLisAnn = getAnnotation(EntityListeners.class);
-            if (entityLisAnn != null) {
-                for (Class<?> aClass : entityLisAnn.value()) {
-                    if (EntityListener.class.isAssignableFrom(aClass)) {
-                        listeners.add(new EntityListenerAdapter(aClass));
-                    } else {
-                        listeners.add(new UntypedEntityListenerAdapter(aClass));
-                    }
-                }
-            }
-
-            OnEntityListenerAdapter adapter = OnEntityListenerAdapter.listen(getType());
-            if (adapter != null) {
-                listeners.add(adapter);
-            }
+            initializeListeners();
 
         }
 
