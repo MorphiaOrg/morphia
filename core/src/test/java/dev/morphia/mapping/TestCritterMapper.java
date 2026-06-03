@@ -234,7 +234,33 @@ public class TestCritterMapper {
                 "Static getter must not be exposed as a property");
     }
 
+    @Test
+    public void testSubclassGetterShadowsSuperclassGetter() {
+        CritterMapper mapper = new CritterMapper(
+                MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
+        EntityModel model = mapper.mapEntity(OverridingChild.class);
+        Assertions.assertNotNull(model.getProperty("value"),
+                "Property must be discovered when both subclass and superclass define the getter");
+        OverridingChild instance = new OverridingChild();
+        model.getProperty("value").getAccessor().set(instance, "x");
+        Assertions.assertEquals("OVERRIDDEN:x", model.getProperty("value").getAccessor().get(instance),
+                "Subclass getter must take precedence over superclass getter");
+    }
+
+    @Test
+    public void testGrandparentSetterDiscovered() {
+        CritterMapper mapper = new CritterMapper(
+                MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
+        EntityModel model = mapper.mapEntity(GrandChild.class);
+        Assertions.assertNotNull(model.getProperty("data"),
+                "Setter defined only in grandparent must be found via hierarchy walk");
+        GrandChild instance = new GrandChild();
+        model.getProperty("data").getAccessor().set(instance, "test");
+        Assertions.assertEquals("test", model.getProperty("data").getAccessor().get(instance));
+    }
+
     public static class MethodsBase {
+        // transient: excluded from field-based discovery so only METHODS mode maps this property
         private transient String name;
 
         public String getName() {
@@ -305,5 +331,50 @@ public class TestCritterMapper {
         @PrePersist
         public void prePersist() {
         }
+    }
+
+    public static class OverridingBase {
+        private transient String value;
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+    }
+
+    @Entity("overriding_child")
+    public static class OverridingChild extends OverridingBase {
+        @Id
+        ObjectId id;
+
+        @Override
+        public String getValue() {
+            String raw = super.getValue();
+            return raw == null ? null : "OVERRIDDEN:" + raw;
+        }
+    }
+
+    public static class GrandParent {
+        private transient String data;
+
+        public String getData() {
+            return data;
+        }
+
+        public void setData(String data) {
+            this.data = data;
+        }
+    }
+
+    public static class MiddleParent extends GrandParent {
+    }
+
+    @Entity("grand_child")
+    public static class GrandChild extends MiddleParent {
+        @Id
+        ObjectId id;
     }
 }

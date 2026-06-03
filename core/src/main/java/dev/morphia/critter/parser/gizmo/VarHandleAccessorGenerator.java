@@ -141,6 +141,7 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
                     return true;
                 }
             } catch (NoSuchMethodException e) {
+                // expected: this class does not declare the setter; walk up to the superclass
             }
             current = current.getSuperclass();
         }

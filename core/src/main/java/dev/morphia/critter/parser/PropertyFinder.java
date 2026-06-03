@@ -126,8 +126,10 @@ public class PropertyFinder {
     private ClassNode readClassNode(Class<?> type) {
         String resourceName = "%s.class".formatted(type.getName().replace('.', '/'));
         InputStream inputStream = type.getClassLoader().getResourceAsStream(resourceName);
-        if (inputStream == null)
+        if (inputStream == null) {
+            LOG.debug("Bytecode resource not found for {}; hierarchy traversal stops here", type.getName());
             return null;
+        }
         ClassNode node = new ClassNode();
         try {
             new ClassReader(inputStream).accept(node, 0);
@@ -229,7 +231,7 @@ public class PropertyFinder {
                 node = readClassNode(current);
             if (node != null) {
                 MethodNode setter = findSetter(node, propName, returnType);
-                // Private setters in a superclass are not inherited
+                // Private setters are inaccessible from generated accessor bytecode
                 if (setter != null && (setter.access & Opcodes.ACC_PRIVATE) == 0) {
                     return setter;
                 }
