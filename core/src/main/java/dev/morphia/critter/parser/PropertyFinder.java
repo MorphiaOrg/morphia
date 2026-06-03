@@ -15,17 +15,22 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.PropertyDiscovery;
 
 import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Discovers entity properties (fields or getter methods) from a parsed ASM {@link ClassNode}
  * and produces the corresponding {@link PropertyModelGenerator} instances.
  */
 public class PropertyFinder {
+    private static final Logger LOG = LoggerFactory.getLogger(PropertyFinder.class);
+
     private final Map<Class<?>, Object> providerMap;
     private final CritterClassLoader classLoader;
     private final boolean runtimeMode;
@@ -59,7 +64,7 @@ public class PropertyFinder {
      */
     public List<PropertyModelGenerator> find(Class<?> entityType, ClassNode classNode) {
         List<PropertyModelGenerator> models = new ArrayList<>();
-        List<MethodNode> methods = discoverPropertyMethods(classNode);
+        List<MethodNode> methods = discoverPropertyMethods(entityType, classNode);
         if (methods.isEmpty()) {
             List<FieldNode> fields = discoverAllFields(entityType, classNode);
             if (!runtimeMode) {
@@ -121,12 +126,15 @@ public class PropertyFinder {
     private ClassNode readClassNode(Class<?> type) {
         String resourceName = "%s.class".formatted(type.getName().replace('.', '/'));
         InputStream inputStream = type.getClassLoader().getResourceAsStream(resourceName);
-        if (inputStream == null)
+        if (inputStream == null) {
+            LOG.debug("Bytecode resource not found for {}; hierarchy traversal stops here", type.getName());
             return null;
+        }
         ClassNode node = new ClassNode();
         try {
             new ClassReader(inputStream).accept(node, 0);
         } catch (IOException e) {
+            LOG.warn("Failed to read bytecode for {}: {}", type.getName(), e.getMessage());
             return null;
         }
         return node;
@@ -146,24 +154,47 @@ public class PropertyFinder {
         return result;
     }
 
-    private List<MethodNode> discoverPropertyMethods(ClassNode classNode) {
+    private List<MethodNode> discoverPropertyMethods(Class<?> entityType, ClassNode classNode) {
         List<MethodNode> result = new ArrayList<>();
-        for (MethodNode method : classNode.methods) {
-            if (!isGetter(method)) {
-                continue;
-            }
-            if (propertyDiscovery == PropertyDiscovery.METHODS) {
-                // In METHODS mode: include all getters that have a matching setter,
-                // merging annotations from both getter and setter so that annotations
-                // placed on the setter (e.g. @Version, @Text) are visible to downstream generators.
+        Map<String, Boolean> seen = new LinkedHashMap<>();
+
+        Class<?> current = entityType;
+        ClassNode currentNode = classNode;
+
+        while (current != null && current != Object.class) {
+            ClassNode node = currentNode != null ? currentNode : readClassNode(current);
+            if (node == null)
+                break;
+
+            boolean isSuperclass = current != entityType;
+            for (MethodNode method : node.methods) {
+                if (!isGetter(method))
+                    continue;
+                // Private methods are not inherited and cannot be invoked from a subclass context
+                if (isSuperclass && (method.access & Opcodes.ACC_PRIVATE) != 0)
+                    continue;
                 String propName = getterPropertyName(method);
-                MethodNode setter = findSetter(classNode, propName, Type.getReturnType(method.desc));
-                if (setter != null) {
-                    result.add(mergeAnnotations(method, setter));
+                // Subclass definition already registered; superclass version is shadowed
+                if (seen.containsKey(propName))
+                    continue;
+
+                if (propertyDiscovery == PropertyDiscovery.METHODS) {
+                    // In METHODS mode: include all getters that have a matching setter,
+                    // merging annotations from both getter and setter so that annotations
+                    // placed on the setter (e.g. @Version, @Text) are visible to downstream generators.
+                    MethodNode setter = findSetterInHierarchy(node, current, propName, Type.getReturnType(method.desc));
+                    if (setter != null) {
+                        seen.put(propName, Boolean.TRUE);
+                        result.add(mergeAnnotations(method, setter));
+                    }
+                } else if (isPropertyAnnotated(method.visibleAnnotations, false)) {
+                    seen.put(propName, Boolean.TRUE);
+                    result.add(method);
                 }
-            } else if (isPropertyAnnotated(method.visibleAnnotations, false)) {
-                result.add(method);
             }
+
+            current = current.getSuperclass();
+            currentNode = null;
         }
         return result;
     }
@@ -171,7 +202,8 @@ public class PropertyFinder {
     private boolean isGetter(MethodNode method) {
         return (method.name.startsWith("get") || method.name.startsWith("is"))
                 && Type.getArgumentTypes(method.desc).length == 0
-                && !Type.getReturnType(method.desc).equals(Type.VOID_TYPE);
+                && !Type.getReturnType(method.desc).equals(Type.VOID_TYPE)
+                && (method.access & Opcodes.ACC_STATIC) == 0;
     }
 
     private String getterPropertyName(MethodNode method) {
@@ -187,6 +219,25 @@ public class PropertyFinder {
             if (method.name.equals(setterName) && method.desc.equals(setterDesc)) {
                 return method;
             }
+        }
+        return null;
+    }
+
+    private MethodNode findSetterInHierarchy(ClassNode startNode, Class<?> startClass, String propName, Type returnType) {
+        ClassNode node = startNode;
+        Class<?> current = startClass;
+        while (current != null && current != Object.class) {
+            if (node == null)
+                node = readClassNode(current);
+            if (node != null) {
+                MethodNode setter = findSetter(node, propName, returnType);
+                // Private setters are inaccessible from generated accessor bytecode
+                if (setter != null && (setter.access & Opcodes.ACC_PRIVATE) == 0) {
+                    return setter;
+                }
+            }
+            current = current.getSuperclass();
+            node = null;
         }
         return null;
     }

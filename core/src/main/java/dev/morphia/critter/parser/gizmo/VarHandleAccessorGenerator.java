@@ -5,6 +5,7 @@ import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.invoke.VarHandle;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Map;
 
@@ -133,12 +134,19 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
                 return false;
             }
         }
-        try {
-            entity.getDeclaredMethod(setterName, paramClass);
-            return true;
-        } catch (NoSuchMethodException e) {
-            return false;
+        Class<?> current = entity;
+        while (current != null && current != Object.class) {
+            try {
+                Method m = current.getDeclaredMethod(setterName, paramClass);
+                if (!Modifier.isPrivate(m.getModifiers()) && !Modifier.isStatic(m.getModifiers())) {
+                    return true;
+                }
+            } catch (NoSuchMethodException e) {
+                // expected: this class does not declare the setter; walk up to the superclass
+            }
+            current = current.getSuperclass();
         }
+        return false;
     }
 
     /**
