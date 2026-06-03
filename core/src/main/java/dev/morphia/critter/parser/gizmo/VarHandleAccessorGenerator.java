@@ -133,12 +133,16 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
                 return false;
             }
         }
-        try {
-            entity.getDeclaredMethod(setterName, paramClass);
-            return true;
-        } catch (NoSuchMethodException e) {
-            return false;
+        Class<?> current = entity;
+        while (current != null && current != Object.class) {
+            try {
+                current.getDeclaredMethod(setterName, paramClass);
+                return true;
+            } catch (NoSuchMethodException e) {
+                current = current.getSuperclass();
+            }
         }
+        return false;
     }
 
     /**
