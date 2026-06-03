@@ -104,12 +104,12 @@ public class TestVarHandleAccessor {
         FinalFieldEntity entity = new FinalFieldEntity();
         PropertyAccessor<String> accessor = loadAccessor(loader, FinalFieldEntity.class, "label");
 
-        Assert.assertEquals(accessor.get(entity), "original",
+        Assertions.assertEquals(accessor.get(entity), "original",
                 "get() must return the correct final field value");
         try {
             accessor.set(entity, "modified");
         } catch (RuntimeException e) {
-            Assert.assertTrue(e.getMessage().contains("label"),
+            Assertions.assertTrue(e.getMessage().contains("label"),
                     "Fallback RuntimeException must mention the field name, got: " + e.getMessage());
         }
     }
