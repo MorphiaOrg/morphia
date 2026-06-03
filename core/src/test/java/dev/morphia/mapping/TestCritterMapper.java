@@ -14,6 +14,7 @@ import dev.morphia.annotations.PrePersist;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
 import org.bson.types.ObjectId;
@@ -189,6 +190,122 @@ public class TestCritterMapper {
                 "register() must make the model retrievable, as importModels() relies on it");
     }
 
+    @Test
+    public void testInheritedGetterDiscoveryInMethodsMode() {
+        CritterMapper mapper = new CritterMapper(
+                MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
+        EntityModel model = mapper.mapEntity(MethodsChild.class);
+        Assertions.assertNotNull(model, "mapEntity should return a model for MethodsChild");
+        Assertions.assertTrue(model instanceof CritterEntityModel,
+                "Expected CritterEntityModel but got: " + model.getClass().getName());
+        Assertions.assertNotNull(model.getProperty("name"),
+                "Property 'name' inherited from MethodsBase should be discovered in METHODS mode");
+    }
+
+    @Test
+    public void testMethodBasedPropertyRoundTrip() {
+        CritterMapper mapper = new CritterMapper(
+                MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
+        EntityModel model = mapper.mapEntity(MethodsChild.class);
+        PropertyModel property = model.getProperty("name");
+        Assertions.assertNotNull(property, "Property 'name' must be discovered");
+        MethodsChild instance = new MethodsChild();
+        property.getAccessor().set(instance, "hello");
+        Assertions.assertEquals("hello", property.getAccessor().get(instance),
+                "Accessor must round-trip the value written via set()");
+    }
+
+    @Test
+    public void testPrivateSuperclassGetterExcluded() {
+        CritterMapper mapper = new CritterMapper(
+                MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
+        EntityModel model = mapper.mapEntity(PrivateGetterChild.class);
+        Assertions.assertNotNull(model);
+        Assertions.assertNull(model.getProperty("secret"),
+                "Private getter in superclass must not be exposed as a property");
+    }
+
+    @Test
+    public void testStaticGetterExcluded() {
+        CritterMapper mapper = mapper();
+        EntityModel model = mapper.mapEntity(StaticGetterEntity.class);
+        Assertions.assertNotNull(model);
+        Assertions.assertNull(model.getProperty("kind"),
+                "Static getter must not be exposed as a property");
+    }
+
+    @Test
+    public void testSubclassGetterShadowsSuperclassGetter() {
+        CritterMapper mapper = new CritterMapper(
+                MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
+        EntityModel model = mapper.mapEntity(OverridingChild.class);
+        Assertions.assertNotNull(model.getProperty("value"),
+                "Property must be discovered when both subclass and superclass define the getter");
+        OverridingChild instance = new OverridingChild();
+        model.getProperty("value").getAccessor().set(instance, "x");
+        Assertions.assertEquals("OVERRIDDEN:x", model.getProperty("value").getAccessor().get(instance),
+                "Subclass getter must take precedence over superclass getter");
+    }
+
+    @Test
+    public void testGrandparentSetterDiscovered() {
+        CritterMapper mapper = new CritterMapper(
+                MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
+        EntityModel model = mapper.mapEntity(GrandChild.class);
+        Assertions.assertNotNull(model.getProperty("data"),
+                "Setter defined only in grandparent must be found via hierarchy walk");
+        GrandChild instance = new GrandChild();
+        model.getProperty("data").getAccessor().set(instance, "test");
+        Assertions.assertEquals("test", model.getProperty("data").getAccessor().get(instance));
+    }
+
+    public static class MethodsBase {
+        // transient: excluded from field-based discovery so only METHODS mode maps this property
+        private transient String name;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
+    @Entity("methods_child")
+    public static class MethodsChild extends MethodsBase {
+        @Id
+        ObjectId id;
+    }
+
+    public static class PrivateGetterBase {
+        private transient String secret;
+
+        private String getSecret() {
+            return secret;
+        }
+
+        public void setSecret(String secret) {
+            this.secret = secret;
+        }
+    }
+
+    @Entity("private_getter_child")
+    public static class PrivateGetterChild extends PrivateGetterBase {
+        @Id
+        ObjectId id;
+    }
+
+    @Entity("static_getter_entity")
+    public static class StaticGetterEntity {
+        @Id
+        ObjectId id;
+
+        public static String getKind() {
+            return "example";
+        }
+    }
+
     /**
      * Verifies that CritterMapper correctly reports lifecycle methods.
      * Previously, GizmoEntityModelGenerator hard-coded hasLifecycle() to always return false,
@@ -214,5 +331,50 @@ public class TestCritterMapper {
         @PrePersist
         public void prePersist() {
         }
+    }
+
+    public static class OverridingBase {
+        private transient String value;
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+    }
+
+    @Entity("overriding_child")
+    public static class OverridingChild extends OverridingBase {
+        @Id
+        ObjectId id;
+
+        @Override
+        public String getValue() {
+            String raw = super.getValue();
+            return raw == null ? null : "OVERRIDDEN:" + raw;
+        }
+    }
+
+    public static class GrandParent {
+        private transient String data;
+
+        public String getData() {
+            return data;
+        }
+
+        public void setData(String data) {
+            this.data = data;
+        }
+    }
+
+    public static class MiddleParent extends GrandParent {
+    }
+
+    @Entity("grand_child")
+    public static class GrandChild extends MiddleParent {
+        @Id
+        ObjectId id;
     }
 }
