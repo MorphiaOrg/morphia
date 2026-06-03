@@ -167,8 +167,8 @@ public class PropertyFinder {
                 if (isSuperclass && (method.access & Opcodes.ACC_PRIVATE) != 0)
                     continue;
                 String propName = getterPropertyName(method);
-                // Subclass method takes precedence — skip if already seen
-                if (seen.putIfAbsent(propName, Boolean.TRUE) != null)
+                // Skip if a qualifying getter was already found at a lower level in the hierarchy
+                if (seen.containsKey(propName))
                     continue;
 
                 if (propertyDiscovery == PropertyDiscovery.METHODS) {
@@ -177,9 +177,11 @@ public class PropertyFinder {
                     // placed on the setter (e.g. @Version, @Text) are visible to downstream generators.
                     MethodNode setter = findSetterInHierarchy(node, current, propName, Type.getReturnType(method.desc));
                     if (setter != null) {
+                        seen.put(propName, Boolean.TRUE);
                         result.add(mergeAnnotations(method, setter));
                     }
                 } else if (isPropertyAnnotated(method.visibleAnnotations, false)) {
+                    seen.put(propName, Boolean.TRUE);
                     result.add(method);
                 }
             }
