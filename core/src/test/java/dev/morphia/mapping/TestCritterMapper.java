@@ -208,7 +208,7 @@ public class TestCritterMapper {
 
     /** Base class with a getter/setter pair that the subclass inherits. */
     public static class MethodsBase {
-        private String name;
+        private transient String name;
 
         public String getName() {
             return name;

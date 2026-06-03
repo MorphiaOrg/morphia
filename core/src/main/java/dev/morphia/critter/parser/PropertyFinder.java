@@ -15,6 +15,7 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.PropertyDiscovery;
 
 import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;
@@ -158,8 +159,12 @@ public class PropertyFinder {
             if (node == null)
                 break;
 
+            boolean isSuperclass = current != entityType;
             for (MethodNode method : node.methods) {
                 if (!isGetter(method))
+                    continue;
+                // Private methods in a superclass are not inherited — skip them
+                if (isSuperclass && (method.access & Opcodes.ACC_PRIVATE) != 0)
                     continue;
                 String propName = getterPropertyName(method);
                 // Subclass method takes precedence — skip if already seen
@@ -170,7 +175,7 @@ public class PropertyFinder {
                     // In METHODS mode: include all getters that have a matching setter,
                     // merging annotations from both getter and setter so that annotations
                     // placed on the setter (e.g. @Version, @Text) are visible to downstream generators.
-                    MethodNode setter = findSetter(node, propName, Type.getReturnType(method.desc));
+                    MethodNode setter = findSetterInHierarchy(node, current, propName, Type.getReturnType(method.desc));
                     if (setter != null) {
                         result.add(mergeAnnotations(method, setter));
                     }
@@ -188,7 +193,8 @@ public class PropertyFinder {
     private boolean isGetter(MethodNode method) {
         return (method.name.startsWith("get") || method.name.startsWith("is"))
                 && Type.getArgumentTypes(method.desc).length == 0
-                && !Type.getReturnType(method.desc).equals(Type.VOID_TYPE);
+                && !Type.getReturnType(method.desc).equals(Type.VOID_TYPE)
+                && (method.access & Opcodes.ACC_STATIC) == 0;
     }
 
     private String getterPropertyName(MethodNode method) {
@@ -204,6 +210,25 @@ public class PropertyFinder {
             if (method.name.equals(setterName) && method.desc.equals(setterDesc)) {
                 return method;
             }
+        }
+        return null;
+    }
+
+    private MethodNode findSetterInHierarchy(ClassNode startNode, Class<?> startClass, String propName, Type returnType) {
+        ClassNode node = startNode;
+        Class<?> current = startClass;
+        while (current != null && current != Object.class) {
+            if (node == null)
+                node = readClassNode(current);
+            if (node != null) {
+                MethodNode setter = findSetter(node, propName, returnType);
+                // Private setters in a superclass are not inherited
+                if (setter != null && (setter.access & Opcodes.ACC_PRIVATE) == 0) {
+                    return setter;
+                }
+            }
+            current = current.getSuperclass();
+            node = null;
         }
         return null;
     }

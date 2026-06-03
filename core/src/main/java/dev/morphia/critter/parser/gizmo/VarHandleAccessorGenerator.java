@@ -136,11 +136,14 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
         Class<?> current = entity;
         while (current != null && current != Object.class) {
             try {
-                current.getDeclaredMethod(setterName, paramClass);
-                return true;
+                java.lang.reflect.Method m = current.getDeclaredMethod(setterName, paramClass);
+                if (!Modifier.isPrivate(m.getModifiers()) && !Modifier.isStatic(m.getModifiers())) {
+                    return true;
+                }
             } catch (NoSuchMethodException e) {
-                current = current.getSuperclass();
+                // not on this level, keep walking
             }
+            current = current.getSuperclass();
         }
         return false;
     }
