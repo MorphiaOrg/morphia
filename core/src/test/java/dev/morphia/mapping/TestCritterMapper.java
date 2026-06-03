@@ -14,6 +14,7 @@ import dev.morphia.annotations.PrePersist;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
 import org.bson.types.ObjectId;
@@ -189,11 +190,6 @@ public class TestCritterMapper {
                 "register() must make the model retrievable, as importModels() relies on it");
     }
 
-    /**
-     * Verify that inherited getter/setter pairs are discovered when METHODS mode is used.
-     * Before the fix, PropertyFinder.discoverPropertyMethods() only inspected the immediate
-     * class's methods and missed getters defined in parent classes.
-     */
     @Test
     public void testInheritedGetterDiscoveryInMethodsMode() {
         CritterMapper mapper = new CritterMapper(
@@ -206,7 +202,38 @@ public class TestCritterMapper {
                 "Property 'name' inherited from MethodsBase should be discovered in METHODS mode");
     }
 
-    /** Base class with a getter/setter pair that the subclass inherits. */
+    @Test
+    public void testMethodBasedPropertyRoundTrip() {
+        CritterMapper mapper = new CritterMapper(
+                MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
+        EntityModel model = mapper.mapEntity(MethodsChild.class);
+        PropertyModel property = model.getProperty("name");
+        Assertions.assertNotNull(property, "Property 'name' must be discovered");
+        MethodsChild instance = new MethodsChild();
+        property.getAccessor().set(instance, "hello");
+        Assertions.assertEquals("hello", property.getAccessor().get(instance),
+                "Accessor must round-trip the value written via set()");
+    }
+
+    @Test
+    public void testPrivateSuperclassGetterExcluded() {
+        CritterMapper mapper = new CritterMapper(
+                MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
+        EntityModel model = mapper.mapEntity(PrivateGetterChild.class);
+        Assertions.assertNotNull(model);
+        Assertions.assertNull(model.getProperty("secret"),
+                "Private getter in superclass must not be exposed as a property");
+    }
+
+    @Test
+    public void testStaticGetterExcluded() {
+        CritterMapper mapper = mapper();
+        EntityModel model = mapper.mapEntity(StaticGetterEntity.class);
+        Assertions.assertNotNull(model);
+        Assertions.assertNull(model.getProperty("kind"),
+                "Static getter must not be exposed as a property");
+    }
+
     public static class MethodsBase {
         private transient String name;
 
@@ -225,7 +252,35 @@ public class TestCritterMapper {
         ObjectId id;
     }
 
-    /*
+    public static class PrivateGetterBase {
+        private transient String secret;
+
+        private String getSecret() {
+            return secret;
+        }
+
+        public void setSecret(String secret) {
+            this.secret = secret;
+        }
+    }
+
+    @Entity("private_getter_child")
+    public static class PrivateGetterChild extends PrivateGetterBase {
+        @Id
+        ObjectId id;
+    }
+
+    @Entity("static_getter_entity")
+    public static class StaticGetterEntity {
+        @Id
+        ObjectId id;
+
+        public static String getKind() {
+            return "example";
+        }
+    }
+
+    /**
      * Verifies that CritterMapper correctly reports lifecycle methods.
      * Previously, GizmoEntityModelGenerator hard-coded hasLifecycle() to always return false,
      * silently skipping @PrePersist/@PostLoad/@PreLoad/@PostPersist callbacks for CritterMapper.

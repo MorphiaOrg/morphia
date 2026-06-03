@@ -21,12 +21,16 @@ import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Discovers entity properties (fields or getter methods) from a parsed ASM {@link ClassNode}
  * and produces the corresponding {@link PropertyModelGenerator} instances.
  */
 public class PropertyFinder {
+    private static final Logger LOG = LoggerFactory.getLogger(PropertyFinder.class);
+
     private final Map<Class<?>, Object> providerMap;
     private final CritterClassLoader classLoader;
     private final boolean runtimeMode;
@@ -128,6 +132,7 @@ public class PropertyFinder {
         try {
             new ClassReader(inputStream).accept(node, 0);
         } catch (IOException e) {
+            LOG.warn("Failed to read bytecode for {}: {}", type.getName(), e.getMessage());
             return null;
         }
         return node;
@@ -163,11 +168,11 @@ public class PropertyFinder {
             for (MethodNode method : node.methods) {
                 if (!isGetter(method))
                     continue;
-                // Private methods in a superclass are not inherited — skip them
+                // Private methods are not inherited and cannot be invoked from a subclass context
                 if (isSuperclass && (method.access & Opcodes.ACC_PRIVATE) != 0)
                     continue;
                 String propName = getterPropertyName(method);
-                // Skip if a qualifying getter was already found at a lower level in the hierarchy
+                // Subclass definition already registered; superclass version is shadowed
                 if (seen.containsKey(propName))
                     continue;
 

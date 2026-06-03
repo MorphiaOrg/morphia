@@ -141,7 +141,6 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
                     return true;
                 }
             } catch (NoSuchMethodException e) {
-                // not on this level, keep walking
             }
             current = current.getSuperclass();
         }
