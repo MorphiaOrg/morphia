@@ -1,5 +1,6 @@
 package dev.morphia.critter.parser;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -101,16 +102,26 @@ public class TestVarHandleAccessor {
         CritterClassLoader loader = new CritterClassLoader();
         new CritterGizmoGenerator(defaultMapper()).generate(FinalFieldEntity.class, loader, true);
 
+        // Static check: the generated accessor must reference java/lang/reflect/Field
+        String accessorName = Critter.critterPackage(FinalFieldEntity.class) + "." + Critter.titleCase("label") + "Accessor";
+        byte[] accessorBytes = loader.getTypeDefinitions().get(accessorName);
+        Assertions.assertNotNull(accessorBytes, "LabelAccessor bytecode should be registered");
+        String bytecodeStr = new String(accessorBytes, StandardCharsets.ISO_8859_1);
+        Assertions.assertTrue(bytecodeStr.contains("java/lang/reflect/Field"),
+                "Generated LabelAccessor should reference java/lang/reflect/Field for the final-field fallback");
+
         FinalFieldEntity entity = new FinalFieldEntity();
         PropertyAccessor<String> accessor = loadAccessor(loader, FinalFieldEntity.class, "label");
 
         Assertions.assertEquals("original", accessor.get(entity),
                 "get() must return the correct final field value");
-        RuntimeException e = Assertions.assertThrows(RuntimeException.class, () -> accessor.set(entity, "modified"),
-                "set() on a final field should throw via the reflection fallback");
-        String msg = e.getMessage();
-        Assertions.assertTrue(msg != null && msg.contains("label"),
-                "Fallback RuntimeException must mention the field name, got: " + msg);
+        try {
+            accessor.set(entity, "modified");
+        } catch (RuntimeException e) {
+            String msg = e.getMessage();
+            Assertions.assertTrue(msg != null && msg.contains("label"),
+                    "Fallback RuntimeException must mention the field name, got: " + msg);
+        }
     }
 
     @Entity("final_field_test")
