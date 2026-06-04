@@ -23,15 +23,17 @@ for (prop in properties) {
 }
 
 // ── syntheticAccessorMethodsShouldExist ─────────────────────────────────────
-// Load the modified Person.class from the output directory via a URLClassLoader
-// so we can use reflection to check for __read* methods.
+// Use javap to read method signatures without needing transitive dependencies.
 
-def urls = [
-    new File(basedir, "target/generated-classes/critter").toURI().toURL()
-] as URL[]
-def loader = new URLClassLoader(urls, Thread.currentThread().contextClassLoader)
-def personClass = loader.loadClass("com.example.Person")
-def methodNames = personClass.getDeclaredMethods().collect { it.name }
+File personClassFile = new File(outputDir, "com/example/Person.class")
+assert personClassFile.exists() : "Person.class should exist in generated-classes at ${personClassFile.absolutePath}"
+
+def proc = ["javap", "-p", personClassFile.absolutePath].execute()
+def javapOutput = proc.text
+def methodNames = javapOutput.readLines().collect { line ->
+    def matcher = line =~ /\s+\S.*\s+(\w+)\s*\(/
+    matcher ? matcher[0][1] : null
+}.findAll { it != null }
 
 for (prop in properties) {
     String readMethod = "__read${prop}"
