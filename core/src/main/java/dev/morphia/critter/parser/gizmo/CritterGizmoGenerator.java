@@ -1,21 +1,22 @@
 package dev.morphia.critter.parser.gizmo;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import dev.morphia.critter.CritterClassLoader;
+import dev.morphia.critter.parser.FieldInfo;
+import dev.morphia.critter.parser.MethodInfo;
 import dev.morphia.critter.parser.PropertyFinder;
 import dev.morphia.critter.parser.asm.AddFieldAccessorMethods;
 import dev.morphia.critter.parser.asm.AddMethodAccessorMethods;
 import dev.morphia.mapping.Mapper;
 
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldNode;
-import org.objectweb.asm.tree.MethodNode;
+import io.github.dmlloyd.classfile.ClassFile;
+import io.github.dmlloyd.classfile.ClassModel;
 
 /**
- * Facade that orchestrates the full Gizmo-based code generation pipeline for a Morphia entity,
+ * Facade that orchestrates the full ClassFile-based code generation pipeline for a Morphia entity,
  * including field/method accessor injection and property/entity model generation.
  */
 public class CritterGizmoGenerator {
@@ -39,20 +40,20 @@ public class CritterGizmoGenerator {
      * @return the generated entity model generator
      */
     public GizmoEntityModelGenerator generate(Class<?> type, CritterClassLoader critterClassLoader, boolean runtimeMode) {
-        ClassNode classNode = new ClassNode();
         String resourceName = "%s.class".formatted(type.getName().replace('.', '/'));
-        java.io.InputStream inputStream = type.getClassLoader().getResourceAsStream(resourceName);
+        InputStream inputStream = type.getClassLoader().getResourceAsStream(resourceName);
         if (inputStream == null) {
             throw new IllegalArgumentException("Could not find class file for %s".formatted(type.getName()));
         }
+        ClassModel classModel;
         try {
-            new ClassReader(inputStream).accept(classNode, 0);
+            classModel = ClassFile.of().parse(inputStream.readAllBytes());
         } catch (IOException e) {
             throw new RuntimeException("Failed to read class %s".formatted(type.getName()), e);
         }
         PropertyFinder propertyFinder = new PropertyFinder(mapper, critterClassLoader, runtimeMode);
 
-        return entityModel(type, critterClassLoader, classNode, propertyFinder.find(type, classNode));
+        return entityModel(type, critterClassLoader, classModel, propertyFinder.find(type, classModel));
     }
 
     /**
@@ -74,7 +75,7 @@ public class CritterGizmoGenerator {
      * @param fields     the fields for which accessor methods should be generated
      * @return the augmented class bytecode
      */
-    public byte[] fieldAccessors(Class<?> entityType, List<FieldNode> fields) {
+    public byte[] fieldAccessors(Class<?> entityType, List<FieldInfo> fields) {
         return new AddFieldAccessorMethods(entityType, fields).emit();
     }
 
@@ -85,7 +86,7 @@ public class CritterGizmoGenerator {
      * @param methods    the getter methods for which accessor methods should be generated
      * @return the augmented class bytecode
      */
-    public byte[] methodAccessors(Class<?> entityType, List<MethodNode> methods) {
+    public byte[] methodAccessors(Class<?> entityType, List<MethodInfo> methods) {
         return new AddMethodAccessorMethods(entityType, methods).emit();
     }
 
@@ -97,7 +98,7 @@ public class CritterGizmoGenerator {
      * @param field              the field for which a property accessor should be generated
      * @return the emitted property accessor generator
      */
-    public PropertyAccessorGenerator propertyAccessor(Class<?> entityType, CritterClassLoader critterClassLoader, FieldNode field) {
+    public PropertyAccessorGenerator propertyAccessor(Class<?> entityType, CritterClassLoader critterClassLoader, FieldInfo field) {
         return new PropertyAccessorGenerator(entityType, critterClassLoader, field).emit();
     }
 
@@ -109,7 +110,7 @@ public class CritterGizmoGenerator {
      * @param method             the getter method for which a property accessor should be generated
      * @return the emitted property accessor generator
      */
-    public PropertyAccessorGenerator propertyAccessor(Class<?> entityType, CritterClassLoader critterClassLoader, MethodNode method) {
+    public PropertyAccessorGenerator propertyAccessor(Class<?> entityType, CritterClassLoader critterClassLoader, MethodInfo method) {
         return new PropertyAccessorGenerator(entityType, critterClassLoader, method).emit();
     }
 
@@ -121,7 +122,7 @@ public class CritterGizmoGenerator {
      * @param field              the field for which a VarHandle accessor should be generated
      * @return the emitted VarHandle accessor generator
      */
-    public VarHandleAccessorGenerator varHandleAccessor(Class<?> entityType, CritterClassLoader critterClassLoader, FieldNode field) {
+    public VarHandleAccessorGenerator varHandleAccessor(Class<?> entityType, CritterClassLoader critterClassLoader, FieldInfo field) {
         return new VarHandleAccessorGenerator(entityType, critterClassLoader, field).emit();
     }
 
@@ -133,7 +134,7 @@ public class CritterGizmoGenerator {
      * @param method             the getter method for which a VarHandle accessor should be generated
      * @return the emitted VarHandle accessor generator
      */
-    public VarHandleAccessorGenerator varHandleAccessor(Class<?> entityType, CritterClassLoader critterClassLoader, MethodNode method) {
+    public VarHandleAccessorGenerator varHandleAccessor(Class<?> entityType, CritterClassLoader critterClassLoader, MethodInfo method) {
         return new VarHandleAccessorGenerator(entityType, critterClassLoader, method).emit();
     }
 
@@ -145,7 +146,7 @@ public class CritterGizmoGenerator {
      * @param field              the field for which a property model should be generated
      * @return the emitted property model generator
      */
-    public PropertyModelGenerator propertyModelGenerator(Class<?> entityType, CritterClassLoader critterClassLoader, FieldNode field) {
+    public PropertyModelGenerator propertyModelGenerator(Class<?> entityType, CritterClassLoader critterClassLoader, FieldInfo field) {
         return new PropertyModelGenerator(mapper.getConfig(), entityType, critterClassLoader, field).emit();
     }
 
@@ -157,7 +158,7 @@ public class CritterGizmoGenerator {
      * @param method             the getter method for which a property model should be generated
      * @return the emitted property model generator
      */
-    public PropertyModelGenerator propertyModelGenerator(Class<?> entityType, CritterClassLoader critterClassLoader, MethodNode method) {
+    public PropertyModelGenerator propertyModelGenerator(Class<?> entityType, CritterClassLoader critterClassLoader, MethodInfo method) {
         return new PropertyModelGenerator(mapper.getConfig(), entityType, critterClassLoader, method).emit();
     }
 
@@ -166,12 +167,12 @@ public class CritterGizmoGenerator {
      *
      * @param type               the entity class
      * @param critterClassLoader the class loader that will receive the generated bytecode
-     * @param classNode          the ASM class node for the entity
+     * @param classModel         the ClassModel for the entity
      * @param properties         the list of property model generators for the entity's properties
      * @return the emitted entity model generator
      */
     public GizmoEntityModelGenerator entityModel(Class<?> type, CritterClassLoader critterClassLoader,
-            ClassNode classNode, List<PropertyModelGenerator> properties) {
-        return new GizmoEntityModelGenerator(mapper, type, critterClassLoader, classNode, properties).emit();
+            ClassModel classModel, List<PropertyModelGenerator> properties) {
+        return new GizmoEntityModelGenerator(mapper, type, critterClassLoader, properties).emit();
     }
 }

@@ -166,16 +166,18 @@
             <artifactId>byte-buddy</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.quarkus.gizmo</groupId>
-            <artifactId>gizmo</artifactId>
+            <groupId>io.github.dmlloyd</groupId>
+            <artifactId>jdk-classfile-backport</artifactId>
         </dependency>
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm-tree</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm-util</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

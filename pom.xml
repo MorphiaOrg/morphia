@@ -55,6 +55,7 @@
         <driver-javadoc.link>https://mongodb.github.io/mongo-java-driver/${driver.minor.version}/apidocs</driver-javadoc.link>
         <morphia-javadoc.link>https://morphia.dev/morphia/${morphia.minor.version}/javadoc</morphia-javadoc.link>
         <gizmo.version>1.10.1</gizmo.version>
+        <classfile.backport.version>25.1</classfile.backport.version>
         <jackson.version>2.22.0</jackson.version>
         <jackson-annotations.version>2.22</jackson-annotations.version>
         <json.assert.version>1.5.3</json.assert.version>
@@ -374,6 +375,11 @@
                 <groupId>io.quarkus.gizmo</groupId>
                 <artifactId>gizmo</artifactId>
                 <version>${gizmo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.dmlloyd</groupId>
+                <artifactId>jdk-classfile-backport</artifactId>
+                <version>${classfile.backport.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.bytebuddy</groupId>

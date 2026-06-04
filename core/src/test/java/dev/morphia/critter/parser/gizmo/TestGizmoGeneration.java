@@ -19,8 +19,8 @@ import dev.morphia.annotations.internal.FieldBuilder;
 import dev.morphia.annotations.internal.IndexBuilder;
 import dev.morphia.annotations.internal.IndexOptionsBuilder;
 import dev.morphia.annotations.internal.IndexesBuilder;
-import dev.morphia.critter.ClassfileOutput;
 import dev.morphia.critter.CritterClassLoader;
+import dev.morphia.critter.parser.MethodInfo;
 import dev.morphia.critter.parser.asm.AddMethodAccessorMethods;
 import dev.morphia.critter.sources.Example;
 import dev.morphia.critter.sources.MethodExample;
@@ -31,18 +31,14 @@ import dev.morphia.mapping.lifecycle.EntityListenerAdapter;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.AnnotationNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.MethodNode;
 
-import io.quarkus.gizmo.ClassCreator;
-import io.quarkus.gizmo.MethodDescriptor;
+import io.github.dmlloyd.classfile.ClassFile;
+import io.github.dmlloyd.classfile.ClassModel;
+import io.github.dmlloyd.classfile.attribute.RuntimeVisibleAnnotationsAttribute;
 
 import static com.mongodb.client.model.CollationCaseFirst.LOWER;
 import static dev.morphia.critter.parser.GeneratorsTestHelper.defaultMapper;
-import static io.quarkus.gizmo.MethodDescriptor.ofMethod;
+import static io.github.dmlloyd.classfile.Attributes.runtimeVisibleAnnotations;
 
 public class TestGizmoGeneration {
     private final CritterClassLoader critterClassLoader = new CritterClassLoader();
@@ -50,12 +46,6 @@ public class TestGizmoGeneration {
     @Test
     public void testMapStringExample() {
         String descString = "Ljava/util/Map<Ljava/lang/String;Ldev/morphia/critter/sources/Example;>;";
-        String descriptor = descriptor(
-                java.util.Map.class,
-                descriptor(String.class),
-                descriptor(Example.class));
-
-        Assertions.assertEquals(descString, descriptor);
         TypeData<?> typeData = PropertyModelGenerator.typeData(descString, Thread.currentThread().getContextClassLoader()).get(0);
         Assertions.assertEquals(typeDataHelper(java.util.Map.class, typeDataHelper(String.class), typeDataHelper(Example.class)), typeData);
     }
@@ -63,14 +53,6 @@ public class TestGizmoGeneration {
     @Test
     public void testListMapStringExample() {
         String descString = "Ljava/util/List<Ljava/util/Map<Ljava/lang/String;Ldev/morphia/critter/sources/Example;>;>;";
-        String descriptor = descriptor(
-                java.util.List.class,
-                descriptor(
-                        java.util.Map.class,
-                        descriptor(String.class),
-                        descriptor(Example.class)));
-        Assertions.assertEquals(descString, descriptor);
-
         TypeData<?> typeData = PropertyModelGenerator.typeData(descString, Thread.currentThread().getContextClassLoader()).get(0);
         Assertions.assertEquals(typeDataHelper(java.util.List.class,
                 typeDataHelper(java.util.Map.class, typeDataHelper(String.class), typeDataHelper(Example.class))), typeData);
@@ -79,12 +61,7 @@ public class TestGizmoGeneration {
     @Test
     public void testMapOfList() {
         String descString = "Ljava/util/Map<Ljava/lang/String;Ljava/util/List<Ldev/morphia/critter/sources/Example;>;>;";
-        String descriptor = descriptor(
-                java.util.Map.class,
-                descriptor(String.class),
-                descriptor(java.util.List.class, descriptor(Example.class)));
-        Assertions.assertEquals(descString, descriptor);
-        TypeData<?> typeData = PropertyModelGenerator.typeData(descriptor, Thread.currentThread().getContextClassLoader()).get(0);
+        TypeData<?> typeData = PropertyModelGenerator.typeData(descString, Thread.currentThread().getContextClassLoader()).get(0);
         Assertions.assertEquals(typeDataHelper(java.util.Map.class,
                 typeDataHelper(String.class),
                 typeDataHelper(java.util.List.class, typeDataHelper(Example.class))), typeData);
@@ -98,7 +75,6 @@ public class TestGizmoGeneration {
 
     @Test
     public void testMultiDimensionalArray() {
-        // int[][] — verifies that nested visitArrayType() calls propagate correctly
         TypeData<?> typeData = PropertyModelGenerator.typeData("[[I", Thread.currentThread().getContextClassLoader()).get(0);
         Assertions.assertTrue(typeData.isArray());
         Assertions.assertEquals(int[][].class, typeData.getType());
@@ -106,40 +82,8 @@ public class TestGizmoGeneration {
 
     @Test
     public void testMalformedSignatureReturnsEmpty() {
-        // Malformed signatures must return empty rather than throw
         var result = PropertyModelGenerator.typeData("!!not-a-valid-signature!!", Thread.currentThread().getContextClassLoader());
         Assertions.assertTrue(result.isEmpty());
-    }
-
-    @Test
-    public void testAnnotationBuilding() throws Exception {
-        AnnotationNode index = new AnnotationNode("Ldev/morphia/annotations/Index;");
-        AnnotationNode field = new AnnotationNode("Ldev/morphia/annotations/Field;");
-        index.values = List.of("fields", List.of(field));
-
-        try (ClassCreator creator = ClassCreator.builder()
-                .className("critter.AnnotationTest")
-                .superClass(EntityModel.class)
-                .classOutput((name, data) -> {
-                    String className = name.replace('/', '.');
-                    critterClassLoader.register(className, data);
-                    try {
-                        ClassfileOutput.dump(name, data);
-                    } catch (Exception ignored) {
-                    }
-                })
-                .build()) {
-            var mc = creator.getMethodCreator("test", Void.class);
-            MethodDescriptor annotationMethod = ofMethod(
-                    EntityModel.class.getName(),
-                    "annotation",
-                    EntityModel.class.getName(),
-                    java.lang.annotation.Annotation.class);
-            mc.invokeVirtualMethod(
-                    annotationMethod,
-                    mc.getThis(),
-                    GizmoExtensions.annotationBuilder(index, mc));
-        }
     }
 
     @Test
@@ -214,76 +158,47 @@ public class TestGizmoGeneration {
     }
 
     @Test
-    public void testConstructors() throws Exception {
-        String className = "dev.morphia.critter.GizmoSubclass";
-
-        try (ClassCreator constructorCall = ClassCreator.builder()
-                .classOutput((name, data) -> critterClassLoader.register(name.replace('/', '.'), data))
-                .className("dev.morphia.critter.ConstructorCall")
-                .build()) {
-            var fieldCreator = constructorCall.getFieldCreator("name", String.class)
-                    .setModifiers(Modifier.PUBLIC);
-            var constructorCreator = constructorCall.getConstructorCreator(String.class);
-            constructorCreator.invokeSpecialMethod(
-                    MethodDescriptor.ofConstructor(Object.class),
-                    constructorCreator.getThis());
-            constructorCreator.setParameterNames(new String[] { "name" });
-            constructorCreator.writeInstanceField(
-                    fieldCreator.getFieldDescriptor(),
-                    constructorCreator.getThis(),
-                    constructorCreator.getMethodParam(0));
-            constructorCreator.returnVoid();
-        }
-
-        critterClassLoader.loadClass("dev.morphia.critter.ConstructorCall")
-                .getConstructor(String.class)
-                .newInstance("here i am");
-
-        try (ClassCreator creator = ClassCreator.builder()
-                .classOutput((name, data) -> critterClassLoader.register(name.replace('/', '.'), data))
-                .className(className)
-                .superClass("dev.morphia.critter.ConstructorCall")
-                .build()) {
-            var constructor = creator.getConstructorCreator(String.class);
-            constructor.invokeSpecialMethod(
-                    MethodDescriptor.ofConstructor("dev.morphia.critter.ConstructorCall", String.class),
-                    constructor.getThis(),
-                    constructor.getMethodParam(0));
-            constructor.setParameterNames(new String[] { "subName" });
-            constructor.returnVoid();
-        }
-
-        Object instance = critterClassLoader.loadClass(className)
-                .getConstructor(String.class)
-                .newInstance("This is my name");
-        Assertions.assertNotNull(instance);
-    }
-
-    @Test
     public void testMethodBasedAccessors() throws Exception {
         CritterClassLoader classLoader = new CritterClassLoader();
 
         String resourceName = MethodExample.class.getName().replace('.', '/') + ".class";
-        var inputStream = MethodExample.class.getClassLoader().getResourceAsStream(resourceName);
-        ClassNode classNode = new ClassNode();
-        new ClassReader(inputStream).accept(classNode, 0);
+        byte[] classBytes;
+        try (var inputStream = MethodExample.class.getClassLoader().getResourceAsStream(resourceName)) {
+            classBytes = inputStream.readAllBytes();
+        }
+        ClassModel classModel = ClassFile.of().parse(classBytes);
 
-        List<MethodNode> methodNodes = classNode.methods.stream()
-                .filter(node -> node.name.startsWith("get"))
-                .filter(node -> Type.getArgumentTypes(node.desc).length == 0)
-                .filter(node -> node.visibleAnnotations != null
-                        && node.visibleAnnotations.stream().anyMatch(
-                                ann -> List.of("Ldev/morphia/annotations/Id;", "Ldev/morphia/annotations/Property;").contains(ann.desc)))
+        List<String> targetAnnotations = List.of("Ldev/morphia/annotations/Id;", "Ldev/morphia/annotations/Property;");
+        List<MethodInfo> methodInfos = classModel.methods().stream()
+                .filter(m -> m.methodName().stringValue().startsWith("get"))
+                .filter(m -> {
+                    var rva = m.findAttribute(runtimeVisibleAnnotations());
+                    if (rva.isEmpty())
+                        return false;
+                    return rva.get().annotations().stream()
+                            .anyMatch(ann -> targetAnnotations.contains(ann.classSymbol().descriptorString()));
+                })
+                .map(m -> {
+                    var rva = m.findAttribute(runtimeVisibleAnnotations());
+                    List<io.github.dmlloyd.classfile.Annotation> anns = rva.map(RuntimeVisibleAnnotationsAttribute::annotations)
+                            .orElse(List.of());
+                    return new MethodInfo(
+                            m.methodName().stringValue(),
+                            m.methodType().stringValue(),
+                            null,
+                            m.flags().flagsMask(),
+                            anns);
+                })
                 .collect(Collectors.toList());
 
-        List<String> methodNames = methodNodes.stream().map(n -> n.name).collect(Collectors.toList());
+        List<String> methodNames = methodInfos.stream().map(MethodInfo::name).collect(Collectors.toList());
         Assertions.assertTrue(methodNames.contains("getId"), "Should find getId method");
         Assertions.assertTrue(methodNames.contains("getCount"), "Should find getCount method");
         Assertions.assertTrue(methodNames.contains("getScore"), "Should find getScore method");
         Assertions.assertTrue(methodNames.contains("getComputedValue"), "Should find getComputedValue method");
-        Assertions.assertEquals(methodNodes.size(), 4, "Should find exactly 4 annotated getter methods");
+        Assertions.assertEquals(4, methodInfos.size(), "Should find exactly 4 annotated getter methods");
 
-        byte[] bytecode = new AddMethodAccessorMethods(MethodExample.class, methodNodes).emit();
+        byte[] bytecode = new AddMethodAccessorMethods(MethodExample.class, methodInfos).emit();
 
         classLoader.register(MethodExample.class.getName(), bytecode);
         Class<?> modifiedClass = classLoader.loadClass(MethodExample.class.getName());
@@ -310,16 +225,6 @@ public class TestGizmoGeneration {
                     e.getCause().getMessage() != null && e.getCause().getMessage().contains("read-only"),
                     "Exception message should mention read-only");
         }
-    }
-
-    private String descriptor(Class<?> type, String... typeParameters) {
-        String desc = Type.getDescriptor(type);
-        if (typeParameters.length > 0) {
-            desc = desc.substring(0, desc.length() - 1)
-                    + "<" + String.join("", typeParameters) + ">"
-                    + ";";
-        }
-        return desc;
     }
 
     @SuppressWarnings("unchecked")
