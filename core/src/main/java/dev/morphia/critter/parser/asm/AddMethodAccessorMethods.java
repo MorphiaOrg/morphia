@@ -1,144 +1,101 @@
 package dev.morphia.critter.parser.asm;
 
+import java.lang.constant.ClassDesc;
+import java.lang.constant.MethodTypeDesc;
 import java.util.List;
 
 import dev.morphia.critter.Critter;
 import dev.morphia.critter.parser.ExtensionFunctions;
+import dev.morphia.critter.parser.MethodInfo;
 
-import org.objectweb.asm.Label;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.MethodNode;
-
-import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
-import static org.objectweb.asm.Opcodes.ACC_SYNTHETIC;
-import static org.objectweb.asm.Opcodes.ALOAD;
-import static org.objectweb.asm.Opcodes.ATHROW;
-import static org.objectweb.asm.Opcodes.DUP;
-import static org.objectweb.asm.Opcodes.ILOAD;
-import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
-import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
-import static org.objectweb.asm.Opcodes.IRETURN;
-import static org.objectweb.asm.Opcodes.NEW;
-import static org.objectweb.asm.Opcodes.RETURN;
+import io.github.dmlloyd.classfile.ClassFile;
+import io.github.dmlloyd.classfile.ClassModel;
+import io.github.dmlloyd.classfile.ClassTransform;
+import io.github.dmlloyd.classfile.MethodModel;
+import io.github.dmlloyd.classfile.TypeKind;
 
 /**
  * Generates synthetic {@code __readXxx} and {@code __writeXxx} accessor methods into an entity class
  * bytecode for properties backed by getter/setter methods rather than direct fields.
  */
 public class AddMethodAccessorMethods extends BaseGenerator {
-    private final Class<?> entity;
-    private final List<MethodNode> methods;
+    private final List<MethodInfo> methods;
 
     /**
      * Creates a generator that will add accessor methods for the given getter methods to the entity class.
-     *
-     * @param entity  the entity class to augment
-     * @param methods the getter methods for which accessor methods should be generated
      */
-    public AddMethodAccessorMethods(Class<?> entity, List<MethodNode> methods) {
+    public AddMethodAccessorMethods(Class<?> entity, List<MethodInfo> methods) {
         super(entity);
-        this.entity = entity;
         this.methods = methods;
-        readClassFiltering(entity);
     }
 
     @Override
     public byte[] emit() {
-        for (MethodNode method : methods) {
-            String propertyName = ExtensionFunctions.getterToPropertyName(method, entity);
-            Type returnType = Type.getReturnType(method.desc);
-            reader(propertyName, returnType, method.name);
-            writer(propertyName, returnType);
-        }
-        classWriter.visitEnd();
-        return classWriter.toByteArray();
-    }
+        ClassModel model = readClassFiltering();
+        ClassDesc entityDesc = ClassDesc.of(entity.getName());
 
-    private void writer(String propertyName, Type propertyType) {
-        String setterName = "set%s".formatted(Critter.titleCase(propertyName));
-        boolean hasSetter = false;
-        for (java.lang.reflect.Method m : entity.getMethods()) {
-            if (m.getName().equals(setterName) && m.getParameterCount() == 1) {
-                hasSetter = true;
-                break;
-            }
-        }
+        ClassTransform transform = ClassTransform.dropping(
+                element -> element instanceof MethodModel m
+                        && (m.flags().flagsMask() & ClassFile.ACC_SYNTHETIC) != 0
+                        && (m.methodName().stringValue().startsWith("__read")
+                                || m.methodName().stringValue().startsWith("__write")))
+                .andThen(ClassTransform.endHandler(classBuilder -> {
+                    for (MethodInfo method : methods) {
+                        String propertyName = ExtensionFunctions.getterToPropertyName(method, entity);
+                        MethodTypeDesc methodMtd = MethodTypeDesc.ofDescriptor(method.desc());
+                        ClassDesc returnDesc = methodMtd.returnType();
+                        TypeKind returnKind = TypeKind.fromDescriptor(returnDesc.descriptorString());
+                        String getterName = method.name();
+                        String setterName = "set%s".formatted(Critter.titleCase(propertyName));
 
-        var mv = classWriter.visitMethod(
-                ACC_PUBLIC | ACC_SYNTHETIC,
-                "__write%s".formatted(Critter.titleCase(propertyName)),
-                "(%s)V".formatted(propertyType.getDescriptor()),
-                null,
-                null);
-        mv.visitCode();
-        Label label0 = new Label();
-        mv.visitLabel(label0);
-        mv.visitLineNumber(18, label0);
+                        boolean hasSetter = false;
+                        for (java.lang.reflect.Method m : entity.getMethods()) {
+                            if (m.getName().equals(setterName) && m.getParameterCount() == 1) {
+                                hasSetter = true;
+                                break;
+                            }
+                        }
 
-        if (hasSetter) {
-            // Call the setter method
-            mv.visitVarInsn(ALOAD, 0);
-            mv.visitVarInsn(propertyType.getOpcode(ILOAD), 1);
-            mv.visitMethodInsn(
-                    INVOKEVIRTUAL,
-                    entityType.getInternalName(),
-                    setterName,
-                    "(%s)V".formatted(propertyType.getDescriptor()),
-                    false);
-            Label label1 = new Label();
-            mv.visitLabel(label1);
-            mv.visitLineNumber(19, label1);
-            mv.visitInsn(RETURN);
-            Label label2 = new Label();
-            mv.visitLabel(label2);
-            mv.visitLocalVariable("this", entityType.getDescriptor(), null, label0, label2, 0);
-            mv.visitLocalVariable("value", propertyType.getDescriptor(), null, label0, label2, 1);
-        } else {
-            // Throw UnsupportedOperationException for read-only properties
-            mv.visitTypeInsn(NEW, "java/lang/UnsupportedOperationException");
-            mv.visitInsn(DUP);
-            mv.visitLdcInsn("Property '%s' is read-only".formatted(propertyName));
-            mv.visitMethodInsn(
-                    INVOKESPECIAL,
-                    "java/lang/UnsupportedOperationException",
-                    "<init>",
-                    "(Ljava/lang/String;)V",
-                    false);
-            mv.visitInsn(ATHROW);
-            Label label1 = new Label();
-            mv.visitLabel(label1);
-            mv.visitLocalVariable("this", entityType.getDescriptor(), null, label0, label1, 0);
-            mv.visitLocalVariable("value", propertyType.getDescriptor(), null, label0, label1, 1);
-        }
+                        // __readXxx(): return type of getter
+                        String readerName = "__read%s".formatted(Critter.titleCase(propertyName));
+                        MethodTypeDesc readerMtd = MethodTypeDesc.of(returnDesc);
+                        classBuilder.withMethodBody(readerName, readerMtd,
+                                ClassFile.ACC_PUBLIC | ClassFile.ACC_SYNTHETIC,
+                                cod -> {
+                                    cod.aload(0);
+                                    cod.invokevirtual(entityDesc, getterName, MethodTypeDesc.of(returnDesc));
+                                    cod.return_(returnKind);
+                                });
 
-        mv.visitMaxs(2, 2);
-        mv.visitEnd();
-    }
+                        // __writeXxx(T): void
+                        String writerName = "__write%s".formatted(Critter.titleCase(propertyName));
+                        MethodTypeDesc writerMtd = MethodTypeDesc.of(ClassDesc.ofDescriptor("V"), returnDesc);
+                        if (hasSetter) {
+                            classBuilder.withMethodBody(writerName, writerMtd,
+                                    ClassFile.ACC_PUBLIC | ClassFile.ACC_SYNTHETIC,
+                                    cod -> {
+                                        cod.aload(0);
+                                        cod.loadLocal(returnKind, 1);
+                                        cod.invokevirtual(entityDesc, setterName,
+                                                MethodTypeDesc.of(ClassDesc.ofDescriptor("V"), returnDesc));
+                                        cod.return_();
+                                    });
+                        } else {
+                            classBuilder.withMethodBody(writerName, writerMtd,
+                                    ClassFile.ACC_PUBLIC | ClassFile.ACC_SYNTHETIC,
+                                    cod -> {
+                                        ClassDesc uoeDesc = ClassDesc.of("java.lang.UnsupportedOperationException");
+                                        cod.new_(uoeDesc);
+                                        cod.dup();
+                                        cod.ldc("Property '%s' is read-only".formatted(propertyName));
+                                        cod.invokespecial(uoeDesc, "<init>",
+                                                MethodTypeDesc.ofDescriptor("(Ljava/lang/String;)V"));
+                                        cod.athrow();
+                                    });
+                        }
+                    }
+                }));
 
-    private void reader(String propertyName, Type returnType, String getterName) {
-        String name = "__read%s".formatted(Critter.titleCase(propertyName));
-        var mv = classWriter.visitMethod(
-                ACC_PUBLIC | ACC_SYNTHETIC,
-                name,
-                "()%s".formatted(returnType.getDescriptor()),
-                null,
-                null);
-        mv.visitCode();
-        Label label0 = new Label();
-        mv.visitLabel(label0);
-        mv.visitLineNumber(14, label0);
-        mv.visitVarInsn(ALOAD, 0);
-        mv.visitMethodInsn(
-                INVOKEVIRTUAL,
-                entityType.getInternalName(),
-                getterName,
-                "()%s".formatted(returnType.getDescriptor()),
-                false);
-        mv.visitInsn(returnType.getOpcode(IRETURN));
-        Label label1 = new Label();
-        mv.visitLabel(label1);
-        mv.visitLocalVariable("this", entityType.getDescriptor(), null, label0, label1, 0);
-        mv.visitMaxs(1, 1);
-        mv.visitEnd();
+        return ClassFile.of().transformClass(model, transform);
     }
 }

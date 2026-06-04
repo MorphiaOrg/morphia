@@ -1,172 +1,266 @@
 package dev.morphia.critter.parser.gizmo;
 
+import java.lang.constant.ClassDesc;
+import java.lang.constant.ConstantDescs;
+import java.lang.constant.MethodTypeDesc;
 import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
 import java.util.List;
 
-import dev.morphia.critter.parser.ExtensionFunctions;
 import dev.morphia.mapping.codec.pojo.TypeData;
 
-import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.AnnotationNode;
-
-import io.quarkus.gizmo.BytecodeCreator;
-import io.quarkus.gizmo.FieldDescriptor;
-import io.quarkus.gizmo.MethodCreator;
-import io.quarkus.gizmo.MethodDescriptor;
-import io.quarkus.gizmo.ResultHandle;
-
-import static io.quarkus.gizmo.MethodDescriptor.ofMethod;
-import static org.objectweb.asm.Type.ARRAY;
+import io.github.dmlloyd.classfile.CodeBuilder;
+import io.github.dmlloyd.classfile.TypeKind;
 
 /**
- * Static utility methods that bridge ASM annotation nodes and Morphia type data with the Gizmo bytecode generation API.
+ * Static utility methods bridging annotation introspection and Morphia type data with the ClassFile API.
  */
 public class GizmoExtensions {
 
-    /** @hidden */
     private GizmoExtensions() {
     }
 
     /**
-     * Emits Gizmo bytecode that instantiates the Morphia annotation represented by the given ASM annotation node.
-     *
-     * @param annotationNode the ASM annotation node to convert
-     * @param creator        the Gizmo method creator in which the bytecode is emitted
-     * @return a result handle for the constructed annotation instance
+     * Emits bytecode that leaves the given annotation instance on the stack.
+     * Uses the annotation builder pattern: XxxBuilder.xxxBuilder().field1(v1).build().
      */
-    public static ResultHandle annotationBuilder(AnnotationNode annotationNode, MethodCreator creator) {
-        Type type = Type.getType(annotationNode.desc);
-        String classPackage = type.getClassName().substring(0, type.getClassName().lastIndexOf('.'));
-        String className = type.getClassName().substring(type.getClassName().lastIndexOf('.') + 1);
-        Type builderType = Type.getType("L%s.internal.%sBuilder;".formatted(classPackage, className).replace('.', '/'));
-        MethodDescriptor builder = ofMethod(
-                builderType.getClassName(),
-                ExtensionFunctions.methodCase(className) + "Builder",
-                builderType.getClassName());
-        ResultHandle local = creator.invokeStaticMethod(builder);
+    public static void emitAnnotationOnStack(CodeBuilder cod, java.lang.annotation.Annotation annotation) {
+        Class<?> annType = annotation.annotationType();
+        String className = annType.getName();
+        String classPackage = className.substring(0, className.lastIndexOf('.'));
+        String simpleName = className.substring(className.lastIndexOf('.') + 1);
+        String builderClassName = classPackage + ".internal." + simpleName + "Builder";
+        ClassDesc builderDesc = ClassDesc.of(builderClassName);
+        ClassDesc annDesc = ClassDesc.of(className);
+        String factoryMethod = Character.toLowerCase(simpleName.charAt(0)) + simpleName.substring(1) + "Builder";
 
-        setBuilderValues(annotationNode, creator, local);
+        // Call builder factory: XxxBuilder.xxxBuilder()
+        cod.invokestatic(builderDesc, factoryMethod, MethodTypeDesc.of(builderDesc));
+        int builderSlot = cod.allocateLocal(TypeKind.REFERENCE);
+        cod.astore(builderSlot);
 
-        return creator.invokeVirtualMethod(ofMethod(builderType.getClassName(), "build", type.getClassName()), local);
-    }
-
-    /**
-     * Resolves an ASM {@link Type} to a {@link Class} using the given class loader.
-     *
-     * @param type        the ASM type to resolve
-     * @param classLoader the class loader used to locate the class
-     * @return the corresponding Java class
-     * @throws RuntimeException if the class cannot be found
-     */
-    public static Class<?> asClass(Type type, ClassLoader classLoader) {
-        return switch (type.getSort()) {
-            case Type.VOID -> void.class;
-            case Type.BOOLEAN -> boolean.class;
-            case Type.CHAR -> char.class;
-            case Type.BYTE -> byte.class;
-            case Type.SHORT -> short.class;
-            case Type.INT -> int.class;
-            case Type.FLOAT -> float.class;
-            case Type.LONG -> long.class;
-            case Type.DOUBLE -> double.class;
-            default -> {
-                String className = type.getSort() == ARRAY
-                        ? type.getDescriptor().replace('/', '.')
-                        : type.getClassName();
-                try {
-                    yield Class.forName(className, false, classLoader);
-                } catch (ClassNotFoundException e) {
-                    throw new RuntimeException("Could not find class: %s".formatted(className), e);
+        // For each annotation element that has a non-default value, emit setter call
+        for (java.lang.reflect.Method method : annType.getDeclaredMethods()) {
+            try {
+                Object value = method.invoke(annotation);
+                Object defaultValue = method.getDefaultValue();
+                if (value == null || value.equals(defaultValue)) {
+                    continue;
                 }
+                java.lang.reflect.Type elemType = method.getGenericReturnType();
+                ClassDesc paramDesc = rawTypeDesc(elemType);
+
+                cod.aload(builderSlot);
+                emitAnnotationElementValue(cod, elemType, value);
+                cod.invokevirtual(builderDesc, method.getName(), MethodTypeDesc.of(builderDesc, paramDesc));
+                cod.astore(builderSlot);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to emit annotation element " + method.getName(), e);
             }
-        };
-    }
-
-    /**
-     * Populates the annotation builder with values from the ASM annotation node.
-     *
-     * @param annotationNode the ASM annotation node whose values should be applied
-     * @param creator        the Gizmo method creator in which the bytecode is emitted
-     * @param local          the result handle referencing the annotation builder instance
-     */
-    public static void setBuilderValues(AnnotationNode annotationNode, MethodCreator creator, ResultHandle local) {
-        dev.morphia.annotations.internal.AnnotationNodeExtensions.INSTANCE.setBuilderValues(annotationNode, creator, local);
-    }
-
-    /**
-     * Emits Gizmo bytecode that loads a {@link Class} reference. Non-public classes (e.g. private
-     * inner classes) cannot be referenced via an LDC constant from a different classloader, so this
-     * generates a {@code Class.forName()} call in that case.
-     *
-     * @param creator the Gizmo bytecode creator in which the bytecode is emitted
-     * @param cls     the class to load
-     * @return a result handle for the class reference
-     */
-    public static ResultHandle emitClassRef(BytecodeCreator creator, Class<?> cls) {
-        if (java.lang.reflect.Modifier.isPublic(cls.getModifiers())) {
-            return creator.loadClass(cls);
         }
-        ResultHandle name = creator.load(cls.getName());
-        ResultHandle falseHandle = creator.load(false);
-        ResultHandle thread = creator.invokeStaticMethod(
-                ofMethod(Thread.class, "currentThread", Thread.class));
-        ResultHandle tccl = creator.invokeVirtualMethod(
-                ofMethod(Thread.class, "getContextClassLoader", ClassLoader.class),
-                thread);
-        return creator.invokeStaticMethod(
-                ofMethod(Class.class, "forName", Class.class, String.class, boolean.class, ClassLoader.class),
-                name, falseHandle, tccl);
+
+        // Call .build()
+        cod.aload(builderSlot);
+        cod.invokevirtual(builderDesc, "build", MethodTypeDesc.of(annDesc));
     }
 
-    /**
-     * Emits Gizmo bytecode that constructs a {@link TypeData} instance matching the given type data.
-     *
-     * @param data          the type data to emit
-     * @param methodCreator the Gizmo method creator in which the bytecode is emitted
-     * @return a result handle for the constructed {@code TypeData} instance
-     */
-    public static ResultHandle emitTypeData(TypeData<?> data, MethodCreator methodCreator) {
-        ResultHandle array = methodCreator.newArray(TypeData.class, data.getTypeParameters().size());
-        List<TypeData<?>> typeParameters = data.getTypeParameters();
-        for (int index = 0; index < typeParameters.size(); index++) {
-            methodCreator.writeArrayValue(array, index, emitTypeData(typeParameters.get(index), methodCreator));
-        }
-        List<ResultHandle> list = new ArrayList<>();
-        list.add(emitClassRef(methodCreator, data.getType()));
-        list.add(array);
-        MethodDescriptor descriptor = MethodDescriptor.ofConstructor(
-                TypeData.class,
-                Class.class,
-                "[" + Type.getType(TypeData.class).getDescriptor());
-        return methodCreator.newInstance(descriptor, list.toArray(new ResultHandle[0]));
-    }
-
-    /**
-     * Returns the ASM type descriptor for the raw (erased) form of the given {@link java.lang.reflect.Type}.
-     *
-     * @param type the type to erase
-     * @return the ASM descriptor string for the raw type
-     */
-    public static String rawType(java.lang.reflect.Type type) {
-        if (type instanceof GenericArrayType arrayType) {
-            ParameterizedType type1 = (ParameterizedType) arrayType.getGenericComponentType();
-            return Type.getType("[" + Type.getType((Class<?>) type1.getRawType()).getDescriptor()).getDescriptor();
-        } else if (type instanceof ParameterizedType paramType) {
-            return Type.getType((Class<?>) paramType.getRawType()).getDescriptor();
+    @SuppressWarnings("unchecked")
+    private static void emitAnnotationElementValue(CodeBuilder cod, java.lang.reflect.Type type, Object value) {
+        if (type == String.class) {
+            cod.ldc((String) value);
+        } else if (type == boolean.class || type == Boolean.class) {
+            cod.loadConstant(((Boolean) value) ? 1 : 0);
+        } else if (type == int.class || type == Integer.class) {
+            cod.loadConstant((int) value);
+        } else if (type == long.class || type == Long.class) {
+            cod.loadConstant((long) value);
+        } else if (type == float.class || type == Float.class) {
+            cod.loadConstant((float) value);
+        } else if (type == double.class || type == Double.class) {
+            cod.loadConstant((double) value);
+        } else if (type == Class.class) {
+            emitClassRef(cod, (Class<?>) value);
+        } else if (type instanceof Class<?> t && t.isEnum()) {
+            Enum<?> e = (Enum<?>) value;
+            ClassDesc enumDesc = ClassDesc.of(e.getDeclaringClass().getName());
+            cod.getstatic(enumDesc, e.name(), enumDesc);
+        } else if (type instanceof Class<?> t && t.isAnnotation()) {
+            emitAnnotationOnStack(cod, (java.lang.annotation.Annotation) value);
+        } else if (type instanceof Class<?> t && t.isArray()) {
+            Class<?> componentType = t.getComponentType();
+            Object[] arr = (Object[]) value;
+            emitObjectArray(cod, componentType, arr);
+        } else if (type instanceof ParameterizedType pt && pt.getRawType() == Class.class) {
+            emitClassRef(cod, (Class<?>) value);
+        } else if (type instanceof GenericArrayType gat) {
+            java.lang.reflect.Type compType = gat.getGenericComponentType();
+            Class<?> compClass = (compType instanceof ParameterizedType pt)
+                    ? (Class<?>) pt.getRawType()
+                    : (Class<?>) compType;
+            Object[] arr = (Object[]) value;
+            emitObjectArray(cod, compClass, arr);
         } else {
-            return Type.getType((Class<?>) type).getDescriptor();
+            throw new UnsupportedOperationException("Unsupported annotation element type: " + type);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void emitObjectArray(CodeBuilder cod, Class<?> componentType, Object[] arr) {
+        cod.loadConstant(arr.length);
+        cod.anewarray(ClassDesc.of(componentType.getName()));
+        for (int i = 0; i < arr.length; i++) {
+            cod.dup();
+            cod.loadConstant(i);
+            emitAnnotationElementValue(cod, componentType, arr[i]);
+            cod.aastore();
+        }
+    }
+
+    /**
+     * Emits bytecode that loads a Class reference. Non-public classes use Class.forName().
+     */
+    public static void emitClassRef(CodeBuilder cod, Class<?> cls) {
+        if (Modifier.isPublic(cls.getModifiers())) {
+            cod.loadConstant(ClassDesc.of(cls.getName()));
+        } else {
+            cod.ldc(cls.getName());
+            cod.iconst_0();
+            cod.invokestatic(
+                    ClassDesc.of("java.lang.Thread"),
+                    "currentThread",
+                    MethodTypeDesc.of(ClassDesc.of("java.lang.Thread")));
+            cod.invokevirtual(
+                    ClassDesc.of("java.lang.Thread"),
+                    "getContextClassLoader",
+                    MethodTypeDesc.of(ClassDesc.of("java.lang.ClassLoader")));
+            cod.invokestatic(
+                    ConstantDescs.CD_Class,
+                    "forName",
+                    MethodTypeDesc.ofDescriptor("(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;"));
+        }
+    }
+
+    /**
+     * Emits bytecode that constructs a TypeData instance.
+     */
+    public static void emitTypeData(TypeData<?> data, CodeBuilder cod) {
+        ClassDesc tdDesc = ClassDesc.of("dev.morphia.mapping.codec.pojo.TypeData");
+        cod.new_(tdDesc);
+        cod.dup();
+        emitClassRef(cod, data.getType());
+        List<TypeData<?>> params = data.getTypeParameters();
+        cod.loadConstant(params.size());
+        cod.anewarray(tdDesc);
+        for (int i = 0; i < params.size(); i++) {
+            cod.dup();
+            cod.loadConstant(i);
+            emitTypeData(params.get(i), cod);
+            cod.aastore();
+        }
+        cod.invokespecial(tdDesc, "<init>",
+                MethodTypeDesc.ofDescriptor("(Ljava/lang/Class;[Ldev/morphia/mapping/codec/pojo/TypeData;)V"));
+    }
+
+    /**
+     * Returns the raw type ClassDesc for use as a builder method parameter descriptor.
+     */
+    public static ClassDesc rawTypeDesc(java.lang.reflect.Type type) {
+        if (type instanceof Class<?> c) {
+            if (c.isPrimitive()) {
+                return primitiveDesc(c);
+            }
+            if (c.isArray()) {
+                return ClassDesc.ofDescriptor(classToDescriptor(c));
+            }
+            return ClassDesc.of(c.getName());
+        } else if (type instanceof ParameterizedType pt) {
+            return ClassDesc.of(((Class<?>) pt.getRawType()).getName());
+        } else if (type instanceof GenericArrayType gat) {
+            java.lang.reflect.Type comp = gat.getGenericComponentType();
+            Class<?> rawComp = (comp instanceof ParameterizedType pt) ? (Class<?>) pt.getRawType() : (Class<?>) comp;
+            return ClassDesc.ofDescriptor("[L" + rawComp.getName().replace('.', '/') + ";");
+        } else {
+            throw new UnsupportedOperationException("Unknown type: " + type);
+        }
+    }
+
+    private static ClassDesc primitiveDesc(Class<?> c) {
+        if (c == boolean.class)
+            return ConstantDescs.CD_boolean;
+        if (c == byte.class)
+            return ConstantDescs.CD_byte;
+        if (c == char.class)
+            return ConstantDescs.CD_char;
+        if (c == short.class)
+            return ConstantDescs.CD_short;
+        if (c == int.class)
+            return ConstantDescs.CD_int;
+        if (c == long.class)
+            return ConstantDescs.CD_long;
+        if (c == float.class)
+            return ConstantDescs.CD_float;
+        if (c == double.class)
+            return ConstantDescs.CD_double;
+        throw new IllegalArgumentException("Not a primitive: " + c);
+    }
+
+    private static String classToDescriptor(Class<?> c) {
+        if (c.isArray()) {
+            return "[" + classToDescriptor(c.getComponentType());
+        }
+        if (c.isPrimitive()) {
+            if (c == boolean.class)
+                return "Z";
+            if (c == byte.class)
+                return "B";
+            if (c == char.class)
+                return "C";
+            if (c == short.class)
+                return "S";
+            if (c == int.class)
+                return "I";
+            if (c == long.class)
+                return "J";
+            if (c == float.class)
+                return "F";
+            if (c == double.class)
+                return "D";
+            if (c == void.class)
+                return "V";
+        }
+        return "L" + c.getName().replace('.', '/') + ";";
+    }
+
+    /**
+     * Resolves a ClassDesc to a Class using the given class loader.
+     */
+    public static Class<?> asClass(ClassDesc cd, ClassLoader classLoader) {
+        String desc = cd.descriptorString();
+        if (desc.length() == 1) {
+            return switch (desc.charAt(0)) {
+                case 'V' -> void.class;
+                case 'Z' -> boolean.class;
+                case 'C' -> char.class;
+                case 'B' -> byte.class;
+                case 'S' -> short.class;
+                case 'I' -> int.class;
+                case 'J' -> long.class;
+                case 'F' -> float.class;
+                case 'D' -> double.class;
+                default -> throw new IllegalArgumentException("Unknown descriptor: " + desc);
+            };
+        }
+        String className = desc.startsWith("[") ? desc.replace('/', '.') : desc.substring(1, desc.length() - 1).replace('/', '.');
+        try {
+            return Class.forName(className, false, classLoader);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Could not find class: " + className, e);
         }
     }
 
     /**
      * Returns the generic return type of the named annotation element method.
-     *
-     * @param type the annotation class containing the element
-     * @param name the name of the annotation element
-     * @return the generic return type of the element method
-     * @throws RuntimeException if the element method cannot be found
      */
     public static java.lang.reflect.Type attributeType(Class<?> type, String name) {
         try {
@@ -177,97 +271,16 @@ public class GizmoExtensions {
     }
 
     /**
-     * Emits Gizmo bytecode that loads the given value as the specified {@link java.lang.reflect.Type}.
-     *
-     * @param creator the Gizmo method creator in which the bytecode is emitted
-     * @param type    the target type
-     * @param value   the value to load
-     * @return a result handle for the loaded value
+     * Creates a TypeData from the given ClassDesc with explicit type parameters.
      */
-    @SuppressWarnings("unchecked")
-    public static ResultHandle load(MethodCreator creator, java.lang.reflect.Type type, Object value) {
-        if (type instanceof Class<?> classType) {
-            return load(creator, classType, value);
-        } else if (type instanceof ParameterizedType paramType) {
-            return load(creator, (Class<?>) paramType.getRawType(), value);
-        } else if (type instanceof GenericArrayType arrayType) {
-            String componentTypeName;
-            if (arrayType.getGenericComponentType() instanceof ParameterizedType pType) {
-                componentTypeName = ((Class<?>) pType.getRawType()).getName();
-            } else {
-                componentTypeName = ((Class<?>) arrayType.getGenericComponentType()).getName();
-            }
-            List<?> valueList = (List<?>) value;
-            ResultHandle newArray = creator.newArray(componentTypeName, valueList.size());
-            for (int index = 0; index < valueList.size(); index++) {
-                Object element = valueList.get(index);
-                creator.writeArrayValue(newArray, index, load(creator, element.getClass(), element));
-            }
-            return newArray;
-        } else {
-            throw new UnsupportedOperationException("Unknown type: %s".formatted(type));
-        }
+    public static TypeData<?> typeDataFromDesc(ClassDesc desc, ClassLoader classLoader, List<TypeData<?>> typeParameters) {
+        return new TypeData<>(asClass(desc, classLoader), typeParameters);
     }
 
     /**
-     * Emits Gizmo bytecode that loads the given value as the specified class type.
-     *
-     * @param creator the Gizmo method creator in which the bytecode is emitted
-     * @param type    the target class type
-     * @param value   the value to load
-     * @return a result handle for the loaded value
+     * Creates a TypeData from the given ClassDesc with no type parameters.
      */
-    @SuppressWarnings("unchecked")
-    public static ResultHandle load(MethodCreator creator, Class<?> type, Object value) {
-        if (type == String.class) {
-            return creator.load((String) value);
-        } else if (type == int.class || type == Integer.class) {
-            return creator.load((int) value);
-        } else if (type == long.class || type == Long.class) {
-            return creator.load((long) value);
-        } else if (type == boolean.class || type == Boolean.class) {
-            return creator.load((boolean) value);
-        } else if (type == AnnotationNode.class) {
-            return annotationBuilder((AnnotationNode) value, creator);
-        } else if (type.isAnnotation()) {
-            return annotationBuilder((AnnotationNode) value, creator);
-        } else if (type.isArray()) {
-            List<?> valueList = (List<?>) value;
-            ResultHandle newArray = creator.newArray(type.getComponentType(), valueList.size());
-            for (int index = 0; index < valueList.size(); index++) {
-                Object element = valueList.get(index);
-                creator.writeArrayValue(newArray, index, load(creator, element.getClass(), element));
-            }
-            return newArray;
-        } else if (type.isEnum()) {
-            return creator.readStaticField(FieldDescriptor.of(type, ((String[]) value)[1], type));
-        } else if (value instanceof Type asmType) {
-            return creator.loadClass(asmType.getClassName());
-        } else {
-            throw new UnsupportedOperationException("%s is not yet supported".formatted(type));
-        }
-    }
-
-    /**
-     * Creates a {@link TypeData} from the given ASM type with explicit type parameters.
-     *
-     * @param type           the ASM type to convert
-     * @param classLoader    the class loader used to resolve the type
-     * @param typeParameters the list of generic type parameters
-     * @return a {@code TypeData} representing the type with its parameters
-     */
-    public static TypeData<?> typeDataFromType(Type type, ClassLoader classLoader, List<TypeData<?>> typeParameters) {
-        return new TypeData<>(asClass(type, classLoader), typeParameters);
-    }
-
-    /**
-     * Creates a {@link TypeData} from the given ASM type with no type parameters.
-     *
-     * @param type        the ASM type to convert
-     * @param classLoader the class loader used to resolve the type
-     * @return a {@code TypeData} representing the raw type
-     */
-    public static TypeData<?> typeDataFromType(Type type, ClassLoader classLoader) {
-        return typeDataFromType(type, classLoader, List.of());
+    public static TypeData<?> typeDataFromDesc(ClassDesc desc, ClassLoader classLoader) {
+        return typeDataFromDesc(desc, classLoader, List.of());
     }
 }

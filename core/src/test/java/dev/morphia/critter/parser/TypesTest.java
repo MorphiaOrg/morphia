@@ -1,5 +1,6 @@
 package dev.morphia.critter.parser;
 
+import java.lang.constant.ClassDesc;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Date;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.objectweb.asm.Type;
 
 public class TypesTest {
 
@@ -80,11 +80,35 @@ public class TypesTest {
                 Arguments.of(String[][][].class));
     }
 
+    private static String classToDescriptor(Class<?> c) {
+        if (c.isArray())
+            return "[" + classToDescriptor(c.getComponentType());
+        if (c == boolean.class)
+            return "Z";
+        if (c == char.class)
+            return "C";
+        if (c == byte.class)
+            return "B";
+        if (c == short.class)
+            return "S";
+        if (c == int.class)
+            return "I";
+        if (c == long.class)
+            return "J";
+        if (c == float.class)
+            return "F";
+        if (c == double.class)
+            return "D";
+        if (c == void.class)
+            return "V";
+        return "L" + c.getName().replace('.', '/') + ";";
+    }
+
     @ParameterizedTest
     @MethodSource("types")
     public void asClassConversion(Class<?> expected) {
-        Type type = Type.getType(expected);
+        ClassDesc type = ClassDesc.ofDescriptor(classToDescriptor(expected));
         Class<?> actual = GizmoExtensions.asClass(type, Thread.currentThread().getContextClassLoader());
-        Assertions.assertEquals(expected, actual, "Type " + type.getDescriptor() + " should convert to " + expected.getName());
+        Assertions.assertEquals(expected, actual, "Type " + type.descriptorString() + " should convert to " + expected.getName());
     }
 }
