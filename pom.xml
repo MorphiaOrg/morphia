@@ -55,12 +55,12 @@
         <driver-javadoc.link>https://mongodb.github.io/mongo-java-driver/${driver.minor.version}/apidocs</driver-javadoc.link>
         <morphia-javadoc.link>https://morphia.dev/morphia/${morphia.minor.version}/javadoc</morphia-javadoc.link>
         <gizmo.version>1.10.1</gizmo.version>
-        <jackson.version>2.21.4</jackson.version>
-        <jackson-annotations.version>2.21</jackson-annotations.version>
+        <jackson.version>2.22.0</jackson.version>
+        <jackson-annotations.version>2.22</jackson-annotations.version>
         <json.assert.version>1.5.3</json.assert.version>
         <javapoet.version>1.13.0</javapoet.version>
         <kotlinpoet.version>1.19.1</kotlinpoet.version>
-        <logback.version>1.5.33</logback.version>
+        <logback.version>1.5.34</logback.version>
         <ksp.version>2.3.9</ksp.version>
         <maven.version>4.0.0-rc-5</maven.version>
         <morphia.minor.version>3.0</morphia.minor.version>
@@ -378,7 +378,7 @@
             <dependency>
                 <groupId>net.bytebuddy</groupId>
                 <artifactId>byte-buddy</artifactId>
-                <version>1.18.8</version>
+                <version>1.18.10</version>
             </dependency>
             <dependency>
                 <groupId>io.github.classgraph</groupId>
