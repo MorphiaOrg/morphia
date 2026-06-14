@@ -12,6 +12,7 @@ import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,7 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
     private final Map<String, Annotation> annotationMap;
     private final TypeData<?> typeData;
     private final List<Annotation> morphiaAnnotations;
+    private final String getterName;
 
     /**
      * Creates a generator for a field-based property.
@@ -67,8 +69,9 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
         this.accessFlags = reflectedField != null ? reflectedField.getModifiers() : field.access();
         this.genericType = reflectedField != null ? reflectedField.getGenericType() : Object.class;
         this.annotationMap = buildAnnotationMap(reflectedField != null ? reflectedField.getAnnotations() : new Annotation[0]);
-        this.typeData = computeTypeData(this.genericType, entity.getClassLoader());
+        this.typeData = computeTypeData(resolveGenericType(this.genericType, field.name(), entity), entity.getClassLoader());
         this.morphiaAnnotations = new ArrayList<>(annotationMap.values());
+        this.getterName = null;
     }
 
     /**
@@ -86,8 +89,17 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
         this.accessFlags = reflectedMethod != null ? reflectedMethod.getModifiers() : method.access();
         this.genericType = reflectedMethod != null ? reflectedMethod.getGenericReturnType() : Object.class;
         this.annotationMap = buildAnnotationMap(reflectedMethod != null ? reflectedMethod.getAnnotations() : new Annotation[0]);
-        this.typeData = computeTypeData(this.genericType, entity.getClassLoader());
+        // Also collect setter annotations — some annotations (e.g. @Version, @Text) live on the setter, not the getter
+        String setterName = "set" + Critter.titleCase(this.propertyName);
+        Method reflectedSetter = findSetterMethod(entity, setterName);
+        if (reflectedSetter != null) {
+            for (Annotation ann : reflectedSetter.getAnnotations()) {
+                this.annotationMap.putIfAbsent(ann.annotationType().getName(), ann);
+            }
+        }
+        this.typeData = computeTypeData(resolveGenericType(this.genericType, this.propertyName, entity), entity.getClassLoader());
         this.morphiaAnnotations = new ArrayList<>(annotationMap.values());
+        this.getterName = method.name();
     }
 
     private static Field findField(Class<?> cls, String name) {
@@ -106,7 +118,20 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
         Class<?> current = cls;
         while (current != null && current != Object.class) {
             for (Method m : current.getDeclaredMethods()) {
-                if (m.getName().equals(name) && m.getParameterCount() == 0) {
+                if (m.getName().equals(name) && m.getParameterCount() == 0 && !m.isBridge()) {
+                    return m;
+                }
+            }
+            current = current.getSuperclass();
+        }
+        return null;
+    }
+
+    private static Method findSetterMethod(Class<?> cls, String setterName) {
+        Class<?> current = cls;
+        while (current != null && current != Object.class) {
+            for (Method m : current.getDeclaredMethods()) {
+                if (m.getName().equals(setterName) && m.getParameterCount() == 1 && !m.isBridge()) {
                     return m;
                 }
             }
@@ -121,6 +146,57 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
             map.put(ann.annotationType().getName(), ann);
         }
         return map;
+    }
+
+    private static java.lang.reflect.Type resolveGenericType(java.lang.reflect.Type type, String memberName, Class<?> entity) {
+        if (!(type instanceof TypeVariable<?> tv)) {
+            return type;
+        }
+        Class<?> declaringClass = findDeclaringClass(memberName, entity);
+        Class<?> resolved = resolveTypeVariable(tv.getName(), entity, declaringClass);
+        return (resolved != null && resolved != Object.class) ? resolved : type;
+    }
+
+    private static Class<?> findDeclaringClass(String memberName, Class<?> concreteClass) {
+        Class<?> current = concreteClass;
+        while (current != null && current != Object.class) {
+            try {
+                current.getDeclaredField(memberName);
+                return current;
+            } catch (NoSuchFieldException e) {
+                current = current.getSuperclass();
+            }
+        }
+        return null;
+    }
+
+    private static Class<?> resolveTypeVariable(String typeVarName, Class<?> concreteClass, Class<?> declaringClass) {
+        Map<String, java.lang.reflect.Type> bindings = new HashMap<>();
+        Class<?> current = concreteClass;
+        while (current != null && current != Object.class) {
+            java.lang.reflect.Type genericSuper = current.getGenericSuperclass();
+            Class<?> superClass = current.getSuperclass();
+            if (superClass == null || superClass == Object.class) {
+                break;
+            }
+            if (genericSuper instanceof ParameterizedType paramType) {
+                TypeVariable<?>[] typeParams = superClass.getTypeParameters();
+                java.lang.reflect.Type[] typeArgs = paramType.getActualTypeArguments();
+                for (int i = 0; i < typeParams.length && i < typeArgs.length; i++) {
+                    java.lang.reflect.Type arg = typeArgs[i];
+                    if (arg instanceof TypeVariable<?> argTv && bindings.containsKey(argTv.getName())) {
+                        arg = bindings.get(argTv.getName());
+                    }
+                    bindings.put(typeParams[i].getName(), arg);
+                }
+            }
+            if (declaringClass != null && superClass == declaringClass) {
+                break;
+            }
+            current = superClass;
+        }
+        java.lang.reflect.Type resolved = bindings.get(typeVarName);
+        return resolved instanceof Class<?> c ? c : null;
     }
 
     /**
@@ -287,7 +363,7 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
                         cod.invokespecial(accessorImplDesc, "<init>", MethodTypeDesc.ofDescriptor("()V"));
                         cod.putfield(thisDesc, "accessor", accessorImplDesc);
 
-                        // Register annotations
+                        // Register Morphia annotations via generated builders
                         for (Annotation ann : morphiaAnnotations) {
                             if (ann.annotationType().getName().startsWith("dev.morphia.annotations.")) {
                                 cod.aload(0);
@@ -296,6 +372,24 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
                                         MethodTypeDesc.of(propertyModelDesc, annotationDesc));
                                 cod.pop();
                             }
+                        }
+
+                        // Register all annotations (including non-Morphia ones like @NonNull) via reflection
+                        ClassDesc critterPmDesc = ClassDesc.of("dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel");
+                        if (isFieldBased) {
+                            cod.aload(0);
+                            GizmoExtensions.emitClassRef(cod, entity);
+                            cod.ldc(propertyName);
+                            cod.invokestatic(critterPmDesc, "registerFieldAnnotations",
+                                    MethodTypeDesc.ofDescriptor(
+                                            "(Ldev/morphia/mapping/codec/pojo/PropertyModel;Ljava/lang/Class;Ljava/lang/String;)V"));
+                        } else {
+                            cod.aload(0);
+                            GizmoExtensions.emitClassRef(cod, entity);
+                            cod.ldc(getterName);
+                            cod.invokestatic(critterPmDesc, "registerMethodAnnotations",
+                                    MethodTypeDesc.ofDescriptor(
+                                            "(Ldev/morphia/mapping/codec/pojo/PropertyModel;Ljava/lang/Class;Ljava/lang/String;)V"));
                         }
 
                         cod.return_();

@@ -60,9 +60,7 @@ public class ExtensionFunctions {
         if (mtd.parameterCount() == 0) {
             String returnDesc = mtd.returnType().descriptorString();
             for (java.lang.reflect.Field field : entity.getDeclaredFields()) {
-                String fieldDesc = io.github.dmlloyd.classfile.TypeKind
-                        .from(java.lang.constant.ClassDesc.ofDescriptor(returnDesc)).upperBound().descriptorString();
-                if (field.getName().equals(methodName)) {
+                if (field.getName().equals(methodName) && field.getType().descriptorString().equals(returnDesc)) {
                     return methodName;
                 }
             }

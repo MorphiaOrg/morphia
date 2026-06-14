@@ -55,6 +55,11 @@ public class PropertyAccessorGenerator extends BaseGizmoGenerator {
                 default -> throw new IllegalArgumentException("Unknown primitive: " + desc);
             };
         }
+        if (desc.startsWith("[")) {
+            // Array: return Class.forName-compatible form, e.g. [Ljava.lang.String;
+            return desc.replace('/', '.');
+        }
+        // Object type: Ljava/lang/String; → java.lang.String
         return desc.substring(1, desc.length() - 1).replace('/', '.');
     }
 
@@ -77,7 +82,14 @@ public class PropertyAccessorGenerator extends BaseGizmoGenerator {
     public PropertyAccessorGenerator emit() {
         ClassDesc thisDesc = ClassDesc.of(generatedType);
         ClassDesc entityDesc = ClassDesc.of(entity.getName());
-        ClassDesc propertyDesc = ClassDesc.ofDescriptor(isPrimitive() ? primitiveDescriptor() : "L" + propertyType.replace('.', '/') + ";");
+        ClassDesc propertyDesc;
+        if (isPrimitive()) {
+            propertyDesc = ClassDesc.ofDescriptor(primitiveDescriptor());
+        } else if (propertyType.startsWith("[")) {
+            propertyDesc = ClassDesc.ofDescriptor(propertyType.replace('.', '/'));
+        } else {
+            propertyDesc = ClassDesc.ofDescriptor("L" + propertyType.replace('.', '/') + ";");
+        }
         ClassDesc wrapperDesc = ClassDesc.of(getWrapperType());
         ClassDesc accessorDesc = ClassDesc.of("org.bson.codecs.pojo.PropertyAccessor");
 
@@ -87,10 +99,13 @@ public class PropertyAccessorGenerator extends BaseGizmoGenerator {
             cb.withSuperclass(ConstantDescs.CD_Object);
             cb.withInterfaceSymbols(accessorDesc);
 
-            // Class signature: Ljava/lang/Object;Lorg/bson/codecs/pojo/PropertyAccessor<LpropertyType;>;
+            // Class signature: Ljava/lang/Object;Lorg/bson/codecs/pojo/PropertyAccessor<propertyType>;
+            String propDesc = propertyType.startsWith("[")
+                    ? propertyType.replace('.', '/')
+                    : "L" + propertyType.replace('.', '/') + ";";
             String sigStr = "Ljava/lang/Object;L"
-                    + accessorDesc.descriptorString().substring(1, accessorDesc.descriptorString().length() - 1) + "<L"
-                    + propertyType.replace('.', '/') + ";>;";
+                    + accessorDesc.descriptorString().substring(1, accessorDesc.descriptorString().length() - 1) + "<"
+                    + propDesc + ">" + ";";
             cb.with(SignatureAttribute.of(ClassSignature.parseFrom(sigStr)));
 
             // default constructor

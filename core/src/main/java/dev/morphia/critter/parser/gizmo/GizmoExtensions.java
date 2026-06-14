@@ -121,7 +121,11 @@ public class GizmoExtensions {
      * Emits bytecode that loads a Class reference. Non-public classes use Class.forName().
      */
     public static void emitClassRef(CodeBuilder cod, Class<?> cls) {
-        if (Modifier.isPublic(cls.getModifiers())) {
+        if (cls.isPrimitive()) {
+            // Primitives are not loadable via ClassDesc.of; use the wrapper's TYPE field
+            String wrapper = primitiveWrapperName(cls);
+            cod.getstatic(ClassDesc.of(wrapper), "TYPE", ConstantDescs.CD_Class);
+        } else if (Modifier.isPublic(cls.getModifiers())) {
             cod.loadConstant(ClassDesc.of(cls.getName()));
         } else {
             cod.ldc(cls.getName());
@@ -139,6 +143,28 @@ public class GizmoExtensions {
                     "forName",
                     MethodTypeDesc.ofDescriptor("(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;"));
         }
+    }
+
+    private static String primitiveWrapperName(Class<?> primitive) {
+        if (primitive == boolean.class)
+            return "java.lang.Boolean";
+        if (primitive == byte.class)
+            return "java.lang.Byte";
+        if (primitive == char.class)
+            return "java.lang.Character";
+        if (primitive == short.class)
+            return "java.lang.Short";
+        if (primitive == int.class)
+            return "java.lang.Integer";
+        if (primitive == long.class)
+            return "java.lang.Long";
+        if (primitive == float.class)
+            return "java.lang.Float";
+        if (primitive == double.class)
+            return "java.lang.Double";
+        if (primitive == void.class)
+            return "java.lang.Void";
+        throw new IllegalArgumentException("Not a primitive: " + primitive);
     }
 
     /**

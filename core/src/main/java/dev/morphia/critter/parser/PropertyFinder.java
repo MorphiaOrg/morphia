@@ -214,7 +214,11 @@ public class PropertyFinder {
         String name = method.methodName().stringValue();
         if (!name.startsWith("get") && !name.startsWith("is"))
             return false;
-        if ((method.flags().flagsMask() & ClassFile.ACC_STATIC) != 0)
+        int flags = method.flags().flagsMask();
+        if ((flags & ClassFile.ACC_STATIC) != 0)
+            return false;
+        // 0x0040 = ACC_BRIDGE: skip compiler-generated covariant bridge methods
+        if ((flags & 0x0040) != 0)
             return false;
         java.lang.constant.MethodTypeDesc mtd = java.lang.constant.MethodTypeDesc
                 .ofDescriptor(method.methodType().stringValue());

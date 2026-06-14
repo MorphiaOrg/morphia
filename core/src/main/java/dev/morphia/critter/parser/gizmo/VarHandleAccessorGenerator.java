@@ -107,6 +107,11 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
                 default -> throw new IllegalArgumentException("Unknown primitive: " + desc);
             };
         }
+        if (desc.startsWith("[")) {
+            // Array: return Class.forName-compatible form, e.g. [Ljava.lang.String;
+            return desc.replace('/', '.');
+        }
+        // Object type: Ljava/lang/String; → java.lang.String
         return desc.substring(1, desc.length() - 1).replace('/', '.');
     }
 
@@ -184,10 +189,12 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
             cb.withInterfaceSymbols(accessorDesc);
 
             // Class signature: implements PropertyAccessor<WrapperType>
-            String propInternalName = propertyType.replace('.', '/');
             String wrapperInternalName = getWrapperType().replace('.', '/');
             String accInternal = "org/bson/codecs/pojo/PropertyAccessor";
-            String sigStr = "Ljava/lang/Object;L" + accInternal + "<L" + wrapperInternalName + ";>;";
+            String wrapperTypeArg = wrapperInternalName.startsWith("[")
+                    ? wrapperInternalName
+                    : "L" + wrapperInternalName + ";";
+            String sigStr = "Ljava/lang/Object;L" + accInternal + "<" + wrapperTypeArg + ">" + ";";
             cb.with(SignatureAttribute.of(ClassSignature.parseFrom(sigStr)));
 
             // Field: varHandle or getterHandle
@@ -338,8 +345,6 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
                             // Use reflection to set final field
                             ClassDesc fieldDesc2 = ClassDesc.of("java.lang.reflect.Field");
                             cod.trying(tryBody -> {
-                                tryBody.aload(1);
-                                tryBody.checkcast(ClassDesc.of(entity.getName()));
                                 GizmoExtensions.emitClassRef(tryBody, entity);
                                 tryBody.ldc(propertyName);
                                 tryBody.invokevirtual(ConstantDescs.CD_Class, "getDeclaredField",
@@ -380,7 +385,8 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
                                 cod.invokevirtual(varHandleDesc, "set",
                                         MethodTypeDesc.ofDescriptor("(Ljava/lang/Object;" + propertyDesc.descriptorString() + ")V"));
                             } else {
-                                cod.checkcast(propertyDesc);
+                                // skip checkcast: VarHandle.set(Object,Object) accepts Object;
+                                // checkcast to a non-public inner class would cause IllegalAccessError
                                 cod.invokevirtual(varHandleDesc, "set",
                                         MethodTypeDesc.ofDescriptor("(Ljava/lang/Object;Ljava/lang/Object;)V"));
                             }
@@ -396,7 +402,8 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
                                 cod.invokevirtual(methodHandleDesc, "invoke",
                                         MethodTypeDesc.ofDescriptor("(Ljava/lang/Object;" + propertyDesc.descriptorString() + ")V"));
                             } else {
-                                cod.checkcast(propertyDesc);
+                                // skip checkcast: MethodHandle.invoke(Object,Object) accepts Object;
+                                // checkcast to a non-public inner class would cause IllegalAccessError
                                 cod.invokevirtual(methodHandleDesc, "invoke",
                                         MethodTypeDesc.ofDescriptor("(Ljava/lang/Object;Ljava/lang/Object;)V"));
                             }
@@ -438,6 +445,9 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
                 case "double" -> ConstantDescs.CD_double;
                 default -> throw new IllegalArgumentException("Not a primitive: " + propertyType);
             };
+        }
+        if (propertyType.startsWith("[")) {
+            return ClassDesc.ofDescriptor(propertyType.replace('.', '/'));
         }
         return ClassDesc.of(propertyType);
     }
