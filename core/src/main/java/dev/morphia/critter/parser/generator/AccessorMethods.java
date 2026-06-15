@@ -1,4 +1,4 @@
-package dev.morphia.critter.parser.asm;
+package dev.morphia.critter.parser.generator;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,14 +9,14 @@ import io.github.dmlloyd.classfile.ClassModel;
 /**
  * Base class for bytecode generators that read and transform existing class files.
  */
-public abstract class BaseGenerator {
+public abstract class AccessorMethods {
     /** The entity class whose bytecode will be augmented. */
     protected final Class<?> entity;
 
     /**
      * Creates a new generator for the given entity class.
      */
-    protected BaseGenerator(Class<?> entity) {
+    protected AccessorMethods(Class<?> entity) {
         this.entity = entity;
     }
 

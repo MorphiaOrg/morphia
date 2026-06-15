@@ -1,4 +1,4 @@
-package dev.morphia.critter.parser.asm;
+package dev.morphia.critter.parser.generator;
 
 import java.lang.constant.ClassDesc;
 import java.lang.constant.MethodTypeDesc;
@@ -18,7 +18,7 @@ import io.github.dmlloyd.classfile.TypeKind;
  * Generates synthetic {@code __readXxx} and {@code __writeXxx} accessor methods into an entity class
  * bytecode for properties backed by getter/setter methods rather than direct fields.
  */
-public class AddMethodAccessorMethods extends BaseGenerator {
+public class AddMethodAccessorMethods extends AccessorMethods {
     private final List<MethodInfo> methods;
 
     /**

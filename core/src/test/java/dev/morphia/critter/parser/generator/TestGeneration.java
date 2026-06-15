@@ -21,7 +21,6 @@ import dev.morphia.annotations.internal.IndexOptionsBuilder;
 import dev.morphia.annotations.internal.IndexesBuilder;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.MethodInfo;
-import dev.morphia.critter.parser.asm.AddMethodAccessorMethods;
 import dev.morphia.critter.sources.Example;
 import dev.morphia.critter.sources.MethodExample;
 import dev.morphia.mapping.codec.pojo.EntityModel;

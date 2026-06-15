@@ -8,8 +8,6 @@ import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.FieldInfo;
 import dev.morphia.critter.parser.MethodInfo;
 import dev.morphia.critter.parser.PropertyFinder;
-import dev.morphia.critter.parser.asm.AddFieldAccessorMethods;
-import dev.morphia.critter.parser.asm.AddMethodAccessorMethods;
 import dev.morphia.mapping.Mapper;
 
 import io.github.dmlloyd.classfile.ClassFile;
