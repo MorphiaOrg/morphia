@@ -1,4 +1,4 @@
-package dev.morphia.critter.parser.gizmo;
+package dev.morphia.critter.parser.generator;
 
 import java.lang.constant.ClassDesc;
 import java.lang.constant.ConstantDescs;
@@ -19,7 +19,7 @@ import io.github.dmlloyd.classfile.attribute.SignatureAttribute;
  * Generates a {@link org.bson.codecs.pojo.PropertyAccessor} implementation for a single
  * entity property, delegating to the synthetic {@code __readXxx}/{@code __writeXxx} methods.
  */
-public class PropertyAccessorGenerator extends BaseGizmoGenerator {
+public class PropertyAccessorGenerator extends BaseGenerator {
     private static final Map<String, String> PRIMITIVE_TO_WRAPPER = Map.of(
             "boolean", "java.lang.Boolean",
             "byte", "java.lang.Byte",

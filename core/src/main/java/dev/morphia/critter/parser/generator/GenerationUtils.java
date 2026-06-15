@@ -1,4 +1,4 @@
-package dev.morphia.critter.parser.gizmo;
+package dev.morphia.critter.parser.generator;
 
 import java.lang.constant.ClassDesc;
 import java.lang.constant.ConstantDescs;
@@ -16,9 +16,9 @@ import io.github.dmlloyd.classfile.TypeKind;
 /**
  * Static utility methods bridging annotation introspection and Morphia type data with the ClassFile API.
  */
-public class GizmoExtensions {
+public class GenerationUtils {
 
-    private GizmoExtensions() {
+    private GenerationUtils() {
     }
 
     /**

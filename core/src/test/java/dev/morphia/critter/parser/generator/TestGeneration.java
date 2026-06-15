@@ -1,4 +1,4 @@
-package dev.morphia.critter.parser.gizmo;
+package dev.morphia.critter.parser.generator;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -40,7 +40,7 @@ import static com.mongodb.client.model.CollationCaseFirst.LOWER;
 import static dev.morphia.critter.parser.GeneratorsTestHelper.defaultMapper;
 import static io.github.dmlloyd.classfile.Attributes.runtimeVisibleAnnotations;
 
-public class TestGizmoGeneration {
+public class TestGeneration {
     private final CritterClassLoader critterClassLoader = new CritterClassLoader();
 
     @Test
@@ -87,8 +87,8 @@ public class TestGizmoGeneration {
     }
 
     @Test
-    public void testGizmo() throws Exception {
-        new CritterGizmoGenerator(defaultMapper()).generate(Example.class, critterClassLoader, false);
+    public void testGenerator() throws Exception {
+        new CritterGenerator(defaultMapper()).generate(Example.class, critterClassLoader, false);
         critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.AgeModel");
         Class<?> nameModel = critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.NameModel");
         invokeAll(PropertyModel.class, nameModel);

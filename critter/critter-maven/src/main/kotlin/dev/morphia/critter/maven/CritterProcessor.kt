@@ -3,7 +3,7 @@ package dev.morphia.critter.maven
 import dev.morphia.annotations.Entity
 import dev.morphia.config.MorphiaConfig
 import dev.morphia.critter.CritterClassLoader
-import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator
+import dev.morphia.critter.parser.generator.CritterGenerator
 import dev.morphia.mapping.ReflectiveMapper
 import io.github.classgraph.ClassGraph
 import java.io.File
@@ -20,7 +20,7 @@ class CritterProcessor(
 
     private val logger: Logger = LoggerFactory.getLogger(CritterProcessor::class.java)
     private val critterClassLoader = CritterClassLoader()
-    private val gizmoGenerator = CritterGizmoGenerator(ReflectiveMapper(config, critterClassLoader))
+    private val gizmoGenerator = CritterGenerator(ReflectiveMapper(config, critterClassLoader))
 
     fun process() {
         val entityClasses = findEntityClasses()

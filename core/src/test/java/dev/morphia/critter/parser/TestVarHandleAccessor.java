@@ -14,8 +14,8 @@ import dev.morphia.annotations.Id;
 import dev.morphia.config.ManualMorphiaConfig;
 import dev.morphia.critter.Critter;
 import dev.morphia.critter.CritterClassLoader;
-import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator;
-import dev.morphia.critter.parser.gizmo.VarHandleAccessorGenerator;
+import dev.morphia.critter.parser.generator.CritterGenerator;
+import dev.morphia.critter.parser.generator.VarHandleAccessorGenerator;
 import dev.morphia.critter.sources.Example;
 import dev.morphia.mapping.PropertyDiscovery;
 import dev.morphia.mapping.ReflectiveMapper;
@@ -38,7 +38,7 @@ public class TestVarHandleAccessor {
     @BeforeAll
     public void setup() {
         classLoader = new CritterClassLoader();
-        new CritterGizmoGenerator(defaultMapper()).generate(Example.class, classLoader, true);
+        new CritterGenerator(defaultMapper()).generate(Example.class, classLoader, true);
     }
 
     @Test
@@ -110,7 +110,7 @@ public class TestVarHandleAccessor {
     @Test
     public void testFinalFieldReflectionFallback() throws Exception {
         CritterClassLoader loader = new CritterClassLoader();
-        new CritterGizmoGenerator(defaultMapper()).generate(FinalFieldEntity.class, loader, true);
+        new CritterGenerator(defaultMapper()).generate(FinalFieldEntity.class, loader, true);
 
         // Static check: the generated accessor must reference java/lang/reflect/Field
         String accessorName = Critter.critterPackage(FinalFieldEntity.class) + "." + Critter.titleCase("label") + "Accessor";
@@ -151,7 +151,7 @@ public class TestVarHandleAccessor {
         var methodsMapper = new ReflectiveMapper(
                 new ManualMorphiaConfig().propertyDiscovery(PropertyDiscovery.METHODS));
         CritterClassLoader loader = new CritterClassLoader();
-        new CritterGizmoGenerator(methodsMapper).generate(StaticSetterEntity.class, loader, true);
+        new CritterGenerator(methodsMapper).generate(StaticSetterEntity.class, loader, true);
 
         String accessorName = Critter.critterPackage(StaticSetterEntity.class) + ".ValueAccessor";
         @SuppressWarnings("unchecked")

@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import dev.morphia.critter.CritterClassLoader;
-import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator;
-import dev.morphia.critter.parser.gizmo.PropertyModelGenerator;
+import dev.morphia.critter.parser.generator.CritterGenerator;
+import dev.morphia.critter.parser.generator.PropertyModelGenerator;
 import dev.morphia.critter.parser.java.CritterParser;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.PropertyDiscovery;
@@ -37,7 +37,7 @@ public class PropertyFinder {
     private final Map<Class<?>, Object> providerMap;
     private final CritterClassLoader classLoader;
     private final boolean runtimeMode;
-    private final CritterGizmoGenerator critterGizmoGenerator;
+    private final CritterGenerator critterGenerator;
     private final PropertyDiscovery propertyDiscovery;
 
     public PropertyFinder(Mapper mapper, CritterClassLoader classLoader, boolean runtimeMode) {
@@ -47,7 +47,7 @@ public class PropertyFinder {
         }
         this.classLoader = classLoader;
         this.runtimeMode = runtimeMode;
-        this.critterGizmoGenerator = new CritterGizmoGenerator(mapper);
+        this.critterGenerator = new CritterGenerator(mapper);
         this.propertyDiscovery = mapper.getConfig().propertyDiscovery();
     }
 
@@ -57,27 +57,27 @@ public class PropertyFinder {
         if (methods.isEmpty()) {
             List<FieldInfo> fields = discoverAllFields(entityType, classModel);
             if (!runtimeMode) {
-                classLoader.register(entityType.getName(), critterGizmoGenerator.fieldAccessors(entityType, fields));
+                classLoader.register(entityType.getName(), critterGenerator.fieldAccessors(entityType, fields));
             }
             for (FieldInfo field : fields) {
                 if (runtimeMode) {
-                    critterGizmoGenerator.varHandleAccessor(entityType, classLoader, field);
+                    critterGenerator.varHandleAccessor(entityType, classLoader, field);
                 } else {
-                    critterGizmoGenerator.propertyAccessor(entityType, classLoader, field);
+                    critterGenerator.propertyAccessor(entityType, classLoader, field);
                 }
-                models.add(critterGizmoGenerator.propertyModelGenerator(entityType, classLoader, field));
+                models.add(critterGenerator.propertyModelGenerator(entityType, classLoader, field));
             }
         } else {
             if (!runtimeMode) {
-                classLoader.register(entityType.getName(), critterGizmoGenerator.methodAccessors(entityType, methods));
+                classLoader.register(entityType.getName(), critterGenerator.methodAccessors(entityType, methods));
             }
             for (MethodInfo method : methods) {
                 if (runtimeMode) {
-                    critterGizmoGenerator.varHandleAccessor(entityType, classLoader, method);
+                    critterGenerator.varHandleAccessor(entityType, classLoader, method);
                 } else {
-                    critterGizmoGenerator.propertyAccessor(entityType, classLoader, method);
+                    critterGenerator.propertyAccessor(entityType, classLoader, method);
                 }
-                models.add(critterGizmoGenerator.propertyModelGenerator(entityType, classLoader, method));
+                models.add(critterGenerator.propertyModelGenerator(entityType, classLoader, method));
             }
         }
         return models;

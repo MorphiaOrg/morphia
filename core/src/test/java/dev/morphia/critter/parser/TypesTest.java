@@ -8,7 +8,7 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import dev.morphia.critter.parser.gizmo.GizmoExtensions;
+import dev.morphia.critter.parser.generator.GenerationUtils;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -108,7 +108,7 @@ public class TypesTest {
     @MethodSource("types")
     public void asClassConversion(Class<?> expected) {
         ClassDesc type = ClassDesc.ofDescriptor(classToDescriptor(expected));
-        Class<?> actual = GizmoExtensions.asClass(type, Thread.currentThread().getContextClassLoader());
+        Class<?> actual = GenerationUtils.asClass(type, Thread.currentThread().getContextClassLoader());
         Assertions.assertEquals(expected, actual, "Type " + type.descriptorString() + " should convert to " + expected.getName());
     }
 }

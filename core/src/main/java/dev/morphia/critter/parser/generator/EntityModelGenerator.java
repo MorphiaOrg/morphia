@@ -1,4 +1,4 @@
-package dev.morphia.critter.parser.gizmo;
+package dev.morphia.critter.parser.generator;
 
 import java.lang.annotation.Annotation;
 import java.lang.constant.ClassDesc;
@@ -21,7 +21,7 @@ import io.github.dmlloyd.classfile.TypeKind;
 /**
  * Generates a ClassFile-based {@code CritterEntityModel} implementation for a Morphia entity class.
  */
-public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
+public class EntityModelGenerator extends BaseGenerator {
     private final Mapper mapper;
     private final List<PropertyModelGenerator> properties;
     private final Entity entityAnnotation;
@@ -36,7 +36,7 @@ public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
      * @param properties         the property model generators for each of the entity's properties
      * @throws IllegalStateException if the entity class does not have an {@code @Entity} annotation
      */
-    public GizmoEntityModelGenerator(Mapper mapper, Class<?> type, CritterClassLoader critterClassLoader,
+    public EntityModelGenerator(Mapper mapper, Class<?> type, CritterClassLoader critterClassLoader,
             List<PropertyModelGenerator> properties) {
         super(type, critterClassLoader);
         this.mapper = mapper;
@@ -83,7 +83,7 @@ public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
     /**
      * Emits the generated entity model class and returns this generator.
      */
-    public GizmoEntityModelGenerator emit() {
+    public EntityModelGenerator emit() {
         ClassDesc thisDesc = ClassDesc.of(generatedType);
         ClassDesc superDesc = ClassDesc.of(CritterEntityModel.class.getName());
         ClassDesc mapperDesc = ClassDesc.of(Mapper.class.getName());
@@ -108,13 +108,13 @@ public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
                     ClassFile.ACC_PUBLIC, cod -> {
                         cod.aload(0);
                         cod.aload(1);
-                        GizmoExtensions.emitClassRef(cod, entity);
+                        GenerationUtils.emitClassRef(cod, entity);
                         cod.invokespecial(superDesc, "<init>",
                                 MethodTypeDesc.of(ConstantDescs.CD_void, mapperDesc, ConstantDescs.CD_Class));
 
                         // setType(entityClass)
                         cod.aload(0);
-                        GizmoExtensions.emitClassRef(cod, entity);
+                        GenerationUtils.emitClassRef(cod, entity);
                         cod.invokevirtual(thisDesc, "setType",
                                 MethodTypeDesc.of(ConstantDescs.CD_void, ConstantDescs.CD_Class));
 
@@ -135,7 +135,7 @@ public class GizmoEntityModelGenerator extends BaseGizmoGenerator {
                         // Register morphia annotations
                         for (Annotation ann : morphiaAnnotations) {
                             cod.aload(0);
-                            GizmoExtensions.emitAnnotationOnStack(cod, ann);
+                            GenerationUtils.emitAnnotationOnStack(cod, ann);
                             cod.invokevirtual(entityModelDesc, "annotation",
                                     MethodTypeDesc.of(ConstantDescs.CD_void, annotationDesc));
                         }

@@ -1,4 +1,4 @@
-package dev.morphia.critter.parser.gizmo;
+package dev.morphia.critter.parser.generator;
 
 import java.lang.annotation.Annotation;
 import java.lang.constant.ClassDesc;
@@ -42,7 +42,7 @@ import io.github.dmlloyd.classfile.TypeKind;
  * Generates a ClassFile-based {@link dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel} implementation
  * for a single property of a Morphia entity class.
  */
-public class PropertyModelGenerator extends BaseGizmoGenerator {
+public class PropertyModelGenerator extends BaseGenerator {
     private final MorphiaConfig config;
     private final String propertyName;
     private final String accessorType;
@@ -268,7 +268,7 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
     private static TypeData<?> typeDataFromSignature(io.github.dmlloyd.classfile.Signature sig, ClassLoader classLoader) {
         if (sig instanceof io.github.dmlloyd.classfile.Signature.ClassTypeSig cts) {
             java.lang.constant.ClassDesc cd = cts.classDesc();
-            Class<?> raw = GizmoExtensions.asClass(cd, classLoader);
+            Class<?> raw = GenerationUtils.asClass(cd, classLoader);
             @SuppressWarnings("unchecked")
             List<TypeData<?>> params = (List<TypeData<?>>) (List<?>) cts.typeArgs().stream()
                     .map(arg -> typeDataFromTypeArg(arg, classLoader))
@@ -367,7 +367,7 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
                         for (Annotation ann : morphiaAnnotations) {
                             if (ann.annotationType().getName().startsWith("dev.morphia.annotations.")) {
                                 cod.aload(0);
-                                GizmoExtensions.emitAnnotationOnStack(cod, ann);
+                                GenerationUtils.emitAnnotationOnStack(cod, ann);
                                 cod.invokevirtual(propertyModelDesc, "annotation",
                                         MethodTypeDesc.of(propertyModelDesc, annotationDesc));
                                 cod.pop();
@@ -378,14 +378,14 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
                         ClassDesc critterPmDesc = ClassDesc.of("dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel");
                         if (isFieldBased) {
                             cod.aload(0);
-                            GizmoExtensions.emitClassRef(cod, entity);
+                            GenerationUtils.emitClassRef(cod, entity);
                             cod.ldc(propertyName);
                             cod.invokestatic(critterPmDesc, "registerFieldAnnotations",
                                     MethodTypeDesc.ofDescriptor(
                                             "(Ldev/morphia/mapping/codec/pojo/PropertyModel;Ljava/lang/Class;Ljava/lang/String;)V"));
                         } else {
                             cod.aload(0);
-                            GizmoExtensions.emitClassRef(cod, entity);
+                            GenerationUtils.emitClassRef(cod, entity);
                             cod.ldc(getterName);
                             cod.invokestatic(critterPmDesc, "registerMethodAnnotations",
                                     MethodTypeDesc.ofDescriptor(
@@ -451,21 +451,21 @@ public class PropertyModelGenerator extends BaseGizmoGenerator {
             // getNormalizedType(): Class
             cb.withMethodBody("getNormalizedType", MethodTypeDesc.of(ConstantDescs.CD_Class),
                     ClassFile.ACC_PUBLIC, cod -> {
-                        GizmoExtensions.emitClassRef(cod, normalizedType);
+                        GenerationUtils.emitClassRef(cod, normalizedType);
                         cod.areturn();
                     });
 
             // getType(): Class
             cb.withMethodBody("getType", MethodTypeDesc.of(ConstantDescs.CD_Class),
                     ClassFile.ACC_PUBLIC, cod -> {
-                        GizmoExtensions.emitClassRef(cod, typeData.getType());
+                        GenerationUtils.emitClassRef(cod, typeData.getType());
                         cod.areturn();
                     });
 
             // getTypeData(): TypeData
             cb.withMethodBody("getTypeData", MethodTypeDesc.of(typeDataDesc),
                     ClassFile.ACC_PUBLIC, cod -> {
-                        GizmoExtensions.emitTypeData(typeData, cod);
+                        GenerationUtils.emitTypeData(typeData, cod);
                         cod.areturn();
                     });
 

@@ -1,4 +1,4 @@
-package dev.morphia.critter.parser.gizmo;
+package dev.morphia.critter.parser.generator;
 
 import java.lang.constant.ClassDesc;
 import java.lang.constant.ConstantDescs;
@@ -27,7 +27,7 @@ import io.github.dmlloyd.classfile.attribute.SignatureAttribute;
  * {@link java.lang.invoke.VarHandle} (for fields) or {@link java.lang.invoke.MethodHandle} (for getter/setter pairs)
  * to access a single property of a Morphia entity class.
  */
-public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
+public class VarHandleAccessorGenerator extends BaseGenerator {
     private static final Map<String, String> PRIMITIVE_TO_WRAPPER = Map.of(
             "boolean", "java.lang.Boolean",
             "byte", "java.lang.Byte",
@@ -345,7 +345,7 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
                             // Use reflection to set final field
                             ClassDesc fieldDesc2 = ClassDesc.of("java.lang.reflect.Field");
                             cod.trying(tryBody -> {
-                                GizmoExtensions.emitClassRef(tryBody, entity);
+                                GenerationUtils.emitClassRef(tryBody, entity);
                                 tryBody.ldc(propertyName);
                                 tryBody.invokevirtual(ConstantDescs.CD_Class, "getDeclaredField",
                                         MethodTypeDesc.of(fieldDesc2, ConstantDescs.CD_String));
