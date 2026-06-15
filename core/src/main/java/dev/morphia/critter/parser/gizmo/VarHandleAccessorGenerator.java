@@ -140,7 +140,7 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
         Class<?> paramClass = isPrimitive() ? PRIMITIVE_CLASSES.get(propertyType) : null;
         if (paramClass == null) {
             try {
-                paramClass = Class.forName(propertyType);
+                paramClass = Class.forName(propertyType, false, entityClassLoader());
             } catch (ClassNotFoundException e) {
                 return false;
             }
@@ -250,7 +250,7 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
                         tryBody.aload(privateLookupSlot);
                         tryBody.aload(entityClassSlot);
                         tryBody.ldc(propertyName);
-                        emitLoadClass(tryBody, propertyType, propertyDesc);
+                        emitLoadClass(tryBody, propertyType, propertyDesc, tcclSlot);
                         tryBody.invokevirtual(lookupDesc, "findVarHandle",
                                 MethodTypeDesc.of(varHandleDesc, ConstantDescs.CD_Class, ConstantDescs.CD_String, ConstantDescs.CD_Class));
                         tryBody.aload(0);
@@ -261,7 +261,7 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
                         tryBody.aload(privateLookupSlot);
                         tryBody.aload(entityClassSlot);
                         tryBody.ldc(getterName);
-                        emitLoadClass(tryBody, propertyType, propertyDesc);
+                        emitLoadClass(tryBody, propertyType, propertyDesc, tcclSlot);
                         tryBody.invokestatic(methodTypeDesc2, "methodType",
                                 MethodTypeDesc.of(methodTypeDesc2, ConstantDescs.CD_Class));
                         tryBody.invokevirtual(lookupDesc, "findVirtual",
@@ -276,7 +276,7 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
                             tryBody.aload(entityClassSlot);
                             tryBody.ldc(setterName);
                             tryBody.loadConstant(ConstantDescs.CD_void);
-                            emitLoadClass(tryBody, propertyType, propertyDesc);
+                            emitLoadClass(tryBody, propertyType, propertyDesc, tcclSlot);
                             tryBody.invokestatic(methodTypeDesc2, "methodType",
                                     MethodTypeDesc.of(methodTypeDesc2, ConstantDescs.CD_Class, ConstantDescs.CD_Class));
                             tryBody.invokevirtual(lookupDesc, "findVirtual",
@@ -416,20 +416,24 @@ public class VarHandleAccessorGenerator extends BaseGizmoGenerator {
         return this;
     }
 
-    private void emitLoadClass(io.github.dmlloyd.classfile.CodeBuilder cod, String typeName, ClassDesc desc) {
+    private void emitLoadClass(io.github.dmlloyd.classfile.CodeBuilder cod, String typeName, ClassDesc desc,
+            int tcclSlot) {
         if (isPrimitive()) {
             cod.loadConstant(desc);
         } else {
-            GizmoExtensions.emitClassRef(cod, classForName(typeName));
+            // Emit Class.forName(typeName, false, tccl) so the property type is resolved via the
+            // same classloader used to load the entity, not the accessor's defining classloader.
+            cod.ldc(typeName);
+            cod.iconst_0();
+            cod.aload(tcclSlot);
+            cod.invokestatic(ConstantDescs.CD_Class, "forName",
+                    MethodTypeDesc.ofDescriptor("(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;"));
         }
     }
 
-    private static Class<?> classForName(String name) {
-        try {
-            return Class.forName(name);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+    private ClassLoader entityClassLoader() {
+        ClassLoader cl = entity.getClassLoader();
+        return cl != null ? cl : ClassLoader.getSystemClassLoader();
     }
 
     private ClassDesc propertyClassDesc() {

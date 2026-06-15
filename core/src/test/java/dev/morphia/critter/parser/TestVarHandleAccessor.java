@@ -1,8 +1,12 @@
 package dev.morphia.critter.parser;
 
+import java.lang.constant.ClassDesc;
+import java.lang.constant.ConstantDescs;
+import java.lang.constant.MethodTypeDesc;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import dev.morphia.annotations.Entity;
@@ -10,6 +14,7 @@ import dev.morphia.annotations.Id;
 import dev.morphia.critter.Critter;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator;
+import dev.morphia.critter.parser.gizmo.VarHandleAccessorGenerator;
 import dev.morphia.critter.sources.Example;
 
 import org.bson.codecs.pojo.PropertyAccessor;
@@ -18,6 +23,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+
+import io.github.dmlloyd.classfile.ClassFile;
 
 import static dev.morphia.critter.parser.GeneratorsTestHelper.defaultMapper;
 
@@ -142,5 +149,105 @@ public class TestVarHandleAccessor {
         Class<PropertyAccessor<T>> cls = (Class<PropertyAccessor<T>>) loader.loadClass(
                 Critter.critterPackage(entityType) + "." + Critter.titleCase(fieldName) + "Accessor");
         return cls.getConstructor().newInstance();
+    }
+
+    /**
+     * Regression test for bug #1 from the ClassFile API review:
+     * VarHandleAccessorGenerator uses single-arg Class.forName() (caller classloader) instead of
+     * entity.getClassLoader(), so method-based properties whose type is only known to a child
+     * classloader (typical in app-server deployments) cause emit() to crash and set() to be
+     * unavailable.
+     *
+     * The test fails while the bug is present: emit() throws RuntimeException because
+     * Class.forName("IsolatedValue") uses the system CL, which cannot see the dynamically-loaded type.
+     * Once fixed (Class.forName with entity.getClassLoader()), emit() succeeds and set() works.
+     */
+    @Test
+    public void testMethodBasedAccessorWorksWhenPropertyTypeIsOnChildClassloader() throws Exception {
+        ClassDesc valueTypeDesc = ClassDesc.of("dev.morphia.critter.test.isolate.IsolatedValue");
+        byte[] valueTypeBytes = ClassFile.of().build(valueTypeDesc, cb -> {
+            cb.withVersion(ClassFile.JAVA_17_VERSION, 0);
+            cb.withFlags(ClassFile.ACC_PUBLIC | ClassFile.ACC_SUPER);
+            cb.withSuperclass(ConstantDescs.CD_Object);
+            cb.withMethodBody("<init>", MethodTypeDesc.ofDescriptor("()V"), ClassFile.ACC_PUBLIC, cod -> {
+                cod.aload(0);
+                cod.invokespecial(ConstantDescs.CD_Object, "<init>", MethodTypeDesc.ofDescriptor("()V"));
+                cod.return_();
+            });
+        });
+
+        ClassDesc entityDesc = ClassDesc.of("dev.morphia.critter.test.isolate.EntityWithIsolatedProp");
+        byte[] entityBytes = ClassFile.of().build(entityDesc, cb -> {
+            cb.withVersion(ClassFile.JAVA_17_VERSION, 0);
+            cb.withFlags(ClassFile.ACC_PUBLIC | ClassFile.ACC_SUPER);
+            cb.withSuperclass(ConstantDescs.CD_Object);
+            cb.withField("value", valueTypeDesc, ClassFile.ACC_PRIVATE);
+            cb.withMethodBody("<init>", MethodTypeDesc.ofDescriptor("()V"), ClassFile.ACC_PUBLIC, cod -> {
+                cod.aload(0);
+                cod.invokespecial(ConstantDescs.CD_Object, "<init>", MethodTypeDesc.ofDescriptor("()V"));
+                cod.return_();
+            });
+            cb.withMethodBody("getValue", MethodTypeDesc.of(valueTypeDesc), ClassFile.ACC_PUBLIC, cod -> {
+                cod.aload(0);
+                cod.getfield(entityDesc, "value", valueTypeDesc);
+                cod.areturn();
+            });
+            cb.withMethodBody("setValue",
+                    MethodTypeDesc.of(ConstantDescs.CD_void, valueTypeDesc), ClassFile.ACC_PUBLIC, cod -> {
+                        cod.aload(0);
+                        cod.aload(1);
+                        cod.putfield(entityDesc, "value", valueTypeDesc);
+                        cod.return_();
+                    });
+        });
+
+        Map<String, byte[]> generatedClasses = Map.of(
+                "dev.morphia.critter.test.isolate.IsolatedValue", valueTypeBytes,
+                "dev.morphia.critter.test.isolate.EntityWithIsolatedProp", entityBytes);
+        ClassLoader isolatedLoader = new ClassLoader(ClassLoader.getSystemClassLoader()) {
+            @Override
+            protected Class<?> findClass(String name) throws ClassNotFoundException {
+                byte[] bytes = generatedClasses.get(name);
+                if (bytes != null) {
+                    return defineClass(name, bytes, 0, bytes.length);
+                }
+                throw new ClassNotFoundException(name);
+            }
+        };
+        Class<?> entityClass = isolatedLoader.loadClass("dev.morphia.critter.test.isolate.EntityWithIsolatedProp");
+        Class<?> valueClass = isolatedLoader.loadClass("dev.morphia.critter.test.isolate.IsolatedValue");
+
+        MethodInfo getterInfo = new MethodInfo(
+                "getValue",
+                "()Ldev/morphia/critter/test/isolate/IsolatedValue;",
+                null,
+                ClassFile.ACC_PUBLIC,
+                List.of());
+
+        CritterClassLoader critterLoader = new CritterClassLoader();
+        // Bug: emit() throws RuntimeException(ClassNotFoundException) here because
+        // classForName() calls Class.forName(typeName) with the system CL, not entity.getClassLoader()
+        new VarHandleAccessorGenerator(entityClass, critterLoader, getterInfo).emit();
+
+        // The generated accessor constructor resolves entity/value types via TCCL at runtime
+        ClassLoader prev = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(isolatedLoader);
+        try {
+            String accessorName = Critter.critterPackage(entityClass) + ".ValueAccessor";
+            @SuppressWarnings("unchecked")
+            PropertyAccessor<Object> accessor = (PropertyAccessor<Object>) critterLoader
+                    .loadClass(accessorName).getConstructor().newInstance();
+
+            Object entity = entityClass.getConstructor().newInstance();
+            Object value = valueClass.getConstructor().newInstance();
+
+            Assertions.assertNull(accessor.get(entity), "initial value should be null");
+            // Bug: set() throws UnsupportedOperationException because hasSetter() also called
+            // Class.forName without entity.getClassLoader() and silently returned false
+            accessor.set(entity, value);
+            Assertions.assertSame(value, accessor.get(entity), "get() must return the value that was set");
+        } finally {
+            Thread.currentThread().setContextClassLoader(prev);
+        }
     }
 }
