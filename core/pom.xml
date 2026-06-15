@@ -111,12 +111,6 @@
                         </goals>
                         <phase>generate-sources</phase>
                     </execution>
-                    <execution>
-                        <id>morphia-annotations-asm</id>
-                        <goals>
-                            <goal>morphia-annotation-node</goal>
-                        </goals>
-                    </execution>
                 </executions>
             </plugin>
             <plugin>
