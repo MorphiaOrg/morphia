@@ -17,6 +17,8 @@ docs/reference/public
 docs/reference/server
 mongodb-linux*
 
+audits/
+
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml
