@@ -11,11 +11,14 @@ import java.util.stream.Collectors;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.config.ManualMorphiaConfig;
 import dev.morphia.critter.Critter;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator;
 import dev.morphia.critter.parser.gizmo.VarHandleAccessorGenerator;
 import dev.morphia.critter.sources.Example;
+import dev.morphia.mapping.PropertyDiscovery;
+import dev.morphia.mapping.ReflectiveMapper;
 
 import org.bson.codecs.pojo.PropertyAccessor;
 import org.bson.types.ObjectId;
@@ -128,6 +131,54 @@ public class TestVarHandleAccessor {
             String msg = e.getMessage();
             Assertions.assertTrue(msg != null && msg.contains("label"),
                     "Fallback RuntimeException must mention the field name, got: " + msg);
+        }
+    }
+
+    /**
+     * Regression test for bug #2: findSetter/findSetterInHierarchy did not filter ACC_STATIC methods.
+     *
+     * In METHODS discovery mode, a static setXxx method with matching descriptor was accepted as a
+     * property setter, causing the property to be treated as method-based. hasSetter() then rejected
+     * the static method (it has a reflection-level isStatic guard), leaving no setter handle — so
+     * set() threw UnsupportedOperationException even though the property IS writable via its backing
+     * field.
+     *
+     * After the fix: the static setter is filtered by PropertyFinder, the property falls back to
+     * field-based VarHandle discovery, and set() works correctly.
+     */
+    @Test
+    public void testStaticSetterMethodIsNotTreatedAsPropertySetter() throws Exception {
+        var methodsMapper = new ReflectiveMapper(
+                new ManualMorphiaConfig().propertyDiscovery(PropertyDiscovery.METHODS));
+        CritterClassLoader loader = new CritterClassLoader();
+        new CritterGizmoGenerator(methodsMapper).generate(StaticSetterEntity.class, loader, true);
+
+        String accessorName = Critter.critterPackage(StaticSetterEntity.class) + ".ValueAccessor";
+        @SuppressWarnings("unchecked")
+        PropertyAccessor<Object> accessor = (PropertyAccessor<Object>) loader
+                .loadClass(accessorName).getConstructor().newInstance();
+
+        StaticSetterEntity entity = new StaticSetterEntity();
+        Assertions.assertNull(accessor.get(entity), "initial value should be null");
+        // Bug: set() threw UnsupportedOperationException because the static setter was found by
+        // PropertyFinder, making the property method-based, then hasSetter() rejected it.
+        // Fix: PropertyFinder ignores static setters; property falls back to field VarHandle.
+        accessor.set(entity, "hello");
+        Assertions.assertEquals("hello", accessor.get(entity), "set() must write through to the backing field");
+    }
+
+    @Entity("static_setter_test")
+    public static class StaticSetterEntity {
+        @Id
+        public ObjectId id;
+        private String value;
+
+        public String getValue() {
+            return value;
+        }
+
+        public static void setValue(String v) {
+            // static — must not be used as a property setter
         }
     }
 

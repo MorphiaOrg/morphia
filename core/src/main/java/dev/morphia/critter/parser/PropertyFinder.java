@@ -237,7 +237,8 @@ public class PropertyFinder {
         String setterDesc = "(" + returnDesc + ")V";
         for (MethodModel method : classModel.methods()) {
             if (method.methodName().stringValue().equals(setterName)
-                    && method.methodType().stringValue().equals(setterDesc)) {
+                    && method.methodType().stringValue().equals(setterDesc)
+                    && (method.flags().flagsMask() & ClassFile.ACC_STATIC) == 0) {
                 return toMethodInfo(method);
             }
         }
@@ -253,7 +254,8 @@ public class PropertyFinder {
                 model = readClassModel(current);
             if (model != null) {
                 MethodInfo setter = findSetter(model, propName, returnDesc);
-                if (setter != null && (setter.access() & ClassFile.ACC_PRIVATE) == 0) {
+                if (setter != null && (setter.access() & ClassFile.ACC_PRIVATE) == 0
+                        && (setter.access() & ClassFile.ACC_STATIC) == 0) {
                     return setter;
                 }
             }
