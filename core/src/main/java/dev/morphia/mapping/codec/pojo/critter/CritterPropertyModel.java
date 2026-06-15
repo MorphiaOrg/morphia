@@ -21,6 +21,7 @@ public abstract class CritterPropertyModel extends PropertyModel {
      * Registers all annotations from the entity's field (walking the class hierarchy) into this model.
      * Called from generated subclass constructors so non-Morphia annotations (e.g. @NonNull) are also recorded.
      */
+    @SuppressWarnings("unused")
     public static void registerFieldAnnotations(PropertyModel model, Class<?> entityClass, String fieldName) {
         Class<?> current = entityClass;
         while (current != null && current != Object.class) {
@@ -40,6 +41,7 @@ public abstract class CritterPropertyModel extends PropertyModel {
      * Registers all annotations from the entity's getter method (walking the class hierarchy) into this model.
      * Called from generated subclass constructors so non-Morphia annotations on getters are also recorded.
      */
+    @SuppressWarnings("unused")
     public static void registerMethodAnnotations(PropertyModel model, Class<?> entityClass, String getterName) {
         Class<?> current = entityClass;
         while (current != null && current != Object.class) {
