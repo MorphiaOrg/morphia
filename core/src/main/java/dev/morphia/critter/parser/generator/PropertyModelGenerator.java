@@ -36,7 +36,6 @@ import dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel;
 import org.bson.codecs.pojo.PropertyAccessor;
 
 import io.github.dmlloyd.classfile.ClassFile;
-import io.github.dmlloyd.classfile.TypeKind;
 
 /**
  * Generates a ClassFile-based {@link dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel} implementation
@@ -470,29 +469,23 @@ public class PropertyModelGenerator extends BaseGenerator {
                     });
 
             // isArray(): boolean
-            emitBooleanMethod(cb, "isArray", isArrayFlag);
+            GenerationUtils.emitBooleanMethod(cb, "isArray", isArrayFlag);
             // isFinal(): boolean
-            emitBooleanMethod(cb, "isFinal", isFinalFlag);
+            GenerationUtils.emitBooleanMethod(cb, "isFinal", isFinalFlag);
             // isReference(): boolean
-            emitBooleanMethod(cb, "isReference", isReferenceFlag);
+            GenerationUtils.emitBooleanMethod(cb, "isReference", isReferenceFlag);
             // isTransient(): boolean
-            emitBooleanMethod(cb, "isTransient", isTransientFlag);
+            GenerationUtils.emitBooleanMethod(cb, "isTransient", isTransientFlag);
             // isMap(): boolean
-            emitBooleanMethod(cb, "isMap", isMapFlag);
+            GenerationUtils.emitBooleanMethod(cb, "isMap", isMapFlag);
             // isSet(): boolean
-            emitBooleanMethod(cb, "isSet", isSetFlag);
+            GenerationUtils.emitBooleanMethod(cb, "isSet", isSetFlag);
             // isCollection(): boolean
-            emitBooleanMethod(cb, "isCollection", isCollectionFlag);
+            GenerationUtils.emitBooleanMethod(cb, "isCollection", isCollectionFlag);
         });
 
         critterClassLoader.register(generatedType, bytes);
         return this;
     }
 
-    private static void emitBooleanMethod(io.github.dmlloyd.classfile.ClassBuilder cb, String name, boolean value) {
-        cb.withMethodBody(name, MethodTypeDesc.ofDescriptor("()Z"), ClassFile.ACC_PUBLIC, cod -> {
-            cod.loadConstant(value ? 1 : 0);
-            cod.return_(TypeKind.INT);
-        });
-    }
 }

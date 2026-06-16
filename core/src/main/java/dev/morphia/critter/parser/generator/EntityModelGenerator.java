@@ -16,7 +16,6 @@ import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
 import io.github.dmlloyd.classfile.ClassFile;
-import io.github.dmlloyd.classfile.TypeKind;
 
 /**
  * Generates a ClassFile-based {@code CritterEntityModel} implementation for a Morphia entity class.
@@ -171,11 +170,11 @@ public class EntityModelGenerator extends BaseGenerator {
                     });
 
             // isAbstract(): boolean
-            emitBooleanMethod(cb, "isAbstract", isAbstractFlag);
+            GenerationUtils.emitBooleanMethod(cb, "isAbstract", isAbstractFlag);
             // isInterface(): boolean
-            emitBooleanMethod(cb, "isInterface", isInterfaceFlag);
+            GenerationUtils.emitBooleanMethod(cb, "isInterface", isInterfaceFlag);
             // useDiscriminator(): boolean
-            emitBooleanMethod(cb, "useDiscriminator", useDiscriminatorFlag);
+            GenerationUtils.emitBooleanMethod(cb, "useDiscriminator", useDiscriminatorFlag);
         });
 
         critterClassLoader.register(generatedType, bytes);
@@ -200,10 +199,4 @@ public class EntityModelGenerator extends BaseGenerator {
                 : key;
     }
 
-    private static void emitBooleanMethod(io.github.dmlloyd.classfile.ClassBuilder cb, String name, boolean value) {
-        cb.withMethodBody(name, MethodTypeDesc.ofDescriptor("()Z"), ClassFile.ACC_PUBLIC, cod -> {
-            cod.loadConstant(value ? 1 : 0);
-            cod.return_(TypeKind.INT);
-        });
-    }
 }

@@ -39,7 +39,7 @@ public class CritterGenerator {
      */
     public EntityModelGenerator generate(Class<?> type, CritterClassLoader critterClassLoader, boolean runtimeMode) {
         String resourceName = "%s.class".formatted(type.getName().replace('.', '/'));
-        InputStream inputStream = type.getClassLoader().getResourceAsStream(resourceName);
+        InputStream inputStream = GenerationUtils.safeClassLoader(type).getResourceAsStream(resourceName);
         if (inputStream == null) {
             throw new IllegalArgumentException("Could not find class file for %s".formatted(type.getName()));
         }

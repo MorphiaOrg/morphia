@@ -3,7 +3,6 @@ package dev.morphia.critter.parser.generator;
 import java.lang.constant.ClassDesc;
 import java.lang.constant.ConstantDescs;
 import java.lang.constant.MethodTypeDesc;
-import java.util.Map;
 
 import dev.morphia.critter.Critter;
 import dev.morphia.critter.CritterClassLoader;
@@ -20,63 +19,30 @@ import io.github.dmlloyd.classfile.attribute.SignatureAttribute;
  * entity property, delegating to the synthetic {@code __readXxx}/{@code __writeXxx} methods.
  */
 public class PropertyAccessorGenerator extends BaseGenerator {
-    private static final Map<String, String> PRIMITIVE_TO_WRAPPER = Map.of(
-            "boolean", "java.lang.Boolean",
-            "byte", "java.lang.Byte",
-            "char", "java.lang.Character",
-            "short", "java.lang.Short",
-            "int", "java.lang.Integer",
-            "long", "java.lang.Long",
-            "float", "java.lang.Float",
-            "double", "java.lang.Double");
-
     private final String propertyName;
     private final String propertyType;
 
     public PropertyAccessorGenerator(Class<?> entity, CritterClassLoader critterClassLoader, FieldInfo field) {
         super(entity, critterClassLoader);
         this.propertyName = field.name();
-        this.propertyType = typeClassName(ClassDesc.ofDescriptor(field.desc()));
+        this.propertyType = GenerationUtils.typeClassName(ClassDesc.ofDescriptor(field.desc()));
         generatedType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
-    }
-
-    private static String typeClassName(ClassDesc cd) {
-        String desc = cd.descriptorString();
-        if (desc.length() == 1) {
-            return switch (desc.charAt(0)) {
-                case 'Z' -> "boolean";
-                case 'C' -> "char";
-                case 'B' -> "byte";
-                case 'S' -> "short";
-                case 'I' -> "int";
-                case 'J' -> "long";
-                case 'F' -> "float";
-                case 'D' -> "double";
-                default -> throw new IllegalArgumentException("Unknown primitive: " + desc);
-            };
-        }
-        if (desc.startsWith("[")) {
-            // Array: return Class.forName-compatible form, e.g. [Ljava.lang.String;
-            return desc.replace('/', '.');
-        }
-        // Object type: Ljava/lang/String; → java.lang.String
-        return desc.substring(1, desc.length() - 1).replace('/', '.');
     }
 
     public PropertyAccessorGenerator(Class<?> entity, CritterClassLoader critterClassLoader, MethodInfo method) {
         super(entity, critterClassLoader);
         this.propertyName = ExtensionFunctions.getterToPropertyName(method, entity);
         String returnDesc = MethodTypeDesc.ofDescriptor(method.desc()).returnType().descriptorString();
-        this.propertyType = typeClassName(ClassDesc.ofDescriptor(returnDesc));
+        this.propertyType = GenerationUtils.typeClassName(ClassDesc.ofDescriptor(returnDesc));
         generatedType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
     }
 
     public boolean isPrimitive() {
-        return PRIMITIVE_TO_WRAPPER.containsKey(propertyType);
+        return GenerationUtils.PRIMITIVE_TO_WRAPPER.containsKey(propertyType);
     }
 
     public String getWrapperType() {
-        return PRIMITIVE_TO_WRAPPER.getOrDefault(propertyType, propertyType);
+        return GenerationUtils.PRIMITIVE_TO_WRAPPER.getOrDefault(propertyType, propertyType);
     }
 
     public PropertyAccessorGenerator emit() {

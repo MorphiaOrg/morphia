@@ -7,9 +7,12 @@ import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
+import java.util.Map;
 
 import dev.morphia.mapping.codec.pojo.TypeData;
 
+import io.github.dmlloyd.classfile.ClassBuilder;
+import io.github.dmlloyd.classfile.ClassFile;
 import io.github.dmlloyd.classfile.CodeBuilder;
 import io.github.dmlloyd.classfile.TypeKind;
 
@@ -18,7 +21,59 @@ import io.github.dmlloyd.classfile.TypeKind;
  */
 public class GenerationUtils {
 
+    public static final Map<String, String> PRIMITIVE_TO_WRAPPER = Map.of(
+            "boolean", "java.lang.Boolean",
+            "byte", "java.lang.Byte",
+            "char", "java.lang.Character",
+            "short", "java.lang.Short",
+            "int", "java.lang.Integer",
+            "long", "java.lang.Long",
+            "float", "java.lang.Float",
+            "double", "java.lang.Double");
+
     private GenerationUtils() {
+    }
+
+    /**
+     * Converts a ClassDesc to a type class name string suitable for Class.forName().
+     */
+    public static String typeClassName(ClassDesc cd) {
+        String desc = cd.descriptorString();
+        if (desc.length() == 1) {
+            return switch (desc.charAt(0)) {
+                case 'Z' -> "boolean";
+                case 'C' -> "char";
+                case 'B' -> "byte";
+                case 'S' -> "short";
+                case 'I' -> "int";
+                case 'J' -> "long";
+                case 'F' -> "float";
+                case 'D' -> "double";
+                default -> throw new IllegalArgumentException("Unknown primitive: " + desc);
+            };
+        }
+        if (desc.startsWith("[")) {
+            return desc.replace('/', '.');
+        }
+        return desc.substring(1, desc.length() - 1).replace('/', '.');
+    }
+
+    /**
+     * Emits a no-arg boolean method that returns a constant value.
+     */
+    public static void emitBooleanMethod(ClassBuilder cb, String name, boolean value) {
+        cb.withMethodBody(name, MethodTypeDesc.ofDescriptor("()Z"), ClassFile.ACC_PUBLIC, cod -> {
+            cod.loadConstant(value ? 1 : 0);
+            cod.return_(TypeKind.INT);
+        });
+    }
+
+    /**
+     * Returns the classloader for the given type, falling back to the system classloader for bootstrap-loaded types.
+     */
+    public static ClassLoader safeClassLoader(Class<?> type) {
+        ClassLoader cl = type.getClassLoader();
+        return cl != null ? cl : ClassLoader.getSystemClassLoader();
     }
 
     /**
