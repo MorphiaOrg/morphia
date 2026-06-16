@@ -100,7 +100,7 @@ public class GenerationUtils {
             try {
                 Object value = method.invoke(annotation);
                 Object defaultValue = method.getDefaultValue();
-                if (value == null || value.equals(defaultValue)) {
+                if (value == null || java.util.Objects.deepEquals(value, defaultValue)) {
                     continue;
                 }
                 java.lang.reflect.Type elemType = method.getGenericReturnType();
