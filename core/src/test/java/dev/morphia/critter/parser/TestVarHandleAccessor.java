@@ -167,6 +167,38 @@ public class TestVarHandleAccessor {
         Assertions.assertEquals("hello", accessor.get(entity), "set() must write through to the backing field");
     }
 
+    /**
+     * Regression test for bug #3: isGetter() had no minimum-length guard for "is"/"get" method names.
+     *
+     * A no-arg non-void method named exactly "is" or "get" passed the startsWith check, then
+     * getterPropertyName() computed name.substring(2) == "" and crashed on prop.charAt(0) with
+     * StringIndexOutOfBoundsException, aborting property discovery for the entire entity.
+     *
+     * After the fix: methods named exactly "is" or "get" are rejected by isGetter(), so property
+     * discovery proceeds normally without throwing.
+     */
+    @Test
+    public void testMethodNamedExactlyIsOrGetDoesNotCrashDiscovery() {
+        CritterClassLoader loader = new CritterClassLoader();
+        // Before fix: StringIndexOutOfBoundsException from prop.charAt(0) in getterPropertyName()
+        Assertions.assertDoesNotThrow(
+                () -> new CritterGenerator(defaultMapper()).generate(BareGetterEntity.class, loader, true));
+    }
+
+    @Entity("bare_getter_test")
+    public static class BareGetterEntity {
+        @Id
+        public ObjectId id;
+
+        public boolean is() {
+            return false;
+        }
+
+        public Object get() {
+            return null;
+        }
+    }
+
     @Entity("static_setter_test")
     public static class StaticSetterEntity {
         @Id

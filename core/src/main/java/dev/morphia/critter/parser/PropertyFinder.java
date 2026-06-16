@@ -214,6 +214,8 @@ public class PropertyFinder {
         String name = method.methodName().stringValue();
         if (!name.startsWith("get") && !name.startsWith("is"))
             return false;
+        if (name.equals("get") || name.equals("is"))
+            return false;
         int flags = method.flags().flagsMask();
         if ((flags & ClassFile.ACC_STATIC) != 0)
             return false;
