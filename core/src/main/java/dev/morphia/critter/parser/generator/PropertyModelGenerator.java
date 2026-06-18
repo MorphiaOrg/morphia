@@ -35,6 +35,7 @@ import dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel;
 import org.bson.codecs.pojo.PropertyAccessor;
 
 import io.github.dmlloyd.classfile.ClassFile;
+import io.github.dmlloyd.classfile.attribute.RuntimeVisibleAnnotationsAttribute;
 
 /**
  * Generates a ClassFile-based {@link dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel} implementation
@@ -333,15 +334,23 @@ public class PropertyModelGenerator extends BaseGenerator {
         AlsoLoad alsoLoad = (AlsoLoad) annotationMap.get(AlsoLoad.class.getName());
         String[] loadNamesArr = alsoLoad != null ? alsoLoad.value() : new String[0];
 
-        // Generate annotation impl classes from values known at generation time — zero runtime reflection
-        List<ClassDesc> annotationImpls = annotationMap.values().stream()
-                .map(ann -> GenerationUtils.generateAnnotationImpl(ann, generatedType, critterClassLoader))
+        List<Annotation> morphiaAnnotations = annotationMap.values().stream()
+                .filter(a -> a.annotationType().getName().startsWith("dev.morphia.annotations."))
+                .toList();
+        List<Annotation> nonMorphiaAnnotations = annotationMap.values().stream()
+                .filter(a -> !a.annotationType().getName().startsWith("dev.morphia.annotations."))
+                .toList();
+        List<io.github.dmlloyd.classfile.Annotation> cfAnnotations = nonMorphiaAnnotations.stream()
+                .map(GenerationUtils::toClassfileAnnotation)
                 .toList();
 
         byte[] bytes = ClassFile.of().build(thisDesc, cb -> {
             cb.withVersion(ClassFile.JAVA_17_VERSION, 0);
             cb.withFlags(ClassFile.ACC_PUBLIC | ClassFile.ACC_SUPER);
             cb.withSuperclass(superDesc);
+            if (!cfAnnotations.isEmpty()) {
+                cb.with(RuntimeVisibleAnnotationsAttribute.of(cfAnnotations));
+            }
 
             cb.withField("entityModel", entityModelDesc, ClassFile.ACC_PRIVATE | ClassFile.ACC_FINAL);
             cb.withField("accessor", accessorImplDesc, ClassFile.ACC_PRIVATE | ClassFile.ACC_FINAL);
@@ -363,12 +372,25 @@ public class PropertyModelGenerator extends BaseGenerator {
                         cod.invokespecial(accessorImplDesc, "<init>", MethodTypeDesc.ofDescriptor("()V"));
                         cod.putfield(thisDesc, "accessor", accessorImplDesc);
 
-                        // All annotation values are known at generation time — no runtime reflection
-                        for (ClassDesc implDesc : annotationImpls) {
+                        // Morphia annotations: builder with hardcoded values — no reflection
+                        for (Annotation ann : morphiaAnnotations) {
                             cod.aload(0);
-                            cod.new_(implDesc);
-                            cod.dup();
-                            cod.invokespecial(implDesc, "<init>", MethodTypeDesc.ofDescriptor("()V"));
+                            GenerationUtils.emitAnnotationViaBuilder(cod, ann);
+                            cod.invokevirtual(propertyModelDesc, "annotation",
+                                    MethodTypeDesc.of(propertyModelDesc, annotationDesc));
+                            cod.pop();
+                        }
+
+                        // Non-Morphia annotations: on the generated class via RuntimeVisibleAnnotationsAttribute
+                        for (Annotation ann : nonMorphiaAnnotations) {
+                            cod.aload(0);
+                            cod.aload(0);
+                            cod.invokevirtual(ConstantDescs.CD_Object, "getClass",
+                                    MethodTypeDesc.of(ConstantDescs.CD_Class));
+                            GenerationUtils.emitClassRef(cod, ann.annotationType());
+                            cod.invokevirtual(ConstantDescs.CD_Class, "getDeclaredAnnotation",
+                                    MethodTypeDesc.ofDescriptor(
+                                            "(Ljava/lang/Class;)Ljava/lang/annotation/Annotation;"));
                             cod.invokevirtual(propertyModelDesc, "annotation",
                                     MethodTypeDesc.of(propertyModelDesc, annotationDesc));
                             cod.pop();

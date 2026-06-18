@@ -7,12 +7,14 @@ import java.lang.constant.MethodTypeDesc;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.mapping.codec.pojo.TypeData;
 
+import io.github.dmlloyd.classfile.AnnotationElement;
+import io.github.dmlloyd.classfile.AnnotationValue;
 import io.github.dmlloyd.classfile.ClassBuilder;
 import io.github.dmlloyd.classfile.ClassFile;
 import io.github.dmlloyd.classfile.CodeBuilder;
@@ -79,61 +81,122 @@ public class GenerationUtils {
     }
 
     /**
-     * Generates a concrete class that implements the given annotation interface with all element
-     * values hardcoded as constants. The class is registered with the given class loader and its
-     * ClassDesc is returned for use in {@code new} bytecode instructions.
-     *
-     * <p>
-     * This is used to emit annotation instances inline into generated property/entity model
-     * constructors, eliminating all runtime reflection.
+     * Converts a runtime annotation instance into a ClassFile API annotation descriptor, suitable
+     * for use in {@link io.github.dmlloyd.classfile.attribute.RuntimeVisibleAnnotationsAttribute}.
+     * All element values are captured at generation time.
      */
-    public static ClassDesc generateAnnotationImpl(Annotation ann, String baseName, CritterClassLoader classLoader) {
+    public static io.github.dmlloyd.classfile.Annotation toClassfileAnnotation(Annotation ann) {
         Class<?> annType = ann.annotationType();
-        String implName = baseName + "$$" + annType.getName().replace('.', '_').replace('$', '_');
-        ClassDesc thisDesc = ClassDesc.of(implName);
-        ClassDesc annDesc = ClassDesc.of(annType.getName());
-
-        byte[] bytes = ClassFile.of().build(thisDesc, cb -> {
-            cb.withVersion(ClassFile.JAVA_17_VERSION, 0);
-            cb.withFlags(ClassFile.ACC_PUBLIC | ClassFile.ACC_SUPER | ClassFile.ACC_SYNTHETIC);
-            cb.withSuperclass(ConstantDescs.CD_Object);
-            cb.withInterfaceSymbols(annDesc);
-
-            cb.withMethodBody("<init>", MethodTypeDesc.ofDescriptor("()V"), ClassFile.ACC_PUBLIC, cod -> {
-                cod.aload(0);
-                cod.invokespecial(ConstantDescs.CD_Object, "<init>", MethodTypeDesc.ofDescriptor("()V"));
-                cod.return_();
-            });
-
-            cb.withMethodBody("annotationType", MethodTypeDesc.of(ConstantDescs.CD_Class),
-                    ClassFile.ACC_PUBLIC, cod -> {
-                        emitClassRef(cod, annType);
-                        cod.areturn();
-                    });
-
-            for (java.lang.reflect.Method method : annType.getDeclaredMethods()) {
-                try {
-                    Object value = method.invoke(ann);
-                    Class<?> returnType = method.getReturnType();
-                    ClassDesc returnDesc = ClassDesc.ofDescriptor(returnType.descriptorString());
-                    cb.withMethodBody(method.getName(), MethodTypeDesc.of(returnDesc),
-                            ClassFile.ACC_PUBLIC, cod -> {
-                                emitAnnotationValue(cod, method.getGenericReturnType(), returnType, value, baseName, classLoader);
-                                cod.return_(typeKindOf(returnType));
-                            });
-                } catch (ReflectiveOperationException e) {
-                    throw new RuntimeException("Failed to generate element method for " + method, e);
-                }
+        List<AnnotationElement> elements = new ArrayList<>();
+        for (java.lang.reflect.Method method : annType.getDeclaredMethods()) {
+            try {
+                Object value = method.invoke(ann);
+                AnnotationValue av = toAnnotationValue(method.getGenericReturnType(), method.getReturnType(), value);
+                elements.add(AnnotationElement.of(method.getName(), av));
+            } catch (ReflectiveOperationException e) {
+                throw new RuntimeException("Failed to read annotation element " + method, e);
             }
-        });
-
-        classLoader.register(implName, bytes);
-        return thisDesc;
+        }
+        return io.github.dmlloyd.classfile.Annotation.of(ClassDesc.of(annType.getName()), elements);
     }
 
     @SuppressWarnings("rawtypes")
-    private static void emitAnnotationValue(CodeBuilder cod, java.lang.reflect.Type genericType, Class<?> rawType,
-            Object value, String baseName, CritterClassLoader classLoader) {
+    private static AnnotationValue toAnnotationValue(java.lang.reflect.Type genericType, Class<?> rawType, Object value) {
+        if (rawType == String.class)
+            return AnnotationValue.ofString((String) value);
+        if (rawType == boolean.class)
+            return AnnotationValue.ofBoolean((Boolean) value);
+        if (rawType == byte.class)
+            return AnnotationValue.ofByte((Byte) value);
+        if (rawType == char.class)
+            return AnnotationValue.ofChar((Character) value);
+        if (rawType == short.class)
+            return AnnotationValue.ofShort((Short) value);
+        if (rawType == int.class)
+            return AnnotationValue.ofInt((Integer) value);
+        if (rawType == long.class)
+            return AnnotationValue.ofLong((Long) value);
+        if (rawType == float.class)
+            return AnnotationValue.ofFloat((Float) value);
+        if (rawType == double.class)
+            return AnnotationValue.ofDouble((Double) value);
+        if (rawType == Class.class || (genericType instanceof ParameterizedType pt && pt.getRawType() == Class.class)) {
+            return AnnotationValue.ofClass(ClassDesc.ofDescriptor(((Class<?>) value).descriptorString()));
+        }
+        if (rawType.isEnum()) {
+            Enum e = (Enum) value;
+            return AnnotationValue.ofEnum(ClassDesc.of(e.getDeclaringClass().getName()), e.name());
+        }
+        if (rawType.isAnnotation()) {
+            return AnnotationValue.ofAnnotation(toClassfileAnnotation((Annotation) value));
+        }
+        if (rawType.isArray()) {
+            Class<?> compType = rawType.getComponentType();
+            Object[] arr = (Object[]) value;
+            List<AnnotationValue> values = new ArrayList<>();
+            for (Object elem : arr) {
+                values.add(toAnnotationValue(compType, compType, elem));
+            }
+            return AnnotationValue.ofArray(values);
+        }
+        if (genericType instanceof GenericArrayType gat) {
+            java.lang.reflect.Type compGeneric = gat.getGenericComponentType();
+            Class<?> compClass = (compGeneric instanceof ParameterizedType pt)
+                    ? (Class<?>) pt.getRawType()
+                    : (Class<?>) compGeneric;
+            Object[] arr = (Object[]) value;
+            List<AnnotationValue> values = new ArrayList<>();
+            for (Object elem : arr) {
+                values.add(toAnnotationValue(compGeneric, compClass, elem));
+            }
+            return AnnotationValue.ofArray(values);
+        }
+        throw new UnsupportedOperationException("Unsupported annotation element type: " + rawType);
+    }
+
+    /**
+     * Emits bytecode that calls the generated AnnotationBuilder for a Morphia annotation,
+     * leaving the built annotation instance on the operand stack. Values are hardcoded as
+     * bytecode constants — no runtime reflection.
+     *
+     * <p>
+     * Assumes the annotation type lives under {@code dev.morphia.annotations} and that its
+     * builder follows the {@code XxxBuilder.xxxBuilder()...build()} convention.
+     */
+    public static void emitAnnotationViaBuilder(CodeBuilder cod, Annotation ann) {
+        Class<?> annType = ann.annotationType();
+        String className = annType.getName();
+        int lastDot = className.lastIndexOf('.');
+        String simpleName = className.substring(lastDot + 1);
+        String builderClassName = className.substring(0, lastDot) + ".internal." + simpleName + "Builder";
+        ClassDesc builderDesc = ClassDesc.of(builderClassName);
+        ClassDesc annDesc = ClassDesc.of(className);
+        String factoryMethod = Character.toLowerCase(simpleName.charAt(0)) + simpleName.substring(1) + "Builder";
+
+        cod.invokestatic(builderDesc, factoryMethod, MethodTypeDesc.of(builderDesc));
+
+        for (java.lang.reflect.Method method : annType.getDeclaredMethods()) {
+            try {
+                Object value = method.invoke(ann);
+                Object defaultValue = method.getDefaultValue();
+                if (value == null || java.util.Objects.deepEquals(value, defaultValue)) {
+                    continue;
+                }
+                Class<?> rawType = method.getReturnType();
+                ClassDesc paramDesc = ClassDesc.ofDescriptor(rawType.descriptorString());
+                emitBuilderElementValue(cod, method.getGenericReturnType(), rawType, value);
+                cod.invokevirtual(builderDesc, method.getName(), MethodTypeDesc.of(builderDesc, paramDesc));
+            } catch (ReflectiveOperationException e) {
+                throw new RuntimeException("Failed to emit builder setter for " + method, e);
+            }
+        }
+
+        cod.invokevirtual(builderDesc, "build", MethodTypeDesc.of(annDesc));
+    }
+
+    @SuppressWarnings("rawtypes")
+    private static void emitBuilderElementValue(CodeBuilder cod, java.lang.reflect.Type genericType,
+            Class<?> rawType, Object value) {
         if (rawType == String.class) {
             cod.ldc((String) value);
         } else if (rawType == boolean.class) {
@@ -155,10 +218,7 @@ public class GenerationUtils {
             ClassDesc enumDesc = ClassDesc.of(e.getDeclaringClass().getName());
             cod.getstatic(enumDesc, e.name(), enumDesc);
         } else if (rawType.isAnnotation()) {
-            ClassDesc implDesc = generateAnnotationImpl((Annotation) value, baseName, classLoader);
-            cod.new_(implDesc);
-            cod.dup();
-            cod.invokespecial(implDesc, "<init>", MethodTypeDesc.ofDescriptor("()V"));
+            emitAnnotationViaBuilder(cod, (Annotation) value);
         } else if (rawType.isArray()) {
             Class<?> compType = rawType.getComponentType();
             Object[] arr = (Object[]) value;
@@ -167,7 +227,7 @@ public class GenerationUtils {
             for (int i = 0; i < arr.length; i++) {
                 cod.dup();
                 cod.loadConstant(i);
-                emitAnnotationValue(cod, compType, compType, arr[i], baseName + "_" + i, classLoader);
+                emitBuilderElementValue(cod, compType, compType, arr[i]);
                 cod.aastore();
             }
         } else if (genericType instanceof GenericArrayType gat) {
@@ -181,24 +241,12 @@ public class GenerationUtils {
             for (int i = 0; i < arr.length; i++) {
                 cod.dup();
                 cod.loadConstant(i);
-                emitAnnotationValue(cod, compGeneric, compClass, arr[i], baseName + "_" + i, classLoader);
+                emitBuilderElementValue(cod, compGeneric, compClass, arr[i]);
                 cod.aastore();
             }
         } else {
             throw new UnsupportedOperationException("Unsupported annotation element type: " + rawType);
         }
-    }
-
-    private static TypeKind typeKindOf(Class<?> type) {
-        if (type == long.class)
-            return TypeKind.LONG;
-        if (type == float.class)
-            return TypeKind.FLOAT;
-        if (type == double.class)
-            return TypeKind.DOUBLE;
-        if (type.isPrimitive())
-            return TypeKind.INT;
-        return TypeKind.REFERENCE;
     }
 
     /**

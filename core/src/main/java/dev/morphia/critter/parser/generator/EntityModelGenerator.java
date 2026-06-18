@@ -89,17 +89,12 @@ public class EntityModelGenerator extends BaseGenerator {
         ClassDesc entityModelDesc = ClassDesc.of(dev.morphia.mapping.codec.pojo.EntityModel.class.getName());
         ClassDesc propertyModelDesc = ClassDesc.of(PropertyModel.class.getName());
         ClassDesc annotationDesc = ClassDesc.of(Annotation.class.getName());
-
         String collectionNameStr = computeCollectionName();
         String discriminatorStr = computeDiscriminator();
         String discriminatorKeyStr = computeDiscriminatorKey();
         boolean isAbstractFlag = Modifier.isAbstract(entity.getModifiers());
         boolean isInterfaceFlag = entity.isInterface();
         boolean useDiscriminatorFlag = entityAnnotation.useDiscriminator();
-
-        List<ClassDesc> annotationImpls = morphiaAnnotations.stream()
-                .map(ann -> GenerationUtils.generateAnnotationImpl(ann, generatedType, critterClassLoader))
-                .toList();
 
         byte[] bytes = ClassFile.of().build(thisDesc, cb -> {
             cb.withVersion(ClassFile.JAVA_17_VERSION, 0);
@@ -135,12 +130,10 @@ public class EntityModelGenerator extends BaseGenerator {
                             cod.pop();
                         }
 
-                        // Register morphia annotations — values known at generation time
-                        for (ClassDesc implDesc : annotationImpls) {
+                        // Morphia annotations via builders — no reflection
+                        for (Annotation ann : morphiaAnnotations) {
                             cod.aload(0);
-                            cod.new_(implDesc);
-                            cod.dup();
-                            cod.invokespecial(implDesc, "<init>", MethodTypeDesc.ofDescriptor("()V"));
+                            GenerationUtils.emitAnnotationViaBuilder(cod, ann);
                             cod.invokevirtual(entityModelDesc, "annotation",
                                     MethodTypeDesc.of(ConstantDescs.CD_void, annotationDesc));
                         }
