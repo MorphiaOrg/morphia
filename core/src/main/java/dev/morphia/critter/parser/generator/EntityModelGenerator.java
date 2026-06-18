@@ -97,6 +97,10 @@ public class EntityModelGenerator extends BaseGenerator {
         boolean isInterfaceFlag = entity.isInterface();
         boolean useDiscriminatorFlag = entityAnnotation.useDiscriminator();
 
+        List<ClassDesc> annotationImpls = morphiaAnnotations.stream()
+                .map(ann -> GenerationUtils.generateAnnotationImpl(ann, generatedType, critterClassLoader))
+                .toList();
+
         byte[] bytes = ClassFile.of().build(thisDesc, cb -> {
             cb.withVersion(ClassFile.JAVA_17_VERSION, 0);
             cb.withFlags(ClassFile.ACC_PUBLIC | ClassFile.ACC_SUPER);
@@ -131,10 +135,12 @@ public class EntityModelGenerator extends BaseGenerator {
                             cod.pop();
                         }
 
-                        // Register morphia annotations
-                        for (Annotation ann : morphiaAnnotations) {
+                        // Register morphia annotations — values known at generation time
+                        for (ClassDesc implDesc : annotationImpls) {
                             cod.aload(0);
-                            GenerationUtils.emitAnnotationOnStack(cod, ann);
+                            cod.new_(implDesc);
+                            cod.dup();
+                            cod.invokespecial(implDesc, "<init>", MethodTypeDesc.ofDescriptor("()V"));
                             cod.invokevirtual(entityModelDesc, "annotation",
                                     MethodTypeDesc.of(ConstantDescs.CD_void, annotationDesc));
                         }

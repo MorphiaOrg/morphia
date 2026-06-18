@@ -293,7 +293,7 @@ public class AnnotationBuilders extends AbstractMojo {
             } else {
                 comparator = "Objects";
             }
-            comparisons.add(format("%s.equals(%s, that.%s)", comparator, element.getName(),
+            comparisons.add(format("%s.equals(%s, that.%s())", comparator, element.getName(),
                     element.getName()));
         }
         annotation.addMethod()
@@ -303,10 +303,10 @@ public class AnnotationBuilders extends AbstractMojo {
                 .setBody("if (this == o) {\n"
                         + "   return true;\n"
                         + "}\n"
-                        + "if (!(o instanceof " + annotation.getName() + ")) {\n"
+                        + "if (!(o instanceof " + source.getName() + ")) {\n"
                         + "   return false;\n"
                         + "}\n"
-                        + "var that = (" + annotation.getName() + ") o;\n"
+                        + source.getName() + " that = (" + source.getName() + ") o;\n"
                         + comparisons)
                 .addParameter("Object", "o");
 

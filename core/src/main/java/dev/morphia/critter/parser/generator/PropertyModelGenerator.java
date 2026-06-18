@@ -10,7 +10,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -50,7 +49,6 @@ public class PropertyModelGenerator extends BaseGenerator {
     private final java.lang.reflect.Type genericType;
     private final Map<String, Annotation> annotationMap;
     private final TypeData<?> typeData;
-    private final List<Annotation> morphiaAnnotations;
     private final String getterName;
 
     /**
@@ -69,7 +67,6 @@ public class PropertyModelGenerator extends BaseGenerator {
         this.genericType = reflectedField != null ? reflectedField.getGenericType() : Object.class;
         this.annotationMap = buildAnnotationMap(reflectedField != null ? reflectedField.getAnnotations() : new Annotation[0]);
         this.typeData = computeTypeData(resolveGenericType(this.genericType, field.name(), entity), entity.getClassLoader());
-        this.morphiaAnnotations = new ArrayList<>(annotationMap.values());
         this.getterName = null;
     }
 
@@ -97,7 +94,6 @@ public class PropertyModelGenerator extends BaseGenerator {
             }
         }
         this.typeData = computeTypeData(resolveGenericType(this.genericType, this.propertyName, entity), entity.getClassLoader());
-        this.morphiaAnnotations = new ArrayList<>(annotationMap.values());
         this.getterName = method.name();
     }
 
@@ -337,6 +333,11 @@ public class PropertyModelGenerator extends BaseGenerator {
         AlsoLoad alsoLoad = (AlsoLoad) annotationMap.get(AlsoLoad.class.getName());
         String[] loadNamesArr = alsoLoad != null ? alsoLoad.value() : new String[0];
 
+        // Generate annotation impl classes from values known at generation time — zero runtime reflection
+        List<ClassDesc> annotationImpls = annotationMap.values().stream()
+                .map(ann -> GenerationUtils.generateAnnotationImpl(ann, generatedType, critterClassLoader))
+                .toList();
+
         byte[] bytes = ClassFile.of().build(thisDesc, cb -> {
             cb.withVersion(ClassFile.JAVA_17_VERSION, 0);
             cb.withFlags(ClassFile.ACC_PUBLIC | ClassFile.ACC_SUPER);
@@ -362,33 +363,15 @@ public class PropertyModelGenerator extends BaseGenerator {
                         cod.invokespecial(accessorImplDesc, "<init>", MethodTypeDesc.ofDescriptor("()V"));
                         cod.putfield(thisDesc, "accessor", accessorImplDesc);
 
-                        // Register Morphia annotations via generated builders
-                        for (Annotation ann : morphiaAnnotations) {
-                            if (ann.annotationType().getName().startsWith("dev.morphia.annotations.")) {
-                                cod.aload(0);
-                                GenerationUtils.emitAnnotationOnStack(cod, ann);
-                                cod.invokevirtual(propertyModelDesc, "annotation",
-                                        MethodTypeDesc.of(propertyModelDesc, annotationDesc));
-                                cod.pop();
-                            }
-                        }
-
-                        // Register all annotations (including non-Morphia ones like @NonNull) via reflection
-                        ClassDesc critterPmDesc = ClassDesc.of("dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel");
-                        if (isFieldBased) {
+                        // All annotation values are known at generation time — no runtime reflection
+                        for (ClassDesc implDesc : annotationImpls) {
                             cod.aload(0);
-                            GenerationUtils.emitClassRef(cod, entity);
-                            cod.ldc(propertyName);
-                            cod.invokestatic(critterPmDesc, "registerFieldAnnotations",
-                                    MethodTypeDesc.ofDescriptor(
-                                            "(Ldev/morphia/mapping/codec/pojo/PropertyModel;Ljava/lang/Class;Ljava/lang/String;)V"));
-                        } else {
-                            cod.aload(0);
-                            GenerationUtils.emitClassRef(cod, entity);
-                            cod.ldc(getterName);
-                            cod.invokestatic(critterPmDesc, "registerMethodAnnotations",
-                                    MethodTypeDesc.ofDescriptor(
-                                            "(Ldev/morphia/mapping/codec/pojo/PropertyModel;Ljava/lang/Class;Ljava/lang/String;)V"));
+                            cod.new_(implDesc);
+                            cod.dup();
+                            cod.invokespecial(implDesc, "<init>", MethodTypeDesc.ofDescriptor("()V"));
+                            cod.invokevirtual(propertyModelDesc, "annotation",
+                                    MethodTypeDesc.of(propertyModelDesc, annotationDesc));
+                            cod.pop();
                         }
 
                         cod.return_();

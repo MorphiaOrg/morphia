@@ -1,8 +1,6 @@
 package dev.morphia.mapping.codec.pojo.critter;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.List;
 
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -15,46 +13,6 @@ import org.bson.codecs.pojo.PropertySerialization;
 public abstract class CritterPropertyModel extends PropertyModel {
     public CritterPropertyModel(EntityModel entityModel) {
         super(entityModel);
-    }
-
-    /**
-     * Registers all annotations from the entity's field (walking the class hierarchy) into this model.
-     * Called from generated subclass constructors so non-Morphia annotations (e.g. @NonNull) are also recorded.
-     */
-    @SuppressWarnings("unused")
-    public static void registerFieldAnnotations(PropertyModel model, Class<?> entityClass, String fieldName) {
-        Class<?> current = entityClass;
-        while (current != null && current != Object.class) {
-            try {
-                Field field = current.getDeclaredField(fieldName);
-                for (Annotation ann : field.getDeclaredAnnotations()) {
-                    model.annotation(ann);
-                }
-                return;
-            } catch (NoSuchFieldException e) {
-                current = current.getSuperclass();
-            }
-        }
-    }
-
-    /**
-     * Registers all annotations from the entity's getter method (walking the class hierarchy) into this model.
-     * Called from generated subclass constructors so non-Morphia annotations on getters are also recorded.
-     */
-    @SuppressWarnings("unused")
-    public static void registerMethodAnnotations(PropertyModel model, Class<?> entityClass, String getterName) {
-        Class<?> current = entityClass;
-        while (current != null && current != Object.class) {
-            for (Method m : current.getDeclaredMethods()) {
-                if (m.getName().equals(getterName) && m.getParameterCount() == 0 && !m.isBridge()) {
-                    for (Annotation ann : m.getDeclaredAnnotations()) {
-                        model.annotation(ann);
-                    }
-                    return;
-                }
-            }
-            current = current.getSuperclass();
-        }
     }
 
     @Override
