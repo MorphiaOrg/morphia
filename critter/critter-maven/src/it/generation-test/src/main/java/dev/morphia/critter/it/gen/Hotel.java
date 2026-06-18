@@ -6,8 +6,6 @@ import dev.morphia.annotations.Id;
 import java.util.List;
 import java.util.Objects;
 
-import com.mongodb.lang.NonNullApi;
-
 @Entity("hotels")
 public class Hotel {
     @Id
@@ -22,12 +20,18 @@ public class Hotel {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id, name, stars, tags);
+    public boolean equals(Object o) {
+        if (!(o instanceof Hotel hotel)) {
+            return false;
+        }
+        return stars == hotel.stars &&
+               Objects.equals(id, hotel.id) &&
+               Objects.equals(name, hotel.name) &&
+               Objects.equals(tags, hotel.tags);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
+    public int hashCode() {
+        return Objects.hash(id, name, stars, tags);
     }
 }

@@ -12,6 +12,7 @@ import dev.morphia.critter.parser.generator.CritterGenerator;
 import dev.morphia.critter.parser.generator.PropertyModelGenerator;
 import dev.morphia.critter.parser.java.CritterParser;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.PropertyDiscovery;
 
 import org.slf4j.Logger;
@@ -117,17 +118,20 @@ public class PropertyFinder {
         String resourceName = "%s.class".formatted(type.getName().replace('.', '/'));
         ClassLoader cl = type.getClassLoader() != null ? type.getClassLoader()
                 : ClassLoader.getSystemClassLoader();
-        InputStream inputStream = cl.getResourceAsStream(resourceName);
-        if (inputStream == null) {
-            LOG.debug("Bytecode resource not found for {}; hierarchy traversal stops here", type.getName());
-            return null;
-        }
-        try {
-            byte[] bytes = inputStream.readAllBytes();
-            return ClassFile.of().parse(bytes);
+        try (InputStream inputStream = cl.getResourceAsStream(resourceName)) {
+            if (inputStream == null) {
+                LOG.debug("Bytecode resource not found for {}; hierarchy traversal stops here", type.getName());
+                return null;
+            }
+            try {
+                byte[] bytes = inputStream.readAllBytes();
+                return ClassFile.of().parse(bytes);
+            } catch (IOException e) {
+                LOG.warn("Failed to read bytecode for {}: {}", type.getName(), e.getMessage());
+                return null;
+            }
         } catch (IOException e) {
-            LOG.warn("Failed to read bytecode for {}: {}", type.getName(), e.getMessage());
-            return null;
+            throw new MappingException(e.getMessage(), e);
         }
     }
 

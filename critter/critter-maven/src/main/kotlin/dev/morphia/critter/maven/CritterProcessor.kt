@@ -20,7 +20,7 @@ class CritterProcessor(
 
     private val logger: Logger = LoggerFactory.getLogger(CritterProcessor::class.java)
     private val critterClassLoader = CritterClassLoader()
-    private val gizmoGenerator = CritterGenerator(ReflectiveMapper(config, critterClassLoader))
+    private val generator = CritterGenerator(ReflectiveMapper(config, critterClassLoader))
 
     fun process() {
         val entityClasses = findEntityClasses()
@@ -66,7 +66,7 @@ class CritterProcessor(
 
     private fun processClass(entityClass: Class<*>) {
         logger.info("Generating critter code for: ${entityClass.name}")
-        gizmoGenerator.generate(entityClass, critterClassLoader, false)
+        generator.generate(entityClass, critterClassLoader, false)
     }
 
     private fun writeGeneratedClasses() {

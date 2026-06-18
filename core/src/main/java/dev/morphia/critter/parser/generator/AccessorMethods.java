@@ -3,6 +3,8 @@ package dev.morphia.critter.parser.generator;
 import java.io.IOException;
 import java.io.InputStream;
 
+import dev.morphia.mapping.MappingException;
+
 import io.github.dmlloyd.classfile.ClassFile;
 import io.github.dmlloyd.classfile.ClassModel;
 
@@ -30,16 +32,19 @@ public abstract class AccessorMethods {
      */
     protected ClassModel readClassFiltering() {
         String resourceName = "%s.class".formatted(entity.getName().replace('.', '/'));
-        InputStream inputStream = entity.getClassLoader().getResourceAsStream(resourceName);
-        if (inputStream == null) {
-            throw new IllegalArgumentException("Could not find class file for %s".formatted(entity.getName()));
-        }
-        try {
-            byte[] bytes = inputStream.readAllBytes();
-            ClassModel model = ClassFile.of().parse(bytes);
-            return model;
+        try (InputStream inputStream = entity.getClassLoader().getResourceAsStream(resourceName)) {
+            if (inputStream == null) {
+                throw new IllegalArgumentException("Could not find class file for %s".formatted(entity.getName()));
+            }
+            try {
+                byte[] bytes = inputStream.readAllBytes();
+                ClassModel model = ClassFile.of().parse(bytes);
+                return model;
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to read class %s".formatted(entity.getName()), e);
+            }
         } catch (IOException e) {
-            throw new RuntimeException("Failed to read class %s".formatted(entity.getName()), e);
+            throw new MappingException(e.getMessage(), e);
         }
     }
 }
