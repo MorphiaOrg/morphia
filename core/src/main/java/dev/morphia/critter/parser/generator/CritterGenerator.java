@@ -1,7 +1,5 @@
 package dev.morphia.critter.parser.generator;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import dev.morphia.critter.CritterClassLoader;
@@ -10,7 +8,6 @@ import dev.morphia.critter.parser.MethodInfo;
 import dev.morphia.critter.parser.PropertyFinder;
 import dev.morphia.mapping.Mapper;
 
-import io.github.dmlloyd.classfile.ClassFile;
 import io.github.dmlloyd.classfile.ClassModel;
 
 /**
@@ -38,16 +35,9 @@ public class CritterGenerator {
      * @return the generated entity model generator
      */
     public EntityModelGenerator generate(Class<?> type, CritterClassLoader critterClassLoader, boolean runtimeMode) {
-        String resourceName = "%s.class".formatted(type.getName().replace('.', '/'));
-        InputStream inputStream = GenerationUtils.safeClassLoader(type).getResourceAsStream(resourceName);
-        if (inputStream == null) {
+        ClassModel classModel = GenerationUtils.readClassModel(type);
+        if (classModel == null) {
             throw new IllegalArgumentException("Could not find class file for %s".formatted(type.getName()));
-        }
-        ClassModel classModel;
-        try {
-            classModel = ClassFile.of().parse(inputStream.readAllBytes());
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to read class %s".formatted(type.getName()), e);
         }
         PropertyFinder propertyFinder = new PropertyFinder(mapper, critterClassLoader, runtimeMode);
 

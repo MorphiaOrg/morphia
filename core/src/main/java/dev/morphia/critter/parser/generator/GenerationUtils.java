@@ -1,9 +1,12 @@
 package dev.morphia.critter.parser.generator;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.constant.ClassDesc;
 import java.lang.constant.ConstantDescs;
 import java.lang.constant.MethodTypeDesc;
+import java.lang.reflect.Array;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -17,6 +20,7 @@ import io.github.dmlloyd.classfile.AnnotationElement;
 import io.github.dmlloyd.classfile.AnnotationValue;
 import io.github.dmlloyd.classfile.ClassBuilder;
 import io.github.dmlloyd.classfile.ClassFile;
+import io.github.dmlloyd.classfile.ClassModel;
 import io.github.dmlloyd.classfile.CodeBuilder;
 import io.github.dmlloyd.classfile.TypeKind;
 
@@ -81,6 +85,22 @@ public class GenerationUtils {
     }
 
     /**
+     * Reads and parses the class file for the given type. Returns {@code null} if the class file
+     * resource cannot be found; throws {@link RuntimeException} on I/O or parse failure.
+     */
+    public static ClassModel readClassModel(Class<?> type) {
+        String resourceName = "%s.class".formatted(type.getName().replace('.', '/'));
+        try (InputStream inputStream = safeClassLoader(type).getResourceAsStream(resourceName)) {
+            if (inputStream == null) {
+                return null;
+            }
+            return ClassFile.of().parse(inputStream.readAllBytes());
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read class %s".formatted(type.getName()), e);
+        }
+    }
+
+    /**
      * Converts a runtime annotation instance into a ClassFile API annotation descriptor, suitable
      * for use in {@link io.github.dmlloyd.classfile.attribute.RuntimeVisibleAnnotationsAttribute}.
      * All element values are captured at generation time.
@@ -132,9 +152,10 @@ public class GenerationUtils {
         }
         if (rawType.isArray()) {
             Class<?> compType = rawType.getComponentType();
-            Object[] arr = (Object[]) value;
+            int len = Array.getLength(value);
             List<AnnotationValue> values = new ArrayList<>();
-            for (Object elem : arr) {
+            for (int i = 0; i < len; i++) {
+                Object elem = Array.get(value, i);
                 values.add(toAnnotationValue(compType, compType, elem));
             }
             return AnnotationValue.ofArray(values);
@@ -221,14 +242,25 @@ public class GenerationUtils {
             emitAnnotationViaBuilder(cod, (Annotation) value);
         } else if (rawType.isArray()) {
             Class<?> compType = rawType.getComponentType();
-            Object[] arr = (Object[]) value;
-            cod.loadConstant(arr.length);
-            cod.anewarray(ClassDesc.ofDescriptor(compType.descriptorString()));
-            for (int i = 0; i < arr.length; i++) {
-                cod.dup();
-                cod.loadConstant(i);
-                emitBuilderElementValue(cod, compType, compType, arr[i]);
-                cod.aastore();
+            int len = Array.getLength(value);
+            cod.loadConstant(len);
+            if (compType.isPrimitive()) {
+                TypeKind tk = TypeKind.fromDescriptor(compType.descriptorString());
+                cod.newarray(tk);
+                for (int i = 0; i < len; i++) {
+                    cod.dup();
+                    cod.loadConstant(i);
+                    emitBuilderElementValue(cod, compType, compType, Array.get(value, i));
+                    cod.arrayStore(tk);
+                }
+            } else {
+                cod.anewarray(ClassDesc.ofDescriptor(compType.descriptorString()));
+                for (int i = 0; i < len; i++) {
+                    cod.dup();
+                    cod.loadConstant(i);
+                    emitBuilderElementValue(cod, compType, compType, Array.get(value, i));
+                    cod.aastore();
+                }
             }
         } else if (genericType instanceof GenericArrayType gat) {
             java.lang.reflect.Type compGeneric = gat.getGenericComponentType();

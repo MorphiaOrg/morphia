@@ -163,6 +163,19 @@ public class PropertyModelGenerator extends BaseGenerator {
                 current = current.getSuperclass();
             }
         }
+        // Fall back to getter for method-based properties
+        String titleName = Critter.titleCase(memberName);
+        current = concreteClass;
+        while (current != null && current != Object.class) {
+            for (Method m : current.getDeclaredMethods()) {
+                String name = m.getName();
+                if ((name.equals("get" + titleName) || name.equals("is" + titleName))
+                        && m.getParameterCount() == 0 && !m.isBridge()) {
+                    return current;
+                }
+            }
+            current = current.getSuperclass();
+        }
         return null;
     }
 
@@ -391,9 +404,20 @@ public class PropertyModelGenerator extends BaseGenerator {
                             cod.invokevirtual(ConstantDescs.CD_Class, "getDeclaredAnnotation",
                                     MethodTypeDesc.ofDescriptor(
                                             "(Ljava/lang/Class;)Ljava/lang/annotation/Annotation;"));
+                            // getDeclaredAnnotation returns null if the annotation is absent at runtime
+                            // (e.g. non-RUNTIME retention). Guard to avoid NPE in PropertyModel.annotation().
+                            var skipLabel = cod.newLabel();
+                            var endLabel = cod.newLabel();
+                            cod.dup();
+                            cod.ifnull(skipLabel);
                             cod.invokevirtual(propertyModelDesc, "annotation",
                                     MethodTypeDesc.of(propertyModelDesc, annotationDesc));
                             cod.pop();
+                            cod.goto_(endLabel);
+                            cod.labelBinding(skipLabel);
+                            cod.pop(); // pop null
+                            cod.pop(); // pop this
+                            cod.labelBinding(endLabel);
                         }
 
                         cod.return_();

@@ -3,6 +3,7 @@ package dev.morphia.critter.parser.generator;
 import java.lang.constant.ClassDesc;
 import java.lang.constant.ConstantDescs;
 import java.lang.constant.MethodTypeDesc;
+import java.lang.reflect.Modifier;
 
 import dev.morphia.critter.Critter;
 import dev.morphia.critter.CritterClassLoader;
@@ -112,7 +113,11 @@ public class PropertyAccessorGenerator extends BaseGenerator {
                             cod.invokevirtual(wrapperDesc, unboxMethod, MethodTypeDesc.of(propertyDesc));
                         } else {
                             cod.aload(2);
-                            cod.checkcast(propertyDesc);
+                            // skip checkcast for non-public types: checkcast to a non-public inner
+                            // class causes IllegalAccessError (mirrors VarHandleAccessorGenerator)
+                            if (isPublicPropertyType()) {
+                                cod.checkcast(propertyDesc);
+                            }
                         }
                         cod.invokevirtual(entityDesc, writeName,
                                 MethodTypeDesc.of(ConstantDescs.CD_void, propertyDesc));
@@ -122,6 +127,18 @@ public class PropertyAccessorGenerator extends BaseGenerator {
 
         critterClassLoader.register(generatedType, bytes);
         return this;
+    }
+
+    private boolean isPublicPropertyType() {
+        if (isPrimitive() || propertyType.startsWith("[")) {
+            return true;
+        }
+        try {
+            Class<?> cls = Class.forName(propertyType, false, GenerationUtils.safeClassLoader(entity));
+            return Modifier.isPublic(cls.getModifiers());
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 
     private String primitiveDescriptor() {
