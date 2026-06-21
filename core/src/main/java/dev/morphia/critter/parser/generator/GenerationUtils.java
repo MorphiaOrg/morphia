@@ -385,6 +385,23 @@ public class GenerationUtils {
     }
 
     /**
+     * Returns the {@link ClassDesc} for a primitive type name (e.g. {@code "int"} → {@link ConstantDescs#CD_int}).
+     */
+    public static ClassDesc primitiveClassDesc(String primitiveTypeName) {
+        return switch (primitiveTypeName) {
+            case "boolean" -> ConstantDescs.CD_boolean;
+            case "byte" -> ConstantDescs.CD_byte;
+            case "char" -> ConstantDescs.CD_char;
+            case "short" -> ConstantDescs.CD_short;
+            case "int" -> ConstantDescs.CD_int;
+            case "long" -> ConstantDescs.CD_long;
+            case "float" -> ConstantDescs.CD_float;
+            case "double" -> ConstantDescs.CD_double;
+            default -> throw new IllegalArgumentException("Not a primitive: " + primitiveTypeName);
+        };
+    }
+
+    /**
      * Resolves a ClassDesc to a Class using the given class loader.
      */
     public static Class<?> asClass(ClassDesc cd, ClassLoader classLoader) {

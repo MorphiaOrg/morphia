@@ -19,7 +19,11 @@ import io.github.dmlloyd.classfile.ClassSignature;
 import io.github.dmlloyd.classfile.TypeKind;
 import io.github.dmlloyd.classfile.attribute.SignatureAttribute;
 
+import static dev.morphia.critter.parser.generator.GenerationUtils.PRIMITIVE_TO_WRAPPER;
+import static dev.morphia.critter.parser.generator.GenerationUtils.emitClassRef;
 import static dev.morphia.critter.parser.generator.GenerationUtils.findSetterMethod;
+import static dev.morphia.critter.parser.generator.GenerationUtils.primitiveClassDesc;
+import static dev.morphia.critter.parser.generator.GenerationUtils.typeClassName;
 
 /**
  * Generates a ClassFile-based {@link org.bson.codecs.pojo.PropertyAccessor} implementation that uses
@@ -44,7 +48,7 @@ public class VarHandleAccessorGenerator extends BaseGenerator {
     public VarHandleAccessorGenerator(Class<?> entity, CritterClassLoader critterClassLoader, FieldInfo field) {
         super(entity, critterClassLoader);
         this.propertyName = field.name();
-        this.propertyType = GenerationUtils.typeClassName(ClassDesc.ofDescriptor(field.desc()));
+        this.propertyType = typeClassName(ClassDesc.ofDescriptor(field.desc()));
         this.isFieldBased = true;
         this.isFinalField = (field.access() & ClassFile.ACC_FINAL) != 0;
         this.getterName = null;
@@ -63,7 +67,7 @@ public class VarHandleAccessorGenerator extends BaseGenerator {
         super(entity, critterClassLoader);
         this.propertyName = ExtensionFunctions.getterToPropertyName(method, entity);
         String returnDesc = java.lang.constant.MethodTypeDesc.ofDescriptor(method.desc()).returnType().descriptorString();
-        this.propertyType = GenerationUtils.typeClassName(ClassDesc.ofDescriptor(returnDesc));
+        this.propertyType = typeClassName(ClassDesc.ofDescriptor(returnDesc));
         this.isFieldBased = false;
         this.isFinalField = false;
         this.getterName = method.name();
@@ -77,7 +81,7 @@ public class VarHandleAccessorGenerator extends BaseGenerator {
      * @return {@code true} if the property type is primitive
      */
     public boolean isPrimitive() {
-        return GenerationUtils.PRIMITIVE_TO_WRAPPER.containsKey(propertyType);
+        return PRIMITIVE_TO_WRAPPER.containsKey(propertyType);
     }
 
     /**
@@ -87,7 +91,7 @@ public class VarHandleAccessorGenerator extends BaseGenerator {
      * @return the wrapper type name
      */
     public String getWrapperType() {
-        return GenerationUtils.PRIMITIVE_TO_WRAPPER.getOrDefault(propertyType, propertyType);
+        return PRIMITIVE_TO_WRAPPER.getOrDefault(propertyType, propertyType);
     }
 
     private boolean hasSetter() {
@@ -281,7 +285,7 @@ public class VarHandleAccessorGenerator extends BaseGenerator {
                             // Use reflection to set final field
                             ClassDesc fieldDesc2 = ClassDesc.of("java.lang.reflect.Field");
                             cod.trying(tryBody -> {
-                                GenerationUtils.emitClassRef(tryBody, entity);
+                                emitClassRef(tryBody, entity);
                                 tryBody.ldc(propertyName);
                                 tryBody.invokevirtual(ConstantDescs.CD_Class, "getDeclaredField",
                                         MethodTypeDesc.of(fieldDesc2, ConstantDescs.CD_String));
@@ -368,23 +372,9 @@ public class VarHandleAccessorGenerator extends BaseGenerator {
         }
     }
 
-    private ClassLoader entityClassLoader() {
-        return GenerationUtils.safeClassLoader(entity);
-    }
-
     private ClassDesc propertyClassDesc() {
         if (isPrimitive()) {
-            return switch (propertyType) {
-                case "boolean" -> ConstantDescs.CD_boolean;
-                case "byte" -> ConstantDescs.CD_byte;
-                case "char" -> ConstantDescs.CD_char;
-                case "short" -> ConstantDescs.CD_short;
-                case "int" -> ConstantDescs.CD_int;
-                case "long" -> ConstantDescs.CD_long;
-                case "float" -> ConstantDescs.CD_float;
-                case "double" -> ConstantDescs.CD_double;
-                default -> throw new IllegalArgumentException("Not a primitive: " + propertyType);
-            };
+            return primitiveClassDesc(propertyType);
         }
         if (propertyType.startsWith("[")) {
             return ClassDesc.ofDescriptor(propertyType.replace('.', '/'));

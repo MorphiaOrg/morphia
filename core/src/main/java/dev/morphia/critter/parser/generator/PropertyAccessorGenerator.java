@@ -50,7 +50,7 @@ public class PropertyAccessorGenerator extends BaseGenerator {
         ClassDesc entityDesc = ClassDesc.of(entity.getName());
         ClassDesc propertyDesc;
         if (isPrimitive()) {
-            propertyDesc = ClassDesc.ofDescriptor(primitiveDescriptor());
+            propertyDesc = GenerationUtils.primitiveClassDesc(propertyType);
         } else if (propertyType.startsWith("[")) {
             propertyDesc = ClassDesc.ofDescriptor(propertyType.replace('.', '/'));
         } else {
@@ -127,20 +127,6 @@ public class PropertyAccessorGenerator extends BaseGenerator {
 
         critterClassLoader.register(generatedType, bytes);
         return this;
-    }
-
-    private String primitiveDescriptor() {
-        return switch (propertyType) {
-            case "boolean" -> "Z";
-            case "byte" -> "B";
-            case "char" -> "C";
-            case "short" -> "S";
-            case "int" -> "I";
-            case "long" -> "J";
-            case "float" -> "F";
-            case "double" -> "D";
-            default -> throw new IllegalArgumentException("Not a primitive: " + propertyType);
-        };
     }
 
     private String primitiveUnboxMethod() {
