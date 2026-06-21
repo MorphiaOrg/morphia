@@ -2,6 +2,7 @@ package dev.morphia.critter.parser.generator;
 
 import java.util.List;
 
+import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.FieldInfo;
 import dev.morphia.critter.parser.MethodInfo;
@@ -35,13 +36,20 @@ public class CritterGenerator {
      * @return the generated entity model generator
      */
     public EntityModelGenerator generate(Class<?> type, CritterClassLoader critterClassLoader, boolean runtimeMode) {
-        ClassModel classModel = GenerationUtils.readClassModel(type);
+        // For @ExternalEntity, the annotated stand-in class describes the mapping; the target
+        // class is what actually gets persisted and needs accessor/model generation.
+        ExternalEntity ext = type.getAnnotation(ExternalEntity.class);
+        Class<?> standinType = type;
+        Class<?> targetType = ext != null ? ext.target() : type;
+
+        ClassModel classModel = GenerationUtils.readClassModel(standinType);
         if (classModel == null) {
-            throw new IllegalArgumentException("Could not find class file for %s".formatted(type.getName()));
+            throw new IllegalArgumentException("Could not find class file for %s".formatted(standinType.getName()));
         }
         PropertyFinder propertyFinder = new PropertyFinder(mapper, critterClassLoader, runtimeMode);
 
-        return entityModel(type, critterClassLoader, classModel, propertyFinder.find(type, classModel));
+        return entityModel(targetType, standinType, critterClassLoader, classModel,
+                propertyFinder.find(standinType, classModel, targetType));
     }
 
     /**
@@ -139,6 +147,14 @@ public class CritterGenerator {
     }
 
     /**
+     * Generates and registers a {@link PropertyModelGenerator} for the given field, reading annotations from {@code annotationSource}.
+     */
+    public PropertyModelGenerator propertyModelGenerator(Class<?> entityType, Class<?> annotationSource,
+            CritterClassLoader critterClassLoader, FieldInfo field) {
+        return new PropertyModelGenerator(mapper.getConfig(), entityType, annotationSource, critterClassLoader, field).emit();
+    }
+
+    /**
      * Generates and registers a {@link PropertyModelGenerator} for the property exposed by the given getter method.
      *
      * @param entityType         the entity class that owns the method
@@ -148,6 +164,14 @@ public class CritterGenerator {
      */
     public PropertyModelGenerator propertyModelGenerator(Class<?> entityType, CritterClassLoader critterClassLoader, MethodInfo method) {
         return new PropertyModelGenerator(mapper.getConfig(), entityType, critterClassLoader, method).emit();
+    }
+
+    /**
+     * Generates and registers a {@link PropertyModelGenerator} for the given method, reading annotations from {@code annotationSource}.
+     */
+    public PropertyModelGenerator propertyModelGenerator(Class<?> entityType, Class<?> annotationSource,
+            CritterClassLoader critterClassLoader, MethodInfo method) {
+        return new PropertyModelGenerator(mapper.getConfig(), entityType, annotationSource, critterClassLoader, method).emit();
     }
 
     /**
@@ -161,6 +185,14 @@ public class CritterGenerator {
      */
     public EntityModelGenerator entityModel(Class<?> type, CritterClassLoader critterClassLoader,
             ClassModel classModel, List<PropertyModelGenerator> properties) {
-        return new EntityModelGenerator(mapper, type, critterClassLoader, properties).emit();
+        return new EntityModelGenerator(mapper, type, type, critterClassLoader, properties).emit();
+    }
+
+    /**
+     * Generates and registers the entity model class for the given type, reading entity-level annotations from {@code standinType}.
+     */
+    public EntityModelGenerator entityModel(Class<?> type, Class<?> standinType, CritterClassLoader critterClassLoader,
+            ClassModel classModel, List<PropertyModelGenerator> properties) {
+        return new EntityModelGenerator(mapper, type, standinType, critterClassLoader, properties).emit();
     }
 }

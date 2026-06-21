@@ -54,8 +54,11 @@ public class PropertyModelGenerator extends BaseGenerator {
 
     /**
      * Creates a generator for a field-based property.
+     *
+     * @param annotationSource the class to reflect on for field annotations (may differ from entity for @ExternalEntity stand-ins)
      */
-    public PropertyModelGenerator(MorphiaConfig config, Class<?> entity, CritterClassLoader critterClassLoader, FieldInfo field) {
+    public PropertyModelGenerator(MorphiaConfig config, Class<?> entity, Class<?> annotationSource,
+            CritterClassLoader critterClassLoader, FieldInfo field) {
         super(entity, critterClassLoader);
         this.config = config;
         this.isFieldBased = true;
@@ -63,18 +66,29 @@ public class PropertyModelGenerator extends BaseGenerator {
         generatedType = "%s.%sModel".formatted(baseName, Critter.titleCase(propertyName));
         accessorType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
 
-        Field reflectedField = findField(entity, field.name());
+        Field reflectedField = findField(annotationSource, field.name());
         this.accessFlags = reflectedField != null ? reflectedField.getModifiers() : field.access();
         this.genericType = reflectedField != null ? reflectedField.getGenericType() : Object.class;
         this.annotationMap = buildAnnotationMap(reflectedField != null ? reflectedField.getAnnotations() : new Annotation[0]);
-        this.typeData = computeTypeData(resolveGenericType(this.genericType, field.name(), entity), entity.getClassLoader());
+        this.typeData = computeTypeData(resolveGenericType(this.genericType, field.name(), annotationSource),
+                GenerationUtils.safeClassLoader(annotationSource));
         this.getterName = null;
     }
 
     /**
-     * Creates a generator for a method-based (getter) property.
+     * Creates a generator for a field-based property where the entity class is also the annotation source.
      */
-    public PropertyModelGenerator(MorphiaConfig config, Class<?> entity, CritterClassLoader critterClassLoader, MethodInfo method) {
+    public PropertyModelGenerator(MorphiaConfig config, Class<?> entity, CritterClassLoader critterClassLoader, FieldInfo field) {
+        this(config, entity, entity, critterClassLoader, field);
+    }
+
+    /**
+     * Creates a generator for a method-based (getter) property.
+     *
+     * @param annotationSource the class to reflect on for method annotations (may differ from entity for @ExternalEntity stand-ins)
+     */
+    public PropertyModelGenerator(MorphiaConfig config, Class<?> entity, Class<?> annotationSource,
+            CritterClassLoader critterClassLoader, MethodInfo method) {
         super(entity, critterClassLoader);
         this.config = config;
         this.isFieldBased = false;
@@ -82,20 +96,28 @@ public class PropertyModelGenerator extends BaseGenerator {
         generatedType = "%s.%sModel".formatted(baseName, Critter.titleCase(propertyName));
         accessorType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
 
-        Method reflectedMethod = findMethod(entity, method.name());
+        Method reflectedMethod = findMethod(annotationSource, method.name());
         this.accessFlags = reflectedMethod != null ? reflectedMethod.getModifiers() : method.access();
         this.genericType = reflectedMethod != null ? reflectedMethod.getGenericReturnType() : Object.class;
         this.annotationMap = buildAnnotationMap(reflectedMethod != null ? reflectedMethod.getAnnotations() : new Annotation[0]);
         // Also collect setter annotations — some annotations (e.g. @Version, @Text) live on the setter, not the getter
         String setterName = "set" + Critter.titleCase(this.propertyName);
-        Method reflectedSetter = findSetterMethod(entity, setterName);
+        Method reflectedSetter = findSetterMethod(annotationSource, setterName);
         if (reflectedSetter != null) {
             for (Annotation ann : reflectedSetter.getAnnotations()) {
                 this.annotationMap.putIfAbsent(ann.annotationType().getName(), ann);
             }
         }
-        this.typeData = computeTypeData(resolveGenericType(this.genericType, this.propertyName, entity), entity.getClassLoader());
+        this.typeData = computeTypeData(resolveGenericType(this.genericType, this.propertyName, annotationSource),
+                GenerationUtils.safeClassLoader(annotationSource));
         this.getterName = method.name();
+    }
+
+    /**
+     * Creates a generator for a method-based property where the entity class is also the annotation source.
+     */
+    public PropertyModelGenerator(MorphiaConfig config, Class<?> entity, CritterClassLoader critterClassLoader, MethodInfo method) {
+        this(config, entity, entity, critterClassLoader, method);
     }
 
     private static Field findField(Class<?> cls, String name) {

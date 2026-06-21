@@ -51,32 +51,41 @@ public class PropertyFinder {
     }
 
     public List<PropertyModelGenerator> find(Class<?> entityType, ClassModel classModel) {
+        return find(entityType, classModel, entityType);
+    }
+
+    /**
+     * Discovers properties from {@code standinType}'s classfile but generates accessor and model
+     * bytecode targeting {@code targetType}. Used for {@code @ExternalEntity} stand-ins where the
+     * stand-in carries Morphia annotations but the target is the type actually persisted.
+     */
+    public List<PropertyModelGenerator> find(Class<?> standinType, ClassModel classModel, Class<?> targetType) {
         List<PropertyModelGenerator> models = new ArrayList<>();
-        List<MethodInfo> methods = discoverPropertyMethods(entityType, classModel);
+        List<MethodInfo> methods = discoverPropertyMethods(standinType, classModel);
         if (methods.isEmpty()) {
-            List<FieldInfo> fields = discoverAllFields(entityType, classModel);
+            List<FieldInfo> fields = discoverAllFields(standinType, classModel);
             if (!runtimeMode) {
-                classLoader.register(entityType.getName(), critterGenerator.fieldAccessors(entityType, fields));
+                classLoader.register(targetType.getName(), critterGenerator.fieldAccessors(targetType, fields));
             }
             for (FieldInfo field : fields) {
                 if (runtimeMode) {
-                    critterGenerator.varHandleAccessor(entityType, classLoader, field);
+                    critterGenerator.varHandleAccessor(targetType, classLoader, field);
                 } else {
-                    critterGenerator.propertyAccessor(entityType, classLoader, field);
+                    critterGenerator.propertyAccessor(targetType, classLoader, field);
                 }
-                models.add(critterGenerator.propertyModelGenerator(entityType, classLoader, field));
+                models.add(critterGenerator.propertyModelGenerator(targetType, standinType, classLoader, field));
             }
         } else {
             if (!runtimeMode) {
-                classLoader.register(entityType.getName(), critterGenerator.methodAccessors(entityType, methods));
+                classLoader.register(targetType.getName(), critterGenerator.methodAccessors(targetType, methods));
             }
             for (MethodInfo method : methods) {
                 if (runtimeMode) {
-                    critterGenerator.varHandleAccessor(entityType, classLoader, method);
+                    critterGenerator.varHandleAccessor(targetType, classLoader, method);
                 } else {
-                    critterGenerator.propertyAccessor(entityType, classLoader, method);
+                    critterGenerator.propertyAccessor(targetType, classLoader, method);
                 }
-                models.add(critterGenerator.propertyModelGenerator(entityType, classLoader, method));
+                models.add(critterGenerator.propertyModelGenerator(targetType, standinType, classLoader, method));
             }
         }
         return models;
