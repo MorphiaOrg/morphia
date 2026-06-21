@@ -368,6 +368,23 @@ public class GenerationUtils {
     }
 
     /**
+     * Returns the unboxing method name for the given primitive type name (e.g. {@code "int"} → {@code "intValue"}).
+     */
+    public static String primitiveUnboxMethod(String primitiveTypeName) {
+        return switch (primitiveTypeName) {
+            case "boolean" -> "booleanValue";
+            case "byte" -> "byteValue";
+            case "char" -> "charValue";
+            case "short" -> "shortValue";
+            case "int" -> "intValue";
+            case "long" -> "longValue";
+            case "float" -> "floatValue";
+            case "double" -> "doubleValue";
+            default -> throw new IllegalArgumentException("Not a primitive: " + primitiveTypeName);
+        };
+    }
+
+    /**
      * Resolves a ClassDesc to a Class using the given class loader.
      */
     public static Class<?> asClass(ClassDesc cd, ClassLoader classLoader) {

@@ -123,11 +123,16 @@ public class PropertyFinder {
     }
 
     private ClassModel readClassModel(Class<?> type) {
-        ClassModel model = GenerationUtils.readClassModel(type);
-        if (model == null) {
-            LOG.debug("Bytecode resource not found for {}; hierarchy traversal stops here", type.getName());
+        try {
+            ClassModel model = GenerationUtils.readClassModel(type);
+            if (model == null) {
+                LOG.debug("Bytecode resource not found for {}; hierarchy traversal stops here", type.getName());
+            }
+            return model;
+        } catch (RuntimeException e) {
+            LOG.warn("Failed to read bytecode for {}; hierarchy traversal stops here: {}", type.getName(), e.getMessage());
+            return null;
         }
-        return model;
     }
 
     private List<FieldInfo> discoverFields(ClassModel classModel) {

@@ -7,7 +7,6 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.invoke.VarHandle;
-import java.util.Map;
 
 import dev.morphia.critter.Critter;
 import dev.morphia.critter.CritterClassLoader;
@@ -28,16 +27,6 @@ import static dev.morphia.critter.parser.generator.GenerationUtils.findSetterMet
  * to access a single property of a Morphia entity class.
  */
 public class VarHandleAccessorGenerator extends BaseGenerator {
-    private static final Map<String, Class<?>> PRIMITIVE_CLASSES = Map.of(
-            "boolean", boolean.class,
-            "byte", byte.class,
-            "char", char.class,
-            "short", short.class,
-            "int", int.class,
-            "long", long.class,
-            "float", float.class,
-            "double", double.class);
-
     private final String propertyName;
     private final String propertyType;
     private final boolean isFieldBased;
@@ -104,10 +93,7 @@ public class VarHandleAccessorGenerator extends BaseGenerator {
     private boolean hasSetter() {
         if (isFieldBased || setterName == null)
             return false;
-        ClassDesc paramDesc = isPrimitive()
-                ? ClassDesc.ofDescriptor(PRIMITIVE_CLASSES.get(propertyType).descriptorString())
-                : ClassDesc.of(propertyType);
-        return findSetterMethod(entity, setterName, paramDesc) != null;
+        return findSetterMethod(entity, setterName, propertyClassDesc()) != null;
     }
 
     /**
@@ -407,16 +393,6 @@ public class VarHandleAccessorGenerator extends BaseGenerator {
     }
 
     private String primitiveUnboxMethod() {
-        return switch (propertyType) {
-            case "boolean" -> "booleanValue";
-            case "byte" -> "byteValue";
-            case "char" -> "charValue";
-            case "short" -> "shortValue";
-            case "int" -> "intValue";
-            case "long" -> "longValue";
-            case "float" -> "floatValue";
-            case "double" -> "doubleValue";
-            default -> throw new IllegalArgumentException("Not a primitive: " + propertyType);
-        };
+        return GenerationUtils.primitiveUnboxMethod(propertyType);
     }
 }

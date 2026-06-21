@@ -144,16 +144,6 @@ public class PropertyAccessorGenerator extends BaseGenerator {
     }
 
     private String primitiveUnboxMethod() {
-        return switch (propertyType) {
-            case "boolean" -> "booleanValue";
-            case "byte" -> "byteValue";
-            case "char" -> "charValue";
-            case "short" -> "shortValue";
-            case "int" -> "intValue";
-            case "long" -> "longValue";
-            case "float" -> "floatValue";
-            case "double" -> "doubleValue";
-            default -> throw new IllegalArgumentException("Not a primitive: " + propertyType);
-        };
+        return GenerationUtils.primitiveUnboxMethod(propertyType);
     }
 }

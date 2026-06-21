@@ -94,14 +94,6 @@ public class EntityModelGenerator extends BaseGenerator {
     }
 
     /**
-     * Returns the annotation of the given type from the entity class, or {@code null} if not present.
-     */
-    @SuppressWarnings("unchecked")
-    public <T extends Annotation> T annotation(Class<T> type) {
-        return entity.getAnnotation(type);
-    }
-
-    /**
      * Returns the fully-qualified name of the generated entity model class.
      */
     public String getGeneratedType() {
