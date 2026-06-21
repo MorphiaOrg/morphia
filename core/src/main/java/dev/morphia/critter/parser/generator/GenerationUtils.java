@@ -8,6 +8,7 @@ import java.lang.constant.ConstantDescs;
 import java.lang.constant.MethodTypeDesc;
 import java.lang.reflect.Array;
 import java.lang.reflect.GenericArrayType;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
@@ -40,6 +41,32 @@ public class GenerationUtils {
             "double", "java.lang.Double");
 
     private GenerationUtils() {
+    }
+
+    /**
+     * Walks the class hierarchy looking for a non-private, non-static method named {@code name}
+     * with a single parameter matching {@code paramDesc}. Returns the first such method found,
+     * or {@code null} if none exists (including when the parameter type cannot be resolved).
+     */
+    public static Method findSetterMethod(Class<?> start, String name, ClassDesc paramDesc) {
+        Class<?> paramType;
+        try {
+            paramType = asClass(paramDesc, safeClassLoader(start));
+        } catch (RuntimeException e) {
+            return null;
+        }
+        Class<?> current = start;
+        while (current != null && current != Object.class) {
+            try {
+                Method m = current.getDeclaredMethod(name, paramType);
+                if (!Modifier.isPrivate(m.getModifiers()) && !Modifier.isStatic(m.getModifiers())) {
+                    return m;
+                }
+            } catch (NoSuchMethodException ignored) {
+            }
+            current = current.getSuperclass();
+        }
+        return null;
     }
 
     /**

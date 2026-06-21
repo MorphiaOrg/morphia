@@ -7,8 +7,6 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.invoke.VarHandle;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Map;
 
 import dev.morphia.critter.Critter;
@@ -21,6 +19,8 @@ import io.github.dmlloyd.classfile.ClassFile;
 import io.github.dmlloyd.classfile.ClassSignature;
 import io.github.dmlloyd.classfile.TypeKind;
 import io.github.dmlloyd.classfile.attribute.SignatureAttribute;
+
+import static dev.morphia.critter.parser.generator.GenerationUtils.findSetterMethod;
 
 /**
  * Generates a ClassFile-based {@link org.bson.codecs.pojo.PropertyAccessor} implementation that uses
@@ -104,27 +104,10 @@ public class VarHandleAccessorGenerator extends BaseGenerator {
     private boolean hasSetter() {
         if (isFieldBased || setterName == null)
             return false;
-        Class<?> paramClass = isPrimitive() ? PRIMITIVE_CLASSES.get(propertyType) : null;
-        if (paramClass == null) {
-            try {
-                paramClass = Class.forName(propertyType, false, entityClassLoader());
-            } catch (ClassNotFoundException e) {
-                return false;
-            }
-        }
-        Class<?> current = entity;
-        while (current != null && current != Object.class) {
-            try {
-                Method m = current.getDeclaredMethod(setterName, paramClass);
-                if (!Modifier.isPrivate(m.getModifiers()) && !Modifier.isStatic(m.getModifiers())) {
-                    return true;
-                }
-            } catch (NoSuchMethodException e) {
-                // walk up to superclass
-            }
-            current = current.getSuperclass();
-        }
-        return false;
+        ClassDesc paramDesc = isPrimitive()
+                ? ClassDesc.ofDescriptor(PRIMITIVE_CLASSES.get(propertyType).descriptorString())
+                : ClassDesc.of(propertyType);
+        return findSetterMethod(entity, setterName, paramDesc) != null;
     }
 
     /**

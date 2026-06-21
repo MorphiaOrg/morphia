@@ -66,9 +66,11 @@ public class PropertyAccessorGenerator extends BaseGenerator {
             cb.withInterfaceSymbols(accessorDesc);
 
             // Class signature: Ljava/lang/Object;Lorg/bson/codecs/pojo/PropertyAccessor<propertyType>;
-            String propDesc = propertyType.startsWith("[")
-                    ? propertyType.replace('.', '/')
-                    : "L" + propertyType.replace('.', '/') + ";";
+            // Primitives must use their wrapper type in generic signatures (e.g. "int" → "Ljava/lang/Integer;")
+            String sigType = isPrimitive() ? getWrapperType() : propertyType;
+            String propDesc = sigType.startsWith("[")
+                    ? sigType.replace('.', '/')
+                    : "L" + sigType.replace('.', '/') + ";";
             String sigStr = "Ljava/lang/Object;L"
                     + accessorDesc.descriptorString().substring(1, accessorDesc.descriptorString().length() - 1) + "<"
                     + propDesc + ">" + ";";

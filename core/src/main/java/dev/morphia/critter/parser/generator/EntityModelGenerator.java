@@ -18,6 +18,8 @@ import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
 import io.github.dmlloyd.classfile.ClassFile;
 
+import static dev.morphia.annotations.internal.EntityBuilder.entityBuilder;
+
 /**
  * Generates a ClassFile-based {@code CritterEntityModel} implementation for a Morphia entity class.
  */
@@ -61,11 +63,24 @@ public class EntityModelGenerator extends BaseGenerator {
         while (current != null && current != Object.class) {
             for (Annotation a : current.getAnnotations()) {
                 if (a.annotationType().getName().startsWith("dev.morphia.annotations.")
+                        && !a.annotationType().getName().contains(".internal.")
                         && registered.add(a.annotationType().getName())) {
                     allAnnotations.add(a);
                 }
             }
             current = current.getSuperclass();
+        }
+        // MorphiaDefaultsConvention synthesizes @Entity from @ExternalEntity; mirror that here
+        // so that model.getAnnotation(Entity.class) returns non-null for @ExternalEntity models.
+        if (this.externalEntity != null && allAnnotations.stream().noneMatch(a -> a instanceof Entity)) {
+            allAnnotations.add(entityBuilder()
+                    .cap(this.externalEntity.cap())
+                    .concern(this.externalEntity.concern())
+                    .discriminator(this.externalEntity.discriminator())
+                    .discriminatorKey(this.externalEntity.discriminatorKey())
+                    .value(this.externalEntity.value())
+                    .useDiscriminator(this.externalEntity.useDiscriminator())
+                    .build());
         }
         this.morphiaAnnotations = List.copyOf(allAnnotations);
     }

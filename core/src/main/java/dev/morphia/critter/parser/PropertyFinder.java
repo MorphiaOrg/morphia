@@ -34,6 +34,7 @@ public class PropertyFinder {
     private static final Logger LOG = LoggerFactory.getLogger(PropertyFinder.class);
 
     private final Map<Class<?>, Object> providerMap;
+    private final List<String> annotationDescriptorKeys;
     private final CritterClassLoader classLoader;
     private final boolean runtimeMode;
     private final CritterGenerator critterGenerator;
@@ -44,6 +45,9 @@ public class PropertyFinder {
         for (var provider : mapper.getConfig().propertyAnnotationProviders()) {
             providerMap.put(provider.provides(), provider);
         }
+        this.annotationDescriptorKeys = providerMap.keySet().stream()
+                .map(type -> "L" + type.getName().replace('.', '/') + ";")
+                .toList();
         this.classLoader = classLoader;
         this.runtimeMode = runtimeMode;
         this.critterGenerator = new CritterGenerator(mapper);
@@ -93,11 +97,8 @@ public class PropertyFinder {
 
     private boolean isPropertyAnnotated(List<Annotation> annotations, boolean allowUnannotated) {
         List<Annotation> anns = annotations != null ? annotations : List.of();
-        List<String> keys = providerMap.keySet().stream()
-                .map(type -> "L" + type.getName().replace('.', '/') + ";")
-                .toList();
         return allowUnannotated || anns.stream()
-                .anyMatch(a -> keys.contains(a.classSymbol().descriptorString()));
+                .anyMatch(a -> annotationDescriptorKeys.contains(a.classSymbol().descriptorString()));
     }
 
     private List<FieldInfo> discoverAllFields(Class<?> entityType, ClassModel classModel) {
