@@ -14,6 +14,10 @@ import io.github.dmlloyd.classfile.ClassFile;
 import io.github.dmlloyd.classfile.ClassSignature;
 import io.github.dmlloyd.classfile.attribute.SignatureAttribute;
 
+import static dev.morphia.critter.parser.generator.GenerationUtils.PRIMITIVE_TO_WRAPPER;
+import static dev.morphia.critter.parser.generator.GenerationUtils.primitiveClassDesc;
+import static dev.morphia.critter.parser.generator.GenerationUtils.typeClassName;
+
 /**
  * Generates a {@link org.bson.codecs.pojo.PropertyAccessor} implementation for a single
  * entity property, delegating to the synthetic {@code __readXxx}/{@code __writeXxx} methods.
@@ -25,7 +29,7 @@ public class PropertyAccessorGenerator extends BaseGenerator {
     public PropertyAccessorGenerator(Class<?> entity, CritterClassLoader critterClassLoader, FieldInfo field) {
         super(entity, critterClassLoader);
         this.propertyName = field.name();
-        this.propertyType = GenerationUtils.typeClassName(ClassDesc.ofDescriptor(field.desc()));
+        this.propertyType = typeClassName(ClassDesc.ofDescriptor(field.desc()));
         generatedType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
     }
 
@@ -33,16 +37,16 @@ public class PropertyAccessorGenerator extends BaseGenerator {
         super(entity, critterClassLoader);
         this.propertyName = ExtensionFunctions.getterToPropertyName(method, entity);
         String returnDesc = MethodTypeDesc.ofDescriptor(method.desc()).returnType().descriptorString();
-        this.propertyType = GenerationUtils.typeClassName(ClassDesc.ofDescriptor(returnDesc));
+        this.propertyType = typeClassName(ClassDesc.ofDescriptor(returnDesc));
         generatedType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
     }
 
     public boolean isPrimitive() {
-        return GenerationUtils.PRIMITIVE_TO_WRAPPER.containsKey(propertyType);
+        return PRIMITIVE_TO_WRAPPER.containsKey(propertyType);
     }
 
     public String getWrapperType() {
-        return GenerationUtils.PRIMITIVE_TO_WRAPPER.getOrDefault(propertyType, propertyType);
+        return PRIMITIVE_TO_WRAPPER.getOrDefault(propertyType, propertyType);
     }
 
     public PropertyAccessorGenerator emit() {
@@ -50,7 +54,7 @@ public class PropertyAccessorGenerator extends BaseGenerator {
         ClassDesc entityDesc = ClassDesc.of(entity.getName());
         ClassDesc propertyDesc;
         if (isPrimitive()) {
-            propertyDesc = GenerationUtils.primitiveClassDesc(propertyType);
+            propertyDesc = primitiveClassDesc(propertyType);
         } else if (propertyType.startsWith("[")) {
             propertyDesc = ClassDesc.ofDescriptor(propertyType.replace('.', '/'));
         } else {
