@@ -289,7 +289,7 @@ public class GenerationUtils {
             String wrapper = primitiveWrapperName(cls);
             cod.getstatic(ClassDesc.of(wrapper), "TYPE", ConstantDescs.CD_Class);
         } else if (Modifier.isPublic(cls.getModifiers())) {
-            cod.loadConstant(ClassDesc.of(cls.getName()));
+            cod.loadConstant(ClassDesc.ofDescriptor(cls.descriptorString()));
         } else {
             cod.ldc(cls.getName());
             cod.iconst_0();
