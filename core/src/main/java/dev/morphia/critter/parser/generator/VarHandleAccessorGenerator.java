@@ -333,8 +333,9 @@ public class VarHandleAccessorGenerator extends BaseGenerator {
                                 catchBody.new_(rteDesc);
                                 catchBody.dup();
                                 catchBody.ldc("Failed to set final field '%s'".formatted(propertyName));
+                                catchBody.aload(3);
                                 catchBody.invokespecial(rteDesc, "<init>",
-                                        MethodTypeDesc.ofDescriptor("(Ljava/lang/String;)V"));
+                                        MethodTypeDesc.ofDescriptor("(Ljava/lang/String;Ljava/lang/Throwable;)V"));
                                 catchBody.athrow();
                             }));
                             return;

@@ -207,12 +207,14 @@ public class TestGeneration {
         Assertions.assertNotNull(modifiedClass.getMethod("__readScore"), "Should have __readScore method");
         Assertions.assertNotNull(modifiedClass.getMethod("__readComputedValue"), "Should have __readComputedValue method");
 
-        Assertions.assertNotNull(modifiedClass.getMethod("__writeId", org.bson.types.ObjectId.class), "Should have __writeId method");
+        // Reference types use Object in the bridge descriptor so non-public types never
+        // appear in the accessor's constant pool; primitives keep their concrete type.
+        Assertions.assertNotNull(modifiedClass.getMethod("__writeId", Object.class), "Should have __writeId method");
         Assertions.assertNotNull(modifiedClass.getMethod("__writeCount", long.class), "Should have __writeCount method");
         Assertions.assertNotNull(modifiedClass.getMethod("__writeScore", double.class), "Should have __writeScore method");
 
         Object instance = modifiedClass.getConstructor().newInstance();
-        Method writeComputedMethod = modifiedClass.getMethod("__writeComputedValue", String.class);
+        Method writeComputedMethod = modifiedClass.getMethod("__writeComputedValue", Object.class);
 
         try {
             writeComputedMethod.invoke(instance, "test value");

@@ -3,7 +3,6 @@ package dev.morphia.critter.parser.generator;
 import java.lang.constant.ClassDesc;
 import java.lang.constant.ConstantDescs;
 import java.lang.constant.MethodTypeDesc;
-import java.lang.reflect.Modifier;
 
 import dev.morphia.critter.Critter;
 import dev.morphia.critter.CritterClassLoader;
@@ -83,6 +82,7 @@ public class PropertyAccessorGenerator extends BaseGenerator {
             });
 
             // get(Object model): Object
+            // __readXxx() returns Object for reference types (bridge cast lives inside entity)
             cb.withMethodBody("get", MethodTypeDesc.ofDescriptor("(Ljava/lang/Object;)Ljava/lang/Object;"),
                     ClassFile.ACC_PUBLIC, cod -> {
                         cod.aload(1);
@@ -94,12 +94,13 @@ public class PropertyAccessorGenerator extends BaseGenerator {
                             cod.invokestatic(wrapperDesc, "valueOf",
                                     MethodTypeDesc.of(wrapperDesc, propertyDesc));
                         } else {
-                            cod.invokevirtual(entityDesc, readName, MethodTypeDesc.of(propertyDesc));
+                            cod.invokevirtual(entityDesc, readName, MethodTypeDesc.of(ConstantDescs.CD_Object));
                         }
                         cod.areturn();
                     });
 
             // set(Object model, Object value): void
+            // __writeXxx(Object) for reference types — no non-public type in descriptor
             cb.withMethodBody("set", MethodTypeDesc.ofDescriptor("(Ljava/lang/Object;Ljava/lang/Object;)V"),
                     ClassFile.ACC_PUBLIC, cod -> {
                         cod.aload(1);
@@ -111,34 +112,19 @@ public class PropertyAccessorGenerator extends BaseGenerator {
                             // unbox: WrapperType.primitiveValue()
                             String unboxMethod = primitiveUnboxMethod();
                             cod.invokevirtual(wrapperDesc, unboxMethod, MethodTypeDesc.of(propertyDesc));
+                            cod.invokevirtual(entityDesc, writeName,
+                                    MethodTypeDesc.of(ConstantDescs.CD_void, propertyDesc));
                         } else {
                             cod.aload(2);
-                            // skip checkcast for non-public types: checkcast to a non-public inner
-                            // class causes IllegalAccessError (mirrors VarHandleAccessorGenerator)
-                            if (isPublicPropertyType()) {
-                                cod.checkcast(propertyDesc);
-                            }
+                            cod.invokevirtual(entityDesc, writeName,
+                                    MethodTypeDesc.of(ConstantDescs.CD_void, ConstantDescs.CD_Object));
                         }
-                        cod.invokevirtual(entityDesc, writeName,
-                                MethodTypeDesc.of(ConstantDescs.CD_void, propertyDesc));
                         cod.return_();
                     });
         });
 
         critterClassLoader.register(generatedType, bytes);
         return this;
-    }
-
-    private boolean isPublicPropertyType() {
-        if (isPrimitive() || propertyType.startsWith("[")) {
-            return true;
-        }
-        try {
-            Class<?> cls = Class.forName(propertyType, false, GenerationUtils.safeClassLoader(entity));
-            return Modifier.isPublic(cls.getModifiers());
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
     }
 
     private String primitiveDescriptor() {

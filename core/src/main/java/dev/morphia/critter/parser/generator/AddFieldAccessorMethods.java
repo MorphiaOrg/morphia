@@ -1,6 +1,7 @@
 package dev.morphia.critter.parser.generator;
 
 import java.lang.constant.ClassDesc;
+import java.lang.constant.ConstantDescs;
 import java.lang.constant.MethodTypeDesc;
 import java.util.List;
 
@@ -44,9 +45,11 @@ public class AddFieldAccessorMethods extends AccessorMethods {
                         ClassDesc fieldDesc = ClassDesc.ofDescriptor(field.desc());
                         TypeKind kind = TypeKind.fromDescriptor(field.desc());
 
-                        // __readXxx(): returns field type
+                        // __readXxx(): returns Object (widens from concrete type inside entity,
+                        // keeping non-public types out of the accessor's constant pool)
                         String readerName = "__read%s".formatted(Critter.titleCase(name));
-                        MethodTypeDesc readerMtd = MethodTypeDesc.of(fieldDesc);
+                        boolean isPrimitive = kind != TypeKind.REFERENCE;
+                        MethodTypeDesc readerMtd = MethodTypeDesc.of(isPrimitive ? fieldDesc : ConstantDescs.CD_Object);
                         classBuilder.withMethodBody(readerName, readerMtd,
                                 ClassFile.ACC_PUBLIC | ClassFile.ACC_SYNTHETIC,
                                 cod -> {
@@ -55,14 +58,20 @@ public class AddFieldAccessorMethods extends AccessorMethods {
                                     cod.return_(kind);
                                 });
 
-                        // __writeXxx(fieldType): void
+                        // __writeXxx(Object): void  (cast to concrete type inside entity where it's accessible)
                         String writerName = "__write%s".formatted(Critter.titleCase(name));
-                        MethodTypeDesc writerMtd = MethodTypeDesc.of(ClassDesc.ofDescriptor("V"), fieldDesc);
+                        MethodTypeDesc writerMtd = MethodTypeDesc.of(ClassDesc.ofDescriptor("V"),
+                                isPrimitive ? fieldDesc : ConstantDescs.CD_Object);
                         classBuilder.withMethodBody(writerName, writerMtd,
                                 ClassFile.ACC_PUBLIC | ClassFile.ACC_SYNTHETIC,
                                 cod -> {
                                     cod.aload(0);
-                                    cod.loadLocal(kind, 1);
+                                    if (isPrimitive) {
+                                        cod.loadLocal(kind, 1);
+                                    } else {
+                                        cod.aload(1);
+                                        cod.checkcast(fieldDesc);
+                                    }
                                     cod.putfield(entityDesc, name, fieldDesc);
                                     cod.return_();
                                 });

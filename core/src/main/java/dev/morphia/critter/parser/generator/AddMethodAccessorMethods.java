@@ -1,6 +1,7 @@
 package dev.morphia.critter.parser.generator;
 
 import java.lang.constant.ClassDesc;
+import java.lang.constant.ConstantDescs;
 import java.lang.constant.MethodTypeDesc;
 import java.util.List;
 
@@ -56,9 +57,11 @@ public class AddMethodAccessorMethods extends AccessorMethods {
                             }
                         }
 
-                        // __readXxx(): return type of getter
+                        // __readXxx(): returns Object for reference types (keeps non-public types
+                        // out of the accessor's constant pool; concrete type widens inside entity)
+                        boolean isPrimitive = returnKind != TypeKind.REFERENCE;
                         String readerName = "__read%s".formatted(Critter.titleCase(propertyName));
-                        MethodTypeDesc readerMtd = MethodTypeDesc.of(returnDesc);
+                        MethodTypeDesc readerMtd = MethodTypeDesc.of(isPrimitive ? returnDesc : ConstantDescs.CD_Object);
                         classBuilder.withMethodBody(readerName, readerMtd,
                                 ClassFile.ACC_PUBLIC | ClassFile.ACC_SYNTHETIC,
                                 cod -> {
@@ -67,15 +70,21 @@ public class AddMethodAccessorMethods extends AccessorMethods {
                                     cod.return_(returnKind);
                                 });
 
-                        // __writeXxx(T): void
+                        // __writeXxx(Object): void for reference types (cast inside entity where concrete type is accessible)
                         String writerName = "__write%s".formatted(Critter.titleCase(propertyName));
-                        MethodTypeDesc writerMtd = MethodTypeDesc.of(ClassDesc.ofDescriptor("V"), returnDesc);
+                        MethodTypeDesc writerMtd = MethodTypeDesc.of(ClassDesc.ofDescriptor("V"),
+                                isPrimitive ? returnDesc : ConstantDescs.CD_Object);
                         if (hasSetter) {
                             classBuilder.withMethodBody(writerName, writerMtd,
                                     ClassFile.ACC_PUBLIC | ClassFile.ACC_SYNTHETIC,
                                     cod -> {
                                         cod.aload(0);
-                                        cod.loadLocal(returnKind, 1);
+                                        if (isPrimitive) {
+                                            cod.loadLocal(returnKind, 1);
+                                        } else {
+                                            cod.aload(1);
+                                            cod.checkcast(returnDesc);
+                                        }
                                         cod.invokevirtual(entityDesc, setterName,
                                                 MethodTypeDesc.of(ClassDesc.ofDescriptor("V"), returnDesc));
                                         cod.return_();
