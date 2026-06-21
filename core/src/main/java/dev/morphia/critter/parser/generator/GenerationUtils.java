@@ -310,25 +310,14 @@ public class GenerationUtils {
     }
 
     private static String primitiveWrapperName(Class<?> primitive) {
-        if (primitive == boolean.class)
-            return "java.lang.Boolean";
-        if (primitive == byte.class)
-            return "java.lang.Byte";
-        if (primitive == char.class)
-            return "java.lang.Character";
-        if (primitive == short.class)
-            return "java.lang.Short";
-        if (primitive == int.class)
-            return "java.lang.Integer";
-        if (primitive == long.class)
-            return "java.lang.Long";
-        if (primitive == float.class)
-            return "java.lang.Float";
-        if (primitive == double.class)
-            return "java.lang.Double";
-        if (primitive == void.class)
+        if (primitive == void.class) {
             return "java.lang.Void";
-        throw new IllegalArgumentException("Not a primitive: " + primitive);
+        }
+        String wrapper = PRIMITIVE_TO_WRAPPER.get(primitive.getName());
+        if (wrapper == null) {
+            throw new IllegalArgumentException("Not a primitive: " + primitive);
+        }
+        return wrapper;
     }
 
     /**

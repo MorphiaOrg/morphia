@@ -5,12 +5,9 @@ import java.lang.constant.ClassDesc;
 import java.lang.constant.ConstantDescs;
 import java.lang.constant.MethodTypeDesc;
 import java.lang.reflect.Field;
-import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.TypeVariable;
-import java.lang.reflect.WildcardType;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -70,8 +67,7 @@ public class PropertyModelGenerator extends BaseGenerator {
         this.accessFlags = reflectedField != null ? reflectedField.getModifiers() : field.access();
         this.genericType = reflectedField != null ? reflectedField.getGenericType() : Object.class;
         this.annotationMap = buildAnnotationMap(reflectedField != null ? reflectedField.getAnnotations() : new Annotation[0]);
-        this.typeData = computeTypeData(resolveGenericType(this.genericType, field.name(), annotationSource),
-                GenerationUtils.safeClassLoader(annotationSource));
+        this.typeData = TypeData.get(resolveGenericType(this.genericType, field.name(), annotationSource));
         this.getterName = null;
     }
 
@@ -108,8 +104,7 @@ public class PropertyModelGenerator extends BaseGenerator {
                 this.annotationMap.putIfAbsent(ann.annotationType().getName(), ann);
             }
         }
-        this.typeData = computeTypeData(resolveGenericType(this.genericType, this.propertyName, annotationSource),
-                GenerationUtils.safeClassLoader(annotationSource));
+        this.typeData = TypeData.get(resolveGenericType(this.genericType, this.propertyName, annotationSource));
         this.getterName = method.name();
     }
 
@@ -228,52 +223,6 @@ public class PropertyModelGenerator extends BaseGenerator {
         }
         java.lang.reflect.Type resolved = bindings.get(typeVarName);
         return resolved instanceof Class<?> c ? c : null;
-    }
-
-    /**
-     * Converts a java.lang.reflect.Type into a TypeData instance.
-     */
-    public static TypeData<?> computeTypeData(java.lang.reflect.Type type, ClassLoader classLoader) {
-        if (type instanceof Class<?> c) {
-            return new TypeData<>(c, List.of());
-        } else if (type instanceof ParameterizedType pt) {
-            Class<?> raw = (Class<?>) pt.getRawType();
-            @SuppressWarnings("unchecked")
-            List<TypeData<?>> params = (List<TypeData<?>>) (List<?>) Arrays.stream(pt.getActualTypeArguments())
-                    .map(a -> computeTypeData(a, classLoader))
-                    .toList();
-            return new TypeData<>(raw, params);
-        } else if (type instanceof GenericArrayType gat) {
-            java.lang.reflect.Type comp = gat.getGenericComponentType();
-            Class<?> compClass;
-            if (comp instanceof Class<?> c) {
-                compClass = c;
-            } else if (comp instanceof ParameterizedType pt) {
-                compClass = (Class<?>) pt.getRawType();
-            } else {
-                compClass = Object.class;
-            }
-            try {
-                Class<?> arrayClass = java.lang.reflect.Array.newInstance(compClass, 0).getClass();
-                return new TypeData<>(arrayClass, List.of());
-            } catch (Exception e) {
-                return new TypeData<>(Object.class, List.of());
-            }
-        } else if (type instanceof TypeVariable<?> tv) {
-            // Resolve bounds if possible
-            java.lang.reflect.Type[] bounds = tv.getBounds();
-            if (bounds.length > 0 && bounds[0] != Object.class) {
-                return computeTypeData(bounds[0], classLoader);
-            }
-            return new TypeData<>(Object.class, List.of());
-        } else if (type instanceof WildcardType wt) {
-            java.lang.reflect.Type[] upper = wt.getUpperBounds();
-            if (upper.length > 0) {
-                return computeTypeData(upper[0], classLoader);
-            }
-            return new TypeData<>(Object.class, List.of());
-        }
-        return new TypeData<>(Object.class, List.of());
     }
 
     /**

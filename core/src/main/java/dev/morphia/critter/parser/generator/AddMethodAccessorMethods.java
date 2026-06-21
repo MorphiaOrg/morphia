@@ -3,6 +3,7 @@ package dev.morphia.critter.parser.generator;
 import java.lang.constant.ClassDesc;
 import java.lang.constant.ConstantDescs;
 import java.lang.constant.MethodTypeDesc;
+import java.lang.reflect.Modifier;
 import java.util.List;
 
 import dev.morphia.critter.Critter;
@@ -49,13 +50,7 @@ public class AddMethodAccessorMethods extends AccessorMethods {
                         String getterName = method.name();
                         String setterName = "set%s".formatted(Critter.titleCase(propertyName));
 
-                        boolean hasSetter = false;
-                        for (java.lang.reflect.Method m : entity.getMethods()) {
-                            if (m.getName().equals(setterName) && m.getParameterCount() == 1) {
-                                hasSetter = true;
-                                break;
-                            }
-                        }
+                        boolean hasSetter = findSetter(entity, setterName, methodMtd.returnType()) != null;
 
                         // __readXxx(): returns Object for reference types (keeps non-public types
                         // out of the accessor's constant pool; concrete type widens inside entity)
@@ -106,5 +101,46 @@ public class AddMethodAccessorMethods extends AccessorMethods {
                 }));
 
         return ClassFile.of().transformClass(model, transform);
+    }
+
+    private static java.lang.reflect.Method findSetter(Class<?> start, String name, ClassDesc paramDesc) {
+        Class<?> paramType;
+        try {
+            String paramName = paramDesc.descriptorString();
+            if (paramName.length() == 1) {
+                paramType = switch (paramName) {
+                    case "Z" -> boolean.class;
+                    case "B" -> byte.class;
+                    case "C" -> char.class;
+                    case "S" -> short.class;
+                    case "I" -> int.class;
+                    case "J" -> long.class;
+                    case "F" -> float.class;
+                    case "D" -> double.class;
+                    default -> throw new IllegalArgumentException("Unknown primitive: " + paramName);
+                };
+            } else {
+                String className = paramDesc.packageName().isEmpty()
+                        ? paramDesc.displayName()
+                        : paramDesc.packageName() + "." + paramDesc.displayName();
+                paramType = Class.forName(className, false, start.getClassLoader() != null
+                        ? start.getClassLoader()
+                        : ClassLoader.getSystemClassLoader());
+            }
+        } catch (ClassNotFoundException e) {
+            return null;
+        }
+        Class<?> current = start;
+        while (current != null && current != Object.class) {
+            try {
+                java.lang.reflect.Method m = current.getDeclaredMethod(name, paramType);
+                if (!Modifier.isPrivate(m.getModifiers()) && !Modifier.isStatic(m.getModifiers())) {
+                    return m;
+                }
+            } catch (NoSuchMethodException ignored) {
+            }
+            current = current.getSuperclass();
+        }
+        return null;
     }
 }
