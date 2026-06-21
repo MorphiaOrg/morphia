@@ -120,13 +120,8 @@ public class AddMethodAccessorMethods extends AccessorMethods {
                     default -> throw new IllegalArgumentException("Unknown primitive: " + paramName);
                 };
             } else {
-                String className = paramDesc.packageName().isEmpty()
-                        ? paramDesc.displayName()
-                        : paramDesc.packageName() + "." + paramDesc.displayName();
-                paramType = Class.forName(className, false, start.getClassLoader() != null
-                        ? start.getClassLoader()
-                        : ClassLoader.getSystemClassLoader());
-            }
+                String className = GenerationUtils.typeClassName(paramDesc);
+                paramType = Class.forName(className, false, GenerationUtils.safeClassLoader(start));
         } catch (ClassNotFoundException e) {
             return null;
         }
