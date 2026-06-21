@@ -155,8 +155,7 @@ public class GenerationUtils {
             int len = Array.getLength(value);
             List<AnnotationValue> values = new ArrayList<>();
             for (int i = 0; i < len; i++) {
-                Object elem = Array.get(value, i);
-                values.add(toAnnotationValue(compType, compType, elem));
+                values.add(toAnnotationValue(compType, compType, Array.get(value, i)));
             }
             return AnnotationValue.ofArray(values);
         }
