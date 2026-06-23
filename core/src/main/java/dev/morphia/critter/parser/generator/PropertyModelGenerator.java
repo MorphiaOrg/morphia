@@ -98,7 +98,14 @@ public class PropertyModelGenerator extends BaseGenerator {
         this.annotationMap = buildAnnotationMap(reflectedMethod != null ? reflectedMethod.getAnnotations() : new Annotation[0]);
         // Also collect setter annotations — some annotations (e.g. @Version, @Text) live on the setter, not the getter
         String setterName = "set" + Critter.titleCase(this.propertyName);
-        Method reflectedSetter = findSetterMethod(annotationSource, setterName);
+        Method reflectedSetter = null;
+        if (reflectedMethod != null) {
+            Class<?> paramType = reflectedMethod.getReturnType();
+            ClassDesc paramDesc = paramType.isPrimitive()
+                    ? GenerationUtils.primitiveClassDesc(paramType.getName())
+                    : ClassDesc.of(paramType.getName());
+            reflectedSetter = GenerationUtils.findSetterMethod(annotationSource, setterName, paramDesc);
+        }
         if (reflectedSetter != null) {
             for (Annotation ann : reflectedSetter.getAnnotations()) {
                 this.annotationMap.putIfAbsent(ann.annotationType().getName(), ann);
@@ -132,19 +139,6 @@ public class PropertyModelGenerator extends BaseGenerator {
         while (current != null && current != Object.class) {
             for (Method m : current.getDeclaredMethods()) {
                 if (m.getName().equals(name) && m.getParameterCount() == 0 && !m.isBridge()) {
-                    return m;
-                }
-            }
-            current = current.getSuperclass();
-        }
-        return null;
-    }
-
-    private static Method findSetterMethod(Class<?> cls, String setterName) {
-        Class<?> current = cls;
-        while (current != null && current != Object.class) {
-            for (Method m : current.getDeclaredMethods()) {
-                if (m.getName().equals(setterName) && m.getParameterCount() == 1 && !m.isBridge()) {
                     return m;
                 }
             }

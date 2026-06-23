@@ -7,6 +7,7 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.invoke.VarHandle;
+import java.lang.reflect.Method;
 
 import dev.morphia.critter.Critter;
 import dev.morphia.critter.CritterClassLoader;
@@ -37,6 +38,7 @@ public class VarHandleAccessorGenerator extends BaseGenerator {
     private final boolean isFinalField;
     private final String getterName;
     private final String setterName;
+    private final Method setterMethod;
 
     /**
      * Creates a generator for a field-based property accessor using a {@link java.lang.invoke.VarHandle}.
@@ -53,6 +55,7 @@ public class VarHandleAccessorGenerator extends BaseGenerator {
         this.isFinalField = (field.access() & ClassFile.ACC_FINAL) != 0;
         this.getterName = null;
         this.setterName = null;
+        this.setterMethod = null;
         generatedType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
     }
 
@@ -72,6 +75,7 @@ public class VarHandleAccessorGenerator extends BaseGenerator {
         this.isFinalField = false;
         this.getterName = method.name();
         this.setterName = "set%s".formatted(Critter.titleCase(propertyName));
+        this.setterMethod = findSetterMethod(entity, this.setterName, propertyClassDesc());
         generatedType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
     }
 
@@ -94,12 +98,6 @@ public class VarHandleAccessorGenerator extends BaseGenerator {
         return PRIMITIVE_TO_WRAPPER.getOrDefault(propertyType, propertyType);
     }
 
-    private boolean hasSetter() {
-        if (isFieldBased || setterName == null)
-            return false;
-        return findSetterMethod(entity, setterName, propertyClassDesc()) != null;
-    }
-
     /**
      * Emits the generated property accessor class and returns this generator.
      *
@@ -109,6 +107,14 @@ public class VarHandleAccessorGenerator extends BaseGenerator {
         ClassDesc thisDesc = ClassDesc.of(generatedType);
         ClassDesc accessorDesc = ClassDesc.of("org.bson.codecs.pojo.PropertyAccessor");
         ClassDesc propertyDesc = propertyClassDesc();
+        // Array-typed properties are not supported by VarHandle accessors because the BSON codec
+        // provides Object[] values at runtime which VarHandle rejects with a ClassCastException.
+        // Throwing here causes CritterMapper.tryRuntimeGeneration() to fall back to reflection
+        // for the entity, which handles array types correctly.
+        if (propertyType.startsWith("[")) {
+            throw new IllegalArgumentException(
+                    "Array-typed properties cannot use VarHandle accessors (codec provides Object[]): " + propertyName);
+        }
         ClassDesc wrapperDesc = ClassDesc.of(getWrapperType());
 
         ClassDesc varHandleDesc = ClassDesc.of(VarHandle.class.getName());
@@ -120,7 +126,7 @@ public class VarHandleAccessorGenerator extends BaseGenerator {
         ClassDesc rteDesc = ClassDesc.of(RuntimeException.class.getName());
 
         boolean useVarHandle = isFieldBased;
-        boolean useSetterHandle = !isFieldBased && hasSetter();
+        boolean useSetterHandle = setterMethod != null;
 
         byte[] bytes = ClassFile.of().build(thisDesc, cb -> {
             cb.withVersion(ClassFile.JAVA_17_VERSION, 0);
@@ -211,11 +217,16 @@ public class VarHandleAccessorGenerator extends BaseGenerator {
                         tryBody.putfield(thisDesc, "getterHandle", methodHandleDesc);
 
                         if (useSetterHandle) {
-                            // privateLookup.findVirtual(entityClass, setterName, MethodType.methodType(void.class, paramType))
+                            // privateLookup.findVirtual(entityClass, setterName, MethodType.methodType(returnType, paramType))
+                            // Use the actual setter return type (void for normal setters, non-void for fluent setters)
+                            Class<?> setterReturnType = setterMethod.getReturnType();
+                            ClassDesc setterReturnDesc = setterReturnType == void.class ? ConstantDescs.CD_void
+                                    : setterReturnType.isPrimitive() ? primitiveClassDesc(setterReturnType.getName())
+                                            : ClassDesc.of(setterReturnType.getName());
                             tryBody.aload(privateLookupSlot);
                             tryBody.aload(entityClassSlot);
                             tryBody.ldc(setterName);
-                            tryBody.loadConstant(ConstantDescs.CD_void);
+                            tryBody.loadConstant(setterReturnDesc);
                             emitLoadClass(tryBody, propertyType, propertyDesc, tcclSlot);
                             tryBody.invokestatic(methodTypeDesc2, "methodType",
                                     MethodTypeDesc.of(methodTypeDesc2, ConstantDescs.CD_Class, ConstantDescs.CD_Class));
