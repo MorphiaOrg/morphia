@@ -174,7 +174,7 @@ public class CritterMapper extends AbstractMapper {
         } catch (Exception e) {
             if (fallbackTypes.add(type.getName())) {
                 LOG.warn("Runtime bytecode generation failed for {}; falling back to reflection: {}",
-                        type.getName(), e.getMessage());
+                        type.getName(), e.getMessage(), e);
             }
             return null;
         }

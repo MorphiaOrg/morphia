@@ -16,6 +16,7 @@ import dev.morphia.config.ManualMorphiaConfig;
 import dev.morphia.critter.Critter;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.generator.CritterGenerator;
+import dev.morphia.critter.parser.generator.NestmateAccessorRegistry;
 import dev.morphia.critter.parser.generator.VarHandleAccessorGenerator;
 import dev.morphia.critter.sources.Example;
 import dev.morphia.mapping.PropertyDiscovery;
@@ -92,38 +93,32 @@ public class TestVarHandleAccessor {
     }
 
     @Test
-    public void testAccessorsInstantiatable() throws Exception {
+    public void testAccessorsInstantiatable() {
         for (String field : List.of("name", "age", "salary")) {
-            Class<?> cls = classLoader.loadClass(
-                    Critter.critterPackage(Example.class) + "." + Critter.titleCase(field) + "Accessor");
-            cls.getConstructor().newInstance();
+            String key = Critter.critterPackage(Example.class) + "." + Critter.titleCase(field) + "Accessor";
+            Assertions.assertNotNull(NestmateAccessorRegistry.get(key),
+                    "Nestmate accessor must be registered in registry for field: " + field);
         }
     }
 
     /**
-     * Verifies the code path for {@code final} fields in the runtime-generated VarHandle accessor.
-     * {@code VarHandle.set()} does not support final fields; the generated {@code set()} method
-     * falls back to reflection ({@code Field.setAccessible + Field.set}). In practice the
-     * reflection-based set may also fail in Java 17+ due to JVM final-field restrictions, so this
-     * test verifies that (a) {@code get()} returns the correct initial value, and (b) the
-     * reflection fallback code path IS taken (the RuntimeException message contains the field name).
+     * Verifies the code path for {@code final} fields in the runtime-generated nestmate accessor.
+     * The JVM does not allow {@code putfield} to a final field outside {@code <init>}; the generated
+     * {@code set()} method falls back to reflection ({@code Field.setAccessible + Field.set}).
+     * In practice the reflection-based set may also fail in Java 17+ due to JVM final-field
+     * restrictions, so this test verifies that (a) {@code get()} returns the correct initial value,
+     * and (b) the reflection fallback code path IS taken (the RuntimeException message contains the
+     * field name).
      */
     @Test
     public void testFinalFieldReflectionFallback() throws Exception {
         CritterClassLoader loader = new CritterClassLoader();
         new CritterGenerator(defaultMapper()).generate(FinalFieldEntity.class, loader, true);
 
-        // Static check: the generated accessor must reference java/lang/reflect/Field
-        String accessorName = Critter.critterPackage(FinalFieldEntity.class) + "." + Critter.titleCase("label") + "Accessor";
-        byte[] accessorBytes = loader.getTypeDefinitions().get(accessorName);
-        Assertions.assertNotNull(accessorBytes, "LabelAccessor bytecode should be registered");
-        String bytecodeStr = new String(accessorBytes, StandardCharsets.ISO_8859_1);
-        Assertions.assertTrue(bytecodeStr.contains("java/lang/reflect/Field"),
-                "Generated LabelAccessor should reference java/lang/reflect/Field for the final-field fallback");
-
         FinalFieldEntity entity = new FinalFieldEntity();
         PropertyAccessor<String> accessor = loadAccessor(loader, FinalFieldEntity.class, "label");
 
+        Assertions.assertNotNull(accessor, "LabelAccessor must be registered in nestmate registry");
         Assertions.assertEquals("original", accessor.get(entity),
                 "get() must return the correct final field value");
         try {
@@ -145,7 +140,7 @@ public class TestVarHandleAccessor {
      * field.
      *
      * After the fix: the static setter is filtered by PropertyFinder, the property falls back to
-     * field-based VarHandle discovery, and set() works correctly.
+     * field-based nestmate accessor, and set() works correctly.
      */
     @Test
     public void testStaticSetterMethodIsNotTreatedAsPropertySetter() throws Exception {
@@ -154,16 +149,14 @@ public class TestVarHandleAccessor {
         CritterClassLoader loader = new CritterClassLoader();
         new CritterGenerator(methodsMapper).generate(StaticSetterEntity.class, loader, true);
 
-        String accessorName = Critter.critterPackage(StaticSetterEntity.class) + ".ValueAccessor";
         @SuppressWarnings("unchecked")
-        PropertyAccessor<Object> accessor = (PropertyAccessor<Object>) loader
-                .loadClass(accessorName).getConstructor().newInstance();
+        PropertyAccessor<Object> accessor = (PropertyAccessor<Object>) loadAccessor(loader, StaticSetterEntity.class, "value");
 
         StaticSetterEntity entity = new StaticSetterEntity();
         Assertions.assertNull(accessor.get(entity), "initial value should be null");
         // Bug: set() threw UnsupportedOperationException because the static setter was found by
         // PropertyFinder, making the property method-based, then hasSetter() rejected it.
-        // Fix: PropertyFinder ignores static setters; property falls back to field VarHandle.
+        // Fix: PropertyFinder ignores static setters; property falls back to field nestmate accessor.
         accessor.set(entity, "hello");
         Assertions.assertEquals("hello", accessor.get(entity), "set() must write through to the backing field");
     }
@@ -263,16 +256,14 @@ public class TestVarHandleAccessor {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> PropertyAccessor<T> loadAccessor(Class<?> entityType, String fieldName) throws Exception {
+    private <T> PropertyAccessor<T> loadAccessor(Class<?> entityType, String fieldName) {
         return loadAccessor(classLoader, entityType, fieldName);
     }
 
     @SuppressWarnings("unchecked")
-    private <T> PropertyAccessor<T> loadAccessor(CritterClassLoader loader, Class<?> entityType, String fieldName)
-            throws Exception {
-        Class<PropertyAccessor<T>> cls = (Class<PropertyAccessor<T>>) loader.loadClass(
-                Critter.critterPackage(entityType) + "." + Critter.titleCase(fieldName) + "Accessor");
-        return cls.getConstructor().newInstance();
+    private <T> PropertyAccessor<T> loadAccessor(CritterClassLoader loader, Class<?> entityType, String fieldName) {
+        String key = Critter.critterPackage(entityType) + "." + Critter.titleCase(fieldName) + "Accessor";
+        return (PropertyAccessor<T>) NestmateAccessorRegistry.get(key);
     }
 
     /**

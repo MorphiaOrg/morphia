@@ -13,5 +13,10 @@ public record FieldInfo(
         String desc,
         String signature,
         int access,
-        List<Annotation> visibleAnnotations) {
+        List<Annotation> visibleAnnotations,
+        Class<?> declaringClass) {
+
+    public FieldInfo(String name, String desc, String signature, int access, List<Annotation> visibleAnnotations) {
+        this(name, desc, signature, access, visibleAnnotations, null);
+    }
 }

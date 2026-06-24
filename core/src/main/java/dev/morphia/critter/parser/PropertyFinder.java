@@ -73,11 +73,11 @@ public class PropertyFinder {
             }
             for (FieldInfo field : fields) {
                 if (runtimeMode) {
-                    critterGenerator.varHandleAccessor(targetType, classLoader, field);
+                    critterGenerator.nestmateAccessor(targetType, field);
                 } else {
                     critterGenerator.propertyAccessor(targetType, classLoader, field);
                 }
-                models.add(critterGenerator.propertyModelGenerator(targetType, standinType, classLoader, field));
+                models.add(critterGenerator.propertyModelGenerator(targetType, standinType, classLoader, field, runtimeMode));
             }
         } else {
             if (!runtimeMode) {
@@ -85,11 +85,11 @@ public class PropertyFinder {
             }
             for (MethodInfo method : methods) {
                 if (runtimeMode) {
-                    critterGenerator.varHandleAccessor(targetType, classLoader, method);
+                    critterGenerator.nestmateAccessor(targetType, method);
                 } else {
                     critterGenerator.propertyAccessor(targetType, classLoader, method);
                 }
-                models.add(critterGenerator.propertyModelGenerator(targetType, standinType, classLoader, method));
+                models.add(critterGenerator.propertyModelGenerator(targetType, standinType, classLoader, method, runtimeMode));
             }
         }
         return models;
@@ -111,7 +111,8 @@ public class PropertyFinder {
             ClassModel model = currentModel != null ? currentModel : readClassModel(current);
             if (model == null)
                 break;
-            for (FieldInfo field : discoverFields(model)) {
+            final Class<?> declaringClass = current;
+            for (FieldInfo field : discoverFields(model, declaringClass)) {
                 if (seen.putIfAbsent(field.name(), Boolean.TRUE) == null) {
                     fields.add(field);
                 }
@@ -135,14 +136,15 @@ public class PropertyFinder {
         }
     }
 
-    private List<FieldInfo> discoverFields(ClassModel classModel) {
+    private List<FieldInfo> discoverFields(ClassModel classModel, Class<?> declaringClass) {
         List<String> transientDescs = CritterParser.INSTANCE.transientAnnotations();
         List<FieldInfo> result = new ArrayList<>();
         for (FieldModel field : classModel.fields()) {
             List<Annotation> visible = visibleAnnotations(field);
             boolean isTransient = (field.flags().flagsMask() & ClassFile.ACC_TRANSIENT) != 0
                     || visible.stream().map(a -> a.classSymbol().descriptorString()).anyMatch(transientDescs::contains);
-            if (!isTransient && isPropertyAnnotated(visible, true)) {
+            boolean isStatic = (field.flags().flagsMask() & ClassFile.ACC_STATIC) != 0;
+            if (!isTransient && !isStatic && isPropertyAnnotated(visible, true)) {
                 String sig = field.findAttribute(signature())
                         .map(a -> a.signature().stringValue())
                         .orElse(null);
@@ -151,7 +153,8 @@ public class PropertyFinder {
                         field.fieldType().stringValue(),
                         sig,
                         field.flags().flagsMask(),
-                        visible));
+                        visible,
+                        declaringClass));
             }
         }
         return result;

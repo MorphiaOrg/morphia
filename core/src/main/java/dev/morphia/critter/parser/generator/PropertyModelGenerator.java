@@ -43,6 +43,7 @@ public class PropertyModelGenerator extends BaseGenerator {
     private final String propertyName;
     private final String accessorType;
     private final boolean isFieldBased;
+    private final boolean runtimeMode;
     private final int accessFlags;
     private final java.lang.reflect.Type genericType;
     private final Map<String, Annotation> annotationMap;
@@ -53,12 +54,14 @@ public class PropertyModelGenerator extends BaseGenerator {
      * Creates a generator for a field-based property.
      *
      * @param annotationSource the class to reflect on for field annotations (may differ from entity for @ExternalEntity stand-ins)
+     * @param runtimeMode      {@code true} to use the nestmate accessor registry instead of generating {@code new} bytecode
      */
     public PropertyModelGenerator(MorphiaConfig config, Class<?> entity, Class<?> annotationSource,
-            CritterClassLoader critterClassLoader, FieldInfo field) {
+            CritterClassLoader critterClassLoader, FieldInfo field, boolean runtimeMode) {
         super(entity, critterClassLoader);
         this.config = config;
         this.isFieldBased = true;
+        this.runtimeMode = runtimeMode;
         this.propertyName = field.name();
         generatedType = "%s.%sModel".formatted(baseName, Critter.titleCase(propertyName));
         accessorType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
@@ -74,20 +77,30 @@ public class PropertyModelGenerator extends BaseGenerator {
     /**
      * Creates a generator for a field-based property where the entity class is also the annotation source.
      */
+    public PropertyModelGenerator(MorphiaConfig config, Class<?> entity, Class<?> annotationSource,
+            CritterClassLoader critterClassLoader, FieldInfo field) {
+        this(config, entity, annotationSource, critterClassLoader, field, false);
+    }
+
+    /**
+     * Creates a generator for a field-based property where the entity class is also the annotation source.
+     */
     public PropertyModelGenerator(MorphiaConfig config, Class<?> entity, CritterClassLoader critterClassLoader, FieldInfo field) {
-        this(config, entity, entity, critterClassLoader, field);
+        this(config, entity, entity, critterClassLoader, field, false);
     }
 
     /**
      * Creates a generator for a method-based (getter) property.
      *
      * @param annotationSource the class to reflect on for method annotations (may differ from entity for @ExternalEntity stand-ins)
+     * @param runtimeMode      {@code true} to use the nestmate accessor registry instead of generating {@code new} bytecode
      */
     public PropertyModelGenerator(MorphiaConfig config, Class<?> entity, Class<?> annotationSource,
-            CritterClassLoader critterClassLoader, MethodInfo method) {
+            CritterClassLoader critterClassLoader, MethodInfo method, boolean runtimeMode) {
         super(entity, critterClassLoader);
         this.config = config;
         this.isFieldBased = false;
+        this.runtimeMode = runtimeMode;
         this.propertyName = ExtensionFunctions.getterToPropertyName(method, entity);
         generatedType = "%s.%sModel".formatted(baseName, Critter.titleCase(propertyName));
         accessorType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
@@ -116,10 +129,20 @@ public class PropertyModelGenerator extends BaseGenerator {
     }
 
     /**
+     * Creates a generator for a method-based (getter) property.
+     *
+     * @param annotationSource the class to reflect on for method annotations (may differ from entity for @ExternalEntity stand-ins)
+     */
+    public PropertyModelGenerator(MorphiaConfig config, Class<?> entity, Class<?> annotationSource,
+            CritterClassLoader critterClassLoader, MethodInfo method) {
+        this(config, entity, annotationSource, critterClassLoader, method, false);
+    }
+
+    /**
      * Creates a generator for a method-based property where the entity class is also the annotation source.
      */
     public PropertyModelGenerator(MorphiaConfig config, Class<?> entity, CritterClassLoader critterClassLoader, MethodInfo method) {
-        this(config, entity, entity, critterClassLoader, method);
+        this(config, entity, entity, critterClassLoader, method, false);
     }
 
     private static Field findField(Class<?> cls, String name) {
@@ -322,6 +345,10 @@ public class PropertyModelGenerator extends BaseGenerator {
                 .map(GenerationUtils::toClassfileAnnotation)
                 .toList();
 
+        // For runtime mode, the accessor is a hidden nestmate class retrieved from the registry.
+        // For AOT mode, the accessor is a normal class registered in CritterClassLoader by name.
+        ClassDesc accessorFieldDesc = runtimeMode ? accessorDesc : accessorImplDesc;
+
         byte[] bytes = ClassFile.of().build(thisDesc, cb -> {
             cb.withVersion(ClassFile.JAVA_17_VERSION, 0);
             cb.withFlags(ClassFile.ACC_PUBLIC | ClassFile.ACC_SUPER);
@@ -331,7 +358,7 @@ public class PropertyModelGenerator extends BaseGenerator {
             }
 
             cb.withField("entityModel", entityModelDesc, ClassFile.ACC_PRIVATE | ClassFile.ACC_FINAL);
-            cb.withField("accessor", accessorImplDesc, ClassFile.ACC_PRIVATE | ClassFile.ACC_FINAL);
+            cb.withField("accessor", accessorFieldDesc, ClassFile.ACC_PRIVATE | ClassFile.ACC_FINAL);
 
             // Constructor: (EntityModel) -> void
             cb.withMethodBody("<init>", MethodTypeDesc.of(ConstantDescs.CD_void, entityModelDesc),
@@ -345,10 +372,19 @@ public class PropertyModelGenerator extends BaseGenerator {
                         cod.putfield(thisDesc, "entityModel", entityModelDesc);
 
                         cod.aload(0);
-                        cod.new_(accessorImplDesc);
-                        cod.dup();
-                        cod.invokespecial(accessorImplDesc, "<init>", MethodTypeDesc.ofDescriptor("()V"));
-                        cod.putfield(thisDesc, "accessor", accessorImplDesc);
+                        if (runtimeMode) {
+                            // Retrieve pre-instantiated nestmate accessor from registry
+                            ClassDesc registryDesc = ClassDesc.of(NestmateAccessorRegistry.class.getName());
+                            cod.ldc(accessorType);
+                            cod.invokestatic(registryDesc, "get",
+                                    MethodTypeDesc.of(accessorDesc, ConstantDescs.CD_String));
+                            cod.putfield(thisDesc, "accessor", accessorFieldDesc);
+                        } else {
+                            cod.new_(accessorImplDesc);
+                            cod.dup();
+                            cod.invokespecial(accessorImplDesc, "<init>", MethodTypeDesc.ofDescriptor("()V"));
+                            cod.putfield(thisDesc, "accessor", accessorFieldDesc);
+                        }
 
                         // Morphia annotations: builder with hardcoded values — no reflection
                         for (Annotation ann : morphiaAnnotations) {
@@ -392,7 +428,7 @@ public class PropertyModelGenerator extends BaseGenerator {
             cb.withMethodBody("getAccessor", MethodTypeDesc.of(accessorDesc),
                     ClassFile.ACC_PUBLIC, cod -> {
                         cod.aload(0);
-                        cod.getfield(thisDesc, "accessor", accessorImplDesc);
+                        cod.getfield(thisDesc, "accessor", accessorFieldDesc);
                         cod.areturn();
                     });
 
