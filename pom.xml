@@ -60,7 +60,7 @@
         <json.assert.version>1.5.3</json.assert.version>
         <javapoet.version>1.13.0</javapoet.version>
         <kotlinpoet.version>1.19.1</kotlinpoet.version>
-        <logback.version>1.5.34</logback.version>
+        <logback.version>1.5.36</logback.version>
         <ksp.version>2.3.9</ksp.version>
         <maven.version>4.0.0-rc-5</maven.version>
         <morphia.minor.version>3.0</morphia.minor.version>
@@ -356,12 +356,12 @@
             <dependency>
                 <groupId>org.jboss.forge.roaster</groupId>
                 <artifactId>roaster-api</artifactId>
-                <version>2.31.0.Final</version>
+                <version>2.31.1.Final</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.forge.roaster</groupId>
                 <artifactId>roaster-jdt</artifactId>
-                <version>2.31.0.Final</version>
+                <version>2.31.1.Final</version>
                 <scope>runtime</scope>
             </dependency>
             <dependency>
