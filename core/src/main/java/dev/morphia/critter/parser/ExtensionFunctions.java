@@ -3,11 +3,8 @@ package dev.morphia.critter.parser;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.MethodNode;
-
 /**
- * Utility methods for string and ASM type transformations used during Critter code generation.
+ * Utility methods for string and type transformations used during Critter code generation.
  */
 public class ExtensionFunctions {
 
@@ -19,9 +16,6 @@ public class ExtensionFunctions {
 
     /**
      * Converts a string to title case by capitalizing the first character.
-     *
-     * @param s the input string
-     * @return the string with the first character upper-cased, or the original string if null or empty
      */
     public static String titleCase(String s) {
         if (s == null || s.isEmpty())
@@ -31,9 +25,6 @@ public class ExtensionFunctions {
 
     /**
      * Converts a string to method (camel) case by lower-casing the first character.
-     *
-     * @param s the input string
-     * @return the string with the first character lower-cased, or the original string if null or empty
      */
     public static String methodCase(String s) {
         if (s == null || s.isEmpty())
@@ -43,9 +34,6 @@ public class ExtensionFunctions {
 
     /**
      * Converts a camelCase string to snake_case.
-     *
-     * @param s the camelCase input string
-     * @return the snake_case equivalent
      */
     public static String snakeCase(String s) {
         return SNAKE_CASE_REGEX.matcher(s).replaceAll(m -> "_" + m.group().toLowerCase(Locale.getDefault()));
@@ -57,16 +45,9 @@ public class ExtensionFunctions {
      * - "isActive" -> "active"
      * - "getX" -> "x"
      * - "name()" with matching field "name" -> "name"
-     *
-     * @param method the method node
-     * @param entity the class to check for matching fields when method name doesn't follow standard
-     *               getter naming
-     * @return the property name derived from the getter method
      */
-    public static String getterToPropertyName(MethodNode method, Class<?> entity) {
-        String methodName = method.name;
-
-        // Standard getter patterns
+    public static String getterToPropertyName(MethodInfo method, Class<?> entity) {
+        String methodName = method.name();
         if (methodName.startsWith("get") && methodName.length() > 3) {
             return methodCase(methodName.substring(3));
         }
@@ -74,12 +55,12 @@ public class ExtensionFunctions {
             return methodCase(methodName.substring(2));
         }
 
-        // Check if method name matches a field: no parameters and return type matches field type
-        Type[] argTypes = Type.getArgumentTypes(method.desc);
-        Type returnType = Type.getReturnType(method.desc);
-        if (argTypes.length == 0) {
+        // Parse desc to find argument types and return type
+        java.lang.constant.MethodTypeDesc mtd = java.lang.constant.MethodTypeDesc.ofDescriptor(method.desc());
+        if (mtd.parameterCount() == 0) {
+            String returnDesc = mtd.returnType().descriptorString();
             for (java.lang.reflect.Field field : entity.getDeclaredFields()) {
-                if (field.getName().equals(methodName) && Type.getType(field.getType()).equals(returnType)) {
+                if (field.getName().equals(methodName) && field.getType().descriptorString().equals(returnDesc)) {
                     return methodName;
                 }
             }

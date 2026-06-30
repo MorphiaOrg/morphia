@@ -275,6 +275,9 @@ public class PropertyModel {
         Object target = instance;
         if (target instanceof MorphiaProxy) {
             target = ((MorphiaProxy) instance).unwrap();
+            if (target == null) {
+                return null;
+            }
         }
         return getAccessor().get(target);
     }

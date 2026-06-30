@@ -54,13 +54,13 @@
         <driver.minor.version>5.6</driver.minor.version>
         <driver-javadoc.link>https://mongodb.github.io/mongo-java-driver/${driver.minor.version}/apidocs</driver-javadoc.link>
         <morphia-javadoc.link>https://morphia.dev/morphia/${morphia.minor.version}/javadoc</morphia-javadoc.link>
-        <gizmo.version>1.10.1</gizmo.version>
+        <classfile.backport.version>25.1</classfile.backport.version>
         <jackson.version>2.22.0</jackson.version>
         <jackson-annotations.version>2.22</jackson-annotations.version>
         <json.assert.version>1.5.3</json.assert.version>
         <javapoet.version>1.13.0</javapoet.version>
         <kotlinpoet.version>1.19.1</kotlinpoet.version>
-        <logback.version>1.5.34</logback.version>
+        <logback.version>1.5.36</logback.version>
         <ksp.version>2.3.9</ksp.version>
         <maven.version>4.0.0-rc-5</maven.version>
         <morphia.minor.version>3.0</morphia.minor.version>
@@ -356,12 +356,12 @@
             <dependency>
                 <groupId>org.jboss.forge.roaster</groupId>
                 <artifactId>roaster-api</artifactId>
-                <version>2.31.0.Final</version>
+                <version>2.31.1.Final</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.forge.roaster</groupId>
                 <artifactId>roaster-jdt</artifactId>
-                <version>2.31.0.Final</version>
+                <version>2.31.1.Final</version>
                 <scope>runtime</scope>
             </dependency>
             <dependency>
@@ -371,9 +371,9 @@
                 <scope>compile</scope>
             </dependency>
             <dependency>
-                <groupId>io.quarkus.gizmo</groupId>
-                <artifactId>gizmo</artifactId>
-                <version>${gizmo.version}</version>
+                <groupId>io.github.dmlloyd</groupId>
+                <artifactId>jdk-classfile-backport</artifactId>
+                <version>${classfile.backport.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.bytebuddy</groupId>

@@ -9,8 +9,8 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.critter.CritterClassLoader;
-import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator;
-import dev.morphia.critter.parser.gizmo.GizmoEntityModelGenerator;
+import dev.morphia.critter.parser.generator.CritterGenerator;
+import dev.morphia.critter.parser.generator.EntityModelGenerator;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
@@ -23,7 +23,7 @@ import static dev.morphia.critter.Critter.critterPackage;
  * Hybrid mapper using three-tier entity model discovery:
  * <ol>
  * <li>Pre-generated models from the classpath (critter-maven AOT)</li>
- * <li>Runtime Gizmo+VarHandle generation</li>
+ * <li>Runtime bytecode+VarHandle generation</li>
  * <li>Reflection-based fallback</li>
  * </ol>
  *
@@ -35,7 +35,7 @@ public class CritterMapper extends AbstractMapper {
     private static final Logger LOG = LoggerFactory.getLogger(CritterMapper.class);
 
     private final CritterClassLoader critterClassLoader;
-    private final CritterGizmoGenerator gizmoGenerator;
+    private final CritterGenerator generator;
     private final Set<String> fallbackTypes;
 
     /**
@@ -62,7 +62,7 @@ public class CritterMapper extends AbstractMapper {
     public CritterMapper(MorphiaConfig config, ClassLoader classLoader) {
         super(config, classLoader);
         this.critterClassLoader = classLoader instanceof CritterClassLoader ccl ? ccl : new CritterClassLoader(classLoader);
-        this.gizmoGenerator = new CritterGizmoGenerator(this);
+        this.generator = new CritterGenerator(this);
         this.fallbackTypes = ConcurrentHashMap.newKeySet();
 
     }
@@ -88,7 +88,7 @@ public class CritterMapper extends AbstractMapper {
     public CritterMapper(CritterMapper other) {
         super(other.config, other.classLoader);
         this.critterClassLoader = other.critterClassLoader;
-        this.gizmoGenerator = new CritterGizmoGenerator(this);
+        this.generator = new CritterGenerator(this);
         this.fallbackTypes = other.fallbackTypes;
         this.listeners.addAll(other.listeners);
         // Create independent copies of all entity models so that each mapper instance
@@ -161,20 +161,20 @@ public class CritterMapper extends AbstractMapper {
     }
 
     /**
-     * Tier 2: Generate an entity model at runtime using Gizmo + VarHandle accessors.
+     * Tier 2: Generate an entity model at runtime using VarHandle accessors.
      * On failure, logs once per type and returns null so the caller falls through to reflection.
      */
     @Nullable
     private EntityModel tryRuntimeGeneration(Class<?> type) {
         try {
-            GizmoEntityModelGenerator generator = gizmoGenerator.generate(type, critterClassLoader, true);
+            EntityModelGenerator generator = this.generator.generate(type, critterClassLoader, true);
             Class<?> modelClass = critterClassLoader.loadClass(generator.getGeneratedType());
             Constructor<?> ctor = modelClass.getConstructor(Mapper.class);
             return (EntityModel) ctor.newInstance(this);
         } catch (Exception e) {
             if (fallbackTypes.add(type.getName())) {
                 LOG.warn("Runtime bytecode generation failed for {}; falling back to reflection: {}",
-                        type.getName(), e.getMessage());
+                        type.getName(), e.getMessage(), e);
             }
             return null;
         }

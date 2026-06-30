@@ -1,259 +1,282 @@
 package dev.morphia.critter.parser;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import dev.morphia.critter.CritterClassLoader;
-import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator;
-import dev.morphia.critter.parser.gizmo.PropertyModelGenerator;
+import dev.morphia.critter.parser.generator.CritterGenerator;
+import dev.morphia.critter.parser.generator.GenerationUtils;
+import dev.morphia.critter.parser.generator.PropertyModelGenerator;
 import dev.morphia.critter.parser.java.CritterParser;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.PropertyDiscovery;
 
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.AnnotationNode;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldNode;
-import org.objectweb.asm.tree.MethodNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.github.dmlloyd.classfile.Annotation;
+import io.github.dmlloyd.classfile.ClassFile;
+import io.github.dmlloyd.classfile.ClassModel;
+import io.github.dmlloyd.classfile.FieldModel;
+import io.github.dmlloyd.classfile.MethodModel;
+import io.github.dmlloyd.classfile.attribute.RuntimeVisibleAnnotationsAttribute;
+
+import static io.github.dmlloyd.classfile.Attributes.runtimeVisibleAnnotations;
+import static io.github.dmlloyd.classfile.Attributes.signature;
+
 /**
- * Discovers entity properties (fields or getter methods) from a parsed ASM {@link ClassNode}
+ * Discovers entity properties (fields or getter methods) from a parsed class model
  * and produces the corresponding {@link PropertyModelGenerator} instances.
  */
 public class PropertyFinder {
     private static final Logger LOG = LoggerFactory.getLogger(PropertyFinder.class);
 
     private final Map<Class<?>, Object> providerMap;
+    private final List<String> annotationDescriptorKeys;
     private final CritterClassLoader classLoader;
     private final boolean runtimeMode;
-    private final CritterGizmoGenerator critterGizmoGenerator;
+    private final CritterGenerator critterGenerator;
     private final PropertyDiscovery propertyDiscovery;
 
-    /**
-     * Creates a new PropertyFinder.
-     *
-     * @param mapper      the Morphia mapper
-     * @param classLoader the class loader for registering generated accessor classes
-     * @param runtimeMode {@code true} to generate VarHandle-based accessors instead of synthetic method accessors
-     */
     public PropertyFinder(Mapper mapper, CritterClassLoader classLoader, boolean runtimeMode) {
         this.providerMap = new LinkedHashMap<>();
         for (var provider : mapper.getConfig().propertyAnnotationProviders()) {
             providerMap.put(provider.provides(), provider);
         }
+        this.annotationDescriptorKeys = providerMap.keySet().stream()
+                .map(type -> "L" + type.getName().replace('.', '/') + ";")
+                .toList();
         this.classLoader = classLoader;
         this.runtimeMode = runtimeMode;
-        this.critterGizmoGenerator = new CritterGizmoGenerator(mapper);
+        this.critterGenerator = new CritterGenerator(mapper);
         this.propertyDiscovery = mapper.getConfig().propertyDiscovery();
     }
 
+    public List<PropertyModelGenerator> find(Class<?> entityType, ClassModel classModel) {
+        return find(entityType, classModel, entityType);
+    }
+
     /**
-     * Discovers the properties for the given entity and returns a generator for each one.
-     *
-     * @param entityType the entity class being processed
-     * @param classNode  the ASM class node for the entity
-     * @return a list of property model generators, one per discovered property
+     * Discovers properties from {@code standinType}'s classfile but generates accessor and model
+     * bytecode targeting {@code targetType}. Used for {@code @ExternalEntity} stand-ins where the
+     * stand-in carries Morphia annotations but the target is the type actually persisted.
      */
-    public List<PropertyModelGenerator> find(Class<?> entityType, ClassNode classNode) {
+    public List<PropertyModelGenerator> find(Class<?> standinType, ClassModel classModel, Class<?> targetType) {
         List<PropertyModelGenerator> models = new ArrayList<>();
-        List<MethodNode> methods = discoverPropertyMethods(entityType, classNode);
+        List<MethodInfo> methods = discoverPropertyMethods(standinType, classModel);
         if (methods.isEmpty()) {
-            List<FieldNode> fields = discoverAllFields(entityType, classNode);
+            List<FieldInfo> fields = discoverAllFields(standinType, classModel);
             if (!runtimeMode) {
-                classLoader.register(entityType.getName(), critterGizmoGenerator.fieldAccessors(entityType, fields));
+                classLoader.register(targetType.getName(), critterGenerator.fieldAccessors(targetType, fields));
             }
-            for (FieldNode field : fields) {
+            for (FieldInfo field : fields) {
                 if (runtimeMode) {
-                    critterGizmoGenerator.varHandleAccessor(entityType, classLoader, field);
+                    critterGenerator.nestmateAccessor(targetType, field);
                 } else {
-                    critterGizmoGenerator.propertyAccessor(entityType, classLoader, field);
+                    critterGenerator.propertyAccessor(targetType, classLoader, field);
                 }
-                models.add(critterGizmoGenerator.propertyModelGenerator(entityType, classLoader, field));
+                models.add(critterGenerator.propertyModelGenerator(targetType, standinType, classLoader, field, runtimeMode));
             }
         } else {
             if (!runtimeMode) {
-                classLoader.register(entityType.getName(), critterGizmoGenerator.methodAccessors(entityType, methods));
+                classLoader.register(targetType.getName(), critterGenerator.methodAccessors(targetType, methods));
             }
-            for (MethodNode method : methods) {
+            for (MethodInfo method : methods) {
                 if (runtimeMode) {
-                    critterGizmoGenerator.varHandleAccessor(entityType, classLoader, method);
+                    critterGenerator.nestmateAccessor(targetType, method);
                 } else {
-                    critterGizmoGenerator.propertyAccessor(entityType, classLoader, method);
+                    critterGenerator.propertyAccessor(targetType, classLoader, method);
                 }
-                models.add(critterGizmoGenerator.propertyModelGenerator(entityType, classLoader, method));
+                models.add(critterGenerator.propertyModelGenerator(targetType, standinType, classLoader, method, runtimeMode));
             }
         }
         return models;
     }
 
-    private boolean isPropertyAnnotated(List<AnnotationNode> annotationNodes, boolean allowUnannotated) {
-        List<AnnotationNode> annotations = annotationNodes != null ? annotationNodes : List.of();
-        List<String> keys = providerMap.keySet().stream()
-                .map(type -> Type.getType(type).getDescriptor())
-                .toList();
-        return allowUnannotated || annotations.stream().anyMatch(a -> keys.contains(a.desc));
+    private boolean isPropertyAnnotated(List<Annotation> annotations, boolean allowUnannotated) {
+        List<Annotation> anns = annotations != null ? annotations : List.of();
+        return allowUnannotated || anns.stream()
+                .anyMatch(a -> annotationDescriptorKeys.contains(a.classSymbol().descriptorString()));
     }
 
-    private List<FieldNode> discoverAllFields(Class<?> entityType, ClassNode classNode) {
-        List<FieldNode> fields = new ArrayList<>();
+    private List<FieldInfo> discoverAllFields(Class<?> entityType, ClassModel classModel) {
+        List<FieldInfo> fields = new ArrayList<>();
         Map<String, Boolean> seen = new LinkedHashMap<>();
         Class<?> current = entityType;
-        ClassNode currentNode = classNode;
+        ClassModel currentModel = classModel;
 
         while (current != null && current != Object.class) {
-            ClassNode node = currentNode != null ? currentNode : readClassNode(current);
-            if (node == null)
+            ClassModel model = currentModel != null ? currentModel : readClassModel(current);
+            if (model == null)
                 break;
-            for (FieldNode field : discoverFields(node)) {
-                if (seen.putIfAbsent(field.name, Boolean.TRUE) == null) {
+            final Class<?> declaringClass = current;
+            for (FieldInfo field : discoverFields(model, declaringClass)) {
+                if (seen.putIfAbsent(field.name(), Boolean.TRUE) == null) {
                     fields.add(field);
                 }
             }
             current = current.getSuperclass();
-            currentNode = null;
+            currentModel = null;
         }
         return fields;
     }
 
-    private ClassNode readClassNode(Class<?> type) {
-        String resourceName = "%s.class".formatted(type.getName().replace('.', '/'));
-        InputStream inputStream = type.getClassLoader().getResourceAsStream(resourceName);
-        if (inputStream == null) {
-            LOG.debug("Bytecode resource not found for {}; hierarchy traversal stops here", type.getName());
-            return null;
-        }
-        ClassNode node = new ClassNode();
+    private ClassModel readClassModel(Class<?> type) {
         try {
-            new ClassReader(inputStream).accept(node, 0);
-        } catch (IOException e) {
-            LOG.warn("Failed to read bytecode for {}: {}", type.getName(), e.getMessage());
+            ClassModel model = GenerationUtils.readClassModel(type);
+            if (model == null) {
+                LOG.debug("Bytecode resource not found for {}; hierarchy traversal stops here", type.getName());
+            }
+            return model;
+        } catch (RuntimeException e) {
+            LOG.warn("Failed to read bytecode for {}; hierarchy traversal stops here: {}", type.getName(), e.getMessage());
             return null;
         }
-        return node;
     }
 
-    private List<FieldNode> discoverFields(ClassNode classNode) {
+    private List<FieldInfo> discoverFields(ClassModel classModel, Class<?> declaringClass) {
         List<String> transientDescs = CritterParser.INSTANCE.transientAnnotations();
-        List<FieldNode> result = new ArrayList<>();
-        for (FieldNode field : classNode.fields) {
-            List<AnnotationNode> visible = field.visibleAnnotations != null ? field.visibleAnnotations : List.of();
-            boolean isTransient = (field.access & org.objectweb.asm.Opcodes.ACC_TRANSIENT) != 0
-                    || visible.stream().map(a -> a.desc).anyMatch(transientDescs::contains);
-            if (!isTransient && isPropertyAnnotated(field.visibleAnnotations, true)) {
-                result.add(field);
+        List<FieldInfo> result = new ArrayList<>();
+        for (FieldModel field : classModel.fields()) {
+            List<Annotation> visible = visibleAnnotations(field);
+            boolean isTransient = (field.flags().flagsMask() & ClassFile.ACC_TRANSIENT) != 0
+                    || visible.stream().map(a -> a.classSymbol().descriptorString()).anyMatch(transientDescs::contains);
+            boolean isStatic = (field.flags().flagsMask() & ClassFile.ACC_STATIC) != 0;
+            if (!isTransient && !isStatic && isPropertyAnnotated(visible, true)) {
+                String sig = field.findAttribute(signature())
+                        .map(a -> a.signature().stringValue())
+                        .orElse(null);
+                result.add(new FieldInfo(
+                        field.fieldName().stringValue(),
+                        field.fieldType().stringValue(),
+                        sig,
+                        field.flags().flagsMask(),
+                        visible,
+                        declaringClass));
             }
         }
         return result;
     }
 
-    private List<MethodNode> discoverPropertyMethods(Class<?> entityType, ClassNode classNode) {
-        List<MethodNode> result = new ArrayList<>();
+    private List<MethodInfo> discoverPropertyMethods(Class<?> entityType, ClassModel classModel) {
+        List<MethodInfo> result = new ArrayList<>();
         Map<String, Boolean> seen = new LinkedHashMap<>();
 
         Class<?> current = entityType;
-        ClassNode currentNode = classNode;
+        ClassModel currentModel = classModel;
 
         while (current != null && current != Object.class) {
-            ClassNode node = currentNode != null ? currentNode : readClassNode(current);
-            if (node == null)
+            ClassModel model = currentModel != null ? currentModel : readClassModel(current);
+            if (model == null)
                 break;
 
             boolean isSuperclass = current != entityType;
-            for (MethodNode method : node.methods) {
+            for (MethodModel method : model.methods()) {
                 if (!isGetter(method))
                     continue;
-                // Private methods are not inherited and cannot be invoked from a subclass context
-                if (isSuperclass && (method.access & Opcodes.ACC_PRIVATE) != 0)
+                if (isSuperclass && (method.flags().flagsMask() & ClassFile.ACC_PRIVATE) != 0)
                     continue;
                 String propName = getterPropertyName(method);
-                // Subclass definition already registered; superclass version is shadowed
                 if (seen.containsKey(propName))
                     continue;
 
+                MethodInfo methodInfo = toMethodInfo(method);
+
                 if (propertyDiscovery == PropertyDiscovery.METHODS) {
-                    // In METHODS mode: include all getters that have a matching setter,
-                    // merging annotations from both getter and setter so that annotations
-                    // placed on the setter (e.g. @Version, @Text) are visible to downstream generators.
-                    MethodNode setter = findSetterInHierarchy(node, current, propName, Type.getReturnType(method.desc));
+                    java.lang.constant.MethodTypeDesc mtd = java.lang.constant.MethodTypeDesc
+                            .ofDescriptor(method.methodType().stringValue());
+                    MethodInfo setter = findSetterInHierarchy(model, current, propName,
+                            mtd.returnType().descriptorString());
                     if (setter != null) {
                         seen.put(propName, Boolean.TRUE);
-                        result.add(mergeAnnotations(method, setter));
+                        result.add(methodInfo.mergeAnnotations(setter));
                     }
-                } else if (isPropertyAnnotated(method.visibleAnnotations, false)) {
+                } else if (isPropertyAnnotated(methodInfo.visibleAnnotations(), false)) {
                     seen.put(propName, Boolean.TRUE);
-                    result.add(method);
+                    result.add(methodInfo);
                 }
             }
 
             current = current.getSuperclass();
-            currentNode = null;
+            currentModel = null;
         }
         return result;
     }
 
-    private boolean isGetter(MethodNode method) {
-        return (method.name.startsWith("get") || method.name.startsWith("is"))
-                && Type.getArgumentTypes(method.desc).length == 0
-                && !Type.getReturnType(method.desc).equals(Type.VOID_TYPE)
-                && (method.access & Opcodes.ACC_STATIC) == 0;
+    private MethodInfo toMethodInfo(MethodModel method) {
+        String sig = method.findAttribute(signature())
+                .map(a -> a.signature().stringValue())
+                .orElse(null);
+        return new MethodInfo(
+                method.methodName().stringValue(),
+                method.methodType().stringValue(),
+                sig,
+                method.flags().flagsMask(),
+                visibleAnnotations(method));
     }
 
-    private String getterPropertyName(MethodNode method) {
-        String prefix = method.name.startsWith("is") ? "is" : "get";
-        String name = method.name.substring(prefix.length());
-        return Character.toLowerCase(name.charAt(0)) + name.substring(1);
+    private boolean isGetter(MethodModel method) {
+        String name = method.methodName().stringValue();
+        if (!name.startsWith("get") && !name.startsWith("is"))
+            return false;
+        if (name.equals("get") || name.equals("is"))
+            return false;
+        int flags = method.flags().flagsMask();
+        if ((flags & ClassFile.ACC_STATIC) != 0)
+            return false;
+        // 0x0040 = ACC_BRIDGE: skip compiler-generated covariant bridge methods
+        if ((flags & 0x0040) != 0)
+            return false;
+        java.lang.constant.MethodTypeDesc mtd = java.lang.constant.MethodTypeDesc
+                .ofDescriptor(method.methodType().stringValue());
+        return mtd.parameterCount() == 0 && !mtd.returnType().equals(java.lang.constant.ConstantDescs.CD_void);
     }
 
-    private MethodNode findSetter(ClassNode classNode, String propertyName, Type returnType) {
+    private String getterPropertyName(MethodModel method) {
+        String name = method.methodName().stringValue();
+        String prefix = name.startsWith("is") ? "is" : "get";
+        String prop = name.substring(prefix.length());
+        return Character.toLowerCase(prop.charAt(0)) + prop.substring(1);
+    }
+
+    private MethodInfo findSetter(ClassModel classModel, String propertyName, String returnDesc) {
         String setterName = "set" + Character.toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
-        String setterDesc = "(" + returnType.getDescriptor() + ")V";
-        for (MethodNode method : classNode.methods) {
-            if (method.name.equals(setterName) && method.desc.equals(setterDesc)) {
-                return method;
+        String setterDesc = "(" + returnDesc + ")V";
+        for (MethodModel method : classModel.methods()) {
+            if (method.methodName().stringValue().equals(setterName)
+                    && method.methodType().stringValue().equals(setterDesc)
+                    && (method.flags().flagsMask() & ClassFile.ACC_STATIC) == 0) {
+                return toMethodInfo(method);
             }
         }
         return null;
     }
 
-    private MethodNode findSetterInHierarchy(ClassNode startNode, Class<?> startClass, String propName, Type returnType) {
-        ClassNode node = startNode;
+    private MethodInfo findSetterInHierarchy(ClassModel startModel, Class<?> startClass, String propName,
+            String returnDesc) {
+        ClassModel model = startModel;
         Class<?> current = startClass;
         while (current != null && current != Object.class) {
-            if (node == null)
-                node = readClassNode(current);
-            if (node != null) {
-                MethodNode setter = findSetter(node, propName, returnType);
-                // Private setters are inaccessible from generated accessor bytecode
-                if (setter != null && (setter.access & Opcodes.ACC_PRIVATE) == 0) {
+            if (model == null)
+                model = readClassModel(current);
+            if (model != null) {
+                MethodInfo setter = findSetter(model, propName, returnDesc);
+                if (setter != null && (setter.access() & ClassFile.ACC_PRIVATE) == 0
+                        && (setter.access() & ClassFile.ACC_STATIC) == 0) {
                     return setter;
                 }
             }
             current = current.getSuperclass();
-            node = null;
+            model = null;
         }
         return null;
     }
 
-    private MethodNode mergeAnnotations(MethodNode getter, MethodNode setter) {
-        List<AnnotationNode> setterAnnotations = setter.visibleAnnotations != null ? setter.visibleAnnotations : List.of();
-        if (setterAnnotations.isEmpty()) {
-            return getter;
-        }
-        MethodNode merged = new MethodNode(getter.access, getter.name, getter.desc, getter.signature, null);
-        List<AnnotationNode> combined = new ArrayList<>();
-        if (getter.visibleAnnotations != null) {
-            combined.addAll(getter.visibleAnnotations);
-        }
-        combined.addAll(setterAnnotations);
-        merged.visibleAnnotations = combined;
-        return merged;
+    private List<Annotation> visibleAnnotations(io.github.dmlloyd.classfile.AttributedElement element) {
+        return element.findAttribute(runtimeVisibleAnnotations())
+                .map(RuntimeVisibleAnnotationsAttribute::annotations)
+                .orElse(List.of());
     }
 }
