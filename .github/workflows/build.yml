@@ -150,20 +150,36 @@ jobs:
   Coverage:
     name: Coverage Report
     needs:
-      - Build
       - Matrix
     strategy:
       fail-fast: false
       matrix:
         mapper: [ reflection, critter ]
-    uses: evanchooly/workflows/.github/workflows/build.yml@master
-    secrets:
-      DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
-    with:
-      java: 17
-      reuseBuild: true
-      archive-name: "${{matrix.mapper}}-${{github.run_id}}"
-      maven-flags: "-e -Dmorphia.mapper=${{ matrix.mapper }} -Pcoverage"
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          java-version: 17
+          distribution: temurin
+          cache: maven
+
+      - name: Run tests with coverage
+        run: ./mvnw -e -Dmorphia.mapper=${{ matrix.mapper }} -Pcoverage verify
+        env:
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+
+      - name: Upload JaCoCo reports
+        uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: "test-coverage-${{ matrix.mapper }}-${{ github.run_id }}"
+          path: "**/target/site/jacoco/"
+          retention-days: 7
 
   Release:
     needs:
