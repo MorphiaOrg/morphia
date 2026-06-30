@@ -92,15 +92,15 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;org.objectweb.asm.Type&gt;</code></div>
+<div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#propertyAnnotations" class="member-name-link">propertyAnnotations</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Annotation types that mark a field or method as a mapped property.</div>
+<div class="block">Annotation descriptors that mark a field or method as a mapped property.</div>
 </div>
-<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;org.objectweb.asm.Type&gt;</code></div>
+<div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second odd-row-color"><code><a href="#transientAnnotations" class="member-name-link">transientAnnotations</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">Annotation types that mark a field or method as transient (not persisted).</div>
+<div class="block">Annotation descriptors that mark a field or method as transient (not persisted).</div>
 </div>
 </div>
 </section>
@@ -166,15 +166,15 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="propertyAnnotations">
 <h3>propertyAnnotations</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;org.objectweb.asm.Type&gt;</span>&nbsp;<span class="element-name">propertyAnnotations</span></div>
-<div class="block">Annotation types that mark a field or method as a mapped property.</div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">propertyAnnotations</span></div>
+<div class="block">Annotation descriptors that mark a field or method as a mapped property.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="transientAnnotations">
 <h3>transientAnnotations</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;org.objectweb.asm.Type&gt;</span>&nbsp;<span class="element-name">transientAnnotations</span></div>
-<div class="block">Annotation types that mark a field or method as transient (not persisted).</div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">transientAnnotations</span></div>
+<div class="block">Annotation descriptors that mark a field or method as transient (not persisted).</div>
 </section>
 </li>
 </ul>
@@ -190,10 +190,6 @@ loadScripts(document, 'script');</script>
 <h3>Critter</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Critter</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/io/File.html" title="class or interface in java.io" class="external-link">File</a>&nbsp;root)</span></div>
 <div class="block">Creates a new Critter instance rooted at the given directory.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>root</code> - the root directory for source files</dd>
-</dl>
 </section>
 </li>
 </ul>
@@ -209,12 +205,6 @@ loadScripts(document, 'script');</script>
 <h3>critterPackage</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">critterPackage</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity)</span></div>
 <div class="block">Returns the package name used for generated Critter classes for the given entity.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>entity</code> - the entity class</dd>
-<dt>Returns:</dt>
-<dd>the generated package name</dd>
-</dl>
 </section>
 </li>
 <li>
@@ -222,12 +212,6 @@ loadScripts(document, 'script');</script>
 <h3>titleCase</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">titleCase</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;s)</span></div>
 <div class="block">Converts a string to title case by capitalizing the first character.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>s</code> - the input string</dd>
-<dt>Returns:</dt>
-<dd>the string with the first character upper-cased, or the original string if null or empty</dd>
-</dl>
 </section>
 </li>
 <li>
@@ -235,12 +219,6 @@ loadScripts(document, 'script');</script>
 <h3>identifierCase</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">identifierCase</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;s)</span></div>
 <div class="block">Converts a string to identifier (camel) case by lower-casing the first character.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>s</code> - the input string</dd>
-<dt>Returns:</dt>
-<dd>the string with the first character lower-cased, or the original string if null or empty</dd>
-</dl>
 </section>
 </li>
 </ul>

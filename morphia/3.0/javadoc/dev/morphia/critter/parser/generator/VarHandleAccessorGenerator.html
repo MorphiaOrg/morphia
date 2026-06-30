@@ -5,7 +5,7 @@
 <title>VarHandleAccessorGenerator (Morphia Core)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta name="description" content="declaration: package: dev.morphia.critter.parser.gizmo, class: VarHandleAccessorGenerator">
+<meta name="description" content="declaration: package: dev.morphia.critter.parser.generator, class: VarHandleAccessorGenerator">
 <meta name="generator" content="javadoc/ClassWriterImpl">
 <link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
 <link rel="stylesheet" type="text/css" href="../../../../../script-dir/jquery-ui.min.css" title="Style">
@@ -69,19 +69,19 @@ loadScripts(document, 'script');</script>
 <main role="main">
 <!-- ======== START OF CLASS DATA ======== -->
 <div class="header">
-<div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">dev.morphia.critter.parser.gizmo</a></div>
+<div class="sub-title"><span class="package-label-in-type">Package</span>&nbsp;<a href="package-summary.html">dev.morphia.critter.parser.generator</a></div>
 <h1 title="Class VarHandleAccessorGenerator" class="title">Class VarHandleAccessorGenerator</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
-<div class="inheritance"><a href="BaseGizmoGenerator.html" title="class in dev.morphia.critter.parser.gizmo">dev.morphia.critter.parser.gizmo.BaseGizmoGenerator</a>
-<div class="inheritance">dev.morphia.critter.parser.gizmo.VarHandleAccessorGenerator</div>
+<div class="inheritance"><a href="BaseGenerator.html" title="class in dev.morphia.critter.parser.generator">dev.morphia.critter.parser.generator.BaseGenerator</a>
+<div class="inheritance">dev.morphia.critter.parser.generator.VarHandleAccessorGenerator</div>
 </div>
 </div>
 <section class="class-description" id="class-description">
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">VarHandleAccessorGenerator</span>
-<span class="extends-implements">extends <a href="BaseGizmoGenerator.html" title="class in dev.morphia.critter.parser.gizmo">BaseGizmoGenerator</a></span></div>
-<div class="block">Generates a Gizmo-based <a href="https://mongodb.github.io/mongo-java-driver/5.6/apidocs/bson/org/bson/codecs/pojo/PropertyAccessor.html" title="class or interface in org.bson.codecs.pojo" class="external-link"><code>PropertyAccessor</code></a> implementation that uses
+<span class="extends-implements">extends <a href="BaseGenerator.html" title="class in dev.morphia.critter.parser.generator">BaseGenerator</a></span></div>
+<div class="block">Generates a ClassFile-based <a href="https://mongodb.github.io/mongo-java-driver/5.6/apidocs/bson/org/bson/codecs/pojo/PropertyAccessor.html" title="class or interface in org.bson.codecs.pojo" class="external-link"><code>PropertyAccessor</code></a> implementation that uses
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/invoke/VarHandle.html" title="class or interface in java.lang.invoke" class="external-link"><code>VarHandle</code></a> (for fields) or <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/invoke/MethodHandle.html" title="class or interface in java.lang.invoke" class="external-link"><code>MethodHandle</code></a> (for getter/setter pairs)
  to access a single property of a Morphia entity class.</div>
 </section>
@@ -92,8 +92,8 @@ loadScripts(document, 'script');</script>
 <section class="field-summary" id="field-summary">
 <h2>Field Summary</h2>
 <div class="inherited-list">
-<h3 id="fields-inherited-from-class-dev.morphia.critter.parser.gizmo.BaseGizmoGenerator">Fields inherited from class&nbsp;dev.morphia.critter.parser.gizmo.<a href="BaseGizmoGenerator.html" title="class in dev.morphia.critter.parser.gizmo">BaseGizmoGenerator</a></h3>
-<code><a href="BaseGizmoGenerator.html#baseName">baseName</a>, <a href="BaseGizmoGenerator.html#critterClassLoader">critterClassLoader</a>, <a href="BaseGizmoGenerator.html#entity">entity</a>, <a href="BaseGizmoGenerator.html#generatedType">generatedType</a></code></div>
+<h3 id="fields-inherited-from-class-dev.morphia.critter.parser.generator.BaseGenerator">Fields inherited from class&nbsp;dev.morphia.critter.parser.generator.<a href="BaseGenerator.html" title="class in dev.morphia.critter.parser.generator">BaseGenerator</a></h3>
+<code><a href="BaseGenerator.html#baseName">baseName</a>, <a href="BaseGenerator.html#critterClassLoader">critterClassLoader</a>, <a href="BaseGenerator.html#entity">entity</a>, <a href="BaseGenerator.html#generatedType">generatedType</a></code></div>
 </section>
 </li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -104,15 +104,15 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.Class,dev.morphia.critter.CritterClassLoader,org.objectweb.asm.tree.FieldNode)" class="member-name-link">VarHandleAccessorGenerator</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo)" class="member-name-link">VarHandleAccessorGenerator</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity,
  CritterClassLoader&nbsp;critterClassLoader,
- org.objectweb.asm.tree.FieldNode&nbsp;field)</code></div>
+ <a href="../FieldInfo.html" title="class in dev.morphia.critter.parser">FieldInfo</a>&nbsp;field)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Creates a generator for a field-based property accessor using a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/invoke/VarHandle.html" title="class or interface in java.lang.invoke" class="external-link"><code>VarHandle</code></a>.</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.lang.Class,dev.morphia.critter.CritterClassLoader,org.objectweb.asm.tree.MethodNode)" class="member-name-link">VarHandleAccessorGenerator</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity,
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.MethodInfo)" class="member-name-link">VarHandleAccessorGenerator</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity,
  CritterClassLoader&nbsp;critterClassLoader,
- org.objectweb.asm.tree.MethodNode&nbsp;method)</code></div>
+ <a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;method)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Creates a generator for a method-based property accessor using <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/invoke/MethodHandle.html" title="class or interface in java.lang.invoke" class="external-link"><code>MethodHandle</code></a>s.</div>
 </div>
@@ -130,7 +130,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="VarHandleAccessorGenerator.html" title="class in dev.morphia.critter.parser.gizmo">VarHandleAccessorGenerator</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="VarHandleAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator">VarHandleAccessorGenerator</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#emit()" class="member-name-link">emit</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Emits the generated property accessor class and returns this generator.</div>
@@ -150,9 +150,6 @@ loadScripts(document, 'script');</script>
 </div>
 </div>
 <div class="inherited-list">
-<h3 id="methods-inherited-from-class-dev.morphia.critter.parser.gizmo.BaseGizmoGenerator">Methods inherited from class&nbsp;dev.morphia.critter.parser.gizmo.<a href="BaseGizmoGenerator.html" title="class in dev.morphia.critter.parser.gizmo">BaseGizmoGenerator</a></h3>
-<code><a href="BaseGizmoGenerator.html#getBuilder()">getBuilder</a>, <a href="BaseGizmoGenerator.html#getCreator()">getCreator</a></code></div>
-<div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
@@ -167,32 +164,32 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(java.lang.Class,dev.morphia.critter.CritterClassLoader,org.objectweb.asm.tree.FieldNode)">
+<section class="detail" id="&lt;init&gt;(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo)">
 <h3>VarHandleAccessorGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">VarHandleAccessorGenerator</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity,
  CritterClassLoader&nbsp;critterClassLoader,
- org.objectweb.asm.tree.FieldNode&nbsp;field)</span></div>
+ <a href="../FieldInfo.html" title="class in dev.morphia.critter.parser">FieldInfo</a>&nbsp;field)</span></div>
 <div class="block">Creates a generator for a field-based property accessor using a <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/invoke/VarHandle.html" title="class or interface in java.lang.invoke" class="external-link"><code>VarHandle</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>entity</code> - the entity class that owns the field</dd>
 <dd><code>critterClassLoader</code> - the class loader that will receive the generated bytecode</dd>
-<dd><code>field</code> - the ASM field node representing the property</dd>
+<dd><code>field</code> - the field info representing the property</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(java.lang.Class,dev.morphia.critter.CritterClassLoader,org.objectweb.asm.tree.MethodNode)">
+<section class="detail" id="&lt;init&gt;(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.MethodInfo)">
 <h3>VarHandleAccessorGenerator</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">VarHandleAccessorGenerator</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity,
  CritterClassLoader&nbsp;critterClassLoader,
- org.objectweb.asm.tree.MethodNode&nbsp;method)</span></div>
+ <a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;method)</span></div>
 <div class="block">Creates a generator for a method-based property accessor using <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/invoke/MethodHandle.html" title="class or interface in java.lang.invoke" class="external-link"><code>MethodHandle</code></a>s.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>entity</code> - the entity class that owns the getter</dd>
 <dd><code>critterClassLoader</code> - the class loader that will receive the generated bytecode</dd>
-<dd><code>method</code> - the ASM method node representing the getter</dd>
+<dd><code>method</code> - the method info representing the getter</dd>
 </dl>
 </section>
 </li>
@@ -230,7 +227,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="emit()">
 <h3>emit</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="VarHandleAccessorGenerator.html" title="class in dev.morphia.critter.parser.gizmo">VarHandleAccessorGenerator</a></span>&nbsp;<span class="element-name">emit</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="VarHandleAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator">VarHandleAccessorGenerator</a></span>&nbsp;<span class="element-name">emit</span>()</div>
 <div class="block">Emits the generated property accessor class and returns this generator.</div>
 <dl class="notes">
 <dt>Returns:</dt>

@@ -8,8 +8,7 @@ dev.morphia.config.converters
 dev.morphia.critter
 dev.morphia.critter.conventions
 dev.morphia.critter.parser
-dev.morphia.critter.parser.asm
-dev.morphia.critter.parser.gizmo
+dev.morphia.critter.parser.generator
 dev.morphia.critter.parser.java
 dev.morphia.mapping
 dev.morphia.query

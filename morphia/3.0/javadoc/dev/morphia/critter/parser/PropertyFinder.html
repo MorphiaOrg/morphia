@@ -79,8 +79,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">PropertyFinder</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Discovers entity properties (fields or getter methods) from a parsed ASM <code>ClassNode</code>
- and produces the corresponding <a href="gizmo/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.gizmo"><code>PropertyModelGenerator</code></a> instances.</div>
+<div class="block">Discovers entity properties (fields or getter methods) from a parsed class model
+ and produces the corresponding <a href="generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator"><code>PropertyModelGenerator</code></a> instances.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -95,9 +95,7 @@ loadScripts(document, 'script');</script>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(dev.morphia.mapping.Mapper,dev.morphia.critter.CritterClassLoader,boolean)" class="member-name-link">PropertyFinder</a><wbr>(Mapper&nbsp;mapper,
  CritterClassLoader&nbsp;classLoader,
  boolean&nbsp;runtimeMode)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Creates a new PropertyFinder.</div>
-</div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -112,11 +110,17 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="gizmo/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.gizmo">PropertyModelGenerator</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#find(java.lang.Class,org.objectweb.asm.tree.ClassNode)" class="member-name-link">find</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
- org.objectweb.asm.tree.ClassNode&nbsp;classNode)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Discovers the properties for the given entity and returns a generator for each one.</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#find(java.lang.Class,io.github.dmlloyd.classfile.ClassModel)" class="member-name-link">find</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
+ io.github.dmlloyd.classfile.ClassModel&nbsp;classModel)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#find(java.lang.Class,io.github.dmlloyd.classfile.ClassModel,java.lang.Class)" class="member-name-link">find</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;standinType,
+ io.github.dmlloyd.classfile.ClassModel&nbsp;classModel,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;targetType)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Discovers properties from <code>standinType</code>'s classfile but generates accessor and model
+ bytecode targeting <code>targetType</code>.</div>
 </div>
 </div>
 </div>
@@ -141,13 +145,6 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">PropertyFinder</span><wbr><span class="parameters">(Mapper&nbsp;mapper,
  CritterClassLoader&nbsp;classLoader,
  boolean&nbsp;runtimeMode)</span></div>
-<div class="block">Creates a new PropertyFinder.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>mapper</code> - the Morphia mapper</dd>
-<dd><code>classLoader</code> - the class loader for registering generated accessor classes</dd>
-<dd><code>runtimeMode</code> - <code>true</code> to generate VarHandle-based accessors instead of synthetic method accessors</dd>
-</dl>
 </section>
 </li>
 </ul>
@@ -159,18 +156,21 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="find(java.lang.Class,org.objectweb.asm.tree.ClassNode)">
+<section class="detail" id="find(java.lang.Class,io.github.dmlloyd.classfile.ClassModel)">
 <h3>find</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="gizmo/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.gizmo">PropertyModelGenerator</a>&gt;</span>&nbsp;<span class="element-name">find</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
- org.objectweb.asm.tree.ClassNode&nbsp;classNode)</span></div>
-<div class="block">Discovers the properties for the given entity and returns a generator for each one.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>entityType</code> - the entity class being processed</dd>
-<dd><code>classNode</code> - the ASM class node for the entity</dd>
-<dt>Returns:</dt>
-<dd>a list of property model generators, one per discovered property</dd>
-</dl>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a>&gt;</span>&nbsp;<span class="element-name">find</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
+ io.github.dmlloyd.classfile.ClassModel&nbsp;classModel)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="find(java.lang.Class,io.github.dmlloyd.classfile.ClassModel,java.lang.Class)">
+<h3>find</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a>&gt;</span>&nbsp;<span class="element-name">find</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;standinType,
+ io.github.dmlloyd.classfile.ClassModel&nbsp;classModel,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;targetType)</span></div>
+<div class="block">Discovers properties from <code>standinType</code>'s classfile but generates accessor and model
+ bytecode targeting <code>targetType</code>. Used for <code>@ExternalEntity</code> stand-ins where the
+ stand-in carries Morphia annotations but the target is the type actually persisted.</div>
 </section>
 </li>
 </ul>

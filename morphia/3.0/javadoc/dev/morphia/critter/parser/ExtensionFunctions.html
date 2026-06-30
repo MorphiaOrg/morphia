@@ -79,7 +79,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ExtensionFunctions</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Utility methods for string and ASM type transformations used during Critter code generation.</div>
+<div class="block">Utility methods for string and type transformations used during Critter code generation.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -95,7 +95,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getterToPropertyName(org.objectweb.asm.tree.MethodNode,java.lang.Class)" class="member-name-link">getterToPropertyName</a><wbr>(org.objectweb.asm.tree.MethodNode&nbsp;method,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getterToPropertyName(dev.morphia.critter.parser.MethodInfo,java.lang.Class)" class="member-name-link">getterToPropertyName</a><wbr>(<a href="MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;method,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Converts a getter method to a property name.</div>
@@ -137,12 +137,6 @@ loadScripts(document, 'script');</script>
 <h3>titleCase</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">titleCase</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;s)</span></div>
 <div class="block">Converts a string to title case by capitalizing the first character.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>s</code> - the input string</dd>
-<dt>Returns:</dt>
-<dd>the string with the first character upper-cased, or the original string if null or empty</dd>
-</dl>
 </section>
 </li>
 <li>
@@ -150,12 +144,6 @@ loadScripts(document, 'script');</script>
 <h3>methodCase</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">methodCase</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;s)</span></div>
 <div class="block">Converts a string to method (camel) case by lower-casing the first character.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>s</code> - the input string</dd>
-<dt>Returns:</dt>
-<dd>the string with the first character lower-cased, or the original string if null or empty</dd>
-</dl>
 </section>
 </li>
 <li>
@@ -163,32 +151,18 @@ loadScripts(document, 'script');</script>
 <h3>snakeCase</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">snakeCase</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;s)</span></div>
 <div class="block">Converts a camelCase string to snake_case.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>s</code> - the camelCase input string</dd>
-<dt>Returns:</dt>
-<dd>the snake_case equivalent</dd>
-</dl>
 </section>
 </li>
 <li>
-<section class="detail" id="getterToPropertyName(org.objectweb.asm.tree.MethodNode,java.lang.Class)">
+<section class="detail" id="getterToPropertyName(dev.morphia.critter.parser.MethodInfo,java.lang.Class)">
 <h3>getterToPropertyName</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getterToPropertyName</span><wbr><span class="parameters">(org.objectweb.asm.tree.MethodNode&nbsp;method,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getterToPropertyName</span><wbr><span class="parameters">(<a href="MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;method,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity)</span></div>
 <div class="block">Converts a getter method to a property name. Examples:
  - "getName" -> "name"
  - "isActive" -> "active"
  - "getX" -> "x"
  - "name()" with matching field "name" -> "name"</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>method</code> - the method node</dd>
-<dd><code>entity</code> - the class to check for matching fields when method name doesn't follow standard
-               getter naming</dd>
-<dt>Returns:</dt>
-<dd>the property name derived from the getter method</dd>
-</dl>
 </section>
 </li>
 </ul>

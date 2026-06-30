@@ -61,7 +61,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color"><a href="#dev.morphia.critter.parser">dev.morphia.critter.parser</a></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><a href="#dev.morphia.critter.parser.gizmo">dev.morphia.critter.parser.gizmo</a></div>
+<div class="col-first even-row-color"><a href="#dev.morphia.critter.parser.generator">dev.morphia.critter.parser.generator</a></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><a href="#dev.morphia.mapping">dev.morphia.mapping</a></div>
 <div class="col-last odd-row-color">
@@ -113,33 +113,40 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color"><code><a href="../../critter/parser/PropertyFinder.html#%3Cinit%3E(dev.morphia.mapping.Mapper,dev.morphia.critter.CritterClassLoader,boolean)" class="member-name-link">PropertyFinder</a><wbr>(Mapper&nbsp;mapper,
  CritterClassLoader&nbsp;classLoader,
  boolean&nbsp;runtimeMode)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Creates a new PropertyFinder.</div>
-</div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="dev.morphia.critter.parser.gizmo">
-<h2>Uses of Mapper in <a href="../../critter/parser/gizmo/package-summary.html">dev.morphia.critter.parser.gizmo</a></h2>
-<div class="caption"><span>Constructors in <a href="../../critter/parser/gizmo/package-summary.html">dev.morphia.critter.parser.gizmo</a> with parameters of type Mapper in  in </span></div>
+<section class="detail" id="dev.morphia.critter.parser.generator">
+<h2>Uses of Mapper in <a href="../../critter/parser/generator/package-summary.html">dev.morphia.critter.parser.generator</a></h2>
+<div class="caption"><span>Constructors in <a href="../../critter/parser/generator/package-summary.html">dev.morphia.critter.parser.generator</a> with parameters of type Mapper in  in </span></div>
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier</div>
 <div class="table-header col-second">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../../critter/parser/gizmo/CritterGizmoGenerator.html#%3Cinit%3E(dev.morphia.mapping.Mapper)" class="member-name-link">CritterGizmoGenerator</a><wbr>(Mapper&nbsp;mapper)</code></div>
+<div class="col-second even-row-color"><code><a href="../../critter/parser/generator/CritterGenerator.html#%3Cinit%3E(dev.morphia.mapping.Mapper)" class="member-name-link">CritterGenerator</a><wbr>(Mapper&nbsp;mapper)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Creates a new CritterGizmoGenerator with the given mapper.</div>
+<div class="block">Creates a new CritterGenerator with the given mapper.</div>
 </div>
 <div class="col-first odd-row-color"><code>&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../../critter/parser/gizmo/GizmoEntityModelGenerator.html#%3Cinit%3E(dev.morphia.mapping.Mapper,java.lang.Class,dev.morphia.critter.CritterClassLoader,org.objectweb.asm.tree.ClassNode,java.util.List)" class="member-name-link">GizmoEntityModelGenerator</a><wbr>(Mapper&nbsp;mapper,
+<div class="col-second odd-row-color"><code><a href="../../critter/parser/generator/EntityModelGenerator.html#%3Cinit%3E(dev.morphia.mapping.Mapper,java.lang.Class,dev.morphia.critter.CritterClassLoader,java.util.List)" class="member-name-link">EntityModelGenerator</a><wbr>(Mapper&nbsp;mapper,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;type,
  CritterClassLoader&nbsp;critterClassLoader,
- org.objectweb.asm.tree.ClassNode&nbsp;classNode,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../critter/parser/gizmo/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.gizmo">PropertyModelGenerator</a>&gt;&nbsp;properties)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../critter/parser/generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a>&gt;&nbsp;properties)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Creates a new entity model generator for the given entity.</div>
+<div class="block">Creates a new entity model generator where the entity class is also the annotation source.</div>
+</div>
+<div class="col-first even-row-color"><code>&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../../critter/parser/generator/EntityModelGenerator.html#%3Cinit%3E(dev.morphia.mapping.Mapper,java.lang.Class,java.lang.Class,dev.morphia.critter.CritterClassLoader,java.util.List)" class="member-name-link">EntityModelGenerator</a><wbr>(Mapper&nbsp;mapper,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;type,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;standinType,
+ CritterClassLoader&nbsp;critterClassLoader,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../critter/parser/generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a>&gt;&nbsp;properties)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Creates a new entity model generator for the given entity, reading entity-level annotations
+ from <code>standinType</code> (which differs from <code>type</code> only for <code>@ExternalEntity</code>).</div>
 </div>
 </div>
 </section>

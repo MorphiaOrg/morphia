@@ -15,7 +15,11 @@
 <script type="text/javascript" src="../../../../script-dir/jquery-ui.min.js"></script>
 </head>
 <body class="package-declaration-page">
-<script type="text/javascript">var pathtoroot = "../../../../";
+<script type="text/javascript">var evenRowColor = "even-row-color";
+var oddRowColor = "odd-row-color";
+var tableTab = "table-tab";
+var activeTableTab = "active-table-tab";
+var pathtoroot = "../../../../";
 loadScripts(document, 'script');</script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -71,31 +75,41 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><a href="../package-summary.html">dev.morphia.critter</a></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="asm/package-summary.html">dev.morphia.critter.parser.asm</a></div>
+<div class="col-first odd-row-color"><a href="generator/package-summary.html">dev.morphia.critter.parser.generator</a></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><a href="gizmo/package-summary.html">dev.morphia.critter.parser.gizmo</a></div>
+<div class="col-first even-row-color"><a href="java/package-summary.html">dev.morphia.critter.parser.java</a></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><a href="java/package-summary.html">dev.morphia.critter.parser.java</a></div>
+<div class="col-first odd-row-color"><a href="../conventions/package-summary.html">dev.morphia.critter.conventions</a></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><a href="../conventions/package-summary.html">dev.morphia.critter.conventions</a></div>
-<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </div>
 </li>
 <li>
 <div id="class-summary">
-<div class="caption"><span>Classes</span></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="class-summary-tab0" role="tab" aria-selected="true" aria-controls="class-summary.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary', 2)" class="active-table-tab">All Classes and Interfaces</button><button id="class-summary-tab2" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab2', 2)" class="table-tab">Classes</button><button id="class-summary-tab4" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab4', 2)" class="table-tab">Record Classes</button></div>
+<div id="class-summary.tabpanel" role="tabpanel" aria-labelledby="class-summary-tab0">
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="ExtensionFunctions.html" title="class in dev.morphia.critter.parser">ExtensionFunctions</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Utility methods for string and ASM type transformations used during Critter code generation.</div>
+<div class="block">Utility methods for string and type transformations used during Critter code generation.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab4"><a href="FieldInfo.html" title="class in dev.morphia.critter.parser">FieldInfo</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab4">
+<div class="block">Immutable record capturing the bytecode-level information for a single entity field,
+ replacing direct use of ASM <code>FieldNode</code>.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab4"><a href="MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab4">
+<div class="block">Immutable record capturing the bytecode-level information for a single entity method,
+ replacing direct use of ASM <code>MethodNode</code>.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="PropertyFinder.html" title="class in dev.morphia.critter.parser">PropertyFinder</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Discovers entity properties (fields or getter methods) from a parsed ASM <code>ClassNode</code>
- and produces the corresponding <a href="gizmo/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.gizmo"><code>PropertyModelGenerator</code></a> instances.</div>
+<div class="block">Discovers entity properties (fields or getter methods) from a parsed class model
+ and produces the corresponding <a href="generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator"><code>PropertyModelGenerator</code></a> instances.</div>
+</div>
 </div>
 </div>
 </div>
