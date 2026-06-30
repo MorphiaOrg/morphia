@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 
 import dev.morphia.critter.ClassfileOutput;
 import dev.morphia.critter.CritterClassLoader;
-import dev.morphia.critter.parser.gizmo.CritterGizmoGenerator;
-import dev.morphia.critter.parser.gizmo.GizmoEntityModelGenerator;
+import dev.morphia.critter.parser.generator.CritterGenerator;
+import dev.morphia.critter.parser.generator.EntityModelGenerator;
 import dev.morphia.critter.sources.Example;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
@@ -40,7 +40,7 @@ public class GeneratorTest {
         } catch (Exception ignored) {
         }
 
-        GizmoEntityModelGenerator gen = new CritterGizmoGenerator(defaultMapper()).generate(Example.class, critterClassLoader, false);
+        EntityModelGenerator gen = new CritterGenerator(defaultMapper()).generate(Example.class, critterClassLoader, false);
         try {
             entityModel = (CritterEntityModel) critterClassLoader
                     .loadClass(gen.getGeneratedType())

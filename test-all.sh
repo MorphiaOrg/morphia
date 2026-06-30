@@ -28,11 +28,10 @@ function findRoot() {
 }
 
 function selectServers() {
-  PS3="Select a server version: "
-
+  LIST=`sanitize $( ${ROOT}/.github/BuildMatrix.java )`
   if [ -z "$SERVERS" ]
   then
-    LIST=`sanitize $( ${ROOT}/.github/BuildMatrix.java )`
+    PS3="Select a server version: "
     select SERVER in all $LIST
     do
       case $SERVER in
@@ -45,15 +44,17 @@ function selectServers() {
       esac
       break
     done
+  elif [ "$SERVERS" = "all" ]
+  then
+    SERVERS=$LIST
   fi
 }
 
 function selectDrivers() {
-  PS3="Select a driver version: "
-
+  LIST=$( sanitize $( ${ROOT}/.github/DriverVersions.java all ) )
   if [ -z "$DRIVERS" ]
   then
-    LIST=$( sanitize $( ${ROOT}/.github/DriverVersions.java all ) )
+    PS3="Select a driver version: "
     select DRIVER in all $LIST
     do
       case $DRIVER in
@@ -66,14 +67,16 @@ function selectDrivers() {
       esac
       break
     done
+  elif [ "$DRIVERS" = "all" ]
+  then
+    DRIVERS=$LIST
   fi
 }
 
 function selectMappers() {
-  PS3="Select a mapper: "
-
   if [ -z "$MAPPERS" ]
   then
+    PS3="Select a mapper: "
     select MAPPER in all reflection critter
     do
       case $MAPPER in
@@ -86,6 +89,9 @@ function selectMappers() {
       esac
       break
     done
+  elif [ "$MAPPERS" = "all" ]
+  then
+    MAPPERS="reflection critter"
   fi
 }
 

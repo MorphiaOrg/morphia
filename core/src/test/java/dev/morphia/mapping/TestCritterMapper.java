@@ -308,7 +308,7 @@ public class TestCritterMapper {
 
     /**
      * Verifies that CritterMapper correctly reports lifecycle methods.
-     * Previously, GizmoEntityModelGenerator hard-coded hasLifecycle() to always return false,
+     * Previously, EntityModelGenerator hard-coded hasLifecycle() to always return false,
      * silently skipping @PrePersist/@PostLoad/@PreLoad/@PostPersist callbacks for CritterMapper.
      */
     @Test

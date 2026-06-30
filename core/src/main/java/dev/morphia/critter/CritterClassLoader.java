@@ -90,8 +90,12 @@ public class CritterClassLoader extends ByteArrayClassLoader.ChildFirst {
 
     private boolean shouldRegister(String className) {
         // Only register classes from the dev.morphia.critter package
-        // This avoids SecurityException (java.*, javax.*) and LinkageError (third-party libs)
-        return className.startsWith("dev.morphia.critter.");
+        // This avoids SecurityException (java.*, javax.*) and LinkageError (third-party libs).
+        // NestmateAccessorRegistry must be excluded: it uses a static map that must be shared across
+        // classloaders (the generator registers via the parent CL; generated models read via this CL).
+        // Excluding it here lets ChildFirst delegation fall back to the parent for a single shared instance.
+        return className.startsWith("dev.morphia.critter.")
+                && !className.equals("dev.morphia.critter.parser.generator.NestmateAccessorRegistry");
     }
 
     /**
