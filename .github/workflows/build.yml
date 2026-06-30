@@ -162,7 +162,7 @@ jobs:
     with:
       java: 17
       reuseBuild: true
-      archive-name: "test-coverage-${{matrix.mapper}}-${{github.run_id}}"
+      archive-name: "${{matrix.mapper}}-${{github.run_id}}"
       maven-flags: "-e -Dmorphia.mapper=${{ matrix.mapper }} -Pcoverage"
 
   Release:
