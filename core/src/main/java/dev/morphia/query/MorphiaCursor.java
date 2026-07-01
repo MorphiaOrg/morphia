@@ -9,6 +9,7 @@ import com.mongodb.client.MongoCursor;
 import com.mongodb.lang.NonNull;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.mapping.codec.DecodeSession;
 
 /**
  * @param <T> the original type being iterated
@@ -16,6 +17,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  */
 public class MorphiaCursor<T> implements AutoCloseable, MongoCursor<T> {
     private final MongoCursor<T> wrapped;
+    private final boolean rootSession;
 
     /**
      * Creates a MorphiaCursor
@@ -27,13 +29,20 @@ public class MorphiaCursor<T> implements AutoCloseable, MongoCursor<T> {
     @MorphiaInternal
     public MorphiaCursor(MongoCursor<T> cursor) {
         wrapped = cursor;
+        rootSession = DecodeSession.activate();
     }
 
     /**
-     * Closes the underlying cursor.
+     * Closes the underlying cursor and releases the decode session if this cursor owns it.
      */
     public void close() {
-        wrapped.close();
+        try {
+            wrapped.close();
+        } finally {
+            if (rootSession) {
+                DecodeSession.deactivate();
+            }
+        }
     }
 
     @Override
@@ -80,7 +89,7 @@ public class MorphiaCursor<T> implements AutoCloseable, MongoCursor<T> {
      */
     public List<T> toList() {
         final List<T> results = new ArrayList<>();
-        try (wrapped) {
+        try (this) {
             while (wrapped.hasNext()) {
                 results.add(next());
             }

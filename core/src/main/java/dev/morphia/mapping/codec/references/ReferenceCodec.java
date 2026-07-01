@@ -27,6 +27,7 @@ import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
+import dev.morphia.mapping.codec.DecodeSession;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
@@ -323,6 +324,64 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     }
 
     @Nullable
+    private Object lookupInSession(Object id, EntityModel entityModel) {
+        DecodeSession session = DecodeSession.current();
+        if (session == null) {
+            return null;
+        }
+        String collection = id instanceof DBRef
+                ? ((DBRef) id).getCollectionName()
+                : entityModel.collectionName();
+        Object lookupId = id instanceof DBRef ? ((DBRef) id).getId() : id;
+        return session.lookup(collection, lookupId);
+    }
+
+    /**
+     * Returns a map of stripped-id → cached entity for each id in rawIds that is present
+     * in the current session. Ids not yet in the session are absent from the result.
+     */
+    private Map<Object, Object> partialSessionLookup(List<?> rawIds, EntityModel entityModel) {
+        DecodeSession session = DecodeSession.current();
+        if (session == null) {
+            return Map.of();
+        }
+        Map<Object, Object> hits = new LinkedHashMap<>();
+        for (Object id : rawIds) {
+            String collection = id instanceof DBRef ? ((DBRef) id).getCollectionName() : entityModel.collectionName();
+            Object lookupId = id instanceof DBRef ? ((DBRef) id).getId() : id;
+            Object cached = session.lookup(collection, lookupId);
+            if (cached != null) {
+                hits.put(lookupId, cached);
+            }
+        }
+        return hits;
+    }
+
+    /**
+     * Returns a map of stripped-id → cached entity for each map value id that is present
+     * in the current session. Returns null if no session is active.
+     */
+    @Nullable
+    private Map<Object, Object> lookupMapInSession(Map<Object, Object> ids, EntityModel entityModel) {
+        DecodeSession session = DecodeSession.current();
+        if (session == null) {
+            return null;
+        }
+        Map<Object, Object> result = new LinkedHashMap<>();
+        for (Entry<Object, Object> entry : ids.entrySet()) {
+            Object rawId = entry.getValue();
+            String collection = rawId instanceof DBRef ? ((DBRef) rawId).getCollectionName() : entityModel.collectionName();
+            Object lookupId = rawId instanceof DBRef ? ((DBRef) rawId).getId() : rawId;
+            Object cached = session.lookup(collection, lookupId);
+            if (cached == null) {
+                return null; // any miss: fall through to full DB fetch
+            }
+            result.put(entry.getKey(), cached);
+        }
+        return result;
+    }
+
+    @Nullable
     private Object fetch(Object value) {
         boolean lazy = annotation.lazy();
         boolean ignoreMissing = annotation.ignoreMissing();
@@ -336,7 +395,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
                 return preDecoded;
             }
             List<Object> ids = stripDbRefs(rawIds);
-            Supplier<Object> loader = () -> fetchCollection(rawIds, entityModel, ignoreMissing);
+            Supplier<Object> loader = () -> fetchCollectionMerged(rawIds, entityModel, ignoreMissing);
             return lazy ? createProxy(loader, ids, entityModel.getType()) : loader.get();
 
         } else if (Set.class.isAssignableFrom(type)) {
@@ -346,7 +405,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
                 return new LinkedHashSet<>(preDecoded);
             }
             List<Object> ids = stripDbRefs(rawIds);
-            Supplier<Object> loader = () -> new LinkedHashSet<>(fetchCollection(rawIds, entityModel, ignoreMissing));
+            Supplier<Object> loader = () -> new LinkedHashSet<>(fetchCollectionMerged(rawIds, entityModel, ignoreMissing));
             return lazy ? createProxy(loader, ids, entityModel.getType()) : loader.get();
 
         } else if (Map.class.isAssignableFrom(type)) {
@@ -357,6 +416,10 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
                 ids.put(mapper.getConversions().convert(entry.getKey(), keyType), entry.getValue());
             }
             List<Object> idList = stripDbRefs(new ArrayList<>(ids.values()));
+            Map<Object, Object> cachedMap = lookupMapInSession(ids, entityModel);
+            if (cachedMap != null) {
+                return cachedMap;
+            }
             Supplier<Object> loader = () -> fetchMap(ids, entityModel);
             return lazy ? createProxy(loader, idList, entityModel.getType()) : loader.get();
 
@@ -365,6 +428,10 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             // If processId already decoded the value into an entity instance, return it directly
             if (entityModel.getType().isInstance(id)) {
                 return id;
+            }
+            Object cached = lookupInSession(id, entityModel);
+            if (cached != null) {
+                return cached;
             }
             List<Object> ids = List.of(stripDbRef(id));
             Supplier<Object> loader = () -> fetchSingle(id, entityModel, ignoreMissing);
@@ -376,20 +443,40 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         var query = id instanceof DBRef
                 ? datastore.find(mapper.getClassFromCollection(((DBRef) id).getCollectionName()))
                 : datastore.find(entityModel.getType());
-        Object result = query.filter(eq("_id", stripDbRef(id))).iterator().tryNext();
-        if (result == null && !ignoreMissing) {
-            throw new ReferenceException(Sofia.missingReferencedEntity(entityModel.getType().getSimpleName()));
+        try (var cursor = query.filter(eq("_id", stripDbRef(id))).iterator()) {
+            Object result = cursor.tryNext();
+            if (result == null && !ignoreMissing) {
+                throw new ReferenceException(Sofia.missingReferencedEntity(entityModel.getType().getSimpleName()));
+            }
+            return result;
         }
-        return result;
     }
 
-    private List<Object> fetchCollection(List<?> ids, EntityModel entityModel, boolean ignoreMissing) {
+    private List<Object> fetchCollectionMerged(List<?> rawIds, EntityModel entityModel, boolean ignoreMissing) {
+        Map<Object, Object> idMap = new HashMap<>(partialSessionLookup(rawIds, entityModel));
+
+        List<Object> missingIds = rawIds.stream()
+                .filter(id -> {
+                    Object lookupId = id instanceof DBRef ? ((DBRef) id).getId() : id;
+                    return !idMap.containsKey(lookupId);
+                })
+                .collect(Collectors.toList());
+
+        if (!missingIds.isEmpty()) {
+            idMap.putAll(buildIdMap(missingIds, entityModel, ignoreMissing));
+        }
+
+        return mapIdsToValues(rawIds, idMap).stream()
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    private Map<Object, Object> buildIdMap(List<?> ids, EntityModel entityModel, boolean ignoreMissing) {
         Map<String, List<Object>> byCollection = new HashMap<>();
         for (Object id : ids) {
             if (id instanceof DBRef) {
                 byCollection.computeIfAbsent(((DBRef) id).getCollectionName(), k -> new ArrayList<>()).add(((DBRef) id).getId());
             } else {
-                // nested List items are stored as-is; extractFlatIds flattens them for the query
                 byCollection.computeIfAbsent(entityModel.collectionName(), k -> new ArrayList<>()).add(id);
             }
         }
@@ -398,8 +485,11 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         for (Entry<String, List<Object>> entry : byCollection.entrySet()) {
             idMap.putAll(queryCollection(entry.getKey(), extractFlatIds(entry.getValue()), entityModel, ignoreMissing));
         }
+        return idMap;
+    }
 
-        return mapIdsToValues(ids, idMap).stream()
+    private List<Object> fetchCollection(List<?> ids, EntityModel entityModel, boolean ignoreMissing) {
+        return mapIdsToValues(ids, buildIdMap(ids, entityModel, ignoreMissing)).stream()
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
