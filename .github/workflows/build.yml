@@ -19,12 +19,51 @@ jobs:
       java: 17
 
   Build:
-    uses: evanchooly/workflows/.github/workflows/build.yml@master
-    secrets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
       DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
-    with:
-      java: 17
-      saveBuild: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Generate cache key
+        id: maven-cache-key
+        shell: bash
+        run: echo "key=cache-${{ github.run_number }}" >> $GITHUB_OUTPUT
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          java-version: 17
+          distribution: temurin
+          server-id: central
+          cache: maven
+
+      - name: Build without Tests
+        run: ./mvnw -e -U install -DskipTests
+
+      - name: Pre-generate critter test models
+        working-directory: core
+        run: ../mvnw dev.morphia.morphia:critter-maven:generate-test-models
+
+      - name: Cache build artifacts
+        uses: actions/cache@v5
+        with:
+          path: |
+            **/target
+            ~/.m2/repository
+          key: target-${{ steps.maven-cache-key.outputs.key }}
+
+      - name: Collect logs
+        uses: actions/upload-artifact@v6
+        if: failure()
+        with:
+          name: "logs-${{ github.sha }}-${{ github.run_id }}"
+          path: |
+            **/target/**/*.log
+            **/target/**/*.err
+          retention-days: 7
 
   Matrix:
     runs-on: ubuntu-latest

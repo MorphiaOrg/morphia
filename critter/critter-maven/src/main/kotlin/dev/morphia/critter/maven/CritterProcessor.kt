@@ -66,7 +66,11 @@ class CritterProcessor(
 
     private fun processClass(entityClass: Class<*>) {
         logger.info("Generating critter code for: ${entityClass.name}")
-        generator.generate(entityClass, critterClassLoader, false)
+        try {
+            generator.generate(entityClass, critterClassLoader, false)
+        } catch (e: Exception) {
+            logger.warn("Skipping ${entityClass.name}: ${e.message}", e)
+        }
     }
 
     private fun writeGeneratedClasses() {

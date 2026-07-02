@@ -60,7 +60,7 @@ public class PropertyAccessorGenerator extends BaseGenerator {
         } else {
             propertyDesc = ClassDesc.ofDescriptor("L" + propertyType.replace('.', '/') + ";");
         }
-        ClassDesc wrapperDesc = ClassDesc.of(getWrapperType());
+        ClassDesc wrapperDesc = isPrimitive() ? ClassDesc.of(getWrapperType()) : propertyDesc;
         ClassDesc accessorDesc = ClassDesc.of("org.bson.codecs.pojo.PropertyAccessor");
 
         byte[] bytes = ClassFile.of().build(thisDesc, cb -> {
