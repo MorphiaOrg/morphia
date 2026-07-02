@@ -79,7 +79,13 @@ class CritterTestMojo : AbstractMojo() {
     }
 
     private fun buildClassLoader(): ClassLoader {
-        val urls = project.testClasspathElements.map { File(it).toURI().toURL() }.toTypedArray()
+        val urls =
+            buildList {
+                    add(File(project.build.testOutputDirectory).toURI().toURL())
+                    add(File(project.build.outputDirectory).toURI().toURL())
+                    project.artifacts.mapNotNullTo(this) { it.file?.toURI()?.toURL() }
+                }
+                .toTypedArray()
         return URLClassLoader(urls, Thread.currentThread().contextClassLoader)
     }
 }
