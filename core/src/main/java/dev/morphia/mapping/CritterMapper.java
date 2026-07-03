@@ -154,7 +154,7 @@ public class CritterMapper extends AbstractMapper {
             return (EntityModel) ctor.newInstance(this);
         } catch (ClassNotFoundException e) {
             return null;
-        } catch (Exception e) {
+        } catch (Throwable e) {
             LOG.warn("Failed to load pre-generated model for {}: {}", type.getName(), e.getMessage());
             return null;
         }

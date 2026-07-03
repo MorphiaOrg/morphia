@@ -69,6 +69,7 @@ public class PropertyFinder {
         if (methods.isEmpty()) {
             List<FieldInfo> fields = discoverAllFields(standinType, classModel);
             if (!runtimeMode) {
+                checkAotCompatibility(fields, targetType);
                 classLoader.register(targetType.getName(), critterGenerator.fieldAccessors(targetType, fields));
             }
             for (FieldInfo field : fields) {
@@ -81,6 +82,7 @@ public class PropertyFinder {
             }
         } else {
             if (!runtimeMode) {
+                checkAotMethodCompatibility(methods, targetType, classModel);
                 classLoader.register(targetType.getName(), critterGenerator.methodAccessors(targetType, methods));
             }
             for (MethodInfo method : methods) {
@@ -93,6 +95,69 @@ public class PropertyFinder {
             }
         }
         return models;
+    }
+
+    private static final String ID_ANNOTATION_DESC = "Ldev/morphia/annotations/Id;";
+
+    private void checkAotCompatibility(List<FieldInfo> fields, Class<?> targetType) {
+        boolean hasIdOnField = false;
+        for (FieldInfo field : fields) {
+            int flags = field.access();
+            if ((flags & ClassFile.ACC_FINAL) != 0) {
+                throw new UnsupportedOperationException(
+                        "AOT skip: final field '" + field.name() + "' in " + targetType.getName());
+            }
+            if ((flags & ClassFile.ACC_PRIVATE) != 0 && field.declaringClass() != targetType) {
+                throw new UnsupportedOperationException(
+                        "AOT skip: private inherited field '" + field.name() + "' from "
+                                + field.declaringClass().getName() + " in " + targetType.getName());
+            }
+            if (field.desc().startsWith("[")) {
+                throw new UnsupportedOperationException(
+                        "AOT skip: array-typed field '" + field.name() + "' in " + targetType.getName());
+            }
+            if (field.visibleAnnotations() != null && field.visibleAnnotations().stream()
+                    .anyMatch(a -> ID_ANNOTATION_DESC.equals(a.classSymbol().descriptorString()))) {
+                hasIdOnField = true;
+            }
+        }
+        if (!hasIdOnField) {
+            // @Id not on any field — entity likely uses getter-based discovery; skip AOT
+            // so the runtime can pick the correct property discovery mode.
+            throw new UnsupportedOperationException(
+                    "AOT skip: no @Id on any field in " + targetType.getName()
+                            + "; entity requires runtime property discovery");
+        }
+    }
+
+    private void checkAotMethodCompatibility(List<MethodInfo> methods, Class<?> targetType,
+            ClassModel classModel) {
+        // If @Id is missing from the discovered methods, look for it on any getter in the hierarchy.
+        // If found there, the entity relies on METHODS discovery for @Id — skip AOT so the runtime
+        // can use the correct discovery mode.
+        boolean hasIdInMethods = methods.stream()
+                .anyMatch(m -> m.visibleAnnotations() != null && m.visibleAnnotations().stream()
+                        .anyMatch(a -> ID_ANNOTATION_DESC.equals(a.classSymbol().descriptorString())));
+        if (hasIdInMethods) {
+            return;
+        }
+        ClassModel current = classModel;
+        Class<?> cls = targetType;
+        while (cls != null && cls != Object.class) {
+            ClassModel model = current != null ? current : readClassModel(cls);
+            if (model != null) {
+                for (io.github.dmlloyd.classfile.MethodModel method : model.methods()) {
+                    if (visibleAnnotations(method).stream()
+                            .anyMatch(a -> ID_ANNOTATION_DESC.equals(a.classSymbol().descriptorString()))) {
+                        throw new UnsupportedOperationException(
+                                "AOT skip: @Id on getter in " + targetType.getName()
+                                        + "; entity requires runtime property discovery");
+                    }
+                }
+            }
+            cls = cls.getSuperclass();
+            current = null;
+        }
     }
 
     private boolean isPropertyAnnotated(List<Annotation> annotations, boolean allowUnannotated) {
@@ -141,9 +206,10 @@ public class PropertyFinder {
         List<FieldInfo> result = new ArrayList<>();
         for (FieldModel field : classModel.fields()) {
             List<Annotation> visible = visibleAnnotations(field);
-            boolean isTransient = (field.flags().flagsMask() & ClassFile.ACC_TRANSIENT) != 0
+            int flags = field.flags().flagsMask();
+            boolean isTransient = (flags & ClassFile.ACC_TRANSIENT) != 0
                     || visible.stream().map(a -> a.classSymbol().descriptorString()).anyMatch(transientDescs::contains);
-            boolean isStatic = (field.flags().flagsMask() & ClassFile.ACC_STATIC) != 0;
+            boolean isStatic = (flags & ClassFile.ACC_STATIC) != 0;
             if (!isTransient && !isStatic && isPropertyAnnotated(visible, true)) {
                 String sig = field.findAttribute(signature())
                         .map(a -> a.signature().stringValue())

@@ -24,7 +24,13 @@ public class Critter {
      * Returns the package name used for generated Critter classes for the given entity.
      */
     public static String critterPackage(Class<?> entity) {
-        return "%s.__morphia.%s".formatted(entity.getPackageName(), entity.getSimpleName().toLowerCase());
+        // Use the full class name relative to the package (replacing $ with _) so that
+        // inner classes with the same simple name in different outer classes don't collide.
+        String pkg = entity.getPackageName();
+        String relativeName = pkg.isEmpty()
+                ? entity.getName()
+                : entity.getName().substring(pkg.length() + 1);
+        return "%s.__morphia.%s".formatted(pkg, relativeName.replace('$', '_').toLowerCase());
     }
 
     /**

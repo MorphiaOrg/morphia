@@ -44,6 +44,12 @@ class CritterTestMojo : AbstractMojo() {
                 return
             }
 
+            // Remove stale generated files so skipped entities don't leave orphaned models.
+            testClassesDirectory
+                .walkTopDown()
+                .filter { it.isDirectory && it.name == "__morphia" }
+                .forEach { it.deleteRecursively() }
+
             CritterProcessor(
                     classesDirectory = testClassesDirectory,
                     outputDirectory = testClassesDirectory,
