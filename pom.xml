@@ -60,7 +60,7 @@
         <json.assert.version>1.5.3</json.assert.version>
         <javapoet.version>1.13.0</javapoet.version>
         <kotlinpoet.version>1.19.1</kotlinpoet.version>
-        <logback.version>1.5.36</logback.version>
+        <logback.version>1.5.37</logback.version>
         <ksp.version>2.3.9</ksp.version>
         <maven.version>4.0.0-rc-5</maven.version>
         <morphia.minor.version>3.0</morphia.minor.version>
@@ -70,7 +70,7 @@
         <slf4j.version>2.0.18</slf4j.version>
         <sofia.version>0.25</sofia.version>
         <surefire.version>3.1.0</surefire.version>
-        <junit.version>6.1.0</junit.version>
+        <junit.version>6.1.1</junit.version>
         <zt.exec.version>1.12</zt.exec.version>
 
         <maven.compiler.target>17</maven.compiler.target>
@@ -378,7 +378,7 @@
             <dependency>
                 <groupId>net.bytebuddy</groupId>
                 <artifactId>byte-buddy</artifactId>
-                <version>1.18.10</version>
+                <version>1.18.11</version>
             </dependency>
             <dependency>
                 <groupId>io.github.classgraph</groupId>
