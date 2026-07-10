@@ -44,11 +44,11 @@
     <properties>
         <kotlin.version>1.9.25</kotlin.version>
         <awaitility.version>1.7.0</awaitility.version>
-        <driver.version>5.8.0</driver.version>
+        <driver.version>5.9.0</driver.version>
         <driver.minor.version>5.7</driver.minor.version>
-        <jackson.version>2.22.0</jackson.version>
+        <jackson.version>2.22.1</jackson.version>
         <json.assert.version>1.5.3</json.assert.version>
-        <logback.version>1.5.37</logback.version>
+        <logback.version>1.5.38</logback.version>
         <maven.version>3.9.16</maven.version>
         <revapi.maven.plugin.version>0.15.1</revapi.maven.plugin.version>
         <revapi.java.version>0.28.4</revapi.java.version>
@@ -57,7 +57,7 @@
         <sofia.version>0.25</sofia.version>
         <surefire.version>3.1.0</surefire.version>
         <testng.version>7.12.0</testng.version>
-        <zt.exec.version>1.12</zt.exec.version>
+        <zt.exec.version>1.13.0</zt.exec.version>
 
         <maven.compiler.target>11</maven.compiler.target>
         <maven.compiler.source>11</maven.compiler.source>
