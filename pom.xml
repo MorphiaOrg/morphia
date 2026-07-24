@@ -55,7 +55,7 @@
         <driver-javadoc.link>https://mongodb.github.io/mongo-java-driver/${driver.minor.version}/apidocs</driver-javadoc.link>
         <morphia-javadoc.link>https://morphia.dev/morphia/${morphia.minor.version}/javadoc</morphia-javadoc.link>
         <classfile.backport.version>25.1</classfile.backport.version>
-        <jackson.version>2.22.0</jackson.version>
+        <jackson.version>2.22.1</jackson.version>
         <jackson-annotations.version>2.22</jackson-annotations.version>
         <json.assert.version>1.5.3</json.assert.version>
         <javapoet.version>1.13.0</javapoet.version>
