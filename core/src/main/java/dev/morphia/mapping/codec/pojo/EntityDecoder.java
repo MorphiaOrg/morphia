@@ -4,6 +4,7 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.DiscriminatorLookup;
+import dev.morphia.mapping.codec.DecodeSession;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 
 import org.bson.BsonInvalidOperationException;
@@ -45,7 +46,29 @@ public class EntityDecoder<T> implements Decoder<T> {
         if (decoderContext.hasCheckedDiscriminator()) {
             LOG.debug(format("Decoding document using codec for %s'", morphiaCodec.getEntityModel().getType().getName()));
             MorphiaInstanceCreator instanceCreator = getInstanceCreator();
+            T instance = (T) instanceCreator.getInstance();
+
+            DecodeSession session = DecodeSession.current();
+            Object prereadId = null;
+            if (session != null) {
+                prereadId = peekId(reader);
+                if (prereadId != null) {
+                    session.register(classModel.collectionName(), prereadId, instance);
+                }
+            }
+
             decodeProperties(reader, decoderContext, instanceCreator, classModel);
+
+            if (session != null && prereadId == null) {
+                PropertyModel idProp = classModel.getIdProperty();
+                if (idProp != null) {
+                    Object id = morphiaCodec.getDatastore().getMapper().getId(instance);
+                    if (id != null) {
+                        session.register(classModel.collectionName(), id, instance);
+                    }
+                }
+            }
+
             return (T) instanceCreator.getInstance();
         } else {
             entity = getCodecFromDocument(reader, classModel.useDiscriminator(), classModel.discriminatorKey(),
@@ -115,6 +138,34 @@ public class EntityDecoder<T> implements Decoder<T> {
             }
         }
         return codec != null ? codec : defaultCodec;
+    }
+
+    @Nullable
+    private Object peekId(BsonReader reader) {
+        BsonReaderMark mark = reader.getMark();
+        try {
+            reader.readStartDocument();
+            String idName = classModel.getIdProperty() != null
+                    ? classModel.getIdProperty().getMappedName()
+                    : "_id";
+            while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+                String name = reader.readName();
+                if ("_id".equals(name) || name.equals(idName)) {
+                    return morphiaCodec.getRegistry()
+                            .get(Object.class)
+                            .decode(reader, DecoderContext.builder().build());
+                } else {
+                    reader.skipValue();
+                }
+            }
+            return null;
+        } catch (Exception e) {
+            LOG.debug("Could not pre-read _id for DecodeSession on {}; cycle detection may not apply",
+                    classModel.getType().getSimpleName(), e);
+            return null;
+        } finally {
+            mark.reset();
+        }
     }
 
     protected MorphiaInstanceCreator getInstanceCreator() {

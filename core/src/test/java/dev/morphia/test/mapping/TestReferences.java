@@ -1228,4 +1228,72 @@ public class TestReferences extends ProxyTestBase {
             this.id = id;
         }
     }
+
+    @Entity
+    private static class TwoRefContainer {
+        @Id
+        private ObjectId id;
+        @Reference(idOnly = true)
+        private Ref ref1;
+        @Reference(idOnly = true)
+        private Ref ref2;
+    }
+
+    @Entity
+    private static class NodeA {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String name;
+        @Reference
+        private NodeB partner;
+    }
+
+    @Entity
+    private static class NodeB {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String name;
+        @Reference
+        private NodeA partner;
+    }
+
+    @Test
+    public void testReferenceDeduplication() {
+        // A single document with two @Reference fields pointing to the same entity.
+        // Both fields should decode to the same Java instance within one decode session.
+        Ref shared = new Ref("shared-ref");
+        getDs().save(shared);
+
+        TwoRefContainer container = new TwoRefContainer();
+        container.ref1 = shared;
+        container.ref2 = shared;
+        getDs().save(container);
+
+        TwoRefContainer loaded = getDs().find(TwoRefContainer.class).first();
+        Assertions.assertNotNull(loaded);
+        Assertions.assertSame(loaded.ref1, loaded.ref2, "Both ref fields should point to the same Ref instance");
+    }
+
+    @Test
+    public void testCyclicReferenceDoesNotStackOverflow() {
+        NodeA a = new NodeA();
+        a.name = "alpha";
+        NodeB b = new NodeB();
+        b.name = "beta";
+
+        getDs().save(a);
+        getDs().save(b);
+
+        a.partner = b;
+        b.partner = a;
+        getDs().save(a);
+        getDs().save(b);
+
+        NodeA loaded = getDs().find(NodeA.class).filter(eq("_id", a.id)).first();
+        Assertions.assertNotNull(loaded);
+        Assertions.assertNotNull(loaded.partner);
+        Assertions.assertEquals("beta", loaded.partner.name);
+        Assertions.assertNotNull(loaded.partner.partner);
+        Assertions.assertEquals("alpha", loaded.partner.partner.name);
+    }
 }
