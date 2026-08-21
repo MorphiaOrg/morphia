@@ -9,10 +9,21 @@ on:
 jobs:
   CleanUp:
     runs-on: ubuntu-latest
+    permissions:
+      actions: write
     steps:
       - uses: actions/checkout@v7
-      - uses: yanovation/delete-old-actions@v1
+      - uses: yanovian/prune-old-actions@v1 # v1.0.12
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           days-ago: 30
           keep-latest: 10
+      - name: Remove prior Clean Up runs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh run list --workflow "Clean Up" --json databaseId --limit 100 \
+            --jq '.[1:][].databaseId' |
+          while read -r run_id; do
+            gh run delete "$run_id"
+          done

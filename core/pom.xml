@@ -254,5 +254,41 @@
                 </plugins>
             </build>
         </profile>
+
+        <profile>
+            <id>cartographer</id>
+            <activation>
+                <property>
+                    <name>cartographer</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.antwerkz</groupId>
+                        <artifactId>cartographer-maven-plugin</artifactId>
+                        <version>${cartographer.version}</version>
+                        <configuration>
+                            <packages>
+                                <package>dev.morphia</package>
+                            </packages>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>instrument</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <argLine>@{argLine}</argLine>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 </project>
