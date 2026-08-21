@@ -2,6 +2,7 @@ package dev.morphia.config;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -218,5 +219,50 @@ public class ManualMorphiaConfig implements MorphiaConfig {
 
     protected <T> T orDefault(@Nullable T localValue, T defaultValue) {
         return localValue != null ? localValue : defaultValue;
+    }
+
+    /**
+     * A hash of this config's mapping-relevant fields — the ones that affect the
+     * structure/validation of the {@code EntityModel} graph a {@code Mapper} builds
+     * (packages, mapper type, naming strategies, discriminator settings, etc.) — for use as
+     * a cache key by callers that want to reuse an already-mapped {@code Mapper} across
+     * configs that are equivalent for mapping purposes.
+     * <p>
+     * Deliberately excludes fields that only affect datastore-operational behavior and vary
+     * independently of mapping structure, notably {@link #database()} (e.g. tests typically
+     * derive a unique database name per test class from otherwise-identical mapping config),
+     * along with {@link #applyCaps()}, {@link #applyIndexes()}, {@link #applyDocumentValidations()},
+     * {@link #queryFactory()}, and {@link #codecProvider()}.
+     * <p>
+     * Strategy/function fields ({@link #collectionNaming()}, {@link #propertyNaming()},
+     * {@link #discriminator()}, {@link #propertyAnnotationProviders()}) are hashed by
+     * implementation class name rather than by instance, since their factory methods
+     * (e.g. {@code NamingStrategy.camelCase()}) return a fresh instance on every call with
+     * no {@code equals}/{@code hashCode} override — hashing the instances directly would make
+     * this key non-deterministic even for two configs with the same nominal strategy.
+     *
+     * @return a hash of the mapping-relevant fields
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public int mappingCacheKey() {
+        return Objects.hash(
+                packages(),
+                mapper(),
+                collectionNaming().getClass().getName(),
+                propertyNaming().getClass().getName(),
+                discriminator().getClass().getName(),
+                discriminatorKey(),
+                enablePolymorphicQueries(),
+                ignoreFinals(),
+                propertyDiscovery(),
+                storeEmpties(),
+                storeNulls(),
+                dateStorage(),
+                propertyAnnotationProviders().stream()
+                        .map(p -> p.getClass().getName())
+                        .sorted()
+                        .toList());
     }
 }

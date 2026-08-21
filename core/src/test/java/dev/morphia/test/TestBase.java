@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -25,10 +26,13 @@ import com.mongodb.client.result.InsertManyResult;
 import com.mongodb.lang.NonNull;
 
 import dev.morphia.MorphiaDatastore;
+import dev.morphia.config.ManualMorphiaConfig;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.internal.MorphiaInternals;
+import dev.morphia.mapping.CritterMapper;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperType;
+import dev.morphia.mapping.ReflectiveMapper;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.test.config.ManualMorphiaTestConfig;
@@ -138,9 +142,40 @@ public abstract class TestBase {
 
     public MorphiaDatastore getDs() {
         if (datastore == null) {
-            datastore = new MorphiaDatastore(MongoExtension.getMongoClient(), morphiaConfig);
+            Mapper mapper = morphiaConfig instanceof ManualMorphiaConfig manual ? mapperFor(manual) : null;
+            datastore = mapper != null
+                    ? new MorphiaDatastore(MongoExtension.getMongoClient(), morphiaConfig, mapper)
+                    : new MorphiaDatastore(MongoExtension.getMongoClient(), morphiaConfig);
         }
         return datastore;
+    }
+
+    // Mapping ~100-200 test-model classes from scratch is the dominant cost of building a
+    // datastore, and it's identical across every test whose config is mapping-equivalent
+    // (same packages, mapper type, naming strategies, etc. — see
+    // ManualMorphiaConfig#mappingCacheKey()). Cache one fully-mapped/validated "template"
+    // Mapper per distinct mapping-relevant config and clone it (cheap: no re-validation, no
+    // classpath scan) for each test, under that test's own config object so per-test settings
+    // not covered by the key (database name, codec providers, etc.) still apply. EntityModel
+    // is immutable once mapped, so sharing the cloned graph across tests is safe.
+    private static final Map<Integer, Mapper> MAPPER_TEMPLATES = new ConcurrentHashMap<>();
+
+    private static Mapper mapperFor(ManualMorphiaConfig config) {
+        Mapper template = MAPPER_TEMPLATES.computeIfAbsent(config.mappingCacheKey(), k -> buildTemplateMapper(config));
+        if (template instanceof CritterMapper critter) {
+            return new CritterMapper(critter, config);
+        } else if (template instanceof ReflectiveMapper reflective) {
+            return new ReflectiveMapper(reflective, config);
+        }
+        throw new IllegalStateException("Unsupported mapper type: " + template.getClass());
+    }
+
+    private static Mapper buildTemplateMapper(MorphiaConfig config) {
+        Mapper mapper = config.mapper() == MapperType.CRITTER
+                ? new CritterMapper(config)
+                : new ReflectiveMapper(config);
+        config.packages().forEach(mapper::map);
+        return mapper;
     }
 
     public MongoDatabase getDatabase() {

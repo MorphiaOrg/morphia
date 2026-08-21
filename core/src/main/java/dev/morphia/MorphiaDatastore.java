@@ -158,10 +158,32 @@ public class MorphiaDatastore implements Datastore {
      */
     @MorphiaInternal
     public MorphiaDatastore(MongoClient client, MorphiaConfig config, ClassLoader classLoader) {
+        this(client, config, createMapper(config, classLoader), classLoader, true);
+    }
+
+    /**
+     * Builds a datastore around an already-mapped {@link Mapper} (e.g. one cloned from a
+     * previously-built mapper via its config-overriding copy constructor), skipping the
+     * classpath scan/mapping of {@code config.packages()} since the mapper's entity graph
+     * is assumed to already be populated.
+     *
+     * @param client the mongo client
+     * @param config the config
+     * @param mapper an already-populated mapper
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public MorphiaDatastore(MongoClient client, MorphiaConfig config, Mapper mapper) {
+        this(client, config, mapper, Thread.currentThread().getContextClassLoader(), false);
+    }
+
+    private MorphiaDatastore(MongoClient client, MorphiaConfig config, Mapper mapper, ClassLoader classLoader,
+            boolean mapPackages) {
         this.classLoader = classLoader;
         this.mongoClient = client;
         appendMongoClientMetadata(client);
-        this.mapper = createMapper(config, classLoader);
+        this.mapper = mapper;
         this.queryFactory = mapper.getConfig().queryFactory();
         importModels();
 
@@ -171,10 +193,12 @@ public class MorphiaDatastore implements Datastore {
         this.database = clientDatabase.withCodecRegistry(this.codecRegistry);
         operations = new CollectionOperations();
 
-        config.packages().forEach(packageName -> {
-            Sofia.logMappingPackage(packageName);
-            mapper.map(packageName);
-        });
+        if (mapPackages) {
+            config.packages().forEach(packageName -> {
+                Sofia.logMappingPackage(packageName);
+                mapper.map(packageName);
+            });
+        }
         if (config.applyCaps()) {
             applyCaps();
         }

@@ -125,9 +125,17 @@ public class EntityModel {
         this.annotations.putAll(other.annotations);
         other.propertyModelsByName.values()
                 .forEach(otherProperty -> {
+                    // PropertyModel's copy constructor already copies loadNames verbatim, so
+                    // just register them against this (new) EntityModel's lookup map directly.
+                    // Routing through alternateNames() here would re-append the same names onto
+                    // loadNames on every clone, and would throw on any name also registered by
+                    // addProperty() (e.g. a load name equal to the property's own mapped name) —
+                    // harmless on a single clone since propertyModelsByMappedName starts empty,
+                    // but a duplicate re-processed on a second clone (e.g. a session copy of a
+                    // cloned mapper) trips EntityModel.UniqueMap's duplicate check.
                     PropertyModel model = new PropertyModel(this, otherProperty);
                     addProperty(model);
-                    model.alternateNames(model.getLoadNames().toArray(new String[0]));
+                    model.getLoadNames().forEach(name -> propertyModelsByMappedName.putIfAbsent(name, model));
                 });
 
         ShardKeys shardKeys = getAnnotation(ShardKeys.class);

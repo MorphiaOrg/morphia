@@ -97,7 +97,22 @@ public abstract class AbstractMapper implements Mapper {
      */
     @MorphiaInternal
     protected AbstractMapper(AbstractMapper other) {
-        this.config = other.config;
+        this(other, other.config);
+    }
+
+    /**
+     * Copy constructor that reuses another mapper's already-mapped/validated entity
+     * graph under a different config (e.g. a different database name), rather than
+     * assuming the copy operates under the original's config.
+     *
+     * @param other  the original to clone the entity graph from
+     * @param config the config the new mapper should report/operate under
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    protected AbstractMapper(AbstractMapper other, MorphiaConfig config) {
+        this.config = config;
         this.classLoader = other.classLoader;
         this.conversions = other.conversions;
         this.discriminatorLookup = new DiscriminatorLookup(other.classLoader);

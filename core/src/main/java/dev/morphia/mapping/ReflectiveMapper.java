@@ -52,6 +52,19 @@ public class ReflectiveMapper extends AbstractMapper {
         super(other);
     }
 
+    /**
+     * Copy constructor that reuses another mapper's entity graph under a different config.
+     *
+     * @param other  the original to clone the entity graph from
+     * @param config the config the new mapper should report/operate under
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public ReflectiveMapper(ReflectiveMapper other, MorphiaConfig config) {
+        super(other, config);
+    }
+
     @Override
     @Nullable
     public EntityModel mapEntity(@Nullable Class type) {

@@ -86,7 +86,24 @@ public class CritterMapper extends AbstractMapper {
      */
     @MorphiaInternal
     public CritterMapper(CritterMapper other) {
-        super(other.config, other.classLoader);
+        this(other, other.config);
+    }
+
+    /**
+     * Copy constructor that reuses another mapper's entity graph under a different config
+     * (e.g. a different database name) — see {@link #CritterMapper(CritterMapper)} for why
+     * this shares immutable {@code CritterEntityModel} references and creates a new
+     * {@code DiscriminatorLookup} rather than delegating to {@code AbstractMapper}'s copy
+     * constructor.
+     *
+     * @param other  the original to clone the entity graph from
+     * @param config the config the new mapper should report/operate under
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public CritterMapper(CritterMapper other, MorphiaConfig config) {
+        super(config, other.classLoader);
         this.critterClassLoader = other.critterClassLoader;
         this.generator = new CritterGenerator(this);
         this.fallbackTypes = other.fallbackTypes;
