@@ -44,11 +44,11 @@
     <properties>
         <kotlin.version>1.9.25</kotlin.version>
         <awaitility.version>1.7.0</awaitility.version>
-        <driver.version>5.9.1</driver.version>
+        <driver.version>5.10.0</driver.version>
         <driver.minor.version>5.7</driver.minor.version>
-        <jackson.version>2.22.1</jackson.version>
+        <jackson.version>2.22.2</jackson.version>
         <json.assert.version>1.5.3</json.assert.version>
-        <logback.version>1.6.1</logback.version>
+        <logback.version>1.6.3</logback.version>
         <maven.version>3.9.16</maven.version>
         <revapi.maven.plugin.version>0.15.1</revapi.maven.plugin.version>
         <revapi.java.version>0.28.4</revapi.java.version>
@@ -284,12 +284,12 @@
             <dependency>
                 <groupId>net.bytebuddy</groupId>
                 <artifactId>byte-buddy</artifactId>
-                <version>1.18.11</version>
+                <version>1.18.12</version>
             </dependency>
             <dependency>
                 <groupId>io.github.classgraph</groupId>
                 <artifactId>classgraph</artifactId>
-                <version>4.8.189</version>
+                <version>4.8.192</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
