@@ -123,7 +123,12 @@ public class EntityModel {
         discriminator = other.discriminator;
 
         this.annotations.putAll(other.annotations);
-        other.propertyModelsByName.values()
+        // A property renamed in place after being registered (e.g. Kotlin delegated properties
+        // re-registering a field-discovered property under its Kotlin property name) can leave
+        // propertyModelsByName with two keys pointing at the same PropertyModel instance. Dedupe
+        // here so that property isn't cloned and re-added twice, which would trip addProperty()'s
+        // duplicate-mappedName check on the second occurrence.
+        new LinkedHashSet<>(other.propertyModelsByName.values())
                 .forEach(otherProperty -> {
                     // PropertyModel's copy constructor already copies loadNames verbatim, so
                     // just register them against this (new) EntityModel's lookup map directly.
