@@ -10,6 +10,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
@@ -35,8 +36,6 @@ import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 
-import static java.util.Arrays.asList;
-
 /**
  * Base class for Mapper implementations providing shared entity registration and lookup logic.
  *
@@ -50,6 +49,11 @@ public abstract class AbstractMapper implements Mapper {
 
     protected final Map<String, EntityModel> mappedEntities = new ConcurrentHashMap<>();
     protected final ConcurrentHashMap<String, Set<EntityModel>> mappedEntitiesByCollection = new ConcurrentHashMap<>();
+    // Models registered before their direct superclass/interface(s) are themselves registered,
+    // keyed by that not-yet-mapped parent's class name, so the relationship can be linked once
+    // the parent does show up — without rescanning every already-registered model on every new
+    // registration (see register()/linkHierarchy()).
+    private final Map<String, List<EntityModel>> pendingSubtypesByParentName = new ConcurrentHashMap<>();
     protected final List<EntityListener<?>> listeners = new ArrayList<>();
     protected final MorphiaConfig config;
     protected final DiscriminatorLookup discriminatorLookup;
@@ -354,21 +358,43 @@ public abstract class AbstractMapper implements Mapper {
         mappedEntitiesByCollection.computeIfAbsent(model.collectionName(), s -> new CopyOnWriteArraySet<>())
                 .add(model);
 
-        mappedEntities.values().forEach(mapped -> {
-            if (isParent(mapped, model)) {
-                mapped.addSubtype(model);
-            } else if (isParent(model, mapped)) {
-                model.addSubtype(mapped);
-            }
-        });
+        linkHierarchy(model);
         return model;
     }
 
-    private static boolean isParent(EntityModel parent, EntityModel child) {
-        Class<?> parentType = parent.getType();
-        return parentType.equals(child.getType().getSuperclass())
-                || parentType.isInterface()
-                        && asList(child.getType().getInterfaces()).contains(parentType);
+    /**
+     * Links a newly registered model to its already-registered direct superclass/interface(s),
+     * and vice versa: any already-registered model that was waiting on this one as its parent.
+     * This replaces an O(n) rescan of every already-registered model on every new registration
+     * (previously isParent() was checked against the full mappedEntities set each time, an O(n^2)
+     * cost overall) with direct, name-keyed lookups in both directions.
+     */
+    private void linkHierarchy(EntityModel model) {
+        Class<?> type = model.getType();
+
+        List<String> parentNames = new ArrayList<>();
+        Class<?> superclass = type.getSuperclass();
+        if (superclass != null) {
+            parentNames.add(superclass.getName());
+        }
+        for (Class<?> iface : type.getInterfaces()) {
+            parentNames.add(iface.getName());
+        }
+
+        for (String parentName : parentNames) {
+            EntityModel parent = mappedEntities.get(parentName);
+            if (parent != null) {
+                parent.addSubtype(model);
+            } else {
+                pendingSubtypesByParentName.computeIfAbsent(parentName, k -> new CopyOnWriteArrayList<>())
+                        .add(model);
+            }
+        }
+
+        List<EntityModel> waiting = pendingSubtypesByParentName.remove(type.getName());
+        if (waiting != null) {
+            waiting.forEach(model::addSubtype);
+        }
     }
 
     protected List<Class> getClasses(ClassLoader loader, String packageName)
