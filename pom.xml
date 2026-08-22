@@ -51,18 +51,18 @@
         <asm.version>9.10.1</asm.version>
         <awaitility.version>1.7.0</awaitility.version>
         <dokka.version>2.2.0</dokka.version>
-        <driver.version>5.8.0</driver.version>
+        <driver.version>5.10.0</driver.version>
         <driver.minor.version>5.6</driver.minor.version>
         <driver-javadoc.link>https://mongodb.github.io/mongo-java-driver/${driver.minor.version}/apidocs</driver-javadoc.link>
         <morphia-javadoc.link>https://morphia.dev/morphia/${morphia.minor.version}/javadoc</morphia-javadoc.link>
         <classfile.backport.version>25.1</classfile.backport.version>
-        <jackson.version>2.22.0</jackson.version>
+        <jackson.version>2.22.2</jackson.version>
         <jackson-annotations.version>2.22</jackson-annotations.version>
         <json.assert.version>1.5.3</json.assert.version>
         <javapoet.version>1.13.0</javapoet.version>
         <kotlinpoet.version>1.19.1</kotlinpoet.version>
-        <logback.version>1.5.36</logback.version>
-        <ksp.version>2.3.9</ksp.version>
+        <logback.version>1.6.3</logback.version>
+        <ksp.version>2.3.11</ksp.version>
         <maven.version>4.0.0-rc-6</maven.version>
         <morphia.minor.version>3.0</morphia.minor.version>
         <revapi.maven.plugin.version>0.15.1</revapi.maven.plugin.version>
@@ -71,8 +71,8 @@
         <slf4j.version>2.0.18</slf4j.version>
         <sofia.version>0.25</sofia.version>
         <surefire.version>3.1.0</surefire.version>
-        <junit.version>6.1.0</junit.version>
-        <zt.exec.version>1.12</zt.exec.version>
+        <junit.version>6.1.3</junit.version>
+        <zt.exec.version>1.13.0</zt.exec.version>
 
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
@@ -103,7 +103,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.5.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.revapi</groupId>
@@ -253,7 +253,7 @@
             <dependency>
                 <groupId>io.smallrye.config</groupId>
                 <artifactId>smallrye-config</artifactId>
-                <version>3.17.2</version>
+                <version>3.18.1</version>
             </dependency>
 
             <dependency>
@@ -347,7 +347,7 @@
             <dependency>
                 <groupId>org.jsoup</groupId>
                 <artifactId>jsoup</artifactId>
-                <version>1.22.2</version>
+                <version>1.23.1</version>
             </dependency>
             <dependency>
                 <groupId>org.asciidoctor</groupId>
@@ -368,7 +368,7 @@
             <dependency>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-annotations</artifactId>
-                <version>4.10.2</version>
+                <version>4.10.3</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
@@ -379,12 +379,12 @@
             <dependency>
                 <groupId>net.bytebuddy</groupId>
                 <artifactId>byte-buddy</artifactId>
-                <version>1.18.10</version>
+                <version>1.18.12</version>
             </dependency>
             <dependency>
                 <groupId>io.github.classgraph</groupId>
                 <artifactId>classgraph</artifactId>
-                <version>4.8.184</version>
+                <version>4.8.192</version>
             </dependency>
             <dependency>
                 <groupId>com.google.devtools.ksp</groupId>
