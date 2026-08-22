@@ -1,5 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 http://maven.apache.org/xsd/maven-4.1.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.1.0 http://maven.apache.org/xsd/maven-4.1.0.xsd"
+         preserve.model.version="true">
     <modelVersion>4.1.0</modelVersion>
 
     <parent>
@@ -62,7 +63,7 @@
         <kotlinpoet.version>1.19.1</kotlinpoet.version>
         <logback.version>1.5.36</logback.version>
         <ksp.version>2.3.9</ksp.version>
-        <maven.version>4.0.0-rc-5</maven.version>
+        <maven.version>4.0.0-rc-6</maven.version>
         <morphia.minor.version>3.0</morphia.minor.version>
         <revapi.maven.plugin.version>0.15.1</revapi.maven.plugin.version>
         <revapi.java.version>0.28.4</revapi.java.version>
