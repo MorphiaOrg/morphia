@@ -7,6 +7,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.DiscriminatorLookup;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.Conversions;
+import dev.morphia.mapping.codec.DecodeSession;
 import dev.morphia.mapping.codec.PropertyCodecRegistryImpl;
 import dev.morphia.sofia.Sofia;
 
@@ -77,7 +78,14 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
 
     @Override
     public T decode(BsonReader reader, DecoderContext decoderContext) {
-        return getDecoder().decode(reader, decoderContext);
+        boolean root = DecodeSession.activate();
+        try {
+            return getDecoder().decode(reader, decoderContext);
+        } finally {
+            if (root) {
+                DecodeSession.deactivate();
+            }
+        }
     }
 
     @Override
