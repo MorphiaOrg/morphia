@@ -278,7 +278,7 @@
             <dependency>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-annotations</artifactId>
-                <version>4.10.3</version>
+                <version>4.10.4</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
@@ -289,7 +289,7 @@
             <dependency>
                 <groupId>io.github.classgraph</groupId>
                 <artifactId>classgraph</artifactId>
-                <version>4.8.192</version>
+                <version>4.8.194</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
