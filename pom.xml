@@ -44,7 +44,7 @@
     <properties>
         <kotlin.version>1.9.25</kotlin.version>
         <awaitility.version>1.7.0</awaitility.version>
-        <driver.version>5.11.0</driver.version>
+        <driver.version>5.11.1</driver.version>
         <driver.minor.version>5.7</driver.minor.version>
         <jackson.version>2.22.2</jackson.version>
         <json.assert.version>1.5.3</json.assert.version>
@@ -284,7 +284,7 @@
             <dependency>
                 <groupId>net.bytebuddy</groupId>
                 <artifactId>byte-buddy</artifactId>
-                <version>1.18.13</version>
+                <version>1.18.14</version>
             </dependency>
             <dependency>
                 <groupId>io.github.classgraph</groupId>
