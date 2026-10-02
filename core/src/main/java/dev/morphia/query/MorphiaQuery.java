@@ -27,6 +27,7 @@ import dev.morphia.UpdateOptions;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.DecodeSession;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.filters.Filter;
@@ -204,7 +205,8 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     private MorphiaCursor<T> iterator(FindOptions options) {
-        return new MorphiaCursor<>(prepareCursor(options, collection));
+        return new MorphiaCursor<>(DecodeSession.forConfig(datastore.getMapper().getConfig()),
+                () -> prepareCursor(options, collection));
     }
 
     @Override

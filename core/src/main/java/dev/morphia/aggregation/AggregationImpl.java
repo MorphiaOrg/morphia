@@ -14,6 +14,7 @@ import dev.morphia.aggregation.stages.Merge;
 import dev.morphia.aggregation.stages.Out;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.mapping.codec.DecodeSession;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.MorphiaCursor;
 import dev.morphia.query.filters.Filter;
@@ -111,7 +112,8 @@ public class AggregationImpl<T> implements Aggregation<T> {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("pipeline = " + pipeline);
             }
-            iterator = new MorphiaCursor<>(options.apply(pipeline, datastore, collection, targetType).iterator());
+            iterator = new MorphiaCursor<>(DecodeSession.forConfig(datastore.getMapper().getConfig()),
+                    () -> options.apply(pipeline, datastore, collection, targetType).iterator());
         }
         MorphiaCursor<T> cursor = iterator;
         iterator = null;
