@@ -13,6 +13,7 @@ import dev.morphia.mapping.DiscriminatorFunction;
 import dev.morphia.mapping.MapperType;
 import dev.morphia.mapping.NamingStrategy;
 import dev.morphia.mapping.PropertyDiscovery;
+import dev.morphia.mapping.codec.DecodeSession;
 import dev.morphia.query.DefaultQueryFactory;
 import dev.morphia.query.QueryFactory;
 
@@ -43,6 +44,7 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     String database;
 
     DateStorage dateStorage;
+    Integer decodeSessionCacheSize;
     DiscriminatorFunction discriminator;
     String discriminatorKey;
     Boolean enablePolymorphicQueries;
@@ -76,6 +78,7 @@ public class ManualMorphiaConfig implements MorphiaConfig {
         collectionNaming = base.collectionNaming();
         database = base.database();
         dateStorage = base.dateStorage();
+        decodeSessionCacheSize = base.decodeSessionCacheSize();
         discriminator = base.discriminator();
         discriminatorKey = base.discriminatorKey();
         enablePolymorphicQueries = base.enablePolymorphicQueries();
@@ -110,11 +113,13 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     @Override
     public String toString() {
         return ("MorphiaConfig{applyCaps=%s, applyDocumentValidations=%s, applyIndexes=%s, database='%s', codecProvider=%s, " +
-                "collectionNaming=%s, dateStorage=%s, discriminator=%s, discriminatorKey='%s', enablePolymorphicQueries=%s, " +
+                "collectionNaming=%s, dateStorage=%s, decodeSessionCacheSize=%s, discriminator=%s, discriminatorKey='%s', " +
+                "enablePolymorphicQueries=%s, " +
                 "ignoreFinals=%s, mapper=%s, packages=%s, propertyDiscovery=%s, propertyNaming=%s, queryFactory=%s, " +
                 "storeEmpties=%s, storeNulls=%s}").formatted(
                         applyCaps(), applyDocumentValidations(), applyIndexes(), database(), codecProvider(), collectionNaming(),
-                        dateStorage(), discriminator(), discriminatorKey(), enablePolymorphicQueries(), ignoreFinals(), mapper(),
+                        dateStorage(), decodeSessionCacheSize(), discriminator(), discriminatorKey(), enablePolymorphicQueries(),
+                        ignoreFinals(), mapper(),
                         packages(), propertyDiscovery(), propertyNaming(), queryFactory(), storeEmpties(), storeNulls());
     }
 
@@ -150,6 +155,11 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     @Override
     public DateStorage dateStorage() {
         return orDefault(dateStorage, UTC);
+    }
+
+    @Override
+    public Integer decodeSessionCacheSize() {
+        return orDefault(decodeSessionCacheSize, DecodeSession.DEFAULT_CACHE_SIZE);
     }
 
     @Override

@@ -78,14 +78,11 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
 
     @Override
     public T decode(BsonReader reader, DecoderContext decoderContext) {
-        boolean root = DecodeSession.activate();
-        try {
+        if (DecodeSession.current() != null) {
             return getDecoder().decode(reader, decoderContext);
-        } finally {
-            if (root) {
-                DecodeSession.deactivate();
-            }
         }
+        return DecodeSession.forConfig(datastore.getMapper().getConfig())
+                .decoding(() -> getDecoder().decode(reader, decoderContext));
     }
 
     @Override

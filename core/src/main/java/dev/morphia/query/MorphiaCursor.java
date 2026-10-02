@@ -2,6 +2,7 @@ package dev.morphia.query;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import com.mongodb.ServerAddress;
 import com.mongodb.ServerCursor;
@@ -17,7 +18,7 @@ import dev.morphia.mapping.codec.DecodeSession;
  */
 public class MorphiaCursor<T> implements AutoCloseable, MongoCursor<T> {
     private final MongoCursor<T> wrapped;
-    private final boolean rootSession;
+    private final DecodeSession session;
 
     /**
      * Creates a MorphiaCursor
@@ -28,32 +29,56 @@ public class MorphiaCursor<T> implements AutoCloseable, MongoCursor<T> {
      */
     @MorphiaInternal
     public MorphiaCursor(MongoCursor<T> cursor) {
+        session = new DecodeSession();
         wrapped = cursor;
-        rootSession = DecodeSession.activate();
     }
 
     /**
-     * Closes the underlying cursor and releases the decode session if this cursor owns it.
+     * Creates a MorphiaCursor, opening the underlying cursor within this cursor's decode session. The
+     * driver decodes a whole batch of documents when it fetches one -- including the first batch, which it
+     * fetches while the cursor is being opened -- so the cursor has to be opened inside the session for
+     * those documents to share it.
+     *
+     * @param cursor supplies the Iterator to use
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public MorphiaCursor(Supplier<MongoCursor<T>> cursor) {
+        this(new DecodeSession(), cursor);
+    }
+
+    /**
+     * Creates a MorphiaCursor using the given decode session, opening the underlying cursor within it.
+     *
+     * @param session the decode session to use for this cursor's decodes
+     * @param cursor  supplies the Iterator to use
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public MorphiaCursor(DecodeSession session, Supplier<MongoCursor<T>> cursor) {
+        this.session = session;
+        wrapped = session.decoding(cursor);
+    }
+
+    /**
+     * Closes the underlying cursor.
      */
     public void close() {
-        try {
-            wrapped.close();
-        } finally {
-            if (rootSession) {
-                DecodeSession.deactivate();
-            }
-        }
+        wrapped.close();
     }
 
     @Override
     public boolean hasNext() {
-        return wrapped.hasNext();
+        // the driver decodes an entire batch of documents when it fetches one, and it fetches from here
+        return session.decoding(wrapped::hasNext);
     }
 
     @Override
     @NonNull
     public T next() {
-        return wrapped.next();
+        return session.decoding(wrapped::next);
     }
 
     @Override
@@ -63,7 +88,7 @@ public class MorphiaCursor<T> implements AutoCloseable, MongoCursor<T> {
 
     @Override
     public T tryNext() {
-        return wrapped.tryNext();
+        return session.decoding(wrapped::tryNext);
     }
 
     @Override
@@ -90,7 +115,7 @@ public class MorphiaCursor<T> implements AutoCloseable, MongoCursor<T> {
     public List<T> toList() {
         final List<T> results = new ArrayList<>();
         try (this) {
-            while (wrapped.hasNext()) {
+            while (hasNext()) {
                 results.add(next());
             }
         }

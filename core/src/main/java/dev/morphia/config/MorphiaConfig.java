@@ -318,6 +318,40 @@ public interface MorphiaConfig {
     }
 
     /**
+     * The maximum number of decoded entities one decode session will cache.
+     *
+     * <p>
+     * While decoding a query result, Morphia caches the entities it has decoded so that two
+     * {@code @Reference} fields pointing at the same document resolve to the same Java instance rather
+     * than two copies. This bounds that cache, so iterating a very large result set does not retain every
+     * document it has seen. Once the bound is reached the least recently used entries are dropped, which
+     * costs deduplication but never correctness.
+     *
+     * <p>
+     * Set this to {@code 0} to turn deduplication off. Entities being decoded are tracked separately and
+     * are never evicted, so cycles between references resolve safely whatever this is set to.
+     *
+     * @return the maximum number of entities to cache per decode session
+     * @since 3.0
+     */
+    @WithDefault("1000")
+    Integer decodeSessionCacheSize();
+
+    /**
+     * Updates this configuration with a new value and returns a new instance. The original instance is unchanged.
+     *
+     * @param value the new value
+     * @return a new instance with the updated configuration
+     * @since 3.0
+     */
+    default MorphiaConfig decodeSessionCacheSize(Integer value) {
+        var newConfig = new ManualMorphiaConfig(this);
+
+        newConfig.decodeSessionCacheSize = value;
+        return newConfig;
+    }
+
+    /**
      * Enable polymorphic queries. By default, Morphia will only query for the given type. However, in cases where subtypes are stored
      * in the same location, enabling this feature will instruct Morphia to fetch any subtypes that satisfy the query elements.
      *

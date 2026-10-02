@@ -22,11 +22,14 @@ import dev.morphia.aggregation.Aggregation;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.IdGetter;
+import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.PropertyDiscovery;
+import dev.morphia.mapping.codec.DecodeSession;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
+import dev.morphia.query.MorphiaCursor;
 import dev.morphia.test.models.Author;
 import dev.morphia.test.models.Book;
 import dev.morphia.test.models.FacebookUser;
@@ -1230,6 +1233,58 @@ public class TestReferences extends ProxyTestBase {
     }
 
     @Entity
+    public static class Cached {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    @Entity
+    public static class CachedHolder {
+        @Id
+        private ObjectId id = new ObjectId();
+        @Reference
+        private Cached ref;
+    }
+
+    @Entity
+    public static class LazyCachedHolder {
+        @Id
+        private ObjectId id = new ObjectId();
+        @Reference(lazy = true)
+        private Cached ref;
+    }
+
+    @Entity
+    private static class LifecycleNodeA {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String name;
+        @Reference
+        private LifecycleNodeB partner;
+
+        @PostLoad
+        void postLoad() {
+            loaded.incrementAndGet();
+        }
+
+        static final java.util.concurrent.atomic.AtomicInteger loaded = new java.util.concurrent.atomic.AtomicInteger();
+    }
+
+    @Entity
+    private static class LifecycleNodeB {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String name;
+        @Reference
+        private LifecycleNodeA partner;
+    }
+
+    @Entity
     private static class TwoRefContainer {
         @Id
         private ObjectId id;
@@ -1272,6 +1327,137 @@ public class TestReferences extends ProxyTestBase {
         TwoRefContainer loaded = getDs().find(TwoRefContainer.class).first();
         Assertions.assertNotNull(loaded);
         Assertions.assertSame(loaded.ref1, loaded.ref2, "Both ref fields should point to the same Ref instance");
+    }
+
+    /**
+     * A DecodeSession must never outlive the decode that installed it. A cursor that is never closed
+     * used to leave one on the thread, so a later, unrelated query resolved references out of a cache
+     * that could be arbitrarily stale.
+     */
+    @Test
+    public void testUnclosedCursorDoesNotLeakDecodeSession() {
+        Cached cached = new Cached();
+        cached.name = "v1";
+        getDs().save(cached);
+        CachedHolder holder = new CachedHolder();
+        holder.ref = cached;
+        getDs().save(holder);
+
+        // deliberately not closed
+        MorphiaCursor<Cached> leaked = getDs().find(Cached.class).iterator();
+        Assertions.assertNotNull(leaked.next());
+        Assertions.assertNull(DecodeSession.current(), "a decode session outlived the decode that installed it");
+
+        getDs().getDatabase().getCollection(getMapper().getEntityModel(Cached.class).collectionName())
+                .updateOne(new Document("_id", cached.id), new Document("$set", new Document("name", "v2")));
+
+        CachedHolder loaded = getDs().find(CachedHolder.class).first();
+        Assertions.assertNotNull(loaded);
+        Assertions.assertEquals("v2", loaded.ref.name, "reference was resolved from a stale decode session");
+    }
+
+    /**
+     * {@code merge()} reloads through a cursor it does not close; that must not strand a session either.
+     */
+    @Test
+    public void testMergeDoesNotLeakDecodeSession() {
+        Cached cached = new Cached();
+        cached.name = "v1";
+        getDs().save(cached);
+
+        cached.name = "v2";
+        getDs().merge(cached);
+
+        Assertions.assertNull(DecodeSession.current(), "merge() left a decode session on the thread");
+    }
+
+    /**
+     * Whether a reference is a proxy must not depend on what else the session happens to have cached.
+     */
+    @Test
+    public void testLazyReferenceStaysProxyWhenCached() {
+        Cached cached = new Cached();
+        cached.name = "v1";
+        getDs().save(cached);
+        LazyCachedHolder holder = new LazyCachedHolder();
+        holder.ref = cached;
+        getDs().save(holder);
+
+        // the container and the reference target are both decoded in one cursor, so the target is cached
+        // by the time the reference is resolved
+        LazyCachedHolder loaded = getDs().find(LazyCachedHolder.class).first();
+        Assertions.assertNotNull(loaded);
+        assertIsProxy(loaded.ref);
+        assertNotFetched(loaded.ref);
+        Assertions.assertEquals("v1", loaded.ref.getName());
+        assertFetched(loaded.ref);
+    }
+
+    /**
+     * Entities with lifecycle methods decode through LifecycleDecoder, which must take part in the
+     * session too or cycles through them recurse forever.
+     */
+    @Test
+    public void testCyclicReferenceWithLifecycleMethods() {
+        LifecycleNodeA a = new LifecycleNodeA();
+        a.name = "alpha";
+        LifecycleNodeB b = new LifecycleNodeB();
+        b.name = "beta";
+        getDs().save(a);
+        getDs().save(b);
+        a.partner = b;
+        b.partner = a;
+        getDs().save(a);
+        getDs().save(b);
+
+        LifecycleNodeA loaded = getDs().find(LifecycleNodeA.class).filter(eq("_id", a.id)).first();
+        Assertions.assertNotNull(loaded);
+        Assertions.assertNotNull(loaded.partner);
+        Assertions.assertEquals("beta", loaded.partner.name);
+        Assertions.assertNotNull(loaded.partner.partner);
+        Assertions.assertEquals("alpha", loaded.partner.partner.name);
+    }
+
+    /**
+     * Deduplication still spans documents within one cursor.
+     */
+    @Test
+    public void testReferenceDeduplicationAcrossDocuments() {
+        Cached shared = new Cached();
+        shared.name = "shared";
+        getDs().save(shared);
+        for (int i = 0; i < 3; i++) {
+            CachedHolder holder = new CachedHolder();
+            holder.ref = shared;
+            getDs().save(holder);
+        }
+
+        List<CachedHolder> holders = getDs().find(CachedHolder.class).iterator().toList();
+        Assertions.assertEquals(3, holders.size());
+        Assertions.assertSame(holders.get(0).ref, holders.get(1).ref);
+        Assertions.assertSame(holders.get(1).ref, holders.get(2).ref);
+    }
+
+    /**
+     * The cache bound comes from configuration, and zero turns deduplication off while leaving cycle
+     * safety intact.
+     */
+    @Test
+    public void testDecodeSessionCacheSizeIsConfigurable() {
+        Assertions.assertEquals(DecodeSession.DEFAULT_CACHE_SIZE,
+                MorphiaConfig.load().decodeSessionCacheSize().intValue());
+
+        DecodeSession disabled = DecodeSession.forConfig(MorphiaConfig.load().decodeSessionCacheSize(0));
+        ObjectId id = new ObjectId();
+        Object entity = new Cached();
+
+        // a completed entity is not retained ...
+        disabled.register("cached", id, entity);
+        Assertions.assertNull(disabled.lookup("cached", id));
+
+        // ... but one still being decoded is, so cycles still terminate
+        disabled.registerInFlight("cached", id, entity);
+        Assertions.assertSame(entity, disabled.lookup("cached", id));
     }
 
     @Test

@@ -357,30 +357,6 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         return hits;
     }
 
-    /**
-     * Returns a map of stripped-id → cached entity for each map value id that is present
-     * in the current session. Returns null if no session is active.
-     */
-    @Nullable
-    private Map<Object, Object> lookupMapInSession(Map<Object, Object> ids, EntityModel entityModel) {
-        DecodeSession session = DecodeSession.current();
-        if (session == null) {
-            return null;
-        }
-        Map<Object, Object> result = new LinkedHashMap<>();
-        for (Entry<Object, Object> entry : ids.entrySet()) {
-            Object rawId = entry.getValue();
-            String collection = rawId instanceof DBRef ? ((DBRef) rawId).getCollectionName() : entityModel.collectionName();
-            Object lookupId = rawId instanceof DBRef ? ((DBRef) rawId).getId() : rawId;
-            Object cached = session.lookup(collection, lookupId);
-            if (cached == null) {
-                return null; // any miss: fall through to full DB fetch
-            }
-            result.put(entry.getKey(), cached);
-        }
-        return result;
-    }
-
     @Nullable
     private Object fetch(Object value) {
         boolean lazy = annotation.lazy();
@@ -416,10 +392,6 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
                 ids.put(mapper.getConversions().convert(entry.getKey(), keyType), entry.getValue());
             }
             List<Object> idList = stripDbRefs(new ArrayList<>(ids.values()));
-            Map<Object, Object> cachedMap = lookupMapInSession(ids, entityModel);
-            if (cachedMap != null) {
-                return cachedMap;
-            }
             Supplier<Object> loader = () -> fetchMap(ids, entityModel);
             return lazy ? createProxy(loader, idList, entityModel.getType()) : loader.get();
 
@@ -429,12 +401,11 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             if (entityModel.getType().isInstance(id)) {
                 return id;
             }
-            Object cached = lookupInSession(id, entityModel);
-            if (cached != null) {
-                return cached;
-            }
             List<Object> ids = List.of(stripDbRef(id));
-            Supplier<Object> loader = () -> fetchSingle(id, entityModel, ignoreMissing);
+            Supplier<Object> loader = () -> {
+                Object cached = lookupInSession(id, entityModel);
+                return cached != null ? cached : fetchSingle(id, entityModel, ignoreMissing);
+            };
             return lazy ? createProxy(loader, ids, entityModel.getType()) : loader.get();
         }
     }
@@ -488,12 +459,6 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         return idMap;
     }
 
-    private List<Object> fetchCollection(List<?> ids, EntityModel entityModel, boolean ignoreMissing) {
-        return mapIdsToValues(ids, buildIdMap(ids, entityModel, ignoreMissing)).stream()
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-    }
-
     private Map<Object, Object> queryCollection(String collection, List<Object> collectionIds, EntityModel entityModel,
             boolean ignoreMissing) {
         Map<Object, Object> idMap = new HashMap<>();
@@ -526,6 +491,11 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     private Map<Object, Object> fetchMap(Map<Object, Object> ids, EntityModel entityModel) {
         Map<Object, Object> values = new LinkedHashMap<>();
         for (Entry<Object, Object> entry : ids.entrySet()) {
+            Object cached = lookupInSession(entry.getValue(), entityModel);
+            if (cached != null) {
+                values.put(entry.getKey(), cached);
+                continue;
+            }
             DBRef dbRef = entry.getValue() instanceof DBRef
                     ? (DBRef) entry.getValue()
                     : new DBRef(entityModel.collectionName(), entry.getValue());

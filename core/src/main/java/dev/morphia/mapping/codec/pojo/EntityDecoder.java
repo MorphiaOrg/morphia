@@ -46,30 +46,43 @@ public class EntityDecoder<T> implements Decoder<T> {
         if (decoderContext.hasCheckedDiscriminator()) {
             LOG.debug(format("Decoding document using codec for %s'", morphiaCodec.getEntityModel().getType().getName()));
             MorphiaInstanceCreator instanceCreator = getInstanceCreator();
-            T instance = (T) instanceCreator.getInstance();
-
             DecodeSession session = DecodeSession.current();
-            Object prereadId = null;
-            if (session != null) {
-                prereadId = peekId(reader);
-                if (prereadId != null) {
-                    session.register(classModel.collectionName(), prereadId, instance);
-                }
+
+            // Publishing the instance before its properties are decoded is what lets a reference cycle
+            // terminate, but it is only possible when the creator can hand out an instance without the
+            // decoded values. Creators that feed values to a constructor are registered after decoding
+            // instead: they still deduplicate, but a cycle through them cannot be broken.
+            Object prereadId = session != null && classModel.getIdProperty() != null && instanceCreator.isEagerInstanceSafe()
+                    ? peekId(reader)
+                    : null;
+            if (prereadId != null) {
+                session.registerInFlight(classModel.collectionName(), prereadId, instanceCreator.getInstance());
             }
 
-            decodeProperties(reader, decoderContext, instanceCreator, classModel);
-
-            if (session != null && prereadId == null) {
-                PropertyModel idProp = classModel.getIdProperty();
-                if (idProp != null) {
-                    Object id = morphiaCodec.getDatastore().getMapper().getId(instance);
-                    if (id != null) {
-                        session.register(classModel.collectionName(), id, instance);
+            boolean decoded = false;
+            try {
+                decodeProperties(reader, decoderContext, instanceCreator, classModel);
+                decoded = true;
+            } finally {
+                if (prereadId != null) {
+                    if (decoded) {
+                        session.complete(classModel.collectionName(), prereadId);
+                    } else {
+                        session.discard(classModel.collectionName(), prereadId);
                     }
                 }
             }
 
-            return (T) instanceCreator.getInstance();
+            T instance = (T) instanceCreator.getInstance();
+
+            if (session != null && prereadId == null && classModel.getIdProperty() != null) {
+                Object id = morphiaCodec.getDatastore().getMapper().getId(instance);
+                if (id != null) {
+                    session.register(classModel.collectionName(), id, instance);
+                }
+            }
+
+            return instance;
         } else {
             entity = getCodecFromDocument(reader, classModel.useDiscriminator(), classModel.discriminatorKey(),
                     morphiaCodec.getRegistry(), morphiaCodec.getDiscriminatorLookup(), morphiaCodec)
@@ -145,9 +158,7 @@ public class EntityDecoder<T> implements Decoder<T> {
         BsonReaderMark mark = reader.getMark();
         try {
             reader.readStartDocument();
-            String idName = classModel.getIdProperty() != null
-                    ? classModel.getIdProperty().getMappedName()
-                    : "_id";
+            String idName = classModel.getIdProperty().getMappedName();
             while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
                 String name = reader.readName();
                 if ("_id".equals(name) || name.equals(idName)) {
