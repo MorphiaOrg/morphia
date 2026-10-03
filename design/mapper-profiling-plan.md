@@ -105,14 +105,55 @@ Build ──► Profile (matrix: mapper = reflection, critter[, critter-runtime]
 3. **Phase 3:** async-profiler flame graphs, the RoundTrip benchmark against MongoDB, the
    same-runner head-to-head job, and an optional PR-label trigger.
 
-## Open questions
+## Decisions (settled)
 
-1. **Triggers:** every push to `master`, nightly, or manual only to start?
-2. **Critter legs:** profile critter-AOT only, or critter-runtime (Gizmo) as a third parallel
-   leg too?
-3. **History storage:** is a `gh-pages` / `benchmark-data` branch acceptable for the
-   time-series data and charts?
-4. **Scope of phase 1:** pure in-memory benchmarks only, or include a MongoDB round trip from
-   the start?
-5. **Models:** a dedicated benchmark model set (proposed), or reuse some of
-   `core/src/test` models?
+1. **Triggers:** manual only (`workflow_dispatch`) to start.
+2. **Critter legs:** three parallel legs: `reflection`, `critter` (AOT models from
+   `critter-maven`), and `critter-runtime` (Gizmo runtime generation). The runtime path may not
+   stay long term, but we want data on it first.
+3. **History storage:** a dedicated `benchmark-data` branch, set by `HISTORY_BRANCH` in the
+   workflow. We first agreed on `gh-pages`, but `gh-pages` in this repo *is* the morphia.dev
+   documentation site (`CNAME` = `morphia.dev`, updated by the docs build). Data written there
+   would be public under morphia.dev and could be wiped by the next docs push. The new branch
+   is not served anywhere. `github-action-benchmark` writes the same `data.js` and `index.html`
+   to it, and the branch can be moved or published later.
+4. **Database:** in-memory only. Phase 1 measures entity → BSON → entity and nothing that
+   touches MongoDB. `RoundTrip` is dropped.
+5. **Models:** a dedicated model set in the `benchmarks` module.
+
+## Phase 1 implementation notes
+
+- The module is `benchmarks/` (`morphia-benchmarks`). It is only in the reactor with
+  `-Dbenchmarks`, so the regular build never compiles it.
+- Two jars come out of the build:
+  - `morphia-benchmarks.jar`: the shaded JMH uber-jar, built from the plain (unwoven) classes.
+    The `reflection` and `critter-runtime` legs use it on its own.
+  - `morphia-benchmarks-critter-aot.jar`: the `critter-maven` output, i.e. the generated models
+    plus the woven entity classes. The `critter` leg puts it *in front of* the uber-jar on the
+    classpath, so the AOT classes shadow the plain ones.
+- Each benchmark state checks at setup that its variant really got the models it expects: AOT
+  classes for `critter`, `CritterClassLoader` classes for `critter-runtime`, and no fallback to
+  reflection in either critter variant. A misconfigured leg fails loudly instead of quietly
+  measuring the wrong thing.
+
+## Findings from the first local runs
+
+- **critter-maven skips AOT generation** in two cases, and falls back to runtime generation:
+  - embedded types without an `@Id` ("entity requires runtime property discovery"), which in
+    practice means every embedded type;
+  - types that inherit private fields (e.g. `Circle extends Shape` with a private
+    `Shape.color`).
+
+  So the `critter` leg is really a hybrid: top-level entities are AOT and everything they embed
+  is generated at runtime. The models stay realistic on purpose. The tiers are printed per run
+  ("Model tiers" in the job summary).
+- **Critter decode looks much slower than reflection** (local, short warmed run, JDK 21):
+
+  | decode | reflection | critter (AOT) |
+  |---|---:|---:|
+  | SIMPLE | ~2.2 µs, 3.1 KB/op | ~25 µs, 46 KB/op |
+  | NESTED | ~11.7 µs, 29 KB/op | ~62 µs, 137 KB/op |
+
+  The allocation numbers are very stable, which points to something allocated on every decode in
+  the critter path. Encode is roughly even between the two. This needs confirming on CI, then
+  investigating, probably with the JFR recordings the workflow uploads.

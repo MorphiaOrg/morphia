@@ -445,6 +445,17 @@
             </subprojects>
         </profile>
         <profile>
+            <id>benchmarks</id>
+            <activation>
+                <property>
+                    <name>benchmarks</name>
+                </property>
+            </activation>
+            <subprojects>
+                <subproject>benchmarks</subproject>
+            </subprojects>
+        </profile>
+        <profile>
             <id>coverage</id>
             <build>
                 <plugins>
