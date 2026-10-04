@@ -1,6 +1,7 @@
 package dev.morphia.critter;
 
 import java.io.InputStream;
+import java.util.Collections;
 
 import dev.morphia.mapping.Mapper;
 
@@ -64,6 +65,16 @@ public class CritterClassLoaderTest {
 
         loader.loadClass(Critter.class.getName());
         Assertions.assertNull(loader.getResource(resourceName(Critter.class)));
+    }
+
+    @Test
+    public void childClassResourcesAreStillEnumerated() throws Exception {
+        CritterClassLoader loader = new CritterClassLoader(PARENT);
+        String resource = resourceName(Mapper.class);
+        loader.register(Mapper.class.getName(), classBytes(Mapper.class));
+        loader.loadClass(Mapper.class.getName());
+
+        Assertions.assertEquals(Collections.list(PARENT.getResources(resource)), Collections.list(loader.getResources(resource)));
     }
 
     private static String resourceName(Class<?> type) {

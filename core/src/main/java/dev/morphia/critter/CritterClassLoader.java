@@ -17,8 +17,9 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * <p>
  * Registered classes, and classes from the {@code dev.morphia.critter} package, are loaded child-first so generated
  * code links against them rather than the parent's copies; everything else is delegated to the parent. A class's
- * bytes are released once it is defined, and the parent's {@code .class} resources for classes this loader defines
- * are hidden.
+ * bytes are released once it is defined. {@link #getResource(String)}, and so {@code getResourceAsStream}, returns
+ * {@code null} for the {@code .class} file of a class this loader registered or defined; {@code getResources} still
+ * lists the parent's copy, as ByteBuddy's {@code ChildFirst} loader did.
  *
  * @morphia.internal
  * @hidden
