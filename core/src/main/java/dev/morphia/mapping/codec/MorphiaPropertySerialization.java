@@ -50,6 +50,11 @@ public class MorphiaPropertySerialization implements PropertySerialization<Objec
     }
 
     private boolean isNotLoadOnly() {
-        return annotations.stream().noneMatch(a -> a.annotationType().equals(LoadOnly.class));
+        for (int i = 0; i < annotations.size(); i++) {
+            if (annotations.get(i).annotationType().equals(LoadOnly.class)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
