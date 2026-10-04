@@ -1,7 +1,13 @@
 package dev.morphia.mapping;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.mongodb.lang.Nullable;
@@ -34,7 +40,7 @@ import static dev.morphia.critter.Critter.critterPackage;
 public class CritterMapper extends AbstractMapper {
     private static final Logger LOG = LoggerFactory.getLogger(CritterMapper.class);
 
-    private final LazyClassLoader critterClassLoader;
+    private final RuntimeModels runtimeModels;
     private final CritterGenerator generator;
     private final Set<String> fallbackTypes;
 
@@ -61,7 +67,7 @@ public class CritterMapper extends AbstractMapper {
     @MorphiaInternal
     public CritterMapper(MorphiaConfig config, ClassLoader classLoader) {
         super(config, classLoader);
-        this.critterClassLoader = new LazyClassLoader(classLoader);
+        this.runtimeModels = RuntimeModels.forConfig(config, classLoader);
         this.generator = new CritterGenerator(this);
         this.fallbackTypes = ConcurrentHashMap.newKeySet();
 
@@ -104,7 +110,7 @@ public class CritterMapper extends AbstractMapper {
     @MorphiaInternal
     public CritterMapper(CritterMapper other, MorphiaConfig config) {
         super(config, other.classLoader);
-        this.critterClassLoader = other.critterClassLoader;
+        this.runtimeModels = other.runtimeModels;
         this.generator = new CritterGenerator(this);
         this.fallbackTypes = other.fallbackTypes;
         this.listeners.addAll(other.listeners);
@@ -184,9 +190,7 @@ public class CritterMapper extends AbstractMapper {
     @Nullable
     private EntityModel tryRuntimeGeneration(Class<?> type) {
         try {
-            CritterClassLoader loader = critterClassLoader.get();
-            EntityModelGenerator generator = this.generator.generate(type, loader, true);
-            Class<?> modelClass = loader.loadClass(generator.getGeneratedType());
+            Class<?> modelClass = runtimeModels.modelClass(type, generator);
             Constructor<?> ctor = modelClass.getConstructor(Mapper.class);
             return (EntityModel) ctor.newInstance(this);
         } catch (Exception e) {
@@ -206,31 +210,92 @@ public class CritterMapper extends AbstractMapper {
     }
 
     /**
-     * Creates the {@link CritterClassLoader} the first time a model has to be generated at runtime. When every model
-     * is pre-generated, it is never needed. Copies of a mapper share the same instance.
+     * The runtime-generated model classes for one parent class loader and mapping configuration. The
+     * {@link CritterClassLoader} is created the first time a model has to be generated at runtime; when every model is
+     * pre-generated, it is never needed.
+     * <p>
+     * Copies of a mapper share the same instance. So do separate mappers with the same parent loader and an equivalent
+     * configuration (see {@link #generationKey(MorphiaConfig)}), so each entity is generated once rather than once per
+     * mapper. Instances are cached weakly: once no mapper refers to one, its loader and classes can be collected.
      */
-    private static final class LazyClassLoader {
-        private final ClassLoader parent;
-        @Nullable
-        private volatile CritterClassLoader loader;
+    private static final class RuntimeModels {
+        private static final Map<ClassLoader, Map<List<Object>, WeakReference<RuntimeModels>>> SHARED = new WeakHashMap<>();
 
-        private LazyClassLoader(ClassLoader parent) {
+        private final ClassLoader parent;
+        private final Map<Class<?>, Class<?>> modelClasses = new HashMap<>();
+        @Nullable
+        private CritterClassLoader loader;
+
+        private RuntimeModels(ClassLoader parent) {
             this.parent = parent;
             this.loader = parent instanceof CritterClassLoader ccl ? ccl : null;
         }
 
-        private CritterClassLoader get() {
-            CritterClassLoader result = loader;
-            if (result == null) {
-                synchronized (this) {
-                    result = loader;
-                    if (result == null) {
-                        result = new CritterClassLoader(parent);
-                        loader = result;
-                    }
-                }
+        /**
+         * @return the shared instance for this loader and configuration, or a new unshared one if the configuration
+         *         can't be compared safely or {@code parent} is itself a {@link CritterClassLoader}
+         */
+        private static RuntimeModels forConfig(MorphiaConfig config, ClassLoader parent) {
+            List<Object> key = parent instanceof CritterClassLoader ? null : generationKey(config);
+            if (key == null) {
+                return new RuntimeModels(parent);
             }
-            return result;
+            synchronized (SHARED) {
+                Map<List<Object>, WeakReference<RuntimeModels>> byConfig = SHARED.computeIfAbsent(parent, p -> new HashMap<>());
+                byConfig.values().removeIf(ref -> ref.get() == null);
+                WeakReference<RuntimeModels> ref = byConfig.get(key);
+                RuntimeModels models = ref != null ? ref.get() : null;
+                if (models == null) {
+                    models = new RuntimeModels(parent);
+                    byConfig.put(key, new WeakReference<>(models));
+                }
+                return models;
+            }
         }
+
+        /**
+         * Returns the model class for {@code type}, generating it the first time any mapper sharing this instance asks.
+         */
+        private synchronized Class<?> modelClass(Class<?> type, CritterGenerator generator) throws ClassNotFoundException {
+            Class<?> modelClass = modelClasses.get(type);
+            if (modelClass == null) {
+                if (loader == null) {
+                    loader = new CritterClassLoader(parent);
+                }
+                EntityModelGenerator entityModel = generator.generate(type, loader, true);
+                modelClass = loader.loadClass(entityModel.getGeneratedType());
+                modelClasses.put(type, modelClass);
+            }
+            return modelClass;
+        }
+    }
+
+    /**
+     * The configuration settings that runtime generation bakes into a model's bytecode. Two configurations with equal
+     * keys produce identical models, so their mappers can share generated classes.
+     *
+     * @return the key, or {@code null} if a strategy isn't one of Morphia's own, in which case two instances of the same
+     *         class could still behave differently and the models aren't shared
+     */
+    @Nullable
+    private static List<Object> generationKey(MorphiaConfig config) {
+        List<Object> strategies = new ArrayList<>();
+        strategies.add(config.collectionNaming());
+        strategies.add(config.propertyNaming());
+        strategies.add(config.discriminator());
+        strategies.addAll(config.propertyAnnotationProviders());
+
+        List<Object> key = new ArrayList<>();
+        for (Object strategy : strategies) {
+            Class<?> strategyClass = strategy.getClass();
+            if (!strategyClass.getName().startsWith("dev.morphia.") || strategyClass.isAnonymousClass()
+                    || strategyClass.isSynthetic()) {
+                return null;
+            }
+            key.add(strategyClass.getName());
+        }
+        key.add(config.discriminatorKey());
+        key.add(config.propertyDiscovery());
+        return key;
     }
 }

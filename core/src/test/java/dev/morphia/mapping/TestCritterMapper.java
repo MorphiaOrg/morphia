@@ -69,6 +69,48 @@ public class TestCritterMapper {
     }
 
     @Test
+    public void testMappersShareRuntimeModels() {
+        EntityModel first = mapper().mapEntity(CritterMapperTestEntity.class);
+        EntityModel second = mapper().mapEntity(CritterMapperTestEntity.class);
+
+        Assertions.assertInstanceOf(CritterClassLoader.class, first.getClass().getClassLoader(),
+                "Expected a runtime-generated model");
+        Assertions.assertSame(first.getClass(), second.getClass(),
+                "Mappers with equivalent configs should reuse the generated model class");
+        Assertions.assertNotSame(first, second, "Each mapper still gets its own model instance");
+    }
+
+    @Test
+    public void testDifferentNamingDoesNotShareRuntimeModels() {
+        EntityModel camelCase = mapper().mapEntity(CritterMapperTestEntity.class);
+        EntityModel title = new CritterMapper(MorphiaConfig.load()
+                .mapper(MapperType.CRITTER)
+                .propertyNaming(NamingStrategy.title()))
+                .mapEntity(CritterMapperTestEntity.class);
+
+        Assertions.assertNotSame(camelCase.getClass(), title.getClass());
+        Assertions.assertEquals("name", camelCase.getProperty("name").getMappedName());
+        Assertions.assertEquals("Name", title.getProperty("name").getMappedName());
+    }
+
+    @Test
+    public void testCustomNamingDoesNotShareRuntimeModels() {
+        NamingStrategy upperCase = new NamingStrategy() {
+            @Override
+            public String apply(String value) {
+                return value.toUpperCase();
+            }
+        };
+        MorphiaConfig config = MorphiaConfig.load().mapper(MapperType.CRITTER).propertyNaming(upperCase);
+        EntityModel first = new CritterMapper(config).mapEntity(CritterMapperTestEntity.class);
+        EntityModel second = new CritterMapper(config).mapEntity(CritterMapperTestEntity.class);
+
+        Assertions.assertNotSame(first.getClass(), second.getClass(),
+                "A custom strategy can't be compared safely, so its models aren't shared");
+        Assertions.assertEquals("NAME", second.getProperty("name").getMappedName());
+    }
+
+    @Test
     public void testCopyHasIndependentDiscriminatorLookup() {
         CritterMapper original = mapper();
         original.mapEntity(CritterMapperTestEntity.class);
