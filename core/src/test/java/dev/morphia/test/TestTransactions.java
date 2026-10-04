@@ -9,6 +9,7 @@ import com.mongodb.client.result.DeleteResult;
 
 import dev.morphia.Datastore;
 import dev.morphia.aggregation.stages.Lookup;
+import dev.morphia.aggregation.stages.Match;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Reference;
@@ -29,6 +30,7 @@ import org.junit.jupiter.api.Test;
 import static com.mongodb.ClientSessionOptions.builder;
 import static com.mongodb.WriteConcern.MAJORITY;
 import static dev.morphia.query.updates.UpdateOperators.inc;
+import static dev.morphia.query.updates.UpdateOperators.set;
 
 /*@Tags(@Tag("transactions"))*/
 public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
@@ -278,6 +280,44 @@ public class TestTransactions extends dev.morphia.test.TemplatedTestBase {
 
             return null;
         });
+    }
+
+    @Test
+    @DisplayName("Eager references resolve on every session read path (nested queries during decode)")
+    public void referencesInSessionReads() {
+        getDs().withTransaction(session -> {
+            Company company = new Company();
+            company.name = "test";
+            company = session.save(company);
+
+            for (String email : List.of("first@test.com", "second@test.com")) {
+                Employee employee = new Employee();
+                employee.email = email;
+                employee.company = company;
+                session.save(employee);
+            }
+
+            assertCompany(session.find(Employee.class).first());
+            session.find(Employee.class).iterator().toList().forEach(TestTransactions::assertCompany);
+            session.aggregate(Employee.class)
+                    .pipeline(Match.match(Filters.eq("email", "first@test.com")))
+                    .toList()
+                    .forEach(TestTransactions::assertCompany);
+            assertCompany(session.find(Employee.class)
+                    .filter(Filters.eq("email", "first@test.com"))
+                    .modify(set("email", "updated@test.com")));
+            assertCompany(session.find(Employee.class)
+                    .filter(Filters.eq("email", "second@test.com"))
+                    .findAndDelete());
+
+            return null;
+        });
+    }
+
+    private static void assertCompany(Employee employee) {
+        Assertions.assertNotNull(employee);
+        Assertions.assertNotNull(employee.company);
+        Assertions.assertEquals("test", employee.company.name);
     }
 
     @Test
