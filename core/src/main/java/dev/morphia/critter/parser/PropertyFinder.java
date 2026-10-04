@@ -1,9 +1,13 @@
 package dev.morphia.critter.parser;
 
+import java.net.URL;
+import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.generator.CritterGenerator;
@@ -70,7 +74,7 @@ public class PropertyFinder {
             List<FieldInfo> fields = discoverAllFields(standinType, classModel);
             if (!runtimeMode) {
                 checkAotCompatibility(fields, standinType, targetType, classModel);
-                classLoader.register(targetType.getName(), critterGenerator.fieldAccessors(targetType, fields));
+                weaveFieldAccessors(standinType, targetType, fields);
             }
             for (FieldInfo field : fields) {
                 if (runtimeMode) {
@@ -108,9 +112,17 @@ public class PropertyFinder {
                 throw new UnsupportedOperationException(
                         "AOT skip: final field '" + field.name() + "' in " + targetType.getName());
             }
-            if ((flags & ClassFile.ACC_PRIVATE) != 0 && field.declaringClass() != targetType) {
+            if (standinType != targetType) {
+                // Stand-ins keep the original rule: every accessor is woven into the target.
+                if ((flags & ClassFile.ACC_PRIVATE) != 0 && field.declaringClass() != targetType) {
+                    throw new UnsupportedOperationException(
+                            "AOT skip: private inherited field '" + field.name() + "' from "
+                                    + field.declaringClass().getName() + " in " + targetType.getName());
+                }
+            } else if (accessorOwner(field, standinType, targetType) != field.declaringClass()
+                    && !isAccessibleFrom(field, targetType)) {
                 throw new UnsupportedOperationException(
-                        "AOT skip: private inherited field '" + field.name() + "' from "
+                        "AOT skip: inaccessible inherited field '" + field.name() + "' from "
                                 + field.declaringClass().getName() + " in " + targetType.getName());
             }
             if (field.desc().startsWith("[")) {
@@ -122,10 +134,102 @@ public class PropertyFinder {
                 hasIdOnField = true;
             }
         }
+        if (standinType == targetType) {
+            checkShadowedFields(targetType, classModel);
+        }
         // An entity without an @Id (e.g., an embedded type) is fine to generate from its fields. Only an @Id on a
         // getter needs the runtime, which can pick the discovery mode that finds it.
         if (!hasIdOnField) {
             checkIdOnGetter(standinType, targetType, classModel);
+        }
+    }
+
+    /**
+     * Adds the {@code __readXxx}/{@code __writeXxx} accessor methods for {@code fields}. Each field's accessors are woven into
+     * the class declaring it when that class can be rewritten alongside the entity, so inherited private and package-private
+     * fields are reachable; the entity inherits those methods. Fields from other superclasses (e.g. from a library) are woven
+     * into the entity itself.
+     * <p>
+     * What is woven into a class depends only on that class, so subclasses sharing a superclass all produce the same bytes for
+     * it.
+     */
+    private void weaveFieldAccessors(Class<?> standinType, Class<?> targetType, List<FieldInfo> fields) {
+        if (standinType != targetType) {
+            classLoader.register(targetType.getName(), critterGenerator.fieldAccessors(targetType, fields));
+            return;
+        }
+        Set<Class<?>> owners = new LinkedHashSet<>();
+        owners.add(targetType);
+        for (FieldInfo field : fields) {
+            owners.add(accessorOwner(field, standinType, targetType));
+        }
+        for (Class<?> owner : owners) {
+            List<FieldInfo> ownerFields = owner == targetType ? fields : discoverAllFields(owner, null);
+            List<FieldInfo> woven = ownerFields.stream()
+                    .filter(field -> accessorOwner(field, owner, owner) == owner)
+                    .toList();
+            classLoader.register(owner.getName(), critterGenerator.fieldAccessors(owner, woven));
+        }
+    }
+
+    /**
+     * @return the class whose bytecode receives the accessor methods for {@code field}
+     */
+    private static Class<?> accessorOwner(FieldInfo field, Class<?> standinType, Class<?> targetType) {
+        Class<?> declaring = field.declaringClass();
+        return standinType == targetType && canWeave(declaring, targetType) ? declaring : targetType;
+    }
+
+    /**
+     * A superclass can be rewritten alongside the entity when both were loaded from the same location, i.e. the same
+     * output directory or jar. A superclass from a library must be left alone.
+     */
+    private static boolean canWeave(Class<?> type, Class<?> entity) {
+        if (type == entity) {
+            return true;
+        }
+        URL location = location(type);
+        return location != null && location.equals(location(entity));
+    }
+
+    private static URL location(Class<?> type) {
+        CodeSource codeSource = type.getProtectionDomain().getCodeSource();
+        return codeSource != null ? codeSource.getLocation() : null;
+    }
+
+    private static boolean isAccessibleFrom(FieldInfo field, Class<?> owner) {
+        int flags = field.access();
+        if ((flags & (ClassFile.ACC_PUBLIC | ClassFile.ACC_PROTECTED)) != 0) {
+            return true;
+        }
+        return (flags & ClassFile.ACC_PRIVATE) == 0
+                && field.declaringClass().getPackageName().equals(owner.getPackageName())
+                && field.declaringClass().getClassLoader() == owner.getClassLoader();
+    }
+
+    /**
+     * Rejects an entity that redeclares a field from a superclass that is woven too: both classes would get the same
+     * {@code __readXxx}/{@code __writeXxx} methods, and the subclass's would override the superclass's.
+     */
+    private void checkShadowedFields(Class<?> targetType, ClassModel classModel) {
+        Map<String, Class<?>> declaredBy = new LinkedHashMap<>();
+        Class<?> current = targetType;
+        ClassModel currentModel = classModel;
+        while (current != null && current != Object.class && canWeave(current, targetType)) {
+            ClassModel model = currentModel != null ? currentModel : readClassModel(current);
+            if (model == null) {
+                break;
+            }
+            for (FieldInfo field : discoverFields(model, current)) {
+                Class<?> shadowing = declaredBy.putIfAbsent(field.name(), current);
+                if (shadowing != null) {
+                    throw new UnsupportedOperationException(
+                            "AOT skip: field '" + field.name() + "' in " + shadowing.getName() + " shadows a field in "
+                                    + current.getName());
+                }
+            }
+            current = current.getSuperclass();
+            currentModel = null;
         }
     }
 

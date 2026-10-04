@@ -21,15 +21,21 @@ import dev.morphia.annotations.internal.IndexOptionsBuilder;
 import dev.morphia.annotations.internal.IndexesBuilder;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.MethodInfo;
+import dev.morphia.critter.sources.CircleExample;
 import dev.morphia.critter.sources.EmbeddedExample;
 import dev.morphia.critter.sources.Example;
 import dev.morphia.critter.sources.GetterIdExample;
 import dev.morphia.critter.sources.MethodExample;
+import dev.morphia.critter.sources.PackageChildExample;
+import dev.morphia.critter.sources.ShadowingExample;
+import dev.morphia.critter.sources.ShapeExample;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
 import dev.morphia.mapping.lifecycle.EntityListenerAdapter;
 
+import org.bson.codecs.pojo.PropertyAccessor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -121,6 +127,66 @@ public class TestGeneration {
         var e = Assertions.assertThrows(UnsupportedOperationException.class,
                 () -> new CritterGenerator(defaultMapper()).generate(GetterIdExample.class, critterClassLoader, false));
         Assertions.assertTrue(e.getMessage().contains("@Id on getter"), e.getMessage());
+    }
+
+    @Test
+    public void testGeneratorInheritedPrivateFields() throws Exception {
+        EntityModel model = generateModel(CircleExample.class);
+        Object circle = critterClassLoader.loadClass(CircleExample.class.getName()).getConstructor().newInstance();
+
+        assertRoundTrip(model, circle, "color", "red");
+        assertRoundTrip(model, circle, "radius", 2.5);
+        Assertions.assertNotNull(model.getIdProperty(), "Should find the inherited ID property");
+    }
+
+    @Test
+    public void testGeneratorInheritedPackagePrivateFields() throws Exception {
+        EntityModel model = generateModel(PackageChildExample.class);
+        Object child = critterClassLoader.loadClass(PackageChildExample.class.getName()).getConstructor().newInstance();
+
+        assertRoundTrip(model, child, "label", "a label");
+        assertRoundTrip(model, child, "size", 42);
+    }
+
+    @Test
+    public void testGeneratorAbstractEntity() throws Exception {
+        EntityModel model = generateModel(ShapeExample.class);
+
+        Assertions.assertTrue(model.isAbstract(), "Should be abstract");
+        Assertions.assertEquals(List.of("_id", "color"),
+                model.getProperties().stream().map(PropertyModel::getMappedName).toList());
+    }
+
+    @Test
+    public void testGeneratorSiblingsShareSuperclassAccessors() throws Exception {
+        CritterGenerator generator = new CritterGenerator(defaultMapper());
+        generator.generate(CircleExample.class, critterClassLoader, false);
+        byte[] fromCircle = critterClassLoader.getTypeDefinitions().get(ShapeExample.class.getName());
+        generator.generate(ShapeExample.class, critterClassLoader, false);
+        byte[] fromShape = critterClassLoader.getTypeDefinitions().get(ShapeExample.class.getName());
+
+        Assertions.assertArrayEquals(fromCircle, fromShape,
+                "The superclass should be woven the same way no matter which entity triggers it");
+    }
+
+    @Test
+    public void testGeneratorSkipsShadowedFields() {
+        var e = Assertions.assertThrows(UnsupportedOperationException.class,
+                () -> new CritterGenerator(defaultMapper()).generate(ShadowingExample.class, critterClassLoader, false));
+        Assertions.assertTrue(e.getMessage().contains("shadows"), e.getMessage());
+    }
+
+    private EntityModel generateModel(Class<?> type) throws Exception {
+        EntityModelGenerator generator = new CritterGenerator(defaultMapper()).generate(type, critterClassLoader, false);
+        Class<?> modelClass = critterClassLoader.loadClass(generator.getGeneratedType());
+        return (EntityModel) modelClass.getConstructor(Mapper.class).newInstance(defaultMapper());
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private static void assertRoundTrip(EntityModel model, Object entity, String property, Object value) {
+        PropertyAccessor accessor = model.getProperty(property).getAccessor();
+        accessor.set(entity, value);
+        Assertions.assertEquals(value, accessor.get(entity), property);
     }
 
     private void validate(EntityModel model) {

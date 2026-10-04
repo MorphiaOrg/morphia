@@ -59,7 +59,7 @@ class CritterProcessor(
         return scanResult.use { result ->
             result
                 .getClassesWithAnnotation(Entity::class.java)
-                .filter { !it.isAbstract && !it.isInterface }
+                .filter { !it.isInterface }
                 .map { classLoader.loadClass(it.name) }
         }
     }
