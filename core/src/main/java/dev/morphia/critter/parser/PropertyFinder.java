@@ -69,7 +69,7 @@ public class PropertyFinder {
         if (methods.isEmpty()) {
             List<FieldInfo> fields = discoverAllFields(standinType, classModel);
             if (!runtimeMode) {
-                checkAotCompatibility(fields, targetType, classModel);
+                checkAotCompatibility(fields, standinType, targetType, classModel);
                 classLoader.register(targetType.getName(), critterGenerator.fieldAccessors(targetType, fields));
             }
             for (FieldInfo field : fields) {
@@ -82,7 +82,7 @@ public class PropertyFinder {
             }
         } else {
             if (!runtimeMode) {
-                checkAotMethodCompatibility(methods, targetType, classModel);
+                checkAotMethodCompatibility(methods, standinType, targetType, classModel);
                 classLoader.register(targetType.getName(), critterGenerator.methodAccessors(targetType, methods));
             }
             for (MethodInfo method : methods) {
@@ -99,7 +99,8 @@ public class PropertyFinder {
 
     private static final String ID_ANNOTATION_DESC = "Ldev/morphia/annotations/Id;";
 
-    private void checkAotCompatibility(List<FieldInfo> fields, Class<?> targetType, ClassModel classModel) {
+    private void checkAotCompatibility(List<FieldInfo> fields, Class<?> standinType, Class<?> targetType,
+            ClassModel classModel) {
         boolean hasIdOnField = false;
         for (FieldInfo field : fields) {
             int flags = field.access();
@@ -124,11 +125,11 @@ public class PropertyFinder {
         // An entity without an @Id (e.g., an embedded type) is fine to generate from its fields. Only an @Id on a
         // getter needs the runtime, which can pick the discovery mode that finds it.
         if (!hasIdOnField) {
-            checkIdOnGetter(targetType, classModel);
+            checkIdOnGetter(standinType, targetType, classModel);
         }
     }
 
-    private void checkAotMethodCompatibility(List<MethodInfo> methods, Class<?> targetType,
+    private void checkAotMethodCompatibility(List<MethodInfo> methods, Class<?> standinType, Class<?> targetType,
             ClassModel classModel) {
         // If @Id is missing from the discovered methods, look for it on any getter in the hierarchy.
         boolean hasIdInMethods = methods.stream()
@@ -137,16 +138,17 @@ public class PropertyFinder {
         if (hasIdInMethods) {
             return;
         }
-        checkIdOnGetter(targetType, classModel);
+        checkIdOnGetter(standinType, targetType, classModel);
     }
 
     /**
      * Skips AOT when {@code @Id} is on a getter anywhere in the hierarchy: the entity relies on METHODS discovery for
-     * its id, so the runtime must pick the discovery mode.
+     * its id, so the runtime must pick the discovery mode. The scan walks {@code standinType}'s hierarchy (the type
+     * {@code classModel} describes), which differs from {@code targetType} for {@code @ExternalEntity} stand-ins.
      */
-    private void checkIdOnGetter(Class<?> targetType, ClassModel classModel) {
+    private void checkIdOnGetter(Class<?> standinType, Class<?> targetType, ClassModel classModel) {
         ClassModel current = classModel;
-        Class<?> cls = targetType;
+        Class<?> cls = standinType;
         while (cls != null && cls != Object.class) {
             ClassModel model = current != null ? current : readClassModel(cls);
             if (model != null) {

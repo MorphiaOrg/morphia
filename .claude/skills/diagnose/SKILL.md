@@ -70,8 +70,8 @@ The two paths:
 
 `PropertyFinder` rejects some entities for AOT with `UnsupportedOperationException("AOT skip: ...")`:
 final fields, private fields inherited from a superclass, array-typed fields, and entities whose `@Id` is on a getter.
-Entities with no `@Id` at all (e.g., embedded types) are generated normally. Those entities use runtime generation instead, so an "AOT skip" warning in the
-critter-maven output is expected for them and is not an error.
+Entities with no `@Id` at all (e.g., embedded types) are generated normally. The rejected entities use runtime generation instead,
+so an "AOT skip" warning in the critter-maven output is expected for them and is not an error.
 
 ## Common Morphia/Critter Issues
 
