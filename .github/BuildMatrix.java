@@ -33,7 +33,7 @@ public class BuildMatrix {
                 .map(d -> ((JsonNode)d.get("version")).asText())
                 .map(Semver::parse)
                 .filter(it -> it.getPreRelease().isEmpty() || it.getPreRelease().get(0).equals(""))
-                .filter(it -> it.isGreaterThanOrEqualTo("4.0.0"))
+                .filter(it -> it.isGreaterThanOrEqualTo("7.0.0"))
                 .map(it -> format("'%s'", it))
                 .collect(Collectors.toList());
         System.out.println(result);
