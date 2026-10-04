@@ -25,7 +25,8 @@ public abstract class CritterEntityModel extends EntityModel {
     }
 
     /**
-     * Sets up {@link MorphiaPropertySerialization} on every property model.
+     * Sets up {@link MorphiaPropertySerialization} and the mapper's {@link dev.morphia.mapping.codec.Conversions} on every
+     * property model.
      * Must be called at the end of the generated subclass constructor, after all
      * properties have been added via {@code addProperty()}.
      *
@@ -39,6 +40,8 @@ public abstract class CritterEntityModel extends EntityModel {
                 property.alternateNames(loadNames.toArray(new String[0]));
             }
             property.serialization(new MorphiaPropertySerialization(mapper.getConfig(), property));
+            // Without this, PropertyModel#setValue builds a new Conversions registry on every call.
+            property.conversions(mapper.getConversions());
         }
         initializeListeners();
     }
