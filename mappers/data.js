@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1791154344571,
+  "lastUpdate": 1791154347499,
   "repoUrl": "https://github.com/MorphiaOrg/morphia",
   "entries": {
     "Mapper: reflection": [
@@ -472,6 +472,100 @@ window.BENCHMARK_DATA = {
           {
             "name": "dev.morphia.benchmarks.MappingBenchmark.coldStart ( {\"variant\":\"critter-runtime\"} )",
             "value": 358.8783896,
+            "unit": "ms/op",
+            "extra": "iterations: 1\nforks: 10\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Justin Lee",
+            "username": "evanchooly",
+            "email": "evanchooly@users.noreply.github.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "6853f62f6b5e4968779a8476a3736cecb71402d1",
+          "message": "Create the critter class loader lazily and drop its ByteBuddy base class (#4344)\n\n## Problem\n\nAfter #4342 and #4343, every benchmark model loads from AOT, but\ncritter's `coldStart` was still about 12% slower than reflection. The\ncause was `CritterMapper`'s constructor, which always creates a\n`CritterClassLoader`, even when every model is pre-generated and the\nloader is never used.\n\n`CritterClassLoader` extended ByteBuddy's\n`ByteArrayClassLoader.ChildFirst`, so creating one initialized a large\npart of ByteBuddy on every cold start. Diffing the classes loaded by a\ncold `mappedMapper` call against reflection showed 79 ByteBuddy classes,\nplus JDK dynamic proxies and classes like `Process`, `Console` and\n`ResourceBundle` that nothing else needs. Constructing a\n`CritterClassLoader` alone cost about 43–60 ms in a fresh JVM.\n\n## Fix\n\n- **Lazy loader:** `CritterMapper` creates its `CritterClassLoader` the\nfirst time a model has to be generated at runtime. Copies of a mapper\nshare one holder, so they still share one loader.\n- **No ByteBuddy base class:** `CritterClassLoader` is now a plain\n`ClassLoader`. It keeps the behavior that generated code relies on:\n- registered classes and `dev.morphia.critter.*` classes load\nchild-first; everything else goes to the parent\n- a class's bytes are released once it is defined, as with ByteBuddy's\ndefault `LATENT` persistence\n- `getResource`/`getResourceAsStream` return `null` for the `.class`\nfile of a registered or child-defined class; `getResources` still lists\nthe parent's copy, as before\n\nByteBuddy is still a dependency because `ReferenceCodec` uses it for\nlazy reference proxies.\n\n`CritterClassLoaderTest` pins this contract. I wrote it first and\nconfirmed it passes against the old ByteBuddy-based loader, then against\nthe new one.\n\nOne behavior change: the no-arg-loader constructor used to pass the\n`CritterClassLoader` to `AbstractMapper` as the mapper's class loader,\nwhich is used for `Conversions`, `DiscriminatorLookup` and package\nscanning. It now passes the context class loader directly. Most classes\nresolve the same way, because the old loader delegated them to the\nparent. `dev.morphia.critter.*` classes looked up by name are the\nexception: the old loader would have returned a second copy of those,\ndistinct from the mapped class.\n\n## Results\n\nJMH `MappingBenchmark.coldStart`, 20 forks:\n\n| | master | this PR |\n|---|---:|---:|\n| critter | 224.8 ± 8.1 ms | **197.5 ± 4.5 ms** |\n| critter-runtime | 241.4 ± 5.3 ms | 229.6 ± 19.1 ms |\n| reflection | 133.8 ± 4.1 ms | n/a |\n\nOn master alone most of the critter gap is the types that still fall\nback to runtime generation, which #4342 and #4343 fix. With all three\nchanges combined, critter's `coldStart` measured 125.4 ± 1.5 ms against\n128.6 ± 2.7 ms for reflection. A control run without the lazy loader\nmeasured 160.9 ± 16.8 ms. That combined measurement used the lazy loader\nwith the old ByteBuddy base class; once the loader is never created, the\nbase class makes no difference there.\n\n## Testing\n\n- New `CritterClassLoaderTest`: passes against both the old and new\nloader.\n- Full `morphia-core` suite with regenerated AOT test models and\n`-Dmorphia.mapper=critter`: 1279 run, 0 failures. The 33 AOT-skipped\ntest entities go through runtime generation, so this exercises the new\nloader.\n- Full `morphia-core` suite with `-Dmorphia.mapper=reflection`: 1279\nrun, 0 failures.\n- critter-maven unit tests (5) and invoker ITs (3) pass.",
+          "timestamp": "2026-10-04T22:40:04Z",
+          "url": "https://github.com/MorphiaOrg/morphia/commit/6853f62f6b5e4968779a8476a3736cecb71402d1"
+        },
+        "date": 1791154346729,
+        "tool": "jmh",
+        "benches": [
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"SIMPLE\",\"variant\":\"critter-runtime\"} )",
+            "value": 1567.962037265558,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"NESTED\",\"variant\":\"critter-runtime\"} )",
+            "value": 8400.736806377225,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"COLLECTIONS\",\"variant\":\"critter-runtime\"} )",
+            "value": 23460.01807724649,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"POLYMORPHIC\",\"variant\":\"critter-runtime\"} )",
+            "value": 17803.493606502056,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"LIFECYCLE\",\"variant\":\"critter-runtime\"} )",
+            "value": 1127.848002716454,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"SIMPLE\",\"variant\":\"critter-runtime\"} )",
+            "value": 1461.2407636551025,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"NESTED\",\"variant\":\"critter-runtime\"} )",
+            "value": 4820.078869889587,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"COLLECTIONS\",\"variant\":\"critter-runtime\"} )",
+            "value": 13425.47704019034,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"POLYMORPHIC\",\"variant\":\"critter-runtime\"} )",
+            "value": 9568.615921956314,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"LIFECYCLE\",\"variant\":\"critter-runtime\"} )",
+            "value": 1377.8867109747514,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MappingBenchmark.warmMapping ( {\"variant\":\"critter-runtime\"} )",
+            "value": 9701.788385792488,
+            "unit": "us/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MappingBenchmark.coldStart ( {\"variant\":\"critter-runtime\"} )",
+            "value": 386.6828208,
             "unit": "ms/op",
             "extra": "iterations: 1\nforks: 10\nthreads: 1"
           }
