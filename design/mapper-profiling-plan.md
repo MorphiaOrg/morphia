@@ -14,7 +14,7 @@ we can see how each one changes as we tune it.
 - `TestBase` caches one mapped "template" `Mapper` per config. That's good for test speed, but
   it hides mapping and startup cost from any timing based on the test suite.
 - Critter has two ways to get models: AOT, where `critter-maven` generates them at build time,
-  and runtime generation through Gizmo as the fallback. These perform differently, so they
+  and runtime generation with the Class-File API (via `jdk-classfile-backport`) as the fallback. These perform differently, so they
   should be measured separately.
 - There is no JMH or other benchmark setup anywhere in the repo.
 
@@ -109,7 +109,7 @@ Build ──► Profile (matrix: mapper = reflection, critter[, critter-runtime]
 
 1. **Triggers:** manual only (`workflow_dispatch`) to start.
 2. **Critter legs:** three parallel legs: `reflection`, `critter` (AOT models from
-   `critter-maven`), and `critter-runtime` (Gizmo runtime generation). The runtime path may not
+   `critter-maven`), and `critter-runtime` (runtime generation with the Class-File API). The runtime path may not
    stay long term, but we want data on it first.
 3. **History storage:** a dedicated `benchmark-data` branch, set by `HISTORY_BRANCH` in the
    workflow. We first agreed on `gh-pages`, but `gh-pages` in this repo *is* the morphia.dev
