@@ -1,0 +1,243 @@
+name: Mapper Profiling
+
+# Compares the reflection mapper against the critter mapper (AOT models and runtime-generated models) using the JMH
+# benchmarks in the `benchmarks` module. Runs independently of the main build so the results stay easy to find.
+
+on:
+  workflow_dispatch:
+    inputs:
+      benchmarks:
+        description: "JMH include regex (e.g. 'CodecBenchmark' or 'MappingBenchmark.coldStart')"
+        default: ".*"
+      jmh-args:
+        description: "Extra JMH arguments (e.g. '-f 1 -wi 1 -i 1' for a quick smoke run)"
+        default: ""
+      flight-recording:
+        description: "Also record a JFR profile of the codec benchmarks"
+        type: boolean
+        default: true
+      record-history:
+        description: "Append results to the history on the benchmark-data branch (default branch only)"
+        type: boolean
+        default: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  JAVA_VERSION: 17
+  HISTORY_BRANCH: benchmark-data
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: temurin
+          cache: maven
+
+      - name: Build morphia-core and critter-maven
+        run: ./mvnw -e -B install -pl :critter-maven -am -DskipTests -Ddeploy.skip=true -Dinvoker.skip=true
+
+      - name: Build benchmarks
+        run: ./mvnw -e -B package -Dbenchmarks -pl :morphia-benchmarks -Ddeploy.skip=true
+
+      - name: Upload benchmark jars
+        uses: actions/upload-artifact@v6
+        with:
+          name: benchmark-jars
+          path: |
+            benchmarks/target/morphia-benchmarks.jar
+            benchmarks/target/morphia-benchmarks-critter-aot.jar
+          retention-days: 7
+
+  Profile:
+    name: Profile (${{ matrix.variant }})
+    needs: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        variant: [ reflection, critter, critter-runtime ]
+    env:
+      VARIANT: ${{ matrix.variant }}
+      INCLUDE: ${{ inputs.benchmarks }}
+      JMH_ARGS: ${{ inputs.jmh-args }}
+    steps:
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: temurin
+
+      - name: Download benchmark jars
+        uses: actions/download-artifact@v7
+        with:
+          name: benchmark-jars
+
+      # The critter leg puts the AOT models (and the woven entity classes) ahead of the plain classes; the other two
+      # legs never see them. Each benchmark verifies at setup that its models came from the expected place.
+      - name: Configure classpath
+        run: |
+          classpath=morphia-benchmarks.jar
+          if [ "$VARIANT" = critter ]; then
+            classpath="morphia-benchmarks-critter-aot.jar:$classpath"
+          fi
+          echo "BENCH_CP=$classpath" >> "$GITHUB_ENV"
+          mkdir -p results jfr
+
+      - name: Run benchmarks
+        run: |
+          java -cp "$BENCH_CP" org.openjdk.jmh.Main "${INCLUDE:-.*}" -p variant="$VARIANT" -prof gc \
+            -rf json -rff "results/jmh-$VARIANT.json" $JMH_ARGS | tee "results/jmh-$VARIANT.log"
+
+      - name: Record flight profile
+        if: inputs.flight-recording
+        run: |
+          java -cp "$BENCH_CP" org.openjdk.jmh.Main CodecBenchmark -p variant="$VARIANT" \
+            -f 1 -wi 3 -i 3 -prof "jfr:dir=jfr" | tee "jfr/jmh-jfr-$VARIANT.log"
+
+      - name: Upload results
+        uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: jmh-results-${{ matrix.variant }}
+          path: results/
+          retention-days: 30
+
+      - name: Upload flight recordings
+        uses: actions/upload-artifact@v6
+        if: always() && inputs.flight-recording
+        with:
+          name: jfr-${{ matrix.variant }}
+          path: jfr/
+          retention-days: 14
+
+  Compare:
+    needs: Profile
+    if: always() && needs.Profile.result != 'skipped'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: temurin
+
+      - name: Setup JBang
+        uses: jbangdev/setup-jbang@main
+
+      - name: Download results
+        uses: actions/download-artifact@v7
+        with:
+          pattern: jmh-results-*
+          merge-multiple: true
+          path: results
+
+      - name: Render comparison
+        run: |
+          jbang .github/BenchmarkReport.java results | tee report.md
+          {
+            cat report.md
+            echo
+            echo "### Model tiers"
+            echo
+            echo '```'
+            grep -h "model tiers" results/*.log | sort -u || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload report
+        uses: actions/upload-artifact@v6
+        with:
+          name: mapper-profiling-report
+          path: report.md
+          retention-days: 30
+
+  History:
+    needs: Profile
+    if: inputs.record-history && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Download results
+        uses: actions/download-artifact@v7
+        with:
+          pattern: jmh-results-*
+          merge-multiple: true
+          path: results
+
+      # Results live on their own branch, not gh-pages: gh-pages here is the morphia.dev documentation site.
+      - name: Ensure history branch exists
+        run: |
+          if ! git ls-remote --exit-code --heads origin "$HISTORY_BRANCH" > /dev/null; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git switch --orphan "$HISTORY_BRANCH"
+            git commit --allow-empty -m "Initialize benchmark history"
+            git push origin "$HISTORY_BRANCH"
+            git switch -
+          fi
+
+      - name: Record reflection
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          name: "Mapper: reflection"
+          tool: jmh
+          output-file-path: results/jmh-reflection.json
+          gh-pages-branch: ${{ env.HISTORY_BRANCH }}
+          benchmark-data-dir-path: mappers
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: true
+          alert-threshold: "125%"
+          comment-on-alert: false
+          fail-on-alert: false
+
+      - name: Record critter
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          name: "Mapper: critter"
+          tool: jmh
+          output-file-path: results/jmh-critter.json
+          gh-pages-branch: ${{ env.HISTORY_BRANCH }}
+          benchmark-data-dir-path: mappers
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: true
+          alert-threshold: "125%"
+          comment-on-alert: false
+          fail-on-alert: false
+
+      - name: Record critter-runtime
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          name: "Mapper: critter-runtime"
+          tool: jmh
+          output-file-path: results/jmh-critter-runtime.json
+          gh-pages-branch: ${{ env.HISTORY_BRANCH }}
+          benchmark-data-dir-path: mappers
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: true
+          alert-threshold: "125%"
+          comment-on-alert: false
+          fail-on-alert: false
