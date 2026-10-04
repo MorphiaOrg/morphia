@@ -21,7 +21,9 @@ import dev.morphia.annotations.internal.IndexOptionsBuilder;
 import dev.morphia.annotations.internal.IndexesBuilder;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.MethodInfo;
+import dev.morphia.critter.sources.EmbeddedExample;
 import dev.morphia.critter.sources.Example;
+import dev.morphia.critter.sources.GetterIdExample;
 import dev.morphia.critter.sources.MethodExample;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
@@ -99,6 +101,26 @@ public class TestGeneration {
         Class<?> loadClass = critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.ExampleEntityModel");
         EntityModel model = (EntityModel) loadClass.getConstructors()[0].newInstance(defaultMapper());
         validate(model);
+    }
+
+    @Test
+    public void testGeneratorWithoutId() throws Exception {
+        new CritterGenerator(defaultMapper()).generate(EmbeddedExample.class, critterClassLoader, false);
+
+        Class<?> loadClass = critterClassLoader
+                .loadClass("dev.morphia.critter.sources.__morphia.embeddedexample.EmbeddedExampleEntityModel");
+        EntityModel model = (EntityModel) loadClass.getConstructors()[0].newInstance(defaultMapper());
+        Assertions.assertEquals(EmbeddedExample.class.getName(), model.getType().getName());
+        Assertions.assertNull(model.getIdProperty(), "Should not have an ID property");
+        Assertions.assertEquals(List.of("street_name", "number"),
+                model.getProperties().stream().map(PropertyModel::getMappedName).toList());
+    }
+
+    @Test
+    public void testGeneratorSkipsIdOnGetter() {
+        var e = Assertions.assertThrows(UnsupportedOperationException.class,
+                () -> new CritterGenerator(defaultMapper()).generate(GetterIdExample.class, critterClassLoader, false));
+        Assertions.assertTrue(e.getMessage().contains("@Id on getter"), e.getMessage());
     }
 
     private void validate(EntityModel model) {

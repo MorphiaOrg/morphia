@@ -29,9 +29,9 @@ public enum MapperVariant {
 
     /**
      * {@link CritterMapper} with the critter-aot jar ahead of the benchmarks jar on the classpath. The root entities
-     * must load pre-generated models. Types critter-maven can't handle ahead of time (e.g. embedded types without an
-     * {@code @Id}, or types inheriting private fields) are generated at runtime, which is what an application would
-     * get too; nothing may fall back to reflection.
+     * must load pre-generated models. Types critter-maven can't handle ahead of time (e.g. types inheriting private
+     * fields) are generated at runtime, which is what an application would get too; nothing may fall back to
+     * reflection.
      */
     CRITTER(MapperType.CRITTER) {
         @Override

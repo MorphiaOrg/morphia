@@ -69,8 +69,8 @@ The two paths:
   That defines classes in a `CritterClassLoader` plus hidden nestmates. If it fails, it logs once and falls back to a reflective `EntityModel`.
 
 `PropertyFinder` rejects some entities for AOT with `UnsupportedOperationException("AOT skip: ...")`:
-final fields, private fields inherited from a superclass, array-typed fields, and entities without `@Id` on a field
-(this includes every embedded type). Those entities use runtime generation instead, so an "AOT skip" warning in the
+final fields, private fields inherited from a superclass, array-typed fields, and entities whose `@Id` is on a getter.
+Entities with no `@Id` at all (e.g., embedded types) are generated normally. Those entities use runtime generation instead, so an "AOT skip" warning in the
 critter-maven output is expected for them and is not an error.
 
 ## Common Morphia/Critter Issues

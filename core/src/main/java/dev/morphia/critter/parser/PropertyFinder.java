@@ -69,7 +69,7 @@ public class PropertyFinder {
         if (methods.isEmpty()) {
             List<FieldInfo> fields = discoverAllFields(standinType, classModel);
             if (!runtimeMode) {
-                checkAotCompatibility(fields, targetType);
+                checkAotCompatibility(fields, targetType, classModel);
                 classLoader.register(targetType.getName(), critterGenerator.fieldAccessors(targetType, fields));
             }
             for (FieldInfo field : fields) {
@@ -99,7 +99,7 @@ public class PropertyFinder {
 
     private static final String ID_ANNOTATION_DESC = "Ldev/morphia/annotations/Id;";
 
-    private void checkAotCompatibility(List<FieldInfo> fields, Class<?> targetType) {
+    private void checkAotCompatibility(List<FieldInfo> fields, Class<?> targetType, ClassModel classModel) {
         boolean hasIdOnField = false;
         for (FieldInfo field : fields) {
             int flags = field.access();
@@ -121,26 +121,30 @@ public class PropertyFinder {
                 hasIdOnField = true;
             }
         }
+        // An entity without an @Id (e.g., an embedded type) is fine to generate from its fields. Only an @Id on a
+        // getter needs the runtime, which can pick the discovery mode that finds it.
         if (!hasIdOnField) {
-            // @Id not on any field — entity likely uses getter-based discovery; skip AOT
-            // so the runtime can pick the correct property discovery mode.
-            throw new UnsupportedOperationException(
-                    "AOT skip: no @Id on any field in " + targetType.getName()
-                            + "; entity requires runtime property discovery");
+            checkIdOnGetter(targetType, classModel);
         }
     }
 
     private void checkAotMethodCompatibility(List<MethodInfo> methods, Class<?> targetType,
             ClassModel classModel) {
         // If @Id is missing from the discovered methods, look for it on any getter in the hierarchy.
-        // If found there, the entity relies on METHODS discovery for @Id — skip AOT so the runtime
-        // can use the correct discovery mode.
         boolean hasIdInMethods = methods.stream()
                 .anyMatch(m -> m.visibleAnnotations() != null && m.visibleAnnotations().stream()
                         .anyMatch(a -> ID_ANNOTATION_DESC.equals(a.classSymbol().descriptorString())));
         if (hasIdInMethods) {
             return;
         }
+        checkIdOnGetter(targetType, classModel);
+    }
+
+    /**
+     * Skips AOT when {@code @Id} is on a getter anywhere in the hierarchy: the entity relies on METHODS discovery for
+     * its id, so the runtime must pick the discovery mode.
+     */
+    private void checkIdOnGetter(Class<?> targetType, ClassModel classModel) {
         ClassModel current = classModel;
         Class<?> cls = targetType;
         while (cls != null && cls != Object.class) {
