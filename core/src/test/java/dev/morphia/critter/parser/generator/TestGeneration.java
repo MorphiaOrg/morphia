@@ -1,13 +1,22 @@
 package dev.morphia.critter.parser.generator;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import javax.tools.ToolProvider;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.EntityListeners;
@@ -36,8 +45,10 @@ import dev.morphia.mapping.codec.pojo.TypeData;
 import dev.morphia.mapping.lifecycle.EntityListenerAdapter;
 
 import org.bson.codecs.pojo.PropertyAccessor;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import io.github.dmlloyd.classfile.ClassFile;
 import io.github.dmlloyd.classfile.ClassModel;
@@ -174,6 +185,74 @@ public class TestGeneration {
         var e = Assertions.assertThrows(UnsupportedOperationException.class,
                 () -> new CritterGenerator(defaultMapper()).generate(ShadowingExample.class, critterClassLoader, false));
         Assertions.assertTrue(e.getMessage().contains("shadows"), e.getMessage());
+    }
+
+    @Test
+    public void testGeneratorLibrarySuperclassFields(@TempDir Path dir) throws Exception {
+        // The superclasses live in a different classpath location than the entities, like a library would, so they
+        // can't be rewritten: an accessible field is woven into the entity, an unreachable one skips AOT.
+        Path library = dir.resolve("library");
+        Path app = dir.resolve("app");
+        compile(library, Map.of(
+                "lib/SharedBase.java", "package lib; public class SharedBase { protected String shared; }",
+                "lib/PrivateBase.java", "package lib; public class PrivateBase { private String hidden; }",
+                "lib/PackageBase.java", "package lib; public class PackageBase { String hidden; }"));
+        String entity = """
+                package app;
+                @dev.morphia.annotations.Entity
+                public class %s extends lib.%s {
+                    @dev.morphia.annotations.Id
+                    private org.bson.types.ObjectId id;
+                }
+                """;
+        compile(app, Map.of(
+                "app/SharedChild.java", entity.formatted("SharedChild", "SharedBase"),
+                "app/PrivateChild.java", entity.formatted("PrivateChild", "PrivateBase"),
+                "app/PackageChild.java", entity.formatted("PackageChild", "PackageBase")), library);
+
+        try (URLClassLoader loader = new URLClassLoader(new URL[] { app.toUri().toURL(), library.toUri().toURL() },
+                getClass().getClassLoader())) {
+            CritterClassLoader classLoader = new CritterClassLoader(loader);
+            CritterGenerator generator = new CritterGenerator(defaultMapper());
+
+            EntityModelGenerator modelGenerator = generator.generate(loader.loadClass("app.SharedChild"), classLoader, false);
+            Assertions.assertTrue(classLoader.getTypeDefinitions().containsKey("app.SharedChild"));
+            Assertions.assertFalse(classLoader.getTypeDefinitions().containsKey("lib.SharedBase"),
+                    "A library superclass must not be rewritten");
+            EntityModel model = (EntityModel) classLoader.loadClass(modelGenerator.getGeneratedType())
+                    .getConstructor(Mapper.class).newInstance(defaultMapper());
+            Object child = classLoader.loadClass("app.SharedChild").getConstructor().newInstance();
+            assertRoundTrip(model, child, "shared", "a value");
+
+            for (String name : List.of("app.PrivateChild", "app.PackageChild")) {
+                Class<?> type = loader.loadClass(name);
+                var e = Assertions.assertThrows(UnsupportedOperationException.class,
+                        () -> generator.generate(type, classLoader, false));
+                Assertions.assertTrue(e.getMessage().contains("inaccessible inherited field 'hidden'"), e.getMessage());
+            }
+        }
+    }
+
+    private static void compile(Path output, Map<String, String> sources, Path... classpath) throws Exception {
+        Path sourceDir = output.resolveSibling(output.getFileName() + "-src");
+        List<String> files = new ArrayList<>();
+        for (Map.Entry<String, String> source : sources.entrySet()) {
+            Path file = sourceDir.resolve(source.getKey());
+            Files.createDirectories(file.getParent());
+            Files.writeString(file, source.getValue());
+            files.add(file.toString());
+        }
+        List<String> entries = new ArrayList<>();
+        for (Class<?> type : List.of(Entity.class, ObjectId.class)) {
+            entries.add(Path.of(type.getProtectionDomain().getCodeSource().getLocation().toURI()).toString());
+        }
+        for (Path path : classpath) {
+            entries.add(path.toString());
+        }
+        List<String> args = new ArrayList<>(List.of("-d", output.toString(), "-cp", String.join(File.pathSeparator, entries)));
+        args.addAll(files);
+        int result = ToolProvider.getSystemJavaCompiler().run(null, null, null, args.toArray(new String[0]));
+        Assertions.assertEquals(0, result, "Fixture compilation failed");
     }
 
     private EntityModel generateModel(Class<?> type) throws Exception {
