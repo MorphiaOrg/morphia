@@ -34,7 +34,7 @@ import static dev.morphia.critter.Critter.critterPackage;
 public class CritterMapper extends AbstractMapper {
     private static final Logger LOG = LoggerFactory.getLogger(CritterMapper.class);
 
-    private final CritterClassLoader critterClassLoader;
+    private final LazyClassLoader critterClassLoader;
     private final CritterGenerator generator;
     private final Set<String> fallbackTypes;
 
@@ -47,7 +47,7 @@ public class CritterMapper extends AbstractMapper {
      */
     @MorphiaInternal
     public CritterMapper(MorphiaConfig config) {
-        this(config, new CritterClassLoader(Thread.currentThread().getContextClassLoader()));
+        this(config, Thread.currentThread().getContextClassLoader());
     }
 
     /**
@@ -61,7 +61,7 @@ public class CritterMapper extends AbstractMapper {
     @MorphiaInternal
     public CritterMapper(MorphiaConfig config, ClassLoader classLoader) {
         super(config, classLoader);
-        this.critterClassLoader = classLoader instanceof CritterClassLoader ccl ? ccl : new CritterClassLoader(classLoader);
+        this.critterClassLoader = new LazyClassLoader(classLoader);
         this.generator = new CritterGenerator(this);
         this.fallbackTypes = ConcurrentHashMap.newKeySet();
 
@@ -184,8 +184,9 @@ public class CritterMapper extends AbstractMapper {
     @Nullable
     private EntityModel tryRuntimeGeneration(Class<?> type) {
         try {
-            EntityModelGenerator generator = this.generator.generate(type, critterClassLoader, true);
-            Class<?> modelClass = critterClassLoader.loadClass(generator.getGeneratedType());
+            CritterClassLoader loader = critterClassLoader.get();
+            EntityModelGenerator generator = this.generator.generate(type, loader, true);
+            Class<?> modelClass = loader.loadClass(generator.getGeneratedType());
             Constructor<?> ctor = modelClass.getConstructor(Mapper.class);
             return (EntityModel) ctor.newInstance(this);
         } catch (Exception e) {
@@ -202,5 +203,34 @@ public class CritterMapper extends AbstractMapper {
      */
     private EntityModel fallbackToReflection(Class<?> type) {
         return new EntityModel(this, type);
+    }
+
+    /**
+     * Creates the {@link CritterClassLoader} the first time a model has to be generated at runtime. When every model
+     * is pre-generated, it is never needed. Copies of a mapper share the same instance.
+     */
+    private static final class LazyClassLoader {
+        private final ClassLoader parent;
+        @Nullable
+        private volatile CritterClassLoader loader;
+
+        private LazyClassLoader(ClassLoader parent) {
+            this.parent = parent;
+            this.loader = parent instanceof CritterClassLoader ccl ? ccl : null;
+        }
+
+        private CritterClassLoader get() {
+            CritterClassLoader result = loader;
+            if (result == null) {
+                synchronized (this) {
+                    result = loader;
+                    if (result == null) {
+                        result = new CritterClassLoader(parent);
+                        loader = result;
+                    }
+                }
+            }
+            return result;
+        }
     }
 }
