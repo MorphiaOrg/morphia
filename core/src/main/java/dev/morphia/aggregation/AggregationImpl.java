@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.MorphiaDatastore;
@@ -17,9 +18,11 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.MorphiaCursor;
 import dev.morphia.query.filters.Filter;
+import dev.morphia.query.internal.DeferredDecoding;
 import dev.morphia.sofia.Sofia;
 
 import org.bson.Document;
+import org.bson.RawBsonDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,13 +108,20 @@ public class AggregationImpl<T> implements Aggregation<T> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public MorphiaCursor<T> iterator() {
         if (iterator == null) {
             List<Document> pipeline = pipeline();
             if (LOG.isDebugEnabled()) {
                 LOG.debug("pipeline = " + pipeline);
             }
-            iterator = new MorphiaCursor<>(options.apply(pipeline, datastore, collection, targetType).iterator());
+            if (DeferredDecoding.required(datastore)) {
+                MongoCursor<RawBsonDocument> raw = (MongoCursor<RawBsonDocument>) (MongoCursor<?>) options
+                        .apply(pipeline, datastore, collection, RawBsonDocument.class).iterator();
+                iterator = new MorphiaCursor<>((MongoCursor<T>) DeferredDecoding.cursor(raw, collection.getCodecRegistry(), targetType));
+            } else {
+                iterator = new MorphiaCursor<>(options.apply(pipeline, datastore, collection, targetType).iterator());
+            }
         }
         MorphiaCursor<T> cursor = iterator;
         iterator = null;
