@@ -108,10 +108,6 @@ public class PropertyFinder {
         boolean hasIdOnField = false;
         for (FieldInfo field : fields) {
             int flags = field.access();
-            if ((flags & ClassFile.ACC_FINAL) != 0) {
-                throw new UnsupportedOperationException(
-                        "AOT skip: final field '" + field.name() + "' in " + targetType.getName());
-            }
             if (standinType != targetType) {
                 // Stand-ins keep the original rule: every accessor is woven into the target.
                 if ((flags & ClassFile.ACC_PRIVATE) != 0 && field.declaringClass() != targetType) {

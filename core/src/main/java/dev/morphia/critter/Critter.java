@@ -1,6 +1,7 @@
 package dev.morphia.critter;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +50,29 @@ public class Critter {
         if (s == null || s.isEmpty())
             return s;
         return "%c%s".formatted(Character.toLowerCase(s.charAt(0)), s.substring(1));
+    }
+
+    /**
+     * Finds the named field on {@code type} or one of its superclasses and makes it accessible. Generated accessors use
+     * this to write {@code final} fields, which {@code putfield} may only do from a constructor.
+     *
+     * @param type the class to start searching from
+     * @param name the field name
+     * @return the accessible field
+     * @hidden
+     * @morphia.internal
+     */
+    public static Field accessibleField(Class<?> type, String name) {
+        for (Class<?> current = type; current != null; current = current.getSuperclass()) {
+            try {
+                Field field = current.getDeclaredField(name);
+                field.setAccessible(true);
+                return field;
+            } catch (NoSuchFieldException ignored) {
+                // keep looking in the superclass
+            }
+        }
+        throw new IllegalArgumentException("No field '%s' found in %s or its superclasses".formatted(name, type.getName()));
     }
 
     private final File root;

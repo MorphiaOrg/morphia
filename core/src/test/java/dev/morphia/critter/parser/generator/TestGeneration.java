@@ -33,6 +33,7 @@ import dev.morphia.critter.parser.MethodInfo;
 import dev.morphia.critter.sources.CircleExample;
 import dev.morphia.critter.sources.EmbeddedExample;
 import dev.morphia.critter.sources.Example;
+import dev.morphia.critter.sources.FinalFieldsExample;
 import dev.morphia.critter.sources.GetterIdExample;
 import dev.morphia.critter.sources.MethodExample;
 import dev.morphia.critter.sources.PackageChildExample;
@@ -157,6 +158,31 @@ public class TestGeneration {
 
         assertRoundTrip(model, child, "label", "a label");
         assertRoundTrip(model, child, "size", 42);
+    }
+
+    @Test
+    public void testGeneratorFinalFields() throws Exception {
+        EntityModel model = generateModel(FinalFieldsExample.class);
+        Object entity = critterClassLoader.loadClass(FinalFieldsExample.class.getName())
+                .getConstructor(String.class, int.class)
+                .newInstance("initial", 1);
+
+        assertRoundTrip(model, entity, "code", "updated");
+        assertRoundTrip(model, entity, "count", 42);
+    }
+
+    @Test
+    public void testRuntimeGeneratorFinalFields() throws Exception {
+        // A fresh loader: runtime mode leaves the entity class alone, so it must resolve to the application's copy.
+        CritterClassLoader loader = new CritterClassLoader(getClass().getClassLoader());
+        EntityModelGenerator generator = new CritterGenerator(defaultMapper()).generate(FinalFieldsExample.class, loader, true);
+        EntityModel model = (EntityModel) loader.loadClass(generator.getGeneratedType())
+                .getConstructor(Mapper.class)
+                .newInstance(defaultMapper());
+        FinalFieldsExample entity = new FinalFieldsExample("initial", 1);
+
+        assertRoundTrip(model, entity, "code", "updated");
+        assertRoundTrip(model, entity, "count", 42);
     }
 
     @Test
