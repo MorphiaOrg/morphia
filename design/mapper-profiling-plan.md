@@ -154,6 +154,7 @@ Build ──► Profile (matrix: mapper = reflection, critter[, critter-runtime]
   | SIMPLE | ~2.2 µs, 3.1 KB/op | ~25 µs, 46 KB/op |
   | NESTED | ~11.7 µs, 29 KB/op | ~62 µs, 137 KB/op |
 
-  The allocation numbers are very stable, which points to something allocated on every decode in
-  the critter path. Encode is roughly even between the two. This needs confirming on CI, then
-  investigating, probably with the JFR recordings the workflow uploads.
+  **Root cause (fixed in #4338):** critter's generated property models never had the
+  mapper's `Conversions` set, so `PropertyModel#setValue` built a new `Conversions` registry
+  for every property of every decoded entity. With the fix, critter decode matches reflection
+  in both time and allocation.
