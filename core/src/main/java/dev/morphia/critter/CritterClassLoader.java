@@ -1,21 +1,37 @@
 package dev.morphia.critter;
 
-import java.util.Collections;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
+import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
 
-import net.bytebuddy.dynamic.loading.ByteArrayClassLoader;
-
 /**
  * A class loader that supports registering and loading dynamically generated Critter classes from byte arrays.
- * 
+ * <p>
+ * Registered classes, and classes from the {@code dev.morphia.critter} package, are loaded child-first so generated
+ * code links against them rather than the parent's copies; everything else is delegated to the parent. A class's
+ * bytes are released once it is defined. {@link #getResource(String)}, and so {@code getResourceAsStream}, returns
+ * {@code null} for the {@code .class} file of a class this loader registered or defined; {@code getResources} still
+ * lists the parent's copy, as ByteBuddy's {@code ChildFirst} loader did.
+ *
  * @morphia.internal
  * @hidden
  */
 @MorphiaInternal
-public class CritterClassLoader extends ByteArrayClassLoader.ChildFirst {
+public class CritterClassLoader extends ClassLoader {
+    static {
+        registerAsParallelCapable();
+    }
+
+    private final Map<String, byte[]> typeDefinitions = new ConcurrentHashMap<>();
+    private final Set<String> definedTypes = ConcurrentHashMap.newKeySet();
 
     /**
      * Creates a new CritterClassLoader with the given parent classloader.
@@ -23,7 +39,7 @@ public class CritterClassLoader extends ByteArrayClassLoader.ChildFirst {
      * @param parent the parent classloader used for delegation
      */
     public CritterClassLoader(ClassLoader parent) {
-        super(parent, Collections.emptyMap());
+        super(parent);
     }
 
     /**
@@ -54,16 +70,16 @@ public class CritterClassLoader extends ByteArrayClassLoader.ChildFirst {
         if (shouldRegister(name)) {
             String resourceName = "%s.class".formatted(name.replace('.', '/'));
             // Try both this classloader and parent classloader
-            java.io.InputStream stream = getResourceAsStream(resourceName);
+            InputStream stream = getResourceAsStream(resourceName);
             if (stream == null && getParent() != null) {
                 stream = getParent().getResourceAsStream(resourceName);
             }
             if (stream != null) {
-                try (java.io.InputStream in = stream) {
+                try (InputStream in = stream) {
                     byte[] data = in.readAllBytes();
                     register(name, data);
                     return data;
-                } catch (java.io.IOException e) {
+                } catch (IOException e) {
                     throw new ClassNotFoundException(name, e);
                 }
             }
@@ -73,19 +89,57 @@ public class CritterClassLoader extends ByteArrayClassLoader.ChildFirst {
     }
 
     @Override
+    protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+        synchronized (getClassLoadingLock(name)) {
+            Class<?> type = findLoadedClass(name);
+            if (type == null && (typeDefinitions.containsKey(name) || shouldRegister(name))) {
+                try {
+                    type = findClass(name);
+                } catch (ClassNotFoundException e) {
+                    // not available here; fall back to the parent
+                }
+            }
+            if (type == null) {
+                return super.loadClass(name, resolve);
+            }
+            if (resolve) {
+                resolveClass(type);
+            }
+            return type;
+        }
+    }
+
+    @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
         // Try to register from resources first if not already registered
         // Only register project classes to avoid LinkageError with third-party libraries
         if (!typeDefinitions.containsKey(name) && shouldRegister(name)) {
-            java.net.URL resource = getResource("%s.class".formatted(name.replace('.', '/')));
+            URL resource = getParent() != null ? getParent().getResource("%s.class".formatted(name.replace('.', '/'))) : null;
             if (resource != null) {
-                try {
-                    register(name, resource.openStream().readAllBytes());
-                } catch (java.io.IOException ignored) {
+                try (InputStream in = resource.openStream()) {
+                    register(name, in.readAllBytes());
+                } catch (IOException ignored) {
                 }
             }
         }
-        return super.findClass(name);
+        byte[] bytes = typeDefinitions.remove(name);
+        if (bytes == null) {
+            throw new ClassNotFoundException(name);
+        }
+        definedTypes.add(name);
+        return defineClass(name, bytes, 0, bytes.length);
+    }
+
+    @Override
+    @Nullable
+    public URL getResource(String name) {
+        if (name.endsWith(".class")) {
+            String className = name.substring(0, name.length() - ".class".length()).replace('/', '.');
+            if (typeDefinitions.containsKey(className) || definedTypes.contains(className)) {
+                return null;
+            }
+        }
+        return super.getResource(name);
     }
 
     private boolean shouldRegister(String className) {
@@ -93,7 +147,7 @@ public class CritterClassLoader extends ByteArrayClassLoader.ChildFirst {
         // This avoids SecurityException (java.*, javax.*) and LinkageError (third-party libs).
         // NestmateAccessorRegistry must be excluded: it uses a static map that must be shared across
         // classloaders (the generator registers via the parent CL; generated models read via this CL).
-        // Excluding it here lets ChildFirst delegation fall back to the parent for a single shared instance.
+        // Excluding it here lets child-first loading fall back to the parent for a single shared instance.
         return className.startsWith("dev.morphia.critter.")
                 && !className.equals("dev.morphia.critter.parser.generator.NestmateAccessorRegistry");
     }
