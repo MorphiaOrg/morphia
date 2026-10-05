@@ -42,7 +42,8 @@ public class InstanceCreatorFactoryImpl implements InstanceCreatorFactory {
             if (!model.getType().isInterface()) {
                 Constructor<?> constructor = ConstructorCreator.bestConstructor(model);
                 if (constructor != null) {
-                    creator = (c) -> new ConstructorCreator(model, constructor, c);
+                    ConstructorCreator.Plan plan = new ConstructorCreator.Plan(model, constructor);
+                    creator = (c) -> new ConstructorCreator(plan, c);
                 } else {
                     LOG.info("using old creator approach: " + model.getType().getName());
                     try {
@@ -50,7 +51,8 @@ public class InstanceCreatorFactoryImpl implements InstanceCreatorFactory {
                         creator = (c) -> new NoArgCreator(declared);
                     } catch (NoSuchMethodException e) {
                         Constructor<?> full = ConstructorCreator.getFullConstructor(model);
-                        creator = (c) -> new ConstructorCreator(model, full, c);
+                        ConstructorCreator.Plan plan = new ConstructorCreator.Plan(model, full);
+                        creator = (c) -> new ConstructorCreator(plan, c);
                     }
                 }
             }

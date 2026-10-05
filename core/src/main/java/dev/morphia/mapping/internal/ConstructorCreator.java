@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
 
 import com.mongodb.lang.Nullable;
 
@@ -41,11 +39,11 @@ import static java.util.Arrays.stream;
  */
 @MorphiaInternal
 public class ConstructorCreator implements MorphiaInstanceCreator {
+    private final Plan plan;
+    private final Conversions conversions;
     private final Object[] parameters;
-    private final Constructor<?> constructor;
-    private final EntityModel model;
-    private final Map<String, BiFunction<Object[], Object, Void>> positions = new LinkedHashMap<>();
-    private final List<Consumer<Object>> setFunctions = new ArrayList<>();
+    private final List<PropertyModel> pendingModels = new ArrayList<>();
+    private final List<Object> pendingValues = new ArrayList<>();
     private Object instance;
 
     /**
@@ -53,29 +51,54 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
      * @param constructor the constructor to use
      * @param conversions the Conversions instance to use
      */
-    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public ConstructorCreator(EntityModel model, Constructor<?> constructor, Conversions conversions) {
-        this.model = model;
-        this.constructor = constructor;
-        this.constructor.setAccessible(true);
+        this(new Plan(model, constructor), conversions);
+    }
 
-        final Parameter[] constructorParameters = this.constructor.getParameters();
-        this.parameters = new Object[constructorParameters.length];
-        for (int i = 0; i < constructorParameters.length; i++) {
-            final Parameter parameter = constructorParameters[i];
-            parameters[i] = zeroValue(parameter);
-            final int finalI = i;
-            String name = getParameterName(parameter);
-            if (name.matches("arg[0-9]+")) {
-                throw new MappingException(Sofia.unnamedConstructorParameter(model.getType().getName()));
-            }
-            BiFunction<Object[], Object, Void> old = positions.put(name, (Object[] params, Object v) -> {
-                params[finalI] = conversions.convert(v, parameter.getType());
-                return null;
-            });
+    /**
+     * @param plan        the precomputed constructor details
+     * @param conversions the Conversions instance to use
+     */
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
+    public ConstructorCreator(Plan plan, Conversions conversions) {
+        this.plan = plan;
+        this.conversions = conversions;
+        this.parameters = plan.zeroValues.clone();
+    }
 
-            if (old != null) {
-                throw new MappingException(Sofia.duplicatedParameterName(model.getType().getName(), name));
+    /**
+     * The per-constructor work, done once per model rather than once per decoded instance.
+     */
+    public static final class Plan {
+        private final EntityModel model;
+        private final Constructor<?> constructor;
+        private final Map<String, Integer> positions = new LinkedHashMap<>();
+        private final Class<?>[] types;
+        private final Object[] zeroValues;
+
+        /**
+         * @param model       the model
+         * @param constructor the constructor to use
+         */
+        @SuppressFBWarnings("EI_EXPOSE_REP2")
+        public Plan(EntityModel model, Constructor<?> constructor) {
+            this.model = model;
+            this.constructor = constructor;
+            this.constructor.setAccessible(true);
+            final Parameter[] constructorParameters = constructor.getParameters();
+            types = new Class<?>[constructorParameters.length];
+            zeroValues = new Object[constructorParameters.length];
+            for (int i = 0; i < constructorParameters.length; i++) {
+                final Parameter parameter = constructorParameters[i];
+                types[i] = parameter.getType();
+                zeroValues[i] = zeroValue(parameter);
+                String name = getParameterName(parameter);
+                if (name.matches("arg[0-9]+")) {
+                    throw new MappingException(Sofia.unnamedConstructorParameter(model.getType().getName()));
+                }
+                if (positions.put(name, i) != null) {
+                    throw new MappingException(Sofia.duplicatedParameterName(model.getType().getName(), name));
+                }
             }
         }
     }
@@ -114,10 +137,12 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
     public Object getInstance() {
         if (instance == null) {
             try {
-                instance = constructor.newInstance(parameters);
-                setFunctions.forEach(function -> function.accept(instance));
+                instance = plan.constructor.newInstance(parameters);
+                for (int i = 0; i < pendingModels.size(); i++) {
+                    pendingModels.get(i).setValue(instance, pendingValues.get(i));
+                }
             } catch (Exception e) {
-                throw new MappingException(Sofia.cannotInstantiate(model.getType().getName(), e.getMessage()), e);
+                throw new MappingException(Sofia.cannotInstantiate(plan.model.getType().getName(), e.getMessage()), e);
             }
         }
         return instance;
@@ -164,18 +189,17 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
         if (instance != null) {
             model.setValue(instance, value);
         } else {
-            BiFunction<Object[], Object, Void> function = positions.get(model.getName());
-            if (function != null) {
-                function.apply(parameters, value);
+            Integer position = plan.positions.get(model.getName());
+            if (position != null) {
+                parameters[position] = conversions.convert(value, plan.types[position]);
             }
-            setFunctions.add((instance) -> {
-                model.setValue(instance, value);
-            });
+            pendingModels.add(model);
+            pendingValues.add(value);
         }
     }
 
     @Nullable
-    private Object zeroValue(Parameter parameter) {
+    private static Object zeroValue(Parameter parameter) {
         if (!parameter.getType().isPrimitive()) {
             return null;
         } else if (parameter.getType().equals(boolean.class)) {

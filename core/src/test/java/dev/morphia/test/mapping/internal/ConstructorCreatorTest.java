@@ -25,6 +25,8 @@ import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
+import dev.morphia.mapping.codec.MorphiaInstanceCreator;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.internal.ConstructorCreator;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaCursor;
@@ -91,6 +93,20 @@ public class ConstructorCreatorTest extends TestBase {
         constructor = ConstructorCreator.bestConstructor(getDs().getMapper().map(Default.class).get(0));
         Assertions.assertNotNull(constructor);
         Assertions.assertEquals(0, constructor.getParameterCount());
+    }
+
+    @Test
+    public void creatorsDoNotShareState() {
+        EntityModel model = getMapper().map(Address.class).get(0);
+        MorphiaInstanceCreator first = model.getInstanceCreator(getMapper().getConversions());
+        MorphiaInstanceCreator second = model.getInstanceCreator(getMapper().getConversions());
+
+        first.set("NYC", model.getProperty("city"));
+        first.set("NY", model.getProperty("state"));
+        second.set("Boston", model.getProperty("city"));
+
+        Assertions.assertEquals(new Address("NYC", "NY", null), first.getInstance());
+        Assertions.assertEquals(new Address("Boston", null, null), second.getInstance());
     }
 
     @Test
