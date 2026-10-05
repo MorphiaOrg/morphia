@@ -152,14 +152,16 @@ loadScripts(document, 'script');</script>
 <div class="block">Generates bytecode augmenting the entity with synthetic <code>__readXxx</code>/<code>__writeXxx</code> methods for its getter methods.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nestmateAccessor(java.lang.Class,dev.morphia.critter.parser.FieldInfo)" class="member-name-link">nestmateAccessor</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nestmateAccessor(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo)" class="member-name-link">nestmateAccessor</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
+ CritterClassLoader&nbsp;critterClassLoader,
  <a href="../FieldInfo.html" title="class in dev.morphia.critter.parser">FieldInfo</a>&nbsp;field)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Generates a nestmate accessor for the given field and registers the instance in
  <a href="NestmateAccessorRegistry.html" title="class in dev.morphia.critter.parser.generator"><code>NestmateAccessorRegistry</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nestmateAccessor(java.lang.Class,dev.morphia.critter.parser.MethodInfo)" class="member-name-link">nestmateAccessor</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nestmateAccessor(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.MethodInfo)" class="member-name-link">nestmateAccessor</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
+ CritterClassLoader&nbsp;critterClassLoader,
  <a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;method)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Generates a nestmate accessor for the property exposed by the given getter method and registers
@@ -361,9 +363,10 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="nestmateAccessor(java.lang.Class,dev.morphia.critter.parser.FieldInfo)">
+<section class="detail" id="nestmateAccessor(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo)">
 <h3>nestmateAccessor</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">nestmateAccessor</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
+ CritterClassLoader&nbsp;critterClassLoader,
  <a href="../FieldInfo.html" title="class in dev.morphia.critter.parser">FieldInfo</a>&nbsp;field)</span></div>
 <div class="block">Generates a nestmate accessor for the given field and registers the instance in
  <a href="NestmateAccessorRegistry.html" title="class in dev.morphia.critter.parser.generator"><code>NestmateAccessorRegistry</code></a>. The accessor is defined as a hidden nestmate of
@@ -371,20 +374,23 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>entityType</code> - the entity class that owns the field</dd>
+<dd><code>critterClassLoader</code> - the class loader that will define the generated models using the accessor</dd>
 <dd><code>field</code> - the field for which a nestmate accessor should be generated</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="nestmateAccessor(java.lang.Class,dev.morphia.critter.parser.MethodInfo)">
+<section class="detail" id="nestmateAccessor(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.MethodInfo)">
 <h3>nestmateAccessor</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">nestmateAccessor</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
+ CritterClassLoader&nbsp;critterClassLoader,
  <a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;method)</span></div>
 <div class="block">Generates a nestmate accessor for the property exposed by the given getter method and registers
  the instance in <a href="NestmateAccessorRegistry.html" title="class in dev.morphia.critter.parser.generator"><code>NestmateAccessorRegistry</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>entityType</code> - the entity class that owns the method</dd>
+<dd><code>critterClassLoader</code> - the class loader that will define the generated models using the accessor</dd>
 <dd><code>method</code> - the getter method for which a nestmate accessor should be generated</dd>
 </dl>
 </section>

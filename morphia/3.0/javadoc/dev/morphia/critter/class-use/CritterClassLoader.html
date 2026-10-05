@@ -126,6 +126,22 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="block">Reads the entity class bytecode, discovers its properties, and generates all required Critter support classes.</div>
 </div>
+<div class="col-first even-row-color"><code>void</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">CritterGenerator.</span><code><a href="../parser/generator/CritterGenerator.html#nestmateAccessor(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo)" class="member-name-link">nestmateAccessor</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
+ CritterClassLoader&nbsp;critterClassLoader,
+ <a href="../parser/FieldInfo.html" title="class in dev.morphia.critter.parser">FieldInfo</a>&nbsp;field)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Generates a nestmate accessor for the given field and registers the instance in
+ <a href="../parser/generator/NestmateAccessorRegistry.html" title="class in dev.morphia.critter.parser.generator"><code>NestmateAccessorRegistry</code></a>.</div>
+</div>
+<div class="col-first odd-row-color"><code>void</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">CritterGenerator.</span><code><a href="../parser/generator/CritterGenerator.html#nestmateAccessor(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.MethodInfo)" class="member-name-link">nestmateAccessor</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
+ CritterClassLoader&nbsp;critterClassLoader,
+ <a href="../parser/MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;method)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Generates a nestmate accessor for the property exposed by the given getter method and registers
+ the instance in <a href="../parser/generator/NestmateAccessorRegistry.html" title="class in dev.morphia.critter.parser.generator"><code>NestmateAccessorRegistry</code></a>.</div>
+</div>
 <div class="col-first even-row-color"><code><a href="../parser/generator/PropertyAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyAccessorGenerator</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">CritterGenerator.</span><code><a href="../parser/generator/CritterGenerator.html#propertyAccessor(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo)" class="member-name-link">propertyAccessor</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
  CritterClassLoader&nbsp;critterClassLoader,
