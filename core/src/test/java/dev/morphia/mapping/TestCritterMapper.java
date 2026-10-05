@@ -227,8 +227,12 @@ public class TestCritterMapper {
                 }
                 """);
 
+        // logback-test.xml sets dev.morphia to ERROR, so the WARN would be dropped before reaching any appender. Test
+        // classes run concurrently, so other threads' CritterMapper warnings can reach this appender too while it's attached;
+        // only this thread's events are counted (mapping and its warning happen synchronously on the calling thread).
         Logger logger = (Logger) LoggerFactory.getLogger(CritterMapper.class);
         Level level = logger.getLevel();
+        String thread = Thread.currentThread().getName();
         ListAppender<ILoggingEvent> appender = new ListAppender<>();
         appender.start();
         logger.addAppender(appender);
@@ -246,8 +250,9 @@ public class TestCritterMapper {
         }
 
         List<String> warnings = appender.list.stream()
-                .filter(event -> event.getLevel() == Level.WARN)
+                .filter(event -> event.getLevel() == Level.WARN && thread.equals(event.getThreadName()))
                 .map(ILoggingEvent::getFormattedMessage)
+                .filter(message -> message.contains("app.IsolatedEntity"))
                 .toList();
         Assertions.assertEquals(1, warnings.size(), warnings.toString());
         String warning = warnings.get(0);
