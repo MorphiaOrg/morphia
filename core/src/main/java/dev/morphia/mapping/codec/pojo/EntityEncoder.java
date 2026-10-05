@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static dev.morphia.mapping.codec.CodecHelper.document;
-import static java.lang.String.format;
 
 /**
  * @param <T> the entity type
@@ -42,7 +41,7 @@ public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
     public void encode(BsonWriter writer, T value, EncoderContext encoderContext) {
         EntityModel model = morphiaCodec.getEntityModel();
         if (areEquivalentTypes(value.getClass(), model.getType())) {
-            LOG.debug(format("Encoding document using codec for %s'", morphiaCodec.getEntityModel().getType().getName()));
+            LOG.debug("Encoding document using codec for {}", morphiaCodec.getEntityModel().getType().getName());
 
             document(writer, () -> {
 

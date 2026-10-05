@@ -43,7 +43,7 @@ public class EntityDecoder<T> implements Decoder<T> {
     public T decode(BsonReader reader, DecoderContext decoderContext) {
         T entity;
         if (decoderContext.hasCheckedDiscriminator()) {
-            LOG.debug(format("Decoding document using codec for %s'", morphiaCodec.getEntityModel().getType().getName()));
+            LOG.debug("Decoding document using codec for {}", morphiaCodec.getEntityModel().getType().getName());
             MorphiaInstanceCreator instanceCreator = getInstanceCreator();
             decodeProperties(reader, decoderContext, instanceCreator, classModel);
             return (T) instanceCreator.getInstance();
