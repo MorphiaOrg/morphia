@@ -3,7 +3,9 @@ package dev.morphia.mapping;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,6 +21,7 @@ import dev.morphia.config.MorphiaPropertyAnnotationProvider;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.generator.CritterGenerator;
 import dev.morphia.critter.parser.generator.EntityModelGenerator;
+import dev.morphia.critter.parser.generator.NestmateAccessException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
@@ -214,11 +217,35 @@ public class CritterMapper extends AbstractMapper {
             return (EntityModel) ctor.newInstance(this);
         } catch (Exception e) {
             if (fallbackTypes.add(type.getName())) {
-                LOG.warn("Runtime bytecode generation failed for {}; falling back to reflection: {}",
-                        type.getName(), e.getMessage(), e);
+                NestmateAccessException accessFailure = accessFailure(e);
+                if (accessFailure != null) {
+                    LOG.warn("Runtime critter generation can't access {} because it isn't in Morphia's module (on the classpath: "
+                            + "it's loaded by a different class loader than Morphia); falling back to reflection. To use critter "
+                            + "models for it, pre-generate them at build time with the critter-maven plugin. Cause: {}",
+                            accessFailure.getType().getName(), accessFailure.getCause().getMessage());
+                } else {
+                    LOG.warn("Runtime bytecode generation failed for {}; falling back to reflection: {}",
+                            type.getName(), e.getMessage(), e);
+                }
             }
             return null;
         }
+    }
+
+    /**
+     * @param e the runtime generation failure
+     * @return the {@link NestmateAccessException} in {@code e}'s cause chain if runtime generation failed because Morphia
+     *         can't access the entity's module, or null if it failed for another reason
+     */
+    @Nullable
+    static NestmateAccessException accessFailure(Throwable e) {
+        Set<Throwable> seen = Collections.newSetFromMap(new IdentityHashMap<>());
+        for (Throwable t = e; t != null && seen.add(t); t = t.getCause()) {
+            if (t instanceof NestmateAccessException accessException) {
+                return accessException;
+            }
+        }
+        return null;
     }
 
     /**

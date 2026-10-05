@@ -67,6 +67,9 @@ The two paths:
   It writes the generated models and the woven entity classes to disk under `__morphia/<entity>/`.
 - **Runtime:** when no pre-generated model is on the classpath, `CritterMapper` calls `generate(type, loader, true)`.
   That defines classes in a `CritterClassLoader` plus hidden nestmates. If it fails, it logs once and falls back to a reflective `EntityModel`.
+  Hidden nestmates need full privilege access, so an entity outside Morphia's module (on the classpath: loaded by a different
+  class loader) fails with a `NestmateAccessException`; `CritterMapper` logs a specific "can't access ... isn't in Morphia's
+  module" warning for it. That's expected for those layouts, and the fix is critter-maven AOT models, not a generator change.
 
 `PropertyFinder` rejects some entities for AOT with `UnsupportedOperationException("AOT skip: ...")`:
 inherited fields the entity can't reach and whose declaring class can't be rewritten (e.g. a private field in a library

@@ -144,10 +144,16 @@ public class CritterGenerator {
             byte[] bytes = gen.generate();
             // Use the declaring class for privateLookupIn so the hidden nestmate can access
             // private fields declared in a superclass (not just in the leaf entity class).
-            Lookup privateLookup = MethodHandles.privateLookupIn(gen.declaringClass, MethodHandles.lookup());
-            Class<?> accessorClass = privateLookup
-                    .defineHiddenClass(bytes, true, Lookup.ClassOption.NESTMATE)
-                    .lookupClass();
+            Class<?> accessorClass;
+            try {
+                Lookup privateLookup = MethodHandles.privateLookupIn(gen.declaringClass, MethodHandles.lookup());
+                accessorClass = privateLookup
+                        .defineHiddenClass(bytes, true, Lookup.ClassOption.NESTMATE)
+                        .lookupClass();
+            } catch (IllegalAccessException e) {
+                // Defining a nestmate needs full privilege access, which Morphia only has to classes in its own module
+                throw new NestmateAccessException(gen.declaringClass, e);
+            }
             @SuppressWarnings("unchecked")
             PropertyAccessor<?> instance = (PropertyAccessor<?>) accessorClass.getDeclaredConstructor().newInstance();
             NestmateAccessorRegistry.register(critterClassLoader, gen.registryKey, instance);

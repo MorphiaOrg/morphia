@@ -1,6 +1,11 @@
 package dev.morphia.mapping;
 
+import java.io.File;
 import java.lang.ref.Reference;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -9,12 +14,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import javax.tools.ToolProvider;
+
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.critter.CritterClassLoader;
+import dev.morphia.critter.parser.generator.NestmateAccessException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
@@ -22,6 +30,13 @@ import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 
 public class TestCritterMapper {
 
@@ -196,6 +211,74 @@ public class TestCritterMapper {
         Assertions.assertNotNull(model, "Should fall back to reflection and return a non-null model");
         Assertions.assertFalse(model instanceof CritterEntityModel,
                 "Fallback model should be a plain EntityModel, not CritterEntityModel");
+    }
+
+    @Test
+    public void testEntityOutsideMorphiasClassLoaderFallsBackToReflection(@TempDir Path dir) throws Exception {
+        // An entity loaded by its own class loader is in a different unnamed module than Morphia, so runtime generation
+        // can't define nestmate accessors for it.
+        compile(dir, "app/IsolatedEntity.java", """
+                package app;
+                @dev.morphia.annotations.Entity
+                public class IsolatedEntity {
+                    @dev.morphia.annotations.Id
+                    private org.bson.types.ObjectId id;
+                    private String name;
+                }
+                """);
+
+        Logger logger = (Logger) LoggerFactory.getLogger(CritterMapper.class);
+        Level level = logger.getLevel();
+        ListAppender<ILoggingEvent> appender = new ListAppender<>();
+        appender.start();
+        logger.addAppender(appender);
+        logger.setLevel(Level.WARN);
+        try (URLClassLoader loader = new URLClassLoader(new URL[] { dir.toUri().toURL() }, getClass().getClassLoader())) {
+            CritterMapper mapper = new CritterMapper(MorphiaConfig.load().mapper(MapperType.CRITTER), loader);
+            EntityModel model = mapper.mapEntity(loader.loadClass("app.IsolatedEntity"));
+
+            Assertions.assertNotNull(model);
+            Assertions.assertEquals(EntityModel.class, model.getClass(), "Expected a reflective EntityModel");
+            Assertions.assertNotNull(model.getProperty("name"));
+        } finally {
+            logger.detachAppender(appender);
+            logger.setLevel(level);
+        }
+
+        List<String> warnings = appender.list.stream()
+                .filter(event -> event.getLevel() == Level.WARN)
+                .map(ILoggingEvent::getFormattedMessage)
+                .toList();
+        Assertions.assertEquals(1, warnings.size(), warnings.toString());
+        String warning = warnings.get(0);
+        Assertions.assertTrue(warning.contains("can't access app.IsolatedEntity"), warning);
+        Assertions.assertTrue(warning.contains("isn't in Morphia's module"), warning);
+        Assertions.assertTrue(warning.contains("critter-maven"), warning);
+    }
+
+    @Test
+    public void testAccessFailureClassification() {
+        NestmateAccessException accessException = new NestmateAccessException(String.class,
+                new IllegalAccessException("does not have full privilege access"));
+
+        Assertions.assertSame(accessException, CritterMapper.accessFailure(accessException));
+        Assertions.assertSame(accessException,
+                CritterMapper.accessFailure(new RuntimeException(new IllegalStateException(accessException))));
+        Assertions.assertNull(CritterMapper.accessFailure(new RuntimeException(new IllegalAccessException("unrelated"))));
+        Assertions.assertNull(CritterMapper.accessFailure(new ClassNotFoundException("unrelated")));
+    }
+
+    private static void compile(Path output, String file, String source) throws Exception {
+        Path sourceFile = output.resolveSibling(output.getFileName() + "-src").resolve(file);
+        Files.createDirectories(sourceFile.getParent());
+        Files.writeString(sourceFile, source);
+        List<String> classpath = new ArrayList<>();
+        for (Class<?> type : List.of(Entity.class, ObjectId.class)) {
+            classpath.add(Path.of(type.getProtectionDomain().getCodeSource().getLocation().toURI()).toString());
+        }
+        int result = ToolProvider.getSystemJavaCompiler().run(null, null, null, "-d", output.toString(), "-cp",
+                String.join(File.pathSeparator, classpath), sourceFile.toString());
+        Assertions.assertEquals(0, result, "Fixture compilation failed");
     }
 
     @Test
