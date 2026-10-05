@@ -140,10 +140,25 @@ public class NestmateAccessorGenerator {
                     + "<" + propDesc + ">" + ";";
             cb.with(SignatureAttribute.of(ClassSignature.parseFrom(sigStr)));
 
+            ClassDesc reflectFieldDesc = ClassDesc.of("java.lang.reflect.Field");
+            if (isFinalField) {
+                cb.withField("finalField", reflectFieldDesc, ClassFile.ACC_PRIVATE | ClassFile.ACC_FINAL);
+            }
+
             // no-arg constructor
             cb.withMethodBody("<init>", MethodTypeDesc.ofDescriptor("()V"), ClassFile.ACC_PUBLIC, cod -> {
                 cod.aload(0);
                 cod.invokespecial(ConstantDescs.CD_Object, "<init>", MethodTypeDesc.ofDescriptor("()V"));
+                if (isFinalField) {
+                    // putfield cannot write to final fields outside <init>, so set() uses reflection. Look the
+                    // field up once here rather than on every write.
+                    cod.aload(0);
+                    cod.ldc(fieldOwnerDesc);
+                    cod.ldc(fieldOrGetterName);
+                    cod.invokestatic(ClassDesc.of("dev.morphia.critter.Critter"), "accessibleField",
+                            MethodTypeDesc.of(reflectFieldDesc, ConstantDescs.CD_Class, ConstantDescs.CD_String));
+                    cod.putfield(thisDesc, "finalField", reflectFieldDesc);
+                }
                 cod.return_();
             });
 
@@ -181,24 +196,13 @@ public class NestmateAccessorGenerator {
                         }
 
                         if (isFinalField) {
-                            // putfield cannot write to final fields outside <init>; use reflection
-                            ClassDesc fieldDesc2 = ClassDesc.of("java.lang.reflect.Field");
                             ClassDesc rteDesc = ClassDesc.of("java.lang.RuntimeException");
                             cod.trying(tryBody -> {
-                                GenerationUtils.emitClassRef(tryBody, declaringClass);
-                                tryBody.ldc(fieldOrGetterName);
-                                tryBody.invokevirtual(ConstantDescs.CD_Class, "getDeclaredField",
-                                        MethodTypeDesc.of(fieldDesc2, ConstantDescs.CD_String));
-                                int fieldSlot = tryBody.allocateLocal(io.github.dmlloyd.classfile.TypeKind.REFERENCE);
-                                tryBody.astore(fieldSlot);
-                                tryBody.aload(fieldSlot);
-                                tryBody.iconst_1();
-                                tryBody.invokevirtual(fieldDesc2, "setAccessible",
-                                        MethodTypeDesc.ofDescriptor("(Z)V"));
-                                tryBody.aload(fieldSlot);
+                                tryBody.aload(0);
+                                tryBody.getfield(thisDesc, "finalField", reflectFieldDesc);
                                 tryBody.aload(1);
                                 tryBody.aload(2);
-                                tryBody.invokevirtual(fieldDesc2, "set",
+                                tryBody.invokevirtual(reflectFieldDesc, "set",
                                         MethodTypeDesc.ofDescriptor("(Ljava/lang/Object;Ljava/lang/Object;)V"));
                                 tryBody.return_();
                             }, catches -> catches.catching(ClassDesc.of("java.lang.Exception"), catchBody -> {
