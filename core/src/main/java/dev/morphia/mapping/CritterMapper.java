@@ -12,8 +12,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.mongodb.lang.Nullable;
 
+import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
+import dev.morphia.config.MorphiaPropertyAnnotationProvider;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.generator.CritterGenerator;
 import dev.morphia.critter.parser.generator.EntityModelGenerator;
@@ -39,6 +41,23 @@ import static dev.morphia.critter.Critter.critterPackage;
 @MorphiaInternal
 public class CritterMapper extends AbstractMapper {
     private static final Logger LOG = LoggerFactory.getLogger(CritterMapper.class);
+
+    /**
+     * Morphia's stateless strategies: every instance of one of these classes behaves the same, so configurations using
+     * them can be compared by class.
+     */
+    private static final Set<Class<?>> BUILT_IN_STRATEGIES = Set.of(
+            NamingStrategy.identity().getClass(),
+            NamingStrategy.lowerCase().getClass(),
+            NamingStrategy.snakeCase().getClass(),
+            NamingStrategy.camelCase().getClass(),
+            NamingStrategy.kebabCase().getClass(),
+            NamingStrategy.title().getClass(),
+            DiscriminatorFunction.className().getClass(),
+            DiscriminatorFunction.lowerClassName().getClass(),
+            DiscriminatorFunction.lowerSimpleName().getClass(),
+            DiscriminatorFunction.simpleName().getClass(),
+            MorphiaPropertyAnnotationProvider.class);
 
     private final RuntimeModels runtimeModels;
     private final CritterGenerator generator;
@@ -259,14 +278,26 @@ public class CritterMapper extends AbstractMapper {
         private synchronized Class<?> modelClass(Class<?> type, CritterGenerator generator) throws ClassNotFoundException {
             Class<?> modelClass = modelClasses.get(type);
             if (modelClass == null) {
-                if (loader == null) {
-                    loader = new CritterClassLoader(parent);
-                }
-                EntityModelGenerator entityModel = generator.generate(type, loader, true);
-                modelClass = loader.loadClass(entityModel.getGeneratedType());
+                CritterClassLoader target = loaderFor(type);
+                EntityModelGenerator entityModel = generator.generate(type, target, true);
+                modelClass = target.loadClass(entityModel.getGeneratedType());
                 modelClasses.put(type, modelClass);
             }
             return modelClass;
+        }
+
+        /**
+         * Generated class names come from the persisted type, so two {@code @ExternalEntity} stand-ins for the same target
+         * would collide in one loader. Each stand-in gets a loader of its own.
+         */
+        private CritterClassLoader loaderFor(Class<?> type) {
+            if (type.isAnnotationPresent(ExternalEntity.class)) {
+                return new CritterClassLoader(parent);
+            }
+            if (loader == null) {
+                loader = new CritterClassLoader(parent);
+            }
+            return loader;
         }
     }
 
@@ -274,8 +305,8 @@ public class CritterMapper extends AbstractMapper {
      * The configuration settings that runtime generation bakes into a model's bytecode. Two configurations with equal
      * keys produce identical models, so their mappers can share generated classes.
      *
-     * @return the key, or {@code null} if a strategy isn't one of Morphia's own, in which case two instances of the same
-     *         class could still behave differently and the models aren't shared
+     * @return the key, or {@code null} if a strategy isn't one of Morphia's stateless built-ins, in which case two
+     *         instances of the same class could still behave differently and the models aren't shared
      */
     @Nullable
     private static List<Object> generationKey(MorphiaConfig config) {
@@ -287,12 +318,10 @@ public class CritterMapper extends AbstractMapper {
 
         List<Object> key = new ArrayList<>();
         for (Object strategy : strategies) {
-            Class<?> strategyClass = strategy.getClass();
-            if (!strategyClass.getName().startsWith("dev.morphia.") || strategyClass.isAnonymousClass()
-                    || strategyClass.isSynthetic()) {
+            if (!BUILT_IN_STRATEGIES.contains(strategy.getClass())) {
                 return null;
             }
-            key.add(strategyClass.getName());
+            key.add(strategy.getClass().getName());
         }
         key.add(config.discriminatorKey());
         key.add(config.propertyDiscovery());

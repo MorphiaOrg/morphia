@@ -78,7 +78,7 @@ public class PropertyFinder {
             }
             for (FieldInfo field : fields) {
                 if (runtimeMode) {
-                    critterGenerator.nestmateAccessor(targetType, field);
+                    critterGenerator.nestmateAccessor(targetType, classLoader, field);
                 } else {
                     critterGenerator.propertyAccessor(targetType, classLoader, field);
                 }
@@ -91,7 +91,7 @@ public class PropertyFinder {
             }
             for (MethodInfo method : methods) {
                 if (runtimeMode) {
-                    critterGenerator.nestmateAccessor(targetType, method);
+                    critterGenerator.nestmateAccessor(targetType, classLoader, method);
                 } else {
                     critterGenerator.propertyAccessor(targetType, classLoader, method);
                 }

@@ -373,11 +373,14 @@ public class PropertyModelGenerator extends BaseGenerator {
 
                         cod.aload(0);
                         if (runtimeMode) {
-                            // Retrieve pre-instantiated nestmate accessor from registry
+                            // Retrieve the pre-instantiated nestmate accessor registered for this class's loader
                             ClassDesc registryDesc = ClassDesc.of(NestmateAccessorRegistry.class.getName());
+                            ClassDesc classLoaderDesc = ClassDesc.of("java.lang.ClassLoader");
+                            cod.ldc(thisDesc);
+                            cod.invokevirtual(ConstantDescs.CD_Class, "getClassLoader", MethodTypeDesc.of(classLoaderDesc));
                             cod.ldc(accessorType);
                             cod.invokestatic(registryDesc, "get",
-                                    MethodTypeDesc.of(accessorDesc, ConstantDescs.CD_String));
+                                    MethodTypeDesc.of(accessorDesc, classLoaderDesc, ConstantDescs.CD_String));
                             cod.putfield(thisDesc, "accessor", accessorFieldDesc);
                         } else {
                             cod.new_(accessorImplDesc);

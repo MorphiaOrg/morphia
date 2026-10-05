@@ -1,5 +1,6 @@
 package dev.morphia.mapping;
 
+import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -9,6 +10,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.config.MorphiaConfig;
@@ -108,6 +110,47 @@ public class TestCritterMapper {
         Assertions.assertNotSame(first.getClass(), second.getClass(),
                 "A custom strategy can't be compared safely, so its models aren't shared");
         Assertions.assertEquals("NAME", second.getProperty("name").getMappedName());
+    }
+
+    @Test
+    public void testSharedRuntimeModelsKeepTheirOwnAccessors() {
+        MorphiaConfig fieldsConfig = MorphiaConfig.load().mapper(MapperType.CRITTER);
+        CritterMapper first = new CritterMapper(fieldsConfig);
+        first.mapEntity(AccessorChoiceEntity.class);
+        new CritterMapper(fieldsConfig.propertyDiscovery(PropertyDiscovery.METHODS)).mapEntity(AccessorChoiceEntity.class);
+
+        // Reuses the first mapper's model class, which must still be bound to field accessors.
+        EntityModel model = new CritterMapper(fieldsConfig).mapEntity(AccessorChoiceEntity.class);
+        AccessorChoiceEntity entity = new AccessorChoiceEntity();
+        model.getProperty("name").getAccessor().set(entity, "value");
+
+        Assertions.assertEquals("value", model.getProperty("name").getAccessor().get(entity),
+                "A FIELDS model must read the field, not the getter");
+        Reference.reachabilityFence(first);
+    }
+
+    @Test
+    public void testExternalEntityStandInsDoNotShareRuntimeModels() {
+        EntityModel first = mapper().mapEntity(FirstStandIn.class);
+        EntityModel second = mapper().mapEntity(SecondStandIn.class);
+
+        Assertions.assertEquals("first_targets", first.collectionName());
+        Assertions.assertEquals("second_targets", second.collectionName());
+    }
+
+    @Test
+    public void testConfiguredStrategiesDoNotShareRuntimeModels() {
+        EntityModel first = new CritterMapper(MorphiaConfig.load()
+                .mapper(MapperType.CRITTER)
+                .propertyNaming(new PrefixNaming("first_")))
+                .mapEntity(CritterMapperTestEntity.class);
+        EntityModel second = new CritterMapper(MorphiaConfig.load()
+                .mapper(MapperType.CRITTER)
+                .propertyNaming(new PrefixNaming("second_")))
+                .mapEntity(CritterMapperTestEntity.class);
+
+        Assertions.assertEquals("first_name", first.getProperty("name").getMappedName());
+        Assertions.assertEquals("second_name", second.getProperty("name").getMappedName());
     }
 
     @Test
@@ -418,5 +461,55 @@ public class TestCritterMapper {
     public static class GrandChild extends MiddleParent {
         @Id
         ObjectId id;
+    }
+
+    @Entity
+    public static class AccessorChoiceEntity {
+        @Id
+        ObjectId id;
+        private String name;
+
+        public String getName() {
+            return "getter:" + name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
+    public static class ExternalTarget {
+        private ObjectId id;
+        private String name;
+    }
+
+    @ExternalEntity(target = ExternalTarget.class, value = "first_targets")
+    public static class FirstStandIn {
+        @Id
+        private ObjectId id;
+        private String name;
+    }
+
+    @ExternalEntity(target = ExternalTarget.class, value = "second_targets")
+    public static class SecondStandIn {
+        @Id
+        private ObjectId id;
+        private String name;
+    }
+
+    /**
+     * A configurable strategy in Morphia's own namespace, which must not be mistaken for a built-in.
+     */
+    public static class PrefixNaming extends NamingStrategy {
+        private final String prefix;
+
+        public PrefixNaming(String prefix) {
+            this.prefix = prefix;
+        }
+
+        @Override
+        public String apply(String value) {
+            return prefix + value;
+        }
     }
 }
