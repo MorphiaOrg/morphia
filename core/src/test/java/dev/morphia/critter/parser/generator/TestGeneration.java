@@ -259,6 +259,44 @@ public class TestGeneration {
         }
     }
 
+    @Test
+    public void testGeneratorFinalFieldBehindTransientField(@TempDir Path dir) throws Exception {
+        // The entity's transient field isn't mapped and the library superclass can't be rewritten, so the inherited final
+        // field's writer is woven into the entity, where a lookup by name alone would find the transient field instead.
+        Path library = dir.resolve("library");
+        Path app = dir.resolve("app");
+        compile(library, Map.of("lib/FinalBase.java", """
+                package lib;
+                public class FinalBase {
+                    protected final int value;
+                    public FinalBase() {
+                        value = 1;
+                    }
+                }
+                """));
+        compile(app, Map.of("app/TransientChild.java", """
+                package app;
+                @dev.morphia.annotations.Entity
+                public class TransientChild extends lib.FinalBase {
+                    @dev.morphia.annotations.Id
+                    private org.bson.types.ObjectId id;
+                    private transient String value;
+                }
+                """), library);
+
+        try (URLClassLoader loader = new URLClassLoader(new URL[] { app.toUri().toURL(), library.toUri().toURL() },
+                getClass().getClassLoader())) {
+            CritterClassLoader classLoader = new CritterClassLoader(loader);
+            EntityModelGenerator modelGenerator = new CritterGenerator(defaultMapper())
+                    .generate(loader.loadClass("app.TransientChild"), classLoader, false);
+            EntityModel model = (EntityModel) classLoader.loadClass(modelGenerator.getGeneratedType())
+                    .getConstructor(Mapper.class).newInstance(defaultMapper());
+            Object child = classLoader.loadClass("app.TransientChild").getConstructor().newInstance();
+
+            assertRoundTrip(model, child, "value", 42);
+        }
+    }
+
     private static void compile(Path output, Map<String, String> sources, Path... classpath) throws Exception {
         Path sourceDir = output.resolveSibling(output.getFileName() + "-src");
         List<String> files = new ArrayList<>();

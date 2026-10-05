@@ -95,13 +95,14 @@ public class AddFieldAccessorMethods extends AccessorMethods {
 
     /**
      * {@code putfield} may only write a final field from a constructor, so the writer goes through reflection instead.
-     * The {@link java.lang.reflect.Field} is looked up on first use and cached in a synthetic static field.
+     * The {@link java.lang.reflect.Field} is looked up on its declaring class on first use and cached in a synthetic
+     * volatile static field, so other threads see it fully initialized.
      */
     private static void writeFinalField(ClassBuilder classBuilder, ClassDesc entityDesc,
             FieldInfo field, String writerName, MethodTypeDesc writerMtd, TypeKind kind, ClassDesc fieldDesc) {
         String cacheName = "__field%s".formatted(Critter.titleCase(field.name()));
         classBuilder.withField(cacheName, CD_FIELD,
-                ClassFile.ACC_PRIVATE | ClassFile.ACC_STATIC | ClassFile.ACC_SYNTHETIC);
+                ClassFile.ACC_PRIVATE | ClassFile.ACC_STATIC | ClassFile.ACC_VOLATILE | ClassFile.ACC_SYNTHETIC);
         classBuilder.withMethodBody(writerName, writerMtd, ClassFile.ACC_PUBLIC | ClassFile.ACC_SYNTHETIC, cod -> {
             Label cached = cod.newLabel();
             cod.getstatic(entityDesc, cacheName, CD_FIELD);
@@ -109,9 +110,16 @@ public class AddFieldAccessorMethods extends AccessorMethods {
             cod.ifnonnull(cached);
             cod.pop();
             cod.ldc(entityDesc);
-            cod.ldc(field.name());
-            cod.invokestatic(CD_CRITTER, "accessibleField",
-                    MethodTypeDesc.of(CD_FIELD, ConstantDescs.CD_Class, ConstantDescs.CD_String));
+            if (field.declaringClass() != null) {
+                cod.ldc(field.declaringClass().getName());
+                cod.ldc(field.name());
+                cod.invokestatic(CD_CRITTER, "accessibleField",
+                        MethodTypeDesc.of(CD_FIELD, ConstantDescs.CD_Class, ConstantDescs.CD_String, ConstantDescs.CD_String));
+            } else {
+                cod.ldc(field.name());
+                cod.invokestatic(CD_CRITTER, "accessibleField",
+                        MethodTypeDesc.of(CD_FIELD, ConstantDescs.CD_Class, ConstantDescs.CD_String));
+            }
             cod.dup();
             cod.putstatic(entityDesc, cacheName, CD_FIELD);
             cod.labelBinding(cached);
