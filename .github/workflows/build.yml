@@ -181,7 +181,7 @@ jobs:
     secrets:
       DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
     with:
-      java: 17
+      java: ${{ matrix.java }}
       reuseBuild: true
       archive-name: "${{matrix.mapper}}-${{matrix.java}}-${{github.run_id}}"
       maven-flags: "-e -Dmorphia.mapper=${{ matrix.mapper }}"
