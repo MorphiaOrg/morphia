@@ -456,6 +456,23 @@
             </subprojects>
         </profile>
         <profile>
+            <!--
+                JEP 500: control mutation of final fields via deep reflection in the forked test JVM, e.g.
+                -Dfinal.field.mutation=deny (allow|warn|debug|deny). Only activates on JDK 26+ since older JVMs
+                reject the unknown launcher option. Uses the argLine property so it composes with jacoco's agent.
+            -->
+            <id>final-field-mutation</id>
+            <activation>
+                <jdk>[26,)</jdk>
+                <property>
+                    <name>final.field.mutation</name>
+                </property>
+            </activation>
+            <properties>
+                <argLine>--illegal-final-field-mutation=${final.field.mutation}</argLine>
+            </properties>
+        </profile>
+        <profile>
             <id>coverage</id>
             <build>
                 <plugins>

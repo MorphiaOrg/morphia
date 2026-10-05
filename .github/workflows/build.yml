@@ -186,6 +186,29 @@ jobs:
       archive-name: "${{matrix.mapper}}-${{matrix.java}}-${{github.run_id}}"
       maven-flags: "-e -Dmorphia.mapper=${{ matrix.mapper }}"
 
+  # JEP 500: run the suite with final field mutation via deep reflection denied so every remaining
+  # dependency on it shows up before a future JDK makes deny the default. Non-blocking until those
+  # mutations are removed (see #4353).
+  FinalFieldMutationTests:
+    name: Final field mutation denied
+    needs:
+      - Build
+      - Matrix
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [ 26 ]
+        mapper: [ reflection, critter ]
+    uses: evanchooly/workflows/.github/workflows/build.yml@master
+    secrets:
+      DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+    with:
+      java: ${{ matrix.java }}
+      reuseBuild: true
+      optional: true
+      archive-name: "final-field-mutation-${{matrix.mapper}}-${{matrix.java}}-${{github.run_id}}"
+      maven-flags: "-e -Dmorphia.mapper=${{ matrix.mapper }} -Dfinal.field.mutation=deny"
+
   Coverage:
     name: Coverage Report
     needs:
