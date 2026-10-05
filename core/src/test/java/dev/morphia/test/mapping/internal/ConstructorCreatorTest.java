@@ -110,6 +110,29 @@ public class ConstructorCreatorTest extends TestBase {
     }
 
     @Test
+    public void constructorArgumentsAreNotResetAfterConstruction() {
+        getMapper().map(NormalizingEntity.class);
+        ObjectId id = new ObjectId();
+        getDs().getCollection(NormalizingEntity.class)
+                .withDocumentClass(Document.class)
+                .insertOne(new Document("_id", id)
+                        .append("name", "  MiXeD Case  ")
+                        .append("tags", asList("b", "a"))
+                        .append("note", "not in the constructor"));
+
+        NormalizingEntity loaded = getDs().find(NormalizingEntity.class).first();
+
+        Assertions.assertNotNull(loaded);
+        Assertions.assertEquals(id, loaded.id);
+        // the constructor's normalized values must survive rather than being overwritten by the raw decoded values
+        Assertions.assertEquals("mixed case", loaded.name);
+        Assertions.assertEquals(List.of("a", "b"), loaded.tags);
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> loaded.tags.add("c"));
+        // properties without a matching constructor parameter are still set after construction
+        Assertions.assertEquals("not in the constructor", loaded.note);
+    }
+
+    @Test
     public void typeConversions() {
         getMapper().map(MyEntity.class, EmbeddedEntity.class);
         Document document = new Document("_id", "2")
@@ -543,6 +566,21 @@ class Person extends AbstractPerson {
                 .add("firstName='" + firstName + "'")
                 .add("lastName='" + lastName + "'")
                 .toString();
+    }
+}
+
+@Entity(useDiscriminator = false)
+class NormalizingEntity {
+    @Id
+    final ObjectId id;
+    final String name;
+    final List<String> tags;
+    String note;
+
+    NormalizingEntity(ObjectId id, String name, List<String> tags) {
+        this.id = id;
+        this.name = name.trim().toLowerCase();
+        this.tags = tags.stream().sorted().toList();
     }
 }
 
