@@ -96,7 +96,7 @@ public class TestVarHandleAccessor {
     public void testAccessorsInstantiatable() {
         for (String field : List.of("name", "age", "salary")) {
             String key = Critter.critterPackage(Example.class) + "." + Critter.titleCase(field) + "Accessor";
-            Assertions.assertNotNull(NestmateAccessorRegistry.get(key),
+            Assertions.assertNotNull(NestmateAccessorRegistry.get(classLoader, key),
                     "Nestmate accessor must be registered in registry for field: " + field);
         }
     }
@@ -263,7 +263,7 @@ public class TestVarHandleAccessor {
     @SuppressWarnings("unchecked")
     private <T> PropertyAccessor<T> loadAccessor(CritterClassLoader loader, Class<?> entityType, String fieldName) {
         String key = Critter.critterPackage(entityType) + "." + Critter.titleCase(fieldName) + "Accessor";
-        return (PropertyAccessor<T>) NestmateAccessorRegistry.get(key);
+        return (PropertyAccessor<T>) NestmateAccessorRegistry.get(loader, key);
     }
 
     /**
