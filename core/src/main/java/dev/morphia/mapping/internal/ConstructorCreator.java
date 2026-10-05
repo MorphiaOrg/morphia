@@ -192,9 +192,12 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
             Integer position = plan.positions.get(model.getName());
             if (position != null) {
                 parameters[position] = conversions.convert(value, plan.types[position]);
+            } else {
+                // only properties the constructor doesn't take need setting after construction. re-setting the others would
+                // overwrite whatever the constructor did with the value and, for final fields, write them reflectively (JEP 500).
+                pendingModels.add(model);
+                pendingValues.add(value);
             }
-            pendingModels.add(model);
-            pendingValues.add(value);
         }
     }
 
