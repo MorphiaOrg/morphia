@@ -24,6 +24,7 @@ import io.github.dmlloyd.classfile.TypeKind;
 public class AddFieldAccessorMethods extends AccessorMethods {
     private static final ClassDesc CD_FIELD = ClassDesc.of("java.lang.reflect.Field");
     private static final ClassDesc CD_CRITTER = ClassDesc.of("dev.morphia.critter.Critter");
+    private static final ClassDesc CD_RUNTIME_EXCEPTION = ClassDesc.of("java.lang.RuntimeException");
     private final List<FieldInfo> fields;
 
     /**
@@ -123,15 +124,32 @@ public class AddFieldAccessorMethods extends AccessorMethods {
             cod.dup();
             cod.putstatic(entityDesc, cacheName, CD_FIELD);
             cod.labelBinding(cached);
-            cod.aload(0);
-            cod.loadLocal(kind, 1);
-            if (kind != TypeKind.REFERENCE) {
-                ClassDesc wrapper = ClassDesc.of(GenerationUtils.PRIMITIVE_TO_WRAPPER.get(fieldDesc.displayName()));
-                cod.invokestatic(wrapper, "valueOf", MethodTypeDesc.of(wrapper, fieldDesc));
-            }
-            cod.invokevirtual(CD_FIELD, "set", MethodTypeDesc.of(ConstantDescs.CD_void, ConstantDescs.CD_Object,
-                    ConstantDescs.CD_Object));
-            cod.return_();
+            int fieldSlot = cod.allocateLocal(TypeKind.REFERENCE);
+            cod.astore(fieldSlot);
+            // Wrap failures the same way the runtime accessor (NestmateAccessorGenerator) does, so both tiers fail alike
+            // and Field.set's checked IllegalAccessException doesn't escape undeclared.
+            cod.trying(tryBody -> {
+                tryBody.aload(fieldSlot);
+                tryBody.aload(0);
+                tryBody.loadLocal(kind, 1);
+                if (kind != TypeKind.REFERENCE) {
+                    ClassDesc wrapper = ClassDesc.of(GenerationUtils.PRIMITIVE_TO_WRAPPER.get(fieldDesc.displayName()));
+                    tryBody.invokestatic(wrapper, "valueOf", MethodTypeDesc.of(wrapper, fieldDesc));
+                }
+                tryBody.invokevirtual(CD_FIELD, "set", MethodTypeDesc.of(ConstantDescs.CD_void, ConstantDescs.CD_Object,
+                        ConstantDescs.CD_Object));
+                tryBody.return_();
+            }, catches -> catches.catching(ConstantDescs.CD_Exception, catchBody -> {
+                int exceptionSlot = catchBody.allocateLocal(TypeKind.REFERENCE);
+                catchBody.astore(exceptionSlot);
+                catchBody.new_(CD_RUNTIME_EXCEPTION);
+                catchBody.dup();
+                catchBody.ldc("Failed to set final field '%s'".formatted(field.name()));
+                catchBody.aload(exceptionSlot);
+                catchBody.invokespecial(CD_RUNTIME_EXCEPTION, "<init>",
+                        MethodTypeDesc.of(ConstantDescs.CD_void, ConstantDescs.CD_String, ConstantDescs.CD_Throwable));
+                catchBody.athrow();
+            }));
         });
     }
 }

@@ -1,6 +1,7 @@
 package dev.morphia.critter.parser.generator;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -169,6 +170,26 @@ public class TestGeneration {
 
         assertRoundTrip(model, entity, "code", "updated");
         assertRoundTrip(model, entity, "count", 42);
+    }
+
+    @Test
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public void testGeneratorFinalFieldWriteFailureIsWrapped() throws Exception {
+        EntityModel model = generateModel(FinalFieldsExample.class);
+        Class<?> woven = critterClassLoader.loadClass(FinalFieldsExample.class.getName());
+        Object entity = woven.getConstructor(String.class, int.class).newInstance("initial", 1);
+
+        // Seed the woven writer's Field cache with a copy that was never made accessible, so Field.set throws the
+        // checked IllegalAccessException.
+        Field cache = woven.getDeclaredField("__fieldCode");
+        cache.setAccessible(true);
+        cache.set(null, woven.getDeclaredField("code"));
+
+        PropertyAccessor accessor = model.getProperty("code").getAccessor();
+        Throwable thrown = Assertions.assertThrows(Throwable.class, () -> accessor.set(entity, "updated"));
+        Assertions.assertEquals(RuntimeException.class, thrown.getClass());
+        Assertions.assertEquals("Failed to set final field 'code'", thrown.getMessage());
+        Assertions.assertInstanceOf(IllegalAccessException.class, thrown.getCause());
     }
 
     @Test
