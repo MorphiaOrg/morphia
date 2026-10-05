@@ -2,6 +2,7 @@ package dev.morphia.mapping;
 
 import java.io.File;
 import java.lang.ref.Reference;
+import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -44,54 +45,60 @@ public class TestCritterMapper {
         return new CritterMapper(MorphiaConfig.load().mapper(MapperType.CRITTER));
     }
 
+    /**
+     * Asserts that a model came from runtime generation rather than an AOT model or the reflection fallback. The
+     * entities here have no AOT models only because their package isn't in the test {@code morphia.packages}, so this
+     * keeps the tests honest if that ever changes.
+     */
+    private static EntityModel assertRuntimeGenerated(EntityModel model) {
+        Assertions.assertNotNull(model);
+        Assertions.assertInstanceOf(CritterEntityModel.class, model,
+                "Expected a CritterEntityModel but got: " + model.getClass().getName());
+        Assertions.assertInstanceOf(CritterClassLoader.class, model.getClass().getClassLoader(),
+                "Expected a runtime-generated model but " + model.getClass().getName() + " was loaded by "
+                        + model.getClass().getClassLoader());
+        return model;
+    }
+
     @Test
     public void testRuntimeGenerationProducesCritterEntityModel() {
         CritterMapper mapper = mapper();
-        EntityModel model = mapper.mapEntity(CritterMapperTestEntity.class);
-        Assertions.assertNotNull(model);
-        Assertions.assertTrue(model instanceof CritterEntityModel,
-                "Expected CritterEntityModel but got: " + model.getClass().getName());
+        assertRuntimeGenerated(mapper.mapEntity(CritterMapperTestEntity.class));
     }
 
     @Test
     public void testCollectionNameFromAnnotation() {
         CritterMapper mapper = mapper();
-        EntityModel model = mapper.mapEntity(CritterMapperTestEntity.class);
-        Assertions.assertNotNull(model);
+        EntityModel model = assertRuntimeGenerated(mapper.mapEntity(CritterMapperTestEntity.class));
         Assertions.assertEquals("critter_test", model.collectionName());
     }
 
     @Test
     public void testMappedEntityCached() {
         CritterMapper mapper = mapper();
-        EntityModel first = mapper.mapEntity(CritterMapperTestEntity.class);
+        EntityModel first = assertRuntimeGenerated(mapper.mapEntity(CritterMapperTestEntity.class));
         EntityModel second = mapper.mapEntity(CritterMapperTestEntity.class);
-        Assertions.assertNotNull(first);
         Assertions.assertSame(first, second, "mapEntity should return the same cached model on repeated calls");
     }
 
     @Test
     public void testCopySharesCritterModels() {
         CritterMapper original = mapper();
-        EntityModel model = original.mapEntity(CritterMapperTestEntity.class);
-        Assertions.assertNotNull(model);
-        Assertions.assertTrue(model instanceof CritterEntityModel, "Original model must be a CritterEntityModel");
+        EntityModel model = assertRuntimeGenerated(original.mapEntity(CritterMapperTestEntity.class));
 
         CritterMapper copy = (CritterMapper) original.copy();
         EntityModel copiedModel = copy.getEntityModel(CritterMapperTestEntity.class);
 
         Assertions.assertNotNull(copiedModel, "copy() must carry over already-mapped entities");
-        Assertions.assertTrue(copiedModel instanceof CritterEntityModel, "Copied model must remain a CritterEntityModel");
+        assertRuntimeGenerated(copiedModel);
         Assertions.assertNotSame(copiedModel, model, "copy() creates independent model instances for isolation");
     }
 
     @Test
     public void testMappersShareRuntimeModels() {
-        EntityModel first = mapper().mapEntity(CritterMapperTestEntity.class);
-        EntityModel second = mapper().mapEntity(CritterMapperTestEntity.class);
+        EntityModel first = assertRuntimeGenerated(mapper().mapEntity(CritterMapperTestEntity.class));
+        EntityModel second = assertRuntimeGenerated(mapper().mapEntity(CritterMapperTestEntity.class));
 
-        Assertions.assertInstanceOf(CritterClassLoader.class, first.getClass().getClassLoader(),
-                "Expected a runtime-generated model");
         Assertions.assertSame(first.getClass(), second.getClass(),
                 "Mappers with equivalent configs should reuse the generated model class");
         Assertions.assertNotSame(first, second, "Each mapper still gets its own model instance");
@@ -99,11 +106,11 @@ public class TestCritterMapper {
 
     @Test
     public void testDifferentNamingDoesNotShareRuntimeModels() {
-        EntityModel camelCase = mapper().mapEntity(CritterMapperTestEntity.class);
-        EntityModel title = new CritterMapper(MorphiaConfig.load()
+        EntityModel camelCase = assertRuntimeGenerated(mapper().mapEntity(CritterMapperTestEntity.class));
+        EntityModel title = assertRuntimeGenerated(new CritterMapper(MorphiaConfig.load()
                 .mapper(MapperType.CRITTER)
                 .propertyNaming(NamingStrategy.title()))
-                .mapEntity(CritterMapperTestEntity.class);
+                .mapEntity(CritterMapperTestEntity.class));
 
         Assertions.assertNotSame(camelCase.getClass(), title.getClass());
         Assertions.assertEquals("name", camelCase.getProperty("name").getMappedName());
@@ -117,11 +124,9 @@ public class TestCritterMapper {
                 .mapper(MapperType.CRITTER)
                 .propertyNaming(NamingStrategy.title()));
 
-        EntityModel copied = copy.mapEntity(CritterMapperTestEntity.class);
-        EntityModel camelCase = original.mapEntity(CritterMapperTestEntity.class);
+        EntityModel copied = assertRuntimeGenerated(copy.mapEntity(CritterMapperTestEntity.class));
+        EntityModel camelCase = assertRuntimeGenerated(original.mapEntity(CritterMapperTestEntity.class));
 
-        Assertions.assertInstanceOf(CritterClassLoader.class, copied.getClass().getClassLoader(),
-                "Expected a runtime-generated model");
         Assertions.assertEquals("Name", copied.getProperty("name").getMappedName(),
                 "An entity first mapped through the copy must use the copy's naming");
         Assertions.assertEquals("name", camelCase.getProperty("name").getMappedName());
@@ -136,11 +141,9 @@ public class TestCritterMapper {
                 .mapper(MapperType.CRITTER)
                 .propertyNaming(NamingStrategy.title()));
 
-        EntityModel camelCase = original.mapEntity(CritterMapperTestEntity.class);
-        EntityModel copied = copy.mapEntity(CritterMapperTestEntity.class);
+        EntityModel camelCase = assertRuntimeGenerated(original.mapEntity(CritterMapperTestEntity.class));
+        EntityModel copied = assertRuntimeGenerated(copy.mapEntity(CritterMapperTestEntity.class));
 
-        Assertions.assertInstanceOf(CritterClassLoader.class, copied.getClass().getClassLoader(),
-                "Expected a runtime-generated model");
         Assertions.assertEquals("name", camelCase.getProperty("name").getMappedName());
         Assertions.assertEquals("Name", copied.getProperty("name").getMappedName(),
                 "The copy must not reuse the model the original defined in the shared parent loader");
@@ -154,11 +157,9 @@ public class TestCritterMapper {
                 .mapper(MapperType.CRITTER)
                 .database("copy_database"));
 
-        EntityModel copied = copy.mapEntity(CritterMapperTestEntity.class);
-        EntityModel model = original.mapEntity(CritterMapperTestEntity.class);
+        EntityModel copied = assertRuntimeGenerated(copy.mapEntity(CritterMapperTestEntity.class));
+        EntityModel model = assertRuntimeGenerated(original.mapEntity(CritterMapperTestEntity.class));
 
-        Assertions.assertInstanceOf(CritterClassLoader.class, copied.getClass().getClassLoader(),
-                "Expected a runtime-generated model");
         Assertions.assertSame(model.getClass(), copied.getClass(),
                 "A copy that only changes operational settings should reuse the generated model class");
         Assertions.assertNotSame(model, copied);
@@ -173,8 +174,8 @@ public class TestCritterMapper {
             }
         };
         MorphiaConfig config = MorphiaConfig.load().mapper(MapperType.CRITTER).propertyNaming(upperCase);
-        EntityModel first = new CritterMapper(config).mapEntity(CritterMapperTestEntity.class);
-        EntityModel second = new CritterMapper(config).mapEntity(CritterMapperTestEntity.class);
+        EntityModel first = assertRuntimeGenerated(new CritterMapper(config).mapEntity(CritterMapperTestEntity.class));
+        EntityModel second = assertRuntimeGenerated(new CritterMapper(config).mapEntity(CritterMapperTestEntity.class));
 
         Assertions.assertNotSame(first.getClass(), second.getClass(),
                 "A custom strategy can't be compared safely, so its models aren't shared");
@@ -185,11 +186,12 @@ public class TestCritterMapper {
     public void testSharedRuntimeModelsKeepTheirOwnAccessors() {
         MorphiaConfig fieldsConfig = MorphiaConfig.load().mapper(MapperType.CRITTER);
         CritterMapper first = new CritterMapper(fieldsConfig);
-        first.mapEntity(AccessorChoiceEntity.class);
-        new CritterMapper(fieldsConfig.propertyDiscovery(PropertyDiscovery.METHODS)).mapEntity(AccessorChoiceEntity.class);
+        assertRuntimeGenerated(first.mapEntity(AccessorChoiceEntity.class));
+        assertRuntimeGenerated(new CritterMapper(fieldsConfig.propertyDiscovery(PropertyDiscovery.METHODS))
+                .mapEntity(AccessorChoiceEntity.class));
 
         // Reuses the first mapper's model class, which must still be bound to field accessors.
-        EntityModel model = new CritterMapper(fieldsConfig).mapEntity(AccessorChoiceEntity.class);
+        EntityModel model = assertRuntimeGenerated(new CritterMapper(fieldsConfig).mapEntity(AccessorChoiceEntity.class));
         AccessorChoiceEntity entity = new AccessorChoiceEntity();
         model.getProperty("name").getAccessor().set(entity, "value");
 
@@ -200,8 +202,8 @@ public class TestCritterMapper {
 
     @Test
     public void testExternalEntityStandInsDoNotShareRuntimeModels() {
-        EntityModel first = mapper().mapEntity(FirstStandIn.class);
-        EntityModel second = mapper().mapEntity(SecondStandIn.class);
+        EntityModel first = assertRuntimeGenerated(mapper().mapEntity(FirstStandIn.class));
+        EntityModel second = assertRuntimeGenerated(mapper().mapEntity(SecondStandIn.class));
 
         Assertions.assertEquals("first_targets", first.collectionName());
         Assertions.assertEquals("second_targets", second.collectionName());
@@ -209,14 +211,14 @@ public class TestCritterMapper {
 
     @Test
     public void testConfiguredStrategiesDoNotShareRuntimeModels() {
-        EntityModel first = new CritterMapper(MorphiaConfig.load()
+        EntityModel first = assertRuntimeGenerated(new CritterMapper(MorphiaConfig.load()
                 .mapper(MapperType.CRITTER)
                 .propertyNaming(new PrefixNaming("first_")))
-                .mapEntity(CritterMapperTestEntity.class);
-        EntityModel second = new CritterMapper(MorphiaConfig.load()
+                .mapEntity(CritterMapperTestEntity.class));
+        EntityModel second = assertRuntimeGenerated(new CritterMapper(MorphiaConfig.load()
                 .mapper(MapperType.CRITTER)
                 .propertyNaming(new PrefixNaming("second_")))
-                .mapEntity(CritterMapperTestEntity.class);
+                .mapEntity(CritterMapperTestEntity.class));
 
         Assertions.assertEquals("first_name", first.getProperty("name").getMappedName());
         Assertions.assertEquals("second_name", second.getProperty("name").getMappedName());
@@ -225,9 +227,9 @@ public class TestCritterMapper {
     @Test
     public void testCopyHasIndependentDiscriminatorLookup() {
         CritterMapper original = mapper();
-        original.mapEntity(CritterMapperTestEntity.class);
+        assertRuntimeGenerated(original.mapEntity(CritterMapperTestEntity.class));
         CritterMapper copy = (CritterMapper) original.copy();
-        Assertions.assertNotNull(copy.getEntityModel(CritterMapperTestEntity.class));
+        assertRuntimeGenerated(copy.getEntityModel(CritterMapperTestEntity.class));
         Assertions.assertNotSame(copy.getDiscriminatorLookup(), original.getDiscriminatorLookup());
     }
 
@@ -365,10 +367,92 @@ public class TestCritterMapper {
             pool.shutdown();
             pool.awaitTermination(5, TimeUnit.SECONDS);
         }
-        EntityModel first = results.get(0);
+        EntityModel first = assertRuntimeGenerated(results.get(0));
         for (EntityModel result : results) {
             Assertions.assertSame(first, result, "All threads should see the same registered model");
         }
+    }
+
+    @Test
+    public void testConcurrentMappingAcrossSharingMappers() throws Exception {
+        // A discriminator key no other test uses gives these mappers a RuntimeModels of their own, so the model class
+        // is generated during the race rather than reused from an earlier test.
+        MorphiaConfig config = MorphiaConfig.load().mapper(MapperType.CRITTER).discriminatorKey("_concurrentShare");
+        int threads = 8;
+        List<CritterMapper> mappers = new ArrayList<>();
+        for (int i = 0; i < threads; i++) {
+            mappers.add(new CritterMapper(config));
+        }
+        CountDownLatch latch = new CountDownLatch(1);
+        ExecutorService pool = Executors.newFixedThreadPool(threads);
+
+        List<Future<EntityModel>> futures = new ArrayList<>();
+        for (CritterMapper mapper : mappers) {
+            futures.add(pool.submit(() -> {
+                latch.await();
+                return mapper.mapEntity(CritterMapperTestEntity.class);
+            }));
+        }
+
+        latch.countDown();
+        List<EntityModel> results = new ArrayList<>();
+        try {
+            for (Future<EntityModel> f : futures) {
+                results.add(f.get(30, TimeUnit.SECONDS));
+            }
+        } finally {
+            pool.shutdown();
+            pool.awaitTermination(5, TimeUnit.SECONDS);
+        }
+
+        Class<?> modelClass = assertRuntimeGenerated(results.get(0)).getClass();
+        for (int i = 0; i < threads; i++) {
+            EntityModel result = assertRuntimeGenerated(results.get(i));
+            Assertions.assertSame(modelClass, result.getClass(), "Sharing mappers should reuse one generated model class");
+            Assertions.assertSame(result, mappers.get(i).getEntityModel(CritterMapperTestEntity.class),
+                    "Each mapper should register the model it returned");
+            for (int j = i + 1; j < threads; j++) {
+                Assertions.assertNotSame(result, results.get(j), "Each mapper gets its own model instance");
+            }
+            Assertions.assertEquals("name", result.getProperty("name").getMappedName());
+        }
+    }
+
+    @Test
+    public void testRuntimeClassLoaderReleasedWithItsMappers() throws InterruptedException {
+        WeakReference<ClassLoader> loader = mapAndForget();
+
+        long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(10);
+        while (loader.get() != null && System.nanoTime() < deadline) {
+            System.gc();
+            Thread.sleep(50);
+        }
+
+        Assertions.assertNull(loader.get(),
+                "The CritterClassLoader should be collectable once no mapper uses it; something still holds it");
+    }
+
+    /**
+     * Maps an entity through mappers that share runtime models and returns only a weak reference to the generated
+     * loader, so nothing on the caller's stack keeps the mappers, models, or loader alive. The discriminator key is one
+     * no other test uses, so no other mapper in this JVM shares the loader.
+     */
+    private static WeakReference<ClassLoader> mapAndForget() {
+        MorphiaConfig config = MorphiaConfig.load()
+                .mapper(MapperType.CRITTER)
+                .collectionNaming(NamingStrategy.kebabCase())
+                .discriminatorKey("_releaseCheck");
+        CritterMapper mapper = new CritterMapper(config);
+        EntityModel model = assertRuntimeGenerated(mapper.mapEntity(ReleasedEntity.class));
+        EntityModel shared = assertRuntimeGenerated(new CritterMapper(config).mapEntity(ReleasedEntity.class));
+        Assertions.assertSame(model.getClass(), shared.getClass(), "Expected the two mappers to share runtime models");
+        Assertions.assertSame(model.getClass(), mapper.copy().getEntityModel(ReleasedEntity.class).getClass());
+
+        ReleasedEntity entity = new ReleasedEntity();
+        model.getProperty("name").getAccessor().set(entity, "value");
+        Assertions.assertEquals("value", model.getProperty("name").getAccessor().get(entity));
+
+        return new WeakReference<>(model.getClass().getClassLoader());
     }
 
     /**
@@ -379,9 +463,7 @@ public class TestCritterMapper {
     @Test
     public void testSessionDatastoreCopyPattern() {
         CritterMapper original = mapper();
-        EntityModel model = original.mapEntity(CritterMapperTestEntity.class);
-        Assertions.assertNotNull(model);
-        Assertions.assertTrue(model instanceof CritterEntityModel);
+        EntityModel model = assertRuntimeGenerated(original.mapEntity(CritterMapperTestEntity.class));
 
         // Simulate what new MorphiaDatastore(datastore) does — calls mapper.copy()
         Mapper sessionMapper = original.copy();
@@ -392,8 +474,7 @@ public class TestCritterMapper {
                 "Session copy must preserve already-mapped entities");
         EntityModel sessionModel = sessionMapper.getEntityModel(CritterMapperTestEntity.class);
         Assertions.assertNotNull(sessionModel, "Session copy must preserve already-mapped entities");
-        Assertions.assertTrue(sessionModel instanceof CritterEntityModel,
-                "Session copy must produce CritterEntityModel instances, not reflection fallbacks");
+        assertRuntimeGenerated(sessionModel);
         Assertions.assertNotSame(sessionModel, model, "Session copy creates independent model instances for isolation");
     }
 
@@ -421,10 +502,7 @@ public class TestCritterMapper {
     public void testInheritedGetterDiscoveryInMethodsMode() {
         CritterMapper mapper = new CritterMapper(
                 MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
-        EntityModel model = mapper.mapEntity(MethodsChild.class);
-        Assertions.assertNotNull(model, "mapEntity should return a model for MethodsChild");
-        Assertions.assertTrue(model instanceof CritterEntityModel,
-                "Expected CritterEntityModel but got: " + model.getClass().getName());
+        EntityModel model = assertRuntimeGenerated(mapper.mapEntity(MethodsChild.class));
         Assertions.assertNotNull(model.getProperty("name"),
                 "Property 'name' inherited from MethodsBase should be discovered in METHODS mode");
     }
@@ -433,7 +511,7 @@ public class TestCritterMapper {
     public void testMethodBasedPropertyRoundTrip() {
         CritterMapper mapper = new CritterMapper(
                 MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
-        EntityModel model = mapper.mapEntity(MethodsChild.class);
+        EntityModel model = assertRuntimeGenerated(mapper.mapEntity(MethodsChild.class));
         PropertyModel property = model.getProperty("name");
         Assertions.assertNotNull(property, "Property 'name' must be discovered");
         MethodsChild instance = new MethodsChild();
@@ -446,8 +524,7 @@ public class TestCritterMapper {
     public void testPrivateSuperclassGetterExcluded() {
         CritterMapper mapper = new CritterMapper(
                 MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
-        EntityModel model = mapper.mapEntity(PrivateGetterChild.class);
-        Assertions.assertNotNull(model);
+        EntityModel model = assertRuntimeGenerated(mapper.mapEntity(PrivateGetterChild.class));
         Assertions.assertNull(model.getProperty("secret"),
                 "Private getter in superclass must not be exposed as a property");
     }
@@ -455,8 +532,7 @@ public class TestCritterMapper {
     @Test
     public void testStaticGetterExcluded() {
         CritterMapper mapper = mapper();
-        EntityModel model = mapper.mapEntity(StaticGetterEntity.class);
-        Assertions.assertNotNull(model);
+        EntityModel model = assertRuntimeGenerated(mapper.mapEntity(StaticGetterEntity.class));
         Assertions.assertNull(model.getProperty("kind"),
                 "Static getter must not be exposed as a property");
     }
@@ -465,7 +541,7 @@ public class TestCritterMapper {
     public void testSubclassGetterShadowsSuperclassGetter() {
         CritterMapper mapper = new CritterMapper(
                 MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
-        EntityModel model = mapper.mapEntity(OverridingChild.class);
+        EntityModel model = assertRuntimeGenerated(mapper.mapEntity(OverridingChild.class));
         Assertions.assertNotNull(model.getProperty("value"),
                 "Property must be discovered when both subclass and superclass define the getter");
         OverridingChild instance = new OverridingChild();
@@ -478,7 +554,7 @@ public class TestCritterMapper {
     public void testGrandparentSetterDiscovered() {
         CritterMapper mapper = new CritterMapper(
                 MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
-        EntityModel model = mapper.mapEntity(GrandChild.class);
+        EntityModel model = assertRuntimeGenerated(mapper.mapEntity(GrandChild.class));
         Assertions.assertNotNull(model.getProperty("data"),
                 "Setter defined only in grandparent must be found via hierarchy walk");
         GrandChild instance = new GrandChild();
@@ -541,11 +617,8 @@ public class TestCritterMapper {
     @Test
     public void testHasLifecycleDetectedByCritterMapper() {
         CritterMapper mapper = mapper();
-        EntityModel model = mapper.mapEntity(LifecycleEntity.class);
+        EntityModel model = assertRuntimeGenerated(mapper.mapEntity(LifecycleEntity.class));
 
-        Assertions.assertNotNull(model);
-        Assertions.assertTrue(model instanceof CritterEntityModel,
-                "Expected CritterEntityModel but got: " + model.getClass().getName());
         Assertions.assertTrue(model.hasLifecycle(PrePersist.class),
                 "CritterMapper must detect @PrePersist lifecycle methods on entities");
     }
@@ -618,6 +691,13 @@ public class TestCritterMapper {
         public void setName(String name) {
             this.name = name;
         }
+    }
+
+    @Entity("released_entity")
+    public static class ReleasedEntity {
+        @Id
+        private ObjectId id;
+        private String name;
     }
 
     public static class ExternalTarget {
