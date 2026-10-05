@@ -298,6 +298,11 @@ public class CritterMapper extends AbstractMapper {
             if (originalKey != null && originalKey.equals(generationKey(config))) {
                 return original;
             }
+            if (parent instanceof CritterClassLoader) {
+                // The original may already have defined its models in this loader under the same names, and the loader
+                // would hand those back; generate the copy's models in a child loader of their own.
+                return new RuntimeModels(new CritterClassLoader(parent));
+            }
             return forConfig(config, parent);
         }
 

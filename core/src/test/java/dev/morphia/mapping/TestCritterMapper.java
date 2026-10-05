@@ -114,6 +114,25 @@ public class TestCritterMapper {
     }
 
     @Test
+    public void testCopyWithDifferentNamingUnderCritterClassLoaderParent() {
+        CritterClassLoader parent = new CritterClassLoader(getClass().getClassLoader());
+        CritterMapper original = new CritterMapper(MorphiaConfig.load().mapper(MapperType.CRITTER), parent);
+        CritterMapper copy = new CritterMapper(original, MorphiaConfig.load()
+                .mapper(MapperType.CRITTER)
+                .propertyNaming(NamingStrategy.title()));
+
+        EntityModel camelCase = original.mapEntity(CritterMapperTestEntity.class);
+        EntityModel copied = copy.mapEntity(CritterMapperTestEntity.class);
+
+        Assertions.assertInstanceOf(CritterClassLoader.class, copied.getClass().getClassLoader(),
+                "Expected a runtime-generated model");
+        Assertions.assertEquals("name", camelCase.getProperty("name").getMappedName());
+        Assertions.assertEquals("Name", copied.getProperty("name").getMappedName(),
+                "The copy must not reuse the model the original defined in the shared parent loader");
+        Assertions.assertNotSame(camelCase.getClass(), copied.getClass());
+    }
+
+    @Test
     public void testCopyWithDifferentDatabaseSharesRuntimeModels() {
         CritterMapper original = mapper();
         CritterMapper copy = new CritterMapper(original, MorphiaConfig.load()
