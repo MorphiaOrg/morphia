@@ -53,7 +53,7 @@ public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
                     encodeDiscriminator(writer, model);
                 }
 
-                for (PropertyModel propertyModel : model.getProperties()) {
+                for (PropertyModel propertyModel : model.properties()) {
                     if (propertyModel.equals(idModel)) {
                         continue;
                     }
