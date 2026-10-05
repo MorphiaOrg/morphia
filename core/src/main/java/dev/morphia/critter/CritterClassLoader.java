@@ -126,8 +126,11 @@ public class CritterClassLoader extends ClassLoader {
         if (bytes == null) {
             throw new ClassNotFoundException(name);
         }
+        // The bytes are not restored if defineClass fails: the same bytes would fail the same way on a retry.
+        // Only mark the name as defined (hiding the parent's .class resource) once the define succeeds.
+        Class<?> type = defineClass(name, bytes, 0, bytes.length);
         definedTypes.add(name);
-        return defineClass(name, bytes, 0, bytes.length);
+        return type;
     }
 
     @Override
@@ -145,9 +148,10 @@ public class CritterClassLoader extends ClassLoader {
     private boolean shouldRegister(String className) {
         // Only register classes from the dev.morphia.critter package
         // This avoids SecurityException (java.*, javax.*) and LinkageError (third-party libs).
-        // NestmateAccessorRegistry must be excluded: it uses a static map that must be shared across
-        // classloaders (the generator registers via the parent CL; generated models read via this CL).
-        // Excluding it here lets child-first loading fall back to the parent for a single shared instance.
+        // NestmateAccessorRegistry must be excluded. Its map is keyed by CritterClassLoader, but the map itself is
+        // a static field, so every party must see the same Class: CritterGenerator registers accessors through the
+        // parent's copy of the class, and generated models (defined by this loader) look them up. A child-first copy
+        // here would have its own, empty map. Excluding it lets loading fall back to the parent's single copy.
         return className.startsWith("dev.morphia.critter.")
                 && !className.equals("dev.morphia.critter.parser.generator.NestmateAccessorRegistry");
     }

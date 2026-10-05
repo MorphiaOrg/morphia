@@ -77,6 +77,17 @@ public class CritterClassLoaderTest {
         Assertions.assertEquals(Collections.list(PARENT.getResources(resource)), Collections.list(loader.getResources(resource)));
     }
 
+    @Test
+    public void failedDefinitionsDoNotHideResources() throws Exception {
+        CritterClassLoader loader = new CritterClassLoader(PARENT);
+        String resource = resourceName(Critter.class);
+        loader.register(Critter.class.getName(), new byte[] { 0, 1, 2, 3 });
+        Assertions.assertNull(loader.getResource(resource));
+
+        Assertions.assertThrows(ClassFormatError.class, () -> loader.loadClass(Critter.class.getName()));
+        Assertions.assertNotNull(loader.getResource(resource));
+    }
+
     private static String resourceName(Class<?> type) {
         return type.getName().replace('.', '/') + ".class";
     }

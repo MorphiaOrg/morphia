@@ -31,7 +31,7 @@ import static dev.morphia.critter.Critter.critterPackage;
  * Hybrid mapper using three-tier entity model discovery:
  * <ol>
  * <li>Pre-generated models from the classpath (critter-maven AOT)</li>
- * <li>Runtime bytecode+VarHandle generation</li>
+ * <li>Runtime bytecode generation, using hidden nestmate accessors</li>
  * <li>Reflection-based fallback</li>
  * </ol>
  *
@@ -203,7 +203,7 @@ public class CritterMapper extends AbstractMapper {
     }
 
     /**
-     * Tier 2: Generate an entity model at runtime using VarHandle accessors.
+     * Tier 2: Generate an entity model at runtime, using hidden nestmate accessor classes for property access.
      * On failure, logs once per type and returns null so the caller falls through to reflection.
      */
     @Nullable
