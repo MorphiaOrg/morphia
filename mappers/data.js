@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1791260732580,
+  "lastUpdate": 1791260735077,
   "repoUrl": "https://github.com/MorphiaOrg/morphia",
   "entries": {
     "Mapper: reflection": [
@@ -754,6 +754,100 @@ window.BENCHMARK_DATA = {
           {
             "name": "dev.morphia.benchmarks.MappingBenchmark.coldStart ( {\"variant\":\"critter-runtime\"} )",
             "value": 386.6828208,
+            "unit": "ms/op",
+            "extra": "iterations: 1\nforks: 10\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Justin Lee",
+            "username": "evanchooly",
+            "email": "evanchooly@users.noreply.github.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "0a5812f93e9bff88cdb6e7a51d3712fec43d349d",
+          "message": "Test critter's pre-generated models in pull-request CI (#4370)\n\nAdds a **Critter (AOT)** job to the Pull Requests workflow, so pull\nrequests exercise critter's pre-generated models and not only runtime\ngeneration.\n\n### Why\n- **Today's PR job:** the shared workflow behind `Build` runs a plain\n`install -Dmorphia.mapper=critter`. Core's build doesn't run\ncritter-maven, so there are no pre-generated models and critter\ngenerates every model at runtime. That's how #4366's AOT record tests\nfailed in PR CI.\n- **Push builds:** branches pushed to this repo also run `build.yml`.\nThat workflow generates the models and tests against them, so same-repo\nPRs did get AOT coverage there.\n- **Forks:** pull requests from forks only run this workflow, so they\nnever tested the AOT path.\n\n### What the job does\nIt mirrors `build.yml`:\n1. `install -DskipTests`\n2. `generate-test-models` in `core`\n3. `surefire:test -Dmorphia.mapper=critter`, which doesn't recompile.\nRecompiling would replace the woven classes and leave stale models\n(`NoSuchMethodError: __readXxx`).\n\nThe existing `Build` job is unchanged. It keeps running critter with\nruntime generation for every model, which, together with `Coverage\nReport (critter)` in `build.yml`, is the only full-suite run of the\nruntime tier. The two jobs cover the two critter tiers.\n\n### Verified locally\n- The workflow parses.\n- I ran the job's three commands as written: `BUILD SUCCESS` across the\nreactor.\n- Core ran 1313 tests against the generated models (0 failures, 16\nskipped). The `Aot*` record fixtures got their models, and their\nAOT-tier checks passed.\n\nThis PR's own CI runs the new job, since `pull_request` uses the\nworkflow from the PR.\n\nThe new job isn't a required check. If it should block merges, add\n`Critter (AOT)` to master's required status checks.\n\nFixes #4369",
+          "timestamp": "2026-10-06T04:17:28Z",
+          "url": "https://github.com/MorphiaOrg/morphia/commit/0a5812f93e9bff88cdb6e7a51d3712fec43d349d"
+        },
+        "date": 1791260734379,
+        "tool": "jmh",
+        "benches": [
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"SIMPLE\",\"variant\":\"critter-runtime\"} )",
+            "value": 954.2226837998511,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"NESTED\",\"variant\":\"critter-runtime\"} )",
+            "value": 2950.533610558183,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"COLLECTIONS\",\"variant\":\"critter-runtime\"} )",
+            "value": 9377.329274477046,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"POLYMORPHIC\",\"variant\":\"critter-runtime\"} )",
+            "value": 5561.694384658154,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"LIFECYCLE\",\"variant\":\"critter-runtime\"} )",
+            "value": 833.3074444294255,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"SIMPLE\",\"variant\":\"critter-runtime\"} )",
+            "value": 692.8405682185492,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"NESTED\",\"variant\":\"critter-runtime\"} )",
+            "value": 2214.47252243984,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"COLLECTIONS\",\"variant\":\"critter-runtime\"} )",
+            "value": 7470.6925852208715,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"POLYMORPHIC\",\"variant\":\"critter-runtime\"} )",
+            "value": 4170.98948312613,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"LIFECYCLE\",\"variant\":\"critter-runtime\"} )",
+            "value": 742.65455088121,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MappingBenchmark.warmMapping ( {\"variant\":\"critter-runtime\"} )",
+            "value": 78.62200435176638,
+            "unit": "us/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MappingBenchmark.coldStart ( {\"variant\":\"critter-runtime\"} )",
+            "value": 300.22875509999994,
             "unit": "ms/op",
             "extra": "iterations: 1\nforks: 10\nthreads: 1"
           }
