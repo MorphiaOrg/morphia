@@ -13,3 +13,42 @@ jobs:
     with:
       java: 17
       maven-flags: "-e -Dmorphia.mapper=critter"
+
+  # The Build job above runs a plain `install`, so critter has no pre-generated models and generates every model at
+  # runtime. This job covers the AOT path the way build.yml does: build, let critter-maven generate the test models,
+  # then run the tests without recompiling (test-compile would replace the woven classes). Pushes to this repo also run
+  # build.yml, but pull requests from forks only get this workflow.
+  CritterAot:
+    name: Critter (AOT)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          java-version: 17
+          distribution: temurin
+          cache: maven
+
+      - name: Build without tests
+        run: ./mvnw -e -U install -DskipTests
+
+      - name: Generate critter test models
+        working-directory: core
+        run: ../mvnw -e dev.morphia.morphia:critter-maven:generate-test-models
+
+      - name: Test against the generated models
+        run: ./mvnw -e surefire:test -Dmorphia.mapper=critter
+
+      - name: Collect logs
+        uses: actions/upload-artifact@v6
+        if: failure()
+        with:
+          name: "logs-critter-aot-${{ github.run_id }}"
+          path: |
+            **/target/**/*.log
+            **/target/**/*.err
+          retention-days: 7
