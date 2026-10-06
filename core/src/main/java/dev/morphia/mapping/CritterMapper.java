@@ -120,6 +120,11 @@ public class CritterMapper extends AbstractMapper {
      * this shares immutable {@code CritterEntityModel} references and creates a new
      * {@code DiscriminatorLookup} rather than delegating to {@code AbstractMapper}'s copy
      * constructor.
+     * <p>
+     * Already-mapped entities are cloned as they are. Entities mapped later through the copy reuse the original's
+     * runtime-generated classes only if {@code config} generates the same bytecode (same naming, discriminator, property
+     * discovery and annotation providers); otherwise the copy generates its own.
+     * </p>
      *
      * @param other  the original to clone the entity graph from
      * @param config the config the new mapper should report/operate under
@@ -129,7 +134,7 @@ public class CritterMapper extends AbstractMapper {
     @MorphiaInternal
     public CritterMapper(CritterMapper other, MorphiaConfig config) {
         super(config, other.classLoader);
-        this.runtimeModels = other.runtimeModels;
+        this.runtimeModels = RuntimeModels.forCopy(other.runtimeModels, other.config, config, other.classLoader);
         this.generator = new CritterGenerator(this);
         this.fallbackTypes = other.fallbackTypes;
         this.listeners.addAll(other.listeners);
@@ -233,7 +238,8 @@ public class CritterMapper extends AbstractMapper {
      * {@link CritterClassLoader} is created the first time a model has to be generated at runtime; when every model is
      * pre-generated, it is never needed.
      * <p>
-     * Copies of a mapper share the same instance. So do separate mappers with the same parent loader and an equivalent
+     * Copies of a mapper share the same instance unless the copy's configuration generates different bytecode. So do separate mappers with
+     * the same parent loader and an equivalent
      * configuration (see {@link #generationKey(MorphiaConfig)}), so each entity is generated once rather than once per
      * mapper. Instances are cached weakly: once no mapper refers to one, its loader and classes can be collected.
      */
@@ -270,6 +276,34 @@ public class CritterMapper extends AbstractMapper {
                 }
                 return models;
             }
+        }
+
+        /**
+         * Picks the runtime models for a copy of a mapper. The copy keeps the original's instance when its configuration
+         * generates the same bytecode; otherwise entities first mapped through the copy would get classes generated under
+         * the original's settings.
+         *
+         * @param original       the original mapper's runtime models
+         * @param originalConfig the original mapper's configuration
+         * @param config         the copy's configuration
+         * @param parent         the parent class loader
+         * @return the runtime models for the copy
+         */
+        private static RuntimeModels forCopy(RuntimeModels original, MorphiaConfig originalConfig, MorphiaConfig config,
+                ClassLoader parent) {
+            if (config == originalConfig) {
+                return original;
+            }
+            List<Object> originalKey = generationKey(originalConfig);
+            if (originalKey != null && originalKey.equals(generationKey(config))) {
+                return original;
+            }
+            if (parent instanceof CritterClassLoader) {
+                // The original may already have defined its models in this loader under the same names, and the loader
+                // would hand those back; generate the copy's models in a child loader of their own.
+                return new RuntimeModels(new CritterClassLoader(parent));
+            }
+            return forConfig(config, parent);
         }
 
         /**
