@@ -175,7 +175,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: [ 17, 21, 25 ]
+        java: [ 17, 21, 25, 27 ]
         mapper: [ reflection, critter ]
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     secrets:
