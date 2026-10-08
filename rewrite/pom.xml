@@ -170,5 +170,16 @@
         </dependency>
     </dependencies>
 
-
+    <profiles>
+        <!-- OpenRewrite only ships parsers for LTS JDKs and can't parse on 26+ (openrewrite/rewrite#7554) -->
+        <profile>
+            <id>unsupported-rewrite-jdk</id>
+            <activation>
+                <jdk>[26,)</jdk>
+            </activation>
+            <properties>
+                <skipTests>true</skipTests>
+            </properties>
+        </profile>
+    </profiles>
 </project>
