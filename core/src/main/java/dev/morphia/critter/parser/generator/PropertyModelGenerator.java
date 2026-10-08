@@ -31,8 +31,8 @@ import dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel;
 
 import org.bson.codecs.pojo.PropertyAccessor;
 
-import io.github.dmlloyd.classfile.ClassFile;
-import io.github.dmlloyd.classfile.attribute.RuntimeVisibleAnnotationsAttribute;
+import io.smallrye.classfile.ClassFile;
+import io.smallrye.classfile.attribute.RuntimeVisibleAnnotationsAttribute;
 
 /**
  * Generates a ClassFile-based {@link dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel} implementation
@@ -254,7 +254,7 @@ public class PropertyModelGenerator extends BaseGenerator {
         if (input == null || input.isEmpty())
             return java.util.Collections.emptyList();
         try {
-            io.github.dmlloyd.classfile.Signature sig = io.github.dmlloyd.classfile.Signature.parseFrom(input);
+            io.smallrye.classfile.Signature sig = io.smallrye.classfile.Signature.parseFrom(input);
             TypeData<?> result = typeDataFromSignature(sig, classLoader);
             return result != null ? List.of(result) : java.util.Collections.emptyList();
         } catch (Exception e) {
@@ -262,8 +262,8 @@ public class PropertyModelGenerator extends BaseGenerator {
         }
     }
 
-    private static TypeData<?> typeDataFromSignature(io.github.dmlloyd.classfile.Signature sig, ClassLoader classLoader) {
-        if (sig instanceof io.github.dmlloyd.classfile.Signature.ClassTypeSig cts) {
+    private static TypeData<?> typeDataFromSignature(io.smallrye.classfile.Signature sig, ClassLoader classLoader) {
+        if (sig instanceof io.smallrye.classfile.Signature.ClassTypeSig cts) {
             java.lang.constant.ClassDesc cd = cts.classDesc();
             Class<?> raw = GenerationUtils.asClass(cd, classLoader);
             @SuppressWarnings("unchecked")
@@ -271,7 +271,7 @@ public class PropertyModelGenerator extends BaseGenerator {
                     .map(arg -> typeDataFromTypeArg(arg, classLoader))
                     .toList();
             return new TypeData<>(raw, params);
-        } else if (sig instanceof io.github.dmlloyd.classfile.Signature.ArrayTypeSig ats) {
+        } else if (sig instanceof io.smallrye.classfile.Signature.ArrayTypeSig ats) {
             TypeData<?> component = typeDataFromSignature(ats.componentSignature(), classLoader);
             if (component == null)
                 return new TypeData<>(Object.class, List.of());
@@ -281,7 +281,7 @@ public class PropertyModelGenerator extends BaseGenerator {
             } catch (Exception e) {
                 return new TypeData<>(Object.class, List.of());
             }
-        } else if (sig instanceof io.github.dmlloyd.classfile.Signature.BaseTypeSig bts) {
+        } else if (sig instanceof io.smallrye.classfile.Signature.BaseTypeSig bts) {
             Class<?> primitive = switch (bts.baseType()) {
                 case 'Z' -> boolean.class;
                 case 'C' -> char.class;
@@ -295,14 +295,14 @@ public class PropertyModelGenerator extends BaseGenerator {
                 default -> Object.class;
             };
             return new TypeData<>(primitive, List.of());
-        } else if (sig instanceof io.github.dmlloyd.classfile.Signature.TypeVarSig) {
+        } else if (sig instanceof io.smallrye.classfile.Signature.TypeVarSig) {
             return new TypeData<>(Object.class, List.of());
         }
         return new TypeData<>(Object.class, List.of());
     }
 
-    private static TypeData<?> typeDataFromTypeArg(io.github.dmlloyd.classfile.Signature.TypeArg arg, ClassLoader classLoader) {
-        if (arg instanceof io.github.dmlloyd.classfile.Signature.TypeArg.Bounded bounded) {
+    private static TypeData<?> typeDataFromTypeArg(io.smallrye.classfile.Signature.TypeArg arg, ClassLoader classLoader) {
+        if (arg instanceof io.smallrye.classfile.Signature.TypeArg.Bounded bounded) {
             return typeDataFromSignature(bounded.boundType(), classLoader);
         }
         return new TypeData<>(Object.class, List.of());
@@ -341,7 +341,7 @@ public class PropertyModelGenerator extends BaseGenerator {
         List<Annotation> nonMorphiaAnnotations = annotationMap.values().stream()
                 .filter(a -> !a.annotationType().getName().startsWith("dev.morphia.annotations."))
                 .toList();
-        List<io.github.dmlloyd.classfile.Annotation> cfAnnotations = nonMorphiaAnnotations.stream()
+        List<io.smallrye.classfile.Annotation> cfAnnotations = nonMorphiaAnnotations.stream()
                 .map(GenerationUtils::toClassfileAnnotation)
                 .toList();
 

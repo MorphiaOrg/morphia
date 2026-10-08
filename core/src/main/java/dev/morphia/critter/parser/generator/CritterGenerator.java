@@ -13,7 +13,7 @@ import dev.morphia.mapping.Mapper;
 
 import org.bson.codecs.pojo.PropertyAccessor;
 
-import io.github.dmlloyd.classfile.ClassModel;
+import io.smallrye.classfile.ClassModel;
 
 /**
  * Facade that orchestrates the full ClassFile-based code generation pipeline for a Morphia entity,

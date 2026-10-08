@@ -52,13 +52,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import io.github.dmlloyd.classfile.ClassFile;
-import io.github.dmlloyd.classfile.ClassModel;
-import io.github.dmlloyd.classfile.attribute.RuntimeVisibleAnnotationsAttribute;
+import io.smallrye.classfile.ClassFile;
+import io.smallrye.classfile.ClassModel;
+import io.smallrye.classfile.attribute.RuntimeVisibleAnnotationsAttribute;
 
 import static com.mongodb.client.model.CollationCaseFirst.LOWER;
 import static dev.morphia.critter.parser.GeneratorsTestHelper.defaultMapper;
-import static io.github.dmlloyd.classfile.Attributes.runtimeVisibleAnnotations;
+import static io.smallrye.classfile.Attributes.runtimeVisibleAnnotations;
 
 public class TestGeneration {
     private final CritterClassLoader critterClassLoader = new CritterClassLoader();
@@ -431,7 +431,7 @@ public class TestGeneration {
                 })
                 .map(m -> {
                     var rva = m.findAttribute(runtimeVisibleAnnotations());
-                    List<io.github.dmlloyd.classfile.Annotation> anns = rva.map(RuntimeVisibleAnnotationsAttribute::annotations)
+                    List<io.smallrye.classfile.Annotation> anns = rva.map(RuntimeVisibleAnnotationsAttribute::annotations)
                             .orElse(List.of());
                     return new MethodInfo(
                             m.methodName().stringValue(),

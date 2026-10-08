@@ -1,16 +1,23 @@
 name: Build Project
 
+# Branch work is covered by pull-request.yml (which provides the required checks). This full matrix runs on the
+# releasable branches and tags, and on demand for anything else.
 on:
   push:
-    branches-ignore:
-      - 'dependabot/**'
+    branches:
+      - master
+      - '[0-9]+.[0-9]+.x'
     tags:
       - '*'
   workflow_dispatch:
 
+# Never cancel a run on a releasable ref: it may be in the middle of publishing.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ !(github.ref == 'refs/heads/master' || endsWith(github.ref, '.x') || startsWith(github.ref, 'refs/tags/')) }}
+
+permissions:
+  contents: read
 
 jobs:
   CodeAudits:
@@ -56,7 +63,7 @@ jobs:
           key: target-${{ steps.maven-cache-key.outputs.key }}
 
       - name: Collect logs
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: "logs-${{ github.sha }}-${{ github.run_id }}"
@@ -81,7 +88,7 @@ jobs:
           cache: maven
 
       - name: Setup JBang
-        uses: jbangdev/setup-jbang@main
+        uses: jbangdev/setup-jbang@v0.1.1
 
       - name: Find MongoDB versions
         id: mongo-versions
@@ -104,7 +111,7 @@ jobs:
           if [ "${{ github.event.ref }}" == 'refs/heads/master' ] \
             || [ "${{ github.event.ref }}" == 'refs/heads/main' ] \
             || [[ "${{ github.event.ref }}" =~ ^refs/heads/[0-9]+\.[0-9]+\.x$ ]] \
-            || [[ "${{ github.event.ref }}" =~ ^refs/tags/v[0-9]+\.[0-9]+.[0-9]+$ ]]
+            || [[ "${{ github.event.ref }}" =~ ^refs/tags/v[0-9]+\.[0-9]+\.[0-9]+$ ]]
           then
             echo "releasable=true" >> $GITHUB_OUTPUT
           else
@@ -155,8 +162,10 @@ jobs:
         include:
           - driver: ${{ needs.matrix.outputs.driver_snapshot }}
             mapper: reflection
+            optional: true
           - driver: ${{ needs.matrix.outputs.driver_snapshot }}
             mapper: critter
+            optional: true
     uses: evanchooly/workflows/.github/workflows/build.yml@master
     secrets:
       DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
@@ -236,12 +245,32 @@ jobs:
           DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
 
       - name: Upload JaCoCo reports
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: "test-coverage-${{ matrix.mapper }}-${{ github.run_id }}"
           path: "**/target/site/jacoco/"
           retention-days: 7
+
+  # Build saves **/target and ~/.m2 under a per-run cache key for the test legs to reuse. Drop it once they have all
+  # passed so these large one-off caches don't evict setup-java's Maven cache. If any of them failed or was skipped
+  # (e.g. Matrix failed), the default success() condition skips this job and the cache stays for re-runs.
+  DropBuildCache:
+    name: Drop build cache
+    needs:
+      - ServerTests
+      - DriversTests
+      - JdkTests
+      - FinalFieldMutationTests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: write
+    steps:
+      - name: Delete the run's build cache
+        run: gh cache delete "target-cache-${{ github.run_number }}" --repo "${{ github.repository }}" || true
+        env:
+          GH_TOKEN: ${{ github.token }}
 
   Release:
     needs:
@@ -252,9 +281,11 @@ jobs:
       - JdkTests
     if: needs.Matrix.outputs.releasable == 'true'
     uses: evanchooly/workflows/.github/workflows/jreleaser.yml@master
+    permissions:
+      contents: write
     concurrency:
-      group: build-${{ github.ref }}
-      cancel-in-progress: true
+      group: release-${{ github.ref }}
+      cancel-in-progress: false
     with:
       java: 17
     secrets:

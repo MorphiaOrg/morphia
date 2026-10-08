@@ -49,7 +49,7 @@ Systematic diagnosis of test failures in the Morphia project. Run the test, read
 ## Critter Code Generation
 
 Critter generates bytecode with the Class-File API (`java.lang.classfile`), using the
-`jdk-classfile-backport` library (package `io.github.dmlloyd.classfile`) so it runs on Java 17.
+`jdk-classfile-backport` library (package `io.smallrye.classfile`) so it runs on Java 17.
 There is no Gizmo or ASM in the generators. Everything is in
 `core/src/main/java/dev/morphia/critter/parser/generator/`, and `CritterGenerator` is the entry point.
 

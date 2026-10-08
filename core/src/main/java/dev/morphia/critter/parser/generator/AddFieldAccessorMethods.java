@@ -8,14 +8,14 @@ import java.util.List;
 import dev.morphia.critter.Critter;
 import dev.morphia.critter.parser.FieldInfo;
 
-import io.github.dmlloyd.classfile.ClassBuilder;
-import io.github.dmlloyd.classfile.ClassFile;
-import io.github.dmlloyd.classfile.ClassModel;
-import io.github.dmlloyd.classfile.ClassTransform;
-import io.github.dmlloyd.classfile.FieldModel;
-import io.github.dmlloyd.classfile.Label;
-import io.github.dmlloyd.classfile.MethodModel;
-import io.github.dmlloyd.classfile.TypeKind;
+import io.smallrye.classfile.ClassBuilder;
+import io.smallrye.classfile.ClassFile;
+import io.smallrye.classfile.ClassModel;
+import io.smallrye.classfile.ClassTransform;
+import io.smallrye.classfile.FieldModel;
+import io.smallrye.classfile.Label;
+import io.smallrye.classfile.MethodModel;
+import io.smallrye.classfile.TypeKind;
 
 /**
  * Generates synthetic {@code __readXxx} and {@code __writeXxx} accessor methods directly

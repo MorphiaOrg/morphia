@@ -12,7 +12,6 @@ jobs:
     permissions:
       actions: write
     steps:
-      - uses: actions/checkout@v7
       - uses: yanovian/prune-old-actions@v1 # v1.0.12
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
