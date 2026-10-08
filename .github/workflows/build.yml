@@ -253,8 +253,8 @@ jobs:
           retention-days: 7
 
   # Build saves **/target and ~/.m2 under a per-run cache key for the test legs to reuse. Drop it once they have all
-  # passed so these large one-off caches don't evict setup-java's Maven cache. A run with failures keeps it, so its
-  # failed jobs can still be re-run.
+  # passed so these large one-off caches don't evict setup-java's Maven cache. If any of them failed or was skipped
+  # (e.g. Matrix failed), the default success() condition skips this job and the cache stays for re-runs.
   DropBuildCache:
     name: Drop build cache
     needs:
@@ -262,7 +262,6 @@ jobs:
       - DriversTests
       - JdkTests
       - FinalFieldMutationTests
-    if: ${{ !cancelled() && !contains(needs.*.result, 'failure') }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
