@@ -3,6 +3,9 @@ name: Pull Requests
 on:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   CodeAudits:
     uses: evanchooly/workflows/.github/workflows/code-audits.yml@master
@@ -10,6 +13,13 @@ jobs:
       java: 17
   Build:
     uses: evanchooly/workflows/.github/workflows/pull-request.yml@master
+    # the nested dependabot auto-merge job declares these; a called workflow can't exceed the caller's grant
+    permissions:
+      contents: write
+      pull-requests: write
+    secrets:
+      # a token other than GITHUB_TOKEN so the eventual merge triggers build.yml on master
+      AUTOMERGE_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
     with:
       java: 17
       maven-flags: "-e -Dmorphia.mapper=critter"
@@ -44,7 +54,7 @@ jobs:
         run: ./mvnw -e surefire:test -Dmorphia.mapper=critter
 
       - name: Collect logs
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: "logs-critter-aot-${{ github.run_id }}"
