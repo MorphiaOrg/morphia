@@ -20,15 +20,15 @@ import dev.morphia.mapping.PropertyDiscovery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.github.dmlloyd.classfile.Annotation;
-import io.github.dmlloyd.classfile.ClassFile;
-import io.github.dmlloyd.classfile.ClassModel;
-import io.github.dmlloyd.classfile.FieldModel;
-import io.github.dmlloyd.classfile.MethodModel;
-import io.github.dmlloyd.classfile.attribute.RuntimeVisibleAnnotationsAttribute;
+import io.smallrye.classfile.Annotation;
+import io.smallrye.classfile.ClassFile;
+import io.smallrye.classfile.ClassModel;
+import io.smallrye.classfile.FieldModel;
+import io.smallrye.classfile.MethodModel;
+import io.smallrye.classfile.attribute.RuntimeVisibleAnnotationsAttribute;
 
-import static io.github.dmlloyd.classfile.Attributes.runtimeVisibleAnnotations;
-import static io.github.dmlloyd.classfile.Attributes.signature;
+import static io.smallrye.classfile.Attributes.runtimeVisibleAnnotations;
+import static io.smallrye.classfile.Attributes.signature;
 
 /**
  * Discovers entity properties (fields or getter methods) from a parsed class model
@@ -252,7 +252,7 @@ public class PropertyFinder {
         while (cls != null && cls != Object.class) {
             ClassModel model = current != null ? current : readClassModel(cls);
             if (model != null) {
-                for (io.github.dmlloyd.classfile.MethodModel method : model.methods()) {
+                for (io.smallrye.classfile.MethodModel method : model.methods()) {
                     if (visibleAnnotations(method).stream()
                             .anyMatch(a -> ID_ANNOTATION_DESC.equals(a.classSymbol().descriptorString()))) {
                         throw new UnsupportedOperationException(
@@ -446,7 +446,7 @@ public class PropertyFinder {
         return null;
     }
 
-    private List<Annotation> visibleAnnotations(io.github.dmlloyd.classfile.AttributedElement element) {
+    private List<Annotation> visibleAnnotations(io.smallrye.classfile.AttributedElement element) {
         return element.findAttribute(runtimeVisibleAnnotations())
                 .map(RuntimeVisibleAnnotationsAttribute::annotations)
                 .orElse(List.of());

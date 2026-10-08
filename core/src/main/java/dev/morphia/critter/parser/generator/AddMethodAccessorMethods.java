@@ -9,11 +9,11 @@ import dev.morphia.critter.Critter;
 import dev.morphia.critter.parser.ExtensionFunctions;
 import dev.morphia.critter.parser.MethodInfo;
 
-import io.github.dmlloyd.classfile.ClassFile;
-import io.github.dmlloyd.classfile.ClassModel;
-import io.github.dmlloyd.classfile.ClassTransform;
-import io.github.dmlloyd.classfile.MethodModel;
-import io.github.dmlloyd.classfile.TypeKind;
+import io.smallrye.classfile.ClassFile;
+import io.smallrye.classfile.ClassModel;
+import io.smallrye.classfile.ClassTransform;
+import io.smallrye.classfile.MethodModel;
+import io.smallrye.classfile.TypeKind;
 
 import static dev.morphia.critter.parser.generator.GenerationUtils.findSetterMethod;
 

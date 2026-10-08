@@ -17,13 +17,13 @@ import java.util.Map;
 
 import dev.morphia.mapping.codec.pojo.TypeData;
 
-import io.github.dmlloyd.classfile.AnnotationElement;
-import io.github.dmlloyd.classfile.AnnotationValue;
-import io.github.dmlloyd.classfile.ClassBuilder;
-import io.github.dmlloyd.classfile.ClassFile;
-import io.github.dmlloyd.classfile.ClassModel;
-import io.github.dmlloyd.classfile.CodeBuilder;
-import io.github.dmlloyd.classfile.TypeKind;
+import io.smallrye.classfile.AnnotationElement;
+import io.smallrye.classfile.AnnotationValue;
+import io.smallrye.classfile.ClassBuilder;
+import io.smallrye.classfile.ClassFile;
+import io.smallrye.classfile.ClassModel;
+import io.smallrye.classfile.CodeBuilder;
+import io.smallrye.classfile.TypeKind;
 
 /**
  * Static utility methods bridging annotation introspection and Morphia type data with the ClassFile API.
@@ -129,10 +129,10 @@ public class GenerationUtils {
 
     /**
      * Converts a runtime annotation instance into a ClassFile API annotation descriptor, suitable
-     * for use in {@link io.github.dmlloyd.classfile.attribute.RuntimeVisibleAnnotationsAttribute}.
+     * for use in {@link io.smallrye.classfile.attribute.RuntimeVisibleAnnotationsAttribute}.
      * All element values are captured at generation time.
      */
-    public static io.github.dmlloyd.classfile.Annotation toClassfileAnnotation(Annotation ann) {
+    public static io.smallrye.classfile.Annotation toClassfileAnnotation(Annotation ann) {
         Class<?> annType = ann.annotationType();
         List<AnnotationElement> elements = new ArrayList<>();
         for (java.lang.reflect.Method method : annType.getDeclaredMethods()) {
@@ -144,7 +144,7 @@ public class GenerationUtils {
                 throw new RuntimeException("Failed to read annotation element " + method, e);
             }
         }
-        return io.github.dmlloyd.classfile.Annotation.of(ClassDesc.of(annType.getName()), elements);
+        return io.smallrye.classfile.Annotation.of(ClassDesc.of(annType.getName()), elements);
     }
 
     @SuppressWarnings("rawtypes")

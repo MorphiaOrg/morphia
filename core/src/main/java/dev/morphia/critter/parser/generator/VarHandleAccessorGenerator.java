@@ -15,10 +15,10 @@ import dev.morphia.critter.parser.ExtensionFunctions;
 import dev.morphia.critter.parser.FieldInfo;
 import dev.morphia.critter.parser.MethodInfo;
 
-import io.github.dmlloyd.classfile.ClassFile;
-import io.github.dmlloyd.classfile.ClassSignature;
-import io.github.dmlloyd.classfile.TypeKind;
-import io.github.dmlloyd.classfile.attribute.SignatureAttribute;
+import io.smallrye.classfile.ClassFile;
+import io.smallrye.classfile.ClassSignature;
+import io.smallrye.classfile.TypeKind;
+import io.smallrye.classfile.attribute.SignatureAttribute;
 
 import static dev.morphia.critter.parser.generator.GenerationUtils.PRIMITIVE_TO_WRAPPER;
 import static dev.morphia.critter.parser.generator.GenerationUtils.emitClassRef;
@@ -368,7 +368,7 @@ public class VarHandleAccessorGenerator extends BaseGenerator {
         return this;
     }
 
-    private void emitLoadClass(io.github.dmlloyd.classfile.CodeBuilder cod, String typeName, ClassDesc desc,
+    private void emitLoadClass(io.smallrye.classfile.CodeBuilder cod, String typeName, ClassDesc desc,
             int tcclSlot) {
         if (isPrimitive()) {
             cod.loadConstant(desc);

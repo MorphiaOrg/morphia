@@ -29,7 +29,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
-import io.github.dmlloyd.classfile.ClassFile;
+import io.smallrye.classfile.ClassFile;
 
 import static dev.morphia.critter.parser.GeneratorsTestHelper.defaultMapper;
 

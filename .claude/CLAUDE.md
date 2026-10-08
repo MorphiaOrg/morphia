@@ -19,7 +19,7 @@
 
 ## Critter Code Generator
 - Critter bytecode generation is integrated into `morphia-core` (under `dev.morphia.critter` package)
-- The `critter-maven` plugin generates models at build time (AOT); runtime generation with the Class-File API (`java.lang.classfile` via the `jdk-classfile-backport` library, package `io.github.dmlloyd.classfile`) is the fallback
+- The `critter-maven` plugin generates models at build time (AOT); runtime generation with the Class-File API (`java.lang.classfile` via the `jdk-classfile-backport` library, package `io.smallrye.classfile`) is the fallback
 - Build order for critter-maven: `morphia-core` → `critter-maven`
 - `morphia.mapper` config: `reflection` (default) or `critter` — selects `ReflectiveMapper` vs `CritterMapper`
 

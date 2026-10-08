@@ -10,9 +10,9 @@ import dev.morphia.critter.parser.ExtensionFunctions;
 import dev.morphia.critter.parser.FieldInfo;
 import dev.morphia.critter.parser.MethodInfo;
 
-import io.github.dmlloyd.classfile.ClassFile;
-import io.github.dmlloyd.classfile.ClassSignature;
-import io.github.dmlloyd.classfile.attribute.SignatureAttribute;
+import io.smallrye.classfile.ClassFile;
+import io.smallrye.classfile.ClassSignature;
+import io.smallrye.classfile.attribute.SignatureAttribute;
 
 import static dev.morphia.critter.parser.generator.GenerationUtils.PRIMITIVE_TO_WRAPPER;
 import static dev.morphia.critter.parser.generator.GenerationUtils.primitiveClassDesc;

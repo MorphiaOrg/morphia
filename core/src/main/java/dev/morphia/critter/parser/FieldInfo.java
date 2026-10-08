@@ -2,7 +2,7 @@ package dev.morphia.critter.parser;
 
 import java.util.List;
 
-import io.github.dmlloyd.classfile.Annotation;
+import io.smallrye.classfile.Annotation;
 
 /**
  * Immutable record capturing the bytecode-level information for a single entity field,
