@@ -2,8 +2,6 @@ package dev.morphia.mapping.codec.writer;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.mapping.codec.writer.DocumentState.MergingDocument;
-
 import org.bson.Document;
 
 class RootState extends WriteState {
@@ -22,11 +20,8 @@ class RootState extends WriteState {
     }
 
     public Document getDocument() {
-        Document document = new MergingDocument();
-        if (seed != null) {
-            document.putAll(seed);
-        }
-        document.putAll(documentState.value());
+        Document document = seed != null ? new Document(seed) : new Document();
+        documentState.value().forEach((key, value) -> DocumentState.merge(document, key, value));
 
         return document;
     }
