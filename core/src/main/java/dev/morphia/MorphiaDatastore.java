@@ -498,7 +498,9 @@ public class MorphiaDatastore implements Datastore {
             throw new UpdateException(Sofia.noMatchingDocuments());
         }
 
-        return (T) find(entity.getClass(), new FindOptions().limit(1)).filter(eq("_id", id)).iterator().next();
+        try (var cursor = find(entity.getClass(), new FindOptions().limit(1)).filter(eq("_id", id)).iterator()) {
+            return (T) cursor.next();
+        }
     }
 
     @Override
