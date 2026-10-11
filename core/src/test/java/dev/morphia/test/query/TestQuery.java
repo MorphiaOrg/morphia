@@ -104,7 +104,7 @@ public class TestQuery extends TestBase {
                 .find(GenericKeyValue.class, new FindOptions().logQuery())
                 .filter(in("key", keys));
         Assertions.assertEquals(value.id, ((GenericKeyValue<String>) query.first()).id);
-        String loggedQuery = query.getLoggedQuery();
+        String loggedQuery = loggedQuery(query);
         Assertions.assertTrue(loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"), loggedQuery);
     }
 
@@ -139,7 +139,7 @@ public class TestQuery extends TestBase {
         Query<KeyValue> query = getDs().find(KeyValue.class, new FindOptions().logQuery())
                 .filter(in("key", keys));
         KeyValue first = query.first();
-        String loggedQuery = query.getLoggedQuery();
+        String loggedQuery = loggedQuery(query);
         Assertions.assertTrue(loggedQuery.contains("{\"$in\": [\"key1\", \"key2\"]"), loggedQuery);
         Assertions.assertEquals(value.id, first.id);
     }
