@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Mapper Benchmarks :: Morphia Docs</title>
+    <link rel="stylesheet" href="../_/css/site.css">
+    <link rel="stylesheet" href="../_/css/morphia.css">
+    <style>
+        .benchmarks {
+            max-width: 85rem;
+            margin: 0 auto;
+            padding: calc(var(--navbar-height, 3.5rem) + 1.5rem) 1.5rem 2rem;
+        }
+        .benchmarks h1 { margin-top: 0; }
+        .benchmark-status {
+            padding: 1rem 1.25rem;
+            border-left: 4px solid #006264;
+            background: #f3f7f7;
+        }
+        .benchmark-table td, .benchmark-table th { white-space: nowrap; }
+        .benchmark-table td:first-child { white-space: normal; }
+        .benchmark-ratio { font-size: 0.85em; margin-left: 0.4em; color: #52514e; }
+        .benchmark-ratio.faster { font-weight: 600; color: #0b0b0b; }
+        .benchmark-table-wrap { overflow-x: auto; }
+        .benchmark-charts {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 26rem), 1fr));
+            gap: 1.5rem;
+            margin: 1rem 0 2rem;
+        }
+        .benchmark-chart { margin: 0; }
+        .benchmark-chart figcaption { font-weight: 600; margin-bottom: 0.25rem; }
+        .benchmark-canvas { position: relative; height: 16rem; }
+        .benchmark-runs { font-size: 0.9em; }
+        .benchmark-sha { font-family: monospace; }
+    </style>
+</head>
+<body class="article">
+<header class="header" role="banner">
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img height="80%" src="../_/img/logo.png">
+        </div>
+        <div class="navbar-brand">
+            <div class="navbar-item">
+                <a href="https://morphia.dev">Morphia</a>
+                <span class="separator">//</span>
+                <a href="..">Docs</a>
+            </div>
+            <button class="navbar-burger" data-target="topbar-nav">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+        <div id="topbar-nav" class="navbar-menu">
+            <div class="navbar-end">
+                <a class="navbar-item" href="../benchmarks/">Benchmarks</a>
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-link">Projects</div>
+                    <div class="navbar-dropdown">
+                        <div class="navbar-item"><strong>Core</strong></div>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia">Repository</a>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/issues">Issue Tracker</a>
+                        <hr class="navbar-divider">
+                        <div class="navbar-item"><strong>Critter</strong></div>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter">Repository</a>
+                        <a class="navbar-item" href="https://github.com/MorphiaOrg/critter/issues">Issue Tracker</a>
+                        <!--                        <hr class="navbar-divider">-->
+                        <!--                        <a class="navbar-item" href="https://github.com/MorphiaOrg/morphia/blob/master/contributing.adoc">Contributing</a></div>-->
+                    </div>
+                </div>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <div class="navbar-link">Community</div>
+                    <div class="navbar-dropdown is-right">
+                        <a class="navbar-item" href="https://developer.mongodb.com/community/forums/c/drivers-odms/">Drivers &
+                            ODMs chat</a>
+                    </div>
+                </div>
+
+                <a class="navbar-item" href="https://twitter.com/evanchooly">
+                    <span class="icon">
+                        <svg aria-hidden="true" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                            <path fill="#57aaee"
+                                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"></path>
+                        </svg>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main class="benchmarks">
+    <div class="doc">
+        <h1>Mapper Benchmarks</h1>
+        <div class="paragraph">
+            <p>Morphia ships two ways to map entities. These <a href="https://github.com/openjdk/jmh">JMH</a> benchmarks compare them
+                on the same workload:</p>
+        </div>
+        <div class="dlist">
+            <dl>
+                <dt class="hdlist1">reflection</dt>
+                <dd><p>The default mapper. It discovers entity models through reflection at runtime.</p></dd>
+                <dt class="hdlist1">critter</dt>
+                <dd><p>The critter mapper with models generated at build time by the <code>critter-maven</code> plugin.</p></dd>
+                <dt class="hdlist1">critter-runtime</dt>
+                <dd><p>The critter mapper with models generated at runtime, which is the fallback when no build-time models are present.</p></dd>
+            </dl>
+        </div>
+        <div class="paragraph">
+            <p>Results come from the manually triggered
+                <a href="https://github.com/MorphiaOrg/morphia/actions/workflows/mapper-profiling.yml">Mapper Profiling</a> workflow,
+                which runs on shared GitHub-hosted machines. Absolute numbers shift from run to run, so compare the variants within a
+                run rather than reading too much into a single value.</p>
+        </div>
+
+        <p id="benchmark-status" class="benchmark-status" hidden></p>
+        <noscript><p class="benchmark-status">This page needs JavaScript to display the benchmark results.</p></noscript>
+
+        <div id="benchmark-results" hidden>
+            <h2>Latest results</h2>
+            <div id="benchmark-latest" class="benchmark-table-wrap"></div>
+
+            <h2>History</h2>
+            <div class="paragraph"><p>Each point is one workflow run. Hover for details; click a point to open its commit.</p></div>
+            <div id="benchmark-charts" class="benchmark-charts"></div>
+
+            <h2>Runs</h2>
+            <ul id="benchmark-runs" class="benchmark-runs"></ul>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <img src="https://raw.githubusercontent.com/commonhaus/artwork/main/foundation/brand/svg/CF_logo_horizontal_single_default.svg" height="30" alt=""/><br />
+    Copyright © <a href="https://www.commonhaus.org">Morphia</a>. All rights reserved. For details on our trademarks, please visit our <a href="https://www.commonhaus.org/policies/trademark-policy/">Trademark Policy</a> and <a href="https://www.commonhaus.org/trademarks/">Trademark List</a>. Trademarks of third parties are owned by their respective holders and their mention here does not suggest any endorsement or association.
+</footer>
+
+<script src="../_/js/site.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="data.js"></script>
+<script src="benchmarks.js"></script>
+</body>
+</html>
