@@ -1,11 +1,15 @@
 // Renders the mapper benchmark history recorded by the "Mapper Profiling" workflow in MorphiaOrg/morphia.
-// data.js is fetched from the benchmark-data branch at docs build time and sets window.BENCHMARK_DATA in the
+// data.json is extracted from the benchmark-data branch's data.js at docs build time and is in the
 // github-action-benchmark format: entries["Mapper: <variant>"] = [{ commit, date, benches: [{ name, value, unit }] }].
+// The data is treated as untrusted: it is parsed as JSON, never executed, and only reaches the DOM through textContent
+// and setAttribute.
 (function () {
     'use strict';
 
     var VARIANTS = ['reflection', 'critter', 'critter-runtime'];
     var BASELINE = 'reflection';
+    var REPO_URL = 'https://github.com/MorphiaOrg/morphia';
+    var SHA = /^[0-9a-f]{7,40}$/;
     var COLORS = { 'reflection': '#2a78d6', 'critter': '#eb6834', 'critter-runtime': '#1baf7a' };
     var DASHES = { 'reflection': [], 'critter': [6, 4], 'critter-runtime': [2, 3] };
     var POINTS = { 'reflection': 'circle', 'critter': 'rectRot', 'critter-runtime': 'triangle' };
@@ -21,6 +25,22 @@
         return node;
     }
 
+    // Returns the GitHub URL of a commit, or null if the id isn't a plain hex sha.
+    function commitUrl(id) {
+        return SHA.test(id) ? REPO_URL + '/commit/' + id : null;
+    }
+
+    // A link to the commit when its id is a valid sha, otherwise plain text.
+    function commitLink(id, attrs) {
+        var url = commitUrl(id);
+        if (!url) {
+            return el('span', attrs, String(id).substring(0, 8));
+        }
+        var link = el('a', attrs, id.substring(0, 8));
+        link.setAttribute('href', url);
+        return link;
+    }
+
     function message(text) {
         var target = document.getElementById('benchmark-status');
         target.textContent = text;
@@ -30,6 +50,7 @@
     // "dev.morphia.benchmarks.CodecBenchmark.decode ( {"model":"SIMPLE","variant":"critter"} )"
     //   -> { key: "CodecBenchmark.decode | SIMPLE", variant: "critter" }
     function parseName(name) {
+        name = String(name);
         var match = /^(.*?)\s*\(\s*(\{.*\})\s*\)\s*$/.exec(name);
         var method = match ? match[1] : name;
         var params = {};
@@ -42,20 +63,19 @@
         }
         var parts = method.split('.');
         var benchmark = parts.slice(-2).join('.');
-        var variant = params.variant || 'unknown';
+        if (!params || typeof params !== 'object' || Array.isArray(params)) {
+            params = {};
+        }
+        var variant = String(params.variant || 'unknown');
         delete params.variant;
         var values = Object.keys(params).sort().map(function (k) {
-            return params[k];
+            return String(params[k]);
         });
         return { key: values.length ? benchmark + ' | ' + values.join(', ') : benchmark, variant: variant };
     }
 
-    function shortSha(commit) {
-        return commit.id.substring(0, 8);
-    }
-
     function firstLine(text) {
-        return (text || '').split('\n')[0];
+        return String(text || '').split('\n')[0];
     }
 
     function formatDate(timestamp) {
@@ -78,48 +98,73 @@
 
     // Collects results into: commits (ordered by run time) and series[key][variant][commitId] = { value, unit }.
     function collect(data) {
-        var commits = {};
-        var series = {};
+        var commits = Object.create(null);
+        var series = new Map();
         var order = [];
         VARIANTS.forEach(function (variant) {
-            var runs = (data.entries || {})['Mapper: ' + variant] || [];
+            var runs = data.entries['Mapper: ' + variant];
+            if (!Array.isArray(runs)) {
+                return;
+            }
             runs.forEach(function (run) {
+                if (!run || !run.commit || typeof run.commit.id !== 'string' || !Array.isArray(run.benches)) {
+                    return;
+                }
                 var id = run.commit.id;
-                if (!commits[id]) {
-                    commits[id] = { commit: run.commit, date: run.date };
+                if (!Object.prototype.hasOwnProperty.call(commits, id)) {
+                    commits[id] = { id: id, message: firstLine(run.commit.message), date: Number(run.date) };
                     order.push(id);
                 }
                 run.benches.forEach(function (bench) {
+                    if (!bench || typeof bench.value !== 'number' || !isFinite(bench.value)) {
+                        return;
+                    }
                     var parsed = parseName(bench.name);
-                    var byVariant = series[parsed.key] = series[parsed.key] || {};
-                    var byCommit = byVariant[variant] = byVariant[variant] || {};
-                    byCommit[id] = { value: bench.value, unit: bench.unit };
+                    if (parsed.variant !== variant) {
+                        return;
+                    }
+                    var byVariant = series.get(parsed.key);
+                    if (!byVariant) {
+                        byVariant = {};
+                        series.set(parsed.key, byVariant);
+                    }
+                    var byCommit = byVariant[variant] = byVariant[variant] || new Map();
+                    byCommit.set(id, { value: bench.value, unit: String(bench.unit || '') });
                 });
             });
         });
         order.sort(function (a, b) {
-            return commits[a].date - commits[b].date;
+            return (commits[a].date || 0) - (commits[b].date || 0);
         });
         return { commits: commits, order: order, series: series };
+    }
+
+    function sortedKeys(map) {
+        return Array.from(map.keys()).sort();
+    }
+
+    // The result for a variant at a commit, or undefined.
+    function resultAt(byVariant, variant, id) {
+        return byVariant[variant] ? byVariant[variant].get(id) : undefined;
     }
 
     function latestFor(byVariant, order) {
         for (var i = order.length - 1; i >= 0; i--) {
             var id = order[i];
-            if (VARIANTS.some(function (v) { return byVariant[v] && byVariant[v][id]; })) {
+            if (VARIANTS.some(function (v) { return resultAt(byVariant, v, id); })) {
                 return id;
             }
         }
         return null;
     }
 
-    function renderTable(model, repoUrl) {
+    function renderTable(model) {
         var container = document.getElementById('benchmark-latest');
         var lastId = model.order[model.order.length - 1];
         var last = model.commits[lastId];
         var caption = el('p', { 'class': 'benchmark-caption' });
         caption.appendChild(document.createTextNode('Most recent run: '));
-        caption.appendChild(el('a', { href: repoUrl + '/commit/' + lastId }, shortSha(last.commit)));
+        caption.appendChild(commitLink(lastId));
         caption.appendChild(document.createTextNode(' on ' + formatDate(last.date) +
             '. Ratios are relative to the reflection mapper; lower is faster.'));
         container.appendChild(caption);
@@ -134,18 +179,19 @@
         table.appendChild(head);
 
         var body = el('tbody');
-        Object.keys(model.series).sort().forEach(function (key) {
-            var byVariant = model.series[key];
+        sortedKeys(model.series).forEach(function (key) {
+            var byVariant = model.series.get(key);
             var id = latestFor(byVariant, model.order);
             var row = el('tr');
             row.appendChild(el('td', { 'class': 'tableblock halign-left' }, key));
-            var baseline = byVariant[BASELINE] && byVariant[BASELINE][id];
+            var baseline = resultAt(byVariant, BASELINE, id);
             var unit = VARIANTS.map(function (v) {
-                return byVariant[v] && byVariant[v][id] ? byVariant[v][id].unit : null;
+                var result = resultAt(byVariant, v, id);
+                return result ? result.unit : null;
             }).filter(Boolean)[0] || '';
             row.appendChild(el('td', { 'class': 'tableblock halign-left' }, unit));
             VARIANTS.forEach(function (variant) {
-                var result = byVariant[variant] && byVariant[variant][id];
+                var result = resultAt(byVariant, variant, id);
                 var cell = el('td', { 'class': 'tableblock halign-right' }, result ? formatValue(result.value) : '—');
                 if (result && baseline && variant !== BASELINE) {
                     var ratio = result.value / baseline.value;
@@ -161,7 +207,7 @@
         container.appendChild(table);
     }
 
-    function renderCharts(model, repoUrl) {
+    function renderCharts(model) {
         var container = document.getElementById('benchmark-charts');
         if (typeof Chart === 'undefined') {
             container.appendChild(el('p', {}, 'The charting library could not be loaded; the table above has the latest numbers.'));
@@ -171,17 +217,17 @@
         Chart.defaults.color = '#52514e';
 
         var labels = model.order.map(function (id) {
-            return shortSha(model.commits[id].commit);
+            return id.substring(0, 8);
         });
 
-        Object.keys(model.series).sort().forEach(function (key) {
-            var byVariant = model.series[key];
+        sortedKeys(model.series).forEach(function (key) {
+            var byVariant = model.series.get(key);
             var unit = '';
             var datasets = VARIANTS.filter(function (v) { return byVariant[v]; }).map(function (variant) {
                 return {
                     label: variant,
                     data: model.order.map(function (id) {
-                        var result = byVariant[variant][id];
+                        var result = byVariant[variant].get(id);
                         if (result) {
                             unit = result.unit;
                         }
@@ -218,8 +264,9 @@
                     animation: false,
                     interaction: { mode: 'index', intersect: false },
                     onClick: function (event, elements) {
-                        if (elements.length) {
-                            window.open(repoUrl + '/commit/' + model.order[elements[0].index], '_blank', 'noopener');
+                        var url = elements.length ? commitUrl(model.order[elements[0].index]) : null;
+                        if (url) {
+                            window.open(url, '_blank', 'noopener');
                         }
                     },
                     onHover: function (event, elements) {
@@ -251,14 +298,14 @@
                             callbacks: {
                                 title: function (items) {
                                     var run = model.commits[model.order[items[0].dataIndex]];
-                                    return shortSha(run.commit) + ' · ' + formatDate(run.date);
+                                    return run.id.substring(0, 8) + ' · ' + formatDate(run.date);
                                 },
                                 label: function (item) {
                                     return formatValue(item.parsed.y) + ' ' + unit + '  ' + item.dataset.label;
                                 },
                                 footer: function (items) {
                                     var run = model.commits[model.order[items[0].dataIndex]];
-                                    return [firstLine(run.commit.message), 'Click to open the commit'];
+                                    return [run.message, 'Click to open the commit'];
                                 }
                             }
                         }
@@ -268,22 +315,23 @@
         });
     }
 
-    function renderRuns(model, repoUrl) {
+    function renderRuns(model) {
         var list = document.getElementById('benchmark-runs');
         model.order.slice().reverse().forEach(function (id) {
             var run = model.commits[id];
             var item = el('li');
-            item.appendChild(el('a', { href: repoUrl + '/commit/' + id, 'class': 'benchmark-sha' }, shortSha(run.commit)));
-            item.appendChild(document.createTextNode(' ' + formatDate(run.date) + ' — ' + firstLine(run.commit.message)));
+            item.appendChild(commitLink(id, { 'class': 'benchmark-sha' }));
+            item.appendChild(document.createTextNode(' ' + formatDate(run.date) + ' — ' + run.message));
             list.appendChild(item);
         });
     }
 
-    function render() {
-        var data = window.BENCHMARK_DATA;
-        if (!data || !data.entries) {
-            message('Benchmark results are not available right now. They are published from the Mapper Profiling workflow; ' +
-                'please check back later.');
+    var UNAVAILABLE = 'Benchmark results are not available right now. They are published from the Mapper Profiling ' +
+        'workflow; please check back later.';
+
+    function render(data) {
+        if (!data || typeof data !== 'object' || !data.entries || typeof data.entries !== 'object') {
+            message(UNAVAILABLE);
             return;
         }
         var model = collect(data);
@@ -291,16 +339,32 @@
             message('No benchmark runs have been recorded yet.');
             return;
         }
-        var repoUrl = data.repoUrl || 'https://github.com/MorphiaOrg/morphia';
-        renderTable(model, repoUrl);
-        renderCharts(model, repoUrl);
-        renderRuns(model, repoUrl);
+        renderTable(model);
+        renderCharts(model);
+        renderRuns(model);
         document.getElementById('benchmark-results').hidden = false;
     }
 
+    function load() {
+        if (typeof fetch !== 'function') {
+            message(UNAVAILABLE);
+            return;
+        }
+        fetch('data.json', { cache: 'no-cache' })
+            .then(function (response) {
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status);
+                }
+                return response.json();
+            })
+            .then(render, function () {
+                message(UNAVAILABLE);
+            });
+    }
+
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', render);
+        document.addEventListener('DOMContentLoaded', load);
     } else {
-        render();
+        load();
     }
 })();
