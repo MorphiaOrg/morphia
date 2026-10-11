@@ -8,17 +8,23 @@ import java.util.List;
 import dev.morphia.critter.Critter;
 import dev.morphia.critter.parser.FieldInfo;
 
-import io.github.dmlloyd.classfile.ClassFile;
-import io.github.dmlloyd.classfile.ClassModel;
-import io.github.dmlloyd.classfile.ClassTransform;
-import io.github.dmlloyd.classfile.MethodModel;
-import io.github.dmlloyd.classfile.TypeKind;
+import io.smallrye.classfile.ClassBuilder;
+import io.smallrye.classfile.ClassFile;
+import io.smallrye.classfile.ClassModel;
+import io.smallrye.classfile.ClassTransform;
+import io.smallrye.classfile.FieldModel;
+import io.smallrye.classfile.Label;
+import io.smallrye.classfile.MethodModel;
+import io.smallrye.classfile.TypeKind;
 
 /**
  * Generates synthetic {@code __readXxx} and {@code __writeXxx} accessor methods directly
  * into an entity class bytecode for each of its fields.
  */
 public class AddFieldAccessorMethods extends AccessorMethods {
+    private static final ClassDesc CD_FIELD = ClassDesc.of("java.lang.reflect.Field");
+    private static final ClassDesc CD_CRITTER = ClassDesc.of("dev.morphia.critter.Critter");
+    private static final ClassDesc CD_RUNTIME_EXCEPTION = ClassDesc.of("java.lang.RuntimeException");
     private final List<FieldInfo> fields;
 
     /**
@@ -38,7 +44,10 @@ public class AddFieldAccessorMethods extends AccessorMethods {
                 element -> element instanceof MethodModel m
                         && (m.flags().flagsMask() & ClassFile.ACC_SYNTHETIC) != 0
                         && (m.methodName().stringValue().startsWith("__read")
-                                || m.methodName().stringValue().startsWith("__write")))
+                                || m.methodName().stringValue().startsWith("__write"))
+                        || element instanceof FieldModel f
+                                && (f.flags().flagsMask() & ClassFile.ACC_SYNTHETIC) != 0
+                                && f.fieldName().stringValue().startsWith("__field"))
                 .andThen(ClassTransform.endHandler(classBuilder -> {
                     for (FieldInfo field : fields) {
                         String name = field.name();
@@ -62,6 +71,10 @@ public class AddFieldAccessorMethods extends AccessorMethods {
                         String writerName = "__write%s".formatted(Critter.titleCase(name));
                         MethodTypeDesc writerMtd = MethodTypeDesc.of(ClassDesc.ofDescriptor("V"),
                                 isPrimitive ? fieldDesc : ConstantDescs.CD_Object);
+                        if ((field.access() & ClassFile.ACC_FINAL) != 0) {
+                            writeFinalField(classBuilder, entityDesc, field, writerName, writerMtd, kind, fieldDesc);
+                            continue;
+                        }
                         classBuilder.withMethodBody(writerName, writerMtd,
                                 ClassFile.ACC_PUBLIC | ClassFile.ACC_SYNTHETIC,
                                 cod -> {
@@ -79,5 +92,64 @@ public class AddFieldAccessorMethods extends AccessorMethods {
                 }));
 
         return ClassFile.of().transformClass(model, transform);
+    }
+
+    /**
+     * {@code putfield} may only write a final field from a constructor, so the writer goes through reflection instead.
+     * The {@link java.lang.reflect.Field} is looked up on its declaring class on first use and cached in a synthetic
+     * volatile static field, so other threads see it fully initialized.
+     */
+    private static void writeFinalField(ClassBuilder classBuilder, ClassDesc entityDesc,
+            FieldInfo field, String writerName, MethodTypeDesc writerMtd, TypeKind kind, ClassDesc fieldDesc) {
+        String cacheName = "__field%s".formatted(Critter.titleCase(field.name()));
+        classBuilder.withField(cacheName, CD_FIELD,
+                ClassFile.ACC_PRIVATE | ClassFile.ACC_STATIC | ClassFile.ACC_VOLATILE | ClassFile.ACC_SYNTHETIC);
+        classBuilder.withMethodBody(writerName, writerMtd, ClassFile.ACC_PUBLIC | ClassFile.ACC_SYNTHETIC, cod -> {
+            Label cached = cod.newLabel();
+            cod.getstatic(entityDesc, cacheName, CD_FIELD);
+            cod.dup();
+            cod.ifnonnull(cached);
+            cod.pop();
+            cod.ldc(entityDesc);
+            if (field.declaringClass() != null) {
+                cod.ldc(field.declaringClass().getName());
+                cod.ldc(field.name());
+                cod.invokestatic(CD_CRITTER, "accessibleField",
+                        MethodTypeDesc.of(CD_FIELD, ConstantDescs.CD_Class, ConstantDescs.CD_String, ConstantDescs.CD_String));
+            } else {
+                cod.ldc(field.name());
+                cod.invokestatic(CD_CRITTER, "accessibleField",
+                        MethodTypeDesc.of(CD_FIELD, ConstantDescs.CD_Class, ConstantDescs.CD_String));
+            }
+            cod.dup();
+            cod.putstatic(entityDesc, cacheName, CD_FIELD);
+            cod.labelBinding(cached);
+            int fieldSlot = cod.allocateLocal(TypeKind.REFERENCE);
+            cod.astore(fieldSlot);
+            // Wrap failures the same way the runtime accessor (NestmateAccessorGenerator) does, so both tiers fail alike
+            // and Field.set's checked IllegalAccessException doesn't escape undeclared.
+            cod.trying(tryBody -> {
+                tryBody.aload(fieldSlot);
+                tryBody.aload(0);
+                tryBody.loadLocal(kind, 1);
+                if (kind != TypeKind.REFERENCE) {
+                    ClassDesc wrapper = ClassDesc.of(GenerationUtils.PRIMITIVE_TO_WRAPPER.get(fieldDesc.displayName()));
+                    tryBody.invokestatic(wrapper, "valueOf", MethodTypeDesc.of(wrapper, fieldDesc));
+                }
+                tryBody.invokevirtual(CD_FIELD, "set", MethodTypeDesc.of(ConstantDescs.CD_void, ConstantDescs.CD_Object,
+                        ConstantDescs.CD_Object));
+                tryBody.return_();
+            }, catches -> catches.catching(ConstantDescs.CD_Exception, catchBody -> {
+                int exceptionSlot = catchBody.allocateLocal(TypeKind.REFERENCE);
+                catchBody.astore(exceptionSlot);
+                catchBody.new_(CD_RUNTIME_EXCEPTION);
+                catchBody.dup();
+                catchBody.ldc("Failed to set final field '%s'".formatted(field.name()));
+                catchBody.aload(exceptionSlot);
+                catchBody.invokespecial(CD_RUNTIME_EXCEPTION, "<init>",
+                        MethodTypeDesc.of(ConstantDescs.CD_void, ConstantDescs.CD_String, ConstantDescs.CD_Throwable));
+                catchBody.athrow();
+            }));
+        });
     }
 }

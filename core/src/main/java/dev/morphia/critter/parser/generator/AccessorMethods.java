@@ -2,7 +2,7 @@ package dev.morphia.critter.parser.generator;
 
 import dev.morphia.mapping.MappingException;
 
-import io.github.dmlloyd.classfile.ClassModel;
+import io.smallrye.classfile.ClassModel;
 
 /**
  * Base class for bytecode generators that read and transform existing class files.

@@ -7,6 +7,8 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -77,6 +79,7 @@ public class EntityModel {
 
     private final Map<Class<? extends Annotation>, Annotation> annotations = new HashMap<>();
     private final Map<String, PropertyModel> propertyModelsByName = new UniqueMap();
+    private final Collection<PropertyModel> propertyView = Collections.unmodifiableCollection(propertyModelsByName.values());
     final Map<String, PropertyModel> propertyModelsByMappedName = new UniqueMap();
 
     private Map<String, Map<String, Type>> parameterization;
@@ -334,6 +337,14 @@ public class EntityModel {
      */
     public List<PropertyModel> getProperties() {
         return new ArrayList<>(propertyModelsByName.values());
+    }
+
+    /**
+     * A live, read-only view of this model's properties for the codecs, which iterate them for every document and so
+     * shouldn't pay for the copy {@link #getProperties()} makes.
+     */
+    Collection<PropertyModel> properties() {
+        return propertyView;
     }
 
     /**

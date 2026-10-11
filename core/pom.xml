@@ -160,7 +160,7 @@
             <artifactId>byte-buddy</artifactId>
         </dependency>
         <dependency>
-            <groupId>io.github.dmlloyd</groupId>
+            <groupId>io.smallrye.classfile</groupId>
             <artifactId>jdk-classfile-backport</artifactId>
         </dependency>
         <dependency>

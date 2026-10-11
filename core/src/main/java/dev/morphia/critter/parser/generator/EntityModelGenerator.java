@@ -16,7 +16,7 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
-import io.github.dmlloyd.classfile.ClassFile;
+import io.smallrye.classfile.ClassFile;
 
 import static dev.morphia.annotations.internal.EntityBuilder.entityBuilder;
 

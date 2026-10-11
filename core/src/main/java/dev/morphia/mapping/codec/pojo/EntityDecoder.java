@@ -29,6 +29,7 @@ import static java.lang.String.format;
 @MorphiaInternal
 public class EntityDecoder<T> implements Decoder<T> {
     private static final Logger LOG = LoggerFactory.getLogger(EntityDecoder.class);
+    private static final DecoderContext CHECKED_DISCRIMINATOR = DecoderContext.builder().checkedDiscriminator(true).build();
 
     private final MorphiaCodec<T> morphiaCodec;
     private final EntityModel classModel;
@@ -43,14 +44,14 @@ public class EntityDecoder<T> implements Decoder<T> {
     public T decode(BsonReader reader, DecoderContext decoderContext) {
         T entity;
         if (decoderContext.hasCheckedDiscriminator()) {
-            LOG.debug(format("Decoding document using codec for %s'", morphiaCodec.getEntityModel().getType().getName()));
+            LOG.debug("Decoding document using codec for {}", morphiaCodec.getEntityModel().getType().getName());
             MorphiaInstanceCreator instanceCreator = getInstanceCreator();
             decodeProperties(reader, decoderContext, instanceCreator, classModel);
             return (T) instanceCreator.getInstance();
         } else {
             entity = getCodecFromDocument(reader, classModel.useDiscriminator(), classModel.discriminatorKey(),
                     morphiaCodec.getRegistry(), morphiaCodec.getDiscriminatorLookup(), morphiaCodec)
-                    .decode(reader, DecoderContext.builder().checkedDiscriminator(true).build());
+                    .decode(reader, CHECKED_DISCRIMINATOR);
         }
 
         return entity;

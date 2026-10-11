@@ -147,6 +147,11 @@ public class SessionDatastore extends MorphiaDatastore implements MorphiaSession
     }
 
     @Override
+    public Object getOverloadRetryPolicyState() {
+        return session.getOverloadRetryPolicyState();
+    }
+
+    @Override
     public TransactionSpan getTransactionSpan() {
         return session.getTransactionSpan();
     }

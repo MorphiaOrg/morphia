@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -35,10 +36,12 @@ import dev.morphia.mapping.MapperType;
 import dev.morphia.mapping.ReflectiveMapper;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
+import dev.morphia.query.Query;
 import dev.morphia.test.config.ManualMorphiaTestConfig;
 import dev.morphia.test.config.MorphiaTestConfig;
 import dev.morphia.test.mapping.codec.ZonedDateTimeCodec;
 
+import org.awaitility.Awaitility;
 import org.bson.Document;
 import org.bson.UuidRepresentation;
 import org.bson.codecs.Codec;
@@ -176,6 +179,17 @@ public abstract class TestBase {
                 : new ReflectiveMapper(config);
         config.packages().forEach(mapper::map);
         return mapper;
+    }
+
+    /**
+     * The server doesn't always make the profiler entry visible by the time the query returns, so poll for it rather than
+     * reading it once.
+     */
+    protected String loggedQuery(Query<?> query) {
+        return Awaitility.await()
+                .atMost(5, TimeUnit.SECONDS)
+                .pollInterval(50, TimeUnit.MILLISECONDS)
+                .until(query::getLoggedQuery, json -> !json.equals("{}"));
     }
 
     public MongoDatabase getDatabase() {

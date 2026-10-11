@@ -30,6 +30,7 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.filters.Filter;
+import dev.morphia.query.internal.DeferredDecoding;
 import dev.morphia.query.updates.UpdateOperator;
 import dev.morphia.sofia.Sofia;
 
@@ -169,6 +170,10 @@ public class MorphiaQuery<T> implements Query<T> {
     @Override
     public T findAndDelete(FindAndDeleteOptions options) {
         MongoCollection<T> mongoCollection = datastore.configureCollection(options, collection);
+        if (DeferredDecoding.required(datastore)) {
+            return DeferredDecoding.decode(mongoCollection.getCodecRegistry(), mongoCollection.getDocumentClass(),
+                    datastore.operations().findOneAndDelete(DeferredDecoding.raw(mongoCollection), getQueryDocument(), options));
+        }
         return datastore.operations().findOneAndDelete(mongoCollection, getQueryDocument(), options);
     }
 
@@ -189,8 +194,13 @@ public class MorphiaQuery<T> implements Query<T> {
 
         Operations value = new Operations(datastore, entityModel, coalesce(first, updates), validate);
 
-        return datastore.operations().findOneAndUpdate(datastore.configureCollection(options, collection),
-                toDocument(), value.toDocument(datastore), options);
+        MongoCollection<T> mongoCollection = datastore.configureCollection(options, collection);
+        if (DeferredDecoding.required(datastore)) {
+            return DeferredDecoding.decode(mongoCollection.getCodecRegistry(), mongoCollection.getDocumentClass(),
+                    datastore.operations().findOneAndUpdate(DeferredDecoding.raw(mongoCollection), toDocument(),
+                            value.toDocument(datastore), options));
+        }
+        return datastore.operations().findOneAndUpdate(mongoCollection, toDocument(), value.toDocument(datastore), options);
     }
 
     @MorphiaInternal
@@ -204,6 +214,10 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     private MorphiaCursor<T> iterator(FindOptions options) {
+        if (DeferredDecoding.required(datastore)) {
+            return new MorphiaCursor<>(DeferredDecoding.cursor(prepareCursor(options, DeferredDecoding.raw(collection)),
+                    collection.getCodecRegistry(), collection.getDocumentClass()));
+        }
         return new MorphiaCursor<>(prepareCursor(options, collection));
     }
 
