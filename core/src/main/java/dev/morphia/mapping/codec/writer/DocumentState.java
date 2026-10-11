@@ -10,9 +10,6 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 import org.bson.Document;
-import org.bson.json.JsonWriterSettings;
-
-import static java.util.List.of;
 
 /**
  * @morphia.internal
@@ -44,31 +41,10 @@ public class DocumentState extends ValueState<Map<String, Object>> {
         return "document";
     }
 
-    @SuppressWarnings("unchecked")
-    private Document andTogether(Document doc, String key, @Nullable Object additional) {
-        if (additional != null) {
-            Document newSubdoc = new Document(key, additional);
-            var extant = doc.remove(key);
-            List<Document> and = (List<Document>) doc.get("$and");
-            if (and != null) {
-                and.add(newSubdoc);
-            } else {
-                and = new ArrayList<>();
-                and.addAll(of(new Document(key, extant), newSubdoc));
-                doc.put("$and", and);
-                return newSubdoc;
-            }
-        }
-        return doc;
-    }
-
     @Override
     void end() {
-        finished = new MergingDocument();
-        values.forEach(v -> {
-            finished.put(v.name(), v.value());
-        });
-        //        finished = new Document(finished);
+        finished = new Document();
+        values.forEach(v -> merge(finished, v.name(), v.value()));
         super.end();
     }
 
@@ -80,45 +56,28 @@ public class DocumentState extends ValueState<Map<String, Object>> {
     }
 
     /**
-     * @morphia.internal
-     * @hidden
+     * Adds a value to a document combining it with any existing value for the same key rather than replacing it. Operators (keys starting
+     * with {@code $}) are combined using {@code $and} while subdocuments are merged recursively. Existing subdocuments are copied rather
+     * than modified in place.
+     *
+     * @param target the document to update
+     * @param key    the key to set
+     * @param value  the value to add
      */
-    @MorphiaInternal
-    public static class MergingDocument extends Document {
-        public MergingDocument() {
-        }
-
-        public MergingDocument(String key, Object value) {
-            super(key, value);
-        }
-
-        @Override
-        @SuppressWarnings({ "rawtypes", "unchecked" })
-        public Object put(String key, Object value) {
-            if (containsKey(key)) {
-                var current = get(key);
-                if (key.startsWith("$")) {
-                    var list = List.of(new MergingDocument(key, current), new MergingDocument(key, value));
-                    remove(key);
-                    put("$and", list);
-                    return current;
-                } else if (current instanceof Document && value instanceof Document) {
-                    ((Document) current).putAll((Document) value);
-                    return current;
-                }
+    static void merge(Document target, String key, @Nullable Object value) {
+        if (target.containsKey(key)) {
+            Object current = target.get(key);
+            if (key.startsWith("$")) {
+                target.remove(key);
+                merge(target, "$and", List.of(new Document(key, current), new Document(key, value)));
+                return;
+            } else if (current instanceof Document && value instanceof Document) {
+                Document merged = new Document((Document) current);
+                ((Document) value).forEach((k, v) -> merge(merged, k, v));
+                target.put(key, merged);
+                return;
             }
-            return super.put(key, value);
         }
-
-        @Override
-        public void putAll(Map<? extends String, ?> map) {
-            map.entrySet().forEach(entry -> put(entry.getKey(), entry.getValue()));
-            super.putAll(map);
-        }
-
-        @Override
-        public String toString() {
-            return toJson(JsonWriterSettings.builder().indent(true).build());
-        }
+        target.put(key, value);
     }
 }

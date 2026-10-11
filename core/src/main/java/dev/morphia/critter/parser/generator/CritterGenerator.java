@@ -13,7 +13,7 @@ import dev.morphia.mapping.Mapper;
 
 import org.bson.codecs.pojo.PropertyAccessor;
 
-import io.github.dmlloyd.classfile.ClassModel;
+import io.smallrye.classfile.ClassModel;
 
 /**
  * Facade that orchestrates the full ClassFile-based code generation pipeline for a Morphia entity,
@@ -119,36 +119,44 @@ public class CritterGenerator {
      * {@link NestmateAccessorRegistry}. The accessor is defined as a hidden nestmate of
      * {@code entityType} so it can directly access private fields via {@code getfield}/{@code putfield}.
      *
-     * @param entityType the entity class that owns the field
-     * @param field      the field for which a nestmate accessor should be generated
+     * @param entityType         the entity class that owns the field
+     * @param critterClassLoader the class loader that will define the generated models using the accessor
+     * @param field              the field for which a nestmate accessor should be generated
      */
-    public void nestmateAccessor(Class<?> entityType, FieldInfo field) {
-        defineNestmate(entityType, new NestmateAccessorGenerator(entityType, field));
+    public void nestmateAccessor(Class<?> entityType, CritterClassLoader critterClassLoader, FieldInfo field) {
+        defineNestmate(entityType, critterClassLoader, new NestmateAccessorGenerator(entityType, field));
     }
 
     /**
      * Generates a nestmate accessor for the property exposed by the given getter method and registers
      * the instance in {@link NestmateAccessorRegistry}.
      *
-     * @param entityType the entity class that owns the method
-     * @param method     the getter method for which a nestmate accessor should be generated
+     * @param entityType         the entity class that owns the method
+     * @param critterClassLoader the class loader that will define the generated models using the accessor
+     * @param method             the getter method for which a nestmate accessor should be generated
      */
-    public void nestmateAccessor(Class<?> entityType, MethodInfo method) {
-        defineNestmate(entityType, new NestmateAccessorGenerator(entityType, method));
+    public void nestmateAccessor(Class<?> entityType, CritterClassLoader critterClassLoader, MethodInfo method) {
+        defineNestmate(entityType, critterClassLoader, new NestmateAccessorGenerator(entityType, method));
     }
 
-    private void defineNestmate(Class<?> entityType, NestmateAccessorGenerator gen) {
+    private void defineNestmate(Class<?> entityType, CritterClassLoader critterClassLoader, NestmateAccessorGenerator gen) {
         try {
             byte[] bytes = gen.generate();
             // Use the declaring class for privateLookupIn so the hidden nestmate can access
             // private fields declared in a superclass (not just in the leaf entity class).
-            Lookup privateLookup = MethodHandles.privateLookupIn(gen.declaringClass, MethodHandles.lookup());
-            Class<?> accessorClass = privateLookup
-                    .defineHiddenClass(bytes, true, Lookup.ClassOption.NESTMATE)
-                    .lookupClass();
+            Class<?> accessorClass;
+            try {
+                Lookup privateLookup = MethodHandles.privateLookupIn(gen.declaringClass, MethodHandles.lookup());
+                accessorClass = privateLookup
+                        .defineHiddenClass(bytes, true, Lookup.ClassOption.NESTMATE)
+                        .lookupClass();
+            } catch (IllegalAccessException e) {
+                // Defining a nestmate needs full privilege access, which Morphia only has to classes in its own module
+                throw new NestmateAccessException(gen.declaringClass, e);
+            }
             @SuppressWarnings("unchecked")
             PropertyAccessor<?> instance = (PropertyAccessor<?>) accessorClass.getDeclaredConstructor().newInstance();
-            NestmateAccessorRegistry.register(gen.registryKey, instance);
+            NestmateAccessorRegistry.register(critterClassLoader, gen.registryKey, instance);
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {

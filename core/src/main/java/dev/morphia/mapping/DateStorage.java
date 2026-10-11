@@ -2,7 +2,6 @@ package dev.morphia.mapping;
 
 import java.time.ZoneId;
 
-import static java.time.ZoneId.of;
 import static java.time.ZoneId.systemDefault;
 
 /**
@@ -17,7 +16,7 @@ public enum DateStorage {
     UTC {
         @Override
         public ZoneId getZone() {
-            return of("UTC");
+            return Zones.UTC;
         }
     },
 
@@ -35,4 +34,11 @@ public enum DateStorage {
      * @return the ZoneId for this storage type
      */
     public abstract ZoneId getZone();
+
+    /**
+     * Parsing "UTC" builds a new {@code ZoneId} every time, and the date codecs ask for the zone on every value.
+     */
+    private static final class Zones {
+        private static final ZoneId UTC = ZoneId.of("UTC");
+    }
 }

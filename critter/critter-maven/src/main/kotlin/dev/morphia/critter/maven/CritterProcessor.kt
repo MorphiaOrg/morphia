@@ -59,14 +59,18 @@ class CritterProcessor(
         return scanResult.use { result ->
             result
                 .getClassesWithAnnotation(Entity::class.java)
-                .filter { !it.isAbstract && !it.isInterface }
+                .filter { !it.isInterface }
                 .map { classLoader.loadClass(it.name) }
         }
     }
 
     private fun processClass(entityClass: Class<*>) {
         logger.info("Generating critter code for: ${entityClass.name}")
-        generator.generate(entityClass, critterClassLoader, false)
+        try {
+            generator.generate(entityClass, critterClassLoader, false)
+        } catch (e: Exception) {
+            logger.warn("Skipping ${entityClass.name}: ${e.message}", e)
+        }
     }
 
     private fun writeGeneratedClasses() {

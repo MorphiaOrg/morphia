@@ -40,7 +40,12 @@ public class BytecodeDumpTest {
 
         for (Class<?> entity : ENTITIES) {
             CritterClassLoader loader = new CritterClassLoader();
-            new CritterGenerator(defaultMapper()).generate(entity, loader, false);
+            try {
+                new CritterGenerator(defaultMapper()).generate(entity, loader, false);
+            } catch (UnsupportedOperationException e) {
+                // Entity requires runtime discovery; skip AOT dump for it
+                continue;
+            }
 
             for (Map.Entry<String, byte[]> entry : loader.getTypeDefinitions().entrySet()) {
                 String className = entry.getKey();

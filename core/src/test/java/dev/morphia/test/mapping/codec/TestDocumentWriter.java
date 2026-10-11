@@ -2,7 +2,6 @@ package dev.morphia.test.mapping.codec;
 
 import java.util.Map;
 
-import dev.morphia.mapping.codec.writer.DocumentState.MergingDocument;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.MorphiaQuery;
 import dev.morphia.query.filters.Filters;
@@ -19,6 +18,7 @@ import static dev.morphia.query.filters.Filters.*;
 import static java.util.Arrays.asList;
 import static java.util.List.of;
 import static org.bson.Document.parse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SuppressWarnings("CodeBlock2Expr")
 public class TestDocumentWriter extends TestBase {
@@ -48,9 +48,57 @@ public class TestDocumentWriter extends TestBase {
         document.remove("_t");
         Document expected = new Document("$and",
                 of(
-                        new MergingDocument("$or", of(new Document("name", "A"), new Document("name", "B"))),
-                        new MergingDocument("$or", of(new Document("name", "C"), new Document("name", "D")))));
+                        new Document("$or", of(new Document("name", "A"), new Document("name", "B"))),
+                        new Document("$or", of(new Document("name", "C"), new Document("name", "D")))));
         assertDocumentEquals(document, expected);
+    }
+
+    @Test
+    public void seededQuery() {
+        Document seed = new Document("field1", new Document("$gt", 1))
+                .append("$or", of(new Document("name", "A"), new Document("name", "B")));
+        Document original = new Document(seed);
+        MorphiaQuery<User> query = (MorphiaQuery<User>) getDs().find(User.class, seed).disableValidation();
+        query.filter(lt("field1", 5));
+        query.filter(or(eq("name", "C"), eq("name", "D")));
+
+        Document expected = new Document("field1", new Document("$gt", 1).append("$lt", 5))
+                .append("$and", of(
+                        new Document("$or", of(new Document("name", "A"), new Document("name", "B"))),
+                        new Document("$or", of(new Document("name", "C"), new Document("name", "D")))));
+        for (int i = 0; i < 2; i++) {
+            Document document = query.toDocument();
+            document.remove("_t");
+            assertEquals(expected, document);
+        }
+        assertEquals(original, seed);
+    }
+
+    @Test
+    public void deepMerge() {
+        DocumentWriter writer = new DocumentWriter(getMapper().getConfig());
+        document(writer, () -> {
+            document(writer, "a", () -> {
+                document(writer, "b", () -> writer.writeInt32("x", 1));
+            });
+            document(writer, "a", () -> {
+                document(writer, "b", () -> writer.writeInt32("y", 2));
+            });
+        });
+
+        assertEquals(new Document("a", new Document("b", new Document("x", 1).append("y", 2))), writer.getDocument());
+    }
+
+    @Test
+    public void plainDocumentEquality() {
+        DocumentWriter writer = new DocumentWriter(getMapper().getConfig());
+        document(writer, () -> {
+            document(writer, "subdoc", () -> writer.writeInt32("nested", 42));
+        });
+
+        Document expected = new Document("subdoc", new Document("nested", 42));
+        assertEquals(expected, writer.getDocument());
+        assertEquals(writer.getDocument(), expected);
     }
 
     @Test
@@ -81,7 +129,7 @@ public class TestDocumentWriter extends TestBase {
             });
         });
 
-        assertDocumentEquals(new MergingDocument("stuff", of(new MergingDocument("doc", 42))), writer.getDocument());
+        assertDocumentEquals(new Document("stuff", of(new Document("doc", 42))), writer.getDocument());
     }
 
     @Test
@@ -115,7 +163,7 @@ public class TestDocumentWriter extends TestBase {
                 });
             });
         });
-        Document top = new MergingDocument("top", of(of(1, 2, 3, new MergingDocument("nested", "string"))));
+        Document top = new Document("top", of(of(1, 2, 3, new Document("nested", "string"))));
         assertDocumentEquals(writer.getDocument(), top);
     }
 
@@ -162,7 +210,7 @@ public class TestDocumentWriter extends TestBase {
             document(writer, () -> writer.writeInt32("nested", 42));
         });
 
-        assertDocumentEquals(new MergingDocument("subdoc", new MergingDocument("nested", 42)), writer.getDocument());
+        assertDocumentEquals(new Document("subdoc", new Document("nested", 42)), writer.getDocument());
 
     }
 }

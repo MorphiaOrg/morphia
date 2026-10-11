@@ -7,6 +7,8 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -77,6 +79,7 @@ public class EntityModel {
 
     private final Map<Class<? extends Annotation>, Annotation> annotations = new HashMap<>();
     private final Map<String, PropertyModel> propertyModelsByName = new UniqueMap();
+    private final Collection<PropertyModel> propertyView = Collections.unmodifiableCollection(propertyModelsByName.values());
     final Map<String, PropertyModel> propertyModelsByMappedName = new UniqueMap();
 
     private Map<String, Map<String, Type>> parameterization;
@@ -123,11 +126,24 @@ public class EntityModel {
         discriminator = other.discriminator;
 
         this.annotations.putAll(other.annotations);
-        other.propertyModelsByName.values()
+        // A property renamed in place after being registered (e.g. Kotlin delegated properties
+        // re-registering a field-discovered property under its Kotlin property name) can leave
+        // propertyModelsByName with two keys pointing at the same PropertyModel instance. Dedupe
+        // here so that property isn't cloned and re-added twice, which would trip addProperty()'s
+        // duplicate-mappedName check on the second occurrence.
+        new LinkedHashSet<>(other.propertyModelsByName.values())
                 .forEach(otherProperty -> {
+                    // PropertyModel's copy constructor already copies loadNames verbatim, so
+                    // just register them against this (new) EntityModel's lookup map directly.
+                    // Routing through alternateNames() here would re-append the same names onto
+                    // loadNames on every clone, and would throw on any name also registered by
+                    // addProperty() (e.g. a load name equal to the property's own mapped name) —
+                    // harmless on a single clone since propertyModelsByMappedName starts empty,
+                    // but a duplicate re-processed on a second clone (e.g. a session copy of a
+                    // cloned mapper) trips EntityModel.UniqueMap's duplicate check.
                     PropertyModel model = new PropertyModel(this, otherProperty);
                     addProperty(model);
-                    model.alternateNames(model.getLoadNames().toArray(new String[0]));
+                    model.getLoadNames().forEach(name -> propertyModelsByMappedName.putIfAbsent(name, model));
                 });
 
         ShardKeys shardKeys = getAnnotation(ShardKeys.class);
@@ -321,6 +337,14 @@ public class EntityModel {
      */
     public List<PropertyModel> getProperties() {
         return new ArrayList<>(propertyModelsByName.values());
+    }
+
+    /**
+     * A live, read-only view of this model's properties for the codecs, which iterate them for every document and so
+     * shouldn't pay for the copy {@link #getProperties()} makes.
+     */
+    Collection<PropertyModel> properties() {
+        return propertyView;
     }
 
     /**

@@ -25,6 +25,8 @@ import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
+import dev.morphia.mapping.codec.MorphiaInstanceCreator;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.internal.ConstructorCreator;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaCursor;
@@ -91,6 +93,43 @@ public class ConstructorCreatorTest extends TestBase {
         constructor = ConstructorCreator.bestConstructor(getDs().getMapper().map(Default.class).get(0));
         Assertions.assertNotNull(constructor);
         Assertions.assertEquals(0, constructor.getParameterCount());
+    }
+
+    @Test
+    public void creatorsDoNotShareState() {
+        EntityModel model = getMapper().map(Address.class).get(0);
+        MorphiaInstanceCreator first = model.getInstanceCreator(getMapper().getConversions());
+        MorphiaInstanceCreator second = model.getInstanceCreator(getMapper().getConversions());
+
+        first.set("NYC", model.getProperty("city"));
+        first.set("NY", model.getProperty("state"));
+        second.set("Boston", model.getProperty("city"));
+
+        Assertions.assertEquals(new Address("NYC", "NY", null), first.getInstance());
+        Assertions.assertEquals(new Address("Boston", null, null), second.getInstance());
+    }
+
+    @Test
+    public void constructorArgumentsAreNotResetAfterConstruction() {
+        getMapper().map(NormalizingEntity.class);
+        ObjectId id = new ObjectId();
+        getDs().getCollection(NormalizingEntity.class)
+                .withDocumentClass(Document.class)
+                .insertOne(new Document("_id", id)
+                        .append("name", "  MiXeD Case  ")
+                        .append("tags", asList("b", "a"))
+                        .append("note", "not in the constructor"));
+
+        NormalizingEntity loaded = getDs().find(NormalizingEntity.class).first();
+
+        Assertions.assertNotNull(loaded);
+        Assertions.assertEquals(id, loaded.id);
+        // the constructor's normalized values must survive rather than being overwritten by the raw decoded values
+        Assertions.assertEquals("mixed case", loaded.name);
+        Assertions.assertEquals(List.of("a", "b"), loaded.tags);
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> loaded.tags.add("c"));
+        // properties without a matching constructor parameter are still set after construction
+        Assertions.assertEquals("not in the constructor", loaded.note);
     }
 
     @Test
@@ -527,6 +566,21 @@ class Person extends AbstractPerson {
                 .add("firstName='" + firstName + "'")
                 .add("lastName='" + lastName + "'")
                 .toString();
+    }
+}
+
+@Entity(useDiscriminator = false)
+class NormalizingEntity {
+    @Id
+    final ObjectId id;
+    final String name;
+    final List<String> tags;
+    String note;
+
+    NormalizingEntity(ObjectId id, String name, List<String> tags) {
+        this.id = id;
+        this.name = name.trim().toLowerCase();
+        this.tags = tags.stream().sorted().toList();
     }
 }
 
