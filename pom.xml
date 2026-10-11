@@ -48,7 +48,7 @@
     </repositories>
 
     <properties>
-        <asm.version>9.10.1</asm.version>
+        <asm.version>9.11</asm.version>
         <awaitility.version>1.7.0</awaitility.version>
         <dokka.version>2.2.0</dokka.version>
         <driver.version>5.13.0</driver.version>
@@ -384,7 +384,7 @@
             <dependency>
                 <groupId>io.github.classgraph</groupId>
                 <artifactId>classgraph</artifactId>
-                <version>4.8.196</version>
+                <version>4.8.197</version>
             </dependency>
             <dependency>
                 <groupId>com.google.devtools.ksp</groupId>
