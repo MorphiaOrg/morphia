@@ -20,7 +20,9 @@ jobs:
       - name: Remove prior Clean Up runs
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
         run: |
+          set -o pipefail
           gh run list --workflow "Clean Up" --json databaseId --limit 100 \
             --jq '.[1:][].databaseId' |
           while read -r run_id; do
