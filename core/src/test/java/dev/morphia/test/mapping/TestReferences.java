@@ -19,6 +19,7 @@ import dev.morphia.Datastore;
 import dev.morphia.ModifyOptions;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.Aggregation;
+import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.IdGetter;
@@ -1651,6 +1652,71 @@ public class TestReferences extends ProxyTestBase {
     }
 
     /**
+     * A projected find run part way through another decode -- from a lifecycle callback, say -- shares the outer
+     * session. Its partial entities must not be cached there for later references to pick up.
+     */
+    @Test
+    public void testNestedProjectedEntitiesAreNotReusedForReferences() {
+        Buddy b = new Buddy();
+        b.name = "b";
+        b.age = 2;
+        getDs().save(b);
+        Buddy a = new Buddy();
+        a.name = "a";
+        a.age = 1;
+        a.buddy = b;
+        getDs().save(a);
+
+        DecodeSession session = new DecodeSession();
+        session.decoding(() -> {
+            Buddy partial = getDs().find(Buddy.class, new FindOptions().projection().include("name"))
+                    .filter(eq("name", "b"))
+                    .first();
+            Assertions.assertNotNull(partial);
+            Assertions.assertEquals(0, partial.age, "the projection should have left out the age");
+
+            Buddy loaded = getDs().find(Buddy.class).filter(eq("name", "a")).first();
+            Assertions.assertNotNull(loaded);
+            Assertions.assertNotNull(loaded.buddy);
+            Assertions.assertEquals(2, loaded.buddy.age, "the reference resolved to the projected, partial entity");
+            return null;
+        });
+    }
+
+    /**
+     * {@code knownFields} projects each property by its mapped name only, so values stored under an {@code @AlsoLoad}
+     * name are left out and the entities it returns are partial.
+     */
+    @Test
+    public void testKnownFieldsEntitiesAreNotReusedForReferences() {
+        Veteran b = new Veteran();
+        b.name = "b";
+        b.age = 2;
+        getDs().save(b);
+        Veteran a = new Veteran();
+        a.name = "a";
+        a.age = 1;
+        a.buddy = b;
+        getDs().save(a);
+        // move the age to its legacy name, which only @AlsoLoad knows about
+        getDs().getCollection(Veteran.class).withDocumentClass(Document.class)
+                .updateMany(new Document(), new Document("$rename", new Document("age", "years")));
+
+        // "b" decodes first, without its age, before "a" resolves its reference to it
+        List<Veteran> loaded = getDs().find(Veteran.class, new FindOptions()
+                .sort(Sort.descending("name"))
+                .projection().knownFields())
+                .iterator()
+                .toList();
+
+        Assertions.assertEquals(2, loaded.size());
+        Assertions.assertEquals(0, loaded.get(0).age, "knownFields should have left out the @AlsoLoad name");
+        Veteran referenced = loaded.get(1).buddy;
+        Assertions.assertNotNull(referenced);
+        Assertions.assertEquals(2, referenced.age, "the reference resolved to the knownFields, partial entity");
+    }
+
+    /**
      * References look entities up by their id as stored. An entity built through its constructor must be cached under
      * that same value, not its converted Java form, or every reference to it fetches it again.
      */
@@ -1701,6 +1767,17 @@ public class TestReferences extends ProxyTestBase {
         private int age;
         @Reference
         private Buddy buddy;
+    }
+
+    @Entity("veterans")
+    private static class Veteran {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String name;
+        @AlsoLoad("years")
+        private int age;
+        @Reference(idOnly = true)
+        private Veteran buddy;
     }
 
     @Entity("animals")

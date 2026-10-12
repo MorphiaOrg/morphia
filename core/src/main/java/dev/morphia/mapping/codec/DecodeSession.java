@@ -51,6 +51,8 @@ public class DecodeSession {
 
     private final int maxCached;
 
+    private int cachingSuspended;
+
     @Nullable
     private Map<Key, Object> inFlight;
 
@@ -96,15 +98,26 @@ public class DecodeSession {
      * Runs {@code action} with this session installed on the current thread, removing it again when the
      * action completes. If another session is already installed -- a reference being fetched part way
      * through an outer decode, for instance -- that one stays in place and this session is not used, so
-     * the whole object graph shares a single cache.
+     * the whole object graph shares a single cache. If this session caches nothing (the decode returns partial
+     * documents), the outer session stops caching completed entities until the action finishes, so a partial
+     * entity can not leak into it; in-flight entities are still shared, so cycle safety is unaffected.
      *
      * @param action the decode to run
      * @param <T>    the decoded type
      * @return whatever {@code action} returns
      */
     public <T> T decoding(Supplier<T> action) {
-        if (CURRENT.get() != null) {
-            return action.get();
+        DecodeSession outer = CURRENT.get();
+        if (outer != null) {
+            if (maxCached != 0 || outer == this) {
+                return action.get();
+            }
+            outer.cachingSuspended++;
+            try {
+                return action.get();
+            } finally {
+                outer.cachingSuspended--;
+            }
         }
         CURRENT.set(this);
         try {
@@ -177,7 +190,7 @@ public class DecodeSession {
      * @param entity     the decoded entity instance
      */
     public void register(String collection, Object id, Object entity) {
-        if (maxCached == 0) {
+        if (maxCached == 0 || cachingSuspended > 0) {
             return;
         }
         if (cache == null) {

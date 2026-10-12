@@ -180,7 +180,8 @@ public class Projection {
      *         projection at all or one listing exactly the mapped fields
      */
     boolean isPartial() {
-        return includes != null || excludes != null || (arrayField != null && slice != null) || meta != null;
+        return includes != null || excludes != null || (arrayField != null && slice != null) || meta != null
+                || Boolean.TRUE.equals(knownFields);
     }
 
     /**
