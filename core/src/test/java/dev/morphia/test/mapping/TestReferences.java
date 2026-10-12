@@ -30,6 +30,7 @@ import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.PropertyDiscovery;
 import dev.morphia.mapping.codec.DecodeSession;
+import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
 import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaCursor;
@@ -1387,14 +1388,22 @@ public class TestReferences extends ProxyTestBase {
         holder.ref = cached;
         getDs().save(holder);
 
-        // the container and the reference target are both decoded in one cursor, so the target is cached
-        // by the time the reference is resolved
-        LazyCachedHolder loaded = getDs().find(LazyCachedHolder.class).first();
-        Assertions.assertNotNull(loaded);
-        assertIsProxy(loaded.ref);
-        assertNotFetched(loaded.ref);
-        Assertions.assertEquals("v1", loaded.ref.getName());
-        assertFetched(loaded.ref);
+        // load the target first, in the same session as the holder, so it is cached when the holder decodes
+        DecodeSession session = new DecodeSession();
+        session.decoding(() -> {
+            Cached preloaded = getDs().find(Cached.class).first();
+            Assertions.assertNotNull(preloaded);
+
+            LazyCachedHolder loaded = getDs().find(LazyCachedHolder.class).first();
+            Assertions.assertNotNull(loaded);
+            assertIsProxy(loaded.ref);
+            assertNotFetched(loaded.ref);
+            Assertions.assertEquals("v1", loaded.ref.getName());
+            assertFetched(loaded.ref);
+            Assertions.assertSame(preloaded, ((MorphiaProxy) loaded.ref).unwrap(),
+                    "the proxy should resolve to the instance already in the session");
+            return null;
+        });
     }
 
     /**
@@ -1588,6 +1597,100 @@ public class TestReferences extends ProxyTestBase {
         MappingException thrown = Assertions.assertThrows(MappingException.class,
                 () -> getDs().find(LinkRecord.class).filter(eq("_id", a)).first());
         Assertions.assertTrue(thrown.getMessage().contains("Cyclic reference"), thrown.getMessage());
+    }
+
+    /**
+     * A multi-dimensional reference nests its ids. Each one still has to be checked against the session, or a cycle
+     * through a nested list recurses until the stack overflows.
+     */
+    @Test
+    public void testCyclicReferenceInNestedArray() {
+        Grid grid = new Grid();
+        grid.name = "grid";
+        getDs().save(grid);
+        grid.cells = new Grid[][] { new Grid[] { grid } };
+        getDs().save(grid);
+
+        Grid loaded = getDs().find(Grid.class).first();
+        Assertions.assertNotNull(loaded);
+        Assertions.assertSame(loaded, loaded.cells[0][0]);
+    }
+
+    /**
+     * {@code returnKey} returns only the index keys, so its documents decode to partial entities just as projected
+     * ones do.
+     */
+    @Test
+    public void testReturnKeyEntitiesAreNotReusedForReferences() {
+        Buddy b = new Buddy();
+        b.name = "b";
+        b.age = 2;
+        getDs().save(b);
+        Buddy a = new Buddy();
+        a.name = "a";
+        a.age = 1;
+        a.buddy = b;
+        getDs().save(a);
+
+        // an index covering _id and the reference, so the keys returned still carry both
+        Document keys = new Document("buddy", 1).append("_id", 1);
+        getDs().getCollection(Buddy.class).createIndex(keys);
+
+        // "b" has no buddy, so it sorts first in the index and is decoded before "a" resolves its reference to it
+        List<Buddy> loaded = getDs().find(Buddy.class, new FindOptions()
+                .hint(keys)
+                .returnKey(true))
+                .iterator()
+                .toList();
+
+        Assertions.assertEquals(2, loaded.size());
+        Assertions.assertNull(loaded.get(0).name, "returnKey should have left out the name");
+        Buddy referenced = loaded.get(1).buddy;
+        Assertions.assertNotNull(referenced);
+        Assertions.assertEquals("b", referenced.name, "the reference resolved to the partial, returnKey entity");
+    }
+
+    /**
+     * References look entities up by their id as stored. An entity built through its constructor must be cached under
+     * that same value, not its converted Java form, or every reference to it fetches it again.
+     */
+    @Test
+    public void testConstructorEntityWithConvertedIdIsDeduplicated() {
+        CharRecord target = new CharRecord('x', "target");
+        getDs().save(target);
+        CharHolder holder = new CharHolder();
+        holder.id = new ObjectId();
+        holder.first = target;
+        holder.second = target;
+        getDs().save(holder);
+
+        CharHolder loaded = getDs().find(CharHolder.class).first();
+        Assertions.assertNotNull(loaded);
+        Assertions.assertNotNull(loaded.first);
+        Assertions.assertSame(loaded.first, loaded.second);
+    }
+
+    @Entity("grids")
+    private static class Grid {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String name;
+        @Reference
+        private Grid[][] cells;
+    }
+
+    @Entity("char_records")
+    record CharRecord(@Id Character id, String name) {
+    }
+
+    @Entity("char_holders")
+    private static class CharHolder {
+        @Id
+        private ObjectId id;
+        @Reference(idOnly = true)
+        private CharRecord first;
+        @Reference(idOnly = true)
+        private CharRecord second;
     }
 
     @Entity("buddies")

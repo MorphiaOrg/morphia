@@ -423,9 +423,11 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     }
 
     private List<Object> fetchCollectionMerged(List<?> rawIds, EntityModel entityModel, boolean ignoreMissing) {
-        Map<RefKey, Object> idMap = new HashMap<>(partialSessionLookup(rawIds, entityModel));
+        // multi-dimensional references nest their ids; look each one up individually and rebuild the shape at the end
+        List<Object> flatIds = extractFlatIds(new ArrayList<>(rawIds));
+        Map<RefKey, Object> idMap = new HashMap<>(partialSessionLookup(flatIds, entityModel));
 
-        List<Object> missingIds = rawIds.stream()
+        List<Object> missingIds = flatIds.stream()
                 .filter(id -> !idMap.containsKey(RefKey.of(id, entityModel)))
                 .collect(Collectors.toList());
 

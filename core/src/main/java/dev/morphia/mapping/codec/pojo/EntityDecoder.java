@@ -79,7 +79,9 @@ public class EntityDecoder<T> implements Decoder<T> {
             T instance = (T) instanceCreator.getInstance();
 
             if (session != null && !eager && classModel.getIdProperty() != null) {
-                Object id = morphiaCodec.getDatastore().getMapper().getId(instance);
+                // prefer the id as stored, which is what references look entities up by; the mapped value can differ
+                // for converted id types
+                Object id = prereadId != null ? prereadId : morphiaCodec.getDatastore().getMapper().getId(instance);
                 if (id != null) {
                     session.register(classModel.collectionName(), id, instance);
                 }
