@@ -544,6 +544,10 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
      * different collections that share an id.
      */
     private record RefKey(String collection, Object id) {
+        RefKey {
+            id = DecodeSession.idKey(id);
+        }
+
         static RefKey of(Object id, EntityModel entityModel) {
             return id instanceof DBRef dbRef
                     ? new RefKey(dbRef.getCollectionName(), dbRef.getId())

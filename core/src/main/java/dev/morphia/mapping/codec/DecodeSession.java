@@ -1,6 +1,9 @@
 package dev.morphia.mapping.codec;
 
+import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -225,13 +228,42 @@ public class DecodeSession {
         return entity != null ? entity : (cache != null ? cache.get(key) : null);
     }
 
+    /**
+     * Converts an id into a form whose equality matches MongoDB's. Embedded documents compare by field order in MongoDB,
+     * so {@code {a: 1, b: 2}} and {@code {b: 2, a: 1}} are distinct ids, but Java's {@link Map#equals} ignores order.
+     * Documents (at any depth) are therefore turned into ordered lists of their entries.
+     *
+     * @param id the id value
+     * @return a value usable as a map key for that id
+     */
+    @Nullable
+    public static Object idKey(@Nullable Object id) {
+        if (id instanceof Map<?, ?> map) {
+            List<Object> entries = new ArrayList<>(map.size());
+            for (Map.Entry<?, ?> entry : map.entrySet()) {
+                entries.add(new SimpleImmutableEntry<>(entry.getKey(), idKey(entry.getValue())));
+            }
+            return new OrderedDocument(entries);
+        } else if (id instanceof List<?> list) {
+            List<Object> elements = new ArrayList<>(list.size());
+            for (Object element : list) {
+                elements.add(idKey(element));
+            }
+            return elements;
+        }
+        return id;
+    }
+
+    private record OrderedDocument(List<Object> entries) {
+    }
+
     private static final class Key {
         private final String collection;
         private final Object id;
 
         Key(String collection, Object id) {
             this.collection = collection;
-            this.id = id;
+            this.id = idKey(id);
         }
 
         @Override

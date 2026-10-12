@@ -1717,6 +1717,35 @@ public class TestReferences extends ProxyTestBase {
     }
 
     /**
+     * MongoDB tells embedded-document ids apart by field order, so {@code {a: 1, b: 2}} and {@code {b: 2, a: 1}} are two
+     * documents. The session must not treat a reference to one as a hit for the other.
+     */
+    @Test
+    public void testDocumentIdsDifferingOnlyInFieldOrder() {
+        DocIdTarget first = new DocIdTarget();
+        first.id = new Document("a", 1).append("b", 2);
+        first.name = "first";
+        getDs().save(first);
+        DocIdTarget second = new DocIdTarget();
+        second.id = new Document("b", 2).append("a", 1);
+        second.name = "second";
+        getDs().save(second);
+
+        DocIdHolder holder = new DocIdHolder();
+        holder.id = new ObjectId();
+        holder.first = first;
+        holder.second = second;
+        holder.both = List.of(first, second);
+        getDs().save(holder);
+
+        DocIdHolder loaded = getDs().find(DocIdHolder.class).first();
+        Assertions.assertNotNull(loaded);
+        Assertions.assertEquals("first", loaded.first.name);
+        Assertions.assertEquals("second", loaded.second.name, "the reference resolved to the entity with the reordered id");
+        Assertions.assertEquals(List.of("first", "second"), loaded.both.stream().map(t -> t.name).toList());
+    }
+
+    /**
      * References look entities up by their id as stored. An entity built through its constructor must be cached under
      * that same value, not its converted Java form, or every reference to it fetches it again.
      */
@@ -1778,6 +1807,25 @@ public class TestReferences extends ProxyTestBase {
         private int age;
         @Reference(idOnly = true)
         private Veteran buddy;
+    }
+
+    @Entity("docIdTargets")
+    private static class DocIdTarget {
+        @Id
+        private Document id;
+        private String name;
+    }
+
+    @Entity("docIdHolders")
+    private static class DocIdHolder {
+        @Id
+        private ObjectId id;
+        @Reference(idOnly = true)
+        private DocIdTarget first;
+        @Reference(idOnly = true)
+        private DocIdTarget second;
+        @Reference(idOnly = true)
+        private List<DocIdTarget> both;
     }
 
     @Entity("animals")
