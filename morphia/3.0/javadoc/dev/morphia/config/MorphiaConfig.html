@@ -169,6 +169,16 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
 <div class="block">Updates this configuration with a new value and returns a new instance.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#decodeSessionCacheSize()" class="member-name-link">decodeSessionCacheSize</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">The maximum number of decoded entities one decode session will cache.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#decodeSessionCacheSize(java.lang.Integer)" class="member-name-link">decodeSessionCacheSize</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;value)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="block">Updates this configuration with a new value and returns a new instance.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>@WithConverter(DiscriminatorFunctionConverter.class) <a href="../mapping/DiscriminatorFunction.html" title="class in dev.morphia.mapping">DiscriminatorFunction</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#discriminator()" class="member-name-link">discriminator</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
@@ -660,6 +670,46 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="discriminatorKey(java.lang.String)">
 <h3>discriminatorKey</h3>
 <div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type"><a href="MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a></span>&nbsp;<span class="element-name">discriminatorKey</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;value)</span></div>
+<div class="block">Updates this configuration with a new value and returns a new instance. The original instance is unchanged.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>value</code> - the new value</dd>
+<dt>Returns:</dt>
+<dd>a new instance with the updated configuration</dd>
+<dt>Since:</dt>
+<dd>3.0</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="decodeSessionCacheSize()">
+<h3>decodeSessionCacheSize</h3>
+<div class="member-signature"><span class="annotations">@WithDefault("1000")
+</span><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a></span>&nbsp;<span class="element-name">decodeSessionCacheSize</span>()</div>
+<div class="block">The maximum number of decoded entities one decode session will cache.
+
+ <p>
+ While decoding a query result, Morphia caches the entities it has decoded so that two
+ <code>@Reference</code> fields pointing at the same document resolve to the same Java instance rather
+ than two copies. This bounds that cache, so iterating a very large result set does not retain every
+ document it has seen. Once the bound is reached the least recently used entries are dropped, which
+ costs deduplication but never correctness.
+
+ <p>
+ Set this to <code>0</code> to turn deduplication off. Entities being decoded are tracked separately and
+ are never evicted, so cycles between references resolve safely whatever this is set to.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the maximum number of entities to cache per decode session</dd>
+<dt>Since:</dt>
+<dd>3.0</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="decodeSessionCacheSize(java.lang.Integer)">
+<h3>decodeSessionCacheSize</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type"><a href="MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a></span>&nbsp;<span class="element-name">decodeSessionCacheSize</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;value)</span></div>
 <div class="block">Updates this configuration with a new value and returns a new instance. The original instance is unchanged.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
