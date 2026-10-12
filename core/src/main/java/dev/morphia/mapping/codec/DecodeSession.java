@@ -54,7 +54,9 @@ public class DecodeSession {
 
     private final int maxCached;
 
-    private int cachingSuspended;
+    private final boolean partial;
+
+    private boolean cacheable = true;
 
     @Nullable
     private Map<Key, Object> inFlight;
@@ -76,7 +78,12 @@ public class DecodeSession {
      * @param maxCached the cache bound; {@code 0} disables caching of completed entities
      */
     public DecodeSession(int maxCached) {
+        this(maxCached, false);
+    }
+
+    private DecodeSession(int maxCached, boolean partial) {
         this.maxCached = Math.max(0, maxCached);
+        this.partial = partial;
     }
 
     /**
@@ -87,6 +94,18 @@ public class DecodeSession {
      */
     public static DecodeSession forConfig(MorphiaConfig config) {
         return new DecodeSession(config.decodeSessionCacheSize());
+    }
+
+    /**
+     * Creates a session for a decode whose results are partial documents -- a projection or an aggregation's output,
+     * say. The entities it decodes are never cached, since they must not later stand in for the stored entity, but
+     * references fetched while decoding them are full queries and are cached as usual.
+     *
+     * @param config the configuration to read the bound from
+     * @return the new session
+     */
+    public static DecodeSession forPartialResults(MorphiaConfig config) {
+        return new DecodeSession(config.decodeSessionCacheSize(), true);
     }
 
     /**
@@ -101,9 +120,11 @@ public class DecodeSession {
      * Runs {@code action} with this session installed on the current thread, removing it again when the
      * action completes. If another session is already installed -- a reference being fetched part way
      * through an outer decode, for instance -- that one stays in place and this session is not used, so
-     * the whole object graph shares a single cache. If this session caches nothing (the decode returns partial
-     * documents), the outer session stops caching completed entities until the action finishes, so a partial
-     * entity can not leak into it; in-flight entities are still shared, so cycle safety is unaffected.
+     * the whole object graph shares a single cache. Whether the entities completed during {@code action} are cached
+     * follows this session either way: not for a {@link #forPartialResults partial} decode, otherwise yes. The
+     * previous setting is restored afterwards, so a full query nested in a partial decode (a reference fetch) caches its
+     * entities and a partial query nested in a full one does not. In-flight entities are always shared, so cycle safety
+     * is unaffected.
      *
      * @param action the decode to run
      * @param <T>    the decoded type
@@ -111,22 +132,19 @@ public class DecodeSession {
      */
     public <T> T decoding(Supplier<T> action) {
         DecodeSession outer = CURRENT.get();
-        if (outer != null) {
-            if (maxCached != 0 || outer == this) {
-                return action.get();
-            }
-            outer.cachingSuspended++;
-            try {
-                return action.get();
-            } finally {
-                outer.cachingSuspended--;
-            }
+        DecodeSession installed = outer != null ? outer : this;
+        boolean previous = installed.cacheable;
+        installed.cacheable = !partial;
+        if (outer == null) {
+            CURRENT.set(this);
         }
-        CURRENT.set(this);
         try {
             return action.get();
         } finally {
-            CURRENT.remove();
+            installed.cacheable = previous;
+            if (outer == null) {
+                CURRENT.remove();
+            }
         }
     }
 
@@ -193,7 +211,7 @@ public class DecodeSession {
      * @param entity     the decoded entity instance
      */
     public void register(String collection, Object id, Object entity) {
-        if (maxCached == 0 || cachingSuspended > 0) {
+        if (maxCached == 0 || !cacheable) {
             return;
         }
         if (cache == null) {

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -465,7 +464,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
                 Object entity = cursor.next();
                 idMap.put(new RefKey(collection, mapper.getId(entity)), entity);
             }
-            if (!ignoreMissing && idMap.size() != new HashSet<>(collectionIds).size()) {
+            if (!ignoreMissing && idMap.size() != collectionIds.stream().map(DecodeSession::idKey).distinct().count()) {
                 throw new ReferenceException(Sofia.missingReferencedEntities(entityModel.getType().getSimpleName()));
             }
         }

@@ -117,7 +117,7 @@ public class AggregationImpl<T> implements Aggregation<T> {
                 LOG.debug("pipeline = " + pipeline);
             }
             // a pipeline can reshape documents freely, so nothing it returns is cached as the stored entity
-            DecodeSession session = new DecodeSession(0);
+            DecodeSession session = DecodeSession.forPartialResults(datastore.getMapper().getConfig());
             if (DeferredDecoding.required(datastore)) {
                 iterator = new MorphiaCursor<>(session, () -> {
                     MongoCursor<RawBsonDocument> raw = (MongoCursor<RawBsonDocument>) (MongoCursor<?>) options

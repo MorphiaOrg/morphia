@@ -52,6 +52,7 @@ import org.junit.jupiter.api.Test;
 
 import static dev.morphia.Morphia.createDatastore;
 import static dev.morphia.aggregation.stages.Lookup.lookup;
+import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.in;
 import static dev.morphia.query.updates.UpdateOperators.setOnInsert;
@@ -1746,6 +1747,77 @@ public class TestReferences extends ProxyTestBase {
     }
 
     /**
+     * The check that every referenced document was found must count ids the way MongoDB does, or two ids differing only
+     * in field order look like one id with an extra result.
+     */
+    @Test
+    public void testDocumentIdsDifferingOnlyInFieldOrderInAList() {
+        DocIdTarget first = new DocIdTarget();
+        first.id = new Document("a", 1).append("b", 2);
+        first.name = "first";
+        getDs().save(first);
+        DocIdTarget second = new DocIdTarget();
+        second.id = new Document("b", 2).append("a", 1);
+        second.name = "second";
+        getDs().save(second);
+
+        DocIdHolder holder = new DocIdHolder();
+        holder.id = new ObjectId();
+        holder.both = List.of(first, second);
+        getDs().save(holder);
+
+        DocIdHolder loaded = getDs().find(DocIdHolder.class).first();
+        Assertions.assertNotNull(loaded);
+        Assertions.assertEquals(List.of("first", "second"), loaded.both.stream().map(t -> t.name).toList());
+    }
+
+    /**
+     * A projected result is partial and is not cached, but the references it loads are full entities and still are.
+     */
+    @Test
+    public void testProjectedResultsDeduplicateReferences() {
+        Pair pair = savePair();
+
+        Pair loaded = getDs().find(Pair.class, new FindOptions().projection().include("left", "right"))
+                .filter(eq("_id", pair.id))
+                .first();
+
+        Assertions.assertNotNull(loaded);
+        Assertions.assertNull(loaded.name, "the projection should have left out the name");
+        Assertions.assertNotNull(loaded.left);
+        Assertions.assertSame(loaded.left, loaded.right, "both references should resolve to one instance");
+    }
+
+    /**
+     * An aggregation's output is not cached, but the references it loads are full entities and still are.
+     */
+    @Test
+    public void testAggregationResultsDeduplicateReferences() {
+        Pair pair = savePair();
+
+        List<Pair> loaded = getDs().aggregate(Pair.class, Pair.class)
+                .pipeline(match(eq("_id", pair.id)))
+                .iterator()
+                .toList();
+
+        Assertions.assertEquals(1, loaded.size());
+        Assertions.assertNotNull(loaded.get(0).left);
+        Assertions.assertSame(loaded.get(0).left, loaded.get(0).right, "both references should resolve to one instance");
+    }
+
+    private Pair savePair() {
+        Buddy target = new Buddy();
+        target.name = "target";
+        getDs().save(target);
+        Pair pair = new Pair();
+        pair.name = "pair";
+        pair.left = target;
+        pair.right = target;
+        getDs().save(pair);
+        return pair;
+    }
+
+    /**
      * References look entities up by their id as stored. An entity built through its constructor must be cached under
      * that same value, not its converted Java form, or every reference to it fetches it again.
      */
@@ -1826,6 +1898,17 @@ public class TestReferences extends ProxyTestBase {
         private DocIdTarget second;
         @Reference(idOnly = true)
         private List<DocIdTarget> both;
+    }
+
+    @Entity("pairs")
+    private static class Pair {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String name;
+        @Reference
+        private Buddy left;
+        @Reference
+        private Buddy right;
     }
 
     @Entity("animals")
