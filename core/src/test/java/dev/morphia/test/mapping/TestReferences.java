@@ -23,13 +23,17 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.IdGetter;
 import dev.morphia.annotations.PostLoad;
+import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.config.MorphiaConfig;
+import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.PropertyDiscovery;
 import dev.morphia.mapping.codec.DecodeSession;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
+import dev.morphia.query.FindOptions;
 import dev.morphia.query.MorphiaCursor;
+import dev.morphia.query.Sort;
 import dev.morphia.test.models.Author;
 import dev.morphia.test.models.Book;
 import dev.morphia.test.models.FacebookUser;
@@ -1481,5 +1485,169 @@ public class TestReferences extends ProxyTestBase {
         Assertions.assertEquals("beta", loaded.partner.name);
         Assertions.assertNotNull(loaded.partner.partner);
         Assertions.assertEquals("alpha", loaded.partner.partner.name);
+    }
+
+    /**
+     * A projected document decodes to a partial entity, which must not be handed to a later reference as if it
+     * were the whole entity.
+     */
+    @Test
+    public void testProjectedEntitiesAreNotReusedForReferences() {
+        Buddy b = new Buddy();
+        b.name = "b";
+        b.age = 2;
+        getDs().save(b);
+        Buddy a = new Buddy();
+        a.name = "a";
+        a.age = 1;
+        a.buddy = b;
+        getDs().save(a);
+
+        // "b" decodes first, without its age, before "a" resolves its reference to it
+        List<Buddy> loaded = getDs().find(Buddy.class, new FindOptions()
+                .sort(Sort.descending("name"))
+                .projection().include("name", "buddy"))
+                .iterator()
+                .toList();
+
+        Assertions.assertEquals(2, loaded.size());
+        Assertions.assertEquals(0, loaded.get(0).age, "the projection should have left out the age");
+        Buddy referenced = loaded.get(1).buddy;
+        Assertions.assertNotNull(referenced);
+        Assertions.assertEquals(2, referenced.age, "the reference resolved to the projected, partial entity");
+    }
+
+    /**
+     * DBRefs into different collections can share an id. A cached hit for one must not stand in for the other.
+     */
+    @Test
+    public void testDbRefsSharingAnIdAcrossCollections() {
+        Dog dog = new Dog();
+        dog.id = "shared";
+        dog.name = "dog";
+        getDs().save(dog);
+        Cat cat = new Cat();
+        cat.id = "shared";
+        cat.name = "cat";
+        getDs().save(cat);
+
+        Kennel kennel = new Kennel();
+        kennel.id = new ObjectId();
+        kennel.favorite = dog;
+        kennel.animals = List.of(dog, cat);
+        getDs().save(kennel);
+
+        // favorite decodes first, so the dog is in the session by the time the list is resolved
+        Kennel loaded = getDs().find(Kennel.class).first();
+        Assertions.assertNotNull(loaded);
+        Assertions.assertEquals(2, loaded.animals.size());
+        Assertions.assertInstanceOf(Dog.class, loaded.animals.get(0));
+        Assertions.assertEquals("dog", loaded.animals.get(0).name);
+        Assertions.assertInstanceOf(Cat.class, loaded.animals.get(1));
+        Assertions.assertEquals("cat", loaded.animals.get(1).name);
+    }
+
+    /**
+     * An entity whose lifecycle callback fails part way through its decode must not be left in the session for
+     * anything else to find.
+     */
+    @Test
+    public void testFailedLifecycleCallbackIsNotLeftInSession() {
+        Fussy fussy = new Fussy();
+        getDs().save(fussy);
+        String collection = getMapper().getEntityModel(Fussy.class).collectionName();
+
+        for (String phase : List.of("pre", "post")) {
+            DecodeSession session = new DecodeSession();
+            Fussy.failIn = phase;
+            try {
+                session.decoding(() -> Assertions.assertThrows(RuntimeException.class,
+                        () -> getDs().find(Fussy.class).first(), phase + "load should have failed"));
+            } finally {
+                Fussy.failIn = null;
+            }
+            Assertions.assertNull(session.lookup(collection, fussy.id),
+                    "an entity whose @" + phase + "load failed was left in the session");
+        }
+    }
+
+    /**
+     * An entity built through a constructor taking its properties has no instance to publish until its decode
+     * completes, so a cycle through it can not be resolved. It should fail clearly instead of overflowing the stack.
+     */
+    @Test
+    public void testCyclicReferenceThroughConstructorFailsFast() {
+        ObjectId a = new ObjectId();
+        ObjectId b = new ObjectId();
+        getMapper().map(LinkRecord.class);
+        getDs().getDatabase().getCollection(getMapper().getEntityModel(LinkRecord.class).collectionName())
+                .insertMany(List.of(
+                        new Document("_id", a).append("name", "a").append("next", b),
+                        new Document("_id", b).append("name", "b").append("next", a)));
+
+        MappingException thrown = Assertions.assertThrows(MappingException.class,
+                () -> getDs().find(LinkRecord.class).filter(eq("_id", a)).first());
+        Assertions.assertTrue(thrown.getMessage().contains("Cyclic reference"), thrown.getMessage());
+    }
+
+    @Entity("buddies")
+    private static class Buddy {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String name;
+        private int age;
+        @Reference
+        private Buddy buddy;
+    }
+
+    @Entity("animals")
+    private static class Animal {
+        @Id
+        protected String id;
+        protected String name;
+    }
+
+    @Entity("dogs")
+    private static class Dog extends Animal {
+    }
+
+    @Entity("cats")
+    private static class Cat extends Animal {
+    }
+
+    @Entity("kennels")
+    private static class Kennel {
+        @Id
+        private ObjectId id;
+        @Reference
+        private Animal favorite;
+        @Reference
+        private List<Animal> animals;
+    }
+
+    @Entity("fussy")
+    private static class Fussy {
+        static String failIn;
+
+        @Id
+        private ObjectId id = new ObjectId();
+
+        @PreLoad
+        void preLoad() {
+            if ("pre".equals(failIn)) {
+                throw new IllegalStateException("failing @PreLoad on purpose");
+            }
+        }
+
+        @PostLoad
+        void postLoad() {
+            if ("post".equals(failIn)) {
+                throw new IllegalStateException("failing @PostLoad on purpose");
+            }
+        }
+    }
+
+    @Entity("link_records")
+    record LinkRecord(@Id ObjectId id, String name, @Reference(idOnly = true) LinkRecord next) {
     }
 }

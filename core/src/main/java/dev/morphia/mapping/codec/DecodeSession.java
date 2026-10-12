@@ -9,6 +9,7 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
+import dev.morphia.mapping.MappingException;
 
 /**
  * A cache of {@code (collection, id) -> entity instance} used while decoding. It serves two purposes:
@@ -45,6 +46,8 @@ public class DecodeSession {
     public static final int DEFAULT_CACHE_SIZE = 1_000;
 
     private static final ThreadLocal<DecodeSession> CURRENT = new ThreadLocal<>();
+
+    private static final Object CONSTRUCTING = new Object();
 
     private final int maxCached;
 
@@ -127,6 +130,19 @@ public class DecodeSession {
     }
 
     /**
+     * Records that an entity is being decoded but has no instance to publish yet, because its creator needs the
+     * decoded values to build one. A reference back to it before {@link #complete} or {@link #discard} is a cycle
+     * that cannot be resolved, so {@link #lookup} fails fast rather than letting the decode recurse until the stack
+     * overflows.
+     *
+     * @param collection the MongoDB collection name
+     * @param id         the entity's {@code _id} value
+     */
+    public void registerConstructing(String collection, Object id) {
+        registerInFlight(collection, id, CONSTRUCTING);
+    }
+
+    /**
      * Marks an in-flight entity as fully decoded, moving it to the bounded cache.
      *
      * @param collection the MongoDB collection name
@@ -135,7 +151,7 @@ public class DecodeSession {
     public void complete(String collection, Object id) {
         if (inFlight != null) {
             Object entity = inFlight.remove(new Key(collection, id));
-            if (entity != null) {
+            if (entity != null && entity != CONSTRUCTING) {
                 register(collection, id, entity);
             }
         }
@@ -181,11 +197,18 @@ public class DecodeSession {
      * @param collection the MongoDB collection name
      * @param id         the entity's {@code _id} value
      * @return the entity, or {@code null} if this session has not seen it
+     * @throws MappingException if the entity is still being built by a creator that cannot publish it early, which
+     *                          means it is being referenced from within its own decode
      */
     @Nullable
     public Object lookup(String collection, Object id) {
         Key key = new Key(collection, id);
         Object entity = inFlight != null ? inFlight.get(key) : null;
+        if (entity == CONSTRUCTING) {
+            throw new MappingException(("Cyclic reference to %s/%s can not be resolved: the entity is created through a "
+                    + "constructor taking its properties, so it has no instance until its decode completes. Make one of "
+                    + "the references in the cycle lazy.").formatted(collection, id));
+        }
         return entity != null ? entity : (cache != null ? cache.get(key) : null);
     }
 

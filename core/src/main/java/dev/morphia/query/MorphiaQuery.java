@@ -215,7 +215,10 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     private MorphiaCursor<T> iterator(FindOptions options) {
-        DecodeSession session = DecodeSession.forConfig(datastore.getMapper().getConfig());
+        // projected documents decode to partial entities, which must not be handed out later as the full entity
+        DecodeSession session = options.isPartialProjection()
+                ? new DecodeSession(0)
+                : DecodeSession.forConfig(datastore.getMapper().getConfig());
         if (DeferredDecoding.required(datastore)) {
             return new MorphiaCursor<>(session,
                     () -> DeferredDecoding.cursor(prepareCursor(options, DeferredDecoding.raw(collection)),

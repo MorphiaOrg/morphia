@@ -52,12 +52,14 @@ public class EntityDecoder<T> implements Decoder<T> {
             // Publishing the instance before its properties are decoded is what lets a reference cycle
             // terminate, but it is only possible when the creator can hand out an instance without the
             // decoded values. Creators that feed values to a constructor are registered after decoding
-            // instead: they still deduplicate, but a cycle through them cannot be broken.
-            Object prereadId = session != null && classModel.getIdProperty() != null && instanceCreator.isEagerInstanceSafe()
-                    ? peekId(reader)
-                    : null;
-            if (prereadId != null) {
+            // instead: they still deduplicate, but a cycle through them cannot be broken, so they are marked as
+            // under construction and a reference back to one fails fast instead of recursing.
+            Object prereadId = session != null && classModel.getIdProperty() != null ? peekId(reader) : null;
+            boolean eager = prereadId != null && instanceCreator.isEagerInstanceSafe();
+            if (eager) {
                 session.registerInFlight(classModel.collectionName(), prereadId, instanceCreator.getInstance());
+            } else if (prereadId != null) {
+                session.registerConstructing(classModel.collectionName(), prereadId);
             }
 
             boolean decoded = false;
@@ -76,7 +78,7 @@ public class EntityDecoder<T> implements Decoder<T> {
 
             T instance = (T) instanceCreator.getInstance();
 
-            if (session != null && prereadId == null && classModel.getIdProperty() != null) {
+            if (session != null && !eager && classModel.getIdProperty() != null) {
                 Object id = morphiaCodec.getDatastore().getMapper().getId(instance);
                 if (id != null) {
                     session.register(classModel.collectionName(), id, instance);

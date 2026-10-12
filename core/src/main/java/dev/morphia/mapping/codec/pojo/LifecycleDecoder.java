@@ -64,11 +64,14 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
             session.registerInFlight(model.collectionName(), id, entity);
         }
 
-        model.callLifecycleMethods(PreLoad.class, entity, document, getMorphiaCodec().getDatastore());
+        // the entity stays in flight until its callbacks have run too: a failure anywhere discards it, and nothing
+        // sees it as complete before @PostLoad has finished with it
         boolean decoded = false;
         try {
+            model.callLifecycleMethods(PreLoad.class, entity, document, getMorphiaCodec().getDatastore());
             decodeProperties(new DocumentReader(document, getMorphiaCodec().getConversions()), decoderContext, instanceCreator,
                     model);
+            model.callLifecycleMethods(PostLoad.class, entity, document, getMorphiaCodec().getDatastore());
             decoded = true;
         } finally {
             if (id != null) {
@@ -79,7 +82,6 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
                 }
             }
         }
-        model.callLifecycleMethods(PostLoad.class, entity, document, getMorphiaCodec().getDatastore());
 
         return entity;
     }

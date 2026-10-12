@@ -340,18 +340,17 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
      * Returns a map of stripped-id → cached entity for each id in rawIds that is present
      * in the current session. Ids not yet in the session are absent from the result.
      */
-    private Map<Object, Object> partialSessionLookup(List<?> rawIds, EntityModel entityModel) {
+    private Map<RefKey, Object> partialSessionLookup(List<?> rawIds, EntityModel entityModel) {
         DecodeSession session = DecodeSession.current();
         if (session == null) {
             return Map.of();
         }
-        Map<Object, Object> hits = new LinkedHashMap<>();
+        Map<RefKey, Object> hits = new LinkedHashMap<>();
         for (Object id : rawIds) {
-            String collection = id instanceof DBRef ? ((DBRef) id).getCollectionName() : entityModel.collectionName();
-            Object lookupId = id instanceof DBRef ? ((DBRef) id).getId() : id;
-            Object cached = session.lookup(collection, lookupId);
+            RefKey key = RefKey.of(id, entityModel);
+            Object cached = session.lookup(key.collection(), key.id());
             if (cached != null) {
-                hits.put(lookupId, cached);
+                hits.put(key, cached);
             }
         }
         return hits;
@@ -424,25 +423,22 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     }
 
     private List<Object> fetchCollectionMerged(List<?> rawIds, EntityModel entityModel, boolean ignoreMissing) {
-        Map<Object, Object> idMap = new HashMap<>(partialSessionLookup(rawIds, entityModel));
+        Map<RefKey, Object> idMap = new HashMap<>(partialSessionLookup(rawIds, entityModel));
 
         List<Object> missingIds = rawIds.stream()
-                .filter(id -> {
-                    Object lookupId = id instanceof DBRef ? ((DBRef) id).getId() : id;
-                    return !idMap.containsKey(lookupId);
-                })
+                .filter(id -> !idMap.containsKey(RefKey.of(id, entityModel)))
                 .collect(Collectors.toList());
 
         if (!missingIds.isEmpty()) {
             idMap.putAll(buildIdMap(missingIds, entityModel, ignoreMissing));
         }
 
-        return mapIdsToValues(rawIds, idMap).stream()
+        return mapIdsToValues(rawIds, idMap, entityModel).stream()
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
-    private Map<Object, Object> buildIdMap(List<?> ids, EntityModel entityModel, boolean ignoreMissing) {
+    private Map<RefKey, Object> buildIdMap(List<?> ids, EntityModel entityModel, boolean ignoreMissing) {
         Map<String, List<Object>> byCollection = new HashMap<>();
         for (Object id : ids) {
             if (id instanceof DBRef) {
@@ -452,20 +448,20 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             }
         }
 
-        Map<Object, Object> idMap = new HashMap<>();
+        Map<RefKey, Object> idMap = new HashMap<>();
         for (Entry<String, List<Object>> entry : byCollection.entrySet()) {
             idMap.putAll(queryCollection(entry.getKey(), extractFlatIds(entry.getValue()), entityModel, ignoreMissing));
         }
         return idMap;
     }
 
-    private Map<Object, Object> queryCollection(String collection, List<Object> collectionIds, EntityModel entityModel,
+    private Map<RefKey, Object> queryCollection(String collection, List<Object> collectionIds, EntityModel entityModel,
             boolean ignoreMissing) {
-        Map<Object, Object> idMap = new HashMap<>();
+        Map<RefKey, Object> idMap = new HashMap<>();
         try (MongoCursor<?> cursor = datastore.find(collection).disableValidation().filter(in("_id", collectionIds)).iterator()) {
             while (cursor.hasNext()) {
                 Object entity = cursor.next();
-                idMap.put(mapper.getId(entity), entity);
+                idMap.put(new RefKey(collection, mapper.getId(entity)), entity);
             }
             if (!ignoreMissing && idMap.size() != new HashSet<>(collectionIds).size()) {
                 throw new ReferenceException(Sofia.missingReferencedEntities(entityModel.getType().getSimpleName()));
@@ -474,13 +470,13 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         return idMap;
     }
 
-    private List<Object> mapIdsToValues(List<?> ids, Map<Object, Object> idMap) {
+    private List<Object> mapIdsToValues(List<?> ids, Map<RefKey, Object> idMap, EntityModel entityModel) {
         List<Object> values = new ArrayList<>(Arrays.asList(new Object[ids.size()]));
         for (int i = 0; i < ids.size(); i++) {
             Object id = ids.get(i);
             Object resolved = id instanceof List
-                    ? mapIdsToValues((List<?>) id, idMap)
-                    : idMap.get(id instanceof DBRef ? ((DBRef) id).getId() : id);
+                    ? mapIdsToValues((List<?>) id, idMap, entityModel)
+                    : idMap.get(RefKey.of(id, entityModel));
             if (resolved != null) {
                 values.set(i, resolved);
             }
@@ -539,5 +535,17 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
 
     private static List<Object> stripDbRefs(List<?> ids) {
         return ids.stream().map(ReferenceCodec::stripDbRef).collect(Collectors.toList());
+    }
+
+    /**
+     * Identifies a referenced document by collection as well as id: a list of DBRefs can point at documents in
+     * different collections that share an id.
+     */
+    private record RefKey(String collection, Object id) {
+        static RefKey of(Object id, EntityModel entityModel) {
+            return id instanceof DBRef dbRef
+                    ? new RefKey(dbRef.getCollectionName(), dbRef.getId())
+                    : new RefKey(entityModel.collectionName(), id);
+        }
     }
 }
