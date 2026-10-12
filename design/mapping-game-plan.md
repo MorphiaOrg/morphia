@@ -127,7 +127,8 @@ structural item covers are moved to that item (see Phases 4 and 5).
 - Tests:
   - `@IdField` round trip on a non-clone mapper;
   - a delegated property encoded exactly once.
-- Critter side: generated `@IdField` support lands in 4.8.
+- Critter side: generate `@IdField` support in this PR too, so the round-trip test passes under both mappers as
+  the phase rule requires.
 
 ### 2.2 `getSuperClass()` returns an interface (A5/D5)
 - Set `superClass` only when `parent.getType() == type.getSuperclass()`. Make the field private.
@@ -197,7 +198,7 @@ JMH numbers on both mappers.
 ### 3.3 Discriminator self-match, step 1 (#3, B2)
 - Add `codecForDiscriminator(d)`, which returns `this` on a self-match and otherwise uses a per-codec CHM.
 - Use `skipValue()` instead of `readString()` on `_t`.
-- Step 2, a single pass with no rewind, is moved to 3.12.
+- Step 2, a single pass with no rewind, is moved to 3.17.
 - The `DecodeSession` `_id` pre-read (`peekId`) is a second scan per root document that this step doesn't touch.
   At minimum, have it reuse a constant `DecoderContext` and the codec resolved for the id property instead of
   `registry.get(Object.class)`.
@@ -221,7 +222,9 @@ JMH numbers on both mappers.
 
 ### 3.8 `PathTarget` fixes (#8, D2)
 - Replace the regex with a hand-written check.
-- Iterate a cached, flattened subtype list.
+- Iterate a cached, flattened subtype list. The hierarchy grows as subtypes are mapped lazily, so
+  `EntityModel.addSubtype` must invalidate the cache on the model and on every ancestor (D5). Test: a path that
+  only resolves through a subtype mapped after the first lookup.
 - Cache `UpdateOperator.field()`.
 - `Projection.knownFields` should return mapped names directly.
 - Includes correctness fix 2.5.
@@ -233,26 +236,38 @@ JMH numbers on both mappers.
 **Exit criterion for Phase 3:** decode on SIMPLE/NESTED is within ~10% of the prototype's `flat` row (1.7–2.2×), the
 harness passes, and both mappers agree.
 
-### 3.10 Startup and lifecycle quick wins (#10–#13)
-- **#10 Package scan (A1):** `enableClassInfo().ignoreClassVisibility()` plus `Class.forName(name, false, …)`, then
-  the annotation pre-filter, using `LinkedHashSet` for deterministic order. Merge `map(String)`/`mapPackage`.
-  Per decision 1.2, keep the `.*` default and log a one-time warning when it is in effect.
-- **#11 ServiceLoader once per mapper (D15):** use the loader from decision 1.3 and one `MappingValidator` per
-  mapper. A8: build the rule list once as a static, use one pass over the properties, remove the two rules that can
-  never fire (deprecate them, since they are public), and fix the `TreeSet` comparator.
-- **#12 Lifecycle (D9):** guard `Sofia` debug formatting with `isDebugEnabled()`, precompute argument kinds, use a
-  lifecycle bitmask, and delete `UntypedEntityListenerAdapter`.
-- **#13 Codecs (B9/B12/B10):** collection/map `Supplier`s, a fixed `ZoneOffset` for UTC date storage, and a cached
-  lazy-proxy class with its constructor handle. B10 touches lazy references; it is compatible with the deferred
-  #4339 decision.
+### 3.10 Package scan (#10, A1)
+- `enableClassInfo().ignoreClassVisibility()` plus `Class.forName(name, false, …)`, then the annotation pre-filter.
+- Collect into a `LinkedHashSet` for deterministic order, and merge `map(String)`/`mapPackage`.
+- Per decision 1.2, keep the `.*` default and log a one-time warning when it is in effect.
 
-### 3.11 Primitive array codecs (#20, B7)
+### 3.11 ServiceLoader and validation once per mapper (#11, D15/A8)
+- Load conventions once per mapper with the loader from decision 1.3, and keep one `MappingValidator` per mapper.
+- Build the rule list once as a static, and run one pass over the properties.
+- Remove the two rules that can never fire (deprecate them, since they are public), and fix the `TreeSet`
+  comparator.
+
+### 3.12 Lifecycle dispatch (#12, D9)
+- Guard `Sofia` debug formatting with `isDebugEnabled()`, precompute argument kinds, use a lifecycle bitmask, and
+  delete `UntypedEntityListenerAdapter`.
+
+### 3.13 Collection and map instantiation (#13, B9)
+- Resolve a `Supplier` once per codec instead of `getDeclaredConstructor().newInstance()` on every decode.
+
+### 3.14 Date codecs (#13, B12)
+- Resolve a fixed `ZoneOffset` once per codec for UTC storage, and keep the current path for `SYSTEM_DEFAULT`.
+
+### 3.15 Lazy-reference proxies (#13, B10)
+- Resolve the proxy class, its constructor handle and its `handler` field handle once per `ReferenceCodec`.
+  Compatible with the deferred #4339 decision.
+
+### 3.16 Primitive array codecs (#20, B7)
 - Independent of the rest of the plan, and can land at any time.
 - Specialize `TypedArrayCodec` per primitive component type, keeping the boxed-codec fallback for numeric
   conversions.
 - Measured gain on embedding vectors: 3× encode, 2.4× decode.
 
-### 3.12 Discriminator and `_id` single pass, step 2 (B2)
+### 3.17 Discriminator and `_id` single pass, step 2 (B2)
 - Read in order, and buffer values that appear before `_t`. Continue on a self-match. When `_t` comes first, hand
   off to the subtype decoder. Decode a document without `_t` in one pass.
 - Fold in #4257's `peekId` pre-scan: `_id` is normally the first field, so read it in the same pass and register the
@@ -328,7 +343,7 @@ harness passes, and both mappers agree.
 - Old AOT output fails to load against `final` getters and falls back to runtime generation. 4.12 makes that clean.
 
 ### 4.8 Close the remaining divergences (C3)
-- `@IdField`, `@Property(concreteClass)`, interface-level annotations (shared with A11's annotation utility),
+- `@Property(concreteClass)`, interface-level annotations (shared with A11's annotation utility),
   shadowed fields (use `FieldInfo.declaringClass`), fluent setters in AOT weaving, and array properties.
 - One PR per divergence if any of them turns out to be large. Each one removes an expected failure from 4.5.
 
@@ -417,10 +432,10 @@ Only start after Phases 3 and 4 have shipped and been re-measured.
 4. 2.1–2.8 correctness fixes
 5. 3.0 codec plan skeleton
 6. 3.1 → 3.9, with JMH deltas
-7. 3.10 startup/lifecycle quick wins; 3.11 primitive arrays (independent)
+7. 3.10–3.15 startup, lifecycle and codec quick wins; 3.16 primitive arrays (independent)
 8. 4.1 sessions share the mapper → 4.2 lifecycle streaming
 9. 4.4 generic resolver
 10. Phase 5 A11 builder/annotation utility → 4.5 parity test → 4.6 shared rules → 4.7 plain models → 4.8 divergences →
     4.9–4.11 → 4.12 AOT guard + 4.13 API surface (**before 3.0 GA**)
-11. 3.12 single-pass discriminator
+11. 3.17 single-pass discriminator and `_id`
 12. Phase 5 clean-ups throughout; Phase 6 re-evaluated after 3.0 GA
