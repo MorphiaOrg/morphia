@@ -47,7 +47,8 @@ java -cp $OUT/classes:$JAR dev.morphia.benchmarks.handwritten.Verify            
 java -cp $OUT/classes:$AOT:$JAR dev.morphia.benchmarks.handwritten.Verify critter    # critter AOT models
 ```
 
-Result at the time of the review (re-confirmed on `4d48014`): `152 checks, 0 failures` and `76 checks, 0 failures`.
+Result on `4d48014`: `160 checks, 0 failures` and `80 checks, 0 failures`. The review reported 152 and 76; the
+difference is the flat codec's id-generation check, added afterwards.
 
 ## Run the benchmark
 

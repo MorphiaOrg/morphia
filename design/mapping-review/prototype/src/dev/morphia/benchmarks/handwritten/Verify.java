@@ -90,10 +90,14 @@ public final class Verify {
                     check(what + " hand decode", expected, encode(morphia, decode(hand, bytes), PLAIN));
                     check(what + " flat decode (lenient numbers not expected)", expected, safeFlat(morphia, flat, bytes));
                 }
-                // id generation when encoding a collectible document
+                // id generation when encoding a collectible document; each codec gets its own fresh entity because
+                // the sample loop above always encodes with Morphia first, which sets the id
                 Object fresh = model == Models.SIMPLE ? new SimpleEntity() : new NestedEntity();
                 encode(hand, fresh, COLLECTIBLE);
                 check(label + " " + model + " hand generates _id", true, mapper.getId(fresh) instanceof ObjectId);
+                Object freshFlat = model == Models.SIMPLE ? new SimpleEntity() : new NestedEntity();
+                encode(flat, freshFlat, COLLECTIBLE);
+                check(label + " " + model + " flat generates _id", true, mapper.getId(freshFlat) instanceof ObjectId);
             }
         }
     }

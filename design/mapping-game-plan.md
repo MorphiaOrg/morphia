@@ -87,6 +87,8 @@ model objects. It means most of the speed can be had without an API change.
   - a no-op global listener;
   - no `_t`;
   - schema drift;
+  - decode with a `DecodeSession` active. Since #4257, `EntityDecoder.peekId` marks and scans every root document
+    for `_id` before decoding it whenever a session is active, and `CodecBenchmark` doesn't measure that;
   - a **mixed-entity** run (megamorphic sites);
   - `new MorphiaDatastore(ds)` / `startSession()`;
   - `PathTarget.translatedPath()` / `MorphiaQuery.toDocument()`;
@@ -196,6 +198,9 @@ JMH numbers on both mappers.
 - Add `codecForDiscriminator(d)`, which returns `this` on a self-match and otherwise uses a per-codec CHM.
 - Use `skipValue()` instead of `readString()` on `_t`.
 - Step 2, a single pass with no rewind, is moved to 3.12.
+- The `DecodeSession` `_id` pre-read (`peekId`) is a second scan per root document that this step doesn't touch.
+  At minimum, have it reuse a constant `DecoderContext` and the codec resolved for the id property instead of
+  `registry.get(Object.class)`.
 
 ### 3.4 `getProperty` single lookup (#4, D4/B6)
 - A one-line fix. Can merge with any other PR.
@@ -247,9 +252,14 @@ harness passes, and both mappers agree.
   conversions.
 - Measured gain on embedding vectors: 3× encode, 2.4× decode.
 
-### 3.12 Discriminator single pass, step 2 (B2)
+### 3.12 Discriminator and `_id` single pass, step 2 (B2)
 - Read in order, and buffer values that appear before `_t`. Continue on a self-match. When `_t` comes first, hand
   off to the subtype decoder. Decode a document without `_t` in one pass.
+- Fold in #4257's `peekId` pre-scan: `_id` is normally the first field, so read it in the same pass and register the
+  entity with the `DecodeSession` (`registerInFlight`/`registerConstructing`) **before** any later property, and
+  in particular any reference, is decoded. If `_id` appears after a reference property, fall back to today's
+  mark-and-scan, so cycle-safe decoding never regresses. Add harness fixtures for reference cycles with `_id` both
+  first and late.
 - **Risk:** must not run user constructors speculatively, which interacts with 3.2. Needs harness fixtures with
   `_t` in various positions.
 - Expected: ~360 B and 250–300 ns per 8-field document.
@@ -328,8 +338,13 @@ harness passes, and both mappers agree.
 - Check eligibility before emitting classes.
 
 ### 4.10 Tier decision caching (C6)
-- Cache a global `ClassValue` tier decision (AOT / runtime / failed + cause), so each new mapper doesn't retry and
-  re-log.
+- Cache configuration-independent facts globally in a `ClassValue`: whether an AOT model exists and its
+  constructor.
+- Cache runtime-generation success or failure keyed by the existing `CritterMapper.generationKey`. Generated
+  output depends on property discovery, naming and discriminator strategies, and annotation providers, so one
+  configuration's failure must not be applied to another. Configurations that can't be keyed (custom strategies)
+  stay unshared, as `RuntimeModels` does today. This stops mappers with the same configuration from retrying and
+  re-logging.
 - critter-maven reports the entities it skips.
 - Fall back per property, not per entity.
 
