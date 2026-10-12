@@ -49,4 +49,9 @@ public class NoArgCreator implements MorphiaInstanceCreator {
     public Object getInstance() {
         return instance();
     }
+
+    @Override
+    public boolean isEagerInstanceSafe() {
+        return true;
+    }
 }

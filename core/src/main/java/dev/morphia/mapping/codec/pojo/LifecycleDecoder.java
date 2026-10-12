@@ -3,6 +3,7 @@ package dev.morphia.mapping.codec.pojo;
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.mapping.codec.DecodeSession;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 
@@ -52,10 +53,35 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
         final MorphiaInstanceCreator instanceCreator = model.getInstanceCreator(getMorphiaCodec().getConversions());
         T entity = (T) instanceCreator.getInstance();
 
-        model.callLifecycleMethods(PreLoad.class, entity, document, getMorphiaCodec().getDatastore());
-        decodeProperties(new DocumentReader(document, getMorphiaCodec().getConversions()), decoderContext, instanceCreator,
-                model);
-        model.callLifecycleMethods(PostLoad.class, entity, document, getMorphiaCodec().getDatastore());
+        // mirrors EntityDecoder: publish the instance before its properties are decoded so that reference
+        // cycles through a lifecycle-aware entity terminate the same way they do for any other entity
+        DecodeSession session = DecodeSession.current();
+        PropertyModel idProperty = model.getIdProperty();
+        Object id = session != null && idProperty != null && instanceCreator.isEagerInstanceSafe()
+                ? document.get(idProperty.getMappedName())
+                : null;
+        if (id != null) {
+            session.registerInFlight(model.collectionName(), id, entity);
+        }
+
+        // the entity stays in flight until its callbacks have run too: a failure anywhere discards it, and nothing
+        // sees it as complete before @PostLoad has finished with it
+        boolean decoded = false;
+        try {
+            model.callLifecycleMethods(PreLoad.class, entity, document, getMorphiaCodec().getDatastore());
+            decodeProperties(new DocumentReader(document, getMorphiaCodec().getConversions()), decoderContext, instanceCreator,
+                    model);
+            model.callLifecycleMethods(PostLoad.class, entity, document, getMorphiaCodec().getDatastore());
+            decoded = true;
+        } finally {
+            if (id != null) {
+                if (decoded) {
+                    session.complete(model.collectionName(), id);
+                } else {
+                    session.discard(model.collectionName(), id);
+                }
+            }
+        }
 
         return entity;
     }

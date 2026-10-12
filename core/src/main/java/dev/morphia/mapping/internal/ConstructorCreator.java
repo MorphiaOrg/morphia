@@ -148,6 +148,11 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
         return instance;
     }
 
+    @Override
+    public boolean isEagerInstanceSafe() {
+        return plan.positions.isEmpty();
+    }
+
     /**
      * @param model the model to check
      * @return the constructor taking all fields if it exists

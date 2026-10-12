@@ -176,6 +176,15 @@ public class Projection {
     }
 
     /**
+     * @return true if this projection returns documents that differ from what is stored, i.e. anything other than no
+     *         projection at all or one listing exactly the mapped fields
+     */
+    boolean isPartial() {
+        return includes != null || excludes != null || (arrayField != null && slice != null) || meta != null
+                || Boolean.TRUE.equals(knownFields);
+    }
+
+    /**
      * Adds an sliced array field to a projection.
      *
      * @param field the field to project

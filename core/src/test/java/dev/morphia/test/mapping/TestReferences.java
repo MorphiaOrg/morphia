@@ -19,14 +19,23 @@ import dev.morphia.Datastore;
 import dev.morphia.ModifyOptions;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.aggregation.Aggregation;
+import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.IdGetter;
+import dev.morphia.annotations.PostLoad;
+import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.config.MorphiaConfig;
+import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.PropertyDiscovery;
+import dev.morphia.mapping.codec.DecodeSession;
+import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.mapping.lazy.proxy.ReferenceException;
+import dev.morphia.query.FindOptions;
+import dev.morphia.query.MorphiaCursor;
+import dev.morphia.query.Sort;
 import dev.morphia.test.models.Author;
 import dev.morphia.test.models.Book;
 import dev.morphia.test.models.FacebookUser;
@@ -43,6 +52,7 @@ import org.junit.jupiter.api.Test;
 
 import static dev.morphia.Morphia.createDatastore;
 import static dev.morphia.aggregation.stages.Lookup.lookup;
+import static dev.morphia.aggregation.stages.Match.match;
 import static dev.morphia.query.filters.Filters.eq;
 import static dev.morphia.query.filters.Filters.in;
 import static dev.morphia.query.updates.UpdateOperators.setOnInsert;
@@ -1227,5 +1237,728 @@ public class TestReferences extends ProxyTestBase {
         public void setId(ObjectId id) {
             this.id = id;
         }
+    }
+
+    @Entity
+    public static class Cached {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    @Entity
+    public static class CachedHolder {
+        @Id
+        private ObjectId id = new ObjectId();
+        @Reference
+        private Cached ref;
+    }
+
+    @Entity
+    public static class LazyCachedHolder {
+        @Id
+        private ObjectId id = new ObjectId();
+        @Reference(lazy = true)
+        private Cached ref;
+    }
+
+    @Entity
+    private static class LifecycleNodeA {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String name;
+        @Reference
+        private LifecycleNodeB partner;
+
+        @PostLoad
+        void postLoad() {
+            loaded.incrementAndGet();
+        }
+
+        static final java.util.concurrent.atomic.AtomicInteger loaded = new java.util.concurrent.atomic.AtomicInteger();
+    }
+
+    @Entity
+    private static class LifecycleNodeB {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String name;
+        @Reference
+        private LifecycleNodeA partner;
+    }
+
+    @Entity
+    private static class TwoRefContainer {
+        @Id
+        private ObjectId id;
+        @Reference(idOnly = true)
+        private Ref ref1;
+        @Reference(idOnly = true)
+        private Ref ref2;
+    }
+
+    @Entity
+    private static class NodeA {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String name;
+        @Reference
+        private NodeB partner;
+    }
+
+    @Entity
+    private static class NodeB {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String name;
+        @Reference
+        private NodeA partner;
+    }
+
+    @Test
+    public void testReferenceDeduplication() {
+        // A single document with two @Reference fields pointing to the same entity.
+        // Both fields should decode to the same Java instance within one decode session.
+        Ref shared = new Ref("shared-ref");
+        getDs().save(shared);
+
+        TwoRefContainer container = new TwoRefContainer();
+        container.ref1 = shared;
+        container.ref2 = shared;
+        getDs().save(container);
+
+        TwoRefContainer loaded = getDs().find(TwoRefContainer.class).first();
+        Assertions.assertNotNull(loaded);
+        Assertions.assertSame(loaded.ref1, loaded.ref2, "Both ref fields should point to the same Ref instance");
+    }
+
+    /**
+     * A DecodeSession must never outlive the decode that installed it. A cursor that is never closed
+     * used to leave one on the thread, so a later, unrelated query resolved references out of a cache
+     * that could be arbitrarily stale.
+     */
+    @Test
+    public void testUnclosedCursorDoesNotLeakDecodeSession() {
+        Cached cached = new Cached();
+        cached.name = "v1";
+        getDs().save(cached);
+        CachedHolder holder = new CachedHolder();
+        holder.ref = cached;
+        getDs().save(holder);
+
+        // deliberately not closed
+        MorphiaCursor<Cached> leaked = getDs().find(Cached.class).iterator();
+        Assertions.assertNotNull(leaked.next());
+        Assertions.assertNull(DecodeSession.current(), "a decode session outlived the decode that installed it");
+
+        getDs().getDatabase().getCollection(getMapper().getEntityModel(Cached.class).collectionName())
+                .updateOne(new Document("_id", cached.id), new Document("$set", new Document("name", "v2")));
+
+        CachedHolder loaded = getDs().find(CachedHolder.class).first();
+        Assertions.assertNotNull(loaded);
+        Assertions.assertEquals("v2", loaded.ref.name, "reference was resolved from a stale decode session");
+    }
+
+    /**
+     * {@code merge()} reloads through a cursor it does not close; that must not strand a session either.
+     */
+    @Test
+    public void testMergeDoesNotLeakDecodeSession() {
+        Cached cached = new Cached();
+        cached.name = "v1";
+        getDs().save(cached);
+
+        cached.name = "v2";
+        getDs().merge(cached);
+
+        Assertions.assertNull(DecodeSession.current(), "merge() left a decode session on the thread");
+    }
+
+    /**
+     * Whether a reference is a proxy must not depend on what else the session happens to have cached.
+     */
+    @Test
+    public void testLazyReferenceStaysProxyWhenCached() {
+        Cached cached = new Cached();
+        cached.name = "v1";
+        getDs().save(cached);
+        LazyCachedHolder holder = new LazyCachedHolder();
+        holder.ref = cached;
+        getDs().save(holder);
+
+        // load the target first, in the same session as the holder, so it is cached when the holder decodes
+        DecodeSession session = new DecodeSession();
+        session.decoding(() -> {
+            Cached preloaded = getDs().find(Cached.class).first();
+            Assertions.assertNotNull(preloaded);
+
+            LazyCachedHolder loaded = getDs().find(LazyCachedHolder.class).first();
+            Assertions.assertNotNull(loaded);
+            assertIsProxy(loaded.ref);
+            assertNotFetched(loaded.ref);
+            Assertions.assertEquals("v1", loaded.ref.getName());
+            assertFetched(loaded.ref);
+            Assertions.assertSame(preloaded, ((MorphiaProxy) loaded.ref).unwrap(),
+                    "the proxy should resolve to the instance already in the session");
+            return null;
+        });
+    }
+
+    /**
+     * Entities with lifecycle methods decode through LifecycleDecoder, which must take part in the
+     * session too or cycles through them recurse forever.
+     */
+    @Test
+    public void testCyclicReferenceWithLifecycleMethods() {
+        LifecycleNodeA a = new LifecycleNodeA();
+        a.name = "alpha";
+        LifecycleNodeB b = new LifecycleNodeB();
+        b.name = "beta";
+        getDs().save(a);
+        getDs().save(b);
+        a.partner = b;
+        b.partner = a;
+        getDs().save(a);
+        getDs().save(b);
+
+        LifecycleNodeA loaded = getDs().find(LifecycleNodeA.class).filter(eq("_id", a.id)).first();
+        Assertions.assertNotNull(loaded);
+        Assertions.assertNotNull(loaded.partner);
+        Assertions.assertEquals("beta", loaded.partner.name);
+        Assertions.assertNotNull(loaded.partner.partner);
+        Assertions.assertEquals("alpha", loaded.partner.partner.name);
+    }
+
+    /**
+     * Deduplication still spans documents within one cursor.
+     */
+    @Test
+    public void testReferenceDeduplicationAcrossDocuments() {
+        Cached shared = new Cached();
+        shared.name = "shared";
+        getDs().save(shared);
+        for (int i = 0; i < 3; i++) {
+            CachedHolder holder = new CachedHolder();
+            holder.ref = shared;
+            getDs().save(holder);
+        }
+
+        List<CachedHolder> holders = getDs().find(CachedHolder.class).iterator().toList();
+        Assertions.assertEquals(3, holders.size());
+        Assertions.assertSame(holders.get(0).ref, holders.get(1).ref);
+        Assertions.assertSame(holders.get(1).ref, holders.get(2).ref);
+    }
+
+    /**
+     * The cache bound comes from configuration, and zero turns deduplication off while leaving cycle
+     * safety intact.
+     */
+    @Test
+    public void testDecodeSessionCacheSizeIsConfigurable() {
+        Assertions.assertEquals(DecodeSession.DEFAULT_CACHE_SIZE,
+                MorphiaConfig.load().decodeSessionCacheSize().intValue());
+
+        DecodeSession disabled = DecodeSession.forConfig(MorphiaConfig.load().decodeSessionCacheSize(0));
+        ObjectId id = new ObjectId();
+        Object entity = new Cached();
+
+        // a completed entity is not retained ...
+        disabled.register("cached", id, entity);
+        Assertions.assertNull(disabled.lookup("cached", id));
+
+        // ... but one still being decoded is, so cycles still terminate
+        disabled.registerInFlight("cached", id, entity);
+        Assertions.assertSame(entity, disabled.lookup("cached", id));
+    }
+
+    @Test
+    public void testCyclicReferenceDoesNotStackOverflow() {
+        NodeA a = new NodeA();
+        a.name = "alpha";
+        NodeB b = new NodeB();
+        b.name = "beta";
+
+        getDs().save(a);
+        getDs().save(b);
+
+        a.partner = b;
+        b.partner = a;
+        getDs().save(a);
+        getDs().save(b);
+
+        NodeA loaded = getDs().find(NodeA.class).filter(eq("_id", a.id)).first();
+        Assertions.assertNotNull(loaded);
+        Assertions.assertNotNull(loaded.partner);
+        Assertions.assertEquals("beta", loaded.partner.name);
+        Assertions.assertNotNull(loaded.partner.partner);
+        Assertions.assertEquals("alpha", loaded.partner.partner.name);
+    }
+
+    /**
+     * A projected document decodes to a partial entity, which must not be handed to a later reference as if it
+     * were the whole entity.
+     */
+    @Test
+    public void testProjectedEntitiesAreNotReusedForReferences() {
+        Buddy b = new Buddy();
+        b.name = "b";
+        b.age = 2;
+        getDs().save(b);
+        Buddy a = new Buddy();
+        a.name = "a";
+        a.age = 1;
+        a.buddy = b;
+        getDs().save(a);
+
+        // "b" decodes first, without its age, before "a" resolves its reference to it
+        List<Buddy> loaded = getDs().find(Buddy.class, new FindOptions()
+                .sort(Sort.descending("name"))
+                .projection().include("name", "buddy"))
+                .iterator()
+                .toList();
+
+        Assertions.assertEquals(2, loaded.size());
+        Assertions.assertEquals(0, loaded.get(0).age, "the projection should have left out the age");
+        Buddy referenced = loaded.get(1).buddy;
+        Assertions.assertNotNull(referenced);
+        Assertions.assertEquals(2, referenced.age, "the reference resolved to the projected, partial entity");
+    }
+
+    /**
+     * DBRefs into different collections can share an id. A cached hit for one must not stand in for the other.
+     */
+    @Test
+    public void testDbRefsSharingAnIdAcrossCollections() {
+        Dog dog = new Dog();
+        dog.id = "shared";
+        dog.name = "dog";
+        getDs().save(dog);
+        Cat cat = new Cat();
+        cat.id = "shared";
+        cat.name = "cat";
+        getDs().save(cat);
+
+        Kennel kennel = new Kennel();
+        kennel.id = new ObjectId();
+        kennel.favorite = dog;
+        kennel.animals = List.of(dog, cat);
+        getDs().save(kennel);
+
+        // favorite decodes first, so the dog is in the session by the time the list is resolved
+        Kennel loaded = getDs().find(Kennel.class).first();
+        Assertions.assertNotNull(loaded);
+        Assertions.assertEquals(2, loaded.animals.size());
+        Assertions.assertInstanceOf(Dog.class, loaded.animals.get(0));
+        Assertions.assertEquals("dog", loaded.animals.get(0).name);
+        Assertions.assertInstanceOf(Cat.class, loaded.animals.get(1));
+        Assertions.assertEquals("cat", loaded.animals.get(1).name);
+    }
+
+    /**
+     * An entity whose lifecycle callback fails part way through its decode must not be left in the session for
+     * anything else to find.
+     */
+    @Test
+    public void testFailedLifecycleCallbackIsNotLeftInSession() {
+        Fussy fussy = new Fussy();
+        getDs().save(fussy);
+        String collection = getMapper().getEntityModel(Fussy.class).collectionName();
+
+        for (String phase : List.of("pre", "post")) {
+            DecodeSession session = new DecodeSession();
+            Fussy.failIn = phase;
+            try {
+                session.decoding(() -> Assertions.assertThrows(RuntimeException.class,
+                        () -> getDs().find(Fussy.class).first(), phase + "load should have failed"));
+            } finally {
+                Fussy.failIn = null;
+            }
+            Assertions.assertNull(session.lookup(collection, fussy.id),
+                    "an entity whose @" + phase + "load failed was left in the session");
+        }
+    }
+
+    /**
+     * An entity built through a constructor taking its properties has no instance to publish until its decode
+     * completes, so a cycle through it can not be resolved. It should fail clearly instead of overflowing the stack.
+     */
+    @Test
+    public void testCyclicReferenceThroughConstructorFailsFast() {
+        ObjectId a = new ObjectId();
+        ObjectId b = new ObjectId();
+        getMapper().map(LinkRecord.class);
+        getDs().getDatabase().getCollection(getMapper().getEntityModel(LinkRecord.class).collectionName())
+                .insertMany(List.of(
+                        new Document("_id", a).append("name", "a").append("next", b),
+                        new Document("_id", b).append("name", "b").append("next", a)));
+
+        MappingException thrown = Assertions.assertThrows(MappingException.class,
+                () -> getDs().find(LinkRecord.class).filter(eq("_id", a)).first());
+        Assertions.assertTrue(thrown.getMessage().contains("Cyclic reference"), thrown.getMessage());
+    }
+
+    /**
+     * A multi-dimensional reference nests its ids. Each one still has to be checked against the session, or a cycle
+     * through a nested list recurses until the stack overflows.
+     */
+    @Test
+    public void testCyclicReferenceInNestedArray() {
+        Grid grid = new Grid();
+        grid.name = "grid";
+        getDs().save(grid);
+        grid.cells = new Grid[][] { new Grid[] { grid } };
+        getDs().save(grid);
+
+        Grid loaded = getDs().find(Grid.class).first();
+        Assertions.assertNotNull(loaded);
+        Assertions.assertSame(loaded, loaded.cells[0][0]);
+    }
+
+    /**
+     * {@code returnKey} returns only the index keys, so its documents decode to partial entities just as projected
+     * ones do.
+     */
+    @Test
+    public void testReturnKeyEntitiesAreNotReusedForReferences() {
+        Buddy b = new Buddy();
+        b.name = "b";
+        b.age = 2;
+        getDs().save(b);
+        Buddy a = new Buddy();
+        a.name = "a";
+        a.age = 1;
+        a.buddy = b;
+        getDs().save(a);
+
+        // an index covering _id and the reference, so the keys returned still carry both
+        Document keys = new Document("buddy", 1).append("_id", 1);
+        getDs().getCollection(Buddy.class).createIndex(keys);
+
+        // "b" has no buddy, so it sorts first in the index and is decoded before "a" resolves its reference to it
+        List<Buddy> loaded = getDs().find(Buddy.class, new FindOptions()
+                .hint(keys)
+                .returnKey(true))
+                .iterator()
+                .toList();
+
+        Assertions.assertEquals(2, loaded.size());
+        Assertions.assertNull(loaded.get(0).name, "returnKey should have left out the name");
+        Buddy referenced = loaded.get(1).buddy;
+        Assertions.assertNotNull(referenced);
+        Assertions.assertEquals("b", referenced.name, "the reference resolved to the partial, returnKey entity");
+    }
+
+    /**
+     * A projected find run part way through another decode -- from a lifecycle callback, say -- shares the outer
+     * session. Its partial entities must not be cached there for later references to pick up.
+     */
+    @Test
+    public void testNestedProjectedEntitiesAreNotReusedForReferences() {
+        Buddy b = new Buddy();
+        b.name = "b";
+        b.age = 2;
+        getDs().save(b);
+        Buddy a = new Buddy();
+        a.name = "a";
+        a.age = 1;
+        a.buddy = b;
+        getDs().save(a);
+
+        DecodeSession session = new DecodeSession();
+        session.decoding(() -> {
+            Buddy partial = getDs().find(Buddy.class, new FindOptions().projection().include("name"))
+                    .filter(eq("name", "b"))
+                    .first();
+            Assertions.assertNotNull(partial);
+            Assertions.assertEquals(0, partial.age, "the projection should have left out the age");
+
+            Buddy loaded = getDs().find(Buddy.class).filter(eq("name", "a")).first();
+            Assertions.assertNotNull(loaded);
+            Assertions.assertNotNull(loaded.buddy);
+            Assertions.assertEquals(2, loaded.buddy.age, "the reference resolved to the projected, partial entity");
+            return null;
+        });
+    }
+
+    /**
+     * {@code knownFields} projects each property by its mapped name only, so values stored under an {@code @AlsoLoad}
+     * name are left out and the entities it returns are partial.
+     */
+    @Test
+    public void testKnownFieldsEntitiesAreNotReusedForReferences() {
+        Veteran b = new Veteran();
+        b.name = "b";
+        b.age = 2;
+        getDs().save(b);
+        Veteran a = new Veteran();
+        a.name = "a";
+        a.age = 1;
+        a.buddy = b;
+        getDs().save(a);
+        // move the age to its legacy name, which only @AlsoLoad knows about
+        getDs().getCollection(Veteran.class).withDocumentClass(Document.class)
+                .updateMany(new Document(), new Document("$rename", new Document("age", "years")));
+
+        // "b" decodes first, without its age, before "a" resolves its reference to it
+        List<Veteran> loaded = getDs().find(Veteran.class, new FindOptions()
+                .sort(Sort.descending("name"))
+                .projection().knownFields())
+                .iterator()
+                .toList();
+
+        Assertions.assertEquals(2, loaded.size());
+        Assertions.assertEquals(0, loaded.get(0).age, "knownFields should have left out the @AlsoLoad name");
+        Veteran referenced = loaded.get(1).buddy;
+        Assertions.assertNotNull(referenced);
+        Assertions.assertEquals(2, referenced.age, "the reference resolved to the knownFields, partial entity");
+    }
+
+    /**
+     * MongoDB tells embedded-document ids apart by field order, so {@code {a: 1, b: 2}} and {@code {b: 2, a: 1}} are two
+     * documents. The session must not treat a reference to one as a hit for the other.
+     */
+    @Test
+    public void testDocumentIdsDifferingOnlyInFieldOrder() {
+        DocIdTarget first = new DocIdTarget();
+        first.id = new Document("a", 1).append("b", 2);
+        first.name = "first";
+        getDs().save(first);
+        DocIdTarget second = new DocIdTarget();
+        second.id = new Document("b", 2).append("a", 1);
+        second.name = "second";
+        getDs().save(second);
+
+        DocIdHolder holder = new DocIdHolder();
+        holder.id = new ObjectId();
+        holder.first = first;
+        holder.second = second;
+        holder.both = List.of(first, second);
+        getDs().save(holder);
+
+        DocIdHolder loaded = getDs().find(DocIdHolder.class).first();
+        Assertions.assertNotNull(loaded);
+        Assertions.assertEquals("first", loaded.first.name);
+        Assertions.assertEquals("second", loaded.second.name, "the reference resolved to the entity with the reordered id");
+        Assertions.assertEquals(List.of("first", "second"), loaded.both.stream().map(t -> t.name).toList());
+    }
+
+    /**
+     * The check that every referenced document was found must count ids the way MongoDB does, or two ids differing only
+     * in field order look like one id with an extra result.
+     */
+    @Test
+    public void testDocumentIdsDifferingOnlyInFieldOrderInAList() {
+        DocIdTarget first = new DocIdTarget();
+        first.id = new Document("a", 1).append("b", 2);
+        first.name = "first";
+        getDs().save(first);
+        DocIdTarget second = new DocIdTarget();
+        second.id = new Document("b", 2).append("a", 1);
+        second.name = "second";
+        getDs().save(second);
+
+        DocIdHolder holder = new DocIdHolder();
+        holder.id = new ObjectId();
+        holder.both = List.of(first, second);
+        getDs().save(holder);
+
+        DocIdHolder loaded = getDs().find(DocIdHolder.class).first();
+        Assertions.assertNotNull(loaded);
+        Assertions.assertEquals(List.of("first", "second"), loaded.both.stream().map(t -> t.name).toList());
+    }
+
+    /**
+     * A projected result is partial and is not cached, but the references it loads are full entities and still are.
+     */
+    @Test
+    public void testProjectedResultsDeduplicateReferences() {
+        Pair pair = savePair();
+
+        Pair loaded = getDs().find(Pair.class, new FindOptions().projection().include("left", "right"))
+                .filter(eq("_id", pair.id))
+                .first();
+
+        Assertions.assertNotNull(loaded);
+        Assertions.assertNull(loaded.name, "the projection should have left out the name");
+        Assertions.assertNotNull(loaded.left);
+        Assertions.assertSame(loaded.left, loaded.right, "both references should resolve to one instance");
+    }
+
+    /**
+     * An aggregation's output is not cached, but the references it loads are full entities and still are.
+     */
+    @Test
+    public void testAggregationResultsDeduplicateReferences() {
+        Pair pair = savePair();
+
+        List<Pair> loaded = getDs().aggregate(Pair.class, Pair.class)
+                .pipeline(match(eq("_id", pair.id)))
+                .iterator()
+                .toList();
+
+        Assertions.assertEquals(1, loaded.size());
+        Assertions.assertNotNull(loaded.get(0).left);
+        Assertions.assertSame(loaded.get(0).left, loaded.get(0).right, "both references should resolve to one instance");
+    }
+
+    private Pair savePair() {
+        Buddy target = new Buddy();
+        target.name = "target";
+        getDs().save(target);
+        Pair pair = new Pair();
+        pair.name = "pair";
+        pair.left = target;
+        pair.right = target;
+        getDs().save(pair);
+        return pair;
+    }
+
+    /**
+     * References look entities up by their id as stored. An entity built through its constructor must be cached under
+     * that same value, not its converted Java form, or every reference to it fetches it again.
+     */
+    @Test
+    public void testConstructorEntityWithConvertedIdIsDeduplicated() {
+        CharRecord target = new CharRecord('x', "target");
+        getDs().save(target);
+        CharHolder holder = new CharHolder();
+        holder.id = new ObjectId();
+        holder.first = target;
+        holder.second = target;
+        getDs().save(holder);
+
+        CharHolder loaded = getDs().find(CharHolder.class).first();
+        Assertions.assertNotNull(loaded);
+        Assertions.assertNotNull(loaded.first);
+        Assertions.assertSame(loaded.first, loaded.second);
+    }
+
+    @Entity("grids")
+    private static class Grid {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String name;
+        @Reference
+        private Grid[][] cells;
+    }
+
+    @Entity("char_records")
+    record CharRecord(@Id Character id, String name) {
+    }
+
+    @Entity("char_holders")
+    private static class CharHolder {
+        @Id
+        private ObjectId id;
+        @Reference(idOnly = true)
+        private CharRecord first;
+        @Reference(idOnly = true)
+        private CharRecord second;
+    }
+
+    @Entity("buddies")
+    private static class Buddy {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String name;
+        private int age;
+        @Reference
+        private Buddy buddy;
+    }
+
+    @Entity("veterans")
+    private static class Veteran {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String name;
+        @AlsoLoad("years")
+        private int age;
+        @Reference(idOnly = true)
+        private Veteran buddy;
+    }
+
+    @Entity("docIdTargets")
+    private static class DocIdTarget {
+        @Id
+        private Document id;
+        private String name;
+    }
+
+    @Entity("docIdHolders")
+    private static class DocIdHolder {
+        @Id
+        private ObjectId id;
+        @Reference(idOnly = true)
+        private DocIdTarget first;
+        @Reference(idOnly = true)
+        private DocIdTarget second;
+        @Reference(idOnly = true)
+        private List<DocIdTarget> both;
+    }
+
+    @Entity("pairs")
+    private static class Pair {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String name;
+        @Reference
+        private Buddy left;
+        @Reference
+        private Buddy right;
+    }
+
+    @Entity("animals")
+    private static class Animal {
+        @Id
+        protected String id;
+        protected String name;
+    }
+
+    @Entity("dogs")
+    private static class Dog extends Animal {
+    }
+
+    @Entity("cats")
+    private static class Cat extends Animal {
+    }
+
+    @Entity("kennels")
+    private static class Kennel {
+        @Id
+        private ObjectId id;
+        @Reference
+        private Animal favorite;
+        @Reference
+        private List<Animal> animals;
+    }
+
+    @Entity("fussy")
+    private static class Fussy {
+        static String failIn;
+
+        @Id
+        private ObjectId id = new ObjectId();
+
+        @PreLoad
+        void preLoad() {
+            if ("pre".equals(failIn)) {
+                throw new IllegalStateException("failing @PreLoad on purpose");
+            }
+        }
+
+        @PostLoad
+        void postLoad() {
+            if ("post".equals(failIn)) {
+                throw new IllegalStateException("failing @PostLoad on purpose");
+            }
+        }
+    }
+
+    @Entity("link_records")
+    record LinkRecord(@Id ObjectId id, String name, @Reference(idOnly = true) LinkRecord next) {
     }
 }

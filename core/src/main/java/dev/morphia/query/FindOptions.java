@@ -621,6 +621,13 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
     }
 
     /**
+     * @return true if a projection or {@code returnKey} makes the returned documents differ from what is stored
+     */
+    boolean returnsPartialDocuments() {
+        return returnKey || (projection != null && projection.isPartial());
+    }
+
+    /**
      * Sets to the sort to use
      *
      * @param sort the sort document

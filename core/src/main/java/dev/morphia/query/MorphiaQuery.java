@@ -27,6 +27,7 @@ import dev.morphia.UpdateOptions;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.DecodeSession;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.filters.Filter;
@@ -214,11 +215,16 @@ public class MorphiaQuery<T> implements Query<T> {
     }
 
     private MorphiaCursor<T> iterator(FindOptions options) {
+        // projected documents decode to partial entities, which must not be handed out later as the full entity
+        DecodeSession session = options.returnsPartialDocuments()
+                ? DecodeSession.forPartialResults(datastore.getMapper().getConfig())
+                : DecodeSession.forConfig(datastore.getMapper().getConfig());
         if (DeferredDecoding.required(datastore)) {
-            return new MorphiaCursor<>(DeferredDecoding.cursor(prepareCursor(options, DeferredDecoding.raw(collection)),
-                    collection.getCodecRegistry(), collection.getDocumentClass()));
+            return new MorphiaCursor<>(session,
+                    () -> DeferredDecoding.cursor(prepareCursor(options, DeferredDecoding.raw(collection)),
+                            collection.getCodecRegistry(), collection.getDocumentClass()));
         }
-        return new MorphiaCursor<>(prepareCursor(options, collection));
+        return new MorphiaCursor<>(session, () -> prepareCursor(options, collection));
     }
 
     @Override

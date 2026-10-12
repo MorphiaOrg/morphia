@@ -107,6 +107,11 @@ public class MorphiaCodecProvider implements CodecProvider {
                             public void set(@Nullable Object value, PropertyModel model) {
                                 model.getAccessor().set(entity, value);
                             }
+
+                            @Override
+                            public boolean isEagerInstanceSafe() {
+                                return true;
+                            }
                         };
                     }
                 };

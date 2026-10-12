@@ -15,6 +15,7 @@ import dev.morphia.aggregation.stages.Merge;
 import dev.morphia.aggregation.stages.Out;
 import dev.morphia.aggregation.stages.Stage;
 import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.mapping.codec.DecodeSession;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.MorphiaCursor;
 import dev.morphia.query.filters.Filter;
@@ -115,12 +116,16 @@ public class AggregationImpl<T> implements Aggregation<T> {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("pipeline = " + pipeline);
             }
+            // a pipeline can reshape documents freely, so nothing it returns is cached as the stored entity
+            DecodeSession session = DecodeSession.forPartialResults(datastore.getMapper().getConfig());
             if (DeferredDecoding.required(datastore)) {
-                MongoCursor<RawBsonDocument> raw = (MongoCursor<RawBsonDocument>) (MongoCursor<?>) options
-                        .apply(pipeline, datastore, collection, RawBsonDocument.class).iterator();
-                iterator = new MorphiaCursor<>((MongoCursor<T>) DeferredDecoding.cursor(raw, collection.getCodecRegistry(), targetType));
+                iterator = new MorphiaCursor<>(session, () -> {
+                    MongoCursor<RawBsonDocument> raw = (MongoCursor<RawBsonDocument>) (MongoCursor<?>) options
+                            .apply(pipeline, datastore, collection, RawBsonDocument.class).iterator();
+                    return (MongoCursor<T>) DeferredDecoding.cursor(raw, collection.getCodecRegistry(), targetType);
+                });
             } else {
-                iterator = new MorphiaCursor<>(options.apply(pipeline, datastore, collection, targetType).iterator());
+                iterator = new MorphiaCursor<>(session, () -> options.apply(pipeline, datastore, collection, targetType).iterator());
             }
         }
         MorphiaCursor<T> cursor = iterator;

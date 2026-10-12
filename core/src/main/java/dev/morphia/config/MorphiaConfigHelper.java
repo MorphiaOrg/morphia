@@ -130,6 +130,8 @@ public class MorphiaConfigHelper {
             return ((Class<?>) value).getName();
         } else if (value instanceof Boolean) {
             return value.toString().toLowerCase();
+        } else if (value instanceof Number) {
+            return value.toString();
         } else if (value instanceof List) {
             var list = (List<?>) value;
             if (list.isEmpty()) {
