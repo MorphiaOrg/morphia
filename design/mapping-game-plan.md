@@ -64,20 +64,25 @@ model objects. It means most of the speed can be had without an API change.
 ### ~~0.0 Move the review and this plan to `master`~~
 - `design/mapping-review.md`, `design/mapping-review/` and this file, with the decisions recorded.
 
-### 0.1 Differential codec harness (core test)
-- **What:** a parameterized JUnit test in `core/src/test` that runs over every test entity. It checks:
-  - encoding is byte-identical between the current codec and the codec under change, using a frozen copy or golden
-    BSON fixtures;
-  - decode equivalence;
+### ~~0.1 Differential codec harness (core test)~~
+- **What:** `CodecHarnessTest`, a JUnit test in `core/src/test` that runs offline over a curated set of harness models
+  (`dev.morphia.test.mapping.codec.harness.models`) covering the feature matrix. It checks:
+  - encodings and decode→encode round trips against golden fixtures generated from `master`, compared as canonical
+    extended JSON (field order and BSON types preserved);
+  - that reflection and critter produce identical results, and that critter really uses generated models: the only
+    model allowed to fall back to reflection is `HarnessArrays`, until 4.8 adds array support;
   - "foreign" documents: reordered and unknown fields, numeric widening and narrowing, explicit nulls, missing `_t`,
-    `_t` not in first position, a single value for a list.
-- **Why:** every hot-path change in Phase 2 alters protocol details where regressions are silent. The prototype's
+    `_t` not in first position, string-for-scalar drift, a single value for a list.
+- **Why:** every hot-path change in Phase 3 alters protocol details where regressions are silent. The prototype's
   `Verify.java` already shows the check set.
-- **How:** golden fixtures generated from `master`, plus round-trip property checks. Run under both mappers.
-  It covers storeNulls/storeEmpties on and off, `@AlsoLoad`, `@LoadOnly`, constructor-built entities, lifecycle
-  entities and refresh.
-- **Note:** decode→encode is not idempotent under `storeEmpties=false` + `storeNulls=true` (§5). Pin today's
-  behavior in a fixture and decide separately whether it is a bug.
+- **Covers:** storeNulls/storeEmpties on and off, `@AlsoLoad`, `@LoadOnly`, constructor-built entities, records,
+  lifecycle entities, polymorphism, a generic superclass binding, and references (encode only).
+- **Doesn't cover:** decoding references (that fetches from the database), `refresh()`, or Kotlin entities. Items that
+  touch those paths add their own tests.
+- **Note:** decode→encode is not idempotent under `storeEmpties=false` + `storeNulls=true` (§5). The fixtures pin
+  today's behavior; whether it is a bug is a separate decision.
+- **Note:** the harness models use the test config's `className` discriminator, because AOT models bake in the
+  build-time discriminator (4.12).
 
 ### 0.2 Close the benchmark gaps (§7)
 - **What:** add these to `benchmarks/`:
@@ -87,8 +92,6 @@ model objects. It means most of the speed can be had without an API change.
   - a no-op global listener;
   - no `_t`;
   - schema drift;
-  - decode with a `DecodeSession` active. Since #4257, `EntityDecoder.peekId` marks and scans every root document
-    for `_id` before decoding it whenever a session is active, and `CodecBenchmark` doesn't measure that;
   - a **mixed-entity** run (megamorphic sites);
   - `new MorphiaDatastore(ds)` / `startSession()`;
   - `PathTarget.translatedPath()` / `MorphiaQuery.toDocument()`;
@@ -98,9 +101,10 @@ model objects. It means most of the speed can be had without an API change.
 - **Also:** record a baseline run, both mappers, `-prof gc`, as a checked-in results file so later PRs can quote
   deltas.
 - **Investigate first:** between the review (`76697be`) and `4d48014`, Morphia's decode allocation rose from
-  2,240 to 3,168 B/op on SIMPLE and from 6,920 to 7,928 B/op on NESTED, with **no** `DecodeSession` active.
-  #4257 is the only commit in that range. Find out where the extra ~900–1,000 B per root document comes from
-  before quoting any baseline.
+  2,240 to 3,168 B/op on SIMPLE and from 6,920 to 7,928 B/op on NESTED. #4257 is the only commit in that range.
+  `MorphiaCodec.decode` installs a new `DecodeSession` whenever none is current, so every top-level entity decode
+  now creates a session and runs `EntityDecoder.peekId`, a second mark-and-scan for `_id`. That is the likely
+  source of the extra ~900–1,000 B per root document. Confirm it before quoting any baseline.
 
 ---
 
@@ -203,7 +207,8 @@ JMH numbers on both mappers.
 - Add `codecForDiscriminator(d)`, which returns `this` on a self-match and otherwise uses a per-codec CHM.
 - Use `skipValue()` instead of `readString()` on `_t`.
 - Step 2, a single pass with no rewind, is moved to 3.17.
-- The `DecodeSession` `_id` pre-read (`peekId`) is a second scan per root document that this step doesn't touch.
+- The `DecodeSession` `_id` pre-read (`peekId`) is a second scan per root document, run on every decode because
+  `MorphiaCodec.decode` always installs a session. This step doesn't remove it.
   At minimum, have it reuse a constant `DecoderContext` and the codec resolved for the id property instead of
   `registry.get(Object.class)`.
 
