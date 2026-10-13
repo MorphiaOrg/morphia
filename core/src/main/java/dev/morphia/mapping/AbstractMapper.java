@@ -405,7 +405,8 @@ public abstract class AbstractMapper implements Mapper {
      * passes validation and discriminator registration, so concurrent lookups never see a model that may yet be
      * rejected. While it's being validated, lookups from the registering thread (e.g. a reference back to the type)
      * resolve to it through {@link #mapEntity(Class)}. If validation or discriminator registration fails, the failure
-     * propagates and nothing is registered, so a later lookup fails the same way.
+     * propagates, nothing is registered, and any subtype links made to the model while it was built are removed, so a
+     * later lookup fails the same way. The model is published only after its hierarchy is linked.
      *
      * @param model    the model to register
      * @param validate true to validate the model before completing its registration
@@ -428,15 +429,27 @@ public abstract class AbstractMapper implements Mapper {
                         .validate(this, model);
             }
             discriminatorLookup.addModel(model);
+        } catch (RuntimeException e) {
+            unlink(model);
+            throw e;
         } finally {
             registering.remove(name);
         }
 
         mappedEntitiesByCollection.computeIfAbsent(model.collectionName(), s -> new CopyOnWriteArraySet<>())
                 .add(model);
-        mappedEntities.put(name, model);
         linkHierarchy(model);
+        mappedEntities.put(name, model);
         return model;
+    }
+
+    /**
+     * Removes a rejected model from the subtypes of every model it was linked to while it was built (building a model
+     * maps its annotated interfaces and links the new model under them).
+     */
+    private void unlink(EntityModel model) {
+        mappedEntities.values().forEach(parent -> parent.removeSubtype(model));
+        registering.values().forEach(parent -> parent.removeSubtype(model));
     }
 
     /**

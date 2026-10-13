@@ -48,6 +48,18 @@ public class TestRegistrationProtocol {
 
     @ParameterizedTest
     @EnumSource(MapperType.class)
+    public void invalidModelIsUnlinkedFromItsInterfaces(MapperType type) {
+        Mapper mapper = mapper(type);
+        EntityModel tagged = mapper.mapEntity(Tagged.class);
+
+        Assertions.assertThrows(ConstraintViolationException.class, () -> mapper.mapEntity(TwoVersions.class));
+        Assertions.assertThrows(ConstraintViolationException.class, () -> mapper.mapEntity(TwoVersions.class));
+        Assertions.assertTrue(tagged.getSubtypes().stream().noneMatch(m -> m.getType() == TwoVersions.class),
+                "A model that failed validation should not stay linked as a subtype");
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
     public void duplicateDiscriminatorIsNotRegistered(MapperType type) {
         Mapper mapper = mapper(type);
         mapper.mapEntity(First.class);
@@ -101,13 +113,17 @@ public class TestRegistrationProtocol {
     }
 
     @Entity
-    static class TwoVersions {
+    static class TwoVersions implements Tagged {
         @Id
         private ObjectId id;
         @Version
         private long version;
         @Version
         private long otherVersion;
+    }
+
+    @Entity
+    interface Tagged {
     }
 
     @Entity(value = "shared", discriminator = "shared")

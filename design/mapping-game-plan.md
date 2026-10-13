@@ -321,7 +321,11 @@ harness passes, and both mappers agree.
 
 ### ~~4.3 Shared registration protocol in `AbstractMapper` (#18, A3/D7)~~
 - `synchronized final mapEntity` → `protected abstract buildModel(Class)`.
-- Use `putIfAbsent`, and roll back with `remove(name, model)` when validation fails.
+- ~~Use `putIfAbsent`, and roll back with `remove(name, model)` when validation fails.~~ As implemented (#4390):
+  `register()` runs under the mapper's lock and keeps an in-progress model in a lock-guarded `registering` map
+  (visible only to the registering thread's recursive lookups). It publishes to `mappedEntities` only after
+  validation, discriminator registration and hierarchy linking succeed. On failure it unlinks the model from any
+  parents it was linked under while it was built. `DiscriminatorLookup.addModel` no longer overwrites on a duplicate.
 - **Fixes the §5 issues:** an invalid model staying registered, and duplicate-discriminator races.
 - Ship it early, possibly within Phase 2, because it is a correctness fix and small.
 

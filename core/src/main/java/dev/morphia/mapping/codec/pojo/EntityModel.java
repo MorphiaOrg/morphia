@@ -384,6 +384,18 @@ public class EntityModel {
     }
 
     /**
+     * Removes a direct subtype, e.g. one whose registration failed after it was linked here.
+     *
+     * @param subtype the subtype to remove
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public void removeSubtype(EntityModel subtype) {
+        subtypes.remove(subtype);
+    }
+
+    /**
      * @return the model of the superclass of this type or null
      */
     @Nullable
