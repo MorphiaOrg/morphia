@@ -131,10 +131,10 @@ public final class SimpleEntityCodec implements CollectibleCodec<SimpleEntity> {
                 }
                 case "name" -> NAME.set(entity, type == BsonType.STRING ? reader.readString()
                         : (String) CodecSupport.slowRead(context, reader, ctx, String.class));
-                case "age" -> AGE.set(entity, CodecSupport.readInt(reader, ctx));
-                case "count" -> COUNT.set(entity, CodecSupport.readLong(reader, ctx));
-                case "score" -> SCORE.set(entity, CodecSupport.readDouble(reader, ctx));
-                case "active" -> ACTIVE.set(entity, CodecSupport.readBoolean(reader, ctx));
+                case "age" -> AGE.set(entity, CodecSupport.readInt(context, reader, ctx));
+                case "count" -> COUNT.set(entity, CodecSupport.readLong(context, reader, ctx));
+                case "score" -> SCORE.set(entity, CodecSupport.readDouble(context, reader, ctx));
+                case "active" -> ACTIVE.set(entity, CodecSupport.readBoolean(context, reader, ctx));
                 case "status" -> STATUS.set(entity, type == BsonType.STRING ? Status.valueOf(reader.readString())
                         : (Status) CodecSupport.slowRead(context, reader, ctx, Status.class));
                 case "created" -> CREATED.set(entity, localDateTimeCodec.decode(reader, ctx));

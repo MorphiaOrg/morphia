@@ -149,6 +149,8 @@ public final class Verify {
                     .append("status", new BsonString("CLOSED"))
                     .append("_id", new org.bson.BsonObjectId(new ObjectId())));
             docs.add(new BsonDocument("_t", new BsonString("SimpleEntity")).append("age", new BsonDouble(3.0)));
+            // schema drift: strings where scalars are expected, decoded through the Conversions fallback
+            docs.add(new BsonDocument("active", new BsonString("true")).append("age", new BsonString("42")));
         } else {
             docs.add(new BsonDocument()
                     .append("profile", new BsonDocument("interests", new BsonString("solo")) // single value -> list

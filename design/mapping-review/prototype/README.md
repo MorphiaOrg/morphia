@@ -37,7 +37,7 @@ M=$HOME/.m2/repository
 ```bash
 PP=$M/org/openjdk/jmh/jmh-generator-annprocess/1.37/jmh-generator-annprocess-1.37.jar:$M/org/openjdk/jmh/jmh-core/1.37/jmh-core-1.37.jar:$M/net/sf/jopt-simple/jopt-simple/5.0.4/jopt-simple-5.0.4.jar:$M/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1.jar
 mkdir -p $OUT/classes
-javac -proc:full -processorpath $PP -d $OUT/classes -cp $JAR $P/src/dev/morphia/benchmarks/handwritten/*.java
+javac -processor org.openjdk.jmh.generators.BenchmarkProcessor -processorpath $PP -d $OUT/classes -cp $JAR $P/src/dev/morphia/benchmarks/handwritten/*.java
 ```
 
 ## Correctness check (fast, no timing)
@@ -47,8 +47,21 @@ java -cp $OUT/classes:$JAR dev.morphia.benchmarks.handwritten.Verify            
 java -cp $OUT/classes:$AOT:$JAR dev.morphia.benchmarks.handwritten.Verify critter    # critter AOT models
 ```
 
-Result on `4d48014`: `160 checks, 0 failures` and `80 checks, 0 failures`. The review reported 152 and 76; the
-difference is the flat codec's id-generation check, added afterwards.
+Result on `4d48014`: `168 checks, 0 failures` and `84 checks, 0 failures`. The review reported 152 and 76. Checks
+added afterwards cover the flat codec's id generation and schema drift (a string where a boolean or int is
+expected).
+
+After the review, both prototype codecs gained the decode-as-Object + `Conversions` fallback for non-native BSON
+types, which Morphia already has. The flat codec chooses per slot with a bitmask of BSON types, as in B1. A
+1-fork re-run on `4d48014` (different machine, so compare ratios, not absolute times) shows that this did not
+change its standing:
+
+| decode | SIMPLE | NESTED |
+|---|---|---|
+| morphia | 1226 ± 239 ns (3168 B) | 3142 ± 51 ns (7928 B) |
+| flat | 507 ± 11 ns (1104 B) | 1512 ± 32 ns (3200 B) |
+
+Morphia's allocation is higher than in the review (2240 / 6920 B); see game plan item 0.2.
 
 ## Run the benchmark
 

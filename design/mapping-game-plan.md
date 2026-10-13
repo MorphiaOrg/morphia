@@ -97,6 +97,10 @@ model objects. It means most of the speed can be had without an API change.
   different picture from the per-fork runs.
 - **Also:** record a baseline run, both mappers, `-prof gc`, as a checked-in results file so later PRs can quote
   deltas.
+- **Investigate first:** between the review (`76697be`) and `4d48014`, Morphia's decode allocation rose from
+  2,240 to 3,168 B/op on SIMPLE and from 6,920 to 7,928 B/op on NESTED, with **no** `DecodeSession` active.
+  #4257 is the only commit in that range. Find out where the extra ~900–1,000 B per root document comes from
+  before quoting any baseline.
 
 ---
 

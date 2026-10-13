@@ -95,20 +95,34 @@ public final class CodecSupport {
         writer.writeEndArray();
     }
 
-    static int readInt(BsonReader reader, DecoderContext ctx) {
-        return reader.getCurrentBsonType() == BsonType.INT32 ? reader.readInt32() : INTEGER.decode(reader, ctx);
+    // Numeric BSON types go through the driver codec, which widens and narrows like Morphia's property codecs. Anything
+    // else (schema drift such as a string) takes the same decode-as-Object + Conversions fallback EntityDecoder uses.
+
+    static int readInt(Context context, BsonReader reader, DecoderContext ctx) {
+        BsonType type = reader.getCurrentBsonType();
+        return type == BsonType.INT32 ? reader.readInt32()
+                : isNumber(type) ? INTEGER.decode(reader, ctx) : (Integer) slowRead(context, reader, ctx, int.class);
     }
 
-    static long readLong(BsonReader reader, DecoderContext ctx) {
-        return reader.getCurrentBsonType() == BsonType.INT64 ? reader.readInt64() : LONG.decode(reader, ctx);
+    static long readLong(Context context, BsonReader reader, DecoderContext ctx) {
+        BsonType type = reader.getCurrentBsonType();
+        return type == BsonType.INT64 ? reader.readInt64()
+                : isNumber(type) ? LONG.decode(reader, ctx) : (Long) slowRead(context, reader, ctx, long.class);
     }
 
-    static double readDouble(BsonReader reader, DecoderContext ctx) {
-        return reader.getCurrentBsonType() == BsonType.DOUBLE ? reader.readDouble() : DOUBLE.decode(reader, ctx);
+    static double readDouble(Context context, BsonReader reader, DecoderContext ctx) {
+        BsonType type = reader.getCurrentBsonType();
+        return type == BsonType.DOUBLE ? reader.readDouble()
+                : isNumber(type) ? DOUBLE.decode(reader, ctx) : (Double) slowRead(context, reader, ctx, double.class);
     }
 
-    static boolean readBoolean(BsonReader reader, DecoderContext ctx) {
-        return reader.getCurrentBsonType() == BsonType.BOOLEAN ? reader.readBoolean() : BOOLEAN.decode(reader, ctx);
+    static boolean readBoolean(Context context, BsonReader reader, DecoderContext ctx) {
+        return reader.getCurrentBsonType() == BsonType.BOOLEAN ? reader.readBoolean()
+                : (Boolean) slowRead(context, reader, ctx, boolean.class);
+    }
+
+    private static boolean isNumber(BsonType type) {
+        return type == BsonType.INT32 || type == BsonType.INT64 || type == BsonType.DOUBLE || type == BsonType.DECIMAL128;
     }
 
     /**

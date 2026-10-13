@@ -44,8 +44,14 @@ public final class FlatModelCodec<T> implements Codec<T> {
         final MethodHandle setter;
         final Codec<Object> codec;
         final boolean container;
+        final Class<?> fieldType;
+        /** BSON types (bit per ordinal) the codec reads directly; anything else takes the Conversions fallback. */
+        final int direct;
 
-        Slot(String name, MethodHandle getter, MethodHandle setter, Codec<Object> codec, boolean container) {
+        Slot(String name, MethodHandle getter, MethodHandle setter, Codec<Object> codec, boolean container,
+                Class<?> fieldType) {
+            this.fieldType = fieldType;
+            this.direct = directTypes(fieldType);
             this.name = name;
             this.getter = getter;
             this.setter = setter;
@@ -96,7 +102,8 @@ public final class FlatModelCodec<T> implements Codec<T> {
                             owner.unreflectGetter(field).asType(GETTER),
                             owner.unreflectSetter(field).asType(SETTER),
                             (Codec<Object>) codecFor.apply(field),
-                            Collection.class.isAssignableFrom(field.getType()) || Map.class.isAssignableFrom(field.getType()));
+                            Collection.class.isAssignableFrom(field.getType()) || Map.class.isAssignableFrom(field.getType()),
+                            field.getType());
                     byName.put(name, slot);
                     if (isId) {
                         idSlot = slot;
@@ -186,7 +193,10 @@ public final class FlatModelCodec<T> implements Codec<T> {
                 if (slot == null) {
                     reader.skipValue();
                 } else {
-                    slot.setter.invokeExact(entity, (Object) slot.codec.decode(reader, ctx));
+                    Object value = (slot.direct & (1 << reader.getCurrentBsonType().ordinal())) != 0
+                            ? slot.codec.decode(reader, ctx)
+                            : CodecSupport.slowRead(context, reader, ctx, slot.fieldType);
+                    slot.setter.invokeExact(entity, value);
                 }
             }
             reader.readEndDocument();
@@ -196,5 +206,28 @@ public final class FlatModelCodec<T> implements Codec<T> {
         } catch (Throwable e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    /**
+     * Like B1's per-property bitmask: scalar fields accept only the BSON types their codec reads without throwing (the
+     * driver's numeric codecs widen and narrow); every other field type accepts anything and leaves it to its codec.
+     */
+    private static int directTypes(Class<?> type) {
+        int numbers = bit(BsonType.INT32) | bit(BsonType.INT64) | bit(BsonType.DOUBLE) | bit(BsonType.DECIMAL128);
+        if (type == int.class || type == Integer.class || type == long.class || type == Long.class
+                || type == double.class || type == Double.class) {
+            return numbers;
+        } else if (type == boolean.class || type == Boolean.class) {
+            return bit(BsonType.BOOLEAN);
+        } else if (type == String.class || type.isEnum()) {
+            return bit(BsonType.STRING);
+        } else if (type == ObjectId.class) {
+            return bit(BsonType.OBJECT_ID);
+        }
+        return -1;
+    }
+
+    private static int bit(BsonType type) {
+        return 1 << type.ordinal();
     }
 }
