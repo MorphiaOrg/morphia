@@ -23,7 +23,6 @@ import dev.morphia.config.ManualMorphiaConfig;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.DiscriminatorFunction;
 import dev.morphia.mapping.MapperType;
-import dev.morphia.mapping.codec.DecodeSession;
 import dev.morphia.test.mapping.codec.harness.models.HarnessCollections;
 import dev.morphia.test.mapping.codec.harness.models.HarnessConstructed;
 import dev.morphia.test.mapping.codec.harness.models.HarnessDrawing;
@@ -74,7 +73,8 @@ import static org.junit.jupiter.api.Assertions.fail;
  * configuration variant. Each sample records its encoding and its decode-then-encode round trip (which is not always
  * the identity, e.g. under {@code storeEmpties=false} with {@code storeNulls=true}). Each "foreign" document, one
  * Morphia never writes but must read, records what it decodes to.</li>
- * <li>Every decode runs both without and with a {@link DecodeSession} installed, and both must agree.</li>
+ * <li>Decoding goes through {@code MorphiaCodec.decode}, as in production, so it always runs inside a
+ * {@code DecodeSession}, including #4257's {@code _id} pre-read.</li>
  * </ul>
  * Run with {@code -Dmorphia.harness.update=true} to rewrite the fixtures from the current code, then review the diff:
  * a fixture change is a behavior change.
@@ -225,7 +225,7 @@ public class CodecHarnessTest {
         byte[] encoded = encode(codec, sample.get(), COLLECTIBLE);
         Map<String, String> result = new LinkedHashMap<>();
         result.put("encoded", json(encoded));
-        result.put("roundTrip", recording(() -> encode(codec, decodeBothWays(codec, encoded), PLAIN)));
+        result.put("roundTrip", recording(() -> encode(codec, decode(codec, encoded), PLAIN)));
         results.put(name, result);
     }
 
@@ -240,19 +240,8 @@ public class CodecHarnessTest {
         BsonDocument input = BsonDocument.parse(document);
         Map<String, String> result = new LinkedHashMap<>();
         result.put("input", input.toJson(JSON));
-        result.put("decoded", recording(() -> encode(codec, decodeBothWays(codec, bytes(input)), PLAIN)));
+        result.put("decoded", recording(() -> encode(codec, decode(codec, bytes(input)), PLAIN)));
         results.put("foreign/" + name, result);
-    }
-
-    /**
-     * Decodes without and with a {@link DecodeSession}, which since #4257 pre-reads {@code _id}, and requires both to
-     * yield the same entity.
-     */
-    private <T> T decodeBothWays(Codec<T> codec, byte[] bytes) {
-        T plain = decode(codec, bytes);
-        T inSession = DecodeSession.forConfig(ManualMorphiaConfig.configure()).decoding(() -> decode(codec, bytes));
-        assertEquals(json(encode(codec, plain, PLAIN)), json(encode(codec, inSession, PLAIN)), "decode with a DecodeSession");
-        return plain;
     }
 
     /**

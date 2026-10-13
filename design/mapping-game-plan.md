@@ -91,8 +91,6 @@ model objects. It means most of the speed can be had without an API change.
   - a no-op global listener;
   - no `_t`;
   - schema drift;
-  - decode with a `DecodeSession` active. Since #4257, `EntityDecoder.peekId` marks and scans every root document
-    for `_id` before decoding it whenever a session is active, and `CodecBenchmark` doesn't measure that;
   - a **mixed-entity** run (megamorphic sites);
   - `new MorphiaDatastore(ds)` / `startSession()`;
   - `PathTarget.translatedPath()` / `MorphiaQuery.toDocument()`;
@@ -102,9 +100,10 @@ model objects. It means most of the speed can be had without an API change.
 - **Also:** record a baseline run, both mappers, `-prof gc`, as a checked-in results file so later PRs can quote
   deltas.
 - **Investigate first:** between the review (`76697be`) and `4d48014`, Morphia's decode allocation rose from
-  2,240 to 3,168 B/op on SIMPLE and from 6,920 to 7,928 B/op on NESTED, with **no** `DecodeSession` active.
-  #4257 is the only commit in that range. Find out where the extra ~900–1,000 B per root document comes from
-  before quoting any baseline.
+  2,240 to 3,168 B/op on SIMPLE and from 6,920 to 7,928 B/op on NESTED. #4257 is the only commit in that range.
+  `MorphiaCodec.decode` installs a new `DecodeSession` whenever none is current, so every top-level entity decode
+  now creates a session and runs `EntityDecoder.peekId`, a second mark-and-scan for `_id`. That is the likely
+  source of the extra ~900–1,000 B per root document. Confirm it before quoting any baseline.
 
 ---
 
@@ -207,7 +206,8 @@ JMH numbers on both mappers.
 - Add `codecForDiscriminator(d)`, which returns `this` on a self-match and otherwise uses a per-codec CHM.
 - Use `skipValue()` instead of `readString()` on `_t`.
 - Step 2, a single pass with no rewind, is moved to 3.17.
-- The `DecodeSession` `_id` pre-read (`peekId`) is a second scan per root document that this step doesn't touch.
+- The `DecodeSession` `_id` pre-read (`peekId`) is a second scan per root document, run on every decode because
+  `MorphiaCodec.decode` always installs a session. This step doesn't remove it.
   At minimum, have it reuse a constant `DecoderContext` and the codec resolved for the id property instead of
   `registry.get(Object.class)`.
 
