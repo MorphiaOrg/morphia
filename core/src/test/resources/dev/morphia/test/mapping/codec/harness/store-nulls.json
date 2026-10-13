@@ -1,0 +1,844 @@
+{
+  "scalars": {
+    "encoded": {
+      "_id": {
+        "$oid": "650000000000000000000001"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessScalars",
+      "name": "scalars",
+      "age": {
+        "$numberInt": "42"
+      },
+      "count": {
+        "$numberLong": "9000000000"
+      },
+      "score": {
+        "$numberDouble": "98.6"
+      },
+      "active": true,
+      "boxed": {
+        "$numberInt": "7"
+      },
+      "status": "CLOSED",
+      "created": {
+        "$date": {
+          "$numberLong": "1709214330123"
+        }
+      },
+      "updated": {
+        "$date": {
+          "$numberLong": "1700000000000"
+        }
+      },
+      "amount": {
+        "$numberDecimal": "1234.5600"
+      }
+    },
+    "roundTrip": {
+      "_id": {
+        "$oid": "650000000000000000000001"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessScalars",
+      "name": "scalars",
+      "age": {
+        "$numberInt": "42"
+      },
+      "count": {
+        "$numberLong": "9000000000"
+      },
+      "score": {
+        "$numberDouble": "98.6"
+      },
+      "active": true,
+      "boxed": {
+        "$numberInt": "7"
+      },
+      "status": "CLOSED",
+      "created": {
+        "$date": {
+          "$numberLong": "1709214330123"
+        }
+      },
+      "updated": {
+        "$date": {
+          "$numberLong": "1700000000000"
+        }
+      },
+      "amount": {
+        "$numberDecimal": "1234.5600"
+      }
+    }
+  },
+  "nested": {
+    "encoded": {
+      "_id": {
+        "$oid": "650000000000000000000002"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessNested",
+      "name": "nested",
+      "home": {
+        "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessAddress",
+        "street": "1 Main St",
+        "city": "Springfield"
+      },
+      "profile": {
+        "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessProfile",
+        "bio": "bio",
+        "address": {
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessAddress",
+          "street": "2 Side St",
+          "city": "Shelbyville"
+        },
+        "interests": [
+          "chess",
+          "rowing"
+        ]
+      }
+    },
+    "roundTrip": {
+      "_id": {
+        "$oid": "650000000000000000000002"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessNested",
+      "name": "nested",
+      "home": {
+        "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessAddress",
+        "street": "1 Main St",
+        "city": "Springfield"
+      },
+      "profile": {
+        "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessProfile",
+        "bio": "bio",
+        "address": {
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessAddress",
+          "street": "2 Side St",
+          "city": "Shelbyville"
+        },
+        "interests": [
+          "chess",
+          "rowing"
+        ]
+      }
+    }
+  },
+  "nested-sparse": {
+    "encoded": {
+      "_id": {
+        "$oid": "650000000000000000000003"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessNested",
+      "name": null,
+      "home": null,
+      "profile": {
+        "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessProfile",
+        "bio": null,
+        "address": {
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessAddress",
+          "street": null,
+          "city": "x"
+        }
+      }
+    },
+    "roundTrip": {
+      "_id": {
+        "$oid": "650000000000000000000003"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessNested",
+      "name": null,
+      "home": null,
+      "profile": {
+        "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessProfile",
+        "bio": null,
+        "address": {
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessAddress",
+          "street": null,
+          "city": "x"
+        },
+        "interests": null
+      }
+    }
+  },
+  "nested-empty": {
+    "encoded": {
+      "_id": {
+        "$oid": "65000000000000000000000d"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessNested",
+      "name": null,
+      "home": null,
+      "profile": null
+    },
+    "roundTrip": {
+      "_id": {
+        "$oid": "65000000000000000000000d"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessNested",
+      "name": null,
+      "home": null,
+      "profile": null
+    }
+  },
+  "collections": {
+    "encoded": {
+      "_id": {
+        "$oid": "650000000000000000000004"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessCollections",
+      "tags": [
+        "a",
+        "b",
+        "c"
+      ],
+      "numbers": [
+        {
+          "$numberInt": "1"
+        },
+        {
+          "$numberInt": "2"
+        },
+        {
+          "$numberInt": "3"
+        }
+      ],
+      "addresses": [
+        {
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessAddress",
+          "street": "1 Main St",
+          "city": "Springfield"
+        },
+        {
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessAddress",
+          "street": "2 Side St",
+          "city": "Shelbyville"
+        }
+      ],
+      "addressesByName": {
+        "a": {
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessAddress",
+          "street": "3 Elm St",
+          "city": "Ogdenville"
+        },
+        "b": {
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessAddress",
+          "street": "4 Oak St",
+          "city": "North Haverbrook"
+        }
+      },
+      "namesByNumber": {
+        "1": "one",
+        "2": "two"
+      },
+      "grid": [
+        [
+          "x",
+          "o"
+        ],
+        [
+          "o",
+          "x"
+        ]
+      ],
+      "ints": [
+        {
+          "$numberInt": "1"
+        },
+        {
+          "$numberInt": "2"
+        },
+        {
+          "$numberInt": "3"
+        }
+      ],
+      "doubles": [
+        {
+          "$numberDouble": "0.5"
+        },
+        {
+          "$numberDouble": "1.5"
+        }
+      ],
+      "strings": [
+        "p",
+        "q"
+      ],
+      "addressArray": [
+        {
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessAddress",
+          "street": "5 Pine St",
+          "city": "Capital City"
+        }
+      ]
+    },
+    "roundTrip": {
+      "_id": {
+        "$oid": "650000000000000000000004"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessCollections",
+      "tags": [
+        "a",
+        "b",
+        "c"
+      ],
+      "numbers": [
+        {
+          "$numberInt": "1"
+        },
+        {
+          "$numberInt": "2"
+        },
+        {
+          "$numberInt": "3"
+        }
+      ],
+      "addresses": [
+        {
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessAddress",
+          "street": "1 Main St",
+          "city": "Springfield"
+        },
+        {
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessAddress",
+          "street": "2 Side St",
+          "city": "Shelbyville"
+        }
+      ],
+      "addressesByName": {
+        "a": {
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessAddress",
+          "street": "3 Elm St",
+          "city": "Ogdenville"
+        },
+        "b": {
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessAddress",
+          "street": "4 Oak St",
+          "city": "North Haverbrook"
+        }
+      },
+      "namesByNumber": {
+        "1": "one",
+        "2": "two"
+      },
+      "grid": [
+        [
+          "x",
+          "o"
+        ],
+        [
+          "o",
+          "x"
+        ]
+      ],
+      "ints": [
+        {
+          "$numberInt": "1"
+        },
+        {
+          "$numberInt": "2"
+        },
+        {
+          "$numberInt": "3"
+        }
+      ],
+      "doubles": [
+        {
+          "$numberDouble": "0.5"
+        },
+        {
+          "$numberDouble": "1.5"
+        }
+      ],
+      "strings": [
+        "p",
+        "q"
+      ],
+      "addressArray": [
+        {
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessAddress",
+          "street": "5 Pine St",
+          "city": "Capital City"
+        }
+      ]
+    }
+  },
+  "polymorphic": {
+    "encoded": {
+      "_id": {
+        "$oid": "650000000000000000000005"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDrawing",
+      "main": {
+        "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessSquare",
+        "side": {
+          "$numberDouble": "2.0"
+        },
+        "label": "main"
+      },
+      "circle": {
+        "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessCircle",
+        "radius": {
+          "$numberDouble": "1.0"
+        },
+        "label": "declared"
+      },
+      "shapes": [
+        {
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessCircle",
+          "radius": {
+            "$numberDouble": "3.0"
+          },
+          "label": "c"
+        },
+        {
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessSquare",
+          "side": {
+            "$numberDouble": "4.0"
+          },
+          "label": "s"
+        }
+      ]
+    },
+    "roundTrip": {
+      "_id": {
+        "$oid": "650000000000000000000005"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDrawing",
+      "main": {
+        "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessSquare",
+        "side": {
+          "$numberDouble": "2.0"
+        },
+        "label": "main"
+      },
+      "circle": {
+        "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessCircle",
+        "radius": {
+          "$numberDouble": "1.0"
+        },
+        "label": "declared"
+      },
+      "shapes": [
+        {
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessCircle",
+          "radius": {
+            "$numberDouble": "3.0"
+          },
+          "label": "c"
+        },
+        {
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessSquare",
+          "side": {
+            "$numberDouble": "4.0"
+          },
+          "label": "s"
+        }
+      ]
+    }
+  },
+  "no-discriminator": {
+    "encoded": {
+      "_id": {
+        "$oid": "650000000000000000000006"
+      },
+      "name": "plain"
+    },
+    "roundTrip": {
+      "_id": {
+        "$oid": "650000000000000000000006"
+      },
+      "name": "plain"
+    }
+  },
+  "constructor": {
+    "encoded": {
+      "_id": {
+        "$oid": "650000000000000000000007"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessConstructed",
+      "name": "built",
+      "size": {
+        "$numberInt": "3"
+      }
+    },
+    "roundTrip": {
+      "_id": {
+        "$oid": "650000000000000000000007"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessConstructed",
+      "name": "built",
+      "size": {
+        "$numberInt": "3"
+      }
+    }
+  },
+  "records": {
+    "encoded": {
+      "_id": {
+        "$oid": "650000000000000000000008"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessRecordHolder",
+      "origin": {
+        "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessPoint",
+        "x": {
+          "$numberInt": "0"
+        },
+        "y": {
+          "$numberInt": "0"
+        }
+      },
+      "path": [
+        {
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessPoint",
+          "x": {
+            "$numberInt": "1"
+          },
+          "y": {
+            "$numberInt": "2"
+          }
+        },
+        {
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessPoint",
+          "x": {
+            "$numberInt": "3"
+          },
+          "y": {
+            "$numberInt": "4"
+          }
+        }
+      ]
+    },
+    "roundTrip": {
+      "_id": {
+        "$oid": "650000000000000000000008"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessRecordHolder",
+      "origin": {
+        "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessPoint",
+        "x": {
+          "$numberInt": "0"
+        },
+        "y": {
+          "$numberInt": "0"
+        }
+      },
+      "path": [
+        {
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessPoint",
+          "x": {
+            "$numberInt": "1"
+          },
+          "y": {
+            "$numberInt": "2"
+          }
+        },
+        {
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessPoint",
+          "x": {
+            "$numberInt": "3"
+          },
+          "y": {
+            "$numberInt": "4"
+          }
+        }
+      ]
+    }
+  },
+  "renames": {
+    "encoded": {
+      "_id": {
+        "$oid": "650000000000000000000009"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessRenames",
+      "n": "renamed",
+      "email": "a@example.com"
+    },
+    "roundTrip": {
+      "_id": {
+        "$oid": "650000000000000000000009"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessRenames",
+      "n": "renamed",
+      "email": "a@example.com"
+    }
+  },
+  "lifecycle": {
+    "encoded": {
+      "_id": {
+        "$oid": "65000000000000000000000a"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessLifecycle",
+      "name": "Lifecycle",
+      "normalized": "lifecycle"
+    },
+    "roundTrip": {
+      "_id": {
+        "$oid": "65000000000000000000000a"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessLifecycle",
+      "name": "Lifecycle",
+      "normalized": "lifecycle"
+    }
+  },
+  "generic-binding": {
+    "encoded": {
+      "_id": {
+        "$oid": "65000000000000000000000b"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessStringListBox",
+      "value": [
+        "boxed",
+        "strings"
+      ]
+    },
+    "roundTrip": {
+      "_id": {
+        "$oid": "65000000000000000000000b"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessStringListBox",
+      "value": [
+        "boxed",
+        "strings"
+      ]
+    }
+  },
+  "references": {
+    "encoded": {
+      "_id": {
+        "$oid": "65000000000000000000000c"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessReferences",
+      "dbRef": {
+        "$ref": "harness_scalars",
+        "$id": {
+          "$oid": "650000000000000000000001"
+        }
+      },
+      "idOnly": {
+        "$oid": "650000000000000000000001"
+      },
+      "many": [
+        {
+          "$oid": "650000000000000000000002"
+        },
+        {
+          "$oid": "650000000000000000000003"
+        }
+      ]
+    }
+  },
+  "foreign/scalars-reordered": {
+    "input": {
+      "score": {
+        "$numberInt": "7"
+      },
+      "unknown": "ignored",
+      "age": {
+        "$numberLong": "5"
+      },
+      "count": {
+        "$numberInt": "9"
+      },
+      "name": null,
+      "status": "OPEN",
+      "_id": {
+        "$oid": "650000000000000000000101"
+      }
+    },
+    "decoded": {
+      "_id": {
+        "$oid": "650000000000000000000101"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessScalars",
+      "name": null,
+      "age": {
+        "$numberInt": "5"
+      },
+      "count": {
+        "$numberLong": "9"
+      },
+      "score": {
+        "$numberDouble": "7.0"
+      },
+      "active": false,
+      "boxed": null,
+      "status": "OPEN",
+      "created": null,
+      "updated": null,
+      "amount": null
+    }
+  },
+  "foreign/scalars-discriminator-late": {
+    "input": {
+      "_id": {
+        "$oid": "650000000000000000000102"
+      },
+      "age": {
+        "$numberDouble": "3.0"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessScalars"
+    },
+    "decoded": {
+      "_id": {
+        "$oid": "650000000000000000000102"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessScalars",
+      "name": null,
+      "age": {
+        "$numberInt": "3"
+      },
+      "count": {
+        "$numberLong": "0"
+      },
+      "score": {
+        "$numberDouble": "0.0"
+      },
+      "active": false,
+      "boxed": null,
+      "status": null,
+      "created": null,
+      "updated": null,
+      "amount": null
+    }
+  },
+  "foreign/scalars-schema-drift": {
+    "input": {
+      "active": "true",
+      "age": "42",
+      "score": "1.5"
+    },
+    "decoded": {
+      "_id": null,
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessScalars",
+      "name": null,
+      "age": {
+        "$numberInt": "42"
+      },
+      "count": {
+        "$numberLong": "0"
+      },
+      "score": {
+        "$numberDouble": "1.5"
+      },
+      "active": true,
+      "boxed": null,
+      "status": null,
+      "created": null,
+      "updated": null,
+      "amount": null
+    }
+  },
+  "foreign/nested-single-value-for-list": {
+    "input": {
+      "profile": {
+        "interests": "solo",
+        "address": {
+          "city": "c"
+        }
+      },
+      "name": "n",
+      "home": null,
+      "extra": {
+        "a": {
+          "$numberInt": "1"
+        }
+      }
+    },
+    "decoded": {
+      "_id": null,
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessNested",
+      "name": "n",
+      "home": null,
+      "profile": {
+        "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessProfile",
+        "bio": null,
+        "address": {
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessAddress",
+          "street": null,
+          "city": "c"
+        },
+        "interests": [
+          "solo"
+        ]
+      }
+    }
+  },
+  "foreign/renames-alternate-names": {
+    "input": {
+      "_id": {
+        "$oid": "650000000000000000000103"
+      },
+      "n": "x",
+      "oldEmail": "old@example.com",
+      "legacy": "loaded only"
+    },
+    "decoded": {
+      "_id": {
+        "$oid": "650000000000000000000103"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessRenames",
+      "n": "x",
+      "email": "old@example.com"
+    }
+  },
+  "foreign/polymorphic-subtype-in-declared-field": {
+    "input": {
+      "main": {
+        "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessCircle",
+        "label": "m",
+        "radius": {
+          "$numberDouble": "2.0"
+        }
+      },
+      "shapes": [
+        {
+          "label": "s",
+          "side": {
+            "$numberDouble": "1.0"
+          },
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessSquare"
+        }
+      ]
+    },
+    "decoded": {
+      "_id": null,
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDrawing",
+      "main": {
+        "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessCircle",
+        "radius": {
+          "$numberDouble": "2.0"
+        },
+        "label": "m"
+      },
+      "circle": null,
+      "shapes": [
+        {
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessSquare",
+          "side": {
+            "$numberDouble": "1.0"
+          },
+          "label": "s"
+        }
+      ]
+    }
+  },
+  "foreign/constructor-reordered": {
+    "input": {
+      "size": {
+        "$numberInt": "4"
+      },
+      "name": "late",
+      "_id": {
+        "$oid": "650000000000000000000104"
+      }
+    },
+    "decoded": {
+      "_id": {
+        "$oid": "650000000000000000000104"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessConstructed",
+      "name": "late",
+      "size": {
+        "$numberInt": "4"
+      }
+    }
+  }
+}
