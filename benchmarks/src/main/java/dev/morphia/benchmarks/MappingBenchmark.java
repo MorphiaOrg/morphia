@@ -2,6 +2,7 @@ package dev.morphia.benchmarks;
 
 import java.util.concurrent.TimeUnit;
 
+import dev.morphia.benchmarks.models.SimpleEntity;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
 
@@ -24,6 +25,9 @@ import org.openjdk.jmh.annotations.Warmup;
  * <li>{@link #coldStart()}: one invocation per fresh JVM, i.e. what an application pays at startup, including class
  * loading and (for critter-runtime) bytecode generation.</li>
  * <li>{@link #warmMapping()}: repeated in a warmed-up JVM, isolating the mapping work from one-time class loading.</li>
+ * <li>{@link #scanModelsPackage()} and {@link #scanEverything()}: startup with entities found by package scanning, the
+ * first for the models package only, the second for {@code .*}, the default for {@code morphia.packages}, which scans
+ * the whole classpath.</li>
  * </ul>
  */
 @State(Scope.Benchmark)
@@ -47,7 +51,31 @@ public class MappingBenchmark {
     @Measurement(iterations = 1)
     @Fork(10)
     public Mapper coldStart() {
-        return Fixtures.mappedMapper(mapperVariant, config);
+        return Fixtures.mappedMapper(mapperVariant, config, Models.MAPPING_TYPES);
+    }
+
+    @Benchmark
+    @BenchmarkMode(Mode.SingleShotTime)
+    @OutputTimeUnit(TimeUnit.MILLISECONDS)
+    @Warmup(iterations = 0)
+    @Measurement(iterations = 1)
+    @Fork(5)
+    public Mapper scanModelsPackage() {
+        Mapper mapper = mapperVariant.newMapper(config);
+        mapper.mapPackage(SimpleEntity.class.getPackageName());
+        return mapper;
+    }
+
+    @Benchmark
+    @BenchmarkMode(Mode.SingleShotTime)
+    @OutputTimeUnit(TimeUnit.MILLISECONDS)
+    @Warmup(iterations = 0)
+    @Measurement(iterations = 1)
+    @Fork(5)
+    public Mapper scanEverything() {
+        Mapper mapper = mapperVariant.newMapper(config);
+        mapper.mapPackage(".*");
+        return mapper;
     }
 
     @Benchmark
@@ -57,6 +85,6 @@ public class MappingBenchmark {
     @Measurement(iterations = 5, time = 2)
     @Fork(2)
     public Mapper warmMapping() {
-        return Fixtures.mappedMapper(mapperVariant, config);
+        return Fixtures.mappedMapper(mapperVariant, config, Models.MAPPING_TYPES);
     }
 }

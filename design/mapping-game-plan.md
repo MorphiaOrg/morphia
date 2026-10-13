@@ -84,7 +84,7 @@ model objects. It means most of the speed can be had without an API change.
 - **Note:** the harness models use the test config's `className` discriminator, because AOT models bake in the
   build-time discriminator (4.12).
 
-### 0.2 Close the benchmark gaps (§7)
+### ~~0.2 Close the benchmark gaps (§7)~~
 - **What:** add these to `benchmarks/`:
   - ARRAYS (`double[1536]`, `String[]`);
   - concrete collections;
@@ -100,11 +100,20 @@ model objects. It means most of the speed can be had without an API change.
   different picture from the per-fork runs.
 - **Also:** record a baseline run, both mappers, `-prof gc`, as a checked-in results file so later PRs can quote
   deltas.
-- **Investigate first:** between the review (`76697be`) and `4d48014`, Morphia's decode allocation rose from
-  2,240 to 3,168 B/op on SIMPLE and from 6,920 to 7,928 B/op on NESTED. #4257 is the only commit in that range.
-  `MorphiaCodec.decode` installs a new `DecodeSession` whenever none is current, so every top-level entity decode
-  now creates a session and runs `EntityDecoder.peekId`, a second mark-and-scan for `_id`. That is the likely
-  source of the extra ~900–1,000 B per root document. Confirm it before quoting any baseline.
+- **Investigated:** between the review (`76697be`) and `4d48014`, Morphia's decode allocation rose from 2,240 to
+  3,168 B/op on SIMPLE and from 6,920 to 7,928 B/op on NESTED. #4257 is the only commit in that range.
+  `MorphiaCodec.decode` installs a new `DecodeSession` whenever none is current, so every top-level decode creates
+  one, and every entity decode runs `EntityDecoder.peekId`, a second mark-and-scan for `_id`. A probe on SIMPLE
+  confirmed the split: per-decode session ~352 B, `peekId` plus registration ~488 B. Queries share one session per
+  cursor, so in practice only the ~488 B applies to every document. `CodecBenchmark.decodeInCursor` measures that
+  path.
+- **Done as:** `CodecBenchmark` gained ARRAYS, CONCRETE_COLLECTIONS and LAZY_REFERENCE plus `decodeInCursor`.
+  `DocumentShapesBenchmark` covers no `_t` and schema drift, `ListenerBenchmark` a no-op global listener,
+  `MixedCodecBenchmark` all models in one JVM, `DatastoreBenchmark` the session copy, `QueryBenchmark` path
+  translation and query rendering, and `MappingBenchmark.scan*` package scanning. Results and findings are in
+  `benchmarks/results/baseline-bd70cba8d20/`. `MapperVariant` now requires `ArraysEntity` to be critter's only
+  reflection fallback (4.8). `MappingBenchmark` maps the original 11 types: with `ArraysEntity` included, every new
+  critter mapper retries the failed generation and logs a stack trace (C6, 4.10).
 
 ---
 

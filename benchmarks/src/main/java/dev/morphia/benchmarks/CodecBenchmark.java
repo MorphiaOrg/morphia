@@ -7,6 +7,7 @@ import com.mongodb.client.MongoClient;
 
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.DecodeSession;
 
 import org.bson.BsonBinaryReader;
 import org.bson.BsonBinaryWriter;
@@ -42,13 +43,15 @@ public class CodecBenchmark {
     @Param({ "reflection", "critter", "critter-runtime" })
     public String variant;
 
-    @Param({ "SIMPLE", "NESTED", "COLLECTIONS", "POLYMORPHIC", "LIFECYCLE" })
+    @Param({ "SIMPLE", "NESTED", "COLLECTIONS", "POLYMORPHIC", "LIFECYCLE", "ARRAYS", "CONCRETE_COLLECTIONS",
+            "LAZY_REFERENCE" })
     public Models model;
 
     private MongoClient client;
     private Codec<Object> codec;
     private Object entity;
     private byte[] encoded;
+    private DecodeSession cursorSession;
     private final EncoderContext encoderContext = EncoderContext.builder().isEncodingCollectibleDocument(true).build();
     private final DecoderContext decoderContext = DecoderContext.builder().build();
 
@@ -60,6 +63,7 @@ public class CodecBenchmark {
         Mapper mapper = Fixtures.mappedMapper(mapperVariant, config);
         System.out.printf("[%s] model tiers: %s%n", variant, MapperVariant.describeTiers(mapper));
         client = Fixtures.offlineClient();
+        cursorSession = DecodeSession.forConfig(config);
         codec = (Codec<Object>) Fixtures.codecRegistry(client, config, mapper).get(model.type());
         entity = model.sample();
         encoded = encode();
@@ -83,10 +87,22 @@ public class CodecBenchmark {
         return buffer.toByteArray();
     }
 
+    /**
+     * A standalone decode: with no session installed, {@code MorphiaCodec} creates a {@link DecodeSession} for each one.
+     */
     @Benchmark
     public Object decode() {
         try (BsonBinaryReader reader = new BsonBinaryReader(ByteBuffer.wrap(encoded))) {
             return codec.decode(reader, decoderContext);
         }
+    }
+
+    /**
+     * A decode as {@code MorphiaCursor} does it: inside one session shared by every document of a query, so the
+     * session's own creation is amortized.
+     */
+    @Benchmark
+    public Object decodeInCursor() {
+        return cursorSession.decoding(this::decode);
     }
 }
