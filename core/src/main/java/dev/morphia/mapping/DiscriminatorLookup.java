@@ -67,7 +67,7 @@ public final class DiscriminatorLookup {
      */
     public void addModel(EntityModel entityModel) {
         String discriminator = entityModel.discriminator();
-        Class<?> current = discriminatorClassMap.put(discriminator, entityModel.getType());
+        Class<?> current = discriminatorClassMap.putIfAbsent(discriminator, entityModel.getType());
         if (current != null) {
             throw new MappingException(Sofia.duplicateDiscriminators(discriminator, current.getName(),
                     entityModel.getType().getName()));

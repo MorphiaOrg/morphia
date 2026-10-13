@@ -164,30 +164,13 @@ public class CritterMapper extends AbstractMapper {
         return new CritterMapper(this);
     }
 
-    // Synchronized to prevent concurrent threads from both passing the initial
-    // mappedEntities.get() check and racing to register the same type, which
-    // would cause a duplicate discriminator value error in DiscriminatorLookup.
     @Override
-    @Nullable
-    public synchronized EntityModel mapEntity(@Nullable Class type) {
-        if (!isMappable(type)) {
-            return null;
-        }
-
-        EntityModel model = mappedEntities.get(type.getName());
-        if (model != null) {
-            return model;
-        }
-
-        model = tryLoadPregenerated(type);
+    protected EntityModel buildModel(Class<?> type) {
+        EntityModel model = tryLoadPregenerated(type);
         if (model == null) {
             model = tryRuntimeGeneration(type);
         }
-        if (model == null) {
-            model = fallbackToReflection(type);
-        }
-
-        return model != null ? register(model) : null;
+        return model != null ? model : fallbackToReflection(type);
     }
 
     /**

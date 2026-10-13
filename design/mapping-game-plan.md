@@ -319,7 +319,7 @@ harness passes, and both mappers agree.
 - Build on 2.6.
 - Plan the removal of `addInterceptor`, which has been deprecated for removal since 2.4.0.
 
-### 4.3 Shared registration protocol in `AbstractMapper` (#18, A3/D7)
+### ~~4.3 Shared registration protocol in `AbstractMapper` (#18, A3/D7)~~
 - `synchronized final mapEntity` → `protected abstract buildModel(Class)`.
 - Use `putIfAbsent`, and roll back with `remove(name, model)` when validation fails.
 - **Fixes the §5 issues:** an invalid model staying registered, and duplicate-discriminator races.

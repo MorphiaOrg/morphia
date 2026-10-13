@@ -312,6 +312,41 @@ public abstract class AbstractMapper implements Mapper {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Maps a type, building and registering its model if it isn't mapped yet. Models are built under the mapper's lock
+     * so concurrent first use of a type builds and registers it once; lookups of already-mapped types don't lock.
+     *
+     * @param type the class to map
+     * @return the model, or null if the type isn't mappable
+     */
+    @Override
+    @Nullable
+    public final EntityModel mapEntity(@Nullable Class type) {
+        if (!isMappable(type)) {
+            return null;
+        }
+        EntityModel model = mappedEntities.get(type.getName());
+        if (model != null) {
+            return model;
+        }
+        synchronized (this) {
+            model = mappedEntities.get(type.getName());
+            return model != null ? model : register(buildModel(type));
+        }
+    }
+
+    /**
+     * Builds a new, unregistered model for a mappable type. Called by {@link #mapEntity(Class)} under the mapper's lock,
+     * only for types that aren't mapped yet.
+     *
+     * @param type the type to model
+     * @return the new model
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    protected abstract EntityModel buildModel(Class<?> type);
+
     @Override
     public synchronized void map(String packageName) {
         try {
@@ -357,19 +392,33 @@ public abstract class AbstractMapper implements Mapper {
         return register(entityModel, true);
     }
 
+    /**
+     * Registers a model unless one is already registered for its type, in which case the existing model is returned.
+     * The model is visible in {@link #mappedEntities} while it's validated, so validation can resolve references back
+     * to it. If validation or discriminator registration fails, the model is removed again before the failure
+     * propagates, so a later lookup fails the same way instead of returning a half-registered model.
+     *
+     * @param model    the model to register
+     * @param validate true to validate the model before completing its registration
+     * @return the registered model for the type, which is {@code model} unless another was registered first
+     */
     @MorphiaInternal
     protected EntityModel register(EntityModel model, boolean validate) {
-        var existing = mappedEntities.get(model.getType().getName());
+        String name = model.getType().getName();
+        var existing = mappedEntities.putIfAbsent(name, model);
         if (existing != null) {
             return existing;
         }
-        mappedEntities.put(model.getType().getName(), model);
-        if (validate && !model.isInterface()) {
-            new MappingValidator()
-                    .validate(this, model);
+        try {
+            if (validate && !model.isInterface()) {
+                new MappingValidator()
+                        .validate(this, model);
+            }
+            discriminatorLookup.addModel(model);
+        } catch (RuntimeException e) {
+            mappedEntities.remove(name, model);
+            throw e;
         }
-
-        discriminatorLookup.addModel(model);
         mappedEntitiesByCollection.computeIfAbsent(model.collectionName(), s -> new CopyOnWriteArraySet<>())
                 .add(model);
 
