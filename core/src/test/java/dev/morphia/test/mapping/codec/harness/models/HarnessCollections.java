@@ -21,10 +21,6 @@ public class HarnessCollections {
     private Map<String, HarnessAddress> addressesByName;
     private Map<Integer, String> namesByNumber;
     private List<List<String>> grid;
-    private int[] ints;
-    private double[] doubles;
-    private String[] strings;
-    private HarnessAddress[] addressArray;
 
     public HarnessCollections() {
     }
@@ -44,10 +40,6 @@ public class HarnessCollections {
         entity.namesByNumber.put(1, "one");
         entity.namesByNumber.put(2, "two");
         entity.grid = List.of(List.of("x", "o"), List.of("o", "x"));
-        entity.ints = new int[] { 1, 2, 3 };
-        entity.doubles = new double[] { 0.5, 1.5 };
-        entity.strings = new String[] { "p", "q" };
-        entity.addressArray = new HarnessAddress[] { new HarnessAddress("5 Pine St", "Capital City") };
         return entity;
     }
 

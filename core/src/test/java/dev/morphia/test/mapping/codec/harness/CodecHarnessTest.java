@@ -8,9 +8,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
@@ -23,6 +25,9 @@ import dev.morphia.config.ManualMorphiaConfig;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.DiscriminatorFunction;
 import dev.morphia.mapping.MapperType;
+import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
+import dev.morphia.test.mapping.codec.harness.models.HarnessArrays;
 import dev.morphia.test.mapping.codec.harness.models.HarnessCollections;
 import dev.morphia.test.mapping.codec.harness.models.HarnessConstructed;
 import dev.morphia.test.mapping.codec.harness.models.HarnessDrawing;
@@ -101,6 +106,8 @@ public class CodecHarnessTest {
     /** For re-encoding decoded entities: a collectible encode would give an entity without an id a random one. */
     private static final EncoderContext PLAIN = EncoderContext.builder().build();
     private static final DecoderContext DECODER = DecoderContext.builder().build();
+    /** Critter can't generate models for array properties yet (game plan 4.8), so the whole entity uses reflection. */
+    private static final Set<Class<?>> CRITTER_FALLBACKS = Set.of(HarnessArrays.class);
 
     private final MongoClient client = offlineClient();
 
@@ -179,6 +186,9 @@ public class CodecHarnessTest {
      */
     private Map<String, Map<String, String>> run(Variant variant, MapperType mapper) {
         MorphiaDatastore datastore = datastore(variant, mapper);
+        if (mapper == MapperType.CRITTER) {
+            assertCritterModels(datastore);
+        }
         Map<String, Map<String, String>> results = new LinkedHashMap<>();
 
         sample(results, datastore, "scalars", HarnessScalars.class, HarnessScalars::sample);
@@ -186,6 +196,7 @@ public class CodecHarnessTest {
         sample(results, datastore, "nested-sparse", HarnessNested.class, HarnessNested::sparse);
         sample(results, datastore, "nested-empty", HarnessNested.class, HarnessNested::empty);
         sample(results, datastore, "collections", HarnessCollections.class, HarnessCollections::sample);
+        sample(results, datastore, "arrays", HarnessArrays.class, HarnessArrays::sample);
         sample(results, datastore, "polymorphic", HarnessDrawing.class, HarnessDrawing::sample);
         sample(results, datastore, "no-discriminator", HarnessNoDiscriminator.class, HarnessNoDiscriminator::sample);
         sample(results, datastore, "constructor", HarnessConstructed.class, HarnessConstructed::sample);
@@ -242,6 +253,22 @@ public class CodecHarnessTest {
         result.put("input", input.toJson(JSON));
         result.put("decoded", recording(() -> encode(codec, decode(codec, bytes(input)), PLAIN)));
         results.put("foreign/" + name, result);
+    }
+
+    /**
+     * {@code CritterMapper} quietly falls back to a reflective model when it can't generate one, which would turn the
+     * reflection-vs-critter comparison into reflection-vs-reflection. Every harness model must therefore be a critter
+     * model, except the known fallbacks, which must still fall back so that this list can't go stale.
+     */
+    private static void assertCritterModels(MorphiaDatastore datastore) {
+        Set<Class<?>> fallbacks = new HashSet<>();
+        for (EntityModel model : datastore.getMapper().getMappedEntities()) {
+            if (model.getType().getPackageName().equals(HarnessScalars.class.getPackageName())
+                    && !(model instanceof CritterEntityModel)) {
+                fallbacks.add(model.getType());
+            }
+        }
+        assertEquals(CRITTER_FALLBACKS, fallbacks, "harness models the critter mapper maps reflectively");
     }
 
     /**

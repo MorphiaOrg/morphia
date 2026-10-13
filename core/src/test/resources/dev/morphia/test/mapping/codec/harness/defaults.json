@@ -222,36 +222,6 @@
           "o",
           "x"
         ]
-      ],
-      "ints": [
-        {
-          "$numberInt": "1"
-        },
-        {
-          "$numberInt": "2"
-        },
-        {
-          "$numberInt": "3"
-        }
-      ],
-      "doubles": [
-        {
-          "$numberDouble": "0.5"
-        },
-        {
-          "$numberDouble": "1.5"
-        }
-      ],
-      "strings": [
-        "p",
-        "q"
-      ],
-      "addressArray": [
-        {
-          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessAddress",
-          "street": "5 Pine St",
-          "city": "Capital City"
-        }
       ]
     },
     "roundTrip": {
@@ -312,7 +282,15 @@
           "o",
           "x"
         ]
-      ],
+      ]
+    }
+  },
+  "arrays": {
+    "encoded": {
+      "_id": {
+        "$oid": "65000000000000000000000e"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessArrays",
       "ints": [
         {
           "$numberInt": "1"
@@ -336,7 +314,43 @@
         "p",
         "q"
       ],
-      "addressArray": [
+      "addresses": [
+        {
+          "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessAddress",
+          "street": "5 Pine St",
+          "city": "Capital City"
+        }
+      ]
+    },
+    "roundTrip": {
+      "_id": {
+        "$oid": "65000000000000000000000e"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessArrays",
+      "ints": [
+        {
+          "$numberInt": "1"
+        },
+        {
+          "$numberInt": "2"
+        },
+        {
+          "$numberInt": "3"
+        }
+      ],
+      "doubles": [
+        {
+          "$numberDouble": "0.5"
+        },
+        {
+          "$numberDouble": "1.5"
+        }
+      ],
+      "strings": [
+        "p",
+        "q"
+      ],
+      "addresses": [
         {
           "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessAddress",
           "street": "5 Pine St",

@@ -65,23 +65,24 @@ model objects. It means most of the speed can be had without an API change.
 - `design/mapping-review.md`, `design/mapping-review/` and this file, with the decisions recorded.
 
 ### ~~0.1 Differential codec harness (core test)~~
-- **What:** a parameterized JUnit test in `core/src/test` that runs over every test entity. It checks:
-  - encoding is byte-identical between the current codec and the codec under change, using a frozen copy or golden
-    BSON fixtures;
-  - decode equivalence;
+- **What:** `CodecHarnessTest`, a JUnit test in `core/src/test` that runs offline over a curated set of harness models
+  (`dev.morphia.test.mapping.codec.harness.models`) covering the feature matrix. It checks:
+  - encodings and decode→encode round trips against golden fixtures generated from `master`, compared as canonical
+    extended JSON (field order and BSON types preserved);
+  - that reflection and critter produce identical results, and that critter really uses generated models: the only
+    model allowed to fall back to reflection is `HarnessArrays`, until 4.8 adds array support;
   - "foreign" documents: reordered and unknown fields, numeric widening and narrowing, explicit nulls, missing `_t`,
-    `_t` not in first position, a single value for a list.
-- **Why:** every hot-path change in Phase 2 alters protocol details where regressions are silent. The prototype's
+    `_t` not in first position, string-for-scalar drift, a single value for a list.
+- **Why:** every hot-path change in Phase 3 alters protocol details where regressions are silent. The prototype's
   `Verify.java` already shows the check set.
-- **How:** golden fixtures generated from `master`, plus round-trip property checks. Run under both mappers.
-  It covers storeNulls/storeEmpties on and off, `@AlsoLoad`, `@LoadOnly`, constructor-built entities, lifecycle
-  entities and refresh.
-- **Note:** decode→encode is not idempotent under `storeEmpties=false` + `storeNulls=true` (§5). Pin today's
-  behavior in a fixture and decide separately whether it is a bug.
-- **Done as:** `CodecHarnessTest` with fixtures under `core/src/test/resources/dev/morphia/test/mapping/codec/harness/`.
-  It runs offline. It doesn't cover decoding references (that fetches from the database), `refresh()`, or Kotlin
-  entities. Items that touch those paths add their own tests. Its models use the test config's `className`
-  discriminator, because AOT models bake in the build-time discriminator (4.12).
+- **Covers:** storeNulls/storeEmpties on and off, `@AlsoLoad`, `@LoadOnly`, constructor-built entities, records,
+  lifecycle entities, polymorphism, a generic superclass binding, and references (encode only).
+- **Doesn't cover:** decoding references (that fetches from the database), `refresh()`, or Kotlin entities. Items that
+  touch those paths add their own tests.
+- **Note:** decode→encode is not idempotent under `storeEmpties=false` + `storeNulls=true` (§5). The fixtures pin
+  today's behavior; whether it is a bug is a separate decision.
+- **Note:** the harness models use the test config's `className` discriminator, because AOT models bake in the
+  build-time discriminator (4.12).
 
 ### 0.2 Close the benchmark gaps (§7)
 - **What:** add these to `benchmarks/`:
