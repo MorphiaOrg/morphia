@@ -12,14 +12,14 @@ Lower is better for every benchmark here. Ratios compare each variant against `r
 | `CodecBenchmark.decode` | NESTED | 3,482 ± 86.82 ns/op | 3,721 ± 77.95 ns/op | 3,590 ± 48.56 ns/op | 1.07× 🔴 | 1.03× |
 | `CodecBenchmark.decode` | POLYMORPHIC | 6,507 ± 95.02 ns/op | 6,890 ± 294 ns/op | 6,429 ± 62.15 ns/op | 1.06× 🔴 | 0.99× |
 | `CodecBenchmark.decode` | SIMPLE | 1,351 ± 19.89 ns/op | 1,354 ± 9.01 ns/op | 1,436 ± 25.05 ns/op | 1.00× | 1.06× 🔴 |
-| `CodecBenchmark.decodeInCursor` | ARRAYS | 69,341 ± 722 ns/op | 74,205 ± 1,063 ns/op | 67,705 ± 462 ns/op | 1.07× 🔴 | 0.98× |
-| `CodecBenchmark.decodeInCursor` | COLLECTIONS | 9,935 ± 211 ns/op | 10,669 ± 111 ns/op | 10,012 ± 162 ns/op | 1.07× 🔴 | 1.01× |
-| `CodecBenchmark.decodeInCursor` | CONCRETE_COLLECTIONS | 3,167 ± 151 ns/op | 3,373 ± 146 ns/op | 3,064 ± 38.17 ns/op | 1.06× 🔴 | 0.97× |
-| `CodecBenchmark.decodeInCursor` | LAZY_REFERENCE | 3,351 ± 132 ns/op | 3,492 ± 162 ns/op | 3,205 ± 141 ns/op | 1.04× | 0.96× |
-| `CodecBenchmark.decodeInCursor` | LIFECYCLE | 1,208 ± 22.59 ns/op | 1,285 ± 25.95 ns/op | 1,266 ± 26.55 ns/op | 1.06× 🔴 | 1.05× |
-| `CodecBenchmark.decodeInCursor` | NESTED | 3,365 ± 38.01 ns/op | 3,786 ± 115 ns/op | 3,489 ± 87.67 ns/op | 1.13× 🔴 | 1.04× |
-| `CodecBenchmark.decodeInCursor` | POLYMORPHIC | 6,458 ± 253 ns/op | 6,943 ± 78.24 ns/op | 6,367 ± 86.43 ns/op | 1.08× 🔴 | 0.99× |
-| `CodecBenchmark.decodeInCursor` | SIMPLE | 1,464 ± 140 ns/op | 1,459 ± 57.92 ns/op | 1,441 ± 16.58 ns/op | 1.00× | 0.98× |
+| `CodecBenchmark.decodeInCursor` | ARRAYS | 66,572 ± 426 ns/op | 67,034 ± 341 ns/op | 67,457 ± 560 ns/op | 1.01× | 1.01× |
+| `CodecBenchmark.decodeInCursor` | COLLECTIONS | 9,552 ± 173 ns/op | 10,098 ± 104 ns/op | 10,062 ± 68.64 ns/op | 1.06× 🔴 | 1.05× 🔴 |
+| `CodecBenchmark.decodeInCursor` | CONCRETE_COLLECTIONS | 3,019 ± 37.51 ns/op | 3,142 ± 54.05 ns/op | 3,217 ± 34.57 ns/op | 1.04× | 1.07× 🔴 |
+| `CodecBenchmark.decodeInCursor` | LAZY_REFERENCE | 3,449 ± 83.64 ns/op | 3,360 ± 121 ns/op | 3,416 ± 71.92 ns/op | 0.97× | 0.99× |
+| `CodecBenchmark.decodeInCursor` | LIFECYCLE | 1,190 ± 7.76 ns/op | 1,250 ± 28.82 ns/op | 1,248 ± 27.36 ns/op | 1.05× | 1.05× |
+| `CodecBenchmark.decodeInCursor` | NESTED | 3,273 ± 52.97 ns/op | 3,612 ± 105 ns/op | 3,733 ± 143 ns/op | 1.10× 🔴 | 1.14× 🔴 |
+| `CodecBenchmark.decodeInCursor` | POLYMORPHIC | 6,376 ± 66.65 ns/op | 6,825 ± 153 ns/op | 6,671 ± 69.04 ns/op | 1.07× 🔴 | 1.05× |
+| `CodecBenchmark.decodeInCursor` | SIMPLE | 1,373 ± 48.48 ns/op | 1,396 ± 49.83 ns/op | 1,386 ± 19.21 ns/op | 1.02× | 1.01× |
 | `CodecBenchmark.encode` | ARRAYS | 99,318 ± 1,769 ns/op | 107,751 ± 3,718 ns/op | 93,843 ± 841 ns/op | 1.08× 🔴 | 0.94× 🟢 |
 | `CodecBenchmark.encode` | COLLECTIONS | 7,948 ± 106 ns/op | 8,352 ± 159 ns/op | 7,920 ± 59.36 ns/op | 1.05× 🔴 | 1.00× |
 | `CodecBenchmark.encode` | CONCRETE_COLLECTIONS | 2,115 ± 46.30 ns/op | 2,288 ± 77.45 ns/op | 2,028 ± 15.83 ns/op | 1.08× 🔴 | 0.96× |
@@ -58,14 +58,14 @@ Lower is better for every benchmark here. Ratios compare each variant against `r
 | `CodecBenchmark.decode` | NESTED | 8,008 B/op | 7,992 B/op | 7,992 B/op | 1.00× | 1.00× |
 | `CodecBenchmark.decode` | POLYMORPHIC | 14,424 B/op | 14,432 B/op | 14,424 B/op | 1.00× | 1.00× |
 | `CodecBenchmark.decode` | SIMPLE | 3,160 B/op | 3,168 B/op | 3,168 B/op | 1.00× | 1.00× |
-| `CodecBenchmark.decodeInCursor` | ARRAYS | 76,594 B/op | 76,594 B/op | 76,594 B/op | 1.00× | 1.00× |
-| `CodecBenchmark.decodeInCursor` | COLLECTIONS | 21,752 B/op | 21,744 B/op | 21,760 B/op | 1.00× | 1.00× |
-| `CodecBenchmark.decodeInCursor` | CONCRETE_COLLECTIONS | 6,304 B/op | 6,304 B/op | 6,304 B/op | 1.00× | 1.00× |
-| `CodecBenchmark.decodeInCursor` | LAZY_REFERENCE | 7,925 B/op | 7,883 B/op | 7,939 B/op | 0.99× | 1.00× |
-| `CodecBenchmark.decodeInCursor` | LIFECYCLE | 2,803 B/op | 2,800 B/op | 2,803 B/op | 1.00× | 1.00× |
-| `CodecBenchmark.decodeInCursor` | NESTED | 7,672 B/op | 7,672 B/op | 7,627 B/op | 1.00× | 0.99× |
-| `CodecBenchmark.decodeInCursor` | POLYMORPHIC | 14,064 B/op | 14,064 B/op | 14,064 B/op | 1.00× | 1.00× |
-| `CodecBenchmark.decodeInCursor` | SIMPLE | 2,832 B/op | 2,832 B/op | 2,832 B/op | 1.00× | 1.00× |
+| `CodecBenchmark.decodeInCursor` | ARRAYS | 77,553 B/op | 77,562 B/op | 77,553 B/op | 1.00× | 1.00× |
+| `CodecBenchmark.decodeInCursor` | COLLECTIONS | 22,360 B/op | 22,360 B/op | 22,360 B/op | 1.00× | 1.00× |
+| `CodecBenchmark.decodeInCursor` | CONCRETE_COLLECTIONS | 6,456 B/op | 6,464 B/op | 6,456 B/op | 1.00× | 1.00× |
+| `CodecBenchmark.decodeInCursor` | LAZY_REFERENCE | 8,059 B/op | 7,931 B/op | 8,000 B/op | 0.98× | 0.99× |
+| `CodecBenchmark.decodeInCursor` | LIFECYCLE | 2,808 B/op | 2,819 B/op | 2,808 B/op | 1.00× | 1.00× |
+| `CodecBenchmark.decodeInCursor` | NESTED | 7,944 B/op | 7,944 B/op | 7,944 B/op | 1.00× | 1.00× |
+| `CodecBenchmark.decodeInCursor` | POLYMORPHIC | 14,768 B/op | 14,768 B/op | 14,768 B/op | 1.00× | 1.00× |
+| `CodecBenchmark.decodeInCursor` | SIMPLE | 3,000 B/op | 3,000 B/op | 2,992 B/op | 1.00× | 1.00× |
 | `CodecBenchmark.encode` | ARRAYS | 137,220 B/op | 145,796 B/op | 137,219 B/op | 1.06× 🔴 | 1.00× |
 | `CodecBenchmark.encode` | COLLECTIONS | 7,688 B/op | 7,688 B/op | 7,742 B/op | 1.00× | 1.01× |
 | `CodecBenchmark.encode` | CONCRETE_COLLECTIONS | 3,157 B/op | 3,136 B/op | 3,136 B/op | 0.99× | 0.99× |

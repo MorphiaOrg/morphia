@@ -105,8 +105,9 @@ model objects. It means most of the speed can be had without an API change.
   `MorphiaCodec.decode` installs a new `DecodeSession` whenever none is current, so every top-level decode creates
   one, and every entity decode runs `EntityDecoder.peekId`, a second mark-and-scan for `_id`. A probe on SIMPLE
   confirmed the split: per-decode session ~352 B, `peekId` plus registration ~488 B. Queries share one session per
-  cursor, so in practice only the ~488 B applies to every document. `CodecBenchmark.decodeInCursor` measures that
-  path.
+  cursor, but `CodecBenchmark.decodeInCursor` shows that the steady-state cache insertion and eviction across distinct
+  ids cost about as much as the per-decode session, so a document in a query pays roughly the same as a standalone
+  decode.
 - **Done as:** `CodecBenchmark` gained ARRAYS, CONCRETE_COLLECTIONS and LAZY_REFERENCE plus `decodeInCursor`.
   `DocumentShapesBenchmark` covers no `_t` and schema drift, `ListenerBenchmark` a no-op global listener,
   `MixedCodecBenchmark` all models in one JVM, `DatastoreBenchmark` the session copy, `QueryBenchmark` path

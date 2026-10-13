@@ -11,6 +11,7 @@ import dev.morphia.mapping.codec.DecodeSession;
 
 import org.bson.BsonBinaryReader;
 import org.bson.BsonBinaryWriter;
+import org.bson.RawBsonDocument;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
@@ -52,6 +53,8 @@ public class CodecBenchmark {
     private Object entity;
     private byte[] encoded;
     private DecodeSession cursorSession;
+    private byte[][] cursorDocuments;
+    private int cursorPosition;
     private final EncoderContext encoderContext = EncoderContext.builder().isEncodingCollectibleDocument(true).build();
     private final DecoderContext decoderContext = DecoderContext.builder().build();
 
@@ -63,10 +66,22 @@ public class CodecBenchmark {
         Mapper mapper = Fixtures.mappedMapper(mapperVariant, config);
         System.out.printf("[%s] model tiers: %s%n", variant, MapperVariant.describeTiers(mapper));
         client = Fixtures.offlineClient();
-        cursorSession = DecodeSession.forConfig(config);
         codec = (Codec<Object>) Fixtures.codecRegistry(client, config, mapper).get(model.type());
         entity = model.sample();
         encoded = encode();
+        cursorSession = DecodeSession.forConfig(config);
+        // more documents than the session caches, each with its own _id, so decoding them in turn keeps inserting into
+        // and evicting from the session's cache as a long query does
+        cursorDocuments = new byte[2 * config.decodeSessionCacheSize()][];
+        for (int i = 0; i < cursorDocuments.length; i++) {
+            cursorDocuments[i] = encode(model.sample());
+        }
+        long ids = java.util.Arrays.stream(cursorDocuments).map(bytes -> new RawBsonDocument(bytes).get("_id")).distinct()
+                .count();
+        if (ids != cursorDocuments.length) {
+            throw new IllegalStateException("%s samples share ids: %d distinct of %d".formatted(model, ids,
+                    cursorDocuments.length));
+        }
         Object decoded = decode();
         if (!model.type().isInstance(decoded)) {
             throw new IllegalStateException("Round trip of %s produced %s".formatted(model, decoded));
@@ -80,9 +95,13 @@ public class CodecBenchmark {
 
     @Benchmark
     public byte[] encode() {
+        return encode(entity);
+    }
+
+    private byte[] encode(Object value) {
         BasicOutputBuffer buffer = new BasicOutputBuffer(512);
         try (BsonBinaryWriter writer = new BsonBinaryWriter(buffer)) {
-            codec.encode(writer, entity, encoderContext);
+            codec.encode(writer, value, encoderContext);
         }
         return buffer.toByteArray();
     }
@@ -98,11 +117,17 @@ public class CodecBenchmark {
     }
 
     /**
-     * A decode as {@code MorphiaCursor} does it: inside one session shared by every document of a query, so the
-     * session's own creation is amortized.
+     * A decode as {@code MorphiaCursor} does it: inside one session shared by every document of a long query, so the
+     * session's own creation is amortized while its cache keeps taking in new ids.
      */
     @Benchmark
     public Object decodeInCursor() {
-        return cursorSession.decoding(this::decode);
+        byte[] document = cursorDocuments[cursorPosition];
+        cursorPosition = (cursorPosition + 1) % cursorDocuments.length;
+        return cursorSession.decoding(() -> {
+            try (BsonBinaryReader reader = new BsonBinaryReader(ByteBuffer.wrap(document))) {
+                return codec.decode(reader, decoderContext);
+            }
+        });
     }
 }

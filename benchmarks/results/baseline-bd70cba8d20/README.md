@@ -28,10 +28,12 @@ java -cp morphia-benchmarks.jar org.openjdk.jmh.Main -p variant=critter-runtime 
 
 Reflection numbers unless stated.
 
-- **Every top-level decode now creates a `DecodeSession` (#4257).** `decodeInCursor` decodes inside one shared session,
-  as `MorphiaCursor` does, and saves ~336 B/op on every model. A separate allocation probe on SIMPLE attributed the
-  rest of #4257's cost: `peekId` plus session registration ~488 B/doc, the `_t` pre-scan ~392 B, the per-decode
-  session ~352 B. Without any of these, SIMPLE decodes in 1,936 B; today it takes 3,168 B.
+- **#4257's `DecodeSession` costs about the same in a query as on its own.** A standalone decode creates a session
+  each time. `decodeInCursor` decodes inside one session shared across 2,048 documents with distinct ids, as a long
+  `MorphiaCursor` does, so the session cache keeps inserting and evicting. That steady-state cache work costs about as
+  much as the per-decode session it replaces: SIMPLE 3,000 B vs 3,160 B, NESTED 7,944 vs 8,008, COLLECTIONS 22,360 vs
+  22,088. A separate allocation probe on SIMPLE split the per-document cost: `peekId` plus session registration
+  ~488 B, the `_t` pre-scan ~392 B, a new session ~352 B. Without any of these, SIMPLE decodes in 1,936 B.
 - **A no-op global listener is expensive (B3).** `ListenerBenchmark` against `CodecBenchmark` for the same models:
   SIMPLE decode 3.2 µs vs 1.35 µs (8.7 KB vs 3.2 KB), NESTED decode 14.6 µs vs 3.5 µs (42 KB vs 8 KB), NESTED encode
   11.7 µs vs 2.4 µs (39 KB vs 2 KB).
