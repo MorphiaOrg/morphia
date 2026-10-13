@@ -3,6 +3,7 @@ package dev.morphia.mapping;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +55,9 @@ public abstract class AbstractMapper implements Mapper {
     // the parent does show up — without rescanning every already-registered model on every new
     // registration (see register()/linkHierarchy()).
     private final Map<String, List<EntityModel>> pendingSubtypesByParentName = new ConcurrentHashMap<>();
+    // Models whose registration is in progress (being validated), guarded by the mapper's lock. Only the registering
+    // thread can see them, so its recursive lookups resolve, while other threads wait on the lock for the outcome.
+    private final Map<String, EntityModel> registering = new HashMap<>();
     protected final List<EntityListener<?>> listeners = new ArrayList<>();
     protected final MorphiaConfig config;
     protected final DiscriminatorLookup discriminatorLookup;
@@ -331,6 +335,9 @@ public abstract class AbstractMapper implements Mapper {
         }
         synchronized (this) {
             model = mappedEntities.get(type.getName());
+            if (model == null) {
+                model = registering.get(type.getName());
+            }
             return model != null ? model : register(buildModel(type));
         }
     }
@@ -394,34 +401,40 @@ public abstract class AbstractMapper implements Mapper {
 
     /**
      * Registers a model unless one is already registered for its type, in which case the existing model is returned.
-     * The model is visible in {@link #mappedEntities} while it's validated, so validation can resolve references back
-     * to it. If validation or discriminator registration fails, the model is removed again before the failure
-     * propagates, so a later lookup fails the same way instead of returning a half-registered model.
+     * Registration happens under the mapper's lock. The model is published to {@link #mappedEntities} only after it
+     * passes validation and discriminator registration, so concurrent lookups never see a model that may yet be
+     * rejected. While it's being validated, lookups from the registering thread (e.g. a reference back to the type)
+     * resolve to it through {@link #mapEntity(Class)}. If validation or discriminator registration fails, the failure
+     * propagates and nothing is registered, so a later lookup fails the same way.
      *
      * @param model    the model to register
      * @param validate true to validate the model before completing its registration
      * @return the registered model for the type, which is {@code model} unless another was registered first
      */
     @MorphiaInternal
-    protected EntityModel register(EntityModel model, boolean validate) {
+    protected synchronized EntityModel register(EntityModel model, boolean validate) {
         String name = model.getType().getName();
-        var existing = mappedEntities.putIfAbsent(name, model);
+        var existing = mappedEntities.get(name);
+        if (existing == null) {
+            existing = registering.get(name);
+        }
         if (existing != null) {
             return existing;
         }
+        registering.put(name, model);
         try {
             if (validate && !model.isInterface()) {
                 new MappingValidator()
                         .validate(this, model);
             }
             discriminatorLookup.addModel(model);
-        } catch (RuntimeException e) {
-            mappedEntities.remove(name, model);
-            throw e;
+        } finally {
+            registering.remove(name);
         }
+
         mappedEntitiesByCollection.computeIfAbsent(model.collectionName(), s -> new CopyOnWriteArraySet<>())
                 .add(model);
-
+        mappedEntities.put(name, model);
         linkHierarchy(model);
         return model;
     }
