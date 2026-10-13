@@ -436,9 +436,9 @@ public abstract class AbstractMapper implements Mapper {
             registering.remove(name);
         }
 
+        linkHierarchy(model);
         mappedEntitiesByCollection.computeIfAbsent(model.collectionName(), s -> new CopyOnWriteArraySet<>())
                 .add(model);
-        linkHierarchy(model);
         mappedEntities.put(name, model);
         return model;
     }

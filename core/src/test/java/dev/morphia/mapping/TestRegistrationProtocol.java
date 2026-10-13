@@ -12,6 +12,7 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Version;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 import dev.morphia.mapping.validation.ConstraintViolationException;
 
 import org.bson.types.ObjectId;
@@ -26,6 +27,18 @@ import org.junit.jupiter.params.provider.EnumSource;
 public class TestRegistrationProtocol {
     private static final int THREADS = 8;
     private static final int ROUNDS = 50;
+
+    /**
+     * Asserts that a CRITTER run really got a critter model; {@link CritterMapper} silently falls back to a reflective
+     * model when generation fails.
+     */
+    private static EntityModel assertModelType(MapperType type, EntityModel model) {
+        if (type == MapperType.CRITTER) {
+            Assertions.assertInstanceOf(CritterEntityModel.class, model,
+                    "Expected a critter model but got " + model.getClass().getName());
+        }
+        return model;
+    }
 
     private static Mapper mapper(MapperType type) {
         MorphiaConfig config = MorphiaConfig.load().mapper(type);
@@ -62,7 +75,7 @@ public class TestRegistrationProtocol {
     @EnumSource(MapperType.class)
     public void duplicateDiscriminatorIsNotRegistered(MapperType type) {
         Mapper mapper = mapper(type);
-        mapper.mapEntity(First.class);
+        assertModelType(type, mapper.mapEntity(First.class));
 
         Assertions.assertThrows(MappingException.class, () -> mapper.mapEntity(Second.class));
         Assertions.assertFalse(mapper.isMapped(Second.class), "A model with a duplicate discriminator should not stay registered");
@@ -90,7 +103,7 @@ public class TestRegistrationProtocol {
                 }
                 start.countDown();
 
-                EntityModel first = results.get(0).get();
+                EntityModel first = assertModelType(type, results.get(0).get());
                 for (Future<EntityModel> result : results) {
                     Assertions.assertSame(first, result.get(), "Every thread should see the one registered model");
                 }
@@ -106,7 +119,7 @@ public class TestRegistrationProtocol {
     @EnumSource(MapperType.class)
     public void registerKeepsTheFirstModel(MapperType type) {
         Mapper mapper = mapper(type);
-        EntityModel original = mapper.mapEntity(Concurrent.class);
+        EntityModel original = assertModelType(type, mapper.mapEntity(Concurrent.class));
 
         Assertions.assertSame(original, mapper.register(new EntityModel(mapper, Concurrent.class)));
         Assertions.assertSame(original, mapper.getEntityModel(Concurrent.class));

@@ -151,6 +151,10 @@ structural item covers are moved to that item (see Phases 4 and 5).
 ### 2.2 `getSuperClass()` returns an interface (A5/D5)
 - Set `superClass` only when `parent.getType() == type.getSuperclass()`. Make the field private.
 - Stop recording pending subtypes for `Object` and unmappable parents.
+- Move interface linking out of `EntityModel.MappingUtil.buildHierarchy()` and into the mapper's
+  post-validation `linkHierarchy`, keeping the links to inherited interfaces. Today, building a model links it under
+  its mapped interfaces before it's validated, so a lock-free `getSubtypes()` reader can briefly see a model that is
+  then rejected (deferred from #4390's review).
 - Test: `C extends B implements Tagged` → `getSuperClass() == B`, and `IndexHelper` inherits `B`'s `@Indexes`.
 
 ### 2.3 Reference filter reads the untranslated name (D10)
