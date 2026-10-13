@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+import dev.morphia.benchmarks.models.ArraysEntity;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.mapping.CritterMapper;
@@ -22,22 +23,22 @@ public enum MapperVariant {
      */
     REFLECTION(MapperType.REFLECTION) {
         @Override
-        void verify(Mapper mapper) {
-            expect(mapper, Models.CONCRETE_TYPES, Tier.REFLECTION);
+        void verify(Mapper mapper, List<Class<?>> mapped) {
+            expect(mapper, mapped, Models.CONCRETE_TYPES, Tier.REFLECTION);
         }
     },
 
     /**
      * {@link CritterMapper} with the critter-aot jar ahead of the benchmarks jar on the classpath. The root entities
-     * must load pre-generated models. Types critter-maven can't handle ahead of time (e.g. types with array-typed fields) are
-     * generated at runtime, which is what an application would get too; nothing may fall back to
-     * reflection.
+     * must load pre-generated models, and other types may be generated at runtime, which is what an application would
+     * get too. Only the {@link #CRITTER_FALLBACKS} may fall back to reflection.
      */
     CRITTER(MapperType.CRITTER) {
         @Override
-        void verify(Mapper mapper) {
-            expect(mapper, Models.ROOT_TYPES, Tier.AOT);
-            expect(mapper, Models.CONCRETE_TYPES, Tier.AOT, Tier.RUNTIME);
+        void verify(Mapper mapper, List<Class<?>> mapped) {
+            expect(mapper, mapped, without(Models.ROOT_TYPES), Tier.AOT);
+            expect(mapper, mapped, without(Models.CONCRETE_TYPES), Tier.AOT, Tier.RUNTIME);
+            expect(mapper, mapped, CRITTER_FALLBACKS, Tier.REFLECTION);
         }
     },
 
@@ -46,10 +47,17 @@ public enum MapperVariant {
      */
     CRITTER_RUNTIME(MapperType.CRITTER) {
         @Override
-        void verify(Mapper mapper) {
-            expect(mapper, Models.CONCRETE_TYPES, Tier.RUNTIME);
+        void verify(Mapper mapper, List<Class<?>> mapped) {
+            expect(mapper, mapped, without(Models.CONCRETE_TYPES), Tier.RUNTIME);
+            expect(mapper, mapped, CRITTER_FALLBACKS, Tier.REFLECTION);
         }
     };
+
+    /**
+     * Types the critter mapper maps reflectively. Critter can't generate models for array properties, so an entity with
+     * one falls back whole (game plan item 4.8). They must still fall back, so this list can't go stale.
+     */
+    static final List<Class<?>> CRITTER_FALLBACKS = List.of(ArraysEntity.class);
 
     /**
      * Where an entity model came from.
@@ -99,7 +107,7 @@ public enum MapperVariant {
      * Fails if any type was not mapped the way this variant promises, so a misconfigured leg can't silently measure the
      * wrong thing.
      */
-    abstract void verify(Mapper mapper);
+    abstract void verify(Mapper mapper, List<Class<?>> mapped);
 
     /**
      * @return a one-line summary of the tier each concrete type was mapped with
@@ -110,9 +118,16 @@ public enum MapperVariant {
                 .collect(Collectors.joining(", "));
     }
 
-    private static void expect(Mapper mapper, List<Class<?>> types, Tier... allowed) {
+    private static List<Class<?>> without(List<Class<?>> types) {
+        return types.stream().filter(type -> !CRITTER_FALLBACKS.contains(type)).toList();
+    }
+
+    /**
+     * Checks the tier of each of {@code types} that was {@code mapped}; looking up any other type would map it.
+     */
+    private static void expect(Mapper mapper, List<Class<?>> mapped, List<Class<?>> types, Tier... allowed) {
         List<Tier> expected = List.of(allowed);
-        for (Class<?> type : types) {
+        for (Class<?> type : types.stream().filter(mapped::contains).toList()) {
             Tier actual = Tier.of(mapper.getEntityModel(type));
             if (!expected.contains(actual)) {
                 throw new IllegalStateException("Expected %s to be mapped as %s but it was %s. Mapped tiers: %s"

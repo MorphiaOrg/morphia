@@ -1,5 +1,6 @@
 package dev.morphia.benchmarks;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import com.mongodb.MongoClientSettings;
@@ -35,9 +36,16 @@ public final class Fixtures {
      * source.
      */
     public static Mapper mappedMapper(MapperVariant variant, MorphiaConfig config) {
+        return mappedMapper(variant, config, Models.ALL_TYPES);
+    }
+
+    /**
+     * Creates a mapper for the variant, maps the given types, and verifies those models came from the expected source.
+     */
+    public static Mapper mappedMapper(MapperVariant variant, MorphiaConfig config, List<Class<?>> types) {
         Mapper mapper = variant.newMapper(config);
-        mapper.map(Models.ALL_TYPES);
-        variant.verify(mapper);
+        mapper.map(types);
+        variant.verify(mapper, types);
         return mapper;
     }
 
