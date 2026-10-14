@@ -116,7 +116,10 @@ public class PropertyModel {
     public void alternateNames(String... names) {
         loadNames.addAll(asList(names));
         for (String name : names) {
-            entityModel.propertyModelsByMappedName.put(name, this);
+            // e.g. an alternate name that is also this property's mapped name
+            if (entityModel.propertyModelsByMappedName.get(name) != this) {
+                entityModel.propertyModelsByMappedName.put(name, this);
+            }
         }
     }
 

@@ -178,6 +178,19 @@ public class EntityModel {
     }
 
     /**
+     * @param name the Java name of the property
+     * @return the property with that Java name, or null. Unlike {@link #getProperty(String)}, this doesn't match mapped
+     *         names.
+     * @hidden
+     * @morphia.internal
+     */
+    @Nullable
+    @MorphiaInternal
+    public PropertyModel getPropertyByName(String name) {
+        return propertyModelsByName.get(name);
+    }
+
+    /**
      * Renames a registered property, re-keying it in both the name and mapped-name lookups. The property keeps its
      * position, so the order properties are encoded in doesn't change. Alternate (load) names are left as they are.
      *
@@ -205,7 +218,11 @@ public class EntityModel {
         List<Map.Entry<String, PropertyModel>> entries = new ArrayList<>(map.entrySet());
         map.clear();
         for (Map.Entry<String, PropertyModel> entry : entries) {
-            map.put(entry.getKey().equals(oldKey) ? newKey : entry.getKey(), entry.getValue());
+            String key = entry.getKey().equals(oldKey) ? newKey : entry.getKey();
+            // the property may already be registered under the new name, e.g. as an alternate name; keep one entry
+            if (map.get(key) != entry.getValue()) {
+                map.put(key, entry.getValue());
+            }
         }
     }
 

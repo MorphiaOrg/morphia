@@ -32,6 +32,7 @@ import dev.morphia.test.mapping.codec.harness.models.HarnessCollections;
 import dev.morphia.test.mapping.codec.harness.models.HarnessConstructed;
 import dev.morphia.test.mapping.codec.harness.models.HarnessDrawing;
 import dev.morphia.test.mapping.codec.harness.models.HarnessIdField;
+import dev.morphia.test.mapping.codec.harness.models.HarnessIdFieldAlias;
 import dev.morphia.test.mapping.codec.harness.models.HarnessLifecycle;
 import dev.morphia.test.mapping.codec.harness.models.HarnessNested;
 import dev.morphia.test.mapping.codec.harness.models.HarnessNoDiscriminator;
@@ -193,6 +194,17 @@ public class CodecHarnessTest {
             HarnessIdField decoded = decode(codec, encode(codec, HarnessIdField.sample(), COLLECTIBLE));
             assertEquals("key-1", decoded.getKey(), mapper + " should read the @IdField property from _id");
             assertEquals("named by @IdField", decoded.getName());
+        }
+    }
+
+    @Test
+    void readsIdFieldThatAlsoLoadsFromId() {
+        BsonDocument document = BsonDocument.parse("{\"_id\": \"alias-key\"}");
+        for (MapperType mapper : MapperType.values()) {
+            MorphiaDatastore datastore = datastore(Variant.DEFAULTS, mapper);
+            assertEquals("key", datastore.getMapper().getEntityModel(HarnessIdFieldAlias.class).getIdProperty().getName());
+            assertEquals("alias-key", decode(codec(datastore, HarnessIdFieldAlias.class), bytes(document)).getKey(),
+                    mapper + " should read an @IdField property that also loads from _id");
         }
     }
 

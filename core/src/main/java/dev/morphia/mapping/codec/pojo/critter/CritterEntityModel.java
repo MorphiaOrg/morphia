@@ -47,7 +47,7 @@ public abstract class CritterEntityModel extends EntityModel {
         // the generator already maps the @IdField property to _id; mark it as the id
         IdField idField = getAnnotation(IdField.class);
         if (idField != null && getIdProperty() == null) {
-            setIdProperty(getProperty(idField.value()));
+            setIdProperty(getPropertyByName(idField.value()));
         }
         initializeListeners();
     }
