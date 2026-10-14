@@ -1,7 +1,5 @@
 package dev.morphia.mapping;
 
-import com.mongodb.lang.Nullable;
-
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -66,13 +64,8 @@ public class ReflectiveMapper extends AbstractMapper {
     }
 
     @Override
-    @Nullable
-    public EntityModel mapEntity(@Nullable Class type) {
-        if (isMappable(type)) {
-            EntityModel model = mappedEntities.get(type.getName());
-            return model != null ? model : register(new EntityModel(this, type));
-        }
-        return null;
+    protected EntityModel buildModel(Class<?> type) {
+        return new EntityModel(this, type);
     }
 
     @Override

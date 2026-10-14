@@ -3,6 +3,7 @@ package dev.morphia.mapping;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +55,9 @@ public abstract class AbstractMapper implements Mapper {
     // the parent does show up — without rescanning every already-registered model on every new
     // registration (see register()/linkHierarchy()).
     private final Map<String, List<EntityModel>> pendingSubtypesByParentName = new ConcurrentHashMap<>();
+    // Models whose registration is in progress (being validated), guarded by the mapper's lock. Only the registering
+    // thread can see them, so its recursive lookups resolve, while other threads wait on the lock for the outcome.
+    private final Map<String, EntityModel> registering = new HashMap<>();
     protected final List<EntityListener<?>> listeners = new ArrayList<>();
     protected final MorphiaConfig config;
     protected final DiscriminatorLookup discriminatorLookup;
@@ -312,6 +316,44 @@ public abstract class AbstractMapper implements Mapper {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Maps a type, building and registering its model if it isn't mapped yet. Models are built under the mapper's lock
+     * so concurrent first use of a type builds and registers it once; lookups of already-mapped types don't lock.
+     *
+     * @param type the class to map
+     * @return the model, or null if the type isn't mappable
+     */
+    @Override
+    @Nullable
+    public final EntityModel mapEntity(@Nullable Class type) {
+        if (!isMappable(type)) {
+            return null;
+        }
+        EntityModel model = mappedEntities.get(type.getName());
+        if (model != null) {
+            return model;
+        }
+        synchronized (this) {
+            model = mappedEntities.get(type.getName());
+            if (model == null) {
+                model = registering.get(type.getName());
+            }
+            return model != null ? model : register(buildModel(type));
+        }
+    }
+
+    /**
+     * Builds a new, unregistered model for a mappable type. Called by {@link #mapEntity(Class)} under the mapper's lock,
+     * only for types that aren't mapped yet.
+     *
+     * @param type the type to model
+     * @return the new model
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    protected abstract EntityModel buildModel(Class<?> type);
+
     @Override
     public synchronized void map(String packageName) {
         try {
@@ -357,24 +399,57 @@ public abstract class AbstractMapper implements Mapper {
         return register(entityModel, true);
     }
 
+    /**
+     * Registers a model unless one is already registered for its type, in which case the existing model is returned.
+     * Registration happens under the mapper's lock. The model is published to {@link #mappedEntities} only after it
+     * passes validation and discriminator registration, so concurrent lookups never see a model that may yet be
+     * rejected. While it's being validated, lookups from the registering thread (e.g. a reference back to the type)
+     * resolve to it through {@link #mapEntity(Class)}. If validation or discriminator registration fails, the failure
+     * propagates, nothing is registered, and any subtype links made to the model while it was built are removed, so a
+     * later lookup fails the same way. The model is published only after its hierarchy is linked.
+     *
+     * @param model    the model to register
+     * @param validate true to validate the model before completing its registration
+     * @return the registered model for the type, which is {@code model} unless another was registered first
+     */
     @MorphiaInternal
-    protected EntityModel register(EntityModel model, boolean validate) {
-        var existing = mappedEntities.get(model.getType().getName());
+    protected synchronized EntityModel register(EntityModel model, boolean validate) {
+        String name = model.getType().getName();
+        var existing = mappedEntities.get(name);
+        if (existing == null) {
+            existing = registering.get(name);
+        }
         if (existing != null) {
             return existing;
         }
-        mappedEntities.put(model.getType().getName(), model);
-        if (validate && !model.isInterface()) {
-            new MappingValidator()
-                    .validate(this, model);
+        registering.put(name, model);
+        try {
+            if (validate && !model.isInterface()) {
+                new MappingValidator()
+                        .validate(this, model);
+            }
+            discriminatorLookup.addModel(model);
+        } catch (RuntimeException e) {
+            unlink(model);
+            throw e;
+        } finally {
+            registering.remove(name);
         }
 
-        discriminatorLookup.addModel(model);
+        linkHierarchy(model);
         mappedEntitiesByCollection.computeIfAbsent(model.collectionName(), s -> new CopyOnWriteArraySet<>())
                 .add(model);
-
-        linkHierarchy(model);
+        mappedEntities.put(name, model);
         return model;
+    }
+
+    /**
+     * Removes a rejected model from the subtypes of every model it was linked to while it was built (building a model
+     * maps its annotated interfaces and links the new model under them).
+     */
+    private void unlink(EntityModel model) {
+        mappedEntities.values().forEach(parent -> parent.removeSubtype(model));
+        registering.values().forEach(parent -> parent.removeSubtype(model));
     }
 
     /**
