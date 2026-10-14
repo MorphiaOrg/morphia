@@ -192,7 +192,8 @@ public class EntityModel {
 
     /**
      * Renames a registered property, re-keying it in both the name and mapped-name lookups. The property keeps its
-     * position, so the order properties are encoded in doesn't change. Alternate (load) names are left as they are.
+     * position, so the order properties are encoded in doesn't change. Alternate (load) names are left as they are, and
+     * the old mapped name keeps resolving to the property if it's also one of them.
      *
      * @param property   the registered property to rename
      * @param name       the new Java name
@@ -203,7 +204,14 @@ public class EntityModel {
     @MorphiaInternal
     public void renameProperty(PropertyModel property, String name, String mappedName) {
         rekey(propertyModelsByName, property.getName(), name, property);
-        rekey(propertyModelsByMappedName, property.getMappedName(), mappedName, property);
+        if (property.getLoadNames().contains(property.getMappedName())) {
+            // the old mapped name is also a declared load name, so it must keep resolving to the property
+            if (propertyModelsByMappedName.get(mappedName) != property) {
+                propertyModelsByMappedName.put(mappedName, property);
+            }
+        } else {
+            rekey(propertyModelsByMappedName, property.getMappedName(), mappedName, property);
+        }
         property.name(name)
                 .mappedName(mappedName);
     }

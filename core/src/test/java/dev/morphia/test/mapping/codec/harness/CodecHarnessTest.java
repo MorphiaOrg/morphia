@@ -33,6 +33,7 @@ import dev.morphia.test.mapping.codec.harness.models.HarnessConstructed;
 import dev.morphia.test.mapping.codec.harness.models.HarnessDrawing;
 import dev.morphia.test.mapping.codec.harness.models.HarnessIdField;
 import dev.morphia.test.mapping.codec.harness.models.HarnessIdFieldAlias;
+import dev.morphia.test.mapping.codec.harness.models.HarnessIdFieldLegacy;
 import dev.morphia.test.mapping.codec.harness.models.HarnessLifecycle;
 import dev.morphia.test.mapping.codec.harness.models.HarnessNested;
 import dev.morphia.test.mapping.codec.harness.models.HarnessNoDiscriminator;
@@ -205,6 +206,16 @@ public class CodecHarnessTest {
             assertEquals("key", datastore.getMapper().getEntityModel(HarnessIdFieldAlias.class).getIdProperty().getName());
             assertEquals("alias-key", decode(codec(datastore, HarnessIdFieldAlias.class), bytes(document)).getKey(),
                     mapper + " should read an @IdField property that also loads from _id");
+        }
+    }
+
+    @Test
+    void readsIdFieldFromItsOldNameWhenThatIsALoadName() {
+        BsonDocument document = BsonDocument.parse("{\"legacy\": \"old-key\"}");
+        for (MapperType mapper : MapperType.values()) {
+            Codec<HarnessIdFieldLegacy> codec = codec(datastore(Variant.DEFAULTS, mapper), HarnessIdFieldLegacy.class);
+            assertEquals("old-key", decode(codec, bytes(document)).getKey(),
+                    mapper + " should still load the @IdField property from its declared load name");
         }
     }
 
