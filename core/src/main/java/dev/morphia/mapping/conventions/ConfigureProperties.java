@@ -31,8 +31,8 @@ public class ConfigureProperties implements MorphiaConvention {
             IdField idProperty = model.getAnnotation(IdField.class);
             if (idProperty != null) {
                 PropertyModel propertyModel = model.getProperty(idProperty.value());
+                model.renameProperty(propertyModel, propertyModel.getName(), "_id");
                 model.setIdProperty(propertyModel);
-                propertyModel.mappedName("_id");
             }
         }
     }

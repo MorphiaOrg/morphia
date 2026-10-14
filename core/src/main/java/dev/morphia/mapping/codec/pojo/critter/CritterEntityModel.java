@@ -3,6 +3,7 @@ package dev.morphia.mapping.codec.pojo.critter;
 import java.util.List;
 
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.IdField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.MorphiaPropertySerialization;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -42,6 +43,11 @@ public abstract class CritterEntityModel extends EntityModel {
             property.serialization(new MorphiaPropertySerialization(mapper.getConfig(), property));
             // Without this, PropertyModel#setValue builds a new Conversions registry on every call.
             property.conversions(mapper.getConversions());
+        }
+        // the generator already maps the @IdField property to _id; mark it as the id
+        IdField idField = getAnnotation(IdField.class);
+        if (idField != null && getIdProperty() == null) {
+            setIdProperty(getProperty(idField.value()));
         }
         initializeListeners();
     }

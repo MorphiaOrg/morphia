@@ -31,6 +31,7 @@ import dev.morphia.test.mapping.codec.harness.models.HarnessArrays;
 import dev.morphia.test.mapping.codec.harness.models.HarnessCollections;
 import dev.morphia.test.mapping.codec.harness.models.HarnessConstructed;
 import dev.morphia.test.mapping.codec.harness.models.HarnessDrawing;
+import dev.morphia.test.mapping.codec.harness.models.HarnessIdField;
 import dev.morphia.test.mapping.codec.harness.models.HarnessLifecycle;
 import dev.morphia.test.mapping.codec.harness.models.HarnessNested;
 import dev.morphia.test.mapping.codec.harness.models.HarnessNoDiscriminator;
@@ -181,6 +182,20 @@ public class CodecHarnessTest {
         }
     }
 
+    @Test
+    void readsIdField() {
+        // the fixtures record what was decoded, so this pins the @IdField property being read back from _id
+        for (MapperType mapper : MapperType.values()) {
+            MorphiaDatastore datastore = datastore(Variant.DEFAULTS, mapper);
+            assertEquals("key", datastore.getMapper().getEntityModel(HarnessIdField.class).getIdProperty().getName(),
+                    mapper + " should use the @IdField property as the id");
+            Codec<HarnessIdField> codec = codec(datastore, HarnessIdField.class);
+            HarnessIdField decoded = decode(codec, encode(codec, HarnessIdField.sample(), COLLECTIBLE));
+            assertEquals("key-1", decoded.getKey(), mapper + " should read the @IdField property from _id");
+            assertEquals("named by @IdField", decoded.getName());
+        }
+    }
+
     /**
      * @return case name → recorded results (encoding, round trip, or decoded foreign document) as canonical JSON
      */
@@ -202,6 +217,7 @@ public class CodecHarnessTest {
         sample(results, datastore, "constructor", HarnessConstructed.class, HarnessConstructed::sample);
         sample(results, datastore, "records", HarnessRecordHolder.class, HarnessRecordHolder::sample);
         sample(results, datastore, "renames", HarnessRenames.class, HarnessRenames::sample);
+        sample(results, datastore, "id-field", HarnessIdField.class, HarnessIdField::sample);
         sample(results, datastore, "lifecycle", HarnessLifecycle.class, HarnessLifecycle::sample);
         sample(results, datastore, "generic-binding", HarnessStringListBox.class, HarnessStringListBox::sample);
         encodeOnly(results, datastore, "references", HarnessReferences.class, HarnessReferences::sample);

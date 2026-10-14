@@ -126,12 +126,7 @@ public class EntityModel {
         discriminator = other.discriminator;
 
         this.annotations.putAll(other.annotations);
-        // A property renamed in place after being registered (e.g. Kotlin delegated properties
-        // re-registering a field-discovered property under its Kotlin property name) can leave
-        // propertyModelsByName with two keys pointing at the same PropertyModel instance. Dedupe
-        // here so that property isn't cloned and re-added twice, which would trip addProperty()'s
-        // duplicate-mappedName check on the second occurrence.
-        new LinkedHashSet<>(other.propertyModelsByName.values())
+        other.propertyModelsByName.values()
                 .forEach(otherProperty -> {
                     // PropertyModel's copy constructor already copies loadNames verbatim, so
                     // just register them against this (new) EntityModel's lookup map directly.
@@ -180,6 +175,38 @@ public class EntityModel {
             }
         }
         return added;
+    }
+
+    /**
+     * Renames a registered property, re-keying it in both the name and mapped-name lookups. The property keeps its
+     * position, so the order properties are encoded in doesn't change. Alternate (load) names are left as they are.
+     *
+     * @param property   the registered property to rename
+     * @param name       the new Java name
+     * @param mappedName the new mapped (document) name
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public void renameProperty(PropertyModel property, String name, String mappedName) {
+        rekey(propertyModelsByName, property.getName(), name, property);
+        rekey(propertyModelsByMappedName, property.getMappedName(), mappedName, property);
+        property.name(name)
+                .mappedName(mappedName);
+    }
+
+    private void rekey(Map<String, PropertyModel> map, String oldKey, String newKey, PropertyModel property) {
+        if (map.get(oldKey) != property) {
+            throw new IllegalArgumentException("%s isn't registered as '%s' on %s".formatted(property, oldKey, type.getName()));
+        }
+        if (oldKey.equals(newKey)) {
+            return;
+        }
+        List<Map.Entry<String, PropertyModel>> entries = new ArrayList<>(map.entrySet());
+        map.clear();
+        for (Map.Entry<String, PropertyModel> entry : entries) {
+            map.put(entry.getKey().equals(oldKey) ? newKey : entry.getKey(), entry.getValue());
+        }
     }
 
     public void annotation(Annotation annotation) {

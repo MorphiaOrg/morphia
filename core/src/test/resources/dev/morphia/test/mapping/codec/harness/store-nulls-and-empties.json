@@ -575,6 +575,18 @@
       "email": "a@example.com"
     }
   },
+  "id-field": {
+    "encoded": {
+      "_id": "key-1",
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessIdField",
+      "name": "named by @IdField"
+    },
+    "roundTrip": {
+      "_id": "key-1",
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessIdField",
+      "name": "named by @IdField"
+    }
+  },
   "lifecycle": {
     "encoded": {
       "_id": {

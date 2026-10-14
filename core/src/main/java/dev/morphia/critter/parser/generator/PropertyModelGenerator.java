@@ -14,8 +14,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.mongodb.DBRef;
+import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.AlsoLoad;
+import dev.morphia.annotations.IdField;
 import dev.morphia.annotations.Reference;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.critter.Critter;
@@ -49,6 +51,8 @@ public class PropertyModelGenerator extends BaseGenerator {
     private final Map<String, Annotation> annotationMap;
     private final TypeData<?> typeData;
     private final String getterName;
+    @Nullable
+    private final String idFieldName;
 
     /**
      * Creates a generator for a field-based property.
@@ -72,6 +76,7 @@ public class PropertyModelGenerator extends BaseGenerator {
         this.annotationMap = buildAnnotationMap(reflectedField != null ? reflectedField.getAnnotations() : new Annotation[0]);
         this.typeData = TypeData.get(resolveGenericType(this.genericType, field.name(), annotationSource));
         this.getterName = null;
+        this.idFieldName = idFieldName(annotationSource);
     }
 
     /**
@@ -126,6 +131,7 @@ public class PropertyModelGenerator extends BaseGenerator {
         }
         this.typeData = TypeData.get(resolveGenericType(this.genericType, this.propertyName, annotationSource));
         this.getterName = method.name();
+        this.idFieldName = idFieldName(annotationSource);
     }
 
     /**
@@ -308,6 +314,12 @@ public class PropertyModelGenerator extends BaseGenerator {
         return new TypeData<>(Object.class, List.of());
     }
 
+    @Nullable
+    private static String idFieldName(Class<?> annotationSource) {
+        IdField idField = annotationSource.getAnnotation(IdField.class);
+        return idField != null ? idField.value() : null;
+    }
+
     /**
      * Emits the generated property model class and returns this generator.
      */
@@ -330,7 +342,9 @@ public class PropertyModelGenerator extends BaseGenerator {
         boolean isMapFlag = Map.class.isAssignableFrom(typeData.getType());
         boolean isSetFlag = java.util.Set.class.isAssignableFrom(typeData.getType());
         boolean isCollectionFlag = java.util.Collection.class.isAssignableFrom(typeData.getType());
-        String mappedName = PropertyConvention.mappedName(config, annotationMap, propertyName);
+        // @IdField names the id property at the entity level, so the property's own annotations don't show it
+        String mappedName = propertyName.equals(idFieldName) ? "_id"
+                : PropertyConvention.mappedName(config, annotationMap, propertyName);
         Class<?> normalizedType = PropertyModel.normalize(typeData);
         AlsoLoad alsoLoad = (AlsoLoad) annotationMap.get(AlsoLoad.class.getName());
         String[] loadNamesArr = alsoLoad != null ? alsoLoad.value() : new String[0];
