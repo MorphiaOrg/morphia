@@ -67,6 +67,8 @@ public class PropertyModel {
     private final List<String> loadNames = new ArrayList<>();
     private final EntityModel entityModel;
     private Codec<? super Object> codec;
+    // this property's position in its entity model, which addresses it in a CodecPlan; assigned when it's added
+    private int slot = -1;
     private Class<?> normalizedType;
     private Conversions conversions;
 
@@ -423,6 +425,17 @@ public class PropertyModel {
 
     void codec(Codec<? super Object> codec) {
         this.codec = codec;
+    }
+
+    /**
+     * @return this property's position in its entity model, or -1 if it hasn't been added to one
+     */
+    int slot() {
+        return slot;
+    }
+
+    void slot(int slot) {
+        this.slot = slot;
     }
 
 }

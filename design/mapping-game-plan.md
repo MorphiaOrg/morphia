@@ -194,7 +194,7 @@ structural item covers are moved to that item (see Phases 4 and 5).
 **Precondition:** the minimal codec plan (3.0) and the harness (0.1). Each item is its own PR, with before/after
 JMH numbers on both mappers.
 
-### 3.0 Minimal per-`MorphiaCodec` plan
+### ~~3.0 Minimal per-`MorphiaCodec` plan~~
 - **What:** an immutable object built once per `MorphiaCodec`. Initially it holds `PropertyModel[] properties`,
   `Codec<?>[] codecs` by slot, and `PropertyModel[] encodeOrder`. Later items add `directBsonTypes[]`,
   `boxedTypes[]`, creator positions, lifecycle flags and discriminator/subtype caches.
