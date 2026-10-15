@@ -5,7 +5,9 @@ import java.util.List;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.config.MorphiaConfig;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 
+import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -72,6 +74,38 @@ public class TestCollectionRoots {
         Assertions.assertEquals(List.of(), warnings);
     }
 
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    public void rootQueriesIncludeSubtypesBelowAnUnmappedClass(MapperType type) {
+        MorphiaConfig config = MorphiaConfig.load().mapper(type).enablePolymorphicQueries(true);
+        Mapper mapper = type == MapperType.CRITTER ? new CritterMapper(config) : new ReflectiveMapper(config);
+        // Middle is never mapped
+        mapper.map(Leaf.class, Root.class);
+
+        Assertions.assertEquals(Root.class, mapper.getClassFromCollection("tree"));
+        EntityModel root = mapper.getEntityModel(Root.class);
+        EntityModel leaf = mapper.getEntityModel(Leaf.class);
+        Assertions.assertTrue(root.getSubtypes().contains(leaf), "Leaf extends Root through the unmapped Middle");
+
+        Document query = new Document();
+        mapper.updateQueryWithDiscriminators(root, query);
+        Assertions.assertEquals(List.of(root.discriminator(), leaf.discriminator()),
+                query.get(root.discriminatorKey(), Document.class).getList("$in", String.class));
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    public void anIntermediateClassMappedLaterBecomesTheSuperclass(MapperType type) {
+        Mapper mapper = mapper(type);
+        mapper.map(Leaf.class, Root.class, Middle.class);
+
+        EntityModel middle = mapper.getEntityModel(Middle.class);
+        EntityModel leaf = mapper.getEntityModel(Leaf.class);
+        Assertions.assertSame(middle, leaf.getSuperClass());
+        Assertions.assertSame(mapper.getEntityModel(Root.class), middle.getSuperClass());
+        Assertions.assertTrue(middle.getSubtypes().contains(leaf));
+    }
+
     /**
      * logback-test.xml sets dev.morphia to ERROR, so raise it while capturing. Test classes run concurrently, so only
      * this thread's events count.
@@ -109,6 +143,20 @@ public class TestCollectionRoots {
     @Entity("shapes")
     static class Square extends Shape {
         double side;
+    }
+
+    @Entity("tree")
+    static class Root {
+        @Id
+        ObjectId id;
+    }
+
+    @Entity("tree")
+    static class Middle extends Root {
+    }
+
+    @Entity("tree")
+    static class Leaf extends Middle {
     }
 
     @Entity("shapes")
