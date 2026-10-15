@@ -64,7 +64,7 @@ public class EntityDecoder<T> implements Decoder<T> {
 
             boolean decoded = false;
             try {
-                decodeProperties(reader, decoderContext, instanceCreator, classModel);
+                decodeProperties(reader, decoderContext, instanceCreator, morphiaCodec.getPlan());
                 decoded = true;
             } finally {
                 if (prereadId != null) {
@@ -99,6 +99,23 @@ public class EntityDecoder<T> implements Decoder<T> {
 
     protected void decodeModel(BsonReader reader, DecoderContext decoderContext,
             MorphiaInstanceCreator instanceCreator, @Nullable PropertyModel model) {
+        decodeModel(reader, decoderContext, instanceCreator, morphiaCodec.getPlan(), model);
+    }
+
+    /**
+     * Decodes a property with the codec the given plan holds for it.
+     *
+     * @param reader          the reader
+     * @param decoderContext  the context
+     * @param instanceCreator the creator to give the value to
+     * @param plan            the plan of the codec for the model the property belongs to
+     * @param model           the property, or null to skip the value
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    protected void decodeModel(BsonReader reader, DecoderContext decoderContext,
+            MorphiaInstanceCreator instanceCreator, CodecPlan plan, @Nullable PropertyModel model) {
 
         if (model != null) {
             final BsonReaderMark mark = reader.getMark();
@@ -106,7 +123,7 @@ public class EntityDecoder<T> implements Decoder<T> {
                 if (reader.getCurrentBsonType() == BsonType.NULL) {
                     reader.readNull();
                 } else {
-                    Object value = decoderContext.decodeWithChildContext(model.getCodec(), reader);
+                    Object value = decoderContext.decodeWithChildContext(plan.codec(model), reader);
                     instanceCreator.set(value, model);
                 }
             } catch (BsonInvalidOperationException e) {
@@ -121,13 +138,34 @@ public class EntityDecoder<T> implements Decoder<T> {
 
     protected void decodeProperties(BsonReader reader, DecoderContext decoderContext,
             MorphiaInstanceCreator instanceCreator, EntityModel classModel) {
+        CodecPlan plan = morphiaCodec.getPlan();
+        if (plan.model() != classModel) {
+            plan = ((MorphiaCodec<?>) morphiaCodec.getRegistry().get(classModel.getType())).getPlan();
+        }
+        decodeProperties(reader, decoderContext, instanceCreator, plan);
+    }
+
+    /**
+     * Decodes a document's properties with the codecs a plan holds.
+     *
+     * @param reader          the reader
+     * @param decoderContext  the context
+     * @param instanceCreator the creator to give the values to
+     * @param plan            the plan of the codec for the model being decoded
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    protected void decodeProperties(BsonReader reader, DecoderContext decoderContext,
+            MorphiaInstanceCreator instanceCreator, CodecPlan plan) {
+        EntityModel classModel = plan.model();
         reader.readStartDocument();
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             String name = reader.readName();
             if (classModel.useDiscriminator() && classModel.discriminatorKey().equals(name)) {
                 reader.readString();
             } else {
-                decodeModel(reader, decoderContext, instanceCreator, classModel.getProperty(name));
+                decodeModel(reader, decoderContext, instanceCreator, plan, classModel.getProperty(name));
             }
         }
         reader.readEndDocument();

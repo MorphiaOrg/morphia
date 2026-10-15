@@ -30,7 +30,9 @@ import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.DiscriminatorFunction;
 import dev.morphia.mapping.MapperType;
 import dev.morphia.mapping.codec.MorphiaCodecProvider;
+import dev.morphia.mapping.codec.pojo.CodecPlan;
 import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.MorphiaCodec;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 import dev.morphia.test.mapping.codec.harness.models.HarnessArrays;
@@ -78,6 +80,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -259,6 +262,23 @@ public class CodecHarnessTest {
             }
         } finally {
             executor.shutdownNow();
+        }
+    }
+
+    @Test
+    void codecPlanResolvesEveryPropertyBySlot() {
+        for (MapperType mapper : MapperType.values()) {
+            MorphiaDatastore datastore = datastore(Variant.DEFAULTS, mapper);
+            CodecPlan plan = ((MorphiaCodec<?>) codec(datastore, HarnessScalars.class)).getPlan();
+            EntityModel model = datastore.getMapper().getEntityModel(HarnessScalars.class);
+
+            assertSame(model, plan.model());
+            for (PropertyModel property : model.getProperties()) {
+                assertNotNull(plan.codec(property), mapper + ": no codec for " + property.getName());
+            }
+            PropertyModel foreign = datastore.getMapper().getEntityModel(HarnessRenames.class).getProperties().get(1);
+            assertThrows(IllegalArgumentException.class, () -> plan.codec(foreign),
+                    mapper + ": a property of another model should be rejected");
         }
     }
 

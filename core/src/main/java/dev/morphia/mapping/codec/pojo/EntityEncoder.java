@@ -8,7 +8,6 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.internal.MorphiaInternal;
 
 import org.bson.BsonWriter;
-import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 import org.bson.codecs.IdGenerator;
 import org.bson.codecs.ObjectIdGenerator;
@@ -52,10 +51,7 @@ public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
                     encodeDiscriminator(writer, model);
                 }
 
-                for (PropertyModel propertyModel : model.properties()) {
-                    if (propertyModel.equals(idModel)) {
-                        continue;
-                    }
+                for (PropertyModel propertyModel : morphiaCodec.getPlan().encodeOrder()) {
                     encodeProperty(writer, propertyModel, value, encoderContext);
                 }
             });
@@ -138,8 +134,7 @@ public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
         if (value == null) {
             writer.writeNull();
         } else {
-            Codec<? super Object> codec = (Codec<? super Object>) model.getCodec();
-            encoderContext.encodeWithChildContext(codec, writer, value);
+            encoderContext.encodeWithChildContext(morphiaCodec.getPlan().codec(model), writer, value);
         }
     }
 }
