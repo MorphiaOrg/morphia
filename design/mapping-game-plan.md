@@ -174,7 +174,7 @@ structural item covers are moved to that item (see Phases 4 and 5).
 - Write the test first (`List<Shape>`, where `Shape` has `@PrePersist`).
 - Fix it by delegating subtypes *before* running callbacks in `LifecycleEncoder`/`LifecycleDecoder`.
 
-### 2.7 `PropertyModel.hashCode` includes the lazy codec (D5)
+### ~~2.7 `PropertyModel.hashCode` includes the lazy codec (D5)~~
 - Delete the `equals`/`hashCode` overrides on `EntityModel` and `PropertyModel`, so both compare by identity.
   This also removes the deep `equals` cost on `CopyOnWriteArraySet.add` and in `EntityEncoder`.
 - Audit tests for any that rely on structural equality.

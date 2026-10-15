@@ -23,7 +23,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.StringJoiner;
 
@@ -174,12 +173,6 @@ public class PropertyModel {
         return codec;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getName(), getTypeData(), getMappedName(), codec, getAccessor(), serialization,
-                annotationMap.values(), getNormalizedType());
-    }
-
     /**
      * @param document the Document get the value from
      * @return the value from first mapping of this field
@@ -293,23 +286,6 @@ public class PropertyModel {
      */
     public boolean hasAnnotation(Class<? extends Annotation> type) {
         return annotationMap.containsKey(type);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof PropertyModel that)) {
-            return false;
-        }
-        return getName().equals(that.getName())
-                && getTypeData().equals(that.getTypeData())
-                && getMappedName().equals(that.getMappedName())
-                && Objects.equals(codec, that.codec)
-                && getAccessor().equals(that.getAccessor())
-                && serialization.equals(that.serialization)
-                && Objects.equals(getNormalizedType(), that.getNormalizedType());
     }
 
     /**
