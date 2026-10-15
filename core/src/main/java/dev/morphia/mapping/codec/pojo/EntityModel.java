@@ -529,33 +529,6 @@ public class EntityModel {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(annotations, propertyModelsByName, propertyModelsByMappedName, creatorFactory,
-                discriminatorEnabled, discriminatorKey(), discriminator(), getType(), collectionName(), listeners);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof EntityModel)) {
-            return false;
-        }
-        final EntityModel that = (EntityModel) o;
-        return discriminatorEnabled == that.discriminatorEnabled
-                && Objects.equals(annotations, that.annotations)
-                && Objects.equals(propertyModelsByName, that.propertyModelsByName)
-                && Objects.equals(propertyModelsByMappedName, that.propertyModelsByMappedName)
-                && Objects.equals(creatorFactory, that.creatorFactory)
-                && Objects.equals(discriminatorKey(), that.discriminatorKey())
-                && Objects.equals(discriminator(), that.discriminator())
-                && Objects.equals(getType(), that.getType())
-                && Objects.equals(collectionName(), that.collectionName())
-                && Objects.equals(listeners, that.listeners);
-    }
-
-    @Override
     public String toString() {
         String properties = propertyModelsByName.values().stream()
                 .map(PropertyModel::toString)

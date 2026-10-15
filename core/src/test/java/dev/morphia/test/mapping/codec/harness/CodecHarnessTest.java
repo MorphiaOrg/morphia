@@ -26,6 +26,7 @@ import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.DiscriminatorFunction;
 import dev.morphia.mapping.MapperType;
 import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 import dev.morphia.test.mapping.codec.harness.models.HarnessArrays;
 import dev.morphia.test.mapping.codec.harness.models.HarnessCallbackCircle;
@@ -204,6 +205,25 @@ public class CodecHarnessTest {
         assertEquals(List.of(prePersists, postPersists, preLoads, postLoads),
                 List.of(shape.getPrePersists(), shape.getPostPersists(), shape.getPreLoads(), shape.getPostLoads()),
                 message + ": @PrePersist, @PostPersist, @PreLoad, @PostLoad counts");
+    }
+
+    @Test
+    void modelHashesAreStableAcrossEncoding() {
+        for (MapperType mapper : MapperType.values()) {
+            MorphiaDatastore datastore = datastore(Variant.DEFAULTS, mapper);
+            EntityModel model = datastore.getMapper().getEntityModel(HarnessScalars.class);
+            Set<EntityModel> models = new HashSet<>(Set.of(model));
+            Set<PropertyModel> properties = new HashSet<>(model.getProperties());
+
+            // encoding specializes each property's codec, which used to change its hash
+            Codec<HarnessScalars> codec = codec(datastore, HarnessScalars.class);
+            decode(codec, encode(codec, HarnessScalars.sample(), COLLECTIBLE));
+
+            assertTrue(models.contains(model), mapper + ": the model's hash changed");
+            for (PropertyModel property : model.getProperties()) {
+                assertTrue(properties.contains(property), mapper + ": the hash of " + property.getName() + " changed");
+            }
+        }
     }
 
     @Test
