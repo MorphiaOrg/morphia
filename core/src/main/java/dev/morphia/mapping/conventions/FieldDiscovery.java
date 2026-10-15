@@ -70,6 +70,18 @@ public class FieldDiscovery implements MorphiaConvention {
 
     @MorphiaInternal
     static String discoverMappedName(Mapper mapper, PropertyModel model) {
+        return discoverMappedName(mapper, model, model.getName());
+    }
+
+    /**
+     * @param mapper the mapper
+     * @param model  the property
+     * @param name   the Java name to derive the mapped name from when no annotation names it, e.g. a name the property
+     *               is about to be renamed to
+     * @return the mapped name
+     */
+    @MorphiaInternal
+    static String discoverMappedName(Mapper mapper, PropertyModel model, String name) {
         MorphiaConfig config = mapper.getConfig();
         Property property = model.getAnnotation(Property.class);
         Reference reference = model.getAnnotation(Reference.class);
@@ -86,7 +98,7 @@ public class FieldDiscovery implements MorphiaConvention {
         } else if (version != null && !version.value().equals(Mapper.IGNORED_FIELDNAME)) {
             mappedName = version.value();
         } else {
-            mappedName = config.propertyNaming().apply(model.getName());
+            mappedName = config.propertyNaming().apply(name);
         }
         return mappedName;
     }

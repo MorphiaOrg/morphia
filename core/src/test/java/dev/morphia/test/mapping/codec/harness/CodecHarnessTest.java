@@ -31,6 +31,9 @@ import dev.morphia.test.mapping.codec.harness.models.HarnessArrays;
 import dev.morphia.test.mapping.codec.harness.models.HarnessCollections;
 import dev.morphia.test.mapping.codec.harness.models.HarnessConstructed;
 import dev.morphia.test.mapping.codec.harness.models.HarnessDrawing;
+import dev.morphia.test.mapping.codec.harness.models.HarnessIdField;
+import dev.morphia.test.mapping.codec.harness.models.HarnessIdFieldAlias;
+import dev.morphia.test.mapping.codec.harness.models.HarnessIdFieldLegacy;
 import dev.morphia.test.mapping.codec.harness.models.HarnessLifecycle;
 import dev.morphia.test.mapping.codec.harness.models.HarnessNested;
 import dev.morphia.test.mapping.codec.harness.models.HarnessNoDiscriminator;
@@ -181,6 +184,41 @@ public class CodecHarnessTest {
         }
     }
 
+    @Test
+    void readsIdField() {
+        // the fixtures record what was decoded, so this pins the @IdField property being read back from _id
+        for (MapperType mapper : MapperType.values()) {
+            MorphiaDatastore datastore = datastore(Variant.DEFAULTS, mapper);
+            assertEquals("key", datastore.getMapper().getEntityModel(HarnessIdField.class).getIdProperty().getName(),
+                    mapper + " should use the @IdField property as the id");
+            Codec<HarnessIdField> codec = codec(datastore, HarnessIdField.class);
+            HarnessIdField decoded = decode(codec, encode(codec, HarnessIdField.sample(), COLLECTIBLE));
+            assertEquals("key-1", decoded.getKey(), mapper + " should read the @IdField property from _id");
+            assertEquals("named by @IdField", decoded.getName());
+        }
+    }
+
+    @Test
+    void readsIdFieldThatAlsoLoadsFromId() {
+        BsonDocument document = BsonDocument.parse("{\"_id\": \"alias-key\"}");
+        for (MapperType mapper : MapperType.values()) {
+            MorphiaDatastore datastore = datastore(Variant.DEFAULTS, mapper);
+            assertEquals("key", datastore.getMapper().getEntityModel(HarnessIdFieldAlias.class).getIdProperty().getName());
+            assertEquals("alias-key", decode(codec(datastore, HarnessIdFieldAlias.class), bytes(document)).getKey(),
+                    mapper + " should read an @IdField property that also loads from _id");
+        }
+    }
+
+    @Test
+    void readsIdFieldFromItsOldNameWhenThatIsALoadName() {
+        BsonDocument document = BsonDocument.parse("{\"legacy\": \"old-key\"}");
+        for (MapperType mapper : MapperType.values()) {
+            Codec<HarnessIdFieldLegacy> codec = codec(datastore(Variant.DEFAULTS, mapper), HarnessIdFieldLegacy.class);
+            assertEquals("old-key", decode(codec, bytes(document)).getKey(),
+                    mapper + " should still load the @IdField property from its declared load name");
+        }
+    }
+
     /**
      * @return case name → recorded results (encoding, round trip, or decoded foreign document) as canonical JSON
      */
@@ -202,6 +240,7 @@ public class CodecHarnessTest {
         sample(results, datastore, "constructor", HarnessConstructed.class, HarnessConstructed::sample);
         sample(results, datastore, "records", HarnessRecordHolder.class, HarnessRecordHolder::sample);
         sample(results, datastore, "renames", HarnessRenames.class, HarnessRenames::sample);
+        sample(results, datastore, "id-field", HarnessIdField.class, HarnessIdField::sample);
         sample(results, datastore, "lifecycle", HarnessLifecycle.class, HarnessLifecycle::sample);
         sample(results, datastore, "generic-binding", HarnessStringListBox.class, HarnessStringListBox::sample);
         encodeOnly(results, datastore, "references", HarnessReferences.class, HarnessReferences::sample);

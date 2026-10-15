@@ -8,6 +8,7 @@ import dev.morphia.annotations.Version;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.MorphiaPropertySerialization;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
@@ -30,9 +31,13 @@ public class ConfigureProperties implements MorphiaConvention {
         if (model.getIdProperty() == null) {
             IdField idProperty = model.getAnnotation(IdField.class);
             if (idProperty != null) {
-                PropertyModel propertyModel = model.getProperty(idProperty.value());
+                PropertyModel propertyModel = model.getPropertyByName(idProperty.value());
+                if (propertyModel == null) {
+                    throw new MappingException("@IdField(\"%s\") on %s doesn't name a property".formatted(idProperty.value(),
+                            model.getType().getName()));
+                }
+                model.renameProperty(propertyModel, propertyModel.getName(), "_id");
                 model.setIdProperty(propertyModel);
-                propertyModel.mappedName("_id");
             }
         }
     }

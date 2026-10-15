@@ -14,11 +14,12 @@ class KotlinDelegatedPropertiesDiscovery : MorphiaConvention {
                 field.trySetAccessible()
                 for (kProperty in field.get(model.type) as Array<KProperty<*>>) {
                     val property = model.getProperty("${kProperty.name}\$delegate") ?: continue
-                    property
-                        .name(kProperty.name)
-                        .mappedName(FieldDiscovery.discoverMappedName(mapper, property))
-                        .accessor(ReadWritePropertyAccessor(kProperty as KMutableProperty<*>))
-                    model.addProperty(property)
+                    property.accessor(ReadWritePropertyAccessor(kProperty as KMutableProperty<*>))
+                    model.renameProperty(
+                        property,
+                        kProperty.name,
+                        FieldDiscovery.discoverMappedName(mapper, property, kProperty.name),
+                    )
                 }
             }
     }

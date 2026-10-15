@@ -138,7 +138,7 @@ Decided 2026-10-12.
 Each fix needs a failing test first and must pass under `-Dmorphia.mapper=critter` and `reflection`. Fixes that a
 structural item covers are moved to that item (see Phases 4 and 5).
 
-### 2.1 `@IdField` decode, and the Kotlin delegated property being encoded twice (A4)
+### ~~2.1 `@IdField` decode, and the Kotlin delegated property being encoded twice (A4)~~
 - Add an internal `EntityModel.renameProperty(p, newName, newMappedName)` that re-keys both maps. Use it from
   `ConfigureProperties` and `KotlinDelegatedPropertiesDiscovery`, and drop the copy-constructor dedupe that hides
   the problem.
