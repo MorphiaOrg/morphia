@@ -53,10 +53,10 @@ public class TestMapper extends TestBase {
     private static void assertModelNotSame(EntityModel originalEntity, EntityModel clonedEntity) {
         Assertions.assertNotSame(clonedEntity, originalEntity,
                 format("The models for %s should not be the same object reference", clonedEntity.getType().getName()));
-        if (originalEntity.superClass == null) {
-            Assertions.assertNull(clonedEntity.superClass, "Cloned entity's superClass should also be null");
+        if (originalEntity.getSuperClass() == null) {
+            Assertions.assertNull(clonedEntity.getSuperClass(), "Cloned entity's superClass should also be null");
         } else {
-            Assertions.assertNotSame(clonedEntity.superClass, originalEntity.superClass);
+            Assertions.assertNotSame(clonedEntity.getSuperClass(), originalEntity.getSuperClass());
         }
         originalEntity.getSubtypes().forEach(subtype -> {
             Assertions.assertNotSame(findSubtype(clonedEntity, subtype), subtype);

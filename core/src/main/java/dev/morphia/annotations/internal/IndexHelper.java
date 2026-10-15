@@ -261,7 +261,10 @@ public final class IndexHelper {
     private List<Index> findClassIndexes(EntityModel entityModel) {
         List<Index> list = new ArrayList<>();
         final Indexes indexes = entityModel.getAnnotation(Indexes.class);
-        if (indexes != null) {
+        EntityModel superClass = entityModel.getSuperClass();
+        // @Indexes is @Inherited, so a model that doesn't declare its own carries its superclass's, which the superclass
+        // adds below
+        if (indexes != null && (superClass == null || !indexes.equals(superClass.getAnnotation(Indexes.class)))) {
             for (Index index : indexes.value()) {
                 List<Field> fields = new ArrayList<>();
                 for (Field field : index.fields()) {
@@ -275,7 +278,6 @@ public final class IndexHelper {
                 list.add(replaceFields(index, fields));
             }
         }
-        EntityModel superClass = entityModel.getSuperClass();
         if (superClass != null) {
             list.addAll(findClassIndexes(superClass));
         }

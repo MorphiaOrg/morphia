@@ -148,7 +148,7 @@ structural item covers are moved to that item (see Phases 4 and 5).
 - Critter side: generate `@IdField` support in this PR too, so the round-trip test passes under both mappers as
   the phase rule requires.
 
-### 2.2 `getSuperClass()` returns an interface (A5/D5)
+### ~~2.2 `getSuperClass()` returns an interface (A5/D5)~~
 - Set `superClass` only when `parent.getType() == type.getSuperclass()`. Make the field private.
 - Stop recording pending subtypes for `Object` and unmappable parents.
 - Move interface linking out of `EntityModel.MappingUtil.buildHierarchy()` and into the mapper's

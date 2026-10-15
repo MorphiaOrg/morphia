@@ -93,7 +93,7 @@ public class EntityModel {
     private Class<?> type;
     private String collectionName;
     private final Set<EntityModel> subtypes = new CopyOnWriteArraySet<>();
-    public EntityModel superClass;
+    private EntityModel superClass;
     private PropertyModel idProperty;
     private PropertyModel versionProperty;
     private final List<EntityListener<?>> listeners = new ArrayList<>();
@@ -430,21 +430,17 @@ public class EntityModel {
         return set;
     }
 
+    /**
+     * Adds a direct subtype: a subclass, or a class implementing this interface. The subtype's
+     * {@link #getSuperClass() superclass} is set only if this model is its actual superclass.
+     *
+     * @param subtype the subtype
+     */
     public void addSubtype(EntityModel subtype) {
         subtypes.add(subtype);
-        subtype.superClass = this;
-    }
-
-    /**
-     * Removes a direct subtype, e.g. one whose registration failed after it was linked here.
-     *
-     * @param subtype the subtype to remove
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    public void removeSubtype(EntityModel subtype) {
-        subtypes.remove(subtype);
+        if (subtype.getType().getSuperclass() == type) {
+            subtype.superClass = this;
+        }
     }
 
     /**
@@ -656,16 +652,11 @@ public class EntityModel {
             for (Annotation annotation : type.getAnnotations()) {
                 annotation(annotation);
             }
-            Set<Class<?>> interfaces = new LinkedHashSet<>();
-            interfaces.addAll(findInterfaces(type));
+            // collects the interfaces' annotations; the mapper links the model to them once it's registered
+            findInterfaces(type);
 
             classes.addAll(findParentClasses(type.getSuperclass()));
-            classes.forEach(c -> interfaces.addAll(findInterfaces(c)));
-
-            interfaces.stream()
-                    .map(mapper::mapEntity)
-                    .filter(Objects::nonNull)
-                    .forEach(i -> i.addSubtype(EntityModel.this));
+            classes.forEach(this::findInterfaces);
 
         }
 
