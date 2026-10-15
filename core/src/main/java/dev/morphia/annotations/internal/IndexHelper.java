@@ -3,8 +3,10 @@ package dev.morphia.annotations.internal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -259,33 +261,57 @@ public final class IndexHelper {
     }
 
     /**
-     * Collects the {@code @Indexes} of a model and its superclasses. Every index field is resolved against
-     * {@code entityModel}, the model being indexed, since a subclass can map an inherited property to a different name.
+     * Collects the {@code @Indexes} declared on a model, its superclasses and its mapped interfaces. A declaration
+     * reached along several paths is used once: {@code @Indexes} is {@code @Inherited}, and a model also carries its
+     * interfaces' annotations, so the same declaration can turn up on several of these models. Every index field is
+     * resolved against {@code entityModel}, the model being indexed, since a subclass can map an inherited property to a
+     * different name.
      */
     private List<Index> findClassIndexes(EntityModel entityModel) {
-        List<Index> list = new ArrayList<>();
+        List<Indexes> declarations = new ArrayList<>();
         for (EntityModel current = entityModel; current != null; current = current.getSuperClass()) {
-            final Indexes indexes = current.getAnnotation(Indexes.class);
-            EntityModel superClass = current.getSuperClass();
-            // @Indexes is @Inherited, so a model that doesn't declare its own carries its superclass's, which the next
-            // pass adds
-            if (indexes != null && (superClass == null || !indexes.equals(superClass.getAnnotation(Indexes.class)))) {
-                for (Index index : indexes.value()) {
-                    List<Field> fields = new ArrayList<>();
-                    for (Field field : index.fields()) {
-                        fields.add(fieldBuilder()
-                                .value(findField(entityModel, index.options(), field.value()))
-                                .type(field.type())
-                                .weight(field.weight())
-                                .build());
-                    }
+            addDeclaration(declarations, current.getAnnotation(Indexes.class));
+        }
+        Set<Class<?>> interfaces = new LinkedHashSet<>();
+        for (Class<?> type = entityModel.getType(); type != null; type = type.getSuperclass()) {
+            addInterfaces(type, interfaces);
+        }
+        for (Class<?> type : interfaces) {
+            mapper.tryGetEntityModel(type)
+                    .ifPresent(model -> addDeclaration(declarations, model.getAnnotation(Indexes.class)));
+        }
 
-                    list.add(replaceFields(index, fields));
+        List<Index> list = new ArrayList<>();
+        for (Indexes indexes : declarations) {
+            for (Index index : indexes.value()) {
+                List<Field> fields = new ArrayList<>();
+                for (Field field : index.fields()) {
+                    fields.add(fieldBuilder()
+                            .value(findField(entityModel, index.options(), field.value()))
+                            .type(field.type())
+                            .weight(field.weight())
+                            .build());
                 }
+
+                list.add(replaceFields(index, fields));
             }
         }
 
         return list;
+    }
+
+    private static void addDeclaration(List<Indexes> declarations, @Nullable Indexes indexes) {
+        if (indexes != null && declarations.stream().noneMatch(indexes::equals)) {
+            declarations.add(indexes);
+        }
+    }
+
+    private static void addInterfaces(Class<?> type, Set<Class<?>> interfaces) {
+        for (Class<?> iface : type.getInterfaces()) {
+            if (interfaces.add(iface)) {
+                addInterfaces(iface, interfaces);
+            }
+        }
     }
 
     private Index replaceFields(Index original, List<Field> list) {

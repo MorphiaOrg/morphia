@@ -130,6 +130,20 @@ public class TestHierarchyLinks {
 
     @ParameterizedTest
     @EnumSource(MapperType.class)
+    public void includesInterfaceIndexes(MapperType type) {
+        Mapper mapper = mapper(type);
+        List<String> created = new ArrayList<>();
+        new IndexHelper(mapper).createIndex(recordingCollection(created), model(mapper, type, LabeledThing.class));
+        Assertions.assertEquals(List.of("{\"label\": 1}"), created, "the interface's index, once");
+
+        created.clear();
+        new IndexHelper(mapper).createIndex(recordingCollection(created), model(mapper, type, CodedLabeledThing.class));
+        Assertions.assertEquals(List.of("{\"code\": 1}", "{\"label\": 1}"), created,
+                "the class's own index and the interface's");
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
     public void resolvesInheritedIndexFieldsAgainstTheIndexedModel(MapperType type) {
         MorphiaConfig config = MorphiaConfig.load().mapper(type).propertyDiscovery(PropertyDiscovery.METHODS);
         Mapper mapper = type == MapperType.CRITTER ? new CritterMapper(config) : new ReflectiveMapper(config);
@@ -282,6 +296,27 @@ public class TestHierarchyLinks {
     static class ChainImplementation implements Chain24 {
         @Id
         ObjectId id;
+    }
+
+    @Entity
+    @Indexes(@Index(fields = @dev.morphia.annotations.Field("label")))
+    interface Labeled {
+    }
+
+    @Entity
+    static class LabeledThing implements Labeled {
+        @Id
+        ObjectId id;
+        String label;
+    }
+
+    @Entity
+    @Indexes(@Index(fields = @dev.morphia.annotations.Field("code")))
+    static class CodedLabeledThing implements Labeled {
+        @Id
+        ObjectId id;
+        String label;
+        String code;
     }
 
     @Entity
