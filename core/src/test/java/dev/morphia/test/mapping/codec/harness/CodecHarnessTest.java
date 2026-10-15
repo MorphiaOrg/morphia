@@ -28,6 +28,9 @@ import dev.morphia.mapping.MapperType;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 import dev.morphia.test.mapping.codec.harness.models.HarnessArrays;
+import dev.morphia.test.mapping.codec.harness.models.HarnessCallbackCircle;
+import dev.morphia.test.mapping.codec.harness.models.HarnessCallbackHolder;
+import dev.morphia.test.mapping.codec.harness.models.HarnessCallbackShape;
 import dev.morphia.test.mapping.codec.harness.models.HarnessCollections;
 import dev.morphia.test.mapping.codec.harness.models.HarnessConstructed;
 import dev.morphia.test.mapping.codec.harness.models.HarnessDrawing;
@@ -172,6 +175,35 @@ public class CodecHarnessTest {
             HarnessLifecycle decoded = decode(codec, encode(codec, HarnessLifecycle.sample(), COLLECTIBLE));
             assertTrue(decoded.isLoaded(), mapper + " should run @PostLoad");
         }
+    }
+
+    @Test
+    void runsPolymorphicLifecycleCallbacksOnce() {
+        for (MapperType mapper : MapperType.values()) {
+            MorphiaDatastore datastore = datastore(Variant.DEFAULTS, mapper);
+
+            // a subtype held in a property declared as its supertype
+            Codec<HarnessCallbackHolder> holderCodec = codec(datastore, HarnessCallbackHolder.class);
+            HarnessCallbackHolder holder = HarnessCallbackHolder.sample();
+            HarnessCallbackHolder decodedHolder = decode(holderCodec, encode(holderCodec, holder, COLLECTIBLE));
+            assertCallbacks(mapper + " nested", holder.getShapes().get(0), 1, 1, 0, 0);
+            assertCallbacks(mapper + " nested", decodedHolder.getShapes().get(0), 0, 0, 1, 1);
+
+            // a subtype encoded and decoded through its supertype's codec
+            Codec<HarnessCallbackShape> shapeCodec = codec(datastore, HarnessCallbackShape.class);
+            HarnessCallbackCircle circle = new HarnessCallbackCircle(new ObjectId("650000000000000000000112"), 1);
+            HarnessCallbackShape decoded = decode(shapeCodec, encode(shapeCodec, circle, COLLECTIBLE));
+            assertCallbacks(mapper + " root", circle, 1, 1, 0, 0);
+            assertInstanceOf(HarnessCallbackCircle.class, decoded);
+            assertCallbacks(mapper + " root", decoded, 0, 0, 1, 1);
+        }
+    }
+
+    private static void assertCallbacks(String message, HarnessCallbackShape shape, int prePersists, int postPersists,
+            int preLoads, int postLoads) {
+        assertEquals(List.of(prePersists, postPersists, preLoads, postLoads),
+                List.of(shape.getPrePersists(), shape.getPostPersists(), shape.getPreLoads(), shape.getPostLoads()),
+                message + ": @PrePersist, @PostPersist, @PreLoad, @PostLoad counts");
     }
 
     @Test
