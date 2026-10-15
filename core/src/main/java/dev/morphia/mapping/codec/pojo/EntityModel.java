@@ -5,10 +5,12 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -423,11 +425,17 @@ public class EntityModel {
      * @return the subtypes
      */
     public Set<EntityModel> getSubtypes() {
-        Set<EntityModel> set = new HashSet<>(subtypes);
-        set.addAll(subtypes.stream()
-                .flatMap(type -> type.getSubtypes().stream())
-                .collect(Collectors.toSet()));
-        return set;
+        // a model can be reached along several paths (e.g. linked under an interface and under its superinterface), so
+        // expand each one only once
+        Set<EntityModel> found = new HashSet<>();
+        Deque<EntityModel> pending = new ArrayDeque<>(subtypes);
+        while (!pending.isEmpty()) {
+            EntityModel subtype = pending.pop();
+            if (found.add(subtype)) {
+                pending.addAll(subtype.subtypes);
+            }
+        }
+        return found;
     }
 
     /**

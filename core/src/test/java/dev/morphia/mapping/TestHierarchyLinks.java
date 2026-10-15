@@ -3,6 +3,7 @@ package dev.morphia.mapping;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import dev.morphia.annotations.Property;
 import dev.morphia.annotations.internal.IndexHelper;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -35,12 +37,41 @@ public class TestHierarchyLinks {
         return type == MapperType.CRITTER ? new CritterMapper(config) : new ReflectiveMapper(config);
     }
 
+    /**
+     * Looks up a class's model and, under CRITTER, asserts it's a generated model; {@link CritterMapper} silently falls
+     * back to a reflective model when generation fails, which would hide critter-only regressions.
+     */
+    private static EntityModel model(Mapper mapper, MapperType type, Class<?> entity) {
+        EntityModel model = mapper.getEntityModel(entity);
+        if (type == MapperType.CRITTER) {
+            Assertions.assertInstanceOf(CritterEntityModel.class, model,
+                    "Expected a critter model for " + entity.getName() + " but got " + model.getClass().getName());
+        }
+        return model;
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    public void subtypesOfChainedInterfacesAreFoundOnce(MapperType type) {
+        Mapper mapper = mapper(type);
+        EntityModel implementation = model(mapper, type, ChainImplementation.class);
+        for (Class<?> link = Chain24.class; link != null; link = link.getInterfaces().length == 0 ? null : link.getInterfaces()[0]) {
+            mapper.getEntityModel(link);
+        }
+
+        // each link sits under every link above it, so without a visited set this walk is exponential in the chain length
+        Set<EntityModel> subtypes = Assertions.assertTimeoutPreemptively(Duration.ofSeconds(2),
+                () -> mapper.getEntityModel(Chain01.class).getSubtypes());
+        Assertions.assertTrue(subtypes.contains(implementation));
+        Assertions.assertEquals(24, subtypes.size(), "the 23 other links and the implementation");
+    }
+
     @ParameterizedTest
     @EnumSource(MapperType.class)
     public void superClassIsTheSuperclassNotAnInterface(MapperType type) {
         Mapper mapper = mapper(type);
-        EntityModel child = mapper.getEntityModel(Child.class);
-        EntityModel parent = mapper.getEntityModel(Parent.class);
+        EntityModel child = model(mapper, type, Child.class);
+        EntityModel parent = model(mapper, type, Parent.class);
         EntityModel tagged = mapper.getEntityModel(Tagged.class);
 
         Assertions.assertSame(parent, child.getSuperClass());
@@ -54,9 +85,9 @@ public class TestHierarchyLinks {
     @EnumSource(MapperType.class)
     public void superClassIsTheSuperclassWhenTheParentIsMappedFirst(MapperType type) {
         Mapper mapper = mapper(type);
-        EntityModel parent = mapper.getEntityModel(Parent.class);
+        EntityModel parent = model(mapper, type, Parent.class);
         EntityModel tagged = mapper.getEntityModel(Tagged.class);
-        EntityModel child = mapper.getEntityModel(Child.class);
+        EntityModel child = model(mapper, type, Child.class);
 
         Assertions.assertSame(parent, child.getSuperClass());
         Assertions.assertTrue(parent.getSubtypes().contains(child));
@@ -67,21 +98,21 @@ public class TestHierarchyLinks {
     @EnumSource(MapperType.class)
     public void inheritedInterfacesAreLinked(MapperType type) {
         Mapper mapper = mapper(type);
-        EntityModel grandchild = mapper.getEntityModel(Grandchild.class);
+        EntityModel grandchild = model(mapper, type, Grandchild.class);
         EntityModel tagged = mapper.getEntityModel(Tagged.class);
 
         Assertions.assertTrue(tagged.getSubtypes().contains(grandchild),
                 "Grandchild implements Tagged through Child");
-        Assertions.assertSame(mapper.getEntityModel(Child.class), grandchild.getSuperClass());
+        Assertions.assertSame(model(mapper, type, Child.class), grandchild.getSuperClass());
     }
 
     @ParameterizedTest
     @EnumSource(MapperType.class)
     public void inheritsTheSuperclassIndexes(MapperType type) {
         Mapper mapper = mapper(type);
-        mapper.getEntityModel(Parent.class);
+        model(mapper, type, Parent.class);
         List<String> created = new ArrayList<>();
-        new IndexHelper(mapper).createIndex(recordingCollection(created), mapper.getEntityModel(Child.class));
+        new IndexHelper(mapper).createIndex(recordingCollection(created), model(mapper, type, Child.class));
 
         Assertions.assertEquals(List.of("{\"name\": 1}"), created, "Child should inherit Parent's @Indexes");
     }
@@ -90,9 +121,9 @@ public class TestHierarchyLinks {
     @EnumSource(MapperType.class)
     public void combinesDeclaredAndSuperclassIndexes(MapperType type) {
         Mapper mapper = mapper(type);
-        mapper.getEntityModel(Parent.class);
+        model(mapper, type, Parent.class);
         List<String> created = new ArrayList<>();
-        new IndexHelper(mapper).createIndex(recordingCollection(created), mapper.getEntityModel(IndexedChild.class));
+        new IndexHelper(mapper).createIndex(recordingCollection(created), model(mapper, type, IndexedChild.class));
 
         Assertions.assertEquals(List.of("{\"extra\": 1}", "{\"name\": 1}"), created);
     }
@@ -102,9 +133,9 @@ public class TestHierarchyLinks {
     public void resolvesInheritedIndexFieldsAgainstTheIndexedModel(MapperType type) {
         MorphiaConfig config = MorphiaConfig.load().mapper(type).propertyDiscovery(PropertyDiscovery.METHODS);
         Mapper mapper = type == MapperType.CRITTER ? new CritterMapper(config) : new ReflectiveMapper(config);
-        mapper.getEntityModel(MethodParent.class);
+        model(mapper, type, MethodParent.class);
         List<String> created = new ArrayList<>();
-        new IndexHelper(mapper).createIndex(recordingCollection(created), mapper.getEntityModel(MethodChild.class));
+        new IndexHelper(mapper).createIndex(recordingCollection(created), model(mapper, type, MethodChild.class));
 
         Assertions.assertEquals(List.of("{\"child_name\": 1}"), created,
                 "Parent's index on name should use the name MethodChild maps it to");
@@ -114,8 +145,8 @@ public class TestHierarchyLinks {
     @EnumSource(MapperType.class)
     public void linksExternalEntitiesMappedChildFirst(MapperType type) {
         Mapper mapper = mapper(type);
-        EntityModel child = mapper.getEntityModel(ExternalChildStandIn.class);
-        EntityModel parent = mapper.getEntityModel(ExternalParentStandIn.class);
+        EntityModel child = model(mapper, type, ExternalChildStandIn.class);
+        EntityModel parent = model(mapper, type, ExternalParentStandIn.class);
 
         Assertions.assertSame(parent, child.getSuperClass());
         Assertions.assertTrue(parent.getSubtypes().contains(child));
@@ -126,7 +157,7 @@ public class TestHierarchyLinks {
     @SuppressWarnings("unchecked")
     public void unmappableParentsArentPending(MapperType type) throws ReflectiveOperationException {
         Mapper mapper = mapper(type);
-        mapper.getEntityModel(Child.class);
+        model(mapper, type, Child.class);
 
         Field field = AbstractMapper.class.getDeclaredField("pendingSubtypesByParentName");
         field.setAccessible(true);
@@ -149,6 +180,108 @@ public class TestHierarchyLinks {
 
     @Entity
     interface Tagged {
+    }
+
+    @Entity
+    interface Chain01 {
+    }
+
+    @Entity
+    interface Chain02 extends Chain01 {
+    }
+
+    @Entity
+    interface Chain03 extends Chain02 {
+    }
+
+    @Entity
+    interface Chain04 extends Chain03 {
+    }
+
+    @Entity
+    interface Chain05 extends Chain04 {
+    }
+
+    @Entity
+    interface Chain06 extends Chain05 {
+    }
+
+    @Entity
+    interface Chain07 extends Chain06 {
+    }
+
+    @Entity
+    interface Chain08 extends Chain07 {
+    }
+
+    @Entity
+    interface Chain09 extends Chain08 {
+    }
+
+    @Entity
+    interface Chain10 extends Chain09 {
+    }
+
+    @Entity
+    interface Chain11 extends Chain10 {
+    }
+
+    @Entity
+    interface Chain12 extends Chain11 {
+    }
+
+    @Entity
+    interface Chain13 extends Chain12 {
+    }
+
+    @Entity
+    interface Chain14 extends Chain13 {
+    }
+
+    @Entity
+    interface Chain15 extends Chain14 {
+    }
+
+    @Entity
+    interface Chain16 extends Chain15 {
+    }
+
+    @Entity
+    interface Chain17 extends Chain16 {
+    }
+
+    @Entity
+    interface Chain18 extends Chain17 {
+    }
+
+    @Entity
+    interface Chain19 extends Chain18 {
+    }
+
+    @Entity
+    interface Chain20 extends Chain19 {
+    }
+
+    @Entity
+    interface Chain21 extends Chain20 {
+    }
+
+    @Entity
+    interface Chain22 extends Chain21 {
+    }
+
+    @Entity
+    interface Chain23 extends Chain22 {
+    }
+
+    @Entity
+    interface Chain24 extends Chain23 {
+    }
+
+    @Entity
+    static class ChainImplementation implements Chain24 {
+        @Id
+        ObjectId id;
     }
 
     @Entity
