@@ -170,7 +170,7 @@ structural item covers are moved to that item (see Phases 4 and 5).
 ### 2.5 `PathTarget` leaves `context` on the last subtype tried (D2)
 - Restore `context` when no subtype matches. Ship it alongside the D2 performance item (3.8).
 
-### 2.6 Double `@PrePersist`/`@PostPersist` for polymorphic values (B3)
+### ~~2.6 Double `@PrePersist`/`@PostPersist` for polymorphic values (B3)~~
 - Write the test first (`List<Shape>`, where `Shape` has `@PrePersist`).
 - Fix it by delegating subtypes *before* running callbacks in `LifecycleEncoder`/`LifecycleDecoder`.
 

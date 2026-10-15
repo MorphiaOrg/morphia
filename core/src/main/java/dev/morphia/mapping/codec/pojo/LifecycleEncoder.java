@@ -28,8 +28,16 @@ public class LifecycleEncoder<T> extends EntityEncoder<T> {
     }
 
     @Override
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public void encode(BsonWriter writer, T value, EncoderContext encoderContext) {
         EntityModel model = getMorphiaCodec().getEntityModel();
+        if (!areEquivalentTypes(value.getClass(), model.getType())) {
+            // a subtype: its own codec runs the callbacks, so running them here too would run them twice
+            getMorphiaCodec().getRegistry()
+                    .get((Class) value.getClass())
+                    .encode(writer, value, encoderContext);
+            return;
+        }
         MorphiaDatastore datastore = getMorphiaCodec().getDatastore();
 
         Document document = new Document();
