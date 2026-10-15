@@ -179,7 +179,7 @@ structural item covers are moved to that item (see Phases 4 and 5).
   This also removes the deep `equals` cost on `CopyOnWriteArraySet.add` and in `EntityEncoder`.
 - Audit tests for any that rely on structural equality.
 
-### 2.8 `MorphiaCodecProvider.codecs` is a plain `HashMap` (D8)
+### ~~2.8 `MorphiaCodecProvider.codecs` is a plain `HashMap` (D8)~~
 - Switch to `ConcurrentHashMap`, using `get` + `putIfAbsent`. Not `computeIfAbsent`, because codec construction
   recurses into other codec lookups.
 

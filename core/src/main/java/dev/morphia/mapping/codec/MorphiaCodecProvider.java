@@ -1,10 +1,10 @@
 package dev.morphia.mapping.codec;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.mongodb.lang.Nullable;
 
@@ -35,7 +35,8 @@ import org.bson.codecs.pojo.PropertyCodecProvider;
  */
 @MorphiaInternal
 public class MorphiaCodecProvider implements CodecProvider {
-    private final Map<Class<?>, Codec<?>> codecs = new HashMap<>();
+    // Looked up concurrently. Not computeIfAbsent: building a codec looks up other codecs, which may land back here.
+    private final Map<Class<?>, Codec<?>> codecs = new ConcurrentHashMap<>();
     private final Mapper mapper;
     private final Conversions conversions;
     private final List<PropertyCodecProvider> propertyCodecProviders = new ArrayList<>();
@@ -74,7 +75,11 @@ public class MorphiaCodecProvider implements CodecProvider {
             if (model.hasLifecycle(PreLoad.class) || model.hasLifecycle(PostLoad.class) || mapper.hasListeners()) {
                 codec.setDecoder(new LifecycleDecoder(codec));
             }
-            codecs.put(type, codec);
+            // another thread may have built one meanwhile; keep the first so every caller shares it
+            MorphiaCodec<T> existing = (MorphiaCodec<T>) codecs.putIfAbsent(type, codec);
+            if (existing != null) {
+                codec = existing;
+            }
         }
 
         return codec;
