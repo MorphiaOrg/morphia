@@ -51,6 +51,12 @@ public abstract class AbstractMapper implements Mapper {
 
     protected final Map<String, EntityModel> mappedEntities = new ConcurrentHashMap<>();
     protected final ConcurrentHashMap<String, Set<EntityModel>> mappedEntitiesByCollection = new ConcurrentHashMap<>();
+    // Per collection, the registered models no other model mapped to that collection is a supertype of, in registration
+    // order. Normally one root; several only if unrelated classes share a collection. Replaced whole under the mapper's
+    // lock, so lock-free readers see a consistent list.
+    private final Map<String, List<EntityModel>> rootsByCollection = new ConcurrentHashMap<>();
+    // Collections already warned about for having unrelated roots, so the warning is logged once per collection.
+    private final Set<String> warnedCollections = ConcurrentHashMap.newKeySet();
     // Models registered before their direct superclass/interface(s) are themselves registered,
     // keyed by that not-yet-mapped parent's class name, so the relationship can be linked once
     // the parent does show up — without rescanning every already-registered model on every new
@@ -170,14 +176,17 @@ public abstract class AbstractMapper implements Mapper {
     @Override
     @MorphiaInternal
     public <T> Class<T> getClassFromCollection(String collection) {
-        final List<EntityModel> classes = getClassesMappedToCollection(collection);
-        if (classes.size() > 1) {
+        List<EntityModel> roots = rootsByCollection.get(collection);
+        if (roots == null || roots.isEmpty()) {
+            throw new MappingException(Sofia.collectionNotMapped(collection));
+        }
+        if (roots.size() > 1 && warnedCollections.add(collection)) {
             LOG.warn(Sofia.moreThanOneMapper(collection,
-                    classes.stream()
+                    roots.stream()
                             .map(c -> c.getType().getName())
                             .collect(Collectors.joining(", "))));
         }
-        return (Class<T>) classes.get(0).getType();
+        return (Class<T>) roots.get(0).getType();
     }
 
     @Override
@@ -437,42 +446,87 @@ public abstract class AbstractMapper implements Mapper {
         linkHierarchy(model);
         mappedEntitiesByCollection.computeIfAbsent(model.collectionName(), s -> new CopyOnWriteArraySet<>())
                 .add(model);
+        updateRoots(model);
         mappedEntities.put(name, model);
         return model;
     }
 
     /**
-     * Links a newly registered model to its registered superclass and interfaces (including interfaces it inherits), and
-     * links any registered models that were waiting on this one as a parent. A parent that isn't registered yet is
-     * recorded as pending, unless it's a JDK type such as {@code Object} or {@code Serializable}, which can never be
-     * mapped. The parent's own annotations don't decide this: an {@code @ExternalEntity} stand-in can map a parent that
-     * has none. Lookups are name-keyed in both directions, so registration doesn't rescan every registered model.
+     * Updates the roots of the model's collection: the model replaces any roots it's a supertype of, keeping the first
+     * one's position, and becomes a new root if no root is a supertype of it.
+     */
+    private void updateRoots(EntityModel model) {
+        Class<?> type = model.getType();
+        List<EntityModel> roots = rootsByCollection.getOrDefault(model.collectionName(), List.of());
+        if (roots.stream().anyMatch(root -> root.getType().isAssignableFrom(type))) {
+            return;
+        }
+        List<EntityModel> updated = new ArrayList<>();
+        boolean added = false;
+        for (EntityModel root : roots) {
+            if (type.isAssignableFrom(root.getType())) {
+                if (!added) {
+                    updated.add(model);
+                    added = true;
+                }
+            } else {
+                updated.add(root);
+            }
+        }
+        if (!added) {
+            updated.add(model);
+        }
+        rootsByCollection.put(model.collectionName(), List.copyOf(updated));
+    }
+
+    /**
+     * Links a newly registered model to its nearest registered superclass and its interfaces (including interfaces it
+     * inherits), and links any registered models that were waiting on this one as a parent. A parent that isn't
+     * registered yet is recorded as pending, unless it's a JDK type such as {@code Object} or {@code Serializable}, which
+     * can never be mapped. The parent's own annotations don't decide this: an {@code @ExternalEntity} stand-in can map a
+     * parent that has none. Lookups are name-keyed in both directions, so registration doesn't rescan every registered
+     * model.
      */
     private void linkHierarchy(EntityModel model) {
         Class<?> type = model.getType();
 
-        Set<Class<?>> parents = new LinkedHashSet<>();
-        if (type.getSuperclass() != null) {
-            parents.add(type.getSuperclass());
-        }
-        for (Class<?> current = type; current != null; current = current.getSuperclass()) {
-            addInterfaces(current, parents);
-        }
-
-        for (Class<?> parentType : parents) {
-            EntityModel parent = mappedEntities.get(parentType.getName());
-            if (parent != null) {
-                parent.addSubtype(model);
-            } else if (parentType.getClassLoader() != null) {
-                pendingSubtypesByParentName.computeIfAbsent(parentType.getName(), k -> new CopyOnWriteArrayList<>())
-                        .add(model);
+        // up the superclass chain to the nearest registered class, so a subtype below a class that is never mapped is
+        // still a subtype of the classes above it; unregistered classes on the way record it as pending
+        for (Class<?> ancestor = type.getSuperclass(); ancestor != null; ancestor = ancestor.getSuperclass()) {
+            if (link(ancestor, model)) {
+                break;
             }
+        }
+        Set<Class<?>> interfaces = new LinkedHashSet<>();
+        for (Class<?> current = type; current != null; current = current.getSuperclass()) {
+            addInterfaces(current, interfaces);
+        }
+        for (Class<?> iface : interfaces) {
+            link(iface, model);
         }
 
         List<EntityModel> waiting = pendingSubtypesByParentName.remove(type.getName());
         if (waiting != null) {
             waiting.forEach(model::addSubtype);
         }
+    }
+
+    /**
+     * Links a model under a parent type if it's registered, or records it as pending under that type.
+     *
+     * @return true if the parent is registered
+     */
+    private boolean link(Class<?> parentType, EntityModel model) {
+        EntityModel parent = mappedEntities.get(parentType.getName());
+        if (parent != null) {
+            parent.addSubtype(model);
+            return true;
+        }
+        if (parentType.getClassLoader() != null) {
+            pendingSubtypesByParentName.computeIfAbsent(parentType.getName(), k -> new CopyOnWriteArrayList<>())
+                    .add(model);
+        }
+        return false;
     }
 
     private static void addInterfaces(Class<?> type, Set<Class<?>> interfaces) {

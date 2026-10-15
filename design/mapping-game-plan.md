@@ -162,7 +162,7 @@ structural item covers are moved to that item (see Phases 4 and 5).
   reading it back by the Java name.
 - Tests: `@Reference("r")` and snake_case naming.
 
-### 2.4 `getClassFromCollection` picks an arbitrary class (D6)
+### ~~2.4 `getClassFromCollection` picks an arbitrary class (D6)~~
 - Compute `rootModelByCollection` at registration time. Warn once, at registration, and only when the roots are
   unrelated.
 - Test: `find("shapes")` filters on the root's discriminators.
