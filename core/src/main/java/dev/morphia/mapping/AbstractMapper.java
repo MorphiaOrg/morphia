@@ -51,6 +51,12 @@ public abstract class AbstractMapper implements Mapper {
 
     protected final Map<String, EntityModel> mappedEntities = new ConcurrentHashMap<>();
     protected final ConcurrentHashMap<String, Set<EntityModel>> mappedEntitiesByCollection = new ConcurrentHashMap<>();
+    // Per collection, the registered models no other model mapped to that collection is a supertype of, in registration
+    // order. Normally one root; several only if unrelated classes share a collection. Replaced whole under the mapper's
+    // lock, so lock-free readers see a consistent list.
+    private final Map<String, List<EntityModel>> rootsByCollection = new ConcurrentHashMap<>();
+    // Collections already warned about for having unrelated roots, so the warning is logged once per collection.
+    private final Set<String> warnedCollections = ConcurrentHashMap.newKeySet();
     // Models registered before their direct superclass/interface(s) are themselves registered,
     // keyed by that not-yet-mapped parent's class name, so the relationship can be linked once
     // the parent does show up — without rescanning every already-registered model on every new
@@ -170,14 +176,17 @@ public abstract class AbstractMapper implements Mapper {
     @Override
     @MorphiaInternal
     public <T> Class<T> getClassFromCollection(String collection) {
-        final List<EntityModel> classes = getClassesMappedToCollection(collection);
-        if (classes.size() > 1) {
+        List<EntityModel> roots = rootsByCollection.get(collection);
+        if (roots == null || roots.isEmpty()) {
+            throw new MappingException(Sofia.collectionNotMapped(collection));
+        }
+        if (roots.size() > 1 && warnedCollections.add(collection)) {
             LOG.warn(Sofia.moreThanOneMapper(collection,
-                    classes.stream()
+                    roots.stream()
                             .map(c -> c.getType().getName())
                             .collect(Collectors.joining(", "))));
         }
-        return (Class<T>) classes.get(0).getType();
+        return (Class<T>) roots.get(0).getType();
     }
 
     @Override
@@ -437,8 +446,37 @@ public abstract class AbstractMapper implements Mapper {
         linkHierarchy(model);
         mappedEntitiesByCollection.computeIfAbsent(model.collectionName(), s -> new CopyOnWriteArraySet<>())
                 .add(model);
+        updateRoots(model);
         mappedEntities.put(name, model);
         return model;
+    }
+
+    /**
+     * Updates the roots of the model's collection: the model replaces any roots it's a supertype of, keeping the first
+     * one's position, and becomes a new root if no root is a supertype of it.
+     */
+    private void updateRoots(EntityModel model) {
+        Class<?> type = model.getType();
+        List<EntityModel> roots = rootsByCollection.getOrDefault(model.collectionName(), List.of());
+        if (roots.stream().anyMatch(root -> root.getType().isAssignableFrom(type))) {
+            return;
+        }
+        List<EntityModel> updated = new ArrayList<>();
+        boolean added = false;
+        for (EntityModel root : roots) {
+            if (type.isAssignableFrom(root.getType())) {
+                if (!added) {
+                    updated.add(model);
+                    added = true;
+                }
+            } else {
+                updated.add(root);
+            }
+        }
+        if (!added) {
+            updated.add(model);
+        }
+        rootsByCollection.put(model.collectionName(), List.copyOf(updated));
     }
 
     /**

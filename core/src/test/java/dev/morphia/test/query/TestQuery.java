@@ -602,6 +602,19 @@ public class TestQuery extends TestBase {
     }
 
     @Test
+    public void findByCollectionUsesTheRootClass() {
+        // subtypes first, so the old lookup picked QueryCircle and filtered out the squares
+        withTestConfig(buildConfig().enablePolymorphicQueries(true),
+                List.of(QueryCircle.class, QuerySquare.class, QueryShape.class), () -> {
+                    getDs().save(new QueryCircle());
+                    getDs().save(new QuerySquare());
+
+                    Assertions.assertEquals(2, getDs().find("query_shapes").count(),
+                            "find(\"query_shapes\") should query QueryShape and its subtypes");
+                });
+    }
+
+    @Test
     public void testIdFieldNameQuery() {
         getDs().save(new PhotoWithKeywords("scott", "hernandez"));
 
@@ -1693,5 +1706,19 @@ public class TestQuery extends TestBase {
         @Id
         @SuppressWarnings("unused")
         private ObjectId id;
+    }
+
+    @Entity("query_shapes")
+    abstract static class QueryShape {
+        @Id
+        ObjectId id;
+    }
+
+    @Entity("query_shapes")
+    static class QueryCircle extends QueryShape {
+    }
+
+    @Entity("query_shapes")
+    static class QuerySquare extends QueryShape {
     }
 }
