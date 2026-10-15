@@ -29,6 +29,7 @@ import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.MappingException;
+import dev.morphia.mapping.NamingStrategy;
 import dev.morphia.mapping.PropertyDiscovery;
 import dev.morphia.mapping.codec.DecodeSession;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
@@ -232,6 +233,38 @@ public class TestReferences extends ProxyTestBase {
         Assertions.assertNotNull(getDs().find(Container.class)
                 .filter(eq("singleRef", ref)).iterator()
                 .next());
+    }
+
+    @Test
+    public void testFindByRenamedReference() {
+        withConfig(buildConfig(RenamedReference.class, Ref.class), () -> {
+            final Ref ref = new Ref("renamed");
+            getDs().save(ref);
+            final RenamedReference holder = new RenamedReference();
+            holder.ref = ref;
+            getDs().save(holder);
+
+            Assertions.assertTrue(getDs().getCollection(RenamedReference.class).withDocumentClass(Document.class)
+                    .find().first().containsKey("r"));
+            Assertions.assertNotNull(getDs().find(RenamedReference.class)
+                    .filter(eq("ref", ref))
+                    .first(), "a filter on a reference stored under @Reference(\"r\") should match");
+        });
+    }
+
+    @Test
+    public void testFindByReferenceWithSnakeCaseNaming() {
+        withConfig(buildConfig(Container.class, Ref.class).propertyNaming(NamingStrategy.snakeCase()), () -> {
+            final Ref ref = new Ref("snake");
+            getDs().save(ref);
+            final Container container = new Container();
+            container.singleRef = ref;
+            getDs().save(container);
+
+            Assertions.assertNotNull(getDs().find(Container.class)
+                    .filter(eq("singleRef", ref))
+                    .first(), "a filter on a reference stored as single_ref should match");
+        });
     }
 
     @Test
@@ -818,6 +851,15 @@ public class TestReferences extends ProxyTestBase {
             return !(sibling != null ? !sibling.equals(that.sibling) : that.sibling != null);
 
         }
+    }
+
+    @Entity
+    private static class RenamedReference {
+        @Id
+        private ObjectId id;
+
+        @Reference("r")
+        private Ref ref;
     }
 
     @Entity

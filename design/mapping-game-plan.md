@@ -157,7 +157,7 @@ structural item covers are moved to that item (see Phases 4 and 5).
   then rejected (deferred from #4390's review).
 - Test: `C extends B implements Tagged` → `getSuperClass() == B`, and `IndexHelper` inherits `B`'s `@Indexes`.
 
-### 2.3 Reference filter reads the untranslated name (D10)
+### ~~2.3 Reference filter reads the untranslated name (D10)~~
 - In `Filter.getValue`, call `PropertyHandler.encode(value)` directly instead of encoding a throwaway `Document` and
   reading it back by the Java name.
 - Tests: `@Reference("r")` and snake_case naming.

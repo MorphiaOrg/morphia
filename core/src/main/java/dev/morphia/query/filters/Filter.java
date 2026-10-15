@@ -8,10 +8,8 @@ import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
-import dev.morphia.query.OperationTarget;
 
 import org.bson.BsonWriter;
-import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.EncoderContext;
 
@@ -159,12 +157,10 @@ public class Filter {
     @Nullable
     public Object getValue(MorphiaDatastore datastore) {
         if (!mapped) {
-            PathTarget target = pathTarget(datastore.getMapper());
-            OperationTarget operationTarget = new OperationTarget(pathTarget, value);
-            this.value = operationTarget.getValue();
-            PropertyModel property = target.target();
-            if (property != null && property.specializeCodec(datastore) instanceof PropertyHandler) {
-                this.value = ((Document) operationTarget.encode(datastore)).get(field);
+            PropertyModel property = pathTarget(datastore.getMapper()).target();
+            // encode directly: the property may be stored under a different name than the field this filter names
+            if (property != null && property.specializeCodec(datastore) instanceof PropertyHandler handler) {
+                this.value = handler.encode(value);
             }
             mapped = true;
         }
