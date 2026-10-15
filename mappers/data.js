@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1791260735077,
+  "lastUpdate": 1792078858862,
   "repoUrl": "https://github.com/MorphiaOrg/morphia",
   "entries": {
     "Mapper: reflection": [
@@ -282,6 +282,274 @@ window.BENCHMARK_DATA = {
             "value": 212.98954829999997,
             "unit": "ms/op",
             "extra": "iterations: 1\nforks: 10\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Justin Lee",
+            "username": "evanchooly",
+            "email": "evanchooly@users.noreply.github.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "30554c3d4561e2db62ccbe1b45bd138b69a48bee",
+          "message": "Cache entity codecs in a ConcurrentHashMap (plan item 2.8) (#4397)\n\nPlan item **2.8** (review D8). This completes the Phase 2 fixes. 2.5\nships with 3.8, as the plan says.\n\n## The bug\n`MorphiaCodecProvider.codecs` was a plain `HashMap`, and `get` mutated\nit on every miss. With concurrent first use of an entity type, a\n`HashMap` can be corrupted. Even when it isn't, every thread that missed\nbuilt its own `MorphiaCodec` and stored it, overwriting the others, so\ncallers ended up holding different codec instances for the same type.\n\n## Change\n`codecs` is a `ConcurrentHashMap`. On a miss, `get` builds the codec and\nstores it with `putIfAbsent`. If another thread stored one first, it\nreturns that one, so every caller shares a single codec per type.\n\nIt doesn't use `computeIfAbsent`, as the plan says: building a codec\nlooks up other codecs, and those lookups can land back in this provider,\nwhich isn't allowed inside a `ConcurrentHashMap` compute.\n\n## Tests\n`CodecHarnessTest.concurrentCodecLookupsShareOneCodec` runs under both\nmappers. For 20 fresh providers, 8 threads released together call\n`provider.get(HarnessScalars.class, registry)`, and the test asserts\nthat all of them get the same codec. It failed before the fix:\n*\"REFLECTION: every lookup should get the one cached codec\"*.\n\nThe core and Kotlin suites pass with `-Dmorphia.mapper=critter` and with\nreflection: 1483 + 5 tests, 0 failures.\n\n## Decisions to review\n1. **Recursive self-lookups now keep the inner codec.** If building a\ntype's codec recursively looks up that same type, the inner lookup\nstores its codec first, and the outer one is discarded. Before, the\nouter one overwrote it. Both are fully built codecs for the same model.",
+          "timestamp": "2026-10-15T12:51:23Z",
+          "url": "https://github.com/MorphiaOrg/morphia/commit/30554c3d4561e2db62ccbe1b45bd138b69a48bee"
+        },
+        "date": 1792078857992,
+        "tool": "jmh",
+        "benches": [
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"SIMPLE\",\"variant\":\"reflection\"} )",
+            "value": 1565.7032959828123,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"NESTED\",\"variant\":\"reflection\"} )",
+            "value": 4055.963590978036,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"COLLECTIONS\",\"variant\":\"reflection\"} )",
+            "value": 12355.551148231783,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"POLYMORPHIC\",\"variant\":\"reflection\"} )",
+            "value": 7608.29424452816,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"LIFECYCLE\",\"variant\":\"reflection\"} )",
+            "value": 1307.2210366770857,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"ARRAYS\",\"variant\":\"reflection\"} )",
+            "value": 82029.9588570652,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"CONCRETE_COLLECTIONS\",\"variant\":\"reflection\"} )",
+            "value": 3460.3216334451768,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"LAZY_REFERENCE\",\"variant\":\"reflection\"} )",
+            "value": 3858.5359144235795,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"SIMPLE\",\"variant\":\"reflection\"} )",
+            "value": 1595.4719446932866,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"NESTED\",\"variant\":\"reflection\"} )",
+            "value": 4106.673349806412,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"COLLECTIONS\",\"variant\":\"reflection\"} )",
+            "value": 12845.275039209724,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"POLYMORPHIC\",\"variant\":\"reflection\"} )",
+            "value": 7758.970629413456,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"LIFECYCLE\",\"variant\":\"reflection\"} )",
+            "value": 1322.702512036824,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"ARRAYS\",\"variant\":\"reflection\"} )",
+            "value": 84020.02547621584,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"CONCRETE_COLLECTIONS\",\"variant\":\"reflection\"} )",
+            "value": 3485.3743042632796,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"LAZY_REFERENCE\",\"variant\":\"reflection\"} )",
+            "value": 3756.5882424900824,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"SIMPLE\",\"variant\":\"reflection\"} )",
+            "value": 891.4416119298011,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"NESTED\",\"variant\":\"reflection\"} )",
+            "value": 2738.3170388265435,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"COLLECTIONS\",\"variant\":\"reflection\"} )",
+            "value": 9799.168012314058,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"POLYMORPHIC\",\"variant\":\"reflection\"} )",
+            "value": 4827.62063150282,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"LIFECYCLE\",\"variant\":\"reflection\"} )",
+            "value": 952.1211671826889,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"ARRAYS\",\"variant\":\"reflection\"} )",
+            "value": 123191.76172778939,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"CONCRETE_COLLECTIONS\",\"variant\":\"reflection\"} )",
+            "value": 2642.3868230184803,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"LAZY_REFERENCE\",\"variant\":\"reflection\"} )",
+            "value": 1963.22622258415,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.DatastoreBenchmark.copy ( {\"variant\":\"reflection\"} )",
+            "value": 19.180649983625493,
+            "unit": "us/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.DatastoreBenchmark.copyAndDecode ( {\"variant\":\"reflection\"} )",
+            "value": 31.342343174032287,
+            "unit": "us/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.DocumentShapesBenchmark.decode ( {\"shape\":\"AS_WRITTEN\",\"variant\":\"reflection\"} )",
+            "value": 1570.682628269638,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.DocumentShapesBenchmark.decode ( {\"shape\":\"NO_DISCRIMINATOR\",\"variant\":\"reflection\"} )",
+            "value": 1621.716577558642,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.DocumentShapesBenchmark.decode ( {\"shape\":\"SCHEMA_DRIFT\",\"variant\":\"reflection\"} )",
+            "value": 5954.922758158006,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.decode ( {\"model\":\"SIMPLE\",\"variant\":\"reflection\"} )",
+            "value": 3605.1786200630168,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.decode ( {\"model\":\"NESTED\",\"variant\":\"reflection\"} )",
+            "value": 17143.101595178006,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.encode ( {\"model\":\"SIMPLE\",\"variant\":\"reflection\"} )",
+            "value": 3022.0792286452083,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.encode ( {\"model\":\"NESTED\",\"variant\":\"reflection\"} )",
+            "value": 13178.210610028682,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MappingBenchmark.warmMapping ( {\"variant\":\"reflection\"} )",
+            "value": 81.84382262914205,
+            "unit": "us/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MixedCodecBenchmark.decode ( {\"variant\":\"reflection\"} )",
+            "value": 39570.75348462158,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MixedCodecBenchmark.encode ( {\"variant\":\"reflection\"} )",
+            "value": 27071.281469943893,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.QueryBenchmark.queryDocument ( {\"variant\":\"reflection\"} )",
+            "value": 3829.042235061627,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.QueryBenchmark.translatedPath ( {\"variant\":\"reflection\"} )",
+            "value": 1164.2983817228617,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MappingBenchmark.coldStart ( {\"variant\":\"reflection\"} )",
+            "value": 227.8386251,
+            "unit": "ms/op",
+            "extra": "iterations: 1\nforks: 10\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MappingBenchmark.scanEverything ( {\"variant\":\"reflection\"} )",
+            "value": 3293.2668385999996,
+            "unit": "ms/op",
+            "extra": "iterations: 1\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MappingBenchmark.scanModelsPackage ( {\"variant\":\"reflection\"} )",
+            "value": 422.7550486,
+            "unit": "ms/op",
+            "extra": "iterations: 1\nforks: 5\nthreads: 1"
           }
         ]
       }
