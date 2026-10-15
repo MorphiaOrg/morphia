@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -405,8 +406,8 @@ public abstract class AbstractMapper implements Mapper {
      * passes validation and discriminator registration, so concurrent lookups never see a model that may yet be
      * rejected. While it's being validated, lookups from the registering thread (e.g. a reference back to the type)
      * resolve to it through {@link #mapEntity(Class)}. If validation or discriminator registration fails, the failure
-     * propagates, nothing is registered, and any subtype links made to the model while it was built are removed, so a
-     * later lookup fails the same way. The model is published only after its hierarchy is linked.
+     * propagates and nothing is registered, so a later lookup fails the same way. The model is linked into its hierarchy
+     * only after it passes, and published only after it's linked.
      *
      * @param model    the model to register
      * @param validate true to validate the model before completing its registration
@@ -429,9 +430,6 @@ public abstract class AbstractMapper implements Mapper {
                         .validate(this, model);
             }
             discriminatorLookup.addModel(model);
-        } catch (RuntimeException e) {
-            unlink(model);
-            throw e;
         } finally {
             registering.remove(name);
         }
@@ -444,39 +442,29 @@ public abstract class AbstractMapper implements Mapper {
     }
 
     /**
-     * Removes a rejected model from the subtypes of every model it was linked to while it was built (building a model
-     * maps its annotated interfaces and links the new model under them).
-     */
-    private void unlink(EntityModel model) {
-        mappedEntities.values().forEach(parent -> parent.removeSubtype(model));
-        registering.values().forEach(parent -> parent.removeSubtype(model));
-    }
-
-    /**
-     * Links a newly registered model to its already-registered direct superclass/interface(s),
-     * and vice versa: any already-registered model that was waiting on this one as its parent.
-     * This replaces an O(n) rescan of every already-registered model on every new registration
-     * (previously isParent() was checked against the full mappedEntities set each time, an O(n^2)
-     * cost overall) with direct, name-keyed lookups in both directions.
+     * Links a newly registered model to its registered superclass and interfaces (including interfaces it inherits), and
+     * links any registered models that were waiting on this one as a parent. A parent that isn't registered yet is
+     * recorded as pending, unless it's a JDK type such as {@code Object} or {@code Serializable}, which can never be
+     * mapped. The parent's own annotations don't decide this: an {@code @ExternalEntity} stand-in can map a parent that
+     * has none. Lookups are name-keyed in both directions, so registration doesn't rescan every registered model.
      */
     private void linkHierarchy(EntityModel model) {
         Class<?> type = model.getType();
 
-        List<String> parentNames = new ArrayList<>();
-        Class<?> superclass = type.getSuperclass();
-        if (superclass != null) {
-            parentNames.add(superclass.getName());
+        Set<Class<?>> parents = new LinkedHashSet<>();
+        if (type.getSuperclass() != null) {
+            parents.add(type.getSuperclass());
         }
-        for (Class<?> iface : type.getInterfaces()) {
-            parentNames.add(iface.getName());
+        for (Class<?> current = type; current != null; current = current.getSuperclass()) {
+            addInterfaces(current, parents);
         }
 
-        for (String parentName : parentNames) {
-            EntityModel parent = mappedEntities.get(parentName);
+        for (Class<?> parentType : parents) {
+            EntityModel parent = mappedEntities.get(parentType.getName());
             if (parent != null) {
                 parent.addSubtype(model);
-            } else {
-                pendingSubtypesByParentName.computeIfAbsent(parentName, k -> new CopyOnWriteArrayList<>())
+            } else if (parentType.getClassLoader() != null) {
+                pendingSubtypesByParentName.computeIfAbsent(parentType.getName(), k -> new CopyOnWriteArrayList<>())
                         .add(model);
             }
         }
@@ -484,6 +472,14 @@ public abstract class AbstractMapper implements Mapper {
         List<EntityModel> waiting = pendingSubtypesByParentName.remove(type.getName());
         if (waiting != null) {
             waiting.forEach(model::addSubtype);
+        }
+    }
+
+    private static void addInterfaces(Class<?> type, Set<Class<?>> interfaces) {
+        for (Class<?> iface : type.getInterfaces()) {
+            if (interfaces.add(iface)) {
+                addInterfaces(iface, interfaces);
+            }
         }
     }
 

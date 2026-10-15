@@ -5,10 +5,12 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -93,7 +95,7 @@ public class EntityModel {
     private Class<?> type;
     private String collectionName;
     private final Set<EntityModel> subtypes = new CopyOnWriteArraySet<>();
-    public EntityModel superClass;
+    private EntityModel superClass;
     private PropertyModel idProperty;
     private PropertyModel versionProperty;
     private final List<EntityListener<?>> listeners = new ArrayList<>();
@@ -423,28 +425,30 @@ public class EntityModel {
      * @return the subtypes
      */
     public Set<EntityModel> getSubtypes() {
-        Set<EntityModel> set = new HashSet<>(subtypes);
-        set.addAll(subtypes.stream()
-                .flatMap(type -> type.getSubtypes().stream())
-                .collect(Collectors.toSet()));
-        return set;
-    }
-
-    public void addSubtype(EntityModel subtype) {
-        subtypes.add(subtype);
-        subtype.superClass = this;
+        // a model can be reached along several paths (e.g. linked under an interface and under its superinterface), so
+        // expand each one only once
+        Set<EntityModel> found = new HashSet<>();
+        Deque<EntityModel> pending = new ArrayDeque<>(subtypes);
+        while (!pending.isEmpty()) {
+            EntityModel subtype = pending.pop();
+            if (found.add(subtype)) {
+                pending.addAll(subtype.subtypes);
+            }
+        }
+        return found;
     }
 
     /**
-     * Removes a direct subtype, e.g. one whose registration failed after it was linked here.
+     * Adds a direct subtype: a subclass, or a class implementing this interface. The subtype's
+     * {@link #getSuperClass() superclass} is set only if this model is its actual superclass.
      *
-     * @param subtype the subtype to remove
-     * @hidden
-     * @morphia.internal
+     * @param subtype the subtype
      */
-    @MorphiaInternal
-    public void removeSubtype(EntityModel subtype) {
-        subtypes.remove(subtype);
+    public void addSubtype(EntityModel subtype) {
+        subtypes.add(subtype);
+        if (subtype.getType().getSuperclass() == type) {
+            subtype.superClass = this;
+        }
     }
 
     /**
@@ -656,16 +660,11 @@ public class EntityModel {
             for (Annotation annotation : type.getAnnotations()) {
                 annotation(annotation);
             }
-            Set<Class<?>> interfaces = new LinkedHashSet<>();
-            interfaces.addAll(findInterfaces(type));
+            // collects the interfaces' annotations; the mapper links the model to them once it's registered
+            findInterfaces(type);
 
             classes.addAll(findParentClasses(type.getSuperclass()));
-            classes.forEach(c -> interfaces.addAll(findInterfaces(c)));
-
-            interfaces.stream()
-                    .map(mapper::mapEntity)
-                    .filter(Objects::nonNull)
-                    .forEach(i -> i.addSubtype(EntityModel.this));
+            classes.forEach(this::findInterfaces);
 
         }
 
