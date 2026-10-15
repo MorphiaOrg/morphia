@@ -258,28 +258,31 @@ public final class IndexHelper {
         return indexes;
     }
 
+    /**
+     * Collects the {@code @Indexes} of a model and its superclasses. Every index field is resolved against
+     * {@code entityModel}, the model being indexed, since a subclass can map an inherited property to a different name.
+     */
     private List<Index> findClassIndexes(EntityModel entityModel) {
         List<Index> list = new ArrayList<>();
-        final Indexes indexes = entityModel.getAnnotation(Indexes.class);
-        EntityModel superClass = entityModel.getSuperClass();
-        // @Indexes is @Inherited, so a model that doesn't declare its own carries its superclass's, which the superclass
-        // adds below
-        if (indexes != null && (superClass == null || !indexes.equals(superClass.getAnnotation(Indexes.class)))) {
-            for (Index index : indexes.value()) {
-                List<Field> fields = new ArrayList<>();
-                for (Field field : index.fields()) {
-                    fields.add(fieldBuilder()
-                            .value(findField(entityModel, index.options(), field.value()))
-                            .type(field.type())
-                            .weight(field.weight())
-                            .build());
-                }
+        for (EntityModel current = entityModel; current != null; current = current.getSuperClass()) {
+            final Indexes indexes = current.getAnnotation(Indexes.class);
+            EntityModel superClass = current.getSuperClass();
+            // @Indexes is @Inherited, so a model that doesn't declare its own carries its superclass's, which the next
+            // pass adds
+            if (indexes != null && (superClass == null || !indexes.equals(superClass.getAnnotation(Indexes.class)))) {
+                for (Index index : indexes.value()) {
+                    List<Field> fields = new ArrayList<>();
+                    for (Field field : index.fields()) {
+                        fields.add(fieldBuilder()
+                                .value(findField(entityModel, index.options(), field.value()))
+                                .type(field.type())
+                                .weight(field.weight())
+                                .build());
+                    }
 
-                list.add(replaceFields(index, fields));
+                    list.add(replaceFields(index, fields));
+                }
             }
-        }
-        if (superClass != null) {
-            list.addAll(findClassIndexes(superClass));
         }
 
         return list;

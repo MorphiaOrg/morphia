@@ -444,8 +444,9 @@ public abstract class AbstractMapper implements Mapper {
     /**
      * Links a newly registered model to its registered superclass and interfaces (including interfaces it inherits), and
      * links any registered models that were waiting on this one as a parent. A parent that isn't registered yet is
-     * recorded as pending, unless it can never be mapped (e.g. {@code Object}). Lookups are name-keyed in both
-     * directions, so registration doesn't rescan every registered model.
+     * recorded as pending, unless it's a JDK type such as {@code Object} or {@code Serializable}, which can never be
+     * mapped. The parent's own annotations don't decide this: an {@code @ExternalEntity} stand-in can map a parent that
+     * has none. Lookups are name-keyed in both directions, so registration doesn't rescan every registered model.
      */
     private void linkHierarchy(EntityModel model) {
         Class<?> type = model.getType();
@@ -462,7 +463,7 @@ public abstract class AbstractMapper implements Mapper {
             EntityModel parent = mappedEntities.get(parentType.getName());
             if (parent != null) {
                 parent.addSubtype(model);
-            } else if (isMappable(parentType)) {
+            } else if (parentType.getClassLoader() != null) {
                 pendingSubtypesByParentName.computeIfAbsent(parentType.getName(), k -> new CopyOnWriteArrayList<>())
                         .add(model);
             }
