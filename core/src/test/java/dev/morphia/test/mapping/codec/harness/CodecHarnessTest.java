@@ -13,6 +13,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
@@ -25,6 +29,7 @@ import dev.morphia.config.ManualMorphiaConfig;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.DiscriminatorFunction;
 import dev.morphia.mapping.MapperType;
+import dev.morphia.mapping.codec.MorphiaCodecProvider;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
@@ -72,6 +77,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -223,6 +229,36 @@ public class CodecHarnessTest {
             for (PropertyModel property : model.getProperties()) {
                 assertTrue(properties.contains(property), mapper + ": the hash of " + property.getName() + " changed");
             }
+        }
+    }
+
+    @Test
+    void concurrentCodecLookupsShareOneCodec() throws Exception {
+        int threads = 8;
+        ExecutorService executor = Executors.newFixedThreadPool(threads);
+        try {
+            for (MapperType mapper : MapperType.values()) {
+                MorphiaDatastore datastore = datastore(Variant.DEFAULTS, mapper);
+                for (int round = 0; round < 20; round++) {
+                    MorphiaCodecProvider provider = new MorphiaCodecProvider(datastore);
+                    CountDownLatch start = new CountDownLatch(1);
+                    List<Future<Codec<HarnessScalars>>> results = new ArrayList<>();
+                    for (int i = 0; i < threads; i++) {
+                        results.add(executor.submit(() -> {
+                            start.await();
+                            return provider.get(HarnessScalars.class, datastore.getCodecRegistry());
+                        }));
+                    }
+                    start.countDown();
+
+                    Codec<HarnessScalars> first = results.get(0).get();
+                    for (Future<Codec<HarnessScalars>> result : results) {
+                        assertSame(first, result.get(), mapper + ": every lookup should get the one cached codec");
+                    }
+                }
+            }
+        } finally {
+            executor.shutdownNow();
         }
     }
 
