@@ -368,7 +368,7 @@
             <dependency>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-annotations</artifactId>
-                <version>4.10.4</version>
+                <version>4.10.5</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
@@ -379,12 +379,12 @@
             <dependency>
                 <groupId>net.bytebuddy</groupId>
                 <artifactId>byte-buddy</artifactId>
-                <version>1.18.14</version>
+                <version>1.18.15</version>
             </dependency>
             <dependency>
                 <groupId>io.github.classgraph</groupId>
                 <artifactId>classgraph</artifactId>
-                <version>4.8.197</version>
+                <version>6.0.0</version>
             </dependency>
             <dependency>
                 <groupId>com.google.devtools.ksp</groupId>
