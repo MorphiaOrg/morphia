@@ -53,7 +53,7 @@ public final class CodecPlan {
      * codecs keep the mark. Types a codec reads and then may reject, such as an {@code IntegerCodec} reading an INT64
      * that doesn't fit, aren't listed.
      */
-    private static final Map<Class<?>, Integer> DIRECT_BSON_TYPES = Map.ofEntries(
+    static final Map<Class<?>, Integer> DIRECT_BSON_TYPES = Map.ofEntries(
             entry(StringCodec.class, mask(BsonType.STRING, BsonType.SYMBOL)),
             entry(ObjectIdCodec.class, mask(BsonType.OBJECT_ID)),
             entry(IntegerCodec.class, mask(BsonType.INT32)),
