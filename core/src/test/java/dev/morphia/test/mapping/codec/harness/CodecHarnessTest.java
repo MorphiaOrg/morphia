@@ -58,6 +58,7 @@ import org.bson.BsonBinaryReader;
 import org.bson.BsonBinaryWriter;
 import org.bson.BsonDocument;
 import org.bson.BsonString;
+import org.bson.BsonType;
 import org.bson.RawBsonDocument;
 import org.bson.codecs.BsonDocumentCodec;
 import org.bson.codecs.Codec;
@@ -77,6 +78,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -276,6 +278,14 @@ public class CodecHarnessTest {
             for (PropertyModel property : model.getProperties()) {
                 assertNotNull(plan.codec(property), mapper + ": no codec for " + property.getName());
             }
+            // only types the codec can't fail part-way on skip the reader mark; drifted types keep it for the fallback
+            PropertyModel name = model.getProperty("name");
+            PropertyModel age = model.getProperty("age");
+            assertTrue(plan.readsDirectly(name, BsonType.STRING), mapper + ": StringCodec reads STRING directly");
+            assertFalse(plan.readsDirectly(name, BsonType.INT32), mapper + ": StringCodec rejects INT32");
+            assertTrue(plan.readsDirectly(age, BsonType.INT32), mapper + ": IntegerCodec reads INT32 directly");
+            assertFalse(plan.readsDirectly(age, BsonType.INT64), mapper + ": IntegerCodec may reject an INT64 after reading it");
+
             PropertyModel foreign = datastore.getMapper().getEntityModel(HarnessRenames.class).getProperties().get(1);
             assertThrows(IllegalArgumentException.class, () -> plan.codec(foreign),
                     mapper + ": a property of another model should be rejected");

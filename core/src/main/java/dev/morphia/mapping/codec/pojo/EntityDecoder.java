@@ -117,22 +117,28 @@ public class EntityDecoder<T> implements Decoder<T> {
     protected void decodeModel(BsonReader reader, DecoderContext decoderContext,
             MorphiaInstanceCreator instanceCreator, CodecPlan plan, @Nullable PropertyModel model) {
 
-        if (model != null) {
-            final BsonReaderMark mark = reader.getMark();
-            try {
-                if (reader.getCurrentBsonType() == BsonType.NULL) {
-                    reader.readNull();
-                } else {
-                    Object value = decoderContext.decodeWithChildContext(plan.codec(model), reader);
-                    instanceCreator.set(value, model);
-                }
-            } catch (BsonInvalidOperationException e) {
-                mark.reset();
-                final Object value = morphiaCodec.getRegistry().get(Object.class).decode(reader, decoderContext);
-                instanceCreator.set(morphiaCodec.getConversions().convert(value, model.getTypeData().getType()), model);
-            }
-        } else {
+        if (model == null) {
             reader.skipValue();
+            return;
+        }
+        BsonType type = reader.getCurrentBsonType();
+        if (type == BsonType.NULL) {
+            reader.readNull();
+            return;
+        }
+        if (plan.readsDirectly(model, type)) {
+            // the codec can't fail part-way on this type, so there's nothing to rewind and no mark to take
+            instanceCreator.set(decoderContext.decodeWithChildContext(plan.codec(model), reader), model);
+            return;
+        }
+        final BsonReaderMark mark = reader.getMark();
+        try {
+            Object value = decoderContext.decodeWithChildContext(plan.codec(model), reader);
+            instanceCreator.set(value, model);
+        } catch (BsonInvalidOperationException e) {
+            mark.reset();
+            final Object value = morphiaCodec.getRegistry().get(Object.class).decode(reader, decoderContext);
+            instanceCreator.set(morphiaCodec.getConversions().convert(value, model.getTypeData().getType()), model);
         }
     }
 
