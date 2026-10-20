@@ -56,8 +56,7 @@ public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
                 }
             });
         } else {
-            morphiaCodec.getRegistry()
-                    .get((Class) value.getClass())
+            morphiaCodec.codecForSubtype((Class) value.getClass())
                     .encode(writer, value, encoderContext);
         }
     }

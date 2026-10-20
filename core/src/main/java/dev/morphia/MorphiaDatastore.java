@@ -54,6 +54,7 @@ import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.ReflectiveMapper;
 import dev.morphia.mapping.ShardKeyType;
 import dev.morphia.mapping.codec.EnumCodecProvider;
+import dev.morphia.mapping.codec.MemoizingCodecRegistry;
 import dev.morphia.mapping.codec.MorphiaCodecProvider;
 import dev.morphia.mapping.codec.MorphiaExpressionCodecProvider;
 import dev.morphia.mapping.codec.MorphiaFilterCodecProvider;
@@ -238,8 +239,7 @@ public class MorphiaDatastore implements Datastore {
         providers.addAll(morphiaCodecProviders);
         providers.add(codecRegistry);
         providers.add(new GeoJsonCodecProvider());
-        codecRegistry = fromProviders(providers);
-        return codecRegistry;
+        return new MemoizingCodecRegistry(fromProviders(providers));
     }
 
     private void applyCaps() {

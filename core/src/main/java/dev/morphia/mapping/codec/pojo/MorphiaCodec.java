@@ -52,6 +52,8 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     private final CodecPlan plan;
     // discriminator -> codec for the other types a document read through this codec can name; package-visible for tests
     final Map<String, Codec<?>> discriminatorCodecs = new ConcurrentHashMap<>();
+    // subtype -> codec, for values of a subtype encoded through this codec
+    private final Map<Class<?>, Codec<?>> subtypeCodecs = new ConcurrentHashMap<>();
     private EntityEncoder<T> encoder;
     private EntityDecoder<T> decoder;
     private MorphiaDatastore datastore;
@@ -202,6 +204,27 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
             }
         }
         return (Codec<? extends T>) codec;
+    }
+
+    /**
+     * @param type the class of a value being encoded through this codec, a subtype of its own type
+     * @return the codec for that class, looked up once per class
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    @SuppressWarnings("unchecked")
+    public <S> Codec<S> codecForSubtype(Class<S> type) {
+        Codec<?> codec = subtypeCodecs.get(type);
+        if (codec == null) {
+            // not computeIfAbsent: building the codec can look up other codecs, which may land back here
+            codec = registry.get(type);
+            Codec<?> existing = subtypeCodecs.putIfAbsent(type, codec);
+            if (existing != null) {
+                codec = existing;
+            }
+        }
+        return (Codec<S>) codec;
     }
 
     /**

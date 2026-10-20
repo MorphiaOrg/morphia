@@ -21,6 +21,8 @@ class ArrayCodec implements Codec<Object> {
 
     private final Class<?> type;
     private MorphiaDatastore datastore;
+    // the component type's codec, fixed for this codec; resolved on first use
+    private Codec<?> componentCodec;
 
     <T> ArrayCodec(MorphiaDatastore datastore, Class<T> type) {
         this.datastore = datastore;
@@ -76,7 +78,10 @@ class ArrayCodec implements Codec<Object> {
         } else if (bsonType == BsonType.BINARY && BsonBinarySubType.isUuid(reader.peekBinarySubType()) && reader.peekBinarySize() == 16) {
             return datastore.getCodecRegistry().get(UUID.class).decode(reader, decoderContext);
         }
-        return datastore.getCodecRegistry().get(type.getComponentType()).decode(reader, decoderContext);
+        if (componentCodec == null) {
+            componentCodec = datastore.getCodecRegistry().get(type.getComponentType());
+        }
+        return componentCodec.decode(reader, decoderContext);
     }
 
 }
