@@ -47,6 +47,7 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     private final PropertyCodecRegistry propertyCodecRegistry;
     private final DiscriminatorLookup discriminatorLookup;
     private final Conversions conversions;
+    private final CodecPlan plan;
     private EntityEncoder<T> encoder;
     private EntityDecoder<T> decoder;
     private MorphiaDatastore datastore;
@@ -74,6 +75,7 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         this.propertyCodecRegistry = new PropertyCodecRegistryImpl(this, registry, propertyCodecProviders);
         idProperty = model.getIdProperty();
         specializePropertyCodecs();
+        plan = new CodecPlan(model);
     }
 
     @Override
@@ -171,6 +173,16 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
      */
     public EntityModel getEntityModel() {
         return entityModel;
+    }
+
+    /**
+     * @return the plan this codec encodes and decodes with
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public CodecPlan getPlan() {
+        return plan;
     }
 
     /**

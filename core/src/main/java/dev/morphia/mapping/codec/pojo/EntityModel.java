@@ -170,6 +170,7 @@ public class EntityModel {
         added &= propertyModelsByMappedName.put(property.getMappedName(), property) == null;
 
         if (added) {
+            property.slot(propertyModelsByName.size() - 1);
             if (property.hasAnnotation(Id.class)) {
                 idProperty = property;
             } else if (property.hasAnnotation(Version.class)) {

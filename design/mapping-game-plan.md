@@ -194,7 +194,7 @@ structural item covers are moved to that item (see Phases 4 and 5).
 **Precondition:** the minimal codec plan (3.0) and the harness (0.1). Each item is its own PR, with before/after
 JMH numbers on both mappers.
 
-### 3.0 Minimal per-`MorphiaCodec` plan
+### ~~3.0 Minimal per-`MorphiaCodec` plan~~
 - **What:** an immutable object built once per `MorphiaCodec`. Initially it holds `PropertyModel[] properties`,
   `Codec<?>[] codecs` by slot, and `PropertyModel[] encodeOrder`. Later items add `directBsonTypes[]`,
   `boxedTypes[]`, creator positions, lifecycle flags and discriminator/subtype caches.
@@ -202,7 +202,7 @@ JMH numbers on both mappers.
   the shared `PropertyModel`.
 - **Scope:** encoders and decoders read codecs from the plan. `PropertyModel.codec` remains for now (removed in 4.1).
 
-### 3.1 Skip the reader mark for codecs that can't fail part-way (#1, B1)
+### ~~3.1 Skip the reader mark for codecs that can't fail part-way (#1, B1)~~
 - Hoist the NULL check above `getMark()`.
 - Add a per-slot `directBsonTypes` bitmask from a static table keyed on the exact codec class (the table is in B1).
   User codecs keep the mark.

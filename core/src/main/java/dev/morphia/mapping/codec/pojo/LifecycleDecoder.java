@@ -37,6 +37,7 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
     public T decode(BsonReader reader, DecoderContext decoderContext) {
         Document document = getMorphiaCodec().getRegistry().get(Document.class).decode(reader, decoderContext);
         EntityModel model = getMorphiaCodec().getEntityModel();
+        CodecPlan plan = getMorphiaCodec().getPlan();
         if (model.useDiscriminator()) {
             String discriminator = document.getString(model.discriminatorKey());
             if (discriminator != null) {
@@ -45,6 +46,7 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
                 Codec<?> codec = getMorphiaCodec().getRegistry().get(discriminatorClass);
                 if (codec instanceof MorphiaCodec) {
                     model = ((MorphiaCodec<?>) codec).getEntityModel();
+                    plan = ((MorphiaCodec<?>) codec).getPlan();
                 } else {
                     throw new CodecConfigurationException(format("Non-entity class used as discriminator: '%s'.", discriminator));
                 }
@@ -70,7 +72,7 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
         try {
             model.callLifecycleMethods(PreLoad.class, entity, document, getMorphiaCodec().getDatastore());
             decodeProperties(new DocumentReader(document, getMorphiaCodec().getConversions()), decoderContext, instanceCreator,
-                    model);
+                    plan);
             model.callLifecycleMethods(PostLoad.class, entity, document, getMorphiaCodec().getDatastore());
             decoded = true;
         } finally {
