@@ -96,6 +96,22 @@ public class ConstructorCreatorTest extends TestBase {
     }
 
     @Test
+    public void noArgConstructorSetsValuesAsTheyArrive() {
+        EntityModel model = getMapper().map(Default.class).get(0);
+        MorphiaInstanceCreator creator = model.getInstanceCreator(getMapper().getConversions());
+        Assertions.assertTrue(creator.isEagerInstanceSafe());
+
+        creator.set("named", model.getProperty("name"));
+        Default instance = (Default) creator.getInstance();
+        Assertions.assertEquals("named", instance.name);
+
+        // a value that needs converting still goes through Conversions on this path
+        creator.set(42.0, model.getProperty("count"));
+        Assertions.assertSame(instance, creator.getInstance());
+        Assertions.assertEquals(42, instance.count);
+    }
+
+    @Test
     public void creatorsDoNotShareState() {
         EntityModel model = getMapper().map(Address.class).get(0);
         MorphiaInstanceCreator first = model.getInstanceCreator(getMapper().getConversions());
