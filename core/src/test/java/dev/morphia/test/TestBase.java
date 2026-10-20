@@ -60,7 +60,6 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.MongoDBContainer;
-import org.testcontainers.utility.DockerImageName;
 
 import static com.mongodb.MongoClientSettings.builder;
 import static dev.morphia.internal.MorphiaInternals.proxyClassesPresent;
@@ -267,17 +266,14 @@ public abstract class TestBase {
         var savedDatastore = datastore;
         var savedDatabase = database;
         try {
-            String mongodb = System.getProperty("mongodb", "8.0.0");
+            String mongodb = MongoExtension.mongodbVersion();
             if ("local".equals(mongodb)) {
                 morphiaConfig = MorphiaConfig.load();
                 datastore = null;
                 database = null;
                 body.run();
             } else {
-                int version = Semver.parse(mongodb).getMajor();
-                DockerImageName imageName = DockerImageName.parse("mongo:" + version)
-                        .asCompatibleSubstituteFor("mongo");
-                MongoDBContainer shardedContainer = new MongoDBContainer(imageName).withSharding();
+                MongoDBContainer shardedContainer = new MongoDBContainer(MongoExtension.imageName(mongodb)).withSharding();
                 shardedContainer.start();
                 try (MongoClient shardedClient = MongoClients.create(builder()
                         .uuidRepresentation(UuidRepresentation.STANDARD)
