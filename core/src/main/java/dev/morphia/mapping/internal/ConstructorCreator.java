@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
+import java.util.regex.Pattern;
 
 import com.mongodb.lang.Nullable;
 
@@ -39,11 +40,17 @@ import static java.util.Arrays.stream;
  */
 @MorphiaInternal
 public class ConstructorCreator implements MorphiaInstanceCreator {
+    private static final Pattern UNNAMED_PARAMETER = Pattern.compile("arg[0-9]+");
+    private static final Object[] NO_PARAMETERS = new Object[0];
+
     private final Plan plan;
     private final Conversions conversions;
     private final Object[] parameters;
-    private final List<PropertyModel> pendingModels = new ArrayList<>();
-    private final List<Object> pendingValues = new ArrayList<>();
+    // properties the constructor doesn't take, set once it has run; allocated only if a value arrives before then
+    @Nullable
+    private List<PropertyModel> pendingModels;
+    @Nullable
+    private List<Object> pendingValues;
     private Object instance;
 
     /**
@@ -63,7 +70,7 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
     public ConstructorCreator(Plan plan, Conversions conversions) {
         this.plan = plan;
         this.conversions = conversions;
-        this.parameters = plan.zeroValues.clone();
+        this.parameters = plan.types.length == 0 ? NO_PARAMETERS : plan.zeroValues.clone();
     }
 
     /**
@@ -93,7 +100,7 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
                 types[i] = parameter.getType();
                 zeroValues[i] = zeroValue(parameter);
                 String name = getParameterName(parameter);
-                if (name.matches("arg[0-9]+")) {
+                if (UNNAMED_PARAMETER.matcher(name).matches()) {
                     throw new MappingException(Sofia.unnamedConstructorParameter(model.getType().getName()));
                 }
                 if (positions.put(name, i) != null) {
@@ -138,8 +145,10 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
         if (instance == null) {
             try {
                 instance = plan.constructor.newInstance(parameters);
-                for (int i = 0; i < pendingModels.size(); i++) {
-                    pendingModels.get(i).setValue(instance, pendingValues.get(i));
+                if (pendingModels != null) {
+                    for (int i = 0; i < pendingModels.size(); i++) {
+                        pendingModels.get(i).setValue(instance, pendingValues.get(i));
+                    }
                 }
             } catch (Exception e) {
                 throw new MappingException(Sofia.cannotInstantiate(plan.model.getType().getName(), e.getMessage()), e);
@@ -193,6 +202,10 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
     public void set(@Nullable Object value, PropertyModel model) {
         if (instance != null) {
             model.setValue(instance, value);
+        } else if (plan.types.length == 0) {
+            // a no-arg constructor needs none of the values, so construct now and set each value as it arrives instead
+            // of buffering them all
+            model.setValue(getInstance(), value);
         } else {
             Integer position = plan.positions.get(model.getName());
             if (position != null) {
@@ -200,6 +213,10 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
             } else {
                 // only properties the constructor doesn't take need setting after construction. re-setting the others would
                 // overwrite whatever the constructor did with the value and, for final fields, write them reflectively (JEP 500).
+                if (pendingModels == null) {
+                    pendingModels = new ArrayList<>();
+                    pendingValues = new ArrayList<>();
+                }
                 pendingModels.add(model);
                 pendingValues.add(value);
             }

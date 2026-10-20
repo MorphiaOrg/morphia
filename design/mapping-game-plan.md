@@ -210,7 +210,7 @@ JMH numbers on both mappers.
 - Optional: send a known-rejected type straight to the fallback, avoiding a throw and stack trace for each drifted
   field.
 
-### 3.2 No-arg creator fast path (#2, A2/B4)
+### ~~3.2 No-arg creator fast path (#2, A2/B4)~~
 - When the chosen constructor has no parameters, construct the instance first and set values through
   `model.setValue`, which keeps `Conversions`. Allocate pending lists lazily.
 - Delete the dead `NoArgCreator` branch and its `LOG.info`. Delete `NoArgCreator` itself, which also skips

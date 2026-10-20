@@ -12,17 +12,12 @@ import dev.morphia.sofia.Sofia;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * @hidden
  * @morphia.internal
  */
 @MorphiaInternal
 public class InstanceCreatorFactoryImpl implements InstanceCreatorFactory {
-    private static final Logger LOG = LoggerFactory.getLogger(InstanceCreatorFactoryImpl.class);
-
     private final EntityModel model;
     private Function<Conversions, MorphiaInstanceCreator> creator;
 
@@ -45,15 +40,10 @@ public class InstanceCreatorFactoryImpl implements InstanceCreatorFactory {
                     ConstructorCreator.Plan plan = new ConstructorCreator.Plan(model, constructor);
                     creator = (c) -> new ConstructorCreator(plan, c);
                 } else {
-                    LOG.info("using old creator approach: " + model.getType().getName());
-                    try {
-                        Constructor<?> declared = model.getType().getDeclaredConstructor();
-                        creator = (c) -> new NoArgCreator(declared);
-                    } catch (NoSuchMethodException e) {
-                        Constructor<?> full = ConstructorCreator.getFullConstructor(model);
-                        ConstructorCreator.Plan plan = new ConstructorCreator.Plan(model, full);
-                        creator = (c) -> new ConstructorCreator(plan, c);
-                    }
+                    // bestConstructor already picks a no-arg constructor when there is one
+                    Constructor<?> full = ConstructorCreator.getFullConstructor(model);
+                    ConstructorCreator.Plan plan = new ConstructorCreator.Plan(model, full);
+                    creator = (c) -> new ConstructorCreator(plan, c);
                 }
             }
 
