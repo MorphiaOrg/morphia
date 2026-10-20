@@ -217,7 +217,7 @@ JMH numbers on both mappers.
   `Conversions`.
 - Use a static `Pattern` for `arg[0-9]+`.
 
-### 3.3 Discriminator self-match, step 1 (#3, B2)
+### ~~3.3 Discriminator self-match, step 1 (#3, B2)~~
 - Add `codecForDiscriminator(d)`, which returns `this` on a self-match and otherwise uses a per-codec CHM.
 - Use `skipValue()` instead of `readString()` on `_t`.
 - Step 2, a single pass with no rewind, is moved to 3.17.

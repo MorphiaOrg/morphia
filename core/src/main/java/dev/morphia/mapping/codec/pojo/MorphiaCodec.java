@@ -1,6 +1,8 @@
 package dev.morphia.mapping.codec.pojo;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
@@ -48,6 +50,8 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     private final DiscriminatorLookup discriminatorLookup;
     private final Conversions conversions;
     private final CodecPlan plan;
+    // discriminator -> codec for the other types a document read through this codec can name; package-visible for tests
+    final Map<String, Codec<?>> discriminatorCodecs = new ConcurrentHashMap<>();
     private EntityEncoder<T> encoder;
     private EntityDecoder<T> decoder;
     private MorphiaDatastore datastore;
@@ -173,6 +177,31 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
      */
     public EntityModel getEntityModel() {
         return entityModel;
+    }
+
+    /**
+     * @param discriminator a discriminator value read from a document
+     * @return the codec for the type it names: this codec when it names this codec's own type, which is the usual
+     *         case, otherwise the registry's codec for that type, looked up once per discriminator
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    @SuppressWarnings("unchecked")
+    public Codec<? extends T> codecForDiscriminator(String discriminator) {
+        if (discriminator.equals(entityModel.discriminator())) {
+            return this;
+        }
+        Codec<?> codec = discriminatorCodecs.get(discriminator);
+        if (codec == null) {
+            // not computeIfAbsent: building the codec can look up other codecs, which may land back here
+            codec = registry.get(discriminatorLookup.lookup(discriminator));
+            Codec<?> existing = discriminatorCodecs.putIfAbsent(discriminator, codec);
+            if (existing != null) {
+                codec = existing;
+            }
+        }
+        return (Codec<? extends T>) codec;
     }
 
     /**

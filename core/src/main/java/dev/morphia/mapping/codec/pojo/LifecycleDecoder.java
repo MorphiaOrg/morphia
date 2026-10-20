@@ -41,9 +41,7 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
         if (model.useDiscriminator()) {
             String discriminator = document.getString(model.discriminatorKey());
             if (discriminator != null) {
-                Class<?> discriminatorClass = getMorphiaCodec().getDiscriminatorLookup().lookup(discriminator);
-                // need to load the codec to initialize cachedCodecs in field models
-                Codec<?> codec = getMorphiaCodec().getRegistry().get(discriminatorClass);
+                Codec<?> codec = getMorphiaCodec().codecForDiscriminator(discriminator);
                 if (codec instanceof MorphiaCodec) {
                     model = ((MorphiaCodec<?>) codec).getEntityModel();
                     plan = ((MorphiaCodec<?>) codec).getPlan();
