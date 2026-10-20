@@ -34,9 +34,9 @@ public class BuildMatrix {
                 .map(Semver::parse)
                 .filter(it -> it.getPreRelease().isEmpty() || it.getPreRelease().get(0).equals(""))
                 .filter(it -> it.isGreaterThanOrEqualTo("7.0.0"))
-                // the current 8.0 and 8.3 releases refuse to start on Linux 6.19 and newer, which the runners use
-                // (https://jira.mongodb.org/browse/SERVER-121912). Remove this once a fixed release ships.
-                .filter(it -> !(it.getMajor() == 8 && (it.getMinor() == 0 || it.getMinor() == 3)))
+                // these releases refuse to start on Linux 6.19 and newer, which the runners use
+                // (https://jira.mongodb.org/browse/SERVER-121912). Later patch releases are picked up automatically.
+                .filter(it -> !it.isEqualTo("8.0.34") && !it.isEqualTo("8.3.13"))
                 .map(it -> format("'%s'", it))
                 .collect(Collectors.toList());
         System.out.println(result);

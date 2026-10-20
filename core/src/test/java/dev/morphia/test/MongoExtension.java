@@ -26,7 +26,7 @@ public class MongoExtension implements BeforeAllCallback, AfterAllCallback {
 
     /**
      * The server version to test against when {@code -Dmongodb} isn't given. A version without a patch number uses that
-     * release line's latest image. Not 8.0 or 8.3: their current releases refuse to start on Linux 6.19 and newer
+     * release line's latest image. Not 8.0 or 8.3: 8.0.34 and 8.3.13 refuse to start on Linux 6.19 and newer
      * (SERVER-121912).
      */
     static final String DEFAULT_MONGODB = "8.2";
