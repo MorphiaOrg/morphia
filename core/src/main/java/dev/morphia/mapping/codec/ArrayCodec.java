@@ -21,8 +21,9 @@ class ArrayCodec implements Codec<Object> {
 
     private final Class<?> type;
     private MorphiaDatastore datastore;
-    // the component type's codec, fixed for this codec; resolved on first use
-    private Codec<?> componentCodec;
+    // the component type's codec, fixed for this codec; resolved on first use. volatile because this codec is shared
+    // across threads and the cached codec has non-final state that must be visible with it
+    private volatile Codec<?> componentCodec;
 
     <T> ArrayCodec(MorphiaDatastore datastore, Class<T> type) {
         this.datastore = datastore;
@@ -78,10 +79,12 @@ class ArrayCodec implements Codec<Object> {
         } else if (bsonType == BsonType.BINARY && BsonBinarySubType.isUuid(reader.peekBinarySubType()) && reader.peekBinarySize() == 16) {
             return datastore.getCodecRegistry().get(UUID.class).decode(reader, decoderContext);
         }
-        if (componentCodec == null) {
-            componentCodec = datastore.getCodecRegistry().get(type.getComponentType());
+        Codec<?> codec = componentCodec;
+        if (codec == null) {
+            codec = datastore.getCodecRegistry().get(type.getComponentType());
+            componentCodec = codec;
         }
-        return componentCodec.decode(reader, decoderContext);
+        return codec.decode(reader, decoderContext);
     }
 
 }

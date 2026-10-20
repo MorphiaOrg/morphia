@@ -33,8 +33,9 @@ public class EntityDecoder<T> implements Decoder<T> {
 
     private final MorphiaCodec<T> morphiaCodec;
     private final EntityModel classModel;
-    // decodes a pre-read _id the way references read theirs, so the session keys match; resolved on first use
-    private Codec<Object> idKeyCodec;
+    // decodes a pre-read _id the way references read theirs, so the session keys match; resolved on first use.
+    // volatile because decoders are shared across threads
+    private volatile Codec<Object> idKeyCodec;
 
     protected EntityDecoder(MorphiaCodec<T> morphiaCodec) {
         this.morphiaCodec = morphiaCodec;
@@ -210,10 +211,12 @@ public class EntityDecoder<T> implements Decoder<T> {
             while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
                 String name = reader.readName();
                 if ("_id".equals(name) || name.equals(idName)) {
-                    if (idKeyCodec == null) {
-                        idKeyCodec = morphiaCodec.getRegistry().get(Object.class);
+                    Codec<Object> codec = idKeyCodec;
+                    if (codec == null) {
+                        codec = morphiaCodec.getRegistry().get(Object.class);
+                        idKeyCodec = codec;
                     }
-                    return idKeyCodec.decode(reader, DEFAULT_CONTEXT);
+                    return codec.decode(reader, DEFAULT_CONTEXT);
                 } else {
                     reader.skipValue();
                 }
