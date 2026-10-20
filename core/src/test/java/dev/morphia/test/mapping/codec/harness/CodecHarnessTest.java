@@ -39,6 +39,7 @@ import dev.morphia.test.mapping.codec.harness.models.HarnessArrays;
 import dev.morphia.test.mapping.codec.harness.models.HarnessCallbackCircle;
 import dev.morphia.test.mapping.codec.harness.models.HarnessCallbackHolder;
 import dev.morphia.test.mapping.codec.harness.models.HarnessCallbackShape;
+import dev.morphia.test.mapping.codec.harness.models.HarnessCircle;
 import dev.morphia.test.mapping.codec.harness.models.HarnessCollections;
 import dev.morphia.test.mapping.codec.harness.models.HarnessConstructed;
 import dev.morphia.test.mapping.codec.harness.models.HarnessDrawing;
@@ -52,6 +53,7 @@ import dev.morphia.test.mapping.codec.harness.models.HarnessRecordHolder;
 import dev.morphia.test.mapping.codec.harness.models.HarnessReferences;
 import dev.morphia.test.mapping.codec.harness.models.HarnessRenames;
 import dev.morphia.test.mapping.codec.harness.models.HarnessScalars;
+import dev.morphia.test.mapping.codec.harness.models.HarnessShape;
 import dev.morphia.test.mapping.codec.harness.models.HarnessStringListBox;
 
 import org.bson.BsonBinaryReader;
@@ -289,6 +291,22 @@ public class CodecHarnessTest {
             PropertyModel foreign = datastore.getMapper().getEntityModel(HarnessRenames.class).getProperties().get(1);
             assertThrows(IllegalArgumentException.class, () -> plan.codec(foreign),
                     mapper + ": a property of another model should be rejected");
+        }
+    }
+
+    @Test
+    void codecForDiscriminatorResolvesEachTypeOnce() {
+        for (MapperType mapper : MapperType.values()) {
+            MorphiaDatastore datastore = datastore(Variant.DEFAULTS, mapper);
+            MorphiaCodec<HarnessShape> shapes = (MorphiaCodec<HarnessShape>) codec(datastore, HarnessShape.class);
+            MorphiaCodec<?> circles = (MorphiaCodec<?>) codec(datastore, HarnessCircle.class);
+
+            assertSame(circles, circles.codecForDiscriminator(circles.getEntityModel().discriminator()),
+                    mapper + ": a codec's own discriminator resolves to itself");
+            Codec<?> circle = shapes.codecForDiscriminator(circles.getEntityModel().discriminator());
+            assertSame(circles, circle, mapper + ": a subtype's discriminator resolves to the subtype's codec");
+            assertSame(circle, shapes.codecForDiscriminator(circles.getEntityModel().discriminator()),
+                    mapper + ": and the same codec every time");
         }
     }
 

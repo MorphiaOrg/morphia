@@ -3,7 +3,6 @@ package dev.morphia.mapping.codec.pojo;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.mapping.DiscriminatorLookup;
 import dev.morphia.mapping.codec.DecodeSession;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 
@@ -15,7 +14,6 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.Decoder;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.configuration.CodecConfigurationException;
-import org.bson.codecs.configuration.CodecRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,9 +29,12 @@ import static java.lang.String.format;
 public class EntityDecoder<T> implements Decoder<T> {
     private static final Logger LOG = LoggerFactory.getLogger(EntityDecoder.class);
     private static final DecoderContext CHECKED_DISCRIMINATOR = DecoderContext.builder().checkedDiscriminator(true).build();
+    private static final DecoderContext DEFAULT_CONTEXT = DecoderContext.builder().build();
 
     private final MorphiaCodec<T> morphiaCodec;
     private final EntityModel classModel;
+    // decodes a pre-read _id the way references read theirs, so the session keys match; resolved on first use
+    private Codec<Object> idKeyCodec;
 
     protected EntityDecoder(MorphiaCodec<T> morphiaCodec) {
         this.morphiaCodec = morphiaCodec;
@@ -89,8 +90,7 @@ public class EntityDecoder<T> implements Decoder<T> {
 
             return instance;
         } else {
-            entity = getCodecFromDocument(reader, classModel.useDiscriminator(), classModel.discriminatorKey(),
-                    morphiaCodec.getRegistry(), morphiaCodec.getDiscriminatorLookup(), morphiaCodec)
+            entity = getCodecFromDocument(reader, classModel.useDiscriminator(), classModel.discriminatorKey(), morphiaCodec)
                     .decode(reader, CHECKED_DISCRIMINATOR);
         }
 
@@ -169,7 +169,7 @@ public class EntityDecoder<T> implements Decoder<T> {
         while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
             String name = reader.readName();
             if (classModel.useDiscriminator() && classModel.discriminatorKey().equals(name)) {
-                reader.readString();
+                reader.skipValue();
             } else {
                 decodeModel(reader, decoderContext, instanceCreator, plan, classModel.getProperty(name));
             }
@@ -178,7 +178,6 @@ public class EntityDecoder<T> implements Decoder<T> {
     }
 
     protected Codec<T> getCodecFromDocument(BsonReader reader, boolean useDiscriminator, String discriminatorKey,
-            CodecRegistry registry, DiscriminatorLookup discriminatorLookup,
             Codec<T> defaultCodec) {
         Codec<T> codec = null;
         if (useDiscriminator) {
@@ -187,7 +186,7 @@ public class EntityDecoder<T> implements Decoder<T> {
                 reader.readStartDocument();
                 while (codec == null && reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
                     if (discriminatorKey.equals(reader.readName())) {
-                        codec = (Codec<T>) registry.get(discriminatorLookup.lookup(reader.readString()));
+                        codec = (Codec<T>) morphiaCodec.codecForDiscriminator(reader.readString());
                     } else {
                         reader.skipValue();
                     }
@@ -211,9 +210,10 @@ public class EntityDecoder<T> implements Decoder<T> {
             while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
                 String name = reader.readName();
                 if ("_id".equals(name) || name.equals(idName)) {
-                    return morphiaCodec.getRegistry()
-                            .get(Object.class)
-                            .decode(reader, DecoderContext.builder().build());
+                    if (idKeyCodec == null) {
+                        idKeyCodec = morphiaCodec.getRegistry().get(Object.class);
+                    }
+                    return idKeyCodec.decode(reader, DEFAULT_CONTEXT);
                 } else {
                     reader.skipValue();
                 }
