@@ -50,8 +50,8 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     private final DiscriminatorLookup discriminatorLookup;
     private final Conversions conversions;
     private final CodecPlan plan;
-    // discriminator -> codec for the other types a document read through this codec can name
-    private final Map<String, Codec<?>> discriminatorCodecs = new ConcurrentHashMap<>();
+    // discriminator -> codec for the other types a document read through this codec can name; package-visible for tests
+    final Map<String, Codec<?>> discriminatorCodecs = new ConcurrentHashMap<>();
     private EntityEncoder<T> encoder;
     private EntityDecoder<T> decoder;
     private MorphiaDatastore datastore;
