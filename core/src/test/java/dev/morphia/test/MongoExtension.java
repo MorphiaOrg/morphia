@@ -10,7 +10,6 @@ import org.bson.UuidRepresentation;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.semver4j.Semver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.MongoDBContainer;
@@ -25,21 +24,43 @@ public class MongoExtension implements BeforeAllCallback, AfterAllCallback {
     private static MongoDBContainer container;
     private static MongoClient mongoClient;
 
+    /**
+     * The server version to test against when {@code -Dmongodb} isn't given. A version without a patch number uses that
+     * release line's latest image. Not 8.0 or 8.3: 8.0.34 and 8.3.13 refuse to start on Linux 6.19 and newer
+     * (SERVER-121912).
+     */
+    static final String DEFAULT_MONGODB = "8.2";
+
+    /**
+     * @return the server version to test against, from {@code -Dmongodb}: a version such as {@code 8.2.12} or
+     *         {@code 8.2}, or {@code local}
+     */
+    static String mongodbVersion() {
+        return System.getProperty("mongodb", DEFAULT_MONGODB);
+    }
+
+    /**
+     * @param version a server version such as {@code 8.2.12}, or {@code 8.2} for that line's latest release
+     * @return the image for exactly that version
+     */
+    static DockerImageName imageName(String version) {
+        return DockerImageName.parse("mongo:" + version)
+                .asCompatibleSubstituteFor("mongo");
+    }
+
     @Override
     public void beforeAll(ExtensionContext context) {
         synchronized (LOCK) {
             if (mongoClient != null) {
                 return;
             }
-            String mongodb = System.getProperty("mongodb", "8.0.0");
+            String mongodb = mongodbVersion();
             String connectionString;
             if ("local".equals(mongodb)) {
                 LOG.info("'local' mongodb property specified. Using local server.");
                 connectionString = "mongodb://localhost:27017/";
             } else {
-                int version = Semver.parse(mongodb).getMajor();
-                DockerImageName imageName = DockerImageName.parse("mongo:" + version)
-                        .asCompatibleSubstituteFor("mongo");
+                DockerImageName imageName = imageName(mongodb);
                 LOG.info("Running tests using " + imageName);
                 container = new MongoDBContainer(imageName);
                 container.start();
