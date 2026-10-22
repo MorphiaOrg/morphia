@@ -48,7 +48,7 @@
     </repositories>
 
     <properties>
-        <asm.version>9.11</asm.version>
+        <asm.version>9.11.1</asm.version>
         <awaitility.version>1.7.0</awaitility.version>
         <dokka.version>2.2.0</dokka.version>
         <driver.version>5.13.0</driver.version>
@@ -56,7 +56,7 @@
         <driver-javadoc.link>https://mongodb.github.io/mongo-java-driver/${driver.minor.version}/apidocs</driver-javadoc.link>
         <morphia-javadoc.link>https://morphia.dev/morphia/${morphia.minor.version}/javadoc</morphia-javadoc.link>
         <classfile.backport.version>27</classfile.backport.version>
-        <jackson.version>2.22.3</jackson.version>
+        <jackson.version>2.22.4</jackson.version>
         <jackson-annotations.version>2.22</jackson-annotations.version>
         <json.assert.version>1.5.3</json.assert.version>
         <javapoet.version>1.13.0</javapoet.version>
@@ -368,7 +368,7 @@
             <dependency>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-annotations</artifactId>
-                <version>4.10.4</version>
+                <version>4.10.5</version>
                 <scope>compile</scope>
             </dependency>
             <dependency>
@@ -379,12 +379,12 @@
             <dependency>
                 <groupId>net.bytebuddy</groupId>
                 <artifactId>byte-buddy</artifactId>
-                <version>1.18.14</version>
+                <version>1.18.15</version>
             </dependency>
             <dependency>
                 <groupId>io.github.classgraph</groupId>
                 <artifactId>classgraph</artifactId>
-                <version>4.8.197</version>
+                <version>4.8.199</version>
             </dependency>
             <dependency>
                 <groupId>com.google.devtools.ksp</groupId>
