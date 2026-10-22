@@ -15,8 +15,6 @@ import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static dev.morphia.mapping.codec.CodecHelper.document;
-
 /**
  * @param <T> the entity type
  * @hidden
@@ -42,19 +40,16 @@ public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
         if (areEquivalentTypes(value.getClass(), model.getType())) {
             LOG.debug("Encoding document using codec for {}", morphiaCodec.getEntityModel().getType().getName());
 
-            document(writer, () -> {
-
-                PropertyModel idModel = model.getIdProperty();
-                encodeIdProperty(writer, value, encoderContext, idModel);
-
-                if (model.useDiscriminator()) {
-                    encodeDiscriminator(writer, model);
-                }
-
-                for (PropertyModel propertyModel : morphiaCodec.getPlan().encodeOrder()) {
-                    encodeProperty(writer, propertyModel, value, encoderContext);
-                }
-            });
+            // written out rather than through CodecHelper.document, whose lambda would capture these locals per encode
+            writer.writeStartDocument();
+            encodeIdProperty(writer, value, encoderContext, model.getIdProperty());
+            if (model.useDiscriminator()) {
+                encodeDiscriminator(writer, model);
+            }
+            for (PropertyModel propertyModel : morphiaCodec.getPlan().encodeOrder()) {
+                encodeProperty(writer, propertyModel, value, encoderContext);
+            }
+            writer.writeEndDocument();
         } else {
             morphiaCodec.codecForSubtype((Class) value.getClass())
                     .encode(writer, value, encoderContext);

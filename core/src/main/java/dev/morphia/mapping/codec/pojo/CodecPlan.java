@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.mongodb.lang.Nullable;
 
+import dev.morphia.annotations.LoadOnly;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.EnumCodec;
 import dev.morphia.mapping.codec.MorphiaDateCodec;
@@ -84,8 +85,9 @@ public final class CodecPlan {
             directBsonTypes[slot] = codecs[slot] != null ? DIRECT_BSON_TYPES.getOrDefault(codecs[slot].getClass(), 0) : 0;
         }
         PropertyModel idProperty = model.getIdProperty();
+        // the id is written first, separately, and @LoadOnly properties are never written by any encoder
         encodeOrder = Arrays.stream(properties)
-                .filter(property -> property != idProperty)
+                .filter(property -> property != idProperty && !property.hasAnnotation(LoadOnly.class))
                 .toArray(PropertyModel[]::new);
     }
 
@@ -128,7 +130,8 @@ public final class CodecPlan {
     }
 
     /**
-     * @return the properties to encode after the id, in order. Callers must not modify the array.
+     * @return the properties to encode after the id, in order, without {@code @LoadOnly} properties. Callers must not
+     *         modify the array.
      */
     PropertyModel[] encodeOrder() {
         return encodeOrder;
