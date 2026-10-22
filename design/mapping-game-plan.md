@@ -234,7 +234,7 @@ JMH numbers on both mappers.
 - Cache `ArrayCodec`'s component codec.
 - Add a per-codec subtype-codec cache for encode.
 
-### 3.6 Precompute serialization flags and the encode order (#6, B11/A7)
+### ~~3.6 Precompute serialization flags and the encode order (#6, B11/A7)~~
 - Give `MorphiaPropertySerialization` final booleans.
 - Put `encodeOrder` in the plan, without the id property and without properties that are always skipped.
 - Use `==` instead of `equals(idModel)`. The deep `equals` is already gone after 2.7.
