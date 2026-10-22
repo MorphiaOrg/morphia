@@ -226,10 +226,10 @@ JMH numbers on both mappers.
   At minimum, have it reuse a constant `DecoderContext` and the codec resolved for the id property instead of
   `registry.get(Object.class)`.
 
-### 3.4 `getProperty` single lookup (#4, D4/B6)
+### ~~3.4 `getProperty` single lookup (#4, D4/B6)~~
 - A one-line fix. Can merge with any other PR.
 
-### 3.5 Memoizing `CodecRegistry` wrapper (#5, B5)
+### ~~3.5 Memoizing `CodecRegistry` wrapper (#5, B5)~~
 - Wrap the datastore registry. `get(Class)` checks a CHM first, and the other overloads delegate.
 - Cache `ArrayCodec`'s component codec.
 - Add a per-codec subtype-codec cache for encode.

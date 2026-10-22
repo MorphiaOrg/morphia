@@ -408,7 +408,12 @@ public class EntityModel {
      */
     @Nullable
     public PropertyModel getProperty(@Nullable String name) {
-        return name != null ? propertyModelsByMappedName.getOrDefault(name, propertyModelsByName.get(name)) : null;
+        if (name == null) {
+            return null;
+        }
+        // not getOrDefault: its default argument would be looked up every time
+        PropertyModel property = propertyModelsByMappedName.get(name);
+        return property != null ? property : propertyModelsByName.get(name);
     }
 
     /*
