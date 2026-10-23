@@ -46,7 +46,7 @@
         <awaitility.version>1.7.0</awaitility.version>
         <driver.version>5.11.1</driver.version>
         <driver.minor.version>5.7</driver.minor.version>
-        <jackson.version>2.22.3</jackson.version>
+        <jackson.version>2.22.4</jackson.version>
         <json.assert.version>1.5.3</json.assert.version>
         <logback.version>1.6.5</logback.version>
         <maven.version>3.10.0</maven.version>
@@ -252,7 +252,7 @@
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-tree</artifactId>
-                <version>9.11</version>
+                <version>9.11.1</version>
             </dependency>
             <dependency>
                 <groupId>org.jsoup</groupId>
