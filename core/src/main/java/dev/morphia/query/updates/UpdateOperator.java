@@ -28,6 +28,10 @@ public class UpdateOperator {
 
     private Object value;
 
+    // the field's translated path, worked out on first use and cleared when anything it depends on changes
+    @Nullable
+    private String translatedField;
+
     /**
      * @param operator the operator name
      * @param field    the field to update
@@ -75,6 +79,7 @@ public class UpdateOperator {
     @MorphiaInternal
     public UpdateOperator datastore(MorphiaDatastore datastore) {
         this.datastore = datastore;
+        translatedField = null;
         return this;
     }
 
@@ -86,6 +91,7 @@ public class UpdateOperator {
     @MorphiaInternal
     public void entityModel(@Nullable EntityModel model) {
         this.model = model;
+        translatedField = null;
     }
 
     /**
@@ -96,7 +102,12 @@ public class UpdateOperator {
     @MorphiaInternal
     public String field() {
         if (field != null && !field.equals("")) {
-            return new PathTarget(datastore.getMapper(), model, field, validate).translatedPath();
+            String translated = translatedField;
+            if (translated == null) {
+                translated = new PathTarget(datastore.getMapper(), model, field, validate).translatedPath();
+                translatedField = translated;
+            }
+            return translated;
         }
         return field;
     }
@@ -121,6 +132,7 @@ public class UpdateOperator {
     @MorphiaInternal
     public UpdateOperator model(@Nullable EntityModel model) {
         this.model = model;
+        translatedField = null;
         return this;
     }
 
@@ -161,6 +173,7 @@ public class UpdateOperator {
     @MorphiaInternal
     public UpdateOperator validate(boolean validate) {
         this.validate = validate;
+        translatedField = null;
         return this;
     }
 

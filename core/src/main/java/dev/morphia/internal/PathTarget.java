@@ -16,7 +16,6 @@
 
 package dev.morphia.internal;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.StringJoiner;
 
@@ -86,7 +85,7 @@ public class PathTarget {
      * @param <T>    the root type
      */
     public <T> PathTarget(Mapper mapper, @Nullable Class<T> type, String path) {
-        this(mapper, type != null && mapper.isMappable(type) ? mapper.getEntityModel(type) : null, path, true);
+        this(mapper, type, path, true);
     }
 
     /**
@@ -99,7 +98,7 @@ public class PathTarget {
      * @param <T>           the root type
      */
     public <T> PathTarget(Mapper mapper, @Nullable Class<T> type, String path, boolean validateNames) {
-        this(mapper, type != null && mapper.isMappable(type) ? mapper.getEntityModel(type) : null, path, validateNames);
+        this(mapper, type != null ? mapper.tryGetEntityModel(type).orElse(null) : null, path, validateNames);
     }
 
     /**
@@ -162,8 +161,7 @@ public class PathTarget {
         while (!resolved && hasNext()) {
             String segment = next();
 
-            // array operator
-            if ("$".equals(segment) || (segment.startsWith("$[") && segment.endsWith("]")) || segment.matches("[0-9]+")) {
+            if (isArrayOperator(segment)) {
                 if (!hasNext()) {
                     break;
                 }
@@ -193,25 +191,46 @@ public class PathTarget {
         segments.set(position - 1, nameToStore);
     }
 
+    /**
+     * @return true for a positional array operator ({@code $} or {@code $[...]}) or an array index
+     */
+    private static boolean isArrayOperator(String segment) {
+        if ("$".equals(segment) || segment.startsWith("$[") && segment.endsWith("]")) {
+            return true;
+        }
+        if (segment.isEmpty()) {
+            return false;
+        }
+        for (int i = 0; i < segment.length(); i++) {
+            char c = segment.charAt(i);
+            if (c < '0' || c > '9') {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Finds the property a segment names on the current model or, failing that, on any of its subtypes, and moves on to
+     * the model the property holds. If nothing in the hierarchy has the property, no later segment can be resolved, so
+     * the context is cleared rather than left on whichever model was tried last.
+     */
     @Nullable
     private PropertyModel resolveProperty(String segment) {
-        if (context != null) {
-            PropertyModel model = context.getProperty(segment);
-            if (model == null) {
-                Iterator<EntityModel> subTypes = context.getSubtypes().iterator();
-                while (model == null && subTypes.hasNext()) {
-                    context = subTypes.next();
-                    model = resolveProperty(segment);
-                }
-            }
-
-            if (model != null) {
-                context = mapper.tryGetEntityModel(model.getNormalizedType()).orElse(null);
-            }
-            return model;
-        } else {
+        if (context == null) {
             return null;
         }
+        PropertyModel model = context.getProperty(segment);
+        if (model == null) {
+            for (EntityModel subtype : context.allSubtypes()) {
+                model = subtype.getProperty(segment);
+                if (model != null) {
+                    break;
+                }
+            }
+        }
+        context = model != null ? mapper.tryGetEntityModel(model.getNormalizedType()).orElse(null) : null;
+        return model;
     }
 
     String next() {

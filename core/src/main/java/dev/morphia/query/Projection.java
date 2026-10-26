@@ -10,6 +10,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.sofia.Sofia;
 
 import org.bson.Document;
@@ -134,10 +135,10 @@ public class Projection {
 
     private Document knownFields(Mapper mapper, Class<?> clazz) {
         Document projection = new Document();
-        mapper.getEntityModel(clazz).getProperties()
-                .stream()
-                .map(mf -> new PathTarget(mapper, mapper.getEntityModel(clazz), mf.getMappedName()).translatedPath())
-                .forEach(name -> projection.put(name, 1));
+        // a property's mapped name is already its path
+        for (PropertyModel property : mapper.getEntityModel(clazz).getProperties()) {
+            projection.put(property.getMappedName(), 1);
+        }
 
         return projection;
     }
