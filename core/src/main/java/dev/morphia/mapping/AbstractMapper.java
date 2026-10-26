@@ -542,14 +542,17 @@ public abstract class AbstractMapper implements Mapper {
         final Set<Class> classes = new HashSet<>();
 
         ClassGraph classGraph = new ClassGraph()
-                .addClassLoader(loader)
-                .enableAllInfo();
+                .enableClasspath()
+                .enableNonSystemModules()
+                .enableClassLoaders(loader)
+                .enableClassInfo()
+                .ignoreClassVisibility();
         if (packageName.endsWith(".*")) {
             String base = packageName.substring(0, packageName.length() - 2);
+            // acceptPackages is recursive; a bare ".*" accepts nothing so every package is scanned
             if (!base.isEmpty()) {
                 classGraph.acceptPackages(base);
             }
-            classGraph.acceptPackages(packageName);
         } else {
             classGraph.acceptPackagesNonRecursive(packageName);
         }
