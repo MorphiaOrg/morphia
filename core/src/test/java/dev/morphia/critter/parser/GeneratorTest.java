@@ -26,8 +26,10 @@ public class GeneratorTest {
 
     static {
         ClassGraph classGraph = new ClassGraph()
-                .addClassLoader(critterClassLoader)
-                .enableAllInfo();
+                .enableClasspath()
+                .enableClassLoaders(critterClassLoader)
+                .enableClassInfo()
+                .ignoreClassVisibility();
         classGraph.acceptPackages("dev.morphia.critter.sources");
 
         try (var scanResult = classGraph.scan()) {

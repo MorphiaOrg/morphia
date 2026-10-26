@@ -24,7 +24,7 @@ public class RewriteUtils {
     private RewriteUtils() {
     }
 
-    private static List<URI> runtimeClasspath = new ClassGraph().disableNestedJarScanning().getClasspathURIs();
+    private static List<URI> runtimeClasspath = new ClassGraph().enableClasspath().disableNestedJarScanning().getClasspathURIs();
 
     private static LinkedHashSet<Path> dependencies = new LinkedHashSet<Path>();
 

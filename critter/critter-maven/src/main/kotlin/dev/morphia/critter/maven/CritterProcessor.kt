@@ -48,7 +48,7 @@ class CritterProcessor(
             ClassGraph()
                 .enableClassInfo()
                 .enableAnnotationInfo()
-                .overrideClassLoaders(classLoader)
+                .enableClassLoaders(classLoader)
                 .apply {
                     if (packagesToScan.isNotEmpty()) {
                         acceptPackages(*packagesToScan.toTypedArray())
