@@ -248,7 +248,8 @@ JMH numbers on both mappers.
 - Iterate a cached, flattened subtype list. The hierarchy grows as subtypes are mapped lazily, so
   `EntityModel.addSubtype` must invalidate the cache on the model and on every ancestor (D5). Test: a path that
   only resolves through a subtype mapped after the first lookup.
-- Cache `UpdateOperator.field()`.
+- ~~Cache `UpdateOperator.field()`.~~ Not done (#4413): a subtype mapped lazily after the first call can change the
+  translation, and nothing would invalidate the cache. Resolution is cheap after this item anyway.
 - `Projection.knownFields` should return mapped names directly.
 - Includes correctness fix 2.5.
 

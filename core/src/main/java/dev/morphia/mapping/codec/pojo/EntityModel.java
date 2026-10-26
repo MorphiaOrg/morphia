@@ -471,9 +471,17 @@ public class EntityModel {
     }
 
     private void subtypesChanged() {
-        subtypesVersion.incrementAndGet();
-        for (EntityModel parent : parents) {
-            parent.subtypesChanged();
+        // an ancestor can be reached along many paths (a model is linked under every interface it inherits), so visit
+        // each one once; following every path is exponential in the depth of an interface chain
+        Set<EntityModel> visited = new HashSet<>();
+        Deque<EntityModel> pending = new ArrayDeque<>();
+        pending.add(this);
+        while (!pending.isEmpty()) {
+            EntityModel model = pending.removeFirst();
+            if (visited.add(model)) {
+                model.subtypesVersion.incrementAndGet();
+                pending.addAll(model.parents);
+            }
         }
     }
 
