@@ -1,8 +1,6 @@
 package dev.morphia.mapping.codec;
 
-import java.lang.annotation.Annotation;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 import com.mongodb.lang.Nullable;
@@ -17,44 +15,31 @@ import org.bson.codecs.pojo.PropertySerialization;
  * Determines if a property should be serialized or not
  */
 public class MorphiaPropertySerialization implements PropertySerialization<Object> {
-    private final List<Annotation> annotations;
-    private final MorphiaConfig config;
-
-    private final PropertyModel property;
+    // all fixed once the property is mapped, so worked out here rather than on every value
+    private final boolean storeNulls;
+    private final boolean storeEmpties;
+    private final boolean neverSerialized;
 
     /**
      * @param config   the configuration to use
      * @param property the property in question
      */
     public MorphiaPropertySerialization(MorphiaConfig config, PropertyModel property) {
-        this.config = config;
-        annotations = property.getAnnotations();
-        this.property = property;
+        storeNulls = config.storeNulls();
+        storeEmpties = config.storeEmpties();
+        neverSerialized = property.hasAnnotation(LoadOnly.class) || config.ignoreFinals() && property.isFinal();
     }
 
     @Override
     public boolean shouldSerialize(@Nullable Object value) {
-        if (!config.storeNulls() && value == null) {
+        if (neverSerialized) {
             return false;
         }
-        if (config.ignoreFinals() && property.isFinal()) {
-            return false;
+        if (value == null) {
+            return storeNulls;
         }
-        if (!config.storeEmpties()) {
-            if (value instanceof Map && ((Map<?, ?>) value).isEmpty()
-                    || value instanceof Collection && ((Collection<?>) value).isEmpty()) {
-                return false;
-            }
-        }
-        return isNotLoadOnly();
-    }
-
-    private boolean isNotLoadOnly() {
-        for (int i = 0; i < annotations.size(); i++) {
-            if (annotations.get(i).annotationType().equals(LoadOnly.class)) {
-                return false;
-            }
-        }
-        return true;
+        return storeEmpties
+                || !(value instanceof Map && ((Map<?, ?>) value).isEmpty()
+                        || value instanceof Collection && ((Collection<?>) value).isEmpty());
     }
 }
