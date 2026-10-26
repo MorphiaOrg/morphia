@@ -86,6 +86,17 @@ public class TestPathTargetSubtypes {
 
     @ParameterizedTest
     @EnumSource(MapperType.class)
+    public void prefersTheNearestSubtypeWhenAnIntermediateIsMappedLast(MapperType type) {
+        Mapper mapper = mapper(type);
+        // Far is first linked straight under Base, since Middle isn't mapped yet, and that link stays
+        mapper.map(Base.class, Far.class, Middle.class, Near.class);
+
+        Assertions.assertEquals("near_r", translate(mapper, Base.class, "radius"),
+                "Near extends Base directly, so it's nearer than Far, which extends Middle");
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
     public void linksADeepInterfaceChainRootFirstQuickly(MapperType type) {
         Mapper mapper = mapper(type);
         // each link is linked under every interface above it, so invalidating along every path is exponential
@@ -230,6 +241,28 @@ public class TestPathTargetSubtypes {
     static class ChainLink implements Chain32 {
         @Id
         ObjectId id;
+    }
+
+    @Entity("bases")
+    static class Base {
+        @Id
+        ObjectId id;
+    }
+
+    @Entity("bases")
+    static class Middle extends Base {
+    }
+
+    @Entity("bases")
+    static class Far extends Middle {
+        @Property("far_r")
+        double radius;
+    }
+
+    @Entity("bases")
+    static class Near extends Base {
+        @Property("near_r")
+        double radius;
     }
 
     @Entity("shapes")

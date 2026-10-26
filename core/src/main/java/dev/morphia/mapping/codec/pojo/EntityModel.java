@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -464,10 +465,45 @@ public class EntityModel {
                 pending.addAll(subtype.subtypes);
             }
         }
-        List<EntityModel> models = List.copyOf(found);
+        // links don't say how far down a subtype is: one mapped before its superclass is linked under a farther ancestor
+        // and stays there, so order by actual inheritance distance (stable, so ties keep link order)
+        List<EntityModel> ordered = new ArrayList<>(found);
+        Map<EntityModel, Integer> distances = new HashMap<>();
+        for (EntityModel subtype : ordered) {
+            distances.put(subtype, distanceFrom(subtype.getType()));
+        }
+        ordered.sort(Comparator.comparingInt(distances::get));
+        List<EntityModel> models = List.copyOf(ordered);
         // tagged with the version read before walking, so a subtype linked during the walk makes it stale at once
         allSubtypes = new AllSubtypes(version, models);
         return models;
+    }
+
+    /**
+     * @return the fewest superclass or interface steps from the given type up to this model's type
+     */
+    private int distanceFrom(Class<?> subtype) {
+        Map<Class<?>, Integer> steps = new HashMap<>();
+        Deque<Class<?>> pending = new ArrayDeque<>();
+        steps.put(subtype, 0);
+        pending.add(subtype);
+        while (!pending.isEmpty()) {
+            Class<?> current = pending.removeFirst();
+            int step = steps.get(current);
+            if (current == type) {
+                return step;
+            }
+            List<Class<?>> parents = new ArrayList<>(Arrays.asList(current.getInterfaces()));
+            if (current.getSuperclass() != null) {
+                parents.add(0, current.getSuperclass());
+            }
+            for (Class<?> parent : parents) {
+                if (steps.putIfAbsent(parent, step + 1) == null) {
+                    pending.add(parent);
+                }
+            }
+        }
+        return Integer.MAX_VALUE;
     }
 
     private void subtypesChanged() {
