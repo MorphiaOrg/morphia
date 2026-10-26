@@ -96,6 +96,7 @@ public class UpdateOperator {
     @MorphiaInternal
     public String field() {
         if (field != null && !field.equals("")) {
+            // not cached: mapping a subtype later, e.g. while encoding another update's value, can change the translation
             return new PathTarget(datastore.getMapper(), model, field, validate).translatedPath();
         }
         return field;

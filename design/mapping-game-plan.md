@@ -167,7 +167,7 @@ structural item covers are moved to that item (see Phases 4 and 5).
   unrelated.
 - Test: `find("shapes")` filters on the root's discriminators.
 
-### 2.5 `PathTarget` leaves `context` on the last subtype tried (D2)
+### ~~2.5 `PathTarget` leaves `context` on the last subtype tried (D2)~~ (in 3.8)
 - Restore `context` when no subtype matches. Ship it alongside the D2 performance item (3.8).
 
 ### ~~2.6 Double `@PrePersist`/`@PostPersist` for polymorphic values (B3)~~
@@ -243,12 +243,13 @@ JMH numbers on both mappers.
 - Store a boxed target type per slot. When `boxedType.isInstance(v)`, set the value directly.
 - Use `get` instead of `computeIfAbsent`, and remove the double conversion on the fallback path.
 
-### 3.8 `PathTarget` fixes (#8, D2)
+### ~~3.8 `PathTarget` fixes (#8, D2)~~
 - Replace the regex with a hand-written check.
 - Iterate a cached, flattened subtype list. The hierarchy grows as subtypes are mapped lazily, so
   `EntityModel.addSubtype` must invalidate the cache on the model and on every ancestor (D5). Test: a path that
   only resolves through a subtype mapped after the first lookup.
-- Cache `UpdateOperator.field()`.
+- ~~Cache `UpdateOperator.field()`.~~ Not done (#4413): a subtype mapped lazily after the first call can change the
+  translation, and nothing would invalidate the cache. Resolution is cheap after this item anyway.
 - `Projection.knownFields` should return mapped names directly.
 - Includes correctness fix 2.5.
 

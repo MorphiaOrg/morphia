@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,6 +23,7 @@ import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import com.mongodb.lang.NonNull;
@@ -95,6 +97,12 @@ public class EntityModel {
     private Class<?> type;
     private String collectionName;
     private final Set<EntityModel> subtypes = new CopyOnWriteArraySet<>();
+    // the models this one is a direct subtype of, so a change below can invalidate every ancestor's subtype list
+    private final Set<EntityModel> parents = new CopyOnWriteArraySet<>();
+    // bumped whenever a subtype is linked anywhere below this model
+    private final AtomicLong subtypesVersion = new AtomicLong();
+    // every subtype below this model, as of a subtypesVersion; rebuilt on first use after a change
+    private volatile AllSubtypes allSubtypes;
     private EntityModel superClass;
     private PropertyModel idProperty;
     private PropertyModel versionProperty;
@@ -431,17 +439,89 @@ public class EntityModel {
      * @return the subtypes
      */
     public Set<EntityModel> getSubtypes() {
+        return new HashSet<>(allSubtypes());
+    }
+
+    /**
+     * @return every subtype below this model, nearest first, each once. Cached until a subtype is linked anywhere below
+     *         this model.
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public List<EntityModel> allSubtypes() {
+        long version = subtypesVersion.get();
+        AllSubtypes cached = allSubtypes;
+        if (cached != null && cached.version() == version) {
+            return cached.models();
+        }
         // a model can be reached along several paths (e.g. linked under an interface and under its superinterface), so
         // expand each one only once
-        Set<EntityModel> found = new HashSet<>();
+        Set<EntityModel> found = new LinkedHashSet<>();
         Deque<EntityModel> pending = new ArrayDeque<>(subtypes);
         while (!pending.isEmpty()) {
-            EntityModel subtype = pending.pop();
+            EntityModel subtype = pending.removeFirst();
             if (found.add(subtype)) {
                 pending.addAll(subtype.subtypes);
             }
         }
-        return found;
+        // links don't say how far down a subtype is: one mapped before its superclass is linked under a farther ancestor
+        // and stays there, so order by actual inheritance distance (stable, so ties keep link order)
+        List<EntityModel> ordered = new ArrayList<>(found);
+        Map<EntityModel, Integer> distances = new HashMap<>();
+        for (EntityModel subtype : ordered) {
+            distances.put(subtype, distanceFrom(subtype.getType()));
+        }
+        ordered.sort(Comparator.comparingInt(distances::get));
+        List<EntityModel> models = List.copyOf(ordered);
+        // tagged with the version read before walking, so a subtype linked during the walk makes it stale at once
+        allSubtypes = new AllSubtypes(version, models);
+        return models;
+    }
+
+    /**
+     * @return the fewest superclass or interface steps from the given type up to this model's type
+     */
+    private int distanceFrom(Class<?> subtype) {
+        Map<Class<?>, Integer> steps = new HashMap<>();
+        Deque<Class<?>> pending = new ArrayDeque<>();
+        steps.put(subtype, 0);
+        pending.add(subtype);
+        while (!pending.isEmpty()) {
+            Class<?> current = pending.removeFirst();
+            int step = steps.get(current);
+            if (current == type) {
+                return step;
+            }
+            List<Class<?>> parents = new ArrayList<>(Arrays.asList(current.getInterfaces()));
+            if (current.getSuperclass() != null) {
+                parents.add(0, current.getSuperclass());
+            }
+            for (Class<?> parent : parents) {
+                if (steps.putIfAbsent(parent, step + 1) == null) {
+                    pending.add(parent);
+                }
+            }
+        }
+        return Integer.MAX_VALUE;
+    }
+
+    private void subtypesChanged() {
+        // an ancestor can be reached along many paths (a model is linked under every interface it inherits), so visit
+        // each one once; following every path is exponential in the depth of an interface chain
+        Set<EntityModel> visited = new HashSet<>();
+        Deque<EntityModel> pending = new ArrayDeque<>();
+        pending.add(this);
+        while (!pending.isEmpty()) {
+            EntityModel model = pending.removeFirst();
+            if (visited.add(model)) {
+                model.subtypesVersion.incrementAndGet();
+                pending.addAll(model.parents);
+            }
+        }
+    }
+
+    private record AllSubtypes(long version, List<EntityModel> models) {
     }
 
     /**
@@ -452,9 +532,11 @@ public class EntityModel {
      */
     public void addSubtype(EntityModel subtype) {
         subtypes.add(subtype);
+        subtype.parents.add(this);
         if (subtype.getType().getSuperclass() == type) {
             subtype.superClass = this;
         }
+        subtypesChanged();
     }
 
     /**
