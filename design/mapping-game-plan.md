@@ -239,7 +239,7 @@ JMH numbers on both mappers.
 - Put `encodeOrder` in the plan, without the id property and without properties that are always skipped.
 - Use `==` instead of `equals(idModel)`. The deep `equals` is already gone after 2.7.
 
-### 3.7 Skip `Conversions` when the value already fits (#7, B8)
+### ~~3.7 Skip `Conversions` when the value already fits (#7, B8)~~
 - Store a boxed target type per slot. When `boxedType.isInstance(v)`, set the value directly.
 - Use `get` instead of `computeIfAbsent`, and remove the double conversion on the fallback path.
 

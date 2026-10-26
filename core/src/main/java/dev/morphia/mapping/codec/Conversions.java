@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec;
 
+import java.lang.invoke.MethodType;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -150,9 +151,9 @@ public class Conversions {
         if (fromType.equals(target)) {
             return (T) value;
         }
-        final BiFunction function = conversions
-                .computeIfAbsent(fromType, (f) -> new ConcurrentHashMap<>())
-                .get(target);
+        // get, not computeIfAbsent: most values have no conversion, and an empty map per value class buys nothing
+        final Map<Class<?>, BiFunction<?, ClassLoader, ?>> fromConversions = conversions.get(fromType);
+        final BiFunction function = fromConversions != null ? fromConversions.get(target) : null;
         if (function == null) {
             if (target.equals(String.class)) {
                 return (T) value.toString();
@@ -163,6 +164,17 @@ public class Conversions {
             return (T) value;
         }
         return (T) function.apply(value, classLoader);
+    }
+
+    /**
+     * @param type the type
+     * @return the wrapper type when {@code type} is primitive, otherwise {@code type} itself
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public static Class<?> boxedType(Class<?> type) {
+        return type.isPrimitive() ? MethodType.methodType(type).wrap().returnType() : type;
     }
 
     @Nullable

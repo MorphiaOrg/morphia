@@ -70,6 +70,8 @@ public class PropertyModel {
     // this property's position in its entity model, which addresses it in a CodecPlan; assigned when it's added
     private int slot = -1;
     private Class<?> normalizedType;
+    // getType() with primitives boxed: a decoded value that's already an instance of this needs no conversion
+    private Class<?> boxedType;
     private Conversions conversions;
 
     public PropertyModel(EntityModel entityModel) {
@@ -365,6 +367,13 @@ public class PropertyModel {
      * @param value    the value to set
      */
     public void setValue(Object instance, @Nullable Object value) {
+        if (boxedType == null) {
+            boxedType = Conversions.boxedType(getType());
+        }
+        if (boxedType.isInstance(value)) {
+            getAccessor().set(instance, value);
+            return;
+        }
         Conversions c = conversions != null ? conversions
                 : new Conversions(Thread.currentThread().getContextClassLoader());
         getAccessor().set(instance, c.convert(value, getType()));
