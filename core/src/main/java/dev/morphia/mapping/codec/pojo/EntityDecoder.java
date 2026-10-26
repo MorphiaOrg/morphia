@@ -139,8 +139,10 @@ public class EntityDecoder<T> implements Decoder<T> {
         } catch (BsonInvalidOperationException e) {
             mark.reset();
             final Object value = morphiaCodec.getRegistry().get(Object.class).decode(reader, decoderContext);
-            // the creator converts the value to the property's type, so converting here too would do it twice
-            instanceCreator.set(value, model);
+            // not every creator converts (the refresh codec's sets values directly), and a constructor parameter can
+            // need the property's type as a step on the way. ConstructorCreator and setValue skip the second
+            // conversion once the value fits.
+            instanceCreator.set(morphiaCodec.getConversions().convert(value, model.getType()), model);
         }
     }
 
