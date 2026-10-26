@@ -81,6 +81,8 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
         private final Constructor<?> constructor;
         private final Map<String, Integer> positions = new LinkedHashMap<>();
         private final Class<?>[] types;
+        // types with primitives boxed: an argument that's already an instance of its slot's type needs no conversion
+        private final Class<?>[] boxedTypes;
         private final Object[] zeroValues;
 
         /**
@@ -94,10 +96,12 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
             this.constructor.setAccessible(true);
             final Parameter[] constructorParameters = constructor.getParameters();
             types = new Class<?>[constructorParameters.length];
+            boxedTypes = new Class<?>[constructorParameters.length];
             zeroValues = new Object[constructorParameters.length];
             for (int i = 0; i < constructorParameters.length; i++) {
                 final Parameter parameter = constructorParameters[i];
                 types[i] = parameter.getType();
+                boxedTypes[i] = Conversions.boxedType(types[i]);
                 zeroValues[i] = zeroValue(parameter);
                 String name = getParameterName(parameter);
                 if (UNNAMED_PARAMETER.matcher(name).matches()) {
@@ -209,7 +213,9 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
         } else {
             Integer position = plan.positions.get(model.getName());
             if (position != null) {
-                parameters[position] = conversions.convert(value, plan.types[position]);
+                parameters[position] = plan.boxedTypes[position].isInstance(value)
+                        ? value
+                        : conversions.convert(value, plan.types[position]);
             } else {
                 // only properties the constructor doesn't take need setting after construction. re-setting the others would
                 // overwrite whatever the constructor did with the value and, for final fields, write them reflectively (JEP 500).
