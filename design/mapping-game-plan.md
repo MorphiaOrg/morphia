@@ -260,7 +260,7 @@ JMH numbers on both mappers.
 **Exit criterion for Phase 3:** decode on SIMPLE/NESTED is within ~10% of the prototype's `flat` row (1.7–2.2×), the
 harness passes, and both mappers agree.
 
-### 3.10 Package scan (#10, A1)
+### ~~3.10 Package scan (#10, A1)~~
 - `enableClassInfo().ignoreClassVisibility()` plus `Class.forName(name, false, …)`, then the annotation pre-filter.
 - Collect into a `LinkedHashSet` for deterministic order, and merge `map(String)`/`mapPackage`.
 - Per decision 1.2, keep the `.*` default and log a one-time warning when it is in effect.

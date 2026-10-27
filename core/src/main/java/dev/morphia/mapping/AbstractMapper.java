@@ -378,12 +378,7 @@ public abstract class AbstractMapper implements Mapper {
     @Override
     public synchronized void mapPackage(String packageName) {
         Sofia.logConfiguredOperation("Mapper#mapPackage");
-        try {
-            getClasses(classLoader, packageName)
-                    .forEach(this::tryGetEntityModel);
-        } catch (ClassNotFoundException e) {
-            throw new MappingException("Could not get map classes from package " + packageName, e);
-        }
+        map(packageName);
     }
 
     @Override
@@ -540,13 +535,20 @@ public abstract class AbstractMapper implements Mapper {
 
     protected List<Class> getClasses(ClassLoader loader, String packageName)
             throws ClassNotFoundException {
-        final Set<Class> classes = new HashSet<>();
+        if (packageName.equals(".*")) {
+            Sofia.logScanningEntireClasspath();
+        }
+        // ClassGraph lists classes by name, so a LinkedHashSet keeps the mapping order, and any error, the same each run
+        final Set<Class> classes = new LinkedHashSet<>();
 
         ClassGraph classGraph = new ClassGraph()
                 .enableClasspath()
                 .enableNonSystemModules()
                 .enableClassLoaders(loader)
                 .enableClassInfo()
+                .enableAnnotationInfo()
+                // superclasses and interfaces outside the accepted packages can carry the mapping annotation
+                .enableExternalClasses()
                 .ignoreClassVisibility();
         if (packageName.endsWith(".*")) {
             String base = packageName.substring(0, packageName.length() - 2);
@@ -560,8 +562,12 @@ public abstract class AbstractMapper implements Mapper {
 
         try (ScanResult scanResult = classGraph.scan()) {
             for (ClassInfo classInfo : scanResult.getAllClasses()) {
+                if (classInfo.isExternalClass() || !mayBeMappable(classInfo)) {
+                    continue;
+                }
                 try {
-                    classes.add(Class.forName(classInfo.getName(), true, loader));
+                    // initialize=false: mapping a class doesn't need its static initializer to have run
+                    classes.add(Class.forName(classInfo.getName(), false, loader));
                 } catch (Throwable ignored) {
                 }
             }
@@ -600,6 +606,33 @@ public abstract class AbstractMapper implements Mapper {
                     return true;
                 }
                 pending.addAll(Arrays.asList(iface.getInterfaces()));
+            }
+        }
+        return false;
+    }
+
+    /**
+     * A pre-filter on the scanned class files, so only classes that might be mappable get loaded. It matches at least
+     * every class {@link #hasMappingAnnotation(Class)} does: {@code hasAnnotation} covers annotations inherited from
+     * superclasses, and the interfaces are checked separately since theirs aren't inherited. {@code isMappable} still
+     * decides once the class is loaded.
+     */
+    private static boolean mayBeMappable(ClassInfo type) {
+        if (annotated(type)) {
+            return true;
+        }
+        for (ClassInfo iface : type.getAllSuperinterfaces()) {
+            if (annotated(iface)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean annotated(ClassInfo type) {
+        for (Class<? extends Annotation> annotation : MAPPING_ANNOTATIONS) {
+            if (type.hasAnnotation(annotation.getName())) {
+                return true;
             }
         }
         return false;
