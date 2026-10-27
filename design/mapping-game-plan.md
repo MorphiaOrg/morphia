@@ -253,7 +253,7 @@ JMH numbers on both mappers.
 - `Projection.knownFields` should return mapped names directly.
 - Includes correctness fix 2.5.
 
-### 3.9 `ClassValue<Boolean>` for `isMappable` (#9, D3)
+### ~~3.9 `ClassValue<Boolean>` for `isMappable` (#9, D3)~~
 - Walk interfaces only; `@Entity`/`@ExternalEntity` are `@Inherited`.
 - Keep the `MorphiaProxy` rule inside the `ClassValue`.
 

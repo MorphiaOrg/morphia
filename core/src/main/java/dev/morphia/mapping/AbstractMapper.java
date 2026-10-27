@@ -1,8 +1,10 @@
 package dev.morphia.mapping;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -297,8 +299,7 @@ public abstract class AbstractMapper implements Mapper {
         if (type == null) {
             return false;
         }
-        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
-        return actual != null && hasAnnotation(actual, MAPPING_ANNOTATIONS);
+        return MAPPABLE.get(type);
     }
 
     @Override
@@ -568,16 +569,48 @@ public abstract class AbstractMapper implements Mapper {
         return new ArrayList<>(classes);
     }
 
-    protected <T> boolean hasAnnotation(Class<T> clazz, List<Class<? extends Annotation>> annotations) {
-        for (Class<? extends Annotation> annotation : annotations) {
-            if (clazz.getAnnotation(annotation) != null) {
+    /**
+     * Whether a type can be mapped: it, a superclass, or an interface either of them implements (directly or by
+     * extension) carries a mapping annotation. A proxy stands for its superclass. Annotations don't change, so the answer
+     * is worked out once per type.
+     */
+    private static final ClassValue<Boolean> MAPPABLE = new ClassValue<>() {
+        @Override
+        protected Boolean computeValue(Class<?> type) {
+            Class<?> actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
+            return actual != null && hasMappingAnnotation(actual);
+        }
+    };
+
+    private static boolean hasMappingAnnotation(Class<?> type) {
+        // @Entity and @ExternalEntity are @Inherited, so this sees them on superclasses too
+        if (annotated(type)) {
+            return true;
+        }
+        // but annotations on interfaces aren't inherited, so visit every interface of the type and its superclasses
+        Set<Class<?>> visited = new HashSet<>();
+        Deque<Class<?>> pending = new ArrayDeque<>();
+        for (Class<?> current = type; current != null; current = current.getSuperclass()) {
+            pending.addAll(Arrays.asList(current.getInterfaces()));
+        }
+        while (!pending.isEmpty()) {
+            Class<?> iface = pending.removeFirst();
+            if (visited.add(iface)) {
+                if (annotated(iface)) {
+                    return true;
+                }
+                pending.addAll(Arrays.asList(iface.getInterfaces()));
+            }
+        }
+        return false;
+    }
+
+    private static boolean annotated(Class<?> type) {
+        for (Class<? extends Annotation> annotation : MAPPING_ANNOTATIONS) {
+            if (type.isAnnotationPresent(annotation)) {
                 return true;
             }
         }
-
-        return clazz.getSuperclass() != null && hasAnnotation(clazz.getSuperclass(), annotations)
-                || Arrays.stream(clazz.getInterfaces())
-                        .map(i -> hasAnnotation(i, annotations))
-                        .reduce(false, (l, r) -> l || r);
+        return false;
     }
 }
