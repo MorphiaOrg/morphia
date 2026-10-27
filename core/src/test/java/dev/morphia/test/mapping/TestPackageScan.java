@@ -27,7 +27,9 @@ public class TestPackageScan extends TestBase {
     public void doesNotInitializeScannedClasses() {
         getMapper().map(SUB);
 
-        Assertions.assertFalse(ScanProbe.initialized, "the scan shouldn't run static initializers");
+        Assertions.assertTrue(getMapper().isMapped(ScanChild.class));
+        Assertions.assertFalse(ScanProbe.entityInitialized, "mapping an entity shouldn't run its static initializer");
+        Assertions.assertFalse(ScanProbe.nonEntityInitialized, "the scan shouldn't run static initializers of classes it skips");
     }
 
     private static Class<?> className(String name) {

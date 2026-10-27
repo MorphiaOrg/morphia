@@ -4,6 +4,6 @@ import dev.morphia.test.mapping.scan.base.ScanProbe;
 
 public class NotAnEntity {
     static {
-        ScanProbe.initialized = true;
+        ScanProbe.nonEntityInitialized = true;
     }
 }
