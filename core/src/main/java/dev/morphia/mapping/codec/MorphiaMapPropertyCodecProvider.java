@@ -2,9 +2,12 @@ package dev.morphia.mapping.codec;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
+import java.util.function.Supplier;
 
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.internal.MorphiaInternal;
@@ -64,6 +67,9 @@ class MorphiaMapPropertyCodecProvider extends MorphiaPropertyCodecProvider {
         private final Class<Map<K, V>> encoderClass;
         private final Class<K> keyType;
         private final Codec<V> codec;
+        // creates the maps this codec decodes into; worked out on first use, so a type without a usable constructor
+        // still fails when decoding rather than when the codec is built
+        private volatile Supplier<Map<K, V>> factory;
 
         MapCodec(Class<Map<K, V>> encoderClass, Class<K> keyType, Codec<V> codec) {
             this.encoderClass = encoderClass;
@@ -109,13 +115,33 @@ class MorphiaMapPropertyCodecProvider extends MorphiaPropertyCodecProvider {
         }
 
         private Map<K, V> getInstance() {
-            if (encoderClass.isInterface()) {
-                return new HashMap<>();
+            Supplier<Map<K, V>> supplier = factory;
+            if (supplier == null) {
+                supplier = factory();
+                factory = supplier;
+            }
+            return supplier.get();
+        }
+
+        private Supplier<Map<K, V>> factory() {
+            Class<?> type = encoderClass;
+            if (type.isInterface() || type == HashMap.class) {
+                return HashMap::new;
+            } else if (type == LinkedHashMap.class) {
+                return LinkedHashMap::new;
+            } else if (type == TreeMap.class) {
+                return TreeMap::new;
             }
             try {
                 final Constructor<Map<K, V>> constructor = encoderClass.getDeclaredConstructor();
                 constructor.setAccessible(true);
-                return constructor.newInstance();
+                return () -> {
+                    try {
+                        return constructor.newInstance();
+                    } catch (Exception e) {
+                        throw new CodecConfigurationException(e.getMessage(), e);
+                    }
+                };
             } catch (Exception e) {
                 throw new CodecConfigurationException(e.getMessage(), e);
             }
