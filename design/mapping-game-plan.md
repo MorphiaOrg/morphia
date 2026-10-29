@@ -286,7 +286,7 @@ harness passes, and both mappers agree.
 - Resolve the proxy class, its constructor handle and its `handler` field handle once per `ReferenceCodec`.
   Compatible with the deferred #4339 decision.
 
-### 3.16 Primitive array codecs (#20, B7)
+### ~~3.16 Primitive array codecs (#20, B7)~~
 - Independent of the rest of the plan, and can land at any time.
 - Specialize `TypedArrayCodec` per primitive component type, keeping the boxed-codec fallback for numeric
   conversions.
