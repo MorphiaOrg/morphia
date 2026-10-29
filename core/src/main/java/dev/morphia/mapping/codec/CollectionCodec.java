@@ -1,8 +1,12 @@
 package dev.morphia.mapping.codec;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.function.Supplier;
 
 import org.bson.BsonReader;
 import org.bson.BsonType;
@@ -22,6 +26,9 @@ import static java.lang.String.format;
 public class CollectionCodec<T> implements Codec<Collection<T>> {
     private final Class<Collection<T>> encoderClass;
     private final Codec<T> codec;
+    // creates the collections this codec decodes into; worked out on first use, so an unsupported type still fails
+    // when decoding rather than when the codec is built
+    private volatile Supplier<Collection<T>> factory;
 
     protected CollectionCodec(Class<Collection<T>> encoderClass, Codec<T> codec) {
         this.encoderClass = encoderClass;
@@ -67,18 +74,44 @@ public class CollectionCodec<T> implements Codec<Collection<T>> {
     }
 
     protected Collection<T> getInstance() {
+        Supplier<Collection<T>> supplier = factory;
+        if (supplier == null) {
+            supplier = factory();
+            factory = supplier;
+        }
+        return supplier.get();
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private Supplier<Collection<T>> factory() {
         if (encoderClass.isInterface()) {
             if (encoderClass.isAssignableFrom(ArrayList.class)) {
-                return new ArrayList<T>();
+                return ArrayList::new;
             } else if (encoderClass.isAssignableFrom(HashSet.class)) {
-                return new HashSet<T>();
+                return HashSet::new;
             } else {
                 throw new CodecConfigurationException(format("Unsupported Collection interface of %s!", encoderClass.getName()));
             }
         }
-
+        Class<?> type = encoderClass;
+        if (type == ArrayList.class) {
+            return ArrayList::new;
+        } else if (type == HashSet.class) {
+            return HashSet::new;
+        } else if (type == LinkedHashSet.class) {
+            return LinkedHashSet::new;
+        } else if (type == LinkedList.class) {
+            return LinkedList::new;
+        }
         try {
-            return encoderClass.getDeclaredConstructor().newInstance();
+            Constructor<Collection<T>> constructor = encoderClass.getDeclaredConstructor();
+            return () -> {
+                try {
+                    return constructor.newInstance();
+                } catch (Exception e) {
+                    throw new CodecConfigurationException(e.getMessage(), e);
+                }
+            };
         } catch (Exception e) {
             throw new CodecConfigurationException(e.getMessage(), e);
         }

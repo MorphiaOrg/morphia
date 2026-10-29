@@ -10,9 +10,12 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -46,6 +49,7 @@ import dev.morphia.test.mapping.codec.harness.models.HarnessCallbackHolder;
 import dev.morphia.test.mapping.codec.harness.models.HarnessCallbackShape;
 import dev.morphia.test.mapping.codec.harness.models.HarnessCircle;
 import dev.morphia.test.mapping.codec.harness.models.HarnessCollections;
+import dev.morphia.test.mapping.codec.harness.models.HarnessConcreteCollections;
 import dev.morphia.test.mapping.codec.harness.models.HarnessConstructed;
 import dev.morphia.test.mapping.codec.harness.models.HarnessDrawing;
 import dev.morphia.test.mapping.codec.harness.models.HarnessIdField;
@@ -88,6 +92,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -324,6 +329,24 @@ public class CodecHarnessTest {
             assertFalse(model.hasLifecycle(PreLoad.class), mapper.toString());
             assertFalse(model.hasLifecycle(PostPersist.class), mapper.toString());
             assertFalse(model.hasLifecycle(Entity.class), mapper + ": not a lifecycle annotation");
+        }
+    }
+
+    @Test
+    void decodesIntoTheDeclaredConcreteTypes() {
+        for (MapperType mapper : MapperType.values()) {
+            Codec<HarnessConcreteCollections> codec = codec(datastore(Variant.DEFAULTS, mapper), HarnessConcreteCollections.class);
+            byte[] encoded = encode(codec, HarnessConcreteCollections.sample(), COLLECTIBLE);
+            List<Object> first = decode(codec, encoded).values();
+            List<Object> second = decode(codec, encoded).values();
+
+            assertEquals(HarnessConcreteCollections.sample().values(), first, mapper + ": contents survive the round trip");
+            List<Class<?>> types = List.of(ArrayList.class, LinkedHashSet.class, LinkedList.class, TreeMap.class,
+                    LinkedHashMap.class, HarnessConcreteCollections.Labels.class);
+            for (int i = 0; i < types.size(); i++) {
+                assertSame(types.get(i), first.get(i).getClass(), mapper + ": decoded into the declared type");
+                assertNotSame(first.get(i), second.get(i), mapper + ": every decode gets its own instance");
+            }
         }
     }
 

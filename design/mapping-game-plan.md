@@ -276,7 +276,7 @@ harness passes, and both mappers agree.
 - Guard `Sofia` debug formatting with `isDebugEnabled()`, precompute argument kinds, use a lifecycle bitmask, and
   delete `UntypedEntityListenerAdapter`.
 
-### 3.13 Collection and map instantiation (#13, B9)
+### ~~3.13 Collection and map instantiation (#13, B9)~~
 - Resolve a `Supplier` once per codec instead of `getDeclaredConstructor().newInstance()` on every decode.
 
 ### 3.14 Date codecs (#13, B12)
