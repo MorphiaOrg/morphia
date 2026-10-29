@@ -1,11 +1,17 @@
 package dev.morphia.mapping;
 
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
@@ -13,10 +19,12 @@ import dev.morphia.annotations.Version;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
+import dev.morphia.mapping.conventions.MorphiaConvention;
 import dev.morphia.mapping.validation.ConstraintViolationException;
 
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
@@ -112,6 +120,117 @@ public class TestRegistrationProtocol {
             }
         } finally {
             executor.shutdownNow();
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    public void loadsConventionsOncePerMapper(MapperType type, @TempDir Path services) throws Exception {
+        // a loader that registers CountingConvention, so discovery can be counted
+        Path file = services.resolve("META-INF/services/" + MorphiaConvention.class.getName());
+        Files.createDirectories(file.getParent());
+        Files.writeString(file, CountingConvention.class.getName());
+        try (URLClassLoader loader = new URLClassLoader(new URL[] { services.toUri().toURL() }, getClass().getClassLoader())) {
+            CountingConvention.reset();
+            MorphiaConfig config = MorphiaConfig.load().mapper(type);
+            Mapper mapper = type == MapperType.CRITTER ? new CritterMapper(config, loader) : new ReflectiveMapper(config, loader);
+
+            List<MorphiaConvention> conventions = mapper.getConventions();
+            Assertions.assertEquals(1, conventions.size());
+            Assertions.assertSame(conventions, mapper.getConventions());
+            Assertions.assertSame(conventions, mapper.getConventions());
+            Assertions.assertEquals(1, CountingConvention.CREATED.get(), "discovered once per mapper, however often asked");
+
+            if (type == MapperType.REFLECTION) {
+                // critter models don't run conventions (#4416)
+                mapper.mapEntity(Concurrent.class);
+                mapper.mapEntity(First.class);
+                Assertions.assertEquals(List.of(Concurrent.class, First.class), CountingConvention.APPLIED);
+                Assertions.assertEquals(1, CountingConvention.CREATED.get(), "every model reuses the mapper's conventions");
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    public void discoversConventionsOnceUnderConcurrentFirstUse(MapperType type, @TempDir Path services) throws Exception {
+        Path file = services.resolve("META-INF/services/" + MorphiaConvention.class.getName());
+        Files.createDirectories(file.getParent());
+        Files.writeString(file, CountingConvention.class.getName());
+        ExecutorService executor = Executors.newFixedThreadPool(THREADS);
+        try (URLClassLoader loader = new URLClassLoader(new URL[] { services.toUri().toURL() }, getClass().getClassLoader())) {
+            for (int round = 0; round < ROUNDS; round++) {
+                CountingConvention.reset();
+                MorphiaConfig config = MorphiaConfig.load().mapper(type);
+                Mapper mapper = type == MapperType.CRITTER ? new CritterMapper(config, loader) : new ReflectiveMapper(config, loader);
+                CountDownLatch start = new CountDownLatch(1);
+                List<Future<List<MorphiaConvention>>> results = new ArrayList<>();
+                for (int i = 0; i < THREADS; i++) {
+                    results.add(executor.submit(() -> {
+                        start.await();
+                        return mapper.getConventions();
+                    }));
+                }
+                start.countDown();
+                List<MorphiaConvention> first = results.get(0).get();
+                for (Future<List<MorphiaConvention>> result : results) {
+                    Assertions.assertSame(first, result.get());
+                }
+                Assertions.assertEquals(1, CountingConvention.CREATED.get(), "discovered once even when first used concurrently");
+            }
+        } finally {
+            executor.shutdownNow();
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    public void fallsBackToTheContextClassLoaderForConventions(MapperType type, @TempDir Path services, @TempDir Path empty)
+            throws Exception {
+        // the mapper's loader finds no conventions; only the thread's context loader registers CountingConvention
+        Path file = services.resolve("META-INF/services/" + MorphiaConvention.class.getName());
+        Files.createDirectories(file.getParent());
+        Files.writeString(file, CountingConvention.class.getName());
+        Thread thread = Thread.currentThread();
+        ClassLoader original = thread.getContextClassLoader();
+        try (URLClassLoader mapperLoader = new URLClassLoader(new URL[] { empty.toUri().toURL() }, getClass().getClassLoader());
+                URLClassLoader contextLoader = new URLClassLoader(new URL[] { services.toUri().toURL() },
+                        getClass().getClassLoader())) {
+            CountingConvention.reset();
+            MorphiaConfig config = MorphiaConfig.load().mapper(type);
+            Mapper mapper = type == MapperType.CRITTER ? new CritterMapper(config, mapperLoader)
+                    : new ReflectiveMapper(config, mapperLoader);
+            thread.setContextClassLoader(contextLoader);
+
+            List<MorphiaConvention> conventions = mapper.getConventions();
+            Assertions.assertEquals(1, conventions.size(), "found through the context class loader");
+            Assertions.assertInstanceOf(CountingConvention.class, conventions.get(0));
+            Assertions.assertSame(conventions, mapper.getConventions());
+            Assertions.assertEquals(1, CountingConvention.CREATED.get(), "and still discovered only once");
+        } finally {
+            thread.setContextClassLoader(original);
+        }
+    }
+
+    /**
+     * Counts how often it's instantiated and which models it's applied to.
+     */
+    public static class CountingConvention implements MorphiaConvention {
+        static final AtomicInteger CREATED = new AtomicInteger();
+        static final List<Class<?>> APPLIED = new CopyOnWriteArrayList<>();
+
+        public CountingConvention() {
+            CREATED.incrementAndGet();
+        }
+
+        static void reset() {
+            CREATED.set(0);
+            APPLIED.clear();
+        }
+
+        @Override
+        public void apply(Mapper mapper, EntityModel model) {
+            APPLIED.add(model.getType());
         }
     }
 
