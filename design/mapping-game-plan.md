@@ -269,7 +269,7 @@ harness passes, and both mappers agree.
 - Load conventions once per mapper with the loader from decision 1.3, and keep one `MappingValidator` per mapper.
 - Build the rule list once as a static, and run one pass over the properties.
 - Remove the two rules that can never fire (deprecate them, since they are public), and fix the `TreeSet`
-  comparator. As done: only `MultipleId` is deprecated and dropped. Since 2.1, `DuplicatedAttributeNames` fires for an
+  comparator. As done: only `MultipleId` is removed. Since 2.1, `DuplicatedAttributeNames` fires for an
   `@AlsoLoad` that repeats a name on one property, so it still runs.
 
 ### 3.12 Lifecycle dispatch (#12, D9)

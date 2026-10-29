@@ -41,8 +41,8 @@ public class MappingValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(MappingValidator.class);
 
-    // the rules are stateless, so built once. MultipleId isn't here: two @Id properties both map to _id, so mapping
-    // fails with a duplicate mapped name before validation runs
+    // the rules are stateless, so built once. There's no rule for several @Id properties: they all map to _id, so the
+    // entity fails to map with a duplicate mapped name before validation runs
     private static final List<ClassConstraint> CLASS_RULES = List.of(
             new MultipleVersions(),
             new EntityOrExternal(),
