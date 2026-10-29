@@ -279,7 +279,7 @@ harness passes, and both mappers agree.
 ### ~~3.13 Collection and map instantiation (#13, B9)~~
 - Resolve a `Supplier` once per codec instead of `getDeclaredConstructor().newInstance()` on every decode.
 
-### 3.14 Date codecs (#13, B12)
+### ~~3.14 Date codecs (#13, B12)~~
 - Resolve a fixed `ZoneOffset` once per codec for UTC storage, and keep the current path for `SYSTEM_DEFAULT`.
 
 ### 3.15 Lazy-reference proxies (#13, B10)
