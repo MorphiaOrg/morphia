@@ -282,7 +282,7 @@ harness passes, and both mappers agree.
 ### ~~3.14 Date codecs (#13, B12)~~
 - Resolve a fixed `ZoneOffset` once per codec for UTC storage, and keep the current path for `SYSTEM_DEFAULT`.
 
-### 3.15 Lazy-reference proxies (#13, B10)
+### ~~3.15 Lazy-reference proxies (#13, B10)~~
 - Resolve the proxy class, its constructor handle and its `handler` field handle once per `ReferenceCodec`.
   Compatible with the deferred #4339 decision.
 
