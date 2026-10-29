@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.mongodb.client.MongoClient;
@@ -60,14 +61,21 @@ public class TestDateCodecs {
                 Assertions.assertEquals(new BsonDateTime(expectedDate.atStartOfDay(zone).toInstant().toEpochMilli()),
                         encode(dates, expectedDate), "date to " + expectedDate);
             }
-            // values whose epoch milliseconds don't fit in a long fail to encode, as they always have, rather than wrapping
-            for (LocalDateTime value : List.of(LocalDateTime.of(292278994, 8, 17, 7, 12, 56),
-                    LocalDateTime.of(292278995, 1, 1, 0, 0), LocalDateTime.of(-292275056, 1, 1, 0, 0))) {
+            // values whose epoch milliseconds don't fit in a long fail to encode, as they always have, rather than wrapping.
+            // the tight boundary cases only overflow at UTC; the others overflow at any offset up to ±18 hours
+            List<LocalDateTime> tooFar = new ArrayList<>(List.of(LocalDateTime.of(292278995, 1, 1, 0, 0),
+                    LocalDateTime.of(-292275056, 1, 1, 0, 0)));
+            List<LocalDate> tooFarDates = new ArrayList<>(List.of(LocalDate.of(292278995, 1, 1), LocalDate.of(-292275056, 1, 1)));
+            if (storage == DateStorage.UTC) {
+                tooFar.add(LocalDateTime.of(292278994, 8, 17, 7, 12, 56));
+                tooFarDates.add(LocalDate.of(292278994, 8, 18));
+            }
+            for (LocalDateTime value : tooFar) {
                 Assertions.assertThrows(ArithmeticException.class, () -> value.atZone(zone).toInstant().toEpochMilli(),
                         "the reference conversion overflows for " + value);
                 Assertions.assertThrows(ArithmeticException.class, () -> encode(dateTimes, value), "date-time " + value);
             }
-            for (LocalDate value : List.of(LocalDate.of(292278994, 8, 18), LocalDate.of(292278995, 1, 1), LocalDate.of(-292275056, 1, 1))) {
+            for (LocalDate value : tooFarDates) {
                 Assertions.assertThrows(ArithmeticException.class, () -> value.atStartOfDay(zone).toInstant().toEpochMilli(),
                         "the reference conversion overflows for " + value);
                 Assertions.assertThrows(ArithmeticException.class, () -> encode(dates, value), "date " + value);
