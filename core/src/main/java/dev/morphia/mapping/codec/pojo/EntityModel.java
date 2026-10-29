@@ -55,13 +55,13 @@ import dev.morphia.mapping.conventions.MorphiaConvention;
 import dev.morphia.mapping.conventions.MorphiaDefaultsConvention;
 import dev.morphia.mapping.lifecycle.EntityListenerAdapter;
 import dev.morphia.mapping.lifecycle.OnEntityListenerAdapter;
-import dev.morphia.mapping.lifecycle.UntypedEntityListenerAdapter;
 import dev.morphia.sofia.Sofia;
 
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static dev.morphia.mapping.Mapper.LIFECYCLE_ANNOTATIONS;
 import static dev.morphia.mapping.PropertyDiscovery.FIELDS;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
@@ -106,6 +106,8 @@ public class EntityModel {
     private PropertyModel idProperty;
     private PropertyModel versionProperty;
     private final List<EntityListener<?>> listeners = new ArrayList<>();
+    // bit i set when a listener handles Mapper.LIFECYCLE_ANNOTATIONS[i]; worked out when the listeners are set up
+    private int lifecycleEvents;
     private final Set<Class<?>> classes = new LinkedHashSet<>();
 
     public EntityModel(Class<?> type) {
@@ -259,13 +261,17 @@ public class EntityModel {
     @SuppressWarnings("rawtypes")
     public void callLifecycleMethods(Class<? extends Annotation> event, Object entity, Document document,
             MorphiaDatastore datastore) {
-        listeners.forEach((listener) -> {
+        if (hasLifecycle(event)) {
+            for (EntityListener<?> listener : listeners) {
+                invokeLifecycleEvent(event, entity, document, datastore, listener);
+            }
+        }
+        for (EntityListener<?> listener : datastore.getMapper().getListeners()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(Sofia.callingInterceptorMethod(event.getSimpleName(), listener));
+            }
             invokeLifecycleEvent(event, entity, document, datastore, listener);
-        });
-        datastore.getMapper().getListeners().forEach((listener) -> {
-            LOG.debug(Sofia.callingInterceptorMethod(event.getSimpleName(), listener));
-            invokeLifecycleEvent(event, entity, document, datastore, listener);
-        });
+        }
     }
 
     public Set<Class<?>> classHierarchy() {
@@ -588,8 +594,8 @@ public class EntityModel {
      * @return true if that even has been configured
      */
     public boolean hasLifecycle(Class<? extends Annotation> type) {
-        return listeners.stream()
-                .anyMatch(listener -> listener.hasAnnotation(type));
+        int index = LIFECYCLE_ANNOTATIONS.indexOf(type);
+        return index >= 0 && (lifecycleEvents & (1 << index)) != 0;
     }
 
     /**
@@ -601,11 +607,7 @@ public class EntityModel {
         final EntityListeners entityLisAnn = getAnnotation(EntityListeners.class);
         if (entityLisAnn != null) {
             for (Class<?> aClass : entityLisAnn.value()) {
-                if (EntityListener.class.isAssignableFrom(aClass)) {
-                    listeners.add(new EntityListenerAdapter(aClass));
-                } else {
-                    listeners.add(new UntypedEntityListenerAdapter(aClass));
-                }
+                listeners.add(new EntityListenerAdapter(aClass));
             }
         }
 
@@ -613,6 +615,16 @@ public class EntityModel {
         if (adapter != null) {
             listeners.add(adapter);
         }
+
+        int events = 0;
+        for (int i = 0; i < LIFECYCLE_ANNOTATIONS.size(); i++) {
+            for (EntityListener<?> listener : listeners) {
+                if (listener.hasAnnotation(LIFECYCLE_ANNOTATIONS.get(i))) {
+                    events |= 1 << i;
+                }
+            }
+        }
+        lifecycleEvents = events;
     }
 
     @Override

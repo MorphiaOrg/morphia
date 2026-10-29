@@ -32,50 +32,61 @@ import static dev.morphia.mapping.Mapper.LIFECYCLE_ANNOTATIONS;
  */
 @MorphiaInternal
 public class EntityListenerAdapter implements EntityListener<Object> {
-    private final Map<Class<? extends Annotation>, List<Method>> methods = new HashMap<>();
+    private final Map<Class<? extends Annotation>, List<Callback>> callbacks = new HashMap<>();
     private final Class<?> listenerType;
     private Object listener;
 
     public EntityListenerAdapter(Class<?> listenerType) {
-        LIFECYCLE_ANNOTATIONS.stream().forEach(annotationClass -> {
-            methods.put(annotationClass, new ArrayList<>());
-        });
+        for (Class<? extends Annotation> annotationClass : LIFECYCLE_ANNOTATIONS) {
+            callbacks.put(annotationClass, new ArrayList<>());
+        }
         mapAnnotationsToMethods(listenerType);
         this.listenerType = listenerType;
     }
 
     @Override
     public boolean hasAnnotation(@NonNull Class<? extends Annotation> type) {
-        return !methods.get(type).isEmpty();
+        return !callbacks.get(type).isEmpty();
     }
 
-    Map<Class<? extends Annotation>, List<Method>> getMethods() {
-        return methods;
-    }
-
-    protected Object[] collectArgs(Method method, Object entity, Document document, Object datastore) {
-        List<Object> args = new ArrayList<>();
-        for (Class<?> parameterType : method.getParameterTypes()) {
-            if (parameterType.equals(Document.class)) {
-                args.add(document);
-            } else if (parameterType.equals(Datastore.class)) {
-                args.add(datastore);
-            } else {
-                args.add(entity);
+    /**
+     * @return true if any lifecycle method was found
+     */
+    boolean hasCallbacks() {
+        for (List<Callback> list : callbacks.values()) {
+            if (!list.isEmpty()) {
+                return true;
             }
         }
-        return args.toArray();
+        return false;
     }
 
     void invoke(Class<? extends Annotation> annotation, Object entity, Document document, Object datastore) {
-        methods.get(annotation)
-                .forEach(method -> {
-                    try {
-                        method.invoke(getListener(), collectArgs(method, entity, document, datastore));
-                    } catch (ReflectiveOperationException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+        for (Callback callback : callbacks.get(annotation)) {
+            try {
+                callback.method.invoke(target(entity), callback.arguments(entity, document, datastore));
+            } catch (IllegalArgumentException | ReflectiveOperationException e) {
+                throw failure(callback.method, entity, e);
+            }
+        }
+    }
+
+    /**
+     * @param entity the entity the event is for
+     * @return the object to call the lifecycle methods on: an instance of the listener type
+     */
+    protected Object target(Object entity) {
+        return getListener();
+    }
+
+    /**
+     * @param method the lifecycle method that failed
+     * @param entity the entity the event is for
+     * @param e      the failure
+     * @return the exception to throw
+     */
+    protected RuntimeException failure(Method method, Object entity, Exception e) {
+        return e instanceof IllegalArgumentException illegal ? illegal : new RuntimeException(e);
     }
 
     Object getListener() {
@@ -117,10 +128,45 @@ public class EntityListenerAdapter implements EntityListener<Object> {
             for (Class<? extends Annotation> annotationClass : LIFECYCLE_ANNOTATIONS) {
                 if (method.isAnnotationPresent(annotationClass)) {
                     method.setAccessible(true);
-                    methods.get(annotationClass)
-                            .add(method);
+                    callbacks.get(annotationClass)
+                            .add(new Callback(method));
                 }
             }
+        }
+    }
+
+    /**
+     * A lifecycle method and, worked out once, what to pass for each of its parameters.
+     */
+    private static final class Callback {
+        private static final byte ENTITY = 0;
+        private static final byte DOCUMENT = 1;
+        private static final byte DATASTORE = 2;
+
+        private final Method method;
+        private final byte[] parameters;
+
+        Callback(Method method) {
+            this.method = method;
+            Class<?>[] types = method.getParameterTypes();
+            parameters = new byte[types.length];
+            for (int i = 0; i < types.length; i++) {
+                parameters[i] = types[i].equals(Document.class) ? DOCUMENT
+                        : types[i].equals(Datastore.class) ? DATASTORE
+                                : ENTITY;
+            }
+        }
+
+        Object[] arguments(Object entity, Document document, Object datastore) {
+            Object[] arguments = new Object[parameters.length];
+            for (int i = 0; i < parameters.length; i++) {
+                arguments[i] = switch (parameters[i]) {
+                    case DOCUMENT -> document;
+                    case DATASTORE -> datastore;
+                    default -> entity;
+                };
+            }
+            return arguments;
         }
     }
 
