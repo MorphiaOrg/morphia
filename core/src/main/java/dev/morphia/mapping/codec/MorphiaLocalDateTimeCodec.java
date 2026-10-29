@@ -46,10 +46,21 @@ public class MorphiaLocalDateTimeCodec implements Codec<LocalDateTime> {
     @Override
     public void encode(BsonWriter writer, LocalDateTime value, EncoderContext encoderContext) {
         if (utc) {
-            writer.writeDateTime(value.toEpochSecond(ZoneOffset.UTC) * 1000 + value.getNano() / 1_000_000);
+            writer.writeDateTime(epochMillis(value.toEpochSecond(ZoneOffset.UTC), value.getNano()));
         } else {
             writer.writeDateTime(value.atZone(datastore.getMapper().getConfig().dateStorage().getZone()).toInstant().toEpochMilli());
         }
+    }
+
+    /**
+     * The epoch milliseconds of an instant, computed as {@link java.time.Instant#toEpochMilli()} does: an instant whose
+     * milliseconds don't fit in a long throws rather than wrapping, while the earliest that do still convert.
+     */
+    private static long epochMillis(long seconds, int nanos) {
+        if (seconds < 0 && nanos > 0) {
+            return Math.addExact(Math.multiplyExact(seconds + 1, 1000), nanos / 1_000_000 - 1000);
+        }
+        return Math.addExact(Math.multiplyExact(seconds, 1000), nanos / 1_000_000);
     }
 
     @Override

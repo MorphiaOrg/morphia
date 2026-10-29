@@ -45,7 +45,8 @@ public class MorphiaDateCodec implements Codec<LocalDate> {
     @Override
     public void encode(BsonWriter writer, LocalDate value, EncoderContext encoderContext) {
         if (utc) {
-            writer.writeDateTime(value.toEpochDay() * MILLIS_PER_DAY);
+            // a date whose midnight doesn't fit in a long of milliseconds throws rather than wrapping
+            writer.writeDateTime(Math.multiplyExact(value.toEpochDay(), MILLIS_PER_DAY));
         } else {
             writer.writeDateTime(value.atStartOfDay(datastore.getMapper().getConfig().dateStorage().getZone()).toInstant().toEpochMilli());
         }

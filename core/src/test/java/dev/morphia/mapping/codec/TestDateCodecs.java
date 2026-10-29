@@ -60,6 +60,23 @@ public class TestDateCodecs {
                 Assertions.assertEquals(new BsonDateTime(expectedDate.atStartOfDay(zone).toInstant().toEpochMilli()),
                         encode(dates, expectedDate), "date to " + expectedDate);
             }
+            // values whose epoch milliseconds don't fit in a long fail to encode, as they always have, rather than wrapping
+            for (LocalDateTime value : List.of(LocalDateTime.of(292278994, 8, 17, 7, 12, 56),
+                    LocalDateTime.of(292278995, 1, 1, 0, 0), LocalDateTime.of(-292275056, 1, 1, 0, 0))) {
+                Assertions.assertThrows(ArithmeticException.class, () -> value.atZone(zone).toInstant().toEpochMilli(),
+                        "the reference conversion overflows for " + value);
+                Assertions.assertThrows(ArithmeticException.class, () -> encode(dateTimes, value), "date-time " + value);
+            }
+            for (LocalDate value : List.of(LocalDate.of(292278994, 8, 18), LocalDate.of(292278995, 1, 1), LocalDate.of(-292275056, 1, 1))) {
+                Assertions.assertThrows(ArithmeticException.class, () -> value.atStartOfDay(zone).toInstant().toEpochMilli(),
+                        "the reference conversion overflows for " + value);
+                Assertions.assertThrows(ArithmeticException.class, () -> encode(dates, value), "date " + value);
+            }
+            // the earliest and latest representable instants still encode
+            for (long millis : List.of(Long.MIN_VALUE, Long.MAX_VALUE)) {
+                LocalDateTime value = Instant.ofEpochMilli(millis).atZone(zone).toLocalDateTime();
+                Assertions.assertEquals(new BsonDateTime(millis), encode(dateTimes, value), "date-time at " + millis);
+            }
             // sub-millisecond precision is dropped the same way, including before the epoch
             for (LocalDateTime value : List.of(LocalDateTime.of(1969, 12, 31, 23, 59, 59, 999_999_999),
                     LocalDateTime.of(2024, 2, 29, 12, 0, 0, 1))) {
