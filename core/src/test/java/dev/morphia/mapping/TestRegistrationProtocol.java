@@ -117,6 +117,13 @@ public class TestRegistrationProtocol {
 
     @ParameterizedTest
     @EnumSource(MapperType.class)
+    public void loadsConventionsOncePerMapper(MapperType type) {
+        Mapper mapper = mapper(type);
+        Assertions.assertSame(mapper.getConventions(), mapper.getConventions(), "conventions are loaded once and reused");
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
     public void registerKeepsTheFirstModel(MapperType type) {
         Mapper mapper = mapper(type);
         EntityModel original = assertModelType(type, mapper.mapEntity(Concurrent.class));

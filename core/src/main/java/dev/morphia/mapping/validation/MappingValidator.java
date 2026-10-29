@@ -1,19 +1,20 @@
 package dev.morphia.mapping.validation;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.validation.ConstraintViolation.Level;
 import dev.morphia.mapping.validation.classrules.DuplicatedAttributeNames;
 import dev.morphia.mapping.validation.classrules.EntityOrExternal;
-import dev.morphia.mapping.validation.classrules.MultipleId;
 import dev.morphia.mapping.validation.classrules.MultipleVersions;
 import dev.morphia.mapping.validation.classrules.ShardKeyNames;
 import dev.morphia.mapping.validation.fieldrules.ContradictingAnnotations;
@@ -21,6 +22,7 @@ import dev.morphia.mapping.validation.fieldrules.IdDoesNotMix;
 import dev.morphia.mapping.validation.fieldrules.LazyReferenceMissingDependencies;
 import dev.morphia.mapping.validation.fieldrules.LazyReferenceOnArray;
 import dev.morphia.mapping.validation.fieldrules.MapKeyTypeConstraint;
+import dev.morphia.mapping.validation.fieldrules.PropertyConstraint;
 import dev.morphia.mapping.validation.fieldrules.ReferenceToUnidentifiable;
 import dev.morphia.mapping.validation.fieldrules.VersionMisuse;
 
@@ -39,6 +41,23 @@ public class MappingValidator {
 
     private static final Logger LOG = LoggerFactory.getLogger(MappingValidator.class);
 
+    // the rules are stateless, so built once. MultipleId isn't here: two @Id properties both map to _id, so mapping
+    // fails with a duplicate mapped name before validation runs
+    private static final List<ClassConstraint> CLASS_RULES = List.of(
+            new MultipleVersions(),
+            new EntityOrExternal(),
+            new DuplicatedAttributeNames(),
+            new ShardKeyNames());
+
+    private static final List<PropertyConstraint> PROPERTY_RULES = List.of(
+            new IdDoesNotMix(),
+            new ReferenceToUnidentifiable(),
+            new LazyReferenceMissingDependencies(),
+            new LazyReferenceOnArray(),
+            new MapKeyTypeConstraint(),
+            new VersionMisuse(),
+            new ContradictingAnnotations(Reference.class, Property.class));
+
     /**
      * @param entityModel the EntityModel to validate
      * @param mapper      the Mapper to use for validation
@@ -46,16 +65,23 @@ public class MappingValidator {
      */
     @MorphiaInternal
     public void validate(Mapper mapper, EntityModel entityModel) {
-        final Set<ConstraintViolation> ve = new TreeSet<>((o1, o2) -> o1.getLevel().ordinal() > o2.getLevel().ordinal() ? -1 : 1);
-
-        final List<ClassConstraint> rules = getConstraints();
-        for (ClassConstraint v : rules) {
-            v.check(mapper, entityModel, ve);
+        // violations are distinct objects, so a set in report order keeps them all
+        final Set<ConstraintViolation> found = new LinkedHashSet<>();
+        for (ClassConstraint rule : CLASS_RULES) {
+            rule.check(mapper, entityModel, found);
+        }
+        // every property rule in one pass over the properties
+        for (PropertyModel property : entityModel.getProperties()) {
+            for (PropertyConstraint rule : PROPERTY_RULES) {
+                rule.checkProperty(mapper, entityModel, property, found);
+            }
         }
 
-        if (!ve.isEmpty()) {
-            final ConstraintViolation worst = ve.iterator().next();
-            final Level maxLevel = worst.getLevel();
+        if (!found.isEmpty()) {
+            // most severe first; the sort is stable, so equal levels stay in the order they were found
+            final List<ConstraintViolation> ve = new ArrayList<>(found);
+            ve.sort(Comparator.comparing(ConstraintViolation::getLevel).reversed());
+            final Level maxLevel = ve.get(0).getLevel();
             if (maxLevel.ordinal() >= Level.FATAL.ordinal()) {
                 throw new ConstraintViolationException(ve);
             }
@@ -71,28 +97,6 @@ public class MappingValidator {
                 line.log();
             }
         }
-    }
-
-    private List<ClassConstraint> getConstraints() {
-        final List<ClassConstraint> constraints = new ArrayList<>(32);
-
-        // class-level
-        constraints.add(new MultipleId());
-        constraints.add(new MultipleVersions());
-        constraints.add(new EntityOrExternal());
-        constraints.add(new DuplicatedAttributeNames());
-        // field-level
-        constraints.add(new IdDoesNotMix());
-        constraints.add(new ReferenceToUnidentifiable());
-        constraints.add(new LazyReferenceMissingDependencies());
-        constraints.add(new LazyReferenceOnArray());
-        constraints.add(new MapKeyTypeConstraint());
-        constraints.add(new VersionMisuse());
-        constraints.add(new ShardKeyNames());
-
-        constraints.add(new ContradictingAnnotations(Reference.class, Property.class));
-
-        return constraints;
     }
 
     static class LogLine implements Comparable<LogLine> {

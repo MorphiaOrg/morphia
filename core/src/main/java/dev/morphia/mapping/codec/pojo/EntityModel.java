@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicLong;
@@ -690,8 +689,7 @@ public class EntityModel {
                     mapper.getConfig().propertyDiscovery() == FIELDS ? new FieldDiscovery() : new MethodDiscovery(),
                     new ConfigureProperties()));
 
-            ServiceLoader.load(MorphiaConvention.class)
-                    .forEach(conventions::add);
+            conventions.addAll(mapper.getConventions());
 
             for (MorphiaConvention convention : conventions) {
                 convention.apply(mapper, EntityModel.this);

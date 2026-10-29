@@ -1,8 +1,10 @@
 package dev.morphia.mapping;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.ServiceLoader;
 
 import com.mongodb.WriteConcern;
 import com.mongodb.lang.Nullable;
@@ -19,6 +21,7 @@ import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
+import dev.morphia.mapping.conventions.MorphiaConvention;
 
 import org.bson.Document;
 
@@ -175,6 +178,19 @@ public interface Mapper {
      */
     @MorphiaInternal
     List<EntityListener<?>> getListeners();
+
+    /**
+     * @return the {@link MorphiaConvention}s registered through {@link java.util.ServiceLoader}, which every entity
+     *         model this mapper builds applies after Morphia's own conventions
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    default List<MorphiaConvention> getConventions() {
+        List<MorphiaConvention> conventions = new ArrayList<>();
+        ServiceLoader.load(MorphiaConvention.class).forEach(conventions::add);
+        return conventions;
+    }
 
     /**
      * @return collection of EntityModels

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -29,6 +30,7 @@ import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
+import dev.morphia.mapping.conventions.MorphiaConvention;
 import dev.morphia.mapping.validation.MappingValidator;
 import dev.morphia.sofia.Sofia;
 
@@ -71,6 +73,10 @@ public abstract class AbstractMapper implements Mapper {
     protected final MorphiaConfig config;
     protected final DiscriminatorLookup discriminatorLookup;
     protected final ClassLoader classLoader;
+    // stateless, so one serves every registration
+    private final MappingValidator validator = new MappingValidator();
+    // loaded on first use; see getConventions()
+    private volatile List<MorphiaConvention> conventions;
     private final Conversions conversions;
 
     /**
@@ -256,6 +262,31 @@ public abstract class AbstractMapper implements Mapper {
                 .orElse(null);
     }
 
+    /**
+     * Loads the {@link MorphiaConvention}s once for this mapper, with its class loader, falling back to the thread's
+     * context class loader if that finds none.
+     */
+    @Override
+    @MorphiaInternal
+    public List<MorphiaConvention> getConventions() {
+        List<MorphiaConvention> loaded = conventions;
+        if (loaded == null) {
+            loaded = loadConventions(classLoader);
+            ClassLoader context = Thread.currentThread().getContextClassLoader();
+            if (loaded.isEmpty() && context != null && context != classLoader) {
+                loaded = loadConventions(context);
+            }
+            conventions = loaded;
+        }
+        return loaded;
+    }
+
+    private static List<MorphiaConvention> loadConventions(ClassLoader loader) {
+        List<MorphiaConvention> loaded = new ArrayList<>();
+        ServiceLoader.load(MorphiaConvention.class, loader).forEach(loaded::add);
+        return List.copyOf(loaded);
+    }
+
     @Override
     @MorphiaInternal
     public List<EntityListener<?>> getListeners() {
@@ -431,8 +462,7 @@ public abstract class AbstractMapper implements Mapper {
         registering.put(name, model);
         try {
             if (validate && !model.isInterface()) {
-                new MappingValidator()
-                        .validate(this, model);
+                validator.validate(this, model);
             }
             discriminatorLookup.addModel(model);
         } finally {
