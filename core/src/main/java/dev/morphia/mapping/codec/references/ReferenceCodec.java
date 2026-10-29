@@ -1,5 +1,9 @@
 package dev.morphia.mapping.codec.references;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.util.ArrayList;
@@ -47,8 +51,6 @@ import org.bson.codecs.EncoderContext;
 import org.bson.codecs.configuration.CodecConfigurationException;
 
 import net.bytebuddy.ByteBuddy;
-import net.bytebuddy.TypeCache;
-import net.bytebuddy.TypeCache.Sort;
 import net.bytebuddy.description.ByteCodeElement;
 import net.bytebuddy.description.modifier.Visibility;
 import net.bytebuddy.dynamic.DynamicType.Builder;
@@ -75,8 +77,9 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     private final BsonTypeClassMap bsonTypeClassMap = new BsonTypeClassMap();
     private final Mapper mapper;
     private final ClassLoader classLoader;
-    private final TypeCache<TypeCache.SimpleKey> typeCache = new TypeCache.WithInlineExpunction<>(Sort.SOFT);
     private MorphiaDatastore datastore;
+    @Nullable
+    private volatile ProxyFactory proxyFactory;
 
     /**
      * Creates a codec
@@ -180,10 +183,6 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         return fetch(decode);
     }
 
-    private static TypeCache.SimpleKey getCacheKey(Class<?> type) {
-        return new TypeCache.SimpleKey(type, Arrays.asList(type.getInterfaces()));
-    }
-
     @Override
     @Nullable
     public Object encode(Object value) {
@@ -255,16 +254,47 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     }
 
     private <T> T createProxy(Supplier<Object> loader, List<Object> ids, Class<?> referenceType) {
-        ReferenceProxy referenceProxy = new ReferenceProxy(loader, ids, referenceType);
-        PropertyModel propertyModel = getPropertyModel();
+        ProxyFactory factory = proxyFactory();
         try {
-            Class<?> type = propertyModel.getType();
-            Class<T> proxyClass = (Class<T>) typeCache.findOrInsert(classLoader, getCacheKey(type), this::makeProxy, typeCache);
-            final T proxy = proxyClass.getDeclaredConstructor().newInstance();
-            final Field field = proxyClass.getDeclaredField(FIELD_INVOCATION_HANDLER);
+            Object proxy = (Object) factory.constructor().invokeExact();
+            factory.handlerSetter().invokeExact(proxy, (InvocationHandler) new ReferenceProxy(loader, ids, referenceType));
+            return (T) proxy;
+        } catch (Error e) {
+            throw e;
+        } catch (Throwable e) {
+            throw new MappingException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * The proxy type depends only on the property's type, so the class and its handles are resolved once, on the first
+     * lazy decode.
+     */
+    private ProxyFactory proxyFactory() {
+        ProxyFactory factory = proxyFactory;
+        if (factory == null) {
+            synchronized (this) {
+                factory = proxyFactory;
+                if (factory == null) {
+                    factory = makeProxyFactory();
+                    proxyFactory = factory;
+                }
+            }
+        }
+        return factory;
+    }
+
+    private ProxyFactory makeProxyFactory() {
+        try {
+            Class<?> proxyClass = makeProxy();
+            Constructor<?> constructor = proxyClass.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            Field field = proxyClass.getDeclaredField(FIELD_INVOCATION_HANDLER);
             field.setAccessible(true);
-            field.set(proxy, referenceProxy);
-            return proxy;
+            MethodHandles.Lookup lookup = MethodHandles.lookup();
+            return new ProxyFactory(
+                    lookup.unreflectConstructor(constructor).asType(MethodType.methodType(Object.class)),
+                    lookup.unreflectSetter(field).asType(MethodType.methodType(void.class, Object.class, InvocationHandler.class)));
         } catch (ReflectiveOperationException | IllegalArgumentException e) {
             throw new MappingException(e.getMessage(), e);
         }
@@ -536,6 +566,9 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
 
     private static List<Object> stripDbRefs(List<?> ids) {
         return ids.stream().map(ReferenceCodec::stripDbRef).collect(Collectors.toList());
+    }
+
+    private record ProxyFactory(MethodHandle constructor, MethodHandle handlerSetter) {
     }
 
     /**
