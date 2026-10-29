@@ -272,7 +272,7 @@ harness passes, and both mappers agree.
   comparator. As done: only `MultipleId` is removed. Since 2.1, `DuplicatedAttributeNames` fires for an
   `@AlsoLoad` that repeats a name on one property, so it still runs.
 
-### 3.12 Lifecycle dispatch (#12, D9)
+### ~~3.12 Lifecycle dispatch (#12, D9)~~
 - Guard `Sofia` debug formatting with `isDebugEnabled()`, precompute argument kinds, use a lifecycle bitmask, and
   delete `UntypedEntityListenerAdapter`.
 

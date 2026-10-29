@@ -25,6 +25,11 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
 import dev.morphia.MorphiaDatastore;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.PostLoad;
+import dev.morphia.annotations.PostPersist;
+import dev.morphia.annotations.PreLoad;
+import dev.morphia.annotations.PrePersist;
 import dev.morphia.config.ManualMorphiaConfig;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.DiscriminatorFunction;
@@ -307,6 +312,18 @@ public class CodecHarnessTest {
             assertSame(circles, circle, mapper + ": a subtype's discriminator resolves to the subtype's codec");
             assertSame(circle, shapes.codecForDiscriminator(circles.getEntityModel().discriminator()),
                     mapper + ": and the same codec every time");
+        }
+    }
+
+    @Test
+    void reportsExactlyTheDeclaredLifecycleEvents() {
+        for (MapperType mapper : MapperType.values()) {
+            EntityModel model = datastore(Variant.DEFAULTS, mapper).getMapper().getEntityModel(HarnessLifecycle.class);
+            assertTrue(model.hasLifecycle(PrePersist.class), mapper.toString());
+            assertTrue(model.hasLifecycle(PostLoad.class), mapper.toString());
+            assertFalse(model.hasLifecycle(PreLoad.class), mapper.toString());
+            assertFalse(model.hasLifecycle(PostPersist.class), mapper.toString());
+            assertFalse(model.hasLifecycle(Entity.class), mapper + ": not a lifecycle annotation");
         }
     }
 

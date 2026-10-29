@@ -1,12 +1,8 @@
 package dev.morphia.mapping.lifecycle;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.List;
 
 import com.mongodb.lang.Nullable;
-
-import org.bson.Document;
 
 import static java.lang.String.format;
 
@@ -18,29 +14,23 @@ public class OnEntityListenerAdapter extends EntityListenerAdapter {
     @Nullable
     public static OnEntityListenerAdapter listen(Class<?> type) {
         OnEntityListenerAdapter adapter = new OnEntityListenerAdapter(type);
-        boolean annotatedMethods = adapter.getMethods().values().stream().anyMatch(methods -> !methods.isEmpty());
-        return annotatedMethods ? adapter : null;
+        return adapter.hasCallbacks() ? adapter : null;
+    }
+
+    /**
+     * The lifecycle methods are the entity's own.
+     */
+    @Override
+    protected Object target(Object entity) {
+        return entity;
     }
 
     @Override
-    void invoke(Class<? extends Annotation> annotation, Object entity, Document document, Object datastore) {
-        List<Method> list = getMethods().get(annotation);
-        if (list != null) {
-            list
-                    .forEach(method -> {
-                        try {
-                            method.invoke(entity, collectArgs(method, entity, document, datastore));
-                        } catch (IllegalArgumentException e) {
-                            if (e.getMessage().equals("object is not an instance of declaring class")) {
-                                throw new RuntimeException(format("%s is not an instance of the method's type: %s",
-                                        entity.getClass().getName(), method.getDeclaringClass().getName()), e);
-                            }
-                            throw new RuntimeException("Failed to invoke method: " + method, e);
-                        } catch (ReflectiveOperationException e) {
-                            throw new RuntimeException("Failed to invoke method: " + method, e);
-                        }
-                    });
+    protected RuntimeException failure(Method method, Object entity, Exception e) {
+        if (e instanceof IllegalArgumentException && "object is not an instance of declaring class".equals(e.getMessage())) {
+            return new RuntimeException(format("%s is not an instance of the method's type: %s",
+                    entity.getClass().getName(), method.getDeclaringClass().getName()), e);
         }
+        return new RuntimeException("Failed to invoke method: " + method, e);
     }
-
 }
