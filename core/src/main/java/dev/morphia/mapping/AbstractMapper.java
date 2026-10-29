@@ -271,12 +271,18 @@ public abstract class AbstractMapper implements Mapper {
     public List<MorphiaConvention> getConventions() {
         List<MorphiaConvention> loaded = conventions;
         if (loaded == null) {
-            loaded = loadConventions(classLoader);
-            ClassLoader context = Thread.currentThread().getContextClassLoader();
-            if (loaded.isEmpty() && context != null && context != classLoader) {
-                loaded = loadConventions(context);
+            // under the mapper's lock, so concurrent first use discovers (and instantiates) them once
+            synchronized (this) {
+                loaded = conventions;
+                if (loaded == null) {
+                    loaded = loadConventions(classLoader);
+                    ClassLoader context = Thread.currentThread().getContextClassLoader();
+                    if (loaded.isEmpty() && context != null && context != classLoader) {
+                        loaded = loadConventions(context);
+                    }
+                    conventions = loaded;
+                }
             }
-            conventions = loaded;
         }
         return loaded;
     }
