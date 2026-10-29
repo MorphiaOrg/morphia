@@ -183,6 +183,35 @@ public class TestRegistrationProtocol {
         }
     }
 
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    public void fallsBackToTheContextClassLoaderForConventions(MapperType type, @TempDir Path services, @TempDir Path empty)
+            throws Exception {
+        // the mapper's loader finds no conventions; only the thread's context loader registers CountingConvention
+        Path file = services.resolve("META-INF/services/" + MorphiaConvention.class.getName());
+        Files.createDirectories(file.getParent());
+        Files.writeString(file, CountingConvention.class.getName());
+        Thread thread = Thread.currentThread();
+        ClassLoader original = thread.getContextClassLoader();
+        try (URLClassLoader mapperLoader = new URLClassLoader(new URL[] { empty.toUri().toURL() }, getClass().getClassLoader());
+                URLClassLoader contextLoader = new URLClassLoader(new URL[] { services.toUri().toURL() },
+                        getClass().getClassLoader())) {
+            CountingConvention.reset();
+            MorphiaConfig config = MorphiaConfig.load().mapper(type);
+            Mapper mapper = type == MapperType.CRITTER ? new CritterMapper(config, mapperLoader)
+                    : new ReflectiveMapper(config, mapperLoader);
+            thread.setContextClassLoader(contextLoader);
+
+            List<MorphiaConvention> conventions = mapper.getConventions();
+            Assertions.assertEquals(1, conventions.size(), "found through the context class loader");
+            Assertions.assertInstanceOf(CountingConvention.class, conventions.get(0));
+            Assertions.assertSame(conventions, mapper.getConventions());
+            Assertions.assertEquals(1, CountingConvention.CREATED.get(), "and still discovered only once");
+        } finally {
+            thread.setContextClassLoader(original);
+        }
+    }
+
     /**
      * Counts how often it's instantiated and which models it's applied to.
      */
