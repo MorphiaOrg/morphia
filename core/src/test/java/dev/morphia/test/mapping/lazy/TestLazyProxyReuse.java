@@ -70,11 +70,12 @@ public class TestLazyProxyReuse extends ProxyTestBase {
             assertIsProxy(each.many);
             assertEquals(singleProxy, each.single.getClass());
             assertEquals(manyProxy, each.many.getClass());
-            assertNotFetched(each.single);
-            assertNotFetched(each.many);
         }
 
+        // check each proxy just before resolving it: a handler shared between decodes would already be fetched here
         for (Holder each : decoded) {
+            assertNotFetched(each.single);
+            assertNotFetched(each.many);
             assertEquals("single", each.single.getName());
             assertEquals(2, each.many.size());
             assertEquals("first", each.many.get(0).getName());
