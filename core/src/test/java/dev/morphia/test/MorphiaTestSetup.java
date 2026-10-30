@@ -27,6 +27,13 @@ import static java.util.Arrays.stream;
 public class MorphiaTestSetup {
     private static final Logger LOG = LoggerFactory.getLogger(MorphiaTestSetup.class);
 
+    /**
+     * The server version to test against when {@code -Dmongodb} isn't given. A version without a patch number uses that
+     * release line's latest image. Not 8.0 or 8.3: 8.0.34 and 8.3.13 refuse to start on Linux 6.19 and newer
+     * (SERVER-121912).
+     */
+    static final String DEFAULT_MONGODB = "8.2";
+
     private static MongoHolder mongoHolder;
 
     private MorphiaContainer morphiaContainer;
@@ -58,15 +65,14 @@ public class MorphiaTestSetup {
     }
 
     private static MongoHolder initMongoDbContainer(boolean sharded) {
-        String mongodb = System.getProperty("mongodb");
+        String mongodb = System.getProperty("mongodb", DEFAULT_MONGODB);
         String connectionString;
         MongoDBContainer mongoDBContainer = null;
         if ("local".equals(mongodb)) {
             LOG.info("'local' mongodb property specified. Using local server.");
             connectionString = "mongodb://localhost:27017/" + TEST_DB_NAME;
         } else {
-            int version = mongodb != null ? Semver.parse(mongodb).getMajor() : 8;
-            DockerImageName imageName = DockerImageName.parse("mongo:" + version)
+            DockerImageName imageName = DockerImageName.parse("mongo:" + mongodb)
                     .asCompatibleSubstituteFor("mongo");
 
             LOG.info("Running tests using " + imageName);
