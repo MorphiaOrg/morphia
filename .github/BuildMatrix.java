@@ -32,7 +32,7 @@ public class BuildMatrix {
                 .map(d -> ((JsonNode)d.get("version")).asText())
                 .map(Version::valueOf)
                 .filter(it -> it.getPreReleaseVersion() == null || it.getPreReleaseVersion().equals(""))
-                .filter(it -> it.greaterThanOrEqualTo(Version.valueOf("4.0.0")))
+                .filter(it -> it.greaterThanOrEqualTo(Version.valueOf("7.0.0")))
                 // these releases refuse to start on Linux 6.19 and newer, which the runners use
                 // (https://jira.mongodb.org/browse/SERVER-121912). Later patch releases are picked up automatically.
                 .filter(it -> !it.equals(Version.valueOf("8.0.34")) && !it.equals(Version.valueOf("8.3.13")))
