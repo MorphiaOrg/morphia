@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1792078864435,
+  "lastUpdate": 1793381395361,
   "repoUrl": "https://github.com/MorphiaOrg/morphia",
   "entries": {
     "Mapper: reflection": [
@@ -548,6 +548,274 @@ window.BENCHMARK_DATA = {
           {
             "name": "dev.morphia.benchmarks.MappingBenchmark.scanModelsPackage ( {\"variant\":\"reflection\"} )",
             "value": 422.7550486,
+            "unit": "ms/op",
+            "extra": "iterations: 1\nforks: 5\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Justin Lee",
+            "username": "evanchooly",
+            "email": "evanchooly@users.noreply.github.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "23772b843402736f12140e1b77298b2978746561",
+          "message": "Read and write primitive arrays without boxing (plan item 3.16) (#4422)\n\nPlan item **3.16** (review B7).\n\n## The problem\n`TypedArrayCodec` handles `double[]`, `int[]`, `long[]`, `float[]`,\n`short[]`, `boolean[]` and `char[]`, plus the matching wrapper arrays.\nIt treated every element as an object:\n- **encode:** `Array.get` (boxes), then the boxed component codec;\n- **decode:** the boxed component codec, `ArrayList.add`, then\n`Array.set` for every element of a new array.\n\nFor a `double[1536]` embedding, that is 1,536 boxed `Double`s each way,\nplus the list.\n\n## Change\n- **`TypedArrayCodec.of(datastore, type)`** returns a specialized codec\nfor each primitive component type. `MorphiaTypesCodecProvider` uses it.\nWrapper component types keep the general codec.\n- **Encode** writes each element directly: `writeDouble`, `writeInt32`,\n`writeInt64`, `writeBoolean`, and `writeString` for `char`. This is\nexactly what the driver's `DoubleCodec`/`IntegerCodec`/… write,\nincluding `float` → `writeDouble` and `short` → `writeInt32`.\n- **Decode** reads an element stored as the component's native BSON type\nstraight into a primitive buffer: `DOUBLE` for `double`/`float`, `INT32`\nfor `int`/`short`, `INT64` for `long`.\n- **Any other BSON type** goes through the driver's codec for that\nelement, so numeric conversions (e.g. an `INT32` in a `double[]`, or a\nwhole-number `DOUBLE` in an `int[]`) and their errors are unchanged.\nThis is the boxed fallback the plan asks for.\n- The `float` and `short` fast paths repeat the range checks\n`FloatCodec`/`ShortCodec` make, with the same exception and message.\n  - `boolean[]` reads with `readBoolean`, as `BooleanCodec` does.\n- `char[]` still goes through `CharacterCodec`, which keeps its\nstring-length checks. `Character.valueOf` caches the ASCII range, so\nthis rarely allocates.\n- **The decode buffer starts at the length of the last array that codec\ndecoded,** capped at 65,536 elements. Arrays of one property tend to\nshare a length, such as an embedding's dimension, so the usual case\nallocates the result once, with no growth and no final copy.\n- **The fast paths apply only while the component codec is the driver's\nown class.** If an application registers its own codec for `double` (or\n`Double`) through `MorphiaConfig.codecProvider`, the array codec uses\nthe original boxed path through that codec.\n- **The general (wrapper) path** loops over `Object[]` instead of\ncalling `Array.get`, and builds the typed array with `list.toArray(T[])`\ninstead of `Array.set`.\n\n## Tests\n- **New `TestPrimitiveArrayCodecs`** compares the new codecs against a\ncopy of the old algorithm, for all 14 component types, primitive and\nwrapper:\n- **decode, element by element,** across 41 BSON values:\n`INT32`/`INT64`/`DOUBLE`/`DECIMAL128` at and past every type's range\nlimits, `-0.0`, NaN, ±∞, `Float.MAX_VALUE` × 2, fractional values,\n`null`, one- and two-character and empty strings, and booleans. Each has\nto give the same array, or **fail with the same exception class and\nmessage**.\n- **decode, whole arrays,** of sizes 0, 1, 15, 16, 17, 32 and 40+, using\nevery element that decodes on its own, mixed together. The sizes run in\nsequence on one codec, so the length hint grows and shrinks.\n- **encode** of sample arrays, including the extremes, NaN, `-0.0`,\n`char` `\\u0000`/`ï¿¿`, empty and 40-element arrays, and wrapper arrays\nwith `null`s. Each one is read back and compared with what the old\nalgorithm gives.\n- **a replaced component codec:** a `double` codec that stores tenths as\n`INT64` still sees every element, both ways.\n- It **passes on `master` too**, so it pins existing behavior. Dropping\nthe `short` range check makes it fail.\n- The harness's `HarnessArrays` fixtures and the existing `*MappingTest`\nprimitive tests are unchanged and pass.\n- The core and Kotlin suites pass with `-Dmorphia.mapper=critter` and\nwith reflection: 1532 + 5 tests, 0 failures.\n\n## JMH: `CodecBenchmark` ARRAYS, `master` (`26b10d99ec6`) vs this branch\n`ArraysEntity` holds a `double[1536]` and a `String[20]`, and only the\n`double[]` uses this codec. Same machine, `-prof gc`, master and this\nbranch alternating, two rounds each.\n| variant | benchmark | master ns/op (2 runs) | this branch ns/op (2\nruns) | master B/op | this branch B/op |\n|---|---|---|---|---:|---:|\n| reflection | encode | 97,456 ± 949, 99,591 ± 2,850 | 31,332 ± 350,\n31,637 ± 452 | 135,587 | 98,721 |\n| critter | encode | 97,780 ± 949, 97,990 ± 1,983 | 32,225 ± 503, 31,722\n± 498 | 139,875 | 98,721 |\n| reflection | decode | 68,485 ± 569, 68,547 ± 1,020 | 26,585 ± 321,\n26,434 ± 238 | 74,858 | 15,569 |\n| critter | decode | 68,580 ± 806, 67,753 ± 648 | 26,426 ± 268, 28,224 ±\n2,747 | 74,849–74,858 | 15,569 |\n\n- **Encode is 3.1× faster**, matching the review's 3.0×.\n- **Decode is 2.6× faster and allocates 79% less.** The review measured\n2.4×.\n- Without the length hint, decode was 2.25× faster at 48,337 B/op.\nNearly all of that was the buffer doubling from 16 to 2,048.\n- With the hint, what's left is essentially the `double[1536]` itself\n(12.3 KB) and the strings.\n- **`MixedCodecBenchmark`,** which has no primitive arrays, is unchanged\n(within noise) and serves as a control.\n\n## Decisions to review\n1. **The length hint.** Each primitive codec remembers the length of the\nlast array it decoded and starts its next buffer at that size, capped at\n65,536 elements. The field is a plain `int`: a value raced in from\nanother thread only costs a resize. The cap bounds the up-front\nover-allocation after a single huge array to 512 KB, for a `double[]`.\nIt is per codec, which means per datastore and component type, not per\nproperty, so two `double[]` properties of different lengths will share\nit and still grow. It's a one-line change to drop if you'd rather keep\nit simpler.\n2. **The fast path is skipped when the component codec isn't the\ndriver's.** It checks the exact class (`DoubleCodec.class`, …), so a\nsubclass also gets the boxed path. I'd rather give a custom codec the\nslow path than bypass it.\n3. **I left `ArrayCodec` alone.** It handles arrays of other types, e.g.\nthe benchmark's `String[]`, and the review suggested building its typed\narray directly. 3.5 already cached its component codec, and the plan\nitem scopes this to `TypedArrayCodec`.\n4. **The wrapper decode path uses `list.toArray(T[])`.** If a custom\ncomponent codec returned the wrong element type, that now throws\n`ArrayStoreException` where `Array.set` threw\n`IllegalArgumentException`. Driver codecs can't do this.\n5. **Two quirks that already exist** turned up while writing the\nround-trip test. They're unchanged, and the test pins them:\n- a wrapper array with `null` elements (e.g. `Integer[] {1, null}`)\nencodes the nulls, but can't be read back: the component codecs reject\n`NULL`;\n- a `float[]` holding ±∞ encodes, but `FloatCodec` rejects ±∞ on decode,\nwhile NaN passes.\n\n   Both would be separate issues if you want them fixed.",
+          "timestamp": "2026-10-30T15:48:43Z",
+          "url": "https://github.com/MorphiaOrg/morphia/commit/23772b843402736f12140e1b77298b2978746561"
+        },
+        "date": 1793381393940,
+        "tool": "jmh",
+        "benches": [
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"SIMPLE\",\"variant\":\"reflection\"} )",
+            "value": 1214.5012440956139,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"NESTED\",\"variant\":\"reflection\"} )",
+            "value": 3333.7482791425814,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"COLLECTIONS\",\"variant\":\"reflection\"} )",
+            "value": 10752.065482094558,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"POLYMORPHIC\",\"variant\":\"reflection\"} )",
+            "value": 5931.965765878899,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"LIFECYCLE\",\"variant\":\"reflection\"} )",
+            "value": 1220.8084036319667,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"ARRAYS\",\"variant\":\"reflection\"} )",
+            "value": 34547.08802373746,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"CONCRETE_COLLECTIONS\",\"variant\":\"reflection\"} )",
+            "value": 3101.2257853967735,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"LAZY_REFERENCE\",\"variant\":\"reflection\"} )",
+            "value": 2976.2226300829875,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"SIMPLE\",\"variant\":\"reflection\"} )",
+            "value": 1230.0280497374733,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"NESTED\",\"variant\":\"reflection\"} )",
+            "value": 3372.674480964981,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"COLLECTIONS\",\"variant\":\"reflection\"} )",
+            "value": 11139.010540811012,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"POLYMORPHIC\",\"variant\":\"reflection\"} )",
+            "value": 6205.94511214324,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"LIFECYCLE\",\"variant\":\"reflection\"} )",
+            "value": 1188.3605600860799,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"ARRAYS\",\"variant\":\"reflection\"} )",
+            "value": 35553.195554383594,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"CONCRETE_COLLECTIONS\",\"variant\":\"reflection\"} )",
+            "value": 3186.490611588463,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"LAZY_REFERENCE\",\"variant\":\"reflection\"} )",
+            "value": 2979.187425722423,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"SIMPLE\",\"variant\":\"reflection\"} )",
+            "value": 924.916109534012,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"NESTED\",\"variant\":\"reflection\"} )",
+            "value": 2679.5852526188205,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"COLLECTIONS\",\"variant\":\"reflection\"} )",
+            "value": 9577.148009419376,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"POLYMORPHIC\",\"variant\":\"reflection\"} )",
+            "value": 4724.263756912348,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"LIFECYCLE\",\"variant\":\"reflection\"} )",
+            "value": 896.5514642186278,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"ARRAYS\",\"variant\":\"reflection\"} )",
+            "value": 39559.45085212781,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"CONCRETE_COLLECTIONS\",\"variant\":\"reflection\"} )",
+            "value": 2537.108184858321,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"LAZY_REFERENCE\",\"variant\":\"reflection\"} )",
+            "value": 1929.5124906043793,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.DatastoreBenchmark.copy ( {\"variant\":\"reflection\"} )",
+            "value": 19.161770622290458,
+            "unit": "us/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.DatastoreBenchmark.copyAndDecode ( {\"variant\":\"reflection\"} )",
+            "value": 29.44467956635837,
+            "unit": "us/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.DocumentShapesBenchmark.decode ( {\"shape\":\"AS_WRITTEN\",\"variant\":\"reflection\"} )",
+            "value": 1200.3603976939435,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.DocumentShapesBenchmark.decode ( {\"shape\":\"NO_DISCRIMINATOR\",\"variant\":\"reflection\"} )",
+            "value": 1354.9526876708119,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.DocumentShapesBenchmark.decode ( {\"shape\":\"SCHEMA_DRIFT\",\"variant\":\"reflection\"} )",
+            "value": 5627.637084733125,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.decode ( {\"model\":\"SIMPLE\",\"variant\":\"reflection\"} )",
+            "value": 2210.1321194161383,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.decode ( {\"model\":\"NESTED\",\"variant\":\"reflection\"} )",
+            "value": 10176.805616876305,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.encode ( {\"model\":\"SIMPLE\",\"variant\":\"reflection\"} )",
+            "value": 1801.4718319275664,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.encode ( {\"model\":\"NESTED\",\"variant\":\"reflection\"} )",
+            "value": 7426.408667932995,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MappingBenchmark.warmMapping ( {\"variant\":\"reflection\"} )",
+            "value": 64.40647482309004,
+            "unit": "us/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MixedCodecBenchmark.decode ( {\"variant\":\"reflection\"} )",
+            "value": 33043.940722437066,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MixedCodecBenchmark.encode ( {\"variant\":\"reflection\"} )",
+            "value": 26549.472003896437,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.QueryBenchmark.queryDocument ( {\"variant\":\"reflection\"} )",
+            "value": 1682.9504940664053,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.QueryBenchmark.translatedPath ( {\"variant\":\"reflection\"} )",
+            "value": 375.84763018544913,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MappingBenchmark.coldStart ( {\"variant\":\"reflection\"} )",
+            "value": 244.05000179999996,
+            "unit": "ms/op",
+            "extra": "iterations: 1\nforks: 10\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MappingBenchmark.scanEverything ( {\"variant\":\"reflection\"} )",
+            "value": 1254.4757802,
+            "unit": "ms/op",
+            "extra": "iterations: 1\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MappingBenchmark.scanModelsPackage ( {\"variant\":\"reflection\"} )",
+            "value": 408.54437219999994,
             "unit": "ms/op",
             "extra": "iterations: 1\nforks: 5\nthreads: 1"
           }
