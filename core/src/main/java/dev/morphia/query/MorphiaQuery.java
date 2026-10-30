@@ -28,6 +28,7 @@ import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.filters.Filter;
 import dev.morphia.query.filters.Filters;
 import dev.morphia.query.filters.NearFilter;
+import dev.morphia.query.internal.DeferredDecoding;
 import dev.morphia.query.internal.MorphiaCursor;
 import dev.morphia.query.internal.MorphiaKeyCursor;
 import dev.morphia.query.updates.UpdateOperator;
@@ -194,6 +195,10 @@ public class MorphiaQuery<T> implements Query<T> {
     @Override
     public T findAndDelete(FindAndDeleteOptions options) {
         MongoCollection<T> mongoCollection = datastore.configureCollection(options, collection);
+        if (DeferredDecoding.required(datastore)) {
+            return DeferredDecoding.decode(mongoCollection.getCodecRegistry(), mongoCollection.getDocumentClass(),
+                    datastore.operations().findOneAndDelete(DeferredDecoding.raw(mongoCollection), getQueryDocument(), options));
+        }
         return datastore.operations().findOneAndDelete(mongoCollection, getQueryDocument(), options);
     }
 
@@ -237,6 +242,10 @@ public class MorphiaQuery<T> implements Query<T> {
 
     @Override
     public MorphiaCursor<T> iterator(FindOptions options) {
+        if (DeferredDecoding.required(datastore)) {
+            return new MorphiaCursor<>(DeferredDecoding.cursor(prepareCursor(options, DeferredDecoding.raw(collection)),
+                    collection.getCodecRegistry(), collection.getDocumentClass()));
+        }
         return new MorphiaCursor<>(prepareCursor(options, collection));
     }
 

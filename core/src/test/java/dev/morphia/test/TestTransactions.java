@@ -26,6 +26,7 @@ import org.testng.annotations.Test;
 import static com.mongodb.ClientSessionOptions.builder;
 import static com.mongodb.WriteConcern.MAJORITY;
 import static dev.morphia.query.updates.UpdateOperators.inc;
+import static dev.morphia.query.updates.UpdateOperators.set;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
@@ -278,6 +279,46 @@ public class TestTransactions extends TemplatedTestBase {
 
             return null;
         });
+    }
+
+    @Test(description = "Eager references resolve on every session read path (nested queries during decode)")
+    public void referencesInSessionReads() {
+        checkMinServerVersion("5.0.0");
+        getDs().withTransaction(session -> {
+            Company company = new Company();
+            company.name = "test";
+            company = session.save(company);
+
+            for (String email : List.of("first@test.com", "second@test.com")) {
+                Employee employee = new Employee();
+                employee.email = email;
+                employee.company = company;
+                session.save(employee);
+            }
+
+            assertCompany(session.find(Employee.class).first());
+            session.find(Employee.class).iterator().toList().forEach(TestTransactions::assertCompany);
+            session.aggregate(Employee.class)
+                    .match(Filters.eq("email", "first@test.com"))
+                    .execute(Employee.class)
+                    .toList()
+                    .forEach(TestTransactions::assertCompany);
+            assertCompany(session.find(Employee.class)
+                    .filter(Filters.eq("email", "first@test.com"))
+                    .modify(set("email", "updated@test.com"))
+                    .execute());
+            assertCompany(session.find(Employee.class)
+                    .filter(Filters.eq("email", "second@test.com"))
+                    .findAndDelete());
+
+            return null;
+        });
+    }
+
+    private static void assertCompany(Employee employee) {
+        assertNotNull(employee);
+        assertNotNull(employee.company);
+        assertEquals(employee.company.name, "test");
     }
 
     @Test

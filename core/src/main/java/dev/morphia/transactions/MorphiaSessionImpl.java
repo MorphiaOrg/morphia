@@ -150,6 +150,11 @@ public class MorphiaSessionImpl extends DatastoreImpl implements MorphiaSession 
     }
 
     @Override
+    public Object getOverloadRetryPolicyState() {
+        return session.getOverloadRetryPolicyState();
+    }
+
+    @Override
     @Nullable
     public BsonDocument getRecoveryToken() {
         return session.getRecoveryToken();

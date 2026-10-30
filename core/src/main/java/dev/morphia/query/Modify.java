@@ -7,6 +7,7 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.DatastoreImpl;
 import dev.morphia.ModifyOptions;
+import dev.morphia.query.internal.DeferredDecoding;
 import dev.morphia.query.updates.UpdateOperator;
 
 import org.bson.Document;
@@ -53,6 +54,11 @@ public class Modify<T> extends UpdateBase<T> {
         MongoCollection<T> collection = getDatastore().configureCollection(options, getCollection());
         Document update = toDocument();
 
+        if (DeferredDecoding.required(getDatastore())) {
+            return DeferredDecoding.decode(collection.getCodecRegistry(), collection.getDocumentClass(),
+                    getDatastore().operations().findOneAndUpdate(DeferredDecoding.raw(collection), getQuery().toDocument(), update,
+                            options));
+        }
         return getDatastore().operations().findOneAndUpdate(collection, getQuery().toDocument(), update, options);
     }
 }
