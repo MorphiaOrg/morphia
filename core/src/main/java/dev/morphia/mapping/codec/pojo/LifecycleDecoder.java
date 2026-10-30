@@ -141,6 +141,11 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
             decodeProperties(reader, decoderContext, instanceCreator, plan);
             if (!eager) {
                 entity = (T) instanceCreator.getInstance();
+                if (id != null) {
+                    // the instance exists now, so a callback that reaches it through a reference gets it rather than
+                    // an unresolvable cycle
+                    session.registerInFlight(model.collectionName(), id, entity);
+                }
                 model.callLifecycleMethods(PreLoad.class, entity, document, datastore);
             }
             model.callLifecycleMethods(PostLoad.class, entity, document, datastore);
@@ -154,9 +159,10 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
                 }
             }
         }
-        if (!eager && session != null && idProperty != null) {
-            // as EntityDecoder does: prefer the id as stored, which is what references look entities up by
-            Object key = id != null ? id : datastore.getMapper().getId(entity);
+        if (!eager && id == null && session != null && idProperty != null) {
+            // as EntityDecoder does when no id could be read ahead: cache the entity under its mapped id. one read
+            // ahead was put in flight above and has been cached by complete()
+            Object key = datastore.getMapper().getId(entity);
             if (key != null) {
                 session.register(model.collectionName(), key, entity);
             }

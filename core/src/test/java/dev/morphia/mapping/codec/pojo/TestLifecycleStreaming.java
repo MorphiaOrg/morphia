@@ -17,6 +17,7 @@ import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.config.ManualMorphiaConfig;
 import dev.morphia.mapping.MapperType;
+import dev.morphia.mapping.codec.DecodeSession;
 
 import org.bson.BsonBinaryReader;
 import org.bson.BsonBinaryWriter;
@@ -116,6 +117,67 @@ public class TestLifecycleStreaming {
         }
     }
 
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    @SuppressWarnings({ "deprecation", "removal" })
+    void listenersAddedAfterTheCodecIsBuiltStillRun(MapperType mapperType) {
+        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
+            // no listener at all when the codec is built
+            MorphiaDatastore datastore = datastore(client, mapperType);
+            MorphiaCodec<Plain> codec = codec(datastore, Plain.class);
+            Plain entity = new Plain();
+            entity.name = "late";
+            decode(codec, encode(codec, entity));
+
+            Recording persisting = new Recording(PostPersist.class, false);
+            datastore.getMapper().addInterceptor(persisting);
+            BsonDocument encoded = encode(codec, entity);
+            decode(codec, encoded);
+            Assertions.assertEquals(List.of("PostPersist:null"), persisting.calls);
+
+            // a codec built while only a persist listener exists still runs a load listener added later
+            Recording loading = new Recording(PostLoad.class, true);
+            datastore.getMapper().addInterceptor(loading);
+            decode(codec, encoded);
+            Assertions.assertEquals(List.of("PostLoad:late"), loading.calls);
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    @SuppressWarnings({ "deprecation", "removal" })
+    void constructedEntitiesAreInTheSessionDuringTheirCallbacks(MapperType mapperType) {
+        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
+            MorphiaDatastore datastore = datastore(client, mapperType);
+            List<Object> found = new ArrayList<>();
+            datastore.getMapper().addInterceptor(new EntityListener<Object>() {
+                @Override
+                public boolean hasAnnotation(Class<? extends Annotation> type) {
+                    return type == PostLoad.class;
+                }
+
+                @Override
+                public boolean usesDocument(Class<? extends Annotation> type) {
+                    return false;
+                }
+
+                @Override
+                public void postLoad(Object entity, Document document, Object store) {
+                    // what a reference back to the entity would get
+                    found.add(DecodeSession.current().lookup("lifecycle_constructed", ((Constructed) entity).id));
+                }
+            });
+            MorphiaCodec<Constructed> codec = codec(datastore, Constructed.class);
+            Constructed entity = new Constructed(new ObjectId(), "built");
+
+            Constructed decoded = decode(codec, encode(codec, entity));
+
+            Assertions.assertEquals("built", decoded.name);
+            Assertions.assertEquals(List.of(decoded), found);
+            Assertions.assertSame(decoded, found.get(0));
+        }
+    }
+
     private static MorphiaDatastore datastore(MongoClient client, MapperType mapperType) {
         MorphiaDatastore datastore = new MorphiaDatastore(client, ManualMorphiaConfig.configure()
                 .database("lifecycle_streaming")
@@ -124,7 +186,7 @@ public class TestLifecycleStreaming {
                 .applyIndexes(false)
                 .applyCaps(false)
                 .applyDocumentValidations(false));
-        datastore.getMapper().map(Streamed.class, Documented.class, Plain.class);
+        datastore.getMapper().map(Streamed.class, Documented.class, Plain.class, Constructed.class);
         return datastore;
     }
 
@@ -199,6 +261,18 @@ public class TestLifecycleStreaming {
         @PostLoad
         void postLoad(Document document) {
             loaded = document.getString("extra");
+        }
+    }
+
+    @Entity("lifecycle_constructed")
+    public static class Constructed {
+        @Id
+        final ObjectId id;
+        final String name;
+
+        public Constructed(ObjectId id, String name) {
+            this.id = id;
+            this.name = name;
         }
     }
 
