@@ -95,12 +95,13 @@ public class MorphiaCodecProvider implements CodecProvider {
      * @return the new codec
      */
     @Nullable
-    @SuppressWarnings("unchecked")
     public <T> Codec<T> getRefreshCodec(T entity, CodecRegistry registry) {
         EntityModel model = mapper.getEntityModel(entity.getClass());
-        // decode with the entity's regular plan, so the property codecs this datastore already resolved are reused
-        MorphiaCodec<T> regular = (MorphiaCodec<T>) get(model.getType(), registry);
-        CodecPlan plan = regular != null ? regular.getPlan() : null;
+        // decode with the entity's regular plan, so the property codecs this datastore already resolved are reused. a
+        // subclass may provide some other codec for the entity; then the refresh codec builds a plan of its own
+        CodecPlan plan = get(model.getType(), registry) instanceof MorphiaCodec<?> regular && regular.getPlan().model() == model
+                ? regular.getPlan()
+                : null;
         return new MorphiaCodec<>(datastore, model, propertyCodecProviders, mapper.getDiscriminatorLookup(), registry, conversions,
                 plan) {
             @Override
