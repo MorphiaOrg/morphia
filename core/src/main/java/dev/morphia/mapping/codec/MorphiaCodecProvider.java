@@ -9,10 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.MorphiaDatastore;
-import dev.morphia.annotations.PostLoad;
-import dev.morphia.annotations.PostPersist;
-import dev.morphia.annotations.PreLoad;
-import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.CodecPlan;
@@ -70,10 +66,11 @@ public class MorphiaCodecProvider implements CodecProvider {
         if (codec == null && (mapper.isMapped(type) || mapper.isMappable(type))) {
             EntityModel model = mapper.getEntityModel(type);
             codec = new MorphiaCodec<>(datastore, model, propertyCodecProviders, mapper.getDiscriminatorLookup(), registry, conversions);
-            if (model.hasLifecycle(PostPersist.class) || model.hasLifecycle(PrePersist.class) || mapper.hasListeners()) {
+            // only the events the model or a global listener claims; a listener for one event leaves the others alone
+            if (LifecycleEncoder.isNeeded(model, mapper)) {
                 codec.setEncoder(new LifecycleEncoder(codec));
             }
-            if (model.hasLifecycle(PreLoad.class) || model.hasLifecycle(PostLoad.class) || mapper.hasListeners()) {
+            if (LifecycleDecoder.isNeeded(model, mapper)) {
                 codec.setDecoder(new LifecycleDecoder(codec));
             }
             // another thread may have built one meanwhile; keep the first so every caller shares it

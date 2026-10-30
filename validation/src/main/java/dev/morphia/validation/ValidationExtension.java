@@ -35,6 +35,14 @@ public class ValidationExtension implements EntityListener<Object> {
         return PrePersist.class.equals(type);
     }
 
+    /**
+     * Validation looks at the entity only, so entities can be encoded without building a {@code Document}.
+     */
+    @Override
+    public boolean usesDocument(@NonNull Class<? extends Annotation> type) {
+        return false;
+    }
+
     @Override
     @PrePersist
     @SuppressWarnings("unchecked")

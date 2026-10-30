@@ -3,6 +3,7 @@ package dev.morphia.test.mapping.codec.harness;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.lang.annotation.Annotation;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -27,6 +28,7 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
+import dev.morphia.EntityListener;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.PostLoad;
@@ -91,6 +93,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -138,6 +141,11 @@ public class CodecHarnessTest {
     private static final DecoderContext DECODER = DecoderContext.builder().build();
     /** Critter can't generate models for array properties yet (game plan 4.8), so the whole entity uses reflection. */
     private static final Set<Class<?>> CRITTER_FALLBACKS = Set.of(HarnessArrays.class);
+    /**
+     * Cases a listener that takes the {@code Document} still reads differently: {@code DocumentReader} can't convert a
+     * string stored for a number, which the plain and streaming paths do.
+     */
+    private static final Set<String> DOCUMENT_PATH_DIVERGENCES = Set.of("foreign/scalars-schema-drift");
 
     private final MongoClient client = offlineClient();
 
@@ -173,6 +181,25 @@ public class CodecHarnessTest {
                     assertNotNull(expected, "no fixture for " + name + " in " + variant.file());
                     assertEquals(expected, reflection.get(name), "fixture " + variant.file());
                 }));
+            }
+            // a global listener puts every entity on the lifecycle codecs, which must write and read exactly what the
+            // plain codecs do, whether they go through a Document or stream
+            for (GlobalListener listener : List.of(GlobalListener.DOCUMENT, GlobalListener.STREAMING)) {
+                for (MapperType mapper : MapperType.values()) {
+                    Map<String, Map<String, String>> listened = run(variant, mapper, listener);
+                    List<DynamicNode> listenedCases = new ArrayList<>();
+                    for (String name : reflection.keySet()) {
+                        if (listener == GlobalListener.DOCUMENT && DOCUMENT_PATH_DIVERGENCES.contains(name)) {
+                            // still diverges, so that the list can't go stale
+                            listenedCases.add(DynamicTest.dynamicTest(name, () -> assertNotEquals(reflection.get(name),
+                                    listened.get(name), name + " now reads the same through a Document; drop it from the list")));
+                        } else {
+                            listenedCases.add(DynamicTest.dynamicTest(name,
+                                    () -> assertEquals(reflection.get(name), listened.get(name), "with a global listener")));
+                        }
+                    }
+                    cases.add(DynamicContainer.dynamicContainer(listener + " listener, " + mapper, listenedCases));
+                }
             }
             cases.add(DynamicTest.dynamicTest("no stale fixtures",
                     () -> assertEquals(golden.keySet(), reflection.keySet(), "cases in " + variant.file())));
@@ -399,7 +426,16 @@ public class CodecHarnessTest {
      * @return case name → recorded results (encoding, round trip, or decoded foreign document) as canonical JSON
      */
     private Map<String, Map<String, String>> run(Variant variant, MapperType mapper) {
+        return run(variant, mapper, GlobalListener.NONE);
+    }
+
+    @SuppressWarnings({ "deprecation", "removal" })
+    private Map<String, Map<String, String>> run(Variant variant, MapperType mapper, GlobalListener listener) {
         MorphiaDatastore datastore = datastore(variant, mapper);
+        if (listener != GlobalListener.NONE) {
+            // before any codec is built, since a codec decides on the lifecycle path when it's created
+            datastore.getMapper().addInterceptor(new ClaimsEveryEvent(listener == GlobalListener.DOCUMENT));
+        }
         if (mapper == MapperType.CRITTER) {
             assertCritterModels(datastore);
         }
@@ -582,6 +618,29 @@ public class CodecHarnessTest {
                 .applyToServerSettings(server -> server.heartbeatFrequency(1, TimeUnit.HOURS))
                 .applyToSocketSettings(socket -> socket.connectTimeout(100, TimeUnit.MILLISECONDS))
                 .build());
+    }
+
+    private enum GlobalListener {
+        NONE,
+        /** claims every event and takes the Document, so the lifecycle codecs build one */
+        DOCUMENT,
+        /** claims every event without taking the Document, so the lifecycle codecs stream */
+        STREAMING
+    }
+
+    /**
+     * Claims every lifecycle event and does nothing for any of them.
+     */
+    private record ClaimsEveryEvent(boolean usesDocument) implements EntityListener<Object> {
+        @Override
+        public boolean hasAnnotation(Class<? extends Annotation> type) {
+            return true;
+        }
+
+        @Override
+        public boolean usesDocument(Class<? extends Annotation> type) {
+            return usesDocument;
+        }
     }
 
     private enum Variant {
