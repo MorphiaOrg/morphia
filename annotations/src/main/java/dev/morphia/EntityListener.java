@@ -27,6 +27,19 @@ public interface EntityListener<T> {
     boolean hasAnnotation(Class<? extends Annotation> type);
 
     /**
+     * Whether this listener reads or changes the {@code Document} it is given for an event. While no listener of an entity
+     * needs one, Morphia encodes and decodes that entity directly instead of building a {@code Document} for it, and
+     * passes {@code null} as the document. Override this to return false for the events where the document is unused.
+     *
+     * @param type the lifecycle event annotation
+     * @return true if this listener uses the document for that event, which is the default
+     * @since 3.0
+     */
+    default boolean usesDocument(Class<? extends Annotation> type) {
+        return true;
+    }
+
+    /**
      * @param entity    the entity being processed
      * @param document  the Document form of the entity
      * @param datastore the Datastore being used

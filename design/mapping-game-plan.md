@@ -319,11 +319,21 @@ harness passes, and both mappers agree.
   `TestMapper.testMapperCopying` assert isolation that is no longer needed.
 - After this, `refresh()` can reuse the normal codec with an "existing instance" creator.
 
-### 4.2 Lifecycle streaming path (#15, B3)
+### ~~4.2 Lifecycle streaming path (#15, B3)~~
 - Compute `needsDocumentOnPersist` and `needsDocumentOnLoad` per codec. Stream directly unless a hook or a global
   listener takes a `Document`. Gate on event coverage, not `hasListeners()`.
 - Build on 2.6.
 - Plan the removal of `addInterceptor`, which has been deprecated for removal since 2.4.0.
+- **Removal plan for `addInterceptor`**, as worked out in 4.2:
+  - Global listeners are still needed. `@EntityListeners`, which the deprecation points to, is per entity, and the
+    validation module's only documented setup is `mapper.addInterceptor(new ValidationExtension())`.
+  - So first, before 3.0 GA, add a supported way to register global listeners when the datastore is built. One
+    option is a `MorphiaConfig` setting that names listener classes. Another is `ServiceLoader` discovery of
+    `EntityListener`, with the validation module shipping a services file so that adding the dependency turns
+    validation on. This is a maintainer decision.
+  - Then remove `addInterceptor` in 3.0. Global listeners become fixed once the datastore exists, so the lifecycle
+    codecs can decide their path once instead of re-reading the listener list on every encode and decode, and the
+    `Mapper.getListeners()`/`hasListeners()` pair can become internal.
 
 ### ~~4.3 Shared registration protocol in `AbstractMapper` (#18, A3/D7)~~
 - `synchronized final mapEntity` → `protected abstract buildModel(Class)`.

@@ -4,6 +4,7 @@ import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.internal.MorphiaInternal;
+import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 
 import org.bson.BsonWriter;
@@ -27,6 +28,16 @@ public class LifecycleEncoder<T> extends EntityEncoder<T> {
         super(morphiaCodec);
     }
 
+    /**
+     * @param model  the entity's model
+     * @param mapper the mapper
+     * @return true if encoding the entity runs callbacks: the model or a global listener handles {@code @PrePersist} or
+     *         {@code @PostPersist}
+     */
+    public static boolean isNeeded(EntityModel model, Mapper mapper) {
+        return LifecycleEvents.handles(model, mapper, PrePersist.class, PostPersist.class);
+    }
+
     @Override
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void encode(BsonWriter writer, T value, EncoderContext encoderContext) {
@@ -38,6 +49,14 @@ public class LifecycleEncoder<T> extends EntityEncoder<T> {
             return;
         }
         MorphiaDatastore datastore = getMorphiaCodec().getDatastore();
+
+        if (!LifecycleEvents.needDocument(model, datastore.getMapper(), PrePersist.class, PostPersist.class)) {
+            // no callback looks at the document, so write the entity straight through rather than building one
+            model.callLifecycleMethods(PrePersist.class, value, null, datastore);
+            super.encode(writer, value, encoderContext);
+            model.callLifecycleMethods(PostPersist.class, value, null, datastore);
+            return;
+        }
 
         Document document = new Document();
         model.callLifecycleMethods(PrePersist.class, value, document, datastore);

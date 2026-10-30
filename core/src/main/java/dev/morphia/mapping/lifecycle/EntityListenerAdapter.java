@@ -50,6 +50,19 @@ public class EntityListenerAdapter implements EntityListener<Object> {
     }
 
     /**
+     * @return true if a lifecycle method for the event takes a {@code Document}
+     */
+    @Override
+    public boolean usesDocument(@NonNull Class<? extends Annotation> type) {
+        for (Callback callback : callbacks.get(type)) {
+            if (callback.usesDocument()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * @return true if any lifecycle method was found
      */
     boolean hasCallbacks() {
@@ -155,6 +168,15 @@ public class EntityListenerAdapter implements EntityListener<Object> {
                         : types[i].equals(Datastore.class) ? DATASTORE
                                 : ENTITY;
             }
+        }
+
+        boolean usesDocument() {
+            for (byte parameter : parameters) {
+                if (parameter == DOCUMENT) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         Object[] arguments(Object entity, Document document, Object datastore) {
