@@ -146,6 +146,29 @@ public class TestLifecycleStreaming {
     @ParameterizedTest
     @EnumSource(MapperType.class)
     @SuppressWarnings({ "deprecation", "removal" })
+    void aPersistListenerAddedAfterALoadListenerStillRuns(MapperType mapperType) {
+        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
+            // the codec is built while only a load listener exists, as with validation registered after one
+            MorphiaDatastore datastore = datastore(client, mapperType);
+            Recording loading = new Recording(PostLoad.class, true);
+            datastore.getMapper().addInterceptor(loading);
+            MorphiaCodec<Plain> codec = codec(datastore, Plain.class);
+            Plain entity = new Plain();
+            entity.name = "reversed";
+            decode(codec, encode(codec, entity));
+
+            Recording persisting = new Recording(PostPersist.class, false);
+            datastore.getMapper().addInterceptor(persisting);
+            decode(codec, encode(codec, entity));
+
+            Assertions.assertEquals(List.of("PostPersist:null"), persisting.calls);
+            Assertions.assertEquals(List.of("PostLoad:reversed", "PostLoad:reversed"), loading.calls);
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    @SuppressWarnings({ "deprecation", "removal" })
     void constructedEntitiesAreInTheSessionDuringTheirCallbacks(MapperType mapperType) {
         try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
             MorphiaDatastore datastore = datastore(client, mapperType);
