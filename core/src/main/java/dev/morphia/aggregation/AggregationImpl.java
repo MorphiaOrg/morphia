@@ -50,11 +50,13 @@ import dev.morphia.aggregation.stages.Unwind;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.filters.Filter;
+import dev.morphia.query.internal.DeferredDecoding;
 import dev.morphia.query.internal.MorphiaCursor;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import org.bson.Document;
+import org.bson.RawBsonDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -145,6 +147,11 @@ public class AggregationImpl<T> implements Aggregation<T> {
         if (LOG.isDebugEnabled()) {
             LOG.debug("pipeline = " + pipeline);
         }
+        if (DeferredDecoding.required(datastore)) {
+            MongoCursor<RawBsonDocument> raw = datastore.operations()
+                    .<RawBsonDocument> aggregate(this.collection, pipeline, RawBsonDocument.class).iterator();
+            return new MorphiaCursor<>(DeferredDecoding.cursor(raw, collection.getCodecRegistry(), resultType));
+        }
         return new MorphiaCursor<>(datastore.operations().<R> aggregate(this.collection, pipeline, resultType).iterator());
     }
 
@@ -154,6 +161,11 @@ public class AggregationImpl<T> implements Aggregation<T> {
         List<Document> pipeline = pipeline();
         if (LOG.isDebugEnabled()) {
             LOG.debug("pipeline = " + pipeline);
+        }
+        if (DeferredDecoding.required(datastore)) {
+            MongoCursor<RawBsonDocument> raw = (MongoCursor<RawBsonDocument>) (MongoCursor<?>) options
+                    .apply(pipeline, datastore, collection, RawBsonDocument.class).iterator();
+            return new MorphiaCursor<>(DeferredDecoding.cursor(raw, collection.getCodecRegistry(), resultType));
         }
         return new MorphiaCursor<>((MongoCursor<R>) options.apply(pipeline, datastore, collection, resultType).iterator());
     }
