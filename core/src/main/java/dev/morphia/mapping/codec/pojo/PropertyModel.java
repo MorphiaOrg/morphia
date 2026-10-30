@@ -30,17 +30,13 @@ import com.mongodb.DBRef;
 import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.Datastore;
-import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Transient;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
-import dev.morphia.mapping.codec.references.ReferenceCodec;
 
 import org.bson.Document;
-import org.bson.codecs.Codec;
 import org.bson.codecs.pojo.PropertyAccessor;
 import org.bson.codecs.pojo.PropertySerialization;
 
@@ -66,7 +62,6 @@ public class PropertyModel {
     private final Map<Class<? extends Annotation>, Annotation> annotationMap = new HashMap<>();
     private final List<String> loadNames = new ArrayList<>();
     private final EntityModel entityModel;
-    private Codec<? super Object> codec;
     // this property's position in its entity model, which addresses it in a CodecPlan; assigned when it's added
     private int slot = -1;
     private Class<?> normalizedType;
@@ -171,10 +166,6 @@ public class PropertyModel {
     public PropertyModel isFinal(boolean isFinal) {
         this.isFinal = isFinal;
         return this;
-    }
-
-    Codec<?> getCodec() {
-        return codec;
     }
 
     /**
@@ -292,18 +283,6 @@ public class PropertyModel {
         return annotationMap.containsKey(type);
     }
 
-    /**
-     * @param datastore
-     * @return the custom codec to use if set or null
-     */
-    @Nullable
-    public Codec<?> specializeCodec(Datastore datastore) {
-        if (codec == null) {
-            configureCodec(datastore);
-        }
-        return codec;
-    }
-
     @Override
     public String toString() {
         return new StringJoiner(", ", PropertyModel.class.getSimpleName() + "[", "]")
@@ -405,14 +384,6 @@ public class PropertyModel {
         return this;
     }
 
-    private void configureCodec(Datastore datastore) {
-        if (hasAnnotation(Reference.class)) {
-            codec = new ReferenceCodec((MorphiaDatastore) datastore, this);
-        } else if (getTypeData().getTypeParameters().isEmpty()) {
-            codec = (Codec<? super Object>) ((MorphiaDatastore) datastore).getCodecRegistry().get(getType());
-        }
-    }
-
     public boolean isCollection() {
         return Collection.class.isAssignableFrom(getTypeData().getType());
     }
@@ -430,10 +401,6 @@ public class PropertyModel {
         }
 
         return null;
-    }
-
-    void codec(Codec<? super Object> codec) {
-        this.codec = codec;
     }
 
     /**

@@ -308,7 +308,7 @@ harness passes, and both mappers agree.
 
 ## Phase 4: Structural (Tier 2)
 
-### 4.1 Codecs off `PropertyModel`; sessions share the mapper (#14, D1/B13/C7)
+### ~~4.1 Codecs off `PropertyModel`; sessions share the mapper (#14, D1/B13/C7)~~
 - Finish moving codecs into the 3.0 plan and remove `PropertyModel.codec`. `SessionDatastore` reuses
   `datastore.mapper`.
 - Optionally share the stateless filter, expression, update and aggregation providers between the parent and its

@@ -34,7 +34,6 @@ import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Transient;
 import dev.morphia.mapping.MappingException;
-import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.CountOptions;
 import dev.morphia.query.FindAndDeleteOptions;
@@ -88,13 +87,12 @@ public class TestDatastore extends TestBase {
 
             MorphiaDatastore copied = new MorphiaDatastore(getDs());
 
-            EntityModel model = getMapper().getEntityModel(MultipleDSEntity.class);
-            EntityModel copiedModel = copied.getMapper().getEntityModel(MultipleDSEntity.class);
-
-            Assertions.assertNotSame(copiedModel, model);
-            Assertions.assertNotSame(copiedModel.getProperty("_id"), model.getProperty("_id"));
-            Assertions.assertNotSame(copiedModel.getProperty("name"), model.getProperty("name"));
-            Assertions.assertNotSame(copiedModel.getProperty("count"), model.getProperty("count"));
+            // a copy shares the mapper and its models; only the codecs, which are bound to a datastore, are its own
+            Assertions.assertSame(getMapper(), copied.getMapper());
+            Assertions.assertSame(getMapper().getEntityModel(MultipleDSEntity.class),
+                    copied.getMapper().getEntityModel(MultipleDSEntity.class));
+            Assertions.assertNotSame(getDs().getCodecRegistry().get(MultipleDSEntity.class),
+                    copied.getCodecRegistry().get(MultipleDSEntity.class));
         });
     }
 

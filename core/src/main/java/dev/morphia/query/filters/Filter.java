@@ -159,7 +159,7 @@ public class Filter {
         if (!mapped) {
             PropertyModel property = pathTarget(datastore.getMapper()).target();
             // encode directly: the property may be stored under a different name than the field this filter names
-            if (property != null && property.specializeCodec(datastore) instanceof PropertyHandler handler) {
+            if (property != null && datastore.getPropertyCodec(property) instanceof PropertyHandler handler) {
                 this.value = handler.encode(value);
             }
             mapped = true;
