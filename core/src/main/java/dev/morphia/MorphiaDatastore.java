@@ -37,6 +37,7 @@ import dev.morphia.aggregation.AggregationOptions;
 import dev.morphia.aggregation.codecs.AggregationCodecProvider;
 import dev.morphia.annotations.CappedAt;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.ShardKeys;
 import dev.morphia.annotations.ShardOptions;
 import dev.morphia.annotations.Validation;
@@ -66,6 +67,7 @@ import dev.morphia.mapping.codec.pojo.MergingEncoder;
 import dev.morphia.mapping.codec.pojo.MorphiaCodec;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.reader.DocumentReader;
+import dev.morphia.mapping.codec.references.ReferenceCodec;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.CountOptions;
 import dev.morphia.query.FindAndDeleteOptions;
@@ -135,6 +137,8 @@ public class MorphiaDatastore implements Datastore {
     private final QueryFactory queryFactory;
 
     public List<MorphiaCodecProvider> morphiaCodecProviders = new ArrayList<>();
+    // loaded once, by the datastore that first registered their models; copies share them for their codec providers
+    private final List<EntityModelImporter> importers;
     private ClassLoader classLoader;
     private MongoDatabase database;
     private DatastoreOperations operations;
@@ -186,7 +190,7 @@ public class MorphiaDatastore implements Datastore {
         appendMongoClientMetadata(client);
         this.mapper = mapper;
         this.queryFactory = mapper.getConfig().queryFactory();
-        importModels();
+        this.importers = importModels();
 
         MongoDatabase clientDatabase = mongoClient.getDatabase(config.database());
         codecRegistry = buildRegistry(clientDatabase.getCodecRegistry());
@@ -211,15 +215,17 @@ public class MorphiaDatastore implements Datastore {
         }
     }
 
-    private void importModels() {
-        ServiceLoader<EntityModelImporter> importers = ServiceLoader.load(EntityModelImporter.class);
-        for (EntityModelImporter importer : importers) {
+    private List<EntityModelImporter> importModels() {
+        List<EntityModelImporter> importers = new ArrayList<>();
+        for (EntityModelImporter importer : ServiceLoader.load(EntityModelImporter.class)) {
             for (EntityModel model : importer.getModels(getMapper())) {
                 mapper.register(model);
             }
 
             morphiaCodecProviders.add(importer.getCodecProvider(this));
+            importers.add(importer);
         }
+        return List.copyOf(importers);
     }
 
     private CodecRegistry buildRegistry(CodecRegistry codecRegistry) {
@@ -317,6 +323,23 @@ public class MorphiaDatastore implements Datastore {
     }
 
     /**
+     * @param property a mapped property
+     * @return the codec this datastore uses for the property, or null if it has none
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    @Nullable
+    public Codec<?> getPropertyCodec(PropertyModel property) {
+        Codec<?> codec = codecRegistry.get(property.getEntityModel().getType());
+        if (codec instanceof MorphiaCodec<?> morphiaCodec) {
+            return morphiaCodec.getPlan().codec(property);
+        }
+        // the entity's codec was replaced, so there's no plan to ask; references still need one bound to this datastore
+        return property.hasAnnotation(Reference.class) ? new ReferenceCodec(this, property) : null;
+    }
+
+    /**
      * Enables any document validation defined on the class
      *
      * @param model the model to use
@@ -357,9 +380,14 @@ public class MorphiaDatastore implements Datastore {
         this.mongoClient = datastore.mongoClient;
         this.classLoader = datastore.classLoader;
         this.database = mongoClient.getDatabase(datastore.mapper.getConfig().database());
-        this.mapper = datastore.mapper.copy();
+        // the mapper holds no datastore-bound state, so a copy (a session, say) shares it rather than mapping
+        // everything again. its codecs are its own: they're built against this datastore's registry
+        this.mapper = datastore.mapper;
         this.queryFactory = datastore.queryFactory;
         this.operations = datastore.operations;
+        this.importers = datastore.importers;
+        // the importers' models are already registered with the shared mapper; only their codecs are per datastore
+        importers.forEach(importer -> morphiaCodecProviders.add(importer.getCodecProvider(this)));
         codecRegistry = buildRegistry(mongoClient.getDatabase(mapper.getConfig().database()).getCodecRegistry());
         this.database = database.withCodecRegistry(codecRegistry);
     }

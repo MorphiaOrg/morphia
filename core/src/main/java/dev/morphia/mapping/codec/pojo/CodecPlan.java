@@ -69,7 +69,7 @@ public final class CodecPlan {
             entry(MorphiaDateCodec.class, mask(BsonType.DATE_TIME)));
 
     @SuppressWarnings("unchecked")
-    CodecPlan(EntityModel model) {
+    CodecPlan(EntityModel model, Codec<?>[] propertyCodecs) {
         this.model = model;
         List<PropertyModel> list = model.getProperties();
         properties = list.toArray(new PropertyModel[0]);
@@ -81,7 +81,7 @@ public final class CodecPlan {
                 throw new IllegalStateException("%s is in slot %d of %s but records slot %d".formatted(property.getName(), slot,
                         model.getType().getName(), property.slot()));
             }
-            codecs[slot] = (Codec<? super Object>) property.getCodec();
+            codecs[slot] = (Codec<? super Object>) propertyCodecs[slot];
             directBsonTypes[slot] = codecs[slot] != null ? DIRECT_BSON_TYPES.getOrDefault(codecs[slot].getClass(), 0) : 0;
         }
         PropertyModel idProperty = model.getIdProperty();

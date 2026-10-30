@@ -4,13 +4,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.mongodb.lang.Nullable;
+
 import dev.morphia.MorphiaDatastore;
+import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.DiscriminatorLookup;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.DecodeSession;
 import dev.morphia.mapping.codec.PropertyCodecRegistryImpl;
+import dev.morphia.mapping.codec.references.ReferenceCodec;
 import dev.morphia.sofia.Sofia;
 
 import org.bson.BsonReader;
@@ -72,6 +76,28 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
             List<PropertyCodecProvider> propertyCodecProviders,
             DiscriminatorLookup discriminatorLookup, CodecRegistry registry,
             Conversions conversions) {
+        this(datastore, model, propertyCodecProviders, discriminatorLookup, registry, conversions, null);
+    }
+
+    /**
+     * Creates a codec that encodes and decodes with an existing plan, typically another codec's for the same model, so
+     * the property codecs aren't resolved again.
+     *
+     * @param datastore
+     * @param model                  the model backing this codec
+     * @param propertyCodecProviders the codec provider for properties
+     * @param discriminatorLookup    the discriminator to type lookup
+     * @param registry               the codec registry for lookups
+     * @param conversions            the Conversions instance to use
+     * @param plan                   the plan to use, or null to build one for this codec
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public MorphiaCodec(MorphiaDatastore datastore, EntityModel model,
+            List<PropertyCodecProvider> propertyCodecProviders,
+            DiscriminatorLookup discriminatorLookup, CodecRegistry registry,
+            Conversions conversions, @Nullable CodecPlan plan) {
         this.datastore = datastore;
         this.discriminatorLookup = discriminatorLookup;
         this.conversions = conversions;
@@ -80,8 +106,11 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         this.registry = fromRegistries(fromCodecs(this), registry);
         this.propertyCodecRegistry = new PropertyCodecRegistryImpl(this, registry, propertyCodecProviders);
         idProperty = model.getIdProperty();
-        specializePropertyCodecs();
-        plan = new CodecPlan(model);
+        if (plan != null && plan.model() != model) {
+            throw new IllegalArgumentException("The plan is for %s, not %s".formatted(plan.model().getType().getName(),
+                    model.getType().getName()));
+        }
+        this.plan = plan != null ? plan : new CodecPlan(model, propertyCodecs(model));
     }
 
     @Override
@@ -265,17 +294,25 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
         return this;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    private void specializePropertyCodecs() {
-        EntityModel entityModel = getEntityModel();
-        for (PropertyModel propertyModel : entityModel.getProperties()) {
-            Codec<?> specializeCodec = propertyModel.specializeCodec(getDatastore());
-            Codec codec = specializeCodec != null ? specializeCodec
-                    : propertyCodecRegistry.get(propertyModel.getTypeData());
-            if (codec != null) {
-                propertyModel.codec(codec);
+    /**
+     * Resolves each property's codec against this codec's datastore. They live in the plan, never on the shared
+     * {@code PropertyModel}, so datastores and sessions sharing a mapper each get their own: a {@code ReferenceCodec}
+     * fetches through the datastore it was built for.
+     */
+    private Codec<?>[] propertyCodecs(EntityModel model) {
+        List<PropertyModel> properties = model.getProperties();
+        Codec<?>[] codecs = new Codec<?>[properties.size()];
+        for (int slot = 0; slot < codecs.length; slot++) {
+            PropertyModel property = properties.get(slot);
+            if (property.hasAnnotation(Reference.class)) {
+                codecs[slot] = new ReferenceCodec(datastore, property);
+            } else if (property.getTypeData().getTypeParameters().isEmpty()) {
+                codecs[slot] = datastore.getCodecRegistry().get(property.getType());
+            } else {
+                codecs[slot] = propertyCodecRegistry.get(property.getTypeData());
             }
         }
+        return codecs;
     }
 
 }

@@ -456,26 +456,22 @@ public class TestCritterMapper {
     }
 
     /**
-     * Phase 6.2: verify that the session-datastore copy pattern works.
-     * SessionDatastore calls super(datastore) → MorphiaDatastore(MorphiaDatastore) → mapper.copy().
-     * The copy must be a CritterMapper and must carry over already-mapped entities.
+     * {@code copy()} returns a CritterMapper that carries over already-mapped entities as models of its own. Sessions
+     * no longer copy the mapper (they share their datastore's), but the copy constructors still have callers.
      */
     @Test
-    public void testSessionDatastoreCopyPattern() {
+    public void testCopyPreservesMappedEntities() {
         CritterMapper original = mapper();
         EntityModel model = assertRuntimeGenerated(original.mapEntity(CritterMapperTestEntity.class));
 
-        // Simulate what new MorphiaDatastore(datastore) does — calls mapper.copy()
-        Mapper sessionMapper = original.copy();
+        Mapper copy = original.copy();
 
-        Assertions.assertTrue(sessionMapper instanceof CritterMapper,
-                "copy() must return a CritterMapper for the session datastore");
-        Assertions.assertTrue(sessionMapper.isMapped(CritterMapperTestEntity.class),
-                "Session copy must preserve already-mapped entities");
-        EntityModel sessionModel = sessionMapper.getEntityModel(CritterMapperTestEntity.class);
-        Assertions.assertNotNull(sessionModel, "Session copy must preserve already-mapped entities");
-        assertRuntimeGenerated(sessionModel);
-        Assertions.assertNotSame(sessionModel, model, "Session copy creates independent model instances for isolation");
+        Assertions.assertTrue(copy instanceof CritterMapper, "copy() must return a CritterMapper");
+        Assertions.assertTrue(copy.isMapped(CritterMapperTestEntity.class), "The copy must preserve already-mapped entities");
+        EntityModel copiedModel = copy.getEntityModel(CritterMapperTestEntity.class);
+        Assertions.assertNotNull(copiedModel, "The copy must preserve already-mapped entities");
+        assertRuntimeGenerated(copiedModel);
+        Assertions.assertNotSame(copiedModel, model, "The copy has model instances of its own");
     }
 
     /**

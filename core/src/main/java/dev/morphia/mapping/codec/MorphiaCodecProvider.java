@@ -15,6 +15,7 @@ import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.CodecPlan;
 import dev.morphia.mapping.codec.pojo.EntityDecoder;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.LifecycleDecoder;
@@ -96,7 +97,13 @@ public class MorphiaCodecProvider implements CodecProvider {
     @Nullable
     public <T> Codec<T> getRefreshCodec(T entity, CodecRegistry registry) {
         EntityModel model = mapper.getEntityModel(entity.getClass());
-        return new MorphiaCodec<>(datastore, model, propertyCodecProviders, mapper.getDiscriminatorLookup(), registry, conversions) {
+        // decode with the entity's regular plan, so the property codecs this datastore already resolved are reused. a
+        // subclass may provide some other codec for the entity; then the refresh codec builds a plan of its own
+        CodecPlan plan = get(model.getType(), registry) instanceof MorphiaCodec<?> regular && regular.getPlan().model() == model
+                ? regular.getPlan()
+                : null;
+        return new MorphiaCodec<>(datastore, model, propertyCodecProviders, mapper.getDiscriminatorLookup(), registry, conversions,
+                plan) {
             @Override
             protected EntityDecoder<T> getDecoder() {
                 return new EntityDecoder<>(this) {
