@@ -8,6 +8,7 @@ import dev.morphia.DatastoreImpl;
 
 import org.bson.BsonDocument;
 import org.bson.Document;
+import org.bson.RawBsonDocument;
 import org.bson.codecs.BsonDocumentCodec;
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
@@ -28,7 +29,10 @@ public class MorphiaMapCodecProvider implements CodecProvider {
     @Override
     @SuppressWarnings("unchecked")
     public <T> Codec<T> get(Class<T> clazz, List<Type> typeArguments, CodecRegistry registry) {
-        if (BsonDocument.class.isAssignableFrom(clazz)) {
+        if (RawBsonDocument.class.isAssignableFrom(clazz)) {
+            // the driver's codec keeps the raw bytes; session reads rely on that to decode after the driver returns them
+            return null;
+        } else if (BsonDocument.class.isAssignableFrom(clazz)) {
             return (Codec<T>) new BsonDocumentCodec(registry);
         } else if (Map.class.isAssignableFrom(clazz) && !Document.class.isAssignableFrom(clazz)) {
             Class valueType = typeArguments.size() == 2 ? (Class) typeArguments.get(1) : Object.class;
