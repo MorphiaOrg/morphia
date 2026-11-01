@@ -84,6 +84,32 @@ public class TestGlobalListeners {
 
     @ParameterizedTest
     @EnumSource(MapperType.class)
+    void typedMethodsSeeOnlyTheirEntities(MapperType mapperType) {
+        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
+            MorphiaDatastore datastore = datastore(client, config(mapperType).listeners(List.of(Recording.class)));
+            datastore.getMapper().map(Other.class, Holder.class);
+            Codec<Other> others = datastore.getCodecRegistry().get(Other.class);
+            Codec<Holder> holders = datastore.getCodecRegistry().get(Holder.class);
+
+            // Recording's methods take a Plain: an unrelated entity doesn't reach them
+            decode(others, encode(others, new Other()));
+            Assertions.assertEquals(List.of(), CALLS);
+
+            // a Plain held by another entity does
+            Holder holder = new Holder();
+            holder.plain = new Plain();
+            holder.plain.name = "held";
+            decode(holders, encode(holders, holder));
+            Assertions.assertEquals(List.of("prePersist:held", "postLoad:held:held:true"), CALLS);
+
+            var adapter = (dev.morphia.mapping.lifecycle.EntityListenerAdapter) datastore.getMapper().getGlobalListeners().get(0);
+            Assertions.assertTrue(adapter.hasCallback(PrePersist.class, Plain.class));
+            Assertions.assertFalse(adapter.hasCallback(PrePersist.class, Other.class));
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
     void copiesShareTheListeners(MapperType mapperType) {
         try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
             MorphiaDatastore datastore = datastore(client, config(mapperType).listeners(List.of(Recording.class)));
@@ -227,6 +253,19 @@ public class TestGlobalListeners {
         @Id
         ObjectId id;
         String name;
+    }
+
+    @Entity("global_listeners_other")
+    public static class Other {
+        @Id
+        ObjectId id;
+    }
+
+    @Entity("global_listeners_holder")
+    public static class Holder {
+        @Id
+        ObjectId id;
+        Plain plain;
     }
 
     /**

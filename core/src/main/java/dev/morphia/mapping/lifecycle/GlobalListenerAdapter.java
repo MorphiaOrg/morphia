@@ -27,6 +27,15 @@ public class GlobalListenerAdapter extends EntityListenerAdapter {
         getListener();
     }
 
+    /**
+     * A global listener sees every entity, so a method whose entity parameter names a narrower type is called only for
+     * entities of that type: {@code @PrePersist void audit(Auditable entity)} audits {@code Auditable} entities alone.
+     */
+    @Override
+    protected boolean filtersByEntityType() {
+        return true;
+    }
+
     @Override
     protected RuntimeException failure(Method method, Object entity, Exception e) {
         if (e instanceof InvocationTargetException invocation) {
