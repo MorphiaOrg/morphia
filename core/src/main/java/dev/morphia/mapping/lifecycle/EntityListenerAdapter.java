@@ -50,6 +50,40 @@ public class EntityListenerAdapter implements EntityListener<Object> {
     }
 
     /**
+     * @param type the lifecycle event annotation
+     * @return true if a lifecycle method for the event takes a {@code Document}
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public boolean usesDocument(@NonNull Class<? extends Annotation> type) {
+        for (Callback callback : callbacks.get(type)) {
+            if (callback.usesDocument()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param type       the lifecycle event annotation
+     * @param entityType the type of the entity the event is for
+     * @return true if a lifecycle method for the event that would be called for an entity of that type takes a
+     *         {@code Document}
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public boolean usesDocument(@NonNull Class<? extends Annotation> type, Class<?> entityType) {
+        for (Callback callback : callbacks.get(type)) {
+            if ((!filtersByEntityType() || callback.accepts(entityType)) && callback.usesDocument()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * @return true if any lifecycle method was found
      */
     boolean hasCallbacks() {
@@ -184,6 +218,15 @@ public class EntityListenerAdapter implements EntityListener<Object> {
                         : types[i].equals(Datastore.class) ? DATASTORE
                                 : ENTITY;
             }
+        }
+
+        boolean usesDocument() {
+            for (byte parameter : parameters) {
+                if (parameter == DOCUMENT) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /**

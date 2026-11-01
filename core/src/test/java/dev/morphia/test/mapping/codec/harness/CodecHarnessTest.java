@@ -91,6 +91,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -138,6 +139,11 @@ public class CodecHarnessTest {
     private static final DecoderContext DECODER = DecoderContext.builder().build();
     /** Critter can't generate models for array properties yet (game plan 4.8), so the whole entity uses reflection. */
     private static final Set<Class<?>> CRITTER_FALLBACKS = Set.of(HarnessArrays.class);
+    /**
+     * Cases a listener that takes the {@code Document} still reads differently: {@code DocumentReader} can't convert a
+     * string stored for a number, which the plain and streaming paths do.
+     */
+    private static final Set<String> DOCUMENT_PATH_DIVERGENCES = Set.of("foreign/scalars-schema-drift");
 
     private final MongoClient client = offlineClient();
 
@@ -173,6 +179,25 @@ public class CodecHarnessTest {
                     assertNotNull(expected, "no fixture for " + name + " in " + variant.file());
                     assertEquals(expected, reflection.get(name), "fixture " + variant.file());
                 }));
+            }
+            // a configured global listener for every event puts every entity on the lifecycle codecs, which must write and
+            // read exactly what the plain codecs do, whether they go through a Document or stream
+            for (GlobalListener listener : List.of(GlobalListener.DOCUMENT, GlobalListener.STREAMING)) {
+                for (MapperType mapper : MapperType.values()) {
+                    Map<String, Map<String, String>> listened = run(variant, mapper, listener);
+                    List<DynamicNode> listenedCases = new ArrayList<>();
+                    for (String name : reflection.keySet()) {
+                        if (listener == GlobalListener.DOCUMENT && DOCUMENT_PATH_DIVERGENCES.contains(name)) {
+                            // still diverges, so that the list can't go stale
+                            listenedCases.add(DynamicTest.dynamicTest(name, () -> assertNotEquals(reflection.get(name),
+                                    listened.get(name), name + " now reads the same through a Document; drop it from the list")));
+                        } else {
+                            listenedCases.add(DynamicTest.dynamicTest(name,
+                                    () -> assertEquals(reflection.get(name), listened.get(name), "with a global listener")));
+                        }
+                    }
+                    cases.add(DynamicContainer.dynamicContainer(listener + " listener, " + mapper, listenedCases));
+                }
             }
             cases.add(DynamicTest.dynamicTest("no stale fixtures",
                     () -> assertEquals(golden.keySet(), reflection.keySet(), "cases in " + variant.file())));
@@ -399,7 +424,11 @@ public class CodecHarnessTest {
      * @return case name → recorded results (encoding, round trip, or decoded foreign document) as canonical JSON
      */
     private Map<String, Map<String, String>> run(Variant variant, MapperType mapper) {
-        MorphiaDatastore datastore = datastore(variant, mapper);
+        return run(variant, mapper, GlobalListener.NONE);
+    }
+
+    private Map<String, Map<String, String>> run(Variant variant, MapperType mapper, GlobalListener listener) {
+        MorphiaDatastore datastore = datastore(variant, mapper, listener);
         if (mapper == MapperType.CRITTER) {
             assertCritterModels(datastore);
         }
@@ -498,6 +527,10 @@ public class CodecHarnessTest {
     }
 
     private MorphiaDatastore datastore(Variant variant, MapperType mapper) {
+        return datastore(variant, mapper, GlobalListener.NONE);
+    }
+
+    private MorphiaDatastore datastore(Variant variant, MapperType mapper, GlobalListener listener) {
         MorphiaConfig config = ManualMorphiaConfig.configure()
                 .database("codec_harness")
                 .mapper(mapper)
@@ -510,6 +543,9 @@ public class CodecHarnessTest {
                 .applyDocumentValidations(false)
                 .storeNulls(variant.storeNulls)
                 .storeEmpties(variant.storeEmpties);
+        if (listener.type != null) {
+            config = config.listeners(List.of(listener.type));
+        }
         return new MorphiaDatastore(client, config);
     }
 
@@ -582,6 +618,62 @@ public class CodecHarnessTest {
                 .applyToServerSettings(server -> server.heartbeatFrequency(1, TimeUnit.HOURS))
                 .applyToSocketSettings(socket -> socket.connectTimeout(100, TimeUnit.MILLISECONDS))
                 .build());
+    }
+
+    private enum GlobalListener {
+        NONE(null),
+        /** handles every event and takes the Document, so the lifecycle codecs build one */
+        DOCUMENT(TakesTheDocument.class),
+        /** handles every event without taking the Document, so the lifecycle codecs stream */
+        STREAMING(TakesTheEntity.class);
+
+        private final Class<?> type;
+
+        GlobalListener(Class<?> type) {
+            this.type = type;
+        }
+    }
+
+    /**
+     * A configured global listener that handles every lifecycle event with the Document, and does nothing.
+     */
+    public static class TakesTheDocument {
+        @PrePersist
+        void prePersist(Object entity, org.bson.Document document) {
+        }
+
+        @PostPersist
+        void postPersist(Object entity, org.bson.Document document) {
+        }
+
+        @PreLoad
+        void preLoad(Object entity, org.bson.Document document) {
+        }
+
+        @PostLoad
+        void postLoad(Object entity, org.bson.Document document) {
+        }
+    }
+
+    /**
+     * A configured global listener that handles every lifecycle event with the entity alone, and does nothing.
+     */
+    public static class TakesTheEntity {
+        @PrePersist
+        void prePersist(Object entity) {
+        }
+
+        @PostPersist
+        void postPersist(Object entity) {
+        }
+
+        @PreLoad
+        void preLoad(Object entity) {
+        }
+
+        @PostLoad
+        void postLoad(Object entity) {
+        }
     }
 
     private enum Variant {
