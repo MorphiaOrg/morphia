@@ -157,6 +157,16 @@ public class TestGlobalListeners {
     }
 
     @Test
+    void copiesMatchTheConfiguredNamesTrimmed() {
+        MorphiaConfig config = config(MapperType.REFLECTION);
+        ReflectiveMapper original = new ReflectiveMapper(withListenerNames(config, "  " + Recording.class.getName() + " "));
+
+        ReflectiveMapper copy = new ReflectiveMapper(original, config.listeners(List.of(Recording.class)));
+
+        Assertions.assertSame(original.getGlobalListeners(), copy.getGlobalListeners());
+    }
+
+    @Test
     void rejectsAnUnknownClass() {
         MorphiaConfig config = config(MapperType.REFLECTION);
         ManualMorphiaConfig named = ManualMorphiaConfig.configure(config);
