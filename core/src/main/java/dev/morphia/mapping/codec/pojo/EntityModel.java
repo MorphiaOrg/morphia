@@ -268,6 +268,9 @@ public class EntityModel {
                 invokeLifecycleEvent(event, entity, document, datastore, listener);
             }
         }
+        for (EntityListener<?> listener : datastore.getMapper().getGlobalListeners()) {
+            invokeLifecycleEvent(event, entity, document, datastore, listener);
+        }
         for (EntityListener<?> listener : datastore.getMapper().getListeners()) {
             // a global listener takes part only in the events it claims, the same ones that decide which codecs it
             // runs from

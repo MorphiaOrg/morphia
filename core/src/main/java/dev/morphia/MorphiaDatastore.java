@@ -929,6 +929,8 @@ public class MorphiaDatastore implements Datastore {
 
     public boolean hasLifecycle(EntityModel model, Class<? extends Annotation> type) {
         return model.hasLifecycle(type)
+                || mapper.getGlobalListeners().stream()
+                        .anyMatch(listener -> listener.hasAnnotation(type))
                 || mapper.getListeners().stream()
                         .anyMatch(listener -> listener.hasAnnotation(type));
     }

@@ -14,7 +14,14 @@ import jakarta.validation.Validation;
 import jakarta.validation.ValidatorFactory;
 
 /**
- * Enables jakarta.validation support.
+ * Enables jakarta.validation support: entities are validated before they're saved. To turn it on, list it as a global
+ * listener in the Morphia configuration:
+ *
+ * <pre>
+ * morphia.listeners = dev.morphia.validation.ValidationExtension
+ * </pre>
+ *
+ * or {@code MorphiaConfig.listeners(List.of(ValidationExtension.class))}.
  *
  * @since 2.3
  */
@@ -36,20 +43,26 @@ public class ValidationExtension implements EntityListener<Object> {
     }
 
     /**
-     * Validation looks at the entity only, so entities can be encoded without building a {@code Document}.
+     * Validates an entity before it's saved. It takes the entity alone, so entities can be encoded without building a
+     * {@code Document}.
+     *
+     * @param entity the entity
+     * @since 3.0
      */
-    @Override
-    public boolean usesDocument(@NonNull Class<? extends Annotation> type) {
-        return false;
-    }
-
-    @Override
     @PrePersist
     @SuppressWarnings("unchecked")
-    public void prePersist(Object ent, Document document, Object datastore) {
-        final Set validate = validationFactory.getValidator().validate(ent);
+    public void validate(Object entity) {
+        final Set validate = validationFactory.getValidator().validate(entity);
         if (!validate.isEmpty()) {
             throw new VerboseJSR303ConstraintViolationException(validate);
         }
+    }
+
+    /**
+     * Validates an entity when this extension is added with the deprecated {@code Mapper.addInterceptor}.
+     */
+    @Override
+    public void prePersist(Object ent, Document document, Object datastore) {
+        validate(ent);
     }
 }
