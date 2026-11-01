@@ -31,6 +31,8 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.mapping.conventions.MorphiaConvention;
+import dev.morphia.mapping.lifecycle.EntityListenerAdapter;
+import dev.morphia.mapping.lifecycle.GlobalListenerAdapter;
 import dev.morphia.mapping.validation.MappingValidator;
 import dev.morphia.sofia.Sofia;
 
@@ -70,6 +72,8 @@ public abstract class AbstractMapper implements Mapper {
     // thread can see them, so its recursive lookups resolve, while other threads wait on the lock for the outcome.
     private final Map<String, EntityModel> registering = new HashMap<>();
     protected final List<EntityListener<?>> listeners = new ArrayList<>();
+    // from MorphiaConfig.listeners(), fixed once the mapper exists
+    private final List<EntityListener<?>> globalListeners;
     protected final MorphiaConfig config;
     protected final DiscriminatorLookup discriminatorLookup;
     protected final ClassLoader classLoader;
@@ -101,10 +105,27 @@ public abstract class AbstractMapper implements Mapper {
      */
     @MorphiaInternal
     protected AbstractMapper(MorphiaConfig config, ClassLoader classLoader) {
+        this(config, classLoader, null);
+    }
+
+    /**
+     * Creates an AbstractMapper with the given config and classloader, for a copy of another mapper that builds its own
+     * entity models.
+     *
+     * @param config      the config to use
+     * @param classLoader the classloader to use for class and resource resolution
+     * @param original    the mapper being copied, whose global listeners the copy shares when the config names the same
+     *                    classes, or null
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    protected AbstractMapper(MorphiaConfig config, ClassLoader classLoader, @Nullable AbstractMapper original) {
         this.config = config;
         this.classLoader = classLoader;
         this.conversions = new Conversions(classLoader);
         this.discriminatorLookup = new DiscriminatorLookup(classLoader);
+        this.globalListeners = globalListeners(config, classLoader, original);
     }
 
     /**
@@ -137,6 +158,28 @@ public abstract class AbstractMapper implements Mapper {
         this.discriminatorLookup = new DiscriminatorLookup(other.classLoader);
         other.mappedEntities.values().forEach(this::clone);
         this.listeners.addAll(other.listeners);
+        this.globalListeners = globalListeners(config, other.classLoader, other);
+    }
+
+    /**
+     * A copy shares its original's global listeners when the config names the same classes: the same instances, with any
+     * state they keep, and without loading the classes again, which the copy's thread might not be able to.
+     */
+    private static List<EntityListener<?>> globalListeners(MorphiaConfig config, ClassLoader classLoader,
+            @Nullable AbstractMapper original) {
+        if (original != null && listenerNames(config).equals(listenerNames(original.config))) {
+            return original.globalListeners;
+        }
+        return loadGlobalListeners(config, classLoader);
+    }
+
+    /**
+     * @return the configured listener class names, trimmed: a config file may space them out
+     */
+    private static List<String> listenerNames(MorphiaConfig config) {
+        return config.listeners().orElse(List.of()).stream()
+                .map(String::trim)
+                .toList();
     }
 
     @Nullable
@@ -145,6 +188,40 @@ public abstract class AbstractMapper implements Mapper {
             return null;
         }
         return register(new EntityModel(original), false);
+    }
+
+    /**
+     * Creates the configured global listeners. Each class is wrapped the way an {@code @EntityListeners} class is, so its
+     * lifecycle methods are found by annotation and called with arguments matched by type. A class is looked up through
+     * the mapper's loader first, then the thread's context loader.
+     */
+    private static List<EntityListener<?>> loadGlobalListeners(MorphiaConfig config, ClassLoader classLoader) {
+        List<EntityListener<?>> loaded = new ArrayList<>();
+        for (String name : listenerNames(config)) {
+            Class<?> type = loadListenerClass(name, classLoader);
+            EntityListenerAdapter adapter = new GlobalListenerAdapter(type);
+            if (LIFECYCLE_ANNOTATIONS.stream().noneMatch(adapter::hasAnnotation)) {
+                throw new MappingException(Sofia.noLifecycleMethods(type.getName()));
+            }
+            loaded.add(adapter);
+        }
+        return List.copyOf(loaded);
+    }
+
+    private static Class<?> loadListenerClass(String name, ClassLoader classLoader) {
+        try {
+            return Class.forName(name, true, classLoader);
+        } catch (ClassNotFoundException e) {
+            ClassLoader context = Thread.currentThread().getContextClassLoader();
+            if (context != null && context != classLoader) {
+                try {
+                    return Class.forName(name, true, context);
+                } catch (ClassNotFoundException ignored) {
+                    // report the first failure
+                }
+            }
+            throw new MappingException(Sofia.listenerClassNotFound(name), e);
+        }
     }
 
     @Override
@@ -301,6 +378,12 @@ public abstract class AbstractMapper implements Mapper {
 
     @Override
     @MorphiaInternal
+    public List<EntityListener<?>> getGlobalListeners() {
+        return globalListeners;
+    }
+
+    @Override
+    @MorphiaInternal
     public List<EntityModel> getMappedEntities() {
         return new ArrayList<>(mappedEntities.values());
     }
@@ -327,7 +410,7 @@ public abstract class AbstractMapper implements Mapper {
     @Override
     @MorphiaInternal
     public boolean hasListeners() {
-        return !listeners.isEmpty();
+        return !globalListeners.isEmpty() || !listeners.isEmpty();
     }
 
     @Override

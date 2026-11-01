@@ -266,6 +266,9 @@ public class EntityModel {
                 invokeLifecycleEvent(event, entity, document, datastore, listener);
             }
         }
+        for (EntityListener<?> listener : datastore.getMapper().getGlobalListeners()) {
+            invokeLifecycleEvent(event, entity, document, datastore, listener);
+        }
         for (EntityListener<?> listener : datastore.getMapper().getListeners()) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug(Sofia.callingInterceptorMethod(event.getSimpleName(), listener));

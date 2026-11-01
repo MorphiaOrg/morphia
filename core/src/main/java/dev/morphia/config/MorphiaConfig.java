@@ -441,6 +441,38 @@ public interface MorphiaConfig {
     }
 
     /**
+     * A comma delimited list of global entity listener classes. Each one runs for every entity, as if every entity listed it in
+     * {@link dev.morphia.annotations.EntityListeners @EntityListeners}: Morphia calls its methods annotated with a lifecycle event
+     * annotation ({@code @PrePersist}, {@code @PostPersist}, {@code @PreLoad}, {@code @PostLoad}), and each class needs a no-argument
+     * constructor. A method's parameters are filled in by type: the entity, the {@code Document}, or the {@code Datastore}. A method is
+     * called only for entities its entity parameter accepts, so {@code @PrePersist void audit(Auditable entity)} sees {@code Auditable}
+     * entities alone; declare it {@code Object} to see every entity. Leave the {@code Document} out when a listener doesn't need it, so
+     * that Morphia can encode and decode without building one.
+     * <p>
+     * The listeners are read once, when the mapper is created. This replaces {@code Mapper.addInterceptor}.
+     *
+     * @return the class names of the global listeners
+     * @since 3.0
+     */
+    Optional<List<String>> listeners();
+
+    /**
+     * Updates this configuration with a new value and returns a new instance. The original instance is unchanged.
+     *
+     * @param value the global listener classes
+     * @return a new instance with the updated configuration
+     * @see #listeners()
+     * @since 3.0
+     */
+    default MorphiaConfig listeners(List<Class<?>> value) {
+        var newConfig = new ManualMorphiaConfig(this);
+        newConfig.listeners = value.stream()
+                .map(Class::getName)
+                .collect(java.util.stream.Collectors.toCollection(java.util.ArrayList::new));
+        return newConfig;
+    }
+
+    /**
      * A comma delimited list of packages that Morphia should map. If subpackages of a specific package should also be mapped, simply add
      * a '*' to the end of the package name. e.g., 'com.foo.bar.*'
      *
