@@ -137,6 +137,7 @@ public class CritterMapper extends AbstractMapper {
     @MorphiaInternal
     public CritterMapper(CritterMapper other, MorphiaConfig config) {
         super(config, other.classLoader);
+        shareGlobalListeners(other);
         this.runtimeModels = RuntimeModels.forCopy(other.runtimeModels, other.config, config, other.classLoader);
         this.generator = new CritterGenerator(this);
         this.fallbackTypes = other.fallbackTypes;

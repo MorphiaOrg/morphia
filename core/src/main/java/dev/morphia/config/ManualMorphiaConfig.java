@@ -50,6 +50,7 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     String discriminatorKey;
     Boolean enablePolymorphicQueries;
     Boolean ignoreFinals;
+    List<String> listeners;
     MapperType mapper;
     List<String> packages;
     PropertyDiscovery propertyDiscovery;
@@ -84,6 +85,7 @@ public class ManualMorphiaConfig implements MorphiaConfig {
         discriminatorKey = base.discriminatorKey();
         enablePolymorphicQueries = base.enablePolymorphicQueries();
         ignoreFinals = base.ignoreFinals();
+        listeners = base.listeners().map(ArrayList::new).orElse(null);
         mapper = base.mapper();
         packages = new ArrayList<>(base.packages());
         propertyAnnotationProviders = base.propertyAnnotationProviders().stream()
@@ -116,11 +118,11 @@ public class ManualMorphiaConfig implements MorphiaConfig {
         return ("MorphiaConfig{applyCaps=%s, applyDocumentValidations=%s, applyIndexes=%s, database='%s', codecProvider=%s, " +
                 "collectionNaming=%s, dateStorage=%s, decodeSessionCacheSize=%s, discriminator=%s, discriminatorKey='%s', " +
                 "enablePolymorphicQueries=%s, " +
-                "ignoreFinals=%s, mapper=%s, packages=%s, propertyDiscovery=%s, propertyNaming=%s, queryFactory=%s, " +
+                "ignoreFinals=%s, listeners=%s, mapper=%s, packages=%s, propertyDiscovery=%s, propertyNaming=%s, queryFactory=%s, " +
                 "storeEmpties=%s, storeNulls=%s}").formatted(
                         applyCaps(), applyDocumentValidations(), applyIndexes(), database(), codecProvider(), collectionNaming(),
                         dateStorage(), decodeSessionCacheSize(), discriminator(), discriminatorKey(), enablePolymorphicQueries(),
-                        ignoreFinals(), mapper(),
+                        ignoreFinals(), listeners(), mapper(),
                         packages(), propertyDiscovery(), propertyNaming(), queryFactory(), storeEmpties(), storeNulls());
     }
 
@@ -186,6 +188,11 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     @Override
     public MapperType mapper() {
         return orDefault(mapper, MapperType.REFLECTION);
+    }
+
+    @Override
+    public Optional<List<String>> listeners() {
+        return listeners == null || listeners.isEmpty() ? Optional.empty() : Optional.of(List.copyOf(listeners));
     }
 
     @Override

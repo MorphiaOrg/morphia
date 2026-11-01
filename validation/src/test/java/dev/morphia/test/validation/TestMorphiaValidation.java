@@ -1,5 +1,7 @@
 package dev.morphia.test.validation;
 
+import java.util.List;
+
 import dev.morphia.mapping.Mapper;
 import dev.morphia.test.TestBase;
 import dev.morphia.validation.ValidationExtension;
@@ -34,5 +36,24 @@ public class TestMorphiaValidation extends TestBase {
 
         data.email = "foo@bar.com";
         getDs().save(data);
+    }
+
+    @Test
+    public void testValidationAsConfiguredListener() {
+        withConfig(buildConfig(Data.class).listeners(List.of(ValidationExtension.class)), () -> {
+            final Data data = new Data();
+            data.email = "not an email";
+
+            try {
+                getDs().save(data);
+                Assertions.fail("Should have failed validation");
+            } catch (ValidationException exception) {
+                String message = exception.getMessage();
+                assertTrue(message.contains("Data.email:must be a well-formed email address ('not an email')"), message);
+            }
+
+            data.email = "foo@bar.com";
+            getDs().save(data);
+        });
     }
 }
