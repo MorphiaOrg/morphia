@@ -444,8 +444,10 @@ public interface MorphiaConfig {
      * A comma delimited list of global entity listener classes. Each one runs for every entity, as if every entity listed it in
      * {@link dev.morphia.annotations.EntityListeners @EntityListeners}: Morphia calls its methods annotated with a lifecycle event
      * annotation ({@code @PrePersist}, {@code @PostPersist}, {@code @PreLoad}, {@code @PostLoad}), and each class needs a no-argument
-     * constructor. A method's parameters are filled in by type: the entity, the {@code Document}, or the {@code Datastore}. Leave the
-     * {@code Document} out when a listener doesn't need it, so that Morphia can encode and decode without building one.
+     * constructor. A method's parameters are filled in by type: the entity, the {@code Document}, or the {@code Datastore}. A method is
+     * called only for entities its entity parameter accepts, so {@code @PrePersist void audit(Auditable entity)} sees {@code Auditable}
+     * entities alone; declare it {@code Object} to see every entity. Leave the {@code Document} out when a listener doesn't need it, so
+     * that Morphia can encode and decode without building one.
      * <p>
      * The listeners are read once, when the mapper is created. This replaces {@code Mapper.addInterceptor}.
      *

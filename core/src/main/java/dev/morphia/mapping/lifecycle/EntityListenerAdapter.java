@@ -66,6 +66,24 @@ public class EntityListenerAdapter implements EntityListener<Object> {
     }
 
     /**
+     * @param type       the lifecycle event annotation
+     * @param entityType the type of the entity the event is for
+     * @return true if a lifecycle method for the event that would be called for an entity of that type takes a
+     *         {@code Document}
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public boolean usesDocument(@NonNull Class<? extends Annotation> type, Class<?> entityType) {
+        for (Callback callback : callbacks.get(type)) {
+            if ((!filtersByEntityType() || callback.accepts(entityType)) && callback.usesDocument()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * @return true if any lifecycle method was found
      */
     boolean hasCallbacks() {
@@ -77,8 +95,36 @@ public class EntityListenerAdapter implements EntityListener<Object> {
         return false;
     }
 
+    /**
+     * @param type       the lifecycle event annotation
+     * @param entityType the type of the entity the event is for
+     * @return true if a lifecycle method for the event would be called for an entity of that type
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public boolean hasCallback(@NonNull Class<? extends Annotation> type, Class<?> entityType) {
+        for (Callback callback : callbacks.get(type)) {
+            if (!filtersByEntityType() || callback.accepts(entityType)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return true to call a lifecycle method only for entities its entity parameters accept. An {@code @EntityListeners}
+     *         class only ever sees its own entity, so this is false.
+     */
+    protected boolean filtersByEntityType() {
+        return false;
+    }
+
     void invoke(Class<? extends Annotation> annotation, Object entity, Document document, Object datastore) {
         for (Callback callback : callbacks.get(annotation)) {
+            if (filtersByEntityType() && !callback.accepts(entity.getClass())) {
+                continue;
+            }
             try {
                 callback.method.invoke(target(entity), callback.arguments(entity, document, datastore));
             } catch (IllegalArgumentException | ReflectiveOperationException e) {
@@ -160,11 +206,12 @@ public class EntityListenerAdapter implements EntityListener<Object> {
         private static final byte DATASTORE = 2;
 
         private final Method method;
+        private final Class<?>[] types;
         private final byte[] parameters;
 
         Callback(Method method) {
             this.method = method;
-            Class<?>[] types = method.getParameterTypes();
+            types = method.getParameterTypes();
             parameters = new byte[types.length];
             for (int i = 0; i < types.length; i++) {
                 parameters[i] = types[i].equals(Document.class) ? DOCUMENT
@@ -180,6 +227,18 @@ public class EntityListenerAdapter implements EntityListener<Object> {
                 }
             }
             return false;
+        }
+
+        /**
+         * @return true if every parameter that takes the entity accepts one of the type
+         */
+        boolean accepts(Class<?> entityType) {
+            for (int i = 0; i < parameters.length; i++) {
+                if (parameters[i] == ENTITY && !types[i].isAssignableFrom(entityType)) {
+                    return false;
+                }
+            }
+            return true;
         }
 
         Object[] arguments(Object entity, Document document, Object datastore) {
