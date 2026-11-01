@@ -106,6 +106,21 @@ public class TestLifecycleStreaming {
 
     @ParameterizedTest
     @EnumSource(MapperType.class)
+    void configuredListenersApplyToTheEntitiesTheyAccept(MapperType mapperType) {
+        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
+            // takes the Document, but only for a Plain
+            MorphiaConfig config = config(mapperType).listeners(List.of(LoadsTheDocument.class));
+            MorphiaDatastore datastore = datastore(client, config);
+
+            Assertions.assertTrue(((LifecycleDecoder<?>) codec(datastore, Plain.class).getDecoder()).needsDocument());
+            assertStreams(codec(datastore, Streamed.class), true, true);
+            Assertions.assertFalse(codec(datastore, Keyed.class).getDecoder() instanceof LifecycleDecoder,
+                    "no callback applies to a Keyed");
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
     void aListenerForPersistingLeavesDecodingAlone(MapperType mapperType) {
         try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
             MorphiaConfig config = config(mapperType).listeners(List.of(PersistsTheEntity.class));
