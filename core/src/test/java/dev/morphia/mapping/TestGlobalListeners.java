@@ -4,6 +4,10 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
@@ -102,6 +106,56 @@ public class TestGlobalListeners {
         }
     }
 
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    void createsEachListenerOnceUpFront(MapperType mapperType) throws Exception {
+        Counting.CREATED.set(0);
+        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
+            MorphiaDatastore datastore = datastore(client, config(mapperType).listeners(List.of(Counting.class)));
+            Assertions.assertEquals(1, Counting.CREATED.get(), "created with the mapper");
+            Codec<Plain> codec = datastore.getCodecRegistry().get(Plain.class);
+
+            ExecutorService executor = Executors.newFixedThreadPool(8);
+            try {
+                List<Future<byte[]>> encodes = new ArrayList<>();
+                for (int i = 0; i < 8; i++) {
+                    encodes.add(executor.submit(() -> encode(codec, new Plain())));
+                }
+                for (Future<byte[]> encode : encodes) {
+                    encode.get();
+                }
+            } finally {
+                executor.shutdownNow();
+            }
+            Assertions.assertEquals(1, Counting.CREATED.get(), "not again on first use");
+        }
+    }
+
+    @Test
+    void rejectsAClassWithoutANoArgumentConstructor() {
+        MappingException e = Assertions.assertThrows(MappingException.class,
+                () -> new ReflectiveMapper(config(MapperType.REFLECTION).listeners(List.of(NeedsArguments.class))));
+        Assertions.assertTrue(e.getMessage().contains(NeedsArguments.class.getName()), e.getMessage());
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    void copiesDoNotLoadTheClassesAgain(MapperType mapperType) {
+        // the mapper's own loader can't see the listener class; the context loader it was created under can
+        ClassLoader platform = ClassLoader.getPlatformClassLoader();
+        MorphiaConfig config = config(mapperType).listeners(List.of(Recording.class));
+        Mapper mapper = mapperType == MapperType.CRITTER ? new CritterMapper(config, platform) : new ReflectiveMapper(config, platform);
+
+        Thread thread = Thread.currentThread();
+        ClassLoader original = thread.getContextClassLoader();
+        try {
+            thread.setContextClassLoader(platform);
+            Assertions.assertSame(mapper.getGlobalListeners(), mapper.copy().getGlobalListeners());
+        } finally {
+            thread.setContextClassLoader(original);
+        }
+    }
+
     @Test
     void rejectsAnUnknownClass() {
         MorphiaConfig config = config(MapperType.REFLECTION);
@@ -190,6 +244,27 @@ public class TestGlobalListeners {
         @PrePersist
         void refuse(Object entity) {
             throw new IllegalStateException("refused");
+        }
+    }
+
+    public static class Counting {
+        static final AtomicInteger CREATED = new AtomicInteger();
+
+        public Counting() {
+            CREATED.incrementAndGet();
+        }
+
+        @PrePersist
+        void count(Object entity) {
+        }
+    }
+
+    public static class NeedsArguments {
+        public NeedsArguments(String argument) {
+        }
+
+        @PrePersist
+        void prePersist(Object entity) {
         }
     }
 
