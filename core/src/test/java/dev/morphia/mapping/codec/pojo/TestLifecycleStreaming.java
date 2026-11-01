@@ -201,6 +201,49 @@ public class TestLifecycleStreaming {
         }
     }
 
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    @SuppressWarnings({ "deprecation", "removal" })
+    void compositeIdsGetTheirLoadCallbacksOnce(MapperType mapperType) {
+        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
+            MorphiaDatastore datastore = datastore(client, mapperType);
+            List<String> calls = new ArrayList<>();
+            datastore.getMapper().addInterceptor(new EntityListener<Object>() {
+                @Override
+                public boolean hasAnnotation(Class<? extends Annotation> type) {
+                    return type == PreLoad.class || type == PostLoad.class;
+                }
+
+                @Override
+                public boolean usesDocument(Class<? extends Annotation> type) {
+                    return false;
+                }
+
+                @Override
+                public void preLoad(Object entity, Document document, Object store) {
+                    calls.add("PreLoad:" + entity.getClass().getSimpleName());
+                }
+
+                @Override
+                public void postLoad(Object entity, Document document, Object store) {
+                    calls.add("PostLoad:" + entity.getClass().getSimpleName());
+                }
+            });
+            MorphiaCodec<Keyed> codec = codec(datastore, Keyed.class);
+            Keyed entity = new Keyed();
+            entity.id = new CompositeKey();
+            entity.id.region = "eu";
+            entity.id.number = 7;
+
+            Keyed decoded = decode(codec, encode(codec, entity));
+
+            Assertions.assertEquals("eu", decoded.id.region);
+            // the id is decoded once, as a property, inside the entity's own callbacks
+            Assertions.assertEquals(List.of("PreLoad:Keyed", "PreLoad:CompositeKey", "PostLoad:CompositeKey", "PostLoad:Keyed"),
+                    calls);
+        }
+    }
+
     private static MorphiaDatastore datastore(MongoClient client, MapperType mapperType) {
         MorphiaDatastore datastore = new MorphiaDatastore(client, ManualMorphiaConfig.configure()
                 .database("lifecycle_streaming")
@@ -209,7 +252,7 @@ public class TestLifecycleStreaming {
                 .applyIndexes(false)
                 .applyCaps(false)
                 .applyDocumentValidations(false));
-        datastore.getMapper().map(Streamed.class, Documented.class, Plain.class, Constructed.class);
+        datastore.getMapper().map(Streamed.class, Documented.class, Plain.class, Constructed.class, Keyed.class, CompositeKey.class);
         return datastore;
     }
 
@@ -297,6 +340,21 @@ public class TestLifecycleStreaming {
             this.id = id;
             this.name = name;
         }
+    }
+
+    @Entity("lifecycle_keyed")
+    public static class Keyed {
+        @Id
+        CompositeKey id;
+    }
+
+    /**
+     * An id stored as a document with a discriminator, like {@code CustomId}.
+     */
+    @Entity
+    public static class CompositeKey {
+        String region;
+        int number;
     }
 
     @Entity("lifecycle_plain")

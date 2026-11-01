@@ -114,7 +114,9 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
         PropertyModel idProperty = model.getIdProperty();
         Object id = session == null || idProperty == null
                 ? null
-                : document != null ? document.get(idProperty.getMappedName()) : peekId(reader, model);
+                // a composite id isn't read ahead: decoding it would run its own load callbacks an extra time, before
+                // this entity's. the document path never keyed one the way references do either
+                : document != null ? document.get(idProperty.getMappedName()) : peekId(reader, model, false);
 
         // mirrors EntityDecoder: publish the instance before its properties are decoded so that reference cycles
         // through a lifecycle-aware entity terminate the same way they do for any other entity. a creator that needs
@@ -159,9 +161,9 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
                 }
             }
         }
-        if (!eager && id == null && session != null && idProperty != null) {
-            // as EntityDecoder does when no id could be read ahead: cache the entity under its mapped id. one read
-            // ahead was put in flight above and has been cached by complete()
+        if (id == null && session != null && idProperty != null) {
+            // as EntityDecoder does when no id could be read ahead: cache the entity under its mapped id, so later
+            // references to it reuse it. one read ahead was put in flight above and has been cached by complete()
             Object key = datastore.getMapper().getId(entity);
             if (key != null) {
                 session.register(model.collectionName(), key, entity);
