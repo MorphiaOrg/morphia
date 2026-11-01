@@ -60,9 +60,6 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     private final Map<Class<?>, Codec<?>> subtypeCodecs = new ConcurrentHashMap<>();
     private EntityEncoder<T> encoder;
     private EntityDecoder<T> decoder;
-    // used in place of the plain encoder and decoder once a global listener claims their events; built when first needed
-    private volatile EntityEncoder<T> lifecycleEncoder;
-    private volatile EntityDecoder<T> lifecycleDecoder;
     private MorphiaDatastore datastore;
 
     /**
@@ -118,52 +115,16 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
 
     @Override
     public T decode(BsonReader reader, DecoderContext decoderContext) {
-        EntityDecoder<T> decoder = decoder();
         if (DecodeSession.current() != null) {
-            return decoder.decode(reader, decoderContext);
+            return getDecoder().decode(reader, decoderContext);
         }
         return DecodeSession.forConfig(datastore.getMapper().getConfig())
-                .decoding(() -> decoder.decode(reader, decoderContext));
+                .decoding(() -> getDecoder().decode(reader, decoderContext));
     }
 
     @Override
     public void encode(BsonWriter writer, T value, EncoderContext encoderContext) {
-        encoder().encode(writer, value, encoderContext);
-    }
-
-    /**
-     * The encoder to use now. A codec built before a global listener for its events was added still runs that
-     * listener: the plain encoder hands over to a lifecycle one. Other encoders are left as they are.
-     */
-    private EntityEncoder<T> encoder() {
-        EntityEncoder<T> encoder = getEncoder();
-        if (encoder.getClass() == EntityEncoder.class && !datastore.getMapper().getListeners().isEmpty()
-                && LifecycleEncoder.isNeeded(entityModel, datastore.getMapper())) {
-            EntityEncoder<T> lifecycle = lifecycleEncoder;
-            if (lifecycle == null) {
-                lifecycle = new LifecycleEncoder<>(this);
-                lifecycleEncoder = lifecycle;
-            }
-            return lifecycle;
-        }
-        return encoder;
-    }
-
-    /**
-     * The decoder to use now; see {@link #encoder()}.
-     */
-    private EntityDecoder<T> decoder() {
-        EntityDecoder<T> decoder = getDecoder();
-        if (decoder.getClass() == EntityDecoder.class && !datastore.getMapper().getListeners().isEmpty()
-                && LifecycleDecoder.isNeeded(entityModel, datastore.getMapper())) {
-            EntityDecoder<T> lifecycle = lifecycleDecoder;
-            if (lifecycle == null) {
-                lifecycle = new LifecycleDecoder<>(this);
-                lifecycleDecoder = lifecycle;
-            }
-            return lifecycle;
-        }
-        return decoder;
+        getEncoder().encode(writer, value, encoderContext);
     }
 
     @Override

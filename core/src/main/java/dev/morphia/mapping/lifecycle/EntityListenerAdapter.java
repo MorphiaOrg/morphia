@@ -50,9 +50,12 @@ public class EntityListenerAdapter implements EntityListener<Object> {
     }
 
     /**
+     * @param type the lifecycle event annotation
      * @return true if a lifecycle method for the event takes a {@code Document}
+     * @hidden
+     * @morphia.internal
      */
-    @Override
+    @MorphiaInternal
     public boolean usesDocument(@NonNull Class<? extends Annotation> type) {
         for (Callback callback : callbacks.get(type)) {
             if (callback.usesDocument()) {

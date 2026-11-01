@@ -325,25 +325,15 @@ harness passes, and both mappers agree.
 - Build on 2.6.
 - Plan the removal of `addInterceptor`, which has been deprecated for removal since 2.4.0.
 - **Removal plan for `addInterceptor`**, as worked out in 4.2:
-  - Global listeners are still needed. `@EntityListeners`, which the deprecation points to, is per entity, and the
-    validation module's only documented setup is `mapper.addInterceptor(new ValidationExtension())`.
-  - So first, before 3.0 GA, add a supported way to register global listeners when the datastore is built. One
-    option is a `MorphiaConfig` setting that names listener classes. Another is `ServiceLoader` discovery of
-    `EntityListener`, with the validation module shipping a services file so that adding the dependency turns
-    validation on. This is a maintainer decision.
-  - Then remove `addInterceptor` in 3.0. Global listeners become fixed once the datastore exists, so the lifecycle
-    codecs can decide their path once instead of re-reading the listener list on every encode and decode, and the
-    `Mapper.getListeners()`/`hasListeners()` pair can become internal.
-
-### ~~4.3 Shared registration protocol in `AbstractMapper` (#18, A3/D7)~~
-- `synchronized final mapEntity` → `protected abstract buildModel(Class)`.
-- ~~Use `putIfAbsent`, and roll back with `remove(name, model)` when validation fails.~~ As implemented (#4390):
-  `register()` runs under the mapper's lock and keeps an in-progress model in a lock-guarded `registering` map
-  (visible only to the registering thread's recursive lookups). It publishes to `mappedEntities` only after
-  validation, discriminator registration and hierarchy linking succeed. On failure it unlinks the model from any
-  parents it was linked under while it was built. `DiscriminatorLookup.addModel` no longer overwrites on a duplicate.
-- **Fixes the §5 issues:** an invalid model staying registered, and duplicate-discriminator races.
-- Ship it early, possibly within Phase 2, because it is a correctness fix and small.
+  - Global listeners are still needed. `@EntityListeners`, which the deprecation pointed to, is per entity, and the
+    validation module's only setup was `mapper.addInterceptor(new ValidationExtension())`.
+  - ~~First, add a supported way to register global listeners.~~ Done in #4431: `morphia.listeners` names listener
+    classes, which the mapper loads once and scans like `@EntityListeners` classes, so their use of the `Document` is
+    visible in their signatures. `ValidationExtension` can be listed there.
+  - 4.2 streams for configured listeners and keeps `addInterceptor`'s behavior unchanged: any interceptor puts every
+    entity on the lifecycle codecs, it's called for every event, and it always gets a `Document`.
+  - Then remove `addInterceptor` in 3.0. That also removes the interceptor checks the lifecycle codecs make as they run,
+    and lets `Mapper.getListeners()`/`hasListeners()` go.
 
 ### 4.4 One generic-type resolver (#19, A6)
 - Bind `TypeVariable` to `Type` by identity along the superclass chain. Handle `ParameterizedType`,

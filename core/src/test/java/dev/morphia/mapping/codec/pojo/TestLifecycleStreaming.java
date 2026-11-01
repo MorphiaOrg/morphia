@@ -16,6 +16,7 @@ import dev.morphia.annotations.PostPersist;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.config.ManualMorphiaConfig;
+import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.MapperType;
 import dev.morphia.mapping.codec.DecodeSession;
 
@@ -29,22 +30,31 @@ import org.bson.codecs.EncoderContext;
 import org.bson.io.BasicOutputBuffer;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
 /**
  * Lifecycle callbacks get a {@code Document} only when one of them takes it; otherwise the entity is encoded and decoded
- * directly. A global listener takes part only in the events it claims.
+ * directly. An entity's own callbacks and the configured global listeners say so in their parameters, and a codec decides
+ * when it's built. Listeners added with the deprecated {@code addInterceptor} keep their old behavior.
  */
 public class TestLifecycleStreaming {
     private static final EncoderContext COLLECTIBLE = EncoderContext.builder().isEncodingCollectibleDocument(true).build();
     private static final DecoderContext DECODER = DecoderContext.builder().build();
+    static final List<Object> CALLS = new ArrayList<>();
+
+    @BeforeEach
+    void reset() {
+        CALLS.clear();
+    }
 
     @ParameterizedTest
     @EnumSource(MapperType.class)
     void callbacksWithoutADocumentStream(MapperType mapperType) {
         try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
-            MorphiaCodec<Streamed> codec = codec(datastore(client, mapperType), Streamed.class);
+            MorphiaCodec<Streamed> codec = codec(datastore(client, config(mapperType)), Streamed.class);
+            assertStreams(codec, true, true);
             Streamed entity = new Streamed();
             entity.name = "streamed";
 
@@ -63,7 +73,8 @@ public class TestLifecycleStreaming {
     @EnumSource(MapperType.class)
     void callbacksTakingADocumentGetOne(MapperType mapperType) {
         try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
-            MorphiaCodec<Documented> codec = codec(datastore(client, mapperType), Documented.class);
+            MorphiaCodec<Documented> codec = codec(datastore(client, config(mapperType)), Documented.class);
+            assertStreams(codec, false, false);
             Documented entity = new Documented();
             entity.name = "documented";
 
@@ -78,158 +89,99 @@ public class TestLifecycleStreaming {
 
     @ParameterizedTest
     @EnumSource(MapperType.class)
-    @SuppressWarnings({ "deprecation", "removal" })
-    void globalListenersRunOnlyForTheEventsTheyClaim(MapperType mapperType) {
+    void configuredListenersDecideByTheirParameters(MapperType mapperType) {
         try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
-            MorphiaDatastore datastore = datastore(client, mapperType);
-            Recording persisting = new Recording(PostPersist.class, false);
-            Recording loading = new Recording(PostLoad.class, true);
-            datastore.getMapper().addInterceptor(persisting);
-            datastore.getMapper().addInterceptor(loading);
-            MorphiaCodec<Plain> codec = codec(datastore, Plain.class);
-
-            Assertions.assertInstanceOf(LifecycleEncoder.class, codec.getEncoder());
-            Assertions.assertInstanceOf(LifecycleDecoder.class, codec.getDecoder());
+            MorphiaConfig config = config(mapperType).listeners(List.of(PersistsTheEntity.class, LoadsTheDocument.class));
+            MorphiaCodec<Plain> codec = codec(datastore(client, config), Plain.class);
+            // the persisting listener leaves the Document out, so encoding streams; the loading one takes it
+            assertStreams(codec, true, false);
 
             Plain entity = new Plain();
             entity.name = "plain";
-            BsonDocument encoded = encode(codec, entity);
-            decode(codec, encoded);
+            decode(codec, encode(codec, entity));
 
-            // each runs for its own event only. the one that doesn't use the document gets none: through a Document, @PostPersist
-            // would see the encoded name
-            Assertions.assertEquals(List.of("PostPersist:null"), persisting.calls);
-            Assertions.assertEquals(List.of("PostLoad:plain"), loading.calls);
+            Assertions.assertEquals(List.of("PostPersist:plain", "PostLoad:plain:plain"), CALLS);
         }
     }
 
     @ParameterizedTest
     @EnumSource(MapperType.class)
-    @SuppressWarnings({ "deprecation", "removal" })
     void aListenerForPersistingLeavesDecodingAlone(MapperType mapperType) {
         try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
-            MorphiaDatastore datastore = datastore(client, mapperType);
-            datastore.getMapper().addInterceptor(new Recording(PrePersist.class, false));
-            MorphiaCodec<Plain> codec = codec(datastore, Plain.class);
+            MorphiaConfig config = config(mapperType).listeners(List.of(PersistsTheEntity.class));
+            MorphiaCodec<Plain> codec = codec(datastore(client, config), Plain.class);
 
             Assertions.assertInstanceOf(LifecycleEncoder.class, codec.getEncoder());
-            Assertions.assertFalse(codec.getDecoder() instanceof LifecycleDecoder, "nothing claims a load event");
+            Assertions.assertFalse(codec.getDecoder() instanceof LifecycleDecoder, "nothing handles a load event");
         }
     }
 
     @ParameterizedTest
     @EnumSource(MapperType.class)
     @SuppressWarnings({ "deprecation", "removal" })
-    void listenersAddedAfterTheCodecIsBuiltStillRun(MapperType mapperType) {
+    void interceptorsKeepTheirBehavior(MapperType mapperType) {
         try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
-            // no listener at all when the codec is built
-            MorphiaDatastore datastore = datastore(client, mapperType);
+            MorphiaDatastore datastore = datastore(client, config(mapperType));
+            Interceptor interceptor = new Interceptor();
+            datastore.getMapper().addInterceptor(interceptor);
             MorphiaCodec<Plain> codec = codec(datastore, Plain.class);
+
+            // as before: any interceptor puts both directions on the lifecycle codecs, it's called for every event, and
+            // it always gets the document
+            Assertions.assertInstanceOf(LifecycleEncoder.class, codec.getEncoder());
+            Assertions.assertInstanceOf(LifecycleDecoder.class, codec.getDecoder());
             Plain entity = new Plain();
+            entity.name = "intercepted";
+            decode(codec, encode(codec, entity));
+
+            Assertions.assertEquals(List.of("PrePersist:null", "PostPersist:intercepted", "PreLoad:intercepted",
+                    "PostLoad:intercepted"), interceptor.calls);
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    @SuppressWarnings({ "deprecation", "removal" })
+    void anInterceptorAddedLaterStillGetsTheDocument(MapperType mapperType) {
+        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
+            MorphiaDatastore datastore = datastore(client, config(mapperType));
+            MorphiaCodec<Streamed> codec = codec(datastore, Streamed.class);
+            assertStreams(codec, true, true);
+            Streamed entity = new Streamed();
             entity.name = "late";
             decode(codec, encode(codec, entity));
 
-            Recording persisting = new Recording(PostPersist.class, false);
-            datastore.getMapper().addInterceptor(persisting);
-            BsonDocument encoded = encode(codec, entity);
-            decode(codec, encoded);
-            Assertions.assertEquals(List.of("PostPersist:null"), persisting.calls);
+            Interceptor interceptor = new Interceptor();
+            datastore.getMapper().addInterceptor(interceptor);
+            decode(codec, encode(codec, entity));
 
-            // a codec built while only a persist listener exists still runs a load listener added later
-            Recording loading = new Recording(PostLoad.class, true);
-            datastore.getMapper().addInterceptor(loading);
-            decode(codec, encoded);
-            Assertions.assertEquals(List.of("PostLoad:late"), loading.calls);
+            Assertions.assertEquals(List.of("PrePersist:null", "PostPersist:late", "PreLoad:late", "PostLoad:late"),
+                    interceptor.calls, "the codec goes through a Document while there's an interceptor");
         }
     }
 
     @ParameterizedTest
     @EnumSource(MapperType.class)
-    @SuppressWarnings({ "deprecation", "removal" })
-    void aPersistListenerAddedAfterALoadListenerStillRuns(MapperType mapperType) {
-        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
-            // the codec is built while only a load listener exists, as with validation registered after one
-            MorphiaDatastore datastore = datastore(client, mapperType);
-            Recording loading = new Recording(PostLoad.class, true);
-            datastore.getMapper().addInterceptor(loading);
-            MorphiaCodec<Plain> codec = codec(datastore, Plain.class);
-            Plain entity = new Plain();
-            entity.name = "reversed";
-            decode(codec, encode(codec, entity));
-
-            Recording persisting = new Recording(PostPersist.class, false);
-            datastore.getMapper().addInterceptor(persisting);
-            decode(codec, encode(codec, entity));
-
-            Assertions.assertEquals(List.of("PostPersist:null"), persisting.calls);
-            Assertions.assertEquals(List.of("PostLoad:reversed", "PostLoad:reversed"), loading.calls);
-        }
-    }
-
-    @ParameterizedTest
-    @EnumSource(MapperType.class)
-    @SuppressWarnings({ "deprecation", "removal" })
     void constructedEntitiesAreInTheSessionDuringTheirCallbacks(MapperType mapperType) {
         try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
-            MorphiaDatastore datastore = datastore(client, mapperType);
-            List<Object> found = new ArrayList<>();
-            datastore.getMapper().addInterceptor(new EntityListener<Object>() {
-                @Override
-                public boolean hasAnnotation(Class<? extends Annotation> type) {
-                    return type == PostLoad.class;
-                }
-
-                @Override
-                public boolean usesDocument(Class<? extends Annotation> type) {
-                    return false;
-                }
-
-                @Override
-                public void postLoad(Object entity, Document document, Object store) {
-                    // what a reference back to the entity would get
-                    found.add(DecodeSession.current().lookup("lifecycle_constructed", ((Constructed) entity).id));
-                }
-            });
-            MorphiaCodec<Constructed> codec = codec(datastore, Constructed.class);
+            MorphiaConfig config = config(mapperType).listeners(List.of(LooksUpConstructed.class));
+            MorphiaCodec<Constructed> codec = codec(datastore(client, config), Constructed.class);
             Constructed entity = new Constructed(new ObjectId(), "built");
 
             Constructed decoded = decode(codec, encode(codec, entity));
 
             Assertions.assertEquals("built", decoded.name);
-            Assertions.assertEquals(List.of(decoded), found);
-            Assertions.assertSame(decoded, found.get(0));
+            Assertions.assertEquals(1, CALLS.size());
+            Assertions.assertSame(decoded, CALLS.get(0));
         }
     }
 
     @ParameterizedTest
     @EnumSource(MapperType.class)
-    @SuppressWarnings({ "deprecation", "removal" })
     void compositeIdsGetTheirLoadCallbacksOnce(MapperType mapperType) {
         try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
-            MorphiaDatastore datastore = datastore(client, mapperType);
-            List<String> calls = new ArrayList<>();
-            datastore.getMapper().addInterceptor(new EntityListener<Object>() {
-                @Override
-                public boolean hasAnnotation(Class<? extends Annotation> type) {
-                    return type == PreLoad.class || type == PostLoad.class;
-                }
-
-                @Override
-                public boolean usesDocument(Class<? extends Annotation> type) {
-                    return false;
-                }
-
-                @Override
-                public void preLoad(Object entity, Document document, Object store) {
-                    calls.add("PreLoad:" + entity.getClass().getSimpleName());
-                }
-
-                @Override
-                public void postLoad(Object entity, Document document, Object store) {
-                    calls.add("PostLoad:" + entity.getClass().getSimpleName());
-                }
-            });
-            MorphiaCodec<Keyed> codec = codec(datastore, Keyed.class);
+            MorphiaConfig config = config(mapperType).listeners(List.of(RecordsLoads.class));
+            MorphiaCodec<Keyed> codec = codec(datastore(client, config), Keyed.class);
             Keyed entity = new Keyed();
             entity.id = new CompositeKey();
             entity.id.region = "eu";
@@ -240,18 +192,27 @@ public class TestLifecycleStreaming {
             Assertions.assertEquals("eu", decoded.id.region);
             // the id is decoded once, as a property, inside the entity's own callbacks
             Assertions.assertEquals(List.of("PreLoad:Keyed", "PreLoad:CompositeKey", "PostLoad:CompositeKey", "PostLoad:Keyed"),
-                    calls);
+                    CALLS);
         }
     }
 
-    private static MorphiaDatastore datastore(MongoClient client, MapperType mapperType) {
-        MorphiaDatastore datastore = new MorphiaDatastore(client, ManualMorphiaConfig.configure()
+    private static void assertStreams(MorphiaCodec<?> codec, boolean encoding, boolean decoding) {
+        Assertions.assertEquals(!encoding, ((LifecycleEncoder<?>) codec.getEncoder()).needsDocument(), "encoding streams");
+        Assertions.assertEquals(!decoding, ((LifecycleDecoder<?>) codec.getDecoder()).needsDocument(), "decoding streams");
+    }
+
+    private static MorphiaConfig config(MapperType mapperType) {
+        return ManualMorphiaConfig.configure()
                 .database("lifecycle_streaming")
                 .mapper(mapperType)
                 .packages(List.of())
                 .applyIndexes(false)
                 .applyCaps(false)
-                .applyDocumentValidations(false));
+                .applyDocumentValidations(false);
+    }
+
+    private static MorphiaDatastore datastore(MongoClient client, MorphiaConfig config) {
+        MorphiaDatastore datastore = new MorphiaDatastore(client, config);
         datastore.getMapper().map(Streamed.class, Documented.class, Plain.class, Constructed.class, Keyed.class, CompositeKey.class);
         return datastore;
     }
@@ -365,30 +326,64 @@ public class TestLifecycleStreaming {
     }
 
     /**
-     * Claims one event, and records each call with the document's {@code name} (or null without a document).
+     * A configured global listener for {@code @PostPersist} that leaves the Document out.
      */
-    private static class Recording implements EntityListener<Object> {
-        private final Class<? extends Annotation> event;
-        private final boolean usesDocument;
-        private final List<String> calls = new ArrayList<>();
-
-        Recording(Class<? extends Annotation> event, boolean usesDocument) {
-            this.event = event;
-            this.usesDocument = usesDocument;
+    public static class PersistsTheEntity {
+        @PostPersist
+        void postPersist(Plain entity) {
+            CALLS.add("PostPersist:" + entity.name);
         }
+    }
+
+    /**
+     * A configured global listener for {@code @PostLoad} that takes the Document.
+     */
+    public static class LoadsTheDocument {
+        @PostLoad
+        void postLoad(Plain entity, Document document) {
+            CALLS.add("PostLoad:" + entity.name + ":" + document.getString("name"));
+        }
+    }
+
+    /**
+     * Looks a constructed entity up in the session from its {@code @PostLoad}, as a reference back to it would.
+     */
+    public static class LooksUpConstructed {
+        @PostLoad
+        void postLoad(Constructed entity) {
+            CALLS.add(DecodeSession.current().lookup("lifecycle_constructed", entity.id));
+        }
+    }
+
+    /**
+     * Records the load events of every entity.
+     */
+    public static class RecordsLoads {
+        @PreLoad
+        void preLoad(Object entity) {
+            CALLS.add("PreLoad:" + entity.getClass().getSimpleName());
+        }
+
+        @PostLoad
+        void postLoad(Object entity) {
+            CALLS.add("PostLoad:" + entity.getClass().getSimpleName());
+        }
+    }
+
+    /**
+     * An interceptor, added with the deprecated {@code addInterceptor}, that claims only {@code @PrePersist} and records
+     * every call with the document's {@code name}.
+     */
+    private static class Interceptor implements EntityListener<Object> {
+        private final List<String> calls = new ArrayList<>();
 
         @Override
         public boolean hasAnnotation(Class<? extends Annotation> type) {
-            return event.equals(type);
-        }
-
-        @Override
-        public boolean usesDocument(Class<? extends Annotation> type) {
-            return usesDocument;
+            return type == PrePersist.class;
         }
 
         private void record(String name, Document document) {
-            calls.add(name + ":" + (document == null ? null : document.getString("name")));
+            calls.add(name + ":" + document.getString("name"));
         }
 
         @Override

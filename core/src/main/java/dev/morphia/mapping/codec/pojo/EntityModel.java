@@ -257,7 +257,7 @@ public class EntityModel {
      *
      * @param event     the event to run
      * @param entity    the entity to use
-     * @param document  the document used in persistence, or null when no listener for the event uses one
+     * @param document  the document used in persistence, or null when no listener for the event takes one
      * @param datastore the Datastore to use
      */
     @SuppressWarnings("rawtypes")
@@ -272,11 +272,6 @@ public class EntityModel {
             invokeLifecycleEvent(event, entity, document, datastore, listener);
         }
         for (EntityListener<?> listener : datastore.getMapper().getListeners()) {
-            // a global listener takes part only in the events it claims, the same ones that decide which codecs it
-            // runs from
-            if (!listener.hasAnnotation(event)) {
-                continue;
-            }
             if (LOG.isDebugEnabled()) {
                 LOG.debug(Sofia.callingInterceptorMethod(event.getSimpleName(), listener));
             }
@@ -645,7 +640,7 @@ public class EntityModel {
             for (EntityListener<?> listener : listeners) {
                 if (listener.hasAnnotation(event)) {
                     events |= 1 << i;
-                    if (listener.usesDocument(event)) {
+                    if (LifecycleEvents.usesDocument(listener, event)) {
                         documents |= 1 << i;
                     }
                 }

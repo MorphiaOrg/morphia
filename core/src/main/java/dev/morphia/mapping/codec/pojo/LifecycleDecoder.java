@@ -29,26 +29,39 @@ import static java.lang.String.format;
  */
 @MorphiaInternal
 public class LifecycleDecoder<T> extends EntityDecoder<T> {
+    // stands in for a discriminator that isn't stored as a string; compared by identity
+    private static final String NOT_A_STRING = new String("not a string");
+
+    // whether a callback of the entity, or a configured global listener, takes the Document; fixed once the mapper exists
+    private final boolean needsDocument;
+
     /**
      * creates the decoder
      *
      * @param codec the codec
      */
-    // stands in for a discriminator that isn't stored as a string; compared by identity
-    private static final String NOT_A_STRING = new String("not a string");
-
     public LifecycleDecoder(MorphiaCodec<T> codec) {
         super(codec);
+        needsDocument = LifecycleEvents.needDocument(codec.getEntityModel(), codec.getDatastore().getMapper(), PreLoad.class,
+                PostLoad.class);
     }
 
     /**
      * @param model  the entity's model
      * @param mapper the mapper
-     * @return true if decoding the entity runs callbacks: the model or a global listener handles {@code @PreLoad} or
-     *         {@code @PostLoad}
+     * @return true if decoding the entity runs callbacks: the model or a configured global listener handles
+     *         {@code @PreLoad} or {@code @PostLoad}, or there's any interceptor
      */
     public static boolean isNeeded(EntityModel model, Mapper mapper) {
         return LifecycleEvents.handles(model, mapper, PreLoad.class, PostLoad.class);
+    }
+
+    /**
+     * @return true if a callback of the entity or a configured global listener takes the {@code Document}, so this always
+     *         builds one; otherwise only while there's an interceptor
+     */
+    boolean needsDocument() {
+        return needsDocument;
     }
 
     @Override
@@ -56,8 +69,9 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
         EntityModel model = getMorphiaCodec().getEntityModel();
         CodecPlan plan = getMorphiaCodec().getPlan();
         Mapper mapper = getMorphiaCodec().getDatastore().getMapper();
-        if (LifecycleEvents.needDocument(model, mapper, PreLoad.class, PostLoad.class)) {
-            // a callback takes the document, whatever subtype it turns out to be
+        if (needsDocument || !mapper.getListeners().isEmpty()) {
+            // a callback takes the document, whatever subtype it turns out to be. an interceptor, even one added after
+            // this codec was built, always gets the document
             return decodeDocument(reader, decoderContext);
         }
         if (model.useDiscriminator()) {

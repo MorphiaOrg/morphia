@@ -3,7 +3,6 @@ package dev.morphia.test.mapping.codec.harness;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
-import java.lang.annotation.Annotation;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -28,7 +27,6 @@ import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
-import dev.morphia.EntityListener;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.PostLoad;
@@ -182,8 +180,8 @@ public class CodecHarnessTest {
                     assertEquals(expected, reflection.get(name), "fixture " + variant.file());
                 }));
             }
-            // a global listener puts every entity on the lifecycle codecs, which must write and read exactly what the
-            // plain codecs do, whether they go through a Document or stream
+            // a configured global listener for every event puts every entity on the lifecycle codecs, which must write and
+            // read exactly what the plain codecs do, whether they go through a Document or stream
             for (GlobalListener listener : List.of(GlobalListener.DOCUMENT, GlobalListener.STREAMING)) {
                 for (MapperType mapper : MapperType.values()) {
                     Map<String, Map<String, String>> listened = run(variant, mapper, listener);
@@ -429,13 +427,8 @@ public class CodecHarnessTest {
         return run(variant, mapper, GlobalListener.NONE);
     }
 
-    @SuppressWarnings({ "deprecation", "removal" })
     private Map<String, Map<String, String>> run(Variant variant, MapperType mapper, GlobalListener listener) {
-        MorphiaDatastore datastore = datastore(variant, mapper);
-        if (listener != GlobalListener.NONE) {
-            // before any codec is built, since a codec decides on the lifecycle path when it's created
-            datastore.getMapper().addInterceptor(new ClaimsEveryEvent(listener == GlobalListener.DOCUMENT));
-        }
+        MorphiaDatastore datastore = datastore(variant, mapper, listener);
         if (mapper == MapperType.CRITTER) {
             assertCritterModels(datastore);
         }
@@ -534,6 +527,10 @@ public class CodecHarnessTest {
     }
 
     private MorphiaDatastore datastore(Variant variant, MapperType mapper) {
+        return datastore(variant, mapper, GlobalListener.NONE);
+    }
+
+    private MorphiaDatastore datastore(Variant variant, MapperType mapper, GlobalListener listener) {
         MorphiaConfig config = ManualMorphiaConfig.configure()
                 .database("codec_harness")
                 .mapper(mapper)
@@ -546,6 +543,9 @@ public class CodecHarnessTest {
                 .applyDocumentValidations(false)
                 .storeNulls(variant.storeNulls)
                 .storeEmpties(variant.storeEmpties);
+        if (listener.type != null) {
+            config = config.listeners(List.of(listener.type));
+        }
         return new MorphiaDatastore(client, config);
     }
 
@@ -621,25 +621,58 @@ public class CodecHarnessTest {
     }
 
     private enum GlobalListener {
-        NONE,
-        /** claims every event and takes the Document, so the lifecycle codecs build one */
-        DOCUMENT,
-        /** claims every event without taking the Document, so the lifecycle codecs stream */
-        STREAMING
+        NONE(null),
+        /** handles every event and takes the Document, so the lifecycle codecs build one */
+        DOCUMENT(TakesTheDocument.class),
+        /** handles every event without taking the Document, so the lifecycle codecs stream */
+        STREAMING(TakesTheEntity.class);
+
+        private final Class<?> type;
+
+        GlobalListener(Class<?> type) {
+            this.type = type;
+        }
     }
 
     /**
-     * Claims every lifecycle event and does nothing for any of them.
+     * A configured global listener that handles every lifecycle event with the Document, and does nothing.
      */
-    private record ClaimsEveryEvent(boolean usesDocument) implements EntityListener<Object> {
-        @Override
-        public boolean hasAnnotation(Class<? extends Annotation> type) {
-            return true;
+    public static class TakesTheDocument {
+        @PrePersist
+        void prePersist(Object entity, org.bson.Document document) {
         }
 
-        @Override
-        public boolean usesDocument(Class<? extends Annotation> type) {
-            return usesDocument;
+        @PostPersist
+        void postPersist(Object entity, org.bson.Document document) {
+        }
+
+        @PreLoad
+        void preLoad(Object entity, org.bson.Document document) {
+        }
+
+        @PostLoad
+        void postLoad(Object entity, org.bson.Document document) {
+        }
+    }
+
+    /**
+     * A configured global listener that handles every lifecycle event with the entity alone, and does nothing.
+     */
+    public static class TakesTheEntity {
+        @PrePersist
+        void prePersist(Object entity) {
+        }
+
+        @PostPersist
+        void postPersist(Object entity) {
+        }
+
+        @PreLoad
+        void preLoad(Object entity) {
+        }
+
+        @PostLoad
+        void postLoad(Object entity) {
         }
     }
 
