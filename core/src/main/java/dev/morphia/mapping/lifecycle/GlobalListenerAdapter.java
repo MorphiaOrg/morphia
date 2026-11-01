@@ -7,8 +7,9 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
  * Adapts a global listener named in {@code MorphiaConfig.listeners()}. It's found and called like an
- * {@code @EntityListeners} class, but an exception its method throws reaches the caller as it is, as it did when such
- * listeners were added with {@code Mapper.addInterceptor}: a validation listener's {@code ValidationException}, say.
+ * {@code @EntityListeners} class, but its instance is created up front, and an exception its method throws reaches the
+ * caller as it is, as it did when such listeners were added with {@code Mapper.addInterceptor}: a validation listener's
+ * {@code ValidationException}, say.
  *
  * @hidden
  * @morphia.internal
@@ -21,6 +22,9 @@ public class GlobalListenerAdapter extends EntityListenerAdapter {
      */
     public GlobalListenerAdapter(Class<?> listenerType) {
         super(listenerType);
+        // created now, while the mapper is built, rather than on first use: concurrent first callbacks would otherwise
+        // race to create it, and a missing no-argument constructor fails here
+        getListener();
     }
 
     @Override
