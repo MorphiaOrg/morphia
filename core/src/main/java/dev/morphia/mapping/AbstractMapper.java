@@ -167,10 +167,19 @@ public abstract class AbstractMapper implements Mapper {
      */
     private static List<EntityListener<?>> globalListeners(MorphiaConfig config, ClassLoader classLoader,
             @Nullable AbstractMapper original) {
-        if (original != null && config.listeners().equals(original.config.listeners())) {
+        if (original != null && listenerNames(config).equals(listenerNames(original.config))) {
             return original.globalListeners;
         }
         return loadGlobalListeners(config, classLoader);
+    }
+
+    /**
+     * @return the configured listener class names, trimmed: a config file may space them out
+     */
+    private static List<String> listenerNames(MorphiaConfig config) {
+        return config.listeners().orElse(List.of()).stream()
+                .map(String::trim)
+                .toList();
     }
 
     @Nullable
@@ -188,8 +197,8 @@ public abstract class AbstractMapper implements Mapper {
      */
     private static List<EntityListener<?>> loadGlobalListeners(MorphiaConfig config, ClassLoader classLoader) {
         List<EntityListener<?>> loaded = new ArrayList<>();
-        for (String name : config.listeners().orElse(List.of())) {
-            Class<?> type = loadListenerClass(name.trim(), classLoader);
+        for (String name : listenerNames(config)) {
+            Class<?> type = loadListenerClass(name, classLoader);
             EntityListenerAdapter adapter = new GlobalListenerAdapter(type);
             if (LIFECYCLE_ANNOTATIONS.stream().noneMatch(adapter::hasAnnotation)) {
                 throw new MappingException(Sofia.noLifecycleMethods(type.getName()));
