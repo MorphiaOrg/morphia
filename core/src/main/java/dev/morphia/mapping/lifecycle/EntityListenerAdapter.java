@@ -35,14 +35,22 @@ import static dev.morphia.mapping.Mapper.LIFECYCLE_ANNOTATIONS;
 public class EntityListenerAdapter implements EntityListener<Object> {
     private final Map<Class<? extends Annotation>, List<Callback>> callbacks = new HashMap<>();
     private final Class<?> listenerType;
+    // whether it implements a per-event listener interface
+    private final boolean typed;
     private Object listener;
 
+    /**
+     * @param listenerType the {@code @EntityListeners} class or the entity
+     * @throws MappingException if it implements two listener interfaces for one event
+     */
     public EntityListenerAdapter(Class<?> listenerType) {
         for (Class<? extends Annotation> annotationClass : LIFECYCLE_ANNOTATIONS) {
             callbacks.put(annotationClass, new ArrayList<>());
         }
         mapAnnotationsToMethods(listenerType);
         this.listenerType = listenerType;
+        // checked here, when the entity is mapped: annotated methods would otherwise short-circuit every check
+        typed = TypedListeners.handlesAny(listenerType);
     }
 
     /**
@@ -76,7 +84,7 @@ public class EntityListenerAdapter implements EntityListener<Object> {
                 return true;
             }
         }
-        return TypedListeners.handlesAny(listenerType);
+        return typed;
     }
 
     /**

@@ -195,6 +195,43 @@ public class TestLifecycleStreaming {
 
             MorphiaDatastore datastore = new MorphiaDatastore(client, config(mapperType));
             Assertions.assertThrows(MappingException.class, () -> datastore.getMapper().map(PersistsTwice.class));
+            // annotated callbacks for every event don't hide it
+            Assertions.assertThrows(MappingException.class, () -> datastore.getMapper().map(AnnotatedAndLoadsTwice.class));
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    void aListenerForASubtypeLeavesItsSiblingsStreaming(MapperType mapperType) {
+        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
+            MorphiaDatastore datastore = datastore(client, config(mapperType).listeners(List.of(new LoadsCircles())));
+            MorphiaCodec<Shape> shapes = codec(datastore, Shape.class);
+            Assertions.assertFalse(((LifecycleDecoder<?>) shapes.getDecoder()).needsDocument(), "a Square needs no Document");
+            Circle circle = new Circle();
+            circle.name = "round";
+
+            decode(shapes, encode(shapes, new Square()));
+            Assertions.assertEquals(List.of(), CALLS);
+            Assertions.assertInstanceOf(Circle.class, decode(shapes, encode(shapes, circle)));
+            Assertions.assertEquals(List.of("Circle:round"), CALLS, "a Circle decoded as a Shape still gets the Document");
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    void documentIdsAreInTheSessionDuringTheirCallbacks(MapperType mapperType) {
+        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
+            MorphiaConfig config = config(mapperType).listeners(List.of(new LooksUpDocumentKeyed()));
+            MorphiaCodec<DocumentKeyed> codec = codec(datastore(client, config), DocumentKeyed.class);
+            Assertions.assertFalse(((LifecycleDecoder<?>) codec.getDecoder()).needsDocument());
+            DocumentKeyed entity = new DocumentKeyed();
+            entity.id = new Document("region", "eu").append("number", 7);
+
+            DocumentKeyed decoded = decode(codec, encode(codec, entity));
+
+            // an id that isn't an entity is read ahead, so a reference back to the entity finds it
+            Assertions.assertEquals(1, CALLS.size());
+            Assertions.assertSame(decoded, CALLS.get(0));
         }
     }
 
@@ -252,7 +289,7 @@ public class TestLifecycleStreaming {
     private static MorphiaDatastore datastore(MongoClient client, MorphiaConfig config) {
         MorphiaDatastore datastore = new MorphiaDatastore(client, config);
         datastore.getMapper().map(Streamed.class, Documented.class, Plain.class, Constructed.class, Keyed.class, CompositeKey.class,
-                SelfDocumenting.class);
+                SelfDocumenting.class, Shape.class, Circle.class, Square.class, DocumentKeyed.class);
         return datastore;
     }
 
@@ -363,6 +400,62 @@ public class TestLifecycleStreaming {
         }
     }
 
+    /**
+     * Has annotated callbacks for every event, which take the Document, and implements both interfaces for
+     * {@code @PostLoad}, which isn't allowed.
+     */
+    @Entity("lifecycle_annotated_twice")
+    public static class AnnotatedAndLoadsTwice implements PostLoadListener<AnnotatedAndLoadsTwice>,
+            PostLoadDocumentListener<AnnotatedAndLoadsTwice> {
+        @Id
+        ObjectId id;
+
+        @PrePersist
+        void prePersist(Document document) {
+        }
+
+        @PostPersist
+        void postPersist(Document document) {
+        }
+
+        @PreLoad
+        void preLoad(Document document) {
+        }
+
+        @PostLoad
+        void postLoad(Document document) {
+        }
+
+        @Override
+        public void postLoad(AnnotatedAndLoadsTwice entity, Datastore datastore) {
+        }
+
+        @Override
+        public void postLoad(AnnotatedAndLoadsTwice entity, Document document, Datastore datastore) {
+        }
+    }
+
+    @Entity("lifecycle_shapes")
+    public static class Shape {
+        @Id
+        ObjectId id;
+        String name;
+    }
+
+    @Entity("lifecycle_shapes")
+    public static class Circle extends Shape {
+    }
+
+    @Entity("lifecycle_shapes")
+    public static class Square extends Shape {
+    }
+
+    @Entity("lifecycle_document_keyed")
+    public static class DocumentKeyed {
+        @Id
+        Document id;
+    }
+
     @Entity("lifecycle_constructed")
     public static class Constructed {
         @Id
@@ -444,6 +537,26 @@ public class TestLifecycleStreaming {
 
         @Override
         public void postLoad(Object entity, Document document, Datastore datastore) {
+        }
+    }
+
+    /**
+     * Takes the Document for circles alone.
+     */
+    public static class LoadsCircles implements PostLoadDocumentListener<Circle> {
+        @Override
+        public void postLoad(Circle entity, Document document, Datastore datastore) {
+            CALLS.add("Circle:" + document.getString("name"));
+        }
+    }
+
+    /**
+     * Looks the entity up in the session by its id from its {@code @PostLoad}, as a reference back to it would.
+     */
+    public static class LooksUpDocumentKeyed implements PostLoadListener<DocumentKeyed> {
+        @Override
+        public void postLoad(DocumentKeyed entity, Datastore datastore) {
+            CALLS.add(DecodeSession.current().lookup("lifecycle_document_keyed", entity.id));
         }
     }
 

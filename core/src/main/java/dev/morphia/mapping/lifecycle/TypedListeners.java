@@ -97,12 +97,13 @@ public final class TypedListeners {
      * @param listenerType a listener class
      * @param event        the lifecycle event annotation
      * @param entityType   an entity type
-     * @return true if the class's method for the event takes the {@code Document} and may be called for entities of the
-     *         type or of one of its subtypes
+     * @return true if the class's method for the event takes the {@code Document} and accepts every entity of the type. One
+     *         that accepts only a subtype doesn't count: a codec checks the subtype's own needs once it knows the entity is
+     *         one
      */
     public static boolean usesDocument(Class<?> listenerType, Class<? extends Annotation> event, Class<?> entityType) {
         Handler handler = HANDLERS.get(listenerType).get(event);
-        return handler != null && handler.document() && handler.mayAccept(entityType);
+        return handler != null && handler.document() && handler.entityType().isAssignableFrom(entityType);
     }
 
     /**
