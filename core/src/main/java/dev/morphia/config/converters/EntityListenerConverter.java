@@ -46,6 +46,12 @@ public class EntityListenerConverter implements Converter<EntityListener<?>> {
             type = Class.forName(name, true, classLoader);
         } catch (ClassNotFoundException e) {
             throw new MappingException(Sofia.listenerClassNotFound(name), e);
+        } catch (LinkageError e) {
+            // loading initializes the class, so a failing static initializer surfaces here
+            Throwable failure = e instanceof ExceptionInInitializerError initializer && initializer.getCause() != null
+                    ? initializer.getCause()
+                    : e;
+            throw new MappingException(Sofia.listenerNotCreated(name, failure), e);
         }
         if (!EntityListener.class.isAssignableFrom(type)) {
             throw new MappingException(Sofia.notAnEntityListener(name));

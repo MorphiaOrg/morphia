@@ -171,6 +171,12 @@ public class TestGlobalListeners {
         Assertions.assertTrue(e.getMessage().contains(Failing.class.getName()), e.getMessage());
         Assertions.assertTrue(e.getMessage().contains("no configuration"), e.getMessage());
         Assertions.assertInstanceOf(IllegalStateException.class, e.getCause());
+
+        // so is a static initializer's, which loading the class runs
+        String failingStatic = FailingStatic.class.getName();
+        MappingException initializer = Assertions.assertThrows(MappingException.class, () -> converter.convert(failingStatic));
+        Assertions.assertTrue(initializer.getMessage().contains(failingStatic), initializer.getMessage());
+        Assertions.assertTrue(initializer.getMessage().contains("no static configuration"), initializer.getMessage());
     }
 
     private static MorphiaConfig config(MapperType mapperType) {
@@ -280,6 +286,18 @@ public class TestGlobalListeners {
     public static class Failing implements PrePersistListener<Object> {
         public Failing() {
             throw new IllegalStateException("no configuration");
+        }
+
+        @Override
+        public void prePersist(Object entity, Datastore datastore) {
+        }
+    }
+
+    public static class FailingStatic implements PrePersistListener<Object> {
+        static {
+            if (Boolean.TRUE) {
+                throw new IllegalStateException("no static configuration");
+            }
         }
 
         @Override

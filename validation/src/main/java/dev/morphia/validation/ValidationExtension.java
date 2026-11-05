@@ -16,7 +16,7 @@ import jakarta.validation.ValidatorFactory;
  * morphia.listeners = dev.morphia.validation.ValidationExtension
  * </pre>
  *
- * or {@code MorphiaConfig.listeners(List.of(new ValidationExtension()))}.
+ * or {@code config.listeners(List.of(new ValidationExtension()))} on a {@code MorphiaConfig}.
  *
  * @since 2.3
  */
