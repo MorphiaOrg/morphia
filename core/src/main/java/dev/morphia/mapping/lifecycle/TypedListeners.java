@@ -113,14 +113,7 @@ public final class TypedListeners {
         Map<TypeVariable<?>, Type> resolved = new HashMap<>();
         if (type instanceof ParameterizedType parameterized) {
             raw = (Class<?>) parameterized.getRawType();
-            TypeVariable<?>[] parameters = raw.getTypeParameters();
-            Type[] arguments = parameterized.getActualTypeArguments();
-            for (int i = 0; i < parameters.length; i++) {
-                Type argument = arguments[i];
-                resolved.put(parameters[i], argument instanceof TypeVariable<?> variable && bindings.containsKey(variable)
-                        ? bindings.get(variable)
-                        : argument);
-            }
+            bind(parameterized, bindings, resolved);
         } else if (type instanceof Class<?> c) {
             raw = c;
         } else {
@@ -137,6 +130,24 @@ public final class TypedListeners {
         }
         Type superclass = raw.getGenericSuperclass();
         return superclass != null ? typeArgument(superclass, eventInterface, resolved) : null;
+    }
+
+    /**
+     * Binds a parameterized type's type parameters to its arguments, and those of its enclosing types: an inner class of
+     * {@code Outer<Plain>} may implement {@code PrePersistListener<E>} with {@code Outer}'s {@code E}.
+     */
+    private static void bind(ParameterizedType type, Map<TypeVariable<?>, Type> bindings, Map<TypeVariable<?>, Type> resolved) {
+        if (type.getOwnerType() instanceof ParameterizedType owner) {
+            bind(owner, bindings, resolved);
+        }
+        TypeVariable<?>[] parameters = ((Class<?>) type.getRawType()).getTypeParameters();
+        Type[] arguments = type.getActualTypeArguments();
+        for (int i = 0; i < parameters.length; i++) {
+            Type argument = arguments[i];
+            resolved.put(parameters[i], argument instanceof TypeVariable<?> variable && bindings.containsKey(variable)
+                    ? bindings.get(variable)
+                    : argument);
+        }
     }
 
     private static Class<?> erase(Type type) {

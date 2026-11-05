@@ -165,6 +165,18 @@ public class TestTypedListeners {
         Assertions.assertEquals(List.of("plainOnly:typed"), CALLS);
     }
 
+    @Test
+    void findsTheEntityTypeThroughAnEnclosingType() {
+        PlainInner listener = new PlainInner(new Outer<>());
+
+        TypedListeners.invoke(listener, PrePersist.class, new Other(), new Document(), null);
+        Assertions.assertEquals(List.of(), CALLS);
+        Plain plain = new Plain();
+        plain.name = "inner";
+        TypedListeners.invoke(listener, PrePersist.class, plain, new Document(), null);
+        Assertions.assertEquals(List.of("inner:inner"), CALLS);
+    }
+
     private static MorphiaDatastore datastore(MongoClient client, MapperType mapperType) {
         MorphiaConfig config = ManualMorphiaConfig.configure()
                 .database("typed_listeners")
@@ -266,6 +278,25 @@ public class TestTypedListeners {
         @Override
         public void prePersist(Plain entity, Datastore datastore) {
             CALLS.add("plainOnly:" + entity.name);
+        }
+    }
+
+    public static class Outer<E> {
+        public abstract class Inner implements PrePersistListener<E> {
+        }
+    }
+
+    /**
+     * Takes its entity type from its enclosing type's argument.
+     */
+    public static class PlainInner extends Outer<Plain>.Inner {
+        PlainInner(Outer<Plain> outer) {
+            outer.super();
+        }
+
+        @Override
+        public void prePersist(Plain entity, Datastore datastore) {
+            CALLS.add("inner:" + entity.name);
         }
     }
 
