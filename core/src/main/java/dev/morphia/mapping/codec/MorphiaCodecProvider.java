@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import dev.morphia.mapping.codec.pojo.LifecycleDecoder;
 import dev.morphia.mapping.codec.pojo.LifecycleEncoder;
 import dev.morphia.mapping.codec.pojo.MorphiaCodec;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
+import dev.morphia.mapping.lifecycle.TypedListeners;
 
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
@@ -62,6 +64,24 @@ public class MorphiaCodecProvider implements CodecProvider {
         });
     }
 
+    /**
+     * @return true if the entity's own callbacks or a configured global listener handle one of the events for it, or there's
+     *         any interceptor, as before global listeners
+     */
+    @SafeVarargs
+    private boolean runsLifecycle(EntityModel model, Class<? extends Annotation>... events) {
+        if (!mapper.getListeners().isEmpty()) {
+            return true;
+        }
+        for (Class<? extends Annotation> event : events) {
+            if (model.hasLifecycle(event) || mapper.getGlobalListeners().stream()
+                    .anyMatch(listener -> TypedListeners.handles(listener.getClass(), event, model.getType()))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Nullable
     @Override
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -70,10 +90,12 @@ public class MorphiaCodecProvider implements CodecProvider {
         if (codec == null && (mapper.isMapped(type) || mapper.isMappable(type))) {
             EntityModel model = mapper.getEntityModel(type);
             codec = new MorphiaCodec<>(datastore, model, propertyCodecProviders, mapper.getDiscriminatorLookup(), registry, conversions);
-            if (model.hasLifecycle(PostPersist.class) || model.hasLifecycle(PrePersist.class) || mapper.hasListeners()) {
+            if (runsLifecycle(model, PrePersist.class, PostPersist.class)) {
                 codec.setEncoder(new LifecycleEncoder(codec));
             }
-            if (model.hasLifecycle(PreLoad.class) || model.hasLifecycle(PostLoad.class) || mapper.hasListeners()) {
+            // the lifecycle decoder creates the instance before decoding its properties, which a constructor-mapped
+            // entity can't survive, so use it only when something handles a load event for this entity
+            if (runsLifecycle(model, PreLoad.class, PostLoad.class)) {
                 codec.setDecoder(new LifecycleDecoder(codec));
             }
             // another thread may have built one meanwhile; keep the first so every caller shares it

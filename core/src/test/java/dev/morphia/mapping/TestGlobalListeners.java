@@ -124,6 +124,20 @@ public class TestGlobalListeners {
 
     @ParameterizedTest
     @EnumSource(MapperType.class)
+    void aPersistListenerLeavesConstructorMappedEntitiesReadable(MapperType mapperType) {
+        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
+            MorphiaDatastore datastore = datastore(client, config(mapperType).listeners(List.of(new Auditing())));
+            datastore.getMapper().map(Immutable.class);
+            Codec<Immutable> codec = datastore.getCodecRegistry().get(Immutable.class);
+
+            Immutable decoded = decode(codec, encode(codec, new Immutable(new ObjectId(), "kept")));
+
+            Assertions.assertEquals("kept", decoded.name);
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
     void copiesShareTheListeners(MapperType mapperType) {
         try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
             Recording recording = new Recording();
@@ -214,6 +228,18 @@ public class TestGlobalListeners {
         @Id
         ObjectId id;
         String name;
+    }
+
+    @Entity("global_listeners_immutable")
+    public static class Immutable {
+        @Id
+        final ObjectId id;
+        final String name;
+
+        public Immutable(ObjectId id, String name) {
+            this.id = id;
+            this.name = java.util.Objects.requireNonNull(name);
+        }
     }
 
     @Entity("global_listeners_other")
