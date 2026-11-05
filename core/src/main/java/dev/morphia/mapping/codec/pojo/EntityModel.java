@@ -627,7 +627,7 @@ public class EntityModel {
             for (EntityListenerAdapter listener : listeners) {
                 if (listener.handles(event)) {
                     events |= 1 << i;
-                    if (listener.usesDocument(event)) {
+                    if (listener.usesDocument(event, getType())) {
                         documents |= 1 << i;
                     }
                 }

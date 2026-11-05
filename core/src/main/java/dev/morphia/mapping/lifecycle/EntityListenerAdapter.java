@@ -62,17 +62,19 @@ public class EntityListenerAdapter implements EntityListener<Object> {
     }
 
     /**
-     * @param event the lifecycle event annotation
+     * @param event      the lifecycle event annotation
+     * @param entityType the type of the entity the listener is for
      * @return true if a method for the event takes the {@code Document}: an annotated method with a {@code Document}
-     *         parameter, or the event's listener interface's method
+     *         parameter, or the event's listener interface's method if it accepts every entity of the type. One that
+     *         accepts only a subtype doesn't count: a codec checks the subtype's own needs once it knows the entity is one
      */
-    public boolean usesDocument(@NonNull Class<? extends Annotation> event) {
+    public boolean usesDocument(@NonNull Class<? extends Annotation> event, Class<?> entityType) {
         for (Callback callback : callbacks.get(event)) {
             if (callback.usesDocument()) {
                 return true;
             }
         }
-        return TypedListeners.usesDocument(listenerType, event);
+        return TypedListeners.usesDocument(listenerType, event, entityType);
     }
 
     /**

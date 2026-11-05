@@ -428,6 +428,52 @@ class EntityListenerMigrationTest extends MorphiaRewriteTest {
     }
 
     @Test
+    void passingTheDocumentToAnotherSuperclassMethodIsAUse() {
+        rewriteRun(java(
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.EntityListener;
+                        import org.bson.Document;
+
+                        public class Base implements EntityListener<Object> {
+                            @Override
+                            public void postLoad(Object entity, Document document, Datastore datastore) {
+                                System.out.println(document.get("name"));
+                            }
+                        }
+
+                        class Child extends Base {
+                            @Override
+                            public void postPersist(Object entity, Document document, Datastore datastore) {
+                                super.postLoad(entity, document, datastore);
+                            }
+                        }
+                        """,
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.PostLoadDocumentListener;
+                        import dev.morphia.PostPersistDocumentListener;
+                        import org.bson.Document;
+
+                        public class Base implements PostLoadDocumentListener<Object> {
+                            @Override
+                            public void postLoad(Object entity, Document document, Datastore datastore) {
+                                System.out.println(document.get("name"));
+                            }
+                        }
+
+                        class Child extends Base implements PostPersistDocumentListener<Object> {
+                            @Override
+                            public void postPersist(Object entity, Document document, Datastore datastore) {
+                                super.postLoad(entity, document, datastore);
+                            }
+                        }
+                        """));
+    }
+
+    @Test
     void retypesAnUnusedMapperParameter() {
         rewriteRun(java(
                 //language=java

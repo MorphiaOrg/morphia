@@ -691,8 +691,12 @@ public class EntityListenerMigration extends ScanningRecipe<EntityListenerMigrat
         return method == null ? "" : method.getDeclaringType().getFullyQualifiedName() + "#" + method.getName();
     }
 
-    private static boolean toSuper(J.MethodInvocation invocation) {
-        return invocation.getSelect() instanceof J.Identifier select && select.getSimpleName().equals("super");
+    /**
+     * @return true if the call is to the superclass's version of the named method
+     */
+    private static boolean toSuper(J.MethodInvocation invocation, String name) {
+        return invocation.getSelect() instanceof J.Identifier select && select.getSimpleName().equals("super")
+                && invocation.getSimpleName().equals(name);
     }
 
     private static boolean marked(J method) {
@@ -709,12 +713,13 @@ public class EntityListenerMigration extends ScanningRecipe<EntityListenerMigrat
             @Override
             public J.MethodInvocation visitMethodInvocation(J.MethodInvocation invocation, AtomicBoolean used) {
                 // the Document passed on to another listener method is dropped along with that call's, unless that method
-                // may keep it. the overridden method's own may: the override is settled to match it
+                // may keep it. the overridden method may, but the override is settled to match it
                 JavaType.Method type = invocation.getMethodType();
                 JavaType.Method root = type == null ? null
                         : TypeUtils.isOfClassType(type.getDeclaringType(), ENTITY_LISTENER) ? type : root(type);
                 Event event = root != null ? EVENTS.get(root.getName()) : null;
-                if (event != null && !event.keepsDocument() && (event.documentListener() == null || toSuper(invocation))
+                if (event != null && !event.keepsDocument()
+                        && (event.documentListener() == null || toSuper(invocation, method.getSimpleName()))
                         && invocation.getArguments().size() == 3
                         && droppable(invocation.getArguments().get(1))) {
                     visit(invocation.getSelect(), used);

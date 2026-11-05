@@ -210,8 +210,8 @@ public class EntityDecoder<T> implements Decoder<T> {
      *
      * @param reader   the reader, positioned at the document
      * @param model    the model the document is decoded as, which must have an id property
-     * @param entities whether to read an id that decodes as an entity: one whose property type is an entity, or that's
-     *                 stored with a discriminator. Reading one runs that entity's load callbacks
+     * @param entities whether to read an id that decodes as an entity: one stored with a discriminator, which is how the
+     *                 id reader tells. Reading one runs that entity's load callbacks
      * @return the id, decoded the way references read theirs, or null if the document has none, it can't be read, or
      *         it's an entity and {@code entities} is false
      * @hidden
@@ -227,7 +227,7 @@ public class EntityDecoder<T> implements Decoder<T> {
             while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
                 String name = reader.readName();
                 if ("_id".equals(name) || name.equals(idName)) {
-                    if (!entities && reader.getCurrentBsonType() == BsonType.DOCUMENT && decodesAsEntity(reader, model)) {
+                    if (!entities && reader.getCurrentBsonType() == BsonType.DOCUMENT && decodesAsEntity(reader)) {
                         return null;
                     }
                     Codec<Object> codec = idKeyCodec;
@@ -252,13 +252,11 @@ public class EntityDecoder<T> implements Decoder<T> {
 
     /**
      * @param reader the reader, positioned at an id stored as a document, which it's left at
-     * @return true if the id decodes as an entity: its property's type is one, or it's stored with a discriminator, as an
-     *         {@code Object} id holding an entity is
+     * @return true if the id decodes as an entity: like {@code ObjectCodec}, which reads ids ahead, it's stored with the
+     *         discriminator key. One without it, such as an entity mapped with {@code useDiscriminator = false}, is read as
+     *         a plain {@code Document}
      */
-    private boolean decodesAsEntity(BsonReader reader, EntityModel model) {
-        if (morphiaCodec.getDatastore().getMapper().isMappable(model.getIdProperty().getType())) {
-            return true;
-        }
+    private boolean decodesAsEntity(BsonReader reader) {
         String discriminatorKey = morphiaCodec.getDatastore().getMapper().getConfig().discriminatorKey();
         BsonReaderMark mark = reader.getMark();
         try {

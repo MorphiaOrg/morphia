@@ -15,6 +15,7 @@ import dev.morphia.PostPersistDocumentListener;
 import dev.morphia.PostPersistListener;
 import dev.morphia.PreLoadListener;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.EntityListeners;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PostPersist;
@@ -342,6 +343,37 @@ public class TestLifecycleStreaming {
         }
     }
 
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    void aCompositeIdWithoutADiscriminatorIsInTheSessionDuringItsCallbacks(MapperType mapperType) {
+        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
+            MorphiaConfig config = config(mapperType).listeners(List.of(new LooksUpPlainKeyed()));
+            MorphiaCodec<PlainKeyed> codec = codec(datastore(client, config), PlainKeyed.class);
+            PlainKeyed entity = new PlainKeyed();
+            entity.id = new PlainKey();
+            entity.id.region = "eu";
+
+            PlainKeyed decoded = decode(codec, encode(codec, entity));
+
+            // stored without a discriminator, the id is read ahead as a Document, the way a reference reads it
+            Assertions.assertEquals(1, CALLS.size());
+            Assertions.assertSame(decoded, CALLS.get(0));
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    void anEntityListenersClassForASubtypeLeavesItsSiblingsStreaming(MapperType mapperType) {
+        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
+            MorphiaDatastore datastore = datastore(client, config(mapperType));
+            datastore.getMapper().map(Figure.class, Ring.class, Block.class);
+
+            Assertions.assertFalse(((LifecycleDecoder<?>) codec(datastore, Figure.class).getDecoder()).needsDocument());
+            Assertions.assertFalse(((LifecycleDecoder<?>) codec(datastore, Block.class).getDecoder()).needsDocument());
+            Assertions.assertTrue(((LifecycleDecoder<?>) codec(datastore, Ring.class).getDecoder()).needsDocument());
+        }
+    }
+
     private static void assertStreams(MorphiaCodec<?> codec, boolean encoding, boolean decoding) {
         Assertions.assertEquals(!encoding, ((LifecycleEncoder<?>) codec.getEncoder()).needsDocument(), "encoding streams");
         Assertions.assertEquals(!decoding, ((LifecycleDecoder<?>) codec.getDecoder()).needsDocument(), "decoding streams");
@@ -360,7 +392,8 @@ public class TestLifecycleStreaming {
     private static MorphiaDatastore datastore(MongoClient client, MorphiaConfig config) {
         MorphiaDatastore datastore = new MorphiaDatastore(client, config);
         datastore.getMapper().map(Streamed.class, Documented.class, Plain.class, Constructed.class, Keyed.class, CompositeKey.class,
-                SelfDocumenting.class, Shape.class, Circle.class, Square.class, DocumentKeyed.class, ObjectKeyed.class);
+                SelfDocumenting.class, Shape.class, Circle.class, Square.class, DocumentKeyed.class, ObjectKeyed.class, PlainKeyed.class,
+                PlainKey.class);
         return datastore;
     }
 
@@ -519,6 +552,51 @@ public class TestLifecycleStreaming {
 
     @Entity("lifecycle_shapes")
     public static class Square extends Shape {
+    }
+
+    @Entity("lifecycle_plain_keyed")
+    public static class PlainKeyed {
+        @Id
+        PlainKey id;
+    }
+
+    @Entity(useDiscriminator = false)
+    public static class PlainKey {
+        String region;
+    }
+
+    @Entity("lifecycle_figures")
+    @EntityListeners(LoadsRings.class)
+    public static class Figure {
+        @Id
+        ObjectId id;
+    }
+
+    @Entity("lifecycle_figures")
+    public static class Ring extends Figure {
+    }
+
+    @Entity("lifecycle_figures")
+    public static class Block extends Figure {
+    }
+
+    /**
+     * An {@code @EntityListeners} class that takes the Document for rings alone.
+     */
+    public static class LoadsRings implements PostLoadDocumentListener<Ring> {
+        @Override
+        public void postLoad(Ring entity, Document document, Datastore datastore) {
+        }
+    }
+
+    /**
+     * Looks the entity up in the session by its id, read the way a reference reads it.
+     */
+    public static class LooksUpPlainKeyed implements PostLoadListener<PlainKeyed> {
+        @Override
+        public void postLoad(PlainKeyed entity, Datastore datastore) {
+            CALLS.add(DecodeSession.current().lookup("lifecycle_plain_keyed", new Document("region", entity.id.region)));
+        }
     }
 
     @Entity("lifecycle_object_keyed")

@@ -85,17 +85,6 @@ public final class TypedListeners {
     /**
      * @param listenerType a listener class
      * @param event        the lifecycle event annotation
-     * @return true if the class's method for the event takes the {@code Document}: it implements {@link PreLoadListener},
-     *         {@link PostPersistDocumentListener} or {@link PostLoadDocumentListener} for the event
-     */
-    public static boolean usesDocument(Class<?> listenerType, Class<? extends Annotation> event) {
-        Handler handler = HANDLERS.get(listenerType).get(event);
-        return handler != null && handler.document();
-    }
-
-    /**
-     * @param listenerType a listener class
-     * @param event        the lifecycle event annotation
      * @param entityType   an entity type
      * @return true if the class's method for the event takes the {@code Document} and accepts every entity of the type. One
      *         that accepts only a subtype doesn't count: a codec checks the subtype's own needs once it knows the entity is
