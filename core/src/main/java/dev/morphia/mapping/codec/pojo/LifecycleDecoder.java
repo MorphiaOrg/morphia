@@ -28,9 +28,6 @@ import static java.lang.String.format;
  */
 @MorphiaInternal
 public class LifecycleDecoder<T> extends EntityDecoder<T> {
-    // stands in for a discriminator that isn't stored as a string; compared by identity
-    private static final String NOT_A_STRING = new String("not a string");
-
     // whether a listener of the entity, or a configured global listener, takes the Document; fixed once the mapper exists
     private final boolean needsDocument;
 
@@ -63,10 +60,6 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
         }
         if (model.useDiscriminator()) {
             String discriminator = peekDiscriminator(reader, model.discriminatorKey());
-            if (discriminator == NOT_A_STRING) {
-                // let the document path fail on it as it always has
-                return decodeDocument(reader, decoderContext);
-            }
             if (discriminator != null) {
                 MorphiaCodec<?> codec = codecFor(discriminator);
                 model = codec.getEntityModel();
@@ -91,7 +84,11 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
         EntityModel model = getMorphiaCodec().getEntityModel();
         CodecPlan plan = getMorphiaCodec().getPlan();
         if (model.useDiscriminator()) {
-            String discriminator = document.getString(model.discriminatorKey());
+            Object stored = document.get(model.discriminatorKey());
+            if (stored != null && !(stored instanceof String)) {
+                throw notAString(model.discriminatorKey(), stored.getClass().getSimpleName());
+            }
+            String discriminator = (String) stored;
             if (discriminator != null) {
                 MorphiaCodec<?> codec = codecFor(discriminator);
                 model = codec.getEntityModel();
@@ -187,9 +184,14 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
     }
 
     /**
-     * @return the document's discriminator, null if it has none, or {@link #NOT_A_STRING} if it isn't a string. The
-     *         reader is left where it was.
+     * @return the document's discriminator, or null if it has none. The reader is left where it was.
+     * @throws CodecConfigurationException if the discriminator isn't stored as a string
      */
+    private static CodecConfigurationException notAString(String discriminatorKey, Object storedAs) {
+        return new CodecConfigurationException(format("The discriminator '%s' must be stored as a string, not as %s.",
+                discriminatorKey, storedAs));
+    }
+
     @Nullable
     private static String peekDiscriminator(BsonReader reader, String discriminatorKey) {
         BsonReaderMark mark = reader.getMark();
@@ -197,7 +199,10 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
             reader.readStartDocument();
             while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
                 if (discriminatorKey.equals(reader.readName())) {
-                    return reader.getCurrentBsonType() == BsonType.STRING ? reader.readString() : NOT_A_STRING;
+                    if (reader.getCurrentBsonType() != BsonType.STRING) {
+                        throw notAString(discriminatorKey, reader.getCurrentBsonType());
+                    }
+                    return reader.readString();
                 }
                 reader.skipValue();
             }

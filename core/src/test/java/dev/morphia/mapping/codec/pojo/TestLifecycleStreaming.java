@@ -7,6 +7,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
 import dev.morphia.Datastore;
+import dev.morphia.EntityListener;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.PostLoadDocumentListener;
 import dev.morphia.PostLoadListener;
@@ -32,6 +33,7 @@ import org.bson.Document;
 import org.bson.RawBsonDocument;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
+import org.bson.codecs.configuration.CodecConfigurationException;
 import org.bson.io.BasicOutputBuffer;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
@@ -214,6 +216,24 @@ public class TestLifecycleStreaming {
             Assertions.assertEquals(List.of(), CALLS);
             Assertions.assertInstanceOf(Circle.class, decode(shapes, encode(shapes, circle)));
             Assertions.assertEquals(List.of("Circle:round"), CALLS, "a Circle decoded as a Shape still gets the Document");
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    void aDiscriminatorThatIsNotAStringIsRejected(MapperType mapperType) {
+        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
+            BsonDocument stored = BsonDocument.parse("{ _id: { $oid: '%s' }, _t: 5, name: 'odd' }".formatted(new ObjectId()));
+            // streaming, and through a Document
+            for (EntityListener<?> listener : List.<EntityListener<?>> of(new RecordsLoads(), new LoadsAnyDocument())) {
+                MorphiaConfig config = config(mapperType).listeners(List.of(listener));
+                MorphiaCodec<Shape> shapes = codec(datastore(client, config), Shape.class);
+                Assertions.assertInstanceOf(LifecycleDecoder.class, shapes.getDecoder());
+
+                CodecConfigurationException e = Assertions.assertThrows(CodecConfigurationException.class,
+                        () -> decode(shapes, stored));
+                Assertions.assertTrue(e.getMessage().startsWith("The discriminator '_t' must be stored as a string"), e.getMessage());
+            }
         }
     }
 
@@ -535,6 +555,15 @@ public class TestLifecycleStreaming {
         public void postLoad(Object entity, Datastore datastore) {
         }
 
+        @Override
+        public void postLoad(Object entity, Document document, Datastore datastore) {
+        }
+    }
+
+    /**
+     * Takes the Document for every entity.
+     */
+    public static class LoadsAnyDocument implements PostLoadDocumentListener<Object> {
         @Override
         public void postLoad(Object entity, Document document, Datastore datastore) {
         }
