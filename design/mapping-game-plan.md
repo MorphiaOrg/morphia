@@ -326,6 +326,20 @@ harness passes, and both mappers agree.
 - Plan the removal of `addInterceptor`, which has been deprecated for removal since 2.4.0.
 - Prerequisites: #4432 (`EntityListener` becomes a marker; per-event listener interfaces show whether a listener
   takes a `Document`) and #4431 (global listeners configured with `MorphiaConfig.listeners()`).
+- Opt-in `Document` listeners, as the streaming path's escape hatch: `PostLoadDocumentListener<T>`
+  (`postLoad(T, Document, Datastore)`) and `PostPersistDocumentListener<T>` (`postPersist(T, Document, Datastore)`).
+  - A separate single-method interface per event, not a `DocumentAware` marker plus overloads. A marker restates what
+    the override already says, the old `hasAnnotation` duplication: overriding the overload without the marker never
+    calls it, silently. It also covers a whole class rather than one event, and it forces a choice of which overload
+    is abstract, which breaks lambdas or allows a listener that implements nothing.
+  - Dispatch and the per-codec `needsDocument*` flags check for these interfaces per event, like the others. A class
+    may implement only one of each pair for an event; the mapper rejects both at registration.
+  - `PostLoad`: the only way to read unmapped fields, or compare the entity with the raw document, after decoding.
+  - `PostPersist`: `LifecycleEncoder` runs it on the fully encoded `Document` before writing it, so it's the hook for
+    adding fields or signing encoded content.
+  - None for `PrePersist`, whose `Document` is still empty (encoding hasn't happened), so a `PostPersist` listener
+    covers it. `PreLoad` already takes the `Document`. The lifecycle docs' `DigitalSigner` signs at `@PrePersist`, so
+    it signs an empty document: fix that example in the listener docs update that follows #4431.
 
 ### ~~4.3 Shared registration protocol in `AbstractMapper` (#18, A3/D7)~~
 - `synchronized final mapEntity` → `protected abstract buildModel(Class)`.
