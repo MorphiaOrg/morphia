@@ -150,7 +150,11 @@ public class AnnotatedListenerMethodMigration extends ScanningRecipe<AnnotatedLi
             }
             Map<Event, List<J.MethodDeclaration>> methods = annotatedMethods(result);
             if (methods.isEmpty()) {
-                return result;
+                String annotated = annotatedSuperclass(type);
+                return annotated == null ? result
+                        : SearchResult.found(result, ("inherits annotated lifecycle methods from %s, "
+                                + "which isn't a listener, and only an entity's own annotated methods are called now: implement the "
+                                + "per-event listener interfaces by hand").formatted(annotated));
             }
             String inherited = listenerSuperclass(type);
             if (inherited != null) {
@@ -192,13 +196,16 @@ public class AnnotatedListenerMethodMigration extends ScanningRecipe<AnnotatedLi
                 J.MethodDeclaration existing = declared(result, event.method(), arity);
                 // either of the event's interfaces, or a method that implements one: a class may implement only one of them
                 J.MethodDeclaration other = declared(result, event.method(), document ? 2 : 3);
-                if (existing == null && (other != null || implementsEvent(result, event))) {
+                if (existing == null && (other != null || implementsEvent(result, type, event, null))
+                        || existing != null && implementsEvent(result, type, event, listener)) {
                     calls.forEach(call -> problems.put(call.method(), ("the class already implements %s() for this event, so this "
                             + "method can't be called from %s's: call it from there by hand").formatted(event.method(), listener)));
                     continue;
                 }
                 if (existing != null) {
                     if (calls.size() == 1 && calls.get(0).method() == existing && existing.hasModifier(J.Modifier.Type.Public)
+                            && existing.getMethodType() != null
+                            && existing.getMethodType().getReturnType() == JavaType.Primitive.Void
                             && calls.get(0).code().equals("%s(entity, %sdatastore)".formatted(event.method(),
                                     document ? "document, " : ""))
                             && TypeUtils.isOfType(existing.getMethodType().getParameterTypes().get(0), entityType)) {
@@ -288,16 +295,34 @@ public class AnnotatedListenerMethodMigration extends ScanningRecipe<AnnotatedLi
         }
 
         /**
+         * @return the first superclass that declares an annotated lifecycle method and isn't a listener this recipe migrates,
+         *         or null
+         */
+        private @Nullable String annotatedSuperclass(JavaType.FullyQualified type) {
+            for (JavaType.FullyQualified parent = type.getSupertype(); parent != null
+                    && !parent.getFullyQualifiedName().equals("java.lang.Object"); parent = parent.getSupertype()) {
+                if (declaresAnnotated(parent) && !accumulator.listed.contains(parent.getFullyQualifiedName())
+                        && !TypeUtils.isAssignableTo(ENTITY_LISTENER, parent)) {
+                    return parent.getFullyQualifiedName();
+                }
+            }
+            return null;
+        }
+
+        private boolean declaresAnnotated(JavaType.FullyQualified type) {
+            return accumulator.annotated.contains(type.getFullyQualifiedName())
+                    || type.getMethods().stream().anyMatch(method -> method.getAnnotations().stream()
+                            .anyMatch(annotation -> EVENTS.containsKey(annotation.getFullyQualifiedName())));
+        }
+
+        /**
          * @return the first superclass that declares an annotated lifecycle method or is a listener, whose methods a generated
          *         one would override or leave uncalled; or null
          */
         private @Nullable String listenerSuperclass(JavaType.FullyQualified type) {
             for (JavaType.FullyQualified parent = type.getSupertype(); parent != null
                     && !parent.getFullyQualifiedName().equals("java.lang.Object"); parent = parent.getSupertype()) {
-                if (accumulator.annotated.contains(parent.getFullyQualifiedName())
-                        || TypeUtils.isAssignableTo(ENTITY_LISTENER, parent)
-                        || parent.getMethods().stream().anyMatch(method -> method.getAnnotations().stream()
-                                .anyMatch(annotation -> EVENTS.containsKey(annotation.getFullyQualifiedName())))) {
+                if (declaresAnnotated(parent) || TypeUtils.isAssignableTo(ENTITY_LISTENER, parent)) {
                     return parent.getFullyQualifiedName();
                 }
             }
@@ -397,7 +422,8 @@ public class AnnotatedListenerMethodMigration extends ScanningRecipe<AnnotatedLi
                     arguments.add("new Document()");
                 }
             } else if (accepts(parameter, entityType)) {
-                arguments.add("entity");
+                // cast to the parameter's type, so an overload taking the entity's own type isn't called instead
+                arguments.add(TypeUtils.isOfType(parameter, entityType) ? "entity" : "(%s) entity".formatted(name(parameter)));
             } else {
                 return Call.problem(method, ("%s's method can't pass its %s entity to this method's %s parameter: call it from "
                         + "there by hand").formatted(event.listener(), name(entityType), name(parameter)));
@@ -429,10 +455,19 @@ public class AnnotatedListenerMethodMigration extends ScanningRecipe<AnnotatedLi
         return null;
     }
 
-    private static boolean implementsEvent(J.ClassDeclaration classDecl, Event event) {
-        return classDecl.getImplements() != null && classDecl.getImplements().stream().anyMatch(type -> Stream
-                .of(event.listener(), event.documentListener())
-                .anyMatch(listener -> listener != null && TypeUtils.isOfClassType(type.getType(), "dev.morphia." + listener)));
+    /**
+     * @param except an interface to leave out, or null
+     * @return true if the class implements one of the event's interfaces, directly, through a subinterface or a superclass,
+     *         or as rewritten by an earlier recipe in this run
+     */
+    private static boolean implementsEvent(J.ClassDeclaration classDecl, JavaType.FullyQualified type, Event event,
+            @Nullable String except) {
+        return Stream.of(event.listener(), event.documentListener())
+                .filter(listener -> listener != null && !listener.equals(except))
+                .map(listener -> "dev.morphia." + listener)
+                .anyMatch(listener -> TypeUtils.isAssignableTo(listener, type) || classDecl.getImplements() != null
+                        && classDecl.getImplements().stream().anyMatch(implemented -> TypeUtils.isAssignableTo(listener,
+                                implemented.getType())));
     }
 
     private static boolean isEntity(J.ClassDeclaration classDecl) {

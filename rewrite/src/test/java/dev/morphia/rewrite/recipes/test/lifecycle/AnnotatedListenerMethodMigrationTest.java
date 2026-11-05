@@ -642,4 +642,175 @@ class AnnotatedListenerMethodMigrationTest extends MorphiaRewriteTest {
                                 }
                                 """));
     }
+
+    @Test
+    void doesNotReuseAMethodThatReturnsAValue() {
+        rewriteRun(java(ORDER),
+                java(
+                        //language=java
+                        """
+                                package app;
+
+                                import dev.morphia.Datastore;
+                                import dev.morphia.annotations.PostLoad;
+
+                                public class Stamping {
+                                    @PostLoad
+                                    public int postLoad(Order order, Datastore datastore) {
+                                        return 1;
+                                    }
+                                }
+                                """,
+                        //language=java
+                        """
+                                package app;
+
+                                import dev.morphia.Datastore;
+                                import dev.morphia.annotations.PostLoad;
+
+                                public class Stamping {
+                                    /*~~(the class already declares postLoad() with 2 parameters, so this method can't be called from PostLoadListener's: call it from there by hand)~~>*/@PostLoad
+                                    public int postLoad(Order order, Datastore datastore) {
+                                        return 1;
+                                    }
+                                }
+                                """));
+    }
+
+    @Test
+    void flagsAListenerThatOnlyInheritsAnnotatedMethods() {
+        rewriteRun(java(ORDER),
+                java(
+                        //language=java
+                        """
+                                package app;
+
+                                import dev.morphia.annotations.PrePersist;
+
+                                public class Base {
+                                    @PrePersist
+                                    void stamp() {
+                                    }
+                                }
+                                """),
+                java(
+                        //language=java
+                        """
+                                package app;
+
+                                public class Stamping extends Base {
+                                }
+                                """,
+                        //language=java
+                        """
+                                package app;
+
+                                /*~~(inherits annotated lifecycle methods from app.Base, which isn't a listener, and only an entity's own annotated methods are called now: implement the per-event listener interfaces by hand)~~>*/public class Stamping extends Base {
+                                }
+                                """));
+    }
+
+    @Test
+    void doesNotReuseAMethodWhenTheClassImplementsTheOtherInterface() {
+        rewriteRun(spec -> spec.recipes(new EntityListenerMigration(), new AnnotatedListenerMethodMigration()),
+                java(ORDER),
+                java(
+                        //language=java
+                        """
+                                package app;
+
+                                import dev.morphia.Datastore;
+                                import dev.morphia.EntityListener;
+                                import dev.morphia.annotations.PostLoad;
+                                import org.bson.Document;
+
+                                public class Stamping implements EntityListener<Order> {
+                                    @Override
+                                    public boolean hasAnnotation(Class<? extends java.lang.annotation.Annotation> type) {
+                                        return true;
+                                    }
+
+                                    @Override
+                                    public void postLoad(Order entity, Document document, Datastore datastore) {
+                                        System.out.println(document);
+                                    }
+
+                                    @PostLoad
+                                    public void postLoad(Order order, Datastore datastore) {
+                                    }
+                                }
+                                """,
+                        //language=java
+                        """
+                                package app;
+
+                                import dev.morphia.Datastore;
+                                import dev.morphia.PostLoadDocumentListener;
+                                import dev.morphia.annotations.PostLoad;
+                                import org.bson.Document;
+
+                                public class Stamping implements PostLoadDocumentListener<Order> {
+                                    @Override
+                                    public void postLoad(Order entity, Document document, Datastore datastore) {
+                                        System.out.println(document);
+                                    }
+
+                                    /*~~(the class already implements postLoad() for this event, so this method can't be called from PostLoadListener's: call it from there by hand)~~>*/@PostLoad
+                                    public void postLoad(Order order, Datastore datastore) {
+                                    }
+                                }
+                                """));
+    }
+
+    @Test
+    void castsTheEntityToKeepTheAnnotatedOverload() {
+        rewriteRun(java(ORDER),
+                java(
+                        //language=java
+                        """
+                                package app;
+
+                                import dev.morphia.EntityListener;
+                                import dev.morphia.annotations.PostLoad;
+
+                                public class Stamping implements EntityListener<Order> {
+                                    @PostLoad
+                                    void touch(Object entity) {
+                                    }
+
+                                    void touch(Order order) {
+                                    }
+
+                                    @Override
+                                    public boolean hasAnnotation(Class<? extends java.lang.annotation.Annotation> type) {
+                                        return false;
+                                    }
+                                }
+                                """,
+                        //language=java
+                        """
+                                package app;
+
+                                import dev.morphia.Datastore;
+                                import dev.morphia.PostLoadListener;
+
+                                public class Stamping implements PostLoadListener<Order> {
+                                    void touch(Object entity) {
+                                    }
+
+                                    void touch(Order order) {
+                                    }
+
+                                    @Override
+                                    public boolean hasAnnotation(Class<? extends java.lang.annotation.Annotation> type) {
+                                        return false;
+                                    }
+
+                                    @Override
+                                    public void postLoad(Order entity, Datastore datastore) {
+                                        touch((Object) entity);
+                                    }
+                                }
+                                """));
+    }
 }
