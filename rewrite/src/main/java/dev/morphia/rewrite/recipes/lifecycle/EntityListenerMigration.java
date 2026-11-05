@@ -1,6 +1,7 @@
 package dev.morphia.rewrite.recipes.lifecycle;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -146,7 +147,11 @@ public class EntityListenerMigration extends Recipe {
             if (plan.problem() != null) {
                 return SearchResult.found(result, plan.problem());
             }
-            if (plan.needsInterface()) {
+            // a superclass's override supplies the interface only if it migrates; one in another file may, so it's added anyway
+            boolean needsInterface = plan.needsInterface() || TypeUtils.findOverriddenMethod(method.getMethodType())
+                    .map(overridden -> !migrated.contains(key(overridden)))
+                    .orElse(false);
+            if (needsInterface) {
                 Cursor owner = getCursor().dropParentUntil(tree -> tree instanceof J.ClassDeclaration || tree instanceof J.NewClass);
                 Map<Event, TypeTree> listeners = owner.computeMessageIfAbsent(LISTENERS, key -> new LinkedHashMap<>());
                 listeners.put(plan.event(), ((J.VariableDeclarations) method.getParameters().get(0)).getTypeExpression());
@@ -180,6 +185,14 @@ public class EntityListenerMigration extends Recipe {
             }
             if (!replaced) {
                 // the class inherits EntityListener: it adds the interfaces of the events no superclass migrates
+                JavaType inheritedArgument = listenerArgument(classDecl.getType(), Map.of(), new HashSet<>());
+                TypeTree argument = typeTree(inheritedArgument);
+                if (argument != null) {
+                    listeners.replaceAll((event, entityType) -> argument);
+                    if (inheritedArgument instanceof JavaType.Class c) {
+                        maybeAddImport(c.getFullyQualifiedName());
+                    }
+                }
                 types.addAll(listenerTypes(listeners, Space.SINGLE_SPACE));
             }
             addImports(listeners);
@@ -224,19 +237,13 @@ public class EntityListenerMigration extends Recipe {
 
         private J.NewClass emptyMarker(J.Lambda lambda) {
             JavaType.ShallowClass marker = JavaType.ShallowClass.build(ENTITY_LISTENER);
+            maybeAddImport(ENTITY_LISTENER, false);
             J.Identifier name = new J.Identifier(Tree.randomId(), Space.EMPTY, Markers.EMPTY, List.of(), "EntityListener", marker, null);
-            JavaType argument = lambda.getType() instanceof JavaType.Parameterized parameterized
-                    && parameterized.getTypeParameters().size() == 1
-                    && parameterized.getTypeParameters().get(0) instanceof JavaType.FullyQualified fullyQualified
-                            ? fullyQualified
-                            : JavaType.ShallowClass.build("java.lang.Object");
-            String argumentName = ((JavaType.FullyQualified) argument).getClassName();
-            maybeAddImport(((JavaType.FullyQualified) argument).getFullyQualifiedName(), false);
-            J.Identifier argumentTree = new J.Identifier(Tree.randomId(), Space.EMPTY, Markers.EMPTY, List.of(), argumentName, argument,
-                    null);
+            // a diamond, so Java infers the type argument from the target, whatever it is
             J.ParameterizedType clazz = new J.ParameterizedType(Tree.randomId(), Space.SINGLE_SPACE, Markers.EMPTY, name,
-                    JContainer.build(Space.EMPTY, List.of(JRightPadded.build(argumentTree)), Markers.EMPTY),
-                    new JavaType.Parameterized(null, marker, List.of(argument)));
+                    JContainer.build(Space.EMPTY, List.of(JRightPadded.build(new J.Empty(Tree.randomId(), Space.EMPTY, Markers.EMPTY))),
+                            Markers.EMPTY),
+                    marker);
             J.Block body = new J.Block(Tree.randomId(), Space.SINGLE_SPACE, Markers.EMPTY, JRightPadded.build(false), List.of(),
                     Space.EMPTY);
             return new J.NewClass(Tree.randomId(), lambda.getPrefix(), Markers.EMPTY, null, Space.EMPTY, clazz,
@@ -259,7 +266,8 @@ public class EntityListenerMigration extends Recipe {
         public J.MethodInvocation visitMethodInvocation(J.MethodInvocation method, ExecutionContext ctx) {
             J.MethodInvocation result = super.visitMethodInvocation(method, ctx);
             JavaType.Method type = method.getMethodType();
-            if (type == null) {
+            if (type == null || method.getMarkers().findFirst(SearchResult.class).isPresent()) {
+                // already marked for a person to look at
                 return result;
             }
             boolean throughMarker = TypeUtils.isOfClassType(type.getDeclaringType(), ENTITY_LISTENER);
@@ -284,6 +292,10 @@ public class EntityListenerMigration extends Recipe {
             }
             if (event.keepsDocument()) {
                 return result;
+            }
+            if (!droppable(arguments.get(1))) {
+                return SearchResult.found(result, "%s's method takes no Document, and dropping this argument would drop what it does"
+                        .formatted(event.listener()));
             }
             List<Expression> updated = new ArrayList<>(result.getArguments());
             updated.remove(1);
@@ -427,15 +439,15 @@ public class EntityListenerMigration extends Recipe {
         }
         Set<String> declared = new HashSet<>();
         classDecl.getBody().getStatements().forEach(statement -> {
-            if (statement instanceof J.MethodDeclaration method) {
-                declared.add(method.getSimpleName());
+            if (statement instanceof J.MethodDeclaration method && method.getMethodType() != null) {
+                declared.add(signature(method.getMethodType()));
             }
         });
         List<String> inherited = new ArrayList<>();
         for (JavaType.FullyQualified parent = type.getSupertype(); parent != null
                 && !TypeUtils.isAssignableTo(ENTITY_LISTENER, parent); parent = parent.getSupertype()) {
             for (JavaType.Method method : parent.getMethods()) {
-                if (EVENTS.containsKey(method.getName()) && !declared.contains(method.getName())
+                if (EVENTS.containsKey(method.getName()) && !declared.contains(signature(method))
                         && method.getParameterTypes().size() == 3
                         && TypeUtils.isOfClassType(method.getParameterTypes().get(1), DOCUMENT)) {
                     inherited.add(parent.getClassName() + "." + method.getName());
@@ -503,6 +515,76 @@ public class EntityListenerMigration extends Recipe {
         return find(type.getSupertype(), seen);
     }
 
+    /**
+     * @return the method's name and erased parameter types
+     */
+    private static String signature(JavaType.Method method) {
+        return method.getName() + method.getParameterTypes().stream()
+                .map(EntityListenerMigration::erasure)
+                .toList();
+    }
+
+    /**
+     * @return true if dropping the argument loses nothing: it's a plain name, such as a forwarded parameter, or a literal
+     */
+    private static boolean droppable(Expression argument) {
+        return argument instanceof J.Identifier || argument instanceof J.Literal;
+    }
+
+    /**
+     * Resolves the {@code EntityListener} type argument a type inherits, substituting type variables along the way: for
+     * {@code Listener<T> implements Audit<T>} and {@code Audit<A> extends EntityListener<A>}, it's {@code Listener}'s {@code T}.
+     */
+    private static @Nullable JavaType listenerArgument(@Nullable JavaType type, Map<String, JavaType> bindings, Set<String> seen) {
+        JavaType.FullyQualified raw;
+        Map<String, JavaType> resolved = new HashMap<>();
+        if (type instanceof JavaType.Parameterized parameterized) {
+            raw = parameterized.getType();
+            List<JavaType> parameters = raw.getTypeParameters();
+            List<JavaType> arguments = parameterized.getTypeParameters();
+            for (int i = 0; i < parameters.size() && i < arguments.size(); i++) {
+                if (parameters.get(i) instanceof JavaType.GenericTypeVariable variable) {
+                    resolved.put(variable.getName(), substitute(arguments.get(i), bindings));
+                }
+            }
+            if (TypeUtils.isOfClassType(raw, ENTITY_LISTENER)) {
+                return arguments.isEmpty() ? null : substitute(arguments.get(0), bindings);
+            }
+        } else if (type instanceof JavaType.FullyQualified fullyQualified) {
+            raw = fullyQualified;
+        } else {
+            return null;
+        }
+        if (!seen.add(raw.getFullyQualifiedName())) {
+            return null;
+        }
+        for (JavaType.FullyQualified parent : raw.getInterfaces()) {
+            JavaType argument = listenerArgument(parent, resolved, seen);
+            if (argument != null) {
+                return argument;
+            }
+        }
+        return listenerArgument(raw.getSupertype(), resolved, seen);
+    }
+
+    private static JavaType substitute(JavaType type, Map<String, JavaType> bindings) {
+        return type instanceof JavaType.GenericTypeVariable variable && bindings.containsKey(variable.getName())
+                ? bindings.get(variable.getName())
+                : type;
+    }
+
+    /**
+     * @return a type variable or a plain class as a type tree, or null for anything else, which the caller handles
+     */
+    private static @Nullable TypeTree typeTree(@Nullable JavaType type) {
+        if (type instanceof JavaType.GenericTypeVariable variable && !variable.getName().equals("?")) {
+            return new J.Identifier(Tree.randomId(), Space.EMPTY, Markers.EMPTY, List.of(), variable.getName(), variable, null);
+        } else if (type instanceof JavaType.Class c && c.getTypeParameters().isEmpty()) {
+            return new J.Identifier(Tree.randomId(), Space.EMPTY, Markers.EMPTY, List.of(), c.getClassName(), c, null);
+        }
+        return null;
+    }
+
     private static String erasure(JavaType type) {
         if (type instanceof JavaType.GenericTypeVariable variable) {
             return variable.getBounds().isEmpty() ? "java.lang.Object" : erasure(variable.getBounds().get(0));
@@ -530,7 +612,8 @@ public class EntityListenerMigration extends Recipe {
                 JavaType.Method root = type == null ? null
                         : TypeUtils.isOfClassType(type.getDeclaringType(), ENTITY_LISTENER) ? type : root(type);
                 Event event = root != null ? EVENTS.get(root.getName()) : null;
-                if (event != null && !event.keepsDocument() && invocation.getArguments().size() == 3) {
+                if (event != null && !event.keepsDocument() && invocation.getArguments().size() == 3
+                        && droppable(invocation.getArguments().get(1))) {
                     visit(invocation.getSelect(), used);
                     visit(invocation.getArguments().get(0), used);
                     visit(invocation.getArguments().get(2), used);
