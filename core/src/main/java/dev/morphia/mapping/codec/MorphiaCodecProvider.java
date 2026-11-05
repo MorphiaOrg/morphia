@@ -1,5 +1,6 @@
 package dev.morphia.mapping.codec;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +10,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.MorphiaDatastore;
+import dev.morphia.annotations.PostLoad;
+import dev.morphia.annotations.PostPersist;
+import dev.morphia.annotations.PreLoad;
+import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.CodecPlan;
@@ -18,6 +23,7 @@ import dev.morphia.mapping.codec.pojo.LifecycleDecoder;
 import dev.morphia.mapping.codec.pojo.LifecycleEncoder;
 import dev.morphia.mapping.codec.pojo.MorphiaCodec;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
+import dev.morphia.mapping.lifecycle.TypedListeners;
 
 import org.bson.codecs.Codec;
 import org.bson.codecs.configuration.CodecProvider;
@@ -58,6 +64,24 @@ public class MorphiaCodecProvider implements CodecProvider {
         });
     }
 
+    /**
+     * @return true if the entity's own callbacks or a configured global listener handle one of the events for it, or there's
+     *         any interceptor, as before global listeners
+     */
+    @SafeVarargs
+    private boolean runsLifecycle(EntityModel model, Class<? extends Annotation>... events) {
+        if (!mapper.getListeners().isEmpty()) {
+            return true;
+        }
+        for (Class<? extends Annotation> event : events) {
+            if (model.hasLifecycle(event) || mapper.getGlobalListeners().stream()
+                    .anyMatch(listener -> TypedListeners.handles(listener.getClass(), event, model.getType()))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Nullable
     @Override
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -66,11 +90,12 @@ public class MorphiaCodecProvider implements CodecProvider {
         if (codec == null && (mapper.isMapped(type) || mapper.isMappable(type))) {
             EntityModel model = mapper.getEntityModel(type);
             codec = new MorphiaCodec<>(datastore, model, propertyCodecProviders, mapper.getDiscriminatorLookup(), registry, conversions);
-            // only the events the model or a global listener claims; a listener for one event leaves the others alone
-            if (LifecycleEncoder.isNeeded(model, mapper)) {
+            if (runsLifecycle(model, PrePersist.class, PostPersist.class)) {
                 codec.setEncoder(new LifecycleEncoder(codec));
             }
-            if (LifecycleDecoder.isNeeded(model, mapper)) {
+            // the lifecycle decoder creates the instance before decoding its properties, which a constructor-mapped
+            // entity can't survive, so use it only when something handles a load event for this entity
+            if (runsLifecycle(model, PreLoad.class, PostLoad.class)) {
                 codec.setDecoder(new LifecycleDecoder(codec));
             }
             // another thread may have built one meanwhile; keep the first so every caller shares it

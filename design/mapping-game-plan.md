@@ -319,21 +319,37 @@ harness passes, and both mappers agree.
   `TestMapper.testMapperCopying` assert isolation that is no longer needed.
 - After this, `refresh()` can reuse the normal codec with an "existing instance" creator.
 
-### ~~4.2 Lifecycle streaming path (#15, B3)~~
+### 4.2 Lifecycle streaming path (#15, B3)
 - Compute `needsDocumentOnPersist` and `needsDocumentOnLoad` per codec. Stream directly unless a hook or a global
   listener takes a `Document`. Gate on event coverage, not `hasListeners()`.
 - Build on 2.6.
 - Plan the removal of `addInterceptor`, which has been deprecated for removal since 2.4.0.
-- **Removal plan for `addInterceptor`**, as worked out in 4.2:
-  - Global listeners are still needed. `@EntityListeners`, which the deprecation pointed to, is per entity, and the
-    validation module's only setup was `mapper.addInterceptor(new ValidationExtension())`.
-  - ~~First, add a supported way to register global listeners.~~ Done in #4431: `morphia.listeners` names listener
-    classes, which the mapper loads once and scans like `@EntityListeners` classes, so their use of the `Document` is
-    visible in their signatures. `ValidationExtension` can be listed there.
-  - 4.2 streams for configured listeners and keeps `addInterceptor`'s behavior unchanged: any interceptor puts every
-    entity on the lifecycle codecs, it's called for every event, and it always gets a `Document`.
-  - Then remove `addInterceptor` in 3.0. That also removes the interceptor checks the lifecycle codecs make as they run,
-    and lets `Mapper.getListeners()`/`hasListeners()` go.
+- Prerequisites: #4432 (`EntityListener` becomes a marker; per-event listener interfaces show whether a listener
+  takes a `Document`) and #4431 (global listeners configured with `MorphiaConfig.listeners()`).
+- Opt-in `Document` listeners, as the streaming path's escape hatch: `PostLoadDocumentListener<T>`
+  (`postLoad(T, Document, Datastore)`) and `PostPersistDocumentListener<T>` (`postPersist(T, Document, Datastore)`).
+  - A separate single-method interface per event, not a `DocumentAware` marker plus overloads. A marker restates what
+    the override already says, the old `hasAnnotation` duplication: overriding the overload without the marker never
+    calls it, silently. It also covers a whole class rather than one event, and it forces a choice of which overload
+    is abstract, which breaks lambdas or allows a listener that implements nothing.
+  - Dispatch and the per-codec `needsDocument*` flags check for these interfaces per event, like the others. A class
+    may implement only one of each pair for an event; the mapper rejects both at registration.
+  - `PostLoad`: the only way to read unmapped fields, or compare the entity with the raw document, after decoding.
+  - `PostPersist`: `LifecycleEncoder` runs it on the fully encoded `Document` before writing it, so it's the hook for
+    adding fields or signing encoded content.
+  - None for `PrePersist`, whose `Document` is still empty (encoding hasn't happened), so a `PostPersist` listener
+    covers it. `PreLoad` already takes the `Document`. The lifecycle docs' `DigitalSigner` signs at `@PrePersist`, so
+    it signs an empty document: fix that example in the listener docs update that follows #4431.
+
+### ~~4.3 Shared registration protocol in `AbstractMapper` (#18, A3/D7)~~
+- `synchronized final mapEntity` → `protected abstract buildModel(Class)`.
+- ~~Use `putIfAbsent`, and roll back with `remove(name, model)` when validation fails.~~ As implemented (#4390):
+  `register()` runs under the mapper's lock and keeps an in-progress model in a lock-guarded `registering` map
+  (visible only to the registering thread's recursive lookups). It publishes to `mappedEntities` only after
+  validation, discriminator registration and hierarchy linking succeed. On failure it unlinks the model from any
+  parents it was linked under while it was built. `DiscriminatorLookup.addModel` no longer overwrites on a duplicate.
+- **Fixes the §5 issues:** an invalid model staying registered, and duplicate-discriminator races.
+- Ship it early, possibly within Phase 2, because it is a correctness fix and small.
 
 ### 4.4 One generic-type resolver (#19, A6)
 - Bind `TypeVariable` to `Type` by identity along the superclass chain. Handle `ParameterizedType`,
@@ -395,6 +411,24 @@ harness passes, and both mappers agree.
 ### 4.11 Generated instantiators (C8)
 - Emit an instantiator: a woven `__new()` for AOT, a nestmate at runtime, and a constructor call with `@Name`
   arguments. This removes `Constructor.newInstance` from every decode. Coordinate with 3.2's creator.
+- Prior art: the unmerged local branch `worktree-critter-direct-construction` (worktree
+  `.claude/worktrees/critter-direct-construction`, on the since-removed Gizmo backend) generated a
+  `MorphiaInstanceCreator` per entity. Reuse its shape, not its code:
+  - **Two strategies, chosen at generation time.** For a no-arg constructor, create the instance when the creator is
+    constructed and set each value as it arrives. For an all-args constructor, keep one field per constructor
+    parameter, filled by name in `set()`, and call the constructor in `getInstance()`.
+  - **Zero defaults for primitive parameters** that were never set, so the call doesn't fail when a property is missing
+    from the document.
+  - **Fall back to `ConstructorCreator`** when the class or the constructor isn't accessible from the generated code.
+    The branch required both to be public; a nestmate at runtime and a woven `__new()` for AOT should lift most of that
+    restriction.
+  - **Keep `Conversions`.** The branch's no-arg `set()` wrote straight through the property accessor, and its all-args
+    path cast raw values. Both skip the conversions that 3.2 preserved by going through `model.setValue`. The
+    generated creator must convert values before setting or passing them.
+  - **Don't create the instance early for constructor-mapped entities.** The lifecycle decoder's early `getInstance()`
+    breaks constructors that validate their arguments (see #4431); a generated all-args creator has the same
+    constraint.
+- Once 4.11 is done, remove that worktree and delete the branch (it was never pushed).
 
 ### 4.12 AOT validity guard (#17, C4)
 - Emit a format version, generation key and weave hash. Check them at load time, and fall back with one log line
@@ -405,6 +439,18 @@ harness passes, and both mappers agree.
 - Make the `Critter` lists immutable.
 - Fix the `CritterEntityModel` javadoc and `design/GeneratedCode.adoc` item 2, which recommends the constant-getter
   approach that C1 shows the JIT can't optimize.
+
+### 4.14 Annotated lifecycle methods become entity-only (follow-up to #4432)
+Decide once #4431 has landed and the listener code has settled, based on what's left in `EntityListenerAdapter`.
+- `@EntityListeners` classes would implement the per-event interfaces only. Their annotated methods are deprecated
+  first, not removed. `EntityModel.callLifecycleMethods` then has three paths: the entity's own annotated methods
+  (reflective, `OnEntityListenerAdapter`), and `@EntityListeners` instances and global listeners (both
+  `TypedListeners`, with no reflection). Critter could later generate direct calls for the entity's own methods.
+- Cost: an `@EntityListeners` method that writes the `Document` before a save, or reads it after a save or a load,
+  has nowhere to go and must move to the entity's own annotated method. That's a documented pattern (the
+  `DigitalSigner` example in the lifecycle docs). The `EntityListenerMigration` recipe can convert the rest and flag
+  those.
+- `@EntityListeners` instances would be created when the model is set up rather than on first use.
 
 ---
 
@@ -462,7 +508,8 @@ Only start after Phases 3 and 4 have shipped and been re-measured.
 5. 3.0 codec plan skeleton
 6. 3.1 → 3.9, with JMH deltas
 7. 3.10–3.15 startup, lifecycle and codec quick wins; 3.16 primitive arrays (independent)
-8. 4.1 sessions share the mapper → 4.2 lifecycle streaming
+8. 4.1 sessions share the mapper → #4432 listener interfaces → #4431 configured listeners → 4.2 lifecycle
+   streaming; 4.14 entity-only annotated methods once #4431 settles
 9. 4.4 generic resolver
 10. Phase 5 A11 builder/annotation utility → 4.5 parity test → 4.6 shared rules → 4.7 plain models → 4.8 divergences →
     4.9–4.11 → 4.12 AOT guard + 4.13 API surface (**before 3.0 GA**)

@@ -1,14 +1,9 @@
 package dev.morphia.validation;
 
-import java.lang.annotation.Annotation;
 import java.util.Set;
 
-import com.mongodb.lang.NonNull;
-
-import dev.morphia.EntityListener;
-import dev.morphia.annotations.PrePersist;
-
-import org.bson.Document;
+import dev.morphia.Datastore;
+import dev.morphia.PrePersistListener;
 
 import jakarta.validation.Validation;
 import jakarta.validation.ValidatorFactory;
@@ -21,11 +16,11 @@ import jakarta.validation.ValidatorFactory;
  * morphia.listeners = dev.morphia.validation.ValidationExtension
  * </pre>
  *
- * or {@code MorphiaConfig.listeners(List.of(ValidationExtension.class))}.
+ * or {@code config.listeners(List.of(new ValidationExtension()))} on a {@code MorphiaConfig}.
  *
  * @since 2.3
  */
-public class ValidationExtension implements EntityListener<Object> {
+public class ValidationExtension implements PrePersistListener<Object> {
     private final ValidatorFactory validationFactory;
 
     /**
@@ -38,31 +33,11 @@ public class ValidationExtension implements EntityListener<Object> {
     }
 
     @Override
-    public boolean hasAnnotation(@NonNull Class<? extends Annotation> type) {
-        return PrePersist.class.equals(type);
-    }
-
-    /**
-     * Validates an entity before it's saved. It takes the entity alone, so entities can be encoded without building a
-     * {@code Document}.
-     *
-     * @param entity the entity
-     * @since 3.0
-     */
-    @PrePersist
     @SuppressWarnings("unchecked")
-    public void validate(Object entity) {
-        final Set validate = validationFactory.getValidator().validate(entity);
+    public void prePersist(Object ent, Datastore datastore) {
+        final Set validate = validationFactory.getValidator().validate(ent);
         if (!validate.isEmpty()) {
             throw new VerboseJSR303ConstraintViolationException(validate);
         }
-    }
-
-    /**
-     * Validates an entity when this extension is added with the deprecated {@code Mapper.addInterceptor}.
-     */
-    @Override
-    public void prePersist(Object ent, Document document, Object datastore) {
-        validate(ent);
     }
 }

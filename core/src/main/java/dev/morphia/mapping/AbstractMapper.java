@@ -31,8 +31,7 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.mapping.conventions.MorphiaConvention;
-import dev.morphia.mapping.lifecycle.EntityListenerAdapter;
-import dev.morphia.mapping.lifecycle.GlobalListenerAdapter;
+import dev.morphia.mapping.lifecycle.TypedListeners;
 import dev.morphia.mapping.validation.MappingValidator;
 import dev.morphia.sofia.Sofia;
 
@@ -105,27 +104,11 @@ public abstract class AbstractMapper implements Mapper {
      */
     @MorphiaInternal
     protected AbstractMapper(MorphiaConfig config, ClassLoader classLoader) {
-        this(config, classLoader, null);
-    }
-
-    /**
-     * Creates an AbstractMapper with the given config and classloader, for a copy of another mapper that builds its own
-     * entity models.
-     *
-     * @param config      the config to use
-     * @param classLoader the classloader to use for class and resource resolution
-     * @param original    the mapper being copied, whose global listeners the copy shares when the config names the same
-     *                    classes, or null
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    protected AbstractMapper(MorphiaConfig config, ClassLoader classLoader, @Nullable AbstractMapper original) {
         this.config = config;
         this.classLoader = classLoader;
         this.conversions = new Conversions(classLoader);
         this.discriminatorLookup = new DiscriminatorLookup(classLoader);
-        this.globalListeners = globalListeners(config, classLoader, original);
+        this.globalListeners = globalListeners(config);
     }
 
     /**
@@ -158,28 +141,21 @@ public abstract class AbstractMapper implements Mapper {
         this.discriminatorLookup = new DiscriminatorLookup(other.classLoader);
         other.mappedEntities.values().forEach(this::clone);
         this.listeners.addAll(other.listeners);
-        this.globalListeners = globalListeners(config, other.classLoader, other);
+        this.globalListeners = globalListeners(config);
     }
 
     /**
-     * A copy shares its original's global listeners when the config names the same classes: the same instances, with any
-     * state they keep, and without loading the classes again, which the copy's thread might not be able to.
+     * @return the configured global listeners, each of which must implement a per-event listener interface. A copy whose
+     *         config lists the same instances shares them.
      */
-    private static List<EntityListener<?>> globalListeners(MorphiaConfig config, ClassLoader classLoader,
-            @Nullable AbstractMapper original) {
-        if (original != null && listenerNames(config).equals(listenerNames(original.config))) {
-            return original.globalListeners;
+    private static List<EntityListener<?>> globalListeners(MorphiaConfig config) {
+        List<EntityListener<?>> configured = List.copyOf(config.listeners().orElse(List.of()));
+        for (EntityListener<?> listener : configured) {
+            if (!TypedListeners.handlesAny(listener.getClass())) {
+                throw new MappingException(Sofia.noLifecycleMethods(listener.getClass().getName()));
+            }
         }
-        return loadGlobalListeners(config, classLoader);
-    }
-
-    /**
-     * @return the configured listener class names, trimmed: a config file may space them out
-     */
-    private static List<String> listenerNames(MorphiaConfig config) {
-        return config.listeners().orElse(List.of()).stream()
-                .map(String::trim)
-                .toList();
+        return configured;
     }
 
     @Nullable
@@ -188,40 +164,6 @@ public abstract class AbstractMapper implements Mapper {
             return null;
         }
         return register(new EntityModel(original), false);
-    }
-
-    /**
-     * Creates the configured global listeners. Each class is wrapped the way an {@code @EntityListeners} class is, so its
-     * lifecycle methods are found by annotation and called with arguments matched by type. A class is looked up through
-     * the mapper's loader first, then the thread's context loader.
-     */
-    private static List<EntityListener<?>> loadGlobalListeners(MorphiaConfig config, ClassLoader classLoader) {
-        List<EntityListener<?>> loaded = new ArrayList<>();
-        for (String name : listenerNames(config)) {
-            Class<?> type = loadListenerClass(name, classLoader);
-            EntityListenerAdapter adapter = new GlobalListenerAdapter(type);
-            if (LIFECYCLE_ANNOTATIONS.stream().noneMatch(adapter::hasAnnotation)) {
-                throw new MappingException(Sofia.noLifecycleMethods(type.getName()));
-            }
-            loaded.add(adapter);
-        }
-        return List.copyOf(loaded);
-    }
-
-    private static Class<?> loadListenerClass(String name, ClassLoader classLoader) {
-        try {
-            return Class.forName(name, true, classLoader);
-        } catch (ClassNotFoundException e) {
-            ClassLoader context = Thread.currentThread().getContextClassLoader();
-            if (context != null && context != classLoader) {
-                try {
-                    return Class.forName(name, true, context);
-                } catch (ClassNotFoundException ignored) {
-                    // report the first failure
-                }
-            }
-            throw new MappingException(Sofia.listenerClassNotFound(name), e);
-        }
     }
 
     @Override

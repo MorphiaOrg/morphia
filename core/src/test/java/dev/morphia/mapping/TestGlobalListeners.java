@@ -4,22 +4,23 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
 import dev.morphia.Datastore;
+import dev.morphia.EntityListener;
 import dev.morphia.MorphiaDatastore;
+import dev.morphia.PostLoadListener;
+import dev.morphia.PostPersistListener;
+import dev.morphia.PreLoadListener;
+import dev.morphia.PrePersistListener;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.annotations.PostLoad;
-import dev.morphia.annotations.PrePersist;
+import dev.morphia.annotations.PreLoad;
 import dev.morphia.config.ManualMorphiaConfig;
 import dev.morphia.config.MorphiaConfig;
+import dev.morphia.config.converters.EntityListenerConverter;
 
 import org.bson.BsonBinaryReader;
 import org.bson.BsonBinaryWriter;
@@ -36,8 +37,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
 /**
- * Global listeners named in {@link MorphiaConfig#listeners()} run for every entity, with their lifecycle methods found by
- * annotation and their arguments matched by type, as for an {@code @EntityListeners} class.
+ * Global listeners listed in {@link MorphiaConfig#listeners()} run for every entity their per-event interfaces accept.
+ * {@code TestTypedListeners} covers how a listener's entity type is found.
  */
 public class TestGlobalListeners {
     static final List<String> CALLS = new ArrayList<>();
@@ -51,16 +52,17 @@ public class TestGlobalListeners {
     void readsTheListenersFromAConfigFile() {
         MorphiaConfig config = MorphiaConfig.load("META-INF/morphia-config-listeners.properties");
 
-        // the mapper trims each name, as the file may space them out
-        Assertions.assertEquals(List.of(Recording.class.getName(), Auditing.class.getName()),
-                config.listeners().orElseThrow().stream().map(String::trim).toList());
+        // the file spaces the names out
+        Assertions.assertEquals(List.of(Recording.class, Auditing.class),
+                config.listeners().orElseThrow().stream().map(Object::getClass).toList());
     }
 
     @Test
     void setsTheListenersInCode() {
-        MorphiaConfig config = ManualMorphiaConfig.configure().listeners(List.of(Recording.class));
+        Recording recording = new Recording();
+        MorphiaConfig config = ManualMorphiaConfig.configure().listeners(List.of(recording));
 
-        Assertions.assertEquals(Optional.of(List.of(Recording.class.getName())), config.listeners());
+        Assertions.assertEquals(Optional.of(List.of(recording)), config.listeners());
         Assertions.assertEquals(Optional.empty(), ManualMorphiaConfig.configure().listeners());
         Assertions.assertEquals(config.listeners(), ManualMorphiaConfig.configure(config).listeners(), "copies keep them");
     }
@@ -69,29 +71,30 @@ public class TestGlobalListeners {
     @EnumSource(MapperType.class)
     void runForEveryEntity(MapperType mapperType) {
         try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
-            MorphiaDatastore datastore = datastore(client, config(mapperType).listeners(List.of(Recording.class)));
+            MorphiaDatastore datastore = datastore(client, config(mapperType).listeners(List.of(new Recording())));
             Codec<Plain> codec = datastore.getCodecRegistry().get(Plain.class);
             Plain entity = new Plain();
             entity.name = "plain";
 
             decode(codec, encode(codec, entity));
 
-            Assertions.assertEquals(List.of("prePersist:plain", "postLoad:plain:plain:true"), CALLS);
+            Assertions.assertEquals(List.of("prePersist:plain", "postPersist:plain", "preLoad:plain", "postLoad:plain:true"), CALLS);
             Assertions.assertEquals(1, datastore.getMapper().getGlobalListeners().size());
             Assertions.assertTrue(datastore.getMapper().hasListeners());
+            Assertions.assertTrue(datastore.hasLifecycle(datastore.getMapper().getEntityModel(Plain.class), PreLoad.class));
         }
     }
 
     @ParameterizedTest
     @EnumSource(MapperType.class)
-    void typedMethodsSeeOnlyTheirEntities(MapperType mapperType) {
+    void listenersSeeOnlyTheEntitiesTheyAccept(MapperType mapperType) {
         try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
-            MorphiaDatastore datastore = datastore(client, config(mapperType).listeners(List.of(Recording.class)));
+            MorphiaDatastore datastore = datastore(client, config(mapperType).listeners(List.of(new Recording(), new PlainOnly())));
             datastore.getMapper().map(Other.class, Holder.class);
             Codec<Other> others = datastore.getCodecRegistry().get(Other.class);
             Codec<Holder> holders = datastore.getCodecRegistry().get(Holder.class);
 
-            // Recording's methods take a Plain: an unrelated entity doesn't reach them
+            // both listeners take a Plain: an unrelated entity doesn't reach them
             decode(others, encode(others, new Other()));
             Assertions.assertEquals(List.of(), CALLS);
 
@@ -99,12 +102,37 @@ public class TestGlobalListeners {
             Holder holder = new Holder();
             holder.plain = new Plain();
             holder.plain.name = "held";
-            decode(holders, encode(holders, holder));
-            Assertions.assertEquals(List.of("prePersist:held", "postLoad:held:held:true"), CALLS);
+            encode(holders, holder);
+            Assertions.assertEquals(List.of("prePersist:held", "plainOnly:held", "postPersist:held"), CALLS);
+        }
+    }
 
-            var adapter = (dev.morphia.mapping.lifecycle.EntityListenerAdapter) datastore.getMapper().getGlobalListeners().get(0);
-            Assertions.assertTrue(adapter.hasCallback(PrePersist.class, Plain.class));
-            Assertions.assertFalse(adapter.hasCallback(PrePersist.class, Other.class));
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    void aLambdaSeesEveryEntity(MapperType mapperType) {
+        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
+            PrePersistListener<Object> lambda = (entity, datastore) -> CALLS.add(entity.getClass().getSimpleName());
+            MorphiaDatastore datastore = datastore(client, config(mapperType).listeners(List.of(lambda)));
+            datastore.getMapper().map(Other.class);
+
+            encode(datastore.getCodecRegistry().get(Plain.class), new Plain());
+            encode(datastore.getCodecRegistry().get(Other.class), new Other());
+
+            Assertions.assertEquals(List.of("Plain", "Other"), CALLS);
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    void aPersistListenerLeavesConstructorMappedEntitiesReadable(MapperType mapperType) {
+        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
+            MorphiaDatastore datastore = datastore(client, config(mapperType).listeners(List.of(new Auditing())));
+            datastore.getMapper().map(Immutable.class);
+            Codec<Immutable> codec = datastore.getCodecRegistry().get(Immutable.class);
+
+            Immutable decoded = decode(codec, encode(codec, new Immutable(new ObjectId(), "kept")));
+
+            Assertions.assertEquals("kept", decoded.name);
         }
     }
 
@@ -112,11 +140,11 @@ public class TestGlobalListeners {
     @EnumSource(MapperType.class)
     void copiesShareTheListeners(MapperType mapperType) {
         try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
-            MorphiaDatastore datastore = datastore(client, config(mapperType).listeners(List.of(Recording.class)));
+            Recording recording = new Recording();
+            MorphiaDatastore datastore = datastore(client, config(mapperType).listeners(List.of(recording)));
 
-            Assertions.assertSame(datastore.getMapper().getGlobalListeners(),
-                    new MorphiaDatastore(datastore).getMapper().getGlobalListeners());
-            Assertions.assertSame(datastore.getMapper().getGlobalListeners(), datastore.getMapper().copy().getGlobalListeners());
+            Assertions.assertSame(datastore.getMapper(), new MorphiaDatastore(datastore).getMapper());
+            Assertions.assertSame(recording, datastore.getMapper().copy().getGlobalListeners().get(0));
         }
     }
 
@@ -124,7 +152,10 @@ public class TestGlobalListeners {
     @EnumSource(MapperType.class)
     void anExceptionAListenerThrowsReachesTheCaller(MapperType mapperType) {
         try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
-            MorphiaDatastore datastore = datastore(client, config(mapperType).listeners(List.of(Refusing.class)));
+            PrePersistListener<Object> refusing = (entity, datastore) -> {
+                throw new IllegalStateException("refused");
+            };
+            MorphiaDatastore datastore = datastore(client, config(mapperType).listeners(List.of(refusing)));
             Codec<Plain> codec = datastore.getCodecRegistry().get(Plain.class);
 
             IllegalStateException e = Assertions.assertThrows(IllegalStateException.class, () -> encode(codec, new Plain()));
@@ -132,90 +163,34 @@ public class TestGlobalListeners {
         }
     }
 
-    @ParameterizedTest
-    @EnumSource(MapperType.class)
-    void createsEachListenerOnceUpFront(MapperType mapperType) throws Exception {
-        Counting.CREATED.set(0);
-        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
-            MorphiaDatastore datastore = datastore(client, config(mapperType).listeners(List.of(Counting.class)));
-            Assertions.assertEquals(1, Counting.CREATED.get(), "created with the mapper");
-            Codec<Plain> codec = datastore.getCodecRegistry().get(Plain.class);
-
-            ExecutorService executor = Executors.newFixedThreadPool(8);
-            try {
-                List<Future<byte[]>> encodes = new ArrayList<>();
-                for (int i = 0; i < 8; i++) {
-                    encodes.add(executor.submit(() -> encode(codec, new Plain())));
-                }
-                for (Future<byte[]> encode : encodes) {
-                    encode.get();
-                }
-            } finally {
-                executor.shutdownNow();
-            }
-            Assertions.assertEquals(1, Counting.CREATED.get(), "not again on first use");
-        }
-    }
-
     @Test
-    void rejectsAClassWithoutANoArgumentConstructor() {
+    void rejectsAListenerThatHandlesNoEvents() {
         MappingException e = Assertions.assertThrows(MappingException.class,
-                () -> new ReflectiveMapper(config(MapperType.REFLECTION).listeners(List.of(NeedsArguments.class))));
-        Assertions.assertTrue(e.getMessage().contains(NeedsArguments.class.getName()), e.getMessage());
-    }
-
-    @ParameterizedTest
-    @EnumSource(MapperType.class)
-    void copiesDoNotLoadTheClassesAgain(MapperType mapperType) {
-        // the mapper's own loader can't see the listener class; the context loader it was created under can
-        ClassLoader platform = ClassLoader.getPlatformClassLoader();
-        MorphiaConfig config = config(mapperType).listeners(List.of(Recording.class));
-        Mapper mapper = mapperType == MapperType.CRITTER ? new CritterMapper(config, platform) : new ReflectiveMapper(config, platform);
-
-        Thread thread = Thread.currentThread();
-        ClassLoader original = thread.getContextClassLoader();
-        try {
-            thread.setContextClassLoader(platform);
-            Assertions.assertSame(mapper.getGlobalListeners(), mapper.copy().getGlobalListeners());
-        } finally {
-            thread.setContextClassLoader(original);
-        }
-    }
-
-    @Test
-    void copiesMatchTheConfiguredNamesTrimmed() {
-        MorphiaConfig config = config(MapperType.REFLECTION);
-        ReflectiveMapper original = new ReflectiveMapper(withListenerNames(config, "  " + Recording.class.getName() + " "));
-
-        ReflectiveMapper copy = new ReflectiveMapper(original, config.listeners(List.of(Recording.class)));
-
-        Assertions.assertSame(original.getGlobalListeners(), copy.getGlobalListeners());
-    }
-
-    @Test
-    void rejectsAnUnknownClass() {
-        MorphiaConfig config = config(MapperType.REFLECTION);
-        ManualMorphiaConfig named = ManualMorphiaConfig.configure(config);
-        MappingException e = Assertions.assertThrows(MappingException.class,
-                () -> new ReflectiveMapper(withListenerNames(named, "dev.morphia.NoSuchListener")));
-        Assertions.assertTrue(e.getMessage().contains("dev.morphia.NoSuchListener"), e.getMessage());
-    }
-
-    @Test
-    void rejectsAClassWithoutLifecycleMethods() {
-        MappingException e = Assertions.assertThrows(MappingException.class,
-                () -> new ReflectiveMapper(config(MapperType.REFLECTION).listeners(List.of(NoCallbacks.class))));
+                () -> new ReflectiveMapper(config(MapperType.REFLECTION).listeners(List.of(new NoCallbacks()))));
         Assertions.assertTrue(e.getMessage().contains(NoCallbacks.class.getName()), e.getMessage());
     }
 
-    private static MorphiaConfig withListenerNames(MorphiaConfig config, String... names) {
-        // a class that can't be loaded can only be named, as in a config file
-        return new ManualMorphiaConfig(config) {
-            @Override
-            public Optional<List<String>> listeners() {
-                return Optional.of(List.of(names));
-            }
-        };
+    @Test
+    void theConverterRejectsBadClasses() {
+        EntityListenerConverter converter = new EntityListenerConverter();
+        Assertions.assertInstanceOf(Recording.class, converter.convert("  " + Recording.class.getName() + " "));
+
+        for (String name : List.of("dev.morphia.NoSuchListener", NotAListener.class.getName(), NeedsArguments.class.getName())) {
+            MappingException e = Assertions.assertThrows(MappingException.class, () -> converter.convert(name));
+            Assertions.assertTrue(e.getMessage().contains(name), e.getMessage());
+        }
+
+        // a constructor's failure is reported with the class and the failure itself, and kept as the cause
+        MappingException e = Assertions.assertThrows(MappingException.class, () -> converter.convert(Failing.class.getName()));
+        Assertions.assertTrue(e.getMessage().contains(Failing.class.getName()), e.getMessage());
+        Assertions.assertTrue(e.getMessage().contains("no configuration"), e.getMessage());
+        Assertions.assertInstanceOf(IllegalStateException.class, e.getCause());
+
+        // so is a static initializer's, which loading the class runs
+        String failingStatic = FailingStatic.class.getName();
+        MappingException initializer = Assertions.assertThrows(MappingException.class, () -> converter.convert(failingStatic));
+        Assertions.assertTrue(initializer.getMessage().contains(failingStatic), initializer.getMessage());
+        Assertions.assertTrue(initializer.getMessage().contains("no static configuration"), initializer.getMessage());
     }
 
     private static MorphiaConfig config(MapperType mapperType) {
@@ -255,6 +230,18 @@ public class TestGlobalListeners {
         String name;
     }
 
+    @Entity("global_listeners_immutable")
+    public static class Immutable {
+        @Id
+        final ObjectId id;
+        final String name;
+
+        public Immutable(ObjectId id, String name) {
+            this.id = id;
+            this.name = java.util.Objects.requireNonNull(name);
+        }
+    }
+
     @Entity("global_listeners_other")
     public static class Other {
         @Id
@@ -269,56 +256,84 @@ public class TestGlobalListeners {
     }
 
     /**
-     * Records its calls; each method asks for different arguments.
+     * Records its calls for every event.
      */
-    public static class Recording {
-        @PrePersist
-        void prePersist(Plain entity) {
+    public static class Recording implements PrePersistListener<Plain>, PostPersistListener<Plain>, PreLoadListener<Plain>,
+            PostLoadListener<Plain> {
+        @Override
+        public void prePersist(Plain entity, Datastore datastore) {
             CALLS.add("prePersist:" + entity.name);
         }
 
-        @PostLoad
-        void postLoad(Plain entity, Document document, Datastore datastore) {
-            CALLS.add("postLoad:" + entity.name + ":" + document.getString("name") + ":" + (datastore != null));
+        @Override
+        public void postPersist(Plain entity, Datastore datastore) {
+            CALLS.add("postPersist:" + entity.name);
+        }
+
+        @Override
+        public void preLoad(Plain entity, Document document, Datastore datastore) {
+            CALLS.add("preLoad:" + document.getString("name"));
+        }
+
+        @Override
+        public void postLoad(Plain entity, Datastore datastore) {
+            CALLS.add("postLoad:" + entity.name + ":" + (datastore != null));
         }
     }
 
-    public static class Auditing {
-        @PrePersist
-        void audit(Object entity) {
+    public abstract static class Typed<E> implements PrePersistListener<E> {
+    }
+
+    /**
+     * Takes its entity type from a generic superclass.
+     */
+    public static class PlainOnly extends Typed<Plain> {
+        @Override
+        public void prePersist(Plain entity, Datastore datastore) {
+            CALLS.add("plainOnly:" + entity.name);
         }
     }
 
-    public static class Refusing {
-        @PrePersist
-        void refuse(Object entity) {
-            throw new IllegalStateException("refused");
+    public static class Auditing implements PrePersistListener<Object> {
+        @Override
+        public void prePersist(Object entity, Datastore datastore) {
         }
     }
 
-    public static class Counting {
-        static final AtomicInteger CREATED = new AtomicInteger();
-
-        public Counting() {
-            CREATED.incrementAndGet();
-        }
-
-        @PrePersist
-        void count(Object entity) {
-        }
-    }
-
-    public static class NeedsArguments {
+    public static class NeedsArguments implements PrePersistListener<Object> {
         public NeedsArguments(String argument) {
         }
 
-        @PrePersist
-        void prePersist(Object entity) {
+        @Override
+        public void prePersist(Object entity, Datastore datastore) {
         }
     }
 
-    public static class NoCallbacks {
-        void notALifecycleMethod(Object entity) {
+    public static class Failing implements PrePersistListener<Object> {
+        public Failing() {
+            throw new IllegalStateException("no configuration");
         }
+
+        @Override
+        public void prePersist(Object entity, Datastore datastore) {
+        }
+    }
+
+    public static class FailingStatic implements PrePersistListener<Object> {
+        static {
+            if (Boolean.TRUE) {
+                throw new IllegalStateException("no static configuration");
+            }
+        }
+
+        @Override
+        public void prePersist(Object entity, Datastore datastore) {
+        }
+    }
+
+    public static class NoCallbacks implements EntityListener<Object> {
+    }
+
+    public static class NotAListener {
     }
 }

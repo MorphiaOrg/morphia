@@ -40,7 +40,7 @@ public class TestMorphiaValidation extends TestBase {
 
     @Test
     public void testValidationAsConfiguredListener() {
-        withConfig(buildConfig(Data.class).listeners(List.of(ValidationExtension.class)), () -> {
+        withConfig(buildConfig(Data.class).listeners(List.of(new ValidationExtension())), () -> {
             final Data data = new Data();
             data.email = "not an email";
 

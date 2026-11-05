@@ -1,8 +1,10 @@
 package dev.morphia.config;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import dev.morphia.EntityListener;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.PossibleValues;
 import dev.morphia.annotations.Property;
@@ -11,6 +13,7 @@ import dev.morphia.annotations.internal.MorphiaExperimental;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.converters.CodecProviderConverter;
 import dev.morphia.config.converters.DiscriminatorFunctionConverter;
+import dev.morphia.config.converters.EntityListenerConverter;
 import dev.morphia.config.converters.NamingStrategyConverter;
 import dev.morphia.config.converters.PropertyAnnotationProviderConverter;
 import dev.morphia.config.converters.QueryFactoryConverter;
@@ -24,6 +27,7 @@ import dev.morphia.sofia.Sofia;
 
 import org.bson.codecs.configuration.CodecProvider;
 import org.eclipse.microprofile.config.spi.ConfigSource;
+import org.eclipse.microprofile.config.spi.Converter;
 
 import io.smallrye.config.ConfigMapping;
 import io.smallrye.config.SmallRyeConfigBuilder;
@@ -89,6 +93,7 @@ public interface MorphiaConfig {
      * @return the loaded configuration
      * @since 3.0
      */
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     static MorphiaConfig load(String location, ClassLoader classLoader) {
         List<ConfigSource> configSources = inClassPath(location, 0, classLoader);
         if (configSources.isEmpty()) {
@@ -97,6 +102,8 @@ public interface MorphiaConfig {
         }
         return new SmallRyeConfigBuilder()
                 .addDefaultInterceptors()
+                // registered by type rather than with @WithConverter, which smallrye applies to the whole unsplit list
+                .withConverter(EntityListener.class, 100, (Converter) new EntityListenerConverter(classLoader))
                 .withMapping(MorphiaConfig.class)
                 .withSources(configSources)
                 .addDefaultSources()
@@ -441,34 +448,32 @@ public interface MorphiaConfig {
     }
 
     /**
-     * A comma delimited list of global entity listener classes. Each one runs for every entity, as if every entity listed it in
-     * {@link dev.morphia.annotations.EntityListeners @EntityListeners}: Morphia calls its methods annotated with a lifecycle event
-     * annotation ({@code @PrePersist}, {@code @PostPersist}, {@code @PreLoad}, {@code @PostLoad}), and each class needs a no-argument
-     * constructor. A method's parameters are filled in by type: the entity, the {@code Document}, or the {@code Datastore}. A method is
-     * called only for entities its entity parameter accepts, so {@code @PrePersist void audit(Auditable entity)} sees {@code Auditable}
-     * entities alone; declare it {@code Object} to see every entity. Leave the {@code Document} out when a listener doesn't need it, so
-     * that Morphia can encode and decode without building one.
+     * A comma delimited list of global entity listener classes, each with a public no-argument constructor. Each listener runs
+     * for every entity it accepts. A listener implements one or more of the per-event interfaces: {@link dev.morphia.PrePersistListener},
+     * {@link dev.morphia.PostPersistListener}, {@link dev.morphia.PreLoadListener} and {@link dev.morphia.PostLoadListener}, and
+     * each is called only for entities of its type argument, so a {@code PrePersistListener<Auditable>} sees {@code Auditable}
+     * entities alone. Only {@code PreLoadListener} takes the {@code Document}, so Morphia can encode and decode without building
+     * one unless a listener needs it. A listener that implements none of them is rejected when the mapper is created.
      * <p>
-     * The listeners are read once, when the mapper is created. This replaces {@code Mapper.addInterceptor}.
+     * The listeners are read once, when the mapper is created, and a copy of the mapper shares the same instances. This
+     * replaces {@code Mapper.addInterceptor}.
      *
-     * @return the class names of the global listeners
+     * @return the global listeners
      * @since 3.0
      */
-    Optional<List<String>> listeners();
+    Optional<List<EntityListener<?>>> listeners();
 
     /**
      * Updates this configuration with a new value and returns a new instance. The original instance is unchanged.
      *
-     * @param value the global listener classes
+     * @param value the global listeners
      * @return a new instance with the updated configuration
      * @see #listeners()
      * @since 3.0
      */
-    default MorphiaConfig listeners(List<Class<?>> value) {
+    default MorphiaConfig listeners(List<? extends EntityListener<?>> value) {
         var newConfig = new ManualMorphiaConfig(this);
-        newConfig.listeners = value.stream()
-                .map(Class::getName)
-                .collect(java.util.stream.Collectors.toCollection(java.util.ArrayList::new));
+        newConfig.listeners = new ArrayList<>(value);
         return newConfig;
     }
 

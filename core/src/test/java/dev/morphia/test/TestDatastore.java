@@ -1,6 +1,5 @@
 package dev.morphia.test;
 
-import java.lang.annotation.Annotation;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
@@ -14,7 +13,6 @@ import com.mongodb.client.model.Collation;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
-import com.mongodb.lang.NonNull;
 
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
@@ -598,11 +596,6 @@ public class TestDatastore extends TestBase {
         private static boolean prePersist;
         private static boolean prePersistWithEntity;
         private static boolean foundDatastore;
-
-        @Override
-        public boolean hasAnnotation(@NonNull Class<? extends Annotation> type) {
-            return type.equals(PrePersist.class);
-        }
 
         @PrePersist
         void prePersist(Datastore datastore) {

@@ -56,7 +56,7 @@ public class EntityDecoder<T> implements Decoder<T> {
             // decoded values. Creators that feed values to a constructor are registered after decoding
             // instead: they still deduplicate, but a cycle through them cannot be broken, so they are marked as
             // under construction and a reference back to one fails fast instead of recursing.
-            Object prereadId = session != null && classModel.getIdProperty() != null ? peekId(reader, classModel, true) : null;
+            Object prereadId = session != null && classModel.getIdProperty() != null ? peekId(reader) : null;
             boolean eager = prereadId != null && instanceCreator.isEagerInstanceSafe();
             if (eager) {
                 session.registerInFlight(classModel.collectionName(), prereadId, instanceCreator.getInstance());
@@ -205,31 +205,15 @@ public class EntityDecoder<T> implements Decoder<T> {
         return codec != null ? codec : defaultCodec;
     }
 
-    /**
-     * Reads a document's {@code _id} ahead of decoding it, leaving the reader where it was.
-     *
-     * @param reader    the reader, positioned at the document
-     * @param model     the model the document is decoded as, which must have an id property
-     * @param documents whether to read an id stored as a document too. Reading one decodes it, perhaps as an entity
-     *                  of its own, which runs that entity's load callbacks
-     * @return the id, decoded the way references read theirs, or null if the document has none, it can't be read, or
-     *         it's a document and {@code documents} is false
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
     @Nullable
-    protected Object peekId(BsonReader reader, EntityModel model, boolean documents) {
+    private Object peekId(BsonReader reader) {
         BsonReaderMark mark = reader.getMark();
         try {
             reader.readStartDocument();
-            String idName = model.getIdProperty().getMappedName();
+            String idName = classModel.getIdProperty().getMappedName();
             while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
                 String name = reader.readName();
                 if ("_id".equals(name) || name.equals(idName)) {
-                    if (!documents && reader.getCurrentBsonType() == BsonType.DOCUMENT) {
-                        return null;
-                    }
                     Codec<Object> codec = idKeyCodec;
                     if (codec == null) {
                         codec = morphiaCodec.getRegistry().get(Object.class);
@@ -243,7 +227,7 @@ public class EntityDecoder<T> implements Decoder<T> {
             return null;
         } catch (Exception e) {
             LOG.debug("Could not pre-read _id for DecodeSession on {}; cycle detection may not apply",
-                    model.getType().getSimpleName(), e);
+                    classModel.getType().getSimpleName(), e);
             return null;
         } finally {
             mark.reset();
