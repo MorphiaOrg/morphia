@@ -224,6 +224,16 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
 <div class="block">Creates a new configuration based on the current one but updated to reflect the legacy configuration.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://morphia.dev/morphia/3.0/javadoc/dev/morphia/EntityListener.html" title="class or interface in dev.morphia" class="external-link">EntityListener</a>&lt;?&gt;&gt;&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#listeners()" class="member-name-link">listeners</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">A comma delimited list of global entity listener classes, each with a public no-argument constructor.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#listeners(java.util.List)" class="member-name-link">listeners</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends <a href="https://morphia.dev/morphia/3.0/javadoc/dev/morphia/EntityListener.html" title="class or interface in dev.morphia" class="external-link">EntityListener</a>&lt;?&gt;&gt;&nbsp;value)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="block">Updates this configuration with a new value and returns a new instance.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1"><code>static <a href="MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1"><code><a href="#load()" class="member-name-link">load</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1">
@@ -817,6 +827,48 @@ loadScripts(document, 'script');</script>
 <dd>a new instance with the updated configuration</dd>
 <dt>Since:</dt>
 <dd>3.0</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="listeners()">
+<h3>listeners</h3>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://morphia.dev/morphia/3.0/javadoc/dev/morphia/EntityListener.html" title="class or interface in dev.morphia" class="external-link">EntityListener</a>&lt;?&gt;&gt;&gt;</span>&nbsp;<span class="element-name">listeners</span>()</div>
+<div class="block">A comma delimited list of global entity listener classes, each with a public no-argument constructor. Each listener runs
+ for every entity it accepts. A listener implements one or more of the per-event interfaces: <a href="../PrePersistListener.html" title="interface in dev.morphia"><code>PrePersistListener</code></a>,
+ <a href="../PostPersistListener.html" title="interface in dev.morphia"><code>PostPersistListener</code></a>, <a href="../PreLoadListener.html" title="interface in dev.morphia"><code>PreLoadListener</code></a> and <a href="../PostLoadListener.html" title="interface in dev.morphia"><code>PostLoadListener</code></a>, and
+ each is called only for entities of its type argument, so a <code>PrePersistListener&lt;Auditable&gt;</code> sees <code>Auditable</code>
+ entities alone. Only <code>PreLoadListener</code> takes the <code>Document</code>, so Morphia can encode and decode without building
+ one unless a listener needs it. A listener that implements none of them is rejected when the mapper is created.
+ <p>
+ The listeners are read once, when the mapper is created, and a copy of the mapper shares the same instances. This
+ replaces <code>Mapper.addInterceptor</code>.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the global listeners</dd>
+<dt>Since:</dt>
+<dd>3.0</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="listeners(java.util.List)">
+<h3>listeners</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type"><a href="MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a></span>&nbsp;<span class="element-name">listeners</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;? extends <a href="https://morphia.dev/morphia/3.0/javadoc/dev/morphia/EntityListener.html" title="class or interface in dev.morphia" class="external-link">EntityListener</a>&lt;?&gt;&gt;&nbsp;value)</span></div>
+<div class="block">Updates this configuration with a new value and returns a new instance. The original instance is unchanged.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>value</code> - the global listeners</dd>
+<dt>Returns:</dt>
+<dd>a new instance with the updated configuration</dd>
+<dt>Since:</dt>
+<dd>3.0</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="#listeners()"><code>listeners()</code></a></li>
+</ul>
+</dd>
 </dl>
 </section>
 </li>
