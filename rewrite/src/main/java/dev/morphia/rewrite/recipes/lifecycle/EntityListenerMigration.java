@@ -80,7 +80,8 @@ public class EntityListenerMigration extends Recipe {
     @Override
     public @Description String getDescription() {
         return "EntityListener is now a marker interface. Implementations move to PrePersistListener, PostPersistListener, "
-                + "PreLoadListener and PostLoadListener, and their hasAnnotation overrides are removed.";
+                + "PreLoadListener and PostLoadListener, and their hasAnnotation overrides are removed. Calls to the removed "
+                + "Mapper.addInterceptor are marked: list those listeners in MorphiaConfig.listeners() instead.";
     }
 
     @NotNull
@@ -269,6 +270,10 @@ public class EntityListenerMigration extends Recipe {
             if (type == null || method.getMarkers().findFirst(SearchResult.class).isPresent()) {
                 // already marked for a person to look at
                 return result;
+            }
+            if (type.getName().equals("addInterceptor") && TypeUtils.isAssignableTo(MAPPER, type.getDeclaringType())) {
+                return SearchResult.found(result, "addInterceptor was removed in 3.0: list this listener in "
+                        + "MorphiaConfig.listeners(), or name its class in morphia.listeners in a config file");
             }
             boolean throughMarker = TypeUtils.isOfClassType(type.getDeclaringType(), ENTITY_LISTENER);
             JavaType.Method root = throughMarker ? type : root(type);

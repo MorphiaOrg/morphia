@@ -255,7 +255,7 @@ class EntityListenerMigrationTest extends MorphiaRewriteTest {
                         public class Setup {
                             @SuppressWarnings("removal")
                             void setup(Mapper mapper) {
-                                mapper.addInterceptor(new PrePersistListener<Object>() {
+                                /*~~(addInterceptor was removed in 3.0: list this listener in MorphiaConfig.listeners(), or name its class in morphia.listeners in a config file)~~>*/mapper.addInterceptor(new PrePersistListener<Object>() {
                                     @Override
                                     public void prePersist(Object entity, Datastore datastore) {
                                         System.out.println(entity);
@@ -473,6 +473,35 @@ class EntityListenerMigrationTest extends MorphiaRewriteTest {
     }
 
     @Test
+    void flagsAddInterceptor() {
+        rewriteRun(java(
+                //language=java
+                """
+                        import dev.morphia.EntityListener;
+                        import dev.morphia.mapping.Mapper;
+
+                        public class Setup {
+                            @SuppressWarnings("removal")
+                            void setup(Mapper mapper, EntityListener<?> listener) {
+                                mapper.addInterceptor(listener);
+                            }
+                        }
+                        """,
+                //language=java
+                """
+                        import dev.morphia.EntityListener;
+                        import dev.morphia.mapping.Mapper;
+
+                        public class Setup {
+                            @SuppressWarnings("removal")
+                            void setup(Mapper mapper, EntityListener<?> listener) {
+                                /*~~(addInterceptor was removed in 3.0: list this listener in MorphiaConfig.listeners(), or name its class in morphia.listeners in a config file)~~>*/mapper.addInterceptor(listener);
+                            }
+                        }
+                        """));
+    }
+
+    @Test
     void replacesLambdasWithAnEmptyMarker() {
         rewriteRun(java(
                 //language=java
@@ -496,7 +525,7 @@ class EntityListenerMigrationTest extends MorphiaRewriteTest {
                         public class Lambdas {
                             @SuppressWarnings("removal")
                             void setup(Mapper mapper) {
-                                mapper.addInterceptor(new EntityListener<>() {});
+                                /*~~(addInterceptor was removed in 3.0: list this listener in MorphiaConfig.listeners(), or name its class in morphia.listeners in a config file)~~>*/mapper.addInterceptor(new EntityListener<>() {});
                                 EntityListener<?> listener = (EntityListener) new EntityListener<>() {};
                             }
                         }
@@ -710,7 +739,7 @@ class EntityListenerMigrationTest extends MorphiaRewriteTest {
                         public class Inferred {
                             @SuppressWarnings("removal")
                             void setup(Mapper mapper) {
-                                mapper.addInterceptor(new EntityListener<>() {});
+                                /*~~(addInterceptor was removed in 3.0: list this listener in MorphiaConfig.listeners(), or name its class in morphia.listeners in a config file)~~>*/mapper.addInterceptor(new EntityListener<>() {});
                             }
                         }
                         """));
