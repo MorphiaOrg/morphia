@@ -1,16 +1,14 @@
 package dev.morphia.test.callbacks;
 
-import java.lang.annotation.Annotation;
-
 import com.mongodb.lang.NonNull;
 
-import dev.morphia.EntityListener;
+import dev.morphia.Datastore;
+import dev.morphia.PrePersistListener;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.test.TestBase;
 
-import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -42,14 +40,9 @@ public class TestInterceptors extends TestBase {
         }
     }
 
-    public static class Interceptor implements EntityListener<Object> {
+    public static class Interceptor implements PrePersistListener<Object> {
         @Override
-        public boolean hasAnnotation(@NonNull Class<? extends Annotation> type) {
-            return PrePersist.class.equals(type);
-        }
-
-        @Override
-        public void prePersist(@NonNull Object ent, @NonNull Document document, @NonNull Object datastore) {
+        public void prePersist(@NonNull Object ent, @NonNull Datastore datastore) {
             Assertions.assertTrue(((E) ent).called);
         }
     }

@@ -69,6 +69,7 @@ import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.references.ReferenceCodec;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
+import dev.morphia.mapping.lifecycle.TypedListeners;
 import dev.morphia.query.CountOptions;
 import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.FindOptions;
@@ -930,7 +931,7 @@ public class MorphiaDatastore implements Datastore {
     public boolean hasLifecycle(EntityModel model, Class<? extends Annotation> type) {
         return model.hasLifecycle(type)
                 || mapper.getListeners().stream()
-                        .anyMatch(listener -> listener.hasAnnotation(type));
+                        .anyMatch(listener -> TypedListeners.handles(listener.getClass(), type));
     }
 
     /**

@@ -13,10 +13,6 @@ import com.mongodb.lang.NonNull;
 
 import dev.morphia.Datastore;
 import dev.morphia.EntityListener;
-import dev.morphia.annotations.PostLoad;
-import dev.morphia.annotations.PostPersist;
-import dev.morphia.annotations.PreLoad;
-import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.sofia.Sofia;
@@ -26,6 +22,10 @@ import org.bson.Document;
 import static dev.morphia.mapping.Mapper.LIFECYCLE_ANNOTATIONS;
 
 /**
+ * Calls the lifecycle methods of an {@code @EntityListeners} class, or of an entity: its methods annotated with a lifecycle
+ * event annotation, and those of any per-event listener interface it implements. It implements {@link EntityListener} only so
+ * it can be named in {@code @EntityListeners}.
+ *
  * @hidden
  * @since 2.4
  * @morphia.internal
@@ -44,9 +44,12 @@ public class EntityListenerAdapter implements EntityListener<Object> {
         this.listenerType = listenerType;
     }
 
-    @Override
-    public boolean hasAnnotation(@NonNull Class<? extends Annotation> type) {
-        return !callbacks.get(type).isEmpty();
+    /**
+     * @param event the lifecycle event annotation
+     * @return true if the listener handles the event, with an annotated method or its per-event listener interface
+     */
+    public boolean handles(@NonNull Class<? extends Annotation> event) {
+        return !callbacks.get(event).isEmpty() || TypedListeners.handles(listenerType, event);
     }
 
     /**
@@ -58,16 +61,27 @@ public class EntityListenerAdapter implements EntityListener<Object> {
                 return true;
             }
         }
-        return false;
+        return TypedListeners.handlesAny(listenerType);
     }
 
-    void invoke(Class<? extends Annotation> annotation, Object entity, Document document, Object datastore) {
-        for (Callback callback : callbacks.get(annotation)) {
+    /**
+     * Calls the listener's annotated methods for the event, then its per-event listener interface's method.
+     *
+     * @param event     the lifecycle event annotation
+     * @param entity    the entity
+     * @param document  the document
+     * @param datastore the datastore
+     */
+    public void invoke(Class<? extends Annotation> event, Object entity, Document document, Datastore datastore) {
+        for (Callback callback : callbacks.get(event)) {
             try {
                 callback.method.invoke(target(entity), callback.arguments(entity, document, datastore));
             } catch (IllegalArgumentException | ReflectiveOperationException e) {
                 throw failure(callback.method, entity, e);
             }
+        }
+        if (TypedListeners.handles(listenerType, event)) {
+            TypedListeners.invoke(target(entity), event, entity, document, datastore);
         }
     }
 
@@ -100,26 +114,6 @@ public class EntityListenerAdapter implements EntityListener<Object> {
             }
         }
         return listener;
-    }
-
-    @Override
-    public void postLoad(@NonNull Object entity, @NonNull Document document, @NonNull Object datastore) {
-        invoke(PostLoad.class, entity, document, datastore);
-    }
-
-    @Override
-    public void postPersist(@NonNull Object entity, @NonNull Document document, @NonNull Object datastore) {
-        invoke(PostPersist.class, entity, document, datastore);
-    }
-
-    @Override
-    public void preLoad(@NonNull Object entity, @NonNull Document document, @NonNull Object datastore) {
-        invoke(PreLoad.class, entity, document, datastore);
-    }
-
-    @Override
-    public void prePersist(@NonNull Object entity, @NonNull Document document, @NonNull Object datastore) {
-        invoke(PrePersist.class, entity, document, datastore);
     }
 
     @NonNull
@@ -157,7 +151,7 @@ public class EntityListenerAdapter implements EntityListener<Object> {
             }
         }
 
-        Object[] arguments(Object entity, Document document, Object datastore) {
+        Object[] arguments(Object entity, Document document, Datastore datastore) {
             Object[] arguments = new Object[parameters.length];
             for (int i = 0; i < parameters.length; i++) {
                 arguments[i] = switch (parameters[i]) {

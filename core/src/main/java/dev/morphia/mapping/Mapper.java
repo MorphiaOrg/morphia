@@ -50,7 +50,8 @@ public interface Mapper {
             PostLoad.class);
 
     /**
-     * Adds an {@link EntityListener}
+     * Adds an {@link EntityListener} for every entity. It's called for the events of the per-event listener interfaces it
+     * implements, such as {@link dev.morphia.PrePersistListener}.
      *
      * @param ei the interceptor to add
      * @deprecated use {@link dev.morphia.annotations.EntityListeners} to define any lifecycle event listeners
