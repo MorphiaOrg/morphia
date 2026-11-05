@@ -208,18 +208,18 @@ public class EntityDecoder<T> implements Decoder<T> {
     /**
      * Reads a document's {@code _id} ahead of decoding it, leaving the reader where it was.
      *
-     * @param reader    the reader, positioned at the document
-     * @param model     the model the document is decoded as, which must have an id property
-     * @param documents whether to read an id stored as a document too. Reading one decodes it, perhaps as an entity
-     *                  of its own, which runs that entity's load callbacks
+     * @param reader   the reader, positioned at the document
+     * @param model    the model the document is decoded as, which must have an id property
+     * @param entities whether to read an id that decodes as an entity: one whose property type is an entity, or that's
+     *                 stored with a discriminator. Reading one runs that entity's load callbacks
      * @return the id, decoded the way references read theirs, or null if the document has none, it can't be read, or
-     *         it's a document and {@code documents} is false
+     *         it's an entity and {@code entities} is false
      * @hidden
      * @morphia.internal
      */
     @MorphiaInternal
     @Nullable
-    protected Object peekId(BsonReader reader, EntityModel model, boolean documents) {
+    protected Object peekId(BsonReader reader, EntityModel model, boolean entities) {
         BsonReaderMark mark = reader.getMark();
         try {
             reader.readStartDocument();
@@ -227,7 +227,7 @@ public class EntityDecoder<T> implements Decoder<T> {
             while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
                 String name = reader.readName();
                 if ("_id".equals(name) || name.equals(idName)) {
-                    if (!documents && reader.getCurrentBsonType() == BsonType.DOCUMENT) {
+                    if (!entities && reader.getCurrentBsonType() == BsonType.DOCUMENT && decodesAsEntity(reader, model)) {
                         return null;
                     }
                     Codec<Object> codec = idKeyCodec;
@@ -245,6 +245,31 @@ public class EntityDecoder<T> implements Decoder<T> {
             LOG.debug("Could not pre-read _id for DecodeSession on {}; cycle detection may not apply",
                     model.getType().getSimpleName(), e);
             return null;
+        } finally {
+            mark.reset();
+        }
+    }
+
+    /**
+     * @param reader the reader, positioned at an id stored as a document, which it's left at
+     * @return true if the id decodes as an entity: its property's type is one, or it's stored with a discriminator, as an
+     *         {@code Object} id holding an entity is
+     */
+    private boolean decodesAsEntity(BsonReader reader, EntityModel model) {
+        if (morphiaCodec.getDatastore().getMapper().isMappable(model.getIdProperty().getType())) {
+            return true;
+        }
+        String discriminatorKey = morphiaCodec.getDatastore().getMapper().getConfig().discriminatorKey();
+        BsonReaderMark mark = reader.getMark();
+        try {
+            reader.readStartDocument();
+            while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+                if (discriminatorKey.equals(reader.readName())) {
+                    return true;
+                }
+                reader.skipValue();
+            }
+            return false;
         } finally {
             mark.reset();
         }

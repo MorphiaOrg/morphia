@@ -309,6 +309,39 @@ public class TestLifecycleStreaming {
         }
     }
 
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    void anEntityHeldInAnObjectIdGetsItsLoadCallbacksOnce(MapperType mapperType) {
+        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
+            MorphiaConfig config = config(mapperType).listeners(List.of(new RecordsLoads()));
+            MorphiaCodec<ObjectKeyed> codec = codec(datastore(client, config), ObjectKeyed.class);
+            ObjectKeyed entity = new ObjectKeyed();
+            CompositeKey key = new CompositeKey();
+            key.region = "eu";
+            entity.id = key;
+
+            ObjectKeyed decoded = decode(codec, encode(codec, entity));
+
+            Assertions.assertEquals("eu", ((CompositeKey) decoded.id).region);
+            // the id is stored with a discriminator, so it isn't read ahead, and it's decoded once
+            Assertions.assertEquals(List.of("PostLoad:CompositeKey", "PostLoad:ObjectKeyed"), CALLS);
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    void aPreLoadListenerOnAConstructedEntityRunsOnceBeforePostLoad(MapperType mapperType) {
+        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
+            MorphiaConfig config = config(mapperType).listeners(List.of(new LoadsConstructed()));
+            MorphiaCodec<Constructed> codec = codec(datastore(client, config), Constructed.class);
+
+            decode(codec, encode(codec, new Constructed(new ObjectId(), "built")));
+
+            // the instance can't exist before its values are read, so its @PreLoad sees them, just before @PostLoad
+            Assertions.assertEquals(List.of("PreLoad:built:built", "PostLoad:built"), CALLS);
+        }
+    }
+
     private static void assertStreams(MorphiaCodec<?> codec, boolean encoding, boolean decoding) {
         Assertions.assertEquals(!encoding, ((LifecycleEncoder<?>) codec.getEncoder()).needsDocument(), "encoding streams");
         Assertions.assertEquals(!decoding, ((LifecycleDecoder<?>) codec.getDecoder()).needsDocument(), "decoding streams");
@@ -327,7 +360,7 @@ public class TestLifecycleStreaming {
     private static MorphiaDatastore datastore(MongoClient client, MorphiaConfig config) {
         MorphiaDatastore datastore = new MorphiaDatastore(client, config);
         datastore.getMapper().map(Streamed.class, Documented.class, Plain.class, Constructed.class, Keyed.class, CompositeKey.class,
-                SelfDocumenting.class, Shape.class, Circle.class, Square.class, DocumentKeyed.class);
+                SelfDocumenting.class, Shape.class, Circle.class, Square.class, DocumentKeyed.class, ObjectKeyed.class);
         return datastore;
     }
 
@@ -488,6 +521,12 @@ public class TestLifecycleStreaming {
     public static class Square extends Shape {
     }
 
+    @Entity("lifecycle_object_keyed")
+    public static class ObjectKeyed {
+        @Id
+        Object id;
+    }
+
     @Entity("lifecycle_document_keyed")
     public static class DocumentKeyed {
         @Id
@@ -584,6 +623,21 @@ public class TestLifecycleStreaming {
     public static class LoadsAnyDocument implements PostLoadDocumentListener<Object> {
         @Override
         public void postLoad(Object entity, Document document, Datastore datastore) {
+        }
+    }
+
+    /**
+     * Records both load events of a constructed entity, with the Document's name at {@code @PreLoad}.
+     */
+    public static class LoadsConstructed implements PreLoadListener<Constructed>, PostLoadListener<Constructed> {
+        @Override
+        public void preLoad(Constructed entity, Document document, Datastore datastore) {
+            CALLS.add("PreLoad:" + entity.name + ":" + document.getString("name"));
+        }
+
+        @Override
+        public void postLoad(Constructed entity, Datastore datastore) {
+            CALLS.add("PostLoad:" + entity.name);
         }
     }
 

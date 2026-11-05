@@ -115,10 +115,10 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
                 ? null
                 : document != null
                         ? document.get(idProperty.getMappedName())
-                        // an id mapped as an entity isn't read ahead: decoding it would run its own load callbacks an
-                        // extra time, before this entity's. the document path never keyed one the way references do
-                        // either. any other id, a Document or a Map included, is
-                        : peekId(reader, model, !datastore.getMapper().isMappable(idProperty.getType()));
+                        // an id that decodes as an entity isn't read ahead: decoding it would run its own load
+                        // callbacks an extra time, before this entity's. the document path never keyed one the way
+                        // references do either. any other id, a Document or a Map included, is
+                        : peekId(reader, model, false);
 
         // mirrors EntityDecoder: publish the instance before its properties are decoded so that reference cycles
         // through a lifecycle-aware entity terminate the same way they do for any other entity. a creator that needs
