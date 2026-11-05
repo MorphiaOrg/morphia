@@ -324,6 +324,22 @@ harness passes, and both mappers agree.
   listener takes a `Document`. Gate on event coverage, not `hasListeners()`.
 - Build on 2.6.
 - Plan the removal of `addInterceptor`, which has been deprecated for removal since 2.4.0.
+- Prerequisites: #4432 (`EntityListener` becomes a marker; per-event listener interfaces show whether a listener
+  takes a `Document`) and #4431 (global listeners configured with `MorphiaConfig.listeners()`).
+- Opt-in `Document` listeners, as the streaming path's escape hatch: `PostLoadDocumentListener<T>`
+  (`postLoad(T, Document, Datastore)`) and `PostPersistDocumentListener<T>` (`postPersist(T, Document, Datastore)`).
+  - A separate single-method interface per event, not a `DocumentAware` marker plus overloads. A marker restates what
+    the override already says, the old `hasAnnotation` duplication: overriding the overload without the marker never
+    calls it, silently. It also covers a whole class rather than one event, and it forces a choice of which overload
+    is abstract, which breaks lambdas or allows a listener that implements nothing.
+  - Dispatch and the per-codec `needsDocument*` flags check for these interfaces per event, like the others. A class
+    may implement only one of each pair for an event; the mapper rejects both at registration.
+  - `PostLoad`: the only way to read unmapped fields, or compare the entity with the raw document, after decoding.
+  - `PostPersist`: `LifecycleEncoder` runs it on the fully encoded `Document` before writing it, so it's the hook for
+    adding fields or signing encoded content.
+  - None for `PrePersist`, whose `Document` is still empty (encoding hasn't happened), so a `PostPersist` listener
+    covers it. `PreLoad` already takes the `Document`. The lifecycle docs' `DigitalSigner` signs at `@PrePersist`, so
+    it signs an empty document: fix that example in the listener docs update that follows #4431.
 
 ### ~~4.3 Shared registration protocol in `AbstractMapper` (#18, A3/D7)~~
 - `synchronized final mapEntity` → `protected abstract buildModel(Class)`.
@@ -406,6 +422,18 @@ harness passes, and both mappers agree.
 - Fix the `CritterEntityModel` javadoc and `design/GeneratedCode.adoc` item 2, which recommends the constant-getter
   approach that C1 shows the JIT can't optimize.
 
+### 4.14 Annotated lifecycle methods become entity-only (follow-up to #4432)
+Decide once #4431 has landed and the listener code has settled, based on what's left in `EntityListenerAdapter`.
+- `@EntityListeners` classes would implement the per-event interfaces only. Their annotated methods are deprecated
+  first, not removed. `EntityModel.callLifecycleMethods` then has three paths: the entity's own annotated methods
+  (reflective, `OnEntityListenerAdapter`), and `@EntityListeners` instances and global listeners (both
+  `TypedListeners`, with no reflection). Critter could later generate direct calls for the entity's own methods.
+- Cost: an `@EntityListeners` method that writes the `Document` before a save, or reads it after a save or a load,
+  has nowhere to go and must move to the entity's own annotated method. That's a documented pattern (the
+  `DigitalSigner` example in the lifecycle docs). The `EntityListenerMigration` recipe can convert the rest and flag
+  those.
+- `@EntityListeners` instances would be created when the model is set up rather than on first use.
+
 ---
 
 ## Phase 5: Clean-up (any time, low risk)
@@ -462,7 +490,8 @@ Only start after Phases 3 and 4 have shipped and been re-measured.
 5. 3.0 codec plan skeleton
 6. 3.1 → 3.9, with JMH deltas
 7. 3.10–3.15 startup, lifecycle and codec quick wins; 3.16 primitive arrays (independent)
-8. 4.1 sessions share the mapper → 4.2 lifecycle streaming
+8. 4.1 sessions share the mapper → #4432 listener interfaces → #4431 configured listeners → 4.2 lifecycle
+   streaming; 4.14 entity-only annotated methods once #4431 settles
 9. 4.4 generic resolver
 10. Phase 5 A11 builder/annotation utility → 4.5 parity test → 4.6 shared rules → 4.7 plain models → 4.8 divergences →
     4.9–4.11 → 4.12 AOT guard + 4.13 API surface (**before 3.0 GA**)

@@ -28,17 +28,12 @@ import java.util.stream.Collectors;
 import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.Datastore;
 import dev.morphia.EntityListener;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.EntityListeners;
 import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.annotations.Id;
-import dev.morphia.annotations.PostLoad;
-import dev.morphia.annotations.PostPersist;
-import dev.morphia.annotations.PreLoad;
-import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.ShardKeys;
 import dev.morphia.annotations.Version;
 import dev.morphia.annotations.internal.MorphiaInternal;
@@ -55,6 +50,7 @@ import dev.morphia.mapping.conventions.MorphiaConvention;
 import dev.morphia.mapping.conventions.MorphiaDefaultsConvention;
 import dev.morphia.mapping.lifecycle.EntityListenerAdapter;
 import dev.morphia.mapping.lifecycle.OnEntityListenerAdapter;
+import dev.morphia.mapping.lifecycle.TypedListeners;
 import dev.morphia.sofia.Sofia;
 
 import org.bson.Document;
@@ -105,7 +101,7 @@ public class EntityModel {
     private EntityModel superClass;
     private PropertyModel idProperty;
     private PropertyModel versionProperty;
-    private final List<EntityListener<?>> listeners = new ArrayList<>();
+    private final List<EntityListenerAdapter> listeners = new ArrayList<>();
     // bit i set when a listener handles Mapper.LIFECYCLE_ANNOTATIONS[i]; worked out when the listeners are set up
     private int lifecycleEvents;
     private final Set<Class<?>> classes = new LinkedHashSet<>();
@@ -262,18 +258,18 @@ public class EntityModel {
     public void callLifecycleMethods(Class<? extends Annotation> event, Object entity, Document document,
             MorphiaDatastore datastore) {
         if (hasLifecycle(event)) {
-            for (EntityListener<?> listener : listeners) {
-                invokeLifecycleEvent(event, entity, document, datastore, listener);
+            for (EntityListenerAdapter listener : listeners) {
+                listener.invoke(event, entity, document, datastore);
             }
         }
         for (EntityListener<?> listener : datastore.getMapper().getGlobalListeners()) {
-            invokeLifecycleEvent(event, entity, document, datastore, listener);
+            TypedListeners.invoke(listener, event, entity, document, datastore);
         }
         for (EntityListener<?> listener : datastore.getMapper().getListeners()) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug(Sofia.callingInterceptorMethod(event.getSimpleName(), listener));
             }
-            invokeLifecycleEvent(event, entity, document, datastore, listener);
+            TypedListeners.invoke(listener, event, entity, document, datastore);
         }
     }
 
@@ -621,8 +617,8 @@ public class EntityModel {
 
         int events = 0;
         for (int i = 0; i < LIFECYCLE_ANNOTATIONS.size(); i++) {
-            for (EntityListener<?> listener : listeners) {
-                if (listener.hasAnnotation(LIFECYCLE_ANNOTATIONS.get(i))) {
+            for (EntityListenerAdapter listener : listeners) {
+                if (listener.handles(LIFECYCLE_ANNOTATIONS.get(i))) {
                     events |= 1 << i;
                 }
             }
@@ -660,23 +656,6 @@ public class EntityModel {
      */
     public boolean useDiscriminator() {
         return discriminatorEnabled;
-    }
-
-    @SuppressWarnings("rawtypes")
-    private void invokeLifecycleEvent(Class<? extends Annotation> event,
-            Object entity,
-            Document document,
-            Datastore datastore,
-            EntityListener ei) {
-        if (event.equals(PreLoad.class)) {
-            ei.preLoad(entity, document, datastore);
-        } else if (event.equals(PostLoad.class)) {
-            ei.postLoad(entity, document, datastore);
-        } else if (event.equals(PrePersist.class)) {
-            ei.prePersist(entity, document, datastore);
-        } else if (event.equals(PostPersist.class)) {
-            ei.postPersist(entity, document, datastore);
-        }
     }
 
     private class UniqueMap extends LinkedHashMap<String, PropertyModel> {

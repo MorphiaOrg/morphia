@@ -11,17 +11,13 @@ jobs:
     uses: evanchooly/workflows/.github/workflows/code-audits.yml@master
     with:
       java: 17
+  # build.yml directly rather than the shared pull-request.yml: that one's nested auto-merge job can only wait on its own
+  # build, so the auto-merge job lives here where it can wait on every job in this workflow
   Build:
-    uses: evanchooly/workflows/.github/workflows/pull-request.yml@master
-    # the nested dependabot auto-merge job declares these; a called workflow can't exceed the caller's grant
-    permissions:
-      contents: write
-      pull-requests: write
-    secrets:
-      # a token other than GITHUB_TOKEN so the eventual merge triggers build.yml on master
-      AUTOMERGE_TOKEN: ${{ secrets.GH_PUSH_TOKEN }}
+    uses: evanchooly/workflows/.github/workflows/build.yml@master
     with:
       java: 17
+      os: ubuntu-latest
       maven-flags: "-e -Dmorphia.mapper=critter"
 
   # The Build job above runs a plain `install`, so critter has no pre-generated models and generates every model at
@@ -62,3 +58,30 @@ jobs:
             **/target/**/*.log
             **/target/**/*.err
           retention-days: 7
+
+  dependabot:
+    if: ${{ github.actor == 'dependabot[bot]' && github.event_name == 'pull_request' }}
+    name: Automerge dependabot PRs
+    needs:
+      - CodeAudits
+      - Build
+      - CritterAot
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    concurrency:
+      group: "dependabot-automerge-${{ github.base_ref }}"
+      cancel-in-progress: false
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v3
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Enable auto-merge for Dependabot PRs
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          # a token other than GITHUB_TOKEN so the eventual merge triggers build.yml on master
+          GH_TOKEN: ${{ secrets.GH_PUSH_TOKEN || secrets.GITHUB_TOKEN }}

@@ -1,6 +1,5 @@
 package dev.morphia.test.lifecycle;
 
-import java.lang.annotation.Annotation;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Calendar;
@@ -13,8 +12,9 @@ import com.mongodb.client.model.geojson.Position;
 import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.EntityListener;
+import dev.morphia.Datastore;
 import dev.morphia.MorphiaDatastore;
+import dev.morphia.PrePersistListener;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PostLoad;
@@ -26,7 +26,6 @@ import dev.morphia.mapping.DateStorage;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.test.TestBase;
 
-import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -259,14 +258,9 @@ public class TestLifecycles extends TestBase {
         private LifecycleB b;
     }
 
-    private static class NonNullValidation implements EntityListener<Object> {
+    private static class NonNullValidation implements PrePersistListener<Object> {
         @Override
-        public boolean hasAnnotation(@NonNull Class<? extends Annotation> type) {
-            return type.equals(PrePersist.class);
-        }
-
-        @Override
-        public void prePersist(@NonNull Object ent, @NonNull Document document, @NonNull Object datastore) {
+        public void prePersist(@NonNull Object ent, @NonNull Datastore datastore) {
             final List<PropertyModel> fieldsToTest = ((MorphiaDatastore) datastore).getMapper().getEntityModel(ent.getClass())
                     .getProperties(NonNull.class);
             for (PropertyModel mf : fieldsToTest) {

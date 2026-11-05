@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import com.mongodb.lang.Nullable;
 
+import dev.morphia.EntityListener;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.DateStorage;
 import dev.morphia.mapping.DiscriminatorFunction;
@@ -50,7 +51,7 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     String discriminatorKey;
     Boolean enablePolymorphicQueries;
     Boolean ignoreFinals;
-    List<String> listeners;
+    List<EntityListener<?>> listeners;
     MapperType mapper;
     List<String> packages;
     PropertyDiscovery propertyDiscovery;
@@ -191,7 +192,7 @@ public class ManualMorphiaConfig implements MorphiaConfig {
     }
 
     @Override
-    public Optional<List<String>> listeners() {
+    public Optional<List<EntityListener<?>>> listeners() {
         return listeners == null || listeners.isEmpty() ? Optional.empty() : Optional.of(List.copyOf(listeners));
     }
 

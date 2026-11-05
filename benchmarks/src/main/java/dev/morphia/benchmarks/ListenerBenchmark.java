@@ -5,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.mongodb.client.MongoClient;
 
+import dev.morphia.EntityListener;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
 
@@ -59,8 +60,9 @@ public class ListenerBenchmark {
         MapperVariant mapperVariant = MapperVariant.of(variant);
         MorphiaConfig config = Fixtures.config(mapperVariant);
         Mapper mapper = Fixtures.mappedMapper(mapperVariant, config);
-        // claims every event and does nothing for any of them
-        mapper.addInterceptor(event -> true);
+        // does nothing for any event, but its presence routes every entity through the lifecycle codecs
+        mapper.addInterceptor(new EntityListener<Object>() {
+        });
         client = Fixtures.offlineClient();
         codec = (Codec<Object>) Fixtures.codecRegistry(client, config, mapper).get(model.type());
         entity = model.sample();

@@ -50,7 +50,8 @@ public interface Mapper {
             PostLoad.class);
 
     /**
-     * Adds an {@link EntityListener}
+     * Adds an {@link EntityListener} for every entity. It's called for the events of the per-event listener interfaces it
+     * implements, such as {@link dev.morphia.PrePersistListener}.
      *
      * @param ei the interceptor to add
      * @deprecated list global listeners in {@link MorphiaConfig#listeners()} instead, or use
@@ -181,8 +182,8 @@ public interface Mapper {
     List<EntityListener<?>> getListeners();
 
     /**
-     * @return the global listeners named in {@link MorphiaConfig#listeners()}, created when this mapper was. They run for
-     *         every entity, before any added through the deprecated {@link #addInterceptor(EntityListener)}.
+     * @return the global listeners listed in {@link MorphiaConfig#listeners()}. They run for every entity they accept,
+     *         before any added through the deprecated {@link #addInterceptor(EntityListener)}.
      * @hidden
      * @morphia.internal
      */
