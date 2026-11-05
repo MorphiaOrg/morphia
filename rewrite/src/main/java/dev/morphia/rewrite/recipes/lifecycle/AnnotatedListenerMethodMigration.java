@@ -196,9 +196,9 @@ public class AnnotatedListenerMethodMigration extends ScanningRecipe<AnnotatedLi
                 J.MethodDeclaration existing = declared(result, event.method(), arity);
                 // either of the event's interfaces, or a method that implements one: a class may implement only one of them
                 J.MethodDeclaration other = declared(result, event.method(), document ? 2 : 3);
-                if (existing == null && (other != null || implementsEvent(result, type, event, null))
+                if (inherits(type, event.method()) || existing == null && (other != null || implementsEvent(result, type, event, null))
                         || existing != null && implementsEvent(result, type, event, listener)) {
-                    calls.forEach(call -> problems.put(call.method(), ("the class already implements %s() for this event, so this "
+                    calls.forEach(call -> problems.put(call.method(), ("the class already has a %s() method for this event, so this "
                             + "method can't be called from %s's: call it from there by hand").formatted(event.method(), listener)));
                     continue;
                 }
@@ -206,6 +206,7 @@ public class AnnotatedListenerMethodMigration extends ScanningRecipe<AnnotatedLi
                     if (calls.size() == 1 && calls.get(0).method() == existing && existing.hasModifier(J.Modifier.Type.Public)
                             && existing.getMethodType() != null
                             && existing.getMethodType().getReturnType() == JavaType.Primitive.Void
+                            && (existing.getTypeParameters() == null || existing.getTypeParameters().isEmpty())
                             && calls.get(0).code().equals("%s(entity, %sdatastore)".formatted(event.method(),
                                     document ? "document, " : ""))
                             && TypeUtils.isOfType(existing.getMethodType().getParameterTypes().get(0), entityType)) {
@@ -220,6 +221,7 @@ public class AnnotatedListenerMethodMigration extends ScanningRecipe<AnnotatedLi
                     continue;
                 }
                 calls.forEach(call -> moved.computeIfAbsent(call.method(), m -> new ArrayList<>()).add(event));
+                calls.forEach(call -> call.imports().forEach(name -> maybeAddImport(name, false)));
                 interfaces.add(listener);
                 StringBuilder code = new StringBuilder("@Override\npublic void %s(%s entity, %sDatastore datastore) {\n"
                         .formatted(event.method(), entityName, document ? "Document document, " : ""));
@@ -374,7 +376,7 @@ public class AnnotatedListenerMethodMigration extends ScanningRecipe<AnnotatedLi
             JavaType.Method methodType = method.getMethodType();
             if (methodType != null) {
                 methodType.getParameterTypes().stream()
-                        .filter(parameter -> !isDatastore(parameter) && !isDocument(parameter))
+                        .filter(parameter -> !isDatastore(parameter) && !isDocument(parameter) && !methodScoped(method, parameter))
                         .forEach(candidates::add);
             }
         }));
@@ -404,6 +406,7 @@ public class AnnotatedListenerMethodMigration extends ScanningRecipe<AnnotatedLi
             }
         }
         List<String> arguments = new ArrayList<>();
+        List<String> imports = new ArrayList<>();
         boolean document = false;
         List<Statement> parameters = method.getParameters();
         for (int i = 0; i < methodType.getParameterTypes().size(); i++) {
@@ -421,7 +424,13 @@ public class AnnotatedListenerMethodMigration extends ScanningRecipe<AnnotatedLi
                 } else {
                     arguments.add("new Document()");
                 }
+            } else if (methodScoped(method, parameter)) {
+                return Call.problem(method, ("its entity parameter's type is the method's own type variable, which %s's method "
+                        + "can't name: call it from there by hand").formatted(event.listener()));
             } else if (accepts(parameter, entityType)) {
+                if (!TypeUtils.isOfType(parameter, entityType) && parameter instanceof JavaType.FullyQualified cast) {
+                    imports.add(cast.getFullyQualifiedName());
+                }
                 // cast to the parameter's type, so an overload taking the entity's own type isn't called instead
                 arguments.add(TypeUtils.isOfType(parameter, entityType) ? "entity" : "(%s) entity".formatted(name(parameter)));
             } else {
@@ -429,7 +438,7 @@ public class AnnotatedListenerMethodMigration extends ScanningRecipe<AnnotatedLi
                         + "there by hand").formatted(event.listener(), name(entityType), name(parameter)));
             }
         }
-        return new Call(method, "%s(%s)".formatted(method.getSimpleName(), String.join(", ", arguments)), document, null);
+        return new Call(method, "%s(%s)".formatted(method.getSimpleName(), String.join(", ", arguments)), document, imports, null);
     }
 
     private static boolean accepts(JavaType parameter, JavaType entityType) {
@@ -470,6 +479,30 @@ public class AnnotatedListenerMethodMigration extends ScanningRecipe<AnnotatedLi
                                 implemented.getType())));
     }
 
+    /**
+     * @return true if a superclass declares a method with the name and the arity of one of the event's interface methods,
+     *         which a generated method would override or clash with
+     */
+    private static boolean inherits(JavaType.FullyQualified type, String name) {
+        for (JavaType.FullyQualified parent = type.getSupertype(); parent != null
+                && !parent.getFullyQualifiedName().equals("java.lang.Object"); parent = parent.getSupertype()) {
+            if (parent.getMethods().stream().anyMatch(method -> method.getName().equals(name)
+                    && (method.getParameterTypes().size() == 2 || method.getParameterTypes().size() == 3))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return true if the type is one of the method's own type variables, which can't be named outside it
+     */
+    private static boolean methodScoped(J.MethodDeclaration method, JavaType type) {
+        return type instanceof JavaType.GenericTypeVariable variable && method.getTypeParameters() != null
+                && method.getTypeParameters().stream().anyMatch(parameter -> parameter.getName() instanceof J.Identifier name
+                        && name.getSimpleName().equals(variable.getName()));
+    }
+
     private static boolean isEntity(J.ClassDeclaration classDecl) {
         return classDecl.getLeadingAnnotations().stream()
                 .anyMatch(annotation -> ENTITY_ANNOTATIONS.stream().anyMatch(name -> TypeUtils.isOfClassType(annotation.getType(), name)));
@@ -501,10 +534,12 @@ public class AnnotatedListenerMethodMigration extends ScanningRecipe<AnnotatedLi
      * A call from an interface's method to an annotated method, or why there can't be one.
      *
      * @param document true if it passes the {@code Document}
+     * @param imports  the types its casts name
      */
-    private record Call(J.MethodDeclaration method, String code, boolean document, @Nullable String problem) {
+    private record Call(J.MethodDeclaration method, String code, boolean document, List<String> imports,
+            @Nullable String problem) {
         static Call problem(J.MethodDeclaration method, String problem) {
-            return new Call(method, "", false, problem);
+            return new Call(method, "", false, List.of(), problem);
         }
     }
 

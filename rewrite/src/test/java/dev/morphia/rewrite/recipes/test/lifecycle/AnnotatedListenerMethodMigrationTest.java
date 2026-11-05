@@ -593,7 +593,7 @@ class AnnotatedListenerMethodMigrationTest extends MorphiaRewriteTest {
                                         System.out.println(document);
                                     }
 
-                                    /*~~(the class already implements postLoad() for this event, so this method can't be called from PostLoadListener's: call it from there by hand)~~>*/@PostLoad
+                                    /*~~(the class already has a postLoad() method for this event, so this method can't be called from PostLoadListener's: call it from there by hand)~~>*/@PostLoad
                                     void check(Order order) {
                                     }
                                 }
@@ -755,7 +755,7 @@ class AnnotatedListenerMethodMigrationTest extends MorphiaRewriteTest {
                                         System.out.println(document);
                                     }
 
-                                    /*~~(the class already implements postLoad() for this event, so this method can't be called from PostLoadListener's: call it from there by hand)~~>*/@PostLoad
+                                    /*~~(the class already has a postLoad() method for this event, so this method can't be called from PostLoadListener's: call it from there by hand)~~>*/@PostLoad
                                     public void postLoad(Order order, Datastore datastore) {
                                     }
                                 }
@@ -809,6 +809,173 @@ class AnnotatedListenerMethodMigrationTest extends MorphiaRewriteTest {
                                     @Override
                                     public void postLoad(Order entity, Datastore datastore) {
                                         touch((Object) entity);
+                                    }
+                                }
+                                """));
+    }
+
+    @Test
+    void flagsAMethodWhoseEventMethodIsInherited() {
+        rewriteRun(java(ORDER),
+                java(
+                        //language=java
+                        """
+                                package app;
+
+                                import dev.morphia.Datastore;
+
+                                public class Base {
+                                    public final void postLoad(Order order, Datastore datastore) {
+                                    }
+                                }
+                                """),
+                java(
+                        //language=java
+                        """
+                                package app;
+
+                                import dev.morphia.annotations.PostLoad;
+
+                                public class Stamping extends Base {
+                                    @PostLoad
+                                    void stamp(Order order) {
+                                    }
+                                }
+                                """,
+                        //language=java
+                        """
+                                package app;
+
+                                import dev.morphia.annotations.PostLoad;
+
+                                public class Stamping extends Base {
+                                    /*~~(the class already has a postLoad() method for this event, so this method can't be called from PostLoadListener's: call it from there by hand)~~>*/@PostLoad
+                                    void stamp(Order order) {
+                                    }
+                                }
+                                """));
+    }
+
+    @Test
+    void doesNotReuseAGenericMethod() {
+        rewriteRun(java(ORDER),
+                java(
+                        //language=java
+                        """
+                                package app;
+
+                                import dev.morphia.Datastore;
+                                import dev.morphia.annotations.PostLoad;
+
+                                public class Stamping {
+                                    @PostLoad
+                                    public <X> void postLoad(Order order, Datastore datastore) {
+                                    }
+                                }
+                                """,
+                        //language=java
+                        """
+                                package app;
+
+                                import dev.morphia.Datastore;
+                                import dev.morphia.annotations.PostLoad;
+
+                                public class Stamping {
+                                    /*~~(the class already declares postLoad() with 2 parameters, so this method can't be called from PostLoadListener's: call it from there by hand)~~>*/@PostLoad
+                                    public <X> void postLoad(Order order, Datastore datastore) {
+                                    }
+                                }
+                                """));
+    }
+
+    @Test
+    void flagsAMethodWhoseEntityIsItsOwnTypeVariable() {
+        rewriteRun(java(ORDER),
+                java(
+                        //language=java
+                        """
+                                package app;
+
+                                import dev.morphia.annotations.PostLoad;
+
+                                public class Stamping {
+                                    @PostLoad
+                                    <T> void touch(T entity) {
+                                    }
+                                }
+                                """,
+                        //language=java
+                        """
+                                package app;
+
+                                import dev.morphia.annotations.PostLoad;
+
+                                public class Stamping {
+                                    /*~~(its entity parameter's type is the method's own type variable, which PostLoadListener's method can't name: call it from there by hand)~~>*/@PostLoad
+                                    <T> void touch(T entity) {
+                                    }
+                                }
+                                """));
+    }
+
+    @Test
+    void importsTheTypeACastNames() {
+        rewriteRun(java(
+                //language=java
+                """
+                        package app;
+
+                        import dev.morphia.annotations.Entity;
+                        import dev.morphia.annotations.EntityListeners;
+                        import dev.morphia.annotations.Id;
+
+                        @Entity
+                        @EntityListeners(Stamping.class)
+                        public class Order implements java.io.Serializable {
+                            @Id
+                            String id;
+                        }
+                        """),
+                java(
+                        //language=java
+                        """
+                                package app;
+
+                                import dev.morphia.EntityListener;
+                                import dev.morphia.annotations.PostLoad;
+
+                                public class Stamping implements EntityListener<Order> {
+                                    @PostLoad
+                                    void touch(java.io.Serializable entity) {
+                                    }
+
+                                    @Override
+                                    public boolean hasAnnotation(Class<? extends java.lang.annotation.Annotation> type) {
+                                        return false;
+                                    }
+                                }
+                                """,
+                        //language=java
+                        """
+                                package app;
+
+                                import dev.morphia.Datastore;
+                                import dev.morphia.PostLoadListener;
+
+                                import java.io.Serializable;
+
+                                public class Stamping implements PostLoadListener<Order> {
+                                    void touch(Serializable entity) {
+                                    }
+
+                                    @Override
+                                    public boolean hasAnnotation(Class<? extends java.lang.annotation.Annotation> type) {
+                                        return false;
+                                    }
+
+                                    @Override
+                                    public void postLoad(Order entity, Datastore datastore) {
+                                        touch((Serializable) entity);
                                     }
                                 }
                                 """));
