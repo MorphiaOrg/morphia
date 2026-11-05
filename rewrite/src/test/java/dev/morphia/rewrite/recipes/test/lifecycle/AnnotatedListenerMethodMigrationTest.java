@@ -980,4 +980,101 @@ class AnnotatedListenerMethodMigrationTest extends MorphiaRewriteTest {
                                 }
                                 """));
     }
+
+    @Test
+    void flagsAnEntityTypeNamedLikeTheDocument() {
+        rewriteRun(java(
+                //language=java
+                """
+                        package com.acme;
+
+                        import dev.morphia.annotations.Entity;
+                        import dev.morphia.annotations.EntityListeners;
+                        import dev.morphia.annotations.Id;
+
+                        @Entity
+                        @EntityListeners(app.Stamping.class)
+                        public class Document {
+                            @Id
+                            String id;
+                        }
+                        """),
+                java(
+                        //language=java
+                        """
+                                package app;
+
+                                import com.acme.Document;
+                                import dev.morphia.annotations.PostLoad;
+
+                                public class Stamping {
+                                    @PostLoad
+                                    void check(Document entity, org.bson.Document document) {
+                                    }
+                                }
+                                """,
+                        //language=java
+                        """
+                                package app;
+
+                                import com.acme.Document;
+                                import dev.morphia.annotations.PostLoad;
+
+                                /*~~(the generated listener methods would name org.bson.Document, which another type of that name in this file hides: implement the per-event listener interfaces by hand)~~>*/public class Stamping {
+                                    @PostLoad
+                                    void check(Document entity, org.bson.Document document) {
+                                    }
+                                }
+                                """));
+    }
+
+    @Test
+    void flagsAClassThatInheritsTheRawEntityListener() {
+        rewriteRun(java(ORDER),
+                java(
+                        //language=java
+                        """
+                                package app;
+
+                                import dev.morphia.EntityListener;
+
+                                public interface Audit extends EntityListener {
+                                }
+                                """),
+                java(
+                        //language=java
+                        """
+                                package app;
+
+                                import dev.morphia.annotations.PostLoad;
+
+                                public class Stamping implements Audit {
+                                    @PostLoad
+                                    void check(Order order) {
+                                    }
+
+                                    @Override
+                                    public boolean hasAnnotation(Class<? extends java.lang.annotation.Annotation> type) {
+                                        return false;
+                                    }
+                                }
+                                """,
+                        //language=java
+                        """
+                                package app;
+
+                                import dev.morphia.annotations.PostLoad;
+
+                                /*~~(implements app.Audit, which is an EntityListener with another type argument, or none, than the event interfaces would have: implement them by hand)~~>*/public class Stamping implements Audit {
+                                    @PostLoad
+                                    void check(Order order) {
+                                    }
+
+                                    @Override
+                                    public boolean hasAnnotation(Class<? extends java.lang.annotation.Annotation> type) {
+                                        return false;
+                                    }
+                                }
+                                """));
+    }
 }

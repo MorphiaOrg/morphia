@@ -174,6 +174,7 @@ public class AnnotatedListenerMethodMigration extends ScanningRecipe<AnnotatedLi
             Map<J.MethodDeclaration, List<Event>> moved = new HashMap<>();
             List<String> interfaces = new ArrayList<>();
             List<String> generated = new ArrayList<>();
+            List<String> castTypes = new ArrayList<>();
             for (Map.Entry<Event, List<J.MethodDeclaration>> entry : methods.entrySet()) {
                 Event event = entry.getKey();
                 List<J.MethodDeclaration> eventMethods = entry.getValue();
@@ -221,7 +222,7 @@ public class AnnotatedListenerMethodMigration extends ScanningRecipe<AnnotatedLi
                     continue;
                 }
                 calls.forEach(call -> moved.computeIfAbsent(call.method(), m -> new ArrayList<>()).add(event));
-                calls.forEach(call -> call.imports().forEach(name -> maybeAddImport(name, false)));
+                calls.forEach(call -> castTypes.addAll(call.imports()));
                 interfaces.add(listener);
                 StringBuilder code = new StringBuilder("@Override\npublic void %s(%s entity, %sDatastore datastore) {\n"
                         .formatted(event.method(), entityName, document ? "Document document, " : ""));
@@ -229,6 +230,19 @@ public class AnnotatedListenerMethodMigration extends ScanningRecipe<AnnotatedLi
                 generated.add(code.append("}").toString());
             }
 
+            if (!interfaces.isEmpty()) {
+                String clash = clash(entityType, castTypes, generated.stream().anyMatch(code -> code.contains("Document")));
+                if (clash != null) {
+                    return SearchResult.found(result, ("the generated listener methods would name %s, which another type of that "
+                            + "name in this file hides: implement the per-event listener interfaces by hand").formatted(clash));
+                }
+                String inheritedListener = rawOrOtherListener(result, entityType);
+                if (inheritedListener != null) {
+                    return SearchResult.found(result, ("implements %s, which is an EntityListener with another type argument, or "
+                            + "none, than the event interfaces would have: implement them by hand").formatted(inheritedListener));
+                }
+            }
+            castTypes.forEach(name -> maybeAddImport(name, false));
             J.ClassDeclaration updated = result.withBody(result.getBody().withStatements(ListUtils.map(
                     result.getBody().getStatements(), statement -> {
                         if (statement instanceof J.MethodDeclaration method) {
@@ -259,6 +273,38 @@ public class AnnotatedListenerMethodMigration extends ScanningRecipe<AnnotatedLi
             }
             EVENTS.values().forEach(event -> maybeRemoveImport("dev.morphia.annotations." + event.annotation()));
             return updated;
+        }
+
+        /**
+         * @return the first type the generated code would name by a simple name that the file, or the generated code itself,
+         *         uses for another type; or null
+         */
+        private @Nullable String clash(JavaType entityType, List<String> castTypes, boolean document) {
+            Map<String, String> names = new HashMap<>();
+            J.CompilationUnit cu = getCursor().firstEnclosing(J.CompilationUnit.class);
+            if (cu != null) {
+                for (J.Import anImport : cu.getImports()) {
+                    if (!anImport.isStatic() && !anImport.getQualid().getSimpleName().equals("*")) {
+                        names.put(anImport.getQualid().getSimpleName(), anImport.getTypeName());
+                    }
+                }
+            }
+            List<String> used = new ArrayList<>(castTypes);
+            used.add(DATASTORE);
+            if (document) {
+                used.add(DOCUMENT);
+            }
+            if (entityType instanceof JavaType.FullyQualified fullyQualified) {
+                used.add(fullyQualified.getFullyQualifiedName());
+            }
+            for (String name : used) {
+                String simple = name.substring(name.lastIndexOf('.') + 1);
+                String other = names.putIfAbsent(simple, name);
+                if (other != null && !other.equals(name)) {
+                    return name;
+                }
+            }
+            return null;
         }
 
         /**
@@ -501,6 +547,29 @@ public class AnnotatedListenerMethodMigration extends ScanningRecipe<AnnotatedLi
         return type instanceof JavaType.GenericTypeVariable variable && method.getTypeParameters() != null
                 && method.getTypeParameters().stream().anyMatch(parameter -> parameter.getName() instanceof J.Identifier name
                         && name.getSimpleName().equals(variable.getName()));
+    }
+
+    /**
+     * @return an implemented type, other than {@code EntityListener} itself, that inherits {@code EntityListener} raw or with a
+     *         type argument other than the entity type, so the class couldn't also implement the parameterized event
+     *         interfaces; or null
+     */
+    private static @Nullable String rawOrOtherListener(J.ClassDeclaration classDecl, JavaType entityType) {
+        if (classDecl.getImplements() == null) {
+            return null;
+        }
+        for (TypeTree implemented : classDecl.getImplements()) {
+            JavaType type = implemented.getType();
+            if (type == null || TypeUtils.isOfClassType(type, ENTITY_LISTENER) || !TypeUtils.isAssignableTo(ENTITY_LISTENER, type)) {
+                continue;
+            }
+            JavaType argument = EntityListenerMigration.listenerArgument(type, Map.of(), new HashSet<>());
+            if (argument == null || !TypeUtils.isOfType(argument, entityType)) {
+                JavaType.FullyQualified named = TypeUtils.asFullyQualified(type);
+                return named != null ? named.getFullyQualifiedName() : type.toString();
+            }
+        }
+        return null;
     }
 
     private static boolean isEntity(J.ClassDeclaration classDecl) {
