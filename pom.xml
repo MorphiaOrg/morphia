@@ -51,7 +51,7 @@
         <asm.version>9.11.1</asm.version>
         <awaitility.version>1.7.0</awaitility.version>
         <dokka.version>2.2.0</dokka.version>
-        <driver.version>5.13.0</driver.version>
+        <driver.version>5.14.0</driver.version>
         <driver.minor.version>5.6</driver.minor.version>
         <driver-javadoc.link>https://mongodb.github.io/mongo-java-driver/${driver.minor.version}/apidocs</driver-javadoc.link>
         <morphia-javadoc.link>https://morphia.dev/morphia/${morphia.minor.version}/javadoc</morphia-javadoc.link>
@@ -62,7 +62,7 @@
         <javapoet.version>1.13.0</javapoet.version>
         <kotlinpoet.version>1.19.1</kotlinpoet.version>
         <logback.version>1.6.6</logback.version>
-        <ksp.version>2.3.12</ksp.version>
+        <ksp.version>2.3.13</ksp.version>
         <maven.version>4.0.0-rc-7</maven.version>
         <morphia.minor.version>3.0</morphia.minor.version>
         <revapi.maven.plugin.version>0.15.1</revapi.maven.plugin.version>
@@ -179,7 +179,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.6.3</version>
+                <version>3.7.0</version>
                 <executions>
                     <execution>
                         <id>enforce-java</id>
@@ -253,7 +253,7 @@
             <dependency>
                 <groupId>io.smallrye.config</groupId>
                 <artifactId>smallrye-config</artifactId>
-                <version>4.1.0</version>
+                <version>4.2.0</version>
             </dependency>
 
             <dependency>
@@ -379,7 +379,7 @@
             <dependency>
                 <groupId>net.bytebuddy</groupId>
                 <artifactId>byte-buddy</artifactId>
-                <version>1.18.16</version>
+                <version>1.18.17</version>
             </dependency>
             <dependency>
                 <groupId>io.github.classgraph</groupId>
