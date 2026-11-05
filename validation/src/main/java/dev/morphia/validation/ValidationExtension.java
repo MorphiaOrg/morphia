@@ -1,14 +1,9 @@
 package dev.morphia.validation;
 
-import java.lang.annotation.Annotation;
 import java.util.Set;
 
-import com.mongodb.lang.NonNull;
-
-import dev.morphia.EntityListener;
-import dev.morphia.annotations.PrePersist;
-
-import org.bson.Document;
+import dev.morphia.Datastore;
+import dev.morphia.PrePersistListener;
 
 import jakarta.validation.Validation;
 import jakarta.validation.ValidatorFactory;
@@ -18,7 +13,7 @@ import jakarta.validation.ValidatorFactory;
  *
  * @since 2.3
  */
-public class ValidationExtension implements EntityListener<Object> {
+public class ValidationExtension implements PrePersistListener<Object> {
     private final ValidatorFactory validationFactory;
 
     /**
@@ -31,14 +26,8 @@ public class ValidationExtension implements EntityListener<Object> {
     }
 
     @Override
-    public boolean hasAnnotation(@NonNull Class<? extends Annotation> type) {
-        return PrePersist.class.equals(type);
-    }
-
-    @Override
-    @PrePersist
     @SuppressWarnings("unchecked")
-    public void prePersist(Object ent, Document document, Object datastore) {
+    public void prePersist(Object ent, Datastore datastore) {
         final Set validate = validationFactory.getValidator().validate(ent);
         if (!validate.isEmpty()) {
             throw new VerboseJSR303ConstraintViolationException(validate);

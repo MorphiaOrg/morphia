@@ -220,7 +220,8 @@ public class DocumentReaderTest extends TestBase {
         HasNestedByteArray hasNestedByteArray = new HasNestedByteArray();
         hasNestedByteArray.nested = hasByteArray;
         getDs().save(hasNestedByteArray);
-        EntityListener<?> interceptor = (EntityListener) type -> false;
+        EntityListener<?> interceptor = new EntityListener<Object>() {
+        };
         try {
             getDs().getMapper().addInterceptor(interceptor);
             Document first = getDs().getCollection(HasNestedByteArray.class)
