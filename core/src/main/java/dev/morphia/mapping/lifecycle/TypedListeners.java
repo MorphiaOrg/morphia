@@ -26,7 +26,9 @@ import org.bson.Document;
 /**
  * Calls the per-event listener interfaces, {@link PrePersistListener} and the rest. A listener is called for an event only
  * with entities of the interface's type argument: a {@code PrePersistListener<Auditable>} sees {@code Auditable} entities
- * alone. A raw implementation, such as a lambda's class, sees every entity.
+ * alone. A raw implementation sees every entity. That includes every lambda, whose class implements the raw interface
+ * whatever its target type, so a lambda typed for a narrower entity fails in its bridge method's cast when it's given
+ * another entity; the interfaces' javadoc tells users to type lambdas {@code Object}.
  *
  * @hidden
  * @morphia.internal

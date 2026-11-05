@@ -108,6 +108,46 @@ public class TestTypedListeners {
 
     @ParameterizedTest
     @EnumSource(MapperType.class)
+    void aTypedLambdaSeesEveryEntityToo(MapperType mapperType) {
+        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
+            MorphiaDatastore datastore = datastore(client, mapperType);
+            // the lambda's class implements the raw interface, so its type argument is lost, as the interfaces' javadoc says
+            datastore.getMapper().addInterceptor((PrePersistListener<Plain>) (entity, ds) -> CALLS.add(entity.name));
+            datastore.getMapper().map(Other.class);
+            Plain plain = new Plain();
+            plain.name = "plain";
+
+            encode(datastore.getCodecRegistry().get(Plain.class), plain);
+            Assertions.assertEquals(List.of("plain"), CALLS);
+            Codec<Other> others = datastore.getCodecRegistry().get(Other.class);
+            Assertions.assertThrows(ClassCastException.class, () -> encode(others, new Other()));
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    void aTypedAnonymousClassKeepsItsTypeArgument(MapperType mapperType) {
+        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
+            MorphiaDatastore datastore = datastore(client, mapperType);
+            datastore.getMapper().addInterceptor(new PrePersistListener<Plain>() {
+                @Override
+                public void prePersist(Plain entity, Datastore ds) {
+                    CALLS.add(entity.name);
+                }
+            });
+            datastore.getMapper().map(Other.class);
+            Plain plain = new Plain();
+            plain.name = "plain";
+
+            encode(datastore.getCodecRegistry().get(Plain.class), plain);
+            encode(datastore.getCodecRegistry().get(Other.class), new Other());
+
+            Assertions.assertEquals(List.of("plain"), CALLS);
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
     void anExceptionAListenerThrowsReachesTheCaller(MapperType mapperType) {
         try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
             MorphiaDatastore datastore = datastore(client, mapperType);
