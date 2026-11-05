@@ -142,9 +142,286 @@ class EntityListenerMigrationTest extends MorphiaRewriteTest {
                         import org.bson.Document;
 
                         public class Stamping implements EntityListener<Object> {
-                            /*~~(PrePersistListener no longer takes the Document: move this logic to a PreLoadListener, or to an annotated method on the entity or on an @EntityListeners class)~~>*/@Override
+                            /*~~(PrePersistListener takes no Document: the one it was given was always empty, as the entity isn't encoded yet. To change what's saved, implement PostPersistDocumentListener)~~>*/@Override
                             public void prePersist(Object entity, Document document, Datastore datastore) {
                                 document.put("stamp", 1);
+                            }
+                        }
+                        """));
+    }
+
+    @Test
+    void migratesMethodsThatUseTheDocumentToTheDocumentListeners() {
+        rewriteRun(java(
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.EntityListener;
+                        import org.bson.Document;
+
+                        public class Signing implements EntityListener<Object> {
+                            @Override
+                            public boolean hasAnnotation(Class<? extends java.lang.annotation.Annotation> type) {
+                                return true;
+                            }
+
+                            @Override
+                            public void prePersist(Object entity, Document document, Datastore datastore) {
+                                System.out.println(entity);
+                            }
+
+                            @Override
+                            public void postPersist(Object entity, Document document, Datastore datastore) {
+                                document.put("signature", document.hashCode());
+                            }
+
+                            @Override
+                            public void postLoad(Object entity, Document document, Datastore datastore) {
+                                System.out.println(document.get("signature"));
+                            }
+                        }
+                        """,
+                //language=java
+                """
+                        import dev.morphia.*;
+                        import org.bson.Document;
+
+                        public class Signing implements PrePersistListener<Object>, PostPersistDocumentListener<Object>, PostLoadDocumentListener<Object> {
+                            @Override
+                            public void prePersist(Object entity, Datastore datastore) {
+                                System.out.println(entity);
+                            }
+
+                            @Override
+                            public void postPersist(Object entity, Document document, Datastore datastore) {
+                                document.put("signature", document.hashCode());
+                            }
+
+                            @Override
+                            public void postLoad(Object entity, Document document, Datastore datastore) {
+                                System.out.println(document.get("signature"));
+                            }
+                        }
+                        """));
+    }
+
+    @Test
+    void keepsTheDocumentInCallsToADocumentListenerMethod() {
+        rewriteRun(java(
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.EntityListener;
+                        import org.bson.Document;
+
+                        public class Reloading implements EntityListener<Object> {
+                            @Override
+                            public void postPersist(Object entity, Document document, Datastore datastore) {
+                                postLoad(entity, document, datastore);
+                            }
+
+                            @Override
+                            public void postLoad(Object entity, Document document, Datastore datastore) {
+                                System.out.println(document.get("name"));
+                            }
+                        }
+                        """,
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.PostLoadDocumentListener;
+                        import dev.morphia.PostPersistDocumentListener;
+                        import org.bson.Document;
+
+                        public class Reloading implements PostPersistDocumentListener<Object>, PostLoadDocumentListener<Object> {
+                            @Override
+                            public void postPersist(Object entity, Document document, Datastore datastore) {
+                                postLoad(entity, document, datastore);
+                            }
+
+                            @Override
+                            public void postLoad(Object entity, Document document, Datastore datastore) {
+                                System.out.println(document.get("name"));
+                            }
+                        }
+                        """));
+    }
+
+    @Test
+    void anOverrideKeepsTheDocumentItsSuperclassKeeps() {
+        rewriteRun(java(
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.EntityListener;
+                        import org.bson.Document;
+
+                        public class Base implements EntityListener<Object> {
+                            @Override
+                            public void postLoad(Object entity, Document document, Datastore datastore) {
+                                System.out.println(document.get("name"));
+                            }
+                        }
+
+                        class Child extends Base {
+                            @Override
+                            public void postLoad(Object entity, Document document, Datastore datastore) {
+                                System.out.println(entity);
+                            }
+                        }
+                        """,
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.PostLoadDocumentListener;
+                        import org.bson.Document;
+
+                        public class Base implements PostLoadDocumentListener<Object> {
+                            @Override
+                            public void postLoad(Object entity, Document document, Datastore datastore) {
+                                System.out.println(document.get("name"));
+                            }
+                        }
+
+                        class Child extends Base {
+                            @Override
+                            public void postLoad(Object entity, Document document, Datastore datastore) {
+                                System.out.println(entity);
+                            }
+                        }
+                        """));
+    }
+
+    @Test
+    void flagsAnOverrideThatUsesTheDocumentItsSuperclassDoesNot() {
+        rewriteRun(java(
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.EntityListener;
+                        import org.bson.Document;
+
+                        public class Base implements EntityListener<Object> {
+                            @Override
+                            public void postLoad(Object entity, Document document, Datastore datastore) {
+                                System.out.println(entity);
+                            }
+                        }
+
+                        class Child extends Base {
+                            @Override
+                            public void postLoad(Object entity, Document document, Datastore datastore) {
+                                System.out.println(document.get("name"));
+                            }
+                        }
+                        """,
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.PostLoadListener;
+                        import org.bson.Document;
+
+                        public class Base implements PostLoadListener<Object> {
+                            @Override
+                            public void postLoad(Object entity, Datastore datastore) {
+                                System.out.println(entity);
+                            }
+                        }
+
+                        class Child extends Base {
+                            /*~~(the overridden Base.postLoad migrates to PostLoadListener, which takes no Document: stop using the Document here, or migrate both by hand)~~>*/@Override
+                            public void postLoad(Object entity, Document document, Datastore datastore) {
+                                System.out.println(document.get("name"));
+                            }
+                        }
+                        """));
+    }
+
+    @Test
+    void settlesAnOverrideAgainstItsSuperclassInAnotherFile() {
+        rewriteRun(java(
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.EntityListener;
+                        import org.bson.Document;
+
+                        public class Base implements EntityListener<Object> {
+                            @Override
+                            public void postLoad(Object entity, Document document, Datastore datastore) {
+                                System.out.println(document.get("name"));
+                            }
+                        }
+                        """,
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.PostLoadDocumentListener;
+                        import org.bson.Document;
+
+                        public class Base implements PostLoadDocumentListener<Object> {
+                            @Override
+                            public void postLoad(Object entity, Document document, Datastore datastore) {
+                                System.out.println(document.get("name"));
+                            }
+                        }
+                        """),
+                java(
+                        //language=java
+                        """
+                                import dev.morphia.Datastore;
+                                import org.bson.Document;
+
+                                public class Child extends Base {
+                                    @Override
+                                    public void postLoad(Object entity, Document document, Datastore datastore) {
+                                        System.out.println(entity);
+                                    }
+                                }
+                                """));
+    }
+
+    @Test
+    void passingTheDocumentToTheSuperclassIsNotAUse() {
+        rewriteRun(java(
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.EntityListener;
+                        import org.bson.Document;
+
+                        public class Base implements EntityListener<Object> {
+                            @Override
+                            public void postLoad(Object entity, Document document, Datastore datastore) {
+                                System.out.println(entity);
+                            }
+                        }
+
+                        class Child extends Base {
+                            @Override
+                            public void postLoad(Object entity, Document document, Datastore datastore) {
+                                super.postLoad(entity, document, datastore);
+                                System.out.println("child");
+                            }
+                        }
+                        """,
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.PostLoadListener;
+
+                        public class Base implements PostLoadListener<Object> {
+                            @Override
+                            public void postLoad(Object entity, Datastore datastore) {
+                                System.out.println(entity);
+                            }
+                        }
+
+                        class Child extends Base {
+                            @Override
+                            public void postLoad(Object entity, Datastore datastore) {
+                                super.postLoad(entity, datastore);
+                                System.out.println("child");
                             }
                         }
                         """));
@@ -820,7 +1097,7 @@ class EntityListenerMigrationTest extends MorphiaRewriteTest {
                         import org.bson.Document;
 
                         public class Stamping implements EntityListener<Object> {
-                            /*~~(PrePersistListener no longer takes the Document: move this logic to a PreLoadListener, or to an annotated method on the entity or on an @EntityListeners class)~~>*/@Override
+                            /*~~(PrePersistListener takes no Document: the one it was given was always empty, as the entity isn't encoded yet. To change what's saved, implement PostPersistDocumentListener)~~>*/@Override
                             public void prePersist(Object entity, Document document, Datastore datastore) {
                                 document.put("stamp", 1);
                             }
@@ -862,15 +1139,16 @@ class EntityListenerMigrationTest extends MorphiaRewriteTest {
                 //language=java
                 """
                         import dev.morphia.Datastore;
+                        import dev.morphia.PostPersistDocumentListener;
                         import dev.morphia.PrePersistListener;
                         import org.bson.Document;
 
-                        public class Forwarding implements PrePersistListener<Object> {
+                        public class Forwarding implements PrePersistListener<Object>, PostPersistDocumentListener<Object> {
                             @Override
                             public void prePersist(Object entity, Datastore datastore) {
                             }
 
-                            /*~~(PostPersistListener no longer takes the Document: move this logic to a PreLoadListener, or to an annotated method on the entity or on an @EntityListeners class)~~>*/@Override
+                            @Override
                             public void postPersist(Object entity, Document document, Datastore datastore) {
                                 /*~~(PrePersistListener's method takes no Document, and dropping this argument would drop what it does)~~>*/prePersist(entity, document.append("stamp", 1), datastore);
                             }
