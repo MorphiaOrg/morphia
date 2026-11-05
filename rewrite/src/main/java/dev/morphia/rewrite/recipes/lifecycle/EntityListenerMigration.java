@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -16,7 +17,7 @@ import org.openrewrite.Cursor;
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.NlsRewrite.Description;
 import org.openrewrite.NlsRewrite.DisplayName;
-import org.openrewrite.Recipe;
+import org.openrewrite.ScanningRecipe;
 import org.openrewrite.Tree;
 import org.openrewrite.TreeVisitor;
 import org.openrewrite.java.AnnotationMatcher;
@@ -41,30 +42,32 @@ import org.openrewrite.marker.SearchResult;
  * A method is migrated only if it overrides one of {@code EntityListener}'s old methods, directly or through a superclass.
  * Each overriding {@code prePersist}, {@code postPersist}, {@code preLoad} or {@code postLoad} moves to its event's
  * interface, with a {@code Datastore} for its last parameter, and calls to it in the same source file are updated to match.
- * Only {@code preLoad} keeps the {@code Document}. {@code hasAnnotation} overrides are removed, as Morphia now checks for the
- * interfaces itself.
+ * Only {@code preLoad} keeps the {@code Document}, except that a {@code postPersist} or {@code postLoad} that uses it moves
+ * to {@code PostPersistDocumentListener} or {@code PostLoadDocumentListener}, which keep it. {@code hasAnnotation} overrides
+ * are removed, as Morphia now checks for the interfaces itself.
  * <p>
  * Some code can't be migrated automatically and is marked for a person to look at:
  * <ul>
- * <li>a {@code prePersist}, {@code postPersist} or {@code postLoad} that reads its {@code Document}, or a method that uses
- * the deprecated {@code Mapper} parameter;</li>
+ * <li>a {@code prePersist} that reads its {@code Document}, which was always empty, or a method that uses the deprecated
+ * {@code Mapper} parameter;</li>
  * <li>an anonymous listener that handles more than one event, or that extends a class, since it can only implement one
  * interface;</li>
  * <li>a call to a listener method that this recipe didn't migrate in the same source file, or a call to
- * {@code hasAnnotation}.</li>
+ * {@code hasAnnotation};</li>
+ * <li>a call to the removed {@code Mapper.addInterceptor}.</li>
  * </ul>
  */
-public class EntityListenerMigration extends Recipe {
+public class EntityListenerMigration extends ScanningRecipe<EntityListenerMigration.Accumulator> {
     private static final String ENTITY_LISTENER = "dev.morphia.EntityListener";
     private static final String DATASTORE = "dev.morphia.Datastore";
     private static final String MAPPER = "dev.morphia.mapping.Mapper";
     private static final String DOCUMENT = "org.bson.Document";
     private static final String LISTENERS = "listeners";
     private static final Map<String, Event> EVENTS = Map.of(
-            "prePersist", new Event("PrePersistListener", "PrePersist", false),
-            "postPersist", new Event("PostPersistListener", "PostPersist", false),
-            "preLoad", new Event("PreLoadListener", "PreLoad", true),
-            "postLoad", new Event("PostLoadListener", "PostLoad", false));
+            "prePersist", new Event("PrePersistListener", "PrePersist", false, null),
+            "postPersist", new Event("PostPersistListener", "PostPersist", false, "PostPersistDocumentListener"),
+            "preLoad", new Event("PreLoadListener", "PreLoad", true, null),
+            "postLoad", new Event("PostLoadListener", "PostLoad", false, "PostLoadDocumentListener"));
 
     /** Creates a new instance. */
     public EntityListenerMigration() {
@@ -80,33 +83,109 @@ public class EntityListenerMigration extends Recipe {
     @Override
     public @Description String getDescription() {
         return "EntityListener is now a marker interface. Implementations move to PrePersistListener, PostPersistListener, "
-                + "PreLoadListener and PostLoadListener, and their hasAnnotation overrides are removed.";
+                + "PreLoadListener and PostLoadListener, or to PostPersistDocumentListener and PostLoadDocumentListener when "
+                + "they use the Document, and their hasAnnotation overrides are removed. Calls to the removed "
+                + "Mapper.addInterceptor are marked: list those listeners in MorphiaConfig.listeners() instead.";
     }
 
     @NotNull
     @Override
-    public TreeVisitor<?, ExecutionContext> getVisitor() {
-        return new Migrator();
+    public Accumulator getInitialValue(@NotNull ExecutionContext ctx) {
+        return new Accumulator();
+    }
+
+    /**
+     * Collects every source file's listener methods first, so an override can be settled against its superclass's in
+     * another file.
+     */
+    @NotNull
+    @Override
+    public TreeVisitor<?, ExecutionContext> getScanner(@NotNull Accumulator accumulator) {
+        return new JavaIsoVisitor<>() {
+            @Override
+            public J.MethodDeclaration visitMethodDeclaration(J.MethodDeclaration method, ExecutionContext ctx) {
+                Plan plan = plan(method, getCursor().getParentTreeCursor().getValue());
+                if (plan != null && !marked(method)) {
+                    String key = key(method.getMethodType());
+                    accumulator.own.put(key, plan);
+                    TypeUtils.findOverriddenMethod(method.getMethodType())
+                            .ifPresent(parent -> accumulator.overridden.put(key, key(parent)));
+                }
+                return super.visitMethodDeclaration(method, ctx);
+            }
+        };
+    }
+
+    @NotNull
+    @Override
+    public TreeVisitor<?, ExecutionContext> getVisitor(@NotNull Accumulator accumulator) {
+        return new Migrator(accumulator.settle());
+    }
+
+    /**
+     * The plan for each listener method in the source set, and the method each overrides.
+     */
+    static final class Accumulator {
+        private final Map<String, Plan> own = new LinkedHashMap<>();
+        private final Map<String, String> overridden = new HashMap<>();
+        private @Nullable Map<String, Plan> settled;
+
+        /**
+         * @return the plans, with each override settled against its superclass's
+         */
+        Map<String, Plan> settle() {
+            if (settled == null) {
+                settled = new HashMap<>();
+                own.keySet().forEach(this::settle);
+            }
+            return settled;
+        }
+
+        /**
+         * An override of a superclass's listener method must keep the signature its superclass's override migrates to: it
+         * keeps the {@code Document} if that one does, and can't use it if that one doesn't.
+         */
+        private Plan settle(String key) {
+            Plan plan = settled.get(key);
+            if (plan != null) {
+                return plan;
+            }
+            plan = own.get(key);
+            String parentKey = overridden.get(key);
+            if (parentKey != null && own.containsKey(parentKey) && plan.event() != null && plan.problem() == null) {
+                Plan parent = settle(parentKey);
+                Event event = plan.event();
+                // a marked superclass override keeps its old signature, so this one migrates alone, and adds its interface
+                if (parent.event() != null && parent.problem() == null && !parent.event().equals(event)) {
+                    plan = parent.event().keepsDocument()
+                            ? new Plan(parent.event(), null, plan.needsInterface())
+                            : new Plan(event, ("the overridden %s migrates to %s, which takes no Document: stop using the Document "
+                                    + "here, or migrate both by hand").formatted(parentKey.replace('#', '.'), parent.event().listener()),
+                                    plan.needsInterface());
+                }
+            }
+            settled.put(key, plan);
+            return plan;
+        }
     }
 
     private static final class Migrator extends JavaIsoVisitor<ExecutionContext> {
-        // the listener methods this source file declares and migrates, so calls to them can be updated
-        private final Set<String> migrated = new HashSet<>();
+        // the plan for each listener method in the source set, settled across overrides
+        private final Map<String, Plan> plans;
+        // the listener methods that migrate, and the events they migrate to, so calls to them can be updated
+        private final Map<String, Event> migrated = new HashMap<>();
+
+        Migrator(Map<String, Plan> plans) {
+            this.plans = plans;
+            plans.forEach((key, plan) -> {
+                if (plan.event() != null && plan.problem() == null) {
+                    migrated.put(key, plan.event());
+                }
+            });
+        }
 
         @Override
         public J.CompilationUnit visitCompilationUnit(J.CompilationUnit cu, ExecutionContext ctx) {
-            migrated.clear();
-            new JavaIsoVisitor<Set<String>>() {
-                @Override
-                public J.MethodDeclaration visitMethodDeclaration(J.MethodDeclaration method, Set<String> keys) {
-                    Plan plan = plan(method, getCursor().getParentTreeCursor().getValue());
-                    if (plan != null && plan.event() != null && plan.problem() == null) {
-                        keys.add(key(method.getMethodType()));
-                    }
-                    return super.visitMethodDeclaration(method, keys);
-                }
-            }.visit(cu, migrated);
-
             J.CompilationUnit result = super.visitCompilationUnit(cu, ctx);
             if (result != cu) {
                 maybeRemoveImport(ENTITY_LISTENER);
@@ -137,9 +216,11 @@ public class EntityListenerMigration extends Recipe {
         public J.@Nullable MethodDeclaration visitMethodDeclaration(J.MethodDeclaration method, ExecutionContext ctx) {
             J.MethodDeclaration result = super.visitMethodDeclaration(method, ctx);
             Plan plan = plan(method, getCursor().getParentTreeCursor().getValue());
-            if (plan == null) {
+            if (plan == null || marked(method)) {
+                // not a listener method, or already marked for a person to look at in an earlier cycle
                 return result;
             }
+            plan = plans.getOrDefault(key(method.getMethodType()), plan);
             if (plan.event() == null) {
                 // a hasAnnotation override
                 return null;
@@ -149,7 +230,7 @@ public class EntityListenerMigration extends Recipe {
             }
             // a superclass's override supplies the interface only if it migrates; one in another file may, so it's added anyway
             boolean needsInterface = plan.needsInterface() || TypeUtils.findOverriddenMethod(method.getMethodType())
-                    .map(overridden -> !migrated.contains(key(overridden)))
+                    .map(overridden -> !migrated.containsKey(key(overridden)))
                     .orElse(false);
             if (needsInterface) {
                 Cursor owner = getCursor().dropParentUntil(tree -> tree instanceof J.ClassDeclaration || tree instanceof J.NewClass);
@@ -270,6 +351,10 @@ public class EntityListenerMigration extends Recipe {
                 // already marked for a person to look at
                 return result;
             }
+            if (type.getName().equals("addInterceptor") && TypeUtils.isAssignableTo(MAPPER, type.getDeclaringType())) {
+                return SearchResult.found(result, "addInterceptor was removed in 3.0: list this listener in "
+                        + "MorphiaConfig.listeners(), or name its class in morphia.listeners in a config file");
+            }
             boolean throughMarker = TypeUtils.isOfClassType(type.getDeclaringType(), ENTITY_LISTENER);
             JavaType.Method root = throughMarker ? type : root(type);
             if (root == null) {
@@ -283,9 +368,10 @@ public class EntityListenerMigration extends Recipe {
             if (event == null || method.getArguments().size() != 3) {
                 return result;
             }
-            if (throughMarker || !migrated.contains(key(type))) {
+            if (throughMarker || !migrated.containsKey(key(type))) {
                 return SearchResult.found(result, "call the migrated %s method instead".formatted(event.listener()));
             }
+            event = migrated.get(key(type));
             List<Expression> arguments = method.getArguments();
             if (!TypeUtils.isAssignableTo(DATASTORE, arguments.get(2).getType())) {
                 return SearchResult.found(result, "%s's method takes a Datastore".formatted(event.listener()));
@@ -409,13 +495,20 @@ public class EntityListenerMigration extends Recipe {
         J.VariableDeclarations document = (J.VariableDeclarations) method.getParameters().get(1);
         J.VariableDeclarations datastore = (J.VariableDeclarations) method.getParameters().get(2);
         String problem = null;
+        Event target = event;
         if (!event.keepsDocument() && uses(method, document)) {
-            problem = "%s no longer takes the Document: move this logic to a PreLoadListener, or to an annotated method on the "
-                    .formatted(event.listener()) + "entity or on an @EntityListeners class";
-        } else if (TypeUtils.isOfClassType(datastore.getType(), MAPPER) && uses(method, datastore)) {
+            if (event.documentListener() != null) {
+                // the event has an interface whose method keeps the Document
+                target = event.withDocument();
+            } else {
+                problem = ("%s takes no Document: the one it was given was always empty, as the entity isn't encoded yet. To "
+                        + "change what's saved, implement PostPersistDocumentListener").formatted(event.listener());
+            }
+        }
+        if (problem == null && TypeUtils.isOfClassType(datastore.getType(), MAPPER) && uses(method, datastore)) {
             problem = "the Mapper parameter is gone: use datastore.getMapper()";
         }
-        return new Plan(event, problem, needsInterface);
+        return new Plan(target, problem, needsInterface);
     }
 
     /**
@@ -598,6 +691,18 @@ public class EntityListenerMigration extends Recipe {
         return method == null ? "" : method.getDeclaringType().getFullyQualifiedName() + "#" + method.getName();
     }
 
+    /**
+     * @return true if the call is to the superclass's version of the named method
+     */
+    private static boolean toSuper(J.MethodInvocation invocation, String name) {
+        return invocation.getSelect() instanceof J.Identifier select && select.getSimpleName().equals("super")
+                && invocation.getSimpleName().equals(name);
+    }
+
+    private static boolean marked(J method) {
+        return method.getMarkers().findFirst(SearchResult.class).isPresent();
+    }
+
     private static boolean uses(J.MethodDeclaration method, J.VariableDeclarations parameter) {
         if (method.getBody() == null) {
             return false;
@@ -607,12 +712,15 @@ public class EntityListenerMigration extends Recipe {
         new JavaIsoVisitor<AtomicBoolean>() {
             @Override
             public J.MethodInvocation visitMethodInvocation(J.MethodInvocation invocation, AtomicBoolean used) {
-                // the Document passed on to another listener method is dropped along with that call's
+                // the Document passed on to another listener method is dropped along with that call's, unless that method
+                // may keep it. the overridden method may, but the override is settled to match it
                 JavaType.Method type = invocation.getMethodType();
                 JavaType.Method root = type == null ? null
                         : TypeUtils.isOfClassType(type.getDeclaringType(), ENTITY_LISTENER) ? type : root(type);
                 Event event = root != null ? EVENTS.get(root.getName()) : null;
-                if (event != null && !event.keepsDocument() && invocation.getArguments().size() == 3
+                if (event != null && !event.keepsDocument()
+                        && (event.documentListener() == null || toSuper(invocation, method.getSimpleName()))
+                        && invocation.getArguments().size() == 3
                         && droppable(invocation.getArguments().get(1))) {
                     visit(invocation.getSelect(), used);
                     visit(invocation.getArguments().get(0), used);
@@ -676,6 +784,15 @@ public class EntityListenerMigration extends Recipe {
         return types;
     }
 
-    private record Event(String listener, String annotation, boolean keepsDocument) {
+    /**
+     * An event's listener interface.
+     *
+     * @param documentListener the interface for the same event whose method takes the {@code Document}, if there's one and
+     *                         this one's doesn't
+     */
+    private record Event(String listener, String annotation, boolean keepsDocument, @Nullable String documentListener) {
+        Event withDocument() {
+            return new Event(Objects.requireNonNull(documentListener), annotation, true, null);
+        }
     }
 }

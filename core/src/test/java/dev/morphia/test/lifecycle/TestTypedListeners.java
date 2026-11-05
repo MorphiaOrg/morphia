@@ -11,8 +11,6 @@ import dev.morphia.Datastore;
 import dev.morphia.EntityListener;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.PostLoadListener;
-import dev.morphia.PostPersistListener;
-import dev.morphia.PreLoadListener;
 import dev.morphia.PrePersistListener;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.EntityListeners;
@@ -42,7 +40,6 @@ import org.junit.jupiter.params.provider.EnumSource;
  * Listeners that implement the per-event interfaces, {@link PrePersistListener} and the rest, are called for those events
  * alone, and only with entities of the interface's type argument.
  */
-@SuppressWarnings({ "deprecation", "removal" })
 public class TestTypedListeners {
     static final List<String> CALLS = new ArrayList<>();
 
@@ -53,66 +50,11 @@ public class TestTypedListeners {
 
     @ParameterizedTest
     @EnumSource(MapperType.class)
-    void interceptorsGetEveryEvent(MapperType mapperType) {
-        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
-            MorphiaDatastore datastore = datastore(client, mapperType);
-            datastore.getMapper().addInterceptor(new Recording());
-            Codec<Plain> codec = datastore.getCodecRegistry().get(Plain.class);
-            Plain entity = new Plain();
-            entity.name = "plain";
-
-            decode(codec, encode(codec, entity));
-
-            Assertions.assertEquals(List.of("prePersist:plain", "postPersist:plain", "preLoad:plain", "postLoad:plain:true"), CALLS);
-        }
-    }
-
-    @ParameterizedTest
-    @EnumSource(MapperType.class)
-    void interceptorsSeeOnlyTheEntitiesTheyAccept(MapperType mapperType) {
-        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
-            MorphiaDatastore datastore = datastore(client, mapperType);
-            datastore.getMapper().addInterceptor(new Recording());
-            datastore.getMapper().addInterceptor(new PlainOnly());
-            datastore.getMapper().map(Other.class, Holder.class);
-            Codec<Other> others = datastore.getCodecRegistry().get(Other.class);
-            Codec<Holder> holders = datastore.getCodecRegistry().get(Holder.class);
-
-            // both listeners take a Plain: an unrelated entity doesn't reach them
-            decode(others, encode(others, new Other()));
-            Assertions.assertEquals(List.of(), CALLS);
-
-            // a Plain held by another entity does
-            Holder holder = new Holder();
-            holder.plain = new Plain();
-            holder.plain.name = "held";
-            encode(holders, holder);
-            Assertions.assertEquals(List.of("prePersist:held", "plainOnly:held", "postPersist:held"), CALLS);
-        }
-    }
-
-    @ParameterizedTest
-    @EnumSource(MapperType.class)
-    void aLambdaSeesEveryEntity(MapperType mapperType) {
-        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
-            MorphiaDatastore datastore = datastore(client, mapperType);
-            datastore.getMapper().addInterceptor((PrePersistListener<Object>) (entity, ds) -> CALLS.add(entity.getClass().getSimpleName()));
-            datastore.getMapper().map(Other.class);
-
-            encode(datastore.getCodecRegistry().get(Plain.class), new Plain());
-            encode(datastore.getCodecRegistry().get(Other.class), new Other());
-
-            Assertions.assertEquals(List.of("Plain", "Other"), CALLS);
-        }
-    }
-
-    @ParameterizedTest
-    @EnumSource(MapperType.class)
     void aTypedLambdaSeesEveryEntityToo(MapperType mapperType) {
         try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
-            MorphiaDatastore datastore = datastore(client, mapperType);
             // the lambda's class implements the raw interface, so its type argument is lost, as the interfaces' javadoc says
-            datastore.getMapper().addInterceptor((PrePersistListener<Plain>) (entity, ds) -> CALLS.add(entity.name));
+            PrePersistListener<Plain> lambda = (entity, ds) -> CALLS.add(entity.name);
+            MorphiaDatastore datastore = datastore(client, mapperType, lambda);
             datastore.getMapper().map(Other.class);
             Plain plain = new Plain();
             plain.name = "plain";
@@ -128,8 +70,7 @@ public class TestTypedListeners {
     @EnumSource(MapperType.class)
     void aTypedAnonymousClassKeepsItsTypeArgument(MapperType mapperType) {
         try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
-            MorphiaDatastore datastore = datastore(client, mapperType);
-            datastore.getMapper().addInterceptor(new PrePersistListener<Plain>() {
+            MorphiaDatastore datastore = datastore(client, mapperType, new PrePersistListener<Plain>() {
                 @Override
                 public void prePersist(Plain entity, Datastore ds) {
                     CALLS.add(entity.name);
@@ -143,21 +84,6 @@ public class TestTypedListeners {
             encode(datastore.getCodecRegistry().get(Other.class), new Other());
 
             Assertions.assertEquals(List.of("plain"), CALLS);
-        }
-    }
-
-    @ParameterizedTest
-    @EnumSource(MapperType.class)
-    void anExceptionAListenerThrowsReachesTheCaller(MapperType mapperType) {
-        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
-            MorphiaDatastore datastore = datastore(client, mapperType);
-            datastore.getMapper().addInterceptor((PrePersistListener<Object>) (entity, ds) -> {
-                throw new IllegalStateException("refused");
-            });
-            Codec<Plain> codec = datastore.getCodecRegistry().get(Plain.class);
-
-            IllegalStateException e = Assertions.assertThrows(IllegalStateException.class, () -> encode(codec, new Plain()));
-            Assertions.assertEquals("refused", e.getMessage());
         }
     }
 
@@ -217,14 +143,15 @@ public class TestTypedListeners {
         Assertions.assertEquals(List.of("inner:inner"), CALLS);
     }
 
-    private static MorphiaDatastore datastore(MongoClient client, MapperType mapperType) {
+    private static MorphiaDatastore datastore(MongoClient client, MapperType mapperType, EntityListener<?>... listeners) {
         MorphiaConfig config = ManualMorphiaConfig.configure()
                 .database("typed_listeners")
                 .mapper(mapperType)
                 .packages(List.of())
                 .applyIndexes(false)
                 .applyCaps(false)
-                .applyDocumentValidations(false);
+                .applyDocumentValidations(false)
+                .listeners(List.of(listeners));
         MorphiaDatastore datastore = new MorphiaDatastore(client, config);
         datastore.getMapper().map(Plain.class);
         return datastore;
@@ -257,13 +184,6 @@ public class TestTypedListeners {
         ObjectId id;
     }
 
-    @Entity("typed_listeners_holder")
-    public static class Holder {
-        @Id
-        ObjectId id;
-        Plain plain;
-    }
-
     @Entity("typed_listeners_listened")
     @EntityListeners(Counting.class)
     public static class Listened {
@@ -279,32 +199,6 @@ public class TestTypedListeners {
         @Override
         public void postLoad(SelfListening entity, Datastore datastore) {
             CALLS.add("self:" + id);
-        }
-    }
-
-    /**
-     * Records its calls for every event.
-     */
-    public static class Recording implements PrePersistListener<Plain>, PostPersistListener<Plain>, PreLoadListener<Plain>,
-            PostLoadListener<Plain> {
-        @Override
-        public void prePersist(Plain entity, Datastore datastore) {
-            CALLS.add("prePersist:" + entity.name);
-        }
-
-        @Override
-        public void postPersist(Plain entity, Datastore datastore) {
-            CALLS.add("postPersist:" + entity.name);
-        }
-
-        @Override
-        public void preLoad(Plain entity, Document document, Datastore datastore) {
-            CALLS.add("preLoad:" + document.getString("name"));
-        }
-
-        @Override
-        public void postLoad(Plain entity, Datastore datastore) {
-            CALLS.add("postLoad:" + entity.name + ":" + (datastore != null));
         }
     }
 

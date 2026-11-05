@@ -70,7 +70,6 @@ public abstract class AbstractMapper implements Mapper {
     // Models whose registration is in progress (being validated), guarded by the mapper's lock. Only the registering
     // thread can see them, so its recursive lookups resolve, while other threads wait on the lock for the outcome.
     private final Map<String, EntityModel> registering = new HashMap<>();
-    protected final List<EntityListener<?>> listeners = new ArrayList<>();
     // from MorphiaConfig.listeners(), fixed once the mapper exists
     private final List<EntityListener<?>> globalListeners;
     protected final MorphiaConfig config;
@@ -140,7 +139,6 @@ public abstract class AbstractMapper implements Mapper {
         this.conversions = other.conversions;
         this.discriminatorLookup = new DiscriminatorLookup(other.classLoader);
         other.mappedEntities.values().forEach(this::clone);
-        this.listeners.addAll(other.listeners);
         this.globalListeners = globalListeners(config);
     }
 
@@ -164,12 +162,6 @@ public abstract class AbstractMapper implements Mapper {
             return null;
         }
         return register(new EntityModel(original), false);
-    }
-
-    @Override
-    @Deprecated(forRemoval = true, since = "2.4.0")
-    public void addInterceptor(EntityListener<?> ei) {
-        listeners.add(ei);
     }
 
     @Override
@@ -314,12 +306,6 @@ public abstract class AbstractMapper implements Mapper {
 
     @Override
     @MorphiaInternal
-    public List<EntityListener<?>> getListeners() {
-        return listeners;
-    }
-
-    @Override
-    @MorphiaInternal
     public List<EntityListener<?>> getGlobalListeners() {
         return globalListeners;
     }
@@ -347,12 +333,6 @@ public abstract class AbstractMapper implements Mapper {
             }
         }
         return wc;
-    }
-
-    @Override
-    @MorphiaInternal
-    public boolean hasListeners() {
-        return !globalListeners.isEmpty() || !listeners.isEmpty();
     }
 
     @Override

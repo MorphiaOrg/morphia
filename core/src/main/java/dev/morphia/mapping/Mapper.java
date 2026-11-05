@@ -50,17 +50,6 @@ public interface Mapper {
             PostLoad.class);
 
     /**
-     * Adds an {@link EntityListener} for every entity. It's called for the events of the per-event listener interfaces it
-     * implements, such as {@link dev.morphia.PrePersistListener}.
-     *
-     * @param ei the interceptor to add
-     * @deprecated list global listeners in {@link MorphiaConfig#listeners()} instead, or use
-     *             {@link dev.morphia.annotations.EntityListeners} for the listeners of one entity
-     */
-    @Deprecated(forRemoval = true, since = "2.4.0")
-    void addInterceptor(EntityListener<?> ei);
-
-    /**
      * @return the copied Mapper
      * @hidden
      * @morphia.internal
@@ -172,18 +161,8 @@ public interface Mapper {
     Object getId(@Nullable Object entity);
 
     /**
-     * Gets list of {@link EntityListener}s
-     *
-     * @return the Interceptors
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    List<EntityListener<?>> getListeners();
-
-    /**
-     * @return the global listeners listed in {@link MorphiaConfig#listeners()}. They run for every entity they accept,
-     *         before any added through the deprecated {@link #addInterceptor(EntityListener)}.
+     * @return the global listeners listed in {@link MorphiaConfig#listeners()}. They run for every entity they accept.
+     *         {@code @EntityListeners} declares the listeners of one entity.
      * @hidden
      * @morphia.internal
      */
@@ -226,14 +205,6 @@ public interface Mapper {
      */
     @Nullable
     WriteConcern getWriteConcern(Class clazz);
-
-    /**
-     * @return true if there are global listeners, configured or added as interceptors
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    boolean hasListeners();
 
     /**
      * Checks if a type is mappable or not

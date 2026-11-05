@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.mongodb.lang.NonNull;
+import com.mongodb.lang.Nullable;
 
 import dev.morphia.Datastore;
 import dev.morphia.EntityListener;
@@ -34,14 +35,22 @@ import static dev.morphia.mapping.Mapper.LIFECYCLE_ANNOTATIONS;
 public class EntityListenerAdapter implements EntityListener<Object> {
     private final Map<Class<? extends Annotation>, List<Callback>> callbacks = new HashMap<>();
     private final Class<?> listenerType;
+    // whether it implements a per-event listener interface
+    private final boolean typed;
     private Object listener;
 
+    /**
+     * @param listenerType the {@code @EntityListeners} class or the entity
+     * @throws MappingException if it implements two listener interfaces for one event
+     */
     public EntityListenerAdapter(Class<?> listenerType) {
         for (Class<? extends Annotation> annotationClass : LIFECYCLE_ANNOTATIONS) {
             callbacks.put(annotationClass, new ArrayList<>());
         }
         mapAnnotationsToMethods(listenerType);
         this.listenerType = listenerType;
+        // checked here, when the entity is mapped: annotated methods would otherwise short-circuit every check
+        typed = TypedListeners.handlesAny(listenerType);
     }
 
     /**
@@ -53,6 +62,22 @@ public class EntityListenerAdapter implements EntityListener<Object> {
     }
 
     /**
+     * @param event      the lifecycle event annotation
+     * @param entityType the type of the entity the listener is for
+     * @return true if a method for the event takes the {@code Document}: an annotated method with a {@code Document}
+     *         parameter, or the event's listener interface's method if it accepts every entity of the type. One that
+     *         accepts only a subtype doesn't count: a codec checks the subtype's own needs once it knows the entity is one
+     */
+    public boolean usesDocument(@NonNull Class<? extends Annotation> event, Class<?> entityType) {
+        for (Callback callback : callbacks.get(event)) {
+            if (callback.usesDocument()) {
+                return true;
+            }
+        }
+        return TypedListeners.usesDocument(listenerType, event, entityType);
+    }
+
+    /**
      * @return true if any lifecycle method was found
      */
     boolean hasCallbacks() {
@@ -61,7 +86,7 @@ public class EntityListenerAdapter implements EntityListener<Object> {
                 return true;
             }
         }
-        return TypedListeners.handlesAny(listenerType);
+        return typed;
     }
 
     /**
@@ -69,10 +94,10 @@ public class EntityListenerAdapter implements EntityListener<Object> {
      *
      * @param event     the lifecycle event annotation
      * @param entity    the entity
-     * @param document  the document
+     * @param document  the document, or null when no method for the event takes one
      * @param datastore the datastore
      */
-    public void invoke(Class<? extends Annotation> event, Object entity, Document document, Datastore datastore) {
+    public void invoke(Class<? extends Annotation> event, Object entity, @Nullable Document document, Datastore datastore) {
         for (Callback callback : callbacks.get(event)) {
             try {
                 callback.method.invoke(target(entity), callback.arguments(entity, document, datastore));
@@ -151,7 +176,16 @@ public class EntityListenerAdapter implements EntityListener<Object> {
             }
         }
 
-        Object[] arguments(Object entity, Document document, Datastore datastore) {
+        boolean usesDocument() {
+            for (byte parameter : parameters) {
+                if (parameter == DOCUMENT) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        Object[] arguments(Object entity, @Nullable Document document, Datastore datastore) {
             Object[] arguments = new Object[parameters.length];
             for (int i = 0; i < parameters.length; i++) {
                 arguments[i] = switch (parameters[i]) {

@@ -122,18 +122,11 @@ public class TestLifecycles extends TestBase {
     }
 
     @Test
-    public void testGlobalInterceptorRunsAfterEntityCallback() {
-        getMapper().addInterceptor(new NonNullValidation());
-        getMapper().map(ValidNullHolder.class, InvalidNullHolder.class);
-
-        getDs().save(new ValidNullHolder());
-        try {
-            getDs().save(new InvalidNullHolder());
-            Assertions.fail();
-        } catch (NonNullValidationException e) {
-            // expected
-        }
-
+    public void testGlobalListenerRunsAfterEntityCallback() {
+        withConfig(buildConfig(ValidNullHolder.class, InvalidNullHolder.class).listeners(List.of(new NonNullValidation())), () -> {
+            getDs().save(new ValidNullHolder());
+            Assertions.assertThrows(NonNullValidationException.class, () -> getDs().save(new InvalidNullHolder()));
+        });
     }
 
     @Test

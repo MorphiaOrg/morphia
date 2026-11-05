@@ -18,6 +18,9 @@ import org.bson.codecs.EncoderContext;
  */
 @MorphiaInternal
 public class LifecycleEncoder<T> extends EntityEncoder<T> {
+    // whether a listener of the entity, or a configured global listener, takes the Document; fixed once the mapper exists
+    private final boolean needsDocument;
+
     /**
      * Creates a new encoder
      *
@@ -25,6 +28,16 @@ public class LifecycleEncoder<T> extends EntityEncoder<T> {
      */
     public LifecycleEncoder(MorphiaCodec<T> morphiaCodec) {
         super(morphiaCodec);
+        needsDocument = LifecycleEvents.needDocument(morphiaCodec.getEntityModel(), morphiaCodec.getDatastore().getMapper(),
+                PrePersist.class, PostPersist.class);
+    }
+
+    /**
+     * @return true if a listener of the entity or a configured global listener takes the {@code Document}, so this builds
+     *         one
+     */
+    boolean needsDocument() {
+        return needsDocument;
     }
 
     @Override
@@ -38,6 +51,14 @@ public class LifecycleEncoder<T> extends EntityEncoder<T> {
             return;
         }
         MorphiaDatastore datastore = getMorphiaCodec().getDatastore();
+
+        if (!needsDocument) {
+            // no listener looks at the document, so write the entity straight through rather than building one
+            model.callLifecycleMethods(PrePersist.class, value, null, datastore);
+            super.encode(writer, value, encoderContext);
+            model.callLifecycleMethods(PostPersist.class, value, null, datastore);
+            return;
+        }
 
         Document document = new Document();
         model.callLifecycleMethods(PrePersist.class, value, document, datastore);

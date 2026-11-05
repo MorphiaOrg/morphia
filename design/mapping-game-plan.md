@@ -319,11 +319,13 @@ harness passes, and both mappers agree.
   `TestMapper.testMapperCopying` assert isolation that is no longer needed.
 - After this, `refresh()` can reuse the normal codec with an "existing instance" creator.
 
-### 4.2 Lifecycle streaming path (#15, B3)
+### ~~4.2 Lifecycle streaming path (#15, B3)~~
 - Compute `needsDocumentOnPersist` and `needsDocumentOnLoad` per codec. Stream directly unless a hook or a global
   listener takes a `Document`. Gate on event coverage, not `hasListeners()`.
 - Build on 2.6.
-- Plan the removal of `addInterceptor`, which has been deprecated for removal since 2.4.0.
+- ~~Plan the removal of `addInterceptor`, which has been deprecated for removal since 2.4.0.~~ Removed in 4.2, along
+  with `Mapper.getListeners()` and `hasListeners()`. Global listeners are configured with `MorphiaConfig.listeners()`
+  (#4431), fixed once the mapper exists, so every lifecycle codec decides its path when it's built.
 - Prerequisites: #4432 (`EntityListener` becomes a marker; per-event listener interfaces show whether a listener
   takes a `Document`) and #4431 (global listeners configured with `MorphiaConfig.listeners()`).
 - Opt-in `Document` listeners, as the streaming path's escape hatch: `PostLoadDocumentListener<T>`

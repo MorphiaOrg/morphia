@@ -452,11 +452,12 @@ public interface MorphiaConfig {
      * for every entity it accepts. A listener implements one or more of the per-event interfaces: {@link dev.morphia.PrePersistListener},
      * {@link dev.morphia.PostPersistListener}, {@link dev.morphia.PreLoadListener} and {@link dev.morphia.PostLoadListener}, and
      * each is called only for entities of its type argument, so a {@code PrePersistListener<Auditable>} sees {@code Auditable}
-     * entities alone. Only {@code PreLoadListener} takes the {@code Document}, so Morphia can encode and decode without building
+     * entities alone. Only {@code PreLoadListener}, {@link dev.morphia.PostPersistDocumentListener} and
+     * {@link dev.morphia.PostLoadDocumentListener} take the {@code Document}, so Morphia can encode and decode without building
      * one unless a listener needs it. A listener that implements none of them is rejected when the mapper is created.
      * <p>
      * The listeners are read once, when the mapper is created, and a copy of the mapper shares the same instances. This
-     * replaces {@code Mapper.addInterceptor}.
+     * replaces {@code Mapper.addInterceptor}, which was removed in 3.0.
      *
      * @return the global listeners
      * @since 3.0
