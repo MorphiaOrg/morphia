@@ -104,6 +104,8 @@ public class EntityModel {
     private final List<EntityListenerAdapter> listeners = new ArrayList<>();
     // bit i set when a listener handles Mapper.LIFECYCLE_ANNOTATIONS[i]; worked out when the listeners are set up
     private int lifecycleEvents;
+    // bit i set when a listener's method for Mapper.LIFECYCLE_ANNOTATIONS[i] takes the Document
+    private int documentEvents;
     private final Set<Class<?>> classes = new LinkedHashSet<>();
 
     public EntityModel(Class<?> type) {
@@ -251,11 +253,11 @@ public class EntityModel {
      *
      * @param event     the event to run
      * @param entity    the entity to use
-     * @param document  the document used in persistence
+     * @param document  the document used in persistence, or null when no listener for the event takes one
      * @param datastore the Datastore to use
      */
     @SuppressWarnings("rawtypes")
-    public void callLifecycleMethods(Class<? extends Annotation> event, Object entity, Document document,
+    public void callLifecycleMethods(Class<? extends Annotation> event, Object entity, @Nullable Document document,
             MorphiaDatastore datastore) {
         if (hasLifecycle(event)) {
             for (EntityListenerAdapter listener : listeners) {
@@ -598,6 +600,18 @@ public class EntityModel {
     }
 
     /**
+     * @param type the lifecycle event type
+     * @return true if one of this model's own listeners takes the {@code Document} for that event
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public boolean lifecycleUsesDocument(Class<? extends Annotation> type) {
+        int index = LIFECYCLE_ANNOTATIONS.indexOf(type);
+        return index >= 0 && (documentEvents & (1 << index)) != 0;
+    }
+
+    /**
      * Populates the {@code listeners} list from {@code @EntityListeners} and on-entity lifecycle methods.
      * Subclasses that bypass the normal {@link MappingUtil} pipeline (e.g. {@code CritterEntityModel}) must
      * call this after their properties have been set up.
@@ -616,14 +630,20 @@ public class EntityModel {
         }
 
         int events = 0;
+        int documents = 0;
         for (int i = 0; i < LIFECYCLE_ANNOTATIONS.size(); i++) {
+            Class<? extends Annotation> event = LIFECYCLE_ANNOTATIONS.get(i);
             for (EntityListenerAdapter listener : listeners) {
-                if (listener.handles(LIFECYCLE_ANNOTATIONS.get(i))) {
+                if (listener.handles(event)) {
                     events |= 1 << i;
+                    if (listener.usesDocument(event)) {
+                        documents |= 1 << i;
+                    }
                 }
             }
         }
         lifecycleEvents = events;
+        documentEvents = documents;
     }
 
     @Override

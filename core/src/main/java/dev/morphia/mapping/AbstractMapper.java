@@ -169,6 +169,7 @@ public abstract class AbstractMapper implements Mapper {
     @Override
     @Deprecated(forRemoval = true, since = "2.4.0")
     public void addInterceptor(EntityListener<?> ei) {
+        TypedListeners.validate(ei.getClass());
         listeners.add(ei);
     }
 

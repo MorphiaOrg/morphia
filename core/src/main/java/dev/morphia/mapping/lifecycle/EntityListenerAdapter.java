@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.mongodb.lang.NonNull;
+import com.mongodb.lang.Nullable;
 
 import dev.morphia.Datastore;
 import dev.morphia.EntityListener;
@@ -53,6 +54,20 @@ public class EntityListenerAdapter implements EntityListener<Object> {
     }
 
     /**
+     * @param event the lifecycle event annotation
+     * @return true if a method for the event takes the {@code Document}: an annotated method with a {@code Document}
+     *         parameter, or the event's listener interface's method
+     */
+    public boolean usesDocument(@NonNull Class<? extends Annotation> event) {
+        for (Callback callback : callbacks.get(event)) {
+            if (callback.usesDocument()) {
+                return true;
+            }
+        }
+        return TypedListeners.usesDocument(listenerType, event);
+    }
+
+    /**
      * @return true if any lifecycle method was found
      */
     boolean hasCallbacks() {
@@ -69,10 +84,10 @@ public class EntityListenerAdapter implements EntityListener<Object> {
      *
      * @param event     the lifecycle event annotation
      * @param entity    the entity
-     * @param document  the document
+     * @param document  the document, or null when no method for the event takes one
      * @param datastore the datastore
      */
-    public void invoke(Class<? extends Annotation> event, Object entity, Document document, Datastore datastore) {
+    public void invoke(Class<? extends Annotation> event, Object entity, @Nullable Document document, Datastore datastore) {
         for (Callback callback : callbacks.get(event)) {
             try {
                 callback.method.invoke(target(entity), callback.arguments(entity, document, datastore));
@@ -151,7 +166,16 @@ public class EntityListenerAdapter implements EntityListener<Object> {
             }
         }
 
-        Object[] arguments(Object entity, Document document, Datastore datastore) {
+        boolean usesDocument() {
+            for (byte parameter : parameters) {
+                if (parameter == DOCUMENT) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        Object[] arguments(Object entity, @Nullable Document document, Datastore datastore) {
             Object[] arguments = new Object[parameters.length];
             for (int i = 0; i < parameters.length; i++) {
                 arguments[i] = switch (parameters[i]) {
