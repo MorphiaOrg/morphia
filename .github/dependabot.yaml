@@ -20,8 +20,6 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: [ "version-update:semver-major" ]
-      - dependency-name: "org.mongodb:*"
-        versions: [ ">=5.12.0" ]
   - package-ecosystem: maven
     target-branch: 2.4.x
     directory: "/"
