@@ -54,8 +54,6 @@ import dev.morphia.mapping.lifecycle.TypedListeners;
 import dev.morphia.sofia.Sofia;
 
 import org.bson.Document;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static dev.morphia.mapping.Mapper.LIFECYCLE_ANNOTATIONS;
 import static dev.morphia.mapping.PropertyDiscovery.FIELDS;
@@ -74,7 +72,6 @@ import static java.util.List.of;
 @MorphiaInternal
 @SuppressWarnings({ "unchecked", "deprecation" })
 public class EntityModel {
-    private static final Logger LOG = LoggerFactory.getLogger(EntityModel.class);
 
     private final Map<Class<? extends Annotation>, Annotation> annotations = new HashMap<>();
     private final Map<String, PropertyModel> propertyModelsByName = new UniqueMap();
@@ -265,12 +262,6 @@ public class EntityModel {
             }
         }
         for (EntityListener<?> listener : datastore.getMapper().getGlobalListeners()) {
-            TypedListeners.invoke(listener, event, entity, document, datastore);
-        }
-        for (EntityListener<?> listener : datastore.getMapper().getListeners()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug(Sofia.callingInterceptorMethod(event.getSimpleName(), listener));
-            }
             TypedListeners.invoke(listener, event, entity, document, datastore);
         }
     }

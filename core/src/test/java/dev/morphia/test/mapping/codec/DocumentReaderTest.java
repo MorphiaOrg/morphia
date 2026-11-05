@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 
 import com.mongodb.client.MongoCollection;
 
-import dev.morphia.EntityListener;
+import dev.morphia.PreLoadListener;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PreLoad;
@@ -214,23 +214,21 @@ public class DocumentReaderTest extends TestBase {
     }
 
     @Test
-    public void testNestedByteArrayWithInterceptor() {
-        HasByteArray hasByteArray = new HasByteArray();
-        hasByteArray.data = new byte[] { 1, 2, 3 };
-        HasNestedByteArray hasNestedByteArray = new HasNestedByteArray();
-        hasNestedByteArray.nested = hasByteArray;
-        getDs().save(hasNestedByteArray);
-        EntityListener<?> interceptor = new EntityListener<Object>() {
+    public void testNestedByteArrayWithDocumentListener() {
+        // a listener that takes the Document puts every entity on the lifecycle decoder's Document path
+        PreLoadListener<Object> listener = (entity, document, datastore) -> {
         };
-        try {
-            getDs().getMapper().addInterceptor(interceptor);
+        withConfig(buildConfig(HasNestedByteArray.class, HasByteArray.class).listeners(List.of(listener)), () -> {
+            HasByteArray hasByteArray = new HasByteArray();
+            hasByteArray.data = new byte[] { 1, 2, 3 };
+            HasNestedByteArray hasNestedByteArray = new HasNestedByteArray();
+            hasNestedByteArray.nested = hasByteArray;
+            getDs().save(hasNestedByteArray);
             Document first = getDs().getCollection(HasNestedByteArray.class)
                     .withDocumentClass(Document.class)
                     .find().first();
             fromDocument(HasNestedByteArray.class, first);
-        } finally {
-            getDs().getMapper().getListeners().remove(interceptor);
-        }
+        });
     }
 
     @Test

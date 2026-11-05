@@ -65,14 +65,10 @@ public class MorphiaCodecProvider implements CodecProvider {
     }
 
     /**
-     * @return true if the entity's own callbacks or a configured global listener handle one of the events for it, or there's
-     *         any interceptor, as before global listeners
+     * @return true if the entity's own callbacks or a configured global listener handle one of the events for it
      */
     @SafeVarargs
     private boolean runsLifecycle(EntityModel model, Class<? extends Annotation>... events) {
-        if (!mapper.getListeners().isEmpty()) {
-            return true;
-        }
         for (Class<? extends Annotation> event : events) {
             if (model.hasLifecycle(event) || mapper.getGlobalListeners().stream()
                     .anyMatch(listener -> TypedListeners.handles(listener.getClass(), event, model.getType()))) {

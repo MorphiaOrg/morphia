@@ -1,5 +1,7 @@
 package dev.morphia.test.callbacks;
 
+import java.util.List;
+
 import com.mongodb.lang.NonNull;
 
 import dev.morphia.Datastore;
@@ -16,14 +18,11 @@ import org.junit.jupiter.api.Test;
 public class TestInterceptors extends TestBase {
 
     public TestInterceptors() {
-        super(buildConfig(E.class));
+        super(buildConfig(E.class).listeners(List.of(new Interceptor())));
     }
 
     @Test
-    @SuppressWarnings("removal")
-    public void testGlobalInterceptor() {
-        getMapper().addInterceptor(new Interceptor());
-
+    public void testGlobalListenerRunsAfterEntityCallback() {
         getDs().save(new E());
     }
 

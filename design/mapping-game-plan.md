@@ -323,14 +323,9 @@ harness passes, and both mappers agree.
 - Compute `needsDocumentOnPersist` and `needsDocumentOnLoad` per codec. Stream directly unless a hook or a global
   listener takes a `Document`. Gate on event coverage, not `hasListeners()`.
 - Build on 2.6.
-- Plan the removal of `addInterceptor`, which has been deprecated for removal since 2.4.0.
-- **Removal plan for `addInterceptor`**, as worked out in 4.2:
-  - ~~Add a supported way to register global listeners.~~ Done in #4431: `MorphiaConfig.listeners()`. Their per-event
-    interfaces show whether they take the `Document`, so a codec decides once, when it's built.
-  - 4.2 keeps `addInterceptor`'s behavior: any interceptor puts every entity on the lifecycle codecs, and while there is
-    one they always go through a `Document`, since one can be added after a codec was built.
-  - Then remove `addInterceptor` in 3.0. That also removes the interceptor check the lifecycle codecs make as they run,
-    and lets `Mapper.getListeners()`/`hasListeners()` go.
+- ~~Plan the removal of `addInterceptor`, which has been deprecated for removal since 2.4.0.~~ Removed in 4.2, along
+  with `Mapper.getListeners()` and `hasListeners()`. Global listeners are configured with `MorphiaConfig.listeners()`
+  (#4431), fixed once the mapper exists, so every lifecycle codec decides its path when it's built.
 - Prerequisites: #4432 (`EntityListener` becomes a marker; per-event listener interfaces show whether a listener
   takes a `Document`) and #4431 (global listeners configured with `MorphiaConfig.listeners()`).
 - Opt-in `Document` listeners, as the streaming path's escape hatch: `PostLoadDocumentListener<T>`

@@ -13,7 +13,6 @@ import dev.morphia.PostLoadListener;
 import dev.morphia.PostPersistDocumentListener;
 import dev.morphia.PostPersistListener;
 import dev.morphia.PreLoadListener;
-import dev.morphia.PrePersistListener;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PostLoad;
@@ -43,10 +42,8 @@ import org.junit.jupiter.params.provider.EnumSource;
 /**
  * Lifecycle listeners get a {@code Document} only when one of them takes it; otherwise the entity is encoded and decoded
  * directly. An entity's own callbacks say so in their parameters, and the per-event listener interfaces in which of them
- * they implement. A codec decides when it's built. Listeners added with the deprecated {@code addInterceptor} keep their
- * old behavior.
+ * they implement. A codec decides when it's built.
  */
-@SuppressWarnings({ "deprecation", "removal" })
 public class TestLifecycleStreaming {
     private static final EncoderContext COLLECTIBLE = EncoderContext.builder().isEncodingCollectibleDocument(true).build();
     private static final DecoderContext DECODER = DecoderContext.builder().build();
@@ -197,48 +194,7 @@ public class TestLifecycleStreaming {
                     configured.getMessage());
 
             MorphiaDatastore datastore = new MorphiaDatastore(client, config(mapperType));
-            Assertions.assertThrows(MappingException.class, () -> datastore.getMapper().addInterceptor(new LoadsTwice()));
             Assertions.assertThrows(MappingException.class, () -> datastore.getMapper().map(PersistsTwice.class));
-        }
-    }
-
-    @ParameterizedTest
-    @EnumSource(MapperType.class)
-    void interceptorsKeepTheirBehavior(MapperType mapperType) {
-        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
-            MorphiaDatastore datastore = datastore(client, config(mapperType));
-            Interceptor interceptor = new Interceptor();
-            datastore.getMapper().addInterceptor(interceptor);
-            MorphiaCodec<Plain> codec = codec(datastore, Plain.class);
-
-            // as before: any interceptor puts both directions on the lifecycle codecs, and it gets the document
-            Assertions.assertInstanceOf(LifecycleEncoder.class, codec.getEncoder());
-            Assertions.assertInstanceOf(LifecycleDecoder.class, codec.getDecoder());
-            Plain entity = new Plain();
-            entity.name = "intercepted";
-            decode(codec, encode(codec, entity));
-
-            Assertions.assertEquals(List.of("PostPersist:intercepted", "PostLoad:intercepted"), interceptor.calls);
-        }
-    }
-
-    @ParameterizedTest
-    @EnumSource(MapperType.class)
-    void anInterceptorAddedLaterStillGetsTheDocument(MapperType mapperType) {
-        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
-            MorphiaDatastore datastore = datastore(client, config(mapperType));
-            MorphiaCodec<Streamed> codec = codec(datastore, Streamed.class);
-            assertStreams(codec, true, true);
-            Streamed entity = new Streamed();
-            entity.name = "late";
-            decode(codec, encode(codec, entity));
-
-            Interceptor interceptor = new Interceptor();
-            datastore.getMapper().addInterceptor(interceptor);
-            decode(codec, encode(codec, entity));
-
-            Assertions.assertEquals(List.of("PostPersist:late", "PostLoad:late"), interceptor.calls,
-                    "the codec goes through a Document while there's an interceptor");
         }
     }
 
@@ -508,29 +464,6 @@ public class TestLifecycleStreaming {
         @Override
         public void postLoad(Object entity, Datastore datastore) {
             CALLS.add("PostLoad:" + entity.getClass().getSimpleName());
-        }
-    }
-
-    /**
-     * An interceptor, added with the deprecated {@code addInterceptor}, that records the document's {@code name} in the
-     * events that take one.
-     */
-    private static class Interceptor implements PrePersistListener<Object>, PostPersistDocumentListener<Object>,
-            PostLoadDocumentListener<Object> {
-        private final List<String> calls = new ArrayList<>();
-
-        @Override
-        public void prePersist(Object entity, Datastore datastore) {
-        }
-
-        @Override
-        public void postPersist(Object entity, Document document, Datastore datastore) {
-            calls.add("PostPersist:" + document.getString("name"));
-        }
-
-        @Override
-        public void postLoad(Object entity, Document document, Datastore datastore) {
-            calls.add("PostLoad:" + document.getString("name"));
         }
     }
 }

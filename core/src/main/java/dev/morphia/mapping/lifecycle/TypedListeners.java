@@ -114,16 +114,6 @@ public final class TypedListeners {
     }
 
     /**
-     * Checks that a listener class implements at most one interface for each event.
-     *
-     * @param listenerType a listener class
-     * @throws MappingException if it implements both of an event's interfaces
-     */
-    public static void validate(Class<?> listenerType) {
-        HANDLERS.get(listenerType);
-    }
-
-    /**
      * Calls the listener's method for the event if it implements the event's interface and accepts the entity.
      *
      * @param listener  the listener

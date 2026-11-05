@@ -140,7 +140,6 @@ public class CritterMapper extends AbstractMapper {
         this.runtimeModels = RuntimeModels.forCopy(other.runtimeModels, other.config, config, other.classLoader);
         this.generator = new CritterGenerator(this);
         this.fallbackTypes = other.fallbackTypes;
-        this.listeners.addAll(other.listeners);
         // Create independent copies of all entity models so that each mapper instance
         // maintains its own model state (e.g. listeners, version tracking).
         other.mappedEntities.values().forEach(model -> {

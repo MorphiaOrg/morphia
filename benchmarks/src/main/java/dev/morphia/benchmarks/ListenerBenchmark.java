@@ -1,16 +1,25 @@
 package dev.morphia.benchmarks;
 
 import java.nio.ByteBuffer;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import com.mongodb.client.MongoClient;
 
+import dev.morphia.Datastore;
 import dev.morphia.EntityListener;
+import dev.morphia.PostLoadDocumentListener;
+import dev.morphia.PostLoadListener;
+import dev.morphia.PostPersistDocumentListener;
+import dev.morphia.PostPersistListener;
+import dev.morphia.PreLoadListener;
+import dev.morphia.PrePersistListener;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
 
 import org.bson.BsonBinaryReader;
 import org.bson.BsonBinaryWriter;
+import org.bson.Document;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.EncoderContext;
@@ -30,9 +39,10 @@ import org.openjdk.jmh.annotations.TearDown;
 import org.openjdk.jmh.annotations.Warmup;
 
 /**
- * Entities without lifecycle methods, but with a global listener registered that does nothing. Any global listener moves
- * every entity type onto the lifecycle codecs, which round-trip each document through a {@code Document}; compare with
- * the same models in {@link CodecBenchmark}.
+ * Entities without lifecycle methods, but with a configured global listener for every event that does nothing, so every
+ * entity type is on the lifecycle codecs. With {@link Listener#DOCUMENT} the listener takes the {@code Document}, so each
+ * entity is round-tripped through one; with {@link Listener#ENTITY} it doesn't, so the codecs stream. Compare with the
+ * same models in {@link CodecBenchmark}.
  */
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
@@ -47,6 +57,9 @@ public class ListenerBenchmark {
     @Param({ "SIMPLE", "NESTED" })
     public Models model;
 
+    @Param({ "DOCUMENT", "ENTITY" })
+    public Listener listener;
+
     private MongoClient client;
     private Codec<Object> codec;
     private Object entity;
@@ -55,14 +68,11 @@ public class ListenerBenchmark {
     private final DecoderContext decoderContext = DecoderContext.builder().build();
 
     @Setup(Level.Trial)
-    @SuppressWarnings({ "unchecked", "deprecation", "removal" })
+    @SuppressWarnings("unchecked")
     public void setup() {
         MapperVariant mapperVariant = MapperVariant.of(variant);
-        MorphiaConfig config = Fixtures.config(mapperVariant);
+        MorphiaConfig config = Fixtures.config(mapperVariant).listeners(List.of(listener.listener));
         Mapper mapper = Fixtures.mappedMapper(mapperVariant, config);
-        // does nothing for any event, but its presence routes every entity through the lifecycle codecs
-        mapper.addInterceptor(new EntityListener<Object>() {
-        });
         client = Fixtures.offlineClient();
         codec = (Codec<Object>) Fixtures.codecRegistry(client, config, mapper).get(model.type());
         entity = model.sample();
@@ -90,6 +100,56 @@ public class ListenerBenchmark {
     public Object decode() {
         try (BsonBinaryReader reader = new BsonBinaryReader(ByteBuffer.wrap(encoded))) {
             return codec.decode(reader, decoderContext);
+        }
+    }
+
+    public enum Listener {
+        DOCUMENT(new TakesTheDocument()),
+        ENTITY(new TakesTheEntity());
+
+        private final EntityListener<?> listener;
+
+        Listener(EntityListener<?> listener) {
+            this.listener = listener;
+        }
+    }
+
+    /**
+     * Handles every event and takes the {@code Document} wherever it can.
+     */
+    public static class TakesTheDocument implements PrePersistListener<Object>, PostPersistDocumentListener<Object>,
+            PreLoadListener<Object>, PostLoadDocumentListener<Object> {
+        @Override
+        public void prePersist(Object entity, Datastore datastore) {
+        }
+
+        @Override
+        public void postPersist(Object entity, Document document, Datastore datastore) {
+        }
+
+        @Override
+        public void preLoad(Object entity, Document document, Datastore datastore) {
+        }
+
+        @Override
+        public void postLoad(Object entity, Document document, Datastore datastore) {
+        }
+    }
+
+    /**
+     * Handles every event but {@code @PreLoad}, whose listener always takes the {@code Document}, with the entity alone.
+     */
+    public static class TakesTheEntity implements PrePersistListener<Object>, PostPersistListener<Object>, PostLoadListener<Object> {
+        @Override
+        public void prePersist(Object entity, Datastore datastore) {
+        }
+
+        @Override
+        public void postPersist(Object entity, Datastore datastore) {
+        }
+
+        @Override
+        public void postLoad(Object entity, Datastore datastore) {
         }
     }
 }

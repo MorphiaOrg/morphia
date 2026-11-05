@@ -8,9 +8,7 @@ import dev.morphia.mapping.lifecycle.TypedListeners;
 
 /**
  * Whether a listener for an entity's lifecycle events needs the entity's {@code Document}. An entity's own listeners and
- * the configured global ones are fixed once the mapper exists, so a lifecycle codec decides when it's built. Listeners
- * added with the deprecated {@code Mapper.addInterceptor} can be added at any time, so the codecs check for them as they
- * run, and any of them always gets a {@code Document}.
+ * the configured global ones are fixed once the mapper exists, so a lifecycle codec decides when it's built.
  */
 final class LifecycleEvents {
     private LifecycleEvents() {

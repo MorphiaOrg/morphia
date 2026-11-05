@@ -6,7 +6,6 @@ import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.DecodeSession;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.reader.DocumentReader;
@@ -47,8 +46,8 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
     }
 
     /**
-     * @return true if a listener of the entity or a configured global listener takes the {@code Document}, so this always
-     *         builds one; otherwise only while there's an interceptor
+     * @return true if a listener of the entity or a configured global listener takes the {@code Document}, so this builds
+     *         one
      */
     boolean needsDocument() {
         return needsDocument;
@@ -58,10 +57,8 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
     public T decode(BsonReader reader, DecoderContext decoderContext) {
         EntityModel model = getMorphiaCodec().getEntityModel();
         CodecPlan plan = getMorphiaCodec().getPlan();
-        Mapper mapper = getMorphiaCodec().getDatastore().getMapper();
-        if (needsDocument || !mapper.getListeners().isEmpty()) {
-            // a callback takes the document, whatever subtype it turns out to be. an interceptor, even one added after
-            // this codec was built, always gets the document
+        if (needsDocument) {
+            // a callback takes the document, whatever subtype it turns out to be
             return decodeDocument(reader, decoderContext);
         }
         if (model.useDiscriminator()) {
@@ -75,7 +72,8 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
                 model = codec.getEntityModel();
                 plan = codec.getPlan();
                 if (model != getMorphiaCodec().getEntityModel()
-                        && LifecycleEvents.needDocument(model, mapper, PreLoad.class, PostLoad.class)) {
+                        && LifecycleEvents.needDocument(model, getMorphiaCodec().getDatastore().getMapper(), PreLoad.class,
+                                PostLoad.class)) {
                     // the subtype has a callback that takes the document
                     return decodeDocument(reader, decoderContext);
                 }

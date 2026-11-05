@@ -80,7 +80,6 @@ public class TestGlobalListeners {
 
             Assertions.assertEquals(List.of("prePersist:plain", "postPersist:plain", "preLoad:plain", "postLoad:plain:true"), CALLS);
             Assertions.assertEquals(1, datastore.getMapper().getGlobalListeners().size());
-            Assertions.assertTrue(datastore.getMapper().hasListeners());
             Assertions.assertTrue(datastore.hasLifecycle(datastore.getMapper().getEntityModel(Plain.class), PreLoad.class));
         }
     }
