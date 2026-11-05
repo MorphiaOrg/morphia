@@ -1,5 +1,7 @@
 package dev.morphia.config.converters;
 
+import java.lang.reflect.InvocationTargetException;
+
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.EntityListener;
@@ -53,7 +55,11 @@ public class EntityListenerConverter implements Converter<EntityListener<?>> {
         } catch (NoSuchMethodException e) {
             throw new MappingException(Sofia.noargConstructorNotFound(type), e);
         } catch (ReflectiveOperationException e) {
-            throw new MappingException(e.getMessage(), e);
+            // a constructor's own exception arrives wrapped in an InvocationTargetException, which has no message
+            Throwable failure = e instanceof InvocationTargetException invocation && invocation.getCause() != null
+                    ? invocation.getCause()
+                    : e;
+            throw new MappingException(Sofia.listenerNotCreated(name, failure), failure);
         }
     }
 }

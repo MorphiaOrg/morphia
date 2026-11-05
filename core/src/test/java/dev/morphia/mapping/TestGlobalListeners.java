@@ -165,6 +165,12 @@ public class TestGlobalListeners {
             MappingException e = Assertions.assertThrows(MappingException.class, () -> converter.convert(name));
             Assertions.assertTrue(e.getMessage().contains(name), e.getMessage());
         }
+
+        // a constructor's failure is reported with the class and the failure itself, and kept as the cause
+        MappingException e = Assertions.assertThrows(MappingException.class, () -> converter.convert(Failing.class.getName()));
+        Assertions.assertTrue(e.getMessage().contains(Failing.class.getName()), e.getMessage());
+        Assertions.assertTrue(e.getMessage().contains("no configuration"), e.getMessage());
+        Assertions.assertInstanceOf(IllegalStateException.class, e.getCause());
     }
 
     private static MorphiaConfig config(MapperType mapperType) {
@@ -264,6 +270,16 @@ public class TestGlobalListeners {
 
     public static class NeedsArguments implements PrePersistListener<Object> {
         public NeedsArguments(String argument) {
+        }
+
+        @Override
+        public void prePersist(Object entity, Datastore datastore) {
+        }
+    }
+
+    public static class Failing implements PrePersistListener<Object> {
+        public Failing() {
+            throw new IllegalStateException("no configuration");
         }
 
         @Override
