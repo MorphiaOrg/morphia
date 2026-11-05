@@ -471,4 +471,220 @@ class EntityListenerMigrationTest extends MorphiaRewriteTest {
                         }
                         """));
     }
+
+    @Test
+    void replacesLambdasWithAnEmptyMarker() {
+        rewriteRun(java(
+                //language=java
+                """
+                        import dev.morphia.EntityListener;
+                        import dev.morphia.mapping.Mapper;
+
+                        public class Lambdas {
+                            @SuppressWarnings("removal")
+                            void setup(Mapper mapper) {
+                                mapper.addInterceptor(event -> true);
+                                EntityListener<?> listener = (EntityListener) type -> false;
+                            }
+                        }
+                        """,
+                //language=java
+                """
+                        import dev.morphia.EntityListener;
+                        import dev.morphia.mapping.Mapper;
+
+                        public class Lambdas {
+                            @SuppressWarnings("removal")
+                            void setup(Mapper mapper) {
+                                mapper.addInterceptor(new EntityListener<Object>() {});
+                                EntityListener<?> listener = (EntityListener) new EntityListener<Object>() {};
+                            }
+                        }
+                        """));
+    }
+
+    @Test
+    void flagsMethodReferences() {
+        rewriteRun(java(
+                //language=java
+                """
+                        import dev.morphia.EntityListener;
+
+                        import java.lang.annotation.Annotation;
+
+                        public class References {
+                            EntityListener<Object> listener = References::claims;
+
+                            static boolean claims(Class<? extends Annotation> type) {
+                                return true;
+                            }
+                        }
+                        """,
+                //language=java
+                """
+                        import dev.morphia.EntityListener;
+
+                        import java.lang.annotation.Annotation;
+
+                        public class References {
+                            EntityListener<Object> listener = /*~~(EntityListener is now a marker: replace this method reference with a per-event listener, or with new EntityListener<>() {} if it only claimed events)~~>*/References::claims;
+
+                            static boolean claims(Class<? extends Annotation> type) {
+                                return true;
+                            }
+                        }
+                        """));
+    }
+
+    @Test
+    void keepsTheEntityListenerTypeArgument() {
+        rewriteRun(java(
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.EntityListener;
+                        import org.bson.Document;
+
+                        public class GenericListener<T> implements EntityListener<T> {
+                            @Override
+                            public boolean hasAnnotation(Class<? extends java.lang.annotation.Annotation> type) {
+                                return true;
+                            }
+
+                            @Override
+                            public void prePersist(Object entity, Document document, Datastore datastore) {
+                            }
+                        }
+                        """,
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.PrePersistListener;
+
+                        public class GenericListener<T> implements PrePersistListener<T> {
+                            @Override
+                            public void prePersist(Object entity, Datastore datastore) {
+                            }
+                        }
+                        """));
+    }
+
+    @Test
+    void flagsAnEventOverriddenTwice() {
+        rewriteRun(java(
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.EntityListener;
+                        import dev.morphia.mapping.Mapper;
+                        import org.bson.Document;
+
+                        public class Both implements EntityListener<Object> {
+                            @Override
+                            public boolean hasAnnotation(Class<? extends java.lang.annotation.Annotation> type) {
+                                return true;
+                            }
+
+                            @Override
+                            public void prePersist(Object entity, Document document, Mapper mapper) {
+                            }
+
+                            @Override
+                            public void prePersist(Object entity, Document document, Datastore datastore) {
+                            }
+                        }
+                        """,
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.EntityListener;
+                        import dev.morphia.mapping.Mapper;
+                        import org.bson.Document;
+
+                        public class Both implements EntityListener<Object> {
+                            /*~~(prePersist is overridden more than once: keep one, then run the migration again)~~>*/@Override
+                            public void prePersist(Object entity, Document document, Mapper mapper) {
+                            }
+
+                            /*~~(prePersist is overridden more than once: keep one, then run the migration again)~~>*/@Override
+                            public void prePersist(Object entity, Document document, Datastore datastore) {
+                            }
+                        }
+                        """));
+    }
+
+    @Test
+    void removesTheAnnotationFromAnUnchangedPreLoad() {
+        rewriteRun(java(
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.EntityListener;
+                        import dev.morphia.annotations.PreLoad;
+                        import org.bson.Document;
+
+                        public class Loading implements EntityListener<Object> {
+                            @Override
+                            public boolean hasAnnotation(Class<? extends java.lang.annotation.Annotation> type) {
+                                return true;
+                            }
+
+                            @Override
+                            @PreLoad
+                            public void preLoad(Object entity, Document document, Datastore datastore) {
+                                document.remove("legacy");
+                            }
+                        }
+                        """,
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.PreLoadListener;
+                        import org.bson.Document;
+
+                        public class Loading implements PreLoadListener<Object> {
+                            @Override
+                            public void preLoad(Object entity, Document document, Datastore datastore) {
+                                document.remove("legacy");
+                            }
+                        }
+                        """));
+    }
+
+    @Test
+    void flagsEventsInheritedFromAClassThatIsntAListener() {
+        rewriteRun(java(
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.EntityListener;
+                        import org.bson.Document;
+
+                        class Base {
+                            public void prePersist(Object entity, Document document, Datastore datastore) {
+                            }
+                        }
+
+                        public class Child extends Base implements EntityListener<Object> {
+                            @Override
+                            public boolean hasAnnotation(Class<? extends java.lang.annotation.Annotation> type) {
+                                return true;
+                            }
+                        }
+                        """,
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.EntityListener;
+                        import org.bson.Document;
+
+                        class Base {
+                            public void prePersist(Object entity, Document document, Datastore datastore) {
+                            }
+                        }
+
+                        /*~~(inherits Base.prePersist from a class that isn't a listener: implement the per-event listener interfaces by hand)~~>*/public class Child extends Base implements EntityListener<Object> {
+                        }
+                        """));
+    }
 }

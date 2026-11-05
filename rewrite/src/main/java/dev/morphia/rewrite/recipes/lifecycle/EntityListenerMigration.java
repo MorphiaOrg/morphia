@@ -98,7 +98,7 @@ public class EntityListenerMigration extends Recipe {
             new JavaIsoVisitor<Set<String>>() {
                 @Override
                 public J.MethodDeclaration visitMethodDeclaration(J.MethodDeclaration method, Set<String> keys) {
-                    Plan plan = plan(method);
+                    Plan plan = plan(method, getCursor().getParentTreeCursor().getValue());
                     if (plan != null && plan.event() != null && plan.problem() == null) {
                         keys.add(key(method.getMethodType()));
                     }
@@ -135,7 +135,7 @@ public class EntityListenerMigration extends Recipe {
         @Override
         public J.@Nullable MethodDeclaration visitMethodDeclaration(J.MethodDeclaration method, ExecutionContext ctx) {
             J.MethodDeclaration result = super.visitMethodDeclaration(method, ctx);
-            Plan plan = plan(method);
+            Plan plan = plan(method, getCursor().getParentTreeCursor().getValue());
             if (plan == null) {
                 return result;
             }
@@ -159,6 +159,11 @@ public class EntityListenerMigration extends Recipe {
             J.ClassDeclaration result = super.visitClassDeclaration(classDecl, ctx);
             List<TypeTree> implemented = result.getImplements() != null ? result.getImplements() : List.of();
             Map<Event, TypeTree> listeners = missing(getCursor().pollMessage(LISTENERS), implemented);
+            String inherited = inheritedEvents(classDecl);
+            if (inherited != null) {
+                return SearchResult.found(result, ("inherits %s from a class that isn't a listener: implement the per-event "
+                        + "listener interfaces by hand").formatted(inherited));
+            }
             if (listeners.isEmpty()) {
                 return result;
             }
@@ -166,6 +171,7 @@ public class EntityListenerMigration extends Recipe {
             boolean replaced = false;
             for (TypeTree type : implemented) {
                 if (!replaced && TypeUtils.isOfClassType(type.getType(), ENTITY_LISTENER)) {
+                    useTypeArgument(listeners, type);
                     types.addAll(listenerTypes(listeners, type.getPrefix()));
                     replaced = true;
                 } else {
@@ -199,8 +205,54 @@ public class EntityListenerMigration extends Recipe {
                                 .map(Event::listener)
                                 .toList()));
             }
+            useTypeArgument(listeners, result.getClazz());
             addImports(listeners);
             return result.withClazz(listenerTypes(listeners, result.getClazz().getPrefix()).get(0));
+        }
+
+        /**
+         * A lambda could only implement {@code hasAnnotation}, so its listener had no callbacks: an empty anonymous marker
+         * does the same.
+         */
+        @Override
+        public @Nullable J postVisit(J tree, ExecutionContext ctx) {
+            J result = super.postVisit(tree, ctx);
+            return result instanceof J.Lambda lambda && TypeUtils.isOfClassType(lambda.getType(), ENTITY_LISTENER)
+                    ? emptyMarker(lambda)
+                    : result;
+        }
+
+        private J.NewClass emptyMarker(J.Lambda lambda) {
+            JavaType.ShallowClass marker = JavaType.ShallowClass.build(ENTITY_LISTENER);
+            J.Identifier name = new J.Identifier(Tree.randomId(), Space.EMPTY, Markers.EMPTY, List.of(), "EntityListener", marker, null);
+            JavaType argument = lambda.getType() instanceof JavaType.Parameterized parameterized
+                    && parameterized.getTypeParameters().size() == 1
+                    && parameterized.getTypeParameters().get(0) instanceof JavaType.FullyQualified fullyQualified
+                            ? fullyQualified
+                            : JavaType.ShallowClass.build("java.lang.Object");
+            String argumentName = ((JavaType.FullyQualified) argument).getClassName();
+            maybeAddImport(((JavaType.FullyQualified) argument).getFullyQualifiedName(), false);
+            J.Identifier argumentTree = new J.Identifier(Tree.randomId(), Space.EMPTY, Markers.EMPTY, List.of(), argumentName, argument,
+                    null);
+            J.ParameterizedType clazz = new J.ParameterizedType(Tree.randomId(), Space.SINGLE_SPACE, Markers.EMPTY, name,
+                    JContainer.build(Space.EMPTY, List.of(JRightPadded.build(argumentTree)), Markers.EMPTY),
+                    new JavaType.Parameterized(null, marker, List.of(argument)));
+            J.Block body = new J.Block(Tree.randomId(), Space.SINGLE_SPACE, Markers.EMPTY, JRightPadded.build(false), List.of(),
+                    Space.EMPTY);
+            return new J.NewClass(Tree.randomId(), lambda.getPrefix(), Markers.EMPTY, null, Space.EMPTY, clazz,
+                    JContainer.build(Space.EMPTY, List.of(JRightPadded.build(new J.Empty(Tree.randomId(), Space.EMPTY,
+                            Markers.EMPTY))), Markers.EMPTY),
+                    body, null);
+        }
+
+        @Override
+        public J.MemberReference visitMemberReference(J.MemberReference memberRef, ExecutionContext ctx) {
+            J.MemberReference result = super.visitMemberReference(memberRef, ctx);
+            if (!TypeUtils.isOfClassType(memberRef.getType(), ENTITY_LISTENER)) {
+                return result;
+            }
+            return SearchResult.found(result, "EntityListener is now a marker: replace this method reference with a per-event "
+                    + "listener, or with new EntityListener<>() {} if it only claimed events");
         }
 
         @Override
@@ -244,7 +296,7 @@ public class EntityListenerMigration extends Recipe {
             J.VariableDeclarations retyped = retype((J.VariableDeclarations) parameters.get(2));
             if (event.keepsDocument() && retyped == parameters.get(2)) {
                 // already a preLoad(entity, document, datastore)
-                return method;
+                return removeAnnotation(method, event, ctx);
             }
             List<Statement> updated = new ArrayList<>();
             updated.add(parameters.get(0));
@@ -261,10 +313,29 @@ public class EntityListenerMigration extends Recipe {
                         .toList()));
             }
             maybeAddImport(DATASTORE, false);
-            // an annotated method would also be called through the interface when the class is an @EntityListeners class
+            return removeAnnotation(result, event, ctx);
+        }
+
+        /**
+         * An annotated method would also be called through the interface when the class is an {@code @EntityListeners} class.
+         */
+        private J.MethodDeclaration removeAnnotation(J.MethodDeclaration method, Event event, ExecutionContext ctx) {
             return (J.MethodDeclaration) new RemoveAnnotationVisitor(
                     new AnnotationMatcher("@dev.morphia.annotations." + event.annotation()))
-                    .visitNonNull(result, ctx, getCursor().getParentOrThrow());
+                    .visitNonNull(method, ctx, getCursor().getParentOrThrow());
+        }
+
+        /**
+         * Parameterizes the interfaces by the {@code EntityListener<X>} type argument, when there is one, rather than by the
+         * methods' entity parameters, which may be erased.
+         */
+        private void useTypeArgument(Map<Event, TypeTree> listeners, TypeTree entityListener) {
+            if (entityListener instanceof J.ParameterizedType parameterized && parameterized.getTypeParameters() != null
+                    && parameterized.getTypeParameters().size() == 1
+                    && parameterized.getTypeParameters().get(0) instanceof TypeTree argument
+                    && !(argument instanceof J.Empty)) {
+                listeners.replaceAll((event, entityType) -> argument);
+            }
         }
 
         /**
@@ -299,7 +370,7 @@ public class EntityListenerMigration extends Recipe {
     }
 
     @Nullable
-    private static Plan plan(J.MethodDeclaration method) {
+    private static Plan plan(J.MethodDeclaration method, Object body) {
         JavaType.Method type = method.getMethodType();
         JavaType.Method root = type != null ? root(type) : null;
         if (root == null) {
@@ -312,9 +383,17 @@ public class EntityListenerMigration extends Recipe {
         if (event == null || method.getParameters().size() != 3) {
             return null;
         }
+        if (body instanceof J.Block block && block.getStatements().stream()
+                .filter(statement -> statement instanceof J.MethodDeclaration other && event.equals(eventOf(other)))
+                .count() > 1) {
+            // e.g. a 2.x listener overriding both the Mapper and the Datastore overloads, which would migrate to one signature
+            return new Plan(event, "%s is overridden more than once: keep one, then run the migration again"
+                    .formatted(root.getName()), false);
+        }
+        // with no overridden method found, the root was matched by erasure, so it's EntityListener's own
         boolean needsInterface = TypeUtils.findOverriddenMethod(type)
                 .map(overridden -> TypeUtils.isOfClassType(overridden.getDeclaringType(), ENTITY_LISTENER))
-                .orElse(false);
+                .orElse(true);
         J.VariableDeclarations document = (J.VariableDeclarations) method.getParameters().get(1);
         J.VariableDeclarations datastore = (J.VariableDeclarations) method.getParameters().get(2);
         String problem = null;
@@ -328,17 +407,109 @@ public class EntityListenerMigration extends Recipe {
     }
 
     /**
+     * @return the event of the old {@code EntityListener} method the given method overrides, or null
+     */
+    @Nullable
+    private static Event eventOf(J.MethodDeclaration method) {
+        JavaType.Method root = method.getMethodType() != null ? root(method.getMethodType()) : null;
+        return root != null && method.getParameters().size() == 3 ? EVENTS.get(root.getName()) : null;
+    }
+
+    /**
+     * @return the old event methods a listener class inherits from superclasses that aren't listeners, which nothing would
+     *         migrate, or null if there are none
+     */
+    @Nullable
+    private static String inheritedEvents(J.ClassDeclaration classDecl) {
+        JavaType.FullyQualified type = classDecl.getType();
+        if (type == null || !TypeUtils.isAssignableTo(ENTITY_LISTENER, type)) {
+            return null;
+        }
+        Set<String> declared = new HashSet<>();
+        classDecl.getBody().getStatements().forEach(statement -> {
+            if (statement instanceof J.MethodDeclaration method) {
+                declared.add(method.getSimpleName());
+            }
+        });
+        List<String> inherited = new ArrayList<>();
+        for (JavaType.FullyQualified parent = type.getSupertype(); parent != null
+                && !TypeUtils.isAssignableTo(ENTITY_LISTENER, parent); parent = parent.getSupertype()) {
+            for (JavaType.Method method : parent.getMethods()) {
+                if (EVENTS.containsKey(method.getName()) && !declared.contains(method.getName())
+                        && method.getParameterTypes().size() == 3
+                        && TypeUtils.isOfClassType(method.getParameterTypes().get(1), DOCUMENT)) {
+                    inherited.add(parent.getClassName() + "." + method.getName());
+                }
+            }
+        }
+        return inherited.isEmpty() ? null : String.join(", ", inherited);
+    }
+
+    /**
      * @return the {@code EntityListener} method that the given method overrides, directly or through superclasses, or null
      */
     private static JavaType.@Nullable Method root(JavaType.Method method) {
+        JavaType.Method last = method;
         Optional<JavaType.Method> overridden = TypeUtils.findOverriddenMethod(method);
         while (overridden.isPresent()) {
             if (TypeUtils.isOfClassType(overridden.get().getDeclaringType(), ENTITY_LISTENER)) {
                 return overridden.get();
             }
-            overridden = TypeUtils.findOverriddenMethod(overridden.get());
+            last = overridden.get();
+            overridden = TypeUtils.findOverriddenMethod(last);
+        }
+        return overriddenByErasure(last);
+    }
+
+    /**
+     * {@code findOverriddenMethod} misses an override whose parameters match only by erasure, such as
+     * {@code prePersist(Object, Document, Datastore)} in a {@code GenericListener<T> implements EntityListener<T>}.
+     *
+     * @return the {@code EntityListener} method the given method overrides by erasure, or null
+     */
+    private static JavaType.@Nullable Method overriddenByErasure(JavaType.Method method) {
+        JavaType.FullyQualified entityListener = find(method.getDeclaringType(), new HashSet<>());
+        if (entityListener == null) {
+            return null;
+        }
+        for (JavaType.Method candidate : entityListener.getMethods()) {
+            if (candidate.getName().equals(method.getName())
+                    && candidate.getParameterTypes().size() == method.getParameterTypes().size()) {
+                boolean matches = true;
+                for (int i = 0; i < candidate.getParameterTypes().size() && matches; i++) {
+                    matches = erasure(candidate.getParameterTypes().get(i)).equals(erasure(method.getParameterTypes().get(i)));
+                }
+                if (matches) {
+                    return candidate;
+                }
+            }
         }
         return null;
+    }
+
+    private static JavaType.@Nullable FullyQualified find(JavaType.@Nullable FullyQualified type, Set<String> seen) {
+        if (type == null || !seen.add(type.getFullyQualifiedName())) {
+            return null;
+        }
+        if (TypeUtils.isOfClassType(type, ENTITY_LISTENER)) {
+            return type;
+        }
+        for (JavaType.FullyQualified parent : type.getInterfaces()) {
+            JavaType.FullyQualified found = find(parent, seen);
+            if (found != null) {
+                return found;
+            }
+        }
+        return find(type.getSupertype(), seen);
+    }
+
+    private static String erasure(JavaType type) {
+        if (type instanceof JavaType.GenericTypeVariable variable) {
+            return variable.getBounds().isEmpty() ? "java.lang.Object" : erasure(variable.getBounds().get(0));
+        } else if (type instanceof JavaType.FullyQualified fullyQualified) {
+            return fullyQualified.getFullyQualifiedName();
+        }
+        return type.toString();
     }
 
     private static String key(JavaType.@Nullable Method method) {
