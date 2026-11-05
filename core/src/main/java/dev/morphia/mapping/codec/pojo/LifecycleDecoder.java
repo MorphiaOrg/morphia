@@ -184,7 +184,7 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
     }
 
     /**
-     * @return the document's discriminator, or null if it has none. The reader is left where it was.
+     * @return the document's discriminator, or null if it has none or it's stored as null. The reader is left where it was.
      * @throws CodecConfigurationException if the discriminator isn't stored as a string
      */
     private static CodecConfigurationException notAString(String discriminatorKey, Object storedAs) {
@@ -199,6 +199,10 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
             reader.readStartDocument();
             while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
                 if (discriminatorKey.equals(reader.readName())) {
+                    if (reader.getCurrentBsonType() == BsonType.NULL) {
+                        // as if it were absent, as the Document path reads it
+                        return null;
+                    }
                     if (reader.getCurrentBsonType() != BsonType.STRING) {
                         throw notAString(discriminatorKey, reader.getCurrentBsonType());
                     }

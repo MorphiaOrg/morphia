@@ -239,6 +239,24 @@ public class TestLifecycleStreaming {
 
     @ParameterizedTest
     @EnumSource(MapperType.class)
+    void aNullDiscriminatorIsReadAsAbsent(MapperType mapperType) {
+        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
+            BsonDocument stored = BsonDocument.parse("{ _id: { $oid: '%s' }, _t: null, name: 'plain' }".formatted(new ObjectId()));
+            // streaming, and through a Document
+            for (EntityListener<?> listener : List.<EntityListener<?>> of(new RecordsLoads(), new LoadsAnyDocument())) {
+                MorphiaConfig config = config(mapperType).listeners(List.of(listener));
+                MorphiaCodec<Shape> shapes = codec(datastore(client, config), Shape.class);
+
+                Shape decoded = decode(shapes, stored);
+
+                Assertions.assertSame(Shape.class, decoded.getClass());
+                Assertions.assertEquals("plain", decoded.name);
+            }
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
     void documentIdsAreInTheSessionDuringTheirCallbacks(MapperType mapperType) {
         try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
             MorphiaConfig config = config(mapperType).listeners(List.of(new LooksUpDocumentKeyed()));
