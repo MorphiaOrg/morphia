@@ -10,7 +10,10 @@ import java.lang.annotation.Target;
 import dev.morphia.EntityListener;
 
 /**
- * Specifies other classes to participate in the @Entity's lifecycle
+ * Specifies other classes to participate in the @Entity's lifecycle. Each class implements one or more of the per-event listener
+ * interfaces, such as {@code PrePersistListener}, and has a no-argument constructor. Morphia creates an instance of each when it
+ * maps the entity. A listed class may not declare methods annotated with a lifecycle event annotation: only an entity's own
+ * methods can be.
  */
 @Documented
 @Inherited

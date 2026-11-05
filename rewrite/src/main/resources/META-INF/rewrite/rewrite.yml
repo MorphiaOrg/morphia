@@ -12,6 +12,7 @@ recipeList:
       oldFullyQualifiedTypeName: dev.morphia.EntityInterceptor
       newFullyQualifiedTypeName: dev.morphia.EntityListener
   - dev.morphia.rewrite.recipes.lifecycle.EntityListenerMigration
+  - dev.morphia.rewrite.recipes.lifecycle.AnnotatedListenerMethodMigration
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: dev.morphia.DatastoreImpl
       newFullyQualifiedTypeName: dev.morphia.MorphiaDatastore

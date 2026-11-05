@@ -628,7 +628,7 @@ public class EntityListenerMigration extends ScanningRecipe<EntityListenerMigrat
      * Resolves the {@code EntityListener} type argument a type inherits, substituting type variables along the way: for
      * {@code Listener<T> implements Audit<T>} and {@code Audit<A> extends EntityListener<A>}, it's {@code Listener}'s {@code T}.
      */
-    private static @Nullable JavaType listenerArgument(@Nullable JavaType type, Map<String, JavaType> bindings, Set<String> seen) {
+    static @Nullable JavaType listenerArgument(@Nullable JavaType type, Map<String, JavaType> bindings, Set<String> seen) {
         JavaType.FullyQualified raw;
         Map<String, JavaType> resolved = new HashMap<>();
         if (type instanceof JavaType.Parameterized parameterized) {
@@ -699,11 +699,11 @@ public class EntityListenerMigration extends ScanningRecipe<EntityListenerMigrat
                 && invocation.getSimpleName().equals(name);
     }
 
-    private static boolean marked(J method) {
+    static boolean marked(J method) {
         return method.getMarkers().findFirst(SearchResult.class).isPresent();
     }
 
-    private static boolean uses(J.MethodDeclaration method, J.VariableDeclarations parameter) {
+    static boolean uses(J.MethodDeclaration method, J.VariableDeclarations parameter) {
         if (method.getBody() == null) {
             return false;
         }

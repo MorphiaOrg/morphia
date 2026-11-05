@@ -442,8 +442,15 @@ harness passes, and both mappers agree.
 - Fix the `CritterEntityModel` javadoc and `design/GeneratedCode.adoc` item 2, which recommends the constant-getter
   approach that C1 shows the JIT can't optimize.
 
-### 4.14 Annotated lifecycle methods become entity-only (follow-up to #4432)
-Decide once #4431 has landed and the listener code has settled, based on what's left in `EntityListenerAdapter`.
+### ~~4.14 Annotated lifecycle methods become entity-only (follow-up to #4432)~~
+Decided after 4.2: removed outright in 3.0 rather than deprecated. With 4.2's `PostPersistDocumentListener` and
+`PostLoadDocumentListener`, every annotated method has an interface to move to, so the cost below no longer applies, and the
+new `AnnotatedListenerMethodMigration` recipe moves them: the class implements each event's interface, whose method calls the
+annotated methods. Mapping rejects an `@EntityListeners` class that declares annotated methods or implements no interface.
+`EntityListenerAdapter` now handles only the entity's own methods; `@EntityListeners` instances are created when the model is
+set up and called through `TypedListeners`.
+
+The original notes:
 - `@EntityListeners` classes would implement the per-event interfaces only. Their annotated methods are deprecated
   first, not removed. `EntityModel.callLifecycleMethods` then has three paths: the entity's own annotated methods
   (reflective, `OnEntityListenerAdapter`), and `@EntityListeners` instances and global listeners (both
@@ -511,7 +518,7 @@ Only start after Phases 3 and 4 have shipped and been re-measured.
 6. 3.1 → 3.9, with JMH deltas
 7. 3.10–3.15 startup, lifecycle and codec quick wins; 3.16 primitive arrays (independent)
 8. 4.1 sessions share the mapper → #4432 listener interfaces → #4431 configured listeners → 4.2 lifecycle
-   streaming; 4.14 entity-only annotated methods once #4431 settles
+   streaming; ~~4.14 entity-only annotated methods~~
 9. 4.4 generic resolver
 10. Phase 5 A11 builder/annotation utility → 4.5 parity test → 4.6 shared rules → 4.7 plain models → 4.8 divergences →
     4.9–4.11 → 4.12 AOT guard + 4.13 API surface (**before 3.0 GA**)

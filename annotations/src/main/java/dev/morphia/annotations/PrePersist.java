@@ -11,6 +11,9 @@ import java.lang.annotation.Target;
  * Called before the data has been persisted to the datastore (before mapping is done).
  * Here you can alter your class members prior to being saved.
  * <p>
+ * Only an entity's own methods may carry this annotation. An {@link EntityListeners @EntityListeners} class implements the
+ * event's listener interface instead.
+ * <p>
  * Methods with this annotation may optionally take a parameter of type
  * Datastore. This is the Datastore that
  * data will be persisted to.
