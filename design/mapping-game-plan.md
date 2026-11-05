@@ -411,6 +411,24 @@ harness passes, and both mappers agree.
 ### 4.11 Generated instantiators (C8)
 - Emit an instantiator: a woven `__new()` for AOT, a nestmate at runtime, and a constructor call with `@Name`
   arguments. This removes `Constructor.newInstance` from every decode. Coordinate with 3.2's creator.
+- Prior art: the unmerged local branch `worktree-critter-direct-construction` (worktree
+  `.claude/worktrees/critter-direct-construction`, on the since-removed Gizmo backend) generated a
+  `MorphiaInstanceCreator` per entity. Reuse its shape, not its code:
+  - **Two strategies, chosen at generation time.** For a no-arg constructor, create the instance when the creator is
+    constructed and set each value as it arrives. For an all-args constructor, keep one field per constructor
+    parameter, filled by name in `set()`, and call the constructor in `getInstance()`.
+  - **Zero defaults for primitive parameters** that were never set, so the call doesn't fail when a property is missing
+    from the document.
+  - **Fall back to `ConstructorCreator`** when the class or the constructor isn't accessible from the generated code.
+    The branch required both to be public; a nestmate at runtime and a woven `__new()` for AOT should lift most of that
+    restriction.
+  - **Keep `Conversions`.** The branch's no-arg `set()` wrote straight through the property accessor, and its all-args
+    path cast raw values. Both skip the conversions that 3.2 preserved by going through `model.setValue`. The
+    generated creator must convert values before setting or passing them.
+  - **Don't create the instance early for constructor-mapped entities.** The lifecycle decoder's early `getInstance()`
+    breaks constructors that validate their arguments (see #4431); a generated all-args creator has the same
+    constraint.
+- Once 4.11 is done, remove that worktree and delete the branch (it was never pushed).
 
 ### 4.12 AOT validity guard (#17, C4)
 - Emit a format version, generation key and weave hash. Check them at load time, and fall back with one log line

@@ -64,6 +64,17 @@ public final class TypedListeners {
 
     /**
      * @param listenerType a listener class
+     * @param event        the lifecycle event annotation
+     * @param entityType   an entity type
+     * @return true if the class's method for the event may be called for entities of the type or of one of its subtypes
+     */
+    public static boolean handles(Class<?> listenerType, Class<? extends Annotation> event, Class<?> entityType) {
+        Class<?> accepted = ENTITY_TYPES.get(listenerType).get(event);
+        return accepted != null && (accepted.isAssignableFrom(entityType) || entityType.isAssignableFrom(accepted));
+    }
+
+    /**
+     * @param listenerType a listener class
      * @return true if the class implements any of the per-event listener interfaces
      */
     public static boolean handlesAny(Class<?> listenerType) {

@@ -31,6 +31,7 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.mapping.conventions.MorphiaConvention;
+import dev.morphia.mapping.lifecycle.TypedListeners;
 import dev.morphia.mapping.validation.MappingValidator;
 import dev.morphia.sofia.Sofia;
 
@@ -70,6 +71,8 @@ public abstract class AbstractMapper implements Mapper {
     // thread can see them, so its recursive lookups resolve, while other threads wait on the lock for the outcome.
     private final Map<String, EntityModel> registering = new HashMap<>();
     protected final List<EntityListener<?>> listeners = new ArrayList<>();
+    // from MorphiaConfig.listeners(), fixed once the mapper exists
+    private final List<EntityListener<?>> globalListeners;
     protected final MorphiaConfig config;
     protected final DiscriminatorLookup discriminatorLookup;
     protected final ClassLoader classLoader;
@@ -105,6 +108,7 @@ public abstract class AbstractMapper implements Mapper {
         this.classLoader = classLoader;
         this.conversions = new Conversions(classLoader);
         this.discriminatorLookup = new DiscriminatorLookup(classLoader);
+        this.globalListeners = globalListeners(config);
     }
 
     /**
@@ -137,6 +141,21 @@ public abstract class AbstractMapper implements Mapper {
         this.discriminatorLookup = new DiscriminatorLookup(other.classLoader);
         other.mappedEntities.values().forEach(this::clone);
         this.listeners.addAll(other.listeners);
+        this.globalListeners = globalListeners(config);
+    }
+
+    /**
+     * @return the configured global listeners, each of which must implement a per-event listener interface. A copy whose
+     *         config lists the same instances shares them.
+     */
+    private static List<EntityListener<?>> globalListeners(MorphiaConfig config) {
+        List<EntityListener<?>> configured = List.copyOf(config.listeners().orElse(List.of()));
+        for (EntityListener<?> listener : configured) {
+            if (!TypedListeners.handlesAny(listener.getClass())) {
+                throw new MappingException(Sofia.noLifecycleMethods(listener.getClass().getName()));
+            }
+        }
+        return configured;
     }
 
     @Nullable
@@ -301,6 +320,12 @@ public abstract class AbstractMapper implements Mapper {
 
     @Override
     @MorphiaInternal
+    public List<EntityListener<?>> getGlobalListeners() {
+        return globalListeners;
+    }
+
+    @Override
+    @MorphiaInternal
     public List<EntityModel> getMappedEntities() {
         return new ArrayList<>(mappedEntities.values());
     }
@@ -327,7 +352,7 @@ public abstract class AbstractMapper implements Mapper {
     @Override
     @MorphiaInternal
     public boolean hasListeners() {
-        return !listeners.isEmpty();
+        return !globalListeners.isEmpty() || !listeners.isEmpty();
     }
 
     @Override

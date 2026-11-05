@@ -54,7 +54,8 @@ public interface Mapper {
      * implements, such as {@link dev.morphia.PrePersistListener}.
      *
      * @param ei the interceptor to add
-     * @deprecated use {@link dev.morphia.annotations.EntityListeners} to define any lifecycle event listeners
+     * @deprecated list global listeners in {@link MorphiaConfig#listeners()} instead, or use
+     *             {@link dev.morphia.annotations.EntityListeners} for the listeners of one entity
      */
     @Deprecated(forRemoval = true, since = "2.4.0")
     void addInterceptor(EntityListener<?> ei);
@@ -181,6 +182,15 @@ public interface Mapper {
     List<EntityListener<?>> getListeners();
 
     /**
+     * @return the global listeners listed in {@link MorphiaConfig#listeners()}. They run for every entity they accept,
+     *         before any added through the deprecated {@link #addInterceptor(EntityListener)}.
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    List<EntityListener<?>> getGlobalListeners();
+
+    /**
      * @return the {@link MorphiaConvention}s registered through {@link java.util.ServiceLoader}, which every entity
      *         model this mapper builds applies after Morphia's own conventions
      * @hidden
@@ -218,7 +228,7 @@ public interface Mapper {
     WriteConcern getWriteConcern(Class clazz);
 
     /**
-     * @return true if there are global interceptors defined
+     * @return true if there are global listeners, configured or added as interceptors
      * @hidden
      * @morphia.internal
      */

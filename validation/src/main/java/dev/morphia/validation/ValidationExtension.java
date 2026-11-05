@@ -9,7 +9,14 @@ import jakarta.validation.Validation;
 import jakarta.validation.ValidatorFactory;
 
 /**
- * Enables jakarta.validation support.
+ * Enables jakarta.validation support: entities are validated before they're saved. To turn it on, list it as a global
+ * listener in the Morphia configuration:
+ *
+ * <pre>
+ * morphia.listeners = dev.morphia.validation.ValidationExtension
+ * </pre>
+ *
+ * or {@code config.listeners(List.of(new ValidationExtension()))} on a {@code MorphiaConfig}.
  *
  * @since 2.3
  */
