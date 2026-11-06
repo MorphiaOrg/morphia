@@ -375,7 +375,6 @@ public class TestGeneration {
         Assertions.assertFalse(model.isAbstract(), "Should not be abstract");
         Assertions.assertFalse(model.isInterface(), "Should not be an interface");
         Assertions.assertTrue(model.useDiscriminator(), "Should use the discriminator");
-        Assertions.assertTrue(model.classHierarchy().isEmpty(), "Should not have a class hierarchy");
     }
 
     private void invokeAll(Class<?> type, Class<?> klass) {

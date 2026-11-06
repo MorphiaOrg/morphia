@@ -246,16 +246,6 @@ public class EntityModel {
         }
     }
 
-    /**
-     * @return the superclasses of this model's type, nearest first: while an {@code @ExternalEntity} is being built, the
-     *         stand-in's, and the target's after
-     * @deprecated use {@link ClassHierarchy#superclasses(Class)}
-     */
-    @Deprecated(forRemoval = true)
-    public Set<Class<?>> classHierarchy() {
-        return new LinkedHashSet<>(ClassHierarchy.superclasses(type));
-    }
-
     public void discriminator(String discriminator) {
         this.discriminator = discriminator;
     }
