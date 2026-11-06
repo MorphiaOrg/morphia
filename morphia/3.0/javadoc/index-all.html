@@ -3106,12 +3106,26 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/PostLoadListener.html#postLoad(T,dev.morphia.Datastore)" class="member-name-link">postLoad(T, Datastore)</a> - Method in interface dev.morphia.<a href="dev/morphia/PostLoadListener.html" title="interface in dev.morphia">PostLoadListener</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="dev/morphia/PostLoadDocumentListener.html#postLoad(T,org.bson.Document,dev.morphia.Datastore)" class="member-name-link">postLoad(T, Document, Datastore)</a> - Method in interface dev.morphia.<a href="dev/morphia/PostLoadDocumentListener.html" title="interface in dev.morphia">PostLoadDocumentListener</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="dev/morphia/PostLoadDocumentListener.html" class="type-name-link" title="interface in dev.morphia">PostLoadDocumentListener</a>&lt;<a href="dev/morphia/PostLoadDocumentListener.html" title="type parameter in PostLoadDocumentListener">T</a>&gt; - Interface in <a href="dev/morphia/package-summary.html">dev.morphia</a></dt>
+<dd>
+<div class="block">A listener for the <code>PostLoad</code> event, called after an entity is decoded, that's also given the <code>Document</code> it was
+ decoded from: to read fields the entity doesn't map, or to compare the entity with what was stored.</div>
+</dd>
 <dt><a href="dev/morphia/PostLoadListener.html" class="type-name-link" title="interface in dev.morphia">PostLoadListener</a>&lt;<a href="dev/morphia/PostLoadListener.html" title="type parameter in PostLoadListener">T</a>&gt; - Interface in <a href="dev/morphia/package-summary.html">dev.morphia</a></dt>
 <dd>
 <div class="block">A listener for the <code>PostLoad</code> event, called after an entity is decoded.</div>
 </dd>
 <dt><a href="dev/morphia/PostPersistListener.html#postPersist(T,dev.morphia.Datastore)" class="member-name-link">postPersist(T, Datastore)</a> - Method in interface dev.morphia.<a href="dev/morphia/PostPersistListener.html" title="interface in dev.morphia">PostPersistListener</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="dev/morphia/PostPersistDocumentListener.html#postPersist(T,org.bson.Document,dev.morphia.Datastore)" class="member-name-link">postPersist(T, Document, Datastore)</a> - Method in interface dev.morphia.<a href="dev/morphia/PostPersistDocumentListener.html" title="interface in dev.morphia">PostPersistDocumentListener</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="dev/morphia/PostPersistDocumentListener.html" class="type-name-link" title="interface in dev.morphia">PostPersistDocumentListener</a>&lt;<a href="dev/morphia/PostPersistDocumentListener.html" title="type parameter in PostPersistDocumentListener">T</a>&gt; - Interface in <a href="dev/morphia/package-summary.html">dev.morphia</a></dt>
+<dd>
+<div class="block">A listener for the <code>PostPersist</code> event, called after an entity is encoded and before it's written, that's also
+ given the encoded <code>Document</code>.</div>
+</dd>
 <dt><a href="dev/morphia/PostPersistListener.html" class="type-name-link" title="interface in dev.morphia">PostPersistListener</a>&lt;<a href="dev/morphia/PostPersistListener.html" title="type parameter in PostPersistListener">T</a>&gt; - Interface in <a href="dev/morphia/package-summary.html">dev.morphia</a></dt>
 <dd>
 <div class="block">A listener for the <code>PostPersist</code> event, called after an entity is encoded.</div>

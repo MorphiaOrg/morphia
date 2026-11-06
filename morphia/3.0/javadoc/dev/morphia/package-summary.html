@@ -145,9 +145,19 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">The ObjectFactory is used by morphia to create instances of classes which can be customized to fit a particular applications needs.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="PostLoadListener.html" title="interface in dev.morphia">PostLoadListener</a>&lt;T&gt;</div>
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="PostLoadDocumentListener.html" title="interface in dev.morphia">PostLoadDocumentListener</a>&lt;T&gt;</div>
 <div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="block">A listener for the <code>PostLoad</code> event, called after an entity is decoded, that's also given the <code>Document</code> it was
+ decoded from: to read fields the entity doesn't map, or to compare the entity with what was stored.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab1"><a href="PostLoadListener.html" title="interface in dev.morphia">PostLoadListener</a>&lt;T&gt;</div>
+<div class="col-last even-row-color class-summary class-summary-tab1">
 <div class="block">A listener for the <code>PostLoad</code> event, called after an entity is decoded.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="PostPersistDocumentListener.html" title="interface in dev.morphia">PostPersistDocumentListener</a>&lt;T&gt;</div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
+<div class="block">A listener for the <code>PostPersist</code> event, called after an entity is encoded and before it's written, that's also
+ given the encoded <code>Document</code>.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab1"><a href="PostPersistListener.html" title="interface in dev.morphia">PostPersistListener</a>&lt;T&gt;</div>
 <div class="col-last even-row-color class-summary class-summary-tab1">

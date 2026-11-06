@@ -838,11 +838,12 @@ loadScripts(document, 'script');</script>
  for every entity it accepts. A listener implements one or more of the per-event interfaces: <a href="../PrePersistListener.html" title="interface in dev.morphia"><code>PrePersistListener</code></a>,
  <a href="../PostPersistListener.html" title="interface in dev.morphia"><code>PostPersistListener</code></a>, <a href="../PreLoadListener.html" title="interface in dev.morphia"><code>PreLoadListener</code></a> and <a href="../PostLoadListener.html" title="interface in dev.morphia"><code>PostLoadListener</code></a>, and
  each is called only for entities of its type argument, so a <code>PrePersistListener&lt;Auditable&gt;</code> sees <code>Auditable</code>
- entities alone. Only <code>PreLoadListener</code> takes the <code>Document</code>, so Morphia can encode and decode without building
+ entities alone. Only <code>PreLoadListener</code>, <a href="../PostPersistDocumentListener.html" title="interface in dev.morphia"><code>PostPersistDocumentListener</code></a> and
+ <a href="../PostLoadDocumentListener.html" title="interface in dev.morphia"><code>PostLoadDocumentListener</code></a> take the <code>Document</code>, so Morphia can encode and decode without building
  one unless a listener needs it. A listener that implements none of them is rejected when the mapper is created.
  <p>
  The listeners are read once, when the mapper is created, and a copy of the mapper shares the same instances. This
- replaces <code>Mapper.addInterceptor</code>.</div>
+ replaces <code>Mapper.addInterceptor</code>, which was removed in 3.0.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the global listeners</dd>
