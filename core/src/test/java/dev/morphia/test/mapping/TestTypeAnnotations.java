@@ -72,6 +72,21 @@ public class TestTypeAnnotations extends TestBase {
     }
 
     @Test
+    public void explicitIdBeatsInterfaceIdField() {
+        withTestConfig(List.of(KeyedWithId.class), () -> {
+            // as in ConfigureProperties, an explicit @Id wins and the @IdField is ignored
+            EntityModel model = model(KeyedWithId.class);
+            Assertions.assertEquals("id", model.getIdProperty().getName());
+            Assertions.assertEquals("key", model.getProperty("key").getMappedName());
+
+            KeyedWithId entity = new KeyedWithId();
+            entity.key = "key-1";
+            getDs().save(entity);
+            Assertions.assertEquals("key-1", getDs().find(KeyedWithId.class).filter(eq("_id", entity.id)).first().key);
+        });
+    }
+
+    @Test
     public void externalEntityWithInterfaceEntity() {
         withTestConfig(List.of(CollectedStandIn.class), () -> {
             // the interface's @Entity is found before the convention would synthesize one from @ExternalEntity
@@ -137,6 +152,30 @@ public class TestTypeAnnotations extends TestBase {
 
         public void setName(String name) {
             this.name = name;
+        }
+    }
+
+    @Entity
+    public static class KeyedWithId implements Keyed {
+        @Id
+        ObjectId id;
+        String key;
+
+        // accessors too, so the package also maps when properties are discovered through methods
+        public ObjectId getId() {
+            return id;
+        }
+
+        public void setId(ObjectId id) {
+            this.id = id;
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        public void setKey(String key) {
+            this.key = key;
         }
     }
 
