@@ -66,8 +66,7 @@ public class MethodDiscovery implements MorphiaConvention {
 
     private void addProperties(Mapper mapper, EntityModel model, Set<Methods> properties) {
         for (Methods methods : properties) {
-            TypeData<?> typeData = model.getTypeData(methods.type, TypeData.get(methods.getter),
-                    methods.getter.getGenericReturnType());
+            TypeData<?> typeData = model.getTypeData(methods.getter.getGenericReturnType());
 
             ExternalEntity externalEntity = model.getAnnotation(ExternalEntity.class);
             Class<?> target = externalEntity != null ? externalEntity.target() : null;

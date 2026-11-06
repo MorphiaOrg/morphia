@@ -353,13 +353,16 @@ harness passes, and both mappers agree.
 - **Fixes the §5 issues:** an invalid model staying registered, and duplicate-discriminator races.
 - Ship it early, possibly within Phase 2, because it is a correctness fix and small.
 
-### 4.4 One generic-type resolver (#19, A6)
+### ~~4.4 One generic-type resolver (#19, A6)~~
 - Bind `TypeVariable` to `Type` by identity along the superclass chain. Handle `ParameterizedType`,
   `GenericArrayType` and wildcards, including `? super`. Cache per class with `ClassValue`.
 - Use it in the reflective builder and in `TypeData`. Critter works from classfile signatures, not
   `java.lang.reflect`, so `PropertyModelGenerator` needs an equivalent binding by type-variable name over
   signatures. Shared test cases keep both sides in step, and the 4.5 parity test covers it.
 - **Fixes:** the `MyMap<V,K>` key/value swap, `? super` being ignored, and the critter/reflection divergence.
+- Done as `TypeResolver`. `PropertyModelGenerator` turned out to read the member's generic type through reflection
+  already (only a helper the tests call parses signatures), so it calls the same resolver rather than a second one over
+  signatures; the generated models still need no reflection at runtime.
 
 ### 4.5 Critter/reflection parity test (C3)
 - Map every test entity with both mappers and compare the resulting models:

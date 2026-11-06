@@ -9,6 +9,7 @@ import java.util.Locale;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.mapping.codec.pojo.TypeData;
+import dev.morphia.mapping.codec.pojo.TypeResolver;
 import dev.morphia.test.TestBase;
 import dev.morphia.test.mapping.codec.pojo.generics.FullHashMap;
 import dev.morphia.test.mapping.codec.pojo.generics.PartialHashMap;
@@ -80,6 +81,23 @@ public class TypeDataTest extends TestBase {
         for (TypeData<?> param : typeData.getTypeParameters()) {
             param.getType(); // throws ClassCastException: Class cannot be cast to TypeData
         }
+    }
+
+    @Test
+    public void testInterfaceBindings() throws NoSuchMethodException {
+        java.lang.reflect.Type held = Holder.class.getMethod("held").getGenericReturnType();
+        Assertions.assertEquals(String.class, TypeResolver.resolve(StringHolder.class, held));
+        Assertions.assertEquals(String.class, TypeResolver.resolve(StringHolderChild.class, held));
+    }
+
+    private interface Holder<T> {
+        T held();
+    }
+
+    private abstract static class StringHolder implements Holder<String> {
+    }
+
+    private abstract static class StringHolderChild extends StringHolder {
     }
 
     private abstract static class TypedId<T extends TypedId<T>> {
