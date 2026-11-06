@@ -366,15 +366,24 @@ harness passes, and both mappers agree.
 - `? super X` was not a bug after all: such a list can hold any supertype's values (a `List<Object>` with strings in
   it), so its elements still decode as the upper bound, `Object`. Using `X` threw `ClassCastException` on a mixed list.
 
-### 4.5 Critter/reflection parity test (C3)
+### ~~4.5 Critter/reflection parity test (C3)~~
 - Map every test entity with both mappers and compare the resulting models:
   - names, mapped names and load names;
   - types and `TypeData`;
   - annotations;
   - id, version and discriminator settings;
   - accessor behavior.
-- Known divergences are listed as expected failures, and each one is removed in 4.8.
+- Known divergences are listed as expected failures, and each one is removed by the item that fixes it (4.6 or 4.8).
 - **Why first:** it is the guard that lets critter keep its own discovery without drifting again.
+- Done as `TestMapperParity`, under both discovery modes. The known divergences are rules (`TestMapperParity.Known`),
+  not a per-entity list, since method discovery alone yields hundreds of entities that differ for one reason. Each rule
+  names the item that closes it:
+  - 4.6: critter switches to method discovery under field discovery when a getter is annotated; under method
+    discovery it maps fields when there are no getter/setter pairs, skips private inherited getters, and keeps an
+    overriding getter's annotations.
+  - 4.8: arrays (critter falls back to reflection), shadowed fields, `@Property(concreteClass)`, fluent setters.
+  - 4.8 also takes two reflection bugs it found: method accessors aren't made accessible, so they throw on
+    package-private entities, and a method named just `get`, `set` or `is` breaks method discovery.
 
 ### 4.6 Shared discovery rules (C10)
 - Pull the pure rules into one place that both `FieldDiscovery`/`MethodDiscovery` and
@@ -382,6 +391,8 @@ harness passes, and both mappers agree.
   `titleCase`/`methodCase`.
 - The rules take plain inputs (names, modifiers, annotation values), so critter keeps working from classfiles
   with no reflection.
+- Removes the 4.5 parity test's discovery rules (`ANNOTATED_GETTERS`, `FIELDS_WITHOUT_ACCESSORS`,
+  `PRIVATE_INHERITED_GETTERS`, `OVERRIDING_GETTER_ANNOTATIONS`).
 
 ### 4.7 Generated code builds plain models (C1)
 - Generated factories construct ordinary `EntityModel`/`PropertyModel` instances from constants, instead of
@@ -397,6 +408,8 @@ harness passes, and both mappers agree.
 ### 4.8 Close the remaining divergences (C3)
 - `@Property(concreteClass)`, ~~interface-level annotations~~ (closed by A11),
   shadowed fields (use `FieldInfo.declaringClass`), fluent setters in AOT weaving, and array properties.
+- Reflection bugs the parity test found: `MethodAccessor` doesn't make its methods accessible (throws on a
+  package-private entity), and method discovery fails on a method named just `get`, `set` or `is`.
 - One PR per divergence if any of them turns out to be large. Each one removes an expected failure from 4.5.
 
 ### 4.9 Runtime generation efficiency (C5/A9)
@@ -529,7 +542,7 @@ Only start after Phases 3 and 4 have shipped and been re-measured.
 8. 4.1 sessions share the mapper → #4432 listener interfaces → #4431 configured listeners → 4.2 lifecycle
    streaming; ~~4.14 entity-only annotated methods~~
 9. 4.4 generic resolver
-10. ~~Phase 5 A11 builder/annotation utility~~ → 4.5 parity test → 4.6 shared rules → 4.7 plain models → 4.8 divergences →
+10. ~~Phase 5 A11 builder/annotation utility~~ → ~~4.5 parity test~~ → 4.6 shared rules → 4.7 plain models → 4.8 divergences →
     4.9–4.11 → 4.12 AOT guard + 4.13 API surface (**before 3.0 GA**)
 11. 3.17 single-pass discriminator and `_id`
 12. Phase 5 clean-ups throughout; Phase 6 re-evaluated after 3.0 GA
