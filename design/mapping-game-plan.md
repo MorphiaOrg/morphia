@@ -383,7 +383,7 @@ harness passes, and both mappers agree.
     overriding getter's annotations.
   - 4.8: arrays (critter falls back to reflection), shadowed fields, `@Property(concreteClass)`, fluent setters.
   - 4.8 also takes two reflection bugs it found: method accessors aren't made accessible, so they throw on
-    package-private entities, and a method named just `get` or `is` breaks method discovery.
+    package-private entities, and a method named just `get`, `set` or `is` breaks method discovery.
 
 ### 4.6 Shared discovery rules (C10)
 - Pull the pure rules into one place that both `FieldDiscovery`/`MethodDiscovery` and
@@ -409,7 +409,7 @@ harness passes, and both mappers agree.
 - `@Property(concreteClass)`, ~~interface-level annotations~~ (closed by A11),
   shadowed fields (use `FieldInfo.declaringClass`), fluent setters in AOT weaving, and array properties.
 - Reflection bugs the parity test found: `MethodAccessor` doesn't make its methods accessible (throws on a
-  package-private entity), and method discovery fails on a method named just `get` or `is`.
+  package-private entity), and method discovery fails on a method named just `get`, `set` or `is`.
 - One PR per divergence if any of them turns out to be large. Each one removes an expected failure from 4.5.
 
 ### 4.9 Runtime generation efficiency (C5/A9)

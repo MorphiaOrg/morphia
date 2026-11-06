@@ -128,13 +128,13 @@ public class TestMapperParity {
             }
         },
         /**
-         * Under method discovery, reflection fails on a method named just {@code get} or {@code is} while working out a
+         * Under method discovery, reflection fails on a method named just {@code get}, {@code set} or {@code is} while working out a
          * property name from it; critter ignores such methods.
          */
         BARE_ACCESSOR_NAMES("4.8") {
             @Override
             boolean claims(Comparison comparison, String fact) {
-                return comparison.discovery == METHODS && fact.equals(MAPPING)
+                return comparison.discovery == METHODS && fact.equals(MAPPING) && hasBareAccessorName(comparison.entity)
                         && StringIndexOutOfBoundsException.class.getName().equals(comparison.reflection.get(MAPPING));
             }
         },
@@ -169,7 +169,8 @@ public class TestMapperParity {
             @Override
             boolean claims(Comparison comparison, String fact) {
                 return comparison.discovery == METHODS && fact.endsWith(".accessor")
-                        && MappingException.class.getName().equals(comparison.reflection.get(fact));
+                        && (MappingException.class.getName() + "(" + IllegalAccessException.class.getName() + ")")
+                                .equals(comparison.reflection.get(fact));
             }
         };
 
@@ -297,12 +298,13 @@ public class TestMapperParity {
             for (ClassInfo info : scan.getAllStandardClasses()) {
                 if (!info.isExternalClass() && mayBeEntity(info)) {
                     Class<?> type;
+                    Map<Class<? extends Annotation>, Annotation> annotations;
                     try {
                         type = Class.forName(info.getName(), false, TestMapperParity.class.getClassLoader());
+                        annotations = ClassHierarchy.annotations(type);
                     } catch (ClassNotFoundException | LinkageError e) {
                         continue;
                     }
-                    Map<Class<? extends Annotation>, Annotation> annotations = ClassHierarchy.annotations(type);
                     if (annotations.containsKey(Entity.class) && !annotations.containsKey(ExternalEntity.class)) {
                         entities.add(type);
                     }
@@ -421,7 +423,8 @@ public class TestMapperParity {
             accessor.set(instance, sample);
             return initial + " -> " + accessor.get(instance);
         } catch (RuntimeException | LinkageError e) {
-            return e.getClass().getName();
+            return e.getCause() == null ? e.getClass().getName()
+                    : e.getClass().getName() + "(" + e.getCause().getClass().getName() + ")";
         }
     }
 
@@ -463,7 +466,9 @@ public class TestMapperParity {
                 .collect(Collectors.toSet());
         for (Class<?> type = entity; type != null && type != Object.class; type = type.getSuperclass()) {
             for (Method method : type.getDeclaredMethods()) {
-                if (isGetter(method) && List.of(method.getAnnotations()).stream()
+                // like critter, which skips a superclass's private getters
+                boolean hidden = type != entity && Modifier.isPrivate(method.getModifiers());
+                if (!hidden && isGetter(method) && List.of(method.getAnnotations()).stream()
                         .anyMatch(a -> annotations.contains(a.annotationType()))) {
                     return true;
                 }
@@ -546,6 +551,17 @@ public class TestMapperParity {
 
     private static boolean hasMorphiaAnnotation(Method method) {
         return List.of(method.getAnnotations()).stream().anyMatch(a -> MORPHIA_ANNOTATIONS.contains(a.annotationType()));
+    }
+
+    private static boolean hasBareAccessorName(Class<?> entity) {
+        for (Class<?> type = entity; type != null && type != Object.class; type = type.getSuperclass()) {
+            for (Method method : type.getDeclaredMethods()) {
+                if (Set.of("get", "set", "is").contains(method.getName())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private static boolean hasArrayField(Class<?> entity) {
