@@ -1,11 +1,14 @@
 package dev.morphia.critter.maven
 
 import dev.morphia.annotations.Entity
+import dev.morphia.annotations.ExternalEntity
 import dev.morphia.config.MorphiaConfig
 import dev.morphia.critter.CritterClassLoader
 import dev.morphia.critter.parser.generator.CritterGenerator
 import dev.morphia.mapping.ReflectiveMapper
+import dev.morphia.mapping.codec.pojo.ClassHierarchy
 import io.github.classgraph.ClassGraph
+import io.github.classgraph.ClassInfo
 import java.io.File
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -41,7 +44,7 @@ class CritterProcessor(
         writeGeneratedClasses()
     }
 
-    private fun findEntityClasses(): List<Class<*>> {
+    internal fun findEntityClasses(): List<Class<*>> {
         val packagesToScan = config.packages().filter { it != ".*" }
 
         val scanResult =
@@ -49,6 +52,8 @@ class CritterProcessor(
                 .enableClassInfo()
                 .enableAnnotationInfo()
                 .enableClassLoaders(classLoader)
+                // interfaces outside the scanned packages can carry @Entity
+                .enableExternalClasses()
                 .apply {
                     if (packagesToScan.isNotEmpty()) {
                         acceptPackages(*packagesToScan.toTypedArray())
@@ -57,15 +62,32 @@ class CritterProcessor(
                 .scan()
 
         return scanResult.use { result ->
-            val annotated = result.getClassesWithAnnotation(Entity::class.java)
-            // a class is also an entity when an interface it implements carries @Entity, as in the
-            // runtime mappers
-            val implementors = annotated.interfaces.flatMap { it.allClassesImplementing }
-            (annotated + implementors)
-                .filter { !it.isInterface }
-                .distinctBy { it.name }
+            result.allClasses
+                .filter { mayBeEntity(it) }
                 .map { classLoader.loadClass(it.name) }
+                .filter { isEntity(it) }
         }
+    }
+
+    /**
+     * Whether the class or an interface it implements carries `@Entity`, as the runtime package
+     * scan checks before loading a class.
+     */
+    private fun mayBeEntity(type: ClassInfo): Boolean =
+        !type.isExternalClass &&
+            !type.isInterface &&
+            !type.isAnnotation &&
+            (type.hasAnnotation(ENTITY) || type.allSuperinterfaces.any { it.hasAnnotation(ENTITY) })
+
+    /**
+     * Whether the mappers treat the class as an entity: it collects `@Entity` from itself, a
+     * superclass or an interface. An `@ExternalEntity` stand-in is left out: its model is named
+     * after its target, so it would replace the target's model, and stand-ins are generated at
+     * runtime.
+     */
+    private fun isEntity(type: Class<*>): Boolean {
+        val annotations = ClassHierarchy.annotations(type)
+        return Entity::class.java in annotations && ExternalEntity::class.java !in annotations
     }
 
     private fun processClass(entityClass: Class<*>) {
@@ -92,5 +114,9 @@ class CritterProcessor(
         }
 
         logger.info("Generated ${typeDefinitions.size} classes to ${outputDirectory.absolutePath}")
+    }
+
+    private companion object {
+        val ENTITY: String = Entity::class.java.name
     }
 }
