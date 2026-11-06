@@ -10,6 +10,7 @@ import dev.morphia.critter.parser.FieldInfo;
 import dev.morphia.critter.parser.MethodInfo;
 import dev.morphia.critter.parser.PropertyFinder;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.ClassHierarchy;
 
 import org.bson.codecs.pojo.PropertyAccessor;
 
@@ -42,7 +43,7 @@ public class CritterGenerator {
     public EntityModelGenerator generate(Class<?> type, CritterClassLoader critterClassLoader, boolean runtimeMode) {
         // For @ExternalEntity, the annotated stand-in class describes the mapping; the target
         // class is what actually gets persisted and needs accessor/model generation.
-        ExternalEntity ext = type.getAnnotation(ExternalEntity.class);
+        ExternalEntity ext = (ExternalEntity) ClassHierarchy.annotations(type).get(ExternalEntity.class);
         Class<?> standinType = type;
         Class<?> targetType = ext != null ? ext.target() : type;
 
@@ -185,16 +186,6 @@ public class CritterGenerator {
     }
 
     /**
-     * Generates and registers a {@link PropertyModelGenerator} for the given field, reading annotations from {@code annotationSource}.
-     *
-     * @param runtimeMode {@code true} to use the nestmate accessor registry instead of generating {@code new} bytecode
-     */
-    public PropertyModelGenerator propertyModelGenerator(Class<?> entityType, Class<?> annotationSource,
-            CritterClassLoader critterClassLoader, FieldInfo field, boolean runtimeMode) {
-        return new PropertyModelGenerator(mapper.getConfig(), entityType, annotationSource, critterClassLoader, field, runtimeMode).emit();
-    }
-
-    /**
      * Generates and registers a {@link PropertyModelGenerator} for the property exposed by the given getter method.
      *
      * @param entityType         the entity class that owns the method
@@ -212,16 +203,6 @@ public class CritterGenerator {
     public PropertyModelGenerator propertyModelGenerator(Class<?> entityType, Class<?> annotationSource,
             CritterClassLoader critterClassLoader, MethodInfo method) {
         return new PropertyModelGenerator(mapper.getConfig(), entityType, annotationSource, critterClassLoader, method).emit();
-    }
-
-    /**
-     * Generates and registers a {@link PropertyModelGenerator} for the given method, reading annotations from {@code annotationSource}.
-     *
-     * @param runtimeMode {@code true} to use the nestmate accessor registry instead of generating {@code new} bytecode
-     */
-    public PropertyModelGenerator propertyModelGenerator(Class<?> entityType, Class<?> annotationSource,
-            CritterClassLoader critterClassLoader, MethodInfo method, boolean runtimeMode) {
-        return new PropertyModelGenerator(mapper.getConfig(), entityType, annotationSource, critterClassLoader, method, runtimeMode).emit();
     }
 
     /**

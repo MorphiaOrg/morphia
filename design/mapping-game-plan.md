@@ -395,7 +395,7 @@ harness passes, and both mappers agree.
 - Old AOT output fails to load against `final` getters and falls back to runtime generation. 4.12 makes that clean.
 
 ### 4.8 Close the remaining divergences (C3)
-- `@Property(concreteClass)`, interface-level annotations (shared with A11's annotation utility),
+- `@Property(concreteClass)`, ~~interface-level annotations~~ (closed by A11),
   shadowed fields (use `FieldInfo.declaringClass`), fluent setters in AOT weaving, and array properties.
 - One PR per divergence if any of them turns out to be large. Each one removes an expected failure from 4.5.
 
@@ -492,9 +492,13 @@ Bundle these into one or two PRs. Most of it is `@MorphiaInternal` dead code.
   target, and normalize anonymous subclasses.
 - **D14:** move `updateQueryWithDiscriminators` into `MorphiaQuery`, using the cached subtype list.
 - **D16:** collapse the five "give me a model" entry points into one nullable lookup plus one throwing wrapper.
-- **A11:** extract `ReflectiveEntityModelBuilder` so the `EntityModel` constructor only assigns fields. Use one
+- ~~**A11:** extract `ReflectiveEntityModelBuilder` so the `EntityModel` constructor only assigns fields. Use one
   annotation-collection utility with documented precedence, whose rules `EntityModelGenerator` also follows (feeds
-  4.8's interface-annotation fix). This is groundwork for Tier 3.
+  4.8's interface-annotation fix). This is groundwork for Tier 3.~~
+  - Done as `ReflectiveEntityModelBuilder` and `ClassHierarchy`, whose per-class caches hold the superclasses and the
+    annotations; the entity's own lifecycle methods are cached per class too. Critter now takes its annotations from
+    `ClassHierarchy`, so 4.8's interface-annotation divergence is closed here. Critter still keeps only Morphia
+    annotations, since only they have builders to emit.
 
 ---
 
@@ -525,7 +529,7 @@ Only start after Phases 3 and 4 have shipped and been re-measured.
 8. 4.1 sessions share the mapper → #4432 listener interfaces → #4431 configured listeners → 4.2 lifecycle
    streaming; ~~4.14 entity-only annotated methods~~
 9. 4.4 generic resolver
-10. Phase 5 A11 builder/annotation utility → 4.5 parity test → 4.6 shared rules → 4.7 plain models → 4.8 divergences →
+10. ~~Phase 5 A11 builder/annotation utility~~ → 4.5 parity test → 4.6 shared rules → 4.7 plain models → 4.8 divergences →
     4.9–4.11 → 4.12 AOT guard + 4.13 API surface (**before 3.0 GA**)
 11. 3.17 single-pass discriminator and `_id`
 12. Phase 5 clean-ups throughout; Phase 6 re-evaluated after 3.0 GA

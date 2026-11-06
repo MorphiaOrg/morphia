@@ -14,6 +14,7 @@ import com.mongodb.DBRef;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.AlsoLoad;
+import dev.morphia.annotations.Id;
 import dev.morphia.annotations.IdField;
 import dev.morphia.annotations.Reference;
 import dev.morphia.config.MorphiaConfig;
@@ -23,6 +24,7 @@ import dev.morphia.critter.conventions.PropertyConvention;
 import dev.morphia.critter.parser.ExtensionFunctions;
 import dev.morphia.critter.parser.FieldInfo;
 import dev.morphia.critter.parser.MethodInfo;
+import dev.morphia.mapping.codec.pojo.ClassHierarchy;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
@@ -50,7 +52,7 @@ public class PropertyModelGenerator extends BaseGenerator {
     private final TypeData<?> typeData;
     private final String getterName;
     @Nullable
-    private final String idFieldName;
+    private String idFieldName;
 
     /**
      * Creates a generator for a field-based property.
@@ -250,8 +252,26 @@ public class PropertyModelGenerator extends BaseGenerator {
 
     @Nullable
     private static String idFieldName(Class<?> annotationSource) {
-        IdField idField = annotationSource.getAnnotation(IdField.class);
+        IdField idField = (IdField) ClassHierarchy.annotations(annotationSource).get(IdField.class);
         return idField != null ? idField.value() : null;
+    }
+
+    /**
+     * @return true if the property is annotated {@code @Id}
+     */
+    public boolean isAnnotatedId() {
+        return annotationMap.containsKey(Id.class.getName());
+    }
+
+    /**
+     * Leaves the entity's {@code @IdField} out of this property's mapped name, because another property is annotated
+     * {@code @Id}: as in {@code ConfigureProperties}, an explicit {@code @Id} wins. Call before {@link #emit()}.
+     *
+     * @return this
+     */
+    public PropertyModelGenerator ignoreIdField() {
+        idFieldName = null;
+        return this;
     }
 
     /**

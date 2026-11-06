@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import dev.morphia.config.MorphiaConfig;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.generator.CritterGenerator;
 import dev.morphia.critter.parser.generator.GenerationUtils;
@@ -43,6 +44,7 @@ public class PropertyFinder {
     private final boolean runtimeMode;
     private final CritterGenerator critterGenerator;
     private final PropertyDiscovery propertyDiscovery;
+    private final MorphiaConfig config;
 
     public PropertyFinder(Mapper mapper, CritterClassLoader classLoader, boolean runtimeMode) {
         this.providerMap = new LinkedHashMap<>();
@@ -56,6 +58,7 @@ public class PropertyFinder {
         this.runtimeMode = runtimeMode;
         this.critterGenerator = new CritterGenerator(mapper);
         this.propertyDiscovery = mapper.getConfig().propertyDiscovery();
+        this.config = mapper.getConfig();
     }
 
     public List<PropertyModelGenerator> find(Class<?> entityType, ClassModel classModel) {
@@ -82,7 +85,7 @@ public class PropertyFinder {
                 } else {
                     critterGenerator.propertyAccessor(targetType, classLoader, field);
                 }
-                models.add(critterGenerator.propertyModelGenerator(targetType, standinType, classLoader, field, runtimeMode));
+                models.add(new PropertyModelGenerator(config, targetType, standinType, classLoader, field, runtimeMode));
             }
         } else {
             if (!runtimeMode) {
@@ -95,8 +98,16 @@ public class PropertyFinder {
                 } else {
                     critterGenerator.propertyAccessor(targetType, classLoader, method);
                 }
-                models.add(critterGenerator.propertyModelGenerator(targetType, standinType, classLoader, method, runtimeMode));
+                models.add(new PropertyModelGenerator(config, targetType, standinType, classLoader, method, runtimeMode));
             }
+        }
+        // as in ConfigureProperties, an explicit @Id wins over the entity's @IdField
+        boolean explicitId = models.stream().anyMatch(PropertyModelGenerator::isAnnotatedId);
+        for (PropertyModelGenerator model : models) {
+            if (explicitId) {
+                model.ignoreIdField();
+            }
+            model.emit();
         }
         return models;
     }

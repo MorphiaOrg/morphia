@@ -18,6 +18,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.MethodAccessor;
+import dev.morphia.mapping.codec.pojo.ClassHierarchy;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
@@ -39,7 +40,7 @@ public class MethodDiscovery implements MorphiaConvention {
         if (model.getProperties().isEmpty()) {
 
             Set<Class<?>> hierarchy = new LinkedHashSet<>(Set.of(model.getType()));
-            hierarchy.addAll(model.classHierarchy());
+            hierarchy.addAll(ClassHierarchy.superclasses(model.getType()));
 
             Set<Methods> properties = new LinkedHashSet<>();
 

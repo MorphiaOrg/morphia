@@ -29,22 +29,15 @@ import dev.morphia.EntityListener;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.EntityListeners;
-import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.ShardKeys;
 import dev.morphia.annotations.Version;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.InstanceCreatorFactory;
 import dev.morphia.mapping.InstanceCreatorFactoryImpl;
-import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
-import dev.morphia.mapping.conventions.ConfigureProperties;
-import dev.morphia.mapping.conventions.FieldDiscovery;
-import dev.morphia.mapping.conventions.MethodDiscovery;
-import dev.morphia.mapping.conventions.MorphiaConvention;
-import dev.morphia.mapping.conventions.MorphiaDefaultsConvention;
 import dev.morphia.mapping.lifecycle.EntityListenerAdapter;
 import dev.morphia.mapping.lifecycle.TypedListeners;
 import dev.morphia.sofia.Sofia;
@@ -52,11 +45,9 @@ import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 
 import static dev.morphia.mapping.Mapper.LIFECYCLE_ANNOTATIONS;
-import static dev.morphia.mapping.PropertyDiscovery.FIELDS;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
-import static java.util.List.of;
 
 /**
  * A model of metadata about a type
@@ -101,7 +92,6 @@ public class EntityModel {
     private int lifecycleEvents;
     // bit i set when a listener's method for Mapper.LIFECYCLE_ANNOTATIONS[i] takes the Document
     private int documentEvents;
-    private final Set<Class<?>> classes = new LinkedHashSet<>();
 
     public EntityModel(Class<?> type) {
         if (!Modifier.isStatic(type.getModifiers()) && type.isMemberClass()) {
@@ -109,17 +99,6 @@ public class EntityModel {
         }
         this.type = type;
         creatorFactory = new InstanceCreatorFactoryImpl(this);
-    }
-
-    public EntityModel(Mapper mapper, Class<?> type) {
-        this(type);
-
-        new MappingUtil(mapper);
-
-        ExternalEntity externalEntity = getAnnotation(ExternalEntity.class);
-        if (externalEntity != null) {
-            this.type = externalEntity.target();
-        }
     }
 
     public EntityModel(EntityModel other) {
@@ -265,10 +244,6 @@ public class EntityModel {
         for (EntityListener<?> listener : datastore.getMapper().getGlobalListeners()) {
             TypedListeners.invoke(listener, event, entity, document, datastore);
         }
-    }
-
-    public Set<Class<?>> classHierarchy() {
-        return classes;
     }
 
     public void discriminator(String discriminator) {
@@ -601,8 +576,8 @@ public class EntityModel {
 
     /**
      * Creates the instances of the {@code @EntityListeners} classes and finds the entity's own lifecycle methods.
-     * Subclasses that bypass the normal {@link MappingUtil} pipeline (e.g. {@code CritterEntityModel}) must
-     * call this after their properties have been set up.
+     * Whatever builds the model ({@link ReflectiveEntityModelBuilder}, or a generated {@code CritterEntityModel}) must
+     * call this after its properties have been set up.
      *
      * @throws MappingException if an {@code @EntityListeners} class can't be created, implements none of the per-event
      *                          listener interfaces, or declares annotated lifecycle methods
@@ -681,90 +656,4 @@ public class EntityModel {
             return propertyModel;
         }
     }
-
-    private class MappingUtil {
-
-        private final Mapper mapper;
-
-        public MappingUtil(Mapper mapper) {
-            this.mapper = mapper;
-            buildHierarchy();
-
-            List<MorphiaConvention> conventions = new ArrayList<>(of(
-                    new MorphiaDefaultsConvention(),
-                    mapper.getConfig().propertyDiscovery() == FIELDS ? new FieldDiscovery() : new MethodDiscovery(),
-                    new ConfigureProperties()));
-
-            conventions.addAll(mapper.getConventions());
-
-            for (MorphiaConvention convention : conventions) {
-                convention.apply(mapper, EntityModel.this);
-            }
-
-            if (discriminatorEnabled) {
-                Objects.requireNonNull(discriminatorKey, Sofia.notNull("discriminatorKey"));
-                Objects.requireNonNull(discriminator, Sofia.notNull("discriminator"));
-            }
-
-            build();
-        }
-
-        private void build() {
-
-            collectionName(getCollectionName());
-
-            //            if (superClass != null) {
-            //                superClass.addSubtype(EntityModel.this);
-            //            }
-
-            initializeListeners();
-
-        }
-
-        private void buildHierarchy() {
-            for (Annotation annotation : type.getAnnotations()) {
-                annotation(annotation);
-            }
-            // collects the interfaces' annotations; the mapper links the model to them once it's registered
-            findInterfaces(type);
-
-            classes.addAll(findParentClasses(type.getSuperclass()));
-            classes.forEach(this::findInterfaces);
-
-        }
-
-        private List<? extends Class<?>> findInterfaces(Class<?> type) {
-            List<Class<?>> list = new ArrayList<>();
-            List<Class<?>> interfaces = Arrays.asList(type.getInterfaces());
-            for (Annotation annotation : type.getAnnotations()) {
-                annotation(annotation);
-            }
-            list.addAll(interfaces);
-            list.addAll(interfaces.stream()
-                    .flatMap(i -> findInterfaces(i).stream())
-                    .collect(Collectors.toList()));
-
-            return list;
-        }
-
-        private Set<Class<?>> findParentClasses(Class<?> type) {
-            Set<Class<?>> classes = new LinkedHashSet<>();
-            while (type != null && !type.isEnum() && !type.equals(Object.class)) {
-                classes.add(type);
-                for (Annotation annotation : type.getAnnotations()) {
-                    annotation(annotation);
-                }
-                type = type.getSuperclass();
-            }
-            return classes;
-        }
-
-        protected String getCollectionName() {
-            Entity entityAn = getAnnotation(Entity.class);
-            return entityAn != null && !entityAn.value().equals(Mapper.IGNORED_FIELDNAME)
-                    ? entityAn.value()
-                    : mapper.getConfig().collectionNaming().apply(type.getSimpleName());
-        }
-    }
-
 }

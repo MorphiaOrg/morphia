@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
@@ -35,6 +36,17 @@ import static java.lang.String.format;
  */
 @MorphiaInternal
 public final class EntityListenerAdapter {
+    // an adapter only reads its type, so subtypes, mappers and model copies can all share it
+    private static final ClassValue<Optional<EntityListenerAdapter>> ADAPTERS = new ClassValue<>() {
+        @Override
+        protected Optional<EntityListenerAdapter> computeValue(Class<?> entityType) {
+            EntityListenerAdapter adapter = new EntityListenerAdapter(entityType);
+            // checked here, when the entity is mapped: annotated methods would otherwise short-circuit every check
+            boolean typed = TypedListeners.handlesAny(entityType);
+            return typed || adapter.hasCallbacks() ? Optional.of(adapter) : Optional.empty();
+        }
+    };
+
     private final Map<Class<? extends Annotation>, List<Callback>> callbacks = new HashMap<>();
     private final Class<?> entityType;
 
@@ -53,10 +65,7 @@ public final class EntityListenerAdapter {
      */
     @Nullable
     public static EntityListenerAdapter listen(Class<?> entityType) {
-        EntityListenerAdapter adapter = new EntityListenerAdapter(entityType);
-        // checked here, when the entity is mapped: annotated methods would otherwise short-circuit every check
-        boolean typed = TypedListeners.handlesAny(entityType);
-        return typed || adapter.hasCallbacks() ? adapter : null;
+        return ADAPTERS.get(entityType).orElse(null);
     }
 
     /**

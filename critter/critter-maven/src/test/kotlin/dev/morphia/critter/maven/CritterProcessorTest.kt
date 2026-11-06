@@ -85,6 +85,35 @@ class CritterProcessorTest {
         assertFalse(File(generated, "named").exists(), "interfaces should not get an AOT model")
     }
 
+    @Test
+    fun testProcessorFindsEntitiesThroughInterfaces() {
+        val processor =
+            CritterProcessor(
+                classesDirectory = File(tempDir, "classes"),
+                outputDirectory = outputDir,
+                classLoader = Thread.currentThread().contextClassLoader,
+                config = MorphiaConfig.load().packages(listOf(FIXTURES)),
+            )
+
+        val found = processor.findEntityClasses().map { it.simpleName }.toSet()
+        assertTrue(
+            "Cat" in found,
+            "a class whose @Entity comes from an interface in another package is an entity: $found",
+        )
+        assertFalse(
+            "CatStandIn" in found,
+            "an @ExternalEntity stand-in must not replace its target's model: $found",
+        )
+
+        processor.process()
+
+        val generated = File(outputDir, FIXTURES.replace('.', '/') + "/__morphia")
+        assertTrue(
+            File(generated, "cat/CatEntityModel.class").exists(),
+            "an entity through its interface should get an AOT model",
+        )
+    }
+
     private companion object {
         const val FIXTURES = "dev.morphia.critter.maven.fixtures"
 

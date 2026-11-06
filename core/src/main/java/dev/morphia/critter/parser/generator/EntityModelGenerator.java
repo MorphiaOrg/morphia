@@ -5,14 +5,15 @@ import java.lang.constant.ClassDesc;
 import java.lang.constant.ConstantDescs;
 import java.lang.constant.MethodTypeDesc;
 import java.lang.reflect.Modifier;
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.ClassHierarchy;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
@@ -48,27 +49,22 @@ public class EntityModelGenerator extends BaseGenerator {
         this.properties = properties;
         generatedType = "%s.%sEntityModel".formatted(baseName, type.getSimpleName());
 
-        this.entityAnnotation = standinType.getAnnotation(Entity.class);
-        this.externalEntity = standinType.getAnnotation(ExternalEntity.class);
+        Map<Class<? extends Annotation>, Annotation> annotations = ClassHierarchy.annotations(standinType);
+        this.entityAnnotation = (Entity) annotations.get(Entity.class);
+        this.externalEntity = (ExternalEntity) annotations.get(ExternalEntity.class);
         if (this.entityAnnotation == null && this.externalEntity == null) {
             throw new IllegalStateException(
                     "Class %s does not have @Entity or @ExternalEntity annotation".formatted(standinType.getName()));
         }
 
-        // Collect morphia annotations from the stand-in class and its ancestors (de-duplicated).
-        // For @ExternalEntity, these are the annotations the user placed on the stand-in's fields.
-        Set<String> registered = new LinkedHashSet<>();
-        List<Annotation> allAnnotations = new java.util.ArrayList<>();
-        Class<?> current = standinType;
-        while (current != null && current != Object.class) {
-            for (Annotation a : current.getAnnotations()) {
-                if (a.annotationType().getName().startsWith("dev.morphia.annotations.")
-                        && !a.annotationType().getName().contains(".internal.")
-                        && registered.add(a.annotationType().getName())) {
-                    allAnnotations.add(a);
-                }
+        // The Morphia annotations of the stand-in, its superclasses and interfaces, in the reflective mapper's precedence.
+        // Only Morphia annotations have builders to emit them with, so other annotations are left out.
+        List<Annotation> allAnnotations = new ArrayList<>();
+        for (Annotation a : annotations.values()) {
+            String name = a.annotationType().getName();
+            if (name.startsWith("dev.morphia.annotations.") && !name.contains(".internal.")) {
+                allAnnotations.add(a);
             }
-            current = current.getSuperclass();
         }
         // MorphiaDefaultsConvention synthesizes @Entity from @ExternalEntity; mirror that here
         // so that model.getAnnotation(Entity.class) returns non-null for @ExternalEntity models.
