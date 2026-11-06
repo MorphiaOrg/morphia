@@ -6,9 +6,6 @@ import java.lang.constant.ConstantDescs;
 import java.lang.constant.MethodTypeDesc;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.TypeVariable;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +26,7 @@ import dev.morphia.critter.parser.MethodInfo;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
+import dev.morphia.mapping.codec.pojo.TypeResolver;
 import dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel;
 
 import org.bson.codecs.pojo.PropertyAccessor;
@@ -74,7 +72,7 @@ public class PropertyModelGenerator extends BaseGenerator {
         this.accessFlags = reflectedField != null ? reflectedField.getModifiers() : field.access();
         this.genericType = reflectedField != null ? reflectedField.getGenericType() : Object.class;
         this.annotationMap = buildAnnotationMap(reflectedField != null ? reflectedField.getAnnotations() : new Annotation[0]);
-        this.typeData = TypeData.get(resolveGenericType(this.genericType, field.name(), annotationSource));
+        this.typeData = TypeData.get(TypeResolver.resolve(annotationSource, this.genericType));
         this.getterName = null;
         this.idFieldName = idFieldName(annotationSource);
     }
@@ -129,7 +127,7 @@ public class PropertyModelGenerator extends BaseGenerator {
                 this.annotationMap.putIfAbsent(ann.annotationType().getName(), ann);
             }
         }
-        this.typeData = TypeData.get(resolveGenericType(this.genericType, this.propertyName, annotationSource));
+        this.typeData = TypeData.get(TypeResolver.resolve(annotationSource, this.genericType));
         this.getterName = method.name();
         this.idFieldName = idFieldName(annotationSource);
     }
@@ -182,70 +180,6 @@ public class PropertyModelGenerator extends BaseGenerator {
             map.put(ann.annotationType().getName(), ann);
         }
         return map;
-    }
-
-    private static java.lang.reflect.Type resolveGenericType(java.lang.reflect.Type type, String memberName, Class<?> entity) {
-        if (!(type instanceof TypeVariable<?> tv)) {
-            return type;
-        }
-        Class<?> declaringClass = findDeclaringClass(memberName, entity);
-        Class<?> resolved = resolveTypeVariable(tv.getName(), entity, declaringClass);
-        return (resolved != null && resolved != Object.class) ? resolved : type;
-    }
-
-    private static Class<?> findDeclaringClass(String memberName, Class<?> concreteClass) {
-        Class<?> current = concreteClass;
-        while (current != null && current != Object.class) {
-            try {
-                current.getDeclaredField(memberName);
-                return current;
-            } catch (NoSuchFieldException e) {
-                current = current.getSuperclass();
-            }
-        }
-        // Fall back to getter for method-based properties
-        String titleName = Critter.titleCase(memberName);
-        current = concreteClass;
-        while (current != null && current != Object.class) {
-            for (Method m : current.getDeclaredMethods()) {
-                String name = m.getName();
-                if ((name.equals("get" + titleName) || name.equals("is" + titleName))
-                        && m.getParameterCount() == 0 && !m.isBridge()) {
-                    return current;
-                }
-            }
-            current = current.getSuperclass();
-        }
-        return null;
-    }
-
-    private static Class<?> resolveTypeVariable(String typeVarName, Class<?> concreteClass, Class<?> declaringClass) {
-        Map<String, java.lang.reflect.Type> bindings = new HashMap<>();
-        Class<?> current = concreteClass;
-        while (current != null && current != Object.class) {
-            java.lang.reflect.Type genericSuper = current.getGenericSuperclass();
-            Class<?> superClass = current.getSuperclass();
-            if (superClass == null || superClass == Object.class) {
-                break;
-            }
-            if (genericSuper instanceof ParameterizedType paramType) {
-                TypeVariable<?>[] typeParams = superClass.getTypeParameters();
-                java.lang.reflect.Type[] typeArgs = paramType.getActualTypeArguments();
-                for (int i = 0; i < typeParams.length && i < typeArgs.length; i++) {
-                    java.lang.reflect.Type arg = typeArgs[i];
-                    if (arg instanceof TypeVariable<?> argTv && bindings.containsKey(argTv.getName())) {
-                        arg = bindings.get(argTv.getName());
-                    }
-                    bindings.put(typeParams[i].getName(), arg);
-                }
-            }
-            if (declaringClass != null && superClass == declaringClass) {
-                break;
-            }
-            current = superClass;
-        }
-        java.lang.reflect.Type resolved = bindings.get(typeVarName);
-        return resolved instanceof Class<?> c ? c : null;
     }
 
     /**

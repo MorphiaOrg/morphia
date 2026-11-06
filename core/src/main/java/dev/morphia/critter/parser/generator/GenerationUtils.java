@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import dev.morphia.mapping.codec.pojo.TypeData;
+import dev.morphia.mapping.codec.pojo.WildCardTypeData;
 
 import io.smallrye.classfile.AnnotationElement;
 import io.smallrye.classfile.AnnotationValue;
@@ -351,6 +352,11 @@ public class GenerationUtils {
      */
     public static void emitTypeData(TypeData<?> data, CodeBuilder cod) {
         ClassDesc tdDesc = ClassDesc.of("dev.morphia.mapping.codec.pojo.TypeData");
+        ClassDesc wildcardDesc = ClassDesc.of("dev.morphia.mapping.codec.pojo.WildCardTypeData");
+        if (data instanceof WildCardTypeData) {
+            cod.new_(wildcardDesc);
+            cod.dup();
+        }
         cod.new_(tdDesc);
         cod.dup();
         emitClassRef(cod, data.getType());
@@ -365,6 +371,11 @@ public class GenerationUtils {
         }
         cod.invokespecial(tdDesc, "<init>",
                 MethodTypeDesc.ofDescriptor("(Ljava/lang/Class;[Ldev/morphia/mapping/codec/pojo/TypeData;)V"));
+        if (data instanceof WildCardTypeData<?> wildcard) {
+            cod.loadConstant(wildcard.isUpperBound() ? 1 : 0);
+            cod.invokespecial(wildcardDesc, "<init>",
+                    MethodTypeDesc.ofDescriptor("(Ldev/morphia/mapping/codec/pojo/TypeData;Z)V"));
+        }
     }
 
     /**

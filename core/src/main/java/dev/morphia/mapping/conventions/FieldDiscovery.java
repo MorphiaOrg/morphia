@@ -44,7 +44,7 @@ public class FieldDiscovery implements MorphiaConvention {
             for (Class<?> type : list) {
                 for (Field field : type.getDeclaredFields()) {
                     if (!isStatic(field.getModifiers()) && !isTransient(field)) {
-                        TypeData<?> typeData = model.getTypeData(type, TypeData.get(field), field.getGenericType());
+                        TypeData<?> typeData = model.getTypeData(field.getGenericType());
                         ExternalEntity externalEntity = type.getAnnotation(ExternalEntity.class);
                         Class<?> target = externalEntity != null ? externalEntity.target() : null;
                         PropertyModel propertyModel = new PropertyModel(model);

@@ -17,9 +17,20 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 public class WildCardTypeData<T> extends TypeData<T> {
     private final boolean upperBound;
 
-    WildCardTypeData(TypeData<T> type, boolean upperBound) {
+    /**
+     * @param type       the bound
+     * @param upperBound true for {@code ? extends}, false for {@code ? super}
+     */
+    public WildCardTypeData(TypeData<T> type, boolean upperBound) {
         super(type.getType(), type.getTypeParameters());
         this.upperBound = upperBound;
+    }
+
+    /**
+     * @return true for {@code ? extends}, false for {@code ? super}
+     */
+    public boolean isUpperBound() {
+        return upperBound;
     }
 
     @Override
