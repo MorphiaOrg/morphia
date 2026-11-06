@@ -33,6 +33,7 @@ import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
 import org.bson.codecs.pojo.PropertyAccessor;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfo;
@@ -53,6 +54,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  * accessor reads and writes. Every fact that differs must be claimed by one of the {@link Known} divergences, and every
  * known divergence must still claim one, so a new divergence fails here and so does a fixed one that's still listed.
  */
+// mapping entities instantiates their listeners, whose side effects other test classes, run concurrently, assert on
+@Isolated
 public class TestMapperParity {
 
     private static final String MAPPING = "mapping";
@@ -410,8 +413,9 @@ public class TestMapperParity {
 
     /**
      * What a property's accessor reads from the shared prototype, and, for a type with a sample value, what it reads
-     * back after writing the sample to a fresh instance. Both mappers read the same prototype, so values a constructor
-     * generates, such as ids and timestamps, compare equal.
+     * back after writing the sample to a fresh instance and which fields the sample landed in. Both mappers read the same
+     * prototype, so values a constructor generates, such as ids and timestamps, compare equal; the fields catch an
+     * accessor that consistently reads and writes the wrong one.
      */
     private static String accessor(PropertyModel property, Object prototype, Supplier<Object> instances) {
         PropertyAccessor<Object> accessor = property.getAccessor();
@@ -423,11 +427,31 @@ public class TestMapperParity {
             }
             Object instance = instances.get();
             accessor.set(instance, sample);
-            return initial + " -> " + accessor.get(instance);
+            return initial + " -> " + accessor.get(instance) + " in " + fieldsHolding(instance, sample);
         } catch (RuntimeException | LinkageError e) {
             return e.getCause() == null ? e.getClass().getName()
                     : e.getClass().getName() + "(" + e.getCause().getClass().getName() + ")";
         }
+    }
+
+    private static List<String> fieldsHolding(Object instance, Object value) {
+        List<String> fields = new ArrayList<>();
+        for (Class<?> type = instance.getClass(); type != null && type != Object.class; type = type.getSuperclass()) {
+            for (Field field : type.getDeclaredFields()) {
+                if (Modifier.isStatic(field.getModifiers())) {
+                    continue;
+                }
+                try {
+                    field.setAccessible(true);
+                    if (value.equals(field.get(instance))) {
+                        fields.add(type.getSimpleName() + "." + field.getName());
+                    }
+                } catch (ReflectiveOperationException | RuntimeException e) {
+                    fields.add(type.getSimpleName() + "." + field.getName() + "?");
+                }
+            }
+        }
+        return fields;
     }
 
     private static Object sample(Class<?> type) {
