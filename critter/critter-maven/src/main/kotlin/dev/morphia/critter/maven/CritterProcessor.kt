@@ -57,9 +57,13 @@ class CritterProcessor(
                 .scan()
 
         return scanResult.use { result ->
-            result
-                .getClassesWithAnnotation(Entity::class.java)
+            val annotated = result.getClassesWithAnnotation(Entity::class.java)
+            // a class is also an entity when an interface it implements carries @Entity, as in the
+            // runtime mappers
+            val implementors = annotated.interfaces.flatMap { it.allClassesImplementing }
+            (annotated + implementors)
                 .filter { !it.isInterface }
+                .distinctBy { it.name }
                 .map { classLoader.loadClass(it.name) }
         }
     }

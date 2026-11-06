@@ -7,6 +7,7 @@ import java.lang.constant.MethodTypeDesc;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.ExternalEntity;
@@ -48,8 +49,9 @@ public class EntityModelGenerator extends BaseGenerator {
         this.properties = properties;
         generatedType = "%s.%sEntityModel".formatted(baseName, type.getSimpleName());
 
-        this.entityAnnotation = standinType.getAnnotation(Entity.class);
-        this.externalEntity = standinType.getAnnotation(ExternalEntity.class);
+        Map<Class<? extends Annotation>, Annotation> annotations = ClassHierarchy.annotations(standinType);
+        this.entityAnnotation = (Entity) annotations.get(Entity.class);
+        this.externalEntity = (ExternalEntity) annotations.get(ExternalEntity.class);
         if (this.entityAnnotation == null && this.externalEntity == null) {
             throw new IllegalStateException(
                     "Class %s does not have @Entity or @ExternalEntity annotation".formatted(standinType.getName()));
@@ -58,7 +60,7 @@ public class EntityModelGenerator extends BaseGenerator {
         // The Morphia annotations of the stand-in, its superclasses and interfaces, in the reflective mapper's precedence.
         // Only Morphia annotations have builders to emit them with, so other annotations are left out.
         List<Annotation> allAnnotations = new ArrayList<>();
-        for (Annotation a : ClassHierarchy.annotations(standinType).values()) {
+        for (Annotation a : annotations.values()) {
             String name = a.annotationType().getName();
             if (name.startsWith("dev.morphia.annotations.") && !name.contains(".internal.")) {
                 allAnnotations.add(a);

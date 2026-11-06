@@ -8,8 +8,10 @@ import dev.morphia.Datastore;
 import dev.morphia.PrePersistListener;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.EntityListeners;
+import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Id;
+import dev.morphia.annotations.IdField;
 import dev.morphia.annotations.Index;
 import dev.morphia.annotations.IndexOptions;
 import dev.morphia.annotations.Indexes;
@@ -22,6 +24,8 @@ import dev.morphia.test.TestBase;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static dev.morphia.query.filters.Filters.eq;
 
 /**
  * Both mappers collect type-level annotations from the same places, with the same precedence.
@@ -52,6 +56,44 @@ public class TestTypeAnnotations extends TestBase {
     }
 
     @Test
+    public void interfaceIdField() {
+        withTestConfig(List.of(KeyedEntity.class), () -> {
+            Assertions.assertEquals("_id", model(KeyedEntity.class).getIdProperty().getMappedName());
+
+            KeyedEntity entity = new KeyedEntity();
+            entity.key = "key-1";
+            entity.name = "keyed by its interface";
+            getDs().save(entity);
+
+            KeyedEntity loaded = getDs().find(KeyedEntity.class).filter(eq("_id", "key-1")).first();
+            Assertions.assertNotNull(loaded);
+            Assertions.assertEquals(entity.name, loaded.name);
+        });
+    }
+
+    @Test
+    public void externalEntityWithInterfaceEntity() {
+        withTestConfig(List.of(CollectedStandIn.class), () -> {
+            // the interface's @Entity is found before the convention would synthesize one from @ExternalEntity
+            EntityModel model = model(CollectedTarget.class);
+            Assertions.assertEquals("interface_targets", model.collectionName());
+            Assertions.assertEquals("interface_targets", model.getEntityAnnotation().value());
+        });
+    }
+
+    @Test
+    public void entityFromInterface() {
+        withTestConfig(List.of(CollectedEntity.class), () -> {
+            Assertions.assertEquals("interface_targets", model(CollectedEntity.class).collectionName());
+
+            CollectedEntity entity = new CollectedEntity();
+            entity.name = "mapped by its interface";
+            getDs().save(entity);
+            Assertions.assertEquals(entity.name, getDs().find(CollectedEntity.class).filter(eq("_id", entity.id)).first().name);
+        });
+    }
+
+    @Test
     public void sharedInterfaceVisitedOnce() {
         Map<Class<? extends Annotation>, Annotation> annotations = ClassHierarchy.annotations(AnnotatedDiamond.class);
         Assertions.assertEquals(List.of(Entity.class, Indexes.class), List.copyOf(annotations.keySet()));
@@ -69,6 +111,55 @@ public class TestTypeAnnotations extends TestBase {
 
     private static String indexName(EntityModel model) {
         return model.getAnnotation(Indexes.class).value()[0].options().name();
+    }
+
+    @IdField("key")
+    public interface Keyed {
+    }
+
+    @Entity
+    public static class KeyedEntity implements Keyed {
+        String key;
+        String name;
+
+        // accessors too, so the package also maps when properties are discovered through methods
+        public String getKey() {
+            return key;
+        }
+
+        public void setKey(String key) {
+            this.key = key;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
+    @Entity("interface_targets")
+    public interface Collected {
+    }
+
+    public static class CollectedEntity implements Collected {
+        @Id
+        ObjectId id;
+        String name;
+    }
+
+    public static class CollectedTarget {
+        ObjectId id;
+        String name;
+    }
+
+    @ExternalEntity(target = CollectedTarget.class, value = "standin_targets")
+    public static class CollectedStandIn implements Collected {
+        @Id
+        ObjectId id;
+        String name;
     }
 
     @EntityListeners(Auditor.class)

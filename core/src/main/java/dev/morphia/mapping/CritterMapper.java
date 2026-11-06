@@ -22,6 +22,7 @@ import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.generator.CritterGenerator;
 import dev.morphia.critter.parser.generator.EntityModelGenerator;
 import dev.morphia.critter.parser.generator.NestmateAccessException;
+import dev.morphia.mapping.codec.pojo.ClassHierarchy;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.ReflectiveEntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
@@ -335,7 +336,7 @@ public class CritterMapper extends AbstractMapper {
          * would collide in one loader. Each stand-in gets a loader of its own.
          */
         private CritterClassLoader loaderFor(Class<?> type) {
-            if (type.isAnnotationPresent(ExternalEntity.class)) {
+            if (ClassHierarchy.annotations(type).containsKey(ExternalEntity.class)) {
                 return new CritterClassLoader(parent);
             }
             if (loader == null) {

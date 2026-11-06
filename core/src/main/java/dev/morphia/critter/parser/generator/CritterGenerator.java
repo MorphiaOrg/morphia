@@ -10,6 +10,7 @@ import dev.morphia.critter.parser.FieldInfo;
 import dev.morphia.critter.parser.MethodInfo;
 import dev.morphia.critter.parser.PropertyFinder;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.ClassHierarchy;
 
 import org.bson.codecs.pojo.PropertyAccessor;
 
@@ -42,7 +43,7 @@ public class CritterGenerator {
     public EntityModelGenerator generate(Class<?> type, CritterClassLoader critterClassLoader, boolean runtimeMode) {
         // For @ExternalEntity, the annotated stand-in class describes the mapping; the target
         // class is what actually gets persisted and needs accessor/model generation.
-        ExternalEntity ext = type.getAnnotation(ExternalEntity.class);
+        ExternalEntity ext = (ExternalEntity) ClassHierarchy.annotations(type).get(ExternalEntity.class);
         Class<?> standinType = type;
         Class<?> targetType = ext != null ? ext.target() : type;
 
