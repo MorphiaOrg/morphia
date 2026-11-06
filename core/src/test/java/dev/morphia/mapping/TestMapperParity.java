@@ -27,6 +27,8 @@ import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.mapping.codec.pojo.ClassHierarchy;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
+import dev.morphia.mapping.codec.pojo.TypeData;
+import dev.morphia.mapping.codec.pojo.WildCardTypeData;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
 import org.bson.codecs.pojo.PropertyAccessor;
@@ -124,7 +126,7 @@ public class TestMapperParity {
             @Override
             boolean claims(Comparison comparison, String fact) {
                 return comparison.discovery == METHODS && fact.endsWith(".annotations")
-                        && overridesWithAnnotatedGetter(comparison.entity);
+                        && overridesWithAnnotatedGetter(comparison.entity, property(fact));
             }
         },
         /**
@@ -369,7 +371,7 @@ public class TestMapperParity {
             facts.put(prefix + "mappedName", property.getMappedName());
             facts.put(prefix + "loadNames", property.getLoadNames().toString());
             facts.put(prefix + "type", property.getType().getName());
-            facts.put(prefix + "typeData", property.getTypeData().toString());
+            facts.put(prefix + "typeData", render(property.getTypeData()));
             facts.put(prefix + "normalizedType", property.getNormalizedType().getName());
             // TypeData's, since PropertyModel.isArray() misses a generic T[], which erases to Object
             facts.put(prefix + "array", String.valueOf(property.getTypeData().isArray()));
@@ -533,9 +535,13 @@ public class TestMapperParity {
         return false;
     }
 
-    private static boolean overridesWithAnnotatedGetter(Class<?> entity) {
+    /**
+     * Whether {@code entity} declares an annotated getter for {@code property} that overrides a superclass's.
+     */
+    private static boolean overridesWithAnnotatedGetter(Class<?> entity, String property) {
         for (Method method : entity.getDeclaredMethods()) {
-            if (method.getParameterCount() == 0 && hasMorphiaAnnotation(method)) {
+            if (isGetter(method) && hasMorphiaAnnotation(method)
+                    && property.equals(Character.toLowerCase(propertyName(method).charAt(0)) + propertyName(method).substring(1))) {
                 for (Class<?> type = entity.getSuperclass(); type != null; type = type.getSuperclass()) {
                     try {
                         type.getDeclaredMethod(method.getName());
@@ -603,6 +609,23 @@ public class TestMapperParity {
             }
         }
         return "@" + type.getSimpleName() + members;
+    }
+
+    /**
+     * Renders a type with qualified names, which {@code TypeData.toString()} doesn't use, so that {@code java.util.Date}
+     * and {@code java.sql.Date} differ.
+     */
+    private static String render(TypeData<?> typeData) {
+        String value = typeData.getType().getName();
+        if (typeData instanceof WildCardTypeData<?> wildcard) {
+            value = (wildcard.isUpperBound() ? "? extends " : "? super ") + value;
+        }
+        if (!typeData.getTypeParameters().isEmpty()) {
+            value += typeData.getTypeParameters().stream()
+                    .map(TestMapperParity::render)
+                    .collect(Collectors.joining(", ", "<", ">"));
+        }
+        return typeData.isArray() ? value + "[]" : value;
     }
 
     private static String value(Object value) {
