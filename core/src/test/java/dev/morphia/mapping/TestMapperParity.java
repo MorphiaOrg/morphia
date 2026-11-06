@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.config.MorphiaConfig;
+import dev.morphia.config.PropertyAnnotationProvider;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.mapping.codec.pojo.ClassHierarchy;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -61,18 +62,17 @@ public class TestMapperParity {
     /**
      * The ways critter and reflection are known to model an entity differently. Each one names the plan item that closes
      * it; closing one means deleting it here, and the test then holds the mappers to the fix. A rule for a difference in
-     * discovery claims every fact of the entities it applies to, since their properties differ wholesale; the others
-     * claim only the facts they explain.
+     * discovery claims every {@linkplain #discovered discovered fact} of the entities it applies to, since their
+     * properties differ wholesale; the others claim only the facts they explain.
      */
     enum Known {
         /**
-         * Critter can't generate a model with an array property, so it maps the entity reflectively.
+         * Critter can't generate a model for an entity with an array field, so it maps the entity reflectively.
          */
         ARRAYS("4.8") {
             @Override
             boolean claims(Comparison comparison, String fact) {
-                return fact.equals(FALLBACK) && comparison.reflection.entrySet().stream()
-                        .anyMatch(e -> e.getKey().endsWith(".array") && e.getValue().equals("true"));
+                return fact.equals(FALLBACK) && hasArrayField(comparison.entity);
             }
         },
         /**
@@ -82,7 +82,7 @@ public class TestMapperParity {
         ANNOTATED_GETTERS("4.6") {
             @Override
             boolean claims(Comparison comparison, String fact) {
-                return comparison.discovery == FIELDS && hasAnnotatedGetter(comparison.entity);
+                return comparison.discovery == FIELDS && discovered(fact) && hasAnnotatedGetter(comparison.entity);
             }
         },
         /**
@@ -92,7 +92,7 @@ public class TestMapperParity {
         FIELDS_WITHOUT_ACCESSORS("4.6") {
             @Override
             boolean claims(Comparison comparison, String fact) {
-                return comparison.discovery == METHODS && !hasAccessorPair(comparison.entity);
+                return comparison.discovery == METHODS && discovered(fact) && !hasAccessorPair(comparison.entity, true);
             }
         },
         /**
@@ -102,17 +102,18 @@ public class TestMapperParity {
         PRIVATE_INHERITED_GETTERS("4.6") {
             @Override
             boolean claims(Comparison comparison, String fact) {
-                return comparison.discovery == METHODS && hasPrivateInheritedGetter(comparison.entity);
+                return comparison.discovery == METHODS && discovered(fact) && hasPrivateInheritedGetter(comparison.entity);
             }
         },
         /**
          * Under method discovery, critter doesn't take a setter that returns a value as a setter, so an entity whose
-         * setters are all fluent has no pairs and critter maps its fields.
+         * only pairs have fluent setters has none for critter, which maps its fields.
          */
         FLUENT_SETTERS("4.8") {
             @Override
             boolean claims(Comparison comparison, String fact) {
-                return comparison.discovery == METHODS && hasFluentSetter(comparison.entity);
+                return comparison.discovery == METHODS && discovered(fact) && hasAccessorPair(comparison.entity, true)
+                        && !hasAccessorPair(comparison.entity, false);
             }
         },
         /**
@@ -130,7 +131,7 @@ public class TestMapperParity {
          * Under method discovery, reflection fails on a method named just {@code get} or {@code is} while working out a
          * property name from it; critter ignores such methods.
          */
-        BARE_ACCESSOR_NAMES("reflection") {
+        BARE_ACCESSOR_NAMES("4.8") {
             @Override
             boolean claims(Comparison comparison, String fact) {
                 return comparison.discovery == METHODS && fact.equals(MAPPING)
@@ -164,7 +165,7 @@ public class TestMapperParity {
          * Reflection's method accessors don't make their methods accessible, so they throw on any entity Morphia can't
          * otherwise reach, such as a package-private class; critter's accessors work.
          */
-        INACCESSIBLE_METHODS("reflection") {
+        INACCESSIBLE_METHODS("4.8") {
             @Override
             boolean claims(Comparison comparison, String fact) {
                 return comparison.discovery == METHODS && fact.endsWith(".accessor")
@@ -287,6 +288,9 @@ public class TestMapperParity {
                 .enableAnnotationInfo()
                 .ignoreClassVisibility()
                 .acceptPackages("dev.morphia")
+                // TestPackageScan's entities record whether their static initializers ran, which instantiating them here
+                // would do
+                .rejectPackages("dev.morphia.test.mapping.scan")
                 // interfaces outside the scanned packages can carry @Entity
                 .enableExternalClasses()
                 .scan()) {
@@ -328,7 +332,7 @@ public class TestMapperParity {
         EntityModel model;
         try {
             model = mapper.mapEntity(entity);
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | LinkageError e) {
             facts.put(MAPPING, e.getClass().getName());
             return null;
         }
@@ -387,6 +391,15 @@ public class TestMapperParity {
         return property == null ? null : property.getName();
     }
 
+    /**
+     * Whether a fact depends on which properties discovery finds: a property's own fact, the property list, the id,
+     * version and shard key properties, or whether the entity maps at all, or maps only reflectively because critter's
+     * model for the properties it found fails validation.
+     */
+    static boolean discovered(String fact) {
+        return fact.contains(".") || Set.of("properties", "id", "version", "shardKeys", MAPPING, FALLBACK).contains(fact);
+    }
+
     private static String property(String fact) {
         return fact.substring(0, fact.lastIndexOf('.'));
     }
@@ -407,7 +420,7 @@ public class TestMapperParity {
             Object instance = instances.get();
             accessor.set(instance, sample);
             return initial + " -> " + accessor.get(instance);
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | LinkageError e) {
             return e.getClass().getName();
         }
     }
@@ -435,15 +448,23 @@ public class TestMapperParity {
             Constructor<?> constructor = entity.getDeclaredConstructor();
             constructor.setAccessible(true);
             return constructor.newInstance();
-        } catch (ReflectiveOperationException | RuntimeException e) {
+        } catch (ReflectiveOperationException | RuntimeException | LinkageError e) {
             return null;
         }
     }
 
+    /**
+     * Whether a getter carries one of the property annotations critter looks for on getters: those of the configured
+     * {@code PropertyAnnotationProvider}s.
+     */
     private static boolean hasAnnotatedGetter(Class<?> entity) {
+        Set<Class<?>> annotations = MorphiaConfig.load().propertyAnnotationProviders().stream()
+                .map(PropertyAnnotationProvider::provides)
+                .collect(Collectors.toSet());
         for (Class<?> type = entity; type != null && type != Object.class; type = type.getSuperclass()) {
             for (Method method : type.getDeclaredMethods()) {
-                if (method.getParameterCount() == 0 && method.getReturnType() != void.class && hasMorphiaAnnotation(method)) {
+                if (isGetter(method) && List.of(method.getAnnotations()).stream()
+                        .anyMatch(a -> annotations.contains(a.annotationType()))) {
                     return true;
                 }
             }
@@ -451,23 +472,35 @@ public class TestMapperParity {
         return false;
     }
 
-    private static boolean hasAccessorPair(Class<?> entity) {
+    private static boolean isGetter(Method method) {
+        String name = method.getName();
+        return !Modifier.isStatic(method.getModifiers()) && !method.isBridge() && method.getParameterCount() == 0
+                && method.getReturnType() != void.class
+                && (name.startsWith("get") && name.length() > 3 || name.startsWith("is") && name.length() > 2);
+    }
+
+    private static String propertyName(Method method) {
+        return method.getName().substring(method.getName().startsWith("is") ? 2 : 3);
+    }
+
+    private static boolean isSetter(Method method, boolean fluent) {
+        String name = method.getName();
+        return !Modifier.isStatic(method.getModifiers()) && method.getParameterCount() == 1 && name.startsWith("set")
+                && name.length() > 3 && (fluent || method.getReturnType() == void.class);
+    }
+
+    /**
+     * @param fluent whether a setter that returns a value counts, as it does for reflection
+     */
+    private static boolean hasAccessorPair(Class<?> entity, boolean fluent) {
         Set<String> getters = new HashSet<>();
         Set<String> setters = new HashSet<>();
         for (Class<?> type = entity; type != null && type != Object.class; type = type.getSuperclass()) {
             for (Method method : type.getDeclaredMethods()) {
-                String name = method.getName();
-                if (Modifier.isStatic(method.getModifiers())) {
-                    continue;
-                }
-                if (method.getParameterCount() == 0 && method.getReturnType() != void.class) {
-                    if (name.startsWith("get") && name.length() > 3) {
-                        getters.add(name.substring(3));
-                    } else if (name.startsWith("is") && name.length() > 2) {
-                        getters.add(name.substring(2));
-                    }
-                } else if (method.getParameterCount() == 1 && name.startsWith("set") && name.length() > 3) {
-                    setters.add(name.substring(3));
+                if (isGetter(method)) {
+                    getters.add(propertyName(method));
+                } else if (isSetter(method, fluent)) {
+                    setters.add(method.getName().substring(3));
                 }
             }
         }
@@ -475,23 +508,19 @@ public class TestMapperParity {
         return !getters.isEmpty();
     }
 
+    /**
+     * Whether a superclass pairs a private getter with a setter.
+     */
     private static boolean hasPrivateInheritedGetter(Class<?> entity) {
         for (Class<?> type = entity.getSuperclass(); type != null && type != Object.class; type = type.getSuperclass()) {
+            Set<String> setters = new HashSet<>();
             for (Method method : type.getDeclaredMethods()) {
-                if (Modifier.isPrivate(method.getModifiers()) && method.getParameterCount() == 0
-                        && method.getName().startsWith("get")) {
-                    return true;
+                if (isSetter(method, true)) {
+                    setters.add(method.getName().substring(3));
                 }
             }
-        }
-        return false;
-    }
-
-    private static boolean hasFluentSetter(Class<?> entity) {
-        for (Class<?> type = entity; type != null && type != Object.class; type = type.getSuperclass()) {
             for (Method method : type.getDeclaredMethods()) {
-                if (method.getName().startsWith("set") && method.getParameterCount() == 1
-                        && method.getReturnType() != void.class) {
+                if (Modifier.isPrivate(method.getModifiers()) && isGetter(method) && setters.contains(propertyName(method))) {
                     return true;
                 }
             }
@@ -517,6 +546,17 @@ public class TestMapperParity {
 
     private static boolean hasMorphiaAnnotation(Method method) {
         return List.of(method.getAnnotations()).stream().anyMatch(a -> MORPHIA_ANNOTATIONS.contains(a.annotationType()));
+    }
+
+    private static boolean hasArrayField(Class<?> entity) {
+        for (Class<?> type = entity; type != null && type != Object.class; type = type.getSuperclass()) {
+            for (Field field : type.getDeclaredFields()) {
+                if (!Modifier.isStatic(field.getModifiers()) && field.getType().isArray()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private static boolean shadowsField(Class<?> entity) {
