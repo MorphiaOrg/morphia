@@ -99,33 +99,30 @@ loadScripts(document, 'script');</script>
 <div class="block">Emits the generated property model class and returns this generator.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="../PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">CritterGenerator.</span><code><a href="../CritterGenerator.html#propertyModelGenerator(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo)" class="member-name-link">propertyModelGenerator</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
+<div class="col-second odd-row-color"><span class="type-name-label">PropertyModelGenerator.</span><code><a href="../PropertyModelGenerator.html#ignoreIdField()" class="member-name-link">ignoreIdField</a>()</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Leaves the entity's <code>@IdField</code> out of this property's mapped name, because another property is annotated
+ <code>@Id</code>: as in <code>ConfigureProperties</code>, an explicit <code>@Id</code> wins.</div>
+</div>
+<div class="col-first even-row-color"><code><a href="../PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">CritterGenerator.</span><code><a href="../CritterGenerator.html#propertyModelGenerator(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo)" class="member-name-link">propertyModelGenerator</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
  CritterClassLoader&nbsp;critterClassLoader,
  <a href="../../FieldInfo.html" title="class in dev.morphia.critter.parser">FieldInfo</a>&nbsp;field)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Generates and registers a <a href="../PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator"><code>PropertyModelGenerator</code></a> for the given field.</div>
 </div>
-<div class="col-first even-row-color"><code><a href="../PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">CritterGenerator.</span><code><a href="../CritterGenerator.html#propertyModelGenerator(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.MethodInfo)" class="member-name-link">propertyModelGenerator</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
+<div class="col-first odd-row-color"><code><a href="../PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">CritterGenerator.</span><code><a href="../CritterGenerator.html#propertyModelGenerator(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.MethodInfo)" class="member-name-link">propertyModelGenerator</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
  CritterClassLoader&nbsp;critterClassLoader,
  <a href="../../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;method)</code></div>
-<div class="col-last even-row-color">
+<div class="col-last odd-row-color">
 <div class="block">Generates and registers a <a href="../PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator"><code>PropertyModelGenerator</code></a> for the property exposed by the given getter method.</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="../PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">CritterGenerator.</span><code><a href="../CritterGenerator.html#propertyModelGenerator(java.lang.Class,java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo)" class="member-name-link">propertyModelGenerator</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
+<div class="col-first even-row-color"><code><a href="../PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">CritterGenerator.</span><code><a href="../CritterGenerator.html#propertyModelGenerator(java.lang.Class,java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo)" class="member-name-link">propertyModelGenerator</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;annotationSource,
  CritterClassLoader&nbsp;critterClassLoader,
  <a href="../../FieldInfo.html" title="class in dev.morphia.critter.parser">FieldInfo</a>&nbsp;field)</code></div>
-<div class="col-last odd-row-color">
-<div class="block">Generates and registers a <a href="../PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator"><code>PropertyModelGenerator</code></a> for the given field, reading annotations from <code>annotationSource</code>.</div>
-</div>
-<div class="col-first even-row-color"><code><a href="../PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">CritterGenerator.</span><code><a href="../CritterGenerator.html#propertyModelGenerator(java.lang.Class,java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo,boolean)" class="member-name-link">propertyModelGenerator</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;annotationSource,
- CritterClassLoader&nbsp;critterClassLoader,
- <a href="../../FieldInfo.html" title="class in dev.morphia.critter.parser">FieldInfo</a>&nbsp;field,
- boolean&nbsp;runtimeMode)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Generates and registers a <a href="../PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator"><code>PropertyModelGenerator</code></a> for the given field, reading annotations from <code>annotationSource</code>.</div>
 </div>
@@ -135,15 +132,6 @@ loadScripts(document, 'script');</script>
  CritterClassLoader&nbsp;critterClassLoader,
  <a href="../../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;method)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Generates and registers a <a href="../PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator"><code>PropertyModelGenerator</code></a> for the given method, reading annotations from <code>annotationSource</code>.</div>
-</div>
-<div class="col-first even-row-color"><code><a href="../PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">CritterGenerator.</span><code><a href="../CritterGenerator.html#propertyModelGenerator(java.lang.Class,java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.MethodInfo,boolean)" class="member-name-link">propertyModelGenerator</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;annotationSource,
- CritterClassLoader&nbsp;critterClassLoader,
- <a href="../../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;method,
- boolean&nbsp;runtimeMode)</code></div>
-<div class="col-last even-row-color">
 <div class="block">Generates and registers a <a href="../PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator"><code>PropertyModelGenerator</code></a> for the given method, reading annotations from <code>annotationSource</code>.</div>
 </div>
 </div>

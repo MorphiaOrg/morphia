@@ -1994,6 +1994,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Updates this configuration with a new value and returns a new instance.</div>
 </dd>
+<dt><a href="dev/morphia/critter/parser/generator/PropertyModelGenerator.html#ignoreIdField()" class="member-name-link">ignoreIdField()</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a></dt>
+<dd>
+<div class="block">Leaves the entity's <code>@IdField</code> out of this property's mapped name, because another property is annotated
+ <code>@Id</code>: as in <code>ConfigureProperties</code>, an explicit <code>@Id</code> wins.</div>
+</dd>
 <dt><a href="dev/morphia/query/filters/Filters.html#in(java.lang.Iterable)" class="member-name-link">in(Iterable&lt;?&gt;)</a> - Static method in class dev.morphia.query.filters.<a href="dev/morphia/query/filters/Filters.html" title="class in dev.morphia.query.filters">Filters</a></dt>
 <dd>
 <div class="block">The $in operator selects the documents where the value of a field equals any value in a given array.</div>
@@ -2138,6 +2143,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns the approximation of the area under a curve, which is calculated using the trapezoidal rule where each set of adjacent
  documents form a trapezoid using the:</div>
 </dd>
+<dt><a href="dev/morphia/critter/parser/generator/PropertyModelGenerator.html#isAnnotatedId()" class="member-name-link">isAnnotatedId()</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="dev/morphia/aggregation/expressions/ArrayExpressions.html#isArray(java.lang.Object)" class="member-name-link">isArray(Object)</a> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/ArrayExpressions.html" title="class in dev.morphia.aggregation.expressions">ArrayExpressions</a></dt>
 <dd>
 <div class="block">Determines if the operand is an array.</div>
@@ -3249,15 +3256,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Generates and registers a <a href="dev/morphia/critter/parser/generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator"><code>PropertyModelGenerator</code></a> for the given field, reading annotations from <code>annotationSource</code>.</div>
 </dd>
-<dt><a href="dev/morphia/critter/parser/generator/CritterGenerator.html#propertyModelGenerator(java.lang.Class,java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo,boolean)" class="member-name-link">propertyModelGenerator(Class&lt;?&gt;, Class&lt;?&gt;, CritterClassLoader, FieldInfo, boolean)</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/CritterGenerator.html" title="class in dev.morphia.critter.parser.generator">CritterGenerator</a></dt>
-<dd>
-<div class="block">Generates and registers a <a href="dev/morphia/critter/parser/generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator"><code>PropertyModelGenerator</code></a> for the given field, reading annotations from <code>annotationSource</code>.</div>
-</dd>
 <dt><a href="dev/morphia/critter/parser/generator/CritterGenerator.html#propertyModelGenerator(java.lang.Class,java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.MethodInfo)" class="member-name-link">propertyModelGenerator(Class&lt;?&gt;, Class&lt;?&gt;, CritterClassLoader, MethodInfo)</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/CritterGenerator.html" title="class in dev.morphia.critter.parser.generator">CritterGenerator</a></dt>
-<dd>
-<div class="block">Generates and registers a <a href="dev/morphia/critter/parser/generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator"><code>PropertyModelGenerator</code></a> for the given method, reading annotations from <code>annotationSource</code>.</div>
-</dd>
-<dt><a href="dev/morphia/critter/parser/generator/CritterGenerator.html#propertyModelGenerator(java.lang.Class,java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.MethodInfo,boolean)" class="member-name-link">propertyModelGenerator(Class&lt;?&gt;, Class&lt;?&gt;, CritterClassLoader, MethodInfo, boolean)</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/CritterGenerator.html" title="class in dev.morphia.critter.parser.generator">CritterGenerator</a></dt>
 <dd>
 <div class="block">Generates and registers a <a href="dev/morphia/critter/parser/generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator"><code>PropertyModelGenerator</code></a> for the given method, reading annotations from <code>annotationSource</code>.</div>
 </dd>
