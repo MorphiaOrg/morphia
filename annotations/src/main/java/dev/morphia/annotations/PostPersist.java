@@ -11,6 +11,9 @@ import java.lang.annotation.Target;
  * Called after the data has been persisted from the java object. Here you can alter the
  * BSON Document before it is saved.
  * <p>
+ * Only an entity's own methods may carry this annotation. An {@link EntityListeners @EntityListeners} class implements the
+ * event's listener interface instead.
+ * <p>
  * Methods with this annotation may optionally take a parameter of type {@link org.bson.Document Document}
  * and/or a parameter of type Datastore. If both parameters are used, the
  * order is unimportant. For typical usage, the method should take a Document parameter.

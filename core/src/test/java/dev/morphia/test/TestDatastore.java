@@ -16,12 +16,12 @@ import com.mongodb.client.result.UpdateResult;
 
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
-import dev.morphia.EntityListener;
 import dev.morphia.InsertManyOptions;
 import dev.morphia.InsertOneOptions;
 import dev.morphia.MissingIdException;
 import dev.morphia.ModifyOptions;
 import dev.morphia.MorphiaDatastore;
+import dev.morphia.PrePersistListener;
 import dev.morphia.UpdateOptions;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.EntityListeners;
@@ -592,24 +592,16 @@ public class TestDatastore extends TestBase {
                 .next().loginCount);
     }
 
-    private static class LifecycleListener implements EntityListener<LifecycleTestObj> {
+    private static class LifecycleListener implements PrePersistListener<LifecycleTestObj> {
         private static boolean prePersist;
         private static boolean prePersistWithEntity;
         private static boolean foundDatastore;
 
-        @PrePersist
-        void prePersist(Datastore datastore) {
+        @Override
+        public void prePersist(LifecycleTestObj obj, Datastore datastore) {
             foundDatastore = datastore != null;
             prePersist = true;
-        }
-
-        @PrePersist
-        void prePersist(LifecycleTestObj obj) {
-            if (obj == null) {
-                throw new RuntimeException();
-            }
-            prePersistWithEntity = true;
-
+            prePersistWithEntity = obj != null;
         }
     }
 

@@ -369,7 +369,8 @@ public class TestLifecycleStreaming {
             datastore.getMapper().map(Figure.class, Ring.class, Block.class);
 
             Assertions.assertFalse(((LifecycleDecoder<?>) codec(datastore, Figure.class).getDecoder()).needsDocument());
-            Assertions.assertFalse(((LifecycleDecoder<?>) codec(datastore, Block.class).getDecoder()).needsDocument());
+            // the listener accepts no blocks, so they have no lifecycle at all
+            Assertions.assertFalse(codec(datastore, Block.class).getDecoder() instanceof LifecycleDecoder);
             Assertions.assertTrue(((LifecycleDecoder<?>) codec(datastore, Ring.class).getDecoder()).needsDocument());
         }
     }

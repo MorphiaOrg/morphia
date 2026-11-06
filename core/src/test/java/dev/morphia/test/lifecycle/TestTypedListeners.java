@@ -20,7 +20,9 @@ import dev.morphia.annotations.PrePersist;
 import dev.morphia.config.ManualMorphiaConfig;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.MapperType;
+import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.lifecycle.TypedListeners;
+import dev.morphia.test.lifecycle.invalid.InvalidListeners;
 
 import org.bson.BsonBinaryReader;
 import org.bson.BsonBinaryWriter;
@@ -97,8 +99,55 @@ public class TestTypedListeners {
 
             decode(codec, encode(codec, new Listened()));
 
-            // the annotated method and the interface's share one instance of the listener
-            Assertions.assertEquals(List.of("annotated:1", "typed:2", "postLoad"), CALLS);
+            Assertions.assertEquals(List.of("created", "typed:1", "postLoad"), CALLS);
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    void entityListenersClassesCantDeclareAnnotatedMethods(MapperType mapperType) {
+        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
+            MorphiaDatastore datastore = datastore(client, mapperType);
+
+            MappingException e = Assertions.assertThrows(MappingException.class,
+                    () -> datastore.getMapper().map(InvalidListeners.AnnotatedListened.class));
+            Assertions.assertTrue(e.getMessage().contains(InvalidListeners.Annotated.class.getName() + " declares annotated()"),
+                    e.getMessage());
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    void entityListenersClassesMustImplementAnInterface(MapperType mapperType) {
+        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
+            MorphiaDatastore datastore = datastore(client, mapperType);
+
+            MappingException e = Assertions.assertThrows(MappingException.class,
+                    () -> datastore.getMapper().map(InvalidListeners.MarkerListened.class));
+            Assertions.assertTrue(e.getMessage().contains(InvalidListeners.MarkerOnly.class.getName()), e.getMessage());
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    void anEntityListenersClassThatFailsToBeCreatedReportsWhy(MapperType mapperType) {
+        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
+            MorphiaDatastore datastore = datastore(client, mapperType);
+
+            MappingException e = Assertions.assertThrows(MappingException.class,
+                    () -> datastore.getMapper().map(InvalidListeners.FailingListened.class));
+            Assertions.assertTrue(e.getMessage().contains("no listener today"), e.getMessage());
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    void entityListenersClassesAreCreatedWhenTheEntityIsMapped(MapperType mapperType) {
+        try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
+            MorphiaDatastore datastore = datastore(client, mapperType);
+            datastore.getMapper().map(Listened.class);
+
+            Assertions.assertEquals(List.of("created"), CALLS);
         }
     }
 
@@ -234,15 +283,11 @@ public class TestTypedListeners {
         }
     }
 
-    /**
-     * Has both an annotated method and an interface's.
-     */
     public static class Counting implements PrePersistListener<Listened>, PostLoadListener<Listened> {
         private int count;
 
-        @PrePersist
-        void annotated(Listened entity) {
-            CALLS.add("annotated:" + ++count);
+        Counting() {
+            CALLS.add("created");
         }
 
         @Override

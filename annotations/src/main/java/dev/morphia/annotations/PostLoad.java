@@ -11,6 +11,9 @@ import java.lang.annotation.Target;
  * Called after the data has been loaded into the java object. This is a good place to perform
  * initialization and sanity-checking of the object.
  * <p>
+ * Only an entity's own methods may carry this annotation. An {@link EntityListeners @EntityListeners} class implements the
+ * event's listener interface instead.
+ * <p>
  * Methods with this annotation may optionally take a parameter of type {@link org.bson.Document Document}
  * and/or a parameter of type Datastore. If both parameters are used,
  * the order is unimportant.

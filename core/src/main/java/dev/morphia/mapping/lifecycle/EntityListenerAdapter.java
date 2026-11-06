@@ -2,6 +2,7 @@ package dev.morphia.mapping.lifecycle;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -21,49 +22,87 @@ import dev.morphia.sofia.Sofia;
 import org.bson.Document;
 
 import static dev.morphia.mapping.Mapper.LIFECYCLE_ANNOTATIONS;
+import static java.lang.String.format;
 
 /**
- * Calls the lifecycle methods of an {@code @EntityListeners} class, or of an entity: its methods annotated with a lifecycle
- * event annotation, and those of any per-event listener interface it implements. It implements {@link EntityListener} only so
- * it can be named in {@code @EntityListeners}.
+ * Calls an entity's own lifecycle methods: its methods annotated with a lifecycle event annotation, and those of any per-event
+ * listener interface it implements. Also creates the instances of {@code @EntityListeners} classes, which implement the
+ * interfaces only.
  *
  * @hidden
  * @since 2.4
  * @morphia.internal
  */
 @MorphiaInternal
-public class EntityListenerAdapter implements EntityListener<Object> {
+public final class EntityListenerAdapter {
     private final Map<Class<? extends Annotation>, List<Callback>> callbacks = new HashMap<>();
-    private final Class<?> listenerType;
-    // whether it implements a per-event listener interface
-    private final boolean typed;
-    private Object listener;
+    private final Class<?> entityType;
 
-    /**
-     * @param listenerType the {@code @EntityListeners} class or the entity
-     * @throws MappingException if it implements two listener interfaces for one event
-     */
-    public EntityListenerAdapter(Class<?> listenerType) {
+    private EntityListenerAdapter(Class<?> entityType) {
         for (Class<? extends Annotation> annotationClass : LIFECYCLE_ANNOTATIONS) {
             callbacks.put(annotationClass, new ArrayList<>());
         }
-        mapAnnotationsToMethods(listenerType);
-        this.listenerType = listenerType;
+        mapAnnotationsToMethods(entityType);
+        this.entityType = entityType;
+    }
+
+    /**
+     * @param entityType the entity
+     * @return the adapter for the entity's own lifecycle methods, or null when it has none
+     * @throws MappingException if it implements two listener interfaces for one event
+     */
+    @Nullable
+    public static EntityListenerAdapter listen(Class<?> entityType) {
+        EntityListenerAdapter adapter = new EntityListenerAdapter(entityType);
         // checked here, when the entity is mapped: annotated methods would otherwise short-circuit every check
-        typed = TypedListeners.handlesAny(listenerType);
+        boolean typed = TypedListeners.handlesAny(entityType);
+        return typed || adapter.hasCallbacks() ? adapter : null;
+    }
+
+    /**
+     * @param listenerType an {@code @EntityListeners} class
+     * @return a new instance of it
+     * @throws MappingException if it implements none of the per-event listener interfaces, or two for one event, declares
+     *                          annotated lifecycle methods, or has no no-argument constructor or can't be created with it
+     */
+    public static EntityListener<?> create(Class<? extends EntityListener<?>> listenerType) {
+        for (Method method : getDeclaredAndInheritedMethods(listenerType)) {
+            for (Class<? extends Annotation> annotationClass : LIFECYCLE_ANNOTATIONS) {
+                if (method.isAnnotationPresent(annotationClass)) {
+                    throw new MappingException(Sofia.annotatedListenerMethod(listenerType.getName(), method.getName(),
+                            annotationClass.getSimpleName()));
+                }
+            }
+        }
+        if (!TypedListeners.handlesAny(listenerType)) {
+            throw new MappingException(Sofia.noLifecycleMethods(listenerType.getName()));
+        }
+        Constructor<? extends EntityListener<?>> constructor;
+        try {
+            constructor = listenerType.getDeclaredConstructor();
+        } catch (NoSuchMethodException e) {
+            throw new MappingException(Sofia.noargConstructorNotFound(listenerType), e);
+        }
+        try {
+            constructor.setAccessible(true);
+            return constructor.newInstance();
+        } catch (ReflectiveOperationException e) {
+            Throwable cause = e instanceof InvocationTargetException target && target.getCause() != null ? target.getCause() : e;
+            throw new MappingException(Sofia.cannotInstantiate(listenerType.getName(), cause.getMessage()), cause);
+        }
     }
 
     /**
      * @param event the lifecycle event annotation
-     * @return true if the listener handles the event, with an annotated method or its per-event listener interface
+     * @return true if the entity handles the event, with an annotated method or its per-event listener interface
      */
     public boolean handles(@NonNull Class<? extends Annotation> event) {
-        return !callbacks.get(event).isEmpty() || TypedListeners.handles(listenerType, event);
+        return !callbacks.get(event).isEmpty() || TypedListeners.handles(entityType, event);
     }
 
     /**
      * @param event      the lifecycle event annotation
-     * @param entityType the type of the entity the listener is for
+     * @param entityType the type of the entity the model is for: the declaring entity or a subtype
      * @return true if a method for the event takes the {@code Document}: an annotated method with a {@code Document}
      *         parameter, or the event's listener interface's method if it accepts every entity of the type. One that
      *         accepts only a subtype doesn't count: a codec checks the subtype's own needs once it knows the entity is one
@@ -74,23 +113,20 @@ public class EntityListenerAdapter implements EntityListener<Object> {
                 return true;
             }
         }
-        return TypedListeners.usesDocument(listenerType, event, entityType);
+        return TypedListeners.usesDocument(this.entityType, event, entityType);
     }
 
-    /**
-     * @return true if any lifecycle method was found
-     */
-    boolean hasCallbacks() {
+    private boolean hasCallbacks() {
         for (List<Callback> list : callbacks.values()) {
             if (!list.isEmpty()) {
                 return true;
             }
         }
-        return typed;
+        return false;
     }
 
     /**
-     * Calls the listener's annotated methods for the event, then its per-event listener interface's method.
+     * Calls the entity's annotated methods for the event, then its per-event listener interface's method.
      *
      * @param event     the lifecycle event annotation
      * @param entity    the entity
@@ -100,48 +136,24 @@ public class EntityListenerAdapter implements EntityListener<Object> {
     public void invoke(Class<? extends Annotation> event, Object entity, @Nullable Document document, Datastore datastore) {
         for (Callback callback : callbacks.get(event)) {
             try {
-                callback.method.invoke(target(entity), callback.arguments(entity, document, datastore));
+                callback.method.invoke(entity, callback.arguments(entity, document, datastore));
             } catch (IllegalArgumentException | ReflectiveOperationException e) {
                 throw failure(callback.method, entity, e);
             }
         }
-        if (TypedListeners.handles(listenerType, event)) {
-            TypedListeners.invoke(target(entity), event, entity, document, datastore);
+        if (TypedListeners.handles(entityType, event)) {
+            TypedListeners.invoke(entity, event, entity, document, datastore);
         }
     }
 
-    /**
-     * @param entity the entity the event is for
-     * @return the object to call the lifecycle methods on: an instance of the listener type
-     */
-    protected Object target(Object entity) {
-        return getListener();
-    }
-
-    /**
-     * @param method the lifecycle method that failed
-     * @param entity the entity the event is for
-     * @param e      the failure
-     * @return the exception to throw
-     */
-    protected RuntimeException failure(Method method, Object entity, Exception e) {
-        return e instanceof IllegalArgumentException illegal ? illegal : new RuntimeException(e);
-    }
-
-    Object getListener() {
-        if (listener == null) {
-            try {
-                Constructor<?> constructor = listenerType.getDeclaredConstructor();
-                constructor.setAccessible(true);
-                listener = constructor.newInstance();
-            } catch (ReflectiveOperationException e) {
-                throw new MappingException(Sofia.noargConstructorNotFound(listenerType), e);
-            }
+    private static RuntimeException failure(Method method, Object entity, Exception e) {
+        if (e instanceof IllegalArgumentException && "object is not an instance of declaring class".equals(e.getMessage())) {
+            return new RuntimeException(format("%s is not an instance of the method's type: %s",
+                    entity.getClass().getName(), method.getDeclaringClass().getName()), e);
         }
-        return listener;
+        return new RuntimeException("Failed to invoke method: " + method, e);
     }
 
-    @NonNull
     private void mapAnnotationsToMethods(Class<?> type) {
         for (Method method : getDeclaredAndInheritedMethods(type)) {
             for (Class<? extends Annotation> annotationClass : LIFECYCLE_ANNOTATIONS) {
@@ -198,7 +210,7 @@ public class EntityListenerAdapter implements EntityListener<Object> {
         }
     }
 
-    private List<Method> getDeclaredAndInheritedMethods(Class<?> type) {
+    private static List<Method> getDeclaredAndInheritedMethods(Class<?> type) {
         final List<Method> methods = new ArrayList<>();
         if (type == Object.class) {
             return methods;

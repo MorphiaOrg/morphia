@@ -44,7 +44,7 @@ import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
-import dev.morphia.mapping.lifecycle.EntityListenerAdapter;
+import dev.morphia.test.models.ExampleListener;
 
 import org.bson.codecs.pojo.PropertyAccessor;
 import org.bson.types.ObjectId;
@@ -354,7 +354,7 @@ public class TestGeneration {
     }
 
     private void validate(EntityModel model) {
-        Assertions.assertEquals(EntityListenersBuilder.entityListenersBuilder().value(EntityListenerAdapter.class).build(),
+        Assertions.assertEquals(EntityListenersBuilder.entityListenersBuilder().value(ExampleListener.class).build(),
                 model.getAnnotation(EntityListeners.class));
         Assertions.assertEquals(EntityBuilder.entityBuilder().value("examples").build(), model.getAnnotation(Entity.class));
         Assertions.assertEquals(IndexesBuilder.indexesBuilder()

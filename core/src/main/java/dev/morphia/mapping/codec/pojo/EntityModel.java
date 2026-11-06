@@ -49,7 +49,6 @@ import dev.morphia.mapping.conventions.MethodDiscovery;
 import dev.morphia.mapping.conventions.MorphiaConvention;
 import dev.morphia.mapping.conventions.MorphiaDefaultsConvention;
 import dev.morphia.mapping.lifecycle.EntityListenerAdapter;
-import dev.morphia.mapping.lifecycle.OnEntityListenerAdapter;
 import dev.morphia.mapping.lifecycle.TypedListeners;
 import dev.morphia.sofia.Sofia;
 
@@ -98,7 +97,11 @@ public class EntityModel {
     private EntityModel superClass;
     private PropertyModel idProperty;
     private PropertyModel versionProperty;
-    private final List<EntityListenerAdapter> listeners = new ArrayList<>();
+    // the entity's own lifecycle methods, or null when it has none
+    @Nullable
+    private EntityListenerAdapter ownListener;
+    // instances of its @EntityListeners classes
+    private final List<EntityListener<?>> listeners = new ArrayList<>();
     // bit i set when a listener handles Mapper.LIFECYCLE_ANNOTATIONS[i]; worked out when the listeners are set up
     private int lifecycleEvents;
     // bit i set when a listener's method for Mapper.LIFECYCLE_ANNOTATIONS[i] takes the Document
@@ -257,8 +260,11 @@ public class EntityModel {
     public void callLifecycleMethods(Class<? extends Annotation> event, Object entity, @Nullable Document document,
             MorphiaDatastore datastore) {
         if (hasLifecycle(event)) {
-            for (EntityListenerAdapter listener : listeners) {
-                listener.invoke(event, entity, document, datastore);
+            for (EntityListener<?> listener : listeners) {
+                TypedListeners.invoke(listener, event, entity, document, datastore);
+            }
+            if (ownListener != null) {
+                ownListener.invoke(event, entity, document, datastore);
             }
         }
         for (EntityListener<?> listener : datastore.getMapper().getGlobalListeners()) {
@@ -603,33 +609,38 @@ public class EntityModel {
     }
 
     /**
-     * Populates the {@code listeners} list from {@code @EntityListeners} and on-entity lifecycle methods.
+     * Creates the instances of the {@code @EntityListeners} classes and finds the entity's own lifecycle methods.
      * Subclasses that bypass the normal {@link MappingUtil} pipeline (e.g. {@code CritterEntityModel}) must
      * call this after their properties have been set up.
+     *
+     * @throws MappingException if an {@code @EntityListeners} class can't be created, implements none of the per-event
+     *                          listener interfaces, or declares annotated lifecycle methods
      */
     protected void initializeListeners() {
         final EntityListeners entityLisAnn = getAnnotation(EntityListeners.class);
         if (entityLisAnn != null) {
-            for (Class<?> aClass : entityLisAnn.value()) {
-                listeners.add(new EntityListenerAdapter(aClass));
+            for (Class<? extends EntityListener<?>> type : entityLisAnn.value()) {
+                listeners.add(EntityListenerAdapter.create(type));
             }
         }
-
-        OnEntityListenerAdapter adapter = OnEntityListenerAdapter.listen(getType());
-        if (adapter != null) {
-            listeners.add(adapter);
-        }
+        ownListener = EntityListenerAdapter.listen(getType());
 
         int events = 0;
         int documents = 0;
         for (int i = 0; i < LIFECYCLE_ANNOTATIONS.size(); i++) {
             Class<? extends Annotation> event = LIFECYCLE_ANNOTATIONS.get(i);
-            for (EntityListenerAdapter listener : listeners) {
-                if (listener.handles(event)) {
+            for (EntityListener<?> listener : listeners) {
+                if (TypedListeners.handles(listener.getClass(), event, getType())) {
                     events |= 1 << i;
-                    if (listener.usesDocument(event, getType())) {
+                    if (TypedListeners.usesDocument(listener.getClass(), event, getType())) {
                         documents |= 1 << i;
                     }
+                }
+            }
+            if (ownListener != null && ownListener.handles(event)) {
+                events |= 1 << i;
+                if (ownListener.usesDocument(event, getType())) {
+                    documents |= 1 << i;
                 }
             }
         }
