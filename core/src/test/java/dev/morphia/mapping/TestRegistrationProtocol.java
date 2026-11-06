@@ -18,6 +18,7 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Version;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.ReflectiveEntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 import dev.morphia.mapping.conventions.MorphiaConvention;
 import dev.morphia.mapping.validation.ConstraintViolationException;
@@ -240,7 +241,7 @@ public class TestRegistrationProtocol {
         Mapper mapper = mapper(type);
         EntityModel original = assertModelType(type, mapper.mapEntity(Concurrent.class));
 
-        Assertions.assertSame(original, mapper.register(new EntityModel(mapper, Concurrent.class)));
+        Assertions.assertSame(original, mapper.register(new ReflectiveEntityModelBuilder(mapper, Concurrent.class).build()));
         Assertions.assertSame(original, mapper.getEntityModel(Concurrent.class));
     }
 

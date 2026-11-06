@@ -22,6 +22,7 @@ import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.ArrayFieldAccessor;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.FieldAccessor;
+import dev.morphia.mapping.codec.pojo.ClassHierarchy;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
@@ -39,7 +40,7 @@ public class FieldDiscovery implements MorphiaConvention {
         if (model.getProperties().isEmpty()) {
             Set<Class<?>> list = new LinkedHashSet<>();
             list.add(model.getType());
-            list.addAll(model.classHierarchy());
+            list.addAll(ClassHierarchy.superclasses(model.getType()));
 
             for (Class<?> type : list) {
                 for (Field field : type.getDeclaredFields()) {

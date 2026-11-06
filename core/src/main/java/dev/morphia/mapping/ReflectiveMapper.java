@@ -3,6 +3,7 @@ package dev.morphia.mapping;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.ReflectiveEntityModelBuilder;
 
 /**
  * The default reflection-based mapper implementation.
@@ -65,7 +66,7 @@ public class ReflectiveMapper extends AbstractMapper {
 
     @Override
     protected EntityModel buildModel(Class<?> type) {
-        return new EntityModel(this, type);
+        return new ReflectiveEntityModelBuilder(this, type).build();
     }
 
     @Override

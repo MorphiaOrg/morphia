@@ -23,6 +23,7 @@ import dev.morphia.critter.parser.generator.CritterGenerator;
 import dev.morphia.critter.parser.generator.EntityModelGenerator;
 import dev.morphia.critter.parser.generator.NestmateAccessException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.ReflectiveEntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
 import org.slf4j.Logger;
@@ -239,7 +240,7 @@ public class CritterMapper extends AbstractMapper {
      * Tier 3: Fall back to the standard reflection-based EntityModel.
      */
     private EntityModel fallbackToReflection(Class<?> type) {
-        return new EntityModel(this, type);
+        return new ReflectiveEntityModelBuilder(this, type).build();
     }
 
     /**

@@ -26,6 +26,7 @@ import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.generator.NestmateAccessException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
+import dev.morphia.mapping.codec.pojo.ReflectiveEntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
 import org.bson.types.ObjectId;
@@ -484,7 +485,7 @@ public class TestCritterMapper {
         CritterMapper mapper = mapper();
 
         // Simulate what importModels() does: create a model externally and register it
-        EntityModel imported = new EntityModel(mapper, CritterMapperTestEntity.class);
+        EntityModel imported = new ReflectiveEntityModelBuilder(mapper, CritterMapperTestEntity.class).build();
         EntityModel registered = mapper.register(imported);
 
         Assertions.assertNotNull(registered);
