@@ -7,9 +7,11 @@ import java.util.Map;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
+import dev.morphia.mapping.CritterMapper;
 import dev.morphia.mapping.PropertyDiscovery;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
+import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 import dev.morphia.test.TestBase;
 
 import org.bson.types.ObjectId;
@@ -42,7 +44,15 @@ public class TestGenericResolution extends TestBase {
     @Test
     public void lowerBoundedWildcard() {
         withTestConfig(List.of(HasLowerBound.class), () -> {
-            assertTypeData(HasLowerBound.class, "numbers", "List<? super Integer>");
+            // a List<? super Integer> can hold any supertype's values, so only Object is safe to decode them as
+            assertTypeData(HasLowerBound.class, "numbers", "List<? extends Object>");
+
+            HasLowerBound entity = new HasLowerBound();
+            entity.numbers = new ArrayList<Object>(List.of("text", 1));
+            getDs().save(entity);
+
+            HasLowerBound loaded = getDs().find(HasLowerBound.class).filter(eq("_id", entity.id)).first();
+            Assertions.assertEquals(entity.numbers, loaded.numbers);
         });
     }
 
@@ -105,6 +115,12 @@ public class TestGenericResolution extends TestBase {
 
     private void assertTypeData(Class<?> entity, String property, String expected) {
         EntityModel model = getMapper().getEntityModel(entity);
+        // critter falls back to reflection for an entity with an array property until plan item 4.8; any other fallback
+        // would test the reflective model twice
+        boolean hasArray = model.getProperties().stream().anyMatch(p -> p.getTypeData().isArray());
+        if (getMapper() instanceof CritterMapper && !hasArray) {
+            Assertions.assertInstanceOf(CritterEntityModel.class, model, entity.getName());
+        }
         TypeData<?> typeData = model.getProperty(property).getTypeData();
         Assertions.assertEquals(expected, typeData.toString(), property);
     }

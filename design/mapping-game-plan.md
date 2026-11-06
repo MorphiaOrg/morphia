@@ -363,6 +363,8 @@ harness passes, and both mappers agree.
 - Done as `TypeResolver`. `PropertyModelGenerator` turned out to read the member's generic type through reflection
   already (only a helper the tests call parses signatures), so it calls the same resolver rather than a second one over
   signatures; the generated models still need no reflection at runtime.
+- `? super X` was not a bug after all: such a list can hold any supertype's values (a `List<Object>` with strings in
+  it), so its elements still decode as the upper bound, `Object`. Using `X` threw `ClassCastException` on a mixed list.
 
 ### 4.5 Critter/reflection parity test (C3)
 - Map every test entity with both mappers and compare the resulting models:

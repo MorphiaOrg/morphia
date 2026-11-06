@@ -122,11 +122,10 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
             }
             return paramBuilder.build();
         } else if (type instanceof WildcardType) {
+            // the upper bound is the only type every value fits: a List<? super Integer> can hold a List<Object>'s values,
+            // so its elements decode as its upper bound, Object, not as Integer
             WildcardType wildcardType = (WildcardType) type;
-            Type[] lowerBounds = wildcardType.getLowerBounds();
-            return lowerBounds.length != 0
-                    ? new WildCardTypeData(get(lowerBounds[0]), false)
-                    : new WildCardTypeData(get(wildcardType.getUpperBounds()[0]), true);
+            return new WildCardTypeData(get(wildcardType.getUpperBounds()[0]), true);
         } else if (type instanceof TypeVariable) {
             return TypeData.builder(Object.class).build();
         } else if (type instanceof Class) {
