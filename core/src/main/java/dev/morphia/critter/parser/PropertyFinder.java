@@ -1,5 +1,7 @@
 package dev.morphia.critter.parser;
 
+import java.lang.constant.ConstantDescs;
+import java.lang.constant.MethodTypeDesc;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
@@ -9,14 +11,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import dev.morphia.annotations.IdField;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.generator.CritterGenerator;
 import dev.morphia.critter.parser.generator.GenerationUtils;
 import dev.morphia.critter.parser.generator.PropertyModelGenerator;
-import dev.morphia.critter.parser.java.CritterParser;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.PropertyDiscovery;
+import dev.morphia.mapping.codec.pojo.ClassHierarchy;
+import dev.morphia.mapping.conventions.DiscoveryRules;
+import dev.morphia.mapping.conventions.DiscoveryRules.AccessorPair;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,8 +44,6 @@ import static io.smallrye.classfile.Attributes.signature;
 public class PropertyFinder {
     private static final Logger LOG = LoggerFactory.getLogger(PropertyFinder.class);
 
-    private final Map<Class<?>, Object> providerMap;
-    private final List<String> annotationDescriptorKeys;
     private final CritterClassLoader classLoader;
     private final boolean runtimeMode;
     private final CritterGenerator critterGenerator;
@@ -47,13 +51,6 @@ public class PropertyFinder {
     private final MorphiaConfig config;
 
     public PropertyFinder(Mapper mapper, CritterClassLoader classLoader, boolean runtimeMode) {
-        this.providerMap = new LinkedHashMap<>();
-        for (var provider : mapper.getConfig().propertyAnnotationProviders()) {
-            providerMap.put(provider.provides(), provider);
-        }
-        this.annotationDescriptorKeys = providerMap.keySet().stream()
-                .map(type -> "L" + type.getName().replace('.', '/') + ";")
-                .toList();
         this.classLoader = classLoader;
         this.runtimeMode = runtimeMode;
         this.critterGenerator = new CritterGenerator(mapper);
@@ -72,9 +69,10 @@ public class PropertyFinder {
      */
     public List<PropertyModelGenerator> find(Class<?> standinType, ClassModel classModel, Class<?> targetType) {
         List<PropertyModelGenerator> models = new ArrayList<>();
-        List<MethodInfo> methods = discoverPropertyMethods(standinType, classModel);
-        if (methods.isEmpty()) {
+        if (propertyDiscovery == PropertyDiscovery.FIELDS) {
             List<FieldInfo> fields = discoverAllFields(standinType, classModel);
+            checkIdField(standinType, targetType, fields.stream().map(FieldInfo::name).toList(),
+                    fields.stream().anyMatch(f -> isAnnotatedId(f.visibleAnnotations())));
             if (!runtimeMode) {
                 checkAotCompatibility(fields, standinType, targetType, classModel);
                 weaveFieldAccessors(standinType, targetType, fields);
@@ -88,6 +86,9 @@ public class PropertyFinder {
                 models.add(new PropertyModelGenerator(config, targetType, standinType, classLoader, field, runtimeMode));
             }
         } else {
+            List<MethodInfo> methods = discoverPropertyMethods(standinType, classModel);
+            checkIdField(standinType, targetType, methods.stream().map(m -> DiscoveryRules.propertyName(m.name())).toList(),
+                    methods.stream().anyMatch(m -> isAnnotatedId(m.visibleAnnotations())));
             if (!runtimeMode) {
                 checkAotMethodCompatibility(methods, standinType, targetType, classModel);
                 classLoader.register(targetType.getName(), critterGenerator.methodAccessors(targetType, methods));
@@ -113,6 +114,23 @@ public class PropertyFinder {
     }
 
     private static final String ID_ANNOTATION_DESC = "Ldev/morphia/annotations/Id;";
+
+    /**
+     * As in {@code ConfigureProperties}, an {@code @IdField} that names no property fails the mapping unless a property
+     * is annotated {@code @Id}. Checked before anything is generated, so a failed entity leaves nothing behind.
+     */
+    private static void checkIdField(Class<?> standinType, Class<?> targetType, List<String> properties, boolean explicitId) {
+        IdField idField = (IdField) ClassHierarchy.annotations(standinType).get(IdField.class);
+        if (!explicitId && idField != null && !properties.contains(idField.value())) {
+            throw new MappingException("@IdField(\"%s\") on %s doesn't name a property".formatted(idField.value(),
+                    targetType.getName()));
+        }
+    }
+
+    private static boolean isAnnotatedId(List<Annotation> annotations) {
+        return annotations != null && annotations.stream()
+                .anyMatch(a -> ID_ANNOTATION_DESC.equals(a.classSymbol().descriptorString()));
+    }
 
     private void checkAotCompatibility(List<FieldInfo> fields, Class<?> standinType, Class<?> targetType,
             ClassModel classModel) {
@@ -277,12 +295,6 @@ public class PropertyFinder {
         }
     }
 
-    private boolean isPropertyAnnotated(List<Annotation> annotations, boolean allowUnannotated) {
-        List<Annotation> anns = annotations != null ? annotations : List.of();
-        return allowUnannotated || anns.stream()
-                .anyMatch(a -> annotationDescriptorKeys.contains(a.classSymbol().descriptorString()));
-    }
-
     private List<FieldInfo> discoverAllFields(Class<?> entityType, ClassModel classModel) {
         List<FieldInfo> fields = new ArrayList<>();
         Map<String, Boolean> seen = new LinkedHashMap<>();
@@ -319,15 +331,11 @@ public class PropertyFinder {
     }
 
     private List<FieldInfo> discoverFields(ClassModel classModel, Class<?> declaringClass) {
-        List<String> transientDescs = CritterParser.INSTANCE.transientAnnotations();
         List<FieldInfo> result = new ArrayList<>();
         for (FieldModel field : classModel.fields()) {
             List<Annotation> visible = visibleAnnotations(field);
             int flags = field.flags().flagsMask();
-            boolean isTransient = (flags & ClassFile.ACC_TRANSIENT) != 0
-                    || visible.stream().map(a -> a.classSymbol().descriptorString()).anyMatch(transientDescs::contains);
-            boolean isStatic = (flags & ClassFile.ACC_STATIC) != 0;
-            if (!isTransient && !isStatic && isPropertyAnnotated(visible, true)) {
+            if (!DiscoveryRules.isIgnoredField(flags, annotationNames(visible))) {
                 String sig = field.findAttribute(signature())
                         .map(a -> a.signature().stringValue())
                         .orElse(null);
@@ -335,7 +343,7 @@ public class PropertyFinder {
                         field.fieldName().stringValue(),
                         field.fieldType().stringValue(),
                         sig,
-                        field.flags().flagsMask(),
+                        flags,
                         visible,
                         declaringClass));
             }
@@ -343,9 +351,19 @@ public class PropertyFinder {
         return result;
     }
 
+    private static List<String> annotationNames(List<Annotation> annotations) {
+        return annotations.stream()
+                .map(a -> a.classSymbol().descriptorString())
+                .map(desc -> desc.substring(1, desc.length() - 1).replace('/', '.'))
+                .toList();
+    }
+
+    /**
+     * Pairs getters and setters the way {@link dev.morphia.mapping.conventions.MethodDiscovery} does: within each class
+     * of the hierarchy, with a subclass's pair hiding a superclass's for the same property.
+     */
     private List<MethodInfo> discoverPropertyMethods(Class<?> entityType, ClassModel classModel) {
-        List<MethodInfo> result = new ArrayList<>();
-        Map<String, Boolean> seen = new LinkedHashMap<>();
+        Map<String, MethodInfo> properties = new LinkedHashMap<>();
 
         Class<?> current = entityType;
         ClassModel currentModel = classModel;
@@ -355,40 +373,59 @@ public class PropertyFinder {
             if (model == null)
                 break;
 
-            boolean isSuperclass = current != entityType;
-            for (MethodModel method : model.methods()) {
-                if (!isGetter(method))
-                    continue;
-                if (isSuperclass && (method.flags().flagsMask() & ClassFile.ACC_PRIVATE) != 0)
-                    continue;
-                String propName = getterPropertyName(method);
-                if (seen.containsKey(propName))
-                    continue;
-
-                MethodInfo methodInfo = toMethodInfo(method);
-
-                if (propertyDiscovery == PropertyDiscovery.METHODS) {
-                    java.lang.constant.MethodTypeDesc mtd = java.lang.constant.MethodTypeDesc
-                            .ofDescriptor(method.methodType().stringValue());
-                    MethodInfo setter = findSetterInHierarchy(model, current, propName,
-                            mtd.returnType().descriptorString());
-                    if (setter != null) {
-                        seen.put(propName, Boolean.TRUE);
-                        result.add(methodInfo.mergeAnnotations(setter));
-                    }
-                } else if (isPropertyAnnotated(methodInfo.visibleAnnotations(), false)) {
-                    seen.put(propName, Boolean.TRUE);
-                    result.add(methodInfo);
+            for (AccessorPair<MethodModel> pair : DiscoveryRules.accessorPairs(model.methods(),
+                    m -> m.methodName().stringValue(), m -> m.flags().flagsMask())) {
+                if (!properties.containsKey(pair.property())) {
+                    properties.put(pair.property(), toMethodInfo(pair, current, entityType));
                 }
             }
 
             current = current.getSuperclass();
             currentModel = null;
         }
-        return result;
+        return new ArrayList<>(properties.values());
     }
 
-    private MethodInfo toMethodInfo(MethodModel method) {
+    /**
+     * @return the getter, carrying the setter's annotations too
+     * @throws UnsupportedOperationException if the generated accessors can't call the pair: they take the setter to be
+     *                                       a {@code void} method named for the property that takes the getter's type, and
+     *                                       call both as the entity, so neither can be private (the setter lookups skip
+     *                                       private methods) or, in a superclass, hidden from the entity's package
+     */
+    private MethodInfo toMethodInfo(AccessorPair<MethodModel> pair, Class<?> declaringClass, Class<?> entityType) {
+        MethodTypeDesc getter = MethodTypeDesc.ofDescriptor(pair.getter().methodType().stringValue());
+        String getterName = pair.getter().methodName().stringValue();
+        boolean supported = (getterName.startsWith("get") || getterName.startsWith("is"))
+                && getter.parameterCount() == 0
+                && !getter.returnType().equals(ConstantDescs.CD_void)
+                && pair.setter().methodName().stringValue().equals("set" + DiscoveryRules.titleCase(pair.property()))
+                && pair.setter().methodType().stringValue().equals("(" + getter.returnType().descriptorString() + ")V")
+                && isCallable(pair.getter().flags().flagsMask(), declaringClass, entityType)
+                && isCallable(pair.setter().flags().flagsMask(), declaringClass, entityType);
+        if (!supported) {
+            throw new UnsupportedOperationException("Critter can't generate accessors for %s's %s() and %s()".formatted(
+                    declaringClass.getName(), getterName, pair.setter().methodName().stringValue()));
+        }
+        return toMethodInfo(pair.getter(), declaringClass).mergeAnnotations(toMethodInfo(pair.setter(), declaringClass));
+    }
+
+    /**
+     * Whether code in the entity's package can call a method: a public one, or, since the generated accessors aren't
+     * subclasses of a superclass declaring it, a protected or package-private one declared in that package by the
+     * same loader.
+     */
+    private static boolean isCallable(int flags, Class<?> declaringClass, Class<?> entityType) {
+        if ((flags & ClassFile.ACC_PRIVATE) != 0) {
+            return false;
+        }
+        return (flags & ClassFile.ACC_PUBLIC) != 0
+                || declaringClass == entityType
+                || declaringClass.getPackageName().equals(entityType.getPackageName())
+                        && declaringClass.getClassLoader() == entityType.getClassLoader();
+    }
+
+    private MethodInfo toMethodInfo(MethodModel method, Class<?> declaringClass) {
         String sig = method.findAttribute(signature())
                 .map(a -> a.signature().stringValue())
                 .orElse(null);
@@ -397,64 +434,8 @@ public class PropertyFinder {
                 method.methodType().stringValue(),
                 sig,
                 method.flags().flagsMask(),
-                visibleAnnotations(method));
-    }
-
-    private boolean isGetter(MethodModel method) {
-        String name = method.methodName().stringValue();
-        if (!name.startsWith("get") && !name.startsWith("is"))
-            return false;
-        if (name.equals("get") || name.equals("is"))
-            return false;
-        int flags = method.flags().flagsMask();
-        if ((flags & ClassFile.ACC_STATIC) != 0)
-            return false;
-        // 0x0040 = ACC_BRIDGE: skip compiler-generated covariant bridge methods
-        if ((flags & 0x0040) != 0)
-            return false;
-        java.lang.constant.MethodTypeDesc mtd = java.lang.constant.MethodTypeDesc
-                .ofDescriptor(method.methodType().stringValue());
-        return mtd.parameterCount() == 0 && !mtd.returnType().equals(java.lang.constant.ConstantDescs.CD_void);
-    }
-
-    private String getterPropertyName(MethodModel method) {
-        String name = method.methodName().stringValue();
-        String prefix = name.startsWith("is") ? "is" : "get";
-        String prop = name.substring(prefix.length());
-        return Character.toLowerCase(prop.charAt(0)) + prop.substring(1);
-    }
-
-    private MethodInfo findSetter(ClassModel classModel, String propertyName, String returnDesc) {
-        String setterName = "set" + Character.toUpperCase(propertyName.charAt(0)) + propertyName.substring(1);
-        String setterDesc = "(" + returnDesc + ")V";
-        for (MethodModel method : classModel.methods()) {
-            if (method.methodName().stringValue().equals(setterName)
-                    && method.methodType().stringValue().equals(setterDesc)
-                    && (method.flags().flagsMask() & ClassFile.ACC_STATIC) == 0) {
-                return toMethodInfo(method);
-            }
-        }
-        return null;
-    }
-
-    private MethodInfo findSetterInHierarchy(ClassModel startModel, Class<?> startClass, String propName,
-            String returnDesc) {
-        ClassModel model = startModel;
-        Class<?> current = startClass;
-        while (current != null && current != Object.class) {
-            if (model == null)
-                model = readClassModel(current);
-            if (model != null) {
-                MethodInfo setter = findSetter(model, propName, returnDesc);
-                if (setter != null && (setter.access() & ClassFile.ACC_PRIVATE) == 0
-                        && (setter.access() & ClassFile.ACC_STATIC) == 0) {
-                    return setter;
-                }
-            }
-            current = current.getSuperclass();
-            model = null;
-        }
-        return null;
+                visibleAnnotations(method),
+                declaringClass);
     }
 
     private List<Annotation> visibleAnnotations(io.smallrye.classfile.AttributedElement element) {

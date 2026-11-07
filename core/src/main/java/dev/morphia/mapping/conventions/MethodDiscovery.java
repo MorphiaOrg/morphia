@@ -2,12 +2,12 @@ package dev.morphia.mapping.conventions;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.Comparator;
+import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.mongodb.lang.NonNull;
@@ -22,12 +22,12 @@ import dev.morphia.mapping.codec.pojo.ClassHierarchy;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
+import dev.morphia.mapping.conventions.DiscoveryRules.AccessorPair;
 import dev.morphia.sofia.Sofia;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import static dev.morphia.mapping.conventions.FieldDiscovery.discoverMappedName;
-import static java.lang.reflect.Modifier.isStatic;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
 
@@ -42,32 +42,22 @@ public class MethodDiscovery implements MorphiaConvention {
             Set<Class<?>> hierarchy = new LinkedHashSet<>(Set.of(model.getType()));
             hierarchy.addAll(ClassHierarchy.superclasses(model.getType()));
 
-            Set<Methods> properties = new LinkedHashSet<>();
-
+            // a subclass's pair hides a superclass's for the same property
+            Map<String, AccessorPair<Method>> properties = new LinkedHashMap<>();
             for (Class<?> type : hierarchy) {
-                properties.addAll(processMethods(type));
+                for (AccessorPair<Method> pair : DiscoveryRules.accessorPairs(List.of(type.getDeclaredMethods()), Method::getName,
+                        Method::getModifiers)) {
+                    properties.putIfAbsent(pair.property(), pair);
+                }
             }
 
-            addProperties(mapper, model, properties);
+            addProperties(mapper, model, properties.values());
         }
     }
 
-    private List<Methods> processMethods(Class<?> type) {
-        return stream(type.getDeclaredMethods())
-                .filter(method -> !isStatic(method.getModifiers()))
-                .filter(m -> !m.isSynthetic()) // overloaded parent methods are synthetic on the child types
-                .filter(MethodDiscovery::isGetterSetter)
-                .collect(Collectors.groupingBy(this::stripPrefix))
-                .entrySet().stream()
-                .filter(entry -> entry.getValue().size() == 2)
-                .map(entry -> new Methods(entry.getKey(), type, entry.getValue()))
-                .collect(toList());
-
-    }
-
-    private void addProperties(Mapper mapper, EntityModel model, Set<Methods> properties) {
-        for (Methods methods : properties) {
-            TypeData<?> typeData = model.getTypeData(methods.getter.getGenericReturnType());
+    private void addProperties(Mapper mapper, EntityModel model, Collection<AccessorPair<Method>> properties) {
+        for (AccessorPair<Method> methods : properties) {
+            TypeData<?> typeData = model.getTypeData(methods.getter().getGenericReturnType());
 
             ExternalEntity externalEntity = model.getAnnotation(ExternalEntity.class);
             Class<?> target = externalEntity != null ? externalEntity.target() : null;
@@ -75,61 +65,14 @@ public class MethodDiscovery implements MorphiaConvention {
             PropertyModel propertyModel = new PropertyModel(model);
 
             model.addProperty(propertyModel
-                    .name(methods.property)
+                    .name(methods.property())
                     .typeData(typeData)
-                    .annotations(discoverAnnotations(methods.getter, methods.setter))
-                    .accessor(new MethodAccessor(getTargetMethod(model, target, methods.getter),
-                            getTargetMethod(model, target, methods.setter)))
+                    .annotations(discoverAnnotations(methods.getter(), methods.setter()))
+                    .accessor(new MethodAccessor(getTargetMethod(model, target, methods.getter()),
+                            getTargetMethod(model, target, methods.setter())))
                     .conversions(mapper.getConversions())
                     .mappedName(discoverMappedName(mapper, propertyModel)));
         }
-    }
-
-    private static class Methods {
-        private final Method getter;
-        private final Method setter;
-        private final String property;
-        private final Class<?> type;
-
-        Methods(String property, Class<?> type, List<Method> methods) {
-            this.property = property;
-            this.type = type;
-            List<Method> collect = methods.stream().sorted(Comparator.comparing(Method::getName))
-                    .collect(toList());
-            getter = collect.get(0);
-            setter = collect.get(1);
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (!(o instanceof Methods)) {
-                return false;
-            }
-            Methods methods = (Methods) o;
-            return property.equals(methods.property);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(property);
-        }
-    }
-
-    @NonNull
-    private String stripPrefix(Method m) {
-        return m.getName().startsWith("get")
-                || m.getName().startsWith("set")
-                        ? stripPrefix(m, 3)
-                        : stripPrefix(m, 2);
-    }
-
-    private static boolean isGetterSetter(Method m) {
-        return m.getName().startsWith("get")
-                || m.getName().startsWith("set")
-                || m.getName().startsWith("is");
     }
 
     private List<Annotation> discoverAnnotations(Method getter, Method setter) {
@@ -148,12 +91,5 @@ public class MethodDiscovery implements MorphiaConvention {
             throw new MappingException(Sofia.mismatchedMethodOnExternalType(method.getName(),
                     method.getParameterTypes(), model.getType().getName(), target.getName()));
         }
-    }
-
-    private String stripPrefix(Method method, int size) {
-        String name = method.getName().substring(size);
-        name = name.substring(0, 1).toLowerCase() + name.substring(1);
-
-        return name;
     }
 }

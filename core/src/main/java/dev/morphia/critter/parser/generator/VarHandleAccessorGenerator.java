@@ -9,11 +9,10 @@ import java.lang.invoke.MethodType;
 import java.lang.invoke.VarHandle;
 import java.lang.reflect.Method;
 
-import dev.morphia.critter.Critter;
 import dev.morphia.critter.CritterClassLoader;
-import dev.morphia.critter.parser.ExtensionFunctions;
 import dev.morphia.critter.parser.FieldInfo;
 import dev.morphia.critter.parser.MethodInfo;
+import dev.morphia.mapping.conventions.DiscoveryRules;
 
 import io.smallrye.classfile.ClassFile;
 import io.smallrye.classfile.ClassSignature;
@@ -56,7 +55,7 @@ public class VarHandleAccessorGenerator extends BaseGenerator {
         this.getterName = null;
         this.setterName = null;
         this.setterMethod = null;
-        generatedType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
+        generatedType = "%s.%sAccessor".formatted(baseName, DiscoveryRules.titleCase(propertyName));
     }
 
     /**
@@ -68,15 +67,15 @@ public class VarHandleAccessorGenerator extends BaseGenerator {
      */
     public VarHandleAccessorGenerator(Class<?> entity, CritterClassLoader critterClassLoader, MethodInfo method) {
         super(entity, critterClassLoader);
-        this.propertyName = ExtensionFunctions.getterToPropertyName(method, entity);
+        this.propertyName = DiscoveryRules.propertyName(method.name());
         String returnDesc = java.lang.constant.MethodTypeDesc.ofDescriptor(method.desc()).returnType().descriptorString();
         this.propertyType = typeClassName(ClassDesc.ofDescriptor(returnDesc));
         this.isFieldBased = false;
         this.isFinalField = false;
         this.getterName = method.name();
-        this.setterName = "set%s".formatted(Critter.titleCase(propertyName));
+        this.setterName = "set%s".formatted(DiscoveryRules.titleCase(propertyName));
         this.setterMethod = findSetterMethod(entity, this.setterName, propertyClassDesc());
-        generatedType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
+        generatedType = "%s.%sAccessor".formatted(baseName, DiscoveryRules.titleCase(propertyName));
     }
 
     /**

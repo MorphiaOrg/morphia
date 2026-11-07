@@ -6,9 +6,9 @@ import java.lang.constant.MethodTypeDesc;
 import java.lang.reflect.Method;
 
 import dev.morphia.critter.Critter;
-import dev.morphia.critter.parser.ExtensionFunctions;
 import dev.morphia.critter.parser.FieldInfo;
 import dev.morphia.critter.parser.MethodInfo;
+import dev.morphia.mapping.conventions.DiscoveryRules;
 
 import io.smallrye.classfile.ClassFile;
 import io.smallrye.classfile.ClassSignature;
@@ -57,24 +57,26 @@ public class NestmateAccessorGenerator {
         this.fieldOrGetterName = field.name();
         this.setterName = null;
         this.setterMethod = null;
-        this.registryKey = "%s.%sAccessor".formatted(Critter.critterPackage(entity), Critter.titleCase(propertyName));
-        this.bytecodeName = entityPackagePrefix(declaringClass) + declaringClass.getSimpleName() + "$$" + Critter.titleCase(propertyName)
+        this.registryKey = "%s.%sAccessor".formatted(Critter.critterPackage(entity), DiscoveryRules.titleCase(propertyName));
+        this.bytecodeName = entityPackagePrefix(declaringClass) + declaringClass.getSimpleName() + "$$"
+                + DiscoveryRules.titleCase(propertyName)
                 + "Accessor";
     }
 
     public NestmateAccessorGenerator(Class<?> entity, MethodInfo method) {
         this.entity = entity;
         this.declaringClass = entity;
-        this.propertyName = ExtensionFunctions.getterToPropertyName(method, entity);
+        this.propertyName = DiscoveryRules.propertyName(method.name());
         String returnDesc = MethodTypeDesc.ofDescriptor(method.desc()).returnType().descriptorString();
         this.propertyType = typeClassName(ClassDesc.ofDescriptor(returnDesc));
         this.isFieldBased = false;
         this.isFinalField = false;
         this.fieldOrGetterName = method.name();
-        this.setterName = "set%s".formatted(Critter.titleCase(propertyName));
+        this.setterName = "set%s".formatted(DiscoveryRules.titleCase(propertyName));
         this.setterMethod = findSetterMethod(entity, this.setterName, propertyClassDesc());
-        this.registryKey = "%s.%sAccessor".formatted(Critter.critterPackage(entity), Critter.titleCase(propertyName));
-        this.bytecodeName = entityPackagePrefix(entity) + entity.getSimpleName() + "$$" + Critter.titleCase(propertyName) + "Accessor";
+        this.registryKey = "%s.%sAccessor".formatted(Critter.critterPackage(entity), DiscoveryRules.titleCase(propertyName));
+        this.bytecodeName = entityPackagePrefix(entity) + entity.getSimpleName() + "$$" + DiscoveryRules.titleCase(propertyName)
+                + "Accessor";
     }
 
     private static Class<?> findDeclaringClassInHierarchy(Class<?> entity, String fieldName) {

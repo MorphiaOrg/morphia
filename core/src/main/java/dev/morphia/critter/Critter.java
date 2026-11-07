@@ -3,24 +3,13 @@ package dev.morphia.critter;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
 import dev.morphia.annotations.Entity;
-import dev.morphia.annotations.Property;
-import dev.morphia.annotations.Transient;
 
 /**
  * Core utility class for Critter code generation, providing shared constants and helper methods.
  */
 public class Critter {
-    /** Annotation descriptors that mark a field or method as a mapped property. */
-    public static final List<String> propertyAnnotations = new ArrayList<>(
-            List.of("L" + Property.class.getName().replace('.', '/') + ";"));
-    /** Annotation descriptors that mark a field or method as transient (not persisted). */
-    public static final List<String> transientAnnotations = new ArrayList<>(
-            List.of("L" + Transient.class.getName().replace('.', '/') + ";"));
-
     /**
      * Returns the package name used for generated Critter classes for the given entity.
      */
@@ -32,24 +21,6 @@ public class Critter {
                 ? entity.getName()
                 : entity.getName().substring(pkg.length() + 1);
         return "%s.__morphia.%s".formatted(pkg, relativeName.replace('$', '_').toLowerCase());
-    }
-
-    /**
-     * Converts a string to title case by capitalizing the first character.
-     */
-    public static String titleCase(String s) {
-        if (s == null || s.isEmpty())
-            return s;
-        return "%c%s".formatted(Character.toUpperCase(s.charAt(0)), s.substring(1));
-    }
-
-    /**
-     * Converts a string to identifier (camel) case by lower-casing the first character.
-     */
-    public static String identifierCase(String s) {
-        if (s == null || s.isEmpty())
-            return s;
-        return "%c%s".formatted(Character.toLowerCase(s.charAt(0)), s.substring(1));
     }
 
     /**

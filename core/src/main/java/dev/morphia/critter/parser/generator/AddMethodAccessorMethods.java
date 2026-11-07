@@ -5,9 +5,8 @@ import java.lang.constant.ConstantDescs;
 import java.lang.constant.MethodTypeDesc;
 import java.util.List;
 
-import dev.morphia.critter.Critter;
-import dev.morphia.critter.parser.ExtensionFunctions;
 import dev.morphia.critter.parser.MethodInfo;
+import dev.morphia.mapping.conventions.DiscoveryRules;
 
 import io.smallrye.classfile.ClassFile;
 import io.smallrye.classfile.ClassModel;
@@ -44,19 +43,19 @@ public class AddMethodAccessorMethods extends AccessorMethods {
                                 || m.methodName().stringValue().startsWith("__write")))
                 .andThen(ClassTransform.endHandler(classBuilder -> {
                     for (MethodInfo method : methods) {
-                        String propertyName = ExtensionFunctions.getterToPropertyName(method, entity);
+                        String propertyName = DiscoveryRules.propertyName(method.name());
                         MethodTypeDesc methodMtd = MethodTypeDesc.ofDescriptor(method.desc());
                         ClassDesc returnDesc = methodMtd.returnType();
                         TypeKind returnKind = TypeKind.fromDescriptor(returnDesc.descriptorString());
                         String getterName = method.name();
-                        String setterName = "set%s".formatted(Critter.titleCase(propertyName));
+                        String setterName = "set%s".formatted(DiscoveryRules.titleCase(propertyName));
 
                         boolean hasSetter = findSetterMethod(entity, setterName, methodMtd.returnType()) != null;
 
                         // __readXxx(): returns Object for reference types (keeps non-public types
                         // out of the accessor's constant pool; concrete type widens inside entity)
                         boolean isPrimitive = returnKind != TypeKind.REFERENCE;
-                        String readerName = "__read%s".formatted(Critter.titleCase(propertyName));
+                        String readerName = "__read%s".formatted(DiscoveryRules.titleCase(propertyName));
                         MethodTypeDesc readerMtd = MethodTypeDesc.of(isPrimitive ? returnDesc : ConstantDescs.CD_Object);
                         classBuilder.withMethodBody(readerName, readerMtd,
                                 ClassFile.ACC_PUBLIC | ClassFile.ACC_SYNTHETIC,
@@ -67,7 +66,7 @@ public class AddMethodAccessorMethods extends AccessorMethods {
                                 });
 
                         // __writeXxx(Object): void for reference types (cast inside entity where concrete type is accessible)
-                        String writerName = "__write%s".formatted(Critter.titleCase(propertyName));
+                        String writerName = "__write%s".formatted(DiscoveryRules.titleCase(propertyName));
                         MethodTypeDesc writerMtd = MethodTypeDesc.of(ClassDesc.ofDescriptor("V"),
                                 isPrimitive ? returnDesc : ConstantDescs.CD_Object);
                         if (hasSetter) {

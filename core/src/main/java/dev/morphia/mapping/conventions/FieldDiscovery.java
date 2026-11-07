@@ -10,13 +10,7 @@ import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.ExternalEntity;
-import dev.morphia.annotations.Id;
-import dev.morphia.annotations.Property;
-import dev.morphia.annotations.Reference;
-import dev.morphia.annotations.Transient;
-import dev.morphia.annotations.Version;
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.ArrayFieldAccessor;
@@ -30,7 +24,7 @@ import dev.morphia.sofia.Sofia;
 
 import org.bson.codecs.pojo.PropertyAccessor;
 
-import static java.lang.reflect.Modifier.isStatic;
+import static java.util.Arrays.stream;
 
 @MorphiaInternal
 public class FieldDiscovery implements MorphiaConvention {
@@ -44,7 +38,7 @@ public class FieldDiscovery implements MorphiaConvention {
 
             for (Class<?> type : list) {
                 for (Field field : type.getDeclaredFields()) {
-                    if (!isStatic(field.getModifiers()) && !isTransient(field)) {
+                    if (!isIgnored(field)) {
                         TypeData<?> typeData = model.getTypeData(field.getGenericType());
                         ExternalEntity externalEntity = type.getAnnotation(ExternalEntity.class);
                         Class<?> target = externalEntity != null ? externalEntity.target() : null;
@@ -63,10 +57,10 @@ public class FieldDiscovery implements MorphiaConvention {
         }
     }
 
-    static boolean isTransient(Field field) {
-        return field.getDeclaredAnnotation(Transient.class) != null
-                || field.getDeclaredAnnotation(java.beans.Transient.class) != null
-                || Modifier.isTransient(field.getModifiers());
+    private static boolean isIgnored(Field field) {
+        return DiscoveryRules.isIgnoredField(field.getModifiers(), stream(field.getDeclaredAnnotations())
+                .map(a -> a.annotationType().getName())
+                .toList());
     }
 
     @MorphiaInternal
@@ -83,25 +77,7 @@ public class FieldDiscovery implements MorphiaConvention {
      */
     @MorphiaInternal
     static String discoverMappedName(Mapper mapper, PropertyModel model, String name) {
-        MorphiaConfig config = mapper.getConfig();
-        Property property = model.getAnnotation(Property.class);
-        Reference reference = model.getAnnotation(Reference.class);
-        Version version = model.getAnnotation(Version.class);
-
-        String mappedName;
-
-        if (model.hasAnnotation(Id.class)) {
-            mappedName = "_id";
-        } else if (property != null && !property.value().equals(Mapper.IGNORED_FIELDNAME)) {
-            mappedName = property.value();
-        } else if (reference != null && !reference.value().equals(Mapper.IGNORED_FIELDNAME)) {
-            mappedName = reference.value();
-        } else if (version != null && !version.value().equals(Mapper.IGNORED_FIELDNAME)) {
-            mappedName = version.value();
-        } else {
-            mappedName = config.propertyNaming().apply(name);
-        }
-        return mappedName;
+        return DiscoveryRules.mappedName(mapper.getConfig(), model::getAnnotation, name);
     }
 
     @NonNull
