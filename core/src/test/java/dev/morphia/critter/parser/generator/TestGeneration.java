@@ -40,6 +40,7 @@ import dev.morphia.critter.sources.ShadowingExample;
 import dev.morphia.critter.sources.ShapeExample;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
+import dev.morphia.mapping.codec.FieldAccessor;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
@@ -240,7 +241,7 @@ public class TestGeneration {
     @Test
     public void testGeneratorLibrarySuperclassFields(@TempDir Path dir) throws Exception {
         // The superclasses live in a different classpath location than the entities, like a library would, so they
-        // can't be rewritten: an accessible field is woven into the entity, an unreachable one skips AOT.
+        // can't be rewritten: an accessible field is woven into the entity, an unreachable one gets a reflective accessor.
         Path library = dir.resolve("library");
         Path app = dir.resolve("app");
         compile(library, Map.of(
@@ -274,11 +275,14 @@ public class TestGeneration {
             Object child = classLoader.loadClass("app.SharedChild").getConstructor().newInstance();
             assertRoundTrip(model, child, "shared", "a value");
 
+            // only the unreachable field falls back to reflection: the entity still gets a build-time model
             for (String name : List.of("app.PrivateChild", "app.PackageChild")) {
-                Class<?> type = loader.loadClass(name);
-                var e = Assertions.assertThrows(UnsupportedOperationException.class,
-                        () -> generator.generate(type, classLoader, false));
-                Assertions.assertTrue(e.getMessage().contains("inaccessible inherited field 'hidden'"), e.getMessage());
+                EntityModelGenerator generated = generator.generate(loader.loadClass(name), classLoader, false);
+                EntityModel unreachable = (EntityModel) classLoader.loadClass(generated.getGeneratedType())
+                        .getConstructor(Mapper.class).newInstance(defaultMapper());
+                Assertions.assertInstanceOf(FieldAccessor.class, unreachable.getProperty("hidden").getAccessor());
+                Assertions.assertFalse(unreachable.getProperty("id").getAccessor() instanceof FieldAccessor);
+                assertRoundTrip(unreachable, classLoader.loadClass(name).getConstructor().newInstance(), "hidden", "a value");
             }
         }
     }

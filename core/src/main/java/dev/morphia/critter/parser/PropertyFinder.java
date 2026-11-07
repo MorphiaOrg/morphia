@@ -6,6 +6,7 @@ import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -27,6 +28,9 @@ import dev.morphia.mapping.codec.pojo.ClassHierarchy;
 import dev.morphia.mapping.conventions.DiscoveryRules;
 import dev.morphia.mapping.conventions.DiscoveryRules.AccessorPair;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.smallrye.classfile.Annotation;
 import io.smallrye.classfile.AttributedElement;
 import io.smallrye.classfile.ClassFile;
@@ -43,6 +47,8 @@ import static io.smallrye.classfile.Attributes.signature;
  * and produces the corresponding {@link PropertyModelGenerator} instances.
  */
 public class PropertyFinder {
+    private static final Logger LOG = LoggerFactory.getLogger(PropertyFinder.class);
+
     private final CritterClassLoader classLoader;
     private final boolean runtimeMode;
     private final CritterGenerator critterGenerator;
@@ -50,6 +56,8 @@ public class PropertyFinder {
     private final MorphiaConfig config;
     // each class's parsed classfile, read once however many times one generation pass walks the hierarchy
     private final Map<Class<?>, ClassModel> classModels = new HashMap<>();
+    // the properties whose getter and setter the generated accessors can't call
+    private final Set<String> uncallable = new HashSet<>();
 
     /**
      * @param critterGenerator the generator emitting the accessors
@@ -95,16 +103,24 @@ public class PropertyFinder {
             if (!runtimeMode) {
                 checkAotCompatibility(fields, standinType, targetType);
             }
+            List<FieldInfo> generated = new ArrayList<>();
             for (FieldInfo field : fields) {
-                models.add(new PropertyModelGenerator(config, targetType, standinType, classLoader, field, runtimeMode));
+                PropertyModelGenerator model = new PropertyModelGenerator(config, targetType, standinType, classLoader, field,
+                        runtimeMode);
+                if (runtimeMode || isReachable(field, standinType, targetType)) {
+                    generated.add(field);
+                } else {
+                    reflective(model, field.name(), targetType, standinType != targetType ? targetType : field.declaringClass());
+                }
+                models.add(model);
             }
             if (runtimeMode) {
-                accessors = critterGenerator.nestmateAccessors(classLoader, fields.stream()
+                accessors = critterGenerator.nestmateAccessors(classLoader, generated.stream()
                         .map(field -> new NestmateAccessorGenerator(targetType, field))
                         .toList());
             } else {
-                Map<String, byte[]> classes = weaveFieldAccessors(standinType, targetType, fields);
-                for (FieldInfo field : fields) {
+                Map<String, byte[]> classes = weaveFieldAccessors(standinType, targetType, generated);
+                for (FieldInfo field : generated) {
                     add(classes, new PropertyAccessorGenerator(targetType, classLoader, field));
                 }
                 accessors = () -> classes.forEach(classLoader::register);
@@ -116,17 +132,26 @@ public class PropertyFinder {
             if (!runtimeMode) {
                 checkAotMethodCompatibility(methods, standinType, targetType);
             }
+            List<MethodInfo> generated = new ArrayList<>();
             for (MethodInfo method : methods) {
-                models.add(new PropertyModelGenerator(config, targetType, standinType, classLoader, method, runtimeMode));
+                PropertyModelGenerator model = new PropertyModelGenerator(config, targetType, standinType, classLoader, method,
+                        runtimeMode);
+                String property = DiscoveryRules.propertyName(method.name());
+                if (!uncallable.contains(property) && hasCallableSetter(targetType, method, property)) {
+                    generated.add(method);
+                } else {
+                    reflective(model, property, targetType, standinType != targetType ? targetType : method.declaringClass());
+                }
+                models.add(model);
             }
             if (runtimeMode) {
-                accessors = critterGenerator.nestmateAccessors(classLoader, methods.stream()
+                accessors = critterGenerator.nestmateAccessors(classLoader, generated.stream()
                         .map(method -> new NestmateAccessorGenerator(targetType, method))
                         .toList());
             } else {
                 Map<String, byte[]> classes = new LinkedHashMap<>();
-                classes.put(targetType.getName(), critterGenerator.methodAccessors(targetType, classModel(targetType), methods));
-                for (MethodInfo method : methods) {
+                classes.put(targetType.getName(), critterGenerator.methodAccessors(targetType, classModel(targetType), generated));
+                for (MethodInfo method : generated) {
                     add(classes, new PropertyAccessorGenerator(targetType, classLoader, method));
                 }
                 accessors = () -> classes.forEach(classLoader::register);
@@ -138,6 +163,41 @@ public class PropertyFinder {
             models.forEach(PropertyModelGenerator::ignoreIdField);
         }
         return new Properties(models, accessors);
+    }
+
+    /**
+     * Gives a property whose field or methods the generated accessors can't reach a reflective accessor, so that only that
+     * property is mapped by reflection rather than the whole entity.
+     */
+    private static void reflective(PropertyModelGenerator model, String property, Class<?> targetType, Class<?> owner) {
+        LOG.debug("Critter can't generate an accessor for {}.{}; it uses a reflective one", targetType.getName(), property);
+        model.reflectiveAccessor(owner);
+    }
+
+    /**
+     * @return whether the accessor methods woven into a build-time model can reach {@code field}. One woven into the class
+     *         declaring the field can. One woven into the entity can reach a field accessible from it, and, for an
+     *         {@code @ExternalEntity} stand-in, a field that isn't private or that the target declares.
+     */
+    private static boolean isReachable(FieldInfo field, Class<?> standinType, Class<?> targetType) {
+        if (standinType != targetType) {
+            return (field.access() & ClassFile.ACC_PRIVATE) == 0 || field.declaringClass() == targetType;
+        }
+        return accessorOwner(field, standinType, targetType) == field.declaringClass() || isAccessibleFrom(field, targetType);
+    }
+
+    /**
+     * @return whether the generated accessors can call the setter {@code getter} was paired with: an
+     *         {@code @ExternalEntity} stand-in's accessors call the target's setter of that name, which may be private
+     */
+    private static boolean hasCallableSetter(Class<?> targetType, MethodInfo getter, String property) {
+        try {
+            GenerationUtils.setterType(targetType, getter, "set" + DiscoveryRules.titleCase(property),
+                    MethodTypeDesc.ofDescriptor(getter.desc()).returnType());
+            return true;
+        } catch (UnsupportedOperationException e) {
+            return false;
+        }
     }
 
     private static void add(Map<String, byte[]> classes, PropertyAccessorGenerator generator) {
@@ -166,26 +226,7 @@ public class PropertyFinder {
     private void checkAotCompatibility(List<FieldInfo> fields, Class<?> standinType, Class<?> targetType) {
         // the accessors are woven into the target's classfile
         classModel(targetType);
-        boolean hasIdOnField = false;
-        for (FieldInfo field : fields) {
-            int flags = field.access();
-            if (standinType != targetType) {
-                // Stand-ins keep the original rule: every accessor is woven into the target.
-                if ((flags & ClassFile.ACC_PRIVATE) != 0 && field.declaringClass() != targetType) {
-                    throw new UnsupportedOperationException(
-                            "AOT skip: private inherited field '" + field.name() + "' from "
-                                    + field.declaringClass().getName() + " in " + targetType.getName());
-                }
-            } else if (accessorOwner(field, standinType, targetType) != field.declaringClass()
-                    && !isAccessibleFrom(field, targetType)) {
-                throw new UnsupportedOperationException(
-                        "AOT skip: inaccessible inherited field '" + field.name() + "' from "
-                                + field.declaringClass().getName() + " in " + targetType.getName());
-            }
-            if (isAnnotatedId(field.visibleAnnotations())) {
-                hasIdOnField = true;
-            }
-        }
+        boolean hasIdOnField = fields.stream().anyMatch(field -> isAnnotatedId(field.visibleAnnotations()));
         // An entity without an @Id (e.g., an embedded type) is fine to generate from its fields. Only an @Id on a
         // getter needs the runtime, which can pick the discovery mode that finds it.
         if (!hasIdOnField) {
@@ -219,6 +260,7 @@ public class PropertyFinder {
             List<FieldInfo> ownerFields = owner == targetType ? fields : discoverAllFields(owner);
             List<FieldInfo> woven = ownerFields.stream()
                     .filter(field -> accessorOwner(field, owner, owner) == owner)
+                    .filter(field -> field.declaringClass() == owner || isAccessibleFrom(field, owner))
                     .toList();
             classes.put(owner.getName(), critterGenerator.fieldAccessors(owner, classModel(owner), woven));
         }
@@ -365,13 +407,11 @@ public class PropertyFinder {
     }
 
     /**
-     * @return the getter, paired with its setter and carrying the setter's annotations too
-     * @throws UnsupportedOperationException if the generated accessors can't call the pair: they take the getter to be a
-     *                                       {@code get}/{@code is} method with no parameters and the setter to be named for
-     *                                       the property and take the getter's type, returning anything. Build-time accessors
-     *                                       are woven into the entity, so they also can't call a superclass's private
-     *                                       methods or those hidden from the entity's package: see
-     *                                       {@link #isCallable}
+     * @return the getter, paired with its setter and carrying the setter's annotations too. The property is recorded as
+     *         {@link #uncallable} if the generated accessors can't call the pair: they take the getter to be a
+     *         {@code get}/{@code is} method with no parameters and the setter to be named for the property and take the
+     *         getter's type, returning anything. Build-time accessors are woven into the entity, so they also can't call a
+     *         superclass's private methods or those hidden from the entity's package: see {@link #isCallable}
      */
     private MethodInfo toMethodInfo(AccessorPair<MethodModel> pair, Class<?> declaringClass, Class<?> entityType,
             boolean standin) {
@@ -387,8 +427,7 @@ public class PropertyFinder {
                 && isCallable(pair.getter().flags().flagsMask(), declaringClass, entityType, standin)
                 && isCallable(pair.setter().flags().flagsMask(), declaringClass, entityType, standin);
         if (!supported) {
-            throw new UnsupportedOperationException("Critter can't generate accessors for %s's %s() and %s()".formatted(
-                    declaringClass.getName(), getterName, pair.setter().methodName().stringValue()));
+            uncallable.add(pair.property());
         }
         return toMethodInfo(pair.getter(), declaringClass).withSetter(toMethodInfo(pair.setter(), declaringClass));
     }

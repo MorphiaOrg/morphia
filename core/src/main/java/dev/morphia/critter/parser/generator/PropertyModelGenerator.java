@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.mongodb.lang.Nullable;
 
@@ -54,6 +55,12 @@ public class PropertyModelGenerator extends BaseGenerator {
     // the component type of an array property whose values need converting, as for ArrayAccessor
     @Nullable
     private final Class<?> arrayComponent;
+    // the getter, paired with its setter, of a method-based property
+    @Nullable
+    private final MethodInfo method;
+    // the class a reflective accessor looks the property's field or methods up in, if the generated ones can't reach them
+    @Nullable
+    private Class<?> reflectiveOwner;
     @Nullable
     private String idFieldName;
 
@@ -78,6 +85,7 @@ public class PropertyModelGenerator extends BaseGenerator {
         this.annotationMap = buildAnnotationMap(reflectedField != null ? reflectedField.getAnnotations() : new Annotation[0]);
         this.typeData = typeData(annotationSource, genericType, annotationMap);
         this.arrayComponent = arrayComponent(reflectedField != null ? reflectedField.getType() : null);
+        this.method = null;
         this.idFieldName = idFieldName(annotationSource);
     }
 
@@ -138,6 +146,7 @@ public class PropertyModelGenerator extends BaseGenerator {
         }
         this.typeData = typeData(annotationSource, genericType, annotationMap);
         this.arrayComponent = arrayComponent(reflectedMethod != null ? reflectedMethod.getReturnType() : null);
+        this.method = method;
         this.idFieldName = idFieldName(annotationSource);
     }
 
@@ -331,6 +340,67 @@ public class PropertyModelGenerator extends BaseGenerator {
     }
 
     /**
+     * Gives the property a reflective accessor, as the reflective mapper would, because the generated accessors can't
+     * reach its field or call its getter and setter. Call before the entity model is emitted.
+     *
+     * @param owner the class declaring the field or methods, or, for an {@code @ExternalEntity} stand-in, the target
+     *              whose hierarchy declares them
+     */
+    public void reflectiveAccessor(Class<?> owner) {
+        this.reflectiveOwner = owner;
+    }
+
+    /**
+     * Emits code setting the property's accessor to its generated one: for runtime models, the pre-instantiated nestmate
+     * accessor registered for the generated model's loader.
+     */
+    private void emitGeneratedAccessor(CodeBuilder cod, ClassDesc modelDesc, int slot) {
+        ClassDesc propertyModelDesc = ClassDesc.of(PropertyModel.class.getName());
+        ClassDesc accessorDesc = ClassDesc.of(PropertyAccessor.class.getName());
+        cod.aload(slot);
+        if (runtimeMode) {
+            ClassDesc registryDesc = ClassDesc.of(NestmateAccessorRegistry.class.getName());
+            ClassDesc classLoaderDesc = ClassDesc.of(ClassLoader.class.getName());
+            cod.ldc(modelDesc);
+            cod.invokevirtual(ConstantDescs.CD_Class, "getClassLoader", MethodTypeDesc.of(classLoaderDesc));
+            cod.ldc(accessorType);
+            cod.invokestatic(registryDesc, "get", MethodTypeDesc.of(accessorDesc, classLoaderDesc, ConstantDescs.CD_String));
+        } else {
+            ClassDesc accessorImplDesc = ClassDesc.of(accessorType);
+            cod.new_(accessorImplDesc);
+            cod.dup();
+            cod.invokespecial(accessorImplDesc, "<init>", MethodTypeDesc.of(ConstantDescs.CD_void));
+        }
+        cod.invokevirtual(propertyModelDesc, "accessor", MethodTypeDesc.of(propertyModelDesc, accessorDesc));
+        cod.pop();
+    }
+
+    /**
+     * Emits code setting the property's accessor to a reflective one through {@link CritterEntityModel}.
+     */
+    private void emitReflectiveAccessor(CodeBuilder cod, ClassDesc modelDesc, int slot, Class<?> owner) {
+        ClassDesc propertyModelDesc = ClassDesc.of(PropertyModel.class.getName());
+        ClassDesc critterModelDesc = ClassDesc.of(CritterEntityModel.class.getName());
+        cod.aload(0);
+        cod.aload(slot);
+        GenerationUtils.emitClassRef(cod, owner, modelDesc);
+        if (method == null) {
+            cod.ldc(propertyName);
+            cod.invokevirtual(critterModelDesc, "fieldAccessor", MethodTypeDesc.of(ConstantDescs.CD_void, propertyModelDesc,
+                    ConstantDescs.CD_Class, ConstantDescs.CD_String));
+        } else {
+            MethodInfo setter = Objects.requireNonNull(method.setter(), "a reflective accessor needs the getter's setter");
+            cod.ldc(method.name());
+            cod.ldc(method.desc());
+            cod.ldc(setter.name());
+            cod.ldc(setter.desc());
+            cod.invokevirtual(critterModelDesc, "methodAccessor", MethodTypeDesc.of(ConstantDescs.CD_void, propertyModelDesc,
+                    ConstantDescs.CD_Class, ConstantDescs.CD_String, ConstantDescs.CD_String, ConstantDescs.CD_String,
+                    ConstantDescs.CD_String));
+        }
+    }
+
+    /**
      * Emits, into a method of the generated entity model that its constructor calls, code that builds this property's
      * model as a plain {@link PropertyModel} and adds it to the entity model in local 0. Every value is a constant or is resolved here,
      * once, so the model's getters are the base class's.
@@ -343,8 +413,6 @@ public class PropertyModelGenerator extends BaseGenerator {
         ClassDesc propertyModelDesc = ClassDesc.of(PropertyModel.class.getName());
         ClassDesc entityModelDesc = ClassDesc.of(EntityModel.class.getName());
         ClassDesc critterModelDesc = ClassDesc.of(CritterEntityModel.class.getName());
-        ClassDesc accessorDesc = ClassDesc.of(PropertyAccessor.class.getName());
-        ClassDesc accessorImplDesc = ClassDesc.of(accessorType);
         ClassDesc typeDataDesc = ClassDesc.of(TypeData.class.getName());
         ClassDesc annotationDesc = ClassDesc.of(Annotation.class.getName());
 
@@ -374,22 +442,11 @@ public class PropertyModelGenerator extends BaseGenerator {
         cod.invokevirtual(propertyModelDesc, "isFinal", MethodTypeDesc.of(propertyModelDesc, ConstantDescs.CD_boolean));
         cod.pop();
 
-        cod.aload(slot);
-        if (runtimeMode) {
-            // the pre-instantiated nestmate accessor registered for the generated model's loader
-            ClassDesc registryDesc = ClassDesc.of(NestmateAccessorRegistry.class.getName());
-            ClassDesc classLoaderDesc = ClassDesc.of(ClassLoader.class.getName());
-            cod.ldc(modelDesc);
-            cod.invokevirtual(ConstantDescs.CD_Class, "getClassLoader", MethodTypeDesc.of(classLoaderDesc));
-            cod.ldc(accessorType);
-            cod.invokestatic(registryDesc, "get", MethodTypeDesc.of(accessorDesc, classLoaderDesc, ConstantDescs.CD_String));
+        if (reflectiveOwner != null) {
+            emitReflectiveAccessor(cod, modelDesc, slot, reflectiveOwner);
         } else {
-            cod.new_(accessorImplDesc);
-            cod.dup();
-            cod.invokespecial(accessorImplDesc, "<init>", MethodTypeDesc.of(ConstantDescs.CD_void));
+            emitGeneratedAccessor(cod, modelDesc, slot);
         }
-        cod.invokevirtual(propertyModelDesc, "accessor", MethodTypeDesc.of(propertyModelDesc, accessorDesc));
-        cod.pop();
         if (arrayComponent != null) {
             cod.aload(0);
             cod.aload(slot);

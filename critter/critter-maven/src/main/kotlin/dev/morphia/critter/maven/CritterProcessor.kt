@@ -25,6 +25,9 @@ class CritterProcessor(
     private val critterClassLoader = CritterClassLoader()
     private val generator = CritterGenerator(ReflectiveMapper(config, critterClassLoader))
 
+    /** The entities no model was generated for, by class name, with the reason. */
+    internal val skipped: MutableMap<String, String> = sortedMapOf()
+
     fun process() {
         val entityClasses = findEntityClasses()
 
@@ -42,6 +45,25 @@ class CritterProcessor(
         }
 
         writeGeneratedClasses()
+        reportSkipped(entityClasses.size)
+    }
+
+    /**
+     * Lists the entities without a generated model. The critter mapper generates their models at
+     * runtime instead, or maps them by reflection.
+     */
+    private fun reportSkipped(entities: Int) {
+        if (skipped.isEmpty()) {
+            logger.info("Generated models for all $entities entities")
+            return
+        }
+        val report = StringBuilder()
+        report.append("Generated models for ${entities - skipped.size} of $entities entities. ")
+        report.append(
+            "Skipped ${skipped.size}, which the critter mapper generates at runtime or maps by reflection:"
+        )
+        skipped.forEach { (type, reason) -> report.append("\n  - $type: $reason") }
+        logger.warn(report.toString())
     }
 
     internal fun findEntityClasses(): List<Class<*>> {
@@ -95,7 +117,8 @@ class CritterProcessor(
         try {
             generator.generate(entityClass, critterClassLoader, false)
         } catch (e: Exception) {
-            logger.warn("Skipping ${entityClass.name}: ${e.message}", e)
+            skipped[entityClass.name] = e.message ?: e.javaClass.name
+            logger.debug("Skipping ${entityClass.name}", e)
         }
     }
 

@@ -5,12 +5,13 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.WeakHashMap;
-import java.util.concurrent.ConcurrentHashMap;
 
 import com.mongodb.lang.Nullable;
 
@@ -64,9 +65,27 @@ public class CritterMapper extends AbstractMapper {
             DiscriminatorFunction.simpleName().getClass(),
             MorphiaPropertyAnnotationProvider.class);
 
+    /**
+     * Each entity's pre-generated model constructor, or empty if critter-maven didn't generate a model for it. Whether a
+     * model exists doesn't depend on a mapper's configuration, so the lookup is made once per class.
+     */
+    private static final ClassValue<Optional<Constructor<?>>> PREGENERATED = new ClassValue<>() {
+        @Override
+        protected Optional<Constructor<?>> computeValue(Class<?> type) {
+            String modelClassName = critterPackage(type) + "." + type.getSimpleName() + "EntityModel";
+            try {
+                return Optional.of(Class.forName(modelClassName, true, type.getClassLoader()).getConstructor(Mapper.class));
+            } catch (ClassNotFoundException e) {
+                return Optional.empty();
+            } catch (ReflectiveOperationException | LinkageError e) {
+                LOG.warn("Failed to load pre-generated model for {}: {}", type.getName(), e.getMessage());
+                return Optional.empty();
+            }
+        }
+    };
+
     private final RuntimeModels runtimeModels;
     private final CritterGenerator generator;
-    private final Set<String> fallbackTypes;
 
     /**
      * Creates a CritterMapper with the given config.
@@ -93,8 +112,6 @@ public class CritterMapper extends AbstractMapper {
         super(config, classLoader);
         this.runtimeModels = RuntimeModels.forConfig(config, classLoader);
         this.generator = new CritterGenerator(this);
-        this.fallbackTypes = ConcurrentHashMap.newKeySet();
-
     }
 
     /**
@@ -141,7 +158,6 @@ public class CritterMapper extends AbstractMapper {
         super(config, other.classLoader);
         this.runtimeModels = RuntimeModels.forCopy(other.runtimeModels, other.config, config, other.classLoader);
         this.generator = new CritterGenerator(this);
-        this.fallbackTypes = other.fallbackTypes;
         // Create independent copies of all entity models so that each mapper instance
         // maintains its own model state (e.g. listeners, version tracking).
         other.mappedEntities.values().forEach(model -> {
@@ -181,13 +197,12 @@ public class CritterMapper extends AbstractMapper {
      */
     @Nullable
     private EntityModel tryLoadPregenerated(Class<?> type) {
-        String modelClassName = critterPackage(type) + "." + type.getSimpleName() + "EntityModel";
-        try {
-            Class<?> modelClass = Class.forName(modelClassName, true, type.getClassLoader());
-            Constructor<?> ctor = modelClass.getConstructor(Mapper.class);
-            return (EntityModel) ctor.newInstance(this);
-        } catch (ClassNotFoundException e) {
+        Constructor<?> ctor = PREGENERATED.get(type).orElse(null);
+        if (ctor == null) {
             return null;
+        }
+        try {
+            return (EntityModel) ctor.newInstance(this);
         } catch (Throwable e) {
             LOG.warn("Failed to load pre-generated model for {}: {}", type.getName(), e.getMessage());
             return null;
@@ -196,27 +211,35 @@ public class CritterMapper extends AbstractMapper {
 
     /**
      * Tier 2: Generate an entity model at runtime, using hidden nestmate accessor classes for property access.
-     * On failure, logs once per type and returns null so the caller falls through to reflection.
+     * Returns null so the caller falls through to reflection if generation fails. A failure is remembered, and logged
+     * once, for every mapper sharing the runtime models: they generate the same bytecode, so they would fail the same way.
      */
     @Nullable
     private EntityModel tryRuntimeGeneration(Class<?> type) {
+        Class<?> modelClass;
         try {
-            Class<?> modelClass = runtimeModels.modelClass(type, generator);
-            Constructor<?> ctor = modelClass.getConstructor(Mapper.class);
-            return (EntityModel) ctor.newInstance(this);
+            modelClass = runtimeModels.modelClass(type, generator);
         } catch (Exception e) {
-            if (fallbackTypes.add(type.getName())) {
-                NestmateAccessException accessFailure = accessFailure(e);
-                if (accessFailure != null) {
-                    LOG.warn("Runtime critter generation can't access {} because it isn't in Morphia's module (on the classpath: "
-                            + "it's loaded by a different class loader than Morphia); falling back to reflection. To use critter "
-                            + "models for it, pre-generate them at build time with the critter-maven plugin. Cause: {}",
-                            accessFailure.getType().getName(), accessFailure.getCause().getMessage());
-                } else {
-                    LOG.warn("Runtime bytecode generation failed for {}; falling back to reflection: {}",
-                            type.getName(), e.getMessage(), e);
-                }
+            NestmateAccessException accessFailure = accessFailure(e);
+            if (accessFailure != null) {
+                LOG.warn("Runtime critter generation can't access {} because it isn't in Morphia's module (on the classpath: "
+                        + "it's loaded by a different class loader than Morphia); falling back to reflection. To use critter "
+                        + "models for it, pre-generate them at build time with the critter-maven plugin. Cause: {}",
+                        accessFailure.getType().getName(), accessFailure.getCause().getMessage());
+            } else {
+                LOG.warn("Runtime bytecode generation failed for {}; falling back to reflection: {}",
+                        type.getName(), e.getMessage(), e);
             }
+            return null;
+        }
+        if (modelClass == null) {
+            return null;
+        }
+        try {
+            return (EntityModel) modelClass.getConstructor(Mapper.class).newInstance(this);
+        } catch (Exception e) {
+            LOG.warn("Failed to create the runtime-generated model for {}; falling back to reflection: {}",
+                    type.getName(), e.getMessage(), e);
             return null;
         }
     }
@@ -259,6 +282,8 @@ public class CritterMapper extends AbstractMapper {
 
         private final ClassLoader parent;
         private final Map<Class<?>, Class<?>> modelClasses = new HashMap<>();
+        // the types whose generation failed
+        private final Set<Class<?>> failures = new HashSet<>();
         @Nullable
         private CritterClassLoader loader;
 
@@ -319,13 +344,25 @@ public class CritterMapper extends AbstractMapper {
 
         /**
          * Returns the model class for {@code type}, generating it the first time any mapper sharing this instance asks.
+         *
+         * @return the model class, or null if generating it failed before
+         * @throws Exception if generating it fails now, which is remembered so it isn't tried again
          */
-        private synchronized Class<?> modelClass(Class<?> type, CritterGenerator generator) throws ClassNotFoundException {
+        @Nullable
+        private synchronized Class<?> modelClass(Class<?> type, CritterGenerator generator) throws Exception {
+            if (failures.contains(type)) {
+                return null;
+            }
             Class<?> modelClass = modelClasses.get(type);
             if (modelClass == null) {
-                CritterClassLoader target = loaderFor(type);
-                EntityModelGenerator entityModel = generator.generate(type, target, true);
-                modelClass = target.loadClass(entityModel.getGeneratedType());
+                try {
+                    CritterClassLoader target = loaderFor(type);
+                    EntityModelGenerator entityModel = generator.generate(type, target, true);
+                    modelClass = target.loadClass(entityModel.getGeneratedType());
+                } catch (Exception e) {
+                    failures.add(type);
+                    throw e;
+                }
                 modelClasses.put(type, modelClass);
             }
             return modelClass;
