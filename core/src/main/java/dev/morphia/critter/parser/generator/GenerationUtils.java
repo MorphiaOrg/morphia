@@ -7,6 +7,7 @@ import java.lang.constant.ClassDesc;
 import java.lang.constant.ConstantDescs;
 import java.lang.constant.MethodTypeDesc;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -69,6 +70,32 @@ public class GenerationUtils {
             } catch (NoSuchMethodException ignored) {
             }
             current = current.getSuperclass();
+        }
+        return null;
+    }
+
+    /**
+     * @param type           the class whose hierarchy declares the field
+     * @param declaringClass the class declaring the field, if known
+     * @param name           the field's name
+     * @return the field {@code declaringClass} declares, or, if that's unknown, the first one named {@code name} in
+     *         {@code type}'s hierarchy; null if there's none
+     */
+    @Nullable
+    public static Field findField(Class<?> type, @Nullable Class<?> declaringClass, String name) {
+        if (declaringClass != null) {
+            try {
+                return declaringClass.getDeclaredField(name);
+            } catch (NoSuchFieldException ignored) {
+                // look through type's hierarchy
+            }
+        }
+        for (Class<?> current = type; current != null && current != Object.class; current = current.getSuperclass()) {
+            for (Field field : current.getDeclaredFields()) {
+                if (field.getName().equals(name)) {
+                    return field;
+                }
+            }
         }
         return null;
     }

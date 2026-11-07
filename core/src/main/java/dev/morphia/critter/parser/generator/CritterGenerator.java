@@ -2,13 +2,16 @@ package dev.morphia.critter.parser.generator;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.FieldInfo;
 import dev.morphia.critter.parser.MethodInfo;
 import dev.morphia.critter.parser.PropertyFinder;
+import dev.morphia.critter.parser.PropertyFinder.Properties;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.ClassHierarchy;
 
@@ -47,14 +50,12 @@ public class CritterGenerator {
         Class<?> standinType = type;
         Class<?> targetType = ext != null ? ext.target() : type;
 
-        ClassModel classModel = GenerationUtils.readClassModel(standinType);
-        if (classModel == null) {
-            throw new IllegalArgumentException("Could not find class file for %s".formatted(standinType.getName()));
-        }
-        PropertyFinder propertyFinder = new PropertyFinder(mapper, critterClassLoader, runtimeMode);
-
-        return entityModel(targetType, standinType, critterClassLoader,
-                propertyFinder.find(standinType, classModel, targetType));
+        Properties properties = new PropertyFinder(this, mapper, critterClassLoader, runtimeMode).find(standinType, targetType);
+        EntityModelGenerator entityModel = new EntityModelGenerator(mapper, targetType, standinType, critterClassLoader,
+                properties.models());
+        // nothing is emitted until every check has passed
+        properties.accessors().run();
+        return entityModel.emit();
     }
 
     /**
@@ -73,22 +74,24 @@ public class CritterGenerator {
      * Generates bytecode augmenting the entity with synthetic {@code __readXxx}/{@code __writeXxx} methods for its fields.
      *
      * @param entityType the entity class to augment
+     * @param model      the entity's parsed classfile
      * @param fields     the fields for which accessor methods should be generated
      * @return the augmented class bytecode
      */
-    public byte[] fieldAccessors(Class<?> entityType, List<FieldInfo> fields) {
-        return new AddFieldAccessorMethods(entityType, fields).emit();
+    public byte[] fieldAccessors(Class<?> entityType, ClassModel model, List<FieldInfo> fields) {
+        return new AddFieldAccessorMethods(entityType, model, fields).emit();
     }
 
     /**
      * Generates bytecode augmenting the entity with synthetic {@code __readXxx}/{@code __writeXxx} methods for its getter methods.
      *
      * @param entityType the entity class to augment
+     * @param model      the entity's parsed classfile
      * @param methods    the getter methods for which accessor methods should be generated
      * @return the augmented class bytecode
      */
-    public byte[] methodAccessors(Class<?> entityType, List<MethodInfo> methods) {
-        return new AddMethodAccessorMethods(entityType, methods).emit();
+    public byte[] methodAccessors(Class<?> entityType, ClassModel model, List<MethodInfo> methods) {
+        return new AddMethodAccessorMethods(entityType, model, methods).emit();
     }
 
     /**
@@ -116,73 +119,52 @@ public class CritterGenerator {
     }
 
     /**
-     * Generates a nestmate accessor for the given field and registers the instance in
-     * {@link NestmateAccessorRegistry}. The accessor is defined as a hidden nestmate of
-     * {@code entityType} so it can directly access private fields via {@code getfield}/{@code putfield}.
+     * Prepares hidden nestmate accessors, checking that Morphia can define every one of them before any is defined. Each
+     * accessor is defined as a nestmate of the class declaring its field, or getter and setter, so it can reach private
+     * members directly, and its instance is registered in {@link NestmateAccessorRegistry}.
      *
-     * @param entityType         the entity class that owns the field
-     * @param critterClassLoader the class loader that will define the generated models using the accessor
-     * @param field              the field for which a nestmate accessor should be generated
+     * @param critterClassLoader the class loader that will define the generated models using the accessors
+     * @param generators         the accessors' generators
+     * @return defines and registers the accessors
+     * @throws NestmateAccessException if Morphia can't define a nestmate in one of the classes
      */
-    public void nestmateAccessor(Class<?> entityType, CritterClassLoader critterClassLoader, FieldInfo field) {
-        defineNestmate(entityType, critterClassLoader, new NestmateAccessorGenerator(entityType, field));
-    }
-
-    /**
-     * Generates a nestmate accessor for the property exposed by the given getter method and registers
-     * the instance in {@link NestmateAccessorRegistry}.
-     *
-     * @param entityType         the entity class that owns the method
-     * @param critterClassLoader the class loader that will define the generated models using the accessor
-     * @param method             the getter method for which a nestmate accessor should be generated
-     */
-    public void nestmateAccessor(Class<?> entityType, CritterClassLoader critterClassLoader, MethodInfo method) {
-        defineNestmate(entityType, critterClassLoader, new NestmateAccessorGenerator(entityType, method));
-    }
-
-    private void defineNestmate(Class<?> entityType, CritterClassLoader critterClassLoader, NestmateAccessorGenerator gen) {
-        try {
-            byte[] bytes = gen.generate();
-            // Use the declaring class for privateLookupIn so the hidden nestmate can access
-            // private fields declared in a superclass (not just in the leaf entity class).
-            Class<?> accessorClass;
-            try {
-                Lookup privateLookup = MethodHandles.privateLookupIn(gen.declaringClass, MethodHandles.lookup());
-                accessorClass = privateLookup
-                        .defineHiddenClass(bytes, true, Lookup.ClassOption.NESTMATE)
-                        .lookupClass();
-            } catch (IllegalAccessException e) {
-                // Defining a nestmate needs full privilege access, which Morphia only has to classes in its own module
-                throw new NestmateAccessException(gen.declaringClass, e);
+    public Runnable nestmateAccessors(CritterClassLoader critterClassLoader, List<NestmateAccessorGenerator> generators) {
+        Map<Class<?>, Lookup> lookups = new HashMap<>();
+        for (NestmateAccessorGenerator generator : generators) {
+            Class<?> host = generator.declaringClass;
+            if (!lookups.containsKey(host)) {
+                lookups.put(host, privateLookup(host));
             }
-            @SuppressWarnings("unchecked")
-            PropertyAccessor<?> instance = (PropertyAccessor<?>) accessorClass.getDeclaredConstructor().newInstance();
-            NestmateAccessorRegistry.register(critterClassLoader, gen.registryKey, instance);
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
+        List<byte[]> classes = generators.stream().map(NestmateAccessorGenerator::generate).toList();
+        return () -> {
+            for (int i = 0; i < generators.size(); i++) {
+                NestmateAccessorGenerator generator = generators.get(i);
+                Lookup lookup = lookups.get(generator.declaringClass);
+                try {
+                    Class<?> accessorClass = lookup.defineHiddenClass(classes.get(i), true, Lookup.ClassOption.NESTMATE)
+                            .lookupClass();
+                    PropertyAccessor<?> instance = (PropertyAccessor<?>) accessorClass.getDeclaredConstructor().newInstance();
+                    NestmateAccessorRegistry.register(critterClassLoader, generator.registryKey, instance);
+                } catch (ReflectiveOperationException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
     }
 
     /**
-     * Generates and registers the entity model class for the given type.
-     *
-     * @param type               the entity class
-     * @param critterClassLoader the class loader that will receive the generated bytecode
-     * @param properties         the list of property model generators for the entity's properties
-     * @return the emitted entity model generator
+     * Defining a nestmate needs full privilege access, which Morphia only has to classes in its own module.
      */
-    public EntityModelGenerator entityModel(Class<?> type, CritterClassLoader critterClassLoader,
-            List<PropertyModelGenerator> properties) {
-        return new EntityModelGenerator(mapper, type, type, critterClassLoader, properties).emit();
-    }
-
-    /**
-     * Generates and registers the entity model class for the given type, reading entity-level annotations from {@code standinType}.
-     */
-    public EntityModelGenerator entityModel(Class<?> type, Class<?> standinType, CritterClassLoader critterClassLoader,
-            List<PropertyModelGenerator> properties) {
-        return new EntityModelGenerator(mapper, type, standinType, critterClassLoader, properties).emit();
+    private static Lookup privateLookup(Class<?> host) {
+        try {
+            Lookup lookup = MethodHandles.privateLookupIn(host, MethodHandles.lookup());
+            if (!lookup.hasFullPrivilegeAccess()) {
+                throw new IllegalAccessException("%s does not have full privilege access".formatted(lookup));
+            }
+            return lookup;
+        } catch (IllegalAccessException e) {
+            throw new NestmateAccessException(host, e);
+        }
     }
 }

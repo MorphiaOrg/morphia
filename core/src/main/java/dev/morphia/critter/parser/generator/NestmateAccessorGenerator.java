@@ -3,6 +3,7 @@ package dev.morphia.critter.parser.generator;
 import java.lang.constant.ClassDesc;
 import java.lang.constant.ConstantDescs;
 import java.lang.constant.MethodTypeDesc;
+import java.lang.reflect.Field;
 
 import com.mongodb.lang.Nullable;
 
@@ -48,7 +49,7 @@ public class NestmateAccessorGenerator {
 
     public NestmateAccessorGenerator(Class<?> entity, FieldInfo field) {
         this.entity = entity;
-        this.declaringClass = findDeclaringClassInHierarchy(entity, field.name());
+        this.declaringClass = fieldHost(entity, field);
         this.propertyName = field.name();
         this.propertyType = typeClassName(ClassDesc.ofDescriptor(field.desc()));
         this.isFieldBased = true;
@@ -95,17 +96,15 @@ public class NestmateAccessorGenerator {
         return isPublic ? entity : declaring;
     }
 
-    private static Class<?> findDeclaringClassInHierarchy(Class<?> entity, String fieldName) {
-        Class<?> current = entity;
-        while (current != null && current != Object.class) {
-            try {
-                current.getDeclaredField(fieldName);
-                return current;
-            } catch (NoSuchFieldException ignored) {
-                current = current.getSuperclass();
-            }
-        }
-        return entity;
+    /**
+     * @return the class declaring the field in {@code entity}'s hierarchy. An {@code @ExternalEntity} stand-in's field is
+     *         declared outside the target's hierarchy, and the target's field of the same name is used.
+     */
+    private static Class<?> fieldHost(Class<?> entity, FieldInfo field) {
+        Class<?> declaring = field.declaringClass();
+        Field found = GenerationUtils.findField(entity,
+                declaring != null && declaring.isAssignableFrom(entity) ? declaring : null, field.name());
+        return found != null ? found.getDeclaringClass() : entity;
     }
 
     private static String entityPackagePrefix(Class<?> entity) {

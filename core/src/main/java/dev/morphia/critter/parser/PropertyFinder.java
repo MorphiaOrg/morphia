@@ -5,6 +5,7 @@ import java.lang.constant.MethodTypeDesc;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -16,6 +17,7 @@ import dev.morphia.config.MorphiaConfig;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.generator.CritterGenerator;
 import dev.morphia.critter.parser.generator.GenerationUtils;
+import dev.morphia.critter.parser.generator.NestmateAccessorGenerator;
 import dev.morphia.critter.parser.generator.PropertyModelGenerator;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
@@ -24,10 +26,8 @@ import dev.morphia.mapping.codec.pojo.ClassHierarchy;
 import dev.morphia.mapping.conventions.DiscoveryRules;
 import dev.morphia.mapping.conventions.DiscoveryRules.AccessorPair;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import io.smallrye.classfile.Annotation;
+import io.smallrye.classfile.AttributedElement;
 import io.smallrye.classfile.ClassFile;
 import io.smallrye.classfile.ClassModel;
 import io.smallrye.classfile.FieldModel;
@@ -42,64 +42,90 @@ import static io.smallrye.classfile.Attributes.signature;
  * and produces the corresponding {@link PropertyModelGenerator} instances.
  */
 public class PropertyFinder {
-    private static final Logger LOG = LoggerFactory.getLogger(PropertyFinder.class);
-
     private final CritterClassLoader classLoader;
     private final boolean runtimeMode;
     private final CritterGenerator critterGenerator;
     private final PropertyDiscovery propertyDiscovery;
     private final MorphiaConfig config;
+    // each class's parsed classfile, read once however many times one generation pass walks the hierarchy
+    private final Map<Class<?>, ClassModel> classModels = new HashMap<>();
 
-    public PropertyFinder(Mapper mapper, CritterClassLoader classLoader, boolean runtimeMode) {
+    /**
+     * @param critterGenerator the generator emitting the accessors
+     * @param mapper           the mapper whose configuration discovers the properties
+     * @param classLoader      the loader that receives the generated classes
+     * @param runtimeMode      {@code true} to generate hidden nestmate accessors for runtime use
+     */
+    public PropertyFinder(CritterGenerator critterGenerator, Mapper mapper, CritterClassLoader classLoader, boolean runtimeMode) {
         this.classLoader = classLoader;
         this.runtimeMode = runtimeMode;
-        this.critterGenerator = new CritterGenerator(mapper);
+        this.critterGenerator = critterGenerator;
         this.propertyDiscovery = mapper.getConfig().propertyDiscovery();
         this.config = mapper.getConfig();
     }
 
-    public List<PropertyModelGenerator> find(Class<?> entityType, ClassModel classModel) {
-        return find(entityType, classModel, entityType);
+    /**
+     * An entity's property model generators and the accessors they use, which aren't emitted until {@code accessors} is
+     * run. Everything that can rule out generating the entity is checked first, so a failed entity leaves nothing behind.
+     *
+     * @param models    the property model generators
+     * @param accessors emits the accessors
+     */
+    public record Properties(List<PropertyModelGenerator> models, Runnable accessors) {
     }
 
     /**
      * Discovers properties from {@code standinType}'s classfile but generates accessor and model
      * bytecode targeting {@code targetType}. Used for {@code @ExternalEntity} stand-ins where the
      * stand-in carries Morphia annotations but the target is the type actually persisted.
+     *
+     * @param standinType the class describing the mapping: the entity itself, or an {@code @ExternalEntity} stand-in
+     * @param targetType  the persisted class
+     * @return the properties
      */
-    public List<PropertyModelGenerator> find(Class<?> standinType, ClassModel classModel, Class<?> targetType) {
+    public Properties find(Class<?> standinType, Class<?> targetType) {
         List<PropertyModelGenerator> models = new ArrayList<>();
+        Runnable accessors;
         if (propertyDiscovery == PropertyDiscovery.FIELDS) {
-            List<FieldInfo> fields = discoverAllFields(standinType, classModel);
+            List<FieldInfo> fields = discoverAllFields(standinType);
             checkIdField(standinType, targetType, fields.stream().map(FieldInfo::name).toList(),
                     fields.stream().anyMatch(f -> isAnnotatedId(f.visibleAnnotations())));
             if (!runtimeMode) {
-                checkAotCompatibility(fields, standinType, targetType, classModel);
-                weaveFieldAccessors(standinType, targetType, fields);
+                checkAotCompatibility(fields, standinType, targetType);
             }
             for (FieldInfo field : fields) {
-                if (runtimeMode) {
-                    critterGenerator.nestmateAccessor(targetType, classLoader, field);
-                } else {
-                    critterGenerator.propertyAccessor(targetType, classLoader, field);
-                }
                 models.add(new PropertyModelGenerator(config, targetType, standinType, classLoader, field, runtimeMode));
             }
+            if (runtimeMode) {
+                accessors = critterGenerator.nestmateAccessors(classLoader, fields.stream()
+                        .map(field -> new NestmateAccessorGenerator(targetType, field))
+                        .toList());
+            } else {
+                accessors = () -> {
+                    weaveFieldAccessors(standinType, targetType, fields);
+                    fields.forEach(field -> critterGenerator.propertyAccessor(targetType, classLoader, field));
+                };
+            }
         } else {
-            List<MethodInfo> methods = discoverPropertyMethods(standinType, classModel, standinType != targetType);
+            List<MethodInfo> methods = discoverPropertyMethods(standinType, standinType != targetType);
             checkIdField(standinType, targetType, methods.stream().map(m -> DiscoveryRules.propertyName(m.name())).toList(),
                     methods.stream().anyMatch(m -> isAnnotatedId(m.visibleAnnotations())));
             if (!runtimeMode) {
-                checkAotMethodCompatibility(methods, standinType, targetType, classModel);
-                classLoader.register(targetType.getName(), critterGenerator.methodAccessors(targetType, methods));
+                checkAotMethodCompatibility(methods, standinType, targetType);
             }
             for (MethodInfo method : methods) {
-                if (runtimeMode) {
-                    critterGenerator.nestmateAccessor(targetType, classLoader, method);
-                } else {
-                    critterGenerator.propertyAccessor(targetType, classLoader, method);
-                }
                 models.add(new PropertyModelGenerator(config, targetType, standinType, classLoader, method, runtimeMode));
+            }
+            if (runtimeMode) {
+                accessors = critterGenerator.nestmateAccessors(classLoader, methods.stream()
+                        .map(method -> new NestmateAccessorGenerator(targetType, method))
+                        .toList());
+            } else {
+                accessors = () -> {
+                    classLoader.register(targetType.getName(),
+                            critterGenerator.methodAccessors(targetType, classModel(targetType), methods));
+                    methods.forEach(method -> critterGenerator.propertyAccessor(targetType, classLoader, method));
+                };
             }
         }
         // as in ConfigureProperties, an explicit @Id wins over the entity's @IdField
@@ -107,7 +133,7 @@ public class PropertyFinder {
         if (explicitId) {
             models.forEach(PropertyModelGenerator::ignoreIdField);
         }
-        return models;
+        return new Properties(models, accessors);
     }
 
     private static final String ID_ANNOTATION_DESC = "Ldev/morphia/annotations/Id;";
@@ -129,8 +155,9 @@ public class PropertyFinder {
                 .anyMatch(a -> ID_ANNOTATION_DESC.equals(a.classSymbol().descriptorString()));
     }
 
-    private void checkAotCompatibility(List<FieldInfo> fields, Class<?> standinType, Class<?> targetType,
-            ClassModel classModel) {
+    private void checkAotCompatibility(List<FieldInfo> fields, Class<?> standinType, Class<?> targetType) {
+        // the accessors are woven into the target's classfile
+        classModel(targetType);
         boolean hasIdOnField = false;
         for (FieldInfo field : fields) {
             int flags = field.access();
@@ -147,15 +174,14 @@ public class PropertyFinder {
                         "AOT skip: inaccessible inherited field '" + field.name() + "' from "
                                 + field.declaringClass().getName() + " in " + targetType.getName());
             }
-            if (field.visibleAnnotations() != null && field.visibleAnnotations().stream()
-                    .anyMatch(a -> ID_ANNOTATION_DESC.equals(a.classSymbol().descriptorString()))) {
+            if (isAnnotatedId(field.visibleAnnotations())) {
                 hasIdOnField = true;
             }
         }
         // An entity without an @Id (e.g., an embedded type) is fine to generate from its fields. Only an @Id on a
         // getter needs the runtime, which can pick the discovery mode that finds it.
         if (!hasIdOnField) {
-            checkIdOnGetter(standinType, targetType, classModel);
+            checkIdOnGetter(standinType, targetType);
         }
     }
 
@@ -170,7 +196,7 @@ public class PropertyFinder {
      */
     private void weaveFieldAccessors(Class<?> standinType, Class<?> targetType, List<FieldInfo> fields) {
         if (standinType != targetType) {
-            classLoader.register(targetType.getName(), critterGenerator.fieldAccessors(targetType, fields));
+            classLoader.register(targetType.getName(), critterGenerator.fieldAccessors(targetType, classModel(targetType), fields));
             return;
         }
         Set<Class<?>> owners = new LinkedHashSet<>();
@@ -179,11 +205,11 @@ public class PropertyFinder {
             owners.add(accessorOwner(field, standinType, targetType));
         }
         for (Class<?> owner : owners) {
-            List<FieldInfo> ownerFields = owner == targetType ? fields : discoverAllFields(owner, null);
+            List<FieldInfo> ownerFields = owner == targetType ? fields : discoverAllFields(owner);
             List<FieldInfo> woven = ownerFields.stream()
                     .filter(field -> accessorOwner(field, owner, owner) == owner)
                     .toList();
-            classLoader.register(owner.getName(), critterGenerator.fieldAccessors(owner, woven));
+            classLoader.register(owner.getName(), critterGenerator.fieldAccessors(owner, classModel(owner), woven));
         }
     }
 
@@ -222,55 +248,40 @@ public class PropertyFinder {
                 && field.declaringClass().getClassLoader() == owner.getClassLoader();
     }
 
-    private void checkAotMethodCompatibility(List<MethodInfo> methods, Class<?> standinType, Class<?> targetType,
-            ClassModel classModel) {
+    private void checkAotMethodCompatibility(List<MethodInfo> methods, Class<?> standinType, Class<?> targetType) {
+        // the accessors are woven into the target's classfile
+        classModel(targetType);
         // If @Id is missing from the discovered methods, look for it on any getter in the hierarchy.
-        boolean hasIdInMethods = methods.stream()
-                .anyMatch(m -> m.visibleAnnotations() != null && m.visibleAnnotations().stream()
-                        .anyMatch(a -> ID_ANNOTATION_DESC.equals(a.classSymbol().descriptorString())));
+        boolean hasIdInMethods = methods.stream().anyMatch(m -> isAnnotatedId(m.visibleAnnotations()));
         if (hasIdInMethods) {
             return;
         }
-        checkIdOnGetter(standinType, targetType, classModel);
+        checkIdOnGetter(standinType, targetType);
     }
 
     /**
      * Skips AOT when {@code @Id} is on a getter anywhere in the hierarchy: the entity relies on METHODS discovery for
-     * its id, so the runtime must pick the discovery mode. The scan walks {@code standinType}'s hierarchy (the type
-     * {@code classModel} describes), which differs from {@code targetType} for {@code @ExternalEntity} stand-ins.
+     * its id, so the runtime must pick the discovery mode. The scan walks {@code standinType}'s hierarchy, which differs
+     * from {@code targetType} for {@code @ExternalEntity} stand-ins.
      */
-    private void checkIdOnGetter(Class<?> standinType, Class<?> targetType, ClassModel classModel) {
-        ClassModel current = classModel;
-        Class<?> cls = standinType;
-        while (cls != null && cls != Object.class) {
-            ClassModel model = current != null ? current : readClassModel(cls);
-            if (model != null) {
-                for (io.smallrye.classfile.MethodModel method : model.methods()) {
-                    if (visibleAnnotations(method).stream()
-                            .anyMatch(a -> ID_ANNOTATION_DESC.equals(a.classSymbol().descriptorString()))) {
-                        throw new UnsupportedOperationException(
-                                "AOT skip: @Id on getter in " + targetType.getName()
-                                        + "; entity requires runtime property discovery");
-                    }
+    private void checkIdOnGetter(Class<?> standinType, Class<?> targetType) {
+        for (Class<?> cls = standinType; cls != null && cls != Object.class; cls = cls.getSuperclass()) {
+            for (MethodModel method : classModel(cls).methods()) {
+                if (isAnnotatedId(visibleAnnotations(method))) {
+                    throw new UnsupportedOperationException(
+                            "AOT skip: @Id on getter in " + targetType.getName()
+                                    + "; entity requires runtime property discovery");
                 }
             }
-            cls = cls.getSuperclass();
-            current = null;
         }
     }
 
-    private List<FieldInfo> discoverAllFields(Class<?> entityType, ClassModel classModel) {
+    private List<FieldInfo> discoverAllFields(Class<?> entityType) {
         List<FieldInfo> fields = new ArrayList<>();
         Map<String, Class<?>> seen = new LinkedHashMap<>();
-        Class<?> current = entityType;
-        ClassModel currentModel = classModel;
-
-        while (current != null && current != Object.class) {
-            ClassModel model = currentModel != null ? currentModel : readClassModel(current);
-            if (model == null)
-                break;
-            final Class<?> declaringClass = current;
-            for (FieldInfo field : discoverFields(model, declaringClass)) {
+        for (Class<?> declaringClass = entityType; declaringClass != null
+                && declaringClass != Object.class; declaringClass = declaringClass.getSuperclass()) {
+            for (FieldInfo field : discoverFields(classModel(declaringClass), declaringClass)) {
                 Class<?> shadowing = seen.putIfAbsent(field.name(), declaringClass);
                 if (shadowing != null) {
                     // as for reflection, whose field discovery maps both fields to the same name
@@ -279,23 +290,21 @@ public class PropertyFinder {
                 }
                 fields.add(field);
             }
-            current = current.getSuperclass();
-            currentModel = null;
         }
         return fields;
     }
 
-    private ClassModel readClassModel(Class<?> type) {
-        try {
-            ClassModel model = GenerationUtils.readClassModel(type);
-            if (model == null) {
-                LOG.debug("Bytecode resource not found for {}; hierarchy traversal stops here", type.getName());
-            }
-            return model;
-        } catch (RuntimeException e) {
-            LOG.warn("Failed to read bytecode for {}; hierarchy traversal stops here: {}", type.getName(), e.getMessage());
-            return null;
+    /**
+     * @return the parsed classfile of {@code type}, read the first time this pass asks for it
+     * @throws UnsupportedOperationException if the classfile can't be found, so that the entity is mapped another way
+     *                                       rather than without the class's properties
+     */
+    private ClassModel classModel(Class<?> type) {
+        ClassModel model = classModels.computeIfAbsent(type, GenerationUtils::readClassModel);
+        if (model == null) {
+            throw new UnsupportedOperationException("Critter can't find the class file for " + type.getName());
         }
+        return model;
     }
 
     private List<FieldInfo> discoverFields(ClassModel classModel, Class<?> declaringClass) {
@@ -330,26 +339,15 @@ public class PropertyFinder {
      * Pairs getters and setters the way {@link dev.morphia.mapping.conventions.MethodDiscovery} does: within each class
      * of the hierarchy, with a subclass's pair hiding a superclass's for the same property.
      */
-    private List<MethodInfo> discoverPropertyMethods(Class<?> entityType, ClassModel classModel, boolean standin) {
+    private List<MethodInfo> discoverPropertyMethods(Class<?> entityType, boolean standin) {
         Map<String, MethodInfo> properties = new LinkedHashMap<>();
-
-        Class<?> current = entityType;
-        ClassModel currentModel = classModel;
-
-        while (current != null && current != Object.class) {
-            ClassModel model = currentModel != null ? currentModel : readClassModel(current);
-            if (model == null)
-                break;
-
-            for (AccessorPair<MethodModel> pair : DiscoveryRules.accessorPairs(model.methods(),
+        for (Class<?> current = entityType; current != null && current != Object.class; current = current.getSuperclass()) {
+            for (AccessorPair<MethodModel> pair : DiscoveryRules.accessorPairs(classModel(current).methods(),
                     m -> m.methodName().stringValue(), m -> m.flags().flagsMask())) {
                 if (!properties.containsKey(pair.property())) {
                     properties.put(pair.property(), toMethodInfo(pair, current, entityType, standin));
                 }
             }
-
-            current = current.getSuperclass();
-            currentModel = null;
         }
         return new ArrayList<>(properties.values());
     }
@@ -414,7 +412,7 @@ public class PropertyFinder {
                 declaringClass);
     }
 
-    private List<Annotation> visibleAnnotations(io.smallrye.classfile.AttributedElement element) {
+    private List<Annotation> visibleAnnotations(AttributedElement element) {
         return element.findAttribute(runtimeVisibleAnnotations())
                 .map(RuntimeVisibleAnnotationsAttribute::annotations)
                 .orElse(List.of());

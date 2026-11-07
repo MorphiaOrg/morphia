@@ -72,7 +72,7 @@ public class PropertyModelGenerator extends BaseGenerator {
         this.propertyName = field.name();
         accessorType = "%s.%sAccessor".formatted(baseName, DiscoveryRules.titleCase(propertyName));
 
-        Field reflectedField = findField(annotationSource, field.name());
+        Field reflectedField = GenerationUtils.findField(annotationSource, field.declaringClass(), field.name());
         this.accessFlags = reflectedField != null ? reflectedField.getModifiers() : field.access();
         this.genericType = reflectedField != null ? reflectedField.getGenericType() : Object.class;
         this.annotationMap = buildAnnotationMap(reflectedField != null ? reflectedField.getAnnotations() : new Annotation[0]);
@@ -156,18 +156,6 @@ public class PropertyModelGenerator extends BaseGenerator {
      */
     public PropertyModelGenerator(MorphiaConfig config, Class<?> entity, CritterClassLoader critterClassLoader, MethodInfo method) {
         this(config, entity, entity, critterClassLoader, method, false);
-    }
-
-    private static Field findField(Class<?> cls, String name) {
-        Class<?> current = cls;
-        while (current != null && current != Object.class) {
-            try {
-                return current.getDeclaredField(name);
-            } catch (NoSuchFieldException e) {
-                current = current.getSuperclass();
-            }
-        }
-        return null;
     }
 
     private static Method findMethod(Class<?> cls, String name) {
