@@ -18,6 +18,7 @@ import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.generator.CritterGenerator;
 import dev.morphia.critter.parser.generator.GenerationUtils;
 import dev.morphia.critter.parser.generator.NestmateAccessorGenerator;
+import dev.morphia.critter.parser.generator.PropertyAccessorGenerator;
 import dev.morphia.critter.parser.generator.PropertyModelGenerator;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
@@ -65,8 +66,9 @@ public class PropertyFinder {
     }
 
     /**
-     * An entity's property model generators and the accessors they use, which aren't emitted until {@code accessors} is
-     * run. Everything that can rule out generating the entity is checked first, so a failed entity leaves nothing behind.
+     * An entity's property model generators and the accessors they use, which aren't defined or registered until
+     * {@code accessors} is run. The accessors' bytecode is already generated and everything that can rule out generating the
+     * entity has been checked, so a failed entity leaves nothing behind.
      *
      * @param models    the property model generators
      * @param accessors emits the accessors
@@ -101,10 +103,11 @@ public class PropertyFinder {
                         .map(field -> new NestmateAccessorGenerator(targetType, field))
                         .toList());
             } else {
-                accessors = () -> {
-                    weaveFieldAccessors(standinType, targetType, fields);
-                    fields.forEach(field -> critterGenerator.propertyAccessor(targetType, classLoader, field));
-                };
+                Map<String, byte[]> classes = weaveFieldAccessors(standinType, targetType, fields);
+                for (FieldInfo field : fields) {
+                    add(classes, new PropertyAccessorGenerator(targetType, classLoader, field));
+                }
+                accessors = () -> classes.forEach(classLoader::register);
             }
         } else {
             List<MethodInfo> methods = discoverPropertyMethods(standinType, standinType != targetType);
@@ -121,11 +124,12 @@ public class PropertyFinder {
                         .map(method -> new NestmateAccessorGenerator(targetType, method))
                         .toList());
             } else {
-                accessors = () -> {
-                    classLoader.register(targetType.getName(),
-                            critterGenerator.methodAccessors(targetType, classModel(targetType), methods));
-                    methods.forEach(method -> critterGenerator.propertyAccessor(targetType, classLoader, method));
-                };
+                Map<String, byte[]> classes = new LinkedHashMap<>();
+                classes.put(targetType.getName(), critterGenerator.methodAccessors(targetType, classModel(targetType), methods));
+                for (MethodInfo method : methods) {
+                    add(classes, new PropertyAccessorGenerator(targetType, classLoader, method));
+                }
+                accessors = () -> classes.forEach(classLoader::register);
             }
         }
         // as in ConfigureProperties, an explicit @Id wins over the entity's @IdField
@@ -134,6 +138,10 @@ public class PropertyFinder {
             models.forEach(PropertyModelGenerator::ignoreIdField);
         }
         return new Properties(models, accessors);
+    }
+
+    private static void add(Map<String, byte[]> classes, PropertyAccessorGenerator generator) {
+        classes.put(generator.getGeneratedType(), generator.generate());
     }
 
     private static final String ID_ANNOTATION_DESC = "Ldev/morphia/annotations/Id;";
@@ -186,18 +194,21 @@ public class PropertyFinder {
     }
 
     /**
-     * Adds the {@code __readXxx}/{@code __writeXxx} accessor methods for {@code fields}. Each field's accessors are woven into
+     * Weaves the {@code __readXxx}/{@code __writeXxx} accessor methods for {@code fields}. Each field's accessors are woven into
      * the class declaring it when that class can be rewritten alongside the entity, so inherited private and package-private
      * fields are reachable; the entity inherits those methods. Fields from other superclasses (e.g. from a library) are woven
      * into the entity itself.
      * <p>
      * What is woven into a class depends only on that class, so subclasses sharing a superclass all produce the same bytes for
      * it.
+     *
+     * @return the woven classes' bytecode, by class name
      */
-    private void weaveFieldAccessors(Class<?> standinType, Class<?> targetType, List<FieldInfo> fields) {
+    private Map<String, byte[]> weaveFieldAccessors(Class<?> standinType, Class<?> targetType, List<FieldInfo> fields) {
+        Map<String, byte[]> classes = new LinkedHashMap<>();
         if (standinType != targetType) {
-            classLoader.register(targetType.getName(), critterGenerator.fieldAccessors(targetType, classModel(targetType), fields));
-            return;
+            classes.put(targetType.getName(), critterGenerator.fieldAccessors(targetType, classModel(targetType), fields));
+            return classes;
         }
         Set<Class<?>> owners = new LinkedHashSet<>();
         owners.add(targetType);
@@ -209,8 +220,9 @@ public class PropertyFinder {
             List<FieldInfo> woven = ownerFields.stream()
                     .filter(field -> accessorOwner(field, owner, owner) == owner)
                     .toList();
-            classLoader.register(owner.getName(), critterGenerator.fieldAccessors(owner, classModel(owner), woven));
+            classes.put(owner.getName(), critterGenerator.fieldAccessors(owner, classModel(owner), woven));
         }
+        return classes;
     }
 
     /**

@@ -195,6 +195,8 @@ public class GenerationUtils {
         List<AnnotationElement> elements = new ArrayList<>();
         for (java.lang.reflect.Method method : annType.getDeclaredMethods()) {
             try {
+                // the annotation type may not be public
+                method.setAccessible(true);
                 Object value = method.invoke(ann);
                 AnnotationValue av = toAnnotationValue(method.getGenericReturnType(), method.getReturnType(), value);
                 elements.add(AnnotationElement.of(method.getName(), av));
@@ -282,6 +284,8 @@ public class GenerationUtils {
 
         for (java.lang.reflect.Method method : annType.getDeclaredMethods()) {
             try {
+                // the annotation type may not be public
+                method.setAccessible(true);
                 Object value = method.invoke(ann);
                 Object defaultValue = method.getDefaultValue();
                 if (value == null || java.util.Objects.deepEquals(value, defaultValue)) {

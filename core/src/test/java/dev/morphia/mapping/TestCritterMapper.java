@@ -2,6 +2,8 @@ package dev.morphia.mapping;
 
 import java.io.File;
 import java.io.InputStream;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.net.URL;
@@ -239,6 +241,31 @@ public class TestCritterMapper {
                 () -> new CritterGenerator(mapper).generate(PrivateSetterStandIn.class, loader, true));
         Assertions.assertNull(NestmateAccessorRegistry.get(loader,
                 Critter.critterPackage(PrivateSetterTarget.class) + ".IdAccessor"));
+    }
+
+    @Test
+    public void testFailedModelGenerationLeavesNoAccessors() {
+        // the entity model is generated after the accessors' checks pass, and naming its collection fails
+        CritterMapper mapper = new CritterMapper(MorphiaConfig.load().mapper(MapperType.CRITTER)
+                .collectionNaming(new FailingNaming()));
+        CritterClassLoader runtime = new CritterClassLoader(getClass().getClassLoader());
+        Assertions.assertThrows(IllegalStateException.class,
+                () -> new CritterGenerator(mapper).generate(HiddenAnnotationEntity.class, runtime, true));
+        Assertions.assertNull(NestmateAccessorRegistry.get(runtime,
+                Critter.critterPackage(HiddenAnnotationEntity.class) + ".IdAccessor"));
+
+        CritterClassLoader buildTime = new CritterClassLoader(getClass().getClassLoader());
+        Assertions.assertThrows(IllegalStateException.class,
+                () -> new CritterGenerator(mapper).generate(HiddenAnnotationEntity.class, buildTime, false));
+        Assertions.assertEquals(Map.of(), buildTime.getTypeDefinitions());
+    }
+
+    @Test
+    public void testNonPublicAnnotationIsCopied() {
+        CritterMapper mapper = new CritterMapper(MorphiaConfig.load().mapper(MapperType.CRITTER));
+        EntityModel model = mapper.mapEntity(HiddenAnnotationEntity.class);
+        Assertions.assertInstanceOf(CritterEntityModel.class, model);
+        Assertions.assertEquals("hidden", model.getProperty("name").getAnnotation(HiddenAnnotation.class).value());
     }
 
     @Test
@@ -899,6 +926,19 @@ public class TestCritterMapper {
         private String name;
     }
 
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface HiddenAnnotation {
+        String value();
+    }
+
+    @Entity
+    public static class HiddenAnnotationEntity {
+        @Id
+        private ObjectId id;
+        @HiddenAnnotation("hidden")
+        private String name;
+    }
+
     public static class PrivateSetterTarget {
         private ObjectId id;
         private String name;
@@ -946,6 +986,13 @@ public class TestCritterMapper {
     /**
      * A configurable strategy in Morphia's own namespace, which must not be mistaken for a built-in.
      */
+    public static class FailingNaming extends NamingStrategy {
+        @Override
+        public String apply(String value) {
+            throw new IllegalStateException("Naming failed for " + value);
+        }
+    }
+
     public static class PrefixNaming extends NamingStrategy {
         private final String prefix;
 
