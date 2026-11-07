@@ -4,7 +4,6 @@ import java.lang.annotation.Annotation;
 import java.lang.constant.ClassDesc;
 import java.lang.constant.ConstantDescs;
 import java.lang.constant.MethodTypeDesc;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,6 @@ import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.ClassHierarchy;
-import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
 import io.smallrye.classfile.ClassFile;
@@ -104,13 +102,10 @@ public class EntityModelGenerator extends BaseGenerator {
         ClassDesc superDesc = ClassDesc.of(CritterEntityModel.class.getName());
         ClassDesc mapperDesc = ClassDesc.of(Mapper.class.getName());
         ClassDesc entityModelDesc = ClassDesc.of(dev.morphia.mapping.codec.pojo.EntityModel.class.getName());
-        ClassDesc propertyModelDesc = ClassDesc.of(PropertyModel.class.getName());
         ClassDesc annotationDesc = ClassDesc.of(Annotation.class.getName());
         String collectionNameStr = computeCollectionName();
         String discriminatorStr = computeDiscriminator();
         String discriminatorKeyStr = computeDiscriminatorKey();
-        boolean isAbstractFlag = Modifier.isAbstract(entity.getModifiers());
-        boolean isInterfaceFlag = entity.isInterface();
         boolean useDiscriminatorFlag = entityAnnotation != null ? entityAnnotation.useDiscriminator()
                 : externalEntity.useDiscriminator();
 
@@ -119,39 +114,50 @@ public class EntityModelGenerator extends BaseGenerator {
             cb.withFlags(ClassFile.ACC_PUBLIC | ClassFile.ACC_SUPER);
             cb.withSuperclass(superDesc);
 
-            // Constructor: (Mapper) -> void
+            for (PropertyModelGenerator prop : properties) {
+                prop.emitAnnotationHolder(cb);
+            }
+
+            // Constructor: (Mapper) -> void. It configures a plain EntityModel: the generated class overrides nothing.
             cb.withMethodBody("<init>", MethodTypeDesc.of(ConstantDescs.CD_void, mapperDesc),
                     ClassFile.ACC_PUBLIC, cod -> {
                         cod.aload(0);
                         cod.aload(1);
-                        GenerationUtils.emitClassRef(cod, entity);
+                        GenerationUtils.emitClassRef(cod, entity, thisDesc);
                         cod.invokespecial(superDesc, "<init>",
                                 MethodTypeDesc.of(ConstantDescs.CD_void, mapperDesc, ConstantDescs.CD_Class));
 
-                        // setType(entityClass)
                         cod.aload(0);
-                        GenerationUtils.emitClassRef(cod, entity);
-                        cod.invokevirtual(thisDesc, "setType",
-                                MethodTypeDesc.of(ConstantDescs.CD_void, ConstantDescs.CD_Class));
+                        cod.ldc(collectionNameStr);
+                        cod.invokevirtual(entityModelDesc, "collectionName",
+                                MethodTypeDesc.of(entityModelDesc, ConstantDescs.CD_String));
+                        cod.pop();
 
-                        // Add property models
+                        cod.aload(0);
+                        cod.ldc(discriminatorStr);
+                        cod.invokevirtual(entityModelDesc, "discriminator",
+                                MethodTypeDesc.of(ConstantDescs.CD_void, ConstantDescs.CD_String));
+
+                        cod.aload(0);
+                        cod.ldc(discriminatorKeyStr);
+                        cod.invokevirtual(entityModelDesc, "discriminatorKey",
+                                MethodTypeDesc.of(entityModelDesc, ConstantDescs.CD_String));
+                        cod.pop();
+
+                        cod.aload(0);
+                        cod.loadConstant(useDiscriminatorFlag ? 1 : 0);
+                        cod.invokevirtual(entityModelDesc, "discriminatorEnabled",
+                                MethodTypeDesc.of(entityModelDesc, ConstantDescs.CD_boolean));
+                        cod.pop();
+
                         for (PropertyModelGenerator prop : properties) {
-                            ClassDesc propDesc = ClassDesc.of(prop.generatedType);
-                            cod.aload(0);
-                            cod.new_(propDesc);
-                            cod.dup();
-                            cod.aload(0);
-                            cod.invokespecial(propDesc, "<init>",
-                                    MethodTypeDesc.of(ConstantDescs.CD_void, entityModelDesc));
-                            cod.invokevirtual(entityModelDesc, "addProperty",
-                                    MethodTypeDesc.of(ConstantDescs.CD_boolean, propertyModelDesc));
-                            cod.pop();
+                            prop.emitProperty(cod, thisDesc, 2);
                         }
 
                         // Morphia annotations via builders — no reflection
                         for (Annotation ann : morphiaAnnotations) {
                             cod.aload(0);
-                            GenerationUtils.emitAnnotationViaBuilder(cod, ann);
+                            GenerationUtils.emitAnnotationViaBuilder(cod, ann, thisDesc);
                             cod.invokevirtual(entityModelDesc, "annotation",
                                     MethodTypeDesc.of(ConstantDescs.CD_void, annotationDesc));
                         }
@@ -164,34 +170,6 @@ public class EntityModelGenerator extends BaseGenerator {
 
                         cod.return_();
                     });
-
-            // collectionName(): String
-            cb.withMethodBody("collectionName", MethodTypeDesc.of(ConstantDescs.CD_String),
-                    ClassFile.ACC_PUBLIC, cod -> {
-                        cod.ldc(collectionNameStr);
-                        cod.areturn();
-                    });
-
-            // discriminator(): String
-            cb.withMethodBody("discriminator", MethodTypeDesc.of(ConstantDescs.CD_String),
-                    ClassFile.ACC_PUBLIC, cod -> {
-                        cod.ldc(discriminatorStr);
-                        cod.areturn();
-                    });
-
-            // discriminatorKey(): String
-            cb.withMethodBody("discriminatorKey", MethodTypeDesc.of(ConstantDescs.CD_String),
-                    ClassFile.ACC_PUBLIC, cod -> {
-                        cod.ldc(discriminatorKeyStr);
-                        cod.areturn();
-                    });
-
-            // isAbstract(): boolean
-            GenerationUtils.emitBooleanMethod(cb, "isAbstract", isAbstractFlag);
-            // isInterface(): boolean
-            GenerationUtils.emitBooleanMethod(cb, "isInterface", isInterfaceFlag);
-            // useDiscriminator(): boolean
-            GenerationUtils.emitBooleanMethod(cb, "useDiscriminator", useDiscriminatorFlag);
         });
 
         critterClassLoader.register(generatedType, bytes);

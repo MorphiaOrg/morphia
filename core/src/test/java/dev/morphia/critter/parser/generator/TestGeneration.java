@@ -4,17 +4,14 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.tools.ToolProvider;
@@ -109,16 +106,17 @@ public class TestGeneration {
     @Test
     public void testGenerator() throws Exception {
         new CritterGenerator(defaultMapper()).generate(Example.class, critterClassLoader, false);
-        critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.AgeModel");
-        Class<?> nameModel = critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.NameModel");
-        invokeAll(PropertyModel.class, nameModel);
-        critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.SalaryModel");
         critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.AgeAccessor").getConstructor().newInstance();
         critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.NameAccessor").getConstructor().newInstance();
         critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.SalaryAccessor").getConstructor().newInstance();
 
         Class<?> loadClass = critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.ExampleEntityModel");
+        // the generated model configures a plain EntityModel in its constructor and overrides nothing
+        Assertions.assertEquals(List.of(), Arrays.stream(loadClass.getDeclaredMethods()).map(Method::getName).toList());
         EntityModel model = (EntityModel) loadClass.getConstructors()[0].newInstance(defaultMapper());
+        for (PropertyModel property : model.getProperties()) {
+            Assertions.assertEquals(PropertyModel.class, property.getClass(), property.getName());
+        }
         validate(model);
     }
 
@@ -375,36 +373,6 @@ public class TestGeneration {
         Assertions.assertFalse(model.isAbstract(), "Should not be abstract");
         Assertions.assertFalse(model.isInterface(), "Should not be an interface");
         Assertions.assertTrue(model.useDiscriminator(), "Should use the discriminator");
-    }
-
-    private void invokeAll(Class<?> type, Class<?> klass) {
-        Object instance;
-        try {
-            instance = klass.getConstructors()[0].newInstance(new Object[] { null });
-        } catch (Exception e) {
-            Assertions.fail("Could not instantiate " + klass.getName() + ": " + e.getMessage());
-            return;
-        }
-        List<String> results = Arrays.stream(type.getDeclaredMethods())
-                .filter(m -> Modifier.isPublic(m.getModifiers())
-                        && !Modifier.isFinal(m.getModifiers())
-                        && m.getParameterCount() == 0)
-                .filter(m -> !List.of("hashCode", "toString").contains(m.getName()))
-                .sorted(Comparator.comparing(Method::getName))
-                .map(method -> {
-                    try {
-                        klass.getDeclaredMethod(method.getName(), method.getParameterTypes());
-                        return null;
-                    } catch (Exception e) {
-                        return e.getMessage();
-                    }
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-
-        if (!results.isEmpty()) {
-            Assertions.fail("Missing methods from " + type.getName() + ": \n" + String.join("\n", results));
-        }
     }
 
     @Test

@@ -124,7 +124,7 @@ public class PropertyModel {
     /**
      * @return the accessor to use when accessing this field
      */
-    public PropertyAccessor<Object> getAccessor() {
+    public final PropertyAccessor<Object> getAccessor() {
         return accessor;
     }
 
@@ -141,7 +141,7 @@ public class PropertyModel {
      * @return the annotation instance or null
      */
     @Nullable
-    public <A extends Annotation> A getAnnotation(Class<A> type) {
+    public final <A extends Annotation> A getAnnotation(Class<A> type) {
         return type.cast(annotationMap.get(type));
     }
 
@@ -159,7 +159,7 @@ public class PropertyModel {
         return this;
     }
 
-    public boolean isFinal() {
+    public final boolean isFinal() {
         return isFinal;
     }
 
@@ -180,21 +180,21 @@ public class PropertyModel {
      * @return the entity model owner of this field
      * @since 2.1
      */
-    public EntityModel getEntityModel() {
+    public final EntityModel getEntityModel() {
         return entityModel;
     }
 
     /**
      * @return the full name of the class plus java field name
      */
-    public String getFullName() {
+    public final String getFullName() {
         return String.format("%s#%s", entityModel.getType().getName(), name);
     }
 
     /**
      * @return the name of the field's (key)name for mongodb, in order of loading.
      */
-    public List<String> getLoadNames() {
+    public final List<String> getLoadNames() {
         return new ArrayList<>(loadNames);
     }
 
@@ -202,7 +202,7 @@ public class PropertyModel {
      * @return the mapped name for the model
      */
     @NonNull
-    public String getMappedName() {
+    public final String getMappedName() {
         return mappedName;
     }
 
@@ -214,7 +214,7 @@ public class PropertyModel {
     /**
      * @return the field name for the model
      */
-    public String getName() {
+    public final String getName() {
         return name;
     }
 
@@ -228,7 +228,7 @@ public class PropertyModel {
      *
      * @return the unwrapped type
      */
-    public Class<?> getNormalizedType() {
+    public final Class<?> getNormalizedType() {
         if (normalizedType == null) {
             normalizedType = normalize(getTypeData());
         }
@@ -239,14 +239,14 @@ public class PropertyModel {
     /**
      * @return the type of this field
      */
-    public Class<?> getType() {
+    public final Class<?> getType() {
         return getTypeData().getType();
     }
 
     /**
      * @return the type data for the field
      */
-    public TypeData<?> getTypeData() {
+    public final TypeData<?> getTypeData() {
         return typeData;
     }
 
@@ -279,7 +279,7 @@ public class PropertyModel {
      * @param type the annotation to search for
      * @return true if the annotation was found
      */
-    public boolean hasAnnotation(Class<? extends Annotation> type) {
+    public final boolean hasAnnotation(Class<? extends Annotation> type) {
         return annotationMap.containsKey(type);
     }
 
@@ -296,14 +296,14 @@ public class PropertyModel {
     /**
      * @return true if the MappedField is an array
      */
-    public boolean isArray() {
+    public final boolean isArray() {
         return getType().isArray();
     }
 
     /**
      * @return true if the MappedField is a Map
      */
-    public boolean isMap() {
+    public final boolean isMap() {
         return Map.class.isAssignableFrom(getTypeData().getType());
     }
 
@@ -312,7 +312,7 @@ public class PropertyModel {
      * @see Reference
      * @see DBRef
      */
-    public boolean isReference() {
+    public final boolean isReference() {
         return hasAnnotation(Reference.class) || DBRef.class == getType();
     }
 
@@ -326,14 +326,14 @@ public class PropertyModel {
     /**
      * @return true if the MappedField is a Set
      */
-    public boolean isSet() {
+    public final boolean isSet() {
         return Set.class.isAssignableFrom(getTypeData().getType());
     }
 
     /**
      * @return true if this field is marked as transient
      */
-    public boolean isTransient() {
+    public final boolean isTransient() {
         return !hasAnnotation(Transient.class)
                 && !hasAnnotation(java.beans.Transient.class)
                 && Modifier.isTransient(getType().getModifiers());
@@ -384,7 +384,7 @@ public class PropertyModel {
         return this;
     }
 
-    public boolean isCollection() {
+    public final boolean isCollection() {
         return Collection.class.isAssignableFrom(getTypeData().getType());
     }
 
