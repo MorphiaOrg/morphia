@@ -21,4 +21,11 @@ public abstract class BaseGenerator {
         this.critterClassLoader = critterClassLoader;
         this.baseName = Critter.critterPackage(entity);
     }
+
+    /**
+     * Returns the fully-qualified name of the generated class.
+     */
+    public String getGeneratedType() {
+        return generatedType;
+    }
 }

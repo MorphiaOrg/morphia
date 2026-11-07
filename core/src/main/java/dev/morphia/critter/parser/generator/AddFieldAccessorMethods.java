@@ -30,14 +30,13 @@ public class AddFieldAccessorMethods extends AccessorMethods {
     /**
      * Creates a generator that will add accessor methods for the given fields to the entity class.
      */
-    public AddFieldAccessorMethods(Class<?> entity, List<FieldInfo> fields) {
-        super(entity);
+    public AddFieldAccessorMethods(Class<?> entity, ClassModel model, List<FieldInfo> fields) {
+        super(entity, model);
         this.fields = fields;
     }
 
     @Override
     public byte[] emit() {
-        ClassModel model = readClassFiltering();
         ClassDesc entityDesc = ClassDesc.of(entity.getName());
 
         ClassTransform transform = ClassTransform.dropping(

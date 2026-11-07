@@ -1,6 +1,9 @@
 package dev.morphia.mapping;
 
 import java.io.File;
+import java.io.InputStream;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.net.URL;
@@ -9,6 +12,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -22,8 +27,11 @@ import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.config.MorphiaConfig;
+import dev.morphia.critter.Critter;
 import dev.morphia.critter.CritterClassLoader;
+import dev.morphia.critter.parser.generator.CritterGenerator;
 import dev.morphia.critter.parser.generator.NestmateAccessException;
+import dev.morphia.critter.parser.generator.NestmateAccessorRegistry;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.ReflectiveEntityModelBuilder;
@@ -224,6 +232,106 @@ public class TestCritterMapper {
     }
 
     @Test
+    public void testFailedGenerationLeavesNoAccessors() {
+        CritterMapper mapper = new CritterMapper(
+                MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
+        CritterClassLoader loader = new CritterClassLoader(getClass().getClassLoader());
+        // name's accessor can't call the target's private setter, which is found after id's accessor could be defined
+        Assertions.assertThrows(UnsupportedOperationException.class,
+                () -> new CritterGenerator(mapper).generate(PrivateSetterStandIn.class, loader, true));
+        Assertions.assertNull(NestmateAccessorRegistry.get(loader,
+                Critter.critterPackage(PrivateSetterTarget.class) + ".IdAccessor"));
+    }
+
+    @Test
+    public void testFailedModelGenerationLeavesNoAccessors() {
+        // the entity model is generated after the accessors' checks pass, and naming its collection fails
+        CritterMapper mapper = new CritterMapper(MorphiaConfig.load().mapper(MapperType.CRITTER)
+                .collectionNaming(new FailingNaming()));
+        CritterClassLoader runtime = new CritterClassLoader(getClass().getClassLoader());
+        Assertions.assertThrows(IllegalStateException.class,
+                () -> new CritterGenerator(mapper).generate(HiddenAnnotationEntity.class, runtime, true));
+        Assertions.assertNull(NestmateAccessorRegistry.get(runtime,
+                Critter.critterPackage(HiddenAnnotationEntity.class) + ".IdAccessor"));
+
+        CritterClassLoader buildTime = new CritterClassLoader(getClass().getClassLoader());
+        Assertions.assertThrows(IllegalStateException.class,
+                () -> new CritterGenerator(mapper).generate(HiddenAnnotationEntity.class, buildTime, false));
+        Assertions.assertEquals(Map.of(), buildTime.getTypeDefinitions());
+    }
+
+    @Test
+    public void testNonPublicAnnotationIsCopied() {
+        CritterMapper mapper = new CritterMapper(MorphiaConfig.load().mapper(MapperType.CRITTER));
+        EntityModel model = mapper.mapEntity(HiddenAnnotationEntity.class);
+        Assertions.assertInstanceOf(CritterEntityModel.class, model);
+        Assertions.assertEquals("hidden", model.getProperty("name").getAnnotation(HiddenAnnotation.class).value());
+    }
+
+    @Test
+    public void testMissingSuperclassClassFileFailsGeneration(@TempDir Path dir) throws Exception {
+        compile(dir, "app/HiddenParent.java", """
+                package app;
+                public class HiddenParent {
+                    private String inherited;
+                }
+                """);
+        compile(dir, "app/VisibleChild.java", """
+                package app;
+                @dev.morphia.annotations.Entity
+                public class VisibleChild extends HiddenParent {
+                    @dev.morphia.annotations.Id
+                    private org.bson.types.ObjectId id;
+                }
+                """, dir);
+        try (URLClassLoader loader = new URLClassLoader(new URL[] { dir.toUri().toURL() }, getClass().getClassLoader()) {
+            @Override
+            public URL findResource(String name) {
+                return name.equals("app/HiddenParent.class") ? null : super.findResource(name);
+            }
+        }) {
+            Class<?> child = loader.loadClass("app.VisibleChild");
+            CritterMapper mapper = new CritterMapper(MorphiaConfig.load().mapper(MapperType.CRITTER), loader);
+            // without the superclass's classfile, its properties would be silently left out
+            UnsupportedOperationException e = Assertions.assertThrows(UnsupportedOperationException.class,
+                    () -> new CritterGenerator(mapper).generate(child, new CritterClassLoader(loader), false));
+            Assertions.assertTrue(e.getMessage().contains("app.HiddenParent"), e.getMessage());
+        }
+    }
+
+    @Test
+    public void testGenerationReadsEachClassFileOnce(@TempDir Path dir) throws Exception {
+        compile(dir, "app/SharedParent.java", """
+                package app;
+                public class SharedParent {
+                    private String inherited;
+                }
+                """);
+        compile(dir, "app/ReadOnceChild.java", """
+                package app;
+                @dev.morphia.annotations.Entity
+                public class ReadOnceChild extends SharedParent {
+                    @dev.morphia.annotations.Id
+                    private org.bson.types.ObjectId id;
+                }
+                """, dir);
+        Map<String, Integer> reads = new ConcurrentHashMap<>();
+        try (URLClassLoader loader = new URLClassLoader(new URL[] { dir.toUri().toURL() }, getClass().getClassLoader()) {
+            @Override
+            public InputStream getResourceAsStream(String name) {
+                reads.merge(name, 1, Integer::sum);
+                return super.getResourceAsStream(name);
+            }
+        }) {
+            Class<?> child = loader.loadClass("app.ReadOnceChild");
+            CritterMapper mapper = new CritterMapper(MorphiaConfig.load().mapper(MapperType.CRITTER), loader);
+            // build-time generation walks the hierarchy to discover fields, look for an @Id getter and weave accessors
+            new CritterGenerator(mapper).generate(child, new CritterClassLoader(loader), false);
+        }
+        Assertions.assertEquals(Map.of("app/ReadOnceChild.class", 1, "app/SharedParent.class", 1), reads);
+    }
+
+    @Test
     public void testConfiguredStrategiesDoNotShareRuntimeModels() {
         EntityModel first = assertRuntimeGenerated(new CritterMapper(MorphiaConfig.load()
                 .mapper(MapperType.CRITTER)
@@ -343,13 +451,16 @@ public class TestCritterMapper {
         Assertions.assertNull(CritterMapper.accessFailure(new ClassNotFoundException("unrelated")));
     }
 
-    private static void compile(Path output, String file, String source) throws Exception {
+    private static void compile(Path output, String file, String source, Path... classpathEntries) throws Exception {
         Path sourceFile = output.resolveSibling(output.getFileName() + "-src").resolve(file);
         Files.createDirectories(sourceFile.getParent());
         Files.writeString(sourceFile, source);
         List<String> classpath = new ArrayList<>();
         for (Class<?> type : List.of(Entity.class, ObjectId.class)) {
             classpath.add(Path.of(type.getProtectionDomain().getCodeSource().getLocation().toURI()).toString());
+        }
+        for (Path entry : classpathEntries) {
+            classpath.add(entry.toString());
         }
         int result = ToolProvider.getSystemJavaCompiler().run(null, null, null, "-d", output.toString(), "-cp",
                 String.join(File.pathSeparator, classpath), sourceFile.toString());
@@ -815,6 +926,19 @@ public class TestCritterMapper {
         private String name;
     }
 
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface HiddenAnnotation {
+        String value();
+    }
+
+    @Entity
+    public static class HiddenAnnotationEntity {
+        @Id
+        private ObjectId id;
+        @HiddenAnnotation("hidden")
+        private String name;
+    }
+
     public static class PrivateSetterTarget {
         private ObjectId id;
         private String name;
@@ -862,6 +986,13 @@ public class TestCritterMapper {
     /**
      * A configurable strategy in Morphia's own namespace, which must not be mistaken for a built-in.
      */
+    public static class FailingNaming extends NamingStrategy {
+        @Override
+        public String apply(String value) {
+            throw new IllegalStateException("Naming failed for " + value);
+        }
+    }
+
     public static class PrefixNaming extends NamingStrategy {
         private final String prefix;
 

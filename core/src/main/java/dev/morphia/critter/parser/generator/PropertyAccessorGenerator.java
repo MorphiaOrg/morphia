@@ -49,6 +49,16 @@ public class PropertyAccessorGenerator extends BaseGenerator {
     }
 
     public PropertyAccessorGenerator emit() {
+        critterClassLoader.register(generatedType, generate());
+        return this;
+    }
+
+    /**
+     * Generates the accessor class without registering it.
+     *
+     * @return the class's bytecode
+     */
+    public byte[] generate() {
         ClassDesc thisDesc = ClassDesc.of(generatedType);
         ClassDesc entityDesc = ClassDesc.of(entity.getName());
         ClassDesc propertyDesc;
@@ -128,8 +138,7 @@ public class PropertyAccessorGenerator extends BaseGenerator {
                     });
         });
 
-        critterClassLoader.register(generatedType, bytes);
-        return this;
+        return bytes;
     }
 
     private String primitiveUnboxMethod() {

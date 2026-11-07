@@ -88,16 +88,19 @@ public class EntityModelGenerator extends BaseGenerator {
     }
 
     /**
-     * Returns the fully-qualified name of the generated entity model class.
-     */
-    public String getGeneratedType() {
-        return generatedType;
-    }
-
-    /**
      * Emits the generated entity model class and returns this generator.
      */
     public EntityModelGenerator emit() {
+        critterClassLoader.register(generatedType, generate());
+        return this;
+    }
+
+    /**
+     * Generates the entity model class without registering it.
+     *
+     * @return the class's bytecode
+     */
+    public byte[] generate() {
         ClassDesc thisDesc = ClassDesc.of(generatedType);
         ClassDesc superDesc = ClassDesc.of(CritterEntityModel.class.getName());
         ClassDesc mapperDesc = ClassDesc.of(Mapper.class.getName());
@@ -181,8 +184,7 @@ public class EntityModelGenerator extends BaseGenerator {
                     });
         });
 
-        critterClassLoader.register(generatedType, bytes);
-        return this;
+        return bytes;
     }
 
     private static String propertyMethod(int index) {

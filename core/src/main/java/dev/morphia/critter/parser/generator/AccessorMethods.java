@@ -10,12 +10,22 @@ import io.smallrye.classfile.ClassModel;
 public abstract class AccessorMethods {
     /** The entity class whose bytecode will be augmented. */
     protected final Class<?> entity;
+    /** The entity's parsed classfile. */
+    protected final ClassModel model;
 
     /**
-     * Creates a new generator for the given entity class.
+     * Creates a new generator for the given entity class, reading its classfile.
      */
     protected AccessorMethods(Class<?> entity) {
+        this(entity, readClassModel(entity));
+    }
+
+    /**
+     * Creates a new generator for the given entity class and its already parsed classfile.
+     */
+    protected AccessorMethods(Class<?> entity, ClassModel model) {
         this.entity = entity;
+        this.model = model;
     }
 
     /**
@@ -23,10 +33,7 @@ public abstract class AccessorMethods {
      */
     public abstract byte[] emit();
 
-    /**
-     * Reads the class file bytes for the given entity.
-     */
-    protected ClassModel readClassFiltering() {
+    private static ClassModel readClassModel(Class<?> entity) {
         ClassModel model = GenerationUtils.readClassModel(entity);
         if (model == null) {
             throw new MappingException("Could not find class file for %s".formatted(entity.getName()));

@@ -446,10 +446,20 @@ harness passes, and both mappers agree.
     models wrap their accessors with it. Critter also keeps a generic array's (`T[]`) array flag.
   - `MethodAccessor` makes its methods accessible.
 
-### 4.9 Runtime generation efficiency (C5/A9)
+### ~~4.9 Runtime generation efficiency (C5/A9)~~
 - Cache `ClassModel` per class for the duration of a generation pass, so shared superclasses are parsed once.
 - Use `declaringClass` instead of exception-driven `getDeclaredField` walks.
 - Check eligibility before emitting classes.
+- Done:
+  - A generation pass is one entity. `PropertyFinder` reads each class file in the hierarchy once and passes it on
+    to the build-time weavers. A pass used to read the parent of a two-class hierarchy three times, and the entity twice.
+    Entities sharing a superclass still each read it once, so mappers don't hold parsed class files.
+  - A superclass whose class file can't be found now fails generation, so the entity falls back to reflection, or
+    is skipped at build time. Before, the walk stopped there and the superclass's properties were silently left out.
+  - Nestmate and model generators look fields up through `FieldInfo.declaringClass`.
+  - Generation checks everything, including full privilege access to each nestmate host, and builds the entity
+    model generator before it defines or registers any accessor. An entity that fails a check no longer leaves accessors in
+    `NestmateAccessorRegistry`, or woven classes in the build output.
 
 ### 4.10 Tier decision caching (C6)
 - Cache configuration-independent facts globally in a `ClassValue`: whether an AOT model exists and its
@@ -577,6 +587,6 @@ Only start after Phases 3 and 4 have shipped and been re-measured.
    streaming; ~~4.14 entity-only annotated methods~~
 9. 4.4 generic resolver
 10. ~~Phase 5 A11 builder/annotation utility~~ → ~~4.5 parity test~~ → ~~4.6 shared rules~~ → ~~4.7 plain models~~ → ~~4.8 divergences~~ →
-    4.9–4.11 → 4.12 AOT guard + 4.13 API surface (**before 3.0 GA**)
+    ~~4.9~~ → 4.10–4.11 → 4.12 AOT guard + 4.13 API surface (**before 3.0 GA**)
 11. 3.17 single-pass discriminator and `_id`
 12. Phase 5 clean-ups throughout; Phase 6 re-evaluated after 3.0 GA

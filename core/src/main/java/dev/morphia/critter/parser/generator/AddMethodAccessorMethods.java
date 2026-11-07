@@ -29,9 +29,16 @@ public class AddMethodAccessorMethods extends AccessorMethods {
         this.methods = methods;
     }
 
+    /**
+     * Creates a generator that will add accessor methods for the given getter methods to the entity class's parsed classfile.
+     */
+    public AddMethodAccessorMethods(Class<?> entity, ClassModel model, List<MethodInfo> methods) {
+        super(entity, model);
+        this.methods = methods;
+    }
+
     @Override
     public byte[] emit() {
-        ClassModel model = readClassFiltering();
         ClassDesc entityDesc = ClassDesc.of(entity.getName());
 
         ClassTransform transform = ClassTransform.dropping(
