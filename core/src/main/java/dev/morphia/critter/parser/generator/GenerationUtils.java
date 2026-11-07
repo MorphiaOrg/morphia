@@ -79,8 +79,10 @@ public class GenerationUtils {
      * @param setterName   the setter's name
      * @param propertyDesc the property's type
      * @return the type of the getter's setter: the paired one's, or, when the getter has none or was paired outside the
-     *         entity's hierarchy (an {@code @ExternalEntity} stand-in's), a non-private one the entity has; null if there
-     *         is none
+     *         entity's hierarchy (an {@code @ExternalEntity} stand-in's), a non-private one the entity has; null if the
+     *         getter has no setter
+     * @throws UnsupportedOperationException if the getter was paired with a setter but the entity has no non-private one
+     *                                       to call, so that the entity is mapped another way rather than read-only
      */
     @Nullable
     public static MethodTypeDesc setterType(Class<?> entity, MethodInfo getter, String setterName, ClassDesc propertyDesc) {
@@ -90,6 +92,9 @@ public class GenerationUtils {
         }
         Method found = findSetterMethod(entity, setterName, propertyDesc);
         if (found == null) {
+            if (setter != null) {
+                throw new UnsupportedOperationException("Critter can't call %s's %s()".formatted(entity.getName(), setterName));
+            }
             return null;
         }
         return MethodTypeDesc.of(ClassDesc.ofDescriptor(found.getReturnType().descriptorString()), propertyDesc);

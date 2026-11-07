@@ -212,6 +212,18 @@ public class TestCritterMapper {
     }
 
     @Test
+    public void testStandInPairWithPrivateTargetSetterFallsBack() {
+        CritterMapper mapper = new CritterMapper(
+                MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
+        // the generated accessor would call the target's setter, which is private, so the property would be read-only
+        EntityModel model = mapper.mapEntity(PrivateSetterStandIn.class);
+        Assertions.assertFalse(model instanceof CritterEntityModel, "Expected a reflective model but got: " + model.getClass());
+        PrivateSetterTarget instance = new PrivateSetterTarget();
+        model.getProperty("name").getAccessor().set(instance, "written");
+        Assertions.assertEquals("written", instance.getName());
+    }
+
+    @Test
     public void testConfiguredStrategiesDoNotShareRuntimeModels() {
         EntityModel first = assertRuntimeGenerated(new CritterMapper(MorphiaConfig.load()
                 .mapper(MapperType.CRITTER)
@@ -801,6 +813,50 @@ public class TestCritterMapper {
         @Id
         private ObjectId id;
         private String name;
+    }
+
+    public static class PrivateSetterTarget {
+        private ObjectId id;
+        private String name;
+
+        public ObjectId getId() {
+            return id;
+        }
+
+        public void setId(ObjectId id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        private void setName(String name) {
+            this.name = name;
+        }
+    }
+
+    @ExternalEntity(target = PrivateSetterTarget.class, value = "private_setter_targets")
+    public static class PrivateSetterStandIn {
+        private ObjectId id;
+        private String name;
+
+        @Id
+        public ObjectId getId() {
+            return id;
+        }
+
+        public void setId(ObjectId id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 
     /**
