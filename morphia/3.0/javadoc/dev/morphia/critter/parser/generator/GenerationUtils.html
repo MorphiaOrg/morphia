@@ -116,8 +116,9 @@ loadScripts(document, 'script');</script>
 <div class="block">Resolves a ClassDesc to a Class using the given class loader.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#emitAnnotationViaBuilder(io.smallrye.classfile.CodeBuilder,java.lang.annotation.Annotation)" class="member-name-link">emitAnnotationViaBuilder</a><wbr>(io.smallrye.classfile.CodeBuilder&nbsp;cod,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&nbsp;ann)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#emitAnnotationViaBuilder(io.smallrye.classfile.CodeBuilder,java.lang.annotation.Annotation,java.lang.constant.ClassDesc)" class="member-name-link">emitAnnotationViaBuilder</a><wbr>(io.smallrye.classfile.CodeBuilder&nbsp;cod,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&nbsp;ann,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/constant/ClassDesc.html" title="class or interface in java.lang.constant" class="external-link">ClassDesc</a>&nbsp;loaderAnchor)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Emits bytecode that calls the generated AnnotationBuilder for a Morphia annotation,
  leaving the built annotation instance on the operand stack.</div>
@@ -130,14 +131,16 @@ loadScripts(document, 'script');</script>
 <div class="block">Emits a no-arg boolean method that returns a constant value.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#emitClassRef(io.smallrye.classfile.CodeBuilder,java.lang.Class)" class="member-name-link">emitClassRef</a><wbr>(io.smallrye.classfile.CodeBuilder&nbsp;cod,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;cls)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#emitClassRef(io.smallrye.classfile.CodeBuilder,java.lang.Class,java.lang.constant.ClassDesc)" class="member-name-link">emitClassRef</a><wbr>(io.smallrye.classfile.CodeBuilder&nbsp;cod,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;cls,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/constant/ClassDesc.html" title="class or interface in java.lang.constant" class="external-link">ClassDesc</a>&nbsp;loaderAnchor)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Emits bytecode that loads a Class reference.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#emitTypeData(dev.morphia.mapping.codec.pojo.TypeData,io.smallrye.classfile.CodeBuilder)" class="member-name-link">emitTypeData</a><wbr>(dev.morphia.mapping.codec.pojo.TypeData&lt;?&gt;&nbsp;data,
- io.smallrye.classfile.CodeBuilder&nbsp;cod)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#emitTypeData(dev.morphia.mapping.codec.pojo.TypeData,io.smallrye.classfile.CodeBuilder,java.lang.constant.ClassDesc)" class="member-name-link">emitTypeData</a><wbr>(dev.morphia.mapping.codec.pojo.TypeData&lt;?&gt;&nbsp;data,
+ io.smallrye.classfile.CodeBuilder&nbsp;cod,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/constant/ClassDesc.html" title="class or interface in java.lang.constant" class="external-link">ClassDesc</a>&nbsp;loaderAnchor)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Emits bytecode that constructs a TypeData instance.</div>
 </div>
@@ -263,10 +266,11 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="emitAnnotationViaBuilder(io.smallrye.classfile.CodeBuilder,java.lang.annotation.Annotation)">
+<section class="detail" id="emitAnnotationViaBuilder(io.smallrye.classfile.CodeBuilder,java.lang.annotation.Annotation,java.lang.constant.ClassDesc)">
 <h3>emitAnnotationViaBuilder</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">emitAnnotationViaBuilder</span><wbr><span class="parameters">(io.smallrye.classfile.CodeBuilder&nbsp;cod,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&nbsp;ann)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/annotation/Annotation.html" title="class or interface in java.lang.annotation" class="external-link">Annotation</a>&nbsp;ann,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/constant/ClassDesc.html" title="class or interface in java.lang.constant" class="external-link">ClassDesc</a>&nbsp;loaderAnchor)</span></div>
 <div class="block">Emits bytecode that calls the generated AnnotationBuilder for a Morphia annotation,
  leaving the built annotation instance on the operand stack. Values are hardcoded as
  bytecode constants — no runtime reflection.
@@ -277,18 +281,28 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="emitClassRef(io.smallrye.classfile.CodeBuilder,java.lang.Class)">
+<section class="detail" id="emitClassRef(io.smallrye.classfile.CodeBuilder,java.lang.Class,java.lang.constant.ClassDesc)">
 <h3>emitClassRef</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">emitClassRef</span><wbr><span class="parameters">(io.smallrye.classfile.CodeBuilder&nbsp;cod,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;cls)</span></div>
-<div class="block">Emits bytecode that loads a Class reference. Non-public classes use Class.forName().</div>
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;cls,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/constant/ClassDesc.html" title="class or interface in java.lang.constant" class="external-link">ClassDesc</a>&nbsp;loaderAnchor)</span></div>
+<div class="block">Emits bytecode that loads a Class reference. A non-public class can't be named as a constant from generated code in
+ another package, so it's looked up by name through the class loader of <code>loaderAnchor</code>, a generated class
+ defined where the entity's classes are visible. Callers emit this once, when a model is built.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>cod</code> - the code to emit into</dd>
+<dd><code>cls</code> - the class to load</dd>
+<dd><code>loaderAnchor</code> - a class whose loader can see <code>cls</code></dd>
+</dl>
 </section>
 </li>
 <li>
-<section class="detail" id="emitTypeData(dev.morphia.mapping.codec.pojo.TypeData,io.smallrye.classfile.CodeBuilder)">
+<section class="detail" id="emitTypeData(dev.morphia.mapping.codec.pojo.TypeData,io.smallrye.classfile.CodeBuilder,java.lang.constant.ClassDesc)">
 <h3>emitTypeData</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">emitTypeData</span><wbr><span class="parameters">(dev.morphia.mapping.codec.pojo.TypeData&lt;?&gt;&nbsp;data,
- io.smallrye.classfile.CodeBuilder&nbsp;cod)</span></div>
+ io.smallrye.classfile.CodeBuilder&nbsp;cod,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/constant/ClassDesc.html" title="class or interface in java.lang.constant" class="external-link">ClassDesc</a>&nbsp;loaderAnchor)</span></div>
 <div class="block">Emits bytecode that constructs a TypeData instance.</div>
 </section>
 </li>

@@ -81,8 +81,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">PropertyModelGenerator</span>
 <span class="extends-implements">extends <a href="BaseGenerator.html" title="class in dev.morphia.critter.parser.generator">BaseGenerator</a></span></div>
-<div class="block">Generates a ClassFile-based <code>CritterPropertyModel</code> implementation
- for a single property of a Morphia entity class.</div>
+<div class="block">Generates the code, in a generated entity model's constructor, that builds the model of one property of a Morphia
+ entity class.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -165,11 +165,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#emit()" class="member-name-link">emit</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Emits the generated property model class and returns this generator.</div>
-</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPropertyName()" class="member-name-link">getPropertyName</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#ignoreIdField()" class="member-name-link">ignoreIdField</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -307,6 +305,16 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="getPropertyName()">
+<h3>getPropertyName</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getPropertyName</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the property's Java name</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="isAnnotatedId()">
 <h3>isAnnotatedId</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isAnnotatedId</span>()</div>
@@ -321,18 +329,11 @@ loadScripts(document, 'script');</script>
 <h3>ignoreIdField</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a></span>&nbsp;<span class="element-name">ignoreIdField</span>()</div>
 <div class="block">Leaves the entity's <code>@IdField</code> out of this property's mapped name, because another property is annotated
- <code>@Id</code>: as in <code>ConfigureProperties</code>, an explicit <code>@Id</code> wins. Call before <a href="#emit()"><code>emit()</code></a>.</div>
+ <code>@Id</code>: as in <code>ConfigureProperties</code>, an explicit <code>@Id</code> wins. Call before the entity model is emitted.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>this</dd>
 </dl>
-</section>
-</li>
-<li>
-<section class="detail" id="emit()">
-<h3>emit</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a></span>&nbsp;<span class="element-name">emit</span>()</div>
-<div class="block">Emits the generated property model class and returns this generator.</div>
 </section>
 </li>
 </ul>

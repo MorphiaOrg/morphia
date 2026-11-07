@@ -853,10 +853,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the package name used for generated Critter classes for the given entity.</div>
 </dd>
-<dt><a href="dev/morphia/critter/parser/java/CritterParser.html" class="type-name-link" title="class in dev.morphia.critter.parser.java">CritterParser</a> - Class in <a href="dev/morphia/critter/parser/java/package-summary.html">dev.morphia.critter.parser.java</a></dt>
-<dd>
-<div class="block">Singleton parser providing annotation descriptor resolution utilities.</div>
-</dd>
 <dt><a href="dev/morphia/query/filters/GeoWithinFilter.html#crs(com.mongodb.client.model.geojson.CoordinateReferenceSystem)" class="member-name-link">crs(CoordinateReferenceSystem)</a> - Method in class dev.morphia.query.filters.<a href="dev/morphia/query/filters/GeoWithinFilter.html" title="class in dev.morphia.query.filters">GeoWithinFilter</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/query/filters/NearFilter.html#crs(com.mongodb.client.model.geojson.CoordinateReferenceSystem)" class="member-name-link">crs(CoordinateReferenceSystem)</a> - Method in class dev.morphia.query.filters.<a href="dev/morphia/query/filters/NearFilter.html" title="class in dev.morphia.query.filters">NearFilter</a></dt>
@@ -1053,6 +1049,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the value of the <code>declaringClass</code> record component.</div>
 </dd>
+<dt><a href="dev/morphia/critter/parser/MethodInfo.html#declaringClass()" class="member-name-link">declaringClass()</a> - Method in record class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./dev/morphia/critter/parser/MethodInfo.html#param-declaringClass"><code>declaringClass</code></a> record component.</div>
+</dd>
 <dt><a href="dev/morphia/config/MorphiaConfig.html#decodeSessionCacheSize()" class="member-name-link">decodeSessionCacheSize()</a> - Method in interface dev.morphia.config.<a href="dev/morphia/config/MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a></dt>
 <dd>
 <div class="block">The maximum number of decoded entities one decode session will cache.</div>
@@ -1191,13 +1191,9 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/critter/package-summary.html">dev.morphia.critter</a> - package dev.morphia.critter</dt>
 <dd>&nbsp;</dd>
-<dt><a href="dev/morphia/critter/conventions/package-summary.html">dev.morphia.critter.conventions</a> - package dev.morphia.critter.conventions</dt>
-<dd>&nbsp;</dd>
 <dt><a href="dev/morphia/critter/parser/package-summary.html">dev.morphia.critter.parser</a> - package dev.morphia.critter.parser</dt>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/critter/parser/generator/package-summary.html">dev.morphia.critter.parser.generator</a> - package dev.morphia.critter.parser.generator</dt>
-<dd>&nbsp;</dd>
-<dt><a href="dev/morphia/critter/parser/java/package-summary.html">dev.morphia.critter.parser.java</a> - package dev.morphia.critter.parser.java</dt>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/mapping/package-summary.html">dev.morphia.mapping</a> - package dev.morphia.mapping</dt>
 <dd>
@@ -1327,15 +1323,11 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="dev/morphia/critter/parser/generator/PropertyAccessorGenerator.html#emit()" class="member-name-link">emit()</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/PropertyAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyAccessorGenerator</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="dev/morphia/critter/parser/generator/PropertyModelGenerator.html#emit()" class="member-name-link">emit()</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a></dt>
-<dd>
-<div class="block">Emits the generated property model class and returns this generator.</div>
-</dd>
 <dt><a href="dev/morphia/critter/parser/generator/VarHandleAccessorGenerator.html#emit()" class="member-name-link">emit()</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/VarHandleAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator">VarHandleAccessorGenerator</a></dt>
 <dd>
 <div class="block">Emits the generated property accessor class and returns this generator.</div>
 </dd>
-<dt><a href="dev/morphia/critter/parser/generator/GenerationUtils.html#emitAnnotationViaBuilder(io.smallrye.classfile.CodeBuilder,java.lang.annotation.Annotation)" class="member-name-link">emitAnnotationViaBuilder(CodeBuilder, Annotation)</a> - Static method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/GenerationUtils.html" title="class in dev.morphia.critter.parser.generator">GenerationUtils</a></dt>
+<dt><a href="dev/morphia/critter/parser/generator/GenerationUtils.html#emitAnnotationViaBuilder(io.smallrye.classfile.CodeBuilder,java.lang.annotation.Annotation,java.lang.constant.ClassDesc)" class="member-name-link">emitAnnotationViaBuilder(CodeBuilder, Annotation, ClassDesc)</a> - Static method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/GenerationUtils.html" title="class in dev.morphia.critter.parser.generator">GenerationUtils</a></dt>
 <dd>
 <div class="block">Emits bytecode that calls the generated AnnotationBuilder for a Morphia annotation,
  leaving the built annotation instance on the operand stack.</div>
@@ -1344,11 +1336,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Emits a no-arg boolean method that returns a constant value.</div>
 </dd>
-<dt><a href="dev/morphia/critter/parser/generator/GenerationUtils.html#emitClassRef(io.smallrye.classfile.CodeBuilder,java.lang.Class)" class="member-name-link">emitClassRef(CodeBuilder, Class&lt;?&gt;)</a> - Static method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/GenerationUtils.html" title="class in dev.morphia.critter.parser.generator">GenerationUtils</a></dt>
+<dt><a href="dev/morphia/critter/parser/generator/GenerationUtils.html#emitClassRef(io.smallrye.classfile.CodeBuilder,java.lang.Class,java.lang.constant.ClassDesc)" class="member-name-link">emitClassRef(CodeBuilder, Class&lt;?&gt;, ClassDesc)</a> - Static method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/GenerationUtils.html" title="class in dev.morphia.critter.parser.generator">GenerationUtils</a></dt>
 <dd>
 <div class="block">Emits bytecode that loads a Class reference.</div>
 </dd>
-<dt><a href="dev/morphia/critter/parser/generator/GenerationUtils.html#emitTypeData(dev.morphia.mapping.codec.pojo.TypeData,io.smallrye.classfile.CodeBuilder)" class="member-name-link">emitTypeData(TypeData&lt;?&gt;, CodeBuilder)</a> - Static method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/GenerationUtils.html" title="class in dev.morphia.critter.parser.generator">GenerationUtils</a></dt>
+<dt><a href="dev/morphia/critter/parser/generator/GenerationUtils.html#emitTypeData(dev.morphia.mapping.codec.pojo.TypeData,io.smallrye.classfile.CodeBuilder,java.lang.constant.ClassDesc)" class="member-name-link">emitTypeData(TypeData&lt;?&gt;, CodeBuilder, ClassDesc)</a> - Static method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/GenerationUtils.html" title="class in dev.morphia.critter.parser.generator">GenerationUtils</a></dt>
 <dd>
 <div class="block">Emits bytecode that constructs a TypeData instance.</div>
 </dd>
@@ -1470,10 +1462,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="dev/morphia/query/filters/RegexFilter.html#extended()" class="member-name-link">extended()</a> - Method in class dev.morphia.query.filters.<a href="dev/morphia/query/filters/RegexFilter.html" title="class in dev.morphia.query.filters">RegexFilter</a></dt>
 <dd>
 <div class="block">“Extended” capability to ignore all white space characters in the $regex pattern unless escaped or included in a character class.</div>
-</dd>
-<dt><a href="dev/morphia/critter/parser/ExtensionFunctions.html" class="type-name-link" title="class in dev.morphia.critter.parser">ExtensionFunctions</a> - Class in <a href="dev/morphia/critter/parser/package-summary.html">dev.morphia.critter.parser</a></dt>
-<dd>
-<div class="block">Utility methods for string and type transformations used during Critter code generation.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:F">F</h2>
@@ -1778,14 +1766,12 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/aggregation/expressions/impls/ConvertType.html#getName()" class="member-name-link">getName()</a> - Method in enum class dev.morphia.aggregation.expressions.impls.<a href="dev/morphia/aggregation/expressions/impls/ConvertType.html" title="enum class in dev.morphia.aggregation.expressions.impls">ConvertType</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="dev/morphia/critter/parser/generator/PropertyModelGenerator.html#getPropertyName()" class="member-name-link">getPropertyName()</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="dev/morphia/query/MorphiaCursor.html#getServerAddress()" class="member-name-link">getServerAddress()</a> - Method in class dev.morphia.query.<a href="dev/morphia/query/MorphiaCursor.html" title="class in dev.morphia.query">MorphiaCursor</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/query/MorphiaCursor.html#getServerCursor()" class="member-name-link">getServerCursor()</a> - Method in class dev.morphia.query.<a href="dev/morphia/query/MorphiaCursor.html" title="class in dev.morphia.query">MorphiaCursor</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="dev/morphia/critter/parser/ExtensionFunctions.html#getterToPropertyName(dev.morphia.critter.parser.MethodInfo,java.lang.Class)" class="member-name-link">getterToPropertyName(MethodInfo, Class&lt;?&gt;)</a> - Static method in class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/ExtensionFunctions.html" title="class in dev.morphia.critter.parser">ExtensionFunctions</a></dt>
-<dd>
-<div class="block">Converts a getter method to a property name.</div>
-</dd>
 <dt><a href="dev/morphia/critter/parser/generator/PropertyAccessorGenerator.html#getWrapperType()" class="member-name-link">getWrapperType()</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/PropertyAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyAccessorGenerator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/critter/parser/generator/VarHandleAccessorGenerator.html#getWrapperType()" class="member-name-link">getWrapperType()</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/VarHandleAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator">VarHandleAccessorGenerator</a></dt>
@@ -1958,10 +1944,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates a named group ID</div>
 </dd>
-<dt><a href="dev/morphia/critter/Critter.html#identifierCase(java.lang.String)" class="member-name-link">identifierCase(String)</a> - Static method in class dev.morphia.critter.<a href="dev/morphia/critter/Critter.html" title="class in dev.morphia.critter">Critter</a></dt>
-<dd>
-<div class="block">Converts a string to identifier (camel) case by lower-casing the first character.</div>
-</dd>
 <dt><a href="dev/morphia/mapping/NamingStrategy.html#identity()" class="member-name-link">identity()</a> - Static method in class dev.morphia.mapping.<a href="dev/morphia/mapping/NamingStrategy.html" title="class in dev.morphia.mapping">NamingStrategy</a></dt>
 <dd>
 <div class="block">Defines a naming strategy that returns the value passed</div>
@@ -2121,10 +2103,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="dev/morphia/InsertOneOptions.html#%3Cinit%3E()" class="member-name-link">InsertOneOptions()</a> - Constructor for class dev.morphia.<a href="dev/morphia/InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></dt>
 <dd>
 <div class="block">Creates a new options wrapper</div>
-</dd>
-<dt><a href="dev/morphia/critter/parser/java/CritterParser.html#INSTANCE" class="member-name-link">INSTANCE</a> - Static variable in class dev.morphia.critter.parser.java.<a href="dev/morphia/critter/parser/java/CritterParser.html" title="class in dev.morphia.critter.parser.java">CritterParser</a></dt>
-<dd>
-<div class="block">The singleton instance of this parser.</div>
 </dd>
 <dt><a href="dev/morphia/aggregation/expressions/impls/ConvertType.html#INT" class="member-name-link">INT</a> - Enum constant in enum class dev.morphia.aggregation.expressions.impls.<a href="dev/morphia/aggregation/expressions/impls/ConvertType.html" title="enum class in dev.morphia.aggregation.expressions.impls">ConvertType</a></dt>
 <dd>
@@ -2622,16 +2600,16 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Generates bytecode augmenting the entity with synthetic <code>__readXxx</code>/<code>__writeXxx</code> methods for its getter methods.</div>
 </dd>
-<dt><a href="dev/morphia/critter/parser/ExtensionFunctions.html#methodCase(java.lang.String)" class="member-name-link">methodCase(String)</a> - Static method in class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/ExtensionFunctions.html" title="class in dev.morphia.critter.parser">ExtensionFunctions</a></dt>
-<dd>
-<div class="block">Converts a string to method (camel) case by lower-casing the first character.</div>
-</dd>
 <dt><a href="dev/morphia/critter/parser/MethodInfo.html" class="type-name-link" title="class in dev.morphia.critter.parser">MethodInfo</a> - Record Class in <a href="dev/morphia/critter/parser/package-summary.html">dev.morphia.critter.parser</a></dt>
 <dd>
 <div class="block">Immutable record capturing the bytecode-level information for a single entity method,
  replacing direct use of ASM <code>MethodNode</code>.</div>
 </dd>
 <dt><a href="dev/morphia/critter/parser/MethodInfo.html#%3Cinit%3E(java.lang.String,java.lang.String,java.lang.String,int,java.util.List)" class="member-name-link">MethodInfo(String, String, String, int, List&lt;Annotation&gt;)</a> - Constructor for record class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a></dt>
+<dd>
+<div class="block">Creates a MethodInfo whose declaring class isn't known.</div>
+</dd>
+<dt><a href="dev/morphia/critter/parser/MethodInfo.html#%3Cinit%3E(java.lang.String,java.lang.String,java.lang.String,int,java.util.List,java.lang.Class)" class="member-name-link">MethodInfo(String, String, String, int, List&lt;Annotation&gt;, Class&lt;?&gt;)</a> - Constructor for record class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a></dt>
 <dd>
 <div class="block">Creates an instance of a <code>MethodInfo</code> record class.</div>
 </dd>
@@ -3215,14 +3193,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Updates this configuration to include the new annotation providers for property discovery.</div>
 </dd>
-<dt><a href="dev/morphia/critter/Critter.html#propertyAnnotations" class="member-name-link">propertyAnnotations</a> - Static variable in class dev.morphia.critter.<a href="dev/morphia/critter/Critter.html" title="class in dev.morphia.critter">Critter</a></dt>
-<dd>
-<div class="block">Annotation descriptors that mark a field or method as a mapped property.</div>
-</dd>
-<dt><a href="dev/morphia/critter/parser/java/CritterParser.html#propertyAnnotations()" class="member-name-link">propertyAnnotations()</a> - Method in class dev.morphia.critter.parser.java.<a href="dev/morphia/critter/parser/java/CritterParser.html" title="class in dev.morphia.critter.parser.java">CritterParser</a></dt>
-<dd>
-<div class="block">Returns the descriptors of all annotation types that mark a field or method as a mapped property.</div>
-</dd>
 <dt><a href="dev/morphia/config/MorphiaConfig.html#propertyDiscovery()" class="member-name-link">propertyDiscovery()</a> - Method in interface dev.morphia.config.<a href="dev/morphia/config/MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a></dt>
 <dd>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
@@ -3244,26 +3214,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="dev/morphia/critter/parser/PropertyFinder.html#%3Cinit%3E(dev.morphia.mapping.Mapper,dev.morphia.critter.CritterClassLoader,boolean)" class="member-name-link">PropertyFinder(Mapper, CritterClassLoader, boolean)</a> - Constructor for class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/PropertyFinder.html" title="class in dev.morphia.critter.parser">PropertyFinder</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="dev/morphia/critter/parser/generator/CritterGenerator.html#propertyModelGenerator(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo)" class="member-name-link">propertyModelGenerator(Class&lt;?&gt;, CritterClassLoader, FieldInfo)</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/CritterGenerator.html" title="class in dev.morphia.critter.parser.generator">CritterGenerator</a></dt>
-<dd>
-<div class="block">Generates and registers a <a href="dev/morphia/critter/parser/generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator"><code>PropertyModelGenerator</code></a> for the given field.</div>
-</dd>
-<dt><a href="dev/morphia/critter/parser/generator/CritterGenerator.html#propertyModelGenerator(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.MethodInfo)" class="member-name-link">propertyModelGenerator(Class&lt;?&gt;, CritterClassLoader, MethodInfo)</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/CritterGenerator.html" title="class in dev.morphia.critter.parser.generator">CritterGenerator</a></dt>
-<dd>
-<div class="block">Generates and registers a <a href="dev/morphia/critter/parser/generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator"><code>PropertyModelGenerator</code></a> for the property exposed by the given getter method.</div>
-</dd>
-<dt><a href="dev/morphia/critter/parser/generator/CritterGenerator.html#propertyModelGenerator(java.lang.Class,java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo)" class="member-name-link">propertyModelGenerator(Class&lt;?&gt;, Class&lt;?&gt;, CritterClassLoader, FieldInfo)</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/CritterGenerator.html" title="class in dev.morphia.critter.parser.generator">CritterGenerator</a></dt>
-<dd>
-<div class="block">Generates and registers a <a href="dev/morphia/critter/parser/generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator"><code>PropertyModelGenerator</code></a> for the given field, reading annotations from <code>annotationSource</code>.</div>
-</dd>
-<dt><a href="dev/morphia/critter/parser/generator/CritterGenerator.html#propertyModelGenerator(java.lang.Class,java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.MethodInfo)" class="member-name-link">propertyModelGenerator(Class&lt;?&gt;, Class&lt;?&gt;, CritterClassLoader, MethodInfo)</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/CritterGenerator.html" title="class in dev.morphia.critter.parser.generator">CritterGenerator</a></dt>
-<dd>
-<div class="block">Generates and registers a <a href="dev/morphia/critter/parser/generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator"><code>PropertyModelGenerator</code></a> for the given method, reading annotations from <code>annotationSource</code>.</div>
-</dd>
 <dt><a href="dev/morphia/critter/parser/generator/PropertyModelGenerator.html" class="type-name-link" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a> - Class in <a href="dev/morphia/critter/parser/generator/package-summary.html">dev.morphia.critter.parser.generator</a></dt>
 <dd>
-<div class="block">Generates a ClassFile-based <code>CritterPropertyModel</code> implementation
- for a single property of a Morphia entity class.</div>
+<div class="block">Generates the code, in a generated entity model's constructor, that builds the model of one property of a Morphia
+ entity class.</div>
 </dd>
 <dt><a href="dev/morphia/critter/parser/generator/PropertyModelGenerator.html#%3Cinit%3E(dev.morphia.config.MorphiaConfig,java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo)" class="member-name-link">PropertyModelGenerator(MorphiaConfig, Class&lt;?&gt;, CritterClassLoader, FieldInfo)</a> - Constructor for class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a></dt>
 <dd>
@@ -3828,10 +3782,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Defines a naming strategy that returns snake case of the value passed</div>
 </dd>
-<dt><a href="dev/morphia/critter/parser/ExtensionFunctions.html#snakeCase(java.lang.String)" class="member-name-link">snakeCase(String)</a> - Static method in class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/ExtensionFunctions.html" title="class in dev.morphia.critter.parser">ExtensionFunctions</a></dt>
-<dd>
-<div class="block">Converts a camelCase string to snake_case.</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/stages/Sort.html#sort()" class="member-name-link">sort()</a> - Static method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Sort.html" title="class in dev.morphia.aggregation.stages">Sort</a></dt>
 <dd>
 <div class="block">Creates a sort stage.</div>
@@ -4149,14 +4099,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/aggregation/expressions/impls/DateToString.html#timeZone(java.lang.Object)" class="member-name-link">timeZone(Object)</a> - Method in class dev.morphia.aggregation.expressions.impls.<a href="dev/morphia/aggregation/expressions/impls/DateToString.html" title="class in dev.morphia.aggregation.expressions.impls">DateToString</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="dev/morphia/critter/Critter.html#titleCase(java.lang.String)" class="member-name-link">titleCase(String)</a> - Static method in class dev.morphia.critter.<a href="dev/morphia/critter/Critter.html" title="class in dev.morphia.critter">Critter</a></dt>
-<dd>
-<div class="block">Converts a string to title case by capitalizing the first character.</div>
-</dd>
-<dt><a href="dev/morphia/critter/parser/ExtensionFunctions.html#titleCase(java.lang.String)" class="member-name-link">titleCase(String)</a> - Static method in class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/ExtensionFunctions.html" title="class in dev.morphia.critter.parser">ExtensionFunctions</a></dt>
-<dd>
-<div class="block">Converts a string to title case by capitalizing the first character.</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/expressions/TypeExpressions.html#toBool(java.lang.Object)" class="member-name-link">toBool(Object)</a> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/TypeExpressions.html" title="class in dev.morphia.aggregation.expressions">TypeExpressions</a></dt>
 <dd>
 <div class="block">Converts value to a boolean.</div>
@@ -4245,14 +4187,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="dev/morphia/aggregation/expressions/TypeExpressions.html#toUuid(java.lang.Object)" class="member-name-link">toUuid(Object)</a> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/TypeExpressions.html" title="class in dev.morphia.aggregation.expressions">TypeExpressions</a></dt>
 <dd>
 <div class="block">Converts a value to a UUID.</div>
-</dd>
-<dt><a href="dev/morphia/critter/Critter.html#transientAnnotations" class="member-name-link">transientAnnotations</a> - Static variable in class dev.morphia.critter.<a href="dev/morphia/critter/Critter.html" title="class in dev.morphia.critter">Critter</a></dt>
-<dd>
-<div class="block">Annotation descriptors that mark a field or method as transient (not persisted).</div>
-</dd>
-<dt><a href="dev/morphia/critter/parser/java/CritterParser.html#transientAnnotations()" class="member-name-link">transientAnnotations()</a> - Method in class dev.morphia.critter.parser.java.<a href="dev/morphia/critter/parser/java/CritterParser.html" title="class in dev.morphia.critter.parser.java">CritterParser</a></dt>
-<dd>
-<div class="block">Returns the descriptors of all annotation types that mark a field or method as transient (not persisted).</div>
 </dd>
 <dt><a href="dev/morphia/aggregation/expressions/TrigonometryExpressions.html" class="type-name-link" title="class in dev.morphia.aggregation.expressions">TrigonometryExpressions</a> - Class in <a href="dev/morphia/aggregation/expressions/package-summary.html">dev.morphia.aggregation.expressions</a></dt>
 <dd>
