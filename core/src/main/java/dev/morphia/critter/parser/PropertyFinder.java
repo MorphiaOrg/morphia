@@ -86,7 +86,7 @@ public class PropertyFinder {
                 models.add(new PropertyModelGenerator(config, targetType, standinType, classLoader, field, runtimeMode));
             }
         } else {
-            List<MethodInfo> methods = discoverPropertyMethods(standinType, classModel);
+            List<MethodInfo> methods = discoverPropertyMethods(standinType, classModel, standinType != targetType);
             checkIdField(standinType, targetType, methods.stream().map(m -> DiscoveryRules.propertyName(m.name())).toList(),
                     methods.stream().anyMatch(m -> isAnnotatedId(m.visibleAnnotations())));
             if (!runtimeMode) {
@@ -147,17 +147,10 @@ public class PropertyFinder {
                         "AOT skip: inaccessible inherited field '" + field.name() + "' from "
                                 + field.declaringClass().getName() + " in " + targetType.getName());
             }
-            if (field.desc().startsWith("[")) {
-                throw new UnsupportedOperationException(
-                        "AOT skip: array-typed field '" + field.name() + "' in " + targetType.getName());
-            }
             if (field.visibleAnnotations() != null && field.visibleAnnotations().stream()
                     .anyMatch(a -> ID_ANNOTATION_DESC.equals(a.classSymbol().descriptorString()))) {
                 hasIdOnField = true;
             }
-        }
-        if (standinType == targetType) {
-            checkShadowedFields(targetType, classModel);
         }
         // An entity without an @Id (e.g., an embedded type) is fine to generate from its fields. Only an @Id on a
         // getter needs the runtime, which can pick the discovery mode that finds it.
@@ -229,32 +222,6 @@ public class PropertyFinder {
                 && field.declaringClass().getClassLoader() == owner.getClassLoader();
     }
 
-    /**
-     * Rejects an entity that redeclares a field from a superclass that is woven too: both classes would get the same
-     * {@code __readXxx}/{@code __writeXxx} methods, and the subclass's would override the superclass's.
-     */
-    private void checkShadowedFields(Class<?> targetType, ClassModel classModel) {
-        Map<String, Class<?>> declaredBy = new LinkedHashMap<>();
-        Class<?> current = targetType;
-        ClassModel currentModel = classModel;
-        while (current != null && current != Object.class && canWeave(current, targetType)) {
-            ClassModel model = currentModel != null ? currentModel : readClassModel(current);
-            if (model == null) {
-                break;
-            }
-            for (FieldInfo field : discoverFields(model, current)) {
-                Class<?> shadowing = declaredBy.putIfAbsent(field.name(), current);
-                if (shadowing != null) {
-                    throw new UnsupportedOperationException(
-                            "AOT skip: field '" + field.name() + "' in " + shadowing.getName() + " shadows a field in "
-                                    + current.getName());
-                }
-            }
-            current = current.getSuperclass();
-            currentModel = null;
-        }
-    }
-
     private void checkAotMethodCompatibility(List<MethodInfo> methods, Class<?> standinType, Class<?> targetType,
             ClassModel classModel) {
         // If @Id is missing from the discovered methods, look for it on any getter in the hierarchy.
@@ -294,7 +261,7 @@ public class PropertyFinder {
 
     private List<FieldInfo> discoverAllFields(Class<?> entityType, ClassModel classModel) {
         List<FieldInfo> fields = new ArrayList<>();
-        Map<String, Boolean> seen = new LinkedHashMap<>();
+        Map<String, Class<?>> seen = new LinkedHashMap<>();
         Class<?> current = entityType;
         ClassModel currentModel = classModel;
 
@@ -304,9 +271,13 @@ public class PropertyFinder {
                 break;
             final Class<?> declaringClass = current;
             for (FieldInfo field : discoverFields(model, declaringClass)) {
-                if (seen.putIfAbsent(field.name(), Boolean.TRUE) == null) {
-                    fields.add(field);
+                Class<?> shadowing = seen.putIfAbsent(field.name(), declaringClass);
+                if (shadowing != null) {
+                    // as for reflection, whose field discovery maps both fields to the same name
+                    throw new MappingException("Field '%s' in %s shadows a field in %s".formatted(field.name(),
+                            shadowing.getName(), declaringClass.getName()));
                 }
+                fields.add(field);
             }
             current = current.getSuperclass();
             currentModel = null;
@@ -359,7 +330,7 @@ public class PropertyFinder {
      * Pairs getters and setters the way {@link dev.morphia.mapping.conventions.MethodDiscovery} does: within each class
      * of the hierarchy, with a subclass's pair hiding a superclass's for the same property.
      */
-    private List<MethodInfo> discoverPropertyMethods(Class<?> entityType, ClassModel classModel) {
+    private List<MethodInfo> discoverPropertyMethods(Class<?> entityType, ClassModel classModel, boolean standin) {
         Map<String, MethodInfo> properties = new LinkedHashMap<>();
 
         Class<?> current = entityType;
@@ -373,7 +344,7 @@ public class PropertyFinder {
             for (AccessorPair<MethodModel> pair : DiscoveryRules.accessorPairs(model.methods(),
                     m -> m.methodName().stringValue(), m -> m.flags().flagsMask())) {
                 if (!properties.containsKey(pair.property())) {
-                    properties.put(pair.property(), toMethodInfo(pair, current, entityType));
+                    properties.put(pair.property(), toMethodInfo(pair, current, entityType, standin));
                 }
             }
 
@@ -384,42 +355,50 @@ public class PropertyFinder {
     }
 
     /**
-     * @return the getter, carrying the setter's annotations too
-     * @throws UnsupportedOperationException if the generated accessors can't call the pair: they take the setter to be
-     *                                       a {@code void} method named for the property that takes the getter's type, and
-     *                                       call both as the entity, so neither can be private (the setter lookups skip
-     *                                       private methods) or, in a superclass, hidden from the entity's package
+     * @return the getter, paired with its setter and carrying the setter's annotations too
+     * @throws UnsupportedOperationException if the generated accessors can't call the pair: they take the getter to be a
+     *                                       {@code get}/{@code is} method with no parameters and the setter to be named for
+     *                                       the property and take the getter's type, returning anything. Build-time accessors
+     *                                       are woven into the entity, so they also can't call a superclass's private
+     *                                       methods or those hidden from the entity's package: see
+     *                                       {@link #isCallable}
      */
-    private MethodInfo toMethodInfo(AccessorPair<MethodModel> pair, Class<?> declaringClass, Class<?> entityType) {
+    private MethodInfo toMethodInfo(AccessorPair<MethodModel> pair, Class<?> declaringClass, Class<?> entityType,
+            boolean standin) {
         MethodTypeDesc getter = MethodTypeDesc.ofDescriptor(pair.getter().methodType().stringValue());
+        MethodTypeDesc setter = MethodTypeDesc.ofDescriptor(pair.setter().methodType().stringValue());
         String getterName = pair.getter().methodName().stringValue();
         boolean supported = (getterName.startsWith("get") || getterName.startsWith("is"))
                 && getter.parameterCount() == 0
                 && !getter.returnType().equals(ConstantDescs.CD_void)
                 && pair.setter().methodName().stringValue().equals("set" + DiscoveryRules.titleCase(pair.property()))
-                && pair.setter().methodType().stringValue().equals("(" + getter.returnType().descriptorString() + ")V")
-                && isCallable(pair.getter().flags().flagsMask(), declaringClass, entityType)
-                && isCallable(pair.setter().flags().flagsMask(), declaringClass, entityType);
+                && setter.parameterCount() == 1
+                && setter.parameterType(0).equals(getter.returnType())
+                && isCallable(pair.getter().flags().flagsMask(), declaringClass, entityType, standin)
+                && isCallable(pair.setter().flags().flagsMask(), declaringClass, entityType, standin);
         if (!supported) {
             throw new UnsupportedOperationException("Critter can't generate accessors for %s's %s() and %s()".formatted(
                     declaringClass.getName(), getterName, pair.setter().methodName().stringValue()));
         }
-        return toMethodInfo(pair.getter(), declaringClass).mergeAnnotations(toMethodInfo(pair.setter(), declaringClass));
+        return toMethodInfo(pair.getter(), declaringClass).withSetter(toMethodInfo(pair.setter(), declaringClass));
     }
 
     /**
-     * Whether code in the entity's package can call a method: a public one, or, since the generated accessors aren't
-     * subclasses of a superclass declaring it, a protected or package-private one declared in that package by the
-     * same loader.
+     * Whether the generated accessors can call a method. Runtime accessors are nestmates of the declaring class, so they
+     * can call any. A method woven into the entity can call one the entity declares, a public or protected one it
+     * inherits, or a package-private one declared in the entity's package by the same loader. An {@code @ExternalEntity}
+     * stand-in's accessors call the target's methods of the same name, found as a non-private one.
      */
-    private static boolean isCallable(int flags, Class<?> declaringClass, Class<?> entityType) {
-        if ((flags & ClassFile.ACC_PRIVATE) != 0) {
-            return false;
+    private boolean isCallable(int flags, Class<?> declaringClass, Class<?> entityType, boolean standin) {
+        if (standin) {
+            return (flags & ClassFile.ACC_PRIVATE) == 0;
         }
-        return (flags & ClassFile.ACC_PUBLIC) != 0
-                || declaringClass == entityType
-                || declaringClass.getPackageName().equals(entityType.getPackageName())
-                        && declaringClass.getClassLoader() == entityType.getClassLoader();
+        if (runtimeMode || declaringClass == entityType || (flags & (ClassFile.ACC_PUBLIC | ClassFile.ACC_PROTECTED)) != 0) {
+            return true;
+        }
+        return (flags & ClassFile.ACC_PRIVATE) == 0
+                && declaringClass.getPackageName().equals(entityType.getPackageName())
+                && declaringClass.getClassLoader() == entityType.getClassLoader();
     }
 
     private MethodInfo toMethodInfo(MethodModel method, Class<?> declaringClass) {

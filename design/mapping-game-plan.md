@@ -70,7 +70,7 @@ model objects. It means most of the speed can be had without an API change.
   - encodings and decode→encode round trips against golden fixtures generated from `master`, compared as canonical
     extended JSON (field order and BSON types preserved);
   - that reflection and critter produce identical results, and that critter really uses generated models: the only
-    model allowed to fall back to reflection is `HarnessArrays`, until 4.8 adds array support;
+    model allowed to fall back to reflection was `HarnessArrays`, until 4.8 added array support;
   - "foreign" documents: reordered and unknown fields, numeric widening and narrowing, explicit nulls, missing `_t`,
     `_t` not in first position, string-for-scalar drift, a single value for a list.
 - **Why:** every hot-path change in Phase 3 alters protocol details where regressions are silent. The prototype's
@@ -112,8 +112,8 @@ model objects. It means most of the speed can be had without an API change.
   `DocumentShapesBenchmark` covers no `_t` and schema drift, `ListenerBenchmark` a no-op global listener,
   `MixedCodecBenchmark` all models in one JVM, `DatastoreBenchmark` the session copy, `QueryBenchmark` path
   translation and query rendering, and `MappingBenchmark.scan*` package scanning. Results and findings are in
-  `benchmarks/results/baseline-bd70cba8d20/`. `MapperVariant` now requires `ArraysEntity` to be critter's only
-  reflection fallback (4.8). `MappingBenchmark` maps the original 11 types: with `ArraysEntity` included, every new
+  `benchmarks/results/baseline-bd70cba8d20/`. `MapperVariant` required `ArraysEntity` to be critter's only
+  reflection fallback until 4.8 added array support; now none may fall back. `MappingBenchmark` maps the original 11 types: with `ArraysEntity` included, every new
   critter mapper retries the failed generation and logs a stack trace (C6, 4.10).
 
 ---
@@ -424,7 +424,7 @@ harness passes, and both mappers agree.
   come from the runtime classpath.
 - A non-public class is loaded through the generated model's own class loader, once.
 
-### 4.8 Close the remaining divergences (C3)
+### ~~4.8 Close the remaining divergences (C3)~~
 - `@Property(concreteClass)`, ~~interface-level annotations~~ (closed by A11),
   shadowed fields (use `FieldInfo.declaringClass`), fluent setters, private or otherwise unreachable getters and
   setters, and array properties.
@@ -432,6 +432,19 @@ harness passes, and both mappers agree.
   package-private entity), ~~and method discovery fails on a method named just `get`, `set` or `is`~~ (closed by
   4.6).
 - One PR per divergence if any of them turns out to be large. Each one removes an expected failure from 4.5.
+- Done in one PR, since none was large. The parity test no longer lists known divergences: every fact must match,
+  and critter falling back to reflection for a test entity is itself a difference.
+  - `@Property(concreteClass)`: critter applies it when it builds the property's `TypeData`, at generation time.
+  - Shadowed fields: under field discovery critter rejects them with a `MappingException`, as reflection does,
+    instead of mapping the subclass's field.
+  - Fluent setters and private or unreachable accessors: `MethodInfo` carries the pair's setter, so the accessors
+    call it by its real descriptor and drop a fluent setter's result. Runtime accessors are nestmates of the class
+    declaring the pair, so they can call its private methods; build-time accessors, woven into the entity, can call
+    the entity's own private methods and inherited protected ones, and skip AOT otherwise.
+  - Arrays: reflection's `ArrayFieldAccessor` became `ArrayAccessor`, which wraps any accessor to convert decoded
+    values to the array type. Reflection uses it for fields and, newly, for getter/setter pairs; critter's generated
+    models wrap their accessors with it. Critter also keeps a generic array's (`T[]`) array flag.
+  - `MethodAccessor` makes its methods accessible.
 
 ### 4.9 Runtime generation efficiency (C5/A9)
 - Cache `ClassModel` per class for the duration of a generation pass, so shared superclasses are parsed once.
@@ -563,7 +576,7 @@ Only start after Phases 3 and 4 have shipped and been re-measured.
 8. 4.1 sessions share the mapper → #4432 listener interfaces → #4431 configured listeners → 4.2 lifecycle
    streaming; ~~4.14 entity-only annotated methods~~
 9. 4.4 generic resolver
-10. ~~Phase 5 A11 builder/annotation utility~~ → ~~4.5 parity test~~ → ~~4.6 shared rules~~ → ~~4.7 plain models~~ → 4.8 divergences →
+10. ~~Phase 5 A11 builder/annotation utility~~ → ~~4.5 parity test~~ → ~~4.6 shared rules~~ → ~~4.7 plain models~~ → ~~4.8 divergences~~ →
     4.9–4.11 → 4.12 AOT guard + 4.13 API surface (**before 3.0 GA**)
 11. 3.17 single-pass discriminator and `_id`
 12. Phase 5 clean-ups throughout; Phase 6 re-evaluated after 3.0 GA

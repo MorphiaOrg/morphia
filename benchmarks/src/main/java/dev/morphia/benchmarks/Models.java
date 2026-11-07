@@ -40,8 +40,7 @@ public enum Models {
 
     /**
      * The types {@code MappingBenchmark} maps: the original model set, kept fixed so the recorded mapping history stays
-     * comparable. It leaves out {@link ArraysEntity}, which critter can't generate, so every new critter mapper would
-     * retry and log the failure.
+     * comparable, so it leaves out the types added since, such as {@link ArraysEntity}.
      */
     public static final List<Class<?>> MAPPING_TYPES = List.of(Address.class, Profile.class, Shape.class, Circle.class,
             Square.class, Rectangle.class, SimpleEntity.class, NestedEntity.class, CollectionsEntity.class, Drawing.class,

@@ -115,10 +115,8 @@ public class TestGenericResolution extends TestBase {
 
     private void assertTypeData(Class<?> entity, String property, String expected) {
         EntityModel model = getMapper().getEntityModel(entity);
-        // critter falls back to reflection for an entity with an array property until plan item 4.8; any other fallback
-        // would test the reflective model twice
-        boolean hasArray = model.getProperties().stream().anyMatch(p -> p.getTypeData().isArray());
-        if (getMapper() instanceof CritterMapper && !hasArray) {
+        // a fallback to reflection would test the reflective model twice
+        if (getMapper() instanceof CritterMapper) {
             Assertions.assertInstanceOf(CritterEntityModel.class, model, entity.getName());
         }
         TypeData<?> typeData = model.getProperty(property).getTypeData();

@@ -13,7 +13,7 @@ import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
-import dev.morphia.mapping.codec.ArrayFieldAccessor;
+import dev.morphia.mapping.codec.ArrayAccessor;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.FieldAccessor;
 import dev.morphia.mapping.codec.pojo.ClassHierarchy;
@@ -48,7 +48,7 @@ public class FieldDiscovery implements MorphiaConvention {
                                 .typeData(typeData)
                                 .annotations(List.of(field.getDeclaredAnnotations()))
                                 .isFinal(Modifier.isFinal(field.getModifiers()))
-                                .accessor(getAccessor(getTargetField(model, target, field), typeData, mapper.getConversions()))
+                                .accessor(getAccessor(getTargetField(model, target, field), mapper.getConversions()))
                                 .conversions(mapper.getConversions())
                                 .mappedName(discoverMappedName(mapper, propertyModel)));
                     }
@@ -92,9 +92,9 @@ public class FieldDiscovery implements MorphiaConvention {
         }
     }
 
-    private PropertyAccessor<? super Object> getAccessor(Field field, TypeData<?> typeData, Conversions conversions) {
-        return field.getType().isArray() && !field.getType().getComponentType().equals(byte.class)
-                ? new ArrayFieldAccessor(typeData, field, conversions)
+    private PropertyAccessor<? super Object> getAccessor(Field field, Conversions conversions) {
+        return ArrayAccessor.converts(field.getType())
+                ? new ArrayAccessor(new FieldAccessor(field), field.getType().getComponentType(), conversions)
                 : new FieldAccessor(field);
     }
 }

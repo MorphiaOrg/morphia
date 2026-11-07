@@ -11,6 +11,7 @@ import io.smallrye.classfile.Annotation;
  * replacing direct use of ASM {@code MethodNode}.
  *
  * @param declaringClass the class declaring the method, or null if unknown
+ * @param setter         for a getter, the setter it pairs with, or null if unknown
  */
 public record MethodInfo(
         String name,
@@ -18,31 +19,35 @@ public record MethodInfo(
         String signature,
         int access,
         List<Annotation> visibleAnnotations,
-        @Nullable Class<?> declaringClass) {
+        @Nullable Class<?> declaringClass,
+        @Nullable MethodInfo setter) {
 
     /**
      * Creates a MethodInfo whose declaring class isn't known.
      */
     public MethodInfo(String name, String desc, String signature, int access, List<Annotation> visibleAnnotations) {
-        this(name, desc, signature, access, visibleAnnotations, null);
+        this(name, desc, signature, access, visibleAnnotations, null, null);
     }
 
     /**
-     * Returns a new MethodInfo that merges annotations from this (getter) and the setter.
-     * If the setter has no annotations, returns {@code this}.
+     * Creates a MethodInfo with no setter.
      */
-    public MethodInfo mergeAnnotations(MethodInfo setter) {
-        List<Annotation> setterAnnotations = setter.visibleAnnotations() != null
-                ? setter.visibleAnnotations()
-                : List.of();
-        if (setterAnnotations.isEmpty()) {
-            return this;
-        }
+    public MethodInfo(String name, String desc, String signature, int access, List<Annotation> visibleAnnotations,
+            @Nullable Class<?> declaringClass) {
+        this(name, desc, signature, access, visibleAnnotations, declaringClass, null);
+    }
+
+    /**
+     * Returns a new MethodInfo for this getter paired with {@code setter}, carrying the setter's annotations too.
+     */
+    public MethodInfo withSetter(MethodInfo setter) {
         java.util.List<Annotation> combined = new java.util.ArrayList<>();
         if (this.visibleAnnotations != null) {
             combined.addAll(this.visibleAnnotations);
         }
-        combined.addAll(setterAnnotations);
-        return new MethodInfo(this.name, this.desc, this.signature, this.access, combined, this.declaringClass);
+        if (setter.visibleAnnotations() != null) {
+            combined.addAll(setter.visibleAnnotations());
+        }
+        return new MethodInfo(this.name, this.desc, this.signature, this.access, combined, this.declaringClass, setter);
     }
 }

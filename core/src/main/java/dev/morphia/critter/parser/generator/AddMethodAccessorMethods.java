@@ -14,8 +14,6 @@ import io.smallrye.classfile.ClassTransform;
 import io.smallrye.classfile.MethodModel;
 import io.smallrye.classfile.TypeKind;
 
-import static dev.morphia.critter.parser.generator.GenerationUtils.findSetterMethod;
-
 /**
  * Generates synthetic {@code __readXxx} and {@code __writeXxx} accessor methods into an entity class
  * bytecode for properties backed by getter/setter methods rather than direct fields.
@@ -49,8 +47,8 @@ public class AddMethodAccessorMethods extends AccessorMethods {
                         TypeKind returnKind = TypeKind.fromDescriptor(returnDesc.descriptorString());
                         String getterName = method.name();
                         String setterName = "set%s".formatted(DiscoveryRules.titleCase(propertyName));
-
-                        boolean hasSetter = findSetterMethod(entity, setterName, methodMtd.returnType()) != null;
+                        MethodTypeDesc setterMtd = GenerationUtils.setterType(entity, method, setterName, returnDesc);
+                        boolean hasSetter = setterMtd != null;
 
                         // __readXxx(): returns Object for reference types (keeps non-public types
                         // out of the accessor's constant pool; concrete type widens inside entity)
@@ -80,8 +78,15 @@ public class AddMethodAccessorMethods extends AccessorMethods {
                                             cod.aload(1);
                                             cod.checkcast(returnDesc);
                                         }
-                                        cod.invokevirtual(entityDesc, setterName,
-                                                MethodTypeDesc.of(ClassDesc.ofDescriptor("V"), returnDesc));
+                                        cod.invokevirtual(entityDesc, setterName, setterMtd);
+                                        // a fluent setter's result
+                                        if (!setterMtd.returnType().equals(ConstantDescs.CD_void)) {
+                                            if (TypeKind.from(setterMtd.returnType()).slotSize() == 2) {
+                                                cod.pop2();
+                                            } else {
+                                                cod.pop();
+                                            }
+                                        }
                                         cod.return_();
                                     });
                         } else {

@@ -26,6 +26,8 @@ public class MethodAccessor implements PropertyAccessor<Object> {
     public MethodAccessor(Method getter, Method setter) {
         this.getter = getter;
         this.setter = setter;
+        getter.setAccessible(true);
+        setter.setAccessible(true);
     }
 
     @Override

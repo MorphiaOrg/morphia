@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.mongodb.lang.Nullable;
+
+import dev.morphia.critter.parser.MethodInfo;
 import dev.morphia.mapping.codec.pojo.TypeData;
 import dev.morphia.mapping.codec.pojo.WildCardTypeData;
 
@@ -68,6 +71,31 @@ public class GenerationUtils {
             current = current.getSuperclass();
         }
         return null;
+    }
+
+    /**
+     * @param entity       the class the accessor is for
+     * @param getter       the property's getter
+     * @param setterName   the setter's name
+     * @param propertyDesc the property's type
+     * @return the type of the getter's setter: the paired one's, or, when the getter has none or was paired outside the
+     *         entity's hierarchy (an {@code @ExternalEntity} stand-in's), a non-private one the entity has; null if there
+     *         is none
+     */
+    @Nullable
+    public static MethodTypeDesc setterType(Class<?> entity, MethodInfo getter, String setterName, ClassDesc propertyDesc) {
+        MethodInfo setter = getter.setter();
+        if (setter != null && getter.declaringClass() != null && getter.declaringClass().isAssignableFrom(entity)) {
+            return MethodTypeDesc.ofDescriptor(setter.desc());
+        }
+        Method found = findSetterMethod(entity, setterName, propertyDesc);
+        if (found == null) {
+            return null;
+        }
+        Class<?> returnType = found.getReturnType();
+        return MethodTypeDesc.of(returnType.isPrimitive() || returnType == void.class
+                ? ClassDesc.ofDescriptor(returnType.descriptorString())
+                : ClassDesc.of(returnType.getName()), propertyDesc);
     }
 
     /**
@@ -374,6 +402,12 @@ public class GenerationUtils {
         }
         cod.invokespecial(tdDesc, "<init>",
                 MethodTypeDesc.ofDescriptor("(Ljava/lang/Class;[Ldev/morphia/mapping/codec/pojo/TypeData;)V"));
+        // a generic array, such as T[], keeps its component type and is only flagged as an array
+        if (data.isArray() && !data.getType().isArray()) {
+            cod.dup();
+            cod.iconst_1();
+            cod.invokevirtual(tdDesc, "setArray", MethodTypeDesc.ofDescriptor("(Z)V"));
+        }
         if (data instanceof WildCardTypeData<?> wildcard) {
             cod.loadConstant(wildcard.isUpperBound() ? 1 : 0);
             cod.invokespecial(wildcardDesc, "<init>",

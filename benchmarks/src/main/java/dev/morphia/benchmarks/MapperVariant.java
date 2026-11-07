@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-import dev.morphia.benchmarks.models.ArraysEntity;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.mapping.CritterMapper;
@@ -31,14 +30,13 @@ public enum MapperVariant {
     /**
      * {@link CritterMapper} with the critter-aot jar ahead of the benchmarks jar on the classpath. The root entities
      * must load pre-generated models, and other types may be generated at runtime, which is what an application would
-     * get too. Only the {@link #CRITTER_FALLBACKS} may fall back to reflection.
+     * get too. None may fall back to reflection.
      */
     CRITTER(MapperType.CRITTER) {
         @Override
         void verify(Mapper mapper, List<Class<?>> mapped) {
-            expect(mapper, mapped, without(Models.ROOT_TYPES), Tier.AOT);
-            expect(mapper, mapped, without(Models.CONCRETE_TYPES), Tier.AOT, Tier.RUNTIME);
-            expect(mapper, mapped, CRITTER_FALLBACKS, Tier.REFLECTION);
+            expect(mapper, mapped, Models.ROOT_TYPES, Tier.AOT);
+            expect(mapper, mapped, Models.CONCRETE_TYPES, Tier.AOT, Tier.RUNTIME);
         }
     },
 
@@ -48,16 +46,9 @@ public enum MapperVariant {
     CRITTER_RUNTIME(MapperType.CRITTER) {
         @Override
         void verify(Mapper mapper, List<Class<?>> mapped) {
-            expect(mapper, mapped, without(Models.CONCRETE_TYPES), Tier.RUNTIME);
-            expect(mapper, mapped, CRITTER_FALLBACKS, Tier.REFLECTION);
+            expect(mapper, mapped, Models.CONCRETE_TYPES, Tier.RUNTIME);
         }
     };
-
-    /**
-     * Types the critter mapper maps reflectively. Critter can't generate models for array properties, so an entity with
-     * one falls back whole (game plan item 4.8). They must still fall back, so this list can't go stale.
-     */
-    static final List<Class<?>> CRITTER_FALLBACKS = List.of(ArraysEntity.class);
 
     /**
      * Where an entity model came from.
@@ -116,10 +107,6 @@ public enum MapperVariant {
         return Models.CONCRETE_TYPES.stream()
                 .map(type -> type.getSimpleName() + "=" + Tier.of(mapper.getEntityModel(type)).name().toLowerCase(Locale.ROOT))
                 .collect(Collectors.joining(", "));
-    }
-
-    private static List<Class<?>> without(List<Class<?>> types) {
-        return types.stream().filter(type -> !CRITTER_FALLBACKS.contains(type)).toList();
     }
 
     /**
