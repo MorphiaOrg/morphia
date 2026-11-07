@@ -64,10 +64,7 @@ public class NestmateAccessorGenerator {
 
     public NestmateAccessorGenerator(Class<?> entity, MethodInfo method) {
         this.entity = entity;
-        // a nestmate of the class declaring the pair can call its private methods; an @ExternalEntity stand-in's pairs
-        // are declared outside the target's hierarchy, and the target's own methods are called
-        Class<?> declaring = method.declaringClass();
-        this.declaringClass = declaring != null && declaring.isAssignableFrom(entity) ? declaring : entity;
+        this.declaringClass = accessorHost(entity, method);
         this.propertyName = DiscoveryRules.propertyName(method.name());
         String returnDesc = MethodTypeDesc.ofDescriptor(method.desc()).returnType().descriptorString();
         this.propertyType = typeClassName(ClassDesc.ofDescriptor(returnDesc));
@@ -79,6 +76,23 @@ public class NestmateAccessorGenerator {
         this.registryKey = "%s.%sAccessor".formatted(Critter.critterPackage(entity), DiscoveryRules.titleCase(propertyName));
         this.bytecodeName = entityPackagePrefix(declaringClass) + declaringClass.getSimpleName() + "$$"
                 + DiscoveryRules.titleCase(propertyName) + "Accessor";
+    }
+
+    /**
+     * @return the class whose nest the accessor joins: the entity's, unless the pair is a superclass's and one of its
+     *         methods isn't public, which only a nestmate of that superclass can call. Joining a superclass's nest needs
+     *         access to its module, which a public pair, such as one inherited from the JDK, mustn't depend on. An
+     *         {@code @ExternalEntity} stand-in's pairs are declared outside the target's hierarchy, and the target's own
+     *         methods are called.
+     */
+    private static Class<?> accessorHost(Class<?> entity, MethodInfo getter) {
+        Class<?> declaring = getter.declaringClass();
+        if (declaring == null || declaring == entity || !declaring.isAssignableFrom(entity)) {
+            return entity;
+        }
+        boolean isPublic = (getter.access() & ClassFile.ACC_PUBLIC) != 0
+                && getter.setter() != null && (getter.setter().access() & ClassFile.ACC_PUBLIC) != 0;
+        return isPublic ? entity : declaring;
     }
 
     private static Class<?> findDeclaringClassInHierarchy(Class<?> entity, String fieldName) {

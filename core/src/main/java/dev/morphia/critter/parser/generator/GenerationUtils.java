@@ -92,10 +92,7 @@ public class GenerationUtils {
         if (found == null) {
             return null;
         }
-        Class<?> returnType = found.getReturnType();
-        return MethodTypeDesc.of(returnType.isPrimitive() || returnType == void.class
-                ? ClassDesc.ofDescriptor(returnType.descriptorString())
-                : ClassDesc.of(returnType.getName()), propertyDesc);
+        return MethodTypeDesc.of(ClassDesc.ofDescriptor(found.getReturnType().descriptorString()), propertyDesc);
     }
 
     /**

@@ -531,6 +531,18 @@ public class TestCritterMapper {
     }
 
     @Test
+    public void testPublicPairFromAnotherModule() {
+        CritterMapper mapper = new CritterMapper(
+                MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
+        // java.base doesn't open java.util, so the accessor for Date's public getTime()/setTime() must join the entity's nest
+        EntityModel model = assertRuntimeGenerated(mapper.mapEntity(DateEntity.class));
+        PropertyAccessor<Object> accessor = model.getProperty("time").getAccessor();
+        DateEntity instance = new DateEntity();
+        accessor.set(instance, 42L);
+        Assertions.assertEquals(42L, accessor.get(instance));
+    }
+
+    @Test
     public void testFluentSetter() {
         CritterMapper mapper = new CritterMapper(
                 MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
@@ -658,6 +670,10 @@ public class TestCritterMapper {
             this.count = count;
             return previous;
         }
+    }
+
+    @Entity("date_entity")
+    public static class DateEntity extends java.util.Date {
     }
 
     @Entity("array_entity")
