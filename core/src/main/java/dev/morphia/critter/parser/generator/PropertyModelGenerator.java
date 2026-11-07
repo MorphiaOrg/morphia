@@ -132,7 +132,8 @@ public class PropertyModelGenerator extends BaseGenerator {
         }
         if (reflectedSetter != null) {
             for (Annotation ann : reflectedSetter.getAnnotations()) {
-                this.annotationMap.putIfAbsent(ann.annotationType().getName(), ann);
+                // as for reflection, the setter's annotation wins over the getter's of the same type
+                this.annotationMap.put(ann.annotationType().getName(), ann);
             }
         }
         this.typeData = typeData(annotationSource, genericType, annotationMap);

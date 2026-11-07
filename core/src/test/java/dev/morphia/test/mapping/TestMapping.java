@@ -20,15 +20,18 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.LoadOnly;
 import dev.morphia.annotations.Name;
+import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Transient;
 import dev.morphia.config.MorphiaConfig;
+import dev.morphia.mapping.CritterMapper;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.NamingStrategy;
 import dev.morphia.mapping.NotMappableException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
+import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 import dev.morphia.query.Query;
 import dev.morphia.query.QueryException;
 import dev.morphia.test.TestBase;
@@ -437,6 +440,23 @@ public class TestMapping extends TestBase {
 
                     Assertions.assertEquals(entity, getDs().find(ThirdPartyEntity.class).first());
                 });
+    }
+
+    @Test
+    public void testArrayPropertyUsingMethods() {
+        withConfig(buildConfig(MethodArrays.class).propertyDiscovery(METHODS), () -> {
+            if (getMapper() instanceof CritterMapper) {
+                Assertions.assertInstanceOf(CritterEntityModel.class, getMapper().getEntityModel(MethodArrays.class));
+            }
+            MethodArrays entity = new MethodArrays();
+            entity.setNames(new String[] { "a", "b" });
+            entity.setCounts(new int[] { 1, 2 });
+            getDs().save(entity);
+
+            MethodArrays loaded = getDs().find(MethodArrays.class).first();
+            Assertions.assertArrayEquals(entity.getNames(), loaded.getNames());
+            Assertions.assertArrayEquals(entity.getCounts(), loaded.getCounts());
+        });
     }
 
     public void testFieldAsDiscriminator() {
@@ -1171,4 +1191,63 @@ public class TestMapping extends TestBase {
     private static class Super3<T extends Number> extends Super2<T> {
     }
 
+    @Entity("method_arrays")
+    public static class MethodArrays {
+        private ObjectId id;
+        private String[] names;
+        private int[] counts;
+
+        @Id
+        public ObjectId getId() {
+            return id;
+        }
+
+        public void setId(ObjectId id) {
+            this.id = id;
+        }
+
+        public String[] getNames() {
+            return names;
+        }
+
+        public void setNames(String[] names) {
+            this.names = names;
+        }
+
+        public int[] getCounts() {
+            return counts;
+        }
+
+        public void setCounts(int[] counts) {
+            this.counts = counts;
+        }
+    }
+
+    /**
+     * Both accessors carry {@code @Property}; the setter's wins, so the property keeps its declared type.
+     */
+    @Entity("setter_property_wins")
+    public static class SetterPropertyWins {
+        private ObjectId id;
+        private List<String> values;
+
+        @Id
+        public ObjectId getId() {
+            return id;
+        }
+
+        public void setId(ObjectId id) {
+            this.id = id;
+        }
+
+        @Property(concreteClass = java.util.LinkedList.class)
+        public List<String> getValues() {
+            return values;
+        }
+
+        @Property
+        public void setValues(List<String> values) {
+            this.values = values;
+        }
+    }
 }
