@@ -21,6 +21,7 @@ import dev.morphia.critter.parser.generator.VarHandleAccessorGenerator;
 import dev.morphia.critter.sources.Example;
 import dev.morphia.mapping.PropertyDiscovery;
 import dev.morphia.mapping.ReflectiveMapper;
+import dev.morphia.mapping.conventions.DiscoveryRules;
 
 import org.bson.codecs.pojo.PropertyAccessor;
 import org.bson.types.ObjectId;
@@ -95,7 +96,7 @@ public class TestVarHandleAccessor {
     @Test
     public void testAccessorsInstantiatable() {
         for (String field : List.of("name", "age", "salary")) {
-            String key = Critter.critterPackage(Example.class) + "." + Critter.titleCase(field) + "Accessor";
+            String key = Critter.critterPackage(Example.class) + "." + DiscoveryRules.titleCase(field) + "Accessor";
             Assertions.assertNotNull(NestmateAccessorRegistry.get(classLoader, key),
                     "Nestmate accessor must be registered in registry for field: " + field);
         }
@@ -133,14 +134,9 @@ public class TestVarHandleAccessor {
     /**
      * Regression test for bug #2: findSetter/findSetterInHierarchy did not filter ACC_STATIC methods.
      *
-     * In METHODS discovery mode, a static setXxx method with matching descriptor was accepted as a
-     * property setter, causing the property to be treated as method-based. hasSetter() then rejected
-     * the static method (it has a reflection-level isStatic guard), leaving no setter handle — so
-     * set() threw UnsupportedOperationException even though the property IS writable via its backing
-     * field.
-     *
-     * After the fix: the static setter is filtered by PropertyFinder, the property falls back to
-     * field-based nestmate accessor, and set() works correctly.
+     * In METHODS discovery mode, a static setXxx method was accepted as a property setter, leaving a property whose set()
+     * threw UnsupportedOperationException. A static method isn't part of a pair, so, as with reflection, the getter alone
+     * maps no property.
      */
     @Test
     public void testStaticSetterMethodIsNotTreatedAsPropertySetter() throws Exception {
@@ -149,16 +145,8 @@ public class TestVarHandleAccessor {
         CritterClassLoader loader = new CritterClassLoader();
         new CritterGenerator(methodsMapper).generate(StaticSetterEntity.class, loader, true);
 
-        @SuppressWarnings("unchecked")
-        PropertyAccessor<Object> accessor = (PropertyAccessor<Object>) loadAccessor(loader, StaticSetterEntity.class, "value");
-
-        StaticSetterEntity entity = new StaticSetterEntity();
-        Assertions.assertNull(accessor.get(entity), "initial value should be null");
-        // Bug: set() threw UnsupportedOperationException because the static setter was found by
-        // PropertyFinder, making the property method-based, then hasSetter() rejected it.
-        // Fix: PropertyFinder ignores static setters; property falls back to field nestmate accessor.
-        accessor.set(entity, "hello");
-        Assertions.assertEquals("hello", accessor.get(entity), "set() must write through to the backing field");
+        Assertions.assertNull(loadAccessor(loader, StaticSetterEntity.class, "value"),
+                "a getter paired only with a static setter must not map a property");
     }
 
     /**
@@ -262,7 +250,7 @@ public class TestVarHandleAccessor {
 
     @SuppressWarnings("unchecked")
     private <T> PropertyAccessor<T> loadAccessor(CritterClassLoader loader, Class<?> entityType, String fieldName) {
-        String key = Critter.critterPackage(entityType) + "." + Critter.titleCase(fieldName) + "Accessor";
+        String key = Critter.critterPackage(entityType) + "." + DiscoveryRules.titleCase(fieldName) + "Accessor";
         return (PropertyAccessor<T>) NestmateAccessorRegistry.get(loader, key);
     }
 

@@ -385,7 +385,7 @@ harness passes, and both mappers agree.
   - 4.8 also takes two reflection bugs it found: method accessors aren't made accessible, so they throw on
     package-private entities, and a method named just `get`, `set` or `is` breaks method discovery.
 
-### 4.6 Shared discovery rules (C10)
+### ~~4.6 Shared discovery rules (C10)~~
 - Pull the pure rules into one place that both `FieldDiscovery`/`MethodDiscovery` and
   `PropertyFinder`/`PropertyConvention` call: mapped-name derivation, transient rules, naming strategy,
   `titleCase`/`methodCase`.
@@ -393,6 +393,16 @@ harness passes, and both mappers agree.
   with no reflection.
 - Removes the 4.5 parity test's discovery rules (`ANNOTATED_GETTERS`, `FIELDS_WITHOUT_ACCESSORS`,
   `PRIVATE_INHERITED_GETTERS`, `OVERRIDING_GETTER_ANNOTATIONS`).
+- Done as `DiscoveryRules`: mapped names, which fields are ignored, accessor names and getter/setter pairing, and
+  `titleCase`/`methodCase`. `PropertyConvention`, `ExtensionFunctions`, `CritterParser` and critter's own copies
+  are gone.
+- Critter now discovers what reflection does: fields only under field discovery, and under method discovery the
+  pairs each class declares, with no fallback to fields. It also rejects an `@IdField` that names no property.
+- The shared accessor-name rule ignores a method named just `get`, `set` or `is`, which fixes that reflection bug
+  from 4.8.
+- Critter's accessors still can't call a fluent setter, a private getter or setter, or a superclass's that isn't
+  visible from the entity's package, so it now maps such an entity reflectively instead of mapping its fields. The
+  parity test's `FLUENT_SETTERS` and `UNREACHABLE_ACCESSORS` rules hold those for 4.8.
 
 ### 4.7 Generated code builds plain models (C1)
 - Generated factories construct ordinary `EntityModel`/`PropertyModel` instances from constants, instead of
@@ -407,9 +417,11 @@ harness passes, and both mappers agree.
 
 ### 4.8 Close the remaining divergences (C3)
 - `@Property(concreteClass)`, ~~interface-level annotations~~ (closed by A11),
-  shadowed fields (use `FieldInfo.declaringClass`), fluent setters in AOT weaving, and array properties.
+  shadowed fields (use `FieldInfo.declaringClass`), fluent setters, private or otherwise unreachable getters and
+  setters, and array properties.
 - Reflection bugs the parity test found: `MethodAccessor` doesn't make its methods accessible (throws on a
-  package-private entity), and method discovery fails on a method named just `get`, `set` or `is`.
+  package-private entity), ~~and method discovery fails on a method named just `get`, `set` or `is`~~ (closed by
+  4.6).
 - One PR per divergence if any of them turns out to be large. Each one removes an expected failure from 4.5.
 
 ### 4.9 Runtime generation efficiency (C5/A9)
@@ -542,7 +554,7 @@ Only start after Phases 3 and 4 have shipped and been re-measured.
 8. 4.1 sessions share the mapper → #4432 listener interfaces → #4431 configured listeners → 4.2 lifecycle
    streaming; ~~4.14 entity-only annotated methods~~
 9. 4.4 generic resolver
-10. ~~Phase 5 A11 builder/annotation utility~~ → ~~4.5 parity test~~ → 4.6 shared rules → 4.7 plain models → 4.8 divergences →
+10. ~~Phase 5 A11 builder/annotation utility~~ → ~~4.5 parity test~~ → ~~4.6 shared rules~~ → 4.7 plain models → 4.8 divergences →
     4.9–4.11 → 4.12 AOT guard + 4.13 API surface (**before 3.0 GA**)
 11. 3.17 single-pass discriminator and `_id`
 12. Phase 5 clean-ups throughout; Phase 6 re-evaluated after 3.0 GA

@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 import dev.morphia.critter.Critter;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.sources.Example;
+import dev.morphia.mapping.conventions.DiscoveryRules;
 
 import org.bson.codecs.pojo.PropertyAccessor;
 import org.junit.jupiter.api.Assertions;
@@ -40,7 +41,7 @@ public class TestAccessorsMutators extends BaseCritterTest {
         Class<PropertyAccessor<Object>> accessorClass = (Class<PropertyAccessor<Object>>) loader.loadClass(
                 Critter.critterPackage(type)
                         + type.getSimpleName()
-                        + Critter.titleCase(fieldName)
+                        + DiscoveryRules.titleCase(fieldName)
                         + "Accessor");
         PropertyAccessor<Object> accessor = accessorClass.getConstructor().newInstance();
 

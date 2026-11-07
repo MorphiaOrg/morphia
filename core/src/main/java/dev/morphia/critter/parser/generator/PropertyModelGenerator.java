@@ -18,10 +18,7 @@ import dev.morphia.annotations.Id;
 import dev.morphia.annotations.IdField;
 import dev.morphia.annotations.Reference;
 import dev.morphia.config.MorphiaConfig;
-import dev.morphia.critter.Critter;
 import dev.morphia.critter.CritterClassLoader;
-import dev.morphia.critter.conventions.PropertyConvention;
-import dev.morphia.critter.parser.ExtensionFunctions;
 import dev.morphia.critter.parser.FieldInfo;
 import dev.morphia.critter.parser.MethodInfo;
 import dev.morphia.mapping.codec.pojo.ClassHierarchy;
@@ -30,6 +27,7 @@ import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
 import dev.morphia.mapping.codec.pojo.TypeResolver;
 import dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel;
+import dev.morphia.mapping.conventions.DiscoveryRules;
 
 import org.bson.codecs.pojo.PropertyAccessor;
 
@@ -67,8 +65,8 @@ public class PropertyModelGenerator extends BaseGenerator {
         this.isFieldBased = true;
         this.runtimeMode = runtimeMode;
         this.propertyName = field.name();
-        generatedType = "%s.%sModel".formatted(baseName, Critter.titleCase(propertyName));
-        accessorType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
+        generatedType = "%s.%sModel".formatted(baseName, DiscoveryRules.titleCase(propertyName));
+        accessorType = "%s.%sAccessor".formatted(baseName, DiscoveryRules.titleCase(propertyName));
 
         Field reflectedField = findField(annotationSource, field.name());
         this.accessFlags = reflectedField != null ? reflectedField.getModifiers() : field.access();
@@ -106,23 +104,25 @@ public class PropertyModelGenerator extends BaseGenerator {
         this.config = config;
         this.isFieldBased = false;
         this.runtimeMode = runtimeMode;
-        this.propertyName = ExtensionFunctions.getterToPropertyName(method, entity);
-        generatedType = "%s.%sModel".formatted(baseName, Critter.titleCase(propertyName));
-        accessorType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
+        this.propertyName = DiscoveryRules.propertyName(method.name());
+        generatedType = "%s.%sModel".formatted(baseName, DiscoveryRules.titleCase(propertyName));
+        accessorType = "%s.%sAccessor".formatted(baseName, DiscoveryRules.titleCase(propertyName));
 
-        Method reflectedMethod = findMethod(annotationSource, method.name());
+        // the pair's own class: a subclass's override of the getter, if any, isn't part of the pair
+        Class<?> declaringClass = method.declaringClass() != null ? method.declaringClass() : annotationSource;
+        Method reflectedMethod = findMethod(declaringClass, method.name());
         this.accessFlags = reflectedMethod != null ? reflectedMethod.getModifiers() : method.access();
         this.genericType = reflectedMethod != null ? reflectedMethod.getGenericReturnType() : Object.class;
         this.annotationMap = buildAnnotationMap(reflectedMethod != null ? reflectedMethod.getAnnotations() : new Annotation[0]);
         // Also collect setter annotations — some annotations (e.g. @Version, @Text) live on the setter, not the getter
-        String setterName = "set" + Critter.titleCase(this.propertyName);
+        String setterName = "set" + DiscoveryRules.titleCase(this.propertyName);
         Method reflectedSetter = null;
         if (reflectedMethod != null) {
             Class<?> paramType = reflectedMethod.getReturnType();
             ClassDesc paramDesc = paramType.isPrimitive()
                     ? GenerationUtils.primitiveClassDesc(paramType.getName())
                     : ClassDesc.of(paramType.getName());
-            reflectedSetter = GenerationUtils.findSetterMethod(annotationSource, setterName, paramDesc);
+            reflectedSetter = GenerationUtils.findSetterMethod(declaringClass, setterName, paramDesc);
         }
         if (reflectedSetter != null) {
             for (Annotation ann : reflectedSetter.getAnnotations()) {
@@ -257,6 +257,13 @@ public class PropertyModelGenerator extends BaseGenerator {
     }
 
     /**
+     * @return the property's Java name
+     */
+    public String getPropertyName() {
+        return propertyName;
+    }
+
+    /**
      * @return true if the property is annotated {@code @Id}
      */
     public boolean isAnnotatedId() {
@@ -289,7 +296,7 @@ public class PropertyModelGenerator extends BaseGenerator {
 
         boolean isFinalFlag = java.lang.reflect.Modifier.isFinal(accessFlags);
         boolean isTransientFlag = java.lang.reflect.Modifier.isTransient(accessFlags)
-                || PropertyConvention.transientAnnotations().stream().anyMatch(c -> annotationMap.containsKey(c.getName()));
+                || annotationMap.keySet().stream().anyMatch(DiscoveryRules::isTransientAnnotation);
         boolean isReferenceFlag = DBRef.class.isAssignableFrom(typeData.getType())
                 || annotationMap.containsKey(Reference.class.getName());
         boolean isArrayFlag = typeData.getType().isArray();
@@ -298,7 +305,7 @@ public class PropertyModelGenerator extends BaseGenerator {
         boolean isCollectionFlag = java.util.Collection.class.isAssignableFrom(typeData.getType());
         // @IdField names the id property at the entity level, so the property's own annotations don't show it
         String mappedName = propertyName.equals(idFieldName) ? "_id"
-                : PropertyConvention.mappedName(config, annotationMap, propertyName);
+                : DiscoveryRules.mappedName(config, type -> annotationMap.get(type.getName()), propertyName);
         Class<?> normalizedType = PropertyModel.normalize(typeData);
         AlsoLoad alsoLoad = (AlsoLoad) annotationMap.get(AlsoLoad.class.getName());
         String[] loadNamesArr = alsoLoad != null ? alsoLoad.value() : new String[0];
