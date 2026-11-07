@@ -92,7 +92,7 @@ loadScripts(document, 'script');</script>
 <h2>Field Summary</h2>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-dev.morphia.critter.parser.generator.AccessorMethods">Fields inherited from class&nbsp;dev.morphia.critter.parser.generator.<a href="AccessorMethods.html" title="class in dev.morphia.critter.parser.generator">AccessorMethods</a></h3>
-<code><a href="AccessorMethods.html#entity">entity</a></code></div>
+<code><a href="AccessorMethods.html#entity">entity</a>, <a href="AccessorMethods.html#model">model</a></code></div>
 </section>
 </li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -103,9 +103,15 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.Class,java.util.List)" class="member-name-link">AddMethodAccessorMethods</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.Class,io.smallrye.classfile.ClassModel,java.util.List)" class="member-name-link">AddMethodAccessorMethods</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity,
+ io.smallrye.classfile.ClassModel&nbsp;model,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&gt;&nbsp;methods)</code></div>
 <div class="col-last even-row-color">
+<div class="block">Creates a generator that will add accessor methods for the given getter methods to the entity class's parsed classfile.</div>
+</div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.lang.Class,java.util.List)" class="member-name-link">AddMethodAccessorMethods</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&gt;&nbsp;methods)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Creates a generator that will add accessor methods for the given getter methods to the entity class.</div>
 </div>
 </div>
@@ -131,9 +137,6 @@ loadScripts(document, 'script');</script>
 </div>
 </div>
 <div class="inherited-list">
-<h3 id="methods-inherited-from-class-dev.morphia.critter.parser.generator.AccessorMethods">Methods inherited from class&nbsp;dev.morphia.critter.parser.generator.<a href="AccessorMethods.html" title="class in dev.morphia.critter.parser.generator">AccessorMethods</a></h3>
-<code><a href="AccessorMethods.html#readClassFiltering()">readClassFiltering</a></code></div>
-<div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 </section>
@@ -153,6 +156,15 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">AddMethodAccessorMethods</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&gt;&nbsp;methods)</span></div>
 <div class="block">Creates a generator that will add accessor methods for the given getter methods to the entity class.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(java.lang.Class,io.smallrye.classfile.ClassModel,java.util.List)">
+<h3>AddMethodAccessorMethods</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">AddMethodAccessorMethods</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity,
+ io.smallrye.classfile.ClassModel&nbsp;model,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&gt;&nbsp;methods)</span></div>
+<div class="block">Creates a generator that will add accessor methods for the given getter methods to the entity class's parsed classfile.</div>
 </section>
 </li>
 </ul>

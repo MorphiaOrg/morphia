@@ -71,9 +71,14 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code><a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">MethodInfo.</span><code><a href="../MethodInfo.html#mergeAnnotations(dev.morphia.critter.parser.MethodInfo)" class="member-name-link">mergeAnnotations</a><wbr>(<a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;setter)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">MethodInfo.</span><code><a href="../MethodInfo.html#setter()" class="member-name-link">setter</a>()</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns a new MethodInfo that merges annotations from this (getter) and the setter.</div>
+<div class="block">Returns the value of the <a href="../../../../../dev/morphia/critter/parser/MethodInfo.html#param-setter"><code>setter</code></a> record component.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a></code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">MethodInfo.</span><code><a href="../MethodInfo.html#withSetter(dev.morphia.critter.parser.MethodInfo)" class="member-name-link">withSetter</a><wbr>(<a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;setter)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Returns a new MethodInfo for this getter paired with <code>setter</code>, carrying the setter's annotations too.</div>
 </div>
 </div>
 <div class="caption"><span>Methods in <a href="../package-summary.html">dev.morphia.critter.parser</a> with parameters of type <a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a></span></div>
@@ -82,9 +87,26 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code><a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">MethodInfo.</span><code><a href="../MethodInfo.html#mergeAnnotations(dev.morphia.critter.parser.MethodInfo)" class="member-name-link">mergeAnnotations</a><wbr>(<a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;setter)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">MethodInfo.</span><code><a href="../MethodInfo.html#withSetter(dev.morphia.critter.parser.MethodInfo)" class="member-name-link">withSetter</a><wbr>(<a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;setter)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Returns a new MethodInfo that merges annotations from this (getter) and the setter.</div>
+<div class="block">Returns a new MethodInfo for this getter paired with <code>setter</code>, carrying the setter's annotations too.</div>
+</div>
+</div>
+<div class="caption"><span>Constructors in <a href="../package-summary.html">dev.morphia.critter.parser</a> with parameters of type <a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier</div>
+<div class="table-header col-second">Constructor</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="../MethodInfo.html#%3Cinit%3E(java.lang.String,java.lang.String,java.lang.String,int,java.util.List,java.lang.Class,dev.morphia.critter.parser.MethodInfo)" class="member-name-link">MethodInfo</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;desc,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;signature,
+ int&nbsp;access,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;io.smallrye.classfile.Annotation&gt;&nbsp;visibleAnnotations,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;declaringClass,
+ <a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;setter)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Creates an instance of a <code>MethodInfo</code> record class.</div>
 </div>
 </div>
 </section>
@@ -97,21 +119,12 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>void</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">CritterGenerator.</span><code><a href="../generator/CritterGenerator.html#nestmateAccessor(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.MethodInfo)" class="member-name-link">nestmateAccessor</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
- CritterClassLoader&nbsp;critterClassLoader,
- <a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;method)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Generates a nestmate accessor for the property exposed by the given getter method and registers
- the instance in <a href="../generator/NestmateAccessorRegistry.html" title="class in dev.morphia.critter.parser.generator"><code>NestmateAccessorRegistry</code></a>.</div>
-</div>
-<div class="col-first odd-row-color"><code><a href="../generator/PropertyAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyAccessorGenerator</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">CritterGenerator.</span><code><a href="../generator/CritterGenerator.html#propertyAccessor(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.MethodInfo)" class="member-name-link">propertyAccessor</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
- CritterClassLoader&nbsp;critterClassLoader,
- <a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;method)</code></div>
-<div class="col-last odd-row-color">
-<div class="block">Generates and registers a <a href="../generator/PropertyAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator"><code>PropertyAccessorGenerator</code></a> for the given getter method.</div>
-</div>
+<div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/constant/MethodTypeDesc.html" title="class or interface in java.lang.constant" class="external-link">MethodTypeDesc</a></code></div>
+<div class="col-second even-row-color"><span class="type-name-label">GenerationUtils.</span><code><a href="../generator/GenerationUtils.html#setterType(java.lang.Class,dev.morphia.critter.parser.MethodInfo,java.lang.String,java.lang.constant.ClassDesc)" class="member-name-link">setterType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity,
+ <a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;getter,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;setterName,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/constant/ClassDesc.html" title="class or interface in java.lang.constant" class="external-link">ClassDesc</a>&nbsp;propertyDesc)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 <div class="caption"><span>Method parameters in <a href="../generator/package-summary.html">dev.morphia.critter.parser.generator</a> with type arguments of type <a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a></span></div>
 <div class="summary-table three-column-summary">
@@ -119,7 +132,8 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>byte[]</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">CritterGenerator.</span><code><a href="../generator/CritterGenerator.html#methodAccessors(java.lang.Class,java.util.List)" class="member-name-link">methodAccessors</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
+<div class="col-second even-row-color"><span class="type-name-label">CritterGenerator.</span><code><a href="../generator/CritterGenerator.html#methodAccessors(java.lang.Class,io.smallrye.classfile.ClassModel,java.util.List)" class="member-name-link">methodAccessors</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
+ io.smallrye.classfile.ClassModel&nbsp;model,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&gt;&nbsp;methods)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Generates bytecode augmenting the entity with synthetic <code>__readXxx</code>/<code>__writeXxx</code> methods for its getter methods.</div>
@@ -180,9 +194,16 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../generator/AddMethodAccessorMethods.html#%3Cinit%3E(java.lang.Class,java.util.List)" class="member-name-link">AddMethodAccessorMethods</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity,
+<div class="col-second even-row-color"><code><a href="../generator/AddMethodAccessorMethods.html#%3Cinit%3E(java.lang.Class,io.smallrye.classfile.ClassModel,java.util.List)" class="member-name-link">AddMethodAccessorMethods</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity,
+ io.smallrye.classfile.ClassModel&nbsp;model,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&gt;&nbsp;methods)</code></div>
 <div class="col-last even-row-color">
+<div class="block">Creates a generator that will add accessor methods for the given getter methods to the entity class's parsed classfile.</div>
+</div>
+<div class="col-first odd-row-color"><code>&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="../generator/AddMethodAccessorMethods.html#%3Cinit%3E(java.lang.Class,java.util.List)" class="member-name-link">AddMethodAccessorMethods</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&gt;&nbsp;methods)</code></div>
+<div class="col-last odd-row-color">
 <div class="block">Creates a generator that will add accessor methods for the given getter methods to the entity class.</div>
 </div>
 </div>

@@ -82,12 +82,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Generates a <a href="https://mongodb.github.io/mongo-java-driver/5.6/apidocs/bson/org/bson/codecs/pojo/PropertyAccessor.html" title="class or interface in org.bson.codecs.pojo" class="external-link"><code>PropertyAccessor</code></a> implementation that uses direct
  <code>getfield</code>/<code>putfield</code> (for fields) or <code>invokevirtual</code> (for getter/setter methods)
  to access entity properties. The generated class must be defined as a hidden nestmate of the entity
- class so the JVM grants it private-member access.
-
- <p>
- Array-typed properties are not supported: the BSON codec provides <code>Object[]</code> at runtime,
- which is incompatible with <code>putfield</code> to a typed array field. Callers should throw
- to trigger <code>CritterMapper</code> fallback to reflection for such entities.</div>
+ class so the JVM grants it private-member access.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -167,12 +162,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="generate()">
 <h3>generate</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">generate</span>()</div>
-<div class="block">Generates the accessor bytecode.</div>
-<dl class="notes">
-<dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/IllegalArgumentException.html" title="class or interface in java.lang" class="external-link">IllegalArgumentException</a></code> - if the property type is an array (BSON codec provides <code>Object[]</code>
-                                  which is incompatible with typed array putfield at runtime)</dd>
-</dl>
+<div class="block">Generates the accessor bytecode. An array property's values are converted to its type before they reach it: see
+ <code>ArrayAccessor</code>.</div>
 </section>
 </li>
 </ul>

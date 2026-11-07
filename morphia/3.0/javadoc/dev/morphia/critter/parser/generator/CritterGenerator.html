@@ -110,23 +110,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="EntityModelGenerator.html" title="class in dev.morphia.critter.parser.generator">EntityModelGenerator</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#entityModel(java.lang.Class,dev.morphia.critter.CritterClassLoader,java.util.List)" class="member-name-link">entityModel</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;type,
- CritterClassLoader&nbsp;critterClassLoader,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a>&gt;&nbsp;properties)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Generates and registers the entity model class for the given type.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="EntityModelGenerator.html" title="class in dev.morphia.critter.parser.generator">EntityModelGenerator</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#entityModel(java.lang.Class,java.lang.Class,dev.morphia.critter.CritterClassLoader,java.util.List)" class="member-name-link">entityModel</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;type,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;standinType,
- CritterClassLoader&nbsp;critterClassLoader,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a>&gt;&nbsp;properties)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Generates and registers the entity model class for the given type, reading entity-level annotations from <code>standinType</code>.</div>
-</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>byte[]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fieldAccessors(java.lang.Class,java.util.List)" class="member-name-link">fieldAccessors</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fieldAccessors(java.lang.Class,io.smallrye.classfile.ClassModel,java.util.List)" class="member-name-link">fieldAccessors</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
+ io.smallrye.classfile.ClassModel&nbsp;model,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../FieldInfo.html" title="class in dev.morphia.critter.parser">FieldInfo</a>&gt;&nbsp;fields)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Generates bytecode augmenting the entity with synthetic <code>__readXxx</code>/<code>__writeXxx</code> methods for its fields.</div>
@@ -146,40 +132,17 @@ loadScripts(document, 'script');</script>
 <div class="block">Reads the entity class bytecode, discovers its properties, and generates all required Critter support classes.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>byte[]</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#methodAccessors(java.lang.Class,java.util.List)" class="member-name-link">methodAccessors</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#methodAccessors(java.lang.Class,io.smallrye.classfile.ClassModel,java.util.List)" class="member-name-link">methodAccessors</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
+ io.smallrye.classfile.ClassModel&nbsp;model,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&gt;&nbsp;methods)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Generates bytecode augmenting the entity with synthetic <code>__readXxx</code>/<code>__writeXxx</code> methods for its getter methods.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nestmateAccessor(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo)" class="member-name-link">nestmateAccessor</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
- CritterClassLoader&nbsp;critterClassLoader,
- <a href="../FieldInfo.html" title="class in dev.morphia.critter.parser">FieldInfo</a>&nbsp;field)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nestmateAccessors(dev.morphia.critter.CritterClassLoader,java.util.List)" class="member-name-link">nestmateAccessors</a><wbr>(CritterClassLoader&nbsp;critterClassLoader,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="NestmateAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator">NestmateAccessorGenerator</a>&gt;&nbsp;generators)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Generates a nestmate accessor for the given field and registers the instance in
- <a href="NestmateAccessorRegistry.html" title="class in dev.morphia.critter.parser.generator"><code>NestmateAccessorRegistry</code></a>.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#nestmateAccessor(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.MethodInfo)" class="member-name-link">nestmateAccessor</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
- CritterClassLoader&nbsp;critterClassLoader,
- <a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;method)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Generates a nestmate accessor for the property exposed by the given getter method and registers
- the instance in <a href="NestmateAccessorRegistry.html" title="class in dev.morphia.critter.parser.generator"><code>NestmateAccessorRegistry</code></a>.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="PropertyAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyAccessorGenerator</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#propertyAccessor(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo)" class="member-name-link">propertyAccessor</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
- CritterClassLoader&nbsp;critterClassLoader,
- <a href="../FieldInfo.html" title="class in dev.morphia.critter.parser">FieldInfo</a>&nbsp;field)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Generates and registers a <a href="PropertyAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator"><code>PropertyAccessorGenerator</code></a> for the given field.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="PropertyAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyAccessorGenerator</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#propertyAccessor(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.MethodInfo)" class="member-name-link">propertyAccessor</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
- CritterClassLoader&nbsp;critterClassLoader,
- <a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;method)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Generates and registers a <a href="PropertyAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator"><code>PropertyAccessorGenerator</code></a> for the given getter method.</div>
+<div class="block">Prepares hidden nestmate accessors, checking that Morphia can define every one of them before any is defined.</div>
 </div>
 </div>
 </div>
@@ -251,14 +214,16 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="fieldAccessors(java.lang.Class,java.util.List)">
+<section class="detail" id="fieldAccessors(java.lang.Class,io.smallrye.classfile.ClassModel,java.util.List)">
 <h3>fieldAccessors</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">fieldAccessors</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
+ io.smallrye.classfile.ClassModel&nbsp;model,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../FieldInfo.html" title="class in dev.morphia.critter.parser">FieldInfo</a>&gt;&nbsp;fields)</span></div>
 <div class="block">Generates bytecode augmenting the entity with synthetic <code>__readXxx</code>/<code>__writeXxx</code> methods for its fields.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>entityType</code> - the entity class to augment</dd>
+<dd><code>model</code> - the entity's parsed classfile</dd>
 <dd><code>fields</code> - the fields for which accessor methods should be generated</dd>
 <dt>Returns:</dt>
 <dd>the augmented class bytecode</dd>
@@ -266,14 +231,16 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="methodAccessors(java.lang.Class,java.util.List)">
+<section class="detail" id="methodAccessors(java.lang.Class,io.smallrye.classfile.ClassModel,java.util.List)">
 <h3>methodAccessors</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">methodAccessors</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
+ io.smallrye.classfile.ClassModel&nbsp;model,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&gt;&nbsp;methods)</span></div>
 <div class="block">Generates bytecode augmenting the entity with synthetic <code>__readXxx</code>/<code>__writeXxx</code> methods for its getter methods.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>entityType</code> - the entity class to augment</dd>
+<dd><code>model</code> - the entity's parsed classfile</dd>
 <dd><code>methods</code> - the getter methods for which accessor methods should be generated</dd>
 <dt>Returns:</dt>
 <dd>the augmented class bytecode</dd>
@@ -281,97 +248,22 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="propertyAccessor(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo)">
-<h3>propertyAccessor</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="PropertyAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyAccessorGenerator</a></span>&nbsp;<span class="element-name">propertyAccessor</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
- CritterClassLoader&nbsp;critterClassLoader,
- <a href="../FieldInfo.html" title="class in dev.morphia.critter.parser">FieldInfo</a>&nbsp;field)</span></div>
-<div class="block">Generates and registers a <a href="PropertyAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator"><code>PropertyAccessorGenerator</code></a> for the given field.</div>
+<section class="detail" id="nestmateAccessors(dev.morphia.critter.CritterClassLoader,java.util.List)">
+<h3>nestmateAccessors</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a></span>&nbsp;<span class="element-name">nestmateAccessors</span><wbr><span class="parameters">(CritterClassLoader&nbsp;critterClassLoader,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="NestmateAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator">NestmateAccessorGenerator</a>&gt;&nbsp;generators)</span></div>
+<div class="block">Prepares hidden nestmate accessors, checking that Morphia can define every one of them before any is defined. Each
+ accessor is defined as a nestmate of the class declaring its field, or getter and setter, so it can reach private
+ members directly, and its instance is registered in <a href="NestmateAccessorRegistry.html" title="class in dev.morphia.critter.parser.generator"><code>NestmateAccessorRegistry</code></a>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>entityType</code> - the entity class that owns the field</dd>
-<dd><code>critterClassLoader</code> - the class loader that will receive the generated bytecode</dd>
-<dd><code>field</code> - the field for which a property accessor should be generated</dd>
+<dd><code>critterClassLoader</code> - the class loader that will define the generated models using the accessors</dd>
+<dd><code>generators</code> - the accessors' generators</dd>
 <dt>Returns:</dt>
-<dd>the emitted property accessor generator</dd>
+<dd>defines and registers the accessors</dd>
+<dt>Throws:</dt>
+<dd><code>NestmateAccessException</code> - if Morphia can't define a nestmate in one of the classes</dd>
 </dl>
-</section>
-</li>
-<li>
-<section class="detail" id="propertyAccessor(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.MethodInfo)">
-<h3>propertyAccessor</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="PropertyAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyAccessorGenerator</a></span>&nbsp;<span class="element-name">propertyAccessor</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
- CritterClassLoader&nbsp;critterClassLoader,
- <a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;method)</span></div>
-<div class="block">Generates and registers a <a href="PropertyAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator"><code>PropertyAccessorGenerator</code></a> for the given getter method.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>entityType</code> - the entity class that owns the method</dd>
-<dd><code>critterClassLoader</code> - the class loader that will receive the generated bytecode</dd>
-<dd><code>method</code> - the getter method for which a property accessor should be generated</dd>
-<dt>Returns:</dt>
-<dd>the emitted property accessor generator</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="nestmateAccessor(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo)">
-<h3>nestmateAccessor</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">nestmateAccessor</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
- CritterClassLoader&nbsp;critterClassLoader,
- <a href="../FieldInfo.html" title="class in dev.morphia.critter.parser">FieldInfo</a>&nbsp;field)</span></div>
-<div class="block">Generates a nestmate accessor for the given field and registers the instance in
- <a href="NestmateAccessorRegistry.html" title="class in dev.morphia.critter.parser.generator"><code>NestmateAccessorRegistry</code></a>. The accessor is defined as a hidden nestmate of
- <code>entityType</code> so it can directly access private fields via <code>getfield</code>/<code>putfield</code>.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>entityType</code> - the entity class that owns the field</dd>
-<dd><code>critterClassLoader</code> - the class loader that will define the generated models using the accessor</dd>
-<dd><code>field</code> - the field for which a nestmate accessor should be generated</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="nestmateAccessor(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.MethodInfo)">
-<h3>nestmateAccessor</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">nestmateAccessor</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
- CritterClassLoader&nbsp;critterClassLoader,
- <a href="../MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;method)</span></div>
-<div class="block">Generates a nestmate accessor for the property exposed by the given getter method and registers
- the instance in <a href="NestmateAccessorRegistry.html" title="class in dev.morphia.critter.parser.generator"><code>NestmateAccessorRegistry</code></a>.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>entityType</code> - the entity class that owns the method</dd>
-<dd><code>critterClassLoader</code> - the class loader that will define the generated models using the accessor</dd>
-<dd><code>method</code> - the getter method for which a nestmate accessor should be generated</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="entityModel(java.lang.Class,dev.morphia.critter.CritterClassLoader,java.util.List)">
-<h3>entityModel</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="EntityModelGenerator.html" title="class in dev.morphia.critter.parser.generator">EntityModelGenerator</a></span>&nbsp;<span class="element-name">entityModel</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;type,
- CritterClassLoader&nbsp;critterClassLoader,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a>&gt;&nbsp;properties)</span></div>
-<div class="block">Generates and registers the entity model class for the given type.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>type</code> - the entity class</dd>
-<dd><code>critterClassLoader</code> - the class loader that will receive the generated bytecode</dd>
-<dd><code>properties</code> - the list of property model generators for the entity's properties</dd>
-<dt>Returns:</dt>
-<dd>the emitted entity model generator</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="entityModel(java.lang.Class,java.lang.Class,dev.morphia.critter.CritterClassLoader,java.util.List)">
-<h3>entityModel</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="EntityModelGenerator.html" title="class in dev.morphia.critter.parser.generator">EntityModelGenerator</a></span>&nbsp;<span class="element-name">entityModel</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;type,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;standinType,
- CritterClassLoader&nbsp;critterClassLoader,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a>&gt;&nbsp;properties)</span></div>
-<div class="block">Generates and registers the entity model class for the given type, reading entity-level annotations from <code>standinType</code>.</div>
 </section>
 </li>
 </ul>

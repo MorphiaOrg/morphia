@@ -72,7 +72,15 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="dev/morphia/critter/parser/generator/AccessorMethods.html#%3Cinit%3E(java.lang.Class)" class="member-name-link">AccessorMethods(Class&lt;?&gt;)</a> - Constructor for class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/AccessorMethods.html" title="class in dev.morphia.critter.parser.generator">AccessorMethods</a></dt>
 <dd>
-<div class="block">Creates a new generator for the given entity class.</div>
+<div class="block">Creates a new generator for the given entity class, reading its classfile.</div>
+</dd>
+<dt><a href="dev/morphia/critter/parser/generator/AccessorMethods.html#%3Cinit%3E(java.lang.Class,io.smallrye.classfile.ClassModel)" class="member-name-link">AccessorMethods(Class&lt;?&gt;, ClassModel)</a> - Constructor for class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/AccessorMethods.html" title="class in dev.morphia.critter.parser.generator">AccessorMethods</a></dt>
+<dd>
+<div class="block">Creates a new generator for the given entity class and its already parsed classfile.</div>
+</dd>
+<dt><a href="dev/morphia/critter/parser/PropertyFinder.Properties.html#accessors()" class="member-name-link">accessors()</a> - Method in record class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/PropertyFinder.Properties.html" title="class in dev.morphia.critter.parser">PropertyFinder.Properties</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./dev/morphia/critter/parser/PropertyFinder.Properties.html#param-accessors"><code>accessors</code></a> record component.</div>
 </dd>
 <dt><a href="dev/morphia/aggregation/expressions/AccumulatorExpressions.html#accumulator(java.lang.String,java.lang.String,java.util.List,java.lang.String)" class="member-name-link">accumulator(String, String, List&lt;Object&gt;, String)</a> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/AccumulatorExpressions.html" title="class in dev.morphia.aggregation.expressions">AccumulatorExpressions</a></dt>
 <dd>
@@ -113,7 +121,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Generates synthetic <code>__readXxx</code> and <code>__writeXxx</code> accessor methods directly
  into an entity class bytecode for each of its fields.</div>
 </dd>
-<dt><a href="dev/morphia/critter/parser/generator/AddFieldAccessorMethods.html#%3Cinit%3E(java.lang.Class,java.util.List)" class="member-name-link">AddFieldAccessorMethods(Class&lt;?&gt;, List&lt;FieldInfo&gt;)</a> - Constructor for class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/AddFieldAccessorMethods.html" title="class in dev.morphia.critter.parser.generator">AddFieldAccessorMethods</a></dt>
+<dt><a href="dev/morphia/critter/parser/generator/AddFieldAccessorMethods.html#%3Cinit%3E(java.lang.Class,io.smallrye.classfile.ClassModel,java.util.List)" class="member-name-link">AddFieldAccessorMethods(Class&lt;?&gt;, ClassModel, List&lt;FieldInfo&gt;)</a> - Constructor for class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/AddFieldAccessorMethods.html" title="class in dev.morphia.critter.parser.generator">AddFieldAccessorMethods</a></dt>
 <dd>
 <div class="block">Creates a generator that will add accessor methods for the given fields to the entity class.</div>
 </dd>
@@ -129,6 +137,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Generates synthetic <code>__readXxx</code> and <code>__writeXxx</code> accessor methods into an entity class
  bytecode for properties backed by getter/setter methods rather than direct fields.</div>
+</dd>
+<dt><a href="dev/morphia/critter/parser/generator/AddMethodAccessorMethods.html#%3Cinit%3E(java.lang.Class,io.smallrye.classfile.ClassModel,java.util.List)" class="member-name-link">AddMethodAccessorMethods(Class&lt;?&gt;, ClassModel, List&lt;MethodInfo&gt;)</a> - Constructor for class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/AddMethodAccessorMethods.html" title="class in dev.morphia.critter.parser.generator">AddMethodAccessorMethods</a></dt>
+<dd>
+<div class="block">Creates a generator that will add accessor methods for the given getter methods to the entity class's parsed classfile.</div>
 </dd>
 <dt><a href="dev/morphia/critter/parser/generator/AddMethodAccessorMethods.html#%3Cinit%3E(java.lang.Class,java.util.List)" class="member-name-link">AddMethodAccessorMethods(Class&lt;?&gt;, List&lt;MethodInfo&gt;)</a> - Constructor for class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/AddMethodAccessorMethods.html" title="class in dev.morphia.critter.parser.generator">AddMethodAccessorMethods</a></dt>
 <dd>
@@ -1372,14 +1384,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">The entity class for which code is being generated.</div>
 </dd>
-<dt><a href="dev/morphia/critter/parser/generator/CritterGenerator.html#entityModel(java.lang.Class,dev.morphia.critter.CritterClassLoader,java.util.List)" class="member-name-link">entityModel(Class&lt;?&gt;, CritterClassLoader, List&lt;PropertyModelGenerator&gt;)</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/CritterGenerator.html" title="class in dev.morphia.critter.parser.generator">CritterGenerator</a></dt>
-<dd>
-<div class="block">Generates and registers the entity model class for the given type.</div>
-</dd>
-<dt><a href="dev/morphia/critter/parser/generator/CritterGenerator.html#entityModel(java.lang.Class,java.lang.Class,dev.morphia.critter.CritterClassLoader,java.util.List)" class="member-name-link">entityModel(Class&lt;?&gt;, Class&lt;?&gt;, CritterClassLoader, List&lt;PropertyModelGenerator&gt;)</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/CritterGenerator.html" title="class in dev.morphia.critter.parser.generator">CritterGenerator</a></dt>
-<dd>
-<div class="block">Generates and registers the entity model class for the given type, reading entity-level annotations from <code>standinType</code>.</div>
-</dd>
 <dt><a href="dev/morphia/critter/parser/generator/EntityModelGenerator.html" class="type-name-link" title="class in dev.morphia.critter.parser.generator">EntityModelGenerator</a> - Class in <a href="dev/morphia/critter/parser/generator/package-summary.html">dev.morphia.critter.parser.generator</a></dt>
 <dd>
 <div class="block">Generates a ClassFile-based <code>CritterEntityModel</code> implementation for a Morphia entity class.</div>
@@ -1406,6 +1410,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
 </dd>
 <dt><a href="dev/morphia/critter/parser/MethodInfo.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a></dt>
+<dd>
+<div class="block">Indicates whether some other object is "equal to" this one.</div>
+</dd>
+<dt><a href="dev/morphia/critter/parser/PropertyFinder.Properties.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/PropertyFinder.Properties.html" title="class in dev.morphia.critter.parser">PropertyFinder.Properties</a></dt>
 <dd>
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
 </dd>
@@ -1524,7 +1532,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Add a field to the stage</div>
 </dd>
-<dt><a href="dev/morphia/critter/parser/generator/CritterGenerator.html#fieldAccessors(java.lang.Class,java.util.List)" class="member-name-link">fieldAccessors(Class&lt;?&gt;, List&lt;FieldInfo&gt;)</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/CritterGenerator.html" title="class in dev.morphia.critter.parser.generator">CritterGenerator</a></dt>
+<dt><a href="dev/morphia/critter/parser/generator/CritterGenerator.html#fieldAccessors(java.lang.Class,io.smallrye.classfile.ClassModel,java.util.List)" class="member-name-link">fieldAccessors(Class&lt;?&gt;, ClassModel, List&lt;FieldInfo&gt;)</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/CritterGenerator.html" title="class in dev.morphia.critter.parser.generator">CritterGenerator</a></dt>
 <dd>
 <div class="block">Generates bytecode augmenting the entity with synthetic <code>__readXxx</code>/<code>__writeXxx</code> methods for its fields.</div>
 </dd>
@@ -1588,9 +1596,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Finds all documents in the collection.</div>
 </dd>
-<dt><a href="dev/morphia/critter/parser/PropertyFinder.html#find(java.lang.Class,io.smallrye.classfile.ClassModel)" class="member-name-link">find(Class&lt;?&gt;, ClassModel)</a> - Method in class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/PropertyFinder.html" title="class in dev.morphia.critter.parser">PropertyFinder</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="dev/morphia/critter/parser/PropertyFinder.html#find(java.lang.Class,io.smallrye.classfile.ClassModel,java.lang.Class)" class="member-name-link">find(Class&lt;?&gt;, ClassModel, Class&lt;?&gt;)</a> - Method in class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/PropertyFinder.html" title="class in dev.morphia.critter.parser">PropertyFinder</a></dt>
+<dt><a href="dev/morphia/critter/parser/PropertyFinder.html#find(java.lang.Class,java.lang.Class)" class="member-name-link">find(Class&lt;?&gt;, Class&lt;?&gt;)</a> - Method in class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/PropertyFinder.html" title="class in dev.morphia.critter.parser">PropertyFinder</a></dt>
 <dd>
 <div class="block">Discovers properties from <code>standinType</code>'s classfile but generates accessor and model
  bytecode targeting <code>targetType</code>.</div>
@@ -1624,6 +1630,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Defines options to use for find and delete operations</div>
 </dd>
 <dt><a href="dev/morphia/query/FindAndDeleteOptions.html#%3Cinit%3E()" class="member-name-link">FindAndDeleteOptions()</a> - Constructor for class dev.morphia.query.<a href="dev/morphia/query/FindAndDeleteOptions.html" title="class in dev.morphia.query">FindAndDeleteOptions</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="dev/morphia/critter/parser/generator/GenerationUtils.html#findField(java.lang.Class,java.lang.Class,java.lang.String)" class="member-name-link">findField(Class&lt;?&gt;, Class&lt;?&gt;, String)</a> - Static method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/GenerationUtils.html" title="class in dev.morphia.critter.parser.generator">GenerationUtils</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/MorphiaDatastore.DatastoreOperations.html#findOneAndDelete(com.mongodb.client.MongoCollection,org.bson.Document,dev.morphia.query.FindAndDeleteOptions)" class="member-name-link">findOneAndDelete(MongoCollection&lt;T&gt;, Document, FindAndDeleteOptions)</a> - Method in class dev.morphia.<a href="dev/morphia/MorphiaDatastore.DatastoreOperations.html" title="class in dev.morphia">MorphiaDatastore.DatastoreOperations</a></dt>
 <dd>
@@ -1687,9 +1695,17 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:G">G</h2>
 <dl class="index">
+<dt><a href="dev/morphia/critter/parser/generator/EntityModelGenerator.html#generate()" class="member-name-link">generate()</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/EntityModelGenerator.html" title="class in dev.morphia.critter.parser.generator">EntityModelGenerator</a></dt>
+<dd>
+<div class="block">Generates the entity model class without registering it.</div>
+</dd>
 <dt><a href="dev/morphia/critter/parser/generator/NestmateAccessorGenerator.html#generate()" class="member-name-link">generate()</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/NestmateAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator">NestmateAccessorGenerator</a></dt>
 <dd>
 <div class="block">Generates the accessor bytecode.</div>
+</dd>
+<dt><a href="dev/morphia/critter/parser/generator/PropertyAccessorGenerator.html#generate()" class="member-name-link">generate()</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/PropertyAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyAccessorGenerator</a></dt>
+<dd>
+<div class="block">Generates the accessor class without registering it.</div>
 </dd>
 <dt><a href="dev/morphia/critter/parser/generator/CritterGenerator.html#generate(java.lang.Class,dev.morphia.critter.CritterClassLoader)" class="member-name-link">generate(Class&lt;?&gt;, CritterClassLoader)</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/CritterGenerator.html" title="class in dev.morphia.critter.parser.generator">CritterGenerator</a></dt>
 <dd>
@@ -1758,9 +1774,9 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the value of a specified field from a document.</div>
 </dd>
-<dt><a href="dev/morphia/critter/parser/generator/EntityModelGenerator.html#getGeneratedType()" class="member-name-link">getGeneratedType()</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/EntityModelGenerator.html" title="class in dev.morphia.critter.parser.generator">EntityModelGenerator</a></dt>
+<dt><a href="dev/morphia/critter/parser/generator/BaseGenerator.html#getGeneratedType()" class="member-name-link">getGeneratedType()</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/BaseGenerator.html" title="class in dev.morphia.critter.parser.generator">BaseGenerator</a></dt>
 <dd>
-<div class="block">Returns the fully-qualified name of the generated entity model class.</div>
+<div class="block">Returns the fully-qualified name of the generated class.</div>
 </dd>
 <dt><a href="dev/morphia/query/Query.html#getLoggedQuery()" class="member-name-link">getLoggedQuery()</a> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
 <dd>&nbsp;</dd>
@@ -1860,6 +1876,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Returns a hash code value for this object.</div>
 </dd>
 <dt><a href="dev/morphia/critter/parser/MethodInfo.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a></dt>
+<dd>
+<div class="block">Returns a hash code value for this object.</div>
+</dd>
+<dt><a href="dev/morphia/critter/parser/PropertyFinder.Properties.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/PropertyFinder.Properties.html" title="class in dev.morphia.critter.parser">PropertyFinder.Properties</a></dt>
 <dd>
 <div class="block">Returns a hash code value for this object.</div>
 </dd>
@@ -2560,10 +2580,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Writes the results of the aggregation pipeline to a specified collection.</div>
 </dd>
-<dt><a href="dev/morphia/critter/parser/MethodInfo.html#mergeAnnotations(dev.morphia.critter.parser.MethodInfo)" class="member-name-link">mergeAnnotations(MethodInfo)</a> - Method in record class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a></dt>
-<dd>
-<div class="block">Returns a new MethodInfo that merges annotations from this (getter) and the setter.</div>
-</dd>
 <dt><a href="dev/morphia/aggregation/expressions/ObjectExpressions.html#mergeObjects()" class="member-name-link">mergeObjects()</a> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/ObjectExpressions.html" title="class in dev.morphia.aggregation.expressions">ObjectExpressions</a></dt>
 <dd>
 <div class="block">Combines multiple documents into a single document.</div>
@@ -2596,7 +2612,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Keywords for use with the $meta aggregation expression.</div>
 </dd>
-<dt><a href="dev/morphia/critter/parser/generator/CritterGenerator.html#methodAccessors(java.lang.Class,java.util.List)" class="member-name-link">methodAccessors(Class&lt;?&gt;, List&lt;MethodInfo&gt;)</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/CritterGenerator.html" title="class in dev.morphia.critter.parser.generator">CritterGenerator</a></dt>
+<dt><a href="dev/morphia/critter/parser/generator/CritterGenerator.html#methodAccessors(java.lang.Class,io.smallrye.classfile.ClassModel,java.util.List)" class="member-name-link">methodAccessors(Class&lt;?&gt;, ClassModel, List&lt;MethodInfo&gt;)</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/CritterGenerator.html" title="class in dev.morphia.critter.parser.generator">CritterGenerator</a></dt>
 <dd>
 <div class="block">Generates bytecode augmenting the entity with synthetic <code>__readXxx</code>/<code>__writeXxx</code> methods for its getter methods.</div>
 </dd>
@@ -2610,6 +2626,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Creates a MethodInfo whose declaring class isn't known.</div>
 </dd>
 <dt><a href="dev/morphia/critter/parser/MethodInfo.html#%3Cinit%3E(java.lang.String,java.lang.String,java.lang.String,int,java.util.List,java.lang.Class)" class="member-name-link">MethodInfo(String, String, String, int, List&lt;Annotation&gt;, Class&lt;?&gt;)</a> - Constructor for record class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a></dt>
+<dd>
+<div class="block">Creates a MethodInfo with no setter.</div>
+</dd>
+<dt><a href="dev/morphia/critter/parser/MethodInfo.html#%3Cinit%3E(java.lang.String,java.lang.String,java.lang.String,int,java.util.List,java.lang.Class,dev.morphia.critter.parser.MethodInfo)" class="member-name-link">MethodInfo(String, String, String, int, List&lt;Annotation&gt;, Class&lt;?&gt;, MethodInfo)</a> - Constructor for record class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a></dt>
 <dd>
 <div class="block">Creates an instance of a <code>MethodInfo</code> record class.</div>
 </dd>
@@ -2701,6 +2721,14 @@ loadScripts(document, 'script');</script>
 <dt><a href="dev/morphia/query/filters/Filters.html#mod(java.lang.String,long,long)" class="member-name-link">mod(String, long, long)</a> - Static method in class dev.morphia.query.filters.<a href="dev/morphia/query/filters/Filters.html" title="class in dev.morphia.query.filters">Filters</a></dt>
 <dd>
 <div class="block">Performs a modulo operation on the value of a field and selects documents with a specified result.</div>
+</dd>
+<dt><a href="dev/morphia/critter/parser/generator/AccessorMethods.html#model" class="member-name-link">model</a> - Variable in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/AccessorMethods.html" title="class in dev.morphia.critter.parser.generator">AccessorMethods</a></dt>
+<dd>
+<div class="block">The entity's parsed classfile.</div>
+</dd>
+<dt><a href="dev/morphia/critter/parser/PropertyFinder.Properties.html#models()" class="member-name-link">models()</a> - Method in record class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/PropertyFinder.Properties.html" title="class in dev.morphia.critter.parser">PropertyFinder.Properties</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./dev/morphia/critter/parser/PropertyFinder.Properties.html#param-models"><code>models</code></a> record component.</div>
 </dd>
 <dt><a href="dev/morphia/query/Query.html#modify(dev.morphia.ModifyOptions,dev.morphia.query.updates.UpdateOperator,dev.morphia.query.updates.UpdateOperator...)" class="member-name-link">modify(ModifyOptions, UpdateOperator, UpdateOperator...)</a> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
 <dd>
@@ -2814,16 +2842,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns geospatial objects in proximity to a point on a sphere.</div>
 </dd>
-<dt><a href="dev/morphia/critter/parser/generator/CritterGenerator.html#nestmateAccessor(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo)" class="member-name-link">nestmateAccessor(Class&lt;?&gt;, CritterClassLoader, FieldInfo)</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/CritterGenerator.html" title="class in dev.morphia.critter.parser.generator">CritterGenerator</a></dt>
-<dd>
-<div class="block">Generates a nestmate accessor for the given field and registers the instance in
- <a href="dev/morphia/critter/parser/generator/NestmateAccessorRegistry.html" title="class in dev.morphia.critter.parser.generator"><code>NestmateAccessorRegistry</code></a>.</div>
-</dd>
-<dt><a href="dev/morphia/critter/parser/generator/CritterGenerator.html#nestmateAccessor(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.MethodInfo)" class="member-name-link">nestmateAccessor(Class&lt;?&gt;, CritterClassLoader, MethodInfo)</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/CritterGenerator.html" title="class in dev.morphia.critter.parser.generator">CritterGenerator</a></dt>
-<dd>
-<div class="block">Generates a nestmate accessor for the property exposed by the given getter method and registers
- the instance in <a href="dev/morphia/critter/parser/generator/NestmateAccessorRegistry.html" title="class in dev.morphia.critter.parser.generator"><code>NestmateAccessorRegistry</code></a>.</div>
-</dd>
 <dt><a href="dev/morphia/critter/parser/generator/NestmateAccessorGenerator.html" class="type-name-link" title="class in dev.morphia.critter.parser.generator">NestmateAccessorGenerator</a> - Class in <a href="dev/morphia/critter/parser/generator/package-summary.html">dev.morphia.critter.parser.generator</a></dt>
 <dd>
 <div class="block">Generates a <a href="https://mongodb.github.io/mongo-java-driver/5.6/apidocs/bson/org/bson/codecs/pojo/PropertyAccessor.html" title="class or interface in org.bson.codecs.pojo" class="external-link"><code>PropertyAccessor</code></a> implementation that uses direct
@@ -2838,6 +2856,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Hands pre-instantiated <a href="https://mongodb.github.io/mongo-java-driver/5.6/apidocs/bson/org/bson/codecs/pojo/PropertyAccessor.html" title="class or interface in org.bson.codecs.pojo" class="external-link"><code>PropertyAccessor</code></a> instances for hidden nestmate accessor classes (which cannot be looked
  up by name via <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html#forName(java.lang.String)" title="class or interface in java.lang" class="external-link"><code>Class.forName(java.lang.String)</code></a>) to the generated property models that use them.</div>
+</dd>
+<dt><a href="dev/morphia/critter/parser/generator/CritterGenerator.html#nestmateAccessors(dev.morphia.critter.CritterClassLoader,java.util.List)" class="member-name-link">nestmateAccessors(CritterClassLoader, List&lt;NestmateAccessorGenerator&gt;)</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/CritterGenerator.html" title="class in dev.morphia.critter.parser.generator">CritterGenerator</a></dt>
+<dd>
+<div class="block">Prepares hidden nestmate accessors, checking that Morphia can define every one of them before any is defined.</div>
 </dd>
 <dt><a href="dev/morphia/query/MorphiaCursor.html#next()" class="member-name-link">next()</a> - Method in class dev.morphia.query.<a href="dev/morphia/query/MorphiaCursor.html" title="class in dev.morphia.query">MorphiaCursor</a></dt>
 <dd>&nbsp;</dd>
@@ -3168,13 +3190,9 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Defines a query projection</div>
 </dd>
-<dt><a href="dev/morphia/critter/parser/generator/CritterGenerator.html#propertyAccessor(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo)" class="member-name-link">propertyAccessor(Class&lt;?&gt;, CritterClassLoader, FieldInfo)</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/CritterGenerator.html" title="class in dev.morphia.critter.parser.generator">CritterGenerator</a></dt>
+<dt><a href="dev/morphia/critter/parser/PropertyFinder.Properties.html#%3Cinit%3E(java.util.List,java.lang.Runnable)" class="member-name-link">Properties(List&lt;PropertyModelGenerator&gt;, Runnable)</a> - Constructor for record class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/PropertyFinder.Properties.html" title="class in dev.morphia.critter.parser">PropertyFinder.Properties</a></dt>
 <dd>
-<div class="block">Generates and registers a <a href="dev/morphia/critter/parser/generator/PropertyAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator"><code>PropertyAccessorGenerator</code></a> for the given field.</div>
-</dd>
-<dt><a href="dev/morphia/critter/parser/generator/CritterGenerator.html#propertyAccessor(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.MethodInfo)" class="member-name-link">propertyAccessor(Class&lt;?&gt;, CritterClassLoader, MethodInfo)</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/CritterGenerator.html" title="class in dev.morphia.critter.parser.generator">CritterGenerator</a></dt>
-<dd>
-<div class="block">Generates and registers a <a href="dev/morphia/critter/parser/generator/PropertyAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator"><code>PropertyAccessorGenerator</code></a> for the given getter method.</div>
+<div class="block">Creates an instance of a <code>Properties</code> record class.</div>
 </dd>
 <dt><a href="dev/morphia/critter/parser/generator/PropertyAccessorGenerator.html" class="type-name-link" title="class in dev.morphia.critter.parser.generator">PropertyAccessorGenerator</a> - Class in <a href="dev/morphia/critter/parser/generator/package-summary.html">dev.morphia.critter.parser.generator</a></dt>
 <dd>
@@ -3212,8 +3230,13 @@ loadScripts(document, 'script');</script>
 <div class="block">Discovers entity properties (fields or getter methods) from a parsed class model
  and produces the corresponding <a href="dev/morphia/critter/parser/generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator"><code>PropertyModelGenerator</code></a> instances.</div>
 </dd>
-<dt><a href="dev/morphia/critter/parser/PropertyFinder.html#%3Cinit%3E(dev.morphia.mapping.Mapper,dev.morphia.critter.CritterClassLoader,boolean)" class="member-name-link">PropertyFinder(Mapper, CritterClassLoader, boolean)</a> - Constructor for class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/PropertyFinder.html" title="class in dev.morphia.critter.parser">PropertyFinder</a></dt>
+<dt><a href="dev/morphia/critter/parser/PropertyFinder.html#%3Cinit%3E(dev.morphia.critter.parser.generator.CritterGenerator,dev.morphia.mapping.Mapper,dev.morphia.critter.CritterClassLoader,boolean)" class="member-name-link">PropertyFinder(CritterGenerator, Mapper, CritterClassLoader, boolean)</a> - Constructor for class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/PropertyFinder.html" title="class in dev.morphia.critter.parser">PropertyFinder</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="dev/morphia/critter/parser/PropertyFinder.Properties.html" class="type-name-link" title="class in dev.morphia.critter.parser">PropertyFinder.Properties</a> - Record Class in <a href="dev/morphia/critter/parser/package-summary.html">dev.morphia.critter.parser</a></dt>
+<dd>
+<div class="block">An entity's property model generators and the accessors they use, which aren't defined or registered until
+ <code>accessors</code> is run.</div>
+</dd>
 <dt><a href="dev/morphia/critter/parser/generator/PropertyModelGenerator.html" class="type-name-link" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a> - Class in <a href="dev/morphia/critter/parser/generator/package-summary.html">dev.morphia.critter.parser.generator</a></dt>
 <dd>
 <div class="block">Generates the code, in a generated entity model's constructor, that builds the model of one property of a Morphia
@@ -3379,10 +3402,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="dev/morphia/aggregation/expressions/WindowExpressions.html#rank()" class="member-name-link">rank()</a> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/WindowExpressions.html" title="class in dev.morphia.aggregation.expressions">WindowExpressions</a></dt>
 <dd>
 <div class="block">Returns the document position (known as the rank) relative to other documents in the $setWindowFields stage partition.</div>
-</dd>
-<dt><a href="dev/morphia/critter/parser/generator/AccessorMethods.html#readClassFiltering()" class="member-name-link">readClassFiltering()</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/AccessorMethods.html" title="class in dev.morphia.critter.parser.generator">AccessorMethods</a></dt>
-<dd>
-<div class="block">Reads the class file bytes for the given entity.</div>
 </dd>
 <dt><a href="dev/morphia/critter/parser/generator/GenerationUtils.html#readClassModel(java.lang.Class)" class="member-name-link">readClassModel(Class&lt;?&gt;)</a> - Static method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/GenerationUtils.html" title="class in dev.morphia.critter.parser.generator">GenerationUtils</a></dt>
 <dd>
@@ -3672,6 +3691,12 @@ loadScripts(document, 'script');</script>
 <div class="block">If an update operation with upsert: true results in an insert of a document, then $setOnInsert assigns the specified values to
  the fields in the document.</div>
 </dd>
+<dt><a href="dev/morphia/critter/parser/MethodInfo.html#setter()" class="member-name-link">setter()</a> - Method in record class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./dev/morphia/critter/parser/MethodInfo.html#param-setter"><code>setter</code></a> record component.</div>
+</dd>
+<dt><a href="dev/morphia/critter/parser/generator/GenerationUtils.html#setterType(java.lang.Class,dev.morphia.critter.parser.MethodInfo,java.lang.String,java.lang.constant.ClassDesc)" class="member-name-link">setterType(Class&lt;?&gt;, MethodInfo, String, ClassDesc)</a> - Static method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/GenerationUtils.html" title="class in dev.morphia.critter.parser.generator">GenerationUtils</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="dev/morphia/aggregation/expressions/SetExpressions.html#setUnion(java.lang.Object,java.lang.Object...)" class="member-name-link">setUnion(Object, Object...)</a> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/SetExpressions.html" title="class in dev.morphia.aggregation.expressions">SetExpressions</a></dt>
 <dd>
 <div class="block">Returns a set with elements that appear in any of the input sets.</div>
@@ -4168,6 +4193,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns a string representation of this record class.</div>
 </dd>
+<dt><a href="dev/morphia/critter/parser/PropertyFinder.Properties.html#toString()" class="member-name-link">toString()</a> - Method in record class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/PropertyFinder.Properties.html" title="class in dev.morphia.critter.parser">PropertyFinder.Properties</a></dt>
+<dd>
+<div class="block">Returns a string representation of this record class.</div>
+</dd>
 <dt><a href="dev/morphia/query/Projection.html#toString()" class="member-name-link">toString()</a> - Method in class dev.morphia.query.<a href="dev/morphia/query/Projection.html" title="class in dev.morphia.query">Projection</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/query/updates/UpdateOperator.html#toString()" class="member-name-link">toString()</a> - Method in class dev.morphia.query.updates.<a href="dev/morphia/query/updates/UpdateOperator.html" title="class in dev.morphia.query.updates">UpdateOperator</a></dt>
@@ -4568,6 +4597,10 @@ the order they are declared.</div>
 <dt><a href="dev/morphia/aggregation/expressions/WindowExpressions.html" class="type-name-link" title="class in dev.morphia.aggregation.expressions">WindowExpressions</a> - Class in <a href="dev/morphia/aggregation/expressions/package-summary.html">dev.morphia.aggregation.expressions</a></dt>
 <dd>
 <div class="block">Provides window specific operations.</div>
+</dd>
+<dt><a href="dev/morphia/critter/parser/MethodInfo.html#withSetter(dev.morphia.critter.parser.MethodInfo)" class="member-name-link">withSetter(MethodInfo)</a> - Method in record class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a></dt>
+<dd>
+<div class="block">Returns a new MethodInfo for this getter paired with <code>setter</code>, carrying the setter's annotations too.</div>
 </dd>
 <dt><a href="dev/morphia/Datastore.html#withTransaction(com.mongodb.ClientSessionOptions,dev.morphia.transactions.MorphiaTransaction)" class="member-name-link">withTransaction(ClientSessionOptions, MorphiaTransaction&lt;T&gt;)</a> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
 <dd>&nbsp;</dd>

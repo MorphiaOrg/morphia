@@ -81,9 +81,10 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Record Components:</dt>
 <dd><code><span id="param-declaringClass">declaringClass</span></code> - the class declaring the method, or null if unknown</dd>
+<dd><code><span id="param-setter">setter</span></code> - for a getter, the setter it pairs with, or null if unknown</dd>
 </dl>
 <hr>
-<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">MethodInfo</span>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;desc, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;signature, int&nbsp;access, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;io.smallrye.classfile.Annotation&gt;&nbsp;visibleAnnotations, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;declaringClass)
+<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">MethodInfo</span>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;desc, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;signature, int&nbsp;access, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;io.smallrye.classfile.Annotation&gt;&nbsp;visibleAnnotations, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;declaringClass, <a href="MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;setter)
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">Record</a></span></div>
 <div class="block">Immutable record capturing the bytecode-level information for a single entity method,
  replacing direct use of ASM <code>MethodNode</code>.</div>
@@ -113,6 +114,16 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;io.smallrye.classfile.Annotation&gt;&nbsp;visibleAnnotations,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;declaringClass)</code></div>
 <div class="col-last odd-row-color">
+<div class="block">Creates a MethodInfo with no setter.</div>
+</div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,java.lang.String,java.lang.String,int,java.util.List,java.lang.Class,dev.morphia.critter.parser.MethodInfo)" class="member-name-link">MethodInfo</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;desc,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;signature,
+ int&nbsp;access,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;io.smallrye.classfile.Annotation&gt;&nbsp;visibleAnnotations,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;declaringClass,
+ <a href="MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;setter)</code></div>
+<div class="col-last even-row-color">
 <div class="block">Creates an instance of a <code>MethodInfo</code> record class.</div>
 </div>
 </div>
@@ -154,15 +165,15 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a hash code value for this object.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#mergeAnnotations(dev.morphia.critter.parser.MethodInfo)" class="member-name-link">mergeAnnotations</a><wbr>(<a href="MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;setter)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#name()" class="member-name-link">name</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns a new MethodInfo that merges annotations from this (getter) and the setter.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#name()" class="member-name-link">name</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <code>name</code> record component.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setter()" class="member-name-link">setter</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the value of the <a href="#param-setter"><code>setter</code></a> record component.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#signature()" class="member-name-link">signature</a>()</code></div>
@@ -178,6 +189,11 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#visibleAnnotations()" class="member-name-link">visibleAnnotations</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <code>visibleAnnotations</code> record component.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#withSetter(dev.morphia.critter.parser.MethodInfo)" class="member-name-link">withSetter</a><wbr>(<a href="MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;setter)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns a new MethodInfo for this getter paired with <code>setter</code>, carrying the setter's annotations too.</div>
 </div>
 </div>
 </div>
@@ -217,6 +233,21 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;io.smallrye.classfile.Annotation&gt;&nbsp;visibleAnnotations,
  <a href="https://mongodb.github.io/mongo-java-driver/5.6/apidocs/driver-core/com/mongodb/lang/Nullable.html" title="class or interface in com.mongodb.lang" class="external-link">@Nullable</a>
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;declaringClass)</span></div>
+<div class="block">Creates a MethodInfo with no setter.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(java.lang.String,java.lang.String,java.lang.String,int,java.util.List,java.lang.Class,dev.morphia.critter.parser.MethodInfo)">
+<h3>MethodInfo</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">MethodInfo</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;desc,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;signature,
+ int&nbsp;access,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;io.smallrye.classfile.Annotation&gt;&nbsp;visibleAnnotations,
+ <a href="https://mongodb.github.io/mongo-java-driver/5.6/apidocs/driver-core/com/mongodb/lang/Nullable.html" title="class or interface in com.mongodb.lang" class="external-link">@Nullable</a>
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;declaringClass,
+ <a href="https://mongodb.github.io/mongo-java-driver/5.6/apidocs/driver-core/com/mongodb/lang/Nullable.html" title="class or interface in com.mongodb.lang" class="external-link">@Nullable</a>
+ <a href="MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;setter)</span></div>
 <div class="block">Creates an instance of a <code>MethodInfo</code> record class.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -226,6 +257,7 @@ loadScripts(document, 'script');</script>
 <dd><code>access</code> - the value for the <code>access</code> record component</dd>
 <dd><code>visibleAnnotations</code> - the value for the <code>visibleAnnotations</code> record component</dd>
 <dd><code>declaringClass</code> - the value for the <a href="#param-declaringClass"><code>declaringClass</code></a> record component</dd>
+<dd><code>setter</code> - the value for the <a href="#param-setter"><code>setter</code></a> record component</dd>
 </dl>
 </section>
 </li>
@@ -238,11 +270,10 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="mergeAnnotations(dev.morphia.critter.parser.MethodInfo)">
-<h3>mergeAnnotations</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a></span>&nbsp;<span class="element-name">mergeAnnotations</span><wbr><span class="parameters">(<a href="MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;setter)</span></div>
-<div class="block">Returns a new MethodInfo that merges annotations from this (getter) and the setter.
- If the setter has no annotations, returns <code>this</code>.</div>
+<section class="detail" id="withSetter(dev.morphia.critter.parser.MethodInfo)">
+<h3>withSetter</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a></span>&nbsp;<span class="element-name">withSetter</span><wbr><span class="parameters">(<a href="MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;setter)</span></div>
+<div class="block">Returns a new MethodInfo for this getter paired with <code>setter</code>, carrying the setter's annotations too.</div>
 </section>
 </li>
 <li>
@@ -350,6 +381,18 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the value of the <a href="#param-declaringClass"><code>declaringClass</code></a> record component</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setter()">
+<h3>setter</h3>
+<div class="member-signature"><span class="annotations"><a href="https://mongodb.github.io/mongo-java-driver/5.6/apidocs/driver-core/com/mongodb/lang/Nullable.html" title="class or interface in com.mongodb.lang" class="external-link">@Nullable</a>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a></span>&nbsp;<span class="element-name">setter</span>()</div>
+<div class="block">Returns the value of the <a href="#param-setter"><code>setter</code></a> record component.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the value of the <a href="#param-setter"><code>setter</code></a> record component</dd>
 </dl>
 </section>
 </li>

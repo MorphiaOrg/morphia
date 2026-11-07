@@ -101,6 +101,11 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">The entity class whose bytecode will be augmented.</div>
 </div>
+<div class="col-first odd-row-color"><code>protected final io.smallrye.classfile.ClassModel</code></div>
+<div class="col-second odd-row-color"><code><a href="#model" class="member-name-link">model</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">The entity's parsed classfile.</div>
+</div>
 </div>
 </section>
 </li>
@@ -116,7 +121,13 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>protected </code></div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.Class)" class="member-name-link">AccessorMethods</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Creates a new generator for the given entity class.</div>
+<div class="block">Creates a new generator for the given entity class, reading its classfile.</div>
+</div>
+<div class="col-first odd-row-color"><code>protected </code></div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.lang.Class,io.smallrye.classfile.ClassModel)" class="member-name-link">AccessorMethods</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity,
+ io.smallrye.classfile.ClassModel&nbsp;model)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Creates a new generator for the given entity class and its already parsed classfile.</div>
 </div>
 </div>
 </section>
@@ -126,7 +137,7 @@ loadScripts(document, 'script');</script>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab3" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab3', 3)" class="table-tab">Abstract Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab3" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab3', 3)" class="table-tab">Abstract Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
@@ -136,11 +147,6 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#emit()" class="member-name-link">emit</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Emits the generated or augmented class bytecode.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected io.smallrye.classfile.ClassModel</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#readClassFiltering()" class="member-name-link">readClassFiltering</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Reads the class file bytes for the given entity.</div>
 </div>
 </div>
 </div>
@@ -166,6 +172,13 @@ loadScripts(document, 'script');</script>
 <div class="block">The entity class whose bytecode will be augmented.</div>
 </section>
 </li>
+<li>
+<section class="detail" id="model">
+<h3>model</h3>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">io.smallrye.classfile.ClassModel</span>&nbsp;<span class="element-name">model</span></div>
+<div class="block">The entity's parsed classfile.</div>
+</section>
+</li>
 </ul>
 </section>
 </li>
@@ -178,7 +191,15 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(java.lang.Class)">
 <h3>AccessorMethods</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="element-name">AccessorMethods</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity)</span></div>
-<div class="block">Creates a new generator for the given entity class.</div>
+<div class="block">Creates a new generator for the given entity class, reading its classfile.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(java.lang.Class,io.smallrye.classfile.ClassModel)">
+<h3>AccessorMethods</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="element-name">AccessorMethods</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity,
+ io.smallrye.classfile.ClassModel&nbsp;model)</span></div>
+<div class="block">Creates a new generator for the given entity class and its already parsed classfile.</div>
 </section>
 </li>
 </ul>
@@ -194,13 +215,6 @@ loadScripts(document, 'script');</script>
 <h3>emit</h3>
 <div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">emit</span>()</div>
 <div class="block">Emits the generated or augmented class bytecode.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="readClassFiltering()">
-<h3>readClassFiltering</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">io.smallrye.classfile.ClassModel</span>&nbsp;<span class="element-name">readClassFiltering</span>()</div>
-<div class="block">Reads the class file bytes for the given entity.</div>
 </section>
 </li>
 </ul>

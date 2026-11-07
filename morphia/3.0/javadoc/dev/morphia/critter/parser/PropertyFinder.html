@@ -45,7 +45,7 @@ loadScripts(document, 'script');</script>
 <div>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
@@ -84,6 +84,24 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="caption"><span>Nested Classes</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Class</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static final record&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="PropertyFinder.Properties.html" class="type-name-link" title="class in dev.morphia.critter.parser">PropertyFinder.Properties</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">An entity's property model generators and the accessors they use, which aren't defined or registered until
+ <code>accessors</code> is run.</div>
+</div>
+</div>
+</section>
+</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li>
 <section class="constructor-summary" id="constructor-summary">
@@ -92,7 +110,8 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(dev.morphia.mapping.Mapper,dev.morphia.critter.CritterClassLoader,boolean)" class="member-name-link">PropertyFinder</a><wbr>(Mapper&nbsp;mapper,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(dev.morphia.critter.parser.generator.CritterGenerator,dev.morphia.mapping.Mapper,dev.morphia.critter.CritterClassLoader,boolean)" class="member-name-link">PropertyFinder</a><wbr>(<a href="generator/CritterGenerator.html" title="class in dev.morphia.critter.parser.generator">CritterGenerator</a>&nbsp;critterGenerator,
+ Mapper&nbsp;mapper,
  CritterClassLoader&nbsp;classLoader,
  boolean&nbsp;runtimeMode)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -110,15 +129,10 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#find(java.lang.Class,io.smallrye.classfile.ClassModel)" class="member-name-link">find</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
- io.smallrye.classfile.ClassModel&nbsp;classModel)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#find(java.lang.Class,io.smallrye.classfile.ClassModel,java.lang.Class)" class="member-name-link">find</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;standinType,
- io.smallrye.classfile.ClassModel&nbsp;classModel,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="PropertyFinder.Properties.html" title="class in dev.morphia.critter.parser">PropertyFinder.Properties</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#find(java.lang.Class,java.lang.Class)" class="member-name-link">find</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;standinType,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;targetType)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Discovers properties from <code>standinType</code>'s classfile but generates accessor and model
  bytecode targeting <code>targetType</code>.</div>
 </div>
@@ -140,11 +154,19 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(dev.morphia.mapping.Mapper,dev.morphia.critter.CritterClassLoader,boolean)">
+<section class="detail" id="&lt;init&gt;(dev.morphia.critter.parser.generator.CritterGenerator,dev.morphia.mapping.Mapper,dev.morphia.critter.CritterClassLoader,boolean)">
 <h3>PropertyFinder</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">PropertyFinder</span><wbr><span class="parameters">(Mapper&nbsp;mapper,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">PropertyFinder</span><wbr><span class="parameters">(<a href="generator/CritterGenerator.html" title="class in dev.morphia.critter.parser.generator">CritterGenerator</a>&nbsp;critterGenerator,
+ Mapper&nbsp;mapper,
  CritterClassLoader&nbsp;classLoader,
  boolean&nbsp;runtimeMode)</span></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>critterGenerator</code> - the generator emitting the accessors</dd>
+<dd><code>mapper</code> - the mapper whose configuration discovers the properties</dd>
+<dd><code>classLoader</code> - the loader that receives the generated classes</dd>
+<dd><code>runtimeMode</code> - <code>true</code> to generate hidden nestmate accessors for runtime use</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -156,21 +178,20 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="find(java.lang.Class,io.smallrye.classfile.ClassModel)">
+<section class="detail" id="find(java.lang.Class,java.lang.Class)">
 <h3>find</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a>&gt;</span>&nbsp;<span class="element-name">find</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
- io.smallrye.classfile.ClassModel&nbsp;classModel)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="find(java.lang.Class,io.smallrye.classfile.ClassModel,java.lang.Class)">
-<h3>find</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="generator/PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a>&gt;</span>&nbsp;<span class="element-name">find</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;standinType,
- io.smallrye.classfile.ClassModel&nbsp;classModel,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="PropertyFinder.Properties.html" title="class in dev.morphia.critter.parser">PropertyFinder.Properties</a></span>&nbsp;<span class="element-name">find</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;standinType,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;targetType)</span></div>
 <div class="block">Discovers properties from <code>standinType</code>'s classfile but generates accessor and model
  bytecode targeting <code>targetType</code>. Used for <code>@ExternalEntity</code> stand-ins where the
  stand-in carries Morphia annotations but the target is the type actually persisted.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>standinType</code> - the class describing the mapping: the entity itself, or an <code>@ExternalEntity</code> stand-in</dd>
+<dd><code>targetType</code> - the persisted class</dd>
+<dt>Returns:</dt>
+<dd>the properties</dd>
+</dl>
 </section>
 </li>
 </ul>

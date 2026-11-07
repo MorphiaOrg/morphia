@@ -63,34 +63,14 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="dev.morphia.critter.parser.generator">
 <h2>Uses of <a href="../FieldInfo.html" title="class in dev.morphia.critter.parser">FieldInfo</a> in <a href="../generator/package-summary.html">dev.morphia.critter.parser.generator</a></h2>
-<div class="caption"><span>Methods in <a href="../generator/package-summary.html">dev.morphia.critter.parser.generator</a> with parameters of type <a href="../FieldInfo.html" title="class in dev.morphia.critter.parser">FieldInfo</a></span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Method</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>void</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">CritterGenerator.</span><code><a href="../generator/CritterGenerator.html#nestmateAccessor(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo)" class="member-name-link">nestmateAccessor</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
- CritterClassLoader&nbsp;critterClassLoader,
- <a href="../FieldInfo.html" title="class in dev.morphia.critter.parser">FieldInfo</a>&nbsp;field)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Generates a nestmate accessor for the given field and registers the instance in
- <a href="../generator/NestmateAccessorRegistry.html" title="class in dev.morphia.critter.parser.generator"><code>NestmateAccessorRegistry</code></a>.</div>
-</div>
-<div class="col-first odd-row-color"><code><a href="../generator/PropertyAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyAccessorGenerator</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">CritterGenerator.</span><code><a href="../generator/CritterGenerator.html#propertyAccessor(java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo)" class="member-name-link">propertyAccessor</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
- CritterClassLoader&nbsp;critterClassLoader,
- <a href="../FieldInfo.html" title="class in dev.morphia.critter.parser">FieldInfo</a>&nbsp;field)</code></div>
-<div class="col-last odd-row-color">
-<div class="block">Generates and registers a <a href="../generator/PropertyAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator"><code>PropertyAccessorGenerator</code></a> for the given field.</div>
-</div>
-</div>
 <div class="caption"><span>Method parameters in <a href="../generator/package-summary.html">dev.morphia.critter.parser.generator</a> with type arguments of type <a href="../FieldInfo.html" title="class in dev.morphia.critter.parser">FieldInfo</a></span></div>
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>byte[]</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">CritterGenerator.</span><code><a href="../generator/CritterGenerator.html#fieldAccessors(java.lang.Class,java.util.List)" class="member-name-link">fieldAccessors</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
+<div class="col-second even-row-color"><span class="type-name-label">CritterGenerator.</span><code><a href="../generator/CritterGenerator.html#fieldAccessors(java.lang.Class,io.smallrye.classfile.ClassModel,java.util.List)" class="member-name-link">fieldAccessors</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entityType,
+ io.smallrye.classfile.ClassModel&nbsp;model,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../FieldInfo.html" title="class in dev.morphia.critter.parser">FieldInfo</a>&gt;&nbsp;fields)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Generates bytecode augmenting the entity with synthetic <code>__readXxx</code>/<code>__writeXxx</code> methods for its fields.</div>
@@ -151,7 +131,8 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../generator/AddFieldAccessorMethods.html#%3Cinit%3E(java.lang.Class,java.util.List)" class="member-name-link">AddFieldAccessorMethods</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity,
+<div class="col-second even-row-color"><code><a href="../generator/AddFieldAccessorMethods.html#%3Cinit%3E(java.lang.Class,io.smallrye.classfile.ClassModel,java.util.List)" class="member-name-link">AddFieldAccessorMethods</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity,
+ io.smallrye.classfile.ClassModel&nbsp;model,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../FieldInfo.html" title="class in dev.morphia.critter.parser">FieldInfo</a>&gt;&nbsp;fields)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Creates a generator that will add accessor methods for the given fields to the entity class.</div>
