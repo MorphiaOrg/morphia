@@ -114,8 +114,16 @@ public class EntityModelGenerator extends BaseGenerator {
             cb.withFlags(ClassFile.ACC_PUBLIC | ClassFile.ACC_SUPER);
             cb.withSuperclass(superDesc);
 
-            for (PropertyModelGenerator prop : properties) {
+            // each property is built by its own method, so a wide entity doesn't push the constructor past the JVM's
+            // limit on a method's size
+            for (int i = 0; i < properties.size(); i++) {
+                PropertyModelGenerator prop = properties.get(i);
                 prop.emitAnnotationHolder(cb);
+                cb.withMethodBody(propertyMethod(i), MethodTypeDesc.of(ConstantDescs.CD_void),
+                        ClassFile.ACC_PRIVATE | ClassFile.ACC_SYNTHETIC, cod -> {
+                            prop.emitProperty(cod, thisDesc, 1);
+                            cod.return_();
+                        });
             }
 
             // Constructor: (Mapper) -> void. It configures a plain EntityModel: the generated class overrides nothing.
@@ -150,8 +158,9 @@ public class EntityModelGenerator extends BaseGenerator {
                                 MethodTypeDesc.of(entityModelDesc, ConstantDescs.CD_boolean));
                         cod.pop();
 
-                        for (PropertyModelGenerator prop : properties) {
-                            prop.emitProperty(cod, thisDesc, 2);
+                        for (int i = 0; i < properties.size(); i++) {
+                            cod.aload(0);
+                            cod.invokespecial(thisDesc, propertyMethod(i), MethodTypeDesc.of(ConstantDescs.CD_void));
                         }
 
                         // Morphia annotations via builders — no reflection
@@ -174,6 +183,10 @@ public class EntityModelGenerator extends BaseGenerator {
 
         critterClassLoader.register(generatedType, bytes);
         return this;
+    }
+
+    private static String propertyMethod(int index) {
+        return "__property" + index;
     }
 
     private String computeCollectionName() {

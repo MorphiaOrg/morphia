@@ -302,11 +302,11 @@ public class PropertyModelGenerator extends BaseGenerator {
     }
 
     /**
-     * Emits, into the generated entity model's constructor, code that builds this property's model as a plain
-     * {@link PropertyModel} and adds it to the entity model in local 0. Every value is a constant or is resolved here,
+     * Emits, into a method of the generated entity model that its constructor calls, code that builds this property's
+     * model as a plain {@link PropertyModel} and adds it to the entity model in local 0. Every value is a constant or is resolved here,
      * once, so the model's getters are the base class's.
      *
-     * @param cod       the constructor's code
+     * @param cod       the method's code
      * @param modelDesc the generated entity model, whose class loader resolves non-public types
      * @param slot      a free local variable slot
      */

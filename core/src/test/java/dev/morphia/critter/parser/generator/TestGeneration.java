@@ -4,6 +4,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -111,8 +112,11 @@ public class TestGeneration {
         critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.SalaryAccessor").getConstructor().newInstance();
 
         Class<?> loadClass = critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.ExampleEntityModel");
-        // the generated model configures a plain EntityModel in its constructor and overrides nothing
-        Assertions.assertEquals(List.of(), Arrays.stream(loadClass.getDeclaredMethods()).map(Method::getName).toList());
+        // the generated model configures a plain EntityModel when it's constructed and overrides nothing: its only methods are
+        // the private ones its constructor calls
+        for (Method method : loadClass.getDeclaredMethods()) {
+            Assertions.assertTrue(Modifier.isPrivate(method.getModifiers()) && method.isSynthetic(), method.toString());
+        }
         EntityModel model = (EntityModel) loadClass.getConstructors()[0].newInstance(defaultMapper());
         for (PropertyModel property : model.getProperties()) {
             Assertions.assertEquals(PropertyModel.class, property.getClass(), property.getName());
@@ -313,6 +317,37 @@ public class TestGeneration {
             Object child = classLoader.loadClass("app.TransientChild").getConstructor().newInstance();
 
             assertRoundTrip(model, child, "value", 42);
+        }
+    }
+
+    @Test
+    public void testGeneratorWideEntity(@TempDir Path dir) throws Exception {
+        // building every property in the constructor would push it past the JVM's 64KB limit on a method's size
+        int width = 1500;
+        StringBuilder fields = new StringBuilder();
+        for (int i = 0; i < width; i++) {
+            fields.append("    private String field%d;%n".formatted(i));
+        }
+        compile(dir.resolve("app"), Map.of("app/WideEntity.java", """
+                package app;
+                @dev.morphia.annotations.Entity
+                public class WideEntity {
+                    @dev.morphia.annotations.Id
+                    private org.bson.types.ObjectId id;
+                %s}
+                """.formatted(fields)));
+
+        try (URLClassLoader loader = new URLClassLoader(new URL[] { dir.resolve("app").toUri().toURL() },
+                getClass().getClassLoader())) {
+            CritterClassLoader classLoader = new CritterClassLoader(loader);
+            EntityModelGenerator modelGenerator = new CritterGenerator(defaultMapper())
+                    .generate(loader.loadClass("app.WideEntity"), classLoader, false);
+            EntityModel model = (EntityModel) classLoader.loadClass(modelGenerator.getGeneratedType())
+                    .getConstructor(Mapper.class).newInstance(defaultMapper());
+            Object entity = classLoader.loadClass("app.WideEntity").getConstructor().newInstance();
+
+            Assertions.assertEquals(width + 1, model.getProperties().size());
+            assertRoundTrip(model, entity, "field" + (width - 1), "last");
         }
     }
 

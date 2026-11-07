@@ -416,7 +416,8 @@ harness passes, and both mappers agree.
 - Old AOT output fails to load against `final` getters and falls back to runtime generation. 4.12 makes that clean.
 - Done. The generated entity model still extends `CritterEntityModel`, so the mapper loads it the same way, but it
   overrides nothing: its constructor sets the collection and discriminator settings and builds each property as a
-  plain `PropertyModel`, so `CritterPropertyModel` and the per-property `XxxModel` classes are gone. Annotations other
+  plain `PropertyModel`, through one private method per property so a wide entity stays under the JVM's method-size
+  limit. `CritterPropertyModel` and the per-property `XxxModel` classes are gone. Annotations other
   than Morphia's, which have no builders, ride on a synthetic field of the generated model.
 - ServiceLoader conventions run when the model loads, at the same point as for reflection (after
   `ConfigureProperties`, before listeners): the Kotlin convention needs runtime `KProperty` objects, and conventions
