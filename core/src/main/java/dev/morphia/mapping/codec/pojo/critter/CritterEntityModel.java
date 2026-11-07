@@ -1,33 +1,33 @@
 package dev.morphia.mapping.codec.pojo.critter;
 
-import java.util.List;
+import java.lang.annotation.Annotation;
 
-import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.IdField;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.MorphiaPropertySerialization;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
+import dev.morphia.mapping.conventions.MorphiaConvention;
 
 /**
- * 0
- * 
+ * The base of critter's generated entity models. A generated model's constructor configures it from constants, as the
+ * reflective mapper configures an {@link EntityModel}, and builds plain {@link PropertyModel}s; it overrides nothing.
+ *
  * @hidden
  * @morphia.internal
  */
-@SuppressWarnings("NullableProblems")
 public abstract class CritterEntityModel extends EntityModel {
-    protected final Mapper mapper;
-    protected Entity entityAnnotation;
-
+    /**
+     * @param mapper the mapper the model is built for
+     * @param type   the entity type
+     */
     public CritterEntityModel(Mapper mapper, Class<?> type) {
         super(type);
-        this.mapper = mapper;
     }
 
     /**
      * Sets up {@link MorphiaPropertySerialization} and the mapper's {@link dev.morphia.mapping.codec.Conversions} on every
-     * property model.
+     * property model, marks the {@code @IdField} property as the id, and applies the mapper's ServiceLoader conventions.
      * Must be called at the end of the generated subclass constructor, after all
      * properties have been added via {@code addProperty()}.
      *
@@ -36,10 +36,6 @@ public abstract class CritterEntityModel extends EntityModel {
     @SuppressWarnings("unused")
     protected final void configureProperties(Mapper mapper) {
         for (PropertyModel property : getProperties()) {
-            List<String> loadNames = property.getLoadNames();
-            if (!loadNames.isEmpty()) {
-                property.alternateNames(loadNames.toArray(new String[0]));
-            }
             property.serialization(new MorphiaPropertySerialization(mapper.getConfig(), property));
             // Without this, PropertyModel#setValue builds a new Conversions registry on every call.
             property.conversions(mapper.getConversions());
@@ -49,44 +45,29 @@ public abstract class CritterEntityModel extends EntityModel {
         if (idField != null && getIdProperty() == null) {
             setIdProperty(getPropertyByName(idField.value()));
         }
+        // as for reflective models, the ServiceLoader conventions run last, here when the model is loaded: they can depend
+        // on the runtime classpath and runtime state, e.g. Kotlin's delegated properties
+        for (MorphiaConvention convention : mapper.getConventions()) {
+            convention.apply(mapper, this);
+        }
         initializeListeners();
     }
 
-    @Override
-    public final EntityModel collectionName(String collectionName) {
-        throw new UnsupportedOperationException();
+    /**
+     * Adds the annotations of one of the generated subclass's fields to a property: the property's annotations other
+     * than Morphia's, which have no builders to construct them with.
+     *
+     * @param property the property
+     * @param holder   the name of the field carrying the annotations
+     */
+    @SuppressWarnings("unused")
+    protected final void foreignAnnotations(PropertyModel property, String holder) {
+        try {
+            for (Annotation annotation : getClass().getDeclaredField(holder).getDeclaredAnnotations()) {
+                property.annotation(annotation);
+            }
+        } catch (NoSuchFieldException e) {
+            throw new IllegalStateException(e);
+        }
     }
-
-    @Override
-    public final void discriminator(String discriminator) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public final EntityModel discriminatorEnabled(boolean discriminatorEnabled) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public final EntityModel discriminatorKey(String discriminatorKey) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public abstract String collectionName();
-
-    @Override
-    public abstract String discriminator();
-
-    @Override
-    public abstract String discriminatorKey();
-
-    @Override
-    public abstract boolean isAbstract();
-
-    @Override
-    public abstract boolean isInterface();
-
-    @Override
-    public abstract boolean useDiscriminator();
 }

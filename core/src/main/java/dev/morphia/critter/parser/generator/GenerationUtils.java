@@ -211,7 +211,7 @@ public class GenerationUtils {
      * Assumes the annotation type lives under {@code dev.morphia.annotations} and that its
      * builder follows the {@code XxxBuilder.xxxBuilder()...build()} convention.
      */
-    public static void emitAnnotationViaBuilder(CodeBuilder cod, Annotation ann) {
+    public static void emitAnnotationViaBuilder(CodeBuilder cod, Annotation ann, ClassDesc loaderAnchor) {
         Class<?> annType = ann.annotationType();
         String className = annType.getName();
         int lastDot = className.lastIndexOf('.');
@@ -232,7 +232,7 @@ public class GenerationUtils {
                 }
                 Class<?> rawType = method.getReturnType();
                 ClassDesc paramDesc = ClassDesc.ofDescriptor(rawType.descriptorString());
-                emitBuilderElementValue(cod, method.getGenericReturnType(), rawType, value);
+                emitBuilderElementValue(cod, method.getGenericReturnType(), rawType, value, loaderAnchor);
                 cod.invokevirtual(builderDesc, method.getName(), MethodTypeDesc.of(builderDesc, paramDesc));
             } catch (ReflectiveOperationException e) {
                 throw new RuntimeException("Failed to emit builder setter for " + method, e);
@@ -244,7 +244,7 @@ public class GenerationUtils {
 
     @SuppressWarnings("rawtypes")
     private static void emitBuilderElementValue(CodeBuilder cod, java.lang.reflect.Type genericType,
-            Class<?> rawType, Object value) {
+            Class<?> rawType, Object value, ClassDesc loaderAnchor) {
         if (rawType == String.class) {
             cod.ldc((String) value);
         } else if (rawType == boolean.class) {
@@ -260,13 +260,13 @@ public class GenerationUtils {
         } else if (rawType == double.class) {
             cod.loadConstant((double) value);
         } else if (rawType == Class.class || (genericType instanceof ParameterizedType pt && pt.getRawType() == Class.class)) {
-            emitClassRef(cod, (Class<?>) value);
+            emitClassRef(cod, (Class<?>) value, loaderAnchor);
         } else if (rawType.isEnum()) {
             Enum e = (Enum) value;
             ClassDesc enumDesc = ClassDesc.of(e.getDeclaringClass().getName());
             cod.getstatic(enumDesc, e.name(), enumDesc);
         } else if (rawType.isAnnotation()) {
-            emitAnnotationViaBuilder(cod, (Annotation) value);
+            emitAnnotationViaBuilder(cod, (Annotation) value, loaderAnchor);
         } else if (rawType.isArray()) {
             Class<?> compType = rawType.getComponentType();
             int len = Array.getLength(value);
@@ -277,7 +277,7 @@ public class GenerationUtils {
                 for (int i = 0; i < len; i++) {
                     cod.dup();
                     cod.loadConstant(i);
-                    emitBuilderElementValue(cod, compType, compType, Array.get(value, i));
+                    emitBuilderElementValue(cod, compType, compType, Array.get(value, i), loaderAnchor);
                     cod.arrayStore(tk);
                 }
             } else {
@@ -285,7 +285,7 @@ public class GenerationUtils {
                 for (int i = 0; i < len; i++) {
                     cod.dup();
                     cod.loadConstant(i);
-                    emitBuilderElementValue(cod, compType, compType, Array.get(value, i));
+                    emitBuilderElementValue(cod, compType, compType, Array.get(value, i), loaderAnchor);
                     cod.aastore();
                 }
             }
@@ -300,7 +300,7 @@ public class GenerationUtils {
             for (int i = 0; i < arr.length; i++) {
                 cod.dup();
                 cod.loadConstant(i);
-                emitBuilderElementValue(cod, compGeneric, compClass, arr[i]);
+                emitBuilderElementValue(cod, compGeneric, compClass, arr[i], loaderAnchor);
                 cod.aastore();
             }
         } else {
@@ -309,9 +309,15 @@ public class GenerationUtils {
     }
 
     /**
-     * Emits bytecode that loads a Class reference. Non-public classes use Class.forName().
+     * Emits bytecode that loads a Class reference. A non-public class can't be named as a constant from generated code in
+     * another package, so it's looked up by name through the class loader of {@code loaderAnchor}, a generated class
+     * defined where the entity's classes are visible. Callers emit this once, when a model is built.
+     *
+     * @param cod          the code to emit into
+     * @param cls          the class to load
+     * @param loaderAnchor a class whose loader can see {@code cls}
      */
-    public static void emitClassRef(CodeBuilder cod, Class<?> cls) {
+    public static void emitClassRef(CodeBuilder cod, Class<?> cls, ClassDesc loaderAnchor) {
         if (cls.isPrimitive()) {
             // Primitives are not loadable via ClassDesc.of; use the wrapper's TYPE field
             String wrapper = primitiveWrapperName(cls);
@@ -321,13 +327,10 @@ public class GenerationUtils {
         } else {
             cod.ldc(cls.getName());
             cod.iconst_0();
-            cod.invokestatic(
-                    ClassDesc.of("java.lang.Thread"),
-                    "currentThread",
-                    MethodTypeDesc.of(ClassDesc.of("java.lang.Thread")));
+            cod.ldc(loaderAnchor);
             cod.invokevirtual(
-                    ClassDesc.of("java.lang.Thread"),
-                    "getContextClassLoader",
+                    ConstantDescs.CD_Class,
+                    "getClassLoader",
                     MethodTypeDesc.of(ClassDesc.of("java.lang.ClassLoader")));
             cod.invokestatic(
                     ConstantDescs.CD_Class,
@@ -350,7 +353,7 @@ public class GenerationUtils {
     /**
      * Emits bytecode that constructs a TypeData instance.
      */
-    public static void emitTypeData(TypeData<?> data, CodeBuilder cod) {
+    public static void emitTypeData(TypeData<?> data, CodeBuilder cod, ClassDesc loaderAnchor) {
         ClassDesc tdDesc = ClassDesc.of("dev.morphia.mapping.codec.pojo.TypeData");
         ClassDesc wildcardDesc = ClassDesc.of("dev.morphia.mapping.codec.pojo.WildCardTypeData");
         if (data instanceof WildCardTypeData) {
@@ -359,14 +362,14 @@ public class GenerationUtils {
         }
         cod.new_(tdDesc);
         cod.dup();
-        emitClassRef(cod, data.getType());
+        emitClassRef(cod, data.getType(), loaderAnchor);
         List<TypeData<?>> params = data.getTypeParameters();
         cod.loadConstant(params.size());
         cod.anewarray(tdDesc);
         for (int i = 0; i < params.size(); i++) {
             cod.dup();
             cod.loadConstant(i);
-            emitTypeData(params.get(i), cod);
+            emitTypeData(params.get(i), cod, loaderAnchor);
             cod.aastore();
         }
         cod.invokespecial(tdDesc, "<init>",

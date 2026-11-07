@@ -104,11 +104,8 @@ public class PropertyFinder {
         }
         // as in ConfigureProperties, an explicit @Id wins over the entity's @IdField
         boolean explicitId = models.stream().anyMatch(PropertyModelGenerator::isAnnotatedId);
-        for (PropertyModelGenerator model : models) {
-            if (explicitId) {
-                model.ignoreIdField();
-            }
-            model.emit();
+        if (explicitId) {
+            models.forEach(PropertyModelGenerator::ignoreIdField);
         }
         return models;
     }

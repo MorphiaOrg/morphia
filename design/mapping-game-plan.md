@@ -404,7 +404,7 @@ harness passes, and both mappers agree.
   visible from the entity's package, so it now maps such an entity reflectively instead of mapping its fields. The
   parity test's `FLUENT_SETTERS` and `UNREACHABLE_ACCESSORS` rules hold those for 4.8.
 
-### 4.7 Generated code builds plain models (C1)
+### ~~4.7 Generated code builds plain models (C1)~~
 - Generated factories construct ordinary `EntityModel`/`PropertyModel` instances from constants, instead of
   subclasses that override about 17 getters each.
   - `Class`/`TypeData` are resolved once, through the entity's own loader, not the TCCL.
@@ -414,6 +414,15 @@ harness passes, and both mappers agree.
   models the way they do for reflection. **Flag for review:** whether they run at generation time (AOT) or at
   load time.
 - Old AOT output fails to load against `final` getters and falls back to runtime generation. 4.12 makes that clean.
+- Done. The generated entity model still extends `CritterEntityModel`, so the mapper loads it the same way, but it
+  overrides nothing: its constructor sets the collection and discriminator settings and builds each property as a
+  plain `PropertyModel`, through one private method per property so a wide entity stays under the JVM's method-size
+  limit. `CritterPropertyModel` and the per-property `XxxModel` classes are gone. Annotations other
+  than Morphia's, which have no builders, ride on a synthetic field of the generated model.
+- ServiceLoader conventions run when the model loads, at the same point as for reflection (after
+  `ConfigureProperties`, before listeners): the Kotlin convention needs runtime `KProperty` objects, and conventions
+  come from the runtime classpath.
+- A non-public class is loaded through the generated model's own class loader, once.
 
 ### 4.8 Close the remaining divergences (C3)
 - `@Property(concreteClass)`, ~~interface-level annotations~~ (closed by A11),
@@ -554,7 +563,7 @@ Only start after Phases 3 and 4 have shipped and been re-measured.
 8. 4.1 sessions share the mapper → #4432 listener interfaces → #4431 configured listeners → 4.2 lifecycle
    streaming; ~~4.14 entity-only annotated methods~~
 9. 4.4 generic resolver
-10. ~~Phase 5 A11 builder/annotation utility~~ → ~~4.5 parity test~~ → ~~4.6 shared rules~~ → 4.7 plain models → 4.8 divergences →
+10. ~~Phase 5 A11 builder/annotation utility~~ → ~~4.5 parity test~~ → ~~4.6 shared rules~~ → ~~4.7 plain models~~ → 4.8 divergences →
     4.9–4.11 → 4.12 AOT guard + 4.13 API surface (**before 3.0 GA**)
 11. 3.17 single-pass discriminator and `_id`
 12. Phase 5 clean-ups throughout; Phase 6 re-evaluated after 3.0 GA

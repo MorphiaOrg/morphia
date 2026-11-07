@@ -295,7 +295,7 @@ public class VarHandleAccessorGenerator extends BaseGenerator {
                             // Use reflection to set final field
                             ClassDesc fieldDesc2 = ClassDesc.of("java.lang.reflect.Field");
                             cod.trying(tryBody -> {
-                                emitClassRef(tryBody, entity);
+                                emitClassRef(tryBody, entity, thisDesc);
                                 tryBody.ldc(propertyName);
                                 tryBody.invokevirtual(ConstantDescs.CD_Class, "getDeclaredField",
                                         MethodTypeDesc.of(fieldDesc2, ConstantDescs.CD_String));

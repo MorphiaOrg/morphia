@@ -11,10 +11,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.tools.ToolProvider;
@@ -109,16 +107,20 @@ public class TestGeneration {
     @Test
     public void testGenerator() throws Exception {
         new CritterGenerator(defaultMapper()).generate(Example.class, critterClassLoader, false);
-        critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.AgeModel");
-        Class<?> nameModel = critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.NameModel");
-        invokeAll(PropertyModel.class, nameModel);
-        critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.SalaryModel");
         critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.AgeAccessor").getConstructor().newInstance();
         critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.NameAccessor").getConstructor().newInstance();
         critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.SalaryAccessor").getConstructor().newInstance();
 
         Class<?> loadClass = critterClassLoader.loadClass("dev.morphia.critter.sources.__morphia.example.ExampleEntityModel");
+        // the generated model configures a plain EntityModel when it's constructed and overrides nothing: its only methods are
+        // the private ones its constructor calls
+        for (Method method : loadClass.getDeclaredMethods()) {
+            Assertions.assertTrue(Modifier.isPrivate(method.getModifiers()) && method.isSynthetic(), method.toString());
+        }
         EntityModel model = (EntityModel) loadClass.getConstructors()[0].newInstance(defaultMapper());
+        for (PropertyModel property : model.getProperties()) {
+            Assertions.assertEquals(PropertyModel.class, property.getClass(), property.getName());
+        }
         validate(model);
     }
 
@@ -318,6 +320,37 @@ public class TestGeneration {
         }
     }
 
+    @Test
+    public void testGeneratorWideEntity(@TempDir Path dir) throws Exception {
+        // building every property in the constructor would push it past the JVM's 64KB limit on a method's size
+        int width = 1500;
+        StringBuilder fields = new StringBuilder();
+        for (int i = 0; i < width; i++) {
+            fields.append("    private String field%d;%n".formatted(i));
+        }
+        compile(dir.resolve("app"), Map.of("app/WideEntity.java", """
+                package app;
+                @dev.morphia.annotations.Entity
+                public class WideEntity {
+                    @dev.morphia.annotations.Id
+                    private org.bson.types.ObjectId id;
+                %s}
+                """.formatted(fields)));
+
+        try (URLClassLoader loader = new URLClassLoader(new URL[] { dir.resolve("app").toUri().toURL() },
+                getClass().getClassLoader())) {
+            CritterClassLoader classLoader = new CritterClassLoader(loader);
+            EntityModelGenerator modelGenerator = new CritterGenerator(defaultMapper())
+                    .generate(loader.loadClass("app.WideEntity"), classLoader, false);
+            EntityModel model = (EntityModel) classLoader.loadClass(modelGenerator.getGeneratedType())
+                    .getConstructor(Mapper.class).newInstance(defaultMapper());
+            Object entity = classLoader.loadClass("app.WideEntity").getConstructor().newInstance();
+
+            Assertions.assertEquals(width + 1, model.getProperties().size());
+            assertRoundTrip(model, entity, "field" + (width - 1), "last");
+        }
+    }
+
     private static void compile(Path output, Map<String, String> sources, Path... classpath) throws Exception {
         Path sourceDir = output.resolveSibling(output.getFileName() + "-src");
         List<String> files = new ArrayList<>();
@@ -375,36 +408,6 @@ public class TestGeneration {
         Assertions.assertFalse(model.isAbstract(), "Should not be abstract");
         Assertions.assertFalse(model.isInterface(), "Should not be an interface");
         Assertions.assertTrue(model.useDiscriminator(), "Should use the discriminator");
-    }
-
-    private void invokeAll(Class<?> type, Class<?> klass) {
-        Object instance;
-        try {
-            instance = klass.getConstructors()[0].newInstance(new Object[] { null });
-        } catch (Exception e) {
-            Assertions.fail("Could not instantiate " + klass.getName() + ": " + e.getMessage());
-            return;
-        }
-        List<String> results = Arrays.stream(type.getDeclaredMethods())
-                .filter(m -> Modifier.isPublic(m.getModifiers())
-                        && !Modifier.isFinal(m.getModifiers())
-                        && m.getParameterCount() == 0)
-                .filter(m -> !List.of("hashCode", "toString").contains(m.getName()))
-                .sorted(Comparator.comparing(Method::getName))
-                .map(method -> {
-                    try {
-                        klass.getDeclaredMethod(method.getName(), method.getParameterTypes());
-                        return null;
-                    } catch (Exception e) {
-                        return e.getMessage();
-                    }
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-
-        if (!results.isEmpty()) {
-            Assertions.fail("Missing methods from " + type.getName() + ": \n" + String.join("\n", results));
-        }
     }
 
     @Test

@@ -10,13 +10,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.mongodb.DBRef;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.IdField;
-import dev.morphia.annotations.Reference;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.FieldInfo;
@@ -26,17 +24,19 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
 import dev.morphia.mapping.codec.pojo.TypeResolver;
-import dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel;
+import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 import dev.morphia.mapping.conventions.DiscoveryRules;
 
 import org.bson.codecs.pojo.PropertyAccessor;
 
+import io.smallrye.classfile.ClassBuilder;
 import io.smallrye.classfile.ClassFile;
+import io.smallrye.classfile.CodeBuilder;
 import io.smallrye.classfile.attribute.RuntimeVisibleAnnotationsAttribute;
 
 /**
- * Generates a ClassFile-based {@link dev.morphia.mapping.codec.pojo.critter.CritterPropertyModel} implementation
- * for a single property of a Morphia entity class.
+ * Generates the code, in a generated entity model's constructor, that builds the model of one property of a Morphia
+ * entity class.
  */
 public class PropertyModelGenerator extends BaseGenerator {
     private final MorphiaConfig config;
@@ -48,7 +48,6 @@ public class PropertyModelGenerator extends BaseGenerator {
     private final java.lang.reflect.Type genericType;
     private final Map<String, Annotation> annotationMap;
     private final TypeData<?> typeData;
-    private final String getterName;
     @Nullable
     private String idFieldName;
 
@@ -65,7 +64,6 @@ public class PropertyModelGenerator extends BaseGenerator {
         this.isFieldBased = true;
         this.runtimeMode = runtimeMode;
         this.propertyName = field.name();
-        generatedType = "%s.%sModel".formatted(baseName, DiscoveryRules.titleCase(propertyName));
         accessorType = "%s.%sAccessor".formatted(baseName, DiscoveryRules.titleCase(propertyName));
 
         Field reflectedField = findField(annotationSource, field.name());
@@ -73,7 +71,6 @@ public class PropertyModelGenerator extends BaseGenerator {
         this.genericType = reflectedField != null ? reflectedField.getGenericType() : Object.class;
         this.annotationMap = buildAnnotationMap(reflectedField != null ? reflectedField.getAnnotations() : new Annotation[0]);
         this.typeData = TypeData.get(TypeResolver.resolve(annotationSource, this.genericType));
-        this.getterName = null;
         this.idFieldName = idFieldName(annotationSource);
     }
 
@@ -105,7 +102,6 @@ public class PropertyModelGenerator extends BaseGenerator {
         this.isFieldBased = false;
         this.runtimeMode = runtimeMode;
         this.propertyName = DiscoveryRules.propertyName(method.name());
-        generatedType = "%s.%sModel".formatted(baseName, DiscoveryRules.titleCase(propertyName));
         accessorType = "%s.%sAccessor".formatted(baseName, DiscoveryRules.titleCase(propertyName));
 
         // the pair's own class: a subclass's override of the getter, if any, isn't part of the pair
@@ -130,7 +126,6 @@ public class PropertyModelGenerator extends BaseGenerator {
             }
         }
         this.typeData = TypeData.get(TypeResolver.resolve(annotationSource, this.genericType));
-        this.getterName = method.name();
         this.idFieldName = idFieldName(annotationSource);
     }
 
@@ -272,7 +267,7 @@ public class PropertyModelGenerator extends BaseGenerator {
 
     /**
      * Leaves the entity's {@code @IdField} out of this property's mapped name, because another property is annotated
-     * {@code @Id}: as in {@code ConfigureProperties}, an explicit {@code @Id} wins. Call before {@link #emit()}.
+     * {@code @Id}: as in {@code ConfigureProperties}, an explicit {@code @Id} wins. Call before the entity model is emitted.
      *
      * @return this
      */
@@ -282,218 +277,143 @@ public class PropertyModelGenerator extends BaseGenerator {
     }
 
     /**
-     * Emits the generated property model class and returns this generator.
+     * @return the name of the field in the generated entity model that carries this property's annotations other than
+     *         Morphia's, or null if it has none
      */
-    public PropertyModelGenerator emit() {
-        ClassDesc thisDesc = ClassDesc.of(generatedType);
-        ClassDesc superDesc = ClassDesc.of(CritterPropertyModel.class.getName());
-        ClassDesc entityModelDesc = ClassDesc.of(EntityModel.class.getName());
+    @Nullable
+    String annotationHolder() {
+        return foreignAnnotations().isEmpty() ? null : "__annotations$" + propertyName;
+    }
+
+    /**
+     * Adds the field named by {@link #annotationHolder()} to the generated entity model, if the property needs one. Only
+     * Morphia annotations have builders, so the others are carried as the field's own annotations.
+     */
+    void emitAnnotationHolder(ClassBuilder cb) {
+        String holder = annotationHolder();
+        if (holder != null) {
+            List<io.smallrye.classfile.Annotation> annotations = foreignAnnotations().stream()
+                    .map(GenerationUtils::toClassfileAnnotation)
+                    .toList();
+            cb.withField(holder, ConstantDescs.CD_Object, fb -> fb
+                    .withFlags(ClassFile.ACC_PRIVATE | ClassFile.ACC_STATIC | ClassFile.ACC_SYNTHETIC)
+                    .with(RuntimeVisibleAnnotationsAttribute.of(annotations)));
+        }
+    }
+
+    /**
+     * Emits, into a method of the generated entity model that its constructor calls, code that builds this property's
+     * model as a plain {@link PropertyModel} and adds it to the entity model in local 0. Every value is a constant or is resolved here,
+     * once, so the model's getters are the base class's.
+     *
+     * @param cod       the method's code
+     * @param modelDesc the generated entity model, whose class loader resolves non-public types
+     * @param slot      a free local variable slot
+     */
+    void emitProperty(CodeBuilder cod, ClassDesc modelDesc, int slot) {
         ClassDesc propertyModelDesc = ClassDesc.of(PropertyModel.class.getName());
+        ClassDesc entityModelDesc = ClassDesc.of(EntityModel.class.getName());
+        ClassDesc critterModelDesc = ClassDesc.of(CritterEntityModel.class.getName());
         ClassDesc accessorDesc = ClassDesc.of(PropertyAccessor.class.getName());
         ClassDesc accessorImplDesc = ClassDesc.of(accessorType);
         ClassDesc typeDataDesc = ClassDesc.of(TypeData.class.getName());
         ClassDesc annotationDesc = ClassDesc.of(Annotation.class.getName());
 
-        boolean isFinalFlag = java.lang.reflect.Modifier.isFinal(accessFlags);
-        boolean isTransientFlag = java.lang.reflect.Modifier.isTransient(accessFlags)
-                || annotationMap.keySet().stream().anyMatch(DiscoveryRules::isTransientAnnotation);
-        boolean isReferenceFlag = DBRef.class.isAssignableFrom(typeData.getType())
-                || annotationMap.containsKey(Reference.class.getName());
-        boolean isArrayFlag = typeData.getType().isArray();
-        boolean isMapFlag = Map.class.isAssignableFrom(typeData.getType());
-        boolean isSetFlag = java.util.Set.class.isAssignableFrom(typeData.getType());
-        boolean isCollectionFlag = java.util.Collection.class.isAssignableFrom(typeData.getType());
         // @IdField names the id property at the entity level, so the property's own annotations don't show it
         String mappedName = propertyName.equals(idFieldName) ? "_id"
                 : DiscoveryRules.mappedName(config, type -> annotationMap.get(type.getName()), propertyName);
-        Class<?> normalizedType = PropertyModel.normalize(typeData);
         AlsoLoad alsoLoad = (AlsoLoad) annotationMap.get(AlsoLoad.class.getName());
-        String[] loadNamesArr = alsoLoad != null ? alsoLoad.value() : new String[0];
 
-        List<Annotation> morphiaAnnotations = annotationMap.values().stream()
-                .filter(a -> a.annotationType().getName().startsWith("dev.morphia.annotations."))
-                .toList();
-        List<Annotation> nonMorphiaAnnotations = annotationMap.values().stream()
-                .filter(a -> !a.annotationType().getName().startsWith("dev.morphia.annotations."))
-                .toList();
-        List<io.smallrye.classfile.Annotation> cfAnnotations = nonMorphiaAnnotations.stream()
-                .map(GenerationUtils::toClassfileAnnotation)
-                .toList();
+        cod.new_(propertyModelDesc);
+        cod.dup();
+        cod.aload(0);
+        cod.invokespecial(propertyModelDesc, "<init>", MethodTypeDesc.of(ConstantDescs.CD_void, entityModelDesc));
+        cod.astore(slot);
 
-        // For runtime mode, the accessor is a hidden nestmate class retrieved from the registry.
-        // For AOT mode, the accessor is a normal class registered in CritterClassLoader by name.
-        ClassDesc accessorFieldDesc = runtimeMode ? accessorDesc : accessorImplDesc;
+        cod.aload(slot);
+        cod.ldc(propertyName);
+        cod.invokevirtual(propertyModelDesc, "name", MethodTypeDesc.of(propertyModelDesc, ConstantDescs.CD_String));
+        cod.pop();
 
-        byte[] bytes = ClassFile.of().build(thisDesc, cb -> {
-            cb.withVersion(ClassFile.JAVA_17_VERSION, 0);
-            cb.withFlags(ClassFile.ACC_PUBLIC | ClassFile.ACC_SUPER);
-            cb.withSuperclass(superDesc);
-            if (!cfAnnotations.isEmpty()) {
-                cb.with(RuntimeVisibleAnnotationsAttribute.of(cfAnnotations));
+        cod.aload(slot);
+        GenerationUtils.emitTypeData(typeData, cod, modelDesc);
+        cod.invokevirtual(propertyModelDesc, "typeData", MethodTypeDesc.of(propertyModelDesc, typeDataDesc));
+        cod.pop();
+
+        cod.aload(slot);
+        cod.loadConstant(java.lang.reflect.Modifier.isFinal(accessFlags) && isFieldBased ? 1 : 0);
+        cod.invokevirtual(propertyModelDesc, "isFinal", MethodTypeDesc.of(propertyModelDesc, ConstantDescs.CD_boolean));
+        cod.pop();
+
+        cod.aload(slot);
+        if (runtimeMode) {
+            // the pre-instantiated nestmate accessor registered for the generated model's loader
+            ClassDesc registryDesc = ClassDesc.of(NestmateAccessorRegistry.class.getName());
+            ClassDesc classLoaderDesc = ClassDesc.of(ClassLoader.class.getName());
+            cod.ldc(modelDesc);
+            cod.invokevirtual(ConstantDescs.CD_Class, "getClassLoader", MethodTypeDesc.of(classLoaderDesc));
+            cod.ldc(accessorType);
+            cod.invokestatic(registryDesc, "get", MethodTypeDesc.of(accessorDesc, classLoaderDesc, ConstantDescs.CD_String));
+        } else {
+            cod.new_(accessorImplDesc);
+            cod.dup();
+            cod.invokespecial(accessorImplDesc, "<init>", MethodTypeDesc.of(ConstantDescs.CD_void));
+        }
+        cod.invokevirtual(propertyModelDesc, "accessor", MethodTypeDesc.of(propertyModelDesc, accessorDesc));
+        cod.pop();
+
+        // Morphia annotations through their builders: no reflection
+        for (Annotation annotation : annotationMap.values()) {
+            if (isMorphiaAnnotation(annotation)) {
+                cod.aload(slot);
+                GenerationUtils.emitAnnotationViaBuilder(cod, annotation, modelDesc);
+                cod.invokevirtual(propertyModelDesc, "annotation", MethodTypeDesc.of(propertyModelDesc, annotationDesc));
+                cod.pop();
             }
+        }
+        String holder = annotationHolder();
+        if (holder != null) {
+            cod.aload(0);
+            cod.aload(slot);
+            cod.ldc(holder);
+            cod.invokevirtual(critterModelDesc, "foreignAnnotations",
+                    MethodTypeDesc.of(ConstantDescs.CD_void, propertyModelDesc, ConstantDescs.CD_String));
+        }
 
-            cb.withField("entityModel", entityModelDesc, ClassFile.ACC_PRIVATE | ClassFile.ACC_FINAL);
-            cb.withField("accessor", accessorFieldDesc, ClassFile.ACC_PRIVATE | ClassFile.ACC_FINAL);
+        cod.aload(slot);
+        cod.ldc(mappedName);
+        cod.invokevirtual(propertyModelDesc, "mappedName", MethodTypeDesc.of(propertyModelDesc, ConstantDescs.CD_String));
+        cod.pop();
 
-            // Constructor: (EntityModel) -> void
-            cb.withMethodBody("<init>", MethodTypeDesc.of(ConstantDescs.CD_void, entityModelDesc),
-                    ClassFile.ACC_PUBLIC, cod -> {
-                        cod.aload(0);
-                        cod.aload(1);
-                        cod.invokespecial(superDesc, "<init>", MethodTypeDesc.of(ConstantDescs.CD_void, entityModelDesc));
+        cod.aload(0);
+        cod.aload(slot);
+        cod.invokevirtual(entityModelDesc, "addProperty", MethodTypeDesc.of(ConstantDescs.CD_boolean, propertyModelDesc));
+        cod.pop();
 
-                        cod.aload(0);
-                        cod.aload(1);
-                        cod.putfield(thisDesc, "entityModel", entityModelDesc);
-
-                        cod.aload(0);
-                        if (runtimeMode) {
-                            // Retrieve the pre-instantiated nestmate accessor registered for this class's loader
-                            ClassDesc registryDesc = ClassDesc.of(NestmateAccessorRegistry.class.getName());
-                            ClassDesc classLoaderDesc = ClassDesc.of("java.lang.ClassLoader");
-                            cod.ldc(thisDesc);
-                            cod.invokevirtual(ConstantDescs.CD_Class, "getClassLoader", MethodTypeDesc.of(classLoaderDesc));
-                            cod.ldc(accessorType);
-                            cod.invokestatic(registryDesc, "get",
-                                    MethodTypeDesc.of(accessorDesc, classLoaderDesc, ConstantDescs.CD_String));
-                            cod.putfield(thisDesc, "accessor", accessorFieldDesc);
-                        } else {
-                            cod.new_(accessorImplDesc);
-                            cod.dup();
-                            cod.invokespecial(accessorImplDesc, "<init>", MethodTypeDesc.ofDescriptor("()V"));
-                            cod.putfield(thisDesc, "accessor", accessorFieldDesc);
-                        }
-
-                        // Morphia annotations: builder with hardcoded values — no reflection
-                        for (Annotation ann : morphiaAnnotations) {
-                            cod.aload(0);
-                            GenerationUtils.emitAnnotationViaBuilder(cod, ann);
-                            cod.invokevirtual(propertyModelDesc, "annotation",
-                                    MethodTypeDesc.of(propertyModelDesc, annotationDesc));
-                            cod.pop();
-                        }
-
-                        // Non-Morphia annotations: on the generated class via RuntimeVisibleAnnotationsAttribute
-                        for (Annotation ann : nonMorphiaAnnotations) {
-                            cod.aload(0);
-                            cod.aload(0);
-                            cod.invokevirtual(ConstantDescs.CD_Object, "getClass",
-                                    MethodTypeDesc.of(ConstantDescs.CD_Class));
-                            GenerationUtils.emitClassRef(cod, ann.annotationType());
-                            cod.invokevirtual(ConstantDescs.CD_Class, "getDeclaredAnnotation",
-                                    MethodTypeDesc.ofDescriptor(
-                                            "(Ljava/lang/Class;)Ljava/lang/annotation/Annotation;"));
-                            // getDeclaredAnnotation returns null if the annotation is absent at runtime
-                            // (e.g. non-RUNTIME retention). Guard to avoid NPE in PropertyModel.annotation().
-                            var skipLabel = cod.newLabel();
-                            var endLabel = cod.newLabel();
-                            cod.dup();
-                            cod.ifnull(skipLabel);
-                            cod.invokevirtual(propertyModelDesc, "annotation",
-                                    MethodTypeDesc.of(propertyModelDesc, annotationDesc));
-                            cod.pop();
-                            cod.goto_(endLabel);
-                            cod.labelBinding(skipLabel);
-                            cod.pop(); // pop null
-                            cod.pop(); // pop this
-                            cod.labelBinding(endLabel);
-                        }
-
-                        cod.return_();
-                    });
-
-            // getAccessor(): PropertyAccessor
-            cb.withMethodBody("getAccessor", MethodTypeDesc.of(accessorDesc),
-                    ClassFile.ACC_PUBLIC, cod -> {
-                        cod.aload(0);
-                        cod.getfield(thisDesc, "accessor", accessorFieldDesc);
-                        cod.areturn();
-                    });
-
-            // getEntityModel(): EntityModel
-            cb.withMethodBody("getEntityModel", MethodTypeDesc.of(entityModelDesc),
-                    ClassFile.ACC_PUBLIC, cod -> {
-                        cod.aload(0);
-                        cod.getfield(thisDesc, "entityModel", entityModelDesc);
-                        cod.areturn();
-                    });
-
-            // getFullName(): String
-            cb.withMethodBody("getFullName", MethodTypeDesc.of(ConstantDescs.CD_String),
-                    ClassFile.ACC_PUBLIC, cod -> {
-                        cod.ldc("%s#%s".formatted(entity.getName(), propertyName));
-                        cod.areturn();
-                    });
-
-            // getName(): String
-            cb.withMethodBody("getName", MethodTypeDesc.of(ConstantDescs.CD_String),
-                    ClassFile.ACC_PUBLIC, cod -> {
-                        cod.ldc(propertyName);
-                        cod.areturn();
-                    });
-
-            // getMappedName(): String
-            cb.withMethodBody("getMappedName", MethodTypeDesc.of(ConstantDescs.CD_String),
-                    ClassFile.ACC_PUBLIC, cod -> {
-                        cod.ldc(mappedName);
-                        cod.areturn();
-                    });
-
-            // getLoadNames(): List
-            cb.withMethodBody("getLoadNames", MethodTypeDesc.of(ClassDesc.of("java.util.List")),
-                    ClassFile.ACC_PUBLIC, cod -> {
-                        cod.loadConstant(loadNamesArr.length);
-                        cod.anewarray(ConstantDescs.CD_Object);
-                        for (int i = 0; i < loadNamesArr.length; i++) {
-                            cod.dup();
-                            cod.loadConstant(i);
-                            cod.ldc(loadNamesArr[i]);
-                            cod.aastore();
-                        }
-                        cod.invokestatic(ClassDesc.of("java.util.Arrays"), "asList",
-                                MethodTypeDesc.ofDescriptor("([Ljava/lang/Object;)Ljava/util/List;"));
-                        cod.areturn();
-                    });
-
-            // getNormalizedType(): Class
-            cb.withMethodBody("getNormalizedType", MethodTypeDesc.of(ConstantDescs.CD_Class),
-                    ClassFile.ACC_PUBLIC, cod -> {
-                        GenerationUtils.emitClassRef(cod, normalizedType);
-                        cod.areturn();
-                    });
-
-            // getType(): Class
-            cb.withMethodBody("getType", MethodTypeDesc.of(ConstantDescs.CD_Class),
-                    ClassFile.ACC_PUBLIC, cod -> {
-                        GenerationUtils.emitClassRef(cod, typeData.getType());
-                        cod.areturn();
-                    });
-
-            // getTypeData(): TypeData
-            cb.withMethodBody("getTypeData", MethodTypeDesc.of(typeDataDesc),
-                    ClassFile.ACC_PUBLIC, cod -> {
-                        GenerationUtils.emitTypeData(typeData, cod);
-                        cod.areturn();
-                    });
-
-            // isArray(): boolean
-            GenerationUtils.emitBooleanMethod(cb, "isArray", isArrayFlag);
-            // isFinal(): boolean
-            GenerationUtils.emitBooleanMethod(cb, "isFinal", isFinalFlag);
-            // isReference(): boolean
-            GenerationUtils.emitBooleanMethod(cb, "isReference", isReferenceFlag);
-            // isTransient(): boolean
-            GenerationUtils.emitBooleanMethod(cb, "isTransient", isTransientFlag);
-            // isMap(): boolean
-            GenerationUtils.emitBooleanMethod(cb, "isMap", isMapFlag);
-            // isSet(): boolean
-            GenerationUtils.emitBooleanMethod(cb, "isSet", isSetFlag);
-            // isCollection(): boolean
-            GenerationUtils.emitBooleanMethod(cb, "isCollection", isCollectionFlag);
-        });
-
-        critterClassLoader.register(generatedType, bytes);
-        return this;
+        // load names go after the property is added: they're registered with the entity model
+        if (alsoLoad != null && alsoLoad.value().length > 0) {
+            String[] names = alsoLoad.value();
+            cod.aload(slot);
+            cod.loadConstant(names.length);
+            cod.anewarray(ConstantDescs.CD_String);
+            for (int i = 0; i < names.length; i++) {
+                cod.dup();
+                cod.loadConstant(i);
+                cod.ldc(names[i]);
+                cod.aastore();
+            }
+            cod.invokevirtual(propertyModelDesc, "alternateNames",
+                    MethodTypeDesc.of(ConstantDescs.CD_void, ConstantDescs.CD_String.arrayType()));
+        }
     }
 
+    private List<Annotation> foreignAnnotations() {
+        return annotationMap.values().stream()
+                .filter(a -> !isMorphiaAnnotation(a))
+                .toList();
+    }
+
+    private static boolean isMorphiaAnnotation(Annotation annotation) {
+        return annotation.annotationType().getName().startsWith("dev.morphia.annotations.");
+    }
 }

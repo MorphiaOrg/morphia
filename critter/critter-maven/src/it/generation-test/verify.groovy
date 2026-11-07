@@ -1,4 +1,4 @@
-// Verify that the critter plugin generated EntityModel, PropertyModel, and accessor classes
+// Verify that the critter plugin generated EntityModel and accessor classes
 // for the Hotel entity, and that synthetic __read* methods were woven into the entity class.
 // Mirrors the three assertions in the former CritterGenerationTest.
 
@@ -14,13 +14,13 @@ File entityModel = new File(outputDir, "${morphiaPackagePath}/HotelEntityModel.c
 assert entityModel.exists() : "HotelEntityModel.class should be generated at ${entityModel.absolutePath}"
 println "OK: HotelEntityModel.class"
 
-// ── propertyModelsShouldBeGenerated ──────────────────────────────────────────
+// ── propertyAccessorsShouldBeGenerated ──────────────────────────────────────────
 
 def properties = ["Id", "Name", "Stars", "Tags"]
 for (prop in properties) {
-    File modelFile = new File(outputDir, "${morphiaPackagePath}/${prop}Model.class")
-    assert modelFile.exists() : "${prop}Model.class should be generated at ${modelFile.absolutePath}"
-    println "OK: ${prop}Model.class"
+    File accessorFile = new File(outputDir, "${morphiaPackagePath}/${prop}Accessor.class")
+    assert accessorFile.exists() : "${prop}Accessor.class should be generated at ${accessorFile.absolutePath}"
+    println "OK: ${prop}Accessor.class"
 }
 
 // ── syntheticAccessorMethodsShouldExist ──────────────────────────────────────

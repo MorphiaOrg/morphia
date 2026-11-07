@@ -274,7 +274,7 @@ public class EntityModel {
      * @return the mapped collection name for the type
      */
     @NonNull
-    public String collectionName() {
+    public final String collectionName() {
         if (collectionName == null) {
             throw new MappingException(Sofia.noMappedCollection(getType().getName()));
         }
@@ -307,14 +307,14 @@ public class EntityModel {
     /**
      * @return the discriminator
      */
-    public String discriminator() {
+    public final String discriminator() {
         return discriminator;
     }
 
     /**
      * @return the discriminator key
      */
-    public String discriminatorKey() {
+    public final String discriminatorKey() {
         return discriminatorKey;
     }
 
@@ -628,21 +628,21 @@ public class EntityModel {
      * @return true if the EntityModel is abstract
      * @since 1.3
      */
-    public boolean isAbstract() {
+    public final boolean isAbstract() {
         return Modifier.isAbstract(getType().getModifiers());
     }
 
     /**
      * @return true if the EntityModel is an interface
      */
-    public boolean isInterface() {
+    public final boolean isInterface() {
         return getType().isInterface();
     }
 
     /**
      * @return true if the discriminator should be used
      */
-    public boolean useDiscriminator() {
+    public final boolean useDiscriminator() {
         return discriminatorEnabled;
     }
 
