@@ -4,11 +4,10 @@ import java.lang.constant.ClassDesc;
 import java.lang.constant.ConstantDescs;
 import java.lang.constant.MethodTypeDesc;
 
-import dev.morphia.critter.Critter;
 import dev.morphia.critter.CritterClassLoader;
-import dev.morphia.critter.parser.ExtensionFunctions;
 import dev.morphia.critter.parser.FieldInfo;
 import dev.morphia.critter.parser.MethodInfo;
+import dev.morphia.mapping.conventions.DiscoveryRules;
 
 import io.smallrye.classfile.ClassFile;
 import io.smallrye.classfile.ClassSignature;
@@ -30,15 +29,15 @@ public class PropertyAccessorGenerator extends BaseGenerator {
         super(entity, critterClassLoader);
         this.propertyName = field.name();
         this.propertyType = typeClassName(ClassDesc.ofDescriptor(field.desc()));
-        generatedType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
+        generatedType = "%s.%sAccessor".formatted(baseName, DiscoveryRules.titleCase(propertyName));
     }
 
     public PropertyAccessorGenerator(Class<?> entity, CritterClassLoader critterClassLoader, MethodInfo method) {
         super(entity, critterClassLoader);
-        this.propertyName = ExtensionFunctions.getterToPropertyName(method, entity);
+        this.propertyName = DiscoveryRules.propertyName(method.name());
         String returnDesc = MethodTypeDesc.ofDescriptor(method.desc()).returnType().descriptorString();
         this.propertyType = typeClassName(ClassDesc.ofDescriptor(returnDesc));
-        generatedType = "%s.%sAccessor".formatted(baseName, Critter.titleCase(propertyName));
+        generatedType = "%s.%sAccessor".formatted(baseName, DiscoveryRules.titleCase(propertyName));
     }
 
     public boolean isPrimitive() {
@@ -93,7 +92,7 @@ public class PropertyAccessorGenerator extends BaseGenerator {
                     ClassFile.ACC_PUBLIC, cod -> {
                         cod.aload(1);
                         cod.checkcast(entityDesc);
-                        String readName = "__read%s".formatted(Critter.titleCase(propertyName));
+                        String readName = "__read%s".formatted(DiscoveryRules.titleCase(propertyName));
                         if (isPrimitive()) {
                             cod.invokevirtual(entityDesc, readName, MethodTypeDesc.of(propertyDesc));
                             // box the primitive
@@ -111,7 +110,7 @@ public class PropertyAccessorGenerator extends BaseGenerator {
                     ClassFile.ACC_PUBLIC, cod -> {
                         cod.aload(1);
                         cod.checkcast(entityDesc);
-                        String writeName = "__write%s".formatted(Critter.titleCase(propertyName));
+                        String writeName = "__write%s".formatted(DiscoveryRules.titleCase(propertyName));
                         if (isPrimitive()) {
                             cod.aload(2);
                             cod.checkcast(wrapperDesc);

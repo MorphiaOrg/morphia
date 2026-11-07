@@ -518,12 +518,13 @@ public class TestCritterMapper {
     }
 
     @Test
-    public void testPrivateSuperclassGetterExcluded() {
+    public void testPrivateSuperclassGetterFallsBack() {
         CritterMapper mapper = new CritterMapper(
                 MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
-        EntityModel model = assertRuntimeGenerated(mapper.mapEntity(PrivateGetterChild.class));
-        Assertions.assertNull(model.getProperty("secret"),
-                "Private getter in superclass must not be exposed as a property");
+        EntityModel model = mapper.mapEntity(PrivateGetterChild.class);
+        // reflection pairs the superclass's private getter with its setter, which critter's accessors can't call
+        Assertions.assertFalse(model instanceof CritterEntityModel, "Expected a reflective model but got: " + model.getClass());
+        Assertions.assertNotNull(model.getProperty("secret"), "The private getter's pair must be discovered, as reflection does");
     }
 
     @Test

@@ -5,8 +5,8 @@ import java.lang.constant.ConstantDescs;
 import java.lang.constant.MethodTypeDesc;
 import java.util.List;
 
-import dev.morphia.critter.Critter;
 import dev.morphia.critter.parser.FieldInfo;
+import dev.morphia.mapping.conventions.DiscoveryRules;
 
 import io.smallrye.classfile.ClassBuilder;
 import io.smallrye.classfile.ClassFile;
@@ -56,7 +56,7 @@ public class AddFieldAccessorMethods extends AccessorMethods {
 
                         // __readXxx(): returns Object (widens from concrete type inside entity,
                         // keeping non-public types out of the accessor's constant pool)
-                        String readerName = "__read%s".formatted(Critter.titleCase(name));
+                        String readerName = "__read%s".formatted(DiscoveryRules.titleCase(name));
                         boolean isPrimitive = kind != TypeKind.REFERENCE;
                         MethodTypeDesc readerMtd = MethodTypeDesc.of(isPrimitive ? fieldDesc : ConstantDescs.CD_Object);
                         classBuilder.withMethodBody(readerName, readerMtd,
@@ -68,7 +68,7 @@ public class AddFieldAccessorMethods extends AccessorMethods {
                                 });
 
                         // __writeXxx(Object): void  (cast to concrete type inside entity where it's accessible)
-                        String writerName = "__write%s".formatted(Critter.titleCase(name));
+                        String writerName = "__write%s".formatted(DiscoveryRules.titleCase(name));
                         MethodTypeDesc writerMtd = MethodTypeDesc.of(ClassDesc.ofDescriptor("V"),
                                 isPrimitive ? fieldDesc : ConstantDescs.CD_Object);
                         if ((field.access() & ClassFile.ACC_FINAL) != 0) {
@@ -101,7 +101,7 @@ public class AddFieldAccessorMethods extends AccessorMethods {
      */
     private static void writeFinalField(ClassBuilder classBuilder, ClassDesc entityDesc,
             FieldInfo field, String writerName, MethodTypeDesc writerMtd, TypeKind kind, ClassDesc fieldDesc) {
-        String cacheName = "__field%s".formatted(Critter.titleCase(field.name()));
+        String cacheName = "__field%s".formatted(DiscoveryRules.titleCase(field.name()));
         classBuilder.withField(cacheName, CD_FIELD,
                 ClassFile.ACC_PRIVATE | ClassFile.ACC_STATIC | ClassFile.ACC_VOLATILE | ClassFile.ACC_SYNTHETIC);
         classBuilder.withMethodBody(writerName, writerMtd, ClassFile.ACC_PUBLIC | ClassFile.ACC_SYNTHETIC, cod -> {
