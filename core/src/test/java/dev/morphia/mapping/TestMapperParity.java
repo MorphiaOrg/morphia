@@ -8,7 +8,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +38,6 @@ import io.github.classgraph.ClassInfo;
 import io.github.classgraph.ScanResult;
 
 import static dev.morphia.mapping.PropertyDiscovery.FIELDS;
-import static dev.morphia.mapping.PropertyDiscovery.METHODS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -50,8 +48,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  * <p>
  * A model is reduced to named facts: the entity's names and discriminator settings, its Morphia annotations, its id and
  * version properties, its lifecycle events, and for each property its names, types, Morphia annotations and what its
- * accessor reads and writes. Every fact that differs must be claimed by one of the {@link Known} divergences, and every
- * known divergence must still claim one, so a new divergence fails here and so does a fixed one that's still listed.
+ * accessor reads and writes. Every fact must match.
  */
 // mapping entities instantiates their listeners, whose side effects other test classes, run concurrently, assert on
 @Isolated
@@ -62,94 +59,6 @@ public class TestMapperParity {
     private static final String FALLBACK = "fallback";
 
     private static final List<Class<? extends Annotation>> MORPHIA_ANNOTATIONS = morphiaAnnotations();
-
-    /**
-     * The ways critter and reflection are known to model an entity differently. Each one names the plan item that closes
-     * it; closing one means deleting it here, and the test then holds the mappers to the fix. Each claims only the facts
-     * it explains.
-     */
-    enum Known {
-        /**
-         * Critter can't generate a model for an entity with an array field, so it maps the entity reflectively.
-         */
-        ARRAYS("4.8") {
-            @Override
-            boolean claims(Comparison comparison, String fact) {
-                return fact.equals(FALLBACK) && hasArrayField(comparison.entity);
-            }
-        },
-        /**
-         * Under method discovery, critter's accessors can't call a private getter or setter, or a superclass's that isn't
-         * visible from the entity's package, so it maps an entity that pairs one reflectively.
-         */
-        UNREACHABLE_ACCESSORS("4.8") {
-            @Override
-            boolean claims(Comparison comparison, String fact) {
-                return comparison.discovery == METHODS && fact.equals(FALLBACK)
-                        && hasPair(comparison.entity, (type, getter, setter) -> !reachable(comparison.entity, type, getter)
-                                || !reachable(comparison.entity, type, setter));
-            }
-        },
-        /**
-         * Under method discovery, critter's accessors can't call a setter that returns a value, so it maps an entity with
-         * one reflectively.
-         */
-        FLUENT_SETTERS("4.8") {
-            @Override
-            boolean claims(Comparison comparison, String fact) {
-                return comparison.discovery == METHODS && fact.equals(FALLBACK)
-                        && hasPair(comparison.entity, (type, getter, setter) -> setter.getReturnType() != void.class);
-            }
-        },
-        /**
-         * A shadowed field fails reflective mapping as a duplicate property, while critter maps the subclass's field.
-         */
-        SHADOWED_FIELDS("4.8") {
-            @Override
-            boolean claims(Comparison comparison, String fact) {
-                return comparison.discovery == FIELDS && fact.equals(MAPPING) && shadowsField(comparison.entity);
-            }
-        },
-        /**
-         * Reflection takes a property's type from {@code @Property(concreteClass)}; critter keeps the declared type.
-         */
-        CONCRETE_CLASS("4.8") {
-            @Override
-            boolean claims(Comparison comparison, String fact) {
-                if (!fact.endsWith(".type") && !fact.endsWith(".typeData")) {
-                    return false;
-                }
-                String annotations = comparison.reflection.get(property(fact) + ".annotations");
-                return annotations != null && annotations.contains("@Property{")
-                        && !annotations.contains("concreteClass=java.lang.Object");
-            }
-        },
-        /**
-         * Reflection's method accessors don't make their methods accessible, so they throw on any entity Morphia can't
-         * otherwise reach, such as a package-private class; critter's accessors work.
-         */
-        INACCESSIBLE_METHODS("4.8") {
-            @Override
-            boolean claims(Comparison comparison, String fact) {
-                return comparison.discovery == METHODS && fact.endsWith(".accessor")
-                        && (MappingException.class.getName() + "(" + IllegalAccessException.class.getName() + ")")
-                                .equals(comparison.reflection.get(fact));
-            }
-        };
-
-        private final String closedBy;
-
-        Known(String closedBy) {
-            this.closedBy = closedBy;
-        }
-
-        abstract boolean claims(Comparison comparison, String fact);
-
-        @Override
-        public String toString() {
-            return name() + " (" + closedBy + ")";
-        }
-    }
 
     /**
      * One entity's facts from each mapper under one discovery mode.
@@ -179,43 +88,27 @@ public class TestMapperParity {
         List<Class<?>> entities = testEntities();
         assertFalse(entities.isEmpty(), "found no test entities");
 
-        Map<String, String> unknown = new TreeMap<>();
-        Set<Known> claiming = new HashSet<>();
-        boolean skipped = false;
+        Map<String, String> differences = new TreeMap<>();
         for (Class<?> entity : entities) {
             for (PropertyDiscovery discovery : PropertyDiscovery.values()) {
                 Comparison comparison = compare(entity, discovery);
                 if (comparison == null) {
-                    skipped = true;
                     continue;
                 }
                 for (String fact : comparison.compared()) {
                     String reflection = comparison.reflection.get(fact);
                     String critter = comparison.critter.get(fact);
                     if (!Objects.equals(reflection, critter)) {
-                        List<Known> known = List.of(Known.values()).stream()
-                                .filter(k -> k.claims(comparison, fact))
-                                .toList();
-                        if (known.isEmpty()) {
-                            unknown.put(comparison.label() + " " + fact, "reflection=" + reflection + ", critter=" + critter);
-                        }
-                        claiming.addAll(known);
+                        differences.put(comparison.label() + " " + fact, "reflection=" + reflection + ", critter=" + critter);
                     }
                 }
             }
         }
 
-        assertEquals(Map.of(), unknown, () -> "critter and reflection model these differently:\n"
-                + unknown.entrySet().stream()
+        assertEquals(Map.of(), differences, () -> "critter and reflection model these differently:\n"
+                + differences.entrySet().stream()
                         .map(e -> "  " + e.getKey() + ": " + e.getValue())
                         .collect(Collectors.joining("\n")));
-        // with pre-generated models some comparisons are skipped, so a rule can go unclaimed without being fixed; the
-        // builds without them still catch a stale one
-        if (!skipped) {
-            Set<Known> stale = new TreeSet<>(Set.of(Known.values()));
-            stale.removeAll(claiming);
-            assertEquals(Set.of(), stale, "known divergences that no longer occur");
-        }
     }
 
     /**
@@ -365,10 +258,6 @@ public class TestMapperParity {
         return property == null ? null : property.getName();
     }
 
-    private static String property(String fact) {
-        return fact.substring(0, fact.lastIndexOf('.'));
-    }
-
     /**
      * What a property's accessor reads from the shared prototype, and, for a type with a sample value, what it reads
      * back after writing the sample to a fresh instance and which fields the sample landed in. Both mappers read the same
@@ -438,79 +327,6 @@ public class TestMapperParity {
         } catch (ReflectiveOperationException | RuntimeException | LinkageError e) {
             return null;
         }
-    }
-
-    /**
-     * Whether the entity has a getter and setter that match, paired as reflection's method discovery pairs them: within
-     * each class, the two instance methods named for a property when there are exactly two, the first by name being the
-     * getter, and a subclass's pair hiding a superclass's.
-     */
-    private static boolean hasPair(Class<?> entity, PairTest test) {
-        Set<String> found = new HashSet<>();
-        for (Class<?> type = entity; type != null && type != Object.class; type = type.getSuperclass()) {
-            Map<String, List<Method>> byProperty = new TreeMap<>();
-            for (Method method : type.getDeclaredMethods()) {
-                String property = accessorProperty(method.getName());
-                if (property != null && !Modifier.isStatic(method.getModifiers()) && !method.isSynthetic()) {
-                    byProperty.computeIfAbsent(property, p -> new ArrayList<>()).add(method);
-                }
-            }
-            for (Map.Entry<String, List<Method>> entry : byProperty.entrySet()) {
-                List<Method> methods = entry.getValue();
-                if (methods.size() == 2 && found.add(entry.getKey())) {
-                    methods.sort(Comparator.comparing(Method::getName));
-                    if (test.matches(type, methods.get(0), methods.get(1))) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    private static String accessorProperty(String name) {
-        for (String prefix : List.of("get", "set", "is")) {
-            if (name.startsWith(prefix) && name.length() > prefix.length()) {
-                return name.substring(prefix.length());
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Whether code in the entity's package can call a method {@code type} declares.
-     */
-    private static boolean reachable(Class<?> entity, Class<?> type, Method method) {
-        int modifiers = method.getModifiers();
-        return !Modifier.isPrivate(modifiers) && (Modifier.isPublic(modifiers) || type == entity
-                || type.getPackageName().equals(entity.getPackageName()));
-    }
-
-    private interface PairTest {
-        boolean matches(Class<?> type, Method getter, Method setter);
-    }
-
-    private static boolean hasArrayField(Class<?> entity) {
-        for (Class<?> type = entity; type != null && type != Object.class; type = type.getSuperclass()) {
-            for (Field field : type.getDeclaredFields()) {
-                if (!Modifier.isStatic(field.getModifiers()) && field.getType().isArray()) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private static boolean shadowsField(Class<?> entity) {
-        Set<String> names = new HashSet<>();
-        for (Class<?> type = entity; type != null && type != Object.class; type = type.getSuperclass()) {
-            for (Field field : type.getDeclaredFields()) {
-                if (!Modifier.isStatic(field.getModifiers()) && !names.add(field.getName())) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     /**

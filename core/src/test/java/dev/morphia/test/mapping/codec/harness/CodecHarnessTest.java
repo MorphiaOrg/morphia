@@ -145,8 +145,6 @@ public class CodecHarnessTest {
     /** For re-encoding decoded entities: a collectible encode would give an entity without an id a random one. */
     private static final EncoderContext PLAIN = EncoderContext.builder().build();
     private static final DecoderContext DECODER = DecoderContext.builder().build();
-    /** Critter can't generate models for array properties yet (game plan 4.8), so the whole entity uses reflection. */
-    private static final Set<Class<?>> CRITTER_FALLBACKS = Set.of(HarnessArrays.class);
     /**
      * Cases a listener that takes the {@code Document} still reads differently: {@code DocumentReader} can't convert a
      * string stored for a number, which the plain and streaming paths do.
@@ -510,7 +508,7 @@ public class CodecHarnessTest {
     /**
      * {@code CritterMapper} quietly falls back to a reflective model when it can't generate one, which would turn the
      * reflection-vs-critter comparison into reflection-vs-reflection. Every harness model must therefore be a critter
-     * model, except the known fallbacks, which must still fall back so that this list can't go stale.
+     * model.
      */
     private static void assertCritterModels(MorphiaDatastore datastore) {
         Set<Class<?>> fallbacks = new HashSet<>();
@@ -520,7 +518,7 @@ public class CodecHarnessTest {
                 fallbacks.add(model.getType());
             }
         }
-        assertEquals(CRITTER_FALLBACKS, fallbacks, "harness models the critter mapper maps reflectively");
+        assertEquals(Set.of(), fallbacks, "harness models the critter mapper maps reflectively");
     }
 
     /**

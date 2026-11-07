@@ -4,6 +4,7 @@ import java.lang.annotation.Annotation;
 import java.lang.constant.ClassDesc;
 import java.lang.constant.ConstantDescs;
 import java.lang.constant.MethodTypeDesc;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
@@ -15,10 +16,12 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.IdField;
+import dev.morphia.annotations.Property;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.FieldInfo;
 import dev.morphia.critter.parser.MethodInfo;
+import dev.morphia.mapping.codec.ArrayAccessor;
 import dev.morphia.mapping.codec.pojo.ClassHierarchy;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
@@ -48,6 +51,9 @@ public class PropertyModelGenerator extends BaseGenerator {
     private final java.lang.reflect.Type genericType;
     private final Map<String, Annotation> annotationMap;
     private final TypeData<?> typeData;
+    // the component type of an array property whose values need converting, as for ArrayAccessor
+    @Nullable
+    private final Class<?> arrayComponent;
     @Nullable
     private String idFieldName;
 
@@ -70,7 +76,8 @@ public class PropertyModelGenerator extends BaseGenerator {
         this.accessFlags = reflectedField != null ? reflectedField.getModifiers() : field.access();
         this.genericType = reflectedField != null ? reflectedField.getGenericType() : Object.class;
         this.annotationMap = buildAnnotationMap(reflectedField != null ? reflectedField.getAnnotations() : new Annotation[0]);
-        this.typeData = TypeData.get(TypeResolver.resolve(annotationSource, this.genericType));
+        this.typeData = typeData(annotationSource, genericType, annotationMap);
+        this.arrayComponent = arrayComponent(reflectedField != null ? reflectedField.getType() : null);
         this.idFieldName = idFieldName(annotationSource);
     }
 
@@ -113,7 +120,10 @@ public class PropertyModelGenerator extends BaseGenerator {
         // Also collect setter annotations — some annotations (e.g. @Version, @Text) live on the setter, not the getter
         String setterName = "set" + DiscoveryRules.titleCase(this.propertyName);
         Method reflectedSetter = null;
-        if (reflectedMethod != null) {
+        if (method.setter() != null) {
+            // the paired setter, which may be private
+            reflectedSetter = findSetter(declaringClass, method.setter());
+        } else if (reflectedMethod != null) {
             Class<?> paramType = reflectedMethod.getReturnType();
             ClassDesc paramDesc = paramType.isPrimitive()
                     ? GenerationUtils.primitiveClassDesc(paramType.getName())
@@ -122,10 +132,12 @@ public class PropertyModelGenerator extends BaseGenerator {
         }
         if (reflectedSetter != null) {
             for (Annotation ann : reflectedSetter.getAnnotations()) {
-                this.annotationMap.putIfAbsent(ann.annotationType().getName(), ann);
+                // as for reflection, the setter's annotation wins over the getter's of the same type
+                this.annotationMap.put(ann.annotationType().getName(), ann);
             }
         }
-        this.typeData = TypeData.get(TypeResolver.resolve(annotationSource, this.genericType));
+        this.typeData = typeData(annotationSource, genericType, annotationMap);
+        this.arrayComponent = arrayComponent(reflectedMethod != null ? reflectedMethod.getReturnType() : null);
         this.idFieldName = idFieldName(annotationSource);
     }
 
@@ -167,6 +179,17 @@ public class PropertyModelGenerator extends BaseGenerator {
                 }
             }
             current = current.getSuperclass();
+        }
+        return null;
+    }
+
+    @Nullable
+    private static Method findSetter(Class<?> declaringClass, MethodInfo setter) {
+        for (Method m : declaringClass.getDeclaredMethods()) {
+            if (m.getName().equals(setter.name()) && MethodTypeDesc.ofDescriptor(setter.desc()).equals(
+                    MethodType.methodType(m.getReturnType(), m.getParameterTypes()).describeConstable().orElse(null))) {
+                return m;
+            }
         }
         return null;
     }
@@ -243,6 +266,24 @@ public class PropertyModelGenerator extends BaseGenerator {
             return typeDataFromSignature(bounded.boundType(), classLoader);
         }
         return new TypeData<>(Object.class, List.of());
+    }
+
+    /**
+     * As in {@code ConfigureProperties}, {@code @Property(concreteClass)} replaces the declared type, keeping its type
+     * arguments.
+     */
+    private static TypeData<?> typeData(Class<?> annotationSource, java.lang.reflect.Type genericType,
+            Map<String, Annotation> annotations) {
+        TypeData<?> typeData = TypeData.get(TypeResolver.resolve(annotationSource, genericType));
+        Property property = (Property) annotations.get(Property.class.getName());
+        return property != null && !property.concreteClass().equals(Object.class)
+                ? typeData.withType(property.concreteClass())
+                : typeData;
+    }
+
+    @Nullable
+    private static Class<?> arrayComponent(@Nullable Class<?> type) {
+        return type != null && ArrayAccessor.converts(type) ? type.getComponentType() : null;
     }
 
     @Nullable
@@ -361,6 +402,13 @@ public class PropertyModelGenerator extends BaseGenerator {
         }
         cod.invokevirtual(propertyModelDesc, "accessor", MethodTypeDesc.of(propertyModelDesc, accessorDesc));
         cod.pop();
+        if (arrayComponent != null) {
+            cod.aload(0);
+            cod.aload(slot);
+            GenerationUtils.emitClassRef(cod, arrayComponent, modelDesc);
+            cod.invokevirtual(critterModelDesc, "arrayAccessor",
+                    MethodTypeDesc.of(ConstantDescs.CD_void, propertyModelDesc, ConstantDescs.CD_Class));
+        }
 
         // Morphia annotations through their builders: no reflection
         for (Annotation annotation : annotationMap.values()) {

@@ -29,6 +29,7 @@ import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.ReflectiveEntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 
+import org.bson.codecs.pojo.PropertyAccessor;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -208,6 +209,18 @@ public class TestCritterMapper {
 
         Assertions.assertEquals("first_targets", first.collectionName());
         Assertions.assertEquals("second_targets", second.collectionName());
+    }
+
+    @Test
+    public void testStandInPairWithPrivateTargetSetterFallsBack() {
+        CritterMapper mapper = new CritterMapper(
+                MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
+        // the generated accessor would call the target's setter, which is private, so the property would be read-only
+        EntityModel model = mapper.mapEntity(PrivateSetterStandIn.class);
+        Assertions.assertFalse(model instanceof CritterEntityModel, "Expected a reflective model but got: " + model.getClass());
+        PrivateSetterTarget instance = new PrivateSetterTarget();
+        model.getProperty("name").getAccessor().set(instance, "written");
+        Assertions.assertEquals("written", instance.getName());
     }
 
     @Test
@@ -518,13 +531,51 @@ public class TestCritterMapper {
     }
 
     @Test
-    public void testPrivateSuperclassGetterFallsBack() {
+    public void testPrivateSuperclassGetter() {
         CritterMapper mapper = new CritterMapper(
                 MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
-        EntityModel model = mapper.mapEntity(PrivateGetterChild.class);
-        // reflection pairs the superclass's private getter with its setter, which critter's accessors can't call
-        Assertions.assertFalse(model instanceof CritterEntityModel, "Expected a reflective model but got: " + model.getClass());
-        Assertions.assertNotNull(model.getProperty("secret"), "The private getter's pair must be discovered, as reflection does");
+        // the accessor is a nestmate of the superclass, so it can call the private getter
+        EntityModel model = assertRuntimeGenerated(mapper.mapEntity(PrivateGetterChild.class));
+        PropertyAccessor<Object> accessor = model.getProperty("secret").getAccessor();
+        PrivateGetterChild instance = new PrivateGetterChild();
+        accessor.set(instance, "hidden");
+        Assertions.assertEquals("hidden", accessor.get(instance));
+    }
+
+    @Test
+    public void testPublicPairFromAnotherModule() {
+        CritterMapper mapper = new CritterMapper(
+                MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
+        // java.base doesn't open java.util, so the accessor for Date's public getTime()/setTime() must join the entity's nest
+        EntityModel model = assertRuntimeGenerated(mapper.mapEntity(DateEntity.class));
+        PropertyAccessor<Object> accessor = model.getProperty("time").getAccessor();
+        DateEntity instance = new DateEntity();
+        accessor.set(instance, 42L);
+        Assertions.assertEquals(42L, accessor.get(instance));
+    }
+
+    @Test
+    public void testFluentSetter() {
+        CritterMapper mapper = new CritterMapper(
+                MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
+        EntityModel model = assertRuntimeGenerated(mapper.mapEntity(FluentSetterEntity.class));
+        PropertyAccessor<Object> accessor = model.getProperty("name").getAccessor();
+        FluentSetterEntity instance = new FluentSetterEntity();
+        accessor.set(instance, "fluent");
+        Assertions.assertEquals("fluent", accessor.get(instance));
+        PropertyAccessor<Object> count = model.getProperty("count").getAccessor();
+        count.set(instance, 42L);
+        Assertions.assertEquals(42L, count.get(instance));
+    }
+
+    @Test
+    public void testArrayProperty() {
+        EntityModel model = assertRuntimeGenerated(mapper().mapEntity(ArrayEntity.class));
+        PropertyAccessor<Object> accessor = model.getProperty("names").getAccessor();
+        ArrayEntity instance = new ArrayEntity();
+        // the codec decodes an array as a list, which the accessor converts to the property's type
+        accessor.set(instance, List.of("a", "b"));
+        Assertions.assertArrayEquals(new String[] { "a", "b" }, instance.names);
     }
 
     @Test
@@ -595,6 +646,53 @@ public class TestCritterMapper {
     public static class PrivateGetterChild extends PrivateGetterBase {
         @Id
         ObjectId id;
+    }
+
+    @Entity("fluent_setter_entity")
+    public static class FluentSetterEntity {
+        @Id
+        ObjectId id;
+        private String name;
+        private long count;
+
+        public ObjectId getId() {
+            return id;
+        }
+
+        public void setId(ObjectId id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public FluentSetterEntity setName(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public long getCount() {
+            return count;
+        }
+
+        // returns the previous value, which takes two stack slots
+        public long setCount(long count) {
+            long previous = this.count;
+            this.count = count;
+            return previous;
+        }
+    }
+
+    @Entity("date_entity")
+    public static class DateEntity extends java.util.Date {
+    }
+
+    @Entity("array_entity")
+    public static class ArrayEntity {
+        @Id
+        ObjectId id;
+        String[] names;
     }
 
     @Entity("static_getter_entity")
@@ -715,6 +813,50 @@ public class TestCritterMapper {
         @Id
         private ObjectId id;
         private String name;
+    }
+
+    public static class PrivateSetterTarget {
+        private ObjectId id;
+        private String name;
+
+        public ObjectId getId() {
+            return id;
+        }
+
+        public void setId(ObjectId id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        private void setName(String name) {
+            this.name = name;
+        }
+    }
+
+    @ExternalEntity(target = PrivateSetterTarget.class, value = "private_setter_targets")
+    public static class PrivateSetterStandIn {
+        private ObjectId id;
+        private String name;
+
+        @Id
+        public ObjectId getId() {
+            return id;
+        }
+
+        public void setId(ObjectId id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 
     /**

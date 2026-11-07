@@ -3,7 +3,8 @@ package dev.morphia.critter.parser.generator;
 import java.lang.constant.ClassDesc;
 import java.lang.constant.ConstantDescs;
 import java.lang.constant.MethodTypeDesc;
-import java.lang.reflect.Method;
+
+import com.mongodb.lang.Nullable;
 
 import dev.morphia.critter.Critter;
 import dev.morphia.critter.parser.FieldInfo;
@@ -12,10 +13,10 @@ import dev.morphia.mapping.conventions.DiscoveryRules;
 
 import io.smallrye.classfile.ClassFile;
 import io.smallrye.classfile.ClassSignature;
+import io.smallrye.classfile.TypeKind;
 import io.smallrye.classfile.attribute.SignatureAttribute;
 
 import static dev.morphia.critter.parser.generator.GenerationUtils.PRIMITIVE_TO_WRAPPER;
-import static dev.morphia.critter.parser.generator.GenerationUtils.findSetterMethod;
 import static dev.morphia.critter.parser.generator.GenerationUtils.primitiveClassDesc;
 import static dev.morphia.critter.parser.generator.GenerationUtils.primitiveUnboxMethod;
 import static dev.morphia.critter.parser.generator.GenerationUtils.typeClassName;
@@ -26,10 +27,6 @@ import static dev.morphia.critter.parser.generator.GenerationUtils.typeClassName
  * to access entity properties. The generated class must be defined as a hidden nestmate of the entity
  * class so the JVM grants it private-member access.
  *
- * <p>
- * Array-typed properties are not supported: the BSON codec provides {@code Object[]} at runtime,
- * which is incompatible with {@code putfield} to a typed array field. Callers should throw
- * to trigger {@link dev.morphia.mapping.CritterMapper} fallback to reflection for such entities.
  */
 public class NestmateAccessorGenerator {
     private final Class<?> entity;
@@ -41,7 +38,9 @@ public class NestmateAccessorGenerator {
     private final boolean isFinalField;
     private final String fieldOrGetterName;
     private final String setterName;
-    private final Method setterMethod;
+    // the setter's type, or null for a field or a read-only property
+    @Nullable
+    private final MethodTypeDesc setterType;
     // registryKey: stable key used for NestmateAccessorRegistry (critter subpackage name)
     final String registryKey;
     // bytecodeName: class name embedded in the bytecode; MUST be in the declaringClass's package for defineHiddenClass
@@ -56,7 +55,7 @@ public class NestmateAccessorGenerator {
         this.isFinalField = (field.access() & ClassFile.ACC_FINAL) != 0;
         this.fieldOrGetterName = field.name();
         this.setterName = null;
-        this.setterMethod = null;
+        this.setterType = null;
         this.registryKey = "%s.%sAccessor".formatted(Critter.critterPackage(entity), DiscoveryRules.titleCase(propertyName));
         this.bytecodeName = entityPackagePrefix(declaringClass) + declaringClass.getSimpleName() + "$$"
                 + DiscoveryRules.titleCase(propertyName)
@@ -65,7 +64,7 @@ public class NestmateAccessorGenerator {
 
     public NestmateAccessorGenerator(Class<?> entity, MethodInfo method) {
         this.entity = entity;
-        this.declaringClass = entity;
+        this.declaringClass = accessorHost(entity, method);
         this.propertyName = DiscoveryRules.propertyName(method.name());
         String returnDesc = MethodTypeDesc.ofDescriptor(method.desc()).returnType().descriptorString();
         this.propertyType = typeClassName(ClassDesc.ofDescriptor(returnDesc));
@@ -73,10 +72,27 @@ public class NestmateAccessorGenerator {
         this.isFinalField = false;
         this.fieldOrGetterName = method.name();
         this.setterName = "set%s".formatted(DiscoveryRules.titleCase(propertyName));
-        this.setterMethod = findSetterMethod(entity, this.setterName, propertyClassDesc());
+        this.setterType = GenerationUtils.setterType(entity, method, setterName, propertyClassDesc());
         this.registryKey = "%s.%sAccessor".formatted(Critter.critterPackage(entity), DiscoveryRules.titleCase(propertyName));
-        this.bytecodeName = entityPackagePrefix(entity) + entity.getSimpleName() + "$$" + DiscoveryRules.titleCase(propertyName)
-                + "Accessor";
+        this.bytecodeName = entityPackagePrefix(declaringClass) + declaringClass.getSimpleName() + "$$"
+                + DiscoveryRules.titleCase(propertyName) + "Accessor";
+    }
+
+    /**
+     * @return the class whose nest the accessor joins: the entity's, unless the pair is a superclass's and one of its
+     *         methods isn't public, which only a nestmate of that superclass can call. Joining a superclass's nest needs
+     *         access to its module, which a public pair, such as one inherited from the JDK, mustn't depend on. An
+     *         {@code @ExternalEntity} stand-in's pairs are declared outside the target's hierarchy, and the target's own
+     *         methods are called.
+     */
+    private static Class<?> accessorHost(Class<?> entity, MethodInfo getter) {
+        Class<?> declaring = getter.declaringClass();
+        if (declaring == null || declaring == entity || !declaring.isAssignableFrom(entity)) {
+            return entity;
+        }
+        boolean isPublic = (getter.access() & ClassFile.ACC_PUBLIC) != 0
+                && getter.setter() != null && (getter.setter().access() & ClassFile.ACC_PUBLIC) != 0;
+        return isPublic ? entity : declaring;
     }
 
     private static Class<?> findDeclaringClassInHierarchy(Class<?> entity, String fieldName) {
@@ -106,26 +122,19 @@ public class NestmateAccessorGenerator {
     }
 
     /**
-     * Generates the accessor bytecode.
-     *
-     * @throws IllegalArgumentException if the property type is an array (BSON codec provides {@code Object[]}
-     *                                  which is incompatible with typed array putfield at runtime)
+     * Generates the accessor bytecode. An array property's values are converted to its type before they reach it: see
+     * {@link dev.morphia.mapping.codec.ArrayAccessor}.
      */
     public byte[] generate() {
-        if (propertyType.startsWith("[")) {
-            throw new IllegalArgumentException(
-                    "Array-typed properties cannot use nestmate accessors (codec provides Object[]): " + propertyName);
-        }
 
         ClassDesc thisDesc = ClassDesc.of(bytecodeName);
-        ClassDesc entityDesc = ClassDesc.of(entity.getName());
-        // For field access, use the declaring class (may differ from entity when field is in a superclass)
-        ClassDesc fieldOwnerDesc = ClassDesc.of(declaringClass.getName());
+        // the class declaring the field or the getter and setter, which may be a superclass of the entity
+        ClassDesc ownerDesc = ClassDesc.of(declaringClass.getName());
         ClassDesc propertyDesc = propertyClassDesc();
-        ClassDesc wrapperDesc = ClassDesc.of(getWrapperType());
+        ClassDesc wrapperDesc = isPrimitive() ? ClassDesc.of(getWrapperType()) : propertyDesc;
         ClassDesc accessorDesc = ClassDesc.of("org.bson.codecs.pojo.PropertyAccessor");
 
-        boolean useSetterHandle = !isFieldBased && setterMethod != null;
+        boolean useSetterHandle = !isFieldBased && setterType != null;
 
         return ClassFile.of().build(thisDesc, cb -> {
             cb.withVersion(ClassFile.JAVA_17_VERSION, 0);
@@ -155,7 +164,7 @@ public class NestmateAccessorGenerator {
                     // putfield cannot write to final fields outside <init>, so set() uses reflection. Look the
                     // field up once here rather than on every write.
                     cod.aload(0);
-                    cod.ldc(fieldOwnerDesc);
+                    cod.ldc(ownerDesc);
                     cod.ldc(fieldOrGetterName);
                     cod.invokestatic(ClassDesc.of("dev.morphia.critter.Critter"), "accessibleField",
                             MethodTypeDesc.of(reflectFieldDesc, ConstantDescs.CD_Class, ConstantDescs.CD_String));
@@ -168,15 +177,14 @@ public class NestmateAccessorGenerator {
             cb.withMethodBody("get", MethodTypeDesc.ofDescriptor("(Ljava/lang/Object;)Ljava/lang/Object;"),
                     ClassFile.ACC_PUBLIC, cod -> {
                         cod.aload(1);
-                        // For field-based access, cast to the declaring class (not the leaf entity):
-                        // the nestmate is defined in the declaring class's nest, so it can reference
-                        // the declaring class but may not be able to reference a private nested leaf class.
-                        cod.checkcast(isFieldBased ? fieldOwnerDesc : entityDesc);
+                        // Cast to the declaring class (not the leaf entity): the nestmate is defined in the declaring
+                        // class's nest, so it can reference the declaring class but may not be able to reference a
+                        // private nested leaf class.
+                        cod.checkcast(ownerDesc);
                         if (isFieldBased) {
-                            cod.getfield(fieldOwnerDesc, fieldOrGetterName, propertyDesc);
+                            cod.getfield(ownerDesc, fieldOrGetterName, propertyDesc);
                         } else {
-                            MethodTypeDesc getterMtd = MethodTypeDesc.of(propertyDesc);
-                            cod.invokevirtual(entityDesc, fieldOrGetterName, getterMtd);
+                            cod.invokevirtual(ownerDesc, fieldOrGetterName, MethodTypeDesc.of(propertyDesc));
                         }
                         if (isPrimitive()) {
                             cod.invokestatic(wrapperDesc, "valueOf", MethodTypeDesc.of(wrapperDesc, propertyDesc));
@@ -221,7 +229,7 @@ public class NestmateAccessorGenerator {
                         }
 
                         cod.aload(1);
-                        cod.checkcast(isFieldBased ? fieldOwnerDesc : entityDesc);
+                        cod.checkcast(ownerDesc);
                         if (isPrimitive()) {
                             cod.aload(2);
                             cod.checkcast(wrapperDesc);
@@ -232,15 +240,16 @@ public class NestmateAccessorGenerator {
                         }
 
                         if (isFieldBased) {
-                            cod.putfield(fieldOwnerDesc, fieldOrGetterName, propertyDesc);
+                            cod.putfield(ownerDesc, fieldOrGetterName, propertyDesc);
                         } else {
-                            Class<?> retType = setterMethod.getReturnType();
-                            ClassDesc retDesc = retType == void.class ? ConstantDescs.CD_void
-                                    : retType.isPrimitive() ? primitiveClassDesc(retType.getName())
-                                            : ClassDesc.of(retType.getName());
-                            cod.invokevirtual(entityDesc, setterName, MethodTypeDesc.of(retDesc, propertyDesc));
-                            if (retType != void.class) {
-                                cod.pop();
+                            cod.invokevirtual(ownerDesc, setterName, setterType);
+                            // a fluent setter's result
+                            if (!setterType.returnType().equals(ConstantDescs.CD_void)) {
+                                if (TypeKind.from(setterType.returnType()).slotSize() == 2) {
+                                    cod.pop2();
+                                } else {
+                                    cod.pop();
+                                }
                             }
                         }
                         cod.return_();

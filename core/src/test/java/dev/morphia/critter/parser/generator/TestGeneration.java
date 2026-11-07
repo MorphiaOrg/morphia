@@ -39,6 +39,7 @@ import dev.morphia.critter.sources.PackageChildExample;
 import dev.morphia.critter.sources.ShadowingExample;
 import dev.morphia.critter.sources.ShapeExample;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
@@ -230,8 +231,8 @@ public class TestGeneration {
     }
 
     @Test
-    public void testGeneratorSkipsShadowedFields() {
-        var e = Assertions.assertThrows(UnsupportedOperationException.class,
+    public void testGeneratorRejectsShadowedFields() {
+        var e = Assertions.assertThrows(MappingException.class,
                 () -> new CritterGenerator(defaultMapper()).generate(ShadowingExample.class, critterClassLoader, false));
         Assertions.assertTrue(e.getMessage().contains("shadows"), e.getMessage());
     }

@@ -4,6 +4,8 @@ import java.lang.annotation.Annotation;
 
 import dev.morphia.annotations.IdField;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.ArrayAccessor;
+import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.MorphiaPropertySerialization;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
@@ -17,12 +19,15 @@ import dev.morphia.mapping.conventions.MorphiaConvention;
  * @morphia.internal
  */
 public abstract class CritterEntityModel extends EntityModel {
+    private final Conversions conversions;
+
     /**
      * @param mapper the mapper the model is built for
      * @param type   the entity type
      */
     public CritterEntityModel(Mapper mapper, Class<?> type) {
         super(type);
+        conversions = mapper.getConversions();
     }
 
     /**
@@ -51,6 +56,17 @@ public abstract class CritterEntityModel extends EntityModel {
             convention.apply(mapper, this);
         }
         initializeListeners();
+    }
+
+    /**
+     * Wraps an array property's accessor to convert decoded values to its array type, as the reflective mapper does.
+     *
+     * @param property      the property
+     * @param componentType the component type of the property's erased type
+     */
+    @SuppressWarnings("unused")
+    protected final void arrayAccessor(PropertyModel property, Class<?> componentType) {
+        property.accessor(new ArrayAccessor(property.getAccessor(), componentType, conversions));
     }
 
     /**

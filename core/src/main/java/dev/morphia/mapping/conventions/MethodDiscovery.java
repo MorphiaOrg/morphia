@@ -17,6 +17,8 @@ import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
+import dev.morphia.mapping.codec.ArrayAccessor;
+import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.MethodAccessor;
 import dev.morphia.mapping.codec.pojo.ClassHierarchy;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -26,6 +28,8 @@ import dev.morphia.mapping.conventions.DiscoveryRules.AccessorPair;
 import dev.morphia.sofia.Sofia;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
+import org.bson.codecs.pojo.PropertyAccessor;
 
 import static dev.morphia.mapping.conventions.FieldDiscovery.discoverMappedName;
 import static java.util.Arrays.stream;
@@ -68,11 +72,18 @@ public class MethodDiscovery implements MorphiaConvention {
                     .name(methods.property())
                     .typeData(typeData)
                     .annotations(discoverAnnotations(methods.getter(), methods.setter()))
-                    .accessor(new MethodAccessor(getTargetMethod(model, target, methods.getter()),
-                            getTargetMethod(model, target, methods.setter())))
+                    .accessor(getAccessor(getTargetMethod(model, target, methods.getter()),
+                            getTargetMethod(model, target, methods.setter()), mapper.getConversions()))
                     .conversions(mapper.getConversions())
                     .mappedName(discoverMappedName(mapper, propertyModel)));
         }
+    }
+
+    private static PropertyAccessor<? super Object> getAccessor(Method getter, Method setter, Conversions conversions) {
+        MethodAccessor accessor = new MethodAccessor(getter, setter);
+        return ArrayAccessor.converts(getter.getReturnType())
+                ? new ArrayAccessor(accessor, getter.getReturnType().getComponentType(), conversions)
+                : accessor;
     }
 
     private List<Annotation> discoverAnnotations(Method getter, Method setter) {

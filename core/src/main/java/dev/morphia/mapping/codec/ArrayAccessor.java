@@ -1,49 +1,67 @@
 package dev.morphia.mapping.codec;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.Field;
 import java.util.List;
 
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.mapping.codec.pojo.TypeData;
+
+import org.bson.codecs.pojo.PropertyAccessor;
 
 import static java.lang.String.format;
 
 /**
+ * Wraps a property's accessor to convert a decoded array, which the codec reads as a list or an {@code Object[]}, to the
+ * property's array type before writing it.
+ *
  * @hidden
  * @morphia.internal
  */
 @SuppressWarnings("rawtypes")
 @MorphiaInternal
-public class ArrayFieldAccessor extends FieldAccessor {
+public class ArrayAccessor implements PropertyAccessor<Object> {
 
-    private final TypeData<?> typeData;
+    private final PropertyAccessor<Object> delegate;
     private final Class<?> componentType;
     private final Conversions conversions;
 
     /**
      * Creates the accessor
      *
-     * @param typeData    the type data
-     * @param field       the field
-     * @param conversions the Conversions instance to use
+     * @param delegate      the property's accessor
+     * @param componentType the component type of the property's array type
+     * @param conversions   the Conversions instance to use
      */
-    public ArrayFieldAccessor(TypeData<?> typeData, Field field, Conversions conversions) {
-        super(field);
-        this.typeData = typeData;
-        componentType = field.getType().getComponentType();
+    @SuppressWarnings("unchecked")
+    public ArrayAccessor(PropertyAccessor<?> delegate, Class<?> componentType, Conversions conversions) {
+        this.delegate = (PropertyAccessor<Object>) delegate;
+        this.componentType = componentType;
         this.conversions = conversions;
     }
 
+    /**
+     * @param type the property's type, erased
+     * @return true if the property's values need converting: it's an array, other than {@code byte[]}, which BSON stores
+     *         as binary
+     */
+    public static boolean converts(Class<?> type) {
+        return type.isArray() && !type.getComponentType().equals(byte.class);
+    }
+
     @Override
-    public void set(Object instance, Object value) {
+    @Nullable
+    public <S> Object get(S instance) {
+        return delegate.get(instance);
+    }
+
+    @Override
+    public <S> void set(S instance, @Nullable Object value) {
         Object newValue = value;
-        if (value.getClass().getComponentType() != componentType) {
+        if (value != null && value.getClass().getComponentType() != componentType) {
             newValue = value instanceof List ? convert((List) value) : convert((Object[]) value);
         }
-        super.set(instance, newValue);
+        delegate.set(instance, newValue);
     }
 
     private Object convert(Object[] value) {
@@ -63,7 +81,8 @@ public class ArrayFieldAccessor extends FieldAccessor {
                 try {
                     Array.set(newArray, i, converted);
                 } catch (IllegalArgumentException e) {
-                    throw new IllegalArgumentException(format("Can't set %s with a value type of %s", getField(), converted.getClass()));
+                    throw new IllegalArgumentException(
+                            format("Can't set an element of %s[] to a %s", componentType.getName(), converted.getClass()));
                 }
             } else {
                 throw new IllegalArgumentException(format("Can not convert '%s' to type '%s' ", value.get(i), componentType.getName()));
@@ -82,7 +101,8 @@ public class ArrayFieldAccessor extends FieldAccessor {
                 try {
                     Array.set(newArray, i, converted);
                 } catch (IllegalArgumentException e) {
-                    throw new IllegalArgumentException(format("Can't set %s with a value type of %s", getField(), converted.getClass()));
+                    throw new IllegalArgumentException(
+                            format("Can't set an element of %s[] to a %s", type.getComponentType().getName(), converted.getClass()));
                 }
             }
 
