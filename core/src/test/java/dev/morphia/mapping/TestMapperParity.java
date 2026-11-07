@@ -8,7 +8,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -441,42 +440,41 @@ public class TestMapperParity {
         }
     }
 
-    private static boolean isGetter(Method method) {
-        String name = method.getName();
-        return !Modifier.isStatic(method.getModifiers()) && !method.isBridge() && method.getParameterCount() == 0
-                && method.getReturnType() != void.class
-                && (name.startsWith("get") && name.length() > 3 || name.startsWith("is") && name.length() > 2);
-    }
-
-    private static String propertyName(Method method) {
-        return method.getName().substring(method.getName().startsWith("is") ? 2 : 3);
-    }
-
-    private static boolean isSetter(Method method) {
-        String name = method.getName();
-        return !Modifier.isStatic(method.getModifiers()) && method.getParameterCount() == 1 && name.startsWith("set")
-                && name.length() > 3;
-    }
-
     /**
-     * Whether a class in the entity's hierarchy declares a getter and setter for the same property that match.
+     * Whether the entity has a getter and setter that match, paired as reflection's method discovery pairs them: within
+     * each class, the two instance methods named for a property when there are exactly two, the first by name being the
+     * getter, and a subclass's pair hiding a superclass's.
      */
     private static boolean hasPair(Class<?> entity, PairTest test) {
+        Set<String> found = new HashSet<>();
         for (Class<?> type = entity; type != null && type != Object.class; type = type.getSuperclass()) {
-            Map<String, Method> getters = new HashMap<>();
+            Map<String, List<Method>> byProperty = new TreeMap<>();
             for (Method method : type.getDeclaredMethods()) {
-                if (isGetter(method)) {
-                    getters.put(propertyName(method), method);
+                String property = accessorProperty(method.getName());
+                if (property != null && !Modifier.isStatic(method.getModifiers()) && !method.isSynthetic()) {
+                    byProperty.computeIfAbsent(property, p -> new ArrayList<>()).add(method);
                 }
             }
-            for (Method setter : type.getDeclaredMethods()) {
-                Method getter = getters.get(setter.getName().substring(Math.min(3, setter.getName().length())));
-                if (isSetter(setter) && getter != null && test.matches(type, getter, setter)) {
-                    return true;
+            for (Map.Entry<String, List<Method>> entry : byProperty.entrySet()) {
+                List<Method> methods = entry.getValue();
+                if (methods.size() == 2 && found.add(entry.getKey())) {
+                    methods.sort(Comparator.comparing(Method::getName));
+                    if (test.matches(type, methods.get(0), methods.get(1))) {
+                        return true;
+                    }
                 }
             }
         }
         return false;
+    }
+
+    private static String accessorProperty(String name) {
+        for (String prefix : List.of("get", "set", "is")) {
+            if (name.startsWith(prefix) && name.length() > prefix.length()) {
+                return name.substring(prefix.length());
+            }
+        }
+        return null;
     }
 
     /**
