@@ -271,6 +271,18 @@ public class TestCritterMapper {
     }
 
     @Test
+    public void testStandInSetterOnlyAsBridge() {
+        CritterMapper mapper = new CritterMapper(
+                MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
+        // the stand-in's setName(Object) doesn't take the getter's type, so its accessor is reflective, and the target has
+        // setName(Object) only as the bridge for Named<String>.setName
+        EntityModel model = assertRuntimeGenerated(mapper.mapEntity(BridgeSetterStandIn.class));
+        BridgeSetterTarget instance = new BridgeSetterTarget();
+        model.getProperty("name").getAccessor().set(instance, "bridged");
+        Assertions.assertEquals("bridged", instance.getName());
+    }
+
+    @Test
     public void testUncallablePairUsesReflectiveAccessor() {
         CritterMapper mapper = new CritterMapper(
                 MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
@@ -969,6 +981,55 @@ public class TestCritterMapper {
         @Id
         private ObjectId id;
         private String name;
+    }
+
+    public interface Named<T> {
+        void setName(T name);
+    }
+
+    public static class BridgeSetterTarget implements Named<String> {
+        private ObjectId id;
+        private String name;
+
+        public ObjectId getId() {
+            return id;
+        }
+
+        public void setId(ObjectId id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
+    @ExternalEntity(target = BridgeSetterTarget.class, value = "bridge_setter_targets")
+    public static class BridgeSetterStandIn {
+        private ObjectId id;
+        private String name;
+
+        @Id
+        public ObjectId getId() {
+            return id;
+        }
+
+        public void setId(ObjectId id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(Object name) {
+            this.name = (String) name;
+        }
     }
 
     @Entity("widening_setters")
