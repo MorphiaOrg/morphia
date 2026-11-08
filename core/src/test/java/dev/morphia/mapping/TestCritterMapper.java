@@ -987,7 +987,18 @@ public class TestCritterMapper {
         void setName(T name);
     }
 
-    public static class BridgeSetterTarget implements Named<String> {
+    public static class PrivateSetterBase {
+        @SuppressWarnings("unused")
+        private Object other;
+
+        @SuppressWarnings("unused")
+        private void setName(Object name) {
+            this.other = name;
+        }
+    }
+
+    // the bridge for Named<String>.setName, not the superclass's private setName(Object), sets the name
+    public static class BridgeSetterTarget extends PrivateSetterBase implements Named<String> {
         private ObjectId id;
         private String name;
 

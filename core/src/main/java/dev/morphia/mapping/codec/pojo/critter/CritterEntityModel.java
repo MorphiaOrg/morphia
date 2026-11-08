@@ -140,23 +140,21 @@ public abstract class CritterEntityModel extends EntityModel {
         // may not see
         String parametersOnly = MethodTypeDesc.ofDescriptor(descriptor).changeReturnType(ConstantDescs.CD_void).descriptorString();
         Class<?>[] parameters = MethodType.fromMethodDescriptorString(parametersOnly, type.getClassLoader()).parameterArray();
-        // a bridge only if nothing else matches: a class implementing a generic interface may have the erased setter only
-        // as a bridge
-        Method bridge = null;
+        // the nearest class declaring a match wins, and within it a bridge only if nothing else matches: a class implementing
+        // a generic interface may have the erased setter only as a bridge
         for (Class<?> current = type; current != null; current = current.getSuperclass()) {
+            Method bridge = null;
             for (Method method : current.getDeclaredMethods()) {
                 if (method.getName().equals(name) && Arrays.equals(method.getParameterTypes(), parameters)) {
                     if (!method.isBridge()) {
                         return method;
                     }
-                    if (bridge == null) {
-                        bridge = method;
-                    }
+                    bridge = method;
                 }
             }
-        }
-        if (bridge != null) {
-            return bridge;
+            if (bridge != null) {
+                return bridge;
+            }
         }
         throw new IllegalStateException("No method %s%s in %s".formatted(name, descriptor, type.getName()));
     }
