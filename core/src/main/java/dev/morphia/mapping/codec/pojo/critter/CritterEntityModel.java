@@ -1,6 +1,8 @@
 package dev.morphia.mapping.codec.pojo.critter;
 
 import java.lang.annotation.Annotation;
+import java.lang.constant.ConstantDescs;
+import java.lang.constant.MethodTypeDesc;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -134,7 +136,10 @@ public abstract class CritterEntityModel extends EntityModel {
     }
 
     private static Method method(Class<?> type, String name, String descriptor) {
-        Class<?>[] parameters = MethodType.fromMethodDescriptorString(descriptor, type.getClassLoader()).parameterArray();
+        // only the parameters identify the method: a stand-in's fluent setter returns the stand-in, which the type's loader
+        // may not see
+        String parametersOnly = MethodTypeDesc.ofDescriptor(descriptor).changeReturnType(ConstantDescs.CD_void).descriptorString();
+        Class<?>[] parameters = MethodType.fromMethodDescriptorString(parametersOnly, type.getClassLoader()).parameterArray();
         for (Class<?> current = type; current != null; current = current.getSuperclass()) {
             for (Method method : current.getDeclaredMethods()) {
                 if (method.getName().equals(name) && !method.isBridge()

@@ -235,6 +235,42 @@ public class TestCritterMapper {
     }
 
     @Test
+    public void testStandInFromChildLoaderWithFluentSetter(@TempDir Path dir) throws Exception {
+        // the stand-in's fluent setter returns the stand-in, which the target's loader can't see
+        compile(dir, "app/FluentStandIn.java", """
+                package app;
+                @dev.morphia.annotations.ExternalEntity(target = dev.morphia.mapping.TestCritterMapper.PrivateSetterTarget.class,
+                        value = "fluent_stand_ins")
+                public class FluentStandIn {
+                    private org.bson.types.ObjectId id;
+                    private String name;
+                    @dev.morphia.annotations.Id
+                    public org.bson.types.ObjectId getId() {
+                        return id;
+                    }
+                    public void setId(org.bson.types.ObjectId id) {
+                        this.id = id;
+                    }
+                    public String getName() {
+                        return name;
+                    }
+                    public FluentStandIn setName(String name) {
+                        this.name = name;
+                        return this;
+                    }
+                }
+                """, Path.of(getClass().getProtectionDomain().getCodeSource().getLocation().toURI()));
+        try (URLClassLoader loader = new URLClassLoader(new URL[] { dir.toUri().toURL() }, getClass().getClassLoader())) {
+            CritterMapper mapper = new CritterMapper(
+                    MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS), loader);
+            EntityModel model = assertRuntimeGenerated(mapper.mapEntity(loader.loadClass("app.FluentStandIn")));
+            PrivateSetterTarget instance = new PrivateSetterTarget();
+            model.getProperty("name").getAccessor().set(instance, "written");
+            Assertions.assertEquals("written", instance.getName());
+        }
+    }
+
+    @Test
     public void testUncallablePairUsesReflectiveAccessor() {
         CritterMapper mapper = new CritterMapper(
                 MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
