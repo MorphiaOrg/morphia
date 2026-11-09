@@ -79,9 +79,11 @@ public class PropertyFinder {
      * entity has been checked, so a failed entity leaves nothing behind.
      *
      * @param models    the property model generators
+     * @param classes   at build time, the classes {@code accessors} registers by name: the accessors and the woven classes,
+     *                  which include the entity. Empty at runtime.
      * @param accessors emits the accessors
      */
-    public record Properties(List<PropertyModelGenerator> models, Runnable accessors) {
+    public record Properties(List<PropertyModelGenerator> models, Map<String, byte[]> classes, Runnable accessors) {
     }
 
     /**
@@ -95,6 +97,7 @@ public class PropertyFinder {
      */
     public Properties find(Class<?> standinType, Class<?> targetType) {
         List<PropertyModelGenerator> models = new ArrayList<>();
+        Map<String, byte[]> classes = new LinkedHashMap<>();
         Runnable accessors;
         if (propertyDiscovery == PropertyDiscovery.FIELDS) {
             List<FieldInfo> fields = discoverAllFields(standinType);
@@ -119,7 +122,7 @@ public class PropertyFinder {
                         .map(field -> new NestmateAccessorGenerator(targetType, field))
                         .toList());
             } else {
-                Map<String, byte[]> classes = weaveFieldAccessors(standinType, targetType, generated);
+                classes.putAll(weaveFieldAccessors(standinType, targetType, generated));
                 for (FieldInfo field : generated) {
                     add(classes, new PropertyAccessorGenerator(targetType, classLoader, field));
                 }
@@ -149,7 +152,6 @@ public class PropertyFinder {
                         .map(method -> new NestmateAccessorGenerator(targetType, method))
                         .toList());
             } else {
-                Map<String, byte[]> classes = new LinkedHashMap<>();
                 classes.put(targetType.getName(), critterGenerator.methodAccessors(targetType, classModel(targetType), generated));
                 for (MethodInfo method : generated) {
                     add(classes, new PropertyAccessorGenerator(targetType, classLoader, method));
@@ -162,7 +164,7 @@ public class PropertyFinder {
         if (explicitId) {
             models.forEach(PropertyModelGenerator::ignoreIdField);
         }
-        return new Properties(models, accessors);
+        return new Properties(models, classes, accessors);
     }
 
     /**

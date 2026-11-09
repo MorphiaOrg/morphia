@@ -112,7 +112,7 @@ public class AddMethodAccessorMethods extends AccessorMethods {
                     }
                 }));
 
-        return ClassFile.of().transformClass(model, transform);
+        return ClassFile.of().transformClass(model, transform.andThen(InstantiatorGenerator.weaving(model)));
     }
 
 }

@@ -14,8 +14,10 @@ import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.ClassHierarchy;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
+import dev.morphia.mapping.internal.Instantiator;
 
 import io.smallrye.classfile.ClassFile;
+import io.smallrye.classfile.CodeBuilder;
 
 import static dev.morphia.annotations.internal.EntityBuilder.entityBuilder;
 
@@ -28,6 +30,7 @@ public class EntityModelGenerator extends BaseGenerator {
     private final Entity entityAnnotation;
     private final ExternalEntity externalEntity;
     private final List<Annotation> morphiaAnnotations;
+    private List<InstantiatorGenerator> instantiators = List.of();
 
     /**
      * Creates a new entity model generator for the given entity, reading entity-level annotations
@@ -85,6 +88,15 @@ public class EntityModelGenerator extends BaseGenerator {
     public EntityModelGenerator(Mapper mapper, Class<?> type, CritterClassLoader critterClassLoader,
             List<PropertyModelGenerator> properties) {
         this(mapper, type, type, critterClassLoader, properties);
+    }
+
+    /**
+     * @param instantiators the instantiators the model registers
+     * @return this generator
+     */
+    public EntityModelGenerator instantiators(List<InstantiatorGenerator> instantiators) {
+        this.instantiators = instantiators;
+        return this;
     }
 
     /**
@@ -174,6 +186,10 @@ public class EntityModelGenerator extends BaseGenerator {
                                     MethodTypeDesc.of(ConstantDescs.CD_void, annotationDesc));
                         }
 
+                        for (InstantiatorGenerator instantiator : instantiators) {
+                            emitInstantiator(cod, thisDesc, entityModelDesc, instantiator);
+                        }
+
                         // configureProperties(mapper)
                         cod.aload(0);
                         cod.aload(1);
@@ -185,6 +201,31 @@ public class EntityModelGenerator extends BaseGenerator {
         });
 
         return bytes;
+    }
+
+    /**
+     * Emits {@code instantiator(descriptor, instance)}, taking a runtime instantiator from {@link NestmateAccessorRegistry}.
+     */
+    private static void emitInstantiator(CodeBuilder cod, ClassDesc thisDesc, ClassDesc entityModelDesc,
+            InstantiatorGenerator instantiator) {
+        ClassDesc instantiatorDesc = ClassDesc.of(Instantiator.class.getName());
+        cod.aload(0);
+        cod.ldc(instantiator.constructorDescriptor());
+        if (instantiator.isRuntime()) {
+            ClassDesc classLoaderDesc = ClassDesc.of(ClassLoader.class.getName());
+            cod.ldc(thisDesc);
+            cod.invokevirtual(ConstantDescs.CD_Class, "getClassLoader", MethodTypeDesc.of(classLoaderDesc));
+            cod.ldc(instantiator.registryKey);
+            cod.invokestatic(ClassDesc.of(NestmateAccessorRegistry.class.getName()), "instantiator",
+                    MethodTypeDesc.of(instantiatorDesc, classLoaderDesc, ConstantDescs.CD_String));
+        } else {
+            ClassDesc implDesc = ClassDesc.of(instantiator.getGeneratedType());
+            cod.new_(implDesc);
+            cod.dup();
+            cod.invokespecial(implDesc, "<init>", MethodTypeDesc.of(ConstantDescs.CD_void));
+        }
+        cod.invokevirtual(entityModelDesc, "instantiator",
+                MethodTypeDesc.of(ConstantDescs.CD_void, ConstantDescs.CD_String, instantiatorDesc));
     }
 
     private static String propertyMethod(int index) {
