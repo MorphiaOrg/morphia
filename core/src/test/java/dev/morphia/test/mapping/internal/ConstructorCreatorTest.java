@@ -174,9 +174,12 @@ public class ConstructorCreatorTest extends TestBase {
 
         // an int widens to a long, as Constructor.newInstance would widen it; the parameters with no value get their zero
         creator.set(5, model.getProperty("size"));
+        // and a char widens to an int
+        creator.set('A', model.getProperty("code"));
         Primitives instance = (Primitives) creator.getInstance();
 
         Assertions.assertEquals(5L, instance.size);
+        Assertions.assertEquals(65, instance.code);
         Assertions.assertEquals('\0', instance.grade);
         Assertions.assertEquals((short) 0, instance.small);
         Assertions.assertEquals(0.0f, instance.ratio);
@@ -204,8 +207,10 @@ public class ConstructorCreatorTest extends TestBase {
         private final short small;
         private final float ratio;
         private final boolean flag;
+        private final int code;
 
-        Primitives(long size, char grade, short small, float ratio, boolean flag) {
+        Primitives(long size, char grade, short small, float ratio, boolean flag, int code) {
+            this.code = code;
             this.size = size;
             this.grade = grade;
             this.small = small;

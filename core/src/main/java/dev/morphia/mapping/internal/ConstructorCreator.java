@@ -264,9 +264,9 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
         if (to < 0 || boxedType.isInstance(value)) {
             return value;
         }
-        // a char widens to an int or anything an int widens to
         Number number = value instanceof Character c ? Integer.valueOf(c) : value instanceof Number n ? n : null;
-        int from = number != null ? WIDENING.indexOf(number.getClass()) : -1;
+        // a char widens to an int or anything an int widens to, but not to a short
+        int from = value instanceof Character ? WIDENING.indexOf(Short.class) : number != null ? WIDENING.indexOf(number.getClass()) : -1;
         if (from < 0 || from >= to) {
             return value;
         }
