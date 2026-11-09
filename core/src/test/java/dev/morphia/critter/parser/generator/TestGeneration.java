@@ -229,9 +229,13 @@ public class TestGeneration {
 
     @Test
     public void testGeneratorSubclassKeepsSuperclassInstantiators() throws Exception {
-        EntityModel model = generateModel(ConstructorExample.class);
-        // weaves ConstructorExample again, for the fields ConstructorChildExample inherits
-        EntityModel child = generateModel(ConstructorChildExample.class);
+        CritterGenerator generator = new CritterGenerator(defaultMapper());
+        EntityModelGenerator parent = generator.generate(ConstructorExample.class, critterClassLoader, false);
+        // weaves ConstructorExample again, for the fields ConstructorChildExample inherits. Nothing is loaded until both are
+        // generated, so that the superclass loaded is the one woven last.
+        EntityModelGenerator childGenerator = generator.generate(ConstructorChildExample.class, critterClassLoader, false);
+        EntityModel model = loadModel(parent);
+        EntityModel child = loadModel(childGenerator);
 
         assertInstantiator(model, critterClassLoader.loadClass(ConstructorExample.class.getName()));
         Class<?> childType = critterClassLoader.loadClass(ConstructorChildExample.class.getName());
@@ -434,7 +438,10 @@ public class TestGeneration {
     }
 
     private EntityModel generateModel(Class<?> type) throws Exception {
-        EntityModelGenerator generator = new CritterGenerator(defaultMapper()).generate(type, critterClassLoader, false);
+        return loadModel(new CritterGenerator(defaultMapper()).generate(type, critterClassLoader, false));
+    }
+
+    private EntityModel loadModel(EntityModelGenerator generator) throws Exception {
         Class<?> modelClass = critterClassLoader.loadClass(generator.getGeneratedType());
         return (EntityModel) modelClass.getConstructor(Mapper.class).newInstance(defaultMapper());
     }
