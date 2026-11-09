@@ -522,6 +522,10 @@ harness passes, and both mappers agree.
     to a `char`, `byte` or `short` parameter.
   - A constructor's exception is the `MappingException`'s cause on both paths, rather than an
     `InvocationTargetException` on the reflective one.
+  - This removes reflection from decoding, but it isn't a speedup. In a crude loop on JDK 17, a generated no-arg
+    instantiator took about 12 ns and `Constructor.newInstance` about 13 ns, and `CodecBenchmark` decode didn't move.
+    It costs about 2 KB per new mapper and 1 MB of allocation on a runtime cold start. The benchmarks have no
+    constructor-mapped entity, so that path isn't measured.
 
 ### 4.12 AOT validity guard (#17, C4)
 - Emit a format version, generation key and weave hash. Check them at load time, and fall back with one log line
