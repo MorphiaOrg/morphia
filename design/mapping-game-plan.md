@@ -461,7 +461,7 @@ harness passes, and both mappers agree.
     model generator before it defines or registers any accessor. An entity that fails a check no longer leaves accessors in
     `NestmateAccessorRegistry`, or woven classes in the build output.
 
-### 4.10 Tier decision caching (C6)
+### ~~4.10 Tier decision caching (C6)~~
 - Cache configuration-independent facts globally in a `ClassValue`: whether an AOT model exists and its
   constructor.
 - Cache runtime-generation success or failure keyed by the existing `CritterMapper.generationKey`. Generated
@@ -471,6 +471,19 @@ harness passes, and both mappers agree.
   re-logging.
 - critter-maven reports the entities it skips.
 - Fall back per property, not per entity.
+- Done:
+  - A `ClassValue` holds each entity's pre-generated model constructor, or its absence, so mappers no longer look
+    for a missing model by catching a `ClassNotFoundException` each time.
+  - `RuntimeModels`, which is already shared by `generationKey`, remembers the entities whose generation failed.
+    Mappers with the same configuration don't retry them, and each failure is logged once. A configuration with a
+    custom strategy still gets its own `RuntimeModels`, and so its own failures.
+  - critter-maven ends with a list of the entities it skipped and why.
+  - A property whose field the generated accessors can't reach, or whose getter and setter they can't call, gets a
+    reflective `FieldAccessor` or `MethodAccessor` in the generated model, built by `CritterEntityModel`. Discovery
+    stays bytecode-based. Cases: an inherited field that is private or hidden from the entity's package, in a
+    superclass that can't be rewritten (build time); a pair critter's accessors can't call, such as a setter taking a
+    supertype of the getter's type, or a superclass's private methods (build time); and a stand-in whose target's
+    setter is private. Each of these used to send the whole entity to reflection, or skip it at build time.
 
 ### 4.11 Generated instantiators (C8)
 - Emit an instantiator: a woven `__new()` for AOT, a nestmate at runtime, and a constructor call with `@Name`
@@ -587,6 +600,6 @@ Only start after Phases 3 and 4 have shipped and been re-measured.
    streaming; ~~4.14 entity-only annotated methods~~
 9. 4.4 generic resolver
 10. ~~Phase 5 A11 builder/annotation utility~~ → ~~4.5 parity test~~ → ~~4.6 shared rules~~ → ~~4.7 plain models~~ → ~~4.8 divergences~~ →
-    ~~4.9~~ → 4.10–4.11 → 4.12 AOT guard + 4.13 API surface (**before 3.0 GA**)
+    ~~4.9~~ → ~~4.10~~ → 4.11 → 4.12 AOT guard + 4.13 API surface (**before 3.0 GA**)
 11. 3.17 single-pass discriminator and `_id`
 12. Phase 5 clean-ups throughout; Phase 6 re-evaluated after 3.0 GA

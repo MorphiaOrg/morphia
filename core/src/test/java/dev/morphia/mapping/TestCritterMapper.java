@@ -11,6 +11,7 @@ import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,6 +33,7 @@ import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.generator.CritterGenerator;
 import dev.morphia.critter.parser.generator.NestmateAccessException;
 import dev.morphia.critter.parser.generator.NestmateAccessorRegistry;
+import dev.morphia.mapping.codec.MethodAccessor;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.ReflectiveEntityModelBuilder;
@@ -220,27 +222,77 @@ public class TestCritterMapper {
     }
 
     @Test
-    public void testStandInPairWithPrivateTargetSetterFallsBack() {
+    public void testStandInPairWithPrivateTargetSetterUsesReflectiveAccessor() {
         CritterMapper mapper = new CritterMapper(
                 MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
-        // the generated accessor would call the target's setter, which is private, so the property would be read-only
-        EntityModel model = mapper.mapEntity(PrivateSetterStandIn.class);
-        Assertions.assertFalse(model instanceof CritterEntityModel, "Expected a reflective model but got: " + model.getClass());
+        // the generated accessor would call the target's setter, which is private, so only that property is reflective
+        EntityModel model = assertRuntimeGenerated(mapper.mapEntity(PrivateSetterStandIn.class));
+        Assertions.assertInstanceOf(MethodAccessor.class, model.getProperty("name").getAccessor());
+        Assertions.assertFalse(model.getProperty("id").getAccessor() instanceof MethodAccessor);
         PrivateSetterTarget instance = new PrivateSetterTarget();
         model.getProperty("name").getAccessor().set(instance, "written");
         Assertions.assertEquals("written", instance.getName());
     }
 
     @Test
-    public void testFailedGenerationLeavesNoAccessors() {
+    public void testStandInFromChildLoaderWithFluentSetter(@TempDir Path dir) throws Exception {
+        // the stand-in's fluent setter returns the stand-in, which the target's loader can't see
+        compile(dir, "app/FluentStandIn.java", """
+                package app;
+                @dev.morphia.annotations.ExternalEntity(target = dev.morphia.mapping.TestCritterMapper.PrivateSetterTarget.class,
+                        value = "fluent_stand_ins")
+                public class FluentStandIn {
+                    private org.bson.types.ObjectId id;
+                    private String name;
+                    @dev.morphia.annotations.Id
+                    public org.bson.types.ObjectId getId() {
+                        return id;
+                    }
+                    public void setId(org.bson.types.ObjectId id) {
+                        this.id = id;
+                    }
+                    public String getName() {
+                        return name;
+                    }
+                    public FluentStandIn setName(String name) {
+                        this.name = name;
+                        return this;
+                    }
+                }
+                """, Path.of(getClass().getProtectionDomain().getCodeSource().getLocation().toURI()));
+        try (URLClassLoader loader = new URLClassLoader(new URL[] { dir.toUri().toURL() }, getClass().getClassLoader())) {
+            CritterMapper mapper = new CritterMapper(
+                    MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS), loader);
+            EntityModel model = assertRuntimeGenerated(mapper.mapEntity(loader.loadClass("app.FluentStandIn")));
+            PrivateSetterTarget instance = new PrivateSetterTarget();
+            model.getProperty("name").getAccessor().set(instance, "written");
+            Assertions.assertEquals("written", instance.getName());
+        }
+    }
+
+    @Test
+    public void testStandInSetterOnlyAsBridge() {
         CritterMapper mapper = new CritterMapper(
                 MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
-        CritterClassLoader loader = new CritterClassLoader(getClass().getClassLoader());
-        // name's accessor can't call the target's private setter, which is found after id's accessor could be defined
-        Assertions.assertThrows(UnsupportedOperationException.class,
-                () -> new CritterGenerator(mapper).generate(PrivateSetterStandIn.class, loader, true));
-        Assertions.assertNull(NestmateAccessorRegistry.get(loader,
-                Critter.critterPackage(PrivateSetterTarget.class) + ".IdAccessor"));
+        // the stand-in's setName(Object) doesn't take the getter's type, so its accessor is reflective, and the target has
+        // setName(Object) only as the bridge for Named<String>.setName
+        EntityModel model = assertRuntimeGenerated(mapper.mapEntity(BridgeSetterStandIn.class));
+        BridgeSetterTarget instance = new BridgeSetterTarget();
+        model.getProperty("name").getAccessor().set(instance, "bridged");
+        Assertions.assertEquals("bridged", instance.getName());
+    }
+
+    @Test
+    public void testUncallablePairUsesReflectiveAccessor() {
+        CritterMapper mapper = new CritterMapper(
+                MorphiaConfig.load().mapper(MapperType.CRITTER).propertyDiscovery(PropertyDiscovery.METHODS));
+        // the setter takes a supertype of the getter's type, which the generated accessors can't call
+        EntityModel model = assertRuntimeGenerated(mapper.mapEntity(WideningSetterEntity.class));
+        PropertyAccessor<Object> accessor = model.getProperty("names").getAccessor();
+        Assertions.assertInstanceOf(MethodAccessor.class, accessor);
+        WideningSetterEntity instance = new WideningSetterEntity();
+        accessor.set(instance, List.of("a", "b"));
+        Assertions.assertEquals(List.of("a", "b"), accessor.get(instance));
     }
 
     @Test
@@ -416,12 +468,17 @@ public class TestCritterMapper {
         logger.addAppender(appender);
         logger.setLevel(Level.WARN);
         try (URLClassLoader loader = new URLClassLoader(new URL[] { dir.toUri().toURL() }, getClass().getClassLoader())) {
-            CritterMapper mapper = new CritterMapper(MorphiaConfig.load().mapper(MapperType.CRITTER), loader);
+            MorphiaConfig config = MorphiaConfig.load().mapper(MapperType.CRITTER);
+            CritterMapper mapper = new CritterMapper(config, loader);
             EntityModel model = mapper.mapEntity(loader.loadClass("app.IsolatedEntity"));
 
             Assertions.assertNotNull(model);
             Assertions.assertEquals(EntityModel.class, model.getClass(), "Expected a reflective EntityModel");
             Assertions.assertNotNull(model.getProperty("name"));
+
+            // mappers with the same configuration remember the failure rather than retrying and logging it again
+            EntityModel again = new CritterMapper(config, loader).mapEntity(loader.loadClass("app.IsolatedEntity"));
+            Assertions.assertEquals(EntityModel.class, again.getClass(), "Expected a reflective EntityModel");
         } finally {
             logger.detachAppender(appender);
             logger.setLevel(level);
@@ -924,6 +981,89 @@ public class TestCritterMapper {
         @Id
         private ObjectId id;
         private String name;
+    }
+
+    public interface Named<T> {
+        void setName(T name);
+    }
+
+    public static class PrivateSetterBase {
+        @SuppressWarnings("unused")
+        private Object other;
+
+        @SuppressWarnings("unused")
+        private void setName(Object name) {
+            this.other = name;
+        }
+    }
+
+    // the bridge for Named<String>.setName, not the superclass's private setName(Object), sets the name
+    public static class BridgeSetterTarget extends PrivateSetterBase implements Named<String> {
+        private ObjectId id;
+        private String name;
+
+        public ObjectId getId() {
+            return id;
+        }
+
+        public void setId(ObjectId id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
+
+    @ExternalEntity(target = BridgeSetterTarget.class, value = "bridge_setter_targets")
+    public static class BridgeSetterStandIn {
+        private ObjectId id;
+        private String name;
+
+        @Id
+        public ObjectId getId() {
+            return id;
+        }
+
+        public void setId(ObjectId id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(Object name) {
+            this.name = (String) name;
+        }
+    }
+
+    @Entity("widening_setters")
+    public static class WideningSetterEntity {
+        private ObjectId id;
+        private List<String> names;
+
+        @Id
+        public ObjectId getId() {
+            return id;
+        }
+
+        public void setId(ObjectId id) {
+            this.id = id;
+        }
+
+        public List<String> getNames() {
+            return names;
+        }
+
+        public void setNames(Collection<String> names) {
+            this.names = new ArrayList<>(names);
+        }
     }
 
     @Retention(RetentionPolicy.RUNTIME)

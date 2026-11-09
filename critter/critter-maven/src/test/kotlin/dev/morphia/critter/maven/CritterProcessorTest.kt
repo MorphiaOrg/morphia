@@ -2,6 +2,7 @@ package dev.morphia.critter.maven
 
 import dev.morphia.config.MorphiaConfig
 import java.io.File
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -112,6 +113,26 @@ class CritterProcessorTest {
             File(generated, "cat/CatEntityModel.class").exists(),
             "an entity through its interface should get an AOT model",
         )
+    }
+
+    @Test
+    fun testProcessorReportsSkippedEntities() {
+        val processor =
+            CritterProcessor(
+                classesDirectory = File(tempDir, "classes"),
+                outputDirectory = outputDir,
+                classLoader = Thread.currentThread().contextClassLoader,
+                config = MorphiaConfig.load().packages(listOf(FIXTURES)),
+            )
+
+        processor.process()
+
+        assertEquals(setOf("$FIXTURES.GetterId"), processor.skipped.keys)
+        assertTrue(
+            processor.skipped.getValue("$FIXTURES.GetterId").contains("@Id on getter"),
+            processor.skipped.toString(),
+        )
+        assertFalse(File(outputDir, FIXTURES.replace('.', '/') + "/__morphia/getterid").exists())
     }
 
     private companion object {
