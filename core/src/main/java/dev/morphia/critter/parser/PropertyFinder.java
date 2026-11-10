@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 import dev.morphia.annotations.IdField;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.generator.CritterGenerator;
@@ -45,7 +46,11 @@ import static io.smallrye.classfile.Attributes.signature;
 /**
  * Discovers entity properties (fields or getter methods) from a parsed class model
  * and produces the corresponding {@link PropertyModelGenerator} instances.
+ *
+ * @hidden
+ * @morphia.internal
  */
+@MorphiaInternal
 public class PropertyFinder {
     private static final Logger LOG = LoggerFactory.getLogger(PropertyFinder.class);
 

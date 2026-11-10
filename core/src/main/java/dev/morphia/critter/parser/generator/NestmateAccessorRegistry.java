@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.internal.Instantiator;
 
 import org.bson.codecs.pojo.PropertyAccessor;
@@ -17,7 +18,11 @@ import org.bson.codecs.pojo.PropertyAccessor;
  * several loaders with different mapping configurations (e.g. field and method property discovery), and a model must
  * always get the accessors generated alongside it, however many other generations have run since. Loaders are held
  * weakly, so a discarded loader's accessors are released with it.
+ *
+ * @hidden
+ * @morphia.internal
  */
+@MorphiaInternal
 public final class NestmateAccessorRegistry {
     private static final Map<ClassLoader, Map<String, Object>> INSTANCES = Collections.synchronizedMap(
             new WeakHashMap<>());

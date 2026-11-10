@@ -19,6 +19,9 @@ Accessing fields directly would be a nonstarter unless the fields were public.
 . The `EntityModel` and `PropertyModel` type could also be generated.
 Here, things like the property name and field name could be "inlined" such that those methods could just return constants since those values can be computed at build time.
 Subsequently, annotation "instances" could be generated to similarly return constant values without having to inspect the "live" annotation on the class/method at runtime.
++
+NOTE: Critter first did this, and it was slower: each generated model was its own subclass, so the calls to those getters in the codecs saw many receiver types and the JIT couldn't inline them (finding C1 in `mapping-review/findings-C-critter.md`).
+A generated model now builds plain `EntityModel` and `PropertyModel` instances once, in its constructor, from values computed at build time, and overrides nothing (plan item 4.7 in `mapping-game-plan.md`).
 
 . Less obviously, the `Mapper` could be generated. in this scenario, it would need to subclass the current `Mapper` to preserve compatibility but could be generated with a prepopulated list of `EntityModel` as generated in the previous bullet.
 By subclassing the current `Mapper` we could still support dynamic mapping of, say, externally defined types.

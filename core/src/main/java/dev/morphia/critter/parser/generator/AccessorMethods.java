@@ -1,5 +1,6 @@
 package dev.morphia.critter.parser.generator;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.MappingException;
 
 import io.smallrye.classfile.ClassFile;
@@ -8,7 +9,11 @@ import io.smallrye.classfile.ClassTransform;
 
 /**
  * Base class for bytecode generators that read and transform existing class files.
+ *
+ * @hidden
+ * @morphia.internal
  */
+@MorphiaInternal
 public abstract class AccessorMethods {
     /** The entity class whose bytecode will be augmented. */
     protected final Class<?> entity;

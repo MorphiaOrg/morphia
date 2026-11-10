@@ -9,6 +9,7 @@ import java.lang.invoke.MethodType;
 import java.lang.invoke.VarHandle;
 import java.lang.reflect.Method;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.FieldInfo;
 import dev.morphia.critter.parser.MethodInfo;
@@ -29,7 +30,11 @@ import static dev.morphia.critter.parser.generator.GenerationUtils.typeClassName
  * Generates a ClassFile-based {@link org.bson.codecs.pojo.PropertyAccessor} implementation that uses
  * {@link java.lang.invoke.VarHandle} (for fields) or {@link java.lang.invoke.MethodHandle} (for getter/setter pairs)
  * to access a single property of a Morphia entity class.
+ *
+ * @hidden
+ * @morphia.internal
  */
+@MorphiaInternal
 public class VarHandleAccessorGenerator extends BaseGenerator {
     private final String propertyName;
     private final String propertyType;

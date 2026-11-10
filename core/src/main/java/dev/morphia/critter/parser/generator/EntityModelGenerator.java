@@ -10,6 +10,7 @@ import java.util.Map;
 
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.ExternalEntity;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.ClassHierarchy;
@@ -25,7 +26,11 @@ import static dev.morphia.annotations.internal.EntityBuilder.entityBuilder;
 
 /**
  * Generates a ClassFile-based {@code CritterEntityModel} implementation for a Morphia entity class.
+ *
+ * @hidden
+ * @morphia.internal
  */
+@MorphiaInternal
 public class EntityModelGenerator extends BaseGenerator {
     private final Mapper mapper;
     private final List<PropertyModelGenerator> properties;

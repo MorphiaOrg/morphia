@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 
 import com.mongodb.lang.Nullable;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.critter.Critter;
 import dev.morphia.critter.parser.FieldInfo;
 import dev.morphia.critter.parser.MethodInfo;
@@ -28,7 +29,10 @@ import static dev.morphia.critter.parser.generator.GenerationUtils.typeClassName
  * to access entity properties. The generated class must be defined as a hidden nestmate of the entity
  * class so the JVM grants it private-member access.
  *
+ * @hidden
+ * @morphia.internal
  */
+@MorphiaInternal
 public class NestmateAccessorGenerator {
     private final Class<?> entity;
     // declaringClass: the class that actually declares the field (may be a superclass of entity)
