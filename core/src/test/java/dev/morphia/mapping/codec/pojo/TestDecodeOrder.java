@@ -15,6 +15,7 @@ import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.MapperType;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.DecodeSession;
+import dev.morphia.mapping.codec.MorphiaCodecProvider;
 
 import org.bson.BsonBinaryReader;
 import org.bson.BsonDocument;
@@ -147,6 +148,38 @@ public class TestDecodeOrder {
             }
             Assertions.assertEquals(1, marks[0], "marks taken");
         });
+    }
+
+    /**
+     * A refresh decodes into the entity it was given, through the same pass, whatever subtype it is.
+     */
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("dev.morphia.mapping.codec.pojo.TestDecodeOrder#mappers")
+    void refreshDecodesIntoTheGivenEntity(MapperType mapper) {
+        withDatastore(mapper, datastore -> {
+            Dog existing = new Dog();
+            existing.id = ID;
+            existing.barks = 1;
+            constructed = 0;
+            String json = "{\"_id\": {\"$oid\": \"%s\"}, \"_t\": \"%s\", \"name\": \"r\", \"barks\": 7, \"probe\": \"Dog\"}"
+                    .formatted(ID.toHexString(), DOG);
+            Codec<Dog> refresh = new MorphiaCodecProvider(datastore).getRefreshCodec(existing, datastore.getCodecRegistry());
+            RawBsonDocument raw = RawBsonDocument.parse(json);
+            Dog refreshed;
+            try (BsonBinaryReader reader = new BsonBinaryReader(raw.getByteBuffer().asNIO())) {
+                refreshed = refresh.decode(reader, DecoderContext.builder().build());
+            }
+
+            Assertions.assertSame(existing, refreshed);
+            Assertions.assertEquals(7, existing.barks);
+            Assertions.assertEquals("r", existing.name);
+            Assertions.assertSame(existing, existing.probe.seen, "the entity was in the session before its properties");
+            Assertions.assertEquals(0, constructed, "constructors run");
+        });
+    }
+
+    static Stream<MapperType> mappers() {
+        return Stream.of(MapperType.values());
     }
 
     private static <T> T decode(MorphiaDatastore datastore, Class<T> type, String json) {

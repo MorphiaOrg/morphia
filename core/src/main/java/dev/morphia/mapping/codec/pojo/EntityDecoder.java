@@ -128,7 +128,9 @@ public class EntityDecoder<T> implements Decoder<T> {
 
     /**
      * Decodes the rest of a document whose start has been read, registering the entity with the session as soon as its id
-     * is known: before any later property, and so any reference, is decoded.
+     * is known: before any later property, and so any reference, is decoded. A subclass customizes this through
+     * {@link #getInstanceCreator()}; {@link #decodeProperties} is for decoders that read a whole document themselves, such
+     * as {@link LifecycleDecoder}.
      *
      * @param id the {@code _id}, if it was read before the discriminator; it isn't in the rest of the document
      */

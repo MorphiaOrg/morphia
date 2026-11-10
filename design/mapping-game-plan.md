@@ -321,6 +321,8 @@ harness passes, and both mappers agree.
     foreign fixtures for where the `_id` and `_t` sit. The goldens were generated with the old decoder.
     `TestDecodeOrder` checks that the entity is in the session before a later property decodes, whichever order the
     `_id`, `_t` and properties come in, that each constructor runs once, and that Morphia's layout takes one mark.
+  - Measured (`CodecBenchmark`, `-prof gc`): SIMPLE decodes with ~500 B less (2,112 → ~1,610 B/op) and 24–28% faster;
+    POLYMORPHIC with ~2.7 KB less and 20–26% faster. LIFECYCLE is unchanged.
   - Not done: `LifecycleDecoder` still reads the discriminator and the id ahead of decoding (`peekDiscriminator`,
     `peekId`). Doing the same there is a follow-up.
   - The harness shows that the lifecycle codecs read a few foreign documents differently from the plain ones; master
