@@ -7,6 +7,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
 import dev.morphia.MorphiaDatastore;
+import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PostLoad;
@@ -251,6 +252,39 @@ public class TestDecodeOrder {
         });
     }
 
+    /**
+     * A subtype that doesn't use a discriminator can map the root's discriminator key as an ordinary property, which it then
+     * decodes like any other.
+     */
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("mappers")
+    void subtypeMappingTheDiscriminatorKeyKeepsIt(MapperType mapper) {
+        withDatastore(mapper, datastore -> {
+            Pet pet = decode(datastore, Pet.class, "{\"_id\": {\"$oid\": \"%s\"}, \"_t\": \"%s\", \"name\": \"l\"}"
+                    .formatted(ID.toHexString(), Lizard.class.getName()));
+
+            Assertions.assertInstanceOf(Lizard.class, pet);
+            Assertions.assertEquals(Lizard.class.getName(), ((Lizard) pet).kind);
+            Assertions.assertEquals(ID, pet.id);
+        });
+    }
+
+    /**
+     * An id read first under one of its load names isn't the key references use, so the entity is registered under the
+     * stored {@code _id} found further on.
+     */
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("mappers")
+    void idLoadNameDoesNotKeyTheEntity(MapperType mapper) {
+        withDatastore(mapper, datastore -> {
+            Aliased aliased = decode(datastore, Aliased.class, "{\"legacyId\": {\"$oid\": \"650000000000000000000399\"}, "
+                    + "\"probe\": \"Aliased\", \"_id\": {\"$oid\": \"%s\"}}".formatted(ID.toHexString()));
+
+            Assertions.assertEquals(ID, aliased.id);
+            Assertions.assertSame(aliased, aliased.probe.seen, "the entity is in the session under its _id");
+        });
+    }
+
     private static <T> T decode(MorphiaDatastore datastore, Class<T> type, String json) {
         RawBsonDocument raw = RawBsonDocument.parse(BsonDocument.parse(json).toJson());
         try (BsonBinaryReader reader = new BsonBinaryReader(raw.getByteBuffer().asNIO())) {
@@ -290,7 +324,8 @@ public class TestDecodeOrder {
                 .applyDocumentValidations(false);
         try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
             MorphiaDatastore datastore = new MorphiaDatastore(client, config);
-            datastore.getMapper().map(Pet.class, Dog.class, Cat.class, Built.class, Note.class, Memo.class, Keyed.class);
+            datastore.getMapper().map(Pet.class, Dog.class, Cat.class, Built.class, Note.class, Memo.class, Keyed.class, Lizard.class,
+                    Aliased.class);
             test.accept(datastore);
         }
     }
@@ -404,6 +439,26 @@ public class TestDecodeOrder {
         Probe probe;
 
         public CompoundId() {
+        }
+    }
+
+    @Entity(value = "Lizard", useDiscriminator = false)
+    public static class Lizard extends Pet {
+        @Property("_t")
+        String kind;
+
+        public Lizard() {
+        }
+    }
+
+    @Entity(value = "Aliased", useDiscriminator = false)
+    public static class Aliased {
+        @Id
+        @AlsoLoad("legacyId")
+        ObjectId id;
+        Probe probe;
+
+        public Aliased() {
         }
     }
 

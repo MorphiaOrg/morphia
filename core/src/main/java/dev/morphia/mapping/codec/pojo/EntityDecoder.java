@@ -112,7 +112,10 @@ public class EntityDecoder<T> implements Decoder<T> {
         // a MorphiaCodec subclass may decode its own way, so only the codec itself is skipped over
         if (codec instanceof MorphiaCodec<?> other && other.getClass() == MorphiaCodec.class) {
             EntityDecoder<?> decoder = other.getDecoder();
-            if (decoder.getClass() == EntityDecoder.class) {
+            EntityModel model = decoder.classModel;
+            // the discriminator has been read, so the subtype must be one that skips it too rather than mapping it
+            if (decoder.getClass() == EntityDecoder.class && model.useDiscriminator()
+                    && model.discriminatorKey().equals(classModel.discriminatorKey())) {
                 return (EntityDecoder<? extends T>) decoder;
             }
         }
@@ -173,7 +176,8 @@ public class EntityDecoder<T> implements Decoder<T> {
                 PropertyModel model = classModel.getProperty(name);
                 if (tracking && !registered) {
                     registered = true;
-                    if (model == idProperty) {
+                    // the stored id itself, not one of its load names, which would key the entity under another value
+                    if (model == idProperty && isIdName(name)) {
                         BsonType type = reader.getCurrentBsonType();
                         if (readsAsKey(plan, idProperty, type)) {
                             // the property's codec reads the value just as references do, so one read serves as both
