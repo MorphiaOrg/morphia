@@ -225,6 +225,7 @@ public class CritterMapper extends AbstractMapper {
                 register(new EntityModel(model), false);
             }
         });
+        copyStandIns(other);
     }
 
     @Override

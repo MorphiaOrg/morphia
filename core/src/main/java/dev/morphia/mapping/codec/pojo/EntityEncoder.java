@@ -37,7 +37,9 @@ public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void encode(BsonWriter writer, T value, EncoderContext encoderContext) {
         EntityModel model = morphiaCodec.getEntityModel();
-        if (areEquivalentTypes(value.getClass(), model.getType())) {
+        // an anonymous subclass or a proxy is mapped as the type it extends, so it's encoded with that model too
+        if (areEquivalentTypes(value.getClass(), model.getType())
+                || morphiaCodec.getDatastore().getMapper().mapEntity(value.getClass()) == model) {
             LOG.debug("Encoding document using codec for {}", morphiaCodec.getEntityModel().getType().getName());
 
             // written out rather than through CodecHelper.document, whose lambda would capture these locals per encode
