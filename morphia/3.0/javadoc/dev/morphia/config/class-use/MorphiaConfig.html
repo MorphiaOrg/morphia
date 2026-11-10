@@ -64,7 +64,9 @@ loadScripts(document, 'script');</script>
 <div class="block">Configuration related types</div>
 </div>
 <div class="col-first even-row-color"><a href="#dev.morphia.critter.parser.generator">dev.morphia.critter.parser.generator</a></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Critter's code generation.</div>
+</div>
 <div class="col-first odd-row-color"><a href="#dev.morphia.mapping">dev.morphia.mapping</a></div>
 <div class="col-last odd-row-color">
 <div class="block">Defines the mapping infrastructure used by Morphia.</div>
@@ -256,55 +258,55 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../../critter/parser/generator/PropertyModelGenerator.html#%3Cinit%3E(dev.morphia.config.MorphiaConfig,java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo)" class="member-name-link">PropertyModelGenerator</a><wbr>(<a href="../MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a>&nbsp;config,
+<div class="col-second even-row-color"><code>PropertyModelGenerator<wbr>(<a href="../MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a>&nbsp;config,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity,
  CritterClassLoader&nbsp;critterClassLoader,
- <a href="../../critter/parser/FieldInfo.html" title="class in dev.morphia.critter.parser">FieldInfo</a>&nbsp;field)</code></div>
+ FieldInfo&nbsp;field)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Creates a generator for a field-based property where the entity class is also the annotation source.</div>
 </div>
 <div class="col-first odd-row-color"><code>&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../../critter/parser/generator/PropertyModelGenerator.html#%3Cinit%3E(dev.morphia.config.MorphiaConfig,java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.MethodInfo)" class="member-name-link">PropertyModelGenerator</a><wbr>(<a href="../MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a>&nbsp;config,
+<div class="col-second odd-row-color"><code>PropertyModelGenerator<wbr>(<a href="../MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a>&nbsp;config,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity,
  CritterClassLoader&nbsp;critterClassLoader,
- <a href="../../critter/parser/MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;method)</code></div>
+ MethodInfo&nbsp;method)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Creates a generator for a method-based property where the entity class is also the annotation source.</div>
 </div>
 <div class="col-first even-row-color"><code>&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../../critter/parser/generator/PropertyModelGenerator.html#%3Cinit%3E(dev.morphia.config.MorphiaConfig,java.lang.Class,java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo)" class="member-name-link">PropertyModelGenerator</a><wbr>(<a href="../MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a>&nbsp;config,
+<div class="col-second even-row-color"><code>PropertyModelGenerator<wbr>(<a href="../MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a>&nbsp;config,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;annotationSource,
  CritterClassLoader&nbsp;critterClassLoader,
- <a href="../../critter/parser/FieldInfo.html" title="class in dev.morphia.critter.parser">FieldInfo</a>&nbsp;field)</code></div>
+ FieldInfo&nbsp;field)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Creates a generator for a field-based property where the entity class is also the annotation source.</div>
 </div>
 <div class="col-first odd-row-color"><code>&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../../critter/parser/generator/PropertyModelGenerator.html#%3Cinit%3E(dev.morphia.config.MorphiaConfig,java.lang.Class,java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.FieldInfo,boolean)" class="member-name-link">PropertyModelGenerator</a><wbr>(<a href="../MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a>&nbsp;config,
+<div class="col-second odd-row-color"><code>PropertyModelGenerator<wbr>(<a href="../MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a>&nbsp;config,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;annotationSource,
  CritterClassLoader&nbsp;critterClassLoader,
- <a href="../../critter/parser/FieldInfo.html" title="class in dev.morphia.critter.parser">FieldInfo</a>&nbsp;field,
+ FieldInfo&nbsp;field,
  boolean&nbsp;runtimeMode)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Creates a generator for a field-based property.</div>
 </div>
 <div class="col-first even-row-color"><code>&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="../../critter/parser/generator/PropertyModelGenerator.html#%3Cinit%3E(dev.morphia.config.MorphiaConfig,java.lang.Class,java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.MethodInfo)" class="member-name-link">PropertyModelGenerator</a><wbr>(<a href="../MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a>&nbsp;config,
+<div class="col-second even-row-color"><code>PropertyModelGenerator<wbr>(<a href="../MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a>&nbsp;config,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;annotationSource,
  CritterClassLoader&nbsp;critterClassLoader,
- <a href="../../critter/parser/MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;method)</code></div>
+ MethodInfo&nbsp;method)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Creates a generator for a method-based (getter) property.</div>
 </div>
 <div class="col-first odd-row-color"><code>&nbsp;</code></div>
-<div class="col-second odd-row-color"><code><a href="../../critter/parser/generator/PropertyModelGenerator.html#%3Cinit%3E(dev.morphia.config.MorphiaConfig,java.lang.Class,java.lang.Class,dev.morphia.critter.CritterClassLoader,dev.morphia.critter.parser.MethodInfo,boolean)" class="member-name-link">PropertyModelGenerator</a><wbr>(<a href="../MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a>&nbsp;config,
+<div class="col-second odd-row-color"><code>PropertyModelGenerator<wbr>(<a href="../MorphiaConfig.html" title="interface in dev.morphia.config">MorphiaConfig</a>&nbsp;config,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;entity,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;annotationSource,
  CritterClassLoader&nbsp;critterClassLoader,
- <a href="../../critter/parser/MethodInfo.html" title="class in dev.morphia.critter.parser">MethodInfo</a>&nbsp;method,
+ MethodInfo&nbsp;method,
  boolean&nbsp;runtimeMode)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Creates a generator for a method-based (getter) property.</div>
