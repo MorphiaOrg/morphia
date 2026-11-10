@@ -655,8 +655,7 @@ Bundle these into one or two PRs. Most of it is `@MorphiaInternal` dead code.
   - ~~precompute the write concern;~~
   - ~~drop `Mapper.getWriteConcern`.~~
   - Done. Each datastore keeps the `MongoCollection` it built for a class, with the entity's write concern, which
-    `EntityModel.writeConcern()` looks up once. `delete(entity)` no longer sets that concern again, since the
-    collection already carries it. `save`, `insert`, `merge` and `replace` look the model up once and pass it to the
+    `EntityModel.writeConcern()` looks up once, and `delete(entity)` reads from the model too. `save`, `insert`, `merge` and `replace` look the model up once and pass it to the
     version bump; `save(List)` reads the id from that model instead of looking it up again through `getId`.
 - **D12:** a single `get` in `DiscriminatorLookup`, a negative cache for `Class.forName`, and the model's
   discriminator key everywhere (`getClass(Document)`, `Projection.project`).

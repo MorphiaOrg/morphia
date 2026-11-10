@@ -401,8 +401,8 @@ public class MorphiaDatastore implements Datastore {
 
     @Override
     public <T> DeleteResult delete(T entity) {
-        // the entity's write concern is already the collection's
-        return delete(entity, new DeleteOptions());
+        // DeleteOptions defaults to ACKNOWLEDGED, which would replace the collection's concern, so set the entity's
+        return delete(entity, new DeleteOptions().writeConcern(mapper.getEntityModel(entity.getClass()).writeConcern()));
     }
 
     @Override
