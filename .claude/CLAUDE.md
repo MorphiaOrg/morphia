@@ -4,9 +4,6 @@
 - After making changes, run `./mvnw spotless:apply` to ensure code formatting is consistent.
 
 ## Build Commands
-- `./mvnw` - Use Maven wrapper (requires Maven 4.1.0+)
-- `-pl :artifactId` - Target specific module (e.g., `-pl :morphia-core`)
-- `-am` - Also build dependencies that need rebuilding
 - Build with deps: `./mvnw install -pl :morphia-core -am -DskipTests`
 - Skip dokka: `-Ddeploy.skip=true`
 - Skip invoker tests: `-Dinvoker.skip=true`
@@ -18,21 +15,9 @@
   - run the critter mapper first as it's more likely to have issues and you want to catch those early
 
 ## Critter Code Generator
-- Critter bytecode generation is integrated into `morphia-core` (under `dev.morphia.critter` package)
 - The `critter-maven` plugin generates models at build time (AOT); runtime generation with the Class-File API (`java.lang.classfile` via the `jdk-classfile-backport` library, package `io.smallrye.classfile`) is the fallback
 - Build order for critter-maven: `morphia-core` → `critter-maven`
 - `morphia.mapper` config: `reflection` (default) or `critter` — selects `ReflectiveMapper` vs `CritterMapper`
-
-## ASM Annotation Parsing Quirks
-- Enum annotation values: stored as `Array<String>` - use `(it as Array<String>)[1]` for enum name
-- Class annotation values: stored as `org.objectweb.asm.Type` - use `Class.forName((it as Type).className)`
-- `MethodNode.signature` can be null (no generics); always check before use
-- `MethodNode.desc` is full descriptor `(params)return` - extract return type with `Type.getReturnType()`
-- Type parameters (e.g., `TT;`) cannot be converted to Class - use `Object.class` as erasure
-
-## Code Patterns
-- `methodCase()` converts getter names like `getName` → `name`
-- `titleCase()` converts `name` → `Name` for generated class names
 
 ## Code Reviews
 - When reviewing code, summarize all concerns and recommended changes in a file so they don't get lost.
