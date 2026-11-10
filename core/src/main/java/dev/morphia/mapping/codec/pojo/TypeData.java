@@ -16,7 +16,6 @@ import dev.morphia.sofia.Sofia;
 
 import org.bson.codecs.pojo.TypeWithTypeParameters;
 
-import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.bson.assertions.Assertions.notNull;
 
@@ -144,23 +143,6 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
         throw new UnsupportedOperationException(Sofia.unhandledTypeData(type.getClass()));
     }
 
-    private static String nestedTypeParameters(List<TypeData<?>> typeParameters) {
-        StringBuilder builder = new StringBuilder();
-        int count = 0;
-        int last = typeParameters.size();
-        for (TypeData<?> typeParameter : typeParameters) {
-            count++;
-            builder.append(typeParameter.getType().getSimpleName());
-            if (!typeParameter.getTypeParameters().isEmpty()) {
-                builder.append(format("<%s>", nestedTypeParameters(typeParameter.getTypeParameters())));
-            }
-            if (count < last) {
-                builder.append(", ");
-            }
-        }
-        return builder.toString();
-    }
-
     /**
      * Creates a TypeData reflecting the type of the given field.
      *
@@ -255,18 +237,6 @@ public class TypeData<T> implements TypeWithTypeParameters<T> {
 
         return value;
     }
-
-    /*
-     * @Override
-     * public String toString() {
-     * String typeParams = typeParameters.isEmpty() ? ""
-     * : ", typeParameters=[" + nestedTypeParameters(typeParameters) + "]";
-     * return "TypeData{"
-     * + "type=" + type.getSimpleName()
-     * + typeParams
-     * + "}";
-     * }
-     */
 
     /**
      * Creates a new TypeData with an updated type

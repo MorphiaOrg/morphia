@@ -66,8 +66,9 @@ class ArrayCodec implements Codec<Object> {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public Class<Object> getEncoderClass() {
-        return null;
+        return (Class<Object>) type;
     }
 
     @Nullable

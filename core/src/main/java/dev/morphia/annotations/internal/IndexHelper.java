@@ -2,7 +2,6 @@ package dev.morphia.annotations.internal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -37,7 +36,6 @@ import static dev.morphia.annotations.Collation.DEFAULT_LOCALE;
 import static dev.morphia.annotations.internal.FieldBuilder.fieldBuilder;
 import static dev.morphia.annotations.internal.IndexBuilder.indexBuilder;
 import static dev.morphia.mapping.IndexType.fromValue;
-import static java.util.Collections.emptyList;
 
 /**
  * A helper class for dealing with index definitions
@@ -189,7 +187,7 @@ public final class IndexHelper {
     @MorphiaInternal
     public void createIndex(MongoCollection<?> collection, EntityModel model) {
         if (!model.isInterface() && !model.isAbstract()) {
-            for (Index index : collectIndexes(model, Collections.emptyList())) {
+            for (Index index : collectIndexes(model)) {
                 createIndex(collection, model, index);
             }
         }
@@ -249,11 +247,7 @@ public final class IndexHelper {
         return list;
     }
 
-    private List<Index> collectIndexes(EntityModel entityModel, List<EntityModel> parentModels) {
-        if (parentModels.contains(entityModel)) {
-            return emptyList();
-        }
-
+    private List<Index> collectIndexes(EntityModel entityModel) {
         List<Index> indexes = findClassIndexes(entityModel);
         indexes.addAll(findFieldIndexes(entityModel));
 

@@ -17,7 +17,6 @@
 package dev.morphia.mapping.codec.pojo;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -31,12 +30,10 @@ import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.Reference;
-import dev.morphia.annotations.Transient;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 
-import org.bson.Document;
 import org.bson.codecs.pojo.PropertyAccessor;
 import org.bson.codecs.pojo.PropertySerialization;
 
@@ -166,14 +163,6 @@ public class PropertyModel {
     public PropertyModel isFinal(boolean isFinal) {
         this.isFinal = isFinal;
         return this;
-    }
-
-    /**
-     * @param document the Document get the value from
-     * @return the value from first mapping of this field
-     */
-    public Object getDocumentValue(Document document) {
-        return document.get(loadFromDocument(document));
     }
 
     /**
@@ -331,15 +320,6 @@ public class PropertyModel {
     }
 
     /**
-     * @return true if this field is marked as transient
-     */
-    public final boolean isTransient() {
-        return !hasAnnotation(Transient.class)
-                && !hasAnnotation(java.beans.Transient.class)
-                && Modifier.isTransient(getType().getModifiers());
-    }
-
-    /**
      * Sets the value for the java field
      *
      * @param instance the instance to update
@@ -386,21 +366,6 @@ public class PropertyModel {
 
     public final boolean isCollection() {
         return Collection.class.isAssignableFrom(getTypeData().getType());
-    }
-
-    @Nullable
-    private String loadFromDocument(Document document) {
-        String propertyName = getMappedName();
-        if (document.containsKey(propertyName)) {
-            return propertyName;
-        }
-        for (String name : getLoadNames()) {
-            if (document.containsKey(name)) {
-                return name;
-            }
-        }
-
-        return null;
     }
 
     /**
