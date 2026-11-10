@@ -16,8 +16,10 @@ import dev.morphia.mapping.codec.pojo.ClassHierarchy;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 import dev.morphia.mapping.internal.Instantiator;
 
+import io.smallrye.classfile.ClassBuilder;
 import io.smallrye.classfile.ClassFile;
 import io.smallrye.classfile.CodeBuilder;
+import io.smallrye.classfile.attribute.ConstantValueAttribute;
 
 import static dev.morphia.annotations.internal.EntityBuilder.entityBuilder;
 
@@ -31,6 +33,8 @@ public class EntityModelGenerator extends BaseGenerator {
     private final ExternalEntity externalEntity;
     private final List<Annotation> morphiaAnnotations;
     private List<InstantiatorGenerator> instantiators = List.of();
+    private String buildId;
+    private List<String> wovenClasses;
 
     /**
      * Creates a new entity model generator for the given entity, reading entity-level annotations
@@ -100,6 +104,20 @@ public class EntityModelGenerator extends BaseGenerator {
     }
 
     /**
+     * Makes the model a pre-generated one, which records what the mapper checks before using it: the Morphia version and
+     * configuration it was generated with, and the build that wove the classes it calls into.
+     *
+     * @param buildId      the ID of the build, stamped on the woven classes
+     * @param wovenClasses the woven classes: the entity and the superclasses whose fields are woven into them
+     * @return this generator
+     */
+    public EntityModelGenerator pregenerated(String buildId, List<String> wovenClasses) {
+        this.buildId = buildId;
+        this.wovenClasses = wovenClasses;
+        return this;
+    }
+
+    /**
      * Emits the generated entity model class and returns this generator.
      */
     public EntityModelGenerator emit() {
@@ -128,6 +146,13 @@ public class EntityModelGenerator extends BaseGenerator {
             cb.withVersion(ClassFile.JAVA_17_VERSION, 0);
             cb.withFlags(ClassFile.ACC_PUBLIC | ClassFile.ACC_SUPER);
             cb.withSuperclass(superDesc);
+
+            if (buildId != null) {
+                constant(cb, CritterEntityModel.MORPHIA_VERSION_FIELD, CritterEntityModel.MORPHIA_VERSION);
+                constant(cb, CritterEntityModel.GENERATION_KEY, CritterEntityModel.generationKey(mapper.getConfig()));
+                constant(cb, CritterEntityModel.BUILD_ID, buildId);
+                constant(cb, CritterEntityModel.WOVEN_CLASSES, String.join(",", wovenClasses));
+            }
 
             // each property is built by its own method, so a wide entity doesn't push the constructor past the JVM's
             // limit on a method's size
@@ -201,6 +226,12 @@ public class EntityModelGenerator extends BaseGenerator {
         });
 
         return bytes;
+    }
+
+    private static void constant(ClassBuilder cb, String name, String value) {
+        cb.withField(name, ConstantDescs.CD_String, fb -> fb
+                .withFlags(ClassFile.ACC_PUBLIC | ClassFile.ACC_STATIC | ClassFile.ACC_FINAL | ClassFile.ACC_SYNTHETIC)
+                .with(ConstantValueAttribute.of(value)));
     }
 
     /**

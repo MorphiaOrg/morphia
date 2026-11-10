@@ -2,7 +2,9 @@ package dev.morphia.critter.parser.generator;
 
 import dev.morphia.mapping.MappingException;
 
+import io.smallrye.classfile.ClassFile;
 import io.smallrye.classfile.ClassModel;
+import io.smallrye.classfile.ClassTransform;
 
 /**
  * Base class for bytecode generators that read and transform existing class files.
@@ -32,6 +34,18 @@ public abstract class AccessorMethods {
      * Emits the generated or augmented class bytecode.
      */
     public abstract byte[] emit();
+
+    /**
+     * Weaves the entity: applies {@code transform}, adds the {@code __newN} methods instantiators call, and drops the build
+     * stamp an earlier build left, for the generator to stamp it afresh (see {@link BuildStamp}).
+     *
+     * @param transform adds the accessor methods
+     * @return the woven class's bytecode
+     */
+    protected byte[] weave(ClassTransform transform) {
+        return ClassFile.of().transformClass(model,
+                transform.andThen(InstantiatorGenerator.weaving(model)).andThen(BuildStamp.dropping()));
+    }
 
     private static ClassModel readClassModel(Class<?> entity) {
         ClassModel model = GenerationUtils.readClassModel(entity);

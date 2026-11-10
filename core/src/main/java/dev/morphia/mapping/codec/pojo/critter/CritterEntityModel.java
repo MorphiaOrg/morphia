@@ -1,5 +1,8 @@
 package dev.morphia.mapping.codec.pojo.critter;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.lang.annotation.Annotation;
 import java.lang.constant.ConstantDescs;
 import java.lang.constant.MethodTypeDesc;
@@ -7,8 +10,12 @@ import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.Set;
 
 import dev.morphia.annotations.IdField;
+import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.ArrayAccessor;
 import dev.morphia.mapping.codec.Conversions;
@@ -27,6 +34,41 @@ import dev.morphia.mapping.conventions.MorphiaConvention;
  * @morphia.internal
  */
 public abstract class CritterEntityModel extends EntityModel {
+    /**
+     * The version of Morphia that's running. A pre-generated model is used only with the version it was generated with.
+     */
+    public static final String MORPHIA_VERSION = morphiaVersion();
+
+    /**
+     * The name of a pre-generated model's constant holding the {@link #MORPHIA_VERSION} it was generated with.
+     */
+    public static final String MORPHIA_VERSION_FIELD = "__morphiaVersion";
+
+    /**
+     * The name of a pre-generated model's constant holding the {@link #generationKey(MorphiaConfig) generation key} of the
+     * configuration it was generated with.
+     */
+    public static final String GENERATION_KEY = "__generationKey";
+
+    /**
+     * The name of a pre-generated model's constant holding the ID of the critter-maven run that generated it.
+     */
+    public static final String BUILD_ID = "__buildId";
+
+    /**
+     * The name of a pre-generated model's constant listing, separated by commas, the classes woven for it: the entity and
+     * the superclasses whose fields are woven into them.
+     */
+    public static final String WOVEN_CLASSES = "__wovenClasses";
+
+    /**
+     * The prefix of the private synthetic field critter-maven adds to each class it weaves, named for the run's ID.
+     */
+    public static final String BUILD_STAMP = "__morphiaBuild$";
+
+    // the languages whose case conversion differs from the root locale's: the dotted and dotless i, and Lithuanian's dot above
+    private static final Set<String> CASE_RULE_LANGUAGES = Set.of("tr", "az", "lt");
+
     private final Conversions conversions;
 
     /**
@@ -36,6 +78,76 @@ public abstract class CritterEntityModel extends EntityModel {
     public CritterEntityModel(Mapper mapper, Class<?> type) {
         super(type);
         conversions = mapper.getConversions();
+    }
+
+    /**
+     * @param type    the entity
+     * @param woven   the name of a class woven with it: the entity or one of its superclasses
+     * @param buildId the ID of the build that generated the entity's model
+     * @return true if the class is stamped with that build's ID, which it isn't if it was compiled again, or woven by
+     *         another build, after the model was generated
+     */
+    public static boolean isWovenBy(Class<?> type, String woven, String buildId) {
+        for (Class<?> current = type; current != null; current = current.getSuperclass()) {
+            if (current.getName().equals(woven)) {
+                try {
+                    // only looked up, so the field's access doesn't matter, and the class isn't initialized
+                    current.getDeclaredField(BUILD_STAMP + buildId);
+                    return true;
+                } catch (NoSuchFieldException e) {
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Describes the configuration settings generation bakes into a model: the collection and property naming, the
+     * discriminator function and key, property discovery and the property annotation providers, and the case rules of the
+     * default locale, which the built-in strategies convert case with. Strategies are identified by class, which tells two
+     * configurations apart only if every strategy is one of Morphia's stateless built-ins.
+     *
+     * @param config the configuration
+     * @return the key
+     */
+    public static String generationKey(MorphiaConfig config) {
+        StringBuilder key = new StringBuilder(256)
+                .append("collectionNaming=").append(config.collectionNaming().getClass().getName())
+                .append(", propertyNaming=").append(config.propertyNaming().getClass().getName())
+                .append(", discriminator=").append(config.discriminator().getClass().getName())
+                .append(", discriminatorKey=").append(config.discriminatorKey())
+                .append(", propertyDiscovery=").append(config.propertyDiscovery())
+                .append(", propertyAnnotationProviders=[");
+        String separator = "";
+        for (Object provider : config.propertyAnnotationProviders()) {
+            key.append(separator).append(provider.getClass().getName());
+            separator = ",";
+        }
+        return key.append("], caseRules=").append(caseRules(Locale.getDefault())).toString();
+    }
+
+    /**
+     * @param locale the locale
+     * @return the language whose rules {@link String#toLowerCase()} and {@link String#toUpperCase()} apply in the locale, or
+     *         {@code root} if they're the same as every other language's. Only Turkish, Azerbaijani and Lithuanian differ, so a
+     *         model generated under, say, {@code en-US} stays usable under {@code de-DE}.
+     */
+    static String caseRules(Locale locale) {
+        String language = locale.getLanguage();
+        return CASE_RULE_LANGUAGES.contains(language) ? language : "root";
+    }
+
+    private static String morphiaVersion() {
+        try (InputStream in = CritterEntityModel.class.getResourceAsStream("/dev/morphia/morphia-version.properties")) {
+            Properties properties = new Properties();
+            if (in != null) {
+                properties.load(in);
+            }
+            return properties.getProperty("version", "unknown");
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     /**

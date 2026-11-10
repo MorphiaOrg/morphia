@@ -46,6 +46,7 @@ import dev.morphia.mapping.codec.FieldAccessor;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
+import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 import dev.morphia.mapping.internal.Instantiator;
 import dev.morphia.test.models.ExampleListener;
 
@@ -122,6 +123,12 @@ public class TestGeneration {
         for (Method method : loadClass.getDeclaredMethods()) {
             Assertions.assertTrue(Modifier.isPrivate(method.getModifiers()) && method.isSynthetic(), method.toString());
         }
+        // the build stamp is private, so it doesn't change a Serializable entity's default serialVersionUID
+        Field stamp = Arrays.stream(critterClassLoader.loadClass(Example.class.getName()).getDeclaredFields())
+                .filter(field -> field.getName().startsWith(CritterEntityModel.BUILD_STAMP))
+                .findFirst()
+                .orElseThrow();
+        Assertions.assertTrue(Modifier.isPrivate(stamp.getModifiers()) && Modifier.isStatic(stamp.getModifiers()), stamp.toString());
         EntityModel model = (EntityModel) loadClass.getConstructors()[0].newInstance(defaultMapper());
         for (PropertyModel property : model.getProperties()) {
             Assertions.assertEquals(PropertyModel.class, property.getClass(), property.getName());
