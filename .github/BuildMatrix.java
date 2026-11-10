@@ -9,15 +9,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.semver4j.Semver;
 
-import java.net.URI;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.Spliterators;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -29,14 +29,12 @@ public class BuildMatrix {
     // (https://jira.mongodb.org/browse/SERVER-121912). An earlier patch is used instead until a later one ships.
     private static final Set<String> BROKEN = Set.of("8.0.34", "8.3.13");
 
-    private static final HttpClient CLIENT = HttpClient.newHttpClient();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     public static void main(String... args) throws Exception {
         // props to Chris Dellaway for the pointer to this
         var json = "https://downloads.mongodb.org/current.json";
-        var mapper = new ObjectMapper();
-
-        var document = mapper.readTree(new URL(json));
+        var document = MAPPER.readTree(new URL(json));
 
         var list = (ArrayNode)document.get("versions");
 
@@ -54,33 +52,28 @@ public class BuildMatrix {
     }
 
     /**
-     * MongoDB lists a release before its Docker image is published, so walk back through the patch releases of the
-     * same minor line until one has an image and isn't known to be broken.
+     * MongoDB lists a release before its Docker image is published, so use the newest patch release of the same minor
+     * line that has an image and isn't known to be broken.
      */
     private static Optional<Semver> usableVersion(Semver latest) {
-        for (int patch = latest.getPatch(); patch >= 0; patch--) {
-            var candidate = Semver.of(latest.getMajor(), latest.getMinor(), patch);
-            if (!BROKEN.contains(candidate.toString()) && hasDockerImage(candidate)) {
-                return Optional.of(candidate);
-            }
-        }
-        System.err.println("No usable docker image found for the " + latest.getMajor() + "." + latest.getMinor() + " line");
-        return Optional.empty();
-    }
-
-    private static boolean hasDockerImage(Semver version) {
-        var request = HttpRequest.newBuilder(URI.create("https://hub.docker.com/v2/repositories/library/mongo/tags/" + version))
-                .GET()
-                .build();
-        int status;
+        var line = latest.getMajor() + "." + latest.getMinor();
+        var url = format("https://hub.docker.com/v2/repositories/library/mongo/tags?name=%s.&page_size=100", line);
+        JsonNode tags;
         try {
-            status = CLIENT.send(request, HttpResponse.BodyHandlers.discarding()).statusCode();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            tags = MAPPER.readTree(new URL(url)).get("results");
+        } catch (IOException e) {
+            throw new UncheckedIOException("Could not list docker images for the " + line + " line", e);
         }
-        if (status != 200 && status != 404) {
-            throw new IllegalStateException(format("Unexpected status %d checking docker image for %s", status, version));
+        var pattern = Pattern.compile(Pattern.quote(line) + "\\.\\d+");
+        var version = StreamSupport.stream(tags.spliterator(), false)
+                .map(t -> t.get("name").asText())
+                .filter(name -> pattern.matcher(name).matches())
+                .filter(name -> !BROKEN.contains(name))
+                .map(Semver::parse)
+                .max(Comparator.naturalOrder());
+        if (version.isEmpty()) {
+            System.err.println("No usable docker image found for the " + line + " line");
         }
-        return status == 200;
+        return version;
     }
 }
