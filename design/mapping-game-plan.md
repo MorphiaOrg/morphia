@@ -527,9 +527,28 @@ harness passes, and both mappers agree.
     It costs about 2 KB per new mapper and 1 MB of allocation on a runtime cold start. The benchmarks have no
     constructor-mapped entity, so that path isn't measured.
 
-### 4.12 AOT validity guard (#17, C4)
+### ~~4.12 AOT validity guard (#17, C4)~~
 - Emit a format version, generation key and weave hash. Check them at load time, and fall back with one log line
   when they don't match. Must land before GA.
+- Done:
+  - **Weave hash.** Every class critter-maven weaves gets a synthetic `public static final boolean` field named
+    `__woven$` plus a hash of its woven bytecode. Weaving drops an earlier build's stamp first. The pre-generated
+    model's static initializer looks up, on the entity, the stamp of every class woven with it. `Class.getField` is
+    used because it finds an inherited public field even when the entity isn't public, and it doesn't initialize the
+    class. A class compiled again without critter-maven has no such field, so initializing the model fails with
+    `NoSuchFieldError`. That happens when the entity is first mapped, instead of as a `NoSuchMethodError` at its
+    first encode.
+  - **Format version.** `CritterEntityModel.FORMAT` (1). The static initializer first passes the format it was
+    generated with to `CritterEntityModel.checkFormat`, which rejects any other. Bump it whenever generated code stops
+    working with core.
+  - **Generation key.** `CritterEntityModel.generationKey(config)` describes the configuration that generation bakes
+    in: collection and property naming, discriminator function and key, property discovery, and the annotation
+    providers. Strategies are identified by class name. The model records its key in a `__generationKey` constant,
+    and the mapper compares it with its own config. Runtime model sharing (4.10) uses the same key, still limited to
+    the built-in strategies.
+  - **Fallback.** Format and weave are per class: they're checked once, in the `PREGENERATED` class value, and logged
+    once per entity. The key is per mapper: on a mismatch the entity's model is generated at runtime, and the mismatch
+    is logged once per pair of keys rather than once per entity.
 
 ### 4.13 Critter API surface (C11), before GA
 - Mark `dev.morphia.critter.*` `@MorphiaInternal` and add a `package-info`.
@@ -620,6 +639,6 @@ Only start after Phases 3 and 4 have shipped and been re-measured.
    streaming; ~~4.14 entity-only annotated methods~~
 9. 4.4 generic resolver
 10. ~~Phase 5 A11 builder/annotation utility~~ → ~~4.5 parity test~~ → ~~4.6 shared rules~~ → ~~4.7 plain models~~ → ~~4.8 divergences~~ →
-    ~~4.9~~ → ~~4.10~~ → ~~4.11~~ → 4.12 AOT guard + 4.13 API surface (**before 3.0 GA**)
+    ~~4.9~~ → ~~4.10~~ → ~~4.11~~ → ~~4.12~~ AOT guard + 4.13 API surface (**before 3.0 GA**)
 11. 3.17 single-pass discriminator and `_id`
 12. Phase 5 clean-ups throughout; Phase 6 re-evaluated after 3.0 GA

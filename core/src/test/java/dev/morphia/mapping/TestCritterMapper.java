@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,6 +46,7 @@ import org.bson.codecs.pojo.PropertyAccessor;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.io.TempDir;
 import org.slf4j.LoggerFactory;
 
@@ -52,6 +54,9 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
+import io.smallrye.classfile.ClassFile;
+import io.smallrye.classfile.ClassTransform;
+import io.smallrye.classfile.instruction.ConstantInstruction;
 
 public class TestCritterMapper {
 
@@ -507,6 +512,143 @@ public class TestCritterMapper {
         Assertions.assertTrue(warning.contains("can't access app.IsolatedEntity"), warning);
         Assertions.assertTrue(warning.contains("isn't in Morphia's module"), warning);
         Assertions.assertTrue(warning.contains("critter-maven"), warning);
+    }
+
+    @Test
+    public void testPregeneratedModelsAreCheckedBeforeUse(@TempDir Path dir) throws Throwable {
+        Path compiled = dir.resolve("classes");
+        // not public, so the generated model can't name them
+        compile(compiled, "app/GuardedBase.java", """
+                package app;
+                class GuardedBase {
+                    private String name;
+                }
+                """);
+        compile(compiled, "app/Guarded.java", """
+                package app;
+                @dev.morphia.annotations.Entity
+                class Guarded extends GuardedBase {
+                    @dev.morphia.annotations.Id
+                    private org.bson.types.ObjectId id;
+                }
+                """, compiled);
+        MorphiaConfig config = MorphiaConfig.load().mapper(MapperType.CRITTER);
+        Map<String, byte[]> generated;
+        String modelName;
+        try (URLClassLoader loader = new URLClassLoader(new URL[] { compiled.toUri().toURL() }, getClass().getClassLoader())) {
+            CritterClassLoader buildTime = new CritterClassLoader(loader);
+            modelName = new CritterGenerator(new ReflectiveMapper(config, buildTime))
+                    .generate(loader.loadClass("app.Guarded"), buildTime, false)
+                    .getGeneratedType();
+            generated = buildTime.getTypeDefinitions();
+        }
+        Assertions.assertTrue(generated.containsKey("app.GuardedBase"), "the superclass's field is woven into it");
+
+        // as critter-maven leaves them, and with the superclass compiled again afterwards without being woven
+        Path built = write(dir.resolve("built"), generated, null);
+        Path stale = write(dir.resolve("stale"), generated, "app.GuardedBase");
+        // and generated for another version of Morphia
+        Map<String, byte[]> otherFormat = new HashMap<>(generated);
+        otherFormat.put(modelName, otherFormat(generated.get(modelName)));
+        Path incompatible = write(dir.resolve("incompatible"), otherFormat, null);
+        List<String> warnings = warnings(() -> {
+            try (URLClassLoader loader = loader(built, compiled)) {
+                Class<?> type = loader.loadClass("app.Guarded");
+                EntityModel model = new CritterMapper(config, loader).mapEntity(type);
+                Assertions.assertEquals(loader.loadClass(modelName), model.getClass(), "the pre-generated model is used");
+
+                EntityModel lowerCase = new CritterMapper(config.collectionNaming(NamingStrategy.lowerCase()), loader)
+                        .mapEntity(type);
+                Assertions.assertNotEquals(model.getClass(), lowerCase.getClass(),
+                        "a model generated with other naming isn't used");
+                Assertions.assertEquals("guarded", lowerCase.collectionName());
+            }
+            try (URLClassLoader loader = loader(stale, compiled)) {
+                EntityModel model = new CritterMapper(config, loader).mapEntity(loader.loadClass("app.Guarded"));
+                Assertions.assertNotEquals(modelName, model.getClass().getName(),
+                        "a model whose classes were compiled again isn't used");
+                Assertions.assertNotNull(model.getProperty("name"));
+            }
+            try (URLClassLoader loader = loader(incompatible, compiled)) {
+                EntityModel model = new CritterMapper(config, loader).mapEntity(loader.loadClass("app.Guarded"));
+                Assertions.assertNotEquals(modelName, model.getClass().getName(),
+                        "a model generated in another format isn't used");
+            }
+        });
+
+        Assertions.assertEquals(1, warnings.stream().filter(w -> w.contains("different mapping configuration")).count(),
+                warnings.toString());
+        Assertions.assertEquals(1, warnings.stream()
+                .filter(w -> w.contains("app.Guarded:") && w.contains("compiled again without critter-maven"))
+                .count(), warnings.toString());
+        Assertions.assertEquals(1, warnings.stream()
+                .filter(w -> w.contains("app.Guarded:") && w.contains("generated in format " + (CritterEntityModel.FORMAT + 1)))
+                .count(), warnings.toString());
+    }
+
+    /**
+     * @return the model's bytecode, changed to declare the next format
+     */
+    private static byte[] otherFormat(byte[] model) {
+        return ClassFile.of().transformClass(ClassFile.of().parse(model), ClassTransform.transformingMethodBodies(
+                method -> method.methodName().equalsString("<clinit>"),
+                (builder, element) -> {
+                    if (element instanceof ConstantInstruction constant
+                            && Integer.valueOf(CritterEntityModel.FORMAT).equals(constant.constantValue())) {
+                        builder.loadConstant(CritterEntityModel.FORMAT + 1);
+                    } else {
+                        builder.with(element);
+                    }
+                }));
+    }
+
+    /**
+     * Writes generated classes to a class path directory.
+     *
+     * @param skipped a class to leave out, or null
+     */
+    private static Path write(Path dir, Map<String, byte[]> classes, String skipped) throws Exception {
+        for (Map.Entry<String, byte[]> entry : classes.entrySet()) {
+            if (!entry.getKey().equals(skipped)) {
+                Path file = dir.resolve(entry.getKey().replace('.', '/') + ".class");
+                Files.createDirectories(file.getParent());
+                Files.write(file, entry.getValue());
+            }
+        }
+        return dir;
+    }
+
+    private URLClassLoader loader(Path... classPath) throws Exception {
+        URL[] urls = new URL[classPath.length];
+        for (int i = 0; i < classPath.length; i++) {
+            urls[i] = classPath[i].toUri().toURL();
+        }
+        return new URLClassLoader(urls, getClass().getClassLoader());
+    }
+
+    /**
+     * @return the WARN messages {@link CritterMapper} logs on this thread while {@code action} runs
+     */
+    private static List<String> warnings(Executable action) throws Throwable {
+        // see testEntityOutsideMorphiasClassLoaderFallsBackToReflection for why the level is raised and only this thread's
+        // events are kept
+        Logger logger = (Logger) LoggerFactory.getLogger(CritterMapper.class);
+        Level level = logger.getLevel();
+        String thread = Thread.currentThread().getName();
+        ListAppender<ILoggingEvent> appender = new ListAppender<>();
+        appender.start();
+        logger.addAppender(appender);
+        logger.setLevel(Level.WARN);
+        try {
+            action.execute();
+        } finally {
+            logger.detachAppender(appender);
+            logger.setLevel(level);
+        }
+        return appender.list.stream()
+                .filter(event -> event.getLevel() == Level.WARN && thread.equals(event.getThreadName()))
+                .map(ILoggingEvent::getFormattedMessage)
+                .toList();
     }
 
     @Test

@@ -16,8 +16,10 @@ import dev.morphia.mapping.codec.pojo.ClassHierarchy;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 import dev.morphia.mapping.internal.Instantiator;
 
+import io.smallrye.classfile.ClassBuilder;
 import io.smallrye.classfile.ClassFile;
 import io.smallrye.classfile.CodeBuilder;
+import io.smallrye.classfile.attribute.ConstantValueAttribute;
 
 import static dev.morphia.annotations.internal.EntityBuilder.entityBuilder;
 
@@ -31,6 +33,7 @@ public class EntityModelGenerator extends BaseGenerator {
     private final ExternalEntity externalEntity;
     private final List<Annotation> morphiaAnnotations;
     private List<InstantiatorGenerator> instantiators = List.of();
+    private List<String> weaveStamps;
 
     /**
      * Creates a new entity model generator for the given entity, reading entity-level annotations
@@ -100,6 +103,19 @@ public class EntityModelGenerator extends BaseGenerator {
     }
 
     /**
+     * Makes the model a pre-generated one, which checks when it's initialized that it can still be used: that its format is
+     * this version's, and that the classes it calls into are still woven as they were when it was generated. It records the
+     * configuration it was generated with for the mapper to compare with its own.
+     *
+     * @param weaveStamps the names of the stamps of the woven classes, which the entity declares or inherits
+     * @return this generator
+     */
+    public EntityModelGenerator pregenerated(List<String> weaveStamps) {
+        this.weaveStamps = weaveStamps;
+        return this;
+    }
+
+    /**
      * Emits the generated entity model class and returns this generator.
      */
     public EntityModelGenerator emit() {
@@ -128,6 +144,10 @@ public class EntityModelGenerator extends BaseGenerator {
             cb.withVersion(ClassFile.JAVA_17_VERSION, 0);
             cb.withFlags(ClassFile.ACC_PUBLIC | ClassFile.ACC_SUPER);
             cb.withSuperclass(superDesc);
+
+            if (weaveStamps != null) {
+                emitValidity(cb, superDesc);
+            }
 
             // each property is built by its own method, so a wide entity doesn't push the constructor past the JVM's
             // limit on a method's size
@@ -201,6 +221,33 @@ public class EntityModelGenerator extends BaseGenerator {
         });
 
         return bytes;
+    }
+
+    /**
+     * Emits the generation key field, and a static initializer checking the format and that every weave stamp is still
+     * there. A stamp that's missing because its class was compiled again without being woven, or woven differently, fails
+     * with a {@link NoSuchFieldError}.
+     */
+    private void emitValidity(ClassBuilder cb, ClassDesc superDesc) {
+        String generationKey = CritterEntityModel.generationKey(mapper.getConfig());
+        cb.withField(CritterEntityModel.GENERATION_KEY, ConstantDescs.CD_String, fb -> fb
+                .withFlags(ClassFile.ACC_PUBLIC | ClassFile.ACC_STATIC | ClassFile.ACC_FINAL | ClassFile.ACC_SYNTHETIC)
+                .with(ConstantValueAttribute.of(generationKey)));
+        ClassDesc thisDesc = ClassDesc.of(generatedType);
+        cb.withMethodBody("<clinit>", MethodTypeDesc.of(ConstantDescs.CD_void), ClassFile.ACC_STATIC, cod -> {
+            cod.loadConstant(CritterEntityModel.FORMAT);
+            cod.invokestatic(superDesc, "checkFormat", MethodTypeDesc.of(ConstantDescs.CD_void, ConstantDescs.CD_int));
+            // through the entity, which inherits the stamps of the superclasses woven with it
+            GenerationUtils.emitClassRef(cod, entity, thisDesc);
+            for (String stamp : weaveStamps) {
+                cod.dup();
+                cod.ldc(stamp);
+                cod.invokestatic(superDesc, "checkWoven",
+                        MethodTypeDesc.of(ConstantDescs.CD_void, ConstantDescs.CD_Class, ConstantDescs.CD_String));
+            }
+            cod.pop();
+            cod.return_();
+        });
     }
 
     /**

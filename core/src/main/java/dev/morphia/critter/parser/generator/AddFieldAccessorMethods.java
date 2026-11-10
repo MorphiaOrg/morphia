@@ -90,7 +90,7 @@ public class AddFieldAccessorMethods extends AccessorMethods {
                     }
                 }));
 
-        return ClassFile.of().transformClass(model, transform.andThen(InstantiatorGenerator.weaving(model)));
+        return weave(transform);
     }
 
     /**

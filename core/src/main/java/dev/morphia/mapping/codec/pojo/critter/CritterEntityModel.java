@@ -9,6 +9,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import dev.morphia.annotations.IdField;
+import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.ArrayAccessor;
 import dev.morphia.mapping.codec.Conversions;
@@ -27,6 +28,19 @@ import dev.morphia.mapping.conventions.MorphiaConvention;
  * @morphia.internal
  */
 public abstract class CritterEntityModel extends EntityModel {
+    /**
+     * The version of the code critter-maven generates. A model generated for another version fails to load, and the
+     * mapper generates the entity's model at runtime instead. Change it whenever generated code would no longer work with
+     * this version of Morphia.
+     */
+    public static final int FORMAT = 1;
+
+    /**
+     * The name of a pre-generated model's static field holding the {@link #generationKey(MorphiaConfig) generation key} of
+     * the configuration it was generated with.
+     */
+    public static final String GENERATION_KEY = "__generationKey";
+
     private final Conversions conversions;
 
     /**
@@ -36,6 +50,62 @@ public abstract class CritterEntityModel extends EntityModel {
     public CritterEntityModel(Mapper mapper, Class<?> type) {
         super(type);
         conversions = mapper.getConversions();
+    }
+
+    /**
+     * Called first when a pre-generated model is initialized.
+     *
+     * @param format the {@link #FORMAT} the model was generated with
+     * @throws IllegalStateException if it isn't this version's
+     */
+    @SuppressWarnings("unused")
+    public static void checkFormat(int format) {
+        if (format != FORMAT) {
+            throw new IllegalStateException("it was generated in format %d, but this version of Morphia reads format %d"
+                    .formatted(format, FORMAT));
+        }
+    }
+
+    /**
+     * Called when a pre-generated model is initialized, for each class woven with its entity.
+     *
+     * @param type  the entity
+     * @param stamp the name of the class's weave stamp, which the entity declares or inherits
+     * @throws NoSuchFieldError if the stamp is missing because the class was compiled again without being woven, or woven
+     *                          differently
+     */
+    @SuppressWarnings("unused")
+    public static void checkWoven(Class<?> type, String stamp) {
+        try {
+            // a lookup only: a public field is found whatever the class's access, and the class isn't initialized
+            type.getField(stamp);
+        } catch (NoSuchFieldException e) {
+            throw new NoSuchFieldError("%s.%s".formatted(type.getName(), stamp));
+        }
+    }
+
+    /**
+     * Describes the configuration settings generation bakes into a model: the collection and property naming, the
+     * discriminator function and key, property discovery and the property annotation providers. Strategies are identified
+     * by class, so two instances of one class are assumed to behave the same.
+     *
+     * @param config the configuration
+     * @return the key
+     */
+    public static String generationKey(MorphiaConfig config) {
+        StringBuilder key = new StringBuilder(256)
+                .append("collectionNaming=").append(config.collectionNaming().getClass().getName())
+                .append(", propertyNaming=").append(config.propertyNaming().getClass().getName())
+                .append(", discriminator=").append(config.discriminator().getClass().getName())
+                .append(", discriminatorKey=").append(config.discriminatorKey())
+                .append(", propertyDiscovery=").append(config.propertyDiscovery())
+                .append(", propertyAnnotationProviders=[");
+        String separator = "";
+        for (Object provider : config.propertyAnnotationProviders()) {
+            key.append(separator).append(provider.getClass().getName());
+            separator = ",";
+        }
+        return key.append(']').toString();
     }
 
     /**
