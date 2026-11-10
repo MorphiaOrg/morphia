@@ -59,13 +59,16 @@ import dev.morphia.test.mapping.codec.harness.models.HarnessCircle;
 import dev.morphia.test.mapping.codec.harness.models.HarnessCollections;
 import dev.morphia.test.mapping.codec.harness.models.HarnessConcreteCollections;
 import dev.morphia.test.mapping.codec.harness.models.HarnessConstructed;
+import dev.morphia.test.mapping.codec.harness.models.HarnessDog;
 import dev.morphia.test.mapping.codec.harness.models.HarnessDrawing;
 import dev.morphia.test.mapping.codec.harness.models.HarnessIdField;
 import dev.morphia.test.mapping.codec.harness.models.HarnessIdFieldAlias;
 import dev.morphia.test.mapping.codec.harness.models.HarnessIdFieldLegacy;
+import dev.morphia.test.mapping.codec.harness.models.HarnessKeyedTicket;
 import dev.morphia.test.mapping.codec.harness.models.HarnessLifecycle;
 import dev.morphia.test.mapping.codec.harness.models.HarnessNested;
 import dev.morphia.test.mapping.codec.harness.models.HarnessNoDiscriminator;
+import dev.morphia.test.mapping.codec.harness.models.HarnessPet;
 import dev.morphia.test.mapping.codec.harness.models.HarnessRecordHolder;
 import dev.morphia.test.mapping.codec.harness.models.HarnessReferences;
 import dev.morphia.test.mapping.codec.harness.models.HarnessRenames;
@@ -146,10 +149,18 @@ public class CodecHarnessTest {
     private static final EncoderContext PLAIN = EncoderContext.builder().build();
     private static final DecoderContext DECODER = DecoderContext.builder().build();
     /**
-     * Cases a listener that takes the {@code Document} still reads differently: {@code DocumentReader} can't convert a
-     * string stored for a number, which the plain and streaming paths do.
+     * Cases the lifecycle codecs still read differently from the plain ones, by listener:
+     * <ul>
+     * <li>through a {@code Document}, {@code DocumentReader} can't convert a string stored for a number, which the plain and
+     * streaming paths do, and an id stored as another type is converted from the {@code Document}'s value rather than read;
+     * <li>both lifecycle paths take a null discriminator as a missing one, where the plain path rejects it.
+     * </ul>
      */
-    private static final Set<String> DOCUMENT_PATH_DIVERGENCES = Set.of("foreign/scalars-schema-drift");
+    private static final Map<GlobalListener, Set<String>> LIFECYCLE_DIVERGENCES = Map.of(
+            GlobalListener.DOCUMENT, Set.of("foreign/scalars-schema-drift", "foreign/pet-string-id-for-object-id",
+                    "foreign/pet-document-id", "foreign/pet-null-discriminator", "foreign/ticket-int-id-for-string-id",
+                    "foreign/ticket-long-id-for-string-id"),
+            GlobalListener.STREAMING, Set.of("foreign/pet-null-discriminator"));
 
     private final MongoClient client = offlineClient();
 
@@ -193,10 +204,11 @@ public class CodecHarnessTest {
                     Map<String, Map<String, String>> listened = run(variant, mapper, listener);
                     List<DynamicNode> listenedCases = new ArrayList<>();
                     for (String name : reflection.keySet()) {
-                        if (listener == GlobalListener.DOCUMENT && DOCUMENT_PATH_DIVERGENCES.contains(name)) {
+                        if (LIFECYCLE_DIVERGENCES.get(listener).contains(name)) {
                             // still diverges, so that the list can't go stale
                             listenedCases.add(DynamicTest.dynamicTest(name, () -> assertNotEquals(reflection.get(name),
-                                    listened.get(name), name + " now reads the same through a Document; drop it from the list")));
+                                    listened.get(name), name + " now reads the same with a " + listener
+                                            + " listener; drop it from the list")));
                         } else {
                             listenedCases.add(DynamicTest.dynamicTest(name,
                                     () -> assertEquals(reflection.get(name), listened.get(name), "with a global listener")));
@@ -454,6 +466,8 @@ public class CodecHarnessTest {
         sample(results, datastore, "id-field", HarnessIdField.class, HarnessIdField::sample);
         sample(results, datastore, "lifecycle", HarnessLifecycle.class, HarnessLifecycle::sample);
         sample(results, datastore, "generic-binding", HarnessStringListBox.class, HarnessStringListBox::sample);
+        sample(results, datastore, "polymorphic-root", HarnessPet.class, HarnessPet::sample);
+        sample(results, datastore, "polymorphic-string-id", HarnessKeyedTicket.class, HarnessKeyedTicket::sample);
         encodeOnly(results, datastore, "references", HarnessReferences.class, HarnessReferences::sample);
 
         foreign(results, datastore, "scalars-reordered", HarnessScalars.class, """
@@ -477,6 +491,52 @@ public class CodecHarnessTest {
                              "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessSquare"}]}""");
         foreign(results, datastore, "constructor-reordered", HarnessConstructed.class, """
                 {"size": 4, "name": "late", "_id": {"$oid": "650000000000000000000104"}}""");
+        // where the id and the discriminator sit, as a polymorphic root reads them
+        foreign(results, datastore, "pet-discriminator-first", HarnessPet.class, """
+                {"_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog", "_id": {"$oid": "650000000000000000000202"}, "name": "a",
+                 "barks": 1}""");
+        foreign(results, datastore, "pet-discriminator-after-a-property", HarnessPet.class, """
+                {"_id": {"$oid": "650000000000000000000203"}, "name": "b",
+                 "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog", "barks": 2}""");
+        foreign(results, datastore, "pet-discriminator-last", HarnessPet.class, """
+                {"name": "c", "barks": 3, "_id": {"$oid": "650000000000000000000204"},
+                 "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog"}""");
+        foreign(results, datastore, "pet-id-after-the-discriminator", HarnessPet.class,
+                """
+                        {"_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog", "name": "d", "_id": {"$oid": "650000000000000000000205"}}""");
+        foreign(results, datastore, "pet-lifecycle-subtype", HarnessPet.class, """
+                {"_id": {"$oid": "65000000000000000000020e"}, "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessCat", "name": "s",
+                 "lives": 9}""");
+        foreign(results, datastore, "pet-no-id", HarnessPet.class, """
+                {"_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog", "name": "e"}""");
+        foreign(results, datastore, "pet-string-id-for-object-id", HarnessPet.class, """
+                {"_id": "650000000000000000000206", "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog", "name": "f"}""");
+        foreign(results, datastore, "pet-document-id", HarnessPet.class, """
+                {"_id": {"a": 1}, "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog", "name": "g"}""");
+        foreign(results, datastore, "pet-null-id", HarnessPet.class, """
+                {"_id": null, "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog", "name": "h"}""");
+        foreign(results, datastore, "pet-missing-discriminator", HarnessPet.class, """
+                {"_id": {"$oid": "650000000000000000000207"}, "name": "i"}""");
+        foreign(results, datastore, "pet-null-discriminator", HarnessPet.class, """
+                {"_id": {"$oid": "650000000000000000000208"}, "_t": null, "name": "j"}""");
+        foreign(results, datastore, "pet-discriminator-not-a-string", HarnessPet.class, """
+                {"_id": {"$oid": "650000000000000000000209"}, "_t": 5, "name": "k"}""");
+        foreign(results, datastore, "pet-unknown-discriminator", HarnessPet.class, """
+                {"_id": {"$oid": "65000000000000000000020a"}, "_t": "no.such.Pet", "name": "l"}""");
+        foreign(results, datastore, "pet-discriminator-outside-the-hierarchy", HarnessPet.class,
+                """
+                        {"_id": {"$oid": "65000000000000000000020b"}, "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessCircle", "label": "m"}""");
+        foreign(results, datastore, "dog-discriminator-of-its-root", HarnessDog.class, """
+                {"_id": {"$oid": "65000000000000000000020c"}, "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessPet", "name": "n",
+                 "barks": 4}""");
+        foreign(results, datastore, "dog-missing-discriminator", HarnessDog.class, """
+                {"_id": {"$oid": "65000000000000000000020d"}, "name": "o", "barks": 5}""");
+        foreign(results, datastore, "ticket-int-id-for-string-id", HarnessKeyedTicket.class, """
+                {"_id": 7, "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessKeyedBug", "title": "p", "severity": 1}""");
+        foreign(results, datastore, "ticket-long-id-for-string-id", HarnessKeyedTicket.class, """
+                {"_id": {"$numberLong": "8"}, "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessKeyedBug", "title": "q"}""");
+        foreign(results, datastore, "ticket-subtype-on-its-own", HarnessKeyedTicket.class, """
+                {"_id": "T-2", "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessKeyedTicket", "title": "r"}""");
         return results;
     }
 

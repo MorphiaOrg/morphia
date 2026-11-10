@@ -14,6 +14,7 @@ import org.bson.codecs.Codec;
 import org.bson.codecs.Decoder;
 import org.bson.codecs.DecoderContext;
 import org.bson.codecs.configuration.CodecConfigurationException;
+import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,59 +44,274 @@ public class EntityDecoder<T> implements Decoder<T> {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public T decode(BsonReader reader, DecoderContext decoderContext) {
-        T entity;
-        if (decoderContext.hasCheckedDiscriminator()) {
-            LOG.debug("Decoding document using codec for {}", morphiaCodec.getEntityModel().getType().getName());
-            MorphiaInstanceCreator instanceCreator = getInstanceCreator();
-            DecodeSession session = DecodeSession.current();
+        if (decoderContext.hasCheckedDiscriminator() || !classModel.useDiscriminator()) {
+            reader.readStartDocument();
+            return decodeFields(reader, decoderContext, null);
+        }
+        return decodeWithDiscriminator(reader);
+    }
 
-            // Publishing the instance before its properties are decoded is what lets a reference cycle
-            // terminate, but it is only possible when the creator can hand out an instance without the
-            // decoded values. Creators that feed values to a constructor are registered after decoding
-            // instead: they still deduplicate, but a cycle through them cannot be broken, so they are marked as
-            // under construction and a reference back to one fails fast instead of recursing.
-            Object prereadId = session != null && classModel.getIdProperty() != null ? peekId(reader, classModel, true) : null;
-            boolean eager = prereadId != null && instanceCreator.isEagerInstanceSafe();
-            if (eager) {
-                session.registerInFlight(classModel.collectionName(), prereadId, instanceCreator.getInstance());
-            } else if (prereadId != null) {
-                session.registerConstructing(classModel.collectionName(), prereadId);
-            }
-
-            boolean decoded = false;
-            try {
-                decodeProperties(reader, decoderContext, instanceCreator, morphiaCodec.getPlan());
-                decoded = true;
-            } finally {
-                if (prereadId != null) {
-                    if (decoded) {
-                        session.complete(classModel.collectionName(), prereadId);
-                    } else {
-                        session.discard(classModel.collectionName(), prereadId);
+    /**
+     * Reads the discriminator in the same pass as the properties when the document starts the way Morphia writes it: the
+     * {@code _id}, then the discriminator. Decoding then carries on from there, with this decoder or the subtype's. Any
+     * other layout, and any subtype whose decoder does more than this one, goes back to the start and finds the codec
+     * first.
+     */
+    @SuppressWarnings("unchecked")
+    private T decodeWithDiscriminator(BsonReader reader) {
+        BsonReaderMark start = reader.getMark();
+        reader.readStartDocument();
+        String discriminatorKey = classModel.discriminatorKey();
+        Codec<? extends T> codec = null;
+        Object id = null;
+        BsonType idType = null;
+        try {
+            BsonType type;
+            while ((type = reader.readBsonType()) != BsonType.END_OF_DOCUMENT) {
+                String name = reader.readName();
+                if (discriminatorKey.equals(name)) {
+                    if (type == BsonType.STRING) {
+                        codec = morphiaCodec.codecForDiscriminator(reader.readString());
                     }
+                    break;
+                }
+                if (idType != null || !isIdName(name) || defaultIdClass(type) == null) {
+                    break;
+                }
+                id = readSimpleId(reader, type);
+                idType = type;
+            }
+        } catch (RuntimeException e) {
+            // finding the codec the long way reports it
+            codec = null;
+        }
+        EntityDecoder<? extends T> decoder = codec != null ? continuingDecoder(codec) : null;
+        if (decoder != null && (idType == null || decoder.takesId(id, idType))) {
+            Object readId = id;
+            if (DecodeSession.current() != null) {
+                return decoder.decodeFields(reader, CHECKED_DISCRIMINATOR, readId);
+            }
+            // as MorphiaCodec.decode would have for the codec
+            return DecodeSession.forConfig(morphiaCodec.getDatastore().getMapper().getConfig())
+                    .decoding(() -> decoder.decodeFields(reader, CHECKED_DISCRIMINATOR, readId));
+        }
+        start.reset();
+        return getCodecFromDocument(reader, true, discriminatorKey, morphiaCodec).decode(reader, CHECKED_DISCRIMINATOR);
+    }
+
+    /**
+     * @return the decoder that can pick up a document part-way through for the codec, or null if it decodes some other way
+     */
+    @Nullable
+    @SuppressWarnings("unchecked")
+    private EntityDecoder<? extends T> continuingDecoder(Codec<? extends T> codec) {
+        if (codec == morphiaCodec) {
+            return this;
+        }
+        if (codec instanceof MorphiaCodec<?> other) {
+            EntityDecoder<?> decoder = other.getDecoder();
+            if (decoder.getClass() == EntityDecoder.class) {
+                return (EntityDecoder<? extends T>) decoder;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @return true if an id read ahead as {@code readSimpleId} reads it is the value this model's id property decodes to
+     */
+    private boolean takesId(Object id, BsonType type) {
+        PropertyModel idProperty = classModel.getIdProperty();
+        return idProperty == null || idProperty.getType() == id.getClass() && morphiaCodec.getPlan().readsDirectly(idProperty, type);
+    }
+
+    /**
+     * Decodes the rest of a document whose start has been read, registering the entity with the session as soon as its id
+     * is known: before any later property, and so any reference, is decoded.
+     *
+     * @param id the {@code _id}, if it was read before the discriminator; it isn't in the rest of the document
+     */
+    @SuppressWarnings("unchecked")
+    private T decodeFields(BsonReader reader, DecoderContext decoderContext, @Nullable Object id) {
+        LOG.debug("Decoding document using codec for {}", classModel.getType().getName());
+        MorphiaInstanceCreator instanceCreator = getInstanceCreator();
+        CodecPlan plan = morphiaCodec.getPlan();
+        DecodeSession session = DecodeSession.current();
+        PropertyModel idProperty = classModel.getIdProperty();
+        boolean useDiscriminator = classModel.useDiscriminator();
+        String discriminatorKey = classModel.discriminatorKey();
+
+        // Publishing the instance before its properties are decoded is what lets a reference cycle terminate, but it is
+        // only possible when the creator can hand out an instance without the decoded values. Creators that feed values to
+        // a constructor are registered after decoding instead: they still deduplicate, but a cycle through them cannot be
+        // broken, so they are marked as under construction and a reference back to one fails fast instead of recursing.
+        boolean tracking = session != null && idProperty != null;
+        boolean registered = false;
+        boolean eager = false;
+        Object key = null;
+        boolean decoded = false;
+        try {
+            if (id != null && idProperty != null) {
+                if (tracking) {
+                    key = id;
+                    eager = register(session, instanceCreator, key);
+                    registered = true;
+                }
+                instanceCreator.set(id, idProperty);
+            }
+            while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+                String name = reader.readName();
+                if (useDiscriminator && discriminatorKey.equals(name)) {
+                    reader.skipValue();
+                    continue;
+                }
+                PropertyModel model = classModel.getProperty(name);
+                if (tracking && !registered) {
+                    registered = true;
+                    if (model == idProperty) {
+                        key = decodeId(reader, decoderContext, instanceCreator, plan, idProperty);
+                        eager = register(session, instanceCreator, key);
+                        continue;
+                    }
+                    // a property comes before the id, so read the id ahead before decoding anything that might refer back
+                    key = scanForId(reader);
+                    eager = register(session, instanceCreator, key);
+                }
+                decodeModel(reader, decoderContext, instanceCreator, plan, model);
+            }
+            reader.readEndDocument();
+            decoded = true;
+        } finally {
+            if (key != null) {
+                if (decoded) {
+                    session.complete(classModel.collectionName(), key);
+                } else {
+                    session.discard(classModel.collectionName(), key);
                 }
             }
-
-            T instance = (T) instanceCreator.getInstance();
-
-            if (session != null && !eager && classModel.getIdProperty() != null) {
-                // prefer the id as stored, which is what references look entities up by; the mapped value can differ
-                // for converted id types
-                Object id = prereadId != null ? prereadId : morphiaCodec.getDatastore().getMapper().getId(instance);
-                if (id != null) {
-                    session.register(classModel.collectionName(), id, instance);
-                }
-            }
-
-            return instance;
-        } else {
-            entity = getCodecFromDocument(reader, classModel.useDiscriminator(), classModel.discriminatorKey(), morphiaCodec)
-                    .decode(reader, CHECKED_DISCRIMINATOR);
         }
 
-        return entity;
+        T instance = (T) instanceCreator.getInstance();
+        if (tracking && !eager) {
+            // prefer the id as stored, which is what references look entities up by; the mapped value can differ for
+            // converted id types
+            Object stored = key != null ? key : morphiaCodec.getDatastore().getMapper().getId(instance);
+            if (stored != null) {
+                session.register(classModel.collectionName(), stored, instance);
+            }
+        }
+        return instance;
+    }
+
+    /**
+     * @return true if the instance was published before its properties are decoded
+     */
+    private boolean register(DecodeSession session, MorphiaInstanceCreator instanceCreator, @Nullable Object key) {
+        if (key == null) {
+            return false;
+        }
+        if (instanceCreator.isEagerInstanceSafe()) {
+            session.registerInFlight(classModel.collectionName(), key, instanceCreator.getInstance());
+            return true;
+        }
+        session.registerConstructing(classModel.collectionName(), key);
+        return false;
+    }
+
+    /**
+     * Decodes the id property, whose name has just been read.
+     *
+     * @return the id as stored, decoded the way references read theirs so the session keys match, or null if it can't be
+     *         read
+     */
+    @Nullable
+    private Object decodeId(BsonReader reader, DecoderContext decoderContext, MorphiaInstanceCreator instanceCreator,
+            CodecPlan plan, PropertyModel idProperty) {
+        BsonType type = reader.getCurrentBsonType();
+        if (idProperty.getType() == defaultIdClass(type) && plan.readsDirectly(idProperty, type)) {
+            // the property's codec reads the value just as references do, so one read serves as both
+            Object id = decoderContext.decodeWithChildContext(plan.codec(idProperty), reader);
+            instanceCreator.set(id, idProperty);
+            return id;
+        }
+        BsonReaderMark mark = reader.getMark();
+        Object key;
+        try {
+            key = idKeyCodec().decode(reader, DEFAULT_CONTEXT);
+        } catch (Exception e) {
+            LOG.debug("Could not read _id for DecodeSession on {}; cycle detection may not apply",
+                    classModel.getType().getSimpleName(), e);
+            key = null;
+        }
+        mark.reset();
+        decodeModel(reader, decoderContext, instanceCreator, plan, idProperty);
+        return key;
+    }
+
+    /**
+     * Finds the id further on in the document, leaving the reader at the value of the property whose name was just read.
+     *
+     * @return the id, decoded the way references read theirs, or null if the document has none or it can't be read
+     */
+    @Nullable
+    private Object scanForId(BsonReader reader) {
+        BsonReaderMark mark = reader.getMark();
+        try {
+            reader.skipValue();
+            while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+                if (isIdName(reader.readName())) {
+                    return idKeyCodec().decode(reader, DEFAULT_CONTEXT);
+                }
+                reader.skipValue();
+            }
+            return null;
+        } catch (Exception e) {
+            LOG.debug("Could not pre-read _id for DecodeSession on {}; cycle detection may not apply",
+                    classModel.getType().getSimpleName(), e);
+            return null;
+        } finally {
+            mark.reset();
+        }
+    }
+
+    private boolean isIdName(String name) {
+        PropertyModel idProperty = classModel.getIdProperty();
+        return "_id".equals(name) || idProperty != null && name.equals(idProperty.getMappedName());
+    }
+
+    /**
+     * @return the class an id stored as this type is read as, by references and by a property of that class alike, or
+     *         null for the types that aren't read ahead
+     */
+    @Nullable
+    private static Class<?> defaultIdClass(BsonType type) {
+        return switch (type) {
+            case OBJECT_ID -> ObjectId.class;
+            case STRING -> String.class;
+            case INT32 -> Integer.class;
+            case INT64 -> Long.class;
+            default -> null;
+        };
+    }
+
+    private static Object readSimpleId(BsonReader reader, BsonType type) {
+        return switch (type) {
+            case OBJECT_ID -> reader.readObjectId();
+            case STRING -> reader.readString();
+            case INT32 -> reader.readInt32();
+            case INT64 -> reader.readInt64();
+            default -> throw new IllegalArgumentException(type.toString());
+        };
+    }
+
+    private Codec<Object> idKeyCodec() {
+        Codec<Object> codec = idKeyCodec;
+        if (codec == null) {
+            codec = morphiaCodec.getRegistry().get(Object.class);
+            idKeyCodec = codec;
+        }
+        return codec;
     }
 
     protected void decodeModel(BsonReader reader, DecoderContext decoderContext,
@@ -230,12 +446,7 @@ public class EntityDecoder<T> implements Decoder<T> {
                     if (!entities && reader.getCurrentBsonType() == BsonType.DOCUMENT && decodesAsEntity(reader)) {
                         return null;
                     }
-                    Codec<Object> codec = idKeyCodec;
-                    if (codec == null) {
-                        codec = morphiaCodec.getRegistry().get(Object.class);
-                        idKeyCodec = codec;
-                    }
-                    return codec.decode(reader, DEFAULT_CONTEXT);
+                    return idKeyCodec().decode(reader, DEFAULT_CONTEXT);
                 } else {
                     reader.skipValue();
                 }
