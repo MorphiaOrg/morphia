@@ -17,9 +17,7 @@
 package dev.morphia.mapping;
 
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
 
 import com.mongodb.lang.Nullable;
 
@@ -40,7 +38,6 @@ import static java.lang.String.format;
 @MorphiaInternal
 public final class DiscriminatorLookup {
     private final Map<String, Class<?>> discriminatorClassMap = new ConcurrentHashMap<>();
-    private final Set<String> packages = new ConcurrentSkipListSet<>();
     private final ClassLoader classLoader;
 
     /**
@@ -87,10 +84,6 @@ public final class DiscriminatorLookup {
 
         Class<?> clazz = getClassForName(discriminator);
         if (clazz == null) {
-            clazz = searchPackages(discriminator);
-        }
-
-        if (clazz == null) {
             throw new CodecConfigurationException(format("A class could not be found for the discriminator: '%s'.", discriminator));
         }
         return clazz;
@@ -107,15 +100,4 @@ public final class DiscriminatorLookup {
         return clazz;
     }
 
-    @Nullable
-    private Class<?> searchPackages(String discriminator) {
-        Class<?> clazz = null;
-        for (String packageName : packages) {
-            clazz = getClassForName(packageName + "." + discriminator);
-            if (clazz != null) {
-                return clazz;
-            }
-        }
-        return clazz;
-    }
 }

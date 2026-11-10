@@ -96,38 +96,6 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     }
 
     /**
-     * Encodes a value
-     *
-     * @param mapper
-     * @param value  the value to encode
-     * @param model  the mapped class of the field type
-     * @return the encoded value
-     * @hidden
-     * @morphia.internal
-     */
-    @Nullable
-    @MorphiaInternal
-    public static Object encodeId(Mapper mapper, Object value, EntityModel model) {
-        Object idValue;
-        Class<?> type;
-        idValue = mapper.getId(value);
-        if (idValue == null) {
-            return !mapper.isMappable(value.getClass()) ? value : null;
-        }
-        type = value.getClass();
-
-        String valueCollectionName = mapper.getEntityModel(type).collectionName();
-        String fieldCollectionName = model.collectionName();
-
-        Reference annotation = model.getAnnotation(Reference.class);
-        if (annotation != null && !annotation.idOnly()
-                || valueCollectionName != null && !valueCollectionName.equals(fieldCollectionName)) {
-            idValue = new DBRef(valueCollectionName, idValue);
-        }
-        return idValue;
-    }
-
-    /**
      * Decodes an ID value
      *
      * @param datastore      the Datastore to use

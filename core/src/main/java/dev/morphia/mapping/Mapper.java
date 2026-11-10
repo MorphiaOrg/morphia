@@ -20,7 +20,6 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.conventions.MorphiaConvention;
 
 import org.bson.Document;
@@ -56,16 +55,6 @@ public interface Mapper {
      */
     @MorphiaInternal
     Mapper copy();
-
-    /**
-     * @param type the class
-     * @return the id property model
-     * @hidden
-     * @morphia.internal
-     * @since 2.2
-     */
-    @MorphiaInternal
-    PropertyModel findIdProperty(Class<?> type);
 
     /**
      * Gets the class as defined by any discriminator field

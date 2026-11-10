@@ -240,7 +240,6 @@ public class TestMapperParity {
             // TypeData's, since PropertyModel.isArray() misses a generic T[], which erases to Object
             facts.put(prefix + "array", String.valueOf(property.getTypeData().isArray()));
             facts.put(prefix + "final", String.valueOf(property.isFinal()));
-            facts.put(prefix + "transient", String.valueOf(property.isTransient()));
             facts.put(prefix + "reference", String.valueOf(property.isReference()));
             facts.put(prefix + "annotations", property.getAnnotations().stream()
                     .filter(a -> MORPHIA_ANNOTATIONS.contains(a.annotationType()))

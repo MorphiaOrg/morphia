@@ -28,7 +28,6 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.pojo.EntityModel;
-import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.mapping.conventions.MorphiaConvention;
 import dev.morphia.mapping.lifecycle.TypedListeners;
@@ -162,17 +161,6 @@ public abstract class AbstractMapper implements Mapper {
             return null;
         }
         return register(new EntityModel(original), false);
-    }
-
-    @Override
-    public PropertyModel findIdProperty(Class<?> type) {
-        EntityModel entityModel = getEntityModel(type);
-        PropertyModel idField = entityModel.getIdProperty();
-
-        if (idField == null) {
-            throw new MappingException(Sofia.idRequired(type.getName()));
-        }
-        return idField;
     }
 
     @Override

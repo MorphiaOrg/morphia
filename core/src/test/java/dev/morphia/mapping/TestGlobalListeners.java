@@ -17,7 +17,6 @@ import dev.morphia.PreLoadListener;
 import dev.morphia.PrePersistListener;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
-import dev.morphia.annotations.PreLoad;
 import dev.morphia.config.ManualMorphiaConfig;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.config.converters.EntityListenerConverter;
@@ -80,7 +79,6 @@ public class TestGlobalListeners {
 
             Assertions.assertEquals(List.of("prePersist:plain", "postPersist:plain", "preLoad:plain", "postLoad:plain:true"), CALLS);
             Assertions.assertEquals(1, datastore.getMapper().getGlobalListeners().size());
-            Assertions.assertTrue(datastore.hasLifecycle(datastore.getMapper().getEntityModel(Plain.class), PreLoad.class));
         }
     }
 

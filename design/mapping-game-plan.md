@@ -634,16 +634,20 @@ The original notes:
 ## Phase 5: Clean-up (any time, low risk)
 
 Bundle these into one or two PRs. Most of it is `@MorphiaInternal` dead code.
-- **A10/B14/D16:**
-  - `DiscriminatorLookup.packages` and `searchPackages`;
-  - `PropertyModel.isTransient()`, `getDocumentValue` and `loadFromDocument`;
-  - `TypeData.nestedTypeParameters`;
-  - unreachable collection codec providers;
-  - `IndexHelper.collectIndexes(parentModels)`;
-  - commented-out blocks;
-  - `Mapper.findIdProperty`, `MorphiaDatastore.hasLifecycle(EntityModel, Class)` and the static
-    `ReferenceCodec.encodeId`;
-  - `ArrayCodec.getEncoderClass()` returning null.
+- ~~**A10/B14/D16:**~~
+  - ~~`DiscriminatorLookup.packages` and `searchPackages`;~~
+  - ~~`PropertyModel.isTransient()`, `getDocumentValue` and `loadFromDocument`;~~
+  - ~~`TypeData.nestedTypeParameters`;~~
+  - ~~unreachable collection codec providers;~~
+  - ~~`IndexHelper.collectIndexes(parentModels)`;~~
+  - ~~commented-out blocks;~~
+  - ~~`Mapper.findIdProperty`, `MorphiaDatastore.hasLifecycle(EntityModel, Class)` and the static
+    `ReferenceCodec.encodeId`;~~
+  - ~~`ArrayCodec.getEncoderClass()` returning null.~~
+  - Done. The two unreachable collection providers became one `MorphiaCollectionPropertyCodecProvider`, which takes
+    every collection, so a list without one still gets Morphia's handling rather than the driver's.
+    `ArrayCodec.getEncoderClass()` returns the array class. `TestGlobalListeners` dropped an assertion on
+    `hasLifecycle`; the callbacks it records already show the listener ran.
 - **D11:**
   - resolve the model once per save/delete;
   - cache `MongoCollection` per class per datastore;

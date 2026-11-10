@@ -1,6 +1,5 @@
 package dev.morphia;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -69,7 +68,6 @@ import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.references.ReferenceCodec;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
-import dev.morphia.mapping.lifecycle.TypedListeners;
 import dev.morphia.query.CountOptions;
 import dev.morphia.query.FindAndDeleteOptions;
 import dev.morphia.query.FindOptions;
@@ -926,12 +924,6 @@ public class MorphiaDatastore implements Datastore {
      */
     public <T> Query<T> find(String collection, Class<T> type) {
         return queryFactory.createQuery(this, collection, type);
-    }
-
-    public boolean hasLifecycle(EntityModel model, Class<? extends Annotation> type) {
-        return model.hasLifecycle(type)
-                || mapper.getGlobalListeners().stream()
-                        .anyMatch(listener -> TypedListeners.handles(listener.getClass(), type));
     }
 
     /**
