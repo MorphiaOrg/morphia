@@ -292,7 +292,7 @@ harness passes, and both mappers agree.
   conversions.
 - Measured gain on embedding vectors: 3× encode, 2.4× decode.
 
-### 3.17 Discriminator and `_id` single pass, step 2 (B2)
+### ~~3.17 Discriminator and `_id` single pass, step 2 (B2)~~
 - Read in order, and buffer values that appear before `_t`. Continue on a self-match. When `_t` comes first, hand
   off to the subtype decoder. Decode a document without `_t` in one pass.
 - Fold in #4257's `peekId` pre-scan: `_id` is normally the first field, so read it in the same pass and register the
@@ -303,6 +303,31 @@ harness passes, and both mappers agree.
 - **Risk:** must not run user constructors speculatively, which interacts with 3.2. Needs harness fixtures with
   `_t` in various positions.
 - Expected: ~360 B and 250–300 ns per 8-field document.
+- Done in `EntityDecoder`:
+  - A document laid out as Morphia writes it (`_id`, then `_t`) is read in one pass. An `_id` stored as an ObjectId,
+    string, int32 or int64 is read before `_t`, and decoding carries on from `_t` with this decoder or the subtype's,
+    without reading anything twice. The `_id` is read once for both the property and the session key whenever the
+    property's codec reads that type directly and the property's class is the one references read it as.
+  - The entity is registered with the `DecodeSession` as soon as its id is read, before any later property. When a
+    property comes before the `_id`, the id is read ahead from there (the old `peekId`), so cycle-safe decoding never
+    regresses.
+  - **Differs from the plan:** values before `_t` aren't buffered. One mark is taken at the start of the document, and
+    any other layout goes back to it and finds the codec first, as before: fields before `_t`, no `_t`, an `_id` of
+    another type, or a subtype whose decoder can't pick up part-way (a lifecycle subtype, a non-entity codec).
+    Buffering every value read before `_t` would allocate more than reading those fields twice, and Morphia never
+    writes those layouts. Each of them still saves the second scan for the `_id`.
+  - No user constructor runs speculatively: nothing is created until the codec is known.
+  - `CodecHarnessTest` gains a polymorphic root with an ObjectId id, one with a string id, a lifecycle subtype, and 19
+    foreign fixtures for where the `_id` and `_t` sit. The goldens were generated with the old decoder.
+    `TestDecodeOrder` checks that the entity is in the session before a later property decodes, whichever order the
+    `_id`, `_t` and properties come in, that each constructor runs once, and that Morphia's layout takes one mark.
+  - Measured (`CodecBenchmark`, `-prof gc`): SIMPLE decodes with ~500 B less (2,112 → ~1,610 B/op) and 24–28% faster;
+    POLYMORPHIC with ~2.7 KB less and 20–26% faster. LIFECYCLE is unchanged.
+  - Not done: `LifecycleDecoder` still reads the discriminator and the id ahead of decoding (`peekDiscriminator`,
+    `peekId`). Doing the same there is a follow-up.
+  - The harness shows that the lifecycle codecs read a few foreign documents differently from the plain ones; master
+    already did. Through a `Document`, an id stored as another type, and with either listener, a null `_t`. They're
+    listed in `LIFECYCLE_DIVERGENCES`.
 
 ---
 
@@ -669,5 +694,5 @@ Only start after Phases 3 and 4 have shipped and been re-measured.
 9. 4.4 generic resolver
 10. ~~Phase 5 A11 builder/annotation utility~~ → ~~4.5 parity test~~ → ~~4.6 shared rules~~ → ~~4.7 plain models~~ → ~~4.8 divergences~~ →
     ~~4.9~~ → ~~4.10~~ → ~~4.11~~ → ~~4.12~~ AOT guard + ~~4.13~~ API surface (**before 3.0 GA**)
-11. 3.17 single-pass discriminator and `_id`
+11. ~~3.17 single-pass discriminator and `_id`~~
 12. Phase 5 clean-ups throughout; Phase 6 re-evaluated after 3.0 GA

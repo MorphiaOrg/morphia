@@ -627,6 +627,46 @@
       ]
     }
   },
+  "polymorphic-root": {
+    "encoded": {
+      "_id": {
+        "$oid": "650000000000000000000201"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog",
+      "barks": {
+        "$numberInt": "3"
+      },
+      "name": "rex"
+    },
+    "roundTrip": {
+      "_id": {
+        "$oid": "650000000000000000000201"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog",
+      "barks": {
+        "$numberInt": "3"
+      },
+      "name": "rex"
+    }
+  },
+  "polymorphic-string-id": {
+    "encoded": {
+      "_id": "BUG-1",
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessKeyedBug",
+      "severity": {
+        "$numberInt": "2"
+      },
+      "title": "crash"
+    },
+    "roundTrip": {
+      "_id": "BUG-1",
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessKeyedBug",
+      "severity": {
+        "$numberInt": "2"
+      },
+      "title": "crash"
+    }
+  },
   "references": {
     "encoded": {
       "_id": {
@@ -866,6 +906,323 @@
       "size": {
         "$numberInt": "4"
       }
+    }
+  },
+  "foreign/pet-discriminator-first": {
+    "input": {
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog",
+      "_id": {
+        "$oid": "650000000000000000000202"
+      },
+      "name": "a",
+      "barks": {
+        "$numberInt": "1"
+      }
+    },
+    "decoded": {
+      "_id": {
+        "$oid": "650000000000000000000202"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog",
+      "barks": {
+        "$numberInt": "1"
+      },
+      "name": "a"
+    }
+  },
+  "foreign/pet-discriminator-after-a-property": {
+    "input": {
+      "_id": {
+        "$oid": "650000000000000000000203"
+      },
+      "name": "b",
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog",
+      "barks": {
+        "$numberInt": "2"
+      }
+    },
+    "decoded": {
+      "_id": {
+        "$oid": "650000000000000000000203"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog",
+      "barks": {
+        "$numberInt": "2"
+      },
+      "name": "b"
+    }
+  },
+  "foreign/pet-discriminator-last": {
+    "input": {
+      "name": "c",
+      "barks": {
+        "$numberInt": "3"
+      },
+      "_id": {
+        "$oid": "650000000000000000000204"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog"
+    },
+    "decoded": {
+      "_id": {
+        "$oid": "650000000000000000000204"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog",
+      "barks": {
+        "$numberInt": "3"
+      },
+      "name": "c"
+    }
+  },
+  "foreign/pet-id-after-the-discriminator": {
+    "input": {
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog",
+      "name": "d",
+      "_id": {
+        "$oid": "650000000000000000000205"
+      }
+    },
+    "decoded": {
+      "_id": {
+        "$oid": "650000000000000000000205"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog",
+      "barks": {
+        "$numberInt": "0"
+      },
+      "name": "d"
+    }
+  },
+  "foreign/pet-lifecycle-subtype": {
+    "input": {
+      "_id": {
+        "$oid": "65000000000000000000020e"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessCat",
+      "name": "s",
+      "lives": {
+        "$numberInt": "9"
+      }
+    },
+    "decoded": {
+      "_id": {
+        "$oid": "65000000000000000000020e"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessCat",
+      "lives": {
+        "$numberInt": "9"
+      },
+      "name": "s"
+    }
+  },
+  "foreign/pet-no-id": {
+    "input": {
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog",
+      "name": "e"
+    },
+    "decoded": {
+      "_id": null,
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog",
+      "barks": {
+        "$numberInt": "0"
+      },
+      "name": "e"
+    }
+  },
+  "foreign/pet-string-id-for-object-id": {
+    "input": {
+      "_id": "650000000000000000000206",
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog",
+      "name": "f"
+    },
+    "decoded": {
+      "_id": {
+        "$oid": "650000000000000000000206"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog",
+      "barks": {
+        "$numberInt": "0"
+      },
+      "name": "f"
+    }
+  },
+  "foreign/pet-document-id": {
+    "input": {
+      "_id": {
+        "a": {
+          "$numberInt": "1"
+        }
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog",
+      "name": "g"
+    },
+    "decoded": {
+      "error": "dev.morphia.mapping.MappingException"
+    }
+  },
+  "foreign/pet-null-id": {
+    "input": {
+      "_id": null,
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog",
+      "name": "h"
+    },
+    "decoded": {
+      "_id": null,
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog",
+      "barks": {
+        "$numberInt": "0"
+      },
+      "name": "h"
+    }
+  },
+  "foreign/pet-missing-discriminator": {
+    "input": {
+      "_id": {
+        "$oid": "650000000000000000000207"
+      },
+      "name": "i"
+    },
+    "decoded": {
+      "error": "dev.morphia.mapping.MappingException"
+    }
+  },
+  "foreign/pet-null-discriminator": {
+    "input": {
+      "_id": {
+        "$oid": "650000000000000000000208"
+      },
+      "_t": null,
+      "name": "j"
+    },
+    "decoded": {
+      "error": "org.bson.codecs.configuration.CodecConfigurationException"
+    }
+  },
+  "foreign/pet-discriminator-not-a-string": {
+    "input": {
+      "_id": {
+        "$oid": "650000000000000000000209"
+      },
+      "_t": {
+        "$numberInt": "5"
+      },
+      "name": "k"
+    },
+    "decoded": {
+      "error": "org.bson.codecs.configuration.CodecConfigurationException"
+    }
+  },
+  "foreign/pet-unknown-discriminator": {
+    "input": {
+      "_id": {
+        "$oid": "65000000000000000000020a"
+      },
+      "_t": "no.such.Pet",
+      "name": "l"
+    },
+    "decoded": {
+      "error": "org.bson.codecs.configuration.CodecConfigurationException"
+    }
+  },
+  "foreign/pet-discriminator-outside-the-hierarchy": {
+    "input": {
+      "_id": {
+        "$oid": "65000000000000000000020b"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessCircle",
+      "label": "m"
+    },
+    "decoded": {
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessCircle",
+      "radius": {
+        "$numberDouble": "0.0"
+      },
+      "label": "m"
+    }
+  },
+  "foreign/dog-discriminator-of-its-root": {
+    "input": {
+      "_id": {
+        "$oid": "65000000000000000000020c"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessPet",
+      "name": "n",
+      "barks": {
+        "$numberInt": "4"
+      }
+    },
+    "decoded": {
+      "error": "dev.morphia.mapping.MappingException"
+    }
+  },
+  "foreign/dog-missing-discriminator": {
+    "input": {
+      "_id": {
+        "$oid": "65000000000000000000020d"
+      },
+      "name": "o",
+      "barks": {
+        "$numberInt": "5"
+      }
+    },
+    "decoded": {
+      "_id": {
+        "$oid": "65000000000000000000020d"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessDog",
+      "barks": {
+        "$numberInt": "5"
+      },
+      "name": "o"
+    }
+  },
+  "foreign/ticket-int-id-for-string-id": {
+    "input": {
+      "_id": {
+        "$numberInt": "7"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessKeyedBug",
+      "title": "p",
+      "severity": {
+        "$numberInt": "1"
+      }
+    },
+    "decoded": {
+      "_id": "7",
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessKeyedBug",
+      "severity": {
+        "$numberInt": "1"
+      },
+      "title": "p"
+    }
+  },
+  "foreign/ticket-long-id-for-string-id": {
+    "input": {
+      "_id": {
+        "$numberLong": "8"
+      },
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessKeyedBug",
+      "title": "q"
+    },
+    "decoded": {
+      "_id": "8",
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessKeyedBug",
+      "severity": {
+        "$numberInt": "0"
+      },
+      "title": "q"
+    }
+  },
+  "foreign/ticket-subtype-on-its-own": {
+    "input": {
+      "_id": "T-2",
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessKeyedTicket",
+      "title": "r"
+    },
+    "decoded": {
+      "_id": "T-2",
+      "_t": "dev.morphia.test.mapping.codec.harness.models.HarnessKeyedTicket",
+      "title": "r"
     }
   }
 }
