@@ -1,5 +1,8 @@
 package dev.morphia.mapping.codec.pojo.critter;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.lang.annotation.Annotation;
 import java.lang.constant.ConstantDescs;
 import java.lang.constant.MethodTypeDesc;
@@ -7,6 +10,7 @@ import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Properties;
 
 import dev.morphia.annotations.IdField;
 import dev.morphia.config.MorphiaConfig;
@@ -29,17 +33,36 @@ import dev.morphia.mapping.conventions.MorphiaConvention;
  */
 public abstract class CritterEntityModel extends EntityModel {
     /**
-     * The version of the code critter-maven generates. A model generated for another version fails to load, and the
-     * mapper generates the entity's model at runtime instead. Change it whenever generated code would no longer work with
-     * this version of Morphia.
+     * The version of Morphia that's running. A pre-generated model is used only with the version it was generated with.
      */
-    public static final int FORMAT = 1;
+    public static final String MORPHIA_VERSION = morphiaVersion();
 
     /**
-     * The name of a pre-generated model's static field holding the {@link #generationKey(MorphiaConfig) generation key} of
-     * the configuration it was generated with.
+     * The name of a pre-generated model's constant holding the {@link #MORPHIA_VERSION} it was generated with.
+     */
+    public static final String MORPHIA_VERSION_FIELD = "__morphiaVersion";
+
+    /**
+     * The name of a pre-generated model's constant holding the {@link #generationKey(MorphiaConfig) generation key} of the
+     * configuration it was generated with.
      */
     public static final String GENERATION_KEY = "__generationKey";
+
+    /**
+     * The name of a pre-generated model's constant holding the ID of the critter-maven run that generated it.
+     */
+    public static final String BUILD_ID = "__buildId";
+
+    /**
+     * The name of a pre-generated model's constant listing, separated by commas, the classes woven for it: the entity and
+     * the superclasses whose fields are woven into them.
+     */
+    public static final String WOVEN_CLASSES = "__wovenClasses";
+
+    /**
+     * The prefix of the private synthetic field critter-maven adds to each class it weaves, named for the run's ID.
+     */
+    public static final String BUILD_STAMP = "__morphiaBuild$";
 
     private final Conversions conversions;
 
@@ -53,41 +76,31 @@ public abstract class CritterEntityModel extends EntityModel {
     }
 
     /**
-     * Called first when a pre-generated model is initialized.
-     *
-     * @param format the {@link #FORMAT} the model was generated with
-     * @throws IllegalStateException if it isn't this version's
+     * @param type    the entity
+     * @param woven   the name of a class woven with it: the entity or one of its superclasses
+     * @param buildId the ID of the build that generated the entity's model
+     * @return true if the class is stamped with that build's ID, which it isn't if it was compiled again, or woven by
+     *         another build, after the model was generated
      */
-    @SuppressWarnings("unused")
-    public static void checkFormat(int format) {
-        if (format != FORMAT) {
-            throw new IllegalStateException("it was generated in format %d, but this version of Morphia reads format %d"
-                    .formatted(format, FORMAT));
+    public static boolean isWovenBy(Class<?> type, String woven, String buildId) {
+        for (Class<?> current = type; current != null; current = current.getSuperclass()) {
+            if (current.getName().equals(woven)) {
+                try {
+                    // only looked up, so the field's access doesn't matter, and the class isn't initialized
+                    current.getDeclaredField(BUILD_STAMP + buildId);
+                    return true;
+                } catch (NoSuchFieldException e) {
+                    return false;
+                }
+            }
         }
-    }
-
-    /**
-     * Called when a pre-generated model is initialized, for each class woven with its entity.
-     *
-     * @param type  the entity
-     * @param stamp the name of the class's weave stamp, which the entity declares or inherits
-     * @throws NoSuchFieldError if the stamp is missing because the class was compiled again without being woven, or woven
-     *                          differently
-     */
-    @SuppressWarnings("unused")
-    public static void checkWoven(Class<?> type, String stamp) {
-        try {
-            // a lookup only: a public field is found whatever the class's access, and the class isn't initialized
-            type.getField(stamp);
-        } catch (NoSuchFieldException e) {
-            throw new NoSuchFieldError("%s.%s".formatted(type.getName(), stamp));
-        }
+        return false;
     }
 
     /**
      * Describes the configuration settings generation bakes into a model: the collection and property naming, the
      * discriminator function and key, property discovery and the property annotation providers. Strategies are identified
-     * by class, so two instances of one class are assumed to behave the same.
+     * by class, which tells two configurations apart only if every strategy is one of Morphia's stateless built-ins.
      *
      * @param config the configuration
      * @return the key
@@ -106,6 +119,18 @@ public abstract class CritterEntityModel extends EntityModel {
             separator = ",";
         }
         return key.append(']').toString();
+    }
+
+    private static String morphiaVersion() {
+        try (InputStream in = CritterEntityModel.class.getResourceAsStream("/dev/morphia/morphia-version.properties")) {
+            Properties properties = new Properties();
+            if (in != null) {
+                properties.load(in);
+            }
+            return properties.getProperty("version", "unknown");
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     /**

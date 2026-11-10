@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,6 +36,8 @@ import io.smallrye.classfile.ClassModel;
 public class CritterGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(CritterGenerator.class);
     private final Mapper mapper;
+    // stamped on every class this generator weaves and recorded in every model it generates at build time
+    private final String buildId = BuildStamp.newId();
 
     /**
      * Creates a new CritterGenerator with the given mapper.
@@ -74,9 +75,9 @@ public class CritterGenerator {
         EntityModelGenerator entityModel = new EntityModelGenerator(mapper, targetType, standinType, critterClassLoader,
                 properties.models()).instantiators(instantiators);
         if (!runtimeMode) {
-            entityModel.pregenerated(properties.classes().values().stream()
-                    .map(WeaveStamp::of)
-                    .filter(Objects::nonNull)
+            entityModel.pregenerated(buildId, properties.classes().entrySet().stream()
+                    .filter(e -> BuildStamp.isStamped(e.getValue()))
+                    .map(Map.Entry::getKey)
                     .toList());
         }
         // nothing is emitted until every class has been generated
@@ -170,7 +171,8 @@ public class CritterGenerator {
     }
 
     /**
-     * Generates bytecode augmenting the entity with synthetic {@code __readXxx}/{@code __writeXxx} methods for its fields.
+     * Generates bytecode augmenting the entity with synthetic {@code __readXxx}/{@code __writeXxx} methods for its fields,
+     * stamped with this generator's build ID.
      *
      * @param entityType the entity class to augment
      * @param model      the entity's parsed classfile
@@ -178,11 +180,12 @@ public class CritterGenerator {
      * @return the augmented class bytecode
      */
     public byte[] fieldAccessors(Class<?> entityType, ClassModel model, List<FieldInfo> fields) {
-        return new AddFieldAccessorMethods(entityType, model, fields).emit();
+        return BuildStamp.stamp(new AddFieldAccessorMethods(entityType, model, fields).emit(), buildId);
     }
 
     /**
-     * Generates bytecode augmenting the entity with synthetic {@code __readXxx}/{@code __writeXxx} methods for its getter methods.
+     * Generates bytecode augmenting the entity with synthetic {@code __readXxx}/{@code __writeXxx} methods for its getter methods,
+     * stamped with this generator's build ID.
      *
      * @param entityType the entity class to augment
      * @param model      the entity's parsed classfile
@@ -190,7 +193,7 @@ public class CritterGenerator {
      * @return the augmented class bytecode
      */
     public byte[] methodAccessors(Class<?> entityType, ClassModel model, List<MethodInfo> methods) {
-        return new AddMethodAccessorMethods(entityType, model, methods).emit();
+        return BuildStamp.stamp(new AddMethodAccessorMethods(entityType, model, methods).emit(), buildId);
     }
 
     /**

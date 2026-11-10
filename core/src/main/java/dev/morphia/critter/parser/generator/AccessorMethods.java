@@ -36,15 +36,15 @@ public abstract class AccessorMethods {
     public abstract byte[] emit();
 
     /**
-     * Weaves the entity: applies {@code transform}, adds the {@code __newN} methods instantiators call, and stamps the result
-     * (see {@link WeaveStamp}).
+     * Weaves the entity: applies {@code transform}, adds the {@code __newN} methods instantiators call, and drops the build
+     * stamp an earlier build left, for the generator to stamp it afresh (see {@link BuildStamp}).
      *
      * @param transform adds the accessor methods
      * @return the woven class's bytecode
      */
     protected byte[] weave(ClassTransform transform) {
-        return WeaveStamp.stamp(ClassFile.of().transformClass(model,
-                transform.andThen(InstantiatorGenerator.weaving(model)).andThen(WeaveStamp.dropping())));
+        return ClassFile.of().transformClass(model,
+                transform.andThen(InstantiatorGenerator.weaving(model)).andThen(BuildStamp.dropping()));
     }
 
     private static ClassModel readClassModel(Class<?> entity) {

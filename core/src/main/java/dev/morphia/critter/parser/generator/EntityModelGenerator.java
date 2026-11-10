@@ -33,7 +33,8 @@ public class EntityModelGenerator extends BaseGenerator {
     private final ExternalEntity externalEntity;
     private final List<Annotation> morphiaAnnotations;
     private List<InstantiatorGenerator> instantiators = List.of();
-    private List<String> weaveStamps;
+    private String buildId;
+    private List<String> wovenClasses;
 
     /**
      * Creates a new entity model generator for the given entity, reading entity-level annotations
@@ -103,15 +104,16 @@ public class EntityModelGenerator extends BaseGenerator {
     }
 
     /**
-     * Makes the model a pre-generated one, which checks when it's initialized that it can still be used: that its format is
-     * this version's, and that the classes it calls into are still woven as they were when it was generated. It records the
-     * configuration it was generated with for the mapper to compare with its own.
+     * Makes the model a pre-generated one, which records what the mapper checks before using it: the Morphia version and
+     * configuration it was generated with, and the build that wove the classes it calls into.
      *
-     * @param weaveStamps the names of the stamps of the woven classes, which the entity declares or inherits
+     * @param buildId      the ID of the build, stamped on the woven classes
+     * @param wovenClasses the woven classes: the entity and the superclasses whose fields are woven into them
      * @return this generator
      */
-    public EntityModelGenerator pregenerated(List<String> weaveStamps) {
-        this.weaveStamps = weaveStamps;
+    public EntityModelGenerator pregenerated(String buildId, List<String> wovenClasses) {
+        this.buildId = buildId;
+        this.wovenClasses = wovenClasses;
         return this;
     }
 
@@ -145,8 +147,11 @@ public class EntityModelGenerator extends BaseGenerator {
             cb.withFlags(ClassFile.ACC_PUBLIC | ClassFile.ACC_SUPER);
             cb.withSuperclass(superDesc);
 
-            if (weaveStamps != null) {
-                emitValidity(cb, superDesc);
+            if (buildId != null) {
+                constant(cb, CritterEntityModel.MORPHIA_VERSION_FIELD, CritterEntityModel.MORPHIA_VERSION);
+                constant(cb, CritterEntityModel.GENERATION_KEY, CritterEntityModel.generationKey(mapper.getConfig()));
+                constant(cb, CritterEntityModel.BUILD_ID, buildId);
+                constant(cb, CritterEntityModel.WOVEN_CLASSES, String.join(",", wovenClasses));
             }
 
             // each property is built by its own method, so a wide entity doesn't push the constructor past the JVM's
@@ -223,31 +228,10 @@ public class EntityModelGenerator extends BaseGenerator {
         return bytes;
     }
 
-    /**
-     * Emits the generation key field, and a static initializer checking the format and that every weave stamp is still
-     * there. A stamp that's missing because its class was compiled again without being woven, or woven differently, fails
-     * with a {@link NoSuchFieldError}.
-     */
-    private void emitValidity(ClassBuilder cb, ClassDesc superDesc) {
-        String generationKey = CritterEntityModel.generationKey(mapper.getConfig());
-        cb.withField(CritterEntityModel.GENERATION_KEY, ConstantDescs.CD_String, fb -> fb
+    private static void constant(ClassBuilder cb, String name, String value) {
+        cb.withField(name, ConstantDescs.CD_String, fb -> fb
                 .withFlags(ClassFile.ACC_PUBLIC | ClassFile.ACC_STATIC | ClassFile.ACC_FINAL | ClassFile.ACC_SYNTHETIC)
-                .with(ConstantValueAttribute.of(generationKey)));
-        ClassDesc thisDesc = ClassDesc.of(generatedType);
-        cb.withMethodBody("<clinit>", MethodTypeDesc.of(ConstantDescs.CD_void), ClassFile.ACC_STATIC, cod -> {
-            cod.loadConstant(CritterEntityModel.FORMAT);
-            cod.invokestatic(superDesc, "checkFormat", MethodTypeDesc.of(ConstantDescs.CD_void, ConstantDescs.CD_int));
-            // through the entity, which inherits the stamps of the superclasses woven with it
-            GenerationUtils.emitClassRef(cod, entity, thisDesc);
-            for (String stamp : weaveStamps) {
-                cod.dup();
-                cod.ldc(stamp);
-                cod.invokestatic(superDesc, "checkWoven",
-                        MethodTypeDesc.of(ConstantDescs.CD_void, ConstantDescs.CD_Class, ConstantDescs.CD_String));
-            }
-            cod.pop();
-            cod.return_();
-        });
+                .with(ConstantValueAttribute.of(value)));
     }
 
     /**
