@@ -6,10 +6,10 @@ import java.util.StringJoiner;
 
 import com.mongodb.lang.Nullable;
 
-import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.internal.PathTarget;
 import dev.morphia.mapping.Mapper;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.sofia.Sofia;
 
@@ -153,13 +153,11 @@ public class Projection {
         iterate(mapper, projection, clazz, includes, 1);
         iterate(mapper, projection, clazz, excludes, 0);
 
-        Entity entityAnnotation = null;
-        if (!clazz.equals(Document.class)) {
-            entityAnnotation = mapper.getEntityModel(clazz).getEntityAnnotation();
-        }
-
-        if (isIncluding() && entityAnnotation != null && entityAnnotation.useDiscriminator()) {
-            projection.put(mapper.getConfig().discriminatorKey(), 1);
+        if (isIncluding() && !clazz.equals(Document.class)) {
+            EntityModel model = mapper.getEntityModel(clazz);
+            if (model.useDiscriminator()) {
+                projection.put(model.discriminatorKey(), 1);
+            }
         }
 
         return projection;

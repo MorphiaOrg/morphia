@@ -17,9 +17,8 @@
 package dev.morphia.mapping;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-
-import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -38,6 +37,10 @@ import static java.lang.String.format;
 @MorphiaInternal
 public final class DiscriminatorLookup {
     private final Map<String, Class<?>> discriminatorClassMap = new ConcurrentHashMap<>();
+    // Class.forName results for discriminators no model registered, including misses, so a stored value that names no
+    // class (or names one under a since-changed discriminator style) doesn't reload or rethrow per document
+    private static final int MAX_CACHED_NAMES = 1024;
+    private final Map<String, Optional<Class<?>>> classesByName = new ConcurrentHashMap<>();
     private final ClassLoader classLoader;
 
     /**
@@ -78,26 +81,29 @@ public final class DiscriminatorLookup {
      * @return the mapped class
      */
     public Class<?> lookup(String discriminator) {
-        if (discriminatorClassMap.containsKey(discriminator)) {
-            return discriminatorClassMap.get(discriminator);
-        }
-
-        Class<?> clazz = getClassForName(discriminator);
+        Class<?> clazz = discriminatorClassMap.get(discriminator);
         if (clazz == null) {
-            throw new CodecConfigurationException(format("A class could not be found for the discriminator: '%s'.", discriminator));
+            // not computeIfAbsent: loading initializes the class, whose initializer could come back here
+            Optional<Class<?>> loaded = classesByName.get(discriminator);
+            if (loaded == null) {
+                loaded = getClassForName(discriminator);
+                // stored data decides the values, so the cache is capped rather than growing with every stray one
+                if (classesByName.size() < MAX_CACHED_NAMES) {
+                    classesByName.putIfAbsent(discriminator, loaded);
+                }
+            }
+            clazz = loaded.orElseThrow(() -> new CodecConfigurationException(
+                    format("A class could not be found for the discriminator: '%s'.", discriminator)));
         }
         return clazz;
     }
 
-    @Nullable
-    private Class<?> getClassForName(String discriminator) {
-        Class<?> clazz = null;
+    private Optional<Class<?>> getClassForName(String discriminator) {
         try {
-            clazz = Class.forName(discriminator, true, classLoader);
+            return Optional.of(Class.forName(discriminator, true, classLoader));
         } catch (ClassNotFoundException e) {
-            // Ignore
+            return Optional.empty();
         }
-        return clazz;
     }
 
 }
