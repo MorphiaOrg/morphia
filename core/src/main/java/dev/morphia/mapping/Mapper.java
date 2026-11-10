@@ -254,17 +254,6 @@ public interface Mapper {
     void mapPackage(String packageName);
 
     /**
-     * Updates a query with any discriminators from subtypes if polymorphic queries are enabled
-     *
-     * @param model the query model
-     * @param query the query document
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    void updateQueryWithDiscriminators(EntityModel model, Document query);
-
-    /**
      * @param entityModel the model to register
      * @return the model
      * @hidden

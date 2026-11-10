@@ -444,10 +444,26 @@ public class EntityModel {
      */
     @MorphiaInternal
     public List<EntityModel> allSubtypes() {
+        return currentSubtypes().models();
+    }
+
+    /**
+     * @param polymorphic true to include the discriminators of every subtype
+     * @return this model's discriminator, then, if polymorphic, those of its subtypes in {@link #allSubtypes()} order.
+     *         The list is unmodifiable and cached like the subtypes.
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public List<String> discriminatorValues(boolean polymorphic) {
+        return polymorphic ? currentSubtypes().discriminators() : List.of(discriminator());
+    }
+
+    private AllSubtypes currentSubtypes() {
         long version = subtypesVersion.get();
         AllSubtypes cached = allSubtypes;
         if (cached != null && cached.version() == version) {
-            return cached.models();
+            return cached;
         }
         // a model can be reached along several paths (e.g. linked under an interface and under its superinterface), so
         // expand each one only once
@@ -468,9 +484,13 @@ public class EntityModel {
         }
         ordered.sort(Comparator.comparingInt(distances::get));
         List<EntityModel> models = List.copyOf(ordered);
+        List<String> discriminators = new ArrayList<>();
+        discriminators.add(discriminator());
+        models.forEach(model -> discriminators.add(model.discriminator()));
         // tagged with the version read before walking, so a subtype linked during the walk makes it stale at once
-        allSubtypes = new AllSubtypes(version, models);
-        return models;
+        AllSubtypes current = new AllSubtypes(version, models, Collections.unmodifiableList(discriminators));
+        allSubtypes = current;
+        return current;
     }
 
     /**
@@ -515,7 +535,7 @@ public class EntityModel {
         }
     }
 
-    private record AllSubtypes(long version, List<EntityModel> models) {
+    private record AllSubtypes(long version, List<EntityModel> models, List<String> discriminators) {
     }
 
     /**

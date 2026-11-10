@@ -60,6 +60,8 @@ public class MorphiaQuery<T> implements Query<T> {
     private final FindOptions options;
     private final Class<T> type;
     private final Mapper mapper;
+    @Nullable
+    private final EntityModel model;
     private final List<Filter> filters = new ArrayList<>();
     private final Document seedQuery;
     private String collectionName;
@@ -82,6 +84,7 @@ public class MorphiaQuery<T> implements Query<T> {
         this.seedQuery = query;
         this.options = options;
         mapper = this.datastore.getMapper();
+        model = mapper.mapEntity(type);
         if (options.collection() != null) {
             collection = datastore.getDatabase().getCollection(options.collection())
                     .withDocumentClass(type);
@@ -371,8 +374,8 @@ public class MorphiaQuery<T> implements Query<T> {
             });
 
             Document query = writer.getDocument();
-            if (mapper.isMappable(getEntityClass())) {
-                mapper.updateQueryWithDiscriminators(mapper.getEntityModel(getEntityClass()), query);
+            if (model != null) {
+                addDiscriminators(model, query);
             }
 
             return query;
@@ -381,6 +384,17 @@ public class MorphiaQuery<T> implements Query<T> {
             throw e;
         }
 
+    }
+
+    /**
+     * Limits a query on a type that stores its discriminator to that type and, if polymorphic queries are enabled, its
+     * subtypes, unless the query already selects by id or by discriminator.
+     */
+    private void addDiscriminators(EntityModel model, Document query) {
+        if (model.useDiscriminator() && !query.containsKey("_id") && !query.containsKey(model.discriminatorKey())) {
+            query.put(model.discriminatorKey(),
+                    new Document("$in", model.discriminatorValues(mapper.getConfig().enablePolymorphicQueries())));
+        }
     }
 
 }

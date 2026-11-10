@@ -7,7 +7,6 @@ import dev.morphia.annotations.Id;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 
-import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -87,10 +86,22 @@ public class TestCollectionRoots {
         EntityModel leaf = mapper.getEntityModel(Leaf.class);
         Assertions.assertTrue(root.getSubtypes().contains(leaf), "Leaf extends Root through the unmapped Middle");
 
-        Document query = new Document();
-        mapper.updateQueryWithDiscriminators(root, query);
-        Assertions.assertEquals(List.of(root.discriminator(), leaf.discriminator()),
-                query.get(root.discriminatorKey(), Document.class).getList("$in", String.class));
+        Assertions.assertEquals(List.of(root.discriminator(), leaf.discriminator()), root.discriminatorValues(true));
+        Assertions.assertEquals(List.of(root.discriminator()), root.discriminatorValues(false));
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    public void discriminatorValuesPickUpSubtypesMappedLater(MapperType type) {
+        Mapper mapper = mapper(type);
+        EntityModel root = mapper.getEntityModel(Root.class);
+        List<String> before = root.discriminatorValues(true);
+        Assertions.assertEquals(List.of(root.discriminator()), before);
+        Assertions.assertSame(before, root.discriminatorValues(true), "cached until the subtypes change");
+
+        EntityModel leaf = mapper.getEntityModel(Leaf.class);
+        Assertions.assertEquals(List.of(root.discriminator(), leaf.discriminator()), root.discriminatorValues(true));
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> root.discriminatorValues(true).add("x"));
     }
 
     @ParameterizedTest

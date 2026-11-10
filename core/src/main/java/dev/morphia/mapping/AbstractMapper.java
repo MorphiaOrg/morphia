@@ -413,24 +413,6 @@ public abstract class AbstractMapper implements Mapper {
 
     @Override
     @MorphiaInternal
-    public void updateQueryWithDiscriminators(EntityModel model, Document query) {
-        Entity annotation = model.getEntityAnnotation();
-        if (annotation != null && annotation.useDiscriminator()
-                && !query.containsKey("_id")
-                && !query.containsKey(model.discriminatorKey())) {
-            List<String> values = new ArrayList<>();
-            values.add(model.discriminator());
-            if (config.enablePolymorphicQueries()) {
-                for (EntityModel subtype : model.getSubtypes()) {
-                    values.add(subtype.discriminator());
-                }
-            }
-            query.put(model.discriminatorKey(), new Document("$in", values));
-        }
-    }
-
-    @Override
-    @MorphiaInternal
     public EntityModel register(EntityModel entityModel) {
         return register(entityModel, true);
     }
