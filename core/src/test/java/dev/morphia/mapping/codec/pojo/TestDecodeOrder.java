@@ -10,6 +10,7 @@ import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PostLoad;
+import dev.morphia.annotations.Property;
 import dev.morphia.config.ManualMorphiaConfig;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.MapperType;
@@ -23,6 +24,7 @@ import org.bson.BsonDocumentWriter;
 import org.bson.BsonReader;
 import org.bson.BsonReaderMark;
 import org.bson.BsonWriter;
+import org.bson.Document;
 import org.bson.RawBsonDocument;
 import org.bson.codecs.Codec;
 import org.bson.codecs.DecoderContext;
@@ -182,6 +184,73 @@ public class TestDecodeOrder {
         return Stream.of(MapperType.values());
     }
 
+    /**
+     * An {@code _id} mapped as an ordinary property, on a model with no id property, is decoded like any other property
+     * even when it comes before the discriminator.
+     */
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("mappers")
+    void idMappedAsAnOrdinaryPropertyIsKept(MapperType mapper) {
+        withDatastore(mapper, datastore -> {
+            Note note = decode(datastore, Note.class, "{\"_id\": \"k1\", \"_t\": \"%s\", \"text\": \"t\"}"
+                    .formatted(Memo.class.getName()));
+
+            Assertions.assertInstanceOf(Memo.class, note);
+            Assertions.assertEquals("k1", note.key);
+            Assertions.assertEquals("t", note.text);
+        });
+    }
+
+    /**
+     * An entity whose id is a document is in the session before the id's own properties are decoded, since one of them
+     * might refer back to it.
+     */
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("mappers")
+    void entityWithACompoundIdIsInTheSessionBeforeItsId(MapperType mapper) {
+        withDatastore(mapper, datastore -> {
+            Keyed keyed = decode(datastore, Keyed.class, "{\"_id\": {\"a\": \"x\", \"probe\": \"Keyed\"}, \"name\": \"n\"}");
+
+            Assertions.assertEquals("x", keyed.id.a);
+            Assertions.assertSame(keyed, keyed.id.probe.seen, "the probe in the id found the entity being decoded");
+        });
+    }
+
+    /**
+     * A codec provider can supply its own {@link MorphiaCodec} subclass for a subtype. Its {@code decode} runs whichever
+     * layout the document has.
+     */
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("mappers")
+    void aSubtypeCodecSubclassStillDecodes(MapperType mapper) {
+        MorphiaDatastore[] holder = new MorphiaDatastore[1];
+        int[] decodes = { 0 };
+        CodecProvider custom = new CodecProvider() {
+            @Override
+            @SuppressWarnings("unchecked")
+            public <T> Codec<T> get(Class<T> clazz, CodecRegistry registry) {
+                if (clazz != Dog.class || holder[0] == null) {
+                    return null;
+                }
+                MorphiaDatastore datastore = holder[0];
+                return (Codec<T>) new CountingCodec<>(datastore, datastore.getMapper().getEntityModel(Dog.class), registry,
+                        decodes);
+            }
+        };
+        withDatastore(mapper, List.of(custom), datastore -> {
+            holder[0] = datastore;
+            Assertions.assertInstanceOf(MorphiaCodec.class, datastore.getCodecRegistry().get(Dog.class));
+            Assertions.assertNotSame(MorphiaCodec.class, datastore.getCodecRegistry().get(Dog.class).getClass(),
+                    "the provider's codec is the one used");
+
+            Pet pet = decode(datastore, Pet.class, "{\"_id\": {\"$oid\": \"%s\"}, \"_t\": \"%s\", \"name\": \"c\"}"
+                    .formatted(ID.toHexString(), DOG));
+
+            Assertions.assertInstanceOf(Dog.class, pet);
+            Assertions.assertEquals(1, decodes[0], "decodes through the provider's codec");
+        });
+    }
+
     private static <T> T decode(MorphiaDatastore datastore, Class<T> type, String json) {
         RawBsonDocument raw = RawBsonDocument.parse(BsonDocument.parse(json).toJson());
         try (BsonBinaryReader reader = new BsonBinaryReader(raw.getByteBuffer().asNIO())) {
@@ -190,11 +259,25 @@ public class TestDecodeOrder {
     }
 
     private static void withDatastore(MapperType mapper, java.util.function.Consumer<MorphiaDatastore> test) {
+        withDatastore(mapper, List.of(), test);
+    }
+
+    private static void withDatastore(MapperType mapper, List<CodecProvider> providers,
+            java.util.function.Consumer<MorphiaDatastore> test) {
         CodecProvider probes = new CodecProvider() {
             @Override
             @SuppressWarnings("unchecked")
             public <T> Codec<T> get(Class<T> clazz, CodecRegistry registry) {
-                return clazz == Probe.class ? (Codec<T>) new ProbeCodec() : null;
+                if (clazz == Probe.class) {
+                    return (Codec<T>) new ProbeCodec();
+                }
+                for (CodecProvider provider : providers) {
+                    Codec<T> codec = provider.get(clazz, registry);
+                    if (codec != null) {
+                        return codec;
+                    }
+                }
+                return null;
             }
         };
         MorphiaConfig config = ManualMorphiaConfig.configure()
@@ -207,7 +290,7 @@ public class TestDecodeOrder {
                 .applyDocumentValidations(false);
         try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
             MorphiaDatastore datastore = new MorphiaDatastore(client, config);
-            datastore.getMapper().map(Pet.class, Dog.class, Cat.class, Built.class);
+            datastore.getMapper().map(Pet.class, Dog.class, Cat.class, Built.class, Note.class, Memo.class, Keyed.class);
             test.accept(datastore);
         }
     }
@@ -230,7 +313,9 @@ public class TestDecodeOrder {
             Probe probe = new Probe();
             String collection = reader.readString();
             try {
-                probe.seen = DecodeSession.current().lookup(collection, ID);
+                // a Keyed is keyed by its compound id as stored, which is the one the probe is part of
+                Object id = "Keyed".equals(collection) ? new Document("a", "x").append("probe", "Keyed") : ID;
+                probe.seen = DecodeSession.current().lookup(collection, id);
             } catch (MappingException e) {
                 probe.seen = Probe.CONSTRUCTING;
             }
@@ -287,6 +372,57 @@ public class TestDecodeOrder {
         public Built(ObjectId id, Probe probe) {
             this.id = id;
             this.probe = probe;
+        }
+    }
+
+    @Entity("Note")
+    public abstract static class Note {
+        @Property("_id")
+        String key;
+        String text;
+    }
+
+    @Entity("Memo")
+    public static class Memo extends Note {
+        public Memo() {
+        }
+    }
+
+    @Entity(value = "Keyed", useDiscriminator = false)
+    public static class Keyed {
+        @Id
+        CompoundId id;
+        String name;
+
+        public Keyed() {
+        }
+    }
+
+    @Entity(useDiscriminator = false)
+    public static class CompoundId {
+        String a;
+        Probe probe;
+
+        public CompoundId() {
+        }
+    }
+
+    /**
+     * A codec a provider supplies for an entity, which counts its decodes.
+     */
+    private static class CountingCodec<T> extends MorphiaCodec<T> {
+        private final int[] decodes;
+
+        CountingCodec(MorphiaDatastore datastore, EntityModel model, CodecRegistry registry, int[] decodes) {
+            super(datastore, model, List.of(), datastore.getMapper().getDiscriminatorLookup(), registry,
+                    datastore.getMapper().getConversions());
+            this.decodes = decodes;
+        }
+
+        @Override
+        public T decode(BsonReader reader, DecoderContext decoderContext) {
+            decodes[0]++;
+            return super.decode(reader, decoderContext);
         }
     }
 }

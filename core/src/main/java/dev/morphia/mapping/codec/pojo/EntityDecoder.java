@@ -109,7 +109,8 @@ public class EntityDecoder<T> implements Decoder<T> {
         if (codec == morphiaCodec) {
             return this;
         }
-        if (codec instanceof MorphiaCodec<?> other) {
+        // a MorphiaCodec subclass may decode its own way, so only the codec itself is skipped over
+        if (codec instanceof MorphiaCodec<?> other && other.getClass() == MorphiaCodec.class) {
             EntityDecoder<?> decoder = other.getDecoder();
             if (decoder.getClass() == EntityDecoder.class) {
                 return (EntityDecoder<? extends T>) decoder;
@@ -123,7 +124,8 @@ public class EntityDecoder<T> implements Decoder<T> {
      */
     private boolean takesId(Object id, BsonType type) {
         PropertyModel idProperty = classModel.getIdProperty();
-        return idProperty == null || idProperty.getType() == id.getClass() && morphiaCodec.getPlan().readsDirectly(idProperty, type);
+        // without an id property, an _id is an ordinary property, which the plan decodes
+        return idProperty != null && readsAsKey(morphiaCodec.getPlan(), idProperty, type);
     }
 
     /**
@@ -172,8 +174,18 @@ public class EntityDecoder<T> implements Decoder<T> {
                 if (tracking && !registered) {
                     registered = true;
                     if (model == idProperty) {
-                        key = decodeId(reader, decoderContext, instanceCreator, plan, idProperty);
-                        eager = register(session, instanceCreator, key);
+                        BsonType type = reader.getCurrentBsonType();
+                        if (readsAsKey(plan, idProperty, type)) {
+                            // the property's codec reads the value just as references do, so one read serves as both
+                            key = decoderContext.decodeWithChildContext(plan.codec(idProperty), reader);
+                            eager = register(session, instanceCreator, key);
+                            instanceCreator.set(key, idProperty);
+                        } else {
+                            // registered before the id is decoded: a compound id can hold a reference back to this entity
+                            key = readKey(reader);
+                            eager = register(session, instanceCreator, key);
+                            decodeModel(reader, decoderContext, instanceCreator, plan, idProperty);
+                        }
                         continue;
                     }
                     // a property comes before the id, so read the id ahead before decoding anything that might refer back
@@ -222,33 +234,30 @@ public class EntityDecoder<T> implements Decoder<T> {
     }
 
     /**
-     * Decodes the id property, whose name has just been read.
+     * @return true if the id property's codec reads a value of this type as references read an id, so one read serves as
+     *         both the property's value and the session key
+     */
+    private static boolean readsAsKey(CodecPlan plan, PropertyModel idProperty, BsonType type) {
+        return idProperty.getType() == defaultIdClass(type) && plan.readsDirectly(idProperty, type);
+    }
+
+    /**
+     * Reads the id, whose name has just been read, the way references read theirs, leaving the reader at its value.
      *
-     * @return the id as stored, decoded the way references read theirs so the session keys match, or null if it can't be
-     *         read
+     * @return the id, or null if it can't be read
      */
     @Nullable
-    private Object decodeId(BsonReader reader, DecoderContext decoderContext, MorphiaInstanceCreator instanceCreator,
-            CodecPlan plan, PropertyModel idProperty) {
-        BsonType type = reader.getCurrentBsonType();
-        if (idProperty.getType() == defaultIdClass(type) && plan.readsDirectly(idProperty, type)) {
-            // the property's codec reads the value just as references do, so one read serves as both
-            Object id = decoderContext.decodeWithChildContext(plan.codec(idProperty), reader);
-            instanceCreator.set(id, idProperty);
-            return id;
-        }
+    private Object readKey(BsonReader reader) {
         BsonReaderMark mark = reader.getMark();
-        Object key;
         try {
-            key = idKeyCodec().decode(reader, DEFAULT_CONTEXT);
+            return idKeyCodec().decode(reader, DEFAULT_CONTEXT);
         } catch (Exception e) {
             LOG.debug("Could not read _id for DecodeSession on {}; cycle detection may not apply",
                     classModel.getType().getSimpleName(), e);
-            key = null;
+            return null;
+        } finally {
+            mark.reset();
         }
-        mark.reset();
-        decodeModel(reader, decoderContext, instanceCreator, plan, idProperty);
-        return key;
     }
 
     /**
