@@ -644,7 +644,8 @@ Bundle these into one or two PRs. Most of it is `@MorphiaInternal` dead code.
   - ~~`Mapper.findIdProperty`, `MorphiaDatastore.hasLifecycle(EntityModel, Class)` and the static
     `ReferenceCodec.encodeId`;~~
   - ~~`ArrayCodec.getEncoderClass()` returning null.~~
-  - Done. The two unreachable collection providers became one `MorphiaCollectionPropertyCodecProvider`, which takes
+  - Done. The two unreachable collection providers became one `MorphiaCollectionPropertyCodecProvider` (the driver-style
+    `CollectionPropertyCodecProvider` is deleted), which takes
     every collection, so a list without one still gets Morphia's handling rather than the driver's.
     `ArrayCodec.getEncoderClass()` returns the array class. `TestGlobalListeners` dropped an assertion on
     `hasLifecycle`; the callbacks it records already show the listener ran.
