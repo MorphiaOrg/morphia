@@ -25,6 +25,7 @@ import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
+import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.internal.ConstructorCreator;
@@ -164,6 +165,72 @@ public class ConstructorCreatorTest extends TestBase {
         Assertions.assertEquals(2L, first.id);
         Assertions.assertEquals(1234L, first.embedded.myId);
 
+    }
+
+    @Test
+    public void primitiveParametersAreWidenedAndZeroed() {
+        EntityModel model = getMapper().map(Primitives.class).get(0);
+        MorphiaInstanceCreator creator = model.getInstanceCreator(getMapper().getConversions());
+
+        // an int widens to a long, as Constructor.newInstance would widen it; the parameters with no value get their zero
+        creator.set(5, model.getProperty("size"));
+        // and a char widens to an int
+        creator.set('A', model.getProperty("code"));
+        Primitives instance = (Primitives) creator.getInstance();
+
+        Assertions.assertEquals(5L, instance.size);
+        Assertions.assertEquals(65, instance.code);
+        Assertions.assertEquals('\0', instance.grade);
+        Assertions.assertEquals((short) 0, instance.small);
+        Assertions.assertEquals(0.0f, instance.ratio);
+        Assertions.assertFalse(instance.flag);
+    }
+
+    @Test
+    public void constructorExceptionsAreTheCause() {
+        EntityModel model = getMapper().map(Validating.class).get(0);
+        MorphiaInstanceCreator creator = model.getInstanceCreator(getMapper().getConversions());
+
+        creator.set("", model.getProperty("name"));
+        MappingException thrown = Assertions.assertThrows(MappingException.class, creator::getInstance);
+
+        Assertions.assertInstanceOf(IllegalArgumentException.class, thrown.getCause());
+        Assertions.assertTrue(thrown.getMessage().endsWith("a name is required"), thrown.getMessage());
+    }
+
+    @Entity
+    private static class Primitives {
+        @Id
+        private ObjectId id;
+        private final long size;
+        private final char grade;
+        private final short small;
+        private final float ratio;
+        private final boolean flag;
+        private final int code;
+
+        Primitives(long size, char grade, short small, float ratio, boolean flag, int code) {
+            this.code = code;
+            this.size = size;
+            this.grade = grade;
+            this.small = small;
+            this.ratio = ratio;
+            this.flag = flag;
+        }
+    }
+
+    @Entity
+    private static class Validating {
+        @Id
+        private ObjectId id;
+        private final String name;
+
+        Validating(String name) {
+            if (name.isEmpty()) {
+                throw new IllegalArgumentException("a name is required");
+            }
+            this.name = name;
+        }
     }
 
     @Entity

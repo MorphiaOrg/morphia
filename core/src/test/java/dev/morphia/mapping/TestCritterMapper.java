@@ -6,6 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -33,6 +34,7 @@ import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.generator.CritterGenerator;
 import dev.morphia.critter.parser.generator.NestmateAccessException;
 import dev.morphia.critter.parser.generator.NestmateAccessorRegistry;
+import dev.morphia.critter.sources.ConstructorExample;
 import dev.morphia.mapping.codec.MethodAccessor;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
@@ -104,6 +106,17 @@ public class TestCritterMapper {
         Assertions.assertNotNull(copiedModel, "copy() must carry over already-mapped entities");
         assertRuntimeGenerated(copiedModel);
         Assertions.assertNotSame(copiedModel, model, "copy() creates independent model instances for isolation");
+    }
+
+    @Test
+    public void testModelsCarryInstantiators() throws Exception {
+        CritterMapper original = mapper();
+        EntityModel model = assertRuntimeGenerated(original.mapEntity(ConstructorExample.class));
+        Constructor<?> constructor = ConstructorExample.class.getDeclaredConstructor(String.class, long.class);
+
+        Assertions.assertNotNull(model.getInstantiator(constructor));
+        Assertions.assertNotNull(original.copy().getEntityModel(ConstructorExample.class).getInstantiator(constructor),
+                "a copied model keeps its instantiators");
     }
 
     @Test

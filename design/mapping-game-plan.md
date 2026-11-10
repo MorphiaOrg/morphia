@@ -485,7 +485,7 @@ harness passes, and both mappers agree.
     supertype of the getter's type, or a superclass's private methods (build time); and a stand-in whose target's
     setter is private. Each of these used to send the whole entity to reflection, or skip it at build time.
 
-### 4.11 Generated instantiators (C8)
+### ~~4.11 Generated instantiators (C8)~~
 - Emit an instantiator: a woven `__new()` for AOT, a nestmate at runtime, and a constructor call with `@Name`
   arguments. This removes `Constructor.newInstance` from every decode. Coordinate with 3.2's creator.
 - Prior art: the unmerged local branch `worktree-critter-direct-construction` (worktree
@@ -506,6 +506,26 @@ harness passes, and both mappers agree.
     breaks constructors that validate their arguments (see #4431); a generated all-args creator has the same
     constraint.
 - Once 4.11 is done, remove that worktree and delete the branch (it was never pushed).
+- Done:
+  - Critter generates an `Instantiator` for each constructor decoding may choose: the no-arg constructor and those whose
+    parameters all name properties. At runtime it's a hidden nestmate of the entity, so it can call a private
+    constructor. At build time it calls a synthetic static `__newN(Object[])` woven into the entity, which keeps the
+    constructor and its parameter types out of the generated class. Every woven class gets a `__newN` for each of its
+    constructors, so a superclass woven again for a subclass entity keeps the ones its own model calls. The generated
+    model registers the instantiators by constructor descriptor, and a copied model keeps them.
+  - `ConstructorCreator` still chooses the constructor and keeps its two strategies, `Conversions`, pending values and
+    eager-instance rule. It calls the generated instantiator for the chosen constructor, or the constructor reflectively
+    when there's none: for an abstract type, a build-time entity that isn't public, or one Morphia can't define nestmates
+    in.
+  - A primitive parameter's argument is widened to its exact wrapper type, as `Constructor.newInstance` would widen it,
+    and a missing one defaults to its own zero. Before, every numeric zero was an `Integer`, which reflection can't pass
+    to a `char`, `byte` or `short` parameter.
+  - A constructor's exception is the `MappingException`'s cause on both paths, rather than an
+    `InvocationTargetException` on the reflective one.
+  - This removes reflection from decoding, but it isn't a speedup. In a crude loop on JDK 17, a generated no-arg
+    instantiator took about 12 ns and `Constructor.newInstance` about 13 ns, and `CodecBenchmark` decode didn't move.
+    It costs about 2 KB per new mapper and 1 MB of allocation on a runtime cold start. The benchmarks have no
+    constructor-mapped entity, so that path isn't measured.
 
 ### 4.12 AOT validity guard (#17, C4)
 - Emit a format version, generation key and weave hash. Check them at load time, and fall back with one log line
@@ -600,6 +620,6 @@ Only start after Phases 3 and 4 have shipped and been re-measured.
    streaming; ~~4.14 entity-only annotated methods~~
 9. 4.4 generic resolver
 10. ~~Phase 5 A11 builder/annotation utility~~ → ~~4.5 parity test~~ → ~~4.6 shared rules~~ → ~~4.7 plain models~~ → ~~4.8 divergences~~ →
-    ~~4.9~~ → ~~4.10~~ → 4.11 → 4.12 AOT guard + 4.13 API surface (**before 3.0 GA**)
+    ~~4.9~~ → ~~4.10~~ → ~~4.11~~ → 4.12 AOT guard + 4.13 API surface (**before 3.0 GA**)
 11. 3.17 single-pass discriminator and `_id`
 12. Phase 5 clean-ups throughout; Phase 6 re-evaluated after 3.0 GA

@@ -2,9 +2,15 @@ package dev.morphia.critter.parser.generator;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodHandles.Lookup;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.critter.CritterClassLoader;
@@ -14,9 +20,13 @@ import dev.morphia.critter.parser.PropertyFinder;
 import dev.morphia.critter.parser.PropertyFinder.Properties;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.pojo.ClassHierarchy;
+import dev.morphia.mapping.internal.ConstructorCreator;
 
 import org.bson.codecs.pojo.PropertyAccessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import io.smallrye.classfile.ClassFile;
 import io.smallrye.classfile.ClassModel;
 
 /**
@@ -24,6 +34,7 @@ import io.smallrye.classfile.ClassModel;
  * including field/method accessor injection and property/entity model generation.
  */
 public class CritterGenerator {
+    private static final Logger LOG = LoggerFactory.getLogger(CritterGenerator.class);
     private final Mapper mapper;
 
     /**
@@ -51,13 +62,92 @@ public class CritterGenerator {
         Class<?> targetType = ext != null ? ext.target() : type;
 
         Properties properties = new PropertyFinder(this, mapper, critterClassLoader, runtimeMode).find(standinType, targetType);
+        // at build time, the woven entity calls the constructors, and each instantiator is named for the woven method it calls
+        List<String> woven = runtimeMode ? null
+                : InstantiatorGenerator.wovenConstructors(ClassFile.of().parse(properties.classes().get(targetType.getName())));
+        List<InstantiatorGenerator> instantiators = instantiators(targetType, properties.models(), critterClassLoader, woven);
+        Runnable defineInstantiators = runtimeMode ? nestmateInstantiators(critterClassLoader, targetType, instantiators) : null;
+        if (defineInstantiators == null && runtimeMode) {
+            instantiators = List.of();
+        }
         EntityModelGenerator entityModel = new EntityModelGenerator(mapper, targetType, standinType, critterClassLoader,
-                properties.models());
+                properties.models()).instantiators(instantiators);
         // nothing is emitted until every class has been generated
         byte[] model = entityModel.generate();
+        if (!runtimeMode) {
+            for (InstantiatorGenerator instantiator : instantiators) {
+                properties.classes().put(instantiator.getGeneratedType(), instantiator.generate());
+            }
+        }
         properties.accessors().run();
+        if (defineInstantiators != null) {
+            defineInstantiators.run();
+        }
         critterClassLoader.register(entityModel.getGeneratedType(), model);
         return entityModel;
+    }
+
+    /**
+     * @return an instantiator for each constructor decoding may choose: the no-arg constructor and those whose parameters
+     *         all name properties. None for a type that can't be instantiated, or, at build time, whose woven methods the
+     *         instantiators can't call; its instances are created reflectively.
+     */
+    private static List<InstantiatorGenerator> instantiators(Class<?> type, List<PropertyModelGenerator> properties,
+            CritterClassLoader critterClassLoader, List<String> woven) {
+        boolean runtimeMode = woven == null;
+        int modifiers = type.getModifiers();
+        if (Modifier.isAbstract(modifiers) || type.isInterface() || type.isEnum()
+                || (type.isMemberClass() && !Modifier.isStatic(modifiers))
+                || (!runtimeMode && !InstantiatorGenerator.isAccessible(type))) {
+            return List.of();
+        }
+        Set<String> names = properties.stream().map(PropertyModelGenerator::getPropertyName).collect(Collectors.toSet());
+        List<InstantiatorGenerator> instantiators = new ArrayList<>();
+        for (Constructor<?> constructor : type.getDeclaredConstructors()) {
+            if (!constructor.isSynthetic() && Arrays.stream(constructor.getParameters())
+                    .allMatch(parameter -> names.contains(ConstructorCreator.getParameterName(parameter)))) {
+                int index = runtimeMode ? instantiators.size()
+                        : woven.indexOf(InstantiatorGenerator.descriptor(constructor));
+                if (index >= 0) {
+                    instantiators.add(new InstantiatorGenerator(type, critterClassLoader, constructor, index, runtimeMode));
+                }
+            }
+        }
+        return instantiators;
+    }
+
+    /**
+     * Prepares the entity's hidden nestmate instantiators, registered in {@link NestmateAccessorRegistry} when defined.
+     *
+     * @return defines and registers the instantiators, or null if Morphia can't define nestmates in the entity, which is then
+     *         instantiated reflectively
+     */
+    private static Runnable nestmateInstantiators(CritterClassLoader critterClassLoader, Class<?> type,
+            List<InstantiatorGenerator> instantiators) {
+        if (instantiators.isEmpty()) {
+            return () -> {
+            };
+        }
+        Lookup lookup;
+        try {
+            lookup = privateLookup(type);
+        } catch (NestmateAccessException e) {
+            LOG.debug("Critter can't generate instantiators for {}; it is instantiated reflectively", type.getName(), e);
+            return null;
+        }
+        List<byte[]> classes = instantiators.stream().map(InstantiatorGenerator::generate).toList();
+        return () -> {
+            for (int i = 0; i < instantiators.size(); i++) {
+                try {
+                    Class<?> instantiatorClass = lookup.defineHiddenClass(classes.get(i), true, Lookup.ClassOption.NESTMATE)
+                            .lookupClass();
+                    NestmateAccessorRegistry.register(critterClassLoader, instantiators.get(i).registryKey,
+                            instantiatorClass.getDeclaredConstructor().newInstance());
+                } catch (ReflectiveOperationException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
     }
 
     /**

@@ -30,6 +30,8 @@ import dev.morphia.annotations.internal.IndexesBuilder;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.MethodInfo;
 import dev.morphia.critter.sources.CircleExample;
+import dev.morphia.critter.sources.ConstructorChildExample;
+import dev.morphia.critter.sources.ConstructorExample;
 import dev.morphia.critter.sources.EmbeddedExample;
 import dev.morphia.critter.sources.Example;
 import dev.morphia.critter.sources.FinalFieldsExample;
@@ -44,6 +46,7 @@ import dev.morphia.mapping.codec.FieldAccessor;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
+import dev.morphia.mapping.internal.Instantiator;
 import dev.morphia.test.models.ExampleListener;
 
 import org.bson.codecs.pojo.PropertyAccessor;
@@ -208,6 +211,62 @@ public class TestGeneration {
 
         assertRoundTrip(model, entity, "code", "updated");
         assertRoundTrip(model, entity, "count", 42);
+    }
+
+    @Test
+    public void testGeneratorInstantiators() throws Exception {
+        EntityModel model = generateModel(ConstructorExample.class);
+        Class<?> woven = critterClassLoader.loadClass(ConstructorExample.class.getName());
+
+        // build-time instantiators call a method woven into the entity, so the constructor can be private
+        assertInstantiator(model, woven);
+        Assertions.assertNotNull(woven.getDeclaredMethod("__new0", Object[].class));
+        Assertions.assertNull(model.getInstantiator(woven.getDeclaredConstructor(int.class)),
+                "decoding never chooses a constructor whose parameters don't name properties");
+        Assertions.assertNull(generateModel(ShapeExample.class).getInstantiator(ShapeExample.class.getDeclaredConstructor()),
+                "an abstract entity can't be instantiated");
+    }
+
+    @Test
+    public void testGeneratorSubclassKeepsSuperclassInstantiators() throws Exception {
+        CritterGenerator generator = new CritterGenerator(defaultMapper());
+        EntityModelGenerator parent = generator.generate(ConstructorExample.class, critterClassLoader, false);
+        // weaves ConstructorExample again, for the fields ConstructorChildExample inherits. Nothing is loaded until both are
+        // generated, so that the superclass loaded is the one woven last.
+        EntityModelGenerator childGenerator = generator.generate(ConstructorChildExample.class, critterClassLoader, false);
+        EntityModel model = loadModel(parent);
+        EntityModel child = loadModel(childGenerator);
+
+        assertInstantiator(model, critterClassLoader.loadClass(ConstructorExample.class.getName()));
+        Class<?> childType = critterClassLoader.loadClass(ConstructorChildExample.class.getName());
+        Assertions.assertEquals(childType,
+                child.getInstantiator(childType.getDeclaredConstructor()).newInstance(new Object[0]).getClass());
+    }
+
+    @Test
+    public void testRuntimeGeneratorInstantiators() throws Exception {
+        CritterClassLoader loader = new CritterClassLoader(getClass().getClassLoader());
+        EntityModelGenerator generator = new CritterGenerator(defaultMapper()).generate(ConstructorExample.class, loader, true);
+        EntityModel model = (EntityModel) loader.loadClass(generator.getGeneratedType())
+                .getConstructor(Mapper.class)
+                .newInstance(defaultMapper());
+
+        Instantiator instantiator = assertInstantiator(model, ConstructorExample.class);
+        Assertions.assertTrue(instantiator.getClass().isHidden(), "runtime instantiators are hidden nestmates");
+    }
+
+    private static Instantiator assertInstantiator(EntityModel model, Class<?> type) throws Exception {
+        Instantiator instantiator = model.getInstantiator(type.getDeclaredConstructor(String.class, long.class));
+        Assertions.assertNotNull(instantiator);
+        Object entity = instantiator.newInstance(new Object[] { "named", 42L });
+        Assertions.assertEquals(type, entity.getClass());
+        Assertions.assertEquals("named", model.getProperty("name").getAccessor().get(entity));
+        Assertions.assertEquals(42L, model.getProperty("size").getAccessor().get(entity));
+        // the constructor's own exception, as calling it directly would throw
+        var thrown = Assertions.assertThrows(IllegalArgumentException.class,
+                () -> instantiator.newInstance(new Object[] { "invalid", 0L }));
+        Assertions.assertEquals("invalid name", thrown.getMessage());
+        return instantiator;
     }
 
     @Test
@@ -379,7 +438,10 @@ public class TestGeneration {
     }
 
     private EntityModel generateModel(Class<?> type) throws Exception {
-        EntityModelGenerator generator = new CritterGenerator(defaultMapper()).generate(type, critterClassLoader, false);
+        return loadModel(new CritterGenerator(defaultMapper()).generate(type, critterClassLoader, false));
+    }
+
+    private EntityModel loadModel(EntityModelGenerator generator) throws Exception {
         Class<?> modelClass = critterClassLoader.loadClass(generator.getGeneratedType());
         return (EntityModel) modelClass.getConstructor(Mapper.class).newInstance(defaultMapper());
     }

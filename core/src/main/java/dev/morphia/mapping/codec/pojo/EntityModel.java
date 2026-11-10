@@ -1,6 +1,8 @@
 package dev.morphia.mapping.codec.pojo;
 
 import java.lang.annotation.Annotation;
+import java.lang.invoke.MethodType;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.ArrayDeque;
@@ -38,6 +40,7 @@ import dev.morphia.mapping.InstanceCreatorFactoryImpl;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
+import dev.morphia.mapping.internal.Instantiator;
 import dev.morphia.mapping.lifecycle.EntityListenerAdapter;
 import dev.morphia.mapping.lifecycle.TypedListeners;
 import dev.morphia.sofia.Sofia;
@@ -68,6 +71,8 @@ public class EntityModel {
     private List<PropertyModel> shardKeys;
 
     private InstanceCreatorFactory creatorFactory;
+    // generated instantiators, by their constructor's descriptor
+    private final Map<String, Instantiator> instantiators = new HashMap<>();
     private boolean discriminatorEnabled;
     private String discriminatorKey;
     private String discriminator;
@@ -135,6 +140,7 @@ public class EntityModel {
         }
 
         this.collectionName = other.collectionName;
+        instantiators.putAll(other.instantiators);
         creatorFactory = new InstanceCreatorFactoryImpl(this);
 
         PropertyModel otherId = other.idProperty;
@@ -345,6 +351,30 @@ public class EntityModel {
      */
     public MorphiaInstanceCreator getInstanceCreator(Conversions conversions) {
         return creatorFactory.create(conversions);
+    }
+
+    /**
+     * @param constructor the constructor
+     * @return the instantiator generated for the constructor, or null if there isn't one
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    @Nullable
+    public Instantiator getInstantiator(Constructor<?> constructor) {
+        return instantiators.isEmpty() ? null
+                : instantiators.get(MethodType.methodType(void.class, constructor.getParameterTypes()).toMethodDescriptorString());
+    }
+
+    /**
+     * @param descriptor   the descriptor of the constructor the instantiator calls
+     * @param instantiator the instantiator
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public void instantiator(String descriptor, Instantiator instantiator) {
+        instantiators.put(descriptor, instantiator);
     }
 
     /**

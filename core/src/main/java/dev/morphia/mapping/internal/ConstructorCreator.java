@@ -1,6 +1,8 @@
 package dev.morphia.mapping.internal;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -42,6 +44,9 @@ import static java.util.Arrays.stream;
 public class ConstructorCreator implements MorphiaInstanceCreator {
     private static final Pattern UNNAMED_PARAMETER = Pattern.compile("arg[0-9]+");
     private static final Object[] NO_PARAMETERS = new Object[0];
+    // the boxed numeric types in the order primitive widening follows: each widens to those after it
+    private static final List<Class<?>> WIDENING = List.of(Byte.class, Short.class, Integer.class, Long.class, Float.class,
+            Double.class);
 
     private final Plan plan;
     private final Conversions conversions;
@@ -78,7 +83,7 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
      */
     public static final class Plan {
         private final EntityModel model;
-        private final Constructor<?> constructor;
+        private final Instantiator instantiator;
         private final Map<String, Integer> positions = new LinkedHashMap<>();
         private final Class<?>[] types;
         // types with primitives boxed: an argument that's already an instance of its slot's type needs no conversion
@@ -92,8 +97,8 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
         @SuppressFBWarnings("EI_EXPOSE_REP2")
         public Plan(EntityModel model, Constructor<?> constructor) {
             this.model = model;
-            this.constructor = constructor;
-            this.constructor.setAccessible(true);
+            Instantiator generated = model.getInstantiator(constructor);
+            this.instantiator = generated != null ? generated : reflective(constructor);
             final Parameter[] constructorParameters = constructor.getParameters();
             types = new Class<?>[constructorParameters.length];
             boxedTypes = new Class<?>[constructorParameters.length];
@@ -102,7 +107,7 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
                 final Parameter parameter = constructorParameters[i];
                 types[i] = parameter.getType();
                 boxedTypes[i] = Conversions.boxedType(types[i]);
-                zeroValues[i] = zeroValue(parameter);
+                zeroValues[i] = zeroValue(types[i]);
                 String name = getParameterName(parameter);
                 if (UNNAMED_PARAMETER.matcher(name).matches()) {
                     throw new MappingException(Sofia.unnamedConstructorParameter(model.getType().getName()));
@@ -112,6 +117,25 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
                 }
             }
         }
+    }
+
+    /**
+     * Calls the constructor reflectively, throwing whatever it throws as a generated instantiator would.
+     */
+    private static Instantiator reflective(Constructor<?> constructor) {
+        constructor.setAccessible(true);
+        return arguments -> {
+            try {
+                return constructor.newInstance(arguments);
+            } catch (InvocationTargetException e) {
+                if (e.getCause() instanceof Exception exception) {
+                    throw exception;
+                } else if (e.getCause() instanceof Error error) {
+                    throw error;
+                }
+                throw e;
+            }
+        };
     }
 
     @Nullable
@@ -148,7 +172,7 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
     public Object getInstance() {
         if (instance == null) {
             try {
-                instance = plan.constructor.newInstance(parameters);
+                instance = plan.instantiator.newInstance(parameters);
                 if (pendingModels != null) {
                     for (int i = 0; i < pendingModels.size(); i++) {
                         pendingModels.get(i).setValue(instance, pendingValues.get(i));
@@ -215,7 +239,7 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
             if (position != null) {
                 parameters[position] = plan.boxedTypes[position].isInstance(value)
                         ? value
-                        : conversions.convert(value, plan.types[position]);
+                        : widen(conversions.convert(value, plan.types[position]), plan.types[position]);
             } else {
                 // only properties the constructor doesn't take need setting after construction. re-setting the others would
                 // overwrite whatever the constructor did with the value and, for final fields, write them reflectively (JEP 500).
@@ -229,14 +253,37 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
         }
     }
 
+    /**
+     * Widens a boxed number for a primitive parameter to its wrapper type, as {@link Constructor#newInstance} would, so that
+     * an instantiator gets the exact wrapper type. Anything else is returned as is, for the instantiator to reject.
+     */
     @Nullable
-    private static Object zeroValue(Parameter parameter) {
-        if (!parameter.getType().isPrimitive()) {
-            return null;
-        } else if (parameter.getType().equals(boolean.class)) {
-            return false;
-        } else {
-            return 0;
+    private static Object widen(@Nullable Object value, Class<?> type) {
+        Class<?> boxedType = Conversions.boxedType(type);
+        int to = type.isPrimitive() ? WIDENING.indexOf(boxedType) : -1;
+        if (to < 0 || boxedType.isInstance(value)) {
+            return value;
         }
+        Number number = value instanceof Character c ? Integer.valueOf(c) : value instanceof Number n ? n : null;
+        // a char widens to an int or anything an int widens to, but not to a short
+        int from = value instanceof Character ? WIDENING.indexOf(Short.class) : number != null ? WIDENING.indexOf(number.getClass()) : -1;
+        if (from < 0 || from >= to) {
+            return value;
+        }
+        return switch (to) {
+            case 1 -> number.shortValue();
+            case 2 -> number.intValue();
+            case 3 -> number.longValue();
+            case 4 -> number.floatValue();
+            default -> number.doubleValue();
+        };
+    }
+
+    /**
+     * @return a primitive type's zero as its exact wrapper type, or null for any other type
+     */
+    @Nullable
+    private static Object zeroValue(Class<?> type) {
+        return type.isPrimitive() ? Array.get(Array.newInstance(type, 1), 0) : null;
     }
 }

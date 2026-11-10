@@ -5,11 +5,13 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+import dev.morphia.mapping.internal.Instantiator;
+
 import org.bson.codecs.pojo.PropertyAccessor;
 
 /**
- * Hands pre-instantiated {@link PropertyAccessor} instances for hidden nestmate accessor classes (which cannot be looked
- * up by name via {@link Class#forName}) to the generated property models that use them.
+ * Hands pre-instantiated {@link PropertyAccessor} and {@link Instantiator} instances for hidden nestmate classes (which
+ * cannot be looked up by name via {@link Class#forName}) to the generated models that use them.
  * <p>
  * Accessors are registered per {@link dev.morphia.critter.CritterClassLoader}. The same entity can be generated into
  * several loaders with different mapping configurations (e.g. field and method property discovery), and a model must
@@ -17,7 +19,7 @@ import org.bson.codecs.pojo.PropertyAccessor;
  * weakly, so a discarded loader's accessors are released with it.
  */
 public final class NestmateAccessorRegistry {
-    private static final Map<ClassLoader, Map<String, PropertyAccessor<?>>> INSTANCES = Collections.synchronizedMap(
+    private static final Map<ClassLoader, Map<String, Object>> INSTANCES = Collections.synchronizedMap(
             new WeakHashMap<>());
 
     private NestmateAccessorRegistry() {
@@ -26,9 +28,9 @@ public final class NestmateAccessorRegistry {
     /**
      * @param loader   the loader that defines the generated models using this accessor
      * @param key      the accessor's key
-     * @param accessor the accessor
+     * @param accessor the accessor or instantiator
      */
-    public static void register(ClassLoader loader, String key, PropertyAccessor<?> accessor) {
+    public static void register(ClassLoader loader, String key, Object accessor) {
         INSTANCES.computeIfAbsent(loader, l -> new ConcurrentHashMap<>()).put(key, accessor);
     }
 
@@ -38,7 +40,20 @@ public final class NestmateAccessorRegistry {
      * @return the accessor, or null if none was registered for that loader
      */
     public static PropertyAccessor<?> get(ClassLoader loader, String key) {
-        Map<String, PropertyAccessor<?>> accessors = INSTANCES.get(loader);
-        return accessors != null ? accessors.get(key) : null;
+        return (PropertyAccessor<?>) lookup(loader, key);
+    }
+
+    /**
+     * @param loader the loader that defines the generated model asking for the instantiator
+     * @param key    the instantiator's key
+     * @return the instantiator, or null if none was registered for that loader
+     */
+    public static Instantiator instantiator(ClassLoader loader, String key) {
+        return (Instantiator) lookup(loader, key);
+    }
+
+    private static Object lookup(ClassLoader loader, String key) {
+        Map<String, Object> instances = INSTANCES.get(loader);
+        return instances != null ? instances.get(key) : null;
     }
 }
