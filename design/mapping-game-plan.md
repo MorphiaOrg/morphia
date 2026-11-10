@@ -555,6 +555,8 @@ harness passes, and both mappers agree.
     - discriminator function and key
     - property discovery
     - the annotation providers
+    - the default locale's case rules: the built-ins convert case with it, but only Turkish, Azerbaijani and
+      Lithuanian convert differently, so other locales all count as `root`
 
     The model records it in `__generationKey`, and each mapper compares it with its own. Strategies are identified
     by class, which only tells configurations apart for Morphia's stateless built-ins. A mapper using any other

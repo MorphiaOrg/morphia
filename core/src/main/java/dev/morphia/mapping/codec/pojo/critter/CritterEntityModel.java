@@ -10,7 +10,9 @@ import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Properties;
+import java.util.Set;
 
 import dev.morphia.annotations.IdField;
 import dev.morphia.config.MorphiaConfig;
@@ -64,6 +66,9 @@ public abstract class CritterEntityModel extends EntityModel {
      */
     public static final String BUILD_STAMP = "__morphiaBuild$";
 
+    // the languages whose case conversion differs from the root locale's: the dotted and dotless i, and Lithuanian's dot above
+    private static final Set<String> CASE_RULE_LANGUAGES = Set.of("tr", "az", "lt");
+
     private final Conversions conversions;
 
     /**
@@ -99,8 +104,9 @@ public abstract class CritterEntityModel extends EntityModel {
 
     /**
      * Describes the configuration settings generation bakes into a model: the collection and property naming, the
-     * discriminator function and key, property discovery and the property annotation providers. Strategies are identified
-     * by class, which tells two configurations apart only if every strategy is one of Morphia's stateless built-ins.
+     * discriminator function and key, property discovery and the property annotation providers, and the case rules of the
+     * default locale, which the built-in strategies convert case with. Strategies are identified by class, which tells two
+     * configurations apart only if every strategy is one of Morphia's stateless built-ins.
      *
      * @param config the configuration
      * @return the key
@@ -118,7 +124,18 @@ public abstract class CritterEntityModel extends EntityModel {
             key.append(separator).append(provider.getClass().getName());
             separator = ",";
         }
-        return key.append(']').toString();
+        return key.append("], caseRules=").append(caseRules(Locale.getDefault())).toString();
+    }
+
+    /**
+     * @param locale the locale
+     * @return the language whose rules {@link String#toLowerCase()} and {@link String#toUpperCase()} apply in the locale, or
+     *         {@code root} if they're the same as every other language's. Only Turkish, Azerbaijani and Lithuanian differ, so a
+     *         model generated under, say, {@code en-US} stays usable under {@code de-DE}.
+     */
+    static String caseRules(Locale locale) {
+        String language = locale.getLanguage();
+        return CASE_RULE_LANGUAGES.contains(language) ? language : "root";
     }
 
     private static String morphiaVersion() {
