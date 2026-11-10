@@ -137,7 +137,7 @@ loadScripts(document, 'script');</script>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab3" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab3', 3)" class="table-tab">Abstract Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab3" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab3', 3)" class="table-tab">Abstract Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
@@ -147,6 +147,12 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#emit()" class="member-name-link">emit</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Emits the generated or augmented class bytecode.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected byte[]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#weave(io.smallrye.classfile.ClassTransform)" class="member-name-link">weave</a><wbr>(io.smallrye.classfile.ClassTransform&nbsp;transform)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Weaves the entity: applies <code>transform</code>, adds the <code>__newN</code> methods instantiators call, and drops the build
+ stamp an earlier build left, for the generator to stamp it afresh (see <a href="https://morphia.dev/morphia/3.0/javadoc/dev/morphia/critter/parser/generator/BuildStamp.html" title="class or interface in dev.morphia.critter.parser.generator" class="external-link"><code>BuildStamp</code></a>).</div>
 </div>
 </div>
 </div>
@@ -215,6 +221,20 @@ loadScripts(document, 'script');</script>
 <h3>emit</h3>
 <div class="member-signature"><span class="modifiers">public abstract</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">emit</span>()</div>
 <div class="block">Emits the generated or augmented class bytecode.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="weave(io.smallrye.classfile.ClassTransform)">
+<h3>weave</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">weave</span><wbr><span class="parameters">(io.smallrye.classfile.ClassTransform&nbsp;transform)</span></div>
+<div class="block">Weaves the entity: applies <code>transform</code>, adds the <code>__newN</code> methods instantiators call, and drops the build
+ stamp an earlier build left, for the generator to stamp it afresh (see <a href="https://morphia.dev/morphia/3.0/javadoc/dev/morphia/critter/parser/generator/BuildStamp.html" title="class or interface in dev.morphia.critter.parser.generator" class="external-link"><code>BuildStamp</code></a>).</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>transform</code> - adds the accessor methods</dd>
+<dt>Returns:</dt>
+<dd>the woven class's bytecode</dd>
+</dl>
 </section>
 </li>
 </ul>

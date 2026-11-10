@@ -1542,7 +1542,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="dev/morphia/critter/parser/generator/CritterGenerator.html#fieldAccessors(java.lang.Class,io.smallrye.classfile.ClassModel,java.util.List)" class="member-name-link">fieldAccessors(Class&lt;?&gt;, ClassModel, List&lt;FieldInfo&gt;)</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/CritterGenerator.html" title="class in dev.morphia.critter.parser.generator">CritterGenerator</a></dt>
 <dd>
-<div class="block">Generates bytecode augmenting the entity with synthetic <code>__readXxx</code>/<code>__writeXxx</code> methods for its fields.</div>
+<div class="block">Generates bytecode augmenting the entity with synthetic <code>__readXxx</code>/<code>__writeXxx</code> methods for its fields,
+ stamped with this generator's build ID.</div>
 </dd>
 <dt><a href="dev/morphia/critter/parser/FieldInfo.html" class="type-name-link" title="class in dev.morphia.critter.parser">FieldInfo</a> - Record Class in <a href="dev/morphia/critter/parser/package-summary.html">dev.morphia.critter.parser</a></dt>
 <dd>
@@ -2640,7 +2641,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="dev/morphia/critter/parser/generator/CritterGenerator.html#methodAccessors(java.lang.Class,io.smallrye.classfile.ClassModel,java.util.List)" class="member-name-link">methodAccessors(Class&lt;?&gt;, ClassModel, List&lt;MethodInfo&gt;)</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/CritterGenerator.html" title="class in dev.morphia.critter.parser.generator">CritterGenerator</a></dt>
 <dd>
-<div class="block">Generates bytecode augmenting the entity with synthetic <code>__readXxx</code>/<code>__writeXxx</code> methods for its getter methods.</div>
+<div class="block">Generates bytecode augmenting the entity with synthetic <code>__readXxx</code>/<code>__writeXxx</code> methods for its getter methods,
+ stamped with this generator's build ID.</div>
 </dd>
 <dt><a href="dev/morphia/critter/parser/MethodInfo.html" class="type-name-link" title="class in dev.morphia.critter.parser">MethodInfo</a> - Record Class in <a href="dev/morphia/critter/parser/package-summary.html">dev.morphia.critter.parser</a></dt>
 <dd>
@@ -3166,6 +3168,11 @@ loadScripts(document, 'script');</script>
 <dt><a href="dev/morphia/aggregation/expressions/MathExpressions.html#pow(java.lang.Object,java.lang.Object)" class="member-name-link">pow(Object, Object)</a> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/MathExpressions.html" title="class in dev.morphia.aggregation.expressions">MathExpressions</a></dt>
 <dd>
 <div class="block">Raises a number to the specified exponent.</div>
+</dd>
+<dt><a href="dev/morphia/critter/parser/generator/EntityModelGenerator.html#pregenerated(java.lang.String,java.util.List)" class="member-name-link">pregenerated(String, List&lt;String&gt;)</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/EntityModelGenerator.html" title="class in dev.morphia.critter.parser.generator">EntityModelGenerator</a></dt>
+<dd>
+<div class="block">Makes the model a pre-generated one, which records what the mapper checks before using it: the Morphia version and
+ configuration it was generated with, and the build that wove the classes it calls into.</div>
 </dd>
 <dt><a href="dev/morphia/PreLoadListener.html#preLoad(T,org.bson.Document,dev.morphia.Datastore)" class="member-name-link">preLoad(T, Document, Datastore)</a> - Method in interface dev.morphia.<a href="dev/morphia/PreLoadListener.html" title="interface in dev.morphia">PreLoadListener</a></dt>
 <dd>&nbsp;</dd>
@@ -4592,6 +4599,11 @@ the order they are declared.</div>
 </dl>
 <h2 class="title" id="I:W">W</h2>
 <dl class="index">
+<dt><a href="dev/morphia/critter/parser/generator/AccessorMethods.html#weave(io.smallrye.classfile.ClassTransform)" class="member-name-link">weave(ClassTransform)</a> - Method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/AccessorMethods.html" title="class in dev.morphia.critter.parser.generator">AccessorMethods</a></dt>
+<dd>
+<div class="block">Weaves the entity: applies <code>transform</code>, adds the <code>__newN</code> methods instantiators call, and drops the build
+ stamp an earlier build left, for the generator to stamp it afresh (see <a href="https://morphia.dev/morphia/3.0/javadoc/dev/morphia/critter/parser/generator/BuildStamp.html" title="class or interface in dev.morphia.critter.parser.generator" class="external-link"><code>BuildStamp</code></a>).</div>
+</dd>
 <dt><a href="dev/morphia/critter/parser/generator/InstantiatorGenerator.html#weaving(io.smallrye.classfile.ClassModel)" class="member-name-link">weaving(ClassModel)</a> - Static method in class dev.morphia.critter.parser.generator.<a href="dev/morphia/critter/parser/generator/InstantiatorGenerator.html" title="class in dev.morphia.critter.parser.generator">InstantiatorGenerator</a></dt>
 <dd>
 <div class="block">Weaves a synthetic static <code>__newN(Object[])</code> method calling each of <a href="dev/morphia/critter/parser/generator/InstantiatorGenerator.html#wovenConstructors(io.smallrye.classfile.ClassModel)"><code>InstantiatorGenerator.wovenConstructors(io.smallrye.classfile.ClassModel)</code></a>, replacing any woven

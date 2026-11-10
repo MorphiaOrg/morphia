@@ -145,6 +145,13 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="EntityModelGenerator.html" title="class in dev.morphia.critter.parser.generator">EntityModelGenerator</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#instantiators(java.util.List)" class="member-name-link">instantiators</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="InstantiatorGenerator.html" title="class in dev.morphia.critter.parser.generator">InstantiatorGenerator</a>&gt;&nbsp;instantiators)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="EntityModelGenerator.html" title="class in dev.morphia.critter.parser.generator">EntityModelGenerator</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#pregenerated(java.lang.String,java.util.List)" class="member-name-link">pregenerated</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;buildId,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;wovenClasses)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Makes the model a pre-generated one, which records what the mapper checks before using it: the Morphia version and
+ configuration it was generated with, and the build that wove the classes it calls into.</div>
+</div>
 </div>
 </div>
 </div>
@@ -212,6 +219,22 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>instantiators</code> - the instantiators the model registers</dd>
+<dt>Returns:</dt>
+<dd>this generator</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="pregenerated(java.lang.String,java.util.List)">
+<h3>pregenerated</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="EntityModelGenerator.html" title="class in dev.morphia.critter.parser.generator">EntityModelGenerator</a></span>&nbsp;<span class="element-name">pregenerated</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;buildId,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;wovenClasses)</span></div>
+<div class="block">Makes the model a pre-generated one, which records what the mapper checks before using it: the Morphia version and
+ configuration it was generated with, and the build that wove the classes it calls into.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>buildId</code> - the ID of the build, stamped on the woven classes</dd>
+<dd><code>wovenClasses</code> - the woven classes: the entity and the superclasses whose fields are woven into them</dd>
 <dt>Returns:</dt>
 <dd>this generator</dd>
 </dl>
