@@ -1,11 +1,16 @@
 package dev.morphia.critter.parser.generator;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.critter.Critter;
 import dev.morphia.critter.CritterClassLoader;
 
 /**
  * Base class for ClassFile-based code generators that produce Critter accessor and model classes.
+ *
+ * @hidden
+ * @morphia.internal
  */
+@MorphiaInternal
 public abstract class BaseGenerator {
     /** The entity class for which code is being generated. */
     protected final Class<?> entity;

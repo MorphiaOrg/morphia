@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import dev.morphia.annotations.ExternalEntity;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.FieldInfo;
 import dev.morphia.critter.parser.MethodInfo;
@@ -32,7 +33,11 @@ import io.smallrye.classfile.ClassModel;
 /**
  * Facade that orchestrates the full ClassFile-based code generation pipeline for a Morphia entity,
  * including field/method accessor injection and property/entity model generation.
+ *
+ * @hidden
+ * @morphia.internal
  */
+@MorphiaInternal
 public class CritterGenerator {
     private static final Logger LOG = LoggerFactory.getLogger(CritterGenerator.class);
     private final Mapper mapper;

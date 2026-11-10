@@ -8,6 +8,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.mapping.internal.Instantiator;
 
@@ -26,7 +27,11 @@ import static dev.morphia.critter.parser.generator.GenerationUtils.primitiveUnbo
  * so it can call a constructor of any visibility. At build time it calls a synthetic static {@code __newN} method woven into
  * the entity, which calls the constructor, so neither the constructor nor its parameter types need to be accessible from the
  * generated class.
+ *
+ * @hidden
+ * @morphia.internal
  */
+@MorphiaInternal
 public class InstantiatorGenerator extends BaseGenerator {
     private static final ClassDesc CD_INSTANTIATOR = ClassDesc.of(Instantiator.class.getName());
     private static final MethodTypeDesc NEW_INSTANCE = MethodTypeDesc.of(ConstantDescs.CD_Object,

@@ -18,6 +18,7 @@ import java.util.Map;
 
 import com.mongodb.lang.Nullable;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.critter.parser.MethodInfo;
 import dev.morphia.mapping.codec.pojo.TypeData;
 import dev.morphia.mapping.codec.pojo.WildCardTypeData;
@@ -32,7 +33,11 @@ import io.smallrye.classfile.TypeKind;
 
 /**
  * Static utility methods bridging annotation introspection and Morphia type data with the ClassFile API.
+ *
+ * @hidden
+ * @morphia.internal
  */
+@MorphiaInternal
 public class GenerationUtils {
 
     public static final Map<String, String> PRIMITIVE_TO_WRAPPER = Map.of(

@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.mongodb.lang.Nullable;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
+
 import io.smallrye.classfile.Annotation;
 
 /**
@@ -12,7 +14,10 @@ import io.smallrye.classfile.Annotation;
  *
  * @param declaringClass the class declaring the method, or null if unknown
  * @param setter         for a getter, the setter it pairs with, or null if unknown
+ * @hidden
+ * @morphia.internal
  */
+@MorphiaInternal
 public record MethodInfo(
         String name,
         String desc,

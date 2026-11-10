@@ -5,6 +5,7 @@ import java.lang.constant.ConstantDescs;
 import java.lang.constant.MethodTypeDesc;
 import java.util.List;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.critter.parser.MethodInfo;
 import dev.morphia.mapping.conventions.DiscoveryRules;
 
@@ -17,7 +18,11 @@ import io.smallrye.classfile.TypeKind;
 /**
  * Generates synthetic {@code __readXxx} and {@code __writeXxx} accessor methods into an entity class
  * bytecode for properties backed by getter/setter methods rather than direct fields.
+ *
+ * @hidden
+ * @morphia.internal
  */
+@MorphiaInternal
 public class AddMethodAccessorMethods extends AccessorMethods {
     private final List<MethodInfo> methods;
 

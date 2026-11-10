@@ -4,6 +4,7 @@ import java.lang.constant.ClassDesc;
 import java.lang.constant.ConstantDescs;
 import java.lang.constant.MethodTypeDesc;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.FieldInfo;
 import dev.morphia.critter.parser.MethodInfo;
@@ -20,7 +21,11 @@ import static dev.morphia.critter.parser.generator.GenerationUtils.typeClassName
 /**
  * Generates a {@link org.bson.codecs.pojo.PropertyAccessor} implementation for a single
  * entity property, delegating to the synthetic {@code __readXxx}/{@code __writeXxx} methods.
+ *
+ * @hidden
+ * @morphia.internal
  */
+@MorphiaInternal
 public class PropertyAccessorGenerator extends BaseGenerator {
     private final String propertyName;
     private final String propertyType;

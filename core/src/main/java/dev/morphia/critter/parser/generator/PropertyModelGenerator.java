@@ -18,6 +18,7 @@ import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.IdField;
 import dev.morphia.annotations.Property;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.critter.CritterClassLoader;
 import dev.morphia.critter.parser.FieldInfo;
@@ -41,7 +42,11 @@ import io.smallrye.classfile.attribute.RuntimeVisibleAnnotationsAttribute;
 /**
  * Generates the code, in a generated entity model's constructor, that builds the model of one property of a Morphia
  * entity class.
+ *
+ * @hidden
+ * @morphia.internal
  */
+@MorphiaInternal
 public class PropertyModelGenerator extends BaseGenerator {
     private final MorphiaConfig config;
     private final String propertyName;

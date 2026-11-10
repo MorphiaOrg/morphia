@@ -15,6 +15,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import dev.morphia.annotations.IdField;
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.codec.ArrayAccessor;
@@ -33,6 +34,7 @@ import dev.morphia.mapping.conventions.MorphiaConvention;
  * @hidden
  * @morphia.internal
  */
+@MorphiaInternal
 public abstract class CritterEntityModel extends EntityModel {
     /**
      * The version of Morphia that's running. A pre-generated model is used only with the version it was generated with.

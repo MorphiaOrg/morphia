@@ -1,15 +1,21 @@
 package dev.morphia.critter;
 
-import java.io.File;
 import java.lang.reflect.Field;
-import java.net.URI;
+import java.util.Locale;
 
-import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.internal.MorphiaInternal;
 
 /**
- * Core utility class for Critter code generation, providing shared constants and helper methods.
+ * Helper methods shared by critter's code generation and the code it generates.
+ *
+ * @hidden
+ * @morphia.internal
  */
-public class Critter {
+@MorphiaInternal
+public final class Critter {
+    private Critter() {
+    }
+
     /**
      * Returns the package name used for generated Critter classes for the given entity.
      */
@@ -20,7 +26,7 @@ public class Critter {
         String relativeName = pkg.isEmpty()
                 ? entity.getName()
                 : entity.getName().substring(pkg.length() + 1);
-        return "%s.__morphia.%s".formatted(pkg, relativeName.replace('$', '_').toLowerCase());
+        return "%s.__morphia.%s".formatted(pkg, relativeName.replace('$', '_').toLowerCase(Locale.ROOT));
     }
 
     /**
@@ -66,22 +72,5 @@ public class Critter {
             }
         }
         return accessibleField(type, name);
-    }
-
-    private final File root;
-    private final File outputDir;
-    private final File ksp;
-
-    /**
-     * Creates a new Critter instance rooted at the given directory.
-     */
-    public Critter(File root) {
-        this.root = root;
-        this.outputDir = new File(root, "target");
-        this.ksp = new File(outputDir, "ksp");
-    }
-
-    private URI loadPath() throws Exception {
-        return Entity.class.getProtectionDomain().getCodeSource().getLocation().toURI();
     }
 }

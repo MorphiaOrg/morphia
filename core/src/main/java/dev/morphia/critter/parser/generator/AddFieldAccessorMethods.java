@@ -5,6 +5,7 @@ import java.lang.constant.ConstantDescs;
 import java.lang.constant.MethodTypeDesc;
 import java.util.List;
 
+import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.critter.parser.FieldInfo;
 import dev.morphia.mapping.conventions.DiscoveryRules;
 
@@ -20,7 +21,11 @@ import io.smallrye.classfile.TypeKind;
 /**
  * Generates synthetic {@code __readXxx} and {@code __writeXxx} accessor methods directly
  * into an entity class bytecode for each of its fields.
+ *
+ * @hidden
+ * @morphia.internal
  */
+@MorphiaInternal
 public class AddFieldAccessorMethods extends AccessorMethods {
     private static final ClassDesc CD_FIELD = ClassDesc.of("java.lang.reflect.Field");
     private static final ClassDesc CD_CRITTER = ClassDesc.of("dev.morphia.critter.Critter");
