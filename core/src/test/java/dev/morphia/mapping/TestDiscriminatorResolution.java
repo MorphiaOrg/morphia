@@ -7,6 +7,8 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.query.FindOptions;
+import dev.morphia.test.models.external.ThirdPartyEntity;
+import dev.morphia.test.models.external.ThirdPartyEntityProxy;
 
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecConfigurationException;
@@ -65,6 +67,25 @@ public class TestDiscriminatorResolution {
         Assertions.assertEquals(new Document("name", 1).append("_kind", 1), projection);
     }
 
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    public void externalEntityProjectionsIncludeTheirDiscriminatorKey(MapperType type) {
+        Mapper mapper = mapper(type);
+        mapper.getEntityModel(ThirdPartyEntityProxy.class);
+        FindOptions options = new FindOptions().projection().include("field");
+
+        Assertions.assertEquals(new Document("field", 1).append("_xt", 1), options.projection().map(mapper, ThirdPartyEntity.class));
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    public void projectionsWithoutADiscriminatorAddNone(MapperType type) {
+        Mapper mapper = mapper(type);
+        FindOptions options = new FindOptions().projection().include("name");
+
+        Assertions.assertEquals(new Document("name", 1), options.projection().map(mapper, Undiscriminated.class));
+    }
+
     private static Mapper mapper(MapperType type) {
         MorphiaConfig config = MorphiaConfig.load().mapper(type);
         return type == MapperType.CRITTER ? new CritterMapper(config) : new ReflectiveMapper(config);
@@ -87,6 +108,13 @@ public class TestDiscriminatorResolution {
             }
             return super.loadClass(name, resolve);
         }
+    }
+
+    @Entity(useDiscriminator = false)
+    static class Undiscriminated {
+        @Id
+        private ObjectId id;
+        private String name;
     }
 
     @Entity(discriminatorKey = "_kind")
