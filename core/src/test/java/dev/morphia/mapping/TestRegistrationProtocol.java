@@ -297,6 +297,10 @@ public class TestRegistrationProtocol {
         Assertions.assertSame(concurrent, mapper.getEntityModel(subclass.getClass()));
         Assertions.assertSame(concurrent, mapper.mapEntity(subclass.getClass()));
         Assertions.assertSame(tagged, mapper.getEntityModel(implementor.getClass()));
+        Named lambda = () -> "lambda";
+        Assertions.assertTrue(lambda.getClass().isHidden());
+        Assertions.assertSame(mapper.getEntityModel(Named.class), mapper.getEntityModel(lambda.getClass()),
+                "a lambda is a hidden class, mapped as the interface it implements");
         Assertions.assertTrue(mapper.isMapped(subclass.getClass()));
         Assertions.assertTrue(mapper.getMappedEntities().stream()
                 .noneMatch(m -> m.getType().isAnonymousClass()), "an anonymous subclass shouldn't get a model of its own");
@@ -361,6 +365,11 @@ public class TestRegistrationProtocol {
 
     @Entity
     interface Tagged {
+    }
+
+    @Entity
+    interface Named {
+        String name();
     }
 
     @Entity(value = "shared", discriminator = "shared")

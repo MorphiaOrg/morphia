@@ -627,8 +627,8 @@ public abstract class AbstractMapper implements Mapper {
 
     /**
      * The class a type is mapped as. A proxy stands for its superclass, and an anonymous, synthetic or hidden class (such
-     * as {@code new User() {{ ... }}}) for the class or interface it extends, so instances of either are stored as that
-     * type rather than mapped as entities of their own.
+     * as {@code new User() {{ ... }}}, or a lambda) for the class or interface it extends, so instances of either are
+     * stored as that type rather than mapped as entities of their own.
      */
     private static final ClassValue<Class<?>> MAPPED_AS = new ClassValue<>() {
         @Override
@@ -637,8 +637,8 @@ public abstract class AbstractMapper implements Mapper {
             while (MorphiaProxy.class.isAssignableFrom(actual) || actual.isAnonymousClass() || actual.isSynthetic()
                     || actual.isHidden()) {
                 Class<?> parent = actual.getSuperclass();
-                // an anonymous class implementing an interface extends Object
-                if (parent == Object.class && actual.isAnonymousClass() && actual.getInterfaces().length == 1) {
+                // an anonymous class or a lambda implementing an interface extends Object
+                if (parent == Object.class && actual.getInterfaces().length == 1) {
                     parent = actual.getInterfaces()[0];
                 }
                 if (parent == null) {
