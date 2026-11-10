@@ -19,11 +19,13 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
+import com.mongodb.WriteConcern;
 import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 
@@ -85,6 +87,9 @@ public class EntityModel {
     private final AtomicLong subtypesVersion = new AtomicLong();
     // every subtype below this model, as of a subtypesVersion; rebuilt on first use after a change
     private volatile AllSubtypes allSubtypes;
+    // the @Entity write concern, looked up by name on first use
+    @Nullable
+    private volatile Optional<WriteConcern> writeConcern;
     private EntityModel superClass;
     private PropertyModel idProperty;
     private PropertyModel versionProperty;
@@ -330,6 +335,25 @@ public class EntityModel {
     @Nullable
     public Entity getEntityAnnotation() {
         return getAnnotation(Entity.class);
+    }
+
+    /**
+     * @return the write concern named by {@link Entity#concern()}, or null if none is named or the name is unknown
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    @Nullable
+    public final WriteConcern writeConcern() {
+        Optional<WriteConcern> concern = writeConcern;
+        if (concern == null) {
+            Entity entity = getEntityAnnotation();
+            concern = Optional.ofNullable(entity != null && !entity.concern().isEmpty()
+                    ? WriteConcern.valueOf(entity.concern())
+                    : null);
+            writeConcern = concern;
+        }
+        return concern.orElse(null);
     }
 
     /**

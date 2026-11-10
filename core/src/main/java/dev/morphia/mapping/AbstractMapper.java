@@ -19,7 +19,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
-import com.mongodb.WriteConcern;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.EntityListener;
@@ -307,20 +306,6 @@ public abstract class AbstractMapper implements Mapper {
     @Override
     public MorphiaConfig getConfig() {
         return config;
-    }
-
-    @Override
-    @Nullable
-    public WriteConcern getWriteConcern(Class clazz) {
-        WriteConcern wc = null;
-        EntityModel entityModel = getEntityModel(clazz);
-        if (entityModel != null) {
-            final Entity entityAnn = entityModel.getEntityAnnotation();
-            if (entityAnn != null && !entityAnn.concern().isEmpty()) {
-                wc = WriteConcern.valueOf(entityAnn.concern());
-            }
-        }
-        return wc;
     }
 
     @Override

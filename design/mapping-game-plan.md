@@ -649,11 +649,15 @@ Bundle these into one or two PRs. Most of it is `@MorphiaInternal` dead code.
     every collection, so a list without one still gets Morphia's handling rather than the driver's.
     `ArrayCodec.getEncoderClass()` returns the array class. `TestGlobalListeners` dropped an assertion on
     `hasLifecycle`; the callbacks it records already show the listener ran.
-- **D11:**
-  - resolve the model once per save/delete;
-  - cache `MongoCollection` per class per datastore;
-  - precompute the write concern;
-  - drop `Mapper.getWriteConcern`.
+- ~~**D11:**~~
+  - ~~resolve the model once per save/delete;~~
+  - ~~cache `MongoCollection` per class per datastore;~~
+  - ~~precompute the write concern;~~
+  - ~~drop `Mapper.getWriteConcern`.~~
+  - Done. Each datastore keeps the `MongoCollection` it built for a class, with the entity's write concern, which
+    `EntityModel.writeConcern()` looks up once. `delete(entity)` no longer sets that concern again, since the
+    collection already carries it. `save`, `insert`, `merge` and `replace` look the model up once and pass it to the
+    version bump; `save(List)` reads the id from that model instead of looking it up again through `getId`.
 - **D12:** a single `get` in `DiscriminatorLookup`, a negative cache for `Class.forName`, and the model's
   discriminator key everywhere (`getClass(Document)`, `Projection.project`).
 - **D13** (decision 1.4): key the registry by `Class<?>`, register `@ExternalEntity` under both the stand-in and the
