@@ -111,29 +111,33 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Static utility methods bridging annotation introspection and Morphia type data with the ClassFile API.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="NestmateAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator">NestmateAccessorGenerator</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="InstantiatorGenerator.html" title="class in dev.morphia.critter.parser.generator">InstantiatorGenerator</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">Generates an <code>Instantiator</code> calling one of an entity's constructors.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="NestmateAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator">NestmateAccessorGenerator</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Generates a <a href="https://mongodb.github.io/mongo-java-driver/5.6/apidocs/bson/org/bson/codecs/pojo/PropertyAccessor.html" title="class or interface in org.bson.codecs.pojo" class="external-link"><code>PropertyAccessor</code></a> implementation that uses direct
  <code>getfield</code>/<code>putfield</code> (for fields) or <code>invokevirtual</code> (for getter/setter methods)
  to access entity properties.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="NestmateAccessorRegistry.html" title="class in dev.morphia.critter.parser.generator">NestmateAccessorRegistry</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">Hands pre-instantiated <a href="https://mongodb.github.io/mongo-java-driver/5.6/apidocs/bson/org/bson/codecs/pojo/PropertyAccessor.html" title="class or interface in org.bson.codecs.pojo" class="external-link"><code>PropertyAccessor</code></a> instances for hidden nestmate accessor classes (which cannot be looked
- up by name via <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html#forName(java.lang.String)" title="class or interface in java.lang" class="external-link"><code>Class.forName(java.lang.String)</code></a>) to the generated property models that use them.</div>
-</div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="PropertyAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyAccessorGenerator</a></div>
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="NestmateAccessorRegistry.html" title="class in dev.morphia.critter.parser.generator">NestmateAccessorRegistry</a></div>
 <div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">Hands pre-instantiated <a href="https://mongodb.github.io/mongo-java-driver/5.6/apidocs/bson/org/bson/codecs/pojo/PropertyAccessor.html" title="class or interface in org.bson.codecs.pojo" class="external-link"><code>PropertyAccessor</code></a> and <code>Instantiator</code> instances for hidden nestmate classes (which
+ cannot be looked up by name via <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Class.html#forName(java.lang.String)" title="class or interface in java.lang" class="external-link"><code>Class.forName(java.lang.String)</code></a>) to the generated models that use them.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="PropertyAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyAccessorGenerator</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Generates a <a href="https://mongodb.github.io/mongo-java-driver/5.6/apidocs/bson/org/bson/codecs/pojo/PropertyAccessor.html" title="class or interface in org.bson.codecs.pojo" class="external-link"><code>PropertyAccessor</code></a> implementation for a single
  entity property, delegating to the synthetic <code>__readXxx</code>/<code>__writeXxx</code> methods.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="PropertyModelGenerator.html" title="class in dev.morphia.critter.parser.generator">PropertyModelGenerator</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Generates the code, in a generated entity model's constructor, that builds the model of one property of a Morphia
  entity class.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="VarHandleAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator">VarHandleAccessorGenerator</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="VarHandleAccessorGenerator.html" title="class in dev.morphia.critter.parser.generator">VarHandleAccessorGenerator</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Generates a ClassFile-based <a href="https://mongodb.github.io/mongo-java-driver/5.6/apidocs/bson/org/bson/codecs/pojo/PropertyAccessor.html" title="class or interface in org.bson.codecs.pojo" class="external-link"><code>PropertyAccessor</code></a> implementation that uses
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/invoke/VarHandle.html" title="class or interface in java.lang.invoke" class="external-link"><code>VarHandle</code></a> (for fields) or <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/invoke/MethodHandle.html" title="class or interface in java.lang.invoke" class="external-link"><code>MethodHandle</code></a> (for getter/setter pairs)
  to access a single property of a Morphia entity class.</div>
