@@ -55,7 +55,8 @@ public class ObjectCodec implements Codec<Object> {
     @MorphiaInternal
     public static Codec<Object> forIds(CodecRegistry registry) {
         Codec<Object> codec = registry.get(Object.class);
-        return codec instanceof ObjectCodec objectCodec ? objectCodec.forIds : codec;
+        // a subclass a provider supplies decodes its own way, which ids keep using
+        return codec.getClass() == ObjectCodec.class ? ((ObjectCodec) codec).forIds : codec;
     }
 
     @Override

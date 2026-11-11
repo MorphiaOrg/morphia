@@ -10,9 +10,12 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PostLoad;
 import dev.morphia.annotations.Reference;
+import dev.morphia.mapping.codec.ObjectCodec;
 import dev.morphia.test.TestBase;
 
 import org.bson.Document;
+import org.bson.codecs.configuration.CodecRegistries;
+import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -165,6 +168,20 @@ public class TestOwnDiscriminatorKey extends TestBase {
         OwnKeyListOwner loaded = getDs().find(OwnKeyListOwner.class).first();
         Assertions.assertEquals(1, loaded.targets.size());
         Assertions.assertEquals("v", loaded.targets.get(0).value);
+    }
+
+    /**
+     * Only Morphia's own {@code ObjectCodec} is swapped for its id mode: a subclass a provider supplies keeps reading ids.
+     */
+    @Test
+    public void aCustomObjectCodecStillReadsIds() {
+        ObjectCodec custom = new ObjectCodec(getDs()) {
+        };
+        CodecRegistry registry = CodecRegistries.fromCodecs(custom);
+
+        Assertions.assertSame(custom, ObjectCodec.forIds(registry));
+        Assertions.assertNotSame(getDs().getCodecRegistry().get(Object.class),
+                ObjectCodec.forIds(getDs().getCodecRegistry()), "Morphia's own is swapped for its id mode");
     }
 
     @Entity("ownKey_untypedIdTargets")
