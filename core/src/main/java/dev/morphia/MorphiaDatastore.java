@@ -203,7 +203,7 @@ public class MorphiaDatastore implements Datastore {
         if (mapPackages) {
             config.packages().forEach(packageName -> {
                 Sofia.logMappingPackage(packageName);
-                mapper.map(packageName);
+                mapper.mapPackage(packageName);
             });
         }
         if (config.applyCaps()) {

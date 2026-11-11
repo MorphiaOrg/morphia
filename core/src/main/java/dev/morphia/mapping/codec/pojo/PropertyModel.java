@@ -19,6 +19,7 @@ package dev.morphia.mapping.codec.pojo;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -181,10 +182,11 @@ public class PropertyModel {
     }
 
     /**
-     * @return the name of the field's (key)name for mongodb, in order of loading.
+     * @return the name of the field's (key)name for mongodb, in order of loading, as a read-only view that reflects later
+     *         changes
      */
     public final List<String> getLoadNames() {
-        return new ArrayList<>(loadNames);
+        return Collections.unmodifiableList(loadNames);
     }
 
     /**

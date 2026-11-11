@@ -263,6 +263,8 @@ harness passes, and both mappers agree.
 ### ~~3.10 Package scan (#10, A1)~~
 - `enableClassInfo().ignoreClassVisibility()` plus `Class.forName(name, false, …)`, then the annotation pre-filter.
 - Collect into a `LinkedHashSet` for deterministic order, and merge `map(String)`/`mapPackage`.
+  - The merge was missed here and landed with #4464: `mapPackage` is the one method, and warns only for packages
+    missing from the config.
 - Per decision 1.2, keep the `.*` default and log a one-time warning when it is in effect.
 
 ### ~~3.11 ServiceLoader and validation once per mapper (#11, D15/A8)~~

@@ -83,8 +83,8 @@ public class MorphiaCodecProvider implements CodecProvider {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public <T> Codec<T> get(Class<T> type, CodecRegistry registry) {
         MorphiaCodec<T> codec = (MorphiaCodec<T>) codecs.get(type);
-        if (codec == null && (mapper.isMapped(type) || mapper.isMappable(type))) {
-            EntityModel model = mapper.getEntityModel(type);
+        EntityModel model = codec == null ? mapper.mapEntity(type) : null;
+        if (model != null) {
             if (model.getType() != type) {
                 // a proxy, anonymous subclass or @ExternalEntity stand-in shares the codec of the type it's mapped as
                 return (Codec<T>) get(model.getType(), registry);

@@ -95,9 +95,7 @@ public class TestRegistrationProtocol {
         Assertions.assertFalse(mapper.isMapped(Second.class), "A model with a duplicate discriminator should not stay registered");
         Assertions.assertEquals(First.class, mapper.getClass("shared"),
                 "A rejected duplicate shouldn't replace the original discriminator mapping");
-        Assertions.assertEquals(List.of(First.class), mapper.getClassesMappedToCollection("shared").stream()
-                .map(EntityModel::getType)
-                .toList());
+        Assertions.assertEquals(First.class, mapper.getClassFromCollection("shared"));
     }
 
     @ParameterizedTest
