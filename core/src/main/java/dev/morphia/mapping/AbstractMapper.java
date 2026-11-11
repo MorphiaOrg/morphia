@@ -28,6 +28,7 @@ import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.Conversions;
+import dev.morphia.mapping.codec.pojo.ClassHierarchy;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.mapping.conventions.MorphiaConvention;
@@ -414,7 +415,8 @@ public abstract class AbstractMapper implements Mapper {
      * @return true if the type is an {@code @ExternalEntity} stand-in for the target
      */
     private static boolean standsIn(Class<?> type, Class<?> target) {
-        ExternalEntity external = type.getAnnotation(ExternalEntity.class);
+        // from the whole hierarchy, interfaces included, as the model builders read it
+        ExternalEntity external = (ExternalEntity) ClassHierarchy.annotations(type).get(ExternalEntity.class);
         return external != null && external.target() == target;
     }
 

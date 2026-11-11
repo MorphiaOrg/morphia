@@ -15,6 +15,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Version;
 import dev.morphia.config.MorphiaConfig;
@@ -264,6 +265,27 @@ public class TestRegistrationProtocol {
         Mapper copy = mapper.copy();
         Assertions.assertTrue(copy.isMapped(ThirdPartyEntityProxy.class), "a copy should keep the stand-in");
         Assertions.assertSame(copy.getEntityModel(ThirdPartyEntity.class), copy.getEntityModel(ThirdPartyEntityProxy.class));
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    public void standInAnnotatedThroughAnInterface(MapperType type) {
+        Mapper mapper = mapper(type);
+        EntityModel model = mapper.getEntityModel(InterfaceStandIn.class);
+
+        Assertions.assertSame(ThirdPartyEntity.class, model.getType());
+        Assertions.assertSame(model, mapper.getEntityModel(InterfaceStandIn.class));
+        Assertions.assertTrue(mapper.isMapped(InterfaceStandIn.class));
+    }
+
+    @ExternalEntity(value = "viaInterface", target = ThirdPartyEntity.class)
+    interface StandsInForThirdParty {
+    }
+
+    static class InterfaceStandIn implements StandsInForThirdParty {
+        public String field;
+        @Id
+        public Long number;
     }
 
     @Test
