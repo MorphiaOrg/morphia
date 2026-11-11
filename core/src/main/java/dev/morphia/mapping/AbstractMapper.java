@@ -10,8 +10,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,6 +26,7 @@ import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.pojo.ClassHierarchy;
 import dev.morphia.mapping.codec.pojo.EntityModel;
+import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.mapping.conventions.MorphiaConvention;
 import dev.morphia.mapping.lifecycle.TypedListeners;
@@ -227,12 +226,6 @@ public abstract class AbstractMapper implements Mapper {
         return conversions;
     }
 
-    @Override
-    @MorphiaInternal
-    public Optional<EntityModel> tryGetEntityModel(Class type) {
-        return Optional.ofNullable(mapEntity(type));
-    }
-
     /**
      * @param type a type as {@link #MAPPED_AS mapped}
      * @return the model registered for the type, or for the target it stands in for, if any
@@ -245,8 +238,11 @@ public abstract class AbstractMapper implements Mapper {
     @Override
     @MorphiaInternal
     public EntityModel getEntityModel(Class type) {
-        return tryGetEntityModel(type)
-                .orElseThrow(() -> new NotMappableException(type));
+        EntityModel model = mapEntity(type);
+        if (model == null) {
+            throw new NotMappableException(type);
+        }
+        return model;
     }
 
     @Override
@@ -255,10 +251,9 @@ public abstract class AbstractMapper implements Mapper {
         if (entity == null) {
             return null;
         }
-        return tryGetEntityModel(entity.getClass())
-                .map(EntityModel::getIdProperty)
-                .map((idField) -> idField.getValue(entity))
-                .orElse(null);
+        EntityModel model = mapEntity(entity.getClass());
+        PropertyModel idProperty = model != null ? model.getIdProperty() : null;
+        return idProperty != null ? idProperty.getValue(entity) : null;
     }
 
     /**
@@ -339,7 +334,6 @@ public abstract class AbstractMapper implements Mapper {
         }
         return classes.stream()
                 .map(this::getEntityModel)
-                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 

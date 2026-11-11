@@ -679,7 +679,11 @@ Bundle these into one or two PRs. Most of it is `@MorphiaInternal` dead code.
   - Done. `MorphiaQuery` resolves its model once and adds the discriminators itself. `EntityModel.discriminatorValues`
     caches the list alongside the subtypes, nearest subtype first, so its order no longer follows a `HashSet`.
     Whether to add them follows the model's `useDiscriminator()` rather than reading the `@Entity` annotation.
-- **D16:** collapse the five "give me a model" entry points into one nullable lookup plus one throwing wrapper.
+- ~~**D16:** collapse the five "give me a model" entry points into one nullable lookup plus one throwing wrapper.~~
+  - Done. `tryGetEntityModel` is gone: `mapEntity` is the nullable lookup and `getEntityModel` throws when it finds
+    nothing. Since D13, `mapEntity` resolves proxies, anonymous subclasses and stand-ins too, so the two always agreed.
+    `map(...)` and `register` stay: the first is the explicit mapping call that rejects unannotated classes, the second
+    takes a model built elsewhere (`EntityModelImporter`).
 - ~~**A11:** extract `ReflectiveEntityModelBuilder` so the `EntityModel` constructor only assigns fields. Use one
   annotation-collection utility with documented precedence, whose rules `EntityModelGenerator` also follows (feeds
   4.8's interface-annotation fix). This is groundwork for Tier 3.~~

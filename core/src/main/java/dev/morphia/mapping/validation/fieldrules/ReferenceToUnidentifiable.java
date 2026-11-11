@@ -20,7 +20,7 @@ public class ReferenceToUnidentifiable extends PropertyConstraint {
         if (propertyModel.hasAnnotation(Reference.class)) {
             final Class realType = propertyModel.getNormalizedType();
 
-            if (!mapper.tryGetEntityModel(realType).isPresent()) {
+            if (mapper.mapEntity(realType) == null) {
                 ve.add(new ConstraintViolation(Level.FATAL, entityModel, propertyModel, getClass(),
                         Sofia.referredTypeMissingId(propertyModel.getFullName(), propertyModel.getType().getName())));
             }
