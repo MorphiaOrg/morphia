@@ -672,7 +672,10 @@ Bundle these into one or two PRs. Most of it is `@MorphiaInternal` dead code.
     anonymous, synthetic and hidden classes are mapped as the class or interface they extend, so
     `new User() {{ ... }}` is stored as a `User` and shares its codec. A same-named class from another loader now
     gets a model of its own rather than the first class's, so its matching discriminator is rejected as a duplicate.
-- **D14:** move `updateQueryWithDiscriminators` into `MorphiaQuery`, using the cached subtype list.
+- ~~**D14:** move `updateQueryWithDiscriminators` into `MorphiaQuery`, using the cached subtype list.~~
+  - Done. `MorphiaQuery` resolves its model once and adds the discriminators itself. `EntityModel.discriminatorValues`
+    caches the list alongside the subtypes, nearest subtype first, so its order no longer follows a `HashSet`.
+    Whether to add them follows the model's `useDiscriminator()` rather than reading the `@Entity` annotation.
 - **D16:** collapse the five "give me a model" entry points into one nullable lookup plus one throwing wrapper.
 - ~~**A11:** extract `ReflectiveEntityModelBuilder` so the `EntityModel` constructor only assigns fields. Use one
   annotation-collection utility with documented precedence, whose rules `EntityModelGenerator` also follows (feeds

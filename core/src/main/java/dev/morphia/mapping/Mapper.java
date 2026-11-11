@@ -22,8 +22,6 @@ import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.conventions.MorphiaConvention;
 
-import org.bson.Document;
-
 /**
  * @morphia.internal
  * @hidden
@@ -242,17 +240,6 @@ public interface Mapper {
      * @param packageName the name of the package to process
      */
     void mapPackage(String packageName);
-
-    /**
-     * Updates a query with any discriminators from subtypes if polymorphic queries are enabled
-     *
-     * @param model the query model
-     * @param query the query document
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    void updateQueryWithDiscriminators(EntityModel model, Document query);
 
     /**
      * @param entityModel the model to register

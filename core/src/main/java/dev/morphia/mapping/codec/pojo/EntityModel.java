@@ -83,8 +83,9 @@ public class EntityModel {
     private final Set<EntityModel> parents = new CopyOnWriteArraySet<>();
     // bumped whenever a subtype is linked anywhere below this model
     private final AtomicLong subtypesVersion = new AtomicLong();
-    // every subtype below this model, as of a subtypesVersion; rebuilt on first use after a change
-    private volatile AllSubtypes allSubtypes;
+    // every subtype below this model and the discriminators of the hierarchy, as of a subtypesVersion; rebuilt on first
+    // use after a change
+    private volatile HierarchySnapshot hierarchy;
     private EntityModel superClass;
     private PropertyModel idProperty;
     private PropertyModel versionProperty;
@@ -444,10 +445,26 @@ public class EntityModel {
      */
     @MorphiaInternal
     public List<EntityModel> allSubtypes() {
+        return hierarchySnapshot().subtypes();
+    }
+
+    /**
+     * @param polymorphic true to include the discriminators of every subtype
+     * @return this model's discriminator, then, if polymorphic, those of its subtypes in {@link #allSubtypes()} order.
+     *         The list is unmodifiable and cached like the subtypes.
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public List<String> discriminatorValues(boolean polymorphic) {
+        return polymorphic ? hierarchySnapshot().discriminators() : List.of(discriminator());
+    }
+
+    private HierarchySnapshot hierarchySnapshot() {
         long version = subtypesVersion.get();
-        AllSubtypes cached = allSubtypes;
+        HierarchySnapshot cached = hierarchy;
         if (cached != null && cached.version() == version) {
-            return cached.models();
+            return cached;
         }
         // a model can be reached along several paths (e.g. linked under an interface and under its superinterface), so
         // expand each one only once
@@ -468,9 +485,13 @@ public class EntityModel {
         }
         ordered.sort(Comparator.comparingInt(distances::get));
         List<EntityModel> models = List.copyOf(ordered);
+        List<String> discriminators = new ArrayList<>();
+        discriminators.add(discriminator());
+        models.forEach(model -> discriminators.add(model.discriminator()));
         // tagged with the version read before walking, so a subtype linked during the walk makes it stale at once
-        allSubtypes = new AllSubtypes(version, models);
-        return models;
+        HierarchySnapshot current = new HierarchySnapshot(version, models, Collections.unmodifiableList(discriminators));
+        hierarchy = current;
+        return current;
     }
 
     /**
@@ -515,7 +536,14 @@ public class EntityModel {
         }
     }
 
-    private record AllSubtypes(long version, List<EntityModel> models) {
+    /**
+     * The hierarchy below a model as of a {@code subtypesVersion}.
+     *
+     * @param version        the version it was built at
+     * @param subtypes       every subtype below the model, nearest first, without the model itself
+     * @param discriminators the model's own discriminator, then those of {@code subtypes} in the same order
+     */
+    private record HierarchySnapshot(long version, List<EntityModel> subtypes, List<String> discriminators) {
     }
 
     /**
