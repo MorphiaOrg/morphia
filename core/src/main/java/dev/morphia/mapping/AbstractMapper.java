@@ -34,7 +34,6 @@ import dev.morphia.mapping.lifecycle.TypedListeners;
 import dev.morphia.mapping.validation.MappingValidator;
 import dev.morphia.sofia.Sofia;
 
-import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

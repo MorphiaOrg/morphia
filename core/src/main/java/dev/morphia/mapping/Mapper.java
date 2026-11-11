@@ -22,8 +22,6 @@ import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.conventions.MorphiaConvention;
 
-import org.bson.Document;
-
 /**
  * @morphia.internal
  * @hidden
