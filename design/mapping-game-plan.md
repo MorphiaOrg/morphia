@@ -59,7 +59,7 @@ model objects. It means most of the speed can be had without an API change.
 
 ---
 
-## Phase 0: Safety net and baselines
+## ~~Phase 0: Safety net and baselines~~
 
 ### ~~0.0 Move the review and this plan to `master`~~
 - `design/mapping-review.md`, `design/mapping-review/` and this file, with the decisions recorded.
@@ -118,7 +118,7 @@ model objects. It means most of the speed can be had without an API change.
 
 ---
 
-## Phase 1: Decide
+## ~~Phase 1: Decide~~
 
 Decided 2026-10-12.
 
@@ -133,7 +133,7 @@ Decided 2026-10-12.
 
 ---
 
-## Phase 2: Correctness fixes that stand alone
+## ~~Phase 2: Correctness fixes that stand alone~~
 
 Each fix needs a failing test first and must pass under `-Dmorphia.mapper=critter` and `reflection`. Fixes that a
 structural item covers are moved to that item (see Phases 4 and 5).
@@ -189,7 +189,7 @@ structural item covers are moved to that item (see Phases 4 and 5).
 
 ---
 
-## Phase 3: Hot-path protocol (Tier 1, items 1–9)
+## ~~Phase 3: Hot-path protocol (Tier 1, items 1–9)~~
 
 **Precondition:** the minimal codec plan (3.0) and the harness (0.1). Each item is its own PR, with before/after
 JMH numbers on both mappers.
@@ -331,7 +331,7 @@ harness passes, and both mappers agree.
 
 ---
 
-## Phase 4: Structural (Tier 2)
+## ~~Phase 4: Structural (Tier 2)~~
 
 ### ~~4.1 Codecs off `PropertyModel`; sessions share the mapper (#14, D1/B13/C7)~~
 - Finish moving codecs into the 3.0 plan and remove `PropertyModel.codec`. `SessionDatastore` reuses
@@ -635,7 +635,7 @@ The original notes:
 
 ---
 
-## Phase 5: Clean-up (any time, low risk)
+## ~~Phase 5: Clean-up (any time, low risk)~~
 
 Bundle these into one or two PRs. Most of it is `@MorphiaInternal` dead code.
 - ~~**A10/B14/D16:**~~
