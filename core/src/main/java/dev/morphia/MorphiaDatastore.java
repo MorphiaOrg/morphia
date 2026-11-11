@@ -507,7 +507,7 @@ public class MorphiaDatastore implements Datastore {
 
     @Override
     public <T> T merge(T entity, InsertOneOptions options) {
-        EntityModel model = mapper.tryGetEntityModel(entity.getClass()).orElse(null);
+        EntityModel model = mapper.mapEntity(entity.getClass());
         PropertyModel idProperty = model != null ? model.getIdProperty() : null;
         final Object id = idProperty != null ? idProperty.getValue(entity) : null;
         if (id == null) {

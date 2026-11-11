@@ -140,7 +140,7 @@ public final class FindOptions implements ReadConfigurable<FindOptions>, Collect
         iterable.skip(skip);
         if (sort != null) {
             Document mapped = new Document();
-            EntityModel model = mapper.tryGetEntityModel(type).orElse(null);
+            EntityModel model = mapper.mapEntity(type);
 
             for (Entry<String, Object> entry : sort.entrySet()) {
                 Object value = entry.getValue();

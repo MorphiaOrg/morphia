@@ -271,8 +271,10 @@ public final class IndexHelper {
             addInterfaces(type, interfaces);
         }
         for (Class<?> type : interfaces) {
-            mapper.tryGetEntityModel(type)
-                    .ifPresent(model -> addDeclaration(declarations, model.getAnnotation(Indexes.class)));
+            EntityModel model = mapper.mapEntity(type);
+            if (model != null) {
+                addDeclaration(declarations, model.getAnnotation(Indexes.class));
+            }
         }
 
         List<Index> list = new ArrayList<>();

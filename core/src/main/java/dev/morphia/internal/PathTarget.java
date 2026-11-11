@@ -98,7 +98,7 @@ public class PathTarget {
      * @param <T>           the root type
      */
     public <T> PathTarget(Mapper mapper, @Nullable Class<T> type, String path, boolean validateNames) {
-        this(mapper, type != null ? mapper.tryGetEntityModel(type).orElse(null) : null, path, validateNames);
+        this(mapper, mapper.mapEntity(type), path, validateNames);
     }
 
     /**
@@ -229,7 +229,7 @@ public class PathTarget {
                 }
             }
         }
-        context = model != null ? mapper.tryGetEntityModel(model.getNormalizedType()).orElse(null) : null;
+        context = model != null ? mapper.mapEntity(model.getNormalizedType()) : null;
         return model;
     }
 

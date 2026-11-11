@@ -3,7 +3,6 @@ package dev.morphia.mapping;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.ServiceLoader;
 
 import com.mongodb.lang.Nullable;
@@ -98,22 +97,12 @@ public interface Mapper {
     Conversions getConversions();
 
     /**
-     * Tries to get the {@link EntityModel} for the object (type). If it isn't mapped, but can be mapped, create a new
-     * class and cache it (without validating). If it isn't mapped and cannot be mapped, return empty.
+     * Gets the {@link EntityModel} for a type, mapping the type first if it isn't mapped yet.
      *
      * @param type the type to process
-     * @return optional EntityModel for the object given or empty
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    Optional<EntityModel> tryGetEntityModel(Class type);
-
-    /**
-     * Gets the {@link EntityModel} for the object (type). If it isn't mapped, create a new class and cache it (without validating).
-     *
-     * @param type the type to process
-     * @return the EntityModel for the object given
+     * @return the EntityModel for the type
+     * @throws NotMappableException if the type can't be mapped
+     * @see #mapEntity(Class)
      * @hidden
      * @morphia.internal
      */
@@ -121,8 +110,12 @@ public interface Mapper {
     EntityModel getEntityModel(Class type);
 
     /**
+     * Gets the {@link EntityModel} for a type, mapping the type first if it isn't mapped yet. A proxy or an anonymous
+     * subclass gets the model of the class it's mapped as, and an {@code @ExternalEntity} stand-in that of its target.
+     *
      * @param type the class to map
-     * @return the EntityModel or null
+     * @return the EntityModel, or null if the type can't be mapped
+     * @see #getEntityModel(Class)
      */
     @Nullable
     EntityModel mapEntity(@Nullable Class type);

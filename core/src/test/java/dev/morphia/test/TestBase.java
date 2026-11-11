@@ -528,9 +528,8 @@ public abstract class TestBase {
     protected <T> T fromDocument(Class<T> type, Document document) {
         Class<T> aClass = type;
         Mapper mapper = getMapper();
-        String key = mapper.tryGetEntityModel(type)
-                .map(EntityModel::discriminatorKey)
-                .orElse(mapper.getConfig().discriminatorKey());
+        EntityModel model = mapper.mapEntity(type);
+        String key = model != null ? model.discriminatorKey() : mapper.getConfig().discriminatorKey();
         if (document.containsKey(key)) {
             aClass = mapper.getClass(document.getString(key));
         }
