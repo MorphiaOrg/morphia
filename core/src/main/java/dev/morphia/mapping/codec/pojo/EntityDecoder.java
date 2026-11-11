@@ -3,9 +3,9 @@ package dev.morphia.mapping.codec.pojo;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.mapping.DiscriminatorLookup;
 import dev.morphia.mapping.codec.DecodeSession;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
+import dev.morphia.mapping.codec.ObjectCodec;
 
 import org.bson.BsonInvalidOperationException;
 import org.bson.BsonReader;
@@ -335,7 +335,7 @@ public class EntityDecoder<T> implements Decoder<T> {
     private Codec<Object> idKeyCodec() {
         Codec<Object> codec = idKeyCodec;
         if (codec == null) {
-            codec = morphiaCodec.getRegistry().get(Object.class);
+            codec = ObjectCodec.forIds(morphiaCodec.getRegistry());
             idKeyCodec = codec;
         }
         return codec;
@@ -503,30 +503,20 @@ public class EntityDecoder<T> implements Decoder<T> {
 
     /**
      * @param reader the reader, positioned at an id stored as a document, which it's left at
-     * @return true if the id decodes as an entity: as {@code ObjectCodec}, which reads ids ahead, decides it, it has a
-     *         discriminator under the configured key or an entity's own. One without, such as an entity mapped with
-     *         {@code useDiscriminator = false}, is read as a plain {@code Document}
+     * @return true if the id decodes as an entity: like {@code ObjectCodec}, which reads ids ahead, it's stored with the
+     *         discriminator key. One without it, such as an entity mapped with {@code useDiscriminator = false}, is read as
+     *         a plain {@code Document}
      */
     private boolean decodesAsEntity(BsonReader reader) {
-        String configuredKey = morphiaCodec.getDatastore().getMapper().getConfig().discriminatorKey();
-        DiscriminatorLookup lookup = morphiaCodec.getDatastore().getMapper().getDiscriminatorLookup();
+        String discriminatorKey = morphiaCodec.getDatastore().getMapper().getConfig().discriminatorKey();
         BsonReaderMark mark = reader.getMark();
         try {
             reader.readStartDocument();
-            BsonType type;
-            while ((type = reader.readBsonType()) != BsonType.END_OF_DOCUMENT) {
-                String name = reader.readName();
-                if (name.equals(configuredKey)) {
-                    // ObjectCodec reads a string here; anything else fails it, so the id isn't read ahead either way
-                    return type == BsonType.STRING;
+            while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
+                if (discriminatorKey.equals(reader.readName())) {
+                    return true;
                 }
-                if (type == BsonType.STRING && lookup.isKey(configuredKey, name)) {
-                    if (lookup.lookup(configuredKey, name, reader.readString()) != null) {
-                        return true;
-                    }
-                } else {
-                    reader.skipValue();
-                }
+                reader.skipValue();
             }
             return false;
         } finally {

@@ -95,8 +95,8 @@ public final class DiscriminatorLookup {
     }
 
     /**
-     * Resolves a discriminator found in a document whose type isn't otherwise known, such as an untyped value or an id
-     * stored as a document. Under the configured key, it's looked up as {@link #lookup(String)} does. Under a key an
+     * Resolves a discriminator found in a document whose type isn't otherwise known: an untyped value. Under the configured
+     * key, it's looked up as {@link #lookup(String)} does. Under a key an
      * entity declares for itself, it must be that entity's discriminator, so an ordinary document that happens to have a
      * field of that name stays a document.
      *

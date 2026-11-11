@@ -28,10 +28,10 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.internal.MorphiaInternal;
-import dev.morphia.mapping.DiscriminatorLookup;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.DecodeSession;
+import dev.morphia.mapping.codec.ObjectCodec;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
@@ -97,32 +97,6 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     }
 
     /**
-     * Finds the entity an id stored as a document is, as {@code ObjectCodec} does for the decode session's keys: the first
-     * discriminator in it, under the configured key or under an entity's own.
-     *
-     * @return the class, or null if it's a plain document
-     * @throws CodecConfigurationException if a discriminator under the configured key names no class
-     */
-    @Nullable
-    private static Class<?> entityClass(MorphiaDatastore datastore, Document document) {
-        String configuredKey = datastore.getMapper().getConfig().discriminatorKey();
-        DiscriminatorLookup lookup = datastore.getMapper().getDiscriminatorLookup();
-        for (Map.Entry<String, Object> entry : document.entrySet()) {
-            String name = entry.getKey();
-            if (entry.getValue() instanceof String value && lookup.isKey(configuredKey, name)) {
-                Class<?> type = lookup.lookup(configuredKey, name, value);
-                if (type != null) {
-                    return type;
-                }
-            } else if (name.equals(configuredKey)) {
-                // a configured key that holds something other than a string leaves the id a document
-                return null;
-            }
-        }
-        return null;
-    }
-
-    /**
      * Decodes an ID value
      *
      * @param datastore      the Datastore to use
@@ -145,27 +119,23 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             if (document.containsKey("$ref")) {
                 id = processId(datastore, new DBRef(document.getString("$db"), document.getString("$ref"), document.get("$id")),
                         decoderContext);
-            } else {
-                // decided as ObjectCodec decides it: the decode session reads its id keys with ObjectCodec, and the two must
-                // agree for a reference back to the entity being decoded to close the cycle
-                Class<?> type;
+            } else if (document.get(datastore.getMapper().getConfig().discriminatorKey()) instanceof String discriminator) {
+                // the configured key rather than the id type's: the decode session reads its id keys with ObjectCodec, which
+                // uses it too, and the two must agree for a reference back to the entity being decoded to close the cycle
                 try {
-                    type = entityClass(datastore, document);
+                    id = datastore.getCodecRegistry()
+                            .get(datastore.getMapper().getClass(discriminator))
+                            .decode(new DocumentReader(document, datastore.getMapper().getConversions()), decoderContext);
                 } catch (CodecConfigurationException e) {
                     throw new MappingException(Sofia.cannotFindTypeInDocument(), e);
                 }
-                if (type != null) {
-                    id = datastore.getCodecRegistry()
-                            .get(type)
-                            .decode(new DocumentReader(document, datastore.getMapper().getConversions()), decoderContext);
-                }
+
             }
         } else if (id instanceof DBRef) {
             DBRef ref = (DBRef) id;
             Object refId = ref.getId();
             if (refId instanceof Document) {
-                refId = datastore.getCodecRegistry()
-                        .get(Object.class)
+                refId = ObjectCodec.forIds(datastore.getCodecRegistry())
                         .decode(new DocumentReader((Document) refId, datastore.getMapper().getConversions()), decoderContext);
             }
             id = new DBRef(ref.getDatabaseName(), ref.getCollectionName(), refId);
@@ -556,7 +526,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     }
 
     private Object decodeDocument(Document value) {
-        return getDatastore().getCodecRegistry().get(Object.class)
+        return ObjectCodec.forIds(getDatastore().getCodecRegistry())
                 .decode(new DocumentReader(value, mapper.getConversions()), DecoderContext.builder().build());
     }
 

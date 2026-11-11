@@ -104,6 +104,75 @@ public class TestOwnDiscriminatorKey extends TestBase {
         Assertions.assertEquals(1, OwnKeyLoadedId.loads, "@PostLoad runs on the id");
     }
 
+    /**
+     * The ids below are stored as documents with their own discriminator key. The decode session and references both read
+     * those as plain documents, as before, so they agree on the key an entity is in flight under however the owner is
+     * decoded.
+     */
+    @Test
+    public void aLifecycleOwnerClosesACycleThroughAnIdWithItsOwnKey() {
+        getMapper().map(OwnKeyLifecycleCycle.class, OwnKeyKind.class);
+        OwnKeyLifecycleCycle cycle = new OwnKeyLifecycleCycle();
+        cycle.id = new OwnKeyKind("loop");
+        cycle.self = cycle;
+        getDs().save(cycle);
+
+        OwnKeyLifecycleCycle loaded = getDs().find(OwnKeyLifecycleCycle.class).first();
+        Assertions.assertEquals(new OwnKeyKind("loop"), loaded.id);
+        Assertions.assertSame(loaded, loaded.self, "the cycle closes on the entity being decoded");
+    }
+
+    @Test
+    public void aMapOfReferencesClosesACycleThroughAnIdWithItsOwnKey() {
+        getMapper().map(OwnKeyMapCycle.class, OwnKeyKind.class);
+        OwnKeyMapCycle cycle = new OwnKeyMapCycle();
+        cycle.id = new OwnKeyKind("map");
+        cycle.others = new LinkedHashMap<>(Map.of("me", cycle));
+        getDs().save(cycle);
+
+        OwnKeyMapCycle loaded = getDs().find(OwnKeyMapCycle.class).first();
+        Assertions.assertSame(loaded, loaded.others.get("me"), "the cycle closes on the entity being decoded");
+    }
+
+    @Test
+    public void anIdWithItsOwnKeyLoadsOnceUnderAnOwnerWithoutCallbacks() {
+        getMapper().map(OwnKeyPlainOwner.class, OwnKeyLoadedId.class);
+        OwnKeyPlainOwner entity = new OwnKeyPlainOwner();
+        entity.id = new OwnKeyLoadedId("p");
+        getDs().save(entity);
+        OwnKeyLoadedId.loads = 0;
+
+        OwnKeyPlainOwner loaded = getDs().find(OwnKeyPlainOwner.class).first();
+        Assertions.assertEquals(new OwnKeyLoadedId("p"), loaded.id);
+        Assertions.assertEquals(1, OwnKeyLoadedId.loads, "@PostLoad runs on the id");
+    }
+
+    @Entity("ownKey_lifecycleCycles")
+    public static class OwnKeyLifecycleCycle {
+        @Id
+        private OwnKeyKind id;
+        @Reference(idOnly = true)
+        private OwnKeyLifecycleCycle self;
+
+        @PostLoad
+        void loaded() {
+        }
+    }
+
+    @Entity("ownKey_mapCycles")
+    public static class OwnKeyMapCycle {
+        @Id
+        private OwnKeyKind id;
+        @Reference(idOnly = true)
+        private Map<String, OwnKeyMapCycle> others;
+    }
+
+    @Entity("ownKey_plainOwners")
+    public static class OwnKeyPlainOwner {
+        @Id
+        private OwnKeyLoadedId id;
+    }
+
     @Entity("ownKey_holders")
     public static class OwnKeyHolder {
         @Id
