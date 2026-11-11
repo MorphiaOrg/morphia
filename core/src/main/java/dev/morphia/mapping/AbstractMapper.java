@@ -14,7 +14,6 @@ import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.stream.Collectors;
 
 import com.mongodb.lang.Nullable;
@@ -55,7 +54,6 @@ public abstract class AbstractMapper implements Mapper {
     protected final Map<Class<?>, EntityModel> mappedEntities = new ConcurrentHashMap<>();
     // each @ExternalEntity stand-in looked up so far, with the target its model is registered under
     private final Map<Class<?>, Class<?>> standIns = new ConcurrentHashMap<>();
-    protected final ConcurrentHashMap<String, Set<EntityModel>> mappedEntitiesByCollection = new ConcurrentHashMap<>();
     // Per collection, the registered models no other model mapped to that collection is a supertype of, in registration
     // order. Normally one root; several only if unrelated classes share a collection. Replaced whole under the mapper's
     // lock, so lock-free readers see a consistent list.
@@ -197,16 +195,6 @@ public abstract class AbstractMapper implements Mapper {
                             .collect(Collectors.joining(", "))));
         }
         return (Class<T>) roots.get(0).getType();
-    }
-
-    @Override
-    @MorphiaInternal
-    public List<EntityModel> getClassesMappedToCollection(String collection) {
-        final Set<EntityModel> entities = mappedEntitiesByCollection.get(collection);
-        if (entities == null || entities.isEmpty()) {
-            throw new MappingException(Sofia.collectionNotMapped(collection));
-        }
-        return new ArrayList<>(entities);
     }
 
     @Override
@@ -402,19 +390,17 @@ public abstract class AbstractMapper implements Mapper {
     protected abstract EntityModel buildModel(Class<?> type);
 
     @Override
-    public synchronized void map(String packageName) {
+    public synchronized void mapPackage(String packageName) {
+        // the datastore maps the configured packages through here too
+        if (!config.packages().contains(packageName)) {
+            Sofia.logConfiguredOperation("Mapper#mapPackage");
+        }
         try {
             List<Class> classes = getClasses(classLoader, packageName);
             classes.forEach(type -> mapEntity(type));
         } catch (ClassNotFoundException e) {
             throw new MappingException("Could not get map classes from package " + packageName, e);
         }
-    }
-
-    @Override
-    public synchronized void mapPackage(String packageName) {
-        Sofia.logConfiguredOperation("Mapper#mapPackage");
-        map(packageName);
     }
 
     @Override
@@ -457,8 +443,6 @@ public abstract class AbstractMapper implements Mapper {
         }
 
         linkHierarchy(model);
-        mappedEntitiesByCollection.computeIfAbsent(model.collectionName(), s -> new CopyOnWriteArraySet<>())
-                .add(model);
         updateRoots(model);
         mappedEntities.put(type, model);
         return model;

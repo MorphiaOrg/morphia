@@ -70,17 +70,6 @@ public interface Mapper {
     <T> Class<T> getClassFromCollection(String collection);
 
     /**
-     * Finds all the types mapped to a named collection
-     *
-     * @param collection the collection to check
-     * @return the mapped types
-     * @hidden
-     * @morphia.internal
-     */
-    @MorphiaInternal
-    List<EntityModel> getClassesMappedToCollection(String collection);
-
-    /**
      * @return the DiscriminatorLookup in use
      * @hidden
      * @morphia.internal
@@ -206,16 +195,8 @@ public interface Mapper {
     List<EntityModel> map(List<Class<?>> classes);
 
     /**
-     * Tries to map all classes in the package specified.
-     *
-     * @param packageName the name of the package to process
-     * @hidden
-     * @since 2.4
-     */
-    void map(String packageName);
-
-    /**
-     * Tries to map all classes in the package specified.
+     * Tries to map all classes in the package specified. Packages are normally listed in {@link MorphiaConfig#packages()}
+     * instead, so mapping one that isn't logs a warning, once.
      *
      * @hidden
      * @param packageName the name of the package to process

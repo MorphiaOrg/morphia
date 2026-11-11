@@ -177,7 +177,7 @@ public abstract class TestBase {
         Mapper mapper = config.mapper() == MapperType.CRITTER
                 ? new CritterMapper(config)
                 : new ReflectiveMapper(config);
-        config.packages().forEach(mapper::map);
+        config.packages().forEach(mapper::mapPackage);
         return mapper;
     }
 

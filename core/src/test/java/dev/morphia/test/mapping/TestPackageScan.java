@@ -15,7 +15,7 @@ public class TestPackageScan extends TestBase {
     @Test
     public void mapsClassesAnnotatedOutsideThePackage() {
         Mapper mapper = getMapper();
-        mapper.map(SUB);
+        mapper.mapPackage(SUB);
 
         Assertions.assertTrue(mapper.isMapped(ScanChild.class), "@Entity is inherited from a superclass in another package");
         Assertions.assertTrue(mapper.isMapped(ScanTaggedImpl.class),
@@ -25,7 +25,7 @@ public class TestPackageScan extends TestBase {
 
     @Test
     public void doesNotInitializeScannedClasses() {
-        getMapper().map(SUB);
+        getMapper().mapPackage(SUB);
 
         Assertions.assertTrue(getMapper().isMapped(ScanChild.class));
         Assertions.assertFalse(ScanProbe.entityInitialized, "mapping an entity shouldn't run its static initializer");
