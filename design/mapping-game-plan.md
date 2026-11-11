@@ -325,8 +325,9 @@ harness passes, and both mappers agree.
     `_id`, `_t` and properties come in, that each constructor runs once, and that Morphia's layout takes one mark.
   - Measured (`CodecBenchmark`, `-prof gc`): SIMPLE decodes with ~500 B less (2,112 → ~1,610 B/op) and 24–28% faster;
     POLYMORPHIC with ~2.7 KB less and 20–26% faster. LIFECYCLE is unchanged.
-  - Not done: `LifecycleDecoder` still reads the discriminator and the id ahead of decoding (`peekDiscriminator`,
-    `peekId`). Doing the same there is a follow-up.
+  - ~~Not done: `LifecycleDecoder` still reads the discriminator and the id ahead of decoding (`peekDiscriminator`,
+    `peekId`). Doing the same there is a follow-up.~~ Done in #4462: `LifecycleDecoder` reads them in the same pass,
+    and `EntityDecoder` hands a lifecycle subtype the rest of the document. LIFECYCLE decodes 25–30% faster.
   - The harness shows that the lifecycle codecs read a few foreign documents differently from the plain ones; master
     already did. Through a `Document`, an id stored as another type, and with either listener, a null `_t`. They're
     listed in `LIFECYCLE_DIVERGENCES`.
