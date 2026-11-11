@@ -11,6 +11,7 @@ import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PostLoad;
+import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.Property;
 import dev.morphia.config.ManualMorphiaConfig;
 import dev.morphia.config.MorphiaConfig;
@@ -18,6 +19,7 @@ import dev.morphia.mapping.MapperType;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.DecodeSession;
 import dev.morphia.mapping.codec.MorphiaCodecProvider;
+import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 
 import org.bson.BsonBinaryReader;
 import org.bson.BsonDocument;
@@ -54,10 +56,14 @@ public class TestDecodeOrder {
     private static final String BUILT = Built.class.getName();
 
     private static int constructed;
+    private static int preLoads;
+    private static Object idAtPreLoad;
 
     @BeforeEach
     void reset() {
         constructed = 0;
+        preLoads = 0;
+        idAtPreLoad = null;
     }
 
     static Stream<Arguments> layouts() {
@@ -79,6 +85,16 @@ public class TestDecodeOrder {
                         .formatted(id, DOG, probe.formatted("Dog"))),
                 arguments(mapper, "no discriminator", Dog.class, "{%s, %s}".formatted(probe.formatted("Dog"), id)),
                 arguments(mapper, "lifecycle subtype", Pet.class, "{%s, \"_t\": \"%s\", %s}"
+                        .formatted(id, CAT, probe.formatted("Cat"))),
+                arguments(mapper, "lifecycle: id, discriminator", Cat.class, "{%s, \"_t\": \"%s\", %s}"
+                        .formatted(id, CAT, probe.formatted("Cat"))),
+                arguments(mapper, "lifecycle: discriminator, id", Pet.class, "{\"_t\": \"%s\", %s, %s}"
+                        .formatted(CAT, id, probe.formatted("Cat"))),
+                arguments(mapper, "lifecycle: discriminator, property, id", Cat.class, "{\"_t\": \"%s\", %s, %s}"
+                        .formatted(CAT, probe.formatted("Cat"), id)),
+                arguments(mapper, "lifecycle: property, id, discriminator", Cat.class, "{%s, %s, \"_t\": \"%s\"}"
+                        .formatted(probe.formatted("Cat"), id, CAT)),
+                arguments(mapper, "lifecycle: id, property, discriminator", Pet.class, "{%s, \"name\": \"b\", \"_t\": \"%s\", %s}"
                         .formatted(id, CAT, probe.formatted("Cat")))));
     }
 
@@ -115,24 +131,28 @@ public class TestDecodeOrder {
 
     static Stream<Arguments> morphiaLayouts() {
         return Stream.of(MapperType.values()).flatMap(mapper -> Stream.of(
-                arguments(mapper, Pet.class), arguments(mapper, Dog.class)));
+                arguments(mapper, Pet.class, Dog.class), arguments(mapper, Dog.class, Dog.class),
+                arguments(mapper, Pet.class, Cat.class), arguments(mapper, Cat.class, Cat.class)));
     }
 
     /**
      * A document laid out as Morphia writes it is read in one pass. The only mark is the one taken at its start, to come back
      * to if the subtype's decoder can't pick up part-way; a second would mean the codec was found by reading ahead.
      */
-    @ParameterizedTest(name = "{0}: {1}")
+    @ParameterizedTest(name = "{0}: {2} as {1}")
     @MethodSource("morphiaLayouts")
-    void morphiaLayoutIsReadInOnePass(MapperType mapper, Class<? extends Pet> type) {
+    @SuppressWarnings("unchecked")
+    void morphiaLayoutIsReadInOnePass(MapperType mapper, Class<? extends Pet> type, Class<? extends Pet> stored) {
         withDatastore(mapper, datastore -> {
-            Dog dog = new Dog();
-            dog.id = ID;
-            dog.name = "rex";
-            dog.barks = 2;
+            Pet pet = stored == Cat.class ? new Cat() : new Dog();
+            pet.id = ID;
+            pet.name = "rex";
+            if (pet instanceof Dog dog) {
+                dog.barks = 2;
+            }
             BsonDocument encoded = new BsonDocument();
             try (BsonDocumentWriter writer = new BsonDocumentWriter(encoded)) {
-                datastore.getCodecRegistry().get(Dog.class).encode(writer, dog, EncoderContext.builder().build());
+                ((Codec<Pet>) datastore.getCodecRegistry().get(stored)).encode(writer, pet, EncoderContext.builder().build());
             }
             RawBsonDocument raw = RawBsonDocument.parse(encoded.toJson());
             Assertions.assertEquals(List.of("_id", "_t"), List.copyOf(raw.keySet()).subList(0, 2), "as Morphia writes it");
@@ -145,11 +165,43 @@ public class TestDecodeOrder {
                     return super.getMark();
                 }
             }) {
-                Pet pet = datastore.getCodecRegistry().get(type).decode(reader, DecoderContext.builder().build());
-                Assertions.assertInstanceOf(Dog.class, pet);
-                Assertions.assertEquals(2, ((Dog) pet).barks);
+                Pet decoded = datastore.getCodecRegistry().get(type).decode(reader, DecoderContext.builder().build());
+                Assertions.assertInstanceOf(stored, decoded);
+                Assertions.assertEquals(ID, decoded.id);
+                Assertions.assertEquals("rex", decoded.name);
+                if (decoded instanceof Dog dog) {
+                    Assertions.assertEquals(2, dog.barks);
+                }
             }
             Assertions.assertEquals(1, marks[0], "marks taken");
+        });
+    }
+
+    static Stream<Arguments> lifecycleLayouts() {
+        String id = "\"_id\": {\"$oid\": \"%s\"}".formatted(ID.toHexString());
+        return Stream.of(MapperType.values()).flatMap(mapper -> Stream.of(
+                arguments(mapper, "id, discriminator", Cat.class, "{%s, \"_t\": \"%s\", \"name\": \"c\"}".formatted(id, CAT)),
+                arguments(mapper, "id, discriminator", Pet.class, "{%s, \"_t\": \"%s\", \"name\": \"c\"}".formatted(id, CAT)),
+                arguments(mapper, "property, id, discriminator", Cat.class,
+                        "{\"name\": \"c\", %s, \"_t\": \"%s\"}".formatted(id, CAT))));
+    }
+
+    /**
+     * A lifecycle entity's {@code @PreLoad} runs before any stored value is set, its id included, whether the id was
+     * read with the discriminator or with the rest, and each callback runs once.
+     */
+    @ParameterizedTest(name = "{0}: {1} as {2}")
+    @MethodSource("lifecycleLayouts")
+    void preLoadRunsBeforeTheStoredValues(MapperType mapper, String layout, Class<? extends Pet> type, String json) {
+        withDatastore(mapper, datastore -> {
+            Pet pet = decode(datastore, type, json);
+
+            Assertions.assertInstanceOf(Cat.class, pet);
+            Assertions.assertEquals(ID, pet.id);
+            Assertions.assertEquals("c", pet.name);
+            Assertions.assertEquals(1, preLoads, "@PreLoad runs");
+            Assertions.assertNull(idAtPreLoad, "the id when @PreLoad ran");
+            Assertions.assertEquals(1, ((Cat) pet).postLoads, "@PostLoad runs");
         });
     }
 
@@ -270,6 +322,116 @@ public class TestDecodeOrder {
     }
 
     /**
+     * The same, under a root that decodes through {@link LifecycleDecoder}: it reads the discriminator with the id, but
+     * leaves it for a subtype that maps it.
+     */
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("mappers")
+    void subtypeMappingTheDiscriminatorKeyKeepsItUnderALifecycleRoot(MapperType mapper) {
+        withDatastore(mapper, datastore -> {
+            Assertions.assertInstanceOf(LifecycleDecoder.class,
+                    ((MorphiaCodec<?>) datastore.getCodecRegistry().get(Bird.class)).getDecoder());
+            Bird bird = decode(datastore, Bird.class, "{\"_id\": {\"$oid\": \"%s\"}, \"_t\": \"%s\", \"name\": \"p\"}"
+                    .formatted(ID.toHexString(), Parrot.class.getName()));
+
+            Assertions.assertInstanceOf(Parrot.class, bird);
+            Assertions.assertEquals(Parrot.class.getName(), ((Parrot) bird).kind);
+            Assertions.assertEquals(ID, bird.id);
+            Assertions.assertEquals("p", bird.name);
+        });
+    }
+
+    /**
+     * A codec can be given its own {@link LifecycleDecoder} subclass for a subtype. A parent's decoder hands it the whole
+     * document, as it would any other decoder that isn't exactly its own kind, rather than carrying on part-way.
+     */
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("mappers")
+    void aSubtypeLifecycleDecoderSubclassStillDecodes(MapperType mapper) {
+        MorphiaDatastore[] holder = new MorphiaDatastore[1];
+        int[] decodes = { 0 };
+        CodecProvider custom = new CodecProvider() {
+            @Override
+            @SuppressWarnings("unchecked")
+            public <T> Codec<T> get(Class<T> clazz, CodecRegistry registry) {
+                if (clazz != Cat.class || holder[0] == null) {
+                    return null;
+                }
+                MorphiaDatastore datastore = holder[0];
+                MorphiaCodec<Cat> codec = new MorphiaCodec<>(datastore, datastore.getMapper().getEntityModel(Cat.class), List.of(),
+                        datastore.getMapper().getDiscriminatorLookup(), registry, datastore.getMapper().getConversions());
+                codec.setDecoder(new LifecycleDecoder<>(codec) {
+                    @Override
+                    public Cat decode(BsonReader reader, DecoderContext decoderContext) {
+                        decodes[0]++;
+                        return super.decode(reader, decoderContext);
+                    }
+                });
+                return (Codec<T>) codec;
+            }
+        };
+        withDatastore(mapper, List.of(custom), datastore -> {
+            holder[0] = datastore;
+            Pet pet = decode(datastore, Pet.class, "{\"_id\": {\"$oid\": \"%s\"}, \"_t\": \"%s\", \"name\": \"c\"}"
+                    .formatted(ID.toHexString(), CAT));
+
+            Assertions.assertInstanceOf(Cat.class, pet);
+            Assertions.assertEquals(1, decodes[0], "decodes through the codec's own decoder");
+        });
+    }
+
+    /**
+     * A {@link LifecycleDecoder} subclass that customizes how properties are decoded sees every property, the id included,
+     * through its hooks, even for a document laid out as Morphia writes it.
+     */
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("mappers")
+    void aLifecycleDecoderSubclassSeesEveryProperty(MapperType mapper) {
+        MorphiaDatastore[] holder = new MorphiaDatastore[1];
+        int[] propertyPasses = { 0 };
+        List<String> decoded = new java.util.ArrayList<>();
+        CodecProvider custom = new CodecProvider() {
+            @Override
+            @SuppressWarnings("unchecked")
+            public <T> Codec<T> get(Class<T> clazz, CodecRegistry registry) {
+                if (clazz != Cat.class || holder[0] == null) {
+                    return null;
+                }
+                MorphiaDatastore datastore = holder[0];
+                MorphiaCodec<Cat> codec = new MorphiaCodec<>(datastore, datastore.getMapper().getEntityModel(Cat.class), List.of(),
+                        datastore.getMapper().getDiscriminatorLookup(), registry, datastore.getMapper().getConversions());
+                codec.setDecoder(new LifecycleDecoder<>(codec) {
+                    @Override
+                    protected void decodeProperties(BsonReader reader, DecoderContext decoderContext,
+                            MorphiaInstanceCreator instanceCreator, CodecPlan plan) {
+                        propertyPasses[0]++;
+                        super.decodeProperties(reader, decoderContext, instanceCreator, plan);
+                    }
+
+                    @Override
+                    protected void decodeModel(BsonReader reader, DecoderContext decoderContext,
+                            MorphiaInstanceCreator instanceCreator, CodecPlan plan, PropertyModel model) {
+                        if (model != null) {
+                            decoded.add(model.getMappedName());
+                        }
+                        super.decodeModel(reader, decoderContext, instanceCreator, plan, model);
+                    }
+                });
+                return (Codec<T>) codec;
+            }
+        };
+        withDatastore(mapper, List.of(custom), datastore -> {
+            holder[0] = datastore;
+            Cat cat = decode(datastore, Cat.class, "{\"_id\": {\"$oid\": \"%s\"}, \"_t\": \"%s\", \"name\": \"c\"}"
+                    .formatted(ID.toHexString(), CAT));
+
+            Assertions.assertEquals(ID, cat.id);
+            Assertions.assertEquals(1, propertyPasses[0], "decodeProperties runs");
+            Assertions.assertEquals(List.of("_id", "name"), decoded, "properties decoded through decodeModel");
+        });
+    }
+
+    /**
      * An id read first under one of its load names isn't the key references use, so the entity is registered under the
      * stored {@code _id} found further on.
      */
@@ -325,7 +487,7 @@ public class TestDecodeOrder {
         try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
             MorphiaDatastore datastore = new MorphiaDatastore(client, config);
             datastore.getMapper().map(Pet.class, Dog.class, Cat.class, Built.class, Note.class, Memo.class, Keyed.class, Lizard.class,
-                    Aliased.class);
+                    Aliased.class, Bird.class, Parrot.class);
             test.accept(datastore);
         }
     }
@@ -390,11 +552,40 @@ public class TestDecodeOrder {
 
     @Entity("Cat")
     public static class Cat extends Pet {
+        transient int postLoads;
+
         public Cat() {
+        }
+
+        @PreLoad
+        void loading() {
+            preLoads++;
+            idAtPreLoad = id;
         }
 
         @PostLoad
         void loaded() {
+            postLoads++;
+        }
+    }
+
+    @Entity("Bird")
+    public abstract static class Bird {
+        @Id
+        ObjectId id;
+        String name;
+
+        @PostLoad
+        void loaded() {
+        }
+    }
+
+    @Entity(value = "Parrot", useDiscriminator = false)
+    public static class Parrot extends Bird {
+        @Property("_t")
+        String kind;
+
+        public Parrot() {
         }
     }
 
