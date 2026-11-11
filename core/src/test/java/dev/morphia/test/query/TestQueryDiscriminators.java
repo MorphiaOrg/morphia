@@ -7,6 +7,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.query.MorphiaQuery;
 import dev.morphia.test.TestBase;
+import dev.morphia.test.query.proxies.ProxiedAnimal;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -41,6 +42,13 @@ public class TestQueryDiscriminators extends TestBase {
             Assertions.assertEquals(new Document("_id", id), document(getDs().find(Animal.class).filter(eq("_id", id))));
             Document byDiscriminator = new Document("_t", discriminator(Dog.class));
             Assertions.assertEquals(byDiscriminator, document(getDs().find(Animal.class, byDiscriminator)));
+        });
+    }
+
+    @Test
+    public void proxiesQueryAsTheirEntity() {
+        withConfig(buildConfig(Animal.class, Dog.class, Puppy.class).enablePolymorphicQueries(false), () -> {
+            Assertions.assertEquals(in(Animal.class), queryDocument(ProxiedAnimal.class));
         });
     }
 

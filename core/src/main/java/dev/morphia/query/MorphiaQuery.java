@@ -84,7 +84,8 @@ public class MorphiaQuery<T> implements Query<T> {
         this.seedQuery = query;
         this.options = options;
         mapper = this.datastore.getMapper();
-        model = mapper.mapEntity(type);
+        // getEntityModel and tryGetEntityModel map a lazy reference's proxy class as its entity; mapEntity doesn't
+        model = mapper.tryGetEntityModel(type).orElse(null);
         if (options.collection() != null) {
             collection = datastore.getDatabase().getCollection(options.collection())
                     .withDocumentClass(type);
