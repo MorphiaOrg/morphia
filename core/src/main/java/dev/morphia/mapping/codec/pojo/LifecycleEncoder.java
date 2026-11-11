@@ -44,7 +44,7 @@ public class LifecycleEncoder<T> extends EntityEncoder<T> {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void encode(BsonWriter writer, T value, EncoderContext encoderContext) {
         EntityModel model = getMorphiaCodec().getEntityModel();
-        if (!areEquivalentTypes(value.getClass(), model.getType())) {
+        if (!encodesDirectly(value, model)) {
             // a subtype: its own codec runs the callbacks, so running them here too would run them twice
             getMorphiaCodec().codecForSubtype((Class) value.getClass())
                     .encode(writer, value, encoderContext);

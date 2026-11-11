@@ -37,9 +37,7 @@ public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void encode(BsonWriter writer, T value, EncoderContext encoderContext) {
         EntityModel model = morphiaCodec.getEntityModel();
-        // an anonymous subclass or a proxy is mapped as the type it extends, so it's encoded with that model too
-        if (areEquivalentTypes(value.getClass(), model.getType())
-                || morphiaCodec.getDatastore().getMapper().mapEntity(value.getClass()) == model) {
+        if (encodesDirectly(value, model)) {
             LOG.debug("Encoding document using codec for {}", morphiaCodec.getEntityModel().getType().getName());
 
             // written out rather than through CodecHelper.document, whose lambda would capture these locals per encode
@@ -77,6 +75,17 @@ public class EntityEncoder<T> implements org.bson.codecs.Encoder<T> {
     @Override
     public Class<T> getEncoderClass() {
         return morphiaCodec.getEncoderClass();
+    }
+
+    /**
+     * @param value the value being encoded
+     * @param model the model of this encoder's codec
+     * @return true if this codec encodes the value itself rather than handing it to a subtype's codec: its class is the
+     *         model's, or is mapped as it, as an anonymous subclass or a proxy is
+     */
+    protected boolean encodesDirectly(Object value, EntityModel model) {
+        return areEquivalentTypes(value.getClass(), model.getType())
+                || morphiaCodec.getDatastore().getMapper().mapEntity(value.getClass()) == model;
     }
 
     protected <S, V> boolean areEquivalentTypes(Class<S> t1, Class<V> t2) {

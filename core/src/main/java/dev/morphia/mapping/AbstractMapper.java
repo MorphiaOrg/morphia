@@ -24,6 +24,7 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.EntityListener;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.Conversions;
@@ -397,11 +398,28 @@ public abstract class AbstractMapper implements Mapper {
             if (model == null) {
                 model = register(buildModel(actual));
                 if (model.getType() != actual) {
+                    if (!standsIn(actual, model.getType())) {
+                        // e.g. a same-named class from another loader whose model resolved to the first class's
+                        throw new MappingException("The model built for %s describes %s"
+                                .formatted(describe(actual), describe(model.getType())));
+                    }
                     standIns.put(actual, model.getType());
                 }
             }
             return model;
         }
+    }
+
+    /**
+     * @return true if the type is an {@code @ExternalEntity} stand-in for the target
+     */
+    private static boolean standsIn(Class<?> type, Class<?> target) {
+        ExternalEntity external = type.getAnnotation(ExternalEntity.class);
+        return external != null && external.target() == target;
+    }
+
+    private static String describe(Class<?> type) {
+        return "%s (loaded by %s)".formatted(type.getName(), type.getClassLoader());
     }
 
     /**

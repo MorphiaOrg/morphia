@@ -271,7 +271,16 @@ public class CritterMapper extends AbstractMapper {
             return null;
         }
         try {
-            return (EntityModel) pregenerated.constructor().newInstance(this);
+            EntityModel model = (EntityModel) pregenerated.constructor().newInstance(this);
+            ExternalEntity external = (ExternalEntity) ClassHierarchy.annotations(type).get(ExternalEntity.class);
+            Class<?> expected = external != null ? external.target() : type;
+            if (model.getType() != expected) {
+                // a same-named class from a child loader can find the model generated for the parent's class
+                LOG.warn("Ignoring the pre-generated model for {}: it was generated for {} from another class loader. Its model "
+                        + "is generated at runtime instead.", type.getName(), model.getType().getName());
+                return null;
+            }
+            return model;
         } catch (Throwable e) {
             LOG.warn("Failed to load pre-generated model for {}: {}", type.getName(), e.getMessage());
             return null;
