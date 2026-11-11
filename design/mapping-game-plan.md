@@ -657,8 +657,13 @@ Bundle these into one or two PRs. Most of it is `@MorphiaInternal` dead code.
   - Done. Each datastore keeps the `MongoCollection` it built for a class, with the entity's write concern, which
     `EntityModel.writeConcern()` looks up once, and `delete(entity)` reads from the model too. `save`, `insert`, `merge` and `replace` look the model up once and pass it to the
     version bump; `save(List)` reads the id from that model instead of looking it up again through `getId`.
-- **D12:** a single `get` in `DiscriminatorLookup`, a negative cache for `Class.forName`, and the model's
-  discriminator key everywhere (`getClass(Document)`, `Projection.project`).
+- ~~**D12:** a single `get` in `DiscriminatorLookup`, a negative cache for `Class.forName`, and the model's
+  discriminator key everywhere (`getClass(Document)`, `Projection.project`).~~
+  - Done. `Class.forName` results are cached, misses included, capped at 1024 names since stored data decides the
+    values. `Mapper.getClass(Document)` is gone. `ReferenceCodec`, its one caller, still reads the configured key for ids
+    stored as entities: the decode session reads its id keys with `ObjectCodec`, which uses that key too, and the two
+    have to change together or a cycle through a compound id with its own key never closes. A projection adds the model's key when the model uses a
+    discriminator, which now covers `@ExternalEntity` models too.
 - **D13** (decision 1.4): key the registry by `Class<?>`, register `@ExternalEntity` under both the stand-in and the
   target, and normalize anonymous subclasses.
 - **D14:** move `updateQueryWithDiscriminators` into `MorphiaQuery`, using the cached subtype list.

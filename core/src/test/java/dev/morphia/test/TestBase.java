@@ -34,6 +34,7 @@ import dev.morphia.mapping.CritterMapper;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MapperType;
 import dev.morphia.mapping.ReflectiveMapper;
+import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.reader.DocumentReader;
 import dev.morphia.mapping.codec.writer.DocumentWriter;
 import dev.morphia.query.Query;
@@ -527,8 +528,11 @@ public abstract class TestBase {
     protected <T> T fromDocument(Class<T> type, Document document) {
         Class<T> aClass = type;
         Mapper mapper = getMapper();
-        if (document.containsKey(mapper.getConfig().discriminatorKey())) {
-            aClass = mapper.getClass(document);
+        String key = mapper.tryGetEntityModel(type)
+                .map(EntityModel::discriminatorKey)
+                .orElse(mapper.getConfig().discriminatorKey());
+        if (document.containsKey(key)) {
+            aClass = mapper.getClass(document.getString(key));
         }
         DocumentReader reader = new DocumentReader(document, getMapper().getConversions());
         return getDs().getCodecRegistry()

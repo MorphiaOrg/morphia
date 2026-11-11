@@ -163,18 +163,6 @@ public abstract class AbstractMapper implements Mapper {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    @Nullable
-    public <T> Class<T> getClass(Document document) {
-        Class c = null;
-        String discriminator = (String) document.get(getConfig().discriminatorKey());
-        if (discriminator != null) {
-            c = getClass(discriminator);
-        }
-        return c;
-    }
-
-    @Override
     public Class getClass(String discriminator) {
         return discriminatorLookup.lookup(discriminator);
     }
