@@ -71,3 +71,5 @@ upgrade-test/
 
 # Critter integration tests are copied from core during build
 critter/critter-integration-tests/src/core-test/.claude/worktrees/
+
+/graphify-out/
