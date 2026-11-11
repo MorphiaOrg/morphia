@@ -18,7 +18,10 @@ package dev.morphia.mapping;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+
+import com.mongodb.lang.Nullable;
 
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.pojo.EntityModel;
@@ -37,6 +40,9 @@ import static java.lang.String.format;
 @MorphiaInternal
 public final class DiscriminatorLookup {
     private final Map<String, Class<?>> discriminatorClassMap = new ConcurrentHashMap<>();
+    // the key each model that uses a discriminator stores it under, by discriminator, and the keys themselves
+    private final Map<String, String> keysByDiscriminator = new ConcurrentHashMap<>();
+    private final Set<String> keys = ConcurrentHashMap.newKeySet();
     // Class.forName results for discriminators no model registered, including misses, so a stored value that names no
     // class (or names one under a since-changed discriminator style) doesn't reload or rethrow per document
     private static final int MAX_CACHED_NAMES = 1024;
@@ -72,6 +78,40 @@ public final class DiscriminatorLookup {
             throw new MappingException(Sofia.duplicateDiscriminators(discriminator, current.getName(),
                     entityModel.getType().getName()));
         }
+        if (entityModel.useDiscriminator()) {
+            keysByDiscriminator.put(discriminator, entityModel.discriminatorKey());
+            keys.add(entityModel.discriminatorKey());
+        }
+    }
+
+    /**
+     * @param configuredKey the discriminator key the configuration names
+     * @param name          the name of a field in a stored document
+     * @return true if a string stored under the name may be a discriminator: it's the configured key, or a key a mapped
+     *         entity stores its own discriminator under
+     */
+    public boolean isKey(String configuredKey, String name) {
+        return name.equals(configuredKey) || keys.contains(name);
+    }
+
+    /**
+     * Resolves a discriminator found in a document whose type isn't otherwise known, such as an untyped value or an id
+     * stored as a document. Under the configured key, it's looked up as {@link #lookup(String)} does. Under a key an
+     * entity declares for itself, it must be that entity's discriminator, so an ordinary document that happens to have a
+     * field of that name stays a document.
+     *
+     * @param configuredKey the discriminator key the configuration names
+     * @param name          the name the value is stored under
+     * @param value         the value
+     * @return the class, or null if the value isn't a discriminator stored under its entity's own key
+     * @throws CodecConfigurationException if it's under the configured key and no class can be found for it
+     */
+    @Nullable
+    public Class<?> lookup(String configuredKey, String name, String value) {
+        if (name.equals(configuredKey)) {
+            return lookup(value);
+        }
+        return name.equals(keysByDiscriminator.get(value)) ? discriminatorClassMap.get(value) : null;
     }
 
     /**

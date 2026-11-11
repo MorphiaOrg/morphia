@@ -1,6 +1,7 @@
 package dev.morphia.mapping.codec;
 
 import dev.morphia.MorphiaDatastore;
+import dev.morphia.mapping.DiscriminatorLookup;
 import dev.morphia.mapping.MappingException;
 
 import org.bson.BsonReader;
@@ -36,14 +37,22 @@ public class ObjectCodec implements Codec<Object> {
         Class<?> clazz;
         if (bsonType == BsonType.DOCUMENT) {
             clazz = Document.class;
-            String discriminatorField = datastore.getMapper().getConfig().discriminatorKey();
+            String configuredKey = datastore.getMapper().getConfig().discriminatorKey();
+            DiscriminatorLookup lookup = datastore.getMapper().getDiscriminatorLookup();
 
             BsonReaderMark mark = reader.getMark();
             reader.readStartDocument();
             while (clazz.equals(Document.class) && reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
-                if (reader.readName().equals(discriminatorField)) {
+                String name = reader.readName();
+                // under the configured key a value that isn't a string fails, as it always has; under an entity's own
+                // key, it's just a field
+                if (name.equals(configuredKey)
+                        || reader.getCurrentBsonType() == BsonType.STRING && lookup.isKey(configuredKey, name)) {
                     try {
-                        clazz = datastore.getMapper().getClass(reader.readString());
+                        Class<?> entity = lookup.lookup(configuredKey, name, reader.readString());
+                        if (entity != null) {
+                            clazz = entity;
+                        }
                     } catch (CodecConfigurationException e) {
                         throw new MappingException(e.getMessage(), e);
                     }

@@ -47,6 +47,28 @@ public class TestDiscriminatorResolution {
         Assertions.assertEquals(List.of(name), loader.requested);
     }
 
+    /**
+     * A discriminator stored under an entity's own key resolves only to that entity, and only under that key. Under the
+     * configured key, lookup works as it always has.
+     */
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    public void discriminatorsResolveUnderTheirOwnKey(MapperType type) {
+        Mapper mapper = mapper(type);
+        String gadget = mapper.getEntityModel(Gadget.class).discriminator();
+        String plain = mapper.getEntityModel(Undiscriminated.class).discriminator();
+        DiscriminatorLookup lookup = mapper.getDiscriminatorLookup();
+
+        Assertions.assertTrue(lookup.isKey("_t", "_kind"));
+        Assertions.assertTrue(lookup.isKey("_t", "_t"));
+        Assertions.assertFalse(lookup.isKey("_t", "name"));
+        Assertions.assertSame(Gadget.class, lookup.lookup("_t", "_kind", gadget));
+        Assertions.assertSame(Gadget.class, lookup.lookup("_t", "_t", gadget), "the configured key, as before");
+        Assertions.assertNull(lookup.lookup("_t", "_kind", "no such entity"), "not a discriminator: a plain field");
+        Assertions.assertNull(lookup.lookup("_t", "_kind", plain), "the discriminator of an entity that doesn't store one");
+        Assertions.assertThrows(CodecConfigurationException.class, () -> lookup.lookup("_t", "_t", UNKNOWN));
+    }
+
     @ParameterizedTest
     @EnumSource(MapperType.class)
     public void registeredDiscriminatorsDontLoadClasses(MapperType type) {

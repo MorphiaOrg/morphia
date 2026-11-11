@@ -671,6 +671,9 @@ Bundle these into one or two PRs. Most of it is `@MorphiaInternal` dead code.
     stored as entities: the decode session reads its id keys with `ObjectCodec`, which uses that key too, and the two
     have to change together or a cycle through a compound id with its own key never closes. A projection adds the model's key when the model uses a
     discriminator, which now covers `@ExternalEntity` models too.
+  - Follow-up done in #4463: `ObjectCodec`, `ReferenceCodec` and `EntityDecoder.decodesAsEntity` now also recognize a
+    discriminator under an entity's own key, through one `DiscriminatorLookup` decision, so untyped values load as those
+    entities and the session and reference sides still agree.
 - ~~**D13** (decision 1.4): key the registry by `Class<?>`, register `@ExternalEntity` under both the stand-in and the
   target, and normalize anonymous subclasses.~~
   - Done. The registry, the pending-subtype links and the in-progress registrations are keyed by `Class`. A stand-in
