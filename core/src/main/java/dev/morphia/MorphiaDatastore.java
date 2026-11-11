@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ServiceLoader;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -140,6 +141,8 @@ public class MorphiaDatastore implements Datastore {
     private final List<EntityModelImporter> importers;
     private ClassLoader classLoader;
     private MongoDatabase database;
+    // each entity type's collection, with the entity's write concern applied
+    private final Map<Class<?>, MongoCollection<?>> collections = new ConcurrentHashMap<>();
     private DatastoreOperations operations;
 
     /**
@@ -398,7 +401,8 @@ public class MorphiaDatastore implements Datastore {
 
     @Override
     public <T> DeleteResult delete(T entity) {
-        return delete(entity, new DeleteOptions().writeConcern(mapper.getWriteConcern(entity.getClass())));
+        // DeleteOptions defaults to ACKNOWLEDGED, which would replace the collection's concern, so set the entity's
+        return delete(entity, new DeleteOptions().writeConcern(mapper.getEntityModel(entity.getClass()).writeConcern()));
     }
 
     @Override
@@ -430,17 +434,22 @@ public class MorphiaDatastore implements Datastore {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> MongoCollection<T> getCollection(Class<T> type) {
-        EntityModel entityModel = mapper.getEntityModel(type);
-        String collectionName = entityModel.collectionName();
-
-        MongoCollection<T> collection = getDatabase().getCollection(collectionName, type);
-
-        Entity annotation = entityModel.getEntityAnnotation();
-        if (annotation != null && !annotation.concern().equals("")) {
-            collection = collection.withWriteConcern(WriteConcern.valueOf(annotation.concern()));
+        MongoCollection<?> collection = collections.get(type);
+        if (collection == null) {
+            EntityModel model = mapper.getEntityModel(type);
+            MongoCollection<T> created = getDatabase().getCollection(model.collectionName(), type);
+            WriteConcern concern = model.writeConcern();
+            if (concern != null) {
+                created = created.withWriteConcern(concern);
+            }
+            collection = collections.putIfAbsent(type, created);
+            if (collection == null) {
+                collection = created;
+            }
         }
-        return collection;
+        return (MongoCollection<T>) collection;
     }
 
     @Override
@@ -451,7 +460,7 @@ public class MorphiaDatastore implements Datastore {
     @Override
     public <T> void insert(T entity, InsertOneOptions options) {
         MongoCollection<T> collection = (MongoCollection<T>) configureCollection(options, getCollection(entity.getClass()));
-        VersionBumpInfo info = updateVersioning(entity);
+        VersionBumpInfo info = updateVersioning(mapper.getEntityModel(entity.getClass()), entity);
 
         try {
             operations.insertOne(collection, entity, options);
@@ -475,8 +484,9 @@ public class MorphiaDatastore implements Datastore {
         }
 
         grouped.forEach((key, list) -> {
+            EntityModel model = mapper.getEntityModel(key);
             List<VersionBumpInfo> infos = list.stream()
-                    .map(this::updateVersioning)
+                    .map(entity -> updateVersioning(model, entity))
                     .collect(Collectors.toList());
 
             try {
@@ -497,12 +507,14 @@ public class MorphiaDatastore implements Datastore {
 
     @Override
     public <T> T merge(T entity, InsertOneOptions options) {
-        final Object id = mapper.getId(entity);
+        EntityModel model = mapper.tryGetEntityModel(entity.getClass()).orElse(null);
+        PropertyModel idProperty = model != null ? model.getIdProperty() : null;
+        final Object id = idProperty != null ? idProperty.getValue(entity) : null;
         if (id == null) {
             throw new MappingException("Could not get id for " + entity.getClass().getName());
         }
 
-        VersionBumpInfo info = updateVersioning(entity);
+        VersionBumpInfo info = updateVersioning(model, entity);
 
         final Query<T> query = info.filter((Query<T>) find(entity.getClass()).filter(eq("_id", id)));
 
@@ -564,7 +576,7 @@ public class MorphiaDatastore implements Datastore {
         if (id == null) {
             throw new MissingIdException();
         }
-        VersionBumpInfo info = updateVersioning(entity);
+        VersionBumpInfo info = updateVersioning(entityModel, entity);
 
         try {
             Document filter = new Document("_id", id);
@@ -616,7 +628,8 @@ public class MorphiaDatastore implements Datastore {
             Class<?> type = entity.getClass();
 
             EntityModel model = getMapper().getEntityModel(type);
-            if (getMapper().getId(entity) != null || model.getVersionProperty() != null) {
+            PropertyModel idProperty = model.getIdProperty();
+            if (idProperty != null && idProperty.getValue(entity) != null || model.getVersionProperty() != null) {
                 list.add(entity);
             } else {
                 grouped.computeIfAbsent(type, c -> new ArrayList<>())
@@ -749,7 +762,7 @@ public class MorphiaDatastore implements Datastore {
         EntityModel entityModel = mapper.getEntityModel(entity.getClass());
         PropertyModel idProperty = entityModel.getIdProperty();
         Object id = idProperty != null ? idProperty.getValue(entity) : null;
-        VersionBumpInfo info = updateVersioning(entity);
+        VersionBumpInfo info = updateVersioning(entityModel, entity);
 
         try {
             if (id == null || info.versioned() && info.newVersion() == 1) {
@@ -850,8 +863,7 @@ public class MorphiaDatastore implements Datastore {
         return collection;
     }
 
-    private <T> VersionBumpInfo updateVersioning(T entity) {
-        final EntityModel entityModel = mapper.getEntityModel(entity.getClass());
+    private <T> VersionBumpInfo updateVersioning(EntityModel entityModel, T entity) {
         PropertyModel versionProperty = entityModel.getVersionProperty();
         if (versionProperty != null) {
             Long value = (Long) versionProperty.getValue(entity);

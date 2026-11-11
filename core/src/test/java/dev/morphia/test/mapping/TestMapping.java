@@ -12,6 +12,8 @@ import java.util.StringJoiner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.mongodb.WriteConcern;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 
 import dev.morphia.Datastore;
@@ -401,6 +403,10 @@ public class TestMapping extends TestBase {
             Assertions.assertEquals("_xt", model.discriminatorKey());
             Entity annotation = model.getAnnotation(Entity.class);
             Assertions.assertEquals("JOURNALED", annotation.concern());
+            Assertions.assertEquals(WriteConcern.JOURNALED, model.writeConcern());
+            MongoCollection<ThirdPartyEntity> collection = getDs().getCollection(ThirdPartyEntity.class);
+            Assertions.assertEquals(WriteConcern.JOURNALED, collection.getWriteConcern());
+            Assertions.assertSame(collection, getDs().getCollection(ThirdPartyEntity.class), "built once per datastore");
             Assertions.assertEquals(123, annotation.cap().count());
             Assertions.assertEquals(456, annotation.cap().value());
 

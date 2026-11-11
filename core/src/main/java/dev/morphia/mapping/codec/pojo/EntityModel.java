@@ -19,11 +19,13 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
+import com.mongodb.WriteConcern;
 import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 
@@ -86,6 +88,9 @@ public class EntityModel {
     // every subtype below this model and the discriminators of the hierarchy, as of a subtypesVersion; rebuilt on first
     // use after a change
     private volatile HierarchySnapshot hierarchy;
+    // the @Entity write concern, looked up by name on first use
+    @Nullable
+    private volatile Optional<WriteConcern> writeConcern;
     private EntityModel superClass;
     private PropertyModel idProperty;
     private PropertyModel versionProperty;
@@ -331,6 +336,30 @@ public class EntityModel {
     @Nullable
     public Entity getEntityAnnotation() {
         return getAnnotation(Entity.class);
+    }
+
+    /**
+     * @return the write concern named by {@link Entity#concern()}, or null if none is named
+     * @throws MappingException if the name isn't one of {@link WriteConcern}'s
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    @Nullable
+    public final WriteConcern writeConcern() {
+        Optional<WriteConcern> concern = writeConcern;
+        if (concern == null) {
+            Entity entity = getEntityAnnotation();
+            String name = entity != null ? entity.concern() : "";
+            WriteConcern named = name.isEmpty() ? null : WriteConcern.valueOf(name);
+            if (!name.isEmpty() && named == null) {
+                // an unknown name mustn't quietly fall back to the database's default concern
+                throw new MappingException("Unknown write concern '%s' on %s".formatted(name, type.getName()));
+            }
+            concern = Optional.ofNullable(named);
+            writeConcern = concern;
+        }
+        return concern.orElse(null);
     }
 
     /**

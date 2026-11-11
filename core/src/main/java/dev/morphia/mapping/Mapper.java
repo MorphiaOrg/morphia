@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ServiceLoader;
 
-import com.mongodb.WriteConcern;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.EntityListener;
@@ -171,17 +170,6 @@ public interface Mapper {
      * @return the options used by this Mapper
      */
     MorphiaConfig getConfig();
-
-    /**
-     * Gets the write concern for entity or returns the default write concern for this datastore
-     *
-     * @param clazz the class to use when looking up the WriteConcern
-     * @return the write concern for the type
-     * @hidden
-     * @morphia.internal
-     */
-    @Nullable
-    WriteConcern getWriteConcern(Class clazz);
 
     /**
      * Checks if a type is mappable or not
