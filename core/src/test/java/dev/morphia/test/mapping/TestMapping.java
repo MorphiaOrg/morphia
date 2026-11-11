@@ -20,6 +20,7 @@ import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.LoadOnly;
 import dev.morphia.annotations.Name;
+import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Property;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.Transient;
@@ -43,6 +44,7 @@ import dev.morphia.test.models.BannedUser;
 import dev.morphia.test.models.BlogImage;
 import dev.morphia.test.models.Book;
 import dev.morphia.test.models.CityPopulation;
+import dev.morphia.test.models.Hotel;
 import dev.morphia.test.models.Jpg;
 import dev.morphia.test.models.MappedInterface;
 import dev.morphia.test.models.Png;
@@ -409,6 +411,51 @@ public class TestMapping extends TestBase {
 
             Assertions.assertEquals(entity, getDs().find(ThirdPartyEntity.class).first());
         });
+    }
+
+    @Test
+    public void anonymousSubclassIsStoredAsItsParent() {
+        withTestConfig(List.of(Hotel.class), () -> {
+            Hotel hotel = new Hotel() {
+                {
+                    setName("anonymous");
+                }
+            };
+            Assertions.assertSame(getDs().getCodecRegistry().get(Hotel.class), getDs().getCodecRegistry().get(hotel.getClass()),
+                    "an anonymous subclass shares its parent's codec");
+            getDs().save(hotel);
+
+            Document stored = getDocumentCollection(Hotel.class).find().first();
+            Assertions.assertEquals(getMapper().getEntityModel(Hotel.class).discriminator(), stored.get("_t"));
+            Hotel loaded = getDs().find(Hotel.class).first();
+            Assertions.assertSame(Hotel.class, loaded.getClass());
+            Assertions.assertEquals("anonymous", loaded.getName());
+            Assertions.assertTrue(getMapper().getMappedEntities().stream().noneMatch(m -> m.getType().isAnonymousClass()));
+        });
+    }
+
+    @Test
+    public void anonymousSubclassRunsItsParentsCallbacksOnce() {
+        withTestConfig(List.of(Stamped.class), () -> {
+            Stamped stamped = new Stamped() {
+            };
+            getDs().save(stamped);
+
+            Assertions.assertEquals(1, stamped.stamps, "the parent's @PrePersist runs once");
+            Assertions.assertEquals(1, getDs().find(Stamped.class).first().stamps);
+        });
+    }
+
+    @Entity
+    static class Stamped {
+        @Id
+        private ObjectId id;
+        private int stamps;
+
+        @PrePersist
+        void stamp() {
+            stamps++;
+        }
     }
 
     @Test

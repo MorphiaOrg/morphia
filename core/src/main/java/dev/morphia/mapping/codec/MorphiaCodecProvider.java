@@ -85,6 +85,10 @@ public class MorphiaCodecProvider implements CodecProvider {
         MorphiaCodec<T> codec = (MorphiaCodec<T>) codecs.get(type);
         if (codec == null && (mapper.isMapped(type) || mapper.isMappable(type))) {
             EntityModel model = mapper.getEntityModel(type);
+            if (model.getType() != type) {
+                // a proxy, anonymous subclass or @ExternalEntity stand-in shares the codec of the type it's mapped as
+                return (Codec<T>) get(model.getType(), registry);
+            }
             codec = new MorphiaCodec<>(datastore, model, propertyCodecProviders, mapper.getDiscriminatorLookup(), registry, conversions);
             if (runsLifecycle(model, PrePersist.class, PostPersist.class)) {
                 codec.setEncoder(new LifecycleEncoder(codec));
