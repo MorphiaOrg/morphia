@@ -156,14 +156,19 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     }
 
     /**
-     * @return the discriminator key of the referenced entity's id type when that type is mapped, or the configured key
+     * @return the discriminator key of the referenced entity's id type when that type is mapped, or the configured key.
+     *         Only a mapped type's key is kept: an id type without a model yet (an {@code @ExternalEntity} target whose
+     *         stand-in isn't mapped, say) may get one later.
      */
     private String idDiscriminatorKey() {
         String key = idDiscriminatorKey;
         if (key == null) {
             PropertyModel id = getEntityModelForField().getIdProperty();
             EntityModel idModel = id != null ? mapper.tryGetEntityModel(id.getNormalizedType()).orElse(null) : null;
-            key = idModel != null ? idModel.discriminatorKey() : mapper.getConfig().discriminatorKey();
+            if (idModel == null) {
+                return mapper.getConfig().discriminatorKey();
+            }
+            key = idModel.discriminatorKey();
             idDiscriminatorKey = key;
         }
         return key;
