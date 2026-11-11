@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1794380527465,
+  "lastUpdate": 1794380529787,
   "repoUrl": "https://github.com/MorphiaOrg/morphia",
   "entries": {
     "Mapper: reflection": [
@@ -1928,6 +1928,298 @@ window.BENCHMARK_DATA = {
           {
             "name": "dev.morphia.benchmarks.MappingBenchmark.scanModelsPackage ( {\"variant\":\"critter\"} )",
             "value": 374.573891,
+            "unit": "ms/op",
+            "extra": "iterations: 1\nforks: 5\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Justin Lee",
+            "username": "evanchooly",
+            "email": "evanchooly@users.noreply.github.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "f283c310889dc25853d428fc60170f92e2c5043f",
+          "message": "Recognize discriminators under an entity's own key in untyped values (#4470)\n\nCloses #4463. Follow-up to D12 (#4454).\n\n## Problem\n\nAn entity can store its discriminator under its own key with\n`@Entity(discriminatorKey = \"...\")`. `ObjectCodec` decides whether a\nstored document is an entity when nothing else says what type it is. It\nlooked only for the configured key (`MorphiaConfig.discriminatorKey()`,\n`_t` by default).\n\nThe issue asked for a test of each path first, to pin down where users\nsee this:\n- **Untyped values: broken.** An entity using its own key, held by a\nfield of type `Object`, a `List<Object>` or a `Map<String, Object>`,\nloaded back as a `Document`. The same entity under the configured key\nloaded as itself. The new `untypedValuesLoadAsTheirEntity` fails on\nmaster with `expected: <OwnKeyKind(a)> but was:\n<Document{{_kind=…OwnKeyKind, name=a}}>`.\n- **Ids stored as documents: worked.** That covers references (eager,\nlazy, id-only, collections), typed id fields, and reference cycles\nthrough such an id. Both the decode session's keys and the references'\nids left them as `Document`s, so the two sides matched.\n\n## Changes\n\n- **`DiscriminatorLookup`** records, as each model registers, the key it\nstores its discriminator under (for models that use one).\n- `isKey(configuredKey, name)`: whether a string under this field name\nmay be a discriminator.\n  - `lookup(configuredKey, name, value)`:\n- Under the configured key, it resolves exactly as before, including the\n`Class.forName` fallback and its error.\n- Under an entity's own key, it resolves only if the value is exactly\nthat entity's discriminator. Anything else returns `null`, so the\ndocument stays a document.\n- **`ObjectCodec`** uses it for untyped values, so an entity under its\nown key loads as itself.\n- **Ids stored as documents are deliberately unchanged.**\n`ObjectCodec.forIds(registry)` returns an id-mode codec that honors only\nthe configured key, which is the old behavior. Every place that reads an\nid stored as a document uses it:\n- the decode session's keys (`EntityDecoder`'s\n`readKey`/`scanForId`/`peekId`);\n  - `ReferenceCodec` for a single reference's id;\n  - `ReferenceCodec` for a `DBRef`'s id;\n- an id property typed `Object` (`@Id Object id`), whose codec in the\nplan is the id-mode one. Otherwise it would decode an own-key id as an\nentity while references look it up as a `Document` (found in Copilot's\nsecond round).\n\n`ReferenceCodec.processId` and `EntityDecoder.decodesAsEntity` are as on\nmaster.\n\n### Why ids are left alone (Copilot review, round 1)\n\nThe first version of this PR applied own keys to ids too, changing\n`ObjectCodec`, `processId` and `decodesAsEntity` together, as the issue\nproposed. Copilot found three ways that broke own-key ids that worked on\nmaster, and new tests confirm each:\n- **A lifecycle owner** whose id has its own key isn't registered in the\nsession before its properties decode. `decodesAsEntity` says not to read\nan entity id ahead, so an eager self-reference overflows the stack.\n- **An `idOnly` `Map` of references** looks up its values as raw\n`Document`s while the session now holds id instances, so the cycle never\ncloses and the stack overflows.\n- **An owner without callbacks** reads its own-key id as an entity once\nfor the session key and again for the property, so the id's `@PostLoad`\nruns twice.\n\nUsers don't hit any of these with own-key ids, because those ids stay\n`Document`s on both sides. Converting them to entities brings in\nproblems that ids under the **configured** key already have on master. A\nscratch run of the same three scenarios with `_t`-keyed compound ids\ngives two stack overflows and a doubled `@PostLoad`. Making ids entities\nsafely needs a design for session keys: probably a canonical raw form on\nboth sides, plus callback-safe key reads. That's a separate change,\ntracked in #4471, #4472 and #4473 for the configured-key cases. So this\nPR fixes the user-visible bug, untyped values, and keeps every id path\nexactly as it was.\n\n## ⚠️ Behavior change\n\n**An untyped document can now load as an entity where it used to stay a\n`Document`.** A stored document in an untyped place (`Object`,\n`List<Object>`, `Map<String, Object>`) loads as an entity when two\nthings hold:\n- it has a string field named like an entity's own discriminator key;\n- the field holds **exactly that entity's discriminator**.\n\nFor example, with `@Entity(discriminatorKey = \"type\", discriminator =\n\"PNG\") class Png` (`dev.morphia.test.models.Png` is one), `{type: \"PNG\",\n…}` in a `Map<String, Object>` now loads as a `Png`. That's the fix for\nentities stored there. But plain user data that happens to match would\nalso convert.\n\nThe match is deliberately narrow:\n- the field must be a key some mapped entity declares;\n- the value must be a string;\n- it must be that same entity's discriminator.\n\nA `type: \"something else\"`, a `type: 5`, or another entity's\ndiscriminator under that key leaves the document alone.\n`documentsWithAFieldOfThatNameStayDocuments` covers those three. This is\nthe rule that has always applied to the configured `_t` key, extended to\nthe keys entities choose themselves.\n\nMigration note: MorphiaOrg/morphia-docs#26 adds \"Untyped values and\nper-entity discriminator keys\" to the 3.0 migration page. It describes\nthis change and what to check. #4459 (the 2.5 → 3.0 audit) should pick\nit up too.\n\n## Decisions to review\n\n- **Untyped values only, not ids.** See above.\n- **Exact match on the entity's own key**, not any registered\ndiscriminator under any declared key. That keeps plain documents from\nconverting as far as possible.\n- **The configured key is unchanged,** in untyped values and in ids.\n- **Field order decides between two discriminators.** An untyped\ndocument holding discriminators under both the configured key and an\nentity's own key resolves by whichever comes first, as `ObjectCodec`\nalready stopped at the first match. Morphia never writes both for one\nentity. Since ids only honor the configured key, this can't make the\nsession and references disagree. Scanning every field to prefer one key\nwasn't worth the cost for documents Morphia doesn't produce.\n- **`ObjectCodec.forIds` only swaps in the id mode for Morphia's own\n`ObjectCodec`** (exact class). A subclass a provider supplies keeps\nreading ids its own way (found in Copilot's round 3; covered by\n`aCustomObjectCodecStillReadsIds`).\n- **Known limitation, not addressed:** an id typed as a `Map` whose\nvalues include an entity with its own key. The id property decodes such\na nested value as the entity, while the session key keeps it a\n`Document`. Copilot's third-round summary hinted at this without an\ninline comment, and I haven't reproduced it. It falls under the\nsession-key design in #4471–#4473.\n- **Only mapped entities are recognized.** A key is known once its\nentity is mapped, which with the default package scan happens at\nstartup.\n\n## Testing\n\nNew `TestOwnDiscriminatorKey`, run against a server:\n- `untypedValuesLoadAsTheirEntity`: an `Object` field, a `List<Object>`\nand a `Map<String, Object>` holding an entity with its own key, plus a\ncontrol under the configured key. **Fails on master.**\n- `documentsWithAFieldOfThatNameStayDocuments`: plain documents whose\n`_kind` field holds a non-discriminator string, a number, or another\nentity's discriminator all stay `Document`s.\n- Guards that own-key ids behave as on master. Each passes on master,\nand the last three **failed on this PR's first version**:\n- `referencesByAnIdWithItsOwnKey`: eager, lazy, id-only and list\nreferences;\n  - `anIdWithItsOwnKeyLoadsOnce`: a lifecycle owner;\n- `aLifecycleOwnerClosesACycleThroughAnIdWithItsOwnKey`: the review's\nfirst case;\n  - `aMapOfReferencesClosesACycleThroughAnIdWithItsOwnKey`: its second;\n  - `anIdWithItsOwnKeyLoadsOnceUnderAnOwnerWithoutCallbacks`: its third.\n- `aListOfReferencesFindsTargetsWithAnUntypedIdWithItsOwnKey`: an `@Id\nObject id` holding an own-key id, referenced only from a list. It came\nback empty on the second version (Copilot's round 2) and is found now.\n\nAlso:\n- `TestDiscriminatorResolution.discriminatorsResolveUnderTheirOwnKey`\nunit-tests `isKey`/`lookup` on both mappers.\n- `TestReferences.compoundIdsWithTheirOwnDiscriminatorKeyCloseCycles`\n(from D12) still passes.\n- Core suite passes with `critter` and with `reflection` (2,535 tests,\n16 skipped).\n- Local Copilot CLI review, one round, on the first version. It found a\nmisplaced javadoc and a configured-key inconsistency in\n`decodesAsEntity`. Both are moot now, since that code is back to master.\n\n## Benchmarks\n\nNone run. The changed code only runs for untyped values, meaning\n`ObjectCodec` on a document, and none of the benchmark models has one.\nIn the scan, the added cost per field is one `getCurrentBsonType()`,\nplus a set lookup for string fields. Id reads take the same path as\nbefore.",
+          "timestamp": "2026-11-11T06:35:39Z",
+          "url": "https://github.com/MorphiaOrg/morphia/commit/f283c310889dc25853d428fc60170f92e2c5043f"
+        },
+        "date": 1794380529350,
+        "tool": "jmh",
+        "benches": [
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"SIMPLE\",\"variant\":\"critter\"} )",
+            "value": 890.7429855952448,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"NESTED\",\"variant\":\"critter\"} )",
+            "value": 2837.4273388482475,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"COLLECTIONS\",\"variant\":\"critter\"} )",
+            "value": 9592.786800246628,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"POLYMORPHIC\",\"variant\":\"critter\"} )",
+            "value": 4649.632536016718,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"LIFECYCLE\",\"variant\":\"critter\"} )",
+            "value": 557.3440016103054,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"ARRAYS\",\"variant\":\"critter\"} )",
+            "value": 34899.481492559506,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"CONCRETE_COLLECTIONS\",\"variant\":\"critter\"} )",
+            "value": 2829.165873948858,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"LAZY_REFERENCE\",\"variant\":\"critter\"} )",
+            "value": 2573.1484829621063,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"SIMPLE\",\"variant\":\"critter\"} )",
+            "value": 899.0844472142963,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"NESTED\",\"variant\":\"critter\"} )",
+            "value": 2756.485864235166,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"COLLECTIONS\",\"variant\":\"critter\"} )",
+            "value": 9746.511504946238,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"POLYMORPHIC\",\"variant\":\"critter\"} )",
+            "value": 4625.043897642229,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"LIFECYCLE\",\"variant\":\"critter\"} )",
+            "value": 572.4866394181032,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"ARRAYS\",\"variant\":\"critter\"} )",
+            "value": 35180.62721229023,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"CONCRETE_COLLECTIONS\",\"variant\":\"critter\"} )",
+            "value": 2905.0930690930554,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"LAZY_REFERENCE\",\"variant\":\"critter\"} )",
+            "value": 2628.0574180300437,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"SIMPLE\",\"variant\":\"critter\"} )",
+            "value": 836.2849608530848,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"NESTED\",\"variant\":\"critter\"} )",
+            "value": 2581.8965641780205,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"COLLECTIONS\",\"variant\":\"critter\"} )",
+            "value": 9069.02609606779,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"POLYMORPHIC\",\"variant\":\"critter\"} )",
+            "value": 4642.95799378135,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"LIFECYCLE\",\"variant\":\"critter\"} )",
+            "value": 409.6224079425679,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"ARRAYS\",\"variant\":\"critter\"} )",
+            "value": 40451.58419020888,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"CONCRETE_COLLECTIONS\",\"variant\":\"critter\"} )",
+            "value": 2488.5883796939775,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"LAZY_REFERENCE\",\"variant\":\"critter\"} )",
+            "value": 1857.674848523374,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 3\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.DatastoreBenchmark.copy ( {\"variant\":\"critter\"} )",
+            "value": 4.3532665998736,
+            "unit": "us/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.DatastoreBenchmark.copyAndDecode ( {\"variant\":\"critter\"} )",
+            "value": 8.785050567211037,
+            "unit": "us/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.DocumentShapesBenchmark.decode ( {\"shape\":\"AS_WRITTEN\",\"variant\":\"critter\"} )",
+            "value": 871.9193386263496,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.DocumentShapesBenchmark.decode ( {\"shape\":\"NO_DISCRIMINATOR\",\"variant\":\"critter\"} )",
+            "value": 1327.668140169852,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.DocumentShapesBenchmark.decode ( {\"shape\":\"SCHEMA_DRIFT\",\"variant\":\"critter\"} )",
+            "value": 5388.279946748999,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.decode ( {\"listener\":\"DOCUMENT\",\"model\":\"SIMPLE\",\"variant\":\"critter\"} )",
+            "value": 2223.3917545638847,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.decode ( {\"listener\":\"DOCUMENT\",\"model\":\"NESTED\",\"variant\":\"critter\"} )",
+            "value": 10184.681114503179,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.decode ( {\"listener\":\"ENTITY\",\"model\":\"SIMPLE\",\"variant\":\"critter\"} )",
+            "value": 932.2289658236126,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.decode ( {\"listener\":\"ENTITY\",\"model\":\"NESTED\",\"variant\":\"critter\"} )",
+            "value": 2922.132317943676,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.encode ( {\"listener\":\"DOCUMENT\",\"model\":\"SIMPLE\",\"variant\":\"critter\"} )",
+            "value": 1778.1987950041669,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.encode ( {\"listener\":\"DOCUMENT\",\"model\":\"NESTED\",\"variant\":\"critter\"} )",
+            "value": 7581.1119469101395,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.encode ( {\"listener\":\"ENTITY\",\"model\":\"SIMPLE\",\"variant\":\"critter\"} )",
+            "value": 885.2395017317228,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.encode ( {\"listener\":\"ENTITY\",\"model\":\"NESTED\",\"variant\":\"critter\"} )",
+            "value": 2744.793477230795,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MappingBenchmark.warmMapping ( {\"variant\":\"critter\"} )",
+            "value": 20.805329402444816,
+            "unit": "us/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MixedCodecBenchmark.decode ( {\"variant\":\"critter\"} )",
+            "value": 26965.14634719324,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MixedCodecBenchmark.encode ( {\"variant\":\"critter\"} )",
+            "value": 25563.5200669159,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.QueryBenchmark.queryDocument ( {\"variant\":\"critter\"} )",
+            "value": 1550.1088261559048,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.QueryBenchmark.translatedPath ( {\"variant\":\"critter\"} )",
+            "value": 351.07896007026443,
+            "unit": "ns/op",
+            "extra": "iterations: 5\nforks: 2\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MappingBenchmark.coldStart ( {\"variant\":\"critter\"} )",
+            "value": 231.5385824,
+            "unit": "ms/op",
+            "extra": "iterations: 1\nforks: 10\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MappingBenchmark.scanEverything ( {\"variant\":\"critter\"} )",
+            "value": 1198.4044594000002,
+            "unit": "ms/op",
+            "extra": "iterations: 1\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MappingBenchmark.scanModelsPackage ( {\"variant\":\"critter\"} )",
+            "value": 395.6936668,
             "unit": "ms/op",
             "extra": "iterations: 1\nforks: 5\nthreads: 1"
           }
