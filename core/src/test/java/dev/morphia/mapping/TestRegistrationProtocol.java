@@ -1,5 +1,6 @@
 package dev.morphia.mapping;
 
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -14,6 +15,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.Version;
 import dev.morphia.config.MorphiaConfig;
@@ -22,9 +24,12 @@ import dev.morphia.mapping.codec.pojo.ReflectiveEntityModelBuilder;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
 import dev.morphia.mapping.conventions.MorphiaConvention;
 import dev.morphia.mapping.validation.ConstraintViolationException;
+import dev.morphia.test.models.external.ThirdPartyEntity;
+import dev.morphia.test.models.external.ThirdPartyEntityProxy;
 
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -245,6 +250,131 @@ public class TestRegistrationProtocol {
         Assertions.assertSame(original, mapper.getEntityModel(Concurrent.class));
     }
 
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    public void standInFindsItsTargetsModel(MapperType type) {
+        Mapper mapper = mapper(type);
+        EntityModel model = assertModelType(type, mapper.getEntityModel(ThirdPartyEntityProxy.class));
+
+        Assertions.assertSame(ThirdPartyEntity.class, model.getType());
+        Assertions.assertTrue(mapper.isMapped(ThirdPartyEntityProxy.class), "the stand-in should be registered too");
+        Assertions.assertSame(model, mapper.getEntityModel(ThirdPartyEntityProxy.class));
+        Assertions.assertSame(model, mapper.getEntityModel(ThirdPartyEntity.class));
+        Assertions.assertEquals(1, mapper.getMappedEntities().size(), "one model, registered once");
+
+        Mapper copy = mapper.copy();
+        Assertions.assertTrue(copy.isMapped(ThirdPartyEntityProxy.class), "a copy should keep the stand-in");
+        Assertions.assertSame(copy.getEntityModel(ThirdPartyEntity.class), copy.getEntityModel(ThirdPartyEntityProxy.class));
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    public void standInAnnotatedThroughAnInterface(MapperType type) {
+        Mapper mapper = mapper(type);
+        EntityModel model = mapper.getEntityModel(InterfaceStandIn.class);
+
+        Assertions.assertSame(ThirdPartyEntity.class, model.getType());
+        Assertions.assertSame(model, mapper.getEntityModel(InterfaceStandIn.class));
+        Assertions.assertTrue(mapper.isMapped(InterfaceStandIn.class));
+    }
+
+    @ExternalEntity(value = "viaInterface", target = ThirdPartyEntity.class)
+    interface StandsInForThirdParty {
+    }
+
+    static class InterfaceStandIn implements StandsInForThirdParty {
+        public String field;
+        @Id
+        public Long number;
+    }
+
+    @Test
+    public void standInIsBuiltOnce(@TempDir Path services) throws Exception {
+        // critter models don't run conventions (#4416), so count the reflective builds
+        Path file = services.resolve("META-INF/services/" + MorphiaConvention.class.getName());
+        Files.createDirectories(file.getParent());
+        Files.writeString(file, CountingConvention.class.getName());
+        try (URLClassLoader loader = new URLClassLoader(new URL[] { services.toUri().toURL() }, getClass().getClassLoader())) {
+            CountingConvention.reset();
+            Mapper mapper = new ReflectiveMapper(MorphiaConfig.load(), loader);
+            for (int i = 0; i < 3; i++) {
+                mapper.getEntityModel(ThirdPartyEntityProxy.class);
+            }
+            Assertions.assertEquals(List.of(ThirdPartyEntityProxy.class), CountingConvention.APPLIED,
+                    "later lookups by the stand-in shouldn't build its model again");
+        }
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    public void anonymousSubclassesAreMappedAsTheirParent(MapperType type) {
+        Mapper mapper = mapper(type);
+        EntityModel concurrent = assertModelType(type, mapper.mapEntity(Concurrent.class));
+        EntityModel tagged = mapper.mapEntity(Tagged.class);
+        Concurrent subclass = new Concurrent() {
+        };
+        Tagged implementor = new Tagged() {
+        };
+
+        Assertions.assertSame(concurrent, mapper.getEntityModel(subclass.getClass()));
+        Assertions.assertSame(concurrent, mapper.mapEntity(subclass.getClass()));
+        Assertions.assertSame(tagged, mapper.getEntityModel(implementor.getClass()));
+        Named lambda = () -> "lambda";
+        Assertions.assertTrue(lambda.getClass().isHidden());
+        Assertions.assertSame(mapper.getEntityModel(Named.class), mapper.getEntityModel(lambda.getClass()),
+                "a lambda is a hidden class, mapped as the interface it implements");
+        Assertions.assertTrue(mapper.isMapped(subclass.getClass()));
+        Assertions.assertTrue(mapper.getMappedEntities().stream()
+                .noneMatch(m -> m.getType().isAnonymousClass()), "an anonymous subclass shouldn't get a model of its own");
+        Assertions.assertTrue(concurrent.getSubtypes().isEmpty());
+    }
+
+    @ParameterizedTest
+    @EnumSource(MapperType.class)
+    public void sameNamedClassesFromOtherLoadersDontShareAModel(MapperType type) throws Exception {
+        Mapper mapper = mapper(type);
+        EntityModel original = assertModelType(type, mapper.mapEntity(LoaderTwin.class));
+        // top level, since a nested copy's nest host would be the original loader's
+        Class<?> twin = new ChildFirstLoader(LoaderTwin.class).loadClass(LoaderTwin.class.getName());
+        Assertions.assertNotSame(LoaderTwin.class, twin);
+
+        Assertions.assertFalse(mapper.isMapped(twin));
+        // the twin carries the same discriminator, so registering it is rejected rather than handed the original's model
+        Assertions.assertThrows(MappingException.class, () -> mapper.mapEntity(twin));
+        Assertions.assertSame(original, mapper.getEntityModel(LoaderTwin.class));
+    }
+
+    /**
+     * Defines its own copy of one class, so it has the same name as the original but is a different class.
+     */
+    private static class ChildFirstLoader extends ClassLoader {
+        private final Class<?> original;
+
+        ChildFirstLoader(Class<?> original) {
+            super(original.getClassLoader());
+            this.original = original;
+        }
+
+        @Override
+        protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+            if (!name.equals(original.getName())) {
+                return super.loadClass(name, resolve);
+            }
+            synchronized (getClassLoadingLock(name)) {
+                Class<?> loaded = findLoadedClass(name);
+                if (loaded == null) {
+                    try (var in = original.getResourceAsStream(name.substring(name.lastIndexOf('.') + 1) + ".class")) {
+                        byte[] bytes = in.readAllBytes();
+                        loaded = defineClass(name, bytes, 0, bytes.length);
+                    } catch (IOException e) {
+                        throw new ClassNotFoundException(name, e);
+                    }
+                }
+                return loaded;
+            }
+        }
+    }
+
     @Entity
     static class TwoVersions implements Tagged {
         @Id
@@ -257,6 +387,11 @@ public class TestRegistrationProtocol {
 
     @Entity
     interface Tagged {
+    }
+
+    @Entity
+    interface Named {
+        String name();
     }
 
     @Entity(value = "shared", discriminator = "shared")

@@ -665,8 +665,13 @@ Bundle these into one or two PRs. Most of it is `@MorphiaInternal` dead code.
     stored as entities: the decode session reads its id keys with `ObjectCodec`, which uses that key too, and the two
     have to change together or a cycle through a compound id with its own key never closes. A projection adds the model's key when the model uses a
     discriminator, which now covers `@ExternalEntity` models too.
-- **D13** (decision 1.4): key the registry by `Class<?>`, register `@ExternalEntity` under both the stand-in and the
-  target, and normalize anonymous subclasses.
+- ~~**D13** (decision 1.4): key the registry by `Class<?>`, register `@ExternalEntity` under both the stand-in and the
+  target, and normalize anonymous subclasses.~~
+  - Done. The registry, the pending-subtype links and the in-progress registrations are keyed by `Class`. A stand-in
+    is recorded against its target the first time it's looked up, and a mapper copy keeps those records. Proxies,
+    anonymous, synthetic and hidden classes are mapped as the class or interface they extend, so
+    `new User() {{ ... }}` is stored as a `User` and shares its codec. A same-named class from another loader now
+    gets a model of its own rather than the first class's, so its matching discriminator is rejected as a duplicate.
 - ~~**D14:** move `updateQueryWithDiscriminators` into `MorphiaQuery`, using the cached subtype list.~~
   - Done. `MorphiaQuery` resolves its model once and adds the discriminators itself. `EntityModel.discriminatorValues`
     caches the list alongside the subtypes, nearest subtype first, so its order no longer follows a `HashSet`.
