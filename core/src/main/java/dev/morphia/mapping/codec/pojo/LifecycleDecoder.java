@@ -58,6 +58,76 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
             // a callback takes the document, whatever subtype it turns out to be
             return decodeDocument(reader, decoderContext);
         }
+        if (!model.useDiscriminator() && !needsId(model)) {
+            // nothing to know before the properties
+            return decode(reader, decoderContext, model, plan, null, null, false);
+        }
+        BsonReaderMark start = reader.getMark();
+        reader.readStartDocument();
+        T entity = decodeLeadingFields(reader, decoderContext);
+        if (entity != null) {
+            return entity;
+        }
+        start.reset();
+        return decodeReadingAhead(reader, decoderContext);
+    }
+
+    /**
+     * Reads the {@code _id} and the discriminator in the same pass as the properties when the document starts with them,
+     * as Morphia writes it, and decodes the rest of it.
+     *
+     * @return the entity, or null if the document starts some other way, which leaves the reader part-way through it
+     */
+    @Nullable
+    private T decodeLeadingFields(BsonReader reader, DecoderContext decoderContext) {
+        EntityModel model = getMorphiaCodec().getEntityModel();
+        String discriminatorKey = model.discriminatorKey();
+        boolean discriminated = !model.useDiscriminator();
+        MorphiaCodec<?> codec = getMorphiaCodec();
+        Object id = null;
+        BsonType idType = null;
+        BsonType type;
+        while ((type = reader.readBsonType()) != BsonType.END_OF_DOCUMENT) {
+            String name = reader.readName();
+            if (!discriminated && discriminatorKey.equals(name)) {
+                if (type == BsonType.STRING) {
+                    codec = codecFor(reader.readString());
+                } else if (type == BsonType.NULL) {
+                    // as if it were absent, as the Document path reads it
+                    reader.readNull();
+                } else {
+                    throw notAString(discriminatorKey, type);
+                }
+                discriminated = true;
+            } else if (idType == null && isIdName(name) && defaultIdClass(type) != null) {
+                id = readSimpleId(reader, type);
+                idType = type;
+            } else {
+                // a property: what's still unknown may come later
+                return null;
+            }
+            if (discriminated && (idType != null || !needsId(codec.getEntityModel()))) {
+                EntityModel subtype = codec.getEntityModel();
+                if (subtype != model && LifecycleEvents.needDocument(subtype, codec.getDatastore().getMapper(), PreLoad.class,
+                        PostLoad.class)) {
+                    return null;
+                }
+                if (idType != null && !takesId(subtype, codec.getPlan(), idType)) {
+                    return null;
+                }
+                return decode(reader, decoderContext, subtype, codec.getPlan(), null, id, true);
+            }
+        }
+        // a document of nothing but leading fields; reading it again is simplest
+        return null;
+    }
+
+    /**
+     * Finds the subtype, and the id, by reading ahead, for documents that don't start as Morphia writes them.
+     */
+    private T decodeReadingAhead(BsonReader reader, DecoderContext decoderContext) {
+        EntityModel model = getMorphiaCodec().getEntityModel();
+        CodecPlan plan = getMorphiaCodec().getPlan();
         if (model.useDiscriminator()) {
             String discriminator = peekDiscriminator(reader, model.discriminatorKey());
             if (discriminator != null) {
@@ -73,7 +143,33 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
             }
         }
         // no callback looks at the document, so read the entity straight from the reader rather than building one
-        return decode(reader, decoderContext, model, plan, null);
+        return decode(reader, decoderContext, model, plan, null, null, false);
+    }
+
+    /**
+     * Carries on with a document whose start, {@code _id} and discriminator another decoder has read.
+     */
+    @Override
+    T decodeFields(BsonReader reader, DecoderContext decoderContext, @Nullable Object id) {
+        return decode(reader, decoderContext, getMorphiaCodec().getEntityModel(), getMorphiaCodec().getPlan(), null, id, true);
+    }
+
+    /**
+     * Unlike {@link EntityDecoder}, this one doesn't look for the id among the rest of the properties, so it carries on
+     * only once it has it, if the entity has one.
+     */
+    @Override
+    boolean continuesAfter(@Nullable BsonType idType) {
+        return idType == null ? getMorphiaCodec().getEntityModel().getIdProperty() == null : takesId(idType);
+    }
+
+    private static boolean needsId(EntityModel model) {
+        return DecodeSession.current() != null && model.getIdProperty() != null;
+    }
+
+    private static boolean takesId(EntityModel model, CodecPlan plan, BsonType idType) {
+        PropertyModel idProperty = model.getIdProperty();
+        return idProperty != null && readsAsKey(plan, idProperty, idType);
     }
 
     /**
@@ -95,7 +191,8 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
                 plan = codec.getPlan();
             }
         }
-        return decode(new DocumentReader(document, getMorphiaCodec().getConversions()), decoderContext, model, plan, document);
+        return decode(new DocumentReader(document, getMorphiaCodec().getConversions()), decoderContext, model, plan, document,
+                null, false);
     }
 
     /**
@@ -103,10 +200,12 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
      *
      * @param reader   the reader for the entity's properties: the original one, or one over {@code document}
      * @param document the document the callbacks get, or null if none of them takes one
+     * @param readId   the {@code _id}, if it has been read already; it isn't in the rest of the document
+     * @param started  true if the document's start, and any fields before the properties, have been read
      */
     @SuppressWarnings("unchecked")
     private T decode(BsonReader reader, DecoderContext decoderContext, EntityModel model, CodecPlan plan,
-            @Nullable Document document) {
+            @Nullable Document document, @Nullable Object readId, boolean started) {
         MorphiaDatastore datastore = getMorphiaCodec().getDatastore();
         MorphiaInstanceCreator instanceCreator = model.getInstanceCreator(getMorphiaCodec().getConversions());
         DecodeSession session = DecodeSession.current();
@@ -115,10 +214,12 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
                 ? null
                 : document != null
                         ? document.get(idProperty.getMappedName())
-                        // an id that decodes as an entity isn't read ahead: decoding it would run its own load
-                        // callbacks an extra time, before this entity's. the document path never keyed one the way
-                        // references do either. any other id, a Document or a Map included, is
-                        : peekId(reader, model, false);
+                        : started
+                                ? readId
+                                // an id that decodes as an entity isn't read ahead: decoding it would run its own load
+                                // callbacks an extra time, before this entity's. the document path never keyed one the way
+                                // references do either. any other id, a Document or a Map included, is
+                                : peekId(reader, model, false);
 
         // mirrors EntityDecoder: publish the instance before its properties are decoded so that reference cycles
         // through a lifecycle-aware entity terminate the same way they do for any other entity. a creator that needs
@@ -142,7 +243,16 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
             if (eager) {
                 model.callLifecycleMethods(PreLoad.class, entity, document, datastore);
             }
-            decodeProperties(reader, decoderContext, instanceCreator, plan);
+            if (readId != null) {
+                // after @PreLoad, which sees the entity before any of its stored values, as it does when the id is decoded
+                // with the rest
+                instanceCreator.set(readId, idProperty);
+            }
+            if (started) {
+                decodeRemainingProperties(reader, decoderContext, instanceCreator, plan);
+            } else {
+                decodeProperties(reader, decoderContext, instanceCreator, plan);
+            }
             if (!eager) {
                 entity = (T) instanceCreator.getInstance();
                 if (id != null) {

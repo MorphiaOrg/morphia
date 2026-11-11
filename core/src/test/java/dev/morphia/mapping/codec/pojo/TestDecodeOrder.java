@@ -11,6 +11,7 @@ import dev.morphia.annotations.AlsoLoad;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Id;
 import dev.morphia.annotations.PostLoad;
+import dev.morphia.annotations.PreLoad;
 import dev.morphia.annotations.Property;
 import dev.morphia.config.ManualMorphiaConfig;
 import dev.morphia.config.MorphiaConfig;
@@ -54,10 +55,14 @@ public class TestDecodeOrder {
     private static final String BUILT = Built.class.getName();
 
     private static int constructed;
+    private static int preLoads;
+    private static Object idAtPreLoad;
 
     @BeforeEach
     void reset() {
         constructed = 0;
+        preLoads = 0;
+        idAtPreLoad = null;
     }
 
     static Stream<Arguments> layouts() {
@@ -79,6 +84,16 @@ public class TestDecodeOrder {
                         .formatted(id, DOG, probe.formatted("Dog"))),
                 arguments(mapper, "no discriminator", Dog.class, "{%s, %s}".formatted(probe.formatted("Dog"), id)),
                 arguments(mapper, "lifecycle subtype", Pet.class, "{%s, \"_t\": \"%s\", %s}"
+                        .formatted(id, CAT, probe.formatted("Cat"))),
+                arguments(mapper, "lifecycle: id, discriminator", Cat.class, "{%s, \"_t\": \"%s\", %s}"
+                        .formatted(id, CAT, probe.formatted("Cat"))),
+                arguments(mapper, "lifecycle: discriminator, id", Pet.class, "{\"_t\": \"%s\", %s, %s}"
+                        .formatted(CAT, id, probe.formatted("Cat"))),
+                arguments(mapper, "lifecycle: discriminator, property, id", Cat.class, "{\"_t\": \"%s\", %s, %s}"
+                        .formatted(CAT, probe.formatted("Cat"), id)),
+                arguments(mapper, "lifecycle: property, id, discriminator", Cat.class, "{%s, %s, \"_t\": \"%s\"}"
+                        .formatted(probe.formatted("Cat"), id, CAT)),
+                arguments(mapper, "lifecycle: id, property, discriminator", Pet.class, "{%s, \"name\": \"b\", \"_t\": \"%s\", %s}"
                         .formatted(id, CAT, probe.formatted("Cat")))));
     }
 
@@ -115,24 +130,28 @@ public class TestDecodeOrder {
 
     static Stream<Arguments> morphiaLayouts() {
         return Stream.of(MapperType.values()).flatMap(mapper -> Stream.of(
-                arguments(mapper, Pet.class), arguments(mapper, Dog.class)));
+                arguments(mapper, Pet.class, Dog.class), arguments(mapper, Dog.class, Dog.class),
+                arguments(mapper, Pet.class, Cat.class), arguments(mapper, Cat.class, Cat.class)));
     }
 
     /**
      * A document laid out as Morphia writes it is read in one pass. The only mark is the one taken at its start, to come back
      * to if the subtype's decoder can't pick up part-way; a second would mean the codec was found by reading ahead.
      */
-    @ParameterizedTest(name = "{0}: {1}")
+    @ParameterizedTest(name = "{0}: {2} as {1}")
     @MethodSource("morphiaLayouts")
-    void morphiaLayoutIsReadInOnePass(MapperType mapper, Class<? extends Pet> type) {
+    @SuppressWarnings("unchecked")
+    void morphiaLayoutIsReadInOnePass(MapperType mapper, Class<? extends Pet> type, Class<? extends Pet> stored) {
         withDatastore(mapper, datastore -> {
-            Dog dog = new Dog();
-            dog.id = ID;
-            dog.name = "rex";
-            dog.barks = 2;
+            Pet pet = stored == Cat.class ? new Cat() : new Dog();
+            pet.id = ID;
+            pet.name = "rex";
+            if (pet instanceof Dog dog) {
+                dog.barks = 2;
+            }
             BsonDocument encoded = new BsonDocument();
             try (BsonDocumentWriter writer = new BsonDocumentWriter(encoded)) {
-                datastore.getCodecRegistry().get(Dog.class).encode(writer, dog, EncoderContext.builder().build());
+                ((Codec<Pet>) datastore.getCodecRegistry().get(stored)).encode(writer, pet, EncoderContext.builder().build());
             }
             RawBsonDocument raw = RawBsonDocument.parse(encoded.toJson());
             Assertions.assertEquals(List.of("_id", "_t"), List.copyOf(raw.keySet()).subList(0, 2), "as Morphia writes it");
@@ -145,11 +164,43 @@ public class TestDecodeOrder {
                     return super.getMark();
                 }
             }) {
-                Pet pet = datastore.getCodecRegistry().get(type).decode(reader, DecoderContext.builder().build());
-                Assertions.assertInstanceOf(Dog.class, pet);
-                Assertions.assertEquals(2, ((Dog) pet).barks);
+                Pet decoded = datastore.getCodecRegistry().get(type).decode(reader, DecoderContext.builder().build());
+                Assertions.assertInstanceOf(stored, decoded);
+                Assertions.assertEquals(ID, decoded.id);
+                Assertions.assertEquals("rex", decoded.name);
+                if (decoded instanceof Dog dog) {
+                    Assertions.assertEquals(2, dog.barks);
+                }
             }
             Assertions.assertEquals(1, marks[0], "marks taken");
+        });
+    }
+
+    static Stream<Arguments> lifecycleLayouts() {
+        String id = "\"_id\": {\"$oid\": \"%s\"}".formatted(ID.toHexString());
+        return Stream.of(MapperType.values()).flatMap(mapper -> Stream.of(
+                arguments(mapper, "id, discriminator", Cat.class, "{%s, \"_t\": \"%s\", \"name\": \"c\"}".formatted(id, CAT)),
+                arguments(mapper, "id, discriminator", Pet.class, "{%s, \"_t\": \"%s\", \"name\": \"c\"}".formatted(id, CAT)),
+                arguments(mapper, "property, id, discriminator", Cat.class,
+                        "{\"name\": \"c\", %s, \"_t\": \"%s\"}".formatted(id, CAT))));
+    }
+
+    /**
+     * A lifecycle entity's {@code @PreLoad} runs before any stored value is set, its id included, whether the id was
+     * read with the discriminator or with the rest, and each callback runs once.
+     */
+    @ParameterizedTest(name = "{0}: {1} as {2}")
+    @MethodSource("lifecycleLayouts")
+    void preLoadRunsBeforeTheStoredValues(MapperType mapper, String layout, Class<? extends Pet> type, String json) {
+        withDatastore(mapper, datastore -> {
+            Pet pet = decode(datastore, type, json);
+
+            Assertions.assertInstanceOf(Cat.class, pet);
+            Assertions.assertEquals(ID, pet.id);
+            Assertions.assertEquals("c", pet.name);
+            Assertions.assertEquals(1, preLoads, "@PreLoad runs");
+            Assertions.assertNull(idAtPreLoad, "the id when @PreLoad ran");
+            Assertions.assertEquals(1, ((Cat) pet).postLoads, "@PostLoad runs");
         });
     }
 
@@ -390,11 +441,20 @@ public class TestDecodeOrder {
 
     @Entity("Cat")
     public static class Cat extends Pet {
+        transient int postLoads;
+
         public Cat() {
+        }
+
+        @PreLoad
+        void loading() {
+            preLoads++;
+            idAtPreLoad = id;
         }
 
         @PostLoad
         void loaded() {
+            postLoads++;
         }
     }
 
