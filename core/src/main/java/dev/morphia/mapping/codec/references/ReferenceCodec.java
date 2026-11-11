@@ -80,8 +80,6 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     private MorphiaDatastore datastore;
     @Nullable
     private volatile ProxyFactory proxyFactory;
-    @Nullable
-    private volatile String idDiscriminatorKey;
 
     /**
      * Creates a codec
@@ -100,32 +98,32 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     /**
      * Decodes an ID value
      *
-     * @param datastore        the Datastore to use
-     * @param decode           the value to decode
-     * @param decoderContext   the decoder context
-     * @param discriminatorKey the discriminator key of the id's type, which marks an id stored as an entity
+     * @param datastore      the Datastore to use
+     * @param decode         the value to decode
+     * @param decoderContext the decoder context
      * @return the decoded value
      */
     @NonNull
-    public static Object processId(MorphiaDatastore datastore, Object decode, DecoderContext decoderContext,
-            String discriminatorKey) {
+    public static Object processId(MorphiaDatastore datastore, Object decode, DecoderContext decoderContext) {
         Object id = decode;
         if (id instanceof Iterable) {
             Iterable<?> iterable = (Iterable<?>) id;
             List<Object> ids = new ArrayList<>();
             for (Object o : iterable) {
-                ids.add(processId(datastore, o, decoderContext, discriminatorKey));
+                ids.add(processId(datastore, o, decoderContext));
             }
             id = ids;
         } else if (id instanceof Document) {
             Document document = (Document) id;
             if (document.containsKey("$ref")) {
                 id = processId(datastore, new DBRef(document.getString("$db"), document.getString("$ref"), document.get("$id")),
-                        decoderContext, discriminatorKey);
-            } else if (document.containsKey(discriminatorKey)) {
+                        decoderContext);
+            } else if (document.get(datastore.getMapper().getConfig().discriminatorKey()) instanceof String discriminator) {
+                // the configured key rather than the id type's: the decode session reads its id keys with ObjectCodec, which
+                // uses it too, and the two must agree for a reference back to the entity being decoded to close the cycle
                 try {
                     id = datastore.getCodecRegistry()
-                            .get(datastore.getMapper().getClass((String) document.get(discriminatorKey)))
+                            .get(datastore.getMapper().getClass(discriminator))
                             .decode(new DocumentReader(document, datastore.getMapper().getConversions()), decoderContext);
                 } catch (CodecConfigurationException e) {
                     throw new MappingException(Sofia.cannotFindTypeInDocument(), e);
@@ -151,27 +149,8 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
         Object decode = getDatastore().getCodecRegistry()
                 .get(bsonTypeClassMap.get(reader.getCurrentBsonType()))
                 .decode(reader, decoderContext);
-        decode = processId(getDatastore(), decode, decoderContext, idDiscriminatorKey());
+        decode = processId(getDatastore(), decode, decoderContext);
         return fetch(decode);
-    }
-
-    /**
-     * @return the discriminator key of the referenced entity's id type when that type is mapped, or the configured key.
-     *         Only a mapped type's key is kept: an id type without a model yet (an {@code @ExternalEntity} target whose
-     *         stand-in isn't mapped, say) may get one later.
-     */
-    private String idDiscriminatorKey() {
-        String key = idDiscriminatorKey;
-        if (key == null) {
-            PropertyModel id = getEntityModelForField().getIdProperty();
-            EntityModel idModel = id != null ? mapper.tryGetEntityModel(id.getNormalizedType()).orElse(null) : null;
-            if (idModel == null) {
-                return mapper.getConfig().discriminatorKey();
-            }
-            key = idModel.discriminatorKey();
-            idDiscriminatorKey = key;
-        }
-        return key;
     }
 
     @Override
