@@ -1,7 +1,5 @@
 package dev.morphia.critter;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,8 +13,8 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 /**
  * A class loader that supports registering and loading dynamically generated Critter classes from byte arrays.
  * <p>
- * Registered classes, and classes from the {@code dev.morphia.critter} package, are loaded child-first so generated
- * code links against them rather than the parent's copies; everything else is delegated to the parent. A class's
+ * Registered classes are loaded child-first so generated code links against them rather than the parent's copies;
+ * everything else, Morphia's own classes included, is delegated to the parent, so there is one copy of each. A class's
  * bytes are released once it is defined. {@link #getResource(String)}, and so {@code getResourceAsStream}, returns
  * {@code null} for the {@code .class} file of a class this loader registered or defined; {@code getResources} still
  * lists the parent's copy, as ByteBuddy's {@code ChildFirst} loader did.
@@ -59,40 +57,11 @@ public class CritterClassLoader extends ClassLoader {
         typeDefinitions.put(name, bytes);
     }
 
-    byte[] bytes(String name) throws ClassNotFoundException {
-        // If already registered, return it
-        byte[] existing = typeDefinitions.get(name);
-        if (existing != null) {
-            return existing;
-        }
-
-        // Try to load from resources if it's a project class
-        if (shouldRegister(name)) {
-            String resourceName = "%s.class".formatted(name.replace('.', '/'));
-            // Try both this classloader and parent classloader
-            InputStream stream = getResourceAsStream(resourceName);
-            if (stream == null && getParent() != null) {
-                stream = getParent().getResourceAsStream(resourceName);
-            }
-            if (stream != null) {
-                try (InputStream in = stream) {
-                    byte[] data = in.readAllBytes();
-                    register(name, data);
-                    return data;
-                } catch (IOException e) {
-                    throw new ClassNotFoundException(name, e);
-                }
-            }
-        }
-
-        throw new ClassNotFoundException(name);
-    }
-
     @Override
     protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
         synchronized (getClassLoadingLock(name)) {
             Class<?> type = findLoadedClass(name);
-            if (type == null && (typeDefinitions.containsKey(name) || shouldRegister(name))) {
+            if (type == null && typeDefinitions.containsKey(name)) {
                 try {
                     type = findClass(name);
                 } catch (ClassNotFoundException e) {
@@ -111,17 +80,6 @@ public class CritterClassLoader extends ClassLoader {
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
-        // Try to register from resources first if not already registered
-        // Only register project classes to avoid LinkageError with third-party libraries
-        if (!typeDefinitions.containsKey(name) && shouldRegister(name)) {
-            URL resource = getParent() != null ? getParent().getResource("%s.class".formatted(name.replace('.', '/'))) : null;
-            if (resource != null) {
-                try (InputStream in = resource.openStream()) {
-                    register(name, in.readAllBytes());
-                } catch (IOException ignored) {
-                }
-            }
-        }
         byte[] bytes = typeDefinitions.remove(name);
         if (bytes == null) {
             throw new ClassNotFoundException(name);
@@ -143,17 +101,6 @@ public class CritterClassLoader extends ClassLoader {
             }
         }
         return super.getResource(name);
-    }
-
-    private boolean shouldRegister(String className) {
-        // Only register classes from the dev.morphia.critter package
-        // This avoids SecurityException (java.*, javax.*) and LinkageError (third-party libs).
-        // NestmateAccessorRegistry must be excluded. Its map is keyed by CritterClassLoader, but the map itself is
-        // a static field, so every party must see the same Class: CritterGenerator registers accessors through the
-        // parent's copy of the class, and generated models (defined by this loader) look them up. A child-first copy
-        // here would have its own, empty map. Excluding it lets loading fall back to the parent's single copy.
-        return className.startsWith("dev.morphia.critter.")
-                && !className.equals("dev.morphia.critter.parser.generator.NestmateAccessorRegistry");
     }
 
     /**

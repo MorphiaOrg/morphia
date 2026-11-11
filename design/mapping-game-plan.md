@@ -606,9 +606,13 @@ harness passes, and both mappers agree.
     found under another (a Turkish locale lowercased `I` to a dotless `ı`).
   - The `CritterEntityModel` javadoc was already fixed by 4.7. `GeneratedCode.adoc` item 2 now notes that the
     constant-getter approach was tried and replaced by plain models.
-  - Not done: C11 also calls `CritterClassLoader.shouldRegister`'s child-first `dev.morphia.critter.*` rule test
+  - ~~Not done: C11 also calls `CritterClassLoader.shouldRegister`'s child-first `dev.morphia.critter.*` rule test
     plumbing. It is how the test fixtures in `dev.morphia.critter.sources` get woven, so moving it behind a test-only
-    hook is left to Phase 5.
+    hook is left to Phase 5.~~
+  - Done in Phase 5, by removing the rule rather than hiding it: nothing needs it any more. With it off, only the two
+    tests asserting the rule itself failed; generation, weaving and the fixtures don't depend on it. `CritterClassLoader`
+    now loads only registered classes child-first. Morphia's own `dev.morphia.critter` classes come from the parent, so
+    there is one copy of their static state. Its unused `bytes(String)` went with it.
 
 ### ~~4.14 Annotated lifecycle methods become entity-only (follow-up to #4432)~~
 Decided after 4.2: removed outright in 3.0 rather than deprecated. With 4.2's `PostPersistDocumentListener` and
