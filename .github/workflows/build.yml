@@ -90,20 +90,9 @@ jobs:
       - name: Setup JBang
         uses: jbangdev/setup-jbang@v0.1.1
 
-      - name: Find MongoDB versions
-        id: mongo-versions
-        run: |
-          echo "mongo_versions=$( jbang .github/BuildMatrix.java )" >> $GITHUB_OUTPUT
-
-      - name: Find Latest Driver version
-        id: latest-driver-version
-        run: |
-          echo "latest_driver_version=$( jbang .github/DriverVersions.java latest)" >> $GITHUB_OUTPUT
-
-      - name: Find Driver versions
-        id: driver-versions
-        run: |
-          echo "driver_versions=$( jbang .github/DriverVersions.java all)" >> $GITHUB_OUTPUT
+      - name: Build matrix
+        id: versions
+        run: jbang .github/BuildMatrix.java
 
       - name: Is releasable branch
         id: releasable
@@ -118,17 +107,11 @@ jobs:
             echo "releasable=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Find Driver snapshot version
-        id: driver-snapshot
-        run: |
-          echo "driver_snapshot=$( jbang .github/DriverSnapshot.java )" >> $GITHUB_OUTPUT
-
     outputs:
-      driver_latest: ${{ steps.latest-driver-version.outputs.latest_driver_version }}
-      driver_matrix: ${{ steps.driver-versions.outputs.driver_versions }}
-      version_matrix: ${{ steps.mongo-versions.outputs.mongo_versions }}
+      driver_matrix: ${{ steps.versions.outputs.driver_versions }}
+      version_matrix: ${{ steps.versions.outputs.mongo_versions }}
       releasable: ${{ steps.releasable.outputs.releasable }}
-      driver_snapshot: ${{ steps.driver-snapshot.outputs.driver_snapshot }}
+      driver_snapshot: ${{ steps.versions.outputs.driver_snapshot }}
 
   ServerTests:
     name: Server
