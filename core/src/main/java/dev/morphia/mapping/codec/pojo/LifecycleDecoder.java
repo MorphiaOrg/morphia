@@ -108,9 +108,14 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
             }
             if (discriminated && (idType != null || !needsId(codec.getEntityModel()))) {
                 EntityModel subtype = codec.getEntityModel();
-                if (subtype != model && LifecycleEvents.needDocument(subtype, codec.getDatastore().getMapper(), PreLoad.class,
-                        PostLoad.class)) {
-                    return null;
+                if (subtype != model) {
+                    // the discriminator has been read, so the subtype must skip it too rather than map it as a property
+                    if (!subtype.useDiscriminator() || !subtype.discriminatorKey().equals(discriminatorKey)) {
+                        return null;
+                    }
+                    if (LifecycleEvents.needDocument(subtype, codec.getDatastore().getMapper(), PreLoad.class, PostLoad.class)) {
+                        return null;
+                    }
                 }
                 if (idType != null && !takesId(subtype, codec.getPlan(), idType)) {
                     return null;

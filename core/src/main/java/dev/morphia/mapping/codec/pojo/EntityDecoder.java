@@ -114,9 +114,10 @@ public class EntityDecoder<T> implements Decoder<T> {
             EntityDecoder<?> decoder = other.getDecoder();
             EntityModel model = decoder.classModel;
             // the discriminator has been read, so the subtype must be one that skips it too rather than mapping it. a
-            // lifecycle decoder can carry on too unless a callback takes the whole document
+            // lifecycle decoder can carry on too unless a callback takes the whole document; a subclass of either may
+            // decode its own way
             boolean continues = decoder.getClass() == EntityDecoder.class
-                    || decoder instanceof LifecycleDecoder<?> lifecycle && !lifecycle.needsDocument();
+                    || decoder.getClass() == LifecycleDecoder.class && !((LifecycleDecoder<?>) decoder).needsDocument();
             if (continues && model.useDiscriminator() && model.discriminatorKey().equals(classModel.discriminatorKey())) {
                 return (EntityDecoder<? extends T>) decoder;
             }

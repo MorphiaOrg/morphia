@@ -321,6 +321,65 @@ public class TestDecodeOrder {
     }
 
     /**
+     * The same, under a root that decodes through {@link LifecycleDecoder}: it reads the discriminator with the id, but
+     * leaves it for a subtype that maps it.
+     */
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("mappers")
+    void subtypeMappingTheDiscriminatorKeyKeepsItUnderALifecycleRoot(MapperType mapper) {
+        withDatastore(mapper, datastore -> {
+            Assertions.assertInstanceOf(LifecycleDecoder.class,
+                    ((MorphiaCodec<?>) datastore.getCodecRegistry().get(Bird.class)).getDecoder());
+            Bird bird = decode(datastore, Bird.class, "{\"_id\": {\"$oid\": \"%s\"}, \"_t\": \"%s\", \"name\": \"p\"}"
+                    .formatted(ID.toHexString(), Parrot.class.getName()));
+
+            Assertions.assertInstanceOf(Parrot.class, bird);
+            Assertions.assertEquals(Parrot.class.getName(), ((Parrot) bird).kind);
+            Assertions.assertEquals(ID, bird.id);
+            Assertions.assertEquals("p", bird.name);
+        });
+    }
+
+    /**
+     * A codec can be given its own {@link LifecycleDecoder} subclass for a subtype. A parent's decoder hands it the whole
+     * document, as it would any other decoder that isn't exactly its own kind, rather than carrying on part-way.
+     */
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("mappers")
+    void aSubtypeLifecycleDecoderSubclassStillDecodes(MapperType mapper) {
+        MorphiaDatastore[] holder = new MorphiaDatastore[1];
+        int[] decodes = { 0 };
+        CodecProvider custom = new CodecProvider() {
+            @Override
+            @SuppressWarnings("unchecked")
+            public <T> Codec<T> get(Class<T> clazz, CodecRegistry registry) {
+                if (clazz != Cat.class || holder[0] == null) {
+                    return null;
+                }
+                MorphiaDatastore datastore = holder[0];
+                MorphiaCodec<Cat> codec = new MorphiaCodec<>(datastore, datastore.getMapper().getEntityModel(Cat.class), List.of(),
+                        datastore.getMapper().getDiscriminatorLookup(), registry, datastore.getMapper().getConversions());
+                codec.setDecoder(new LifecycleDecoder<>(codec) {
+                    @Override
+                    public Cat decode(BsonReader reader, DecoderContext decoderContext) {
+                        decodes[0]++;
+                        return super.decode(reader, decoderContext);
+                    }
+                });
+                return (Codec<T>) codec;
+            }
+        };
+        withDatastore(mapper, List.of(custom), datastore -> {
+            holder[0] = datastore;
+            Pet pet = decode(datastore, Pet.class, "{\"_id\": {\"$oid\": \"%s\"}, \"_t\": \"%s\", \"name\": \"c\"}"
+                    .formatted(ID.toHexString(), CAT));
+
+            Assertions.assertInstanceOf(Cat.class, pet);
+            Assertions.assertEquals(1, decodes[0], "decodes through the codec's own decoder");
+        });
+    }
+
+    /**
      * An id read first under one of its load names isn't the key references use, so the entity is registered under the
      * stored {@code _id} found further on.
      */
@@ -376,7 +435,7 @@ public class TestDecodeOrder {
         try (MongoClient client = MongoClients.create("mongodb://localhost:1")) {
             MorphiaDatastore datastore = new MorphiaDatastore(client, config);
             datastore.getMapper().map(Pet.class, Dog.class, Cat.class, Built.class, Note.class, Memo.class, Keyed.class, Lizard.class,
-                    Aliased.class);
+                    Aliased.class, Bird.class, Parrot.class);
             test.accept(datastore);
         }
     }
@@ -455,6 +514,26 @@ public class TestDecodeOrder {
         @PostLoad
         void loaded() {
             postLoads++;
+        }
+    }
+
+    @Entity("Bird")
+    public abstract static class Bird {
+        @Id
+        ObjectId id;
+        String name;
+
+        @PostLoad
+        void loaded() {
+        }
+    }
+
+    @Entity(value = "Parrot", useDiscriminator = false)
+    public static class Parrot extends Bird {
+        @Property("_t")
+        String kind;
+
+        public Parrot() {
         }
     }
 
