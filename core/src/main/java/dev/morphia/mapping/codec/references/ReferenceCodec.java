@@ -31,6 +31,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.Mapper;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.DecodeSession;
+import dev.morphia.mapping.codec.ObjectCodec;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyHandler;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
@@ -134,8 +135,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             DBRef ref = (DBRef) id;
             Object refId = ref.getId();
             if (refId instanceof Document) {
-                refId = datastore.getCodecRegistry()
-                        .get(Object.class)
+                refId = ObjectCodec.forIds(datastore.getCodecRegistry())
                         .decode(new DocumentReader((Document) refId, datastore.getMapper().getConversions()), decoderContext);
             }
             id = new DBRef(ref.getDatabaseName(), ref.getCollectionName(), refId);
@@ -526,7 +526,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     }
 
     private Object decodeDocument(Document value) {
-        return getDatastore().getCodecRegistry().get(Object.class)
+        return ObjectCodec.forIds(getDatastore().getCodecRegistry())
                 .decode(new DocumentReader(value, mapper.getConversions()), DecoderContext.builder().build());
     }
 

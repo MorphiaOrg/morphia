@@ -5,6 +5,7 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.DecodeSession;
 import dev.morphia.mapping.codec.MorphiaInstanceCreator;
+import dev.morphia.mapping.codec.ObjectCodec;
 
 import org.bson.BsonInvalidOperationException;
 import org.bson.BsonReader;
@@ -334,7 +335,7 @@ public class EntityDecoder<T> implements Decoder<T> {
     private Codec<Object> idKeyCodec() {
         Codec<Object> codec = idKeyCodec;
         if (codec == null) {
-            codec = morphiaCodec.getRegistry().get(Object.class);
+            codec = ObjectCodec.forIds(morphiaCodec.getRegistry());
             idKeyCodec = codec;
         }
         return codec;
