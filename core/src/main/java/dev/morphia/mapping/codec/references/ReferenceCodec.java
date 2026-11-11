@@ -118,10 +118,12 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
             if (document.containsKey("$ref")) {
                 id = processId(datastore, new DBRef(document.getString("$db"), document.getString("$ref"), document.get("$id")),
                         decoderContext);
-            } else if (document.containsKey(datastore.getMapper().getConfig().discriminatorKey())) {
+            } else if (document.get(datastore.getMapper().getConfig().discriminatorKey()) instanceof String discriminator) {
+                // the configured key rather than the id type's: the decode session reads its id keys with ObjectCodec, which
+                // uses it too, and the two must agree for a reference back to the entity being decoded to close the cycle
                 try {
                     id = datastore.getCodecRegistry()
-                            .get(datastore.getMapper().getClass(document))
+                            .get(datastore.getMapper().getClass(discriminator))
                             .decode(new DocumentReader(document, datastore.getMapper().getConversions()), decoderContext);
                 } catch (CodecConfigurationException e) {
                     throw new MappingException(Sofia.cannotFindTypeInDocument(), e);

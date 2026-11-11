@@ -491,6 +491,21 @@ public class TestReferences extends ProxyTestBase {
     }
 
     @Test
+    @Tag("references")
+    public void compoundIdsWithTheirOwnDiscriminatorKeyCloseCycles() {
+        getMapper().map(KindCycle.class, KindId.class);
+        KindCycle cycle = new KindCycle();
+        cycle.id = new KindId("loop");
+        cycle.self = cycle;
+        getDs().save(cycle);
+
+        KindCycle loaded = getDs().find(KindCycle.class).first();
+        Assertions.assertNotNull(loaded);
+        Assertions.assertEquals(cycle.id, loaded.id);
+        Assertions.assertSame(loaded, loaded.self, "the cycle closes on the entity being decoded");
+    }
+
+    @Test
     public void testReferencesWithoutMapping() {
         Child child1 = new Child();
         getDs().save(child1);
@@ -813,6 +828,36 @@ public class TestReferences extends ProxyTestBase {
             return other.id.equals(id) && other.name.equals(name);
         }
 
+    }
+
+    @Entity(discriminatorKey = "_kind")
+    private static class KindId {
+        private String name;
+
+        KindId() {
+        }
+
+        KindId(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public int hashCode() {
+            return name.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj instanceof KindId other && other.name.equals(name);
+        }
+    }
+
+    @Entity
+    private static class KindCycle {
+        @Id
+        private KindId id;
+        @Reference(idOnly = true)
+        private KindCycle self;
     }
 
     @Entity
