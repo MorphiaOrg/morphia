@@ -19,6 +19,7 @@ import dev.morphia.mapping.MapperType;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.DecodeSession;
 import dev.morphia.mapping.codec.MorphiaCodecProvider;
+import dev.morphia.mapping.codec.MorphiaInstanceCreator;
 
 import org.bson.BsonBinaryReader;
 import org.bson.BsonDocument;
@@ -376,6 +377,57 @@ public class TestDecodeOrder {
 
             Assertions.assertInstanceOf(Cat.class, pet);
             Assertions.assertEquals(1, decodes[0], "decodes through the codec's own decoder");
+        });
+    }
+
+    /**
+     * A {@link LifecycleDecoder} subclass that customizes how properties are decoded sees every property, the id included,
+     * through its hooks, even for a document laid out as Morphia writes it.
+     */
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("mappers")
+    void aLifecycleDecoderSubclassSeesEveryProperty(MapperType mapper) {
+        MorphiaDatastore[] holder = new MorphiaDatastore[1];
+        int[] propertyPasses = { 0 };
+        List<String> decoded = new java.util.ArrayList<>();
+        CodecProvider custom = new CodecProvider() {
+            @Override
+            @SuppressWarnings("unchecked")
+            public <T> Codec<T> get(Class<T> clazz, CodecRegistry registry) {
+                if (clazz != Cat.class || holder[0] == null) {
+                    return null;
+                }
+                MorphiaDatastore datastore = holder[0];
+                MorphiaCodec<Cat> codec = new MorphiaCodec<>(datastore, datastore.getMapper().getEntityModel(Cat.class), List.of(),
+                        datastore.getMapper().getDiscriminatorLookup(), registry, datastore.getMapper().getConversions());
+                codec.setDecoder(new LifecycleDecoder<>(codec) {
+                    @Override
+                    protected void decodeProperties(BsonReader reader, DecoderContext decoderContext,
+                            MorphiaInstanceCreator instanceCreator, CodecPlan plan) {
+                        propertyPasses[0]++;
+                        super.decodeProperties(reader, decoderContext, instanceCreator, plan);
+                    }
+
+                    @Override
+                    protected void decodeModel(BsonReader reader, DecoderContext decoderContext,
+                            MorphiaInstanceCreator instanceCreator, CodecPlan plan, PropertyModel model) {
+                        if (model != null) {
+                            decoded.add(model.getMappedName());
+                        }
+                        super.decodeModel(reader, decoderContext, instanceCreator, plan, model);
+                    }
+                });
+                return (Codec<T>) codec;
+            }
+        };
+        withDatastore(mapper, List.of(custom), datastore -> {
+            holder[0] = datastore;
+            Cat cat = decode(datastore, Cat.class, "{\"_id\": {\"$oid\": \"%s\"}, \"_t\": \"%s\", \"name\": \"c\"}"
+                    .formatted(ID.toHexString(), CAT));
+
+            Assertions.assertEquals(ID, cat.id);
+            Assertions.assertEquals(1, propertyPasses[0], "decodeProperties runs");
+            Assertions.assertEquals(List.of("_id", "name"), decoded, "properties decoded through decodeModel");
         });
     }
 

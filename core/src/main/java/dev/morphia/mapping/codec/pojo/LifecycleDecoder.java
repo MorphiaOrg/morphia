@@ -62,6 +62,10 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
             // nothing to know before the properties
             return decode(reader, decoderContext, model, plan, null, null, false);
         }
+        if (getClass() != LifecycleDecoder.class) {
+            // a subclass may customize decodeProperties or decodeModel, which reading the leading fields would bypass
+            return decodeReadingAhead(reader, decoderContext);
+        }
         BsonReaderMark start = reader.getMark();
         reader.readStartDocument();
         T entity = decodeLeadingFields(reader, decoderContext);
