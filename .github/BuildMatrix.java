@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URL;
 import java.util.Comparator;
+import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.regex.Pattern;
@@ -25,9 +25,11 @@ import static java.lang.String.format;
 
 public class BuildMatrix {
 
-    // these releases refuse to start on Linux 6.19 and newer, which the runners use
-    // (https://jira.mongodb.org/browse/SERVER-121912). An earlier patch is used instead until a later one ships.
-    private static final Set<String> BROKEN = Set.of("8.0.34", "8.3.13");
+    // releases of these lines up to and including the given patch refuse to start on Linux 6.19 and newer, which the
+    // runners use (https://jira.mongodb.org/browse/SERVER-121912). A line is skipped until a later patch has an image.
+    private static final Map<String, Semver> LAST_BROKEN = Map.of(
+            "8.0", Semver.parse("8.0.34"),
+            "8.3", Semver.parse("8.3.13"));
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -53,7 +55,7 @@ public class BuildMatrix {
 
     /**
      * MongoDB lists a release before its Docker image is published, so use the newest patch release of the same minor
-     * line that has an image and isn't known to be broken.
+     * line that has an image and is newer than any known broken release.
      */
     private static Optional<Semver> usableVersion(Semver latest) {
         var line = latest.getMajor() + "." + latest.getMinor();
@@ -68,8 +70,8 @@ public class BuildMatrix {
         var version = StreamSupport.stream(tags.spliterator(), false)
                 .map(t -> t.get("name").asText())
                 .filter(name -> pattern.matcher(name).matches())
-                .filter(name -> !BROKEN.contains(name))
                 .map(Semver::parse)
+                .filter(it -> !LAST_BROKEN.containsKey(line) || it.isGreaterThan(LAST_BROKEN.get(line)))
                 .max(Comparator.naturalOrder());
         if (version.isEmpty()) {
             System.err.println("No usable docker image found for the " + line + " line");
