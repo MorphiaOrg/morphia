@@ -173,11 +173,11 @@ public class TestHierarchyLinks {
         Mapper mapper = mapper(type);
         model(mapper, type, Child.class);
 
-        Field field = AbstractMapper.class.getDeclaredField("pendingSubtypesByParentName");
+        Field field = AbstractMapper.class.getDeclaredField("pendingSubtypesByParent");
         field.setAccessible(true);
-        Set<String> pending = ((Map<String, ?>) field.get(mapper)).keySet();
-        Assertions.assertFalse(pending.contains(Object.class.getName()), "Object can never be mapped: " + pending);
-        Assertions.assertFalse(pending.contains(Serializable.class.getName()), "JDK types can never be mapped: " + pending);
+        Set<Class<?>> pending = ((Map<Class<?>, ?>) field.get(mapper)).keySet();
+        Assertions.assertFalse(pending.contains(Object.class), "Object can never be mapped: " + pending);
+        Assertions.assertFalse(pending.contains(Serializable.class), "JDK types can never be mapped: " + pending);
     }
 
     @SuppressWarnings("unchecked")

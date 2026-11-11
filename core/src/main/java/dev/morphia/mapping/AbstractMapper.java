@@ -23,9 +23,11 @@ import com.mongodb.lang.Nullable;
 
 import dev.morphia.EntityListener;
 import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.mapping.codec.Conversions;
+import dev.morphia.mapping.codec.pojo.ClassHierarchy;
 import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 import dev.morphia.mapping.conventions.MorphiaConvention;
@@ -52,7 +54,10 @@ import io.github.classgraph.ScanResult;
 public abstract class AbstractMapper implements Mapper {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractMapper.class);
 
-    protected final Map<String, EntityModel> mappedEntities = new ConcurrentHashMap<>();
+    // keyed by the class a model persists, so same-named classes from different loaders don't share a model
+    protected final Map<Class<?>, EntityModel> mappedEntities = new ConcurrentHashMap<>();
+    // each @ExternalEntity stand-in looked up so far, with the target its model is registered under
+    private final Map<Class<?>, Class<?>> standIns = new ConcurrentHashMap<>();
     protected final ConcurrentHashMap<String, Set<EntityModel>> mappedEntitiesByCollection = new ConcurrentHashMap<>();
     // Per collection, the registered models no other model mapped to that collection is a supertype of, in registration
     // order. Normally one root; several only if unrelated classes share a collection. Replaced whole under the mapper's
@@ -61,13 +66,13 @@ public abstract class AbstractMapper implements Mapper {
     // Collections already warned about for having unrelated roots, so the warning is logged once per collection.
     private final Set<String> warnedCollections = ConcurrentHashMap.newKeySet();
     // Models registered before their direct superclass/interface(s) are themselves registered,
-    // keyed by that not-yet-mapped parent's class name, so the relationship can be linked once
+    // keyed by that not-yet-mapped parent, so the relationship can be linked once
     // the parent does show up — without rescanning every already-registered model on every new
     // registration (see register()/linkHierarchy()).
-    private final Map<String, List<EntityModel>> pendingSubtypesByParentName = new ConcurrentHashMap<>();
+    private final Map<Class<?>, List<EntityModel>> pendingSubtypesByParent = new ConcurrentHashMap<>();
     // Models whose registration is in progress (being validated), guarded by the mapper's lock. Only the registering
     // thread can see them, so its recursive lookups resolve, while other threads wait on the lock for the outcome.
-    private final Map<String, EntityModel> registering = new HashMap<>();
+    private final Map<Class<?>, EntityModel> registering = new HashMap<>();
     // from MorphiaConfig.listeners(), fixed once the mapper exists
     private final List<EntityListener<?>> globalListeners;
     protected final MorphiaConfig config;
@@ -137,7 +142,21 @@ public abstract class AbstractMapper implements Mapper {
         this.conversions = other.conversions;
         this.discriminatorLookup = new DiscriminatorLookup(other.classLoader);
         other.mappedEntities.values().forEach(this::clone);
+        copyStandIns(other);
         this.globalListeners = globalListeners(config);
+    }
+
+    /**
+     * Carries another mapper's {@code @ExternalEntity} stand-ins over to this one, once their targets are registered here
+     * too, so a copy finds them without building their models again.
+     *
+     * @param other the mapper being copied
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    protected final void copyStandIns(AbstractMapper other) {
+        standIns.putAll(other.standIns);
     }
 
     /**
@@ -213,20 +232,16 @@ public abstract class AbstractMapper implements Mapper {
     @Override
     @MorphiaInternal
     public Optional<EntityModel> tryGetEntityModel(Class type) {
-        final Class actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
-        if (actual == null && MorphiaProxy.class.equals(type)) {
-            return Optional.empty();
-        }
-        EntityModel model = mappedEntities.get(actual.getName());
+        return Optional.ofNullable(mapEntity(type));
+    }
 
-        if (model == null) {
-            if (!isMappable(actual)) {
-                return Optional.empty();
-            }
-            model = mapEntity(actual);
-        }
-
-        return Optional.of(model);
+    /**
+     * @param type a type as {@link #MAPPED_AS mapped}
+     * @return the model registered for the type, or for the target it stands in for, if any
+     */
+    @Nullable
+    private EntityModel registered(Class<?> type) {
+        return mappedEntities.get(standIns.getOrDefault(type, type));
     }
 
     @Override
@@ -308,7 +323,7 @@ public abstract class AbstractMapper implements Mapper {
     @Override
     @MorphiaInternal
     public boolean isMapped(Class c) {
-        return mappedEntities.containsKey(c.getName());
+        return registered(MAPPED_AS.get(c)) != null;
     }
 
     @Override
@@ -340,20 +355,46 @@ public abstract class AbstractMapper implements Mapper {
     @Override
     @Nullable
     public final EntityModel mapEntity(@Nullable Class type) {
-        if (!isMappable(type)) {
+        if (type == null) {
             return null;
         }
-        EntityModel model = mappedEntities.get(type.getName());
-        if (model != null) {
+        Class<?> actual = MAPPED_AS.get(type);
+        EntityModel model = registered(actual);
+        // an @ExternalEntity target has a model without being mappable itself
+        if (model != null || !isMappable(actual)) {
             return model;
         }
         synchronized (this) {
-            model = mappedEntities.get(type.getName());
+            model = registered(actual);
             if (model == null) {
-                model = registering.get(type.getName());
+                model = registering.get(actual);
             }
-            return model != null ? model : register(buildModel(type));
+            if (model == null) {
+                model = register(buildModel(actual));
+                if (model.getType() != actual) {
+                    if (!standsIn(actual, model.getType())) {
+                        // e.g. a same-named class from another loader whose model resolved to the first class's
+                        throw new MappingException("The model built for %s describes %s"
+                                .formatted(describe(actual), describe(model.getType())));
+                    }
+                    standIns.put(actual, model.getType());
+                }
+            }
+            return model;
         }
+    }
+
+    /**
+     * @return true if the type is an {@code @ExternalEntity} stand-in for the target
+     */
+    private static boolean standsIn(Class<?> type, Class<?> target) {
+        // from the whole hierarchy, interfaces included, as the model builders read it
+        ExternalEntity external = (ExternalEntity) ClassHierarchy.annotations(type).get(ExternalEntity.class);
+        return external != null && external.target() == target;
+    }
+
+    private static String describe(Class<?> type) {
+        return "%s (loaded by %s)".formatted(type.getName(), type.getClassLoader());
     }
 
     /**
@@ -423,29 +464,29 @@ public abstract class AbstractMapper implements Mapper {
      */
     @MorphiaInternal
     protected synchronized EntityModel register(EntityModel model, boolean validate) {
-        String name = model.getType().getName();
-        var existing = mappedEntities.get(name);
+        Class<?> type = model.getType();
+        var existing = mappedEntities.get(type);
         if (existing == null) {
-            existing = registering.get(name);
+            existing = registering.get(type);
         }
         if (existing != null) {
             return existing;
         }
-        registering.put(name, model);
+        registering.put(type, model);
         try {
             if (validate && !model.isInterface()) {
                 validator.validate(this, model);
             }
             discriminatorLookup.addModel(model);
         } finally {
-            registering.remove(name);
+            registering.remove(type);
         }
 
         linkHierarchy(model);
         mappedEntitiesByCollection.computeIfAbsent(model.collectionName(), s -> new CopyOnWriteArraySet<>())
                 .add(model);
         updateRoots(model);
-        mappedEntities.put(name, model);
+        mappedEntities.put(type, model);
         return model;
     }
 
@@ -482,7 +523,7 @@ public abstract class AbstractMapper implements Mapper {
      * inherits), and links any registered models that were waiting on this one as a parent. A parent that isn't
      * registered yet is recorded as pending, unless it's a JDK type such as {@code Object} or {@code Serializable}, which
      * can never be mapped. The parent's own annotations don't decide this: an {@code @ExternalEntity} stand-in can map a
-     * parent that has none. Lookups are name-keyed in both directions, so registration doesn't rescan every registered
+     * parent that has none. Lookups are keyed by class in both directions, so registration doesn't rescan every registered
      * model.
      */
     private void linkHierarchy(EntityModel model) {
@@ -503,7 +544,7 @@ public abstract class AbstractMapper implements Mapper {
             link(iface, model);
         }
 
-        List<EntityModel> waiting = pendingSubtypesByParentName.remove(type.getName());
+        List<EntityModel> waiting = pendingSubtypesByParent.remove(type);
         if (waiting != null) {
             waiting.forEach(model::addSubtype);
         }
@@ -515,13 +556,13 @@ public abstract class AbstractMapper implements Mapper {
      * @return true if the parent is registered
      */
     private boolean link(Class<?> parentType, EntityModel model) {
-        EntityModel parent = mappedEntities.get(parentType.getName());
+        EntityModel parent = mappedEntities.get(parentType);
         if (parent != null) {
             parent.addSubtype(model);
             return true;
         }
         if (parentType.getClassLoader() != null) {
-            pendingSubtypesByParentName.computeIfAbsent(parentType.getName(), k -> new CopyOnWriteArrayList<>())
+            pendingSubtypesByParent.computeIfAbsent(parentType, k -> new CopyOnWriteArrayList<>())
                     .add(model);
         }
         return false;
@@ -578,15 +619,39 @@ public abstract class AbstractMapper implements Mapper {
     }
 
     /**
-     * Whether a type can be mapped: it, a superclass, or an interface either of them implements (directly or by
-     * extension) carries a mapping annotation. A proxy stands for its superclass. Annotations don't change, so the answer
-     * is worked out once per type.
+     * The class a type is mapped as. A proxy stands for its superclass, and an anonymous, synthetic or hidden class (such
+     * as {@code new User() {{ ... }}}, or a lambda) for the class or interface it extends, so instances of either are
+     * stored as that type rather than mapped as entities of their own.
+     */
+    private static final ClassValue<Class<?>> MAPPED_AS = new ClassValue<>() {
+        @Override
+        protected Class<?> computeValue(Class<?> type) {
+            Class<?> actual = type;
+            while (MorphiaProxy.class.isAssignableFrom(actual) || actual.isAnonymousClass() || actual.isSynthetic()
+                    || actual.isHidden()) {
+                Class<?> parent = actual.getSuperclass();
+                // an anonymous class or a lambda implementing an interface extends Object
+                if (parent == Object.class && actual.getInterfaces().length == 1) {
+                    parent = actual.getInterfaces()[0];
+                }
+                if (parent == null) {
+                    break;
+                }
+                actual = parent;
+            }
+            return actual;
+        }
+    };
+
+    /**
+     * Whether a type can be mapped: the class it's {@link #MAPPED_AS mapped as}, a superclass, or an interface either of
+     * them implements (directly or by extension) carries a mapping annotation. Annotations don't change, so the answer is
+     * worked out once per type.
      */
     private static final ClassValue<Boolean> MAPPABLE = new ClassValue<>() {
         @Override
         protected Boolean computeValue(Class<?> type) {
-            Class<?> actual = MorphiaProxy.class.isAssignableFrom(type) ? type.getSuperclass() : type;
-            return actual != null && hasMappingAnnotation(actual);
+            return hasMappingAnnotation(MAPPED_AS.get(type));
         }
     };
 
