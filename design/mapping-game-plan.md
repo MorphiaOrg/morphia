@@ -658,8 +658,13 @@ Bundle these into one or two PRs. Most of it is `@MorphiaInternal` dead code.
   - cache `MongoCollection` per class per datastore;
   - precompute the write concern;
   - drop `Mapper.getWriteConcern`.
-- **D12:** a single `get` in `DiscriminatorLookup`, a negative cache for `Class.forName`, and the model's
-  discriminator key everywhere (`getClass(Document)`, `Projection.project`).
+- ~~**D12:** a single `get` in `DiscriminatorLookup`, a negative cache for `Class.forName`, and the model's
+  discriminator key everywhere (`getClass(Document)`, `Projection.project`).~~
+  - Done. `Class.forName` results are cached, misses included, capped at 1024 names since stored data decides the
+    values. `Mapper.getClass(Document)` is gone. `ReferenceCodec`, its one caller, still reads the configured key for ids
+    stored as entities: the decode session reads its id keys with `ObjectCodec`, which uses that key too, and the two
+    have to change together or a cycle through a compound id with its own key never closes. A projection adds the model's key when the model uses a
+    discriminator, which now covers `@ExternalEntity` models too.
 - ~~**D13** (decision 1.4): key the registry by `Class<?>`, register `@ExternalEntity` under both the stand-in and the
   target, and normalize anonymous subclasses.~~
   - Done. The registry, the pending-subtype links and the in-progress registrations are keyed by `Class`. A stand-in

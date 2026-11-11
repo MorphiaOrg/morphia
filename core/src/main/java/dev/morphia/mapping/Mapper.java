@@ -57,16 +57,6 @@ public interface Mapper {
     Mapper copy();
 
     /**
-     * Gets the class as defined by any discriminator field
-     *
-     * @param document the document to check
-     * @param <T>      the class type
-     * @return the class reference. might be null
-     */
-    @Nullable
-    <T> Class<T> getClass(Document document);
-
-    /**
      * @param discriminator the lookup value
      * @return the class mapped to this discriminator value
      */
