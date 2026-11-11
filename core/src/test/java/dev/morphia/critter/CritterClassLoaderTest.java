@@ -26,10 +26,12 @@ public class CritterClassLoaderTest {
     }
 
     @Test
-    public void critterClassesLoadChildFirst() throws Exception {
+    public void critterClassesDelegateToParent() throws Exception {
         CritterClassLoader loader = new CritterClassLoader(PARENT);
 
-        Assertions.assertSame(loader, loader.loadClass(Critter.class.getName()).getClassLoader());
+        // one copy of Morphia's own classes, so generated code shares their static state with the mapper
+        Assertions.assertSame(Critter.class, loader.loadClass(Critter.class.getName()));
+        Assertions.assertNotNull(loader.getResource(resourceName(Critter.class)));
     }
 
     @Test
@@ -62,9 +64,6 @@ public class CritterClassLoaderTest {
         Assertions.assertNull(loader.getResourceAsStream(resource));
         loader.loadClass(Mapper.class.getName());
         Assertions.assertNull(loader.getResourceAsStream(resource));
-
-        loader.loadClass(Critter.class.getName());
-        Assertions.assertNull(loader.getResource(resourceName(Critter.class)));
     }
 
     @Test
