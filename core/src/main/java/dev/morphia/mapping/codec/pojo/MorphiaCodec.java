@@ -13,6 +13,7 @@ import dev.morphia.mapping.DiscriminatorLookup;
 import dev.morphia.mapping.MappingException;
 import dev.morphia.mapping.codec.Conversions;
 import dev.morphia.mapping.codec.DecodeSession;
+import dev.morphia.mapping.codec.ObjectCodec;
 import dev.morphia.mapping.codec.PropertyCodecRegistryImpl;
 import dev.morphia.mapping.codec.references.ReferenceCodec;
 import dev.morphia.sofia.Sofia;
@@ -306,6 +307,9 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
             PropertyModel property = properties.get(slot);
             if (property.hasAnnotation(Reference.class)) {
                 codecs[slot] = new ReferenceCodec(datastore, property);
+            } else if (property == model.getIdProperty() && property.getType() == Object.class) {
+                // an untyped id is read as the decode session and references read ids, so all three agree on its value
+                codecs[slot] = ObjectCodec.forIds(datastore.getCodecRegistry());
             } else if (property.getTypeData().getTypeParameters().isEmpty()) {
                 codecs[slot] = datastore.getCodecRegistry().get(property.getType());
             } else {

@@ -147,6 +147,41 @@ public class TestOwnDiscriminatorKey extends TestBase {
         Assertions.assertEquals(1, OwnKeyLoadedId.loads, "@PostLoad runs on the id");
     }
 
+    /**
+     * An {@code Object}-typed id holding an entity with its own key is read as references read it, so a list of
+     * references finds the entity it fetched.
+     */
+    @Test
+    public void aListOfReferencesFindsTargetsWithAnUntypedIdWithItsOwnKey() {
+        getMapper().map(OwnKeyListOwner.class, OwnKeyUntypedIdTarget.class, OwnKeyKind.class);
+        OwnKeyUntypedIdTarget target = new OwnKeyUntypedIdTarget();
+        target.id = new OwnKeyKind("u");
+        target.value = "v";
+        getDs().save(target);
+        OwnKeyListOwner owner = new OwnKeyListOwner();
+        owner.targets = new ArrayList<>(List.of(target));
+        getDs().save(owner);
+
+        OwnKeyListOwner loaded = getDs().find(OwnKeyListOwner.class).first();
+        Assertions.assertEquals(1, loaded.targets.size());
+        Assertions.assertEquals("v", loaded.targets.get(0).value);
+    }
+
+    @Entity("ownKey_untypedIdTargets")
+    public static class OwnKeyUntypedIdTarget {
+        @Id
+        private Object id;
+        private String value;
+    }
+
+    @Entity("ownKey_listOwners")
+    public static class OwnKeyListOwner {
+        @Id
+        private ObjectId id;
+        @Reference
+        private List<OwnKeyUntypedIdTarget> targets;
+    }
+
     @Entity("ownKey_lifecycleCycles")
     public static class OwnKeyLifecycleCycle {
         @Id
