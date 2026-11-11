@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 import com.mongodb.lang.Nullable;
 
 import dev.morphia.EntityListener;
-import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.ExternalEntity;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
@@ -35,7 +34,6 @@ import dev.morphia.mapping.lifecycle.TypedListeners;
 import dev.morphia.mapping.validation.MappingValidator;
 import dev.morphia.sofia.Sofia;
 
-import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -423,24 +421,6 @@ public abstract class AbstractMapper implements Mapper {
     public synchronized void mapPackage(String packageName) {
         Sofia.logConfiguredOperation("Mapper#mapPackage");
         map(packageName);
-    }
-
-    @Override
-    @MorphiaInternal
-    public void updateQueryWithDiscriminators(EntityModel model, Document query) {
-        Entity annotation = model.getEntityAnnotation();
-        if (annotation != null && annotation.useDiscriminator()
-                && !query.containsKey("_id")
-                && !query.containsKey(model.discriminatorKey())) {
-            List<String> values = new ArrayList<>();
-            values.add(model.discriminator());
-            if (config.enablePolymorphicQueries()) {
-                for (EntityModel subtype : model.getSubtypes()) {
-                    values.add(subtype.discriminator());
-                }
-            }
-            query.put(model.discriminatorKey(), new Document("$in", values));
-        }
     }
 
     @Override
