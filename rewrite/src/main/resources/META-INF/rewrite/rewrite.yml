@@ -48,6 +48,9 @@ recipeList:
   - org.openrewrite.java.ChangeMethodName:
       methodPattern: dev.morphia.aggregation.expressions.StringExpressions substr(..)
       newMethodName: substrBytes
+  - org.openrewrite.java.ChangeMethodName:
+      methodPattern: dev.morphia.query.Meta getField()
+      newMethodName: field
   - org.openrewrite.java.RemoveMethodInvocations:
       methodPattern: dev.morphia.Datastore enableDocumentValidation(..)
   - org.openrewrite.java.RemoveMethodInvocations:
@@ -78,7 +81,6 @@ recipeList:
         - dev.morphia.aggregation.expressions.Expressions of(..) document
         - dev.morphia.mapping.Mapper getInterceptors() getListeners
         - dev.morphia.mapping.codec.MorphiaCodecProvider getPropertyCodecProviders() propertyCodecProviders
-        - dev.morphia.query.Meta getField() field
   - org.openrewrite.maven.UpgradeDependencyVersion:
       groupId: dev.morphia.morphia
       artifactId: morphia-core

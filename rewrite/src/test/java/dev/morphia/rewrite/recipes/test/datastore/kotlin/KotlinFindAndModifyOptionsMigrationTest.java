@@ -42,4 +42,81 @@ public class KotlinFindAndModifyOptionsMigrationTest extends KotlinRewriteTest {
                         }
                         """));
     }
+
+    @Test
+    public void testImplicitReceiver() {
+        rewriteRun(kotlin(
+                //language=kotlin
+                """
+                        import dev.morphia.FindAndModifyOptions
+
+                        class Upgrades {
+                            fun options(): FindAndModifyOptions {
+                                return FindAndModifyOptions().apply { returnNew(false) }
+                            }
+                        }
+                        """,
+                //language=kotlin
+                """
+                        import com.mongodb.client.model.ReturnDocument
+                        import dev.morphia.ModifyOptions
+
+                        class Upgrades {
+                            fun options(): ModifyOptions {
+                                return ModifyOptions().apply { returnDocument(ReturnDocument.BEFORE) }
+                            }
+                        }
+                        """));
+    }
+
+    @Test
+    public void testReturnNewExpression() {
+        // a computed flag can't be rewritten in Kotlin, but the type still changes so the compiler points at the call
+        rewriteRun(kotlin(
+                //language=kotlin
+                """
+                        import dev.morphia.FindAndModifyOptions
+
+                        class Upgrades {
+                            fun options(flag: Boolean): FindAndModifyOptions {
+                                return FindAndModifyOptions().returnNew(flag)
+                            }
+                        }
+                        """,
+                //language=kotlin
+                """
+                        import dev.morphia.ModifyOptions
+
+                        class Upgrades {
+                            fun options(flag: Boolean): ModifyOptions {
+                                return ModifyOptions().returnNew(flag)
+                            }
+                        }
+                        """));
+    }
+
+    @Test
+    public void testTypeOnly() {
+        rewriteRun(kotlin(
+                //language=kotlin
+                """
+                        import dev.morphia.FindAndModifyOptions
+
+                        class Upgrades {
+                            fun options(): FindAndModifyOptions {
+                                return FindAndModifyOptions()
+                            }
+                        }
+                        """,
+                //language=kotlin
+                """
+                        import dev.morphia.ModifyOptions
+
+                        class Upgrades {
+                            fun options(): ModifyOptions {
+                                return ModifyOptions()
+                            }
+                        }
+                        """));
+    }
 }
