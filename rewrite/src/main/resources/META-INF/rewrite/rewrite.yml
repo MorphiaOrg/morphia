@@ -63,6 +63,7 @@ recipeList:
   - dev.morphia.rewrite.recipes.datastore.CreateDatastoreMigration
   - dev.morphia.rewrite.recipes.pipeline.UnwrapFieldExpressions
   - dev.morphia.rewrite.recipes.pipeline.PipelineRewriteRecipes
+  - dev.morphia.rewrite.recipes.pipeline.StageFactoryRename
   - dev.morphia.rewrite.recipes.query.ArraySliceMigration
   - dev.morphia.rewrite.recipes.query.LogicalFilterAdd
   - dev.morphia.rewrite.recipes.query.QueryFindOptions
