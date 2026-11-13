@@ -121,7 +121,7 @@ public class DatastoreSaveInsertOptions extends Recipe {
                         // the copy of an Iterable now happens before the options are evaluated, and a dropped
                         // ordered() is no longer evaluated at all, so both need arguments without side effects
                         boolean dropped = !iterable && call.getSimpleName().equals("ordered");
-                        if ((iterable || dropped) && !isSideEffectFree(argument)) {
+                        if ((iterable || dropped) && !isSideEffectFree(getCursor(), argument)) {
                             return invocation;
                         }
                         if (dropped) {

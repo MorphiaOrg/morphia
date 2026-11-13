@@ -9,13 +9,17 @@ import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.openrewrite.Cursor;
 import org.openrewrite.SourceFile;
+import org.openrewrite.java.JavaIsoVisitor;
 import org.openrewrite.java.JavaTemplate;
 import org.openrewrite.java.MethodMatcher;
 import org.openrewrite.java.tree.Expression;
+import org.openrewrite.java.tree.Flag;
 import org.openrewrite.java.tree.J;
 import org.openrewrite.java.tree.JavaType;
 import org.openrewrite.java.tree.TypeUtils;
@@ -132,15 +136,56 @@ public class RewriteUtils {
 
     /**
      * Checks whether evaluating the expression can have no side effects: a literal, a plain name, or a field access on
-     * one of those. Moving such an expression relative to other code doesn't change what the code does on its own,
+     * one of those. In Kotlin, reading a property can run a getter or a delegate, so only literals and local variables or
+     * parameters count. Moving such an expression relative to other code doesn't change what the code does on its own,
      * though its value can still depend on side effects elsewhere.
      *
+     * @param cursor     the cursor where the expression is found, used to tell Kotlin sources apart
      * @param expression the expression to check
      * @return true if evaluating the expression has no side effects
      */
-    public static boolean isSideEffectFree(Expression expression) {
-        return expression instanceof J.Literal || expression instanceof J.Identifier
-                || expression instanceof J.FieldAccess fieldAccess && isSideEffectFree(fieldAccess.getTarget());
+    public static boolean isSideEffectFree(Cursor cursor, Expression expression) {
+        boolean kotlin = isKotlin(cursor);
+        if (expression instanceof J.Literal) {
+            return true;
+        } else if (expression instanceof J.Identifier identifier) {
+            return !kotlin || isStatic(identifier.getFieldType()) || isLocal(cursor, identifier);
+        } else if (expression instanceof J.FieldAccess fieldAccess) {
+            return kotlin
+                    ? isStatic(fieldAccess.getName().getFieldType())
+                    : isSideEffectFree(cursor, fieldAccess.getTarget());
+        }
+        return false;
+    }
+
+    /**
+     * A static field is read directly, even from Kotlin, so no getter runs.
+     */
+    private static boolean isStatic(JavaType.@Nullable Variable variable) {
+        return variable != null && variable.hasFlags(Flag.Static);
+    }
+
+    /**
+     * Checks whether the name is declared as a parameter or a local variable in the enclosing method, rather than being a
+     * property, whose getter or delegate could run when it's read.
+     */
+    private static boolean isLocal(Cursor cursor, J.Identifier identifier) {
+        J.MethodDeclaration method = cursor.firstEnclosing(J.MethodDeclaration.class);
+        if (method == null) {
+            return false;
+        }
+        AtomicBoolean found = new AtomicBoolean();
+        new JavaIsoVisitor<AtomicBoolean>() {
+            @Override
+            public J.VariableDeclarations.NamedVariable visitVariable(J.VariableDeclarations.NamedVariable variable,
+                    AtomicBoolean found) {
+                if (variable.getSimpleName().equals(identifier.getSimpleName())) {
+                    found.set(true);
+                }
+                return variable;
+            }
+        }.visit(method, found);
+        return found.get();
     }
 
     /**

@@ -197,4 +197,24 @@ public class KotlinArraySliceMigrationTest extends KotlinRewriteTest {
                         }
                         """));
     }
+
+    @Test
+    public void testWithSkipProperties() {
+        rewriteRun(kotlin(
+                """
+                        import dev.morphia.query.ArraySlice
+
+                        class Upgrades {
+                            private var next = 0
+                            private val skip: Int
+                                get() = next++
+                            private val limit: Int
+                                get() = next++
+
+                            fun ctor(): ArraySlice {
+                                return ArraySlice(skip, limit)
+                            }
+                        }
+                        """));
+    }
 }

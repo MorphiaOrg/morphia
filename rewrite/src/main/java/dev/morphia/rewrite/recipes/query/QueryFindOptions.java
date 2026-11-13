@@ -193,7 +193,7 @@ public class QueryFindOptions extends Recipe {
                         if (isOfType(argument.getType(), FIND_OPTIONS)) {
                             Expression collection = collectionName(argument);
                             // the collection is now evaluated after the moved options, or not at all if they override it
-                            if (collection == null || !isSideEffectFree(collection) || moved.size() != 1
+                            if (collection == null || !isSideEffectFree(getCursor(), collection) || moved.size() != 1
                                     || !isNewFindOptions(moved.get(0))) {
                                 return null;
                             }

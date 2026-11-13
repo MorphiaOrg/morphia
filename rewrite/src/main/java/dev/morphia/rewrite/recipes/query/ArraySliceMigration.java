@@ -5,6 +5,7 @@ import java.util.List;
 import dev.morphia.query.ArraySlice;
 
 import org.jetbrains.annotations.NotNull;
+import org.openrewrite.Cursor;
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.NlsRewrite.Description;
 import org.openrewrite.NlsRewrite.DisplayName;
@@ -62,7 +63,7 @@ public class ArraySliceMigration extends Recipe {
                     // 2.x is ArraySlice(int skip, int limit) but the factory needs the limit first
                     Expression skip = arguments.get(0);
                     Expression limit = arguments.get(1);
-                    if (!canReorder(skip, limit)) {
+                    if (!canReorder(getCursor(), skip, limit)) {
                         return newClass;
                     }
                     MethodInvocation applied = template("ArraySlice.limit(#{any()}).skip(#{any()})")
@@ -79,9 +80,9 @@ public class ArraySliceMigration extends Recipe {
      * The limit is now evaluated before the skip, so the arguments can only be swapped when that can't change what
      * either of them evaluates to: when one is a literal, or when neither has side effects.
      */
-    private static boolean canReorder(Expression skip, Expression limit) {
+    private static boolean canReorder(Cursor cursor, Expression skip, Expression limit) {
         return skip instanceof J.Literal || limit instanceof J.Literal
-                || isSideEffectFree(skip) && isSideEffectFree(limit);
+                || isSideEffectFree(cursor, skip) && isSideEffectFree(cursor, limit);
     }
 
     private static JavaTemplate template(String code) {

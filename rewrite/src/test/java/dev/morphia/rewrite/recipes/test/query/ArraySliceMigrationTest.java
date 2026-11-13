@@ -185,4 +185,33 @@ public class ArraySliceMigrationTest extends MorphiaRewriteTest {
                         }
                         """));
     }
+
+    @Test
+    public void testWithSkipProperties() {
+        rewriteRun(java(
+                """
+                        import dev.morphia.query.ArraySlice;
+
+                        public class Upgrades {
+                            private int skip = 5;
+                            private int limit = 10;
+
+                            public ArraySlice ctor() {
+                                return new ArraySlice(skip, limit);
+                            }
+                        }
+                        """,
+                """
+                        import dev.morphia.query.ArraySlice;
+
+                        public class Upgrades {
+                            private int skip = 5;
+                            private int limit = 10;
+
+                            public ArraySlice ctor() {
+                                return ArraySlice.limit(limit).skip(skip);
+                            }
+                        }
+                        """));
+    }
 }
