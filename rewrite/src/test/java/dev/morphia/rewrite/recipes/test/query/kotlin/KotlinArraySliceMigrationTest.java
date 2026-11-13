@@ -274,4 +274,23 @@ public class KotlinArraySliceMigrationTest extends KotlinRewriteTest {
                 spec -> spec.afterRecipe(cu -> {
                 })));
     }
+
+    @Test
+    public void testWithSkipVolatile() {
+        rewriteRun(kotlin(
+                """
+                        import dev.morphia.query.ArraySlice
+
+                        class Upgrades {
+                            @Volatile
+                            private var skip = 0
+                            @Volatile
+                            private var limit = 0
+
+                            fun ctor(): ArraySlice {
+                                return ArraySlice(skip, this.limit)
+                            }
+                        }
+                        """));
+    }
 }

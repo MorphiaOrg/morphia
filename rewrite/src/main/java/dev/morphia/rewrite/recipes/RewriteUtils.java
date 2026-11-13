@@ -136,9 +136,10 @@ public class RewriteUtils {
 
     /**
      * Checks whether evaluating the expression can have no side effects: a literal, a plain name, or a field access on
-     * one of those. In Kotlin, reading a property can run a getter or a delegate, so only literals and local variables or
-     * parameters count. Moving such an expression relative to other code doesn't change what the code does on its own,
-     * though its value can still depend on side effects elsewhere.
+     * one of those. In Kotlin, reading a property can run a getter or a delegate, so only literals, static fields, and
+     * local variables or parameters count. A volatile field read never counts, since the memory model orders it against
+     * other reads. Moving such an expression relative to other code doesn't change what the code does on its own, though
+     * its value can still depend on side effects elsewhere.
      *
      * @param cursor     the cursor where the expression is found, used to tell Kotlin sources apart
      * @param expression the expression to check
@@ -149,13 +150,19 @@ public class RewriteUtils {
         if (expression instanceof J.Literal) {
             return true;
         } else if (expression instanceof J.Identifier identifier) {
-            return !kotlin || isStatic(identifier.getFieldType()) || isLocal(cursor, identifier);
+            JavaType.Variable variable = identifier.getFieldType();
+            return !isVolatile(variable) && (!kotlin || isStatic(variable) || isLocal(cursor, identifier));
         } else if (expression instanceof J.FieldAccess fieldAccess) {
-            return kotlin
-                    ? isStatic(fieldAccess.getName().getFieldType())
-                    : isSideEffectFree(cursor, fieldAccess.getTarget());
+            JavaType.Variable variable = fieldAccess.getName().getFieldType();
+            return !isVolatile(variable) && (kotlin
+                    ? isStatic(variable)
+                    : isSideEffectFree(cursor, fieldAccess.getTarget()));
         }
         return false;
+    }
+
+    private static boolean isVolatile(JavaType.@Nullable Variable variable) {
+        return variable != null && variable.hasFlags(Flag.Volatile);
     }
 
     /**

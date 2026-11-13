@@ -281,4 +281,21 @@ public class ArraySliceMigrationTest extends MorphiaRewriteTest {
                         }
                         """));
     }
+
+    @Test
+    public void testWithSkipVolatile() {
+        rewriteRun(java(
+                """
+                        import dev.morphia.query.ArraySlice;
+
+                        public class Upgrades {
+                            private volatile int skip;
+                            private volatile int limit;
+
+                            public ArraySlice ctor() {
+                                return new ArraySlice(skip, this.limit);
+                            }
+                        }
+                        """));
+    }
 }
