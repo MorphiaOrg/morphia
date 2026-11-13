@@ -5,6 +5,8 @@ description: Adopt new dependencies and breaking changes in moving to Morphia 3.
 recipeList:
   - org.openrewrite.java.RemoveAnnotation:
       annotationPattern: '@dev.morphia.annotations.Embedded'
+  - org.openrewrite.java.RemoveAnnotation:
+      annotationPattern: '@dev.morphia.annotations.experimental.Constructor'
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: dev.morphia.query.internal.MorphiaCursor
       newFullyQualifiedTypeName: dev.morphia.query.MorphiaCursor
@@ -25,6 +27,30 @@ recipeList:
   - org.openrewrite.java.ChangeType:
       oldFullyQualifiedTypeName: dev.morphia.mapping.MapperOptions.PropertyDiscovery
       newFullyQualifiedTypeName: dev.morphia.mapping.PropertyDiscovery
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: dev.morphia.annotations.NotSaved
+      newFullyQualifiedTypeName: dev.morphia.annotations.LoadOnly
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: dev.morphia.aggregation.expressions.BooleanExpressions.LogicalExpression
+      newFullyQualifiedTypeName: dev.morphia.aggregation.expressions.impls.LogicalExpression
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: dev.morphia.aggregation.expressions.ObjectExpressions.MergeObjects
+      newFullyQualifiedTypeName: dev.morphia.aggregation.expressions.impls.MergeObjects
+  - org.openrewrite.java.ChangeType:
+      oldFullyQualifiedTypeName: dev.morphia.aggregation.codecs.ExpressionCodec
+      newFullyQualifiedTypeName: dev.morphia.mapping.codec.expressions.ExpressionCodec
+  - org.openrewrite.java.ChangeMethodTargetToStatic:
+      methodPattern: dev.morphia.aggregation.expressions.AccumulatorExpressions stdDevPop(..)
+      fullyQualifiedTargetTypeName: dev.morphia.aggregation.expressions.WindowExpressions
+  - org.openrewrite.java.ChangeMethodTargetToStatic:
+      methodPattern: dev.morphia.aggregation.expressions.AccumulatorExpressions stdDevSamp(..)
+      fullyQualifiedTargetTypeName: dev.morphia.aggregation.expressions.WindowExpressions
+  - org.openrewrite.java.ChangeMethodName:
+      methodPattern: dev.morphia.aggregation.expressions.StringExpressions substr(..)
+      newMethodName: substrBytes
+  - org.openrewrite.java.ChangeMethodName:
+      methodPattern: dev.morphia.query.Meta getField()
+      newMethodName: field
   - org.openrewrite.java.RemoveMethodInvocations:
       methodPattern: dev.morphia.Datastore enableDocumentValidation(..)
   - org.openrewrite.java.RemoveMethodInvocations:
@@ -61,11 +87,13 @@ recipeList:
       newVersion: 3.0.0-SNAPSHOT
   - dev.morphia.rewrite.recipes.config.MorphiaConfigMigration
   - dev.morphia.rewrite.recipes.datastore.CreateDatastoreMigration
+  - dev.morphia.rewrite.recipes.datastore.FindAndModifyOptionsMigration
   - dev.morphia.rewrite.recipes.pipeline.UnwrapFieldExpressions
   - dev.morphia.rewrite.recipes.pipeline.PipelineRewriteRecipes
   - dev.morphia.rewrite.recipes.pipeline.StageFactoryRename
   - dev.morphia.rewrite.recipes.query.ArraySliceMigration
   - dev.morphia.rewrite.recipes.query.LogicalFilterAdd
+  - dev.morphia.rewrite.recipes.query.MetaMigration
   - dev.morphia.rewrite.recipes.query.QueryFindOptions
   - dev.morphia.rewrite.recipes.query.RegexPatternMerge
   - dev.morphia.rewrite.recipes.query.UpdateExecute
