@@ -17,7 +17,12 @@ import org.openrewrite.java.tree.J;
 import org.openrewrite.java.tree.J.Empty;
 import org.openrewrite.java.tree.J.MethodInvocation;
 import org.openrewrite.java.tree.JavaType.Method;
+import org.openrewrite.java.tree.Space;
 
+import jakarta.annotation.Nullable;
+
+import static dev.morphia.rewrite.recipes.RewriteUtils.isOfType;
+import static dev.morphia.rewrite.recipes.RewriteUtils.template;
 import static java.util.Collections.emptyList;
 
 /**
@@ -29,6 +34,7 @@ public class QueryFindOptions extends Recipe {
     public QueryFindOptions() {
     }
 
+    private static final String FIND_OPTIONS = "dev.morphia.query.FindOptions";
     private static final MethodMatcher QUERY_METHOD = new MethodMatcher("dev.morphia.query.Query *(..)");
     private static final MethodMatcher MORPHIA_CURSOR_METHOD = new MethodMatcher("dev.morphia.query.MorphiaCursor *(..)");
 
@@ -52,6 +58,30 @@ public class QueryFindOptions extends Recipe {
                 new MoveFindOptions("first"),
                 new MoveFindOptions("iterator"),
                 new MoveFindOptions("stream"));
+    }
+
+    /**
+     * Returns the collection name if the expression is exactly {@code new FindOptions().collection(name)}.
+     */
+    private static @Nullable Expression collectionName(Expression expression) {
+        if (expression instanceof MethodInvocation method && method.getSimpleName().equals("collection")
+                && method.getArguments().size() == 1 && isNewFindOptions(method.getSelect())
+                && method.getSelect() instanceof J.NewClass) {
+            return method.getArguments().get(0);
+        }
+        return null;
+    }
+
+    /**
+     * Checks whether the expression is a {@code new FindOptions()}, possibly followed by a chain of calls on it, so
+     * that it can be modified without affecting any other use of the options.
+     */
+    private static boolean isNewFindOptions(@Nullable Expression expression) {
+        while (expression instanceof MethodInvocation method) {
+            expression = method.getSelect();
+        }
+        return expression instanceof J.NewClass newClass && isOfType(newClass.getType(), FIND_OPTIONS)
+                && newClass.getArguments().stream().allMatch(argument -> argument instanceof Empty);
     }
 
     private class MoveFindOptions extends Recipe {
@@ -103,8 +133,11 @@ public class QueryFindOptions extends Recipe {
                             select = method.getSelect();
                         }
                         if (select instanceof MethodInvocation find && find.getSimpleName().equals("find")) {
-                            arguments.add(0, find.getArguments().get(0));
-                            newCall.add(find.withArguments(arguments));
+                            List<Expression> findArguments = mergeFindArguments(find, arguments);
+                            if (findArguments == null) {
+                                return super.visitMethodInvocation(invocation, executionContext);
+                            }
+                            newCall.add(find.withArguments(findArguments));
 
                             ListIterator<MethodInvocation> iterator = newCall.listIterator(newCall.size());
                             MethodInvocation updated = null;
@@ -123,6 +156,41 @@ public class QueryFindOptions extends Recipe {
                     }
 
                     return super.visitMethodInvocation(invocation, executionContext);
+                }
+
+                /**
+                 * Combines the arguments already passed to {@code find()} with the options being moved. A
+                 * {@code FindOptions} already passed to {@code find()} can only be merged when it does nothing but
+                 * name the collection (e.g., as rewritten from {@code find(String, Class)}). Otherwise, returns null
+                 * so the invocation is left for a manual migration rather than silently dropping either set of
+                 * options.
+                 */
+                private @Nullable List<Expression> mergeFindArguments(MethodInvocation find, List<Expression> moved) {
+                    List<Expression> findArguments = find.getArguments();
+                    List<Expression> merged = new ArrayList<>();
+                    merged.add(findArguments.get(0));
+                    List<Expression> options = moved;
+                    for (Expression argument : findArguments.subList(1, findArguments.size())) {
+                        if (isOfType(argument.getType(), FIND_OPTIONS)) {
+                            Expression collection = collectionName(argument);
+                            if (collection == null || moved.size() != 1) {
+                                return null;
+                            }
+                            Expression movedOptions = moved.get(0);
+                            String copy = isNewFindOptions(movedOptions) ? "" : ".copy()";
+                            J replaced = template(getCursor(),
+                                    "#{any()}%s.collection(#{any()})".formatted(copy),
+                                    "#{any(%s)}%s.collection(#{any(java.lang.String)})".formatted(FIND_OPTIONS, copy),
+                                    FIND_OPTIONS)
+                                    .apply(getCursor(), ((MethodInvocation) getCursor().getValue()).getCoordinates().replace(),
+                                            movedOptions.withPrefix(Space.EMPTY), collection);
+                            options = List.of(((Expression) replaced).withPrefix(movedOptions.getPrefix()));
+                        } else {
+                            merged.add(argument);
+                        }
+                    }
+                    merged.addAll(options);
+                    return merged;
                 }
 
                 private boolean containsCall(@NotNull MethodInvocation invocation) {

@@ -164,4 +164,37 @@ public class QueryIteratorOptionsTest extends MorphiaRewriteTest {
                         """));
 
     }
+
+    @Test
+    public void testWithNativeQuery() {
+        rewriteRun(java(
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.query.FindOptions;
+                        import org.bson.Document;
+
+                        public class Updates {
+                            public void doUpdate(Datastore ds) {
+                                ds.find(Object.class, new Document("name", "value"))
+                                  .iterator(new FindOptions().limit(1))
+                                  .tryNext();
+                            }
+                        }
+                        """,
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.query.FindOptions;
+                        import org.bson.Document;
+
+                        public class Updates {
+                            public void doUpdate(Datastore ds) {
+                                ds.find(Object.class, new Document("name", "value"), new FindOptions().limit(1))
+                                        .iterator()
+                                        .tryNext();
+                            }
+                        }
+                        """));
+    }
 }

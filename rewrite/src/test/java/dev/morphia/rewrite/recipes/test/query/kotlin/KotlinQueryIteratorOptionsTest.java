@@ -158,4 +158,36 @@ public class KotlinQueryIteratorOptionsTest extends KotlinRewriteTest {
 
     }
 
+    @Test
+    public void testWithNativeQuery() {
+        rewriteRun(kotlin(
+                //language=kotlin
+                """
+                        import dev.morphia.Datastore
+                        import dev.morphia.query.FindOptions
+                        import org.bson.Document
+
+                        class Updates {
+                            fun doUpdate(ds: Datastore) {
+                                ds.find(Any::class.java, Document("name", "value"))
+                                    .iterator(FindOptions().limit(1))
+                                    .tryNext()
+                            }
+                        }
+                        """,
+                //language=kotlin
+                """
+                        import dev.morphia.Datastore
+                        import dev.morphia.query.FindOptions
+                        import org.bson.Document
+
+                        class Updates {
+                            fun doUpdate(ds: Datastore) {
+                                ds.find(Any::class.java, Document("name", "value"), FindOptions().limit(1))
+                                    .iterator()
+                                    .tryNext()
+                            }
+                        }
+                        """));
+    }
 }
