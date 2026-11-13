@@ -84,6 +84,16 @@ public class QueryFindOptions extends Recipe {
                 && newClass.getArguments().stream().allMatch(argument -> argument instanceof Empty);
     }
 
+    private static boolean callsCollection(Expression expression) {
+        while (expression instanceof MethodInvocation method) {
+            if (method.getSimpleName().equals("collection")) {
+                return true;
+            }
+            expression = method.getSelect();
+        }
+        return false;
+    }
+
     private class MoveFindOptions extends Recipe {
 
         private final String methodName;
@@ -161,9 +171,10 @@ public class QueryFindOptions extends Recipe {
                 /**
                  * Combines the arguments already passed to {@code find()} with the options being moved. A
                  * {@code FindOptions} already passed to {@code find()} can only be merged when it does nothing but
-                 * name the collection (e.g., as rewritten from {@code find(String, Class)}). Otherwise, returns null
-                 * so the invocation is left for a manual migration rather than silently dropping either set of
-                 * options.
+                 * name the collection (e.g., as rewritten from {@code find(String, Class)}) and the moved options
+                 * are an inline {@code new FindOptions()} chain. A collection named in the moved options wins, as it
+                 * did in 2.x. Otherwise, returns null so the invocation is left for a manual migration rather than
+                 * silently dropping or changing either set of options.
                  */
                 private @Nullable List<Expression> mergeFindArguments(MethodInvocation find, List<Expression> moved) {
                     List<Expression> findArguments = find.getArguments();
@@ -173,18 +184,19 @@ public class QueryFindOptions extends Recipe {
                     for (Expression argument : findArguments.subList(1, findArguments.size())) {
                         if (isOfType(argument.getType(), FIND_OPTIONS)) {
                             Expression collection = collectionName(argument);
-                            if (collection == null || moved.size() != 1) {
+                            if (collection == null || moved.size() != 1 || !isNewFindOptions(moved.get(0))) {
                                 return null;
                             }
                             Expression movedOptions = moved.get(0);
-                            String copy = isNewFindOptions(movedOptions) ? "" : ".copy()";
-                            J replaced = template(getCursor(),
-                                    "#{any()}%s.collection(#{any()})".formatted(copy),
-                                    "#{any(%s)}%s.collection(#{any(java.lang.String)})".formatted(FIND_OPTIONS, copy),
-                                    FIND_OPTIONS)
-                                    .apply(getCursor(), ((MethodInvocation) getCursor().getValue()).getCoordinates().replace(),
-                                            movedOptions.withPrefix(Space.EMPTY), collection);
-                            options = List.of(((Expression) replaced).withPrefix(movedOptions.getPrefix()));
+                            if (!callsCollection(movedOptions)) {
+                                J replaced = template(getCursor(),
+                                        "#{any()}.collection(#{any()})",
+                                        "#{any(%s)}.collection(#{any(java.lang.String)})".formatted(FIND_OPTIONS),
+                                        FIND_OPTIONS)
+                                        .apply(getCursor(), ((MethodInvocation) getCursor().getValue()).getCoordinates().replace(),
+                                                movedOptions.withPrefix(Space.EMPTY), collection);
+                                options = List.of(((Expression) replaced).withPrefix(movedOptions.getPrefix()));
+                            }
                         } else {
                             merged.add(argument);
                         }

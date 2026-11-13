@@ -51,4 +51,35 @@ public class QueryExecuteTest extends MorphiaRewriteTest {
                         }
                         """));
     }
+
+    @Test
+    public void methodReference() {
+        rewriteRun(java(
+                //language=java
+                """
+                        import java.util.function.Supplier;
+
+                        import dev.morphia.query.MorphiaCursor;
+                        import dev.morphia.query.Query;
+
+                        public class Executes {
+                            public Supplier<MorphiaCursor<Object>> execute(Query<Object> query) {
+                                return query::execute;
+                            }
+                        }
+                        """,
+                //language=java
+                """
+                        import java.util.function.Supplier;
+
+                        import dev.morphia.query.MorphiaCursor;
+                        import dev.morphia.query.Query;
+
+                        public class Executes {
+                            public Supplier<MorphiaCursor<Object>> execute(Query<Object> query) {
+                                return query::iterator;
+                            }
+                        }
+                        """));
+    }
 }

@@ -45,4 +45,31 @@ public class KotlinQueryExecuteTest extends KotlinRewriteTest {
                         }
                         """));
     }
+
+    @Test
+    public void methodReference() {
+        rewriteRun(kotlin(
+                //language=kotlin
+                """
+                        import dev.morphia.query.MorphiaCursor
+                        import dev.morphia.query.Query
+
+                        class Executes {
+                            fun execute(query: Query<Any>): () -> MorphiaCursor<Any> {
+                                return query::execute
+                            }
+                        }
+                        """,
+                //language=kotlin
+                """
+                        import dev.morphia.query.MorphiaCursor
+                        import dev.morphia.query.Query
+
+                        class Executes {
+                            fun execute(query: Query<Any>): () -> MorphiaCursor<Any> {
+                                return query::iterator
+                            }
+                        }
+                        """));
+    }
 }

@@ -65,6 +65,7 @@ public class DatastoreSaveInsertOptionsTest extends MorphiaRewriteTest {
                         """,
                 //language=java
                 """
+                        import java.util.ArrayList;
                         import java.util.List;
 
                         import com.mongodb.WriteConcern;
@@ -73,7 +74,7 @@ public class DatastoreSaveInsertOptionsTest extends MorphiaRewriteTest {
 
                         public class Saves {
                             public List<Object> save(Datastore ds, List<Object> entities) {
-                                return ds.save(entities, new InsertManyOptions().writeConcern(WriteConcern.MAJORITY).ordered(false));
+                                return ds.save(new ArrayList<>(entities), new InsertManyOptions().writeConcern(WriteConcern.MAJORITY).ordered(false));
                             }
                         }
                         """));
@@ -126,11 +127,16 @@ public class DatastoreSaveInsertOptionsTest extends MorphiaRewriteTest {
 
                         public class Saves {
                             public void save(Datastore ds, Object entity, Iterable<Object> entities, List<Object> list, InsertOptions options) {
+                                ds.save(entity, new InsertOptions().ordered(isOrdered()));
                                 ds.save(entity);
                                 ds.save(entity, new InsertOneOptions());
                                 ds.save(list);
                                 ds.save(entities);
                                 ds.save(entity, options);
+                            }
+
+                            private boolean isOrdered() {
+                                return false;
                             }
                         }
                         """));

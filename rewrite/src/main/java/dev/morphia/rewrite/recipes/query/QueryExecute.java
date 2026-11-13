@@ -8,12 +8,14 @@ import org.openrewrite.Recipe;
 import org.openrewrite.TreeVisitor;
 import org.openrewrite.java.JavaIsoVisitor;
 import org.openrewrite.java.MethodMatcher;
+import org.openrewrite.java.tree.J;
 import org.openrewrite.java.tree.J.MethodInvocation;
 import org.openrewrite.java.tree.JavaType.Method;
 
 /**
  * An OpenRewrite recipe that renames the removed {@code Query.execute()} and {@code Query.execute(FindOptions)} to
- * {@code iterator()} and {@code iterator(FindOptions)}. This needs to run before {@link QueryFindOptions} so that any
+ * {@code iterator()} and {@code iterator(FindOptions)}, including method references such as
+ * {@code query::execute}. This needs to run before {@link QueryFindOptions} so that any
  * {@code FindOptions} argument is then moved to {@code Datastore#find()}.
  */
 public class QueryExecute extends Recipe {
@@ -52,6 +54,19 @@ public class QueryExecute extends Recipe {
                             .withMethodType(type);
                 }
                 return invocation;
+            }
+
+            @Override
+            public J.MemberReference visitMemberReference(J.MemberReference memberRef, ExecutionContext executionContext) {
+                J.MemberReference reference = super.visitMemberReference(memberRef, executionContext);
+                Method type = reference.getMethodType();
+                if (type != null && EXECUTE.matches(type)) {
+                    Method newType = type.withName("iterator");
+                    reference = reference
+                            .withReference(reference.getReference().withSimpleName("iterator").withType(newType))
+                            .withMethodType(newType);
+                }
+                return reference;
             }
         };
     }

@@ -47,8 +47,8 @@ public class KotlinQueryDatastoreUpgradeTest extends KotlinRewriteTest {
                                     .filter(eq("name", "value"))
                                     .iterator()
                                     .toList()
-                                return ds.find(Any::class.java, options.copy().collection("other"))
-                                    .first()
+                                return ds.find(Any::class.java, FindOptions().collection("other"))
+                                    .first(options)
                             }
                         }
                         """));
@@ -136,6 +136,35 @@ public class KotlinQueryDatastoreUpgradeTest extends KotlinRewriteTest {
                                 query.delete()
                                 ds.merge(entity, InsertOneOptions().writeConcern(WriteConcern.MAJORITY))
                                 ds.save(entity, InsertOneOptions().writeConcern(WriteConcern.MAJORITY))
+                            }
+                        }
+                        """));
+    }
+
+    @Test
+    public void movedCollectionTakesPrecedence() {
+        rewriteRun(kotlin(
+                //language=kotlin
+                """
+                        import dev.morphia.Datastore
+                        import dev.morphia.query.FindOptions
+
+                        class Executes {
+                            fun execute(ds: Datastore): Any? {
+                                return ds.find("base", Any::class.java)
+                                    .first(FindOptions().collection("override"))
+                            }
+                        }
+                        """,
+                //language=kotlin
+                """
+                        import dev.morphia.Datastore
+                        import dev.morphia.query.FindOptions
+
+                        class Executes {
+                            fun execute(ds: Datastore): Any? {
+                                return ds.find(Any::class.java, FindOptions().collection("override"))
+                                    .first()
                             }
                         }
                         """));

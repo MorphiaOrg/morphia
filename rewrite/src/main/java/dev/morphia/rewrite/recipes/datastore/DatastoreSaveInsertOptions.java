@@ -34,7 +34,8 @@ import static dev.morphia.rewrite.recipes.RewriteUtils.template;
  * <p>
  * Only the cases that convert cleanly are rewritten: the {@code InsertOptions} must be created inline (e.g.,
  * {@code new InsertOptions().writeConcern(wc)}) so that it can be rebuilt as the new options type, and, in Java, an
- * {@code Iterable} must be a {@code Collection} so that it can be copied into an {@code ArrayList}. Anything else is
+ * {@code Iterable} must be a {@code Collection} so that it can be copied into an {@code ArrayList}, as the
+ * removed overloads did. Anything else is
  * left unchanged for a manual migration.
  */
 public class DatastoreSaveInsertOptions extends Recipe {
@@ -89,8 +90,8 @@ public class DatastoreSaveInsertOptions extends Recipe {
 
                 Expression entity = invocation.getArguments().get(0);
                 parameters.add(entity);
-                if (!iterable || isOfType(entity.getType(), "java.util.List", "kotlin.collections.List",
-                        "kotlin.collections.MutableList")) {
+                // the removed Iterable overloads always saved, and returned, a new mutable copy, even of a List
+                if (!iterable) {
                     java.append("#{any()}");
                     kotlin.append("#{any()}");
                 } else if (isKotlin(getCursor())) {
@@ -115,6 +116,11 @@ public class DatastoreSaveInsertOptions extends Recipe {
                     for (MethodInvocation call : calls) {
                         // ordered() has no single entity equivalent and was ignored by save(T, InsertOptions)
                         if (!iterable && call.getSimpleName().equals("ordered")) {
+                            // only drop an argument whose evaluation can't have side effects
+                            Expression ordered = call.getArguments().get(0);
+                            if (!(ordered instanceof J.Literal || ordered instanceof J.Identifier)) {
+                                return invocation;
+                            }
                             continue;
                         }
                         java.append('.').append(call.getSimpleName()).append("(#{any()})");

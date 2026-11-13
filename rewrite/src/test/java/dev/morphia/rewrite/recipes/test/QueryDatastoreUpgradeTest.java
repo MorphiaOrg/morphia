@@ -114,8 +114,8 @@ public class QueryDatastoreUpgradeTest extends MorphiaRewriteTest {
                                         .filter(eq("name", "value"))
                                         .iterator()
                                         .toList();
-                                return ds.find(Object.class, options.copy().collection("other"))
-                                        .first();
+                                return ds.find(Object.class, new FindOptions().collection("other"))
+                                         .first(options);
                             }
                         }
                         """));
@@ -168,6 +168,35 @@ public class QueryDatastoreUpgradeTest extends MorphiaRewriteTest {
                                 query.delete();
                                 ds.merge(entity, new InsertOneOptions().writeConcern(WriteConcern.MAJORITY));
                                 ds.save(entity, new InsertOneOptions().writeConcern(WriteConcern.MAJORITY));
+                            }
+                        }
+                        """));
+    }
+
+    @Test
+    public void movedCollectionTakesPrecedence() {
+        rewriteRun(java(
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.query.FindOptions;
+
+                        public class Executes {
+                            public Object execute(Datastore ds) {
+                                return ds.find("base", Object.class)
+                                         .first(new FindOptions().collection("override"));
+                            }
+                        }
+                        """,
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.query.FindOptions;
+
+                        public class Executes {
+                            public Object execute(Datastore ds) {
+                                return ds.find(Object.class, new FindOptions().collection("override"))
+                                        .first();
                             }
                         }
                         """));
