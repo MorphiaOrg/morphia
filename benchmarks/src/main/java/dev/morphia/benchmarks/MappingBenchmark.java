@@ -82,8 +82,8 @@ public class MappingBenchmark {
     @BenchmarkMode(Mode.AverageTime)
     @OutputTimeUnit(TimeUnit.MICROSECONDS)
     @Warmup(iterations = 5, time = 2)
-    @Measurement(iterations = 5, time = 2)
-    @Fork(2)
+    @Measurement(iterations = 3, time = 2)
+    @Fork(5)
     public Mapper warmMapping() {
         return Fixtures.mappedMapper(mapperVariant, config, Models.MAPPING_TYPES);
     }

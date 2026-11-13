@@ -70,7 +70,7 @@ jobs:
   Profile:
     needs: Build
     runs-on: ubuntu-latest
-    timeout-minutes: 150
+    timeout-minutes: 180
     env:
       VARIANTS: reflection critter critter-runtime
       INCLUDE: ${{ inputs.benchmarks }}
