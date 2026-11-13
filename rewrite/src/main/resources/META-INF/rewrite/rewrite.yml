@@ -3,8 +3,7 @@ name: dev.morphia.UpgradeToMorphia30
 displayName: Upgrade to Morphia 3.0
 description: Adopt new dependencies and breaking changes in moving to Morphia 3.0.
 recipeList:
-  - org.openrewrite.java.RemoveAnnotation:
-      annotationPattern: '@dev.morphia.annotations.Embedded'
+  - dev.morphia.rewrite.recipes.mapping.EmbeddedToEntity
   - org.openrewrite.java.RemoveAnnotation:
       annotationPattern: '@dev.morphia.annotations.experimental.Constructor'
   - org.openrewrite.java.ChangeType:
