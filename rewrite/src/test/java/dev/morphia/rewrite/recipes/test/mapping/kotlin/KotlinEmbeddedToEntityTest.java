@@ -381,4 +381,45 @@ public class KotlinEmbeddedToEntityTest extends KotlinRewriteTest {
                         }
                         """));
     }
+
+    @Test
+    public void typeParameterNamedEntity() {
+        rewriteRun(kotlin(
+                //language=kotlin
+                """
+                        import dev.morphia.annotations.Embedded
+
+                        class Outer<Entity> {
+                            @Embedded
+                            inner class Address
+                        }
+                        """,
+                //language=kotlin
+                """
+                        class Outer<Entity> {
+                            @dev.morphia.annotations.Entity
+                            inner class Address
+                        }
+                        """));
+    }
+
+    @Test
+    public void importAliasedToEntity() {
+        rewriteRun(kotlin(
+                //language=kotlin
+                """
+                        import dev.morphia.annotations.Embedded
+                        import dev.morphia.annotations.Id as Entity
+
+                        @Embedded
+                        class Address
+                        """,
+                //language=kotlin
+                """
+                        import dev.morphia.annotations.Id as Entity
+
+                        @dev.morphia.annotations.Entity
+                        class Address
+                        """));
+    }
 }

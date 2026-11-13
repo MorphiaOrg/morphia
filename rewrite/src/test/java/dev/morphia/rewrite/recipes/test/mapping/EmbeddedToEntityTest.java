@@ -414,4 +414,27 @@ public class EmbeddedToEntityTest extends MorphiaRewriteTest {
                         }
                         """));
     }
+
+    @Test
+    public void typeParameterNamedEntity() {
+        rewriteRun(java(
+                //language=java
+                """
+                        import dev.morphia.annotations.Embedded;
+
+                        public class Outer<Entity> {
+                            @Embedded
+                            public class Address {
+                            }
+                        }
+                        """,
+                //language=java
+                """
+                        public class Outer<Entity> {
+                            @dev.morphia.annotations.Entity
+                            public class Address {
+                            }
+                        }
+                        """));
+    }
 }

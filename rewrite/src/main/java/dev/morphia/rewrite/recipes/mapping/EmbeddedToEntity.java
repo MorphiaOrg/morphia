@@ -118,8 +118,8 @@ public class EmbeddedToEntity extends Recipe {
             }
 
             /**
-             * Builds a reference to {@code @Entity}, fully qualified when another type named {@code Entity} is imported or
-             * declared in the same file.
+             * Builds a reference to {@code @Entity}, fully qualified when another type named {@code Entity} is imported (or
+             * aliased to that name) or declared in the same file, as a type or a type parameter.
              */
             private TypeTree entityType(Space prefix) {
                 JavaSourceFile source = getCursor().firstEnclosing(JavaSourceFile.class);
@@ -139,7 +139,8 @@ public class EmbeddedToEntity extends Recipe {
 
     private static boolean importsOtherEntity(JavaSourceFile source) {
         return source.getImports().stream()
-                .anyMatch(i -> "Entity".equals(i.getQualid().getSimpleName()) && (i.isStatic() || !ENTITY.equals(i.getTypeName())));
+                .anyMatch(i -> i.getAlias() != null ? "Entity".equals(i.getAlias().getSimpleName())
+                        : "Entity".equals(i.getQualid().getSimpleName()) && (i.isStatic() || !ENTITY.equals(i.getTypeName())));
     }
 
     private static boolean declaresEntity(JavaSourceFile source) {
@@ -151,6 +152,14 @@ public class EmbeddedToEntity extends Recipe {
                     found.set(true);
                 }
                 return super.visitClassDeclaration(classDecl, found);
+            }
+
+            @Override
+            public J.TypeParameter visitTypeParameter(J.TypeParameter typeParam, AtomicBoolean found) {
+                if (typeParam.getName() instanceof J.Identifier name && "Entity".equals(name.getSimpleName())) {
+                    found.set(true);
+                }
+                return super.visitTypeParameter(typeParam, found);
             }
         }.visit(source, found);
         return found.get();
