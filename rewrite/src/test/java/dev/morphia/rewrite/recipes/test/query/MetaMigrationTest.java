@@ -127,6 +127,22 @@ public class MetaMigrationTest extends MorphiaRewriteTest {
                                 return new Meta(holder().textScore, "score");
                             }
 
+                            public Meta qualifiedConstant() {
+                                return new Meta(keywordHolder().textScore, "score");
+                            }
+
+                            public Meta qualifiedFactory() {
+                                return loadMeta().textScore();
+                            }
+
+                            public MetaDataKeyword keywordHolder() {
+                                return MetaDataKeyword.textScore;
+                            }
+
+                            public Meta loadMeta() {
+                                return Meta.textScore("score");
+                            }
+
                             public Meta meta(String keyword) {
                                 return new Meta(keyword, "field");
                             }

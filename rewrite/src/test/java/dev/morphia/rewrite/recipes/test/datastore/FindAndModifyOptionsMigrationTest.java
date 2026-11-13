@@ -67,6 +67,10 @@ public class FindAndModifyOptionsMigrationTest extends MorphiaRewriteTest {
                                 FindAndModifyOptions options = new FindAndModifyOptions();
                                 return options.returnNew(returnNew);
                             }
+
+                            public FindAndModifyOptions conditional(boolean a, boolean b, boolean c) {
+                                return new FindAndModifyOptions().returnNew(a ? b : c);
+                            }
                         }
                         """,
                 //language=java
@@ -78,6 +82,10 @@ public class FindAndModifyOptionsMigrationTest extends MorphiaRewriteTest {
                             public ModifyOptions options(boolean returnNew) {
                                 ModifyOptions options = new ModifyOptions();
                                 return options.returnDocument(returnNew ? ReturnDocument.AFTER : ReturnDocument.BEFORE);
+                            }
+
+                            public ModifyOptions conditional(boolean a, boolean b, boolean c) {
+                                return new ModifyOptions().returnDocument((a ? b : c) ? ReturnDocument.AFTER : ReturnDocument.BEFORE);
                             }
                         }
                         """));

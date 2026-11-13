@@ -65,7 +65,10 @@ public class FindAndModifyOptionsMigration extends Recipe {
                     code = "ReturnDocument." + (value ? "AFTER" : "BEFORE");
                     arguments = new Object[0];
                 } else if (getCursor().firstEnclosing(JavaSourceFile.class) instanceof J.CompilationUnit) {
-                    code = "#{any(boolean)} ? ReturnDocument.AFTER : ReturnDocument.BEFORE";
+                    // a conditional or assignment flag needs its own parentheses to stay the condition of the new ternary
+                    boolean group = returnNew instanceof J.Ternary || returnNew instanceof J.Assignment
+                            || returnNew instanceof J.AssignmentOperation;
+                    code = (group ? "(#{any(boolean)})" : "#{any(boolean)}") + " ? ReturnDocument.AFTER : ReturnDocument.BEFORE";
                     arguments = new Object[] { returnNew };
                 } else {
                     // a Java ternary can't be templated into Kotlin so leave a computed flag for the user to fix

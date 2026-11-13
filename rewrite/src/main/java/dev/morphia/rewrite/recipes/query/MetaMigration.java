@@ -20,6 +20,7 @@ import org.openrewrite.java.tree.J.Identifier;
 import org.openrewrite.java.tree.J.Literal;
 import org.openrewrite.java.tree.J.MethodInvocation;
 import org.openrewrite.java.tree.J.NewClass;
+import org.openrewrite.java.tree.JavaType;
 import org.openrewrite.java.tree.TypeUtils;
 
 import static dev.morphia.rewrite.recipes.RewriteUtils.findMorphiaDependencies;
@@ -78,7 +79,9 @@ public class MetaMigration extends Recipe {
             @Override
             public J visitMethodInvocation(MethodInvocation method, ExecutionContext executionContext) {
                 J visited = super.visitMethodInvocation(method, executionContext);
-                if (visited instanceof MethodInvocation invocation && TEXT_SCORE.matches(invocation)) {
+                // a static call made through an instance expression is left alone so the expression is still evaluated
+                if (visited instanceof MethodInvocation invocation && TEXT_SCORE.matches(invocation)
+                        && (invocation.getSelect() == null || isTypeReference(invocation.getSelect()))) {
                     return replace(invocation, "Meta.textScore(\"textScore\")");
                 }
                 return visited;
@@ -108,7 +111,8 @@ public class MetaMigration extends Recipe {
         if (keyword instanceof Literal literal && literal.getValue() instanceof String value) {
             return FACTORIES.contains(value) ? value : null;
         }
-        Identifier name = keyword instanceof FieldAccess access ? access.getName()
+        // a constant reached through an instance expression is left alone so the expression is still evaluated
+        Identifier name = keyword instanceof FieldAccess access ? (isTypeReference(access.getTarget()) ? access.getName() : null)
                 : keyword instanceof Identifier identifier ? identifier : null;
         // only the enum constant itself, not some other variable or field of the enum type that happens to share its name
         if (name != null && name.getFieldType() != null && TypeUtils.isOfClassType(name.getFieldType().getOwner(), KEYWORD)
@@ -116,5 +120,19 @@ public class MetaMigration extends Recipe {
             return "textScore";
         }
         return null;
+    }
+
+    /**
+     * @param expression the qualifier of a static member access
+     * @return true if the qualifier names a type rather than computing a value
+     */
+    private static boolean isTypeReference(Expression expression) {
+        if (expression instanceof Identifier identifier) {
+            return identifier.getFieldType() == null && identifier.getType() instanceof JavaType.FullyQualified;
+        }
+        if (expression instanceof FieldAccess access) {
+            return access.getName().getFieldType() == null && access.getType() instanceof JavaType.FullyQualified;
+        }
+        return false;
     }
 }
