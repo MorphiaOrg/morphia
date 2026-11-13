@@ -267,11 +267,14 @@ public interface Datastore {
     <T> void refresh(T entity);
 
     /**
-     * Replaces a document in the database
+     * Replaces a document in the database. Unlike {@link #save(Object)}, the document must already exist unless
+     * {@link ReplaceOptions#upsert(boolean)} is set.
      *
      * @param entity the entity to replace
      * @param <T>    the type of the entity
      * @return the replaced entity
+     * @throws DocumentNotFoundException if no document matches the entity's ID (and shard key, if any) and upsert is not set
+     * @throws VersionMismatchException  if the entity is versioned and its version does not match the stored document
      * @since 2.3
      */
     default <T> T replace(T entity) {
@@ -279,22 +282,28 @@ public interface Datastore {
     }
 
     /**
-     * Replaces a document in the database
+     * Replaces a document in the database. Unlike {@link #save(Object)}, the document must already exist unless
+     * {@link ReplaceOptions#upsert(boolean)} is set.
      *
      * @param entity  the entity to replace
      * @param options the options to apply to the replace operation
      * @param <T>     the type of the entity
      * @return the replaced entity
+     * @throws DocumentNotFoundException if no document matches the entity's ID (and shard key, if any) and upsert is not set
+     * @throws VersionMismatchException  if the entity is versioned and its version does not match the stored document
      * @since 2.3
      */
     <T> T replace(T entity, ReplaceOptions options);
 
     /**
-     * Replaces a list of documents in the database
+     * Replaces a list of documents in the database, one at a time and in order. Replacement stops at the first failure, leaving any
+     * earlier entities already replaced.
      *
      * @param entities the entities to replace
      * @param <T>      the type of the entity
-     * @return the saved entities
+     * @return the replaced entities
+     * @throws DocumentNotFoundException if no document matches an entity's ID (and shard key, if any) and upsert is not set
+     * @throws VersionMismatchException  if an entity is versioned and its version does not match the stored document
      * @since 2.3
      */
     default <T> List<T> replace(List<T> entities) {
@@ -302,12 +311,15 @@ public interface Datastore {
     }
 
     /**
-     * Replaces a list of documents in the database
+     * Replaces a list of documents in the database, one at a time and in order. Replacement stops at the first failure, leaving any
+     * earlier entities already replaced.
      *
      * @param entities the entities to replace
      * @param <T>      the type of the entity
      * @param options  the options to apply to the replace operation
-     * @return the saved entities
+     * @return the replaced entities
+     * @throws DocumentNotFoundException if no document matches an entity's ID (and shard key, if any) and upsert is not set
+     * @throws VersionMismatchException  if an entity is versioned and its version does not match the stored document
      * @since 2.3
      */
     <T> List<T> replace(List<T> entities, ReplaceOptions options);
