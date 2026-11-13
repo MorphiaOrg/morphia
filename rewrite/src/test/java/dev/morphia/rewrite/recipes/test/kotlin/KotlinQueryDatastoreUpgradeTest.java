@@ -169,4 +169,33 @@ public class KotlinQueryDatastoreUpgradeTest extends KotlinRewriteTest {
                         }
                         """));
     }
+
+    @Test
+    public void nullCollectionIsLeftForManualMigration() {
+        rewriteRun(kotlin(
+                //language=kotlin
+                """
+                        import dev.morphia.Datastore
+                        import dev.morphia.query.FindOptions
+
+                        class Executes {
+                            fun execute(ds: Datastore): Any? {
+                                return ds.find("base", Any::class.java)
+                                    .first(FindOptions().collection(null))
+                            }
+                        }
+                        """,
+                //language=kotlin
+                """
+                        import dev.morphia.Datastore
+                        import dev.morphia.query.FindOptions
+
+                        class Executes {
+                            fun execute(ds: Datastore): Any? {
+                                return ds.find(Any::class.java, FindOptions().collection("base"))
+                                    .first(FindOptions().collection(null))
+                            }
+                        }
+                        """));
+    }
 }

@@ -128,6 +128,7 @@ public class DatastoreSaveInsertOptionsTest extends MorphiaRewriteTest {
                         public class Saves {
                             public void save(Datastore ds, Object entity, Iterable<Object> entities, List<Object> list, InsertOptions options) {
                                 ds.save(entity, new InsertOptions().ordered(isOrdered()));
+                                ds.save(list, new InsertOptions().ordered(list.remove(entity)));
                                 ds.save(entity);
                                 ds.save(entity, new InsertOneOptions());
                                 ds.save(list);

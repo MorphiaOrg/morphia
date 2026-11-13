@@ -82,11 +82,16 @@ public class KotlinDatastoreDeleteQueryTest extends KotlinRewriteTest {
                 """
                         import dev.morphia.DeleteOptions
                         import dev.morphia.Datastore
+                        import dev.morphia.query.Query
 
                         class Deletes {
                             fun delete(ds: Datastore, entity: Any) {
                                 ds.delete(entity)
                                 ds.delete(entity, DeleteOptions())
+                            }
+
+                            fun safeCall(ds: Datastore?, query: Query<Any>) {
+                                ds?.delete(query)
                             }
                         }
                         """));

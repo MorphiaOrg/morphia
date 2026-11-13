@@ -19,6 +19,7 @@ import org.openrewrite.java.tree.JavaType;
 import org.openrewrite.java.tree.JavaType.Method;
 import org.openrewrite.java.tree.Space;
 import org.openrewrite.java.tree.TypeUtils;
+import org.openrewrite.kotlin.marker.IsNullSafe;
 import org.openrewrite.marker.Markers;
 
 import static dev.morphia.rewrite.recipes.RewriteUtils.datastoreMethod;
@@ -59,7 +60,9 @@ public class DatastoreDeleteQuery extends Recipe {
                 MethodInvocation invocation = super.visitMethodInvocation(method, executionContext);
                 Method type = invocation.getMethodType();
                 if (!DELETE.matches(invocation) || type == null || type.getParameterTypes().isEmpty()
-                        || !isOfType(type.getParameterTypes().get(0), QUERY)) {
+                        || !isOfType(type.getParameterTypes().get(0), QUERY)
+                // `ds?.delete(query)` would lose its null check on the datastore
+                        || invocation.getMarkers().findFirst(IsNullSafe.class).isPresent()) {
                     return invocation;
                 }
                 List<Expression> arguments = invocation.getArguments();

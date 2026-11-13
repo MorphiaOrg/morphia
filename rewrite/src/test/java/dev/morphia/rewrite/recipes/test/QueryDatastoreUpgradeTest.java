@@ -201,4 +201,33 @@ public class QueryDatastoreUpgradeTest extends MorphiaRewriteTest {
                         }
                         """));
     }
+
+    @Test
+    public void nullCollectionIsLeftForManualMigration() {
+        rewriteRun(java(
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.query.FindOptions;
+
+                        public class Executes {
+                            public Object execute(Datastore ds) {
+                                return ds.find("base", Object.class)
+                                         .first(new FindOptions().collection(null));
+                            }
+                        }
+                        """,
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.query.FindOptions;
+
+                        public class Executes {
+                            public Object execute(Datastore ds) {
+                                return ds.find(Object.class, new FindOptions().collection("base"))
+                                         .first(new FindOptions().collection(null));
+                            }
+                        }
+                        """));
+    }
 }

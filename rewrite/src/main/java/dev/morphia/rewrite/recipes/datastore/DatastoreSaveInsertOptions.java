@@ -35,8 +35,9 @@ import static dev.morphia.rewrite.recipes.RewriteUtils.template;
  * Only the cases that convert cleanly are rewritten: the {@code InsertOptions} must be created inline (e.g.,
  * {@code new InsertOptions().writeConcern(wc)}) so that it can be rebuilt as the new options type, and, in Java, an
  * {@code Iterable} must be a {@code Collection} so that it can be copied into an {@code ArrayList}, as the
- * removed overloads did. Anything else is
- * left unchanged for a manual migration.
+ * removed overloads did. Because the copy now happens before the options are evaluated, and a dropped
+ * {@code ordered()} is no longer evaluated at all, those option arguments must also be free of side effects. Anything
+ * else is left unchanged for a manual migration.
  */
 public class DatastoreSaveInsertOptions extends Recipe {
     /** Creates a new instance. */
@@ -95,7 +96,7 @@ public class DatastoreSaveInsertOptions extends Recipe {
                     java.append("#{any()}");
                     kotlin.append("#{any()}");
                 } else if (isKotlin(getCursor())) {
-                    kotlin.append("#{any()}.toList()");
+                    kotlin.append("#{any()}.toMutableList()");
                 } else if (TypeUtils.isAssignableTo("java.util.Collection", entity.getType())) {
                     java.append("new ArrayList<>(#{any(java.util.Collection)})");
                     imports.add("java.util.ArrayList");
@@ -115,17 +116,19 @@ public class DatastoreSaveInsertOptions extends Recipe {
                     kotlin.append(", ").append(simpleName).append("()");
                     for (MethodInvocation call : calls) {
                         // ordered() has no single entity equivalent and was ignored by save(T, InsertOptions)
-                        if (!iterable && call.getSimpleName().equals("ordered")) {
-                            // only drop an argument whose evaluation can't have side effects
-                            Expression ordered = call.getArguments().get(0);
-                            if (!(ordered instanceof J.Literal || ordered instanceof J.Identifier)) {
-                                return invocation;
-                            }
+                        Expression argument = call.getArguments().get(0);
+                        // the copy of an Iterable now happens before the options are evaluated, and a dropped
+                        // ordered() is no longer evaluated at all, so both need arguments without side effects
+                        boolean dropped = !iterable && call.getSimpleName().equals("ordered");
+                        if ((iterable || dropped) && !isSideEffectFree(argument)) {
+                            return invocation;
+                        }
+                        if (dropped) {
                             continue;
                         }
                         java.append('.').append(call.getSimpleName()).append("(#{any()})");
                         kotlin.append('.').append(call.getSimpleName()).append("(#{any()})");
-                        parameters.add(call.getArguments().get(0));
+                        parameters.add(argument);
                     }
                     imports.add(newOptions);
                     optionsType = JavaType.buildType(newOptions);
@@ -151,6 +154,11 @@ public class DatastoreSaveInsertOptions extends Recipe {
                         .withMethodType(newType);
             }
         };
+    }
+
+    private static boolean isSideEffectFree(Expression expression) {
+        return expression instanceof J.Literal || expression instanceof J.Identifier
+                || expression instanceof J.FieldAccess fieldAccess && isSideEffectFree(fieldAccess.getTarget());
     }
 
     /**

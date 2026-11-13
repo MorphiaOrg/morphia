@@ -84,10 +84,17 @@ public class QueryFindOptions extends Recipe {
                 && newClass.getArguments().stream().allMatch(argument -> argument instanceof Empty);
     }
 
-    private static boolean callsCollection(Expression expression) {
+    /**
+     * Checks whether the options name a collection that replaces the one given to {@code find()}. In 2.x, a null
+     * collection fell back to the query's collection, so only a non-null string literal provably overrides it. Returns
+     * null when that can't be told.
+     */
+    private static @Nullable Boolean collectionOverride(Expression expression) {
         while (expression instanceof MethodInvocation method) {
             if (method.getSimpleName().equals("collection")) {
-                return true;
+                return method.getArguments().get(0) instanceof J.Literal literal && literal.getValue() != null
+                        ? Boolean.TRUE
+                        : null;
             }
             expression = method.getSelect();
         }
@@ -188,7 +195,10 @@ public class QueryFindOptions extends Recipe {
                                 return null;
                             }
                             Expression movedOptions = moved.get(0);
-                            if (!callsCollection(movedOptions)) {
+                            Boolean override = collectionOverride(movedOptions);
+                            if (override == null) {
+                                return null;
+                            } else if (!override) {
                                 J replaced = template(getCursor(),
                                         "#{any()}.collection(#{any()})",
                                         "#{any(%s)}.collection(#{any(java.lang.String)})".formatted(FIND_OPTIONS),

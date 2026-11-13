@@ -66,8 +66,8 @@ public class KotlinDatastoreSaveInsertOptionsTest extends KotlinRewriteTest {
 
                         class Saves {
                             fun save(ds: Datastore, entities: Iterable<Any>) {
-                                ds.save(entities.toList())
-                                ds.save(entities.toList(), InsertManyOptions().ordered(false))
+                                ds.save(entities.toMutableList())
+                                ds.save(entities.toMutableList(), InsertManyOptions().ordered(false))
                             }
                         }
                         """));
@@ -96,7 +96,7 @@ public class KotlinDatastoreSaveInsertOptionsTest extends KotlinRewriteTest {
 
                         class Saves {
                             fun save(ds: Datastore, entities: List<Any>): List<Any> {
-                                return ds.save(entities.toList(), InsertManyOptions().writeConcern(WriteConcern.MAJORITY).ordered(false))
+                                return ds.save(entities.toMutableList(), InsertManyOptions().writeConcern(WriteConcern.MAJORITY).ordered(false))
                             }
                         }
                         """));
@@ -124,8 +124,8 @@ public class KotlinDatastoreSaveInsertOptionsTest extends KotlinRewriteTest {
 
                         class Saves {
                             fun save(ds: Datastore, entities: Set<Any>) {
-                                ds.save(entities.toList())
-                                ds.save(entities.toList(), InsertManyOptions().ordered(false))
+                                ds.save(entities.toMutableList())
+                                ds.save(entities.toMutableList(), InsertManyOptions().ordered(false))
                             }
                         }
                         """));
@@ -143,6 +143,7 @@ public class KotlinDatastoreSaveInsertOptionsTest extends KotlinRewriteTest {
                         class Saves {
                             fun save(ds: Datastore, entity: Any, list: List<Any>, options: InsertOptions) {
                                 ds.save(entity, InsertOptions().ordered(isOrdered()))
+                                ds.save(list, InsertOptions().ordered(list.isEmpty()))
                                 ds.save(entity)
                                 ds.save(entity, InsertOneOptions())
                                 ds.save(list)
