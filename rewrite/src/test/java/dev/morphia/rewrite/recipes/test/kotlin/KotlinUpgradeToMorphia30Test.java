@@ -123,4 +123,23 @@ public class KotlinUpgradeToMorphia30Test extends KotlinRewriteTest {
                                 }
                                 """));
     }
+
+    @Test
+    void embeddedBecomesEntity() {
+        rewriteRun(
+                //language=kotlin
+                kotlin(
+                        """
+                                import dev.morphia.annotations.Embedded
+
+                                @Embedded(useDiscriminator = false)
+                                class Address
+                                """,
+                        """
+                                import dev.morphia.annotations.Entity
+
+                                @Entity(useDiscriminator = false)
+                                class Address
+                                """));
+    }
 }

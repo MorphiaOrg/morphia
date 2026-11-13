@@ -125,4 +125,25 @@ public class UpgradeToMorphia30Test extends MorphiaRewriteTest {
                                 }
                                 """));
     }
+
+    @Test
+    void embeddedBecomesEntity() {
+        rewriteRun(
+                //language=java
+                java(
+                        """
+                                import dev.morphia.annotations.Embedded;
+
+                                @Embedded(useDiscriminator = false)
+                                public class Address {
+                                }
+                                """,
+                        """
+                                import dev.morphia.annotations.Entity;
+
+                                @Entity(useDiscriminator = false)
+                                public class Address {
+                                }
+                                """));
+    }
 }

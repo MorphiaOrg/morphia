@@ -21,6 +21,7 @@ public class KotlinTestValidationTest {
     private static final String QUERY_PACKAGE = BASE_TEST_PACKAGE + ".query";
     private static final String PIPELINE_PACKAGE = BASE_TEST_PACKAGE + ".pipeline";
     private static final String DATASTORE_PACKAGE = BASE_TEST_PACKAGE + ".datastore";
+    private static final String MAPPING_PACKAGE = BASE_TEST_PACKAGE + ".mapping";
 
     @DisplayName("Checking for Kotlin variants of Java tests")
     @ParameterizedTest(name = "{0}.{2}()")
@@ -53,7 +54,7 @@ public class KotlinTestValidationTest {
     }
 
     private static Stream<Object[]> generateTestData() {
-        return List.of(BASE_TEST_PACKAGE, QUERY_PACKAGE, PIPELINE_PACKAGE, DATASTORE_PACKAGE)
+        return List.of(BASE_TEST_PACKAGE, QUERY_PACKAGE, PIPELINE_PACKAGE, DATASTORE_PACKAGE, MAPPING_PACKAGE)
                 .stream().flatMap(pkg -> generateTestDataForPackage(pkg,
                         getJavaTestMethods(pkg),
                         getKotlinTestMethods(pkg))
