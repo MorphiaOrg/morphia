@@ -587,16 +587,18 @@ public class MorphiaDatastore implements Datastore {
 
             UpdateResult updateResult = operations.replaceOne(collection, entity, filter, options);
 
-            if (updateResult.getModifiedCount() != 1) {
+            // unacknowledged writes report no counts to check.  an identical replacement matches without modifying and an upsert
+            // inserts without matching; neither is a failure
+            if (updateResult.wasAcknowledged() && updateResult.getMatchedCount() != 1 && updateResult.getUpsertedId() == null) {
                 if (info.versioned()) {
                     info.rollbackVersion();
                     throw new VersionMismatchException(entity.getClass(), id);
                 } else if (!entityModel.getShardKeys().isEmpty()) {
-                    throw new MappingException(noShardKeyMatch(entityModel.getShardKeys()
+                    throw new DocumentNotFoundException(noShardKeyMatch(entityModel.getShardKeys()
                             .stream().map(PropertyModel::getMappedName)
                             .collect(joining(", "))));
                 } else {
-                    throw new MappingException(noDocumentsUpdated(id));
+                    throw new DocumentNotFoundException(noDocumentsUpdated(id));
                 }
             }
         } catch (MongoWriteException e) {
@@ -779,7 +781,7 @@ public class MorphiaDatastore implements Datastore {
 
                 UpdateResult updateResult = operations.replaceOne(collection, entity, filter, updateOptions);
 
-                if (info.versioned() && updateResult.getModifiedCount() != 1) {
+                if (info.versioned() && updateResult.wasAcknowledged() && updateResult.getModifiedCount() != 1) {
                     info.rollbackVersion();
                     throw new VersionMismatchException(entity.getClass(), id);
                 }

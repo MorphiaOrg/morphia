@@ -16,12 +16,14 @@ import com.mongodb.client.result.UpdateResult;
 
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
+import dev.morphia.DocumentNotFoundException;
 import dev.morphia.InsertManyOptions;
 import dev.morphia.InsertOneOptions;
 import dev.morphia.MissingIdException;
 import dev.morphia.ModifyOptions;
 import dev.morphia.MorphiaDatastore;
 import dev.morphia.PrePersistListener;
+import dev.morphia.ReplaceOptions;
 import dev.morphia.UpdateOptions;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.EntityListeners;
@@ -479,6 +481,34 @@ public class TestDatastore extends TestBase {
                 Assertions.assertEquals(List.of("bob", "tina", "gene", "louise"), user.getLikes());
             }
         }
+    }
+
+    @Test
+    public void testReplaceUnchanged() {
+        User bob = new User("bob", LocalDate.now());
+        getDs().insert(bob);
+
+        getDs().replace(bob);
+        Assertions.assertEquals(1, getDs().find(User.class).count());
+    }
+
+    @Test
+    public void testReplaceUpsert() {
+        User bob = new User("bob", LocalDate.now());
+        bob.setId(new ObjectId());
+
+        Assertions.assertThrows(DocumentNotFoundException.class, () -> getDs().replace(bob));
+
+        getDs().replace(bob, new ReplaceOptions().upsert(true));
+        Assertions.assertEquals(1, getDs().find(User.class).count());
+    }
+
+    @Test
+    public void testReplaceUnacknowledged() {
+        User bob = new User("bob", LocalDate.now());
+        bob.setId(new ObjectId());
+
+        getDs().replace(bob, new ReplaceOptions().writeConcern(WriteConcern.UNACKNOWLEDGED));
     }
 
     @Test

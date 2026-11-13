@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Objects;
 
 import com.mongodb.MongoWriteException;
+import com.mongodb.WriteConcern;
 import com.mongodb.client.model.ReturnDocument;
 import com.mongodb.client.result.UpdateResult;
 
 import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
+import dev.morphia.InsertOneOptions;
 import dev.morphia.ModifyOptions;
 import dev.morphia.UpdateOptions;
 import dev.morphia.VersionMismatchException;
@@ -290,6 +292,14 @@ public class TestVersioning extends TestBase {
         }
 
         Assertions.assertThrows(VersionMismatchException.class, () -> getDs().save(initial));
+    }
+
+    @Test
+    public void testUnacknowledgedSave() {
+        VersionedType entity = new VersionedType();
+        getDs().save(entity);
+
+        getDs().save(entity, new InsertOneOptions().writeConcern(WriteConcern.UNACKNOWLEDGED));
     }
 
     @Test
