@@ -3,6 +3,7 @@ package dev.morphia.rewrite.recipes.datastore;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
+import org.openrewrite.Cursor;
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.NlsRewrite.Description;
 import org.openrewrite.NlsRewrite.DisplayName;
@@ -62,7 +63,8 @@ public class DatastoreFindCollection extends Recipe {
                         "#{any()}, FindOptions().collection(#{any()})",
                         "#{any()}, new FindOptions().collection(#{any()})",
                         FIND_OPTIONS)
-                        .apply(getCursor(), invocation.getCoordinates().replaceArguments(),
+                        .apply(new Cursor(getCursor().getParentOrThrow(), invocation),
+                                invocation.getCoordinates().replaceArguments(),
                                 invocation.getArguments().get(1), invocation.getArguments().get(0));
                 Method newType = type.withParameterTypes(
                         List.of(type.getParameterTypes().get(1), JavaType.buildType(FIND_OPTIONS)))

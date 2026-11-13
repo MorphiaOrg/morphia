@@ -3,6 +3,7 @@ package dev.morphia.rewrite.recipes.datastore;
 import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
+import org.openrewrite.Cursor;
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.NlsRewrite.Description;
 import org.openrewrite.NlsRewrite.DisplayName;
@@ -59,7 +60,8 @@ public class DatastoreMergeWriteConcern extends Recipe {
                         "#{any()}, InsertOneOptions().writeConcern(#{any()})",
                         "#{any()}, new InsertOneOptions().writeConcern(#{any()})",
                         INSERT_ONE_OPTIONS)
-                        .apply(getCursor(), invocation.getCoordinates().replaceArguments(),
+                        .apply(new Cursor(getCursor().getParentOrThrow(), invocation),
+                                invocation.getCoordinates().replaceArguments(),
                                 invocation.getArguments().get(0), invocation.getArguments().get(1));
                 Method newType = type.withParameterTypes(
                         List.of(type.getParameterTypes().get(0), JavaType.buildType(INSERT_ONE_OPTIONS)))

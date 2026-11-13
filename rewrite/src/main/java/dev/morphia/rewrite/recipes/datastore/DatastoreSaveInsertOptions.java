@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
+import org.openrewrite.Cursor;
 import org.openrewrite.ExecutionContext;
 import org.openrewrite.NlsRewrite.Description;
 import org.openrewrite.NlsRewrite.DisplayName;
@@ -70,7 +71,7 @@ public class DatastoreSaveInsertOptions extends Recipe {
             public MethodInvocation visitMethodInvocation(MethodInvocation method, ExecutionContext executionContext) {
                 MethodInvocation invocation = super.visitMethodInvocation(method, executionContext);
                 Method type = invocation.getMethodType();
-                if (!SAVE.matches(invocation) || type == null) {
+                if (!SAVE.matches(invocation) || type == null || type.getParameterTypes().isEmpty()) {
                     return invocation;
                 }
                 List<JavaType> parameterTypes = type.getParameterTypes();
@@ -126,7 +127,9 @@ public class DatastoreSaveInsertOptions extends Recipe {
 
                 MethodInvocation updated = template(getCursor(), kotlin.toString(), java.toString(),
                         imports.toArray(new String[0]))
-                        .apply(getCursor(), invocation.getCoordinates().replaceArguments(), parameters.toArray());
+                        .apply(new Cursor(getCursor().getParentOrThrow(), invocation),
+                                invocation.getCoordinates().replaceArguments(),
+                                parameters.toArray());
                 imports.forEach(name -> maybeAddImport(name, false));
                 maybeRemoveImport(INSERT_OPTIONS);
 

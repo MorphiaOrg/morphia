@@ -58,7 +58,8 @@ public class DatastoreDeleteQuery extends Recipe {
             public MethodInvocation visitMethodInvocation(MethodInvocation method, ExecutionContext executionContext) {
                 MethodInvocation invocation = super.visitMethodInvocation(method, executionContext);
                 Method type = invocation.getMethodType();
-                if (!DELETE.matches(invocation) || type == null || !isOfType(type.getParameterTypes().get(0), QUERY)) {
+                if (!DELETE.matches(invocation) || type == null || type.getParameterTypes().isEmpty()
+                        || !isOfType(type.getParameterTypes().get(0), QUERY)) {
                     return invocation;
                 }
                 List<Expression> arguments = invocation.getArguments();
