@@ -62,17 +62,14 @@ jobs:
             benchmarks/target/morphia-benchmarks-critter-aot.jar
           retention-days: 7
 
+  # Every variant runs on this one runner. Hosted runners differ in CPU, so variants measured on separate runners compare
+  # the machines as much as the mappers.
   Profile:
-    name: Profile (${{ matrix.variant }})
     needs: Build
     runs-on: ubuntu-latest
-    timeout-minutes: 45
-    strategy:
-      fail-fast: false
-      matrix:
-        variant: [ reflection, critter, critter-runtime ]
+    timeout-minutes: 150
     env:
-      VARIANT: ${{ matrix.variant }}
+      VARIANTS: reflection critter critter-runtime
       INCLUDE: ${{ inputs.benchmarks }}
       JMH_ARGS: ${{ inputs.jmh-args }}
     steps:
@@ -87,33 +84,61 @@ jobs:
         with:
           name: benchmark-jars
 
-      # The critter leg puts the AOT models (and the woven entity classes) ahead of the plain classes; the other two
-      # legs never see them. Each benchmark verifies at setup that its models came from the expected place.
-      - name: Configure classpath
+      - name: Record runner
         run: |
-          classpath=morphia-benchmarks.jar
-          if [ "$VARIANT" = critter ]; then
-            classpath="morphia-benchmarks-critter-aot.jar:$classpath"
-          fi
-          echo "BENCH_CP=$classpath" >> "$GITHUB_ENV"
           mkdir -p results jfr
+          lscpu > results/runner.txt
+          echo "Runner CPU: $(lscpu | sed -n 's/^Model name: *//p') ($(nproc) CPUs)"
 
+      # Only critter puts the AOT models (and the woven entity classes) ahead of the plain classes; the other two never see
+      # them. Each benchmark verifies at setup that its models came from the expected place. Variants take turns benchmark
+      # by benchmark, so anything that drifts on the runner during the run lands on all of them alike.
       - name: Run benchmarks
         run: |
-          java -cp "$BENCH_CP" org.openjdk.jmh.Main "${INCLUDE:-.*}" -p variant="$VARIANT" -prof gc \
-            -rf json -rff "results/jmh-$VARIANT.json" $JMH_ARGS | tee "results/jmh-$VARIANT.log"
+          classpath() {
+            if [ "$1" = critter ]; then
+              echo "morphia-benchmarks-critter-aot.jar:morphia-benchmarks.jar"
+            else
+              echo "morphia-benchmarks.jar"
+            fi
+          }
+          benchmarks=$(java -cp morphia-benchmarks.jar org.openjdk.jmh.Main -l "${INCLUDE:-.*}" | grep '^dev\.morphia\.' || true)
+          if [ -z "$benchmarks" ]; then
+            echo "No benchmarks match '${INCLUDE:-.*}'"
+            exit 1
+          fi
+          for variant in $VARIANTS; do
+            mkdir -p "parts/$variant"
+          done
+          i=0
+          for benchmark in $benchmarks; do
+            i=$((i + 1))
+            for variant in $VARIANTS; do
+              java -cp "$(classpath "$variant")" org.openjdk.jmh.Main "^${benchmark//./\\.}\$" -p variant="$variant" \
+                -prof gc -rf json -rff "parts/$variant/$i.json" $JMH_ARGS | tee -a "results/jmh-$variant.log"
+            done
+          done
+          for variant in $VARIANTS; do
+            jq -s add parts/"$variant"/*.json > "results/jmh-$variant.json"
+          done
 
       - name: Record flight profile
         if: inputs.flight-recording
         run: |
-          java -cp "$BENCH_CP" org.openjdk.jmh.Main CodecBenchmark -p variant="$VARIANT" \
-            -f 1 -wi 3 -i 3 -prof "jfr:dir=jfr" | tee "jfr/jmh-jfr-$VARIANT.log"
+          for variant in $VARIANTS; do
+            classpath=morphia-benchmarks.jar
+            if [ "$variant" = critter ]; then
+              classpath="morphia-benchmarks-critter-aot.jar:$classpath"
+            fi
+            java -cp "$classpath" org.openjdk.jmh.Main CodecBenchmark -p variant="$variant" \
+              -f 1 -wi 3 -i 3 -prof "jfr:dir=jfr" | tee "jfr/jmh-jfr-$variant.log"
+          done
 
       - name: Upload results
         uses: actions/upload-artifact@v7
         if: always()
         with:
-          name: jmh-results-${{ matrix.variant }}
+          name: jmh-results
           path: results/
           retention-days: 30
 
@@ -121,7 +146,7 @@ jobs:
         uses: actions/upload-artifact@v7
         if: always() && inputs.flight-recording
         with:
-          name: jfr-${{ matrix.variant }}
+          name: jfr
           path: jfr/
           retention-days: 14
 
@@ -146,14 +171,15 @@ jobs:
       - name: Download results
         uses: actions/download-artifact@v8
         with:
-          pattern: jmh-results-*
-          merge-multiple: true
+          name: jmh-results
           path: results
 
       - name: Render comparison
         run: |
           jbang .github/BenchmarkReport.java results | tee report.md
           {
+            echo "Every variant ran on one runner: $(sed -n 's/^Model name: *//p' results/runner.txt)"
+            echo
             cat report.md
             echo
             echo "### Model tiers"
@@ -184,8 +210,7 @@ jobs:
       - name: Download results
         uses: actions/download-artifact@v8
         with:
-          pattern: jmh-results-*
-          merge-multiple: true
+          name: jmh-results
           path: results
 
       # Results live on their own branch, not gh-pages: gh-pages here is the morphia.dev documentation site.
