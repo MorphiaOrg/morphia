@@ -61,4 +61,20 @@ public class KotlinDatastoreMergeWriteConcernTest extends KotlinRewriteTest {
                         }
                         """));
     }
+
+    @Test
+    public void expressionBodiesAreUnchanged() {
+        rewriteRun(kotlin(
+                //language=kotlin
+                """
+                        import com.mongodb.WriteConcern
+                        import dev.morphia.Datastore
+
+                        class Merges {
+                            fun merge(ds: Datastore, entity: Any, concern: WriteConcern) = ds.merge(entity, concern)
+
+                            fun mergeUnit(ds: Datastore, entity: Any, concern: WriteConcern): Unit = ds.merge(entity, concern)
+                        }
+                        """));
+    }
 }

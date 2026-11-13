@@ -11,11 +11,15 @@ import org.openrewrite.Recipe;
 import org.openrewrite.TreeVisitor;
 import org.openrewrite.java.JavaIsoVisitor;
 import org.openrewrite.java.MethodMatcher;
+import org.openrewrite.java.tree.J;
 import org.openrewrite.java.tree.J.MethodInvocation;
 import org.openrewrite.java.tree.JavaType;
 import org.openrewrite.java.tree.JavaType.Method;
+import org.openrewrite.kotlin.marker.SingleExpressionBlock;
+import org.openrewrite.kotlin.tree.K;
 
 import static dev.morphia.rewrite.recipes.RewriteUtils.datastoreMethod;
+import static dev.morphia.rewrite.recipes.RewriteUtils.isKotlin;
 import static dev.morphia.rewrite.recipes.RewriteUtils.isOfType;
 import static dev.morphia.rewrite.recipes.RewriteUtils.template;
 
@@ -53,7 +57,8 @@ public class DatastoreMergeWriteConcern extends Recipe {
                 MethodInvocation invocation = super.visitMethodInvocation(method, executionContext);
                 Method type = invocation.getMethodType();
                 if (!MERGE.matches(invocation) || type == null || type.getParameterTypes().size() != 2
-                        || !isOfType(type.getParameterTypes().get(1), "com.mongodb.WriteConcern")) {
+                        || !isOfType(type.getParameterTypes().get(1), "com.mongodb.WriteConcern")
+                        || isKotlinExpressionBody(getCursor())) {
                     return invocation;
                 }
                 MethodInvocation updated = template(getCursor(),
@@ -73,5 +78,26 @@ public class DatastoreMergeWriteConcern extends Recipe {
                         .withMethodType(newType);
             }
         };
+    }
+
+    /**
+     * The new merge returns the entity, so a Kotlin {@code fun f() = ds.merge(e, wc)} would change its inferred return type from
+     * {@code Unit}, or stop compiling if {@code Unit} is declared. Those calls are left for the user to migrate.
+     */
+    private static boolean isKotlinExpressionBody(Cursor cursor) {
+        if (!isKotlin(cursor)) {
+            return false;
+        }
+        Cursor block = cursor.getParentTreeCursor();
+        if (!(block.getValue() instanceof J.Return)) {
+            return false;
+        }
+        // Kotlin wraps the implicit J.Return in a K.Return
+        while (block.getValue() instanceof J.Return || block.getValue() instanceof K.Return) {
+            block = block.getParentTreeCursor();
+        }
+        return block.getValue() instanceof J.Block body
+                && body.getMarkers().findFirst(SingleExpressionBlock.class).isPresent()
+                && block.getParentTreeCursor().getValue() instanceof J.MethodDeclaration;
     }
 }
