@@ -22,5 +22,10 @@
 ## Code Reviews
 - When reviewing code, summarize all concerns and recommended changes in a file so they don't get lost.
 
+## Documentation
+- When implementing a new feature or fixing a bug, consult the docs in `~/dev/morphia.dev/morphia-docs` (repo `MorphiaOrg/morphia-docs`) for any updates the change needs there
+  - Until the 3.0 release, doc edits go on the `docs-redesign` branch; 3.0 content lives under `content/morphia/3.0/`
+- When filing PRs, if a docs PR is needed, make sure the code PR and the docs PR each reference the other so the docs stay in sync
+
 ## Git Operations
 - Never commit or push code without an explicit request from the user.
