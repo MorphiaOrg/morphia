@@ -101,6 +101,12 @@ public class QueryFindOptions extends Recipe {
         return false;
     }
 
+    private static boolean isSideEffectFree(Expression expression) {
+        return expression instanceof J.Literal || expression instanceof J.FieldAccess fieldAccess
+                && isSideEffectFree(fieldAccess.getTarget())
+                || expression instanceof J.Identifier;
+    }
+
     private class MoveFindOptions extends Recipe {
 
         private final String methodName;
@@ -191,7 +197,9 @@ public class QueryFindOptions extends Recipe {
                     for (Expression argument : findArguments.subList(1, findArguments.size())) {
                         if (isOfType(argument.getType(), FIND_OPTIONS)) {
                             Expression collection = collectionName(argument);
-                            if (collection == null || moved.size() != 1 || !isNewFindOptions(moved.get(0))) {
+                            // the collection is now evaluated after the moved options, or not at all if they override it
+                            if (collection == null || !isSideEffectFree(collection) || moved.size() != 1
+                                    || !isNewFindOptions(moved.get(0))) {
                                 return null;
                             }
                             Expression movedOptions = moved.get(0);

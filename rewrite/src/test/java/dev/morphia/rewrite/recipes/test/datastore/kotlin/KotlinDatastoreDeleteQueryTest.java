@@ -27,6 +27,7 @@ public class KotlinDatastoreDeleteQueryTest extends KotlinRewriteTest {
                         class Deletes {
                             fun delete(ds: Datastore, query: Query<Any>) {
                                 ds.delete(query)
+                                ds.delete<Any>(query)
                                 ds.delete(ds.find(Any::class.java).filter(eq("name", "value")))
                             }
                         }
@@ -39,6 +40,7 @@ public class KotlinDatastoreDeleteQueryTest extends KotlinRewriteTest {
 
                         class Deletes {
                             fun delete(ds: Datastore, query: Query<Any>) {
+                                query.delete()
                                 query.delete()
                                 ds.find(Any::class.java).filter(eq("name", "value")).delete()
                             }

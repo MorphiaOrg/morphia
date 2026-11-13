@@ -230,4 +230,41 @@ public class QueryDatastoreUpgradeTest extends MorphiaRewriteTest {
                         }
                         """));
     }
+
+    @Test
+    public void computedCollectionIsLeftForManualMigration() {
+        rewriteRun(java(
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.query.FindOptions;
+
+                        public class Executes {
+                            public Object execute(Datastore ds) {
+                                return ds.find(nextCollection(), Object.class)
+                                         .first(new FindOptions().limit(1));
+                            }
+
+                            String nextCollection() {
+                                return "next";
+                            }
+                        }
+                        """,
+                //language=java
+                """
+                        import dev.morphia.Datastore;
+                        import dev.morphia.query.FindOptions;
+
+                        public class Executes {
+                            public Object execute(Datastore ds) {
+                                return ds.find(Object.class, new FindOptions().collection(nextCollection()))
+                                         .first(new FindOptions().limit(1));
+                            }
+
+                            String nextCollection() {
+                                return "next";
+                            }
+                        }
+                        """));
+    }
 }

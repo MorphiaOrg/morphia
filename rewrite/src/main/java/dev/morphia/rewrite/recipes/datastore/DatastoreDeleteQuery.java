@@ -88,7 +88,9 @@ public class DatastoreDeleteQuery extends Recipe {
                         ? new J.Parentheses<>(randomId(), prefix, Markers.EMPTY,
                                 JRightPadded.build(query.withPrefix(Space.EMPTY)))
                         : query.withPrefix(prefix);
+                // Datastore.delete(Query) is generic but Query.delete() isn't, so drop any explicit type arguments
                 return invocation
+                        .withTypeParameters(null)
                         .withSelect(select)
                         .withArguments(remaining)
                         .withName(invocation.getName().withType(newType))

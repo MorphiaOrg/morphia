@@ -28,6 +28,7 @@ public class DatastoreDeleteQueryTest extends MorphiaRewriteTest {
                         public class Deletes {
                             public void delete(Datastore ds, Query<Object> query) {
                                 ds.delete(query);
+                                ds.<Object>delete(query);
                                 ds.delete(ds.find(Object.class).filter(eq("name", "value")));
                             }
                         }
@@ -41,6 +42,7 @@ public class DatastoreDeleteQueryTest extends MorphiaRewriteTest {
 
                         public class Deletes {
                             public void delete(Datastore ds, Query<Object> query) {
+                                query.delete();
                                 query.delete();
                                 ds.find(Object.class).filter(eq("name", "value")).delete();
                             }
