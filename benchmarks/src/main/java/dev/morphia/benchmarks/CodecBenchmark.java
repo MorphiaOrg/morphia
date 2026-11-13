@@ -37,8 +37,8 @@ import org.openjdk.jmh.annotations.Warmup;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @Warmup(iterations = 5, time = 1)
-@Measurement(iterations = 5, time = 1)
-@Fork(3)
+@Measurement(iterations = 3, time = 1)
+@Fork(5)
 @State(Scope.Benchmark)
 public class CodecBenchmark {
     @Param({ "reflection", "critter", "critter-runtime" })

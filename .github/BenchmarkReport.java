@@ -85,7 +85,8 @@ public class BenchmarkReport {
         System.out.println("## Mapper profiling results");
         System.out.println();
         System.out.println("Lower is better for every benchmark here. Ratios compare each variant against `" + BASELINE
-                + "`: below 1.00× means faster. The legs ran on different runners, so read small differences with care.");
+                + "`: below 1.00× means faster. The variants took turns on one runner, but a shared runner is noisy, so read small "
+                + "differences with care.");
         System.out.println();
         printTable(rows, variants, false);
         if (rows.values().stream().flatMap(m -> m.values().stream()).anyMatch(r -> r.allocPerOp() != null)) {

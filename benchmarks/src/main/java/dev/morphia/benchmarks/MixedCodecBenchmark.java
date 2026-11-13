@@ -41,8 +41,8 @@ import org.openjdk.jmh.infra.Blackhole;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @Warmup(iterations = 5, time = 1)
-@Measurement(iterations = 5, time = 1)
-@Fork(2)
+@Measurement(iterations = 3, time = 1)
+@Fork(5)
 @State(Scope.Benchmark)
 public class MixedCodecBenchmark {
     @Param({ "reflection", "critter", "critter-runtime" })
