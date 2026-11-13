@@ -22,6 +22,7 @@ import org.openrewrite.java.tree.Space;
 import jakarta.annotation.Nullable;
 
 import static dev.morphia.rewrite.recipes.RewriteUtils.isOfType;
+import static dev.morphia.rewrite.recipes.RewriteUtils.isSideEffectFree;
 import static dev.morphia.rewrite.recipes.RewriteUtils.template;
 import static java.util.Collections.emptyList;
 
@@ -99,12 +100,6 @@ public class QueryFindOptions extends Recipe {
             expression = method.getSelect();
         }
         return false;
-    }
-
-    private static boolean isSideEffectFree(Expression expression) {
-        return expression instanceof J.Literal || expression instanceof J.FieldAccess fieldAccess
-                && isSideEffectFree(fieldAccess.getTarget())
-                || expression instanceof J.Identifier;
     }
 
     private class MoveFindOptions extends Recipe {

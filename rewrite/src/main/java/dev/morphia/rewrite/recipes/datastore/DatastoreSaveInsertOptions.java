@@ -25,6 +25,7 @@ import jakarta.annotation.Nullable;
 import static dev.morphia.rewrite.recipes.RewriteUtils.datastoreMethod;
 import static dev.morphia.rewrite.recipes.RewriteUtils.isKotlin;
 import static dev.morphia.rewrite.recipes.RewriteUtils.isOfType;
+import static dev.morphia.rewrite.recipes.RewriteUtils.isSideEffectFree;
 import static dev.morphia.rewrite.recipes.RewriteUtils.template;
 
 /**
@@ -154,11 +155,6 @@ public class DatastoreSaveInsertOptions extends Recipe {
                         .withMethodType(newType);
             }
         };
-    }
-
-    private static boolean isSideEffectFree(Expression expression) {
-        return expression instanceof J.Literal || expression instanceof J.Identifier
-                || expression instanceof J.FieldAccess fieldAccess && isSideEffectFree(fieldAccess.getTarget());
     }
 
     /**

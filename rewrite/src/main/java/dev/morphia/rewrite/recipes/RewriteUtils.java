@@ -15,6 +15,8 @@ import org.openrewrite.Cursor;
 import org.openrewrite.SourceFile;
 import org.openrewrite.java.JavaTemplate;
 import org.openrewrite.java.MethodMatcher;
+import org.openrewrite.java.tree.Expression;
+import org.openrewrite.java.tree.J;
 import org.openrewrite.java.tree.JavaType;
 import org.openrewrite.java.tree.TypeUtils;
 import org.openrewrite.kotlin.KotlinParser;
@@ -126,6 +128,19 @@ public class RewriteUtils {
      */
     public static boolean isOfType(JavaType type, String... names) {
         return Arrays.stream(names).anyMatch(name -> TypeUtils.isOfClassType(type, name));
+    }
+
+    /**
+     * Checks whether evaluating the expression can have no side effects: a literal, a plain name, or a field access on
+     * one of those. Moving such an expression relative to other code doesn't change what the code does on its own,
+     * though its value can still depend on side effects elsewhere.
+     *
+     * @param expression the expression to check
+     * @return true if evaluating the expression has no side effects
+     */
+    public static boolean isSideEffectFree(Expression expression) {
+        return expression instanceof J.Literal || expression instanceof J.Identifier
+                || expression instanceof J.FieldAccess fieldAccess && isSideEffectFree(fieldAccess.getTarget());
     }
 
     /**

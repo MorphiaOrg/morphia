@@ -76,7 +76,7 @@ public class KotlinArraySliceMigrationTest extends KotlinRewriteTest {
 
                         class Upgrades {
                             fun ctor() {
-                                val slice = ArraySlice(10, 10)
+                                val slice = ArraySlice(5, 10)
                             }
                         }
                         """,
@@ -85,7 +85,7 @@ public class KotlinArraySliceMigrationTest extends KotlinRewriteTest {
 
                         class Upgrades {
                             fun ctor() {
-                                val slice = ArraySlice.limit(10).skip(10)
+                                val slice = ArraySlice.limit(10).skip(5)
                             }
                         }
                         """,
@@ -102,7 +102,7 @@ public class KotlinArraySliceMigrationTest extends KotlinRewriteTest {
 
                         class Upgrades {
                             fun ctor(): ArraySlice {
-                                return ArraySlice(10, 10)
+                                return ArraySlice(5, 10)
                             }
                         }
                         """,
@@ -111,12 +111,90 @@ public class KotlinArraySliceMigrationTest extends KotlinRewriteTest {
 
                         class Upgrades {
                             fun ctor(): ArraySlice {
-                                return ArraySlice.limit(10).skip(10)
+                                return ArraySlice.limit(10).skip(5)
                             }
                         }
                         """,
                 //language=kotlin
                 spec -> spec.afterRecipe(cu -> {
                 })));
+    }
+
+    @Test
+    public void testWithSkipVariables() {
+        rewriteRun(kotlin(
+                """
+                        import dev.morphia.query.ArraySlice
+
+                        class Upgrades {
+                            fun ctor(skip: Int, limit: Int): ArraySlice {
+                                return ArraySlice(skip, limit)
+                            }
+                        }
+                        """,
+                """
+                        import dev.morphia.query.ArraySlice
+
+                        class Upgrades {
+                            fun ctor(skip: Int, limit: Int): ArraySlice {
+                                return ArraySlice.limit(limit).skip(skip)
+                            }
+                        }
+                        """,
+                spec -> spec.afterRecipe(cu -> {
+                })));
+    }
+
+    @Test
+    public void testWithSkipOneLiteral() {
+        rewriteRun(kotlin(
+                """
+                        import dev.morphia.query.ArraySlice
+
+                        class Upgrades {
+                            fun ctor(): ArraySlice {
+                                return ArraySlice(5, limit())
+                            }
+
+                            private fun limit(): Int {
+                                return 10
+                            }
+                        }
+                        """,
+                """
+                        import dev.morphia.query.ArraySlice
+
+                        class Upgrades {
+                            fun ctor(): ArraySlice {
+                                return ArraySlice.limit(limit()).skip(5)
+                            }
+
+                            private fun limit(): Int {
+                                return 10
+                            }
+                        }
+                        """,
+                spec -> spec.afterRecipe(cu -> {
+                })));
+    }
+
+    @Test
+    public void testWithSkipSideEffects() {
+        rewriteRun(kotlin(
+                """
+                        import dev.morphia.query.ArraySlice
+
+                        class Upgrades {
+                            private var next = 0
+
+                            fun ctor(): ArraySlice {
+                                return ArraySlice(next(), next())
+                            }
+
+                            private fun next(): Int {
+                                return next++
+                            }
+                        }
+                        """));
     }
 }
