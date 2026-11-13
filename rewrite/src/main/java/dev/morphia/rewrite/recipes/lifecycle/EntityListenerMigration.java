@@ -54,7 +54,8 @@ import org.openrewrite.marker.SearchResult;
  * interface;</li>
  * <li>a call to a listener method that this recipe didn't migrate in the same source file, or a call to
  * {@code hasAnnotation};</li>
- * <li>a call to the removed {@code Mapper.addInterceptor}.</li>
+ * <li>a call to the removed {@code Mapper.addInterceptor}, {@code Mapper.getInterceptors} or
+ * {@code Mapper.hasInterceptors}.</li>
  * </ul>
  */
 public class EntityListenerMigration extends ScanningRecipe<EntityListenerMigration.Accumulator> {
@@ -85,7 +86,9 @@ public class EntityListenerMigration extends ScanningRecipe<EntityListenerMigrat
         return "EntityListener is now a marker interface. Implementations move to PrePersistListener, PostPersistListener, "
                 + "PreLoadListener and PostLoadListener, or to PostPersistDocumentListener and PostLoadDocumentListener when "
                 + "they use the Document, and their hasAnnotation overrides are removed. Calls to the removed "
-                + "Mapper.addInterceptor are marked: list those listeners in MorphiaConfig.listeners() instead.";
+                + "Mapper.addInterceptor are marked: list those listeners in MorphiaConfig.listeners() instead. Calls to the "
+                + "removed Mapper.getInterceptors and Mapper.hasInterceptors are marked too: read MorphiaConfig.listeners() "
+                + "instead.";
     }
 
     @NotNull
@@ -354,6 +357,12 @@ public class EntityListenerMigration extends ScanningRecipe<EntityListenerMigrat
             if (type.getName().equals("addInterceptor") && TypeUtils.isAssignableTo(MAPPER, type.getDeclaringType())) {
                 return SearchResult.found(result, "addInterceptor was removed in 3.0: list this listener in "
                         + "MorphiaConfig.listeners(), or name its class in morphia.listeners in a config file");
+            }
+            if ((type.getName().equals("getInterceptors") || type.getName().equals("hasInterceptors"))
+                    && type.getParameterTypes().isEmpty() && TypeUtils.isAssignableTo(MAPPER, type.getDeclaringType())) {
+                return SearchResult.found(result, ("%s was removed in 3.0: the global listeners are configured in "
+                        + "MorphiaConfig.listeners(), or in morphia.listeners in a config file, so read them from there")
+                        .formatted(type.getName()));
             }
             boolean throughMarker = TypeUtils.isOfClassType(type.getDeclaringType(), ENTITY_LISTENER);
             JavaType.Method root = throughMarker ? type : root(type);

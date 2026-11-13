@@ -79,7 +79,6 @@ recipeList:
       methodPatterns:
         - dev.morphia.Datastore createQuery(java.lang.Class) find
         - dev.morphia.aggregation.expressions.Expressions of(..) document
-        - dev.morphia.mapping.Mapper getInterceptors() getListeners
         - dev.morphia.mapping.codec.MorphiaCodecProvider getPropertyCodecProviders() propertyCodecProviders
   - org.openrewrite.maven.UpgradeDependencyVersion:
       groupId: dev.morphia.morphia

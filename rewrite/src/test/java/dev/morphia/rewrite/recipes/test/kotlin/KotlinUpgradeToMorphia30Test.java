@@ -70,4 +70,57 @@ public class KotlinUpgradeToMorphia30Test extends KotlinRewriteTest {
                                 }
                                 """));
     }
+
+    // 3.0's Mapper has no getListeners(), so getInterceptors() is marked rather than renamed
+    @Test
+    void marksGetInterceptors() {
+        rewriteRun(
+                //language=kotlin
+                kotlin(
+                        """
+                                import dev.morphia.EntityListener
+                                import dev.morphia.mapping.Mapper
+
+                                class Listeners {
+                                    fun listeners(mapper: Mapper): List<EntityListener<*>> {
+                                        return mapper.getInterceptors()
+                                    }
+                                }
+                                """,
+                        """
+                                import dev.morphia.EntityListener
+                                import dev.morphia.mapping.Mapper
+
+                                class Listeners {
+                                    fun listeners(mapper: Mapper): List<EntityListener<*>> {
+                                        return /*~~(getInterceptors was removed in 3.0: the global listeners are configured in MorphiaConfig.listeners(), or in morphia.listeners in a config file, so read them from there)~~>*/mapper.getInterceptors()
+                                    }
+                                }
+                                """));
+    }
+
+    @Test
+    void marksHasInterceptors() {
+        rewriteRun(
+                //language=kotlin
+                kotlin(
+                        """
+                                import dev.morphia.mapping.Mapper
+
+                                class Listeners {
+                                    fun any(mapper: Mapper): Boolean {
+                                        return mapper.hasInterceptors()
+                                    }
+                                }
+                                """,
+                        """
+                                import dev.morphia.mapping.Mapper
+
+                                class Listeners {
+                                    fun any(mapper: Mapper): Boolean {
+                                        return /*~~(hasInterceptors was removed in 3.0: the global listeners are configured in MorphiaConfig.listeners(), or in morphia.listeners in a config file, so read them from there)~~>*/mapper.hasInterceptors()
+                                    }
+                                }
+                                """));
+    }
 }
