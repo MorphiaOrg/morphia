@@ -326,4 +326,92 @@ public class EmbeddedToEntityTest extends MorphiaRewriteTest {
                         }
                         """));
     }
+
+    @Test
+    public void embeddedAfterModifiers() {
+        rewriteRun(java(
+                //language=java
+                """
+                        import dev.morphia.annotations.Embedded;
+
+                        public @Embedded(useDiscriminator = false) class Address {
+                        }
+                        """,
+                //language=java
+                """
+                        import dev.morphia.annotations.Entity;
+
+                        public @Entity(useDiscriminator = false) class Address {
+                        }
+                        """));
+    }
+
+    @Test
+    public void entityAfterModifiers() {
+        rewriteRun(java(
+                //language=java
+                """
+                        import dev.morphia.annotations.Embedded;
+                        import dev.morphia.annotations.Entity;
+
+                        @Embedded(discriminator = "addr")
+                        public @Entity class Address {
+                        }
+                        """,
+                //language=java
+                """
+                        import dev.morphia.annotations.Entity;
+
+                        public @Entity(discriminator = "addr") class Address {
+                        }
+                        """));
+    }
+
+    @Test
+    public void typeNamedEntity() {
+        rewriteRun(java(
+                //language=java
+                """
+                        import dev.morphia.annotations.Embedded;
+
+                        @Embedded(useDiscriminator = false)
+                        public class Entity {
+                        }
+                        """,
+                //language=java
+                """
+                        @dev.morphia.annotations.Entity(useDiscriminator = false)
+                        public class Entity {
+                        }
+                        """));
+    }
+
+    @Test
+    public void nestedTypeNamedEntity() {
+        rewriteRun(java(
+                //language=java
+                """
+                        import dev.morphia.annotations.Embedded;
+
+                        public class Outer {
+                            @Embedded
+                            public static class Address {
+                            }
+
+                            public static class Entity {
+                            }
+                        }
+                        """,
+                //language=java
+                """
+                        public class Outer {
+                            @dev.morphia.annotations.Entity
+                            public static class Address {
+                            }
+
+                            public static class Entity {
+                            }
+                        }
+                        """));
+    }
 }

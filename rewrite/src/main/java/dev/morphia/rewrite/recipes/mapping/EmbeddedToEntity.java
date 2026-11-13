@@ -5,6 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.UnaryOperator;
 
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
@@ -14,6 +16,7 @@ import org.openrewrite.NlsRewrite.DisplayName;
 import org.openrewrite.Recipe;
 import org.openrewrite.Tree;
 import org.openrewrite.TreeVisitor;
+import org.openrewrite.internal.ListUtils;
 import org.openrewrite.java.AnnotationMatcher;
 import org.openrewrite.java.JavaIsoVisitor;
 import org.openrewrite.java.RemoveAnnotationVisitor;
@@ -65,14 +68,11 @@ public class EmbeddedToEntity extends Recipe {
             @Override
             public J.ClassDeclaration visitClassDeclaration(J.ClassDeclaration classDecl, ExecutionContext ctx) {
                 J.ClassDeclaration result = super.visitClassDeclaration(classDecl, ctx);
-                J.Annotation embedded = find(result.getLeadingAnnotations(), EMBEDDED);
+                J.Annotation embedded = find(result.getAllAnnotations(), EMBEDDED);
                 if (embedded != null) {
-                    J.Annotation entity = find(result.getLeadingAnnotations(), ENTITY);
+                    J.Annotation entity = find(result.getAllAnnotations(), ENTITY);
                     J.Annotation replacement = entity == null ? toEntity(embedded) : merge(entity, embedded);
-                    J.Annotation replaced = entity == null ? embedded : entity;
-                    result = result.withLeadingAnnotations(result.getLeadingAnnotations().stream()
-                            .map(annotation -> annotation == replaced ? replacement : annotation)
-                            .toList());
+                    result = replace(result, entity == null ? embedded : entity, replacement);
                     maybeAddImport(ENTITY);
                 }
                 // whatever is left, on this type when it also has @Entity or on its members, is simply dropped
@@ -118,14 +118,12 @@ public class EmbeddedToEntity extends Recipe {
             }
 
             /**
-             * Builds a reference to {@code @Entity}, fully qualified when another type named {@code Entity} is imported.
+             * Builds a reference to {@code @Entity}, fully qualified when another type named {@code Entity} is imported or
+             * declared in the same file.
              */
             private TypeTree entityType(Space prefix) {
                 JavaSourceFile source = getCursor().firstEnclosing(JavaSourceFile.class);
-                boolean clash = source != null && source.getImports().stream()
-                        .anyMatch(i -> !i.isStatic() && "Entity".equals(i.getQualid().getSimpleName())
-                                && !ENTITY.equals(i.getTypeName()));
-                if (clash) {
+                if (source != null && (importsOtherEntity(source) || declaresEntity(source))) {
                     return TypeTree.<J.FieldAccess> build(ENTITY).withPrefix(prefix);
                 }
                 return new J.Identifier(Tree.randomId(), prefix, Markers.EMPTY, List.of(), "Entity",
@@ -137,6 +135,38 @@ public class EmbeddedToEntity extends Recipe {
                 return value.printTrimmed(getCursor());
             }
         };
+    }
+
+    private static boolean importsOtherEntity(JavaSourceFile source) {
+        return source.getImports().stream()
+                .anyMatch(i -> "Entity".equals(i.getQualid().getSimpleName()) && (i.isStatic() || !ENTITY.equals(i.getTypeName())));
+    }
+
+    private static boolean declaresEntity(JavaSourceFile source) {
+        AtomicBoolean found = new AtomicBoolean();
+        new JavaIsoVisitor<AtomicBoolean>() {
+            @Override
+            public J.ClassDeclaration visitClassDeclaration(J.ClassDeclaration classDecl, AtomicBoolean found) {
+                if ("Entity".equals(classDecl.getSimpleName())) {
+                    found.set(true);
+                }
+                return super.visitClassDeclaration(classDecl, found);
+            }
+        }.visit(source, found);
+        return found.get();
+    }
+
+    /**
+     * Swaps an annotation of the type wherever it appears: before the modifiers, among them, or before the class keyword.
+     */
+    private static J.ClassDeclaration replace(J.ClassDeclaration classDecl, J.Annotation target, J.Annotation replacement) {
+        UnaryOperator<List<J.Annotation>> swap = annotations -> ListUtils.map(annotations,
+                annotation -> annotation == target ? replacement : annotation);
+        J.ClassDeclaration result = classDecl.withLeadingAnnotations(swap.apply(classDecl.getLeadingAnnotations()))
+                .withModifiers(ListUtils.map(classDecl.getModifiers(),
+                        modifier -> modifier.withAnnotations(swap.apply(modifier.getAnnotations()))));
+        J.ClassDeclaration.Kind kind = result.getPadding().getKind();
+        return result.getPadding().withKind(kind.withAnnotations(swap.apply(kind.getAnnotations())));
     }
 
     private static J.@Nullable Annotation find(List<J.Annotation> annotations, String type) {

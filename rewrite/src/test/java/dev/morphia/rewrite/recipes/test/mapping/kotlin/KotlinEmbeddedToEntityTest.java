@@ -303,4 +303,82 @@ public class KotlinEmbeddedToEntityTest extends KotlinRewriteTest {
                         class Address
                         """));
     }
+
+    @Test
+    public void embeddedAfterModifiers() {
+        rewriteRun(kotlin(
+                //language=kotlin
+                """
+                        import dev.morphia.annotations.Embedded
+
+                        public @Embedded(useDiscriminator = false) class Address
+                        """,
+                //language=kotlin
+                """
+                        import dev.morphia.annotations.Entity
+
+                        public @Entity(useDiscriminator = false) class Address
+                        """));
+    }
+
+    @Test
+    public void entityAfterModifiers() {
+        rewriteRun(kotlin(
+                //language=kotlin
+                """
+                        import dev.morphia.annotations.Embedded
+                        import dev.morphia.annotations.Entity
+
+                        @Embedded(discriminator = "addr")
+                        public @Entity class Address
+                        """,
+                //language=kotlin
+                """
+                        import dev.morphia.annotations.Entity
+
+                        public @Entity(discriminator = "addr") class Address
+                        """));
+    }
+
+    @Test
+    public void typeNamedEntity() {
+        rewriteRun(kotlin(
+                //language=kotlin
+                """
+                        import dev.morphia.annotations.Embedded
+
+                        @Embedded(useDiscriminator = false)
+                        class Entity
+                        """,
+                //language=kotlin
+                """
+                        @dev.morphia.annotations.Entity(useDiscriminator = false)
+                        class Entity
+                        """));
+    }
+
+    @Test
+    public void nestedTypeNamedEntity() {
+        rewriteRun(kotlin(
+                //language=kotlin
+                """
+                        import dev.morphia.annotations.Embedded
+
+                        class Outer {
+                            @Embedded
+                            class Address
+
+                            class Entity
+                        }
+                        """,
+                //language=kotlin
+                """
+                        class Outer {
+                            @dev.morphia.annotations.Entity
+                            class Address
+
+                            class Entity
+                        }
+                        """));
+    }
 }
