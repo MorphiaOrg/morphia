@@ -6,16 +6,22 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.openrewrite.Cursor;
 import org.openrewrite.SourceFile;
 import org.openrewrite.java.JavaTemplate;
 import org.openrewrite.java.MethodMatcher;
+import org.openrewrite.java.tree.Expression;
+import org.openrewrite.java.tree.Flag;
+import org.openrewrite.java.tree.J;
 import org.openrewrite.java.tree.JavaType;
+import org.openrewrite.java.tree.Statement;
 import org.openrewrite.java.tree.TypeUtils;
 import org.openrewrite.kotlin.KotlinParser;
 import org.openrewrite.kotlin.KotlinTemplate;
@@ -126,6 +132,84 @@ public class RewriteUtils {
      */
     public static boolean isOfType(JavaType type, String... names) {
         return Arrays.stream(names).anyMatch(name -> TypeUtils.isOfClassType(type, name));
+    }
+
+    /**
+     * Checks whether evaluating the expression can have no side effects: a literal, a plain name, or a field access on
+     * one of those. In Kotlin, reading a property can run a getter or a delegate, so only literals, static fields, and
+     * local variables or parameters count. A volatile field read never counts, since the memory model orders it against
+     * other reads. Moving such an expression relative to other code doesn't change what the code does on its own, though
+     * its value can still depend on side effects elsewhere.
+     *
+     * @param cursor     the cursor where the expression is found, used to tell Kotlin sources apart
+     * @param expression the expression to check
+     * @return true if evaluating the expression has no side effects
+     */
+    public static boolean isSideEffectFree(Cursor cursor, Expression expression) {
+        boolean kotlin = isKotlin(cursor);
+        if (expression instanceof J.Literal) {
+            return true;
+        } else if (expression instanceof J.Identifier identifier) {
+            JavaType.Variable variable = identifier.getFieldType();
+            return !isVolatile(variable) && (!kotlin || isStatic(variable) || isLocal(cursor, identifier));
+        } else if (expression instanceof J.FieldAccess fieldAccess) {
+            JavaType.Variable variable = fieldAccess.getName().getFieldType();
+            return !isVolatile(variable) && (kotlin
+                    ? isStatic(variable)
+                    : isSideEffectFree(cursor, fieldAccess.getTarget()));
+        }
+        return false;
+    }
+
+    private static boolean isVolatile(JavaType.@Nullable Variable variable) {
+        return variable != null && variable.hasFlags(Flag.Volatile);
+    }
+
+    /**
+     * A static field is read directly, even from Kotlin, so no getter runs.
+     */
+    private static boolean isStatic(JavaType.@Nullable Variable variable) {
+        return variable != null && variable.hasFlags(Flag.Static);
+    }
+
+    /**
+     * Checks whether the name is bound to a parameter, or to a local variable declared earlier in an enclosing block,
+     * rather than to a property, whose getter or delegate could run when it's read. Anything else, including a name
+     * declared outside the enclosing scopes, counts as a property.
+     */
+    private static boolean isLocal(Cursor cursor, J.Identifier identifier) {
+        String name = identifier.getSimpleName();
+        Object child = null;
+        for (Iterator<Object> path = cursor.getPath(); path.hasNext();) {
+            Object value = path.next();
+            if (value instanceof J.Block block) {
+                for (Statement statement : block.getStatements()) {
+                    if (statement == child) {
+                        break;
+                    }
+                    if (declares(statement, name)) {
+                        return true;
+                    }
+                }
+            } else if (value instanceof J.MethodDeclaration method) {
+                return method.getParameters().stream().anyMatch(parameter -> declares(parameter, name));
+            } else if (value instanceof J.Lambda lambda) {
+                if (lambda.getParameters().getParameters().stream().anyMatch(parameter -> declares(parameter, name))) {
+                    return true;
+                }
+            } else if (value instanceof J.ClassDeclaration) {
+                return false;
+            }
+            if (value instanceof J) {
+                child = value;
+            }
+        }
+        return false;
+    }
+
+    private static boolean declares(J tree, String name) {
+        return tree instanceof J.VariableDeclarations declarations && declarations.getVariables().stream()
+                .anyMatch(variable -> variable.getSimpleName().equals(name));
     }
 
     /**
