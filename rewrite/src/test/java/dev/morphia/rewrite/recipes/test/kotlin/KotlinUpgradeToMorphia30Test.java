@@ -46,6 +46,7 @@ public class KotlinUpgradeToMorphia30Test extends KotlinRewriteTest {
                                 """));
     }
 
+    // MorphiaDatastore is 3.0-only, so this exercises the MorphiaDatastore pattern after DatastoreImpl is renamed
     @Test
     void removeEnsureCapsOnDatastoreImpl() {
         rewriteRun(
