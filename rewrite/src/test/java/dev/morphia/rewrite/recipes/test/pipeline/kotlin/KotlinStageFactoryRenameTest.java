@@ -119,6 +119,29 @@ public class KotlinStageFactoryRenameTest extends KotlinRewriteTest {
     }
 
     @Test
+    public void testUnrelatedFactoriesUntouched() {
+        rewriteRun(kotlin(
+                """
+                        package com.example
+
+                        class Group {
+                            companion object {
+                                @JvmStatic
+                                fun of(): Group = Group()
+                            }
+                        }"""),
+                kotlin(
+                        """
+                                import com.example.Group
+
+                                class TestTheWorld {
+                                    fun stages(): List<Any> {
+                                        return listOf(Group.of(), listOf<Any>())
+                                    }
+                                }"""));
+    }
+
+    @Test
     public void testAfterPipelineRewrite() {
         // The unused Out.out and Merge.merge imports come from PipelineOutRewrite and PipelineMergeRewrite,
         // matching KotlinPipelineOutRewriteTest.

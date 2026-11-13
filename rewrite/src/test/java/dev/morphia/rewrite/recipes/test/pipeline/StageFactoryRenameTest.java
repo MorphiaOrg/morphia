@@ -171,6 +171,30 @@ public class StageFactoryRenameTest extends MorphiaRewriteTest {
     }
 
     @Test
+    public void testUnrelatedFactoriesUntouched() {
+        rewriteRun(java(
+                """
+                        package com.example;
+
+                        public class Group {
+                            public static Group of() {
+                                return new Group();
+                            }
+                        }"""),
+                java(
+                        """
+                                import java.util.List;
+
+                                import com.example.Group;
+
+                                public class TestTheWorld {
+                                    public List<Object> stages() {
+                                        return List.of(Group.of(), List.of());
+                                    }
+                                }"""));
+    }
+
+    @Test
     public void testAfterPipelineRewrite() {
         rewriteRun(spec -> spec.recipes(new PipelineRewriteRecipes(), new StageFactoryRename()),
                 java(
