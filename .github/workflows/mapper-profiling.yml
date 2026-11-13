@@ -105,7 +105,7 @@ jobs:
               echo "morphia-benchmarks.jar"
             fi
           }
-          benchmarks=$(java -cp morphia-benchmarks.jar org.openjdk.jmh.Main -l "${INCLUDE:-.*}" | grep '^dev\.morphia\.' || true)
+          benchmarks=$(java -cp morphia-benchmarks.jar org.openjdk.jmh.Main -l "${INCLUDE:-.*}" $JMH_ARGS | grep '^dev\.morphia\.' || true)
           if [ -z "$benchmarks" ]; then
             echo "No benchmarks match '${INCLUDE:-.*}'"
             exit 1
