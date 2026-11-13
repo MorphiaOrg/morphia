@@ -11,10 +11,20 @@ import java.util.List;
 import java.util.Set;
 
 import org.jetbrains.annotations.NotNull;
+import org.openrewrite.Cursor;
+import org.openrewrite.SourceFile;
+import org.openrewrite.java.JavaTemplate;
 import org.openrewrite.java.MethodMatcher;
+import org.openrewrite.java.tree.JavaType;
+import org.openrewrite.java.tree.TypeUtils;
+import org.openrewrite.kotlin.KotlinParser;
+import org.openrewrite.kotlin.KotlinTemplate;
+import org.openrewrite.kotlin.tree.K;
 import org.semver4j.Semver;
 
 import io.github.classgraph.ClassGraph;
+
+import static org.openrewrite.java.JavaParser.fromJavaVersion;
 
 /**
  * Utility methods for OpenRewrite recipes used in the Morphia migration tooling.
@@ -91,5 +101,62 @@ public class RewriteUtils {
         return runtimeClasspath.stream()
                 .map(uri -> Path.of(uri))
                 .collect(LinkedHashSet::new, Set::add, Set::addAll);
+    }
+
+    /**
+     * Creates a matcher for the given method pattern on {@code Datastore}, the 2.x {@code DatastoreImpl}, and
+     * {@code MorphiaDatastore} (which {@code DatastoreImpl} is renamed to earlier in the upgrade).
+     *
+     * @param pattern the method signature pattern
+     * @return the matcher
+     */
+    public static @NotNull MethodMatcher datastoreMethod(String pattern) {
+        return new MultiMethodMatcher(
+                methodMatcher("dev.morphia.Datastore", pattern),
+                methodMatcher("dev.morphia.DatastoreImpl", pattern),
+                methodMatcher("dev.morphia.MorphiaDatastore", pattern));
+    }
+
+    /**
+     * Checks whether the type is one of the named types, ignoring any type parameters.
+     *
+     * @param type  the type to check
+     * @param names the fully-qualified type names to check against
+     * @return true if the type matches one of the names
+     */
+    public static boolean isOfType(JavaType type, String... names) {
+        return Arrays.stream(names).anyMatch(name -> TypeUtils.isOfClassType(type, name));
+    }
+
+    /**
+     * Checks whether the cursor is in a Kotlin source file.
+     *
+     * @param cursor the cursor
+     * @return true if the enclosing source file is Kotlin
+     */
+    public static boolean isKotlin(Cursor cursor) {
+        return cursor.firstEnclosing(SourceFile.class) instanceof K.CompilationUnit;
+    }
+
+    /**
+     * Builds a template against the 3.x classpath, using the Kotlin variant of the code in Kotlin sources.
+     *
+     * @param cursor     the cursor where the template will be applied
+     * @param kotlinCode the template code for Kotlin sources
+     * @param javaCode   the template code for Java sources
+     * @param imports    the fully-qualified names of the types the template code refers to
+     * @return the template
+     */
+    public static @NotNull JavaTemplate template(Cursor cursor, String kotlinCode, String javaCode, String... imports) {
+        JavaTemplate.Builder builder = isKotlin(cursor)
+                ? KotlinTemplate.builder(kotlinCode)
+                        .parser(KotlinParser.builder()
+                                .classpath(runtimeClasspathPaths()))
+                : JavaTemplate.builder(javaCode)
+                        .javaParser(fromJavaVersion()
+                                .classpath(runtimeClasspathPaths()));
+        return builder
+                .imports(imports)
+                .build();
     }
 }
