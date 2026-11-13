@@ -6,22 +6,22 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.openrewrite.Cursor;
 import org.openrewrite.SourceFile;
-import org.openrewrite.java.JavaIsoVisitor;
 import org.openrewrite.java.JavaTemplate;
 import org.openrewrite.java.MethodMatcher;
 import org.openrewrite.java.tree.Expression;
 import org.openrewrite.java.tree.Flag;
 import org.openrewrite.java.tree.J;
 import org.openrewrite.java.tree.JavaType;
+import org.openrewrite.java.tree.Statement;
 import org.openrewrite.java.tree.TypeUtils;
 import org.openrewrite.kotlin.KotlinParser;
 import org.openrewrite.kotlin.KotlinTemplate;
@@ -166,26 +166,43 @@ public class RewriteUtils {
     }
 
     /**
-     * Checks whether the name is declared as a parameter or a local variable in the enclosing method, rather than being a
-     * property, whose getter or delegate could run when it's read.
+     * Checks whether the name is bound to a parameter, or to a local variable declared earlier in an enclosing block,
+     * rather than to a property, whose getter or delegate could run when it's read. Anything else, including a name
+     * declared outside the enclosing scopes, counts as a property.
      */
     private static boolean isLocal(Cursor cursor, J.Identifier identifier) {
-        J.MethodDeclaration method = cursor.firstEnclosing(J.MethodDeclaration.class);
-        if (method == null) {
-            return false;
-        }
-        AtomicBoolean found = new AtomicBoolean();
-        new JavaIsoVisitor<AtomicBoolean>() {
-            @Override
-            public J.VariableDeclarations.NamedVariable visitVariable(J.VariableDeclarations.NamedVariable variable,
-                    AtomicBoolean found) {
-                if (variable.getSimpleName().equals(identifier.getSimpleName())) {
-                    found.set(true);
+        String name = identifier.getSimpleName();
+        Object child = null;
+        for (Iterator<Object> path = cursor.getPath(); path.hasNext();) {
+            Object value = path.next();
+            if (value instanceof J.Block block) {
+                for (Statement statement : block.getStatements()) {
+                    if (statement == child) {
+                        break;
+                    }
+                    if (declares(statement, name)) {
+                        return true;
+                    }
                 }
-                return variable;
+            } else if (value instanceof J.MethodDeclaration method) {
+                return method.getParameters().stream().anyMatch(parameter -> declares(parameter, name));
+            } else if (value instanceof J.Lambda lambda) {
+                if (lambda.getParameters().getParameters().stream().anyMatch(parameter -> declares(parameter, name))) {
+                    return true;
+                }
+            } else if (value instanceof J.ClassDeclaration) {
+                return false;
             }
-        }.visit(method, found);
-        return found.get();
+            if (value instanceof J) {
+                child = value;
+            }
+        }
+        return false;
+    }
+
+    private static boolean declares(J tree, String name) {
+        return tree instanceof J.VariableDeclarations declarations && declarations.getVariables().stream()
+                .anyMatch(variable -> variable.getSimpleName().equals(name));
     }
 
     /**

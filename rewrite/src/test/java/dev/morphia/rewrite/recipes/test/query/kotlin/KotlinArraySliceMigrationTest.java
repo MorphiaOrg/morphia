@@ -217,4 +217,61 @@ public class KotlinArraySliceMigrationTest extends KotlinRewriteTest {
                         }
                         """));
     }
+
+    @Test
+    public void testWithSkipShadowedProperties() {
+        rewriteRun(kotlin(
+                """
+                        import dev.morphia.query.ArraySlice
+
+                        class Upgrades {
+                            private var next = 0
+                            private val skip: Int
+                                get() = next++
+                            private val limit: Int
+                                get() = next++
+
+                            fun ctor(flag: Boolean): ArraySlice {
+                                if (flag) {
+                                    val skip = 5
+                                    val limit = 10
+                                }
+                                return ArraySlice(skip, limit)
+                            }
+                        }
+                        """));
+    }
+
+    @Test
+    public void testWithSkipLocals() {
+        rewriteRun(kotlin(
+                """
+                        import dev.morphia.query.ArraySlice
+
+                        class Upgrades {
+                            private val skip: Int
+                                get() = 1
+
+                            fun ctor(limit: Int): ArraySlice {
+                                val skip = 5
+                                return ArraySlice(skip, limit)
+                            }
+                        }
+                        """,
+                """
+                        import dev.morphia.query.ArraySlice
+
+                        class Upgrades {
+                            private val skip: Int
+                                get() = 1
+
+                            fun ctor(limit: Int): ArraySlice {
+                                val skip = 5
+                                return ArraySlice.limit(limit).skip(skip)
+                            }
+                        }
+                        """,
+                spec -> spec.afterRecipe(cu -> {
+                })));
+    }
 }

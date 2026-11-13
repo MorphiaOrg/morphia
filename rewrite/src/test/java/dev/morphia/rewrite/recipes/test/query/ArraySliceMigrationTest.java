@@ -214,4 +214,71 @@ public class ArraySliceMigrationTest extends MorphiaRewriteTest {
                         }
                         """));
     }
+
+    @Test
+    public void testWithSkipShadowedProperties() {
+        // unlike Kotlin properties, Java fields are read directly, so these can still be reordered
+        rewriteRun(java(
+                """
+                        import dev.morphia.query.ArraySlice;
+
+                        public class Upgrades {
+                            private int skip = 5;
+                            private int limit = 10;
+
+                            public ArraySlice ctor(boolean flag) {
+                                if (flag) {
+                                    int skip = 1;
+                                    int limit = 2;
+                                }
+                                return new ArraySlice(skip, limit);
+                            }
+                        }
+                        """,
+                """
+                        import dev.morphia.query.ArraySlice;
+
+                        public class Upgrades {
+                            private int skip = 5;
+                            private int limit = 10;
+
+                            public ArraySlice ctor(boolean flag) {
+                                if (flag) {
+                                    int skip = 1;
+                                    int limit = 2;
+                                }
+                                return ArraySlice.limit(limit).skip(skip);
+                            }
+                        }
+                        """));
+    }
+
+    @Test
+    public void testWithSkipLocals() {
+        rewriteRun(java(
+                """
+                        import dev.morphia.query.ArraySlice;
+
+                        public class Upgrades {
+                            private int skip = 1;
+
+                            public ArraySlice ctor(int limit) {
+                                int skip = 5;
+                                return new ArraySlice(skip, limit);
+                            }
+                        }
+                        """,
+                """
+                        import dev.morphia.query.ArraySlice;
+
+                        public class Upgrades {
+                            private int skip = 1;
+
+                            public ArraySlice ctor(int limit) {
+                                int skip = 5;
+                                return ArraySlice.limit(limit).skip(skip);
+                            }
+                        }
+                        """));
+    }
 }
