@@ -106,8 +106,19 @@ public class KotlinMetaMigrationTest extends KotlinRewriteTest {
                 //language=kotlin
                 """
                         import dev.morphia.query.Meta
+                        import dev.morphia.query.Meta.MetaDataKeyword
 
                         class Upgrades {
+                            val textScore: MetaDataKeyword = MetaDataKeyword.textScore
+
+                            fun holder(): Upgrades {
+                                return this
+                            }
+
+                            fun field(): Meta {
+                                return Meta(holder().textScore, "score")
+                            }
+
                             fun meta(keyword: String): Meta {
                                 return Meta(keyword, "field")
                             }

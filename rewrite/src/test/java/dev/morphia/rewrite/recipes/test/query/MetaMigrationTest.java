@@ -114,8 +114,19 @@ public class MetaMigrationTest extends MorphiaRewriteTest {
                 //language=java
                 """
                         import dev.morphia.query.Meta;
+                        import dev.morphia.query.Meta.MetaDataKeyword;
 
                         public class Upgrades {
+                            private MetaDataKeyword textScore = MetaDataKeyword.textScore;
+
+                            public Upgrades holder() {
+                                return this;
+                            }
+
+                            public Meta field() {
+                                return new Meta(holder().textScore, "score");
+                            }
+
                             public Meta meta(String keyword) {
                                 return new Meta(keyword, "field");
                             }

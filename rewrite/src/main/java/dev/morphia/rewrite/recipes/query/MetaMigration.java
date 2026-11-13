@@ -108,11 +108,12 @@ public class MetaMigration extends Recipe {
         if (keyword instanceof Literal literal && literal.getValue() instanceof String value) {
             return FACTORIES.contains(value) ? value : null;
         }
-        if (TypeUtils.isOfClassType(keyword.getType(), KEYWORD)) {
-            String name = keyword instanceof FieldAccess access
-                    ? access.getSimpleName()
-                    : keyword instanceof Identifier identifier ? identifier.getSimpleName() : null;
-            return "textScore".equals(name) ? name : null;
+        Identifier name = keyword instanceof FieldAccess access ? access.getName()
+                : keyword instanceof Identifier identifier ? identifier : null;
+        // only the enum constant itself, not some other variable or field of the enum type that happens to share its name
+        if (name != null && name.getFieldType() != null && TypeUtils.isOfClassType(name.getFieldType().getOwner(), KEYWORD)
+                && "textScore".equals(name.getSimpleName())) {
+            return "textScore";
         }
         return null;
     }
