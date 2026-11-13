@@ -30,9 +30,9 @@ recipeList:
   - org.openrewrite.java.RemoveMethodInvocations:
       methodPattern: dev.morphia.MorphiaDatastore enableDocumentValidation(..)
   - org.openrewrite.java.RemoveMethodInvocations:
-      methodPattern: dev.morphia.Datastore enableCaps(..)
+      methodPattern: dev.morphia.Datastore ensureCaps(..)
   - org.openrewrite.java.RemoveMethodInvocations:
-      methodPattern: dev.morphia.MorphiaDatastore enableCaps(..)
+      methodPattern: dev.morphia.MorphiaDatastore ensureCaps(..)
   - org.openrewrite.java.RemoveMethodInvocations:
       methodPattern: dev.morphia.Datastore ensureIndexes(..)
   - org.openrewrite.java.RemoveMethodInvocations:
