@@ -206,24 +206,24 @@ T&gt;&nbsp;<a href="aggregation/Aggregation.html" title="interface in dev.morphi
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default &lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;T&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#replace(java.util.List)" class="member-name-link">replace</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;T&gt;&nbsp;entities)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
-<div class="block">Replaces a list of documents in the database</div>
+<div class="block">Replaces a list of documents in the database, one at a time and in order.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>&lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;T&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#replace(java.util.List,dev.morphia.ReplaceOptions)" class="member-name-link">replace</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;T&gt;&nbsp;entities,
  <a href="ReplaceOptions.html" title="class in dev.morphia">ReplaceOptions</a>&nbsp;options)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Replaces a list of documents in the database</div>
+<div class="block">Replaces a list of documents in the database, one at a time and in order.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default &lt;T&gt;&nbsp;T</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#replace(T)" class="member-name-link">replace</a><wbr>(T&nbsp;entity)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
-<div class="block">Replaces a document in the database</div>
+<div class="block">Replaces a document in the database.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>&lt;T&gt;&nbsp;T</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#replace(T,dev.morphia.ReplaceOptions)" class="member-name-link">replace</a><wbr>(T&nbsp;entity,
  <a href="ReplaceOptions.html" title="class in dev.morphia">ReplaceOptions</a>&nbsp;options)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Replaces a document in the database</div>
+<div class="block">Replaces a document in the database.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default &lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;T&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#save(java.util.List)" class="member-name-link">save</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;T&gt;&nbsp;entities)</code></div>
@@ -630,7 +630,8 @@ T&gt;</span>&nbsp;<span class="return-type"><a href="aggregation/Aggregation.htm
 <section class="detail" id="replace(T)">
 <h3 id="replace(java.lang.Object)">replace</h3>
 <div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">T</span>&nbsp;<span class="element-name">replace</span><wbr><span class="parameters">(T&nbsp;entity)</span></div>
-<div class="block">Replaces a document in the database</div>
+<div class="block">Replaces a document in the database. Unlike <a href="#save(T)"><code>save(Object)</code></a>, the document must already exist unless
+ <a href="ReplaceOptions.html#upsert(boolean)"><code>ReplaceOptions.upsert(boolean)</code></a> is set.</div>
 <dl class="notes">
 <dt>Type Parameters:</dt>
 <dd><code>T</code> - the type of the entity</dd>
@@ -638,6 +639,9 @@ T&gt;</span>&nbsp;<span class="return-type"><a href="aggregation/Aggregation.htm
 <dd><code>entity</code> - the entity to replace</dd>
 <dt>Returns:</dt>
 <dd>the replaced entity</dd>
+<dt>Throws:</dt>
+<dd><code><a href="DocumentNotFoundException.html" title="class in dev.morphia">DocumentNotFoundException</a></code> - if no document matches the entity's ID (and shard key, if any) and upsert is not set</dd>
+<dd><code><a href="VersionMismatchException.html" title="class in dev.morphia">VersionMismatchException</a></code> - if the entity is versioned and its version does not match the stored document</dd>
 <dt>Since:</dt>
 <dd>2.3</dd>
 </dl>
@@ -648,7 +652,8 @@ T&gt;</span>&nbsp;<span class="return-type"><a href="aggregation/Aggregation.htm
 <h3 id="replace(java.lang.Object,dev.morphia.ReplaceOptions)">replace</h3>
 <div class="member-signature"><span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">T</span>&nbsp;<span class="element-name">replace</span><wbr><span class="parameters">(T&nbsp;entity,
  <a href="ReplaceOptions.html" title="class in dev.morphia">ReplaceOptions</a>&nbsp;options)</span></div>
-<div class="block">Replaces a document in the database</div>
+<div class="block">Replaces a document in the database. Unlike <a href="#save(T)"><code>save(Object)</code></a>, the document must already exist unless
+ <a href="ReplaceOptions.html#upsert(boolean)"><code>ReplaceOptions.upsert(boolean)</code></a> is set.</div>
 <dl class="notes">
 <dt>Type Parameters:</dt>
 <dd><code>T</code> - the type of the entity</dd>
@@ -657,6 +662,9 @@ T&gt;</span>&nbsp;<span class="return-type"><a href="aggregation/Aggregation.htm
 <dd><code>options</code> - the options to apply to the replace operation</dd>
 <dt>Returns:</dt>
 <dd>the replaced entity</dd>
+<dt>Throws:</dt>
+<dd><code><a href="DocumentNotFoundException.html" title="class in dev.morphia">DocumentNotFoundException</a></code> - if no document matches the entity's ID (and shard key, if any) and upsert is not set</dd>
+<dd><code><a href="VersionMismatchException.html" title="class in dev.morphia">VersionMismatchException</a></code> - if the entity is versioned and its version does not match the stored document</dd>
 <dt>Since:</dt>
 <dd>2.3</dd>
 </dl>
@@ -666,14 +674,18 @@ T&gt;</span>&nbsp;<span class="return-type"><a href="aggregation/Aggregation.htm
 <section class="detail" id="replace(java.util.List)">
 <h3>replace</h3>
 <div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;T&gt;</span>&nbsp;<span class="element-name">replace</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;T&gt;&nbsp;entities)</span></div>
-<div class="block">Replaces a list of documents in the database</div>
+<div class="block">Replaces a list of documents in the database, one at a time and in order. Replacement stops at the first failure, leaving any
+ earlier entities already replaced.</div>
 <dl class="notes">
 <dt>Type Parameters:</dt>
 <dd><code>T</code> - the type of the entity</dd>
 <dt>Parameters:</dt>
 <dd><code>entities</code> - the entities to replace</dd>
 <dt>Returns:</dt>
-<dd>the saved entities</dd>
+<dd>the replaced entities</dd>
+<dt>Throws:</dt>
+<dd><code><a href="DocumentNotFoundException.html" title="class in dev.morphia">DocumentNotFoundException</a></code> - if no document matches an entity's ID (and shard key, if any) and upsert is not set</dd>
+<dd><code><a href="VersionMismatchException.html" title="class in dev.morphia">VersionMismatchException</a></code> - if an entity is versioned and its version does not match the stored document</dd>
 <dt>Since:</dt>
 <dd>2.3</dd>
 </dl>
@@ -684,7 +696,8 @@ T&gt;</span>&nbsp;<span class="return-type"><a href="aggregation/Aggregation.htm
 <h3>replace</h3>
 <div class="member-signature"><span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;T&gt;</span>&nbsp;<span class="element-name">replace</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;T&gt;&nbsp;entities,
  <a href="ReplaceOptions.html" title="class in dev.morphia">ReplaceOptions</a>&nbsp;options)</span></div>
-<div class="block">Replaces a list of documents in the database</div>
+<div class="block">Replaces a list of documents in the database, one at a time and in order. Replacement stops at the first failure, leaving any
+ earlier entities already replaced.</div>
 <dl class="notes">
 <dt>Type Parameters:</dt>
 <dd><code>T</code> - the type of the entity</dd>
@@ -692,7 +705,10 @@ T&gt;</span>&nbsp;<span class="return-type"><a href="aggregation/Aggregation.htm
 <dd><code>entities</code> - the entities to replace</dd>
 <dd><code>options</code> - the options to apply to the replace operation</dd>
 <dt>Returns:</dt>
-<dd>the saved entities</dd>
+<dd>the replaced entities</dd>
+<dt>Throws:</dt>
+<dd><code><a href="DocumentNotFoundException.html" title="class in dev.morphia">DocumentNotFoundException</a></code> - if no document matches an entity's ID (and shard key, if any) and upsert is not set</dd>
+<dd><code><a href="VersionMismatchException.html" title="class in dev.morphia">VersionMismatchException</a></code> - if an entity is versioned and its version does not match the stored document</dd>
 <dt>Since:</dt>
 <dd>2.3</dd>
 </dl>

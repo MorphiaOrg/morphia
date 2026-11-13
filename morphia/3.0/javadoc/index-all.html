@@ -1182,6 +1182,15 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Defines a document expression</div>
 </dd>
+<dt><a href="dev/morphia/DocumentNotFoundException.html" class="type-name-link" title="class in dev.morphia">DocumentNotFoundException</a> - Exception in <a href="dev/morphia/package-summary.html">dev.morphia</a></dt>
+<dd>
+<div class="block">This exception is thrown when a replace finds no document to replace, either because no document has the entity's ID or because the
+ entity's shard key values do not match the stored document.</div>
+</dd>
+<dt><a href="dev/morphia/DocumentNotFoundException.html#%3Cinit%3E(java.lang.String)" class="member-name-link">DocumentNotFoundException(String)</a> - Constructor for exception dev.morphia.<a href="dev/morphia/DocumentNotFoundException.html" title="class in dev.morphia">DocumentNotFoundException</a></dt>
+<dd>
+<div class="block">Creates a new exception with a message.</div>
+</dd>
 <dt><a href="dev/morphia/aggregation/expressions/WindowExpressions.html#documentNumber()" class="member-name-link">documentNumber()</a> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/WindowExpressions.html" title="class in dev.morphia.aggregation.expressions">WindowExpressions</a></dt>
 <dd>
 <div class="block">Returns the position of a document (known as the document number) in the $setWindowFields stage partition.</div>
@@ -3129,19 +3138,19 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="dev/morphia/Datastore.html#replace(java.util.List)" class="member-name-link">replace(List&lt;T&gt;)</a> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
 <dd>
-<div class="block">Replaces a list of documents in the database</div>
+<div class="block">Replaces a list of documents in the database, one at a time and in order.</div>
 </dd>
 <dt><a href="dev/morphia/Datastore.html#replace(java.util.List,dev.morphia.ReplaceOptions)" class="member-name-link">replace(List&lt;T&gt;, ReplaceOptions)</a> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
 <dd>
-<div class="block">Replaces a list of documents in the database</div>
+<div class="block">Replaces a list of documents in the database, one at a time and in order.</div>
 </dd>
 <dt><a href="dev/morphia/Datastore.html#replace(T)" class="member-name-link">replace(T)</a> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
 <dd>
-<div class="block">Replaces a document in the database</div>
+<div class="block">Replaces a document in the database.</div>
 </dd>
 <dt><a href="dev/morphia/Datastore.html#replace(T,dev.morphia.ReplaceOptions)" class="member-name-link">replace(T, ReplaceOptions)</a> - Method in interface dev.morphia.<a href="dev/morphia/Datastore.html" title="interface in dev.morphia">Datastore</a></dt>
 <dd>
-<div class="block">Replaces a document in the database</div>
+<div class="block">Replaces a document in the database.</div>
 </dd>
 <dt><a href="dev/morphia/aggregation/expressions/StringExpressions.html#replaceAll(java.lang.Object,java.lang.Object,java.lang.Object)" class="member-name-link">replaceAll(Object, Object, Object)</a> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/StringExpressions.html" title="class in dev.morphia.aggregation.expressions">StringExpressions</a></dt>
 <dd>
