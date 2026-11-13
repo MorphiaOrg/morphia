@@ -4,6 +4,9 @@ name: Mapper Profiling
 # benchmarks in the `benchmarks` module. Runs independently of the main build so the results stay easy to find.
 
 on:
+  # weekly, early Monday UTC; a scheduled run has no inputs, so it takes the defaults below
+  schedule:
+    - cron: "0 6 * * 1"
   workflow_dispatch:
     inputs:
       benchmarks:
@@ -123,7 +126,7 @@ jobs:
           done
 
       - name: Record flight profile
-        if: inputs.flight-recording
+        if: github.event_name == 'schedule' || inputs.flight-recording
         run: |
           for variant in $VARIANTS; do
             classpath=morphia-benchmarks.jar
@@ -144,7 +147,7 @@ jobs:
 
       - name: Upload flight recordings
         uses: actions/upload-artifact@v7
-        if: always() && inputs.flight-recording
+        if: always() && (github.event_name == 'schedule' || inputs.flight-recording)
         with:
           name: jfr
           path: jfr/
@@ -198,7 +201,7 @@ jobs:
 
   History:
     needs: Profile
-    if: inputs.record-history && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    if: (github.event_name == 'schedule' || inputs.record-history) && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
