@@ -158,6 +158,12 @@
             <artifactId>rewrite-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- lets tests load the full UpgradeToMorphia30 recipe, which includes a Maven step -->
+        <dependency>
+            <groupId>org.openrewrite</groupId>
+            <artifactId>rewrite-maven</artifactId>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>dev.morphia.morphia</groupId>
