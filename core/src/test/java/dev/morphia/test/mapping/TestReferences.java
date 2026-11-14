@@ -182,6 +182,36 @@ public class TestReferences extends ProxyTestBase {
     }
 
     @Test
+    public void testLazyReferenceWithNullDatastoreClassLoaderInSession() {
+        MorphiaDatastore originalDatastore = getDs();
+        LazyClassLoaderTarget target = new LazyClassLoaderTarget();
+        target.name = "target";
+        originalDatastore.save(target);
+
+        LazyClassLoaderHolder holder = new LazyClassLoaderHolder();
+        holder.target = target;
+        originalDatastore.save(holder);
+
+        MorphiaDatastore datastoreWithNullClassLoader;
+        ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(null);
+        try {
+            datastoreWithNullClassLoader =
+                    new MorphiaDatastore(getMongoClient(), morphiaConfig, originalDatastore.getMapper());
+        }
+        finally {
+            Thread.currentThread().setContextClassLoader(originalClassLoader);
+        }
+
+        try (var session = datastoreWithNullClassLoader.startSession()) {
+            LazyClassLoaderHolder loaded = session.find(LazyClassLoaderHolder.class).first();
+            Assertions.assertNotNull(loaded);
+            assertIsProxy(loaded.target);
+            Assertions.assertEquals("target", loaded.target.getName());
+        }
+    }
+
+    @Test
     public void testComplexIds() {
         ComplexParent parent = new ComplexParent();
         parent.complex = new Complex(new ChildId("Bob", 67), "Kelso");
@@ -1994,6 +2024,25 @@ public class TestReferences extends ProxyTestBase {
         private int age;
         @Reference
         private Buddy buddy;
+    }
+
+    @Entity("lazyClassLoaderTargets")
+    public static class LazyClassLoaderTarget {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String name;
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    @Entity("lazyClassLoaderHolders")
+    private static class LazyClassLoaderHolder {
+        @Id
+        private ObjectId id = new ObjectId();
+        @Reference(lazy = true)
+        private LazyClassLoaderTarget target;
     }
 
     @Entity("veterans")

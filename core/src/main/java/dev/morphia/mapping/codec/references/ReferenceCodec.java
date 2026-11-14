@@ -299,6 +299,13 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
     private <T> Class<T> makeProxy() {
         PropertyModel propertyModel = getPropertyModel();
         Class<?> type = propertyModel.getType();
+        ClassLoader proxyClassLoader = classLoader;
+        if (proxyClassLoader == null) {
+            proxyClassLoader = type.getClassLoader();
+            if (proxyClassLoader == null) {
+                proxyClassLoader = MorphiaProxy.class.getClassLoader();
+            }
+        }
         Builder<?> builder = new ByteBuddy()
                 .subclass(type)
                 .implement(MorphiaProxy.class)
@@ -318,7 +325,7 @@ public class ReferenceCodec extends BaseReferenceCodec<Object> implements Proper
                 .intercept(InvocationHandlerAdapter.toField(FIELD_INVOCATION_HANDLER))
                 .defineField(FIELD_INVOCATION_HANDLER, InvocationHandler.class, Visibility.PRIVATE)
                 .make()
-                .load(classLoader, Default.WRAPPER)
+                .load(proxyClassLoader, Default.WRAPPER)
                 .getLoaded();
     }
 
