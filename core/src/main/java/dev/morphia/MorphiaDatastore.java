@@ -46,6 +46,7 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
 import dev.morphia.internal.CollectionConfigurable;
 import dev.morphia.internal.CollectionConfiguration;
+import dev.morphia.internal.DispatchingCodec;
 import dev.morphia.internal.ReadConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 import dev.morphia.mapping.CritterMapper;
@@ -96,7 +97,9 @@ import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
 import static org.bson.Document.parse;
+import static org.bson.codecs.configuration.CodecRegistries.fromCodecs;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 /**
  * A generic (type-safe) wrapper around mongodb collections
@@ -144,6 +147,9 @@ public class MorphiaDatastore implements Datastore {
     // each entity type's collection, with the entity's write concern applied
     private final Map<Class<?>, MongoCollection<?>> collections = new ConcurrentHashMap<>();
     private DatastoreOperations operations;
+    // the database with a codec that dispatches on each document's class, for list inserts mixing entity classes
+    @Nullable
+    private MongoDatabase batchDatabase;
 
     /**
      * @param client the mongo client
@@ -476,28 +482,65 @@ public class MorphiaDatastore implements Datastore {
             return;
         }
 
-        Map<Class<?>, List<T>> grouped = groupByType(entities, model -> false);
+        warnOnAlternateCollection(entities, options);
 
-        String alternate = options.collection();
-        if (alternate != null && grouped.size() > 1) {
-            Sofia.logInsertManyAlternateCollection(alternate);
-        }
-
-        grouped.forEach((key, list) -> {
-            EntityModel model = mapper.getEntityModel(key);
-            List<VersionBumpInfo> infos = list.stream()
-                    .map(entity -> updateVersioning(model, entity))
-                    .collect(Collectors.toList());
+        groupByCollection(indexed(entities), options).forEach((key, batch) -> {
+            List<Object> list = new ArrayList<>(batch.size());
+            List<VersionBumpInfo> infos = new ArrayList<>(batch.size());
+            for (Indexed<T> item : batch) {
+                list.add(item.entity());
+                infos.add(updateVersioning(mapper.getEntityModel(item.entity().getClass()), item.entity()));
+            }
 
             try {
-                MongoCollection<T> collection = configureCollection(options,
-                        (MongoCollection<T>) getCollection(key));
-                operations.insertMany(collection, list, options);
+                operations.insertMany(batchCollection(key), list, options);
             } catch (MongoException e) {
                 infos.forEach(VersionBumpInfo::rollbackVersion);
                 throw e;
             }
         });
+    }
+
+    private <T> void warnOnAlternateCollection(List<T> entities, InsertManyOptions options) {
+        String alternate = options.collection();
+        if (alternate != null && entities.stream().map(Object::getClass).distinct().count() > 1) {
+            Sofia.logInsertManyAlternateCollection(alternate);
+        }
+    }
+
+    private static <T> List<Indexed<T>> indexed(List<T> entities) {
+        List<Indexed<T>> indexed = new ArrayList<>(entities.size());
+        for (int i = 0; i < entities.size(); i++) {
+            indexed.add(new Indexed<>(entities.get(i), i));
+        }
+        return indexed;
+    }
+
+    /**
+     * Groups entities into one batch per collection and write concern, in the order each first appears.
+     */
+    private <T> Map<BatchKey, List<Indexed<T>>> groupByCollection(List<Indexed<T>> entities, InsertManyOptions options) {
+        Map<BatchKey, List<Indexed<T>>> batches = new LinkedHashMap<>();
+        for (Indexed<T> item : entities) {
+            EntityModel model = mapper.getEntityModel(item.entity().getClass());
+            String collection = options.collection() != null ? options.collection() : model.collectionName();
+            WriteConcern concern = options.writeConcern() != null ? options.writeConcern() : model.writeConcern();
+            batches.computeIfAbsent(new BatchKey(collection, concern), k -> new ArrayList<>())
+                    .add(item);
+        }
+        return batches;
+    }
+
+    /**
+     * A collection that encodes each document with its own class's codec, so one batch can mix entity classes. Built directly
+     * rather than through {@link #configureCollection}, whose alternate-collection handling would drop that codec.
+     */
+    private MongoCollection<Object> batchCollection(BatchKey key) {
+        if (batchDatabase == null) {
+            batchDatabase = database.withCodecRegistry(fromRegistries(fromCodecs(new DispatchingCodec(codecRegistry)), codecRegistry));
+        }
+        MongoCollection<Object> collection = batchDatabase.getCollection(key.collection(), Object.class);
+        return key.writeConcern() != null ? collection.withWriteConcern(key.writeConcern()) : collection;
     }
 
     @Override
@@ -1254,6 +1297,12 @@ public class MorphiaDatastore implements Datastore {
     }
 
     @MorphiaInternal
+    private record BatchKey(String collection, @Nullable WriteConcern writeConcern) {
+    }
+
+    private record Indexed<T>(T entity, int index) {
+    }
+
     private static class VersionBumpInfo {
         private final Object entity;
 
