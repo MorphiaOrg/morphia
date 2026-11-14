@@ -8,6 +8,7 @@ import com.mongodb.client.MongoDatabase;
 import dev.morphia.BulkWriteFailure;
 import dev.morphia.InsertManyOptions;
 import dev.morphia.MorphiaBulkWriteException;
+import dev.morphia.VersionMismatchException;
 import dev.morphia.annotations.Entity;
 import dev.morphia.annotations.Field;
 import dev.morphia.annotations.Id;
@@ -25,6 +26,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -320,6 +322,114 @@ public class TestBulkWrites extends TestBase {
             assertThrows(MorphiaBulkWriteException.class, () -> getDs().insert(List.of(dup, unsent)));
             assertEquals(2, dup.id);
             assertEquals(3, unsent.id);
+        });
+    }
+
+    @Test
+    public void saveMixedNewAndExistingOrdered() {
+        withTestConfig(List.of(Reading.class, VersionedReading.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+            Reading existing = getDs().save(new Reading("e"));
+            existing.key = "e2";
+            VersionedReading versioned = new VersionedReading("v");
+            List<Object> list = List.of(new Reading("a"), existing, new Reading("k"), versioned);
+
+            MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class, () -> getDs().save(list));
+            assertEquals(List.of(2), e.getFailures().stream().map(BulkWriteFailure::index).toList());
+            assertEquals(List.of(existing, versioned), e.getUnprocessedEntities());
+            assertEquals(0, count("vreadings"));
+        });
+    }
+
+    @Test
+    public void saveMixedNewAndExistingUnordered() {
+        withTestConfig(List.of(Reading.class, VersionedReading.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+            Reading existing = getDs().save(new Reading("e"));
+            existing.key = "e2";
+            List<Object> list = List.of(new Reading("a"), existing, new Reading("k"), new VersionedReading("v"));
+
+            MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class,
+                    () -> getDs().save(list, new InsertManyOptions().ordered(false)));
+            assertEquals(List.of(2), e.getFailures().stream().map(BulkWriteFailure::index).toList());
+            assertTrue(e.getUnprocessedEntities().isEmpty());
+            assertEquals(1, count("vreadings"));
+            assertEquals(1, getDatabase().getCollection("readings").countDocuments(new Document("key", "e2")));
+        });
+    }
+
+    @Test
+    public void saveOneByOneWriteError() {
+        withTestConfig(List.of(Reading.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("a"));
+            Reading b = getDs().save(new Reading("b"));
+            b.key = "a";
+            Reading c = new Reading("c");
+
+            MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class,
+                    () -> getDs().save(List.of(b, c), new InsertManyOptions().ordered(false)));
+            BulkWriteFailure failure = e.getFailures().get(0);
+            assertSame(b, failure.entity());
+            assertEquals(0, failure.index());
+            assertNotNull(failure.error());
+            assertEquals(0, e.getWriteErrors().get(0).getIndex());
+            assertEquals(1, getDatabase().getCollection("readings").countDocuments(new Document("key", "c")));
+        });
+    }
+
+    private VersionedReading staleCopy(String key) {
+        VersionedReading original = getDs().save(new VersionedReading(key));
+        VersionedReading stale = getDs().find(VersionedReading.class).filter(dev.morphia.query.filters.Filters.eq("_id", original.id))
+                .first();
+        original.key = key + "-changed";
+        getDs().save(original);
+        return stale;
+    }
+
+    @Test
+    public void saveStaleVersionUnordered() {
+        withTestConfig(List.of(VersionedReading.class), () -> {
+            getDs().applyIndexes();
+            VersionedReading stale = staleCopy("s");
+            Long staleVersion = stale.version;
+            VersionedReading after = new VersionedReading("y");
+
+            MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class,
+                    () -> getDs().save(List.of(new VersionedReading("x"), stale, after), new InsertManyOptions().ordered(false)));
+            BulkWriteFailure failure = e.getFailures().get(0);
+            assertEquals(1, failure.index());
+            assertInstanceOf(VersionMismatchException.class, failure.exception());
+            assertTrue(e.getWriteErrors().isEmpty());
+            assertEquals(staleVersion, stale.version);
+            assertNotNull(after.id);
+            assertEquals(1, getDatabase().getCollection("vreadings").countDocuments(new Document("key", "y")));
+        });
+    }
+
+    @Test
+    public void saveStaleVersionOrdered() {
+        withTestConfig(List.of(VersionedReading.class), () -> {
+            getDs().applyIndexes();
+            VersionedReading stale = staleCopy("s");
+            VersionedReading after = new VersionedReading("y");
+
+            MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class,
+                    () -> getDs().save(List.of(new VersionedReading("x"), stale, after)));
+            assertEquals(List.of(after), e.getUnprocessedEntities());
+            assertInstanceOf(VersionMismatchException.class, e.getCause());
+            assertEquals(0, getDatabase().getCollection("vreadings").countDocuments(new Document("key", "y")));
+        });
+    }
+
+    @Test
+    public void saveSingleEntityUnchanged() {
+        withTestConfig(List.of(VersionedReading.class), () -> {
+            getDs().applyIndexes();
+            VersionedReading stale = staleCopy("s");
+            assertThrows(VersionMismatchException.class, () -> getDs().save(stale));
         });
     }
 

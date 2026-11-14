@@ -11,7 +11,6 @@ import java.util.Map.Entry;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.mongodb.ClientSessionOptions;
@@ -765,38 +764,48 @@ public class MorphiaDatastore implements Datastore {
             return List.of();
         }
 
-        Map<Class<?>, List<T>> grouped = new LinkedHashMap<>();
-        List<T> list = new ArrayList<>();
-        for (T entity : entities) {
-            Class<?> type = entity.getClass();
+        warnOnAlternateCollection(entities, options);
 
-            EntityModel model = getMapper().getEntityModel(type);
+        // new entities go out in batches first; those with an id or a version are saved one at a time afterward
+        List<Indexed<T>> batched = new ArrayList<>();
+        List<Indexed<T>> individual = new ArrayList<>();
+        for (Indexed<T> item : indexed(entities)) {
+            EntityModel model = getMapper().getEntityModel(item.entity().getClass());
             PropertyModel idProperty = model.getIdProperty();
-            if (idProperty != null && idProperty.getValue(entity) != null || model.getVersionProperty() != null) {
-                list.add(entity);
+            if (idProperty != null && idProperty.getValue(item.entity()) != null || model.getVersionProperty() != null) {
+                individual.add(item);
             } else {
-                grouped.computeIfAbsent(type, c -> new ArrayList<>())
-                        .add(entity);
+                batched.add(item);
             }
         }
 
-        String alternate = options.collection();
-        if (grouped.size() > 1 && alternate != null) {
-            Sofia.logInsertManyAlternateCollection(alternate);
-        }
-
-        for (Entry<Class<?>, List<T>> entry : grouped.entrySet()) {
-            MongoCollection<T> collection = configureCollection(options, (MongoCollection<T>) getCollection(entry.getKey()));
-            operations.insertMany(collection, entry.getValue(), options);
-        }
+        BitSet hadNullId = nullIds(entities);
+        BulkWriteFailures failures = new BulkWriteFailures(entities.size());
+        boolean stopped = insertBatches(groupByCollection(batched, options), options, failures, null);
 
         InsertOneOptions insertOneOptions = new InsertOneOptions()
                 .bypassDocumentValidation(options.bypassDocumentValidation())
-                .collection(alternate)
+                .collection(options.collection())
                 .writeConcern(options.writeConcern());
-        for (T entity : list) {
-            save(entity, insertOneOptions);
+        boolean stopAtFailure = stopsAtFirstFailure(options);
+        for (Indexed<T> item : individual) {
+            T entity = item.entity();
+            if (stopped) {
+                failures.recordUnprocessed(entity, item.index());
+                continue;
+            }
+            try {
+                failures.recordSaved(save(getCollection(entity.getClass()), entity, insertOneOptions));
+            } catch (MongoWriteException e) {
+                failures.recordWriteFailure(entity, item.index(), e);
+                stopped = stopAtFailure;
+            } catch (VersionMismatchException e) {
+                failures.recordException(entity, item.index(), e);
+                stopped = stopAtFailure;
+            }
         }
+
+        finishBulkWrite(entities, hadNullId, null, failures);
         return entities;
     }
 
@@ -899,7 +908,11 @@ public class MorphiaDatastore implements Datastore {
         return doTransaction(startSession(options), transaction);
     }
 
-    private <T> void save(MongoCollection collection, T entity, InsertOneOptions options) {
+    /**
+     * @return the replace's result, or null if the entity was inserted
+     */
+    @Nullable
+    private <T> UpdateResult save(MongoCollection collection, T entity, InsertOneOptions options) {
         collection = configureCollection(options, collection);
 
         EntityModel entityModel = mapper.getEntityModel(entity.getClass());
@@ -910,6 +923,7 @@ public class MorphiaDatastore implements Datastore {
         try {
             if (id == null || info.versioned() && info.newVersion() == 1) {
                 operations.insertOne(collection, entity, options);
+                return null;
             } else {
                 ReplaceOptions updateOptions = new ReplaceOptions()
                         .bypassDocumentValidation(options.bypassDocumentValidation())
@@ -926,6 +940,7 @@ public class MorphiaDatastore implements Datastore {
                     info.rollbackVersion();
                     throw new VersionMismatchException(entity.getClass(), id);
                 }
+                return updateResult;
             }
         } catch (MongoWriteException e) {
             if (info.versioned()) {
@@ -961,24 +976,6 @@ public class MorphiaDatastore implements Datastore {
      */
     public CodecRegistry getCodecRegistry() {
         return codecRegistry;
-    }
-
-    @NonNull
-    private <T> Map<Class<?>, List<T>> groupByType(List<T> entities, Predicate<EntityModel> special) {
-        Map<Class<?>, List<T>> grouped = new LinkedHashMap<>();
-        for (T entity : entities) {
-            Class<?> type = entity.getClass();
-
-            EntityModel model = getMapper().getEntityModel(type);
-            if (special.test(model)) {
-                grouped.computeIfAbsent(Void.class, c -> new ArrayList<>())
-                        .add(entity);
-            } else {
-                grouped.computeIfAbsent(type, c -> new ArrayList<>())
-                        .add(entity);
-            }
-        }
-        return grouped;
     }
 
     /**

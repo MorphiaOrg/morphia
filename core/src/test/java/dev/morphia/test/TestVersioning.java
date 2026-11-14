@@ -13,6 +13,7 @@ import dev.morphia.Datastore;
 import dev.morphia.DeleteOptions;
 import dev.morphia.InsertOneOptions;
 import dev.morphia.ModifyOptions;
+import dev.morphia.MorphiaBulkWriteException;
 import dev.morphia.UpdateOptions;
 import dev.morphia.VersionMismatchException;
 import dev.morphia.annotations.Entity;
@@ -291,7 +292,11 @@ public class TestVersioning extends TestBase {
             Assertions.assertEquals(initial.get(i).version + 1, type.version);
         }
 
-        Assertions.assertThrows(VersionMismatchException.class, () -> getDs().save(initial));
+        // a version conflict in a list save is reported per entity, with the first conflict as the cause
+        MorphiaBulkWriteException e = Assertions.assertThrows(MorphiaBulkWriteException.class, () -> getDs().save(initial));
+        Assertions.assertInstanceOf(VersionMismatchException.class, e.getCause());
+        Assertions.assertSame(initial.get(0), e.getFailedEntities().get(0));
+        Assertions.assertEquals(List.of(initial.get(1)), e.getUnprocessedEntities());
     }
 
     @Test
