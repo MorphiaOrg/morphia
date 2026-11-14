@@ -565,6 +565,7 @@ public class TestMapping extends TestBase {
                 .first();
         Assertions.assertNotNull(loaded);
         Assertions.assertEquals(12, loaded.id);
+        Assertions.assertEquals("some string", loaded.name);
     }
 
     @Test
@@ -691,8 +692,8 @@ public class TestMapping extends TestBase {
         final NormalWithLoadOnly notSaved = getDs().find(NormalWithLoadOnly.class).iterator()
                 .next();
         Assertions.assertNotNull(notSaved);
-        Assertions.assertNotNull(notSaved.name);
-        Assertions.assertEquals("never", notSaved.name);
+        // @LoadOnly properties are loaded, just never saved
+        Assertions.assertEquals("value21", notSaved.name);
     }
 
     @Test
@@ -1018,14 +1019,14 @@ public class TestMapping extends TestBase {
 
     @Entity
     private static class ContainsByteArray {
-        private final byte[] bytes = "Scott".getBytes();
+        private byte[] bytes = "Scott".getBytes();
         @Id
         private ObjectId id;
     }
 
     @Entity
     private static final class ContainsCollection {
-        private final Collection<String> coll = new ArrayList<>();
+        private Collection<String> coll = new ArrayList<>();
         @Id
         private ObjectId id;
 
@@ -1038,21 +1039,21 @@ public class TestMapping extends TestBase {
     @Entity
     private static class ContainsEmbeddedArray {
         @Id
-        private final ObjectId id = new ObjectId();
+        private ObjectId id = new ObjectId();
         private RenamedEmbedded[] res;
     }
 
     @Entity
     private static class ContainsEmbeddedEntity {
         @Id
-        private final ObjectId id = new ObjectId();
+        private ObjectId id = new ObjectId();
         private ContainsIntegerList cil = new ContainsIntegerList();
     }
 
     @Entity
     private static class ContainsEnum1KeyMap {
-        private final Map<Enum1, String> values = new HashMap<>();
-        private final Map<Enum1, String> embeddedValues = new HashMap<>();
+        private Map<Enum1, String> values = new HashMap<>();
+        private Map<Enum1, String> embeddedValues = new HashMap<>();
         @Id
         private ObjectId id;
     }
@@ -1091,14 +1092,14 @@ public class TestMapping extends TestBase {
 
     @Entity
     private static class ContainsIntKeyMap {
-        private final Map<Integer, String> values = new HashMap<>();
+        private Map<Integer, String> values = new HashMap<>();
         @Id
         private ObjectId id;
     }
 
     @Entity
     private static class ContainsIntKeySetStringMap {
-        private final Map<Integer, Set<String>> values = new HashMap<>();
+        private Map<Integer, Set<String>> values = new HashMap<>();
         @Id
         private ObjectId id;
     }
@@ -1113,7 +1114,7 @@ public class TestMapping extends TestBase {
     @Entity(value = "cil", useDiscriminator = false)
     private static class ContainsIntegerListNew {
         @AlsoLoad("intList")
-        private final List<Integer> integers = new ArrayList<>();
+        private List<Integer> integers = new ArrayList<>();
         @Id
         private ObjectId id;
     }
@@ -1128,14 +1129,14 @@ public class TestMapping extends TestBase {
 
     @Entity
     private static class ContainsMapWithEmbeddedInterface {
-        private final Map<String, Foo> embeddedValues = new HashMap<>();
+        private Map<String, Foo> embeddedValues = new HashMap<>();
         @Id
         private ObjectId id;
     }
 
     @Entity
     private static class ContainsObjectIdKeyMap {
-        private final Map<ObjectId, String> values = new HashMap<>();
+        private Map<ObjectId, String> values = new HashMap<>();
         @Id
         private ObjectId id;
 
@@ -1150,8 +1151,8 @@ public class TestMapping extends TestBase {
 
     @Entity
     private static class ContainsPrimitiveMap {
-        private final Map<String, Long> embeddedValues = new HashMap<>();
-        private final Map<String, Long> values = new HashMap<>();
+        private Map<String, Long> embeddedValues = new HashMap<>();
+        private Map<String, Long> values = new HashMap<>();
         @Id
         private ObjectId id;
     }
@@ -1168,14 +1169,16 @@ public class TestMapping extends TestBase {
     private static class HasFinalFieldId {
         @Id
         private final long id;
-        private final String name = "some string";
-
-        protected HasFinalFieldId() {
-            id = -1;
-        }
+        private final String name;
 
         HasFinalFieldId(long id) {
+            this(id, "some string");
+        }
+
+        // takes every final field, so none is set reflectively (JEP 500)
+        private HasFinalFieldId(long id, String name) {
             this.id = id;
+            this.name = name;
         }
     }
 
@@ -1196,7 +1199,7 @@ public class TestMapping extends TestBase {
     @Entity
     private static class MapAsId {
         @Id
-        private final Map<String, String> id = new HashMap<String, String>();
+        private Map<String, String> id = new HashMap<String, String>();
     }
 
     @Entity("generic_arrays")
@@ -1210,7 +1213,7 @@ public class TestMapping extends TestBase {
     @Entity(value = "Normal", useDiscriminator = false)
     private static class Normal {
         @Id
-        private final ObjectId id = new ObjectId();
+        private ObjectId id = new ObjectId();
         private String name;
 
         Normal(String name) {
@@ -1224,9 +1227,9 @@ public class TestMapping extends TestBase {
     @Entity(value = "Normal", useDiscriminator = false)
     private static class NormalWithLoadOnly {
         @Id
-        private final ObjectId id = new ObjectId();
+        private ObjectId id = new ObjectId();
         @LoadOnly
-        private final String name = "never";
+        private String name = "never";
     }
 
     @Entity(useDiscriminator = false)

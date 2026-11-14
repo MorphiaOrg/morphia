@@ -53,6 +53,6 @@ public class TestUriMapping extends TestBase {
     private static class ContainsURIKeyedMap {
         @Id
         private ObjectId id;
-        private final Map<URI, String> uris = new HashMap<>();
+        private Map<URI, String> uris = new HashMap<>();
     }
 }

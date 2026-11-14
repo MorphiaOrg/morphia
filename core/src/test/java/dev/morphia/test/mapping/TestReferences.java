@@ -601,7 +601,7 @@ public class TestReferences extends ProxyTestBase {
 
     private static class ArrayOfReferences extends TestEntity {
         @Reference
-        private final Ref[] refs = new Ref[2];
+        private Ref[] refs = new Ref[2];
     }
 
     @Entity(value = "children", useDiscriminator = false)
@@ -802,7 +802,7 @@ public class TestReferences extends ProxyTestBase {
 
     @Entity
     private static class CompoundId {
-        private final ObjectId id = new ObjectId();
+        private ObjectId id = new ObjectId();
         private String name;
 
         CompoundId() {
@@ -1042,7 +1042,7 @@ public class TestReferences extends ProxyTestBase {
     @Entity(value = "as", useDiscriminator = false)
     private static class HasIdOnly {
         @Reference(idOnly = true)
-        private final List<FacebookUser> list = new ArrayList<>();
+        private List<FacebookUser> list = new ArrayList<>();
         @Id
         private ObjectId id;
         private String name;
@@ -1132,7 +1132,7 @@ public class TestReferences extends ProxyTestBase {
     private static class Parent {
 
         @Reference(lazy = true)
-        private final List<Child> children = new ArrayList<>();
+        private List<Child> children = new ArrayList<>();
         @Id
         private ObjectId id;
 
@@ -1270,7 +1270,7 @@ public class TestReferences extends ProxyTestBase {
     @Entity
     static class Source {
         @Id
-        private final ObjectId id = new ObjectId();
+        private ObjectId id = new ObjectId();
         @Reference
         private Target target;
         @Reference(lazy = true)

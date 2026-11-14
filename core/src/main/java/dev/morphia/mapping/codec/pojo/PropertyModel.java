@@ -83,6 +83,7 @@ public class PropertyModel {
         loadNames.addAll(other.loadNames);
         serialization = other.serialization;
         normalizedType = other.normalizedType;
+        isFinal = other.isFinal;
     }
 
     /**

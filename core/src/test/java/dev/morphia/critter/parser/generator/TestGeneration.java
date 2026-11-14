@@ -47,6 +47,7 @@ import dev.morphia.mapping.codec.pojo.EntityModel;
 import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
+import dev.morphia.mapping.internal.FinalFieldMutation;
 import dev.morphia.mapping.internal.Instantiator;
 import dev.morphia.test.models.ExampleListener;
 
@@ -63,6 +64,7 @@ import io.smallrye.classfile.attribute.RuntimeVisibleAnnotationsAttribute;
 import static com.mongodb.client.model.CollationCaseFirst.LOWER;
 import static dev.morphia.critter.parser.GeneratorsTestHelper.defaultMapper;
 import static io.smallrye.classfile.Attributes.runtimeVisibleAnnotations;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 public class TestGeneration {
     private final CritterClassLoader critterClassLoader = new CritterClassLoader();
@@ -177,6 +179,7 @@ public class TestGeneration {
 
     @Test
     public void testGeneratorFinalFields() throws Exception {
+        assumeFalse(FinalFieldMutation.denied(), "this JVM denies the reflective write being tested (JEP 500)");
         EntityModel model = generateModel(FinalFieldsExample.class);
         Object entity = critterClassLoader.loadClass(FinalFieldsExample.class.getName())
                 .getConstructor(String.class, int.class)
@@ -208,6 +211,7 @@ public class TestGeneration {
 
     @Test
     public void testRuntimeGeneratorFinalFields() throws Exception {
+        assumeFalse(FinalFieldMutation.denied(), "this JVM denies the reflective write being tested (JEP 500)");
         // A fresh loader: runtime mode leaves the entity class alone, so it must resolve to the application's copy.
         CritterClassLoader loader = new CritterClassLoader(getClass().getClassLoader());
         EntityModelGenerator generator = new CritterGenerator(defaultMapper()).generate(FinalFieldsExample.class, loader, true);
@@ -355,6 +359,7 @@ public class TestGeneration {
 
     @Test
     public void testGeneratorFinalFieldBehindTransientField(@TempDir Path dir) throws Exception {
+        assumeFalse(FinalFieldMutation.denied(), "this JVM denies the reflective write being tested (JEP 500)");
         // The entity's transient field isn't mapped and the library superclass can't be rewritten, so the inherited final
         // field's writer is woven into the entity, where a lookup by name alone would find the transient field instead.
         Path library = dir.resolve("library");

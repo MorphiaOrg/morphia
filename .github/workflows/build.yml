@@ -197,7 +197,6 @@ jobs:
     with:
       java: ${{ matrix.java }}
       reuseBuild: true
-      optional: true
       archive-name: "final-field-mutation-${{matrix.mapper}}-${{matrix.java}}-${{github.run_id}}"
       maven-flags: "-e -Dmorphia.mapper=${{ matrix.mapper }} -Dfinal.field.mutation=deny"
 
@@ -262,6 +261,7 @@ jobs:
       - ServerTests
       - DriversTests
       - JdkTests
+      - FinalFieldMutationTests
     if: needs.Matrix.outputs.releasable == 'true'
     uses: evanchooly/workflows/.github/workflows/jreleaser.yml@master
     permissions:

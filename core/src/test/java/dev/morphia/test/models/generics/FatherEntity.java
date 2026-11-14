@@ -11,7 +11,7 @@ import org.bson.types.ObjectId;
 public abstract class FatherEntity<T extends EmbeddedType> {
 
     @Id
-    private final ObjectId id = new ObjectId();
+    private ObjectId id = new ObjectId();
     private List<? extends EmbeddedType> embeddedList;
     private Another embedded;
 

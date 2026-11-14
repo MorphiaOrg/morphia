@@ -233,7 +233,7 @@ public class TestLifecycles extends TestBase {
     @SuppressWarnings({ "NotNullFieldNotInitialized" })
     private static class InvalidNullHolder {
         @Id
-        private final ObjectId id = new ObjectId();
+        private ObjectId id = new ObjectId();
 
         @NonNull
         private String mustFailValidation;
@@ -245,7 +245,7 @@ public class TestLifecycles extends TestBase {
 
     @Entity
     private static class LifecyleA extends Callbacks {
-        private final List<LifecycleB> bs = new LinkedList<>();
+        private List<LifecycleB> bs = new LinkedList<>();
         @Id
         private ObjectId id;
         private LifecycleB b;
@@ -274,7 +274,7 @@ public class TestLifecycles extends TestBase {
     @Entity
     private static class SomeEntity {
         @Id
-        private final String id = new ObjectId().toHexString();
+        private String id = new ObjectId().toHexString();
         @Transient
         private boolean persistentMarker;
 
@@ -297,7 +297,7 @@ public class TestLifecycles extends TestBase {
     @SuppressWarnings("FieldCanBeLocal")
     private static class ValidNullHolder {
         @Id
-        private final ObjectId id = new ObjectId();
+        private ObjectId id = new ObjectId();
 
         @Nullable
         private Date lastModified;
