@@ -184,15 +184,22 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
         }
         Constructor<?> constructor = bestConstructor(model);
         if (constructor == null) {
-            // instances are created with the full constructor, if there is one, which takes every property
-            return List.of();
+            // instances are created with the full constructor. its parameters may name properties by their mapped names,
+            // which don't bind, so those finals are still set reflectively
+            try {
+                constructor = getFullConstructor(model);
+            } catch (MappingException e) {
+                // no instances can be created at all, which mapping reports on its own
+                return List.of();
+            }
         }
         return missing(finals, constructor);
     }
 
     private static List<String> finalProperties(EntityModel model) {
+        // a final ignored by the configuration isn't stored, so there's nothing to pass a constructor
         return model.getProperties().stream()
-                .filter(PropertyModel::isFinal)
+                .filter(property -> property.isFinal() && !property.isIgnoredFinal())
                 .map(PropertyModel::getName)
                 .toList();
     }

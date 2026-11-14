@@ -11,6 +11,10 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  * Reports whether this JVM lets Morphia set final fields reflectively. JEP 500 makes JDK 26 warn the first time it happens
  * and lets {@code --illegal-final-field-mutation=deny} refuse it, which a future JDK will do by default. Rather than read
  * the launcher options, which differ by JDK, Morphia asks the JVM by setting a final field of its own once.
+ * <p>
+ * The JVM decides per calling module, and the probe calls from Morphia's. Critter's woven writers call from the entity's
+ * module instead, so the answer can be wrong for them when only some modules may set finals, e.g. with Morphia in a named
+ * module and {@code --enable-final-field-mutation=ALL-UNNAMED}. Enabling Morphia's module as well avoids that (#4507).
  *
  * @morphia.internal
  * @hidden

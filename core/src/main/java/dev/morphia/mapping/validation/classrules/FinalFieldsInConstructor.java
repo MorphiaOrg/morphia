@@ -37,8 +37,8 @@ public class FinalFieldsInConstructor implements ClassConstraint {
 
     @Override
     public void check(Mapper mapper, EntityModel model, Set<ConstraintViolation> ve) {
-        // finals aren't stored when they're ignored, so there's nothing to set when loading
-        if (Modifier.isAbstract(model.getType().getModifiers()) || mapper.getConfig().ignoreFinals()) {
+        // reflectiveFinals leaves out finals the configuration ignores, since they're never stored
+        if (Modifier.isAbstract(model.getType().getModifiers())) {
             return;
         }
         List<String> reflective = ConstructorCreator.reflectiveFinals(model);
