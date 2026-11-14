@@ -1,7 +1,11 @@
 package dev.morphia.test;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import com.mongodb.client.MongoDatabase;
 
@@ -20,6 +24,7 @@ import dev.morphia.annotations.Transient;
 import dev.morphia.annotations.Version;
 import dev.morphia.transactions.MorphiaSession;
 
+import org.awaitility.Awaitility;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
@@ -37,27 +42,33 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestBulkWrites extends TestBase {
 
-    private int insertCommands(String collection, Runnable body) {
-        return insertCommands(body, collection)[0];
-    }
-
     /**
-     * Counts the insert commands the server sees for each collection while {@code body} runs.
+     * Runs {@code body} with the profiler on and asserts how many insert commands each collection received. The server doesn't
+     * always make profiler entries visible by the time a write returns, so this polls for the expected counts.
      */
-    private int[] insertCommands(Runnable body, String... collections) {
+    private void assertInsertCommands(Runnable body, Map<String, Integer> expected) {
         MongoDatabase database = getDatabase();
         database.runCommand(new Document("profile", 0));
         database.getCollection("system.profile").drop();
         database.runCommand(new Document("profile", 2));
         try {
             body.run();
+            Map<String, Integer> counts = Awaitility.await()
+                    .atMost(5, TimeUnit.SECONDS)
+                    .pollInterval(50, TimeUnit.MILLISECONDS)
+                    .until(() -> insertCounts(database, expected.keySet()), counted -> counted.entrySet().stream()
+                            .allMatch(entry -> entry.getValue() >= expected.get(entry.getKey())));
+            assertEquals(expected, counts);
         } finally {
             database.runCommand(new Document("profile", 0));
         }
-        int[] counts = new int[collections.length];
-        for (int i = 0; i < collections.length; i++) {
-            counts[i] = (int) database.getCollection("system.profile")
-                    .countDocuments(new Document("op", "insert").append("ns", database.getName() + "." + collections[i]));
+    }
+
+    private static Map<String, Integer> insertCounts(MongoDatabase database, Set<String> collections) {
+        Map<String, Integer> counts = new LinkedHashMap<>();
+        for (String collection : collections) {
+            counts.put(collection, (int) database.getCollection("system.profile")
+                    .countDocuments(new Document("op", "insert").append("ns", database.getName() + "." + collection)));
         }
         return counts;
     }
@@ -65,9 +76,8 @@ public class TestBulkWrites extends TestBase {
     @Test
     public void parentAndSubclassShareOneInsert() {
         withTestConfig(List.of(Animal.class, Dog.class), () -> {
-            int commands = insertCommands("animals",
-                    () -> getDs().insert(List.of(new Animal("a"), new Dog("d"), new Animal("a2"))));
-            assertEquals(1, commands);
+            assertInsertCommands(() -> getDs().insert(List.of(new Animal("a"), new Dog("d"), new Animal("a2"))),
+                    Map.of("animals", 1));
             List<String> types = getDatabase().getCollection("animals").find()
                     .map(d -> d.getString("_t"))
                     .into(new java.util.ArrayList<>());
@@ -78,8 +88,7 @@ public class TestBulkWrites extends TestBase {
     @Test
     public void unrelatedClassesSameCollectionShareOneInsert() {
         withTestConfig(List.of(Foo.class, Bar.class), () -> {
-            int commands = insertCommands("shared", () -> getDs().insert(List.of(new Foo(), new Bar(), new Foo())));
-            assertEquals(1, commands);
+            assertInsertCommands(() -> getDs().insert(List.of(new Foo(), new Bar(), new Foo())), Map.of("shared", 1));
             assertEquals(3, getDatabase().getCollection("shared").countDocuments());
         });
     }
@@ -98,10 +107,8 @@ public class TestBulkWrites extends TestBase {
     @Test
     public void subclassWithOwnCollectionBatchedSeparately() {
         withTestConfig(List.of(Animal.class, Cat.class), () -> {
-            int[] commands = insertCommands(
-                    () -> getDs().insert(List.of(new Animal("a"), new Cat("c"), new Animal("a2"))), "animals", "cats");
-            assertEquals(1, commands[0]);
-            assertEquals(1, commands[1]);
+            assertInsertCommands(() -> getDs().insert(List.of(new Animal("a"), new Cat("c"), new Animal("a2"))),
+                    Map.of("animals", 1, "cats", 1));
         });
     }
 
@@ -110,10 +117,10 @@ public class TestBulkWrites extends TestBase {
         withTestConfig(List.of(Majority.class, W1.class, AlsoW1.class), () -> {
             // the options' write concern overrides the entities', so clear it to let the @Entity concerns apply
             InsertManyOptions options = new InsertManyOptions().writeConcern(null);
-            assertEquals(2, insertCommands("shared2",
-                    () -> getDs().insert(List.of(new Majority(), new W1(), new Majority()), options)));
-            assertEquals(1, insertCommands("shared2",
-                    () -> getDs().insert(List.of(new W1(), new AlsoW1(), new W1()), options)));
+            assertInsertCommands(() -> getDs().insert(List.of(new Majority(), new W1(), new Majority()), options),
+                    Map.of("shared2", 2));
+            assertInsertCommands(() -> getDs().insert(List.of(new W1(), new AlsoW1(), new W1()), options),
+                    Map.of("shared2", 1));
         });
     }
 
