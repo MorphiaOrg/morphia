@@ -25,7 +25,7 @@ import static dev.morphia.query.filters.Filters.eq;
 public class MapReferenceSharedIdTest extends ProxyTestBase {
     @Test
     public void eager() {
-        Holder loaded = saveAndLoad();
+        SharedIdHolder loaded = saveAndLoad();
 
         assertResolved(loaded.eager);
     }
@@ -34,44 +34,44 @@ public class MapReferenceSharedIdTest extends ProxyTestBase {
     public void lazy() {
         checkForProxyTypes();
 
-        Holder loaded = saveAndLoad();
+        SharedIdHolder loaded = saveAndLoad();
 
         assertIsProxy(loaded.lazy);
         assertNotFetched(loaded.lazy);
         assertResolved(loaded.lazy);
     }
 
-    private Holder saveAndLoad() {
-        getMapper().map(Base.class, SubA.class, SubB.class, Holder.class);
+    private SharedIdHolder saveAndLoad() {
+        getMapper().map(SharedIdBase.class, SharedIdSubA.class, SharedIdSubB.class, SharedIdHolder.class);
 
-        SubA subA = new SubA();
+        SharedIdSubA subA = new SharedIdSubA();
         subA.id = 100;
-        SubB subB = new SubB();
+        SharedIdSubB subB = new SharedIdSubB();
         subB.id = 100;
 
-        Holder holder = new Holder();
+        SharedIdHolder holder = new SharedIdHolder();
         holder.id = 100;
-        holder.eager.put(SubA.class, subA);
-        holder.eager.put(SubB.class, subB);
-        holder.lazy.put(SubA.class, subA);
-        holder.lazy.put(SubB.class, subB);
+        holder.eager.put(SharedIdSubA.class, subA);
+        holder.eager.put(SharedIdSubB.class, subB);
+        holder.lazy.put(SharedIdSubA.class, subA);
+        holder.lazy.put(SharedIdSubB.class, subB);
 
         getDs().save(List.of(subA, subB, holder));
 
-        Assertions.assertNotEquals(getMapper().getEntityModel(SubA.class).collectionName(),
-                getMapper().getEntityModel(SubB.class).collectionName(),
+        Assertions.assertNotEquals(getMapper().getEntityModel(SharedIdSubA.class).collectionName(),
+                getMapper().getEntityModel(SharedIdSubB.class).collectionName(),
                 "The referenced types must live in different collections for this test to be meaningful");
 
-        Holder loaded = getDs().find(Holder.class)
+        SharedIdHolder loaded = getDs().find(SharedIdHolder.class)
                 .filter(eq("_id", holder.id))
                 .first();
         Assertions.assertNotNull(loaded);
         return loaded;
     }
 
-    private void assertResolved(Map<Class<? extends Base>, Base> map) {
+    private void assertResolved(Map<Class<? extends SharedIdBase>, SharedIdBase> map) {
         Assertions.assertEquals(2, map.size());
-        for (Map.Entry<Class<? extends Base>, Base> entry : map.entrySet()) {
+        for (Map.Entry<Class<? extends SharedIdBase>, SharedIdBase> entry : map.entrySet()) {
             Assertions.assertInstanceOf(Class.class, entry.getKey());
             Assertions.assertEquals(entry.getKey(), entry.getValue().getClass());
             Assertions.assertEquals(100, entry.getValue().id);
@@ -79,26 +79,26 @@ public class MapReferenceSharedIdTest extends ProxyTestBase {
     }
 
     @Entity
-    private static class Base {
+    private static class SharedIdBase {
         @Id
         protected long id;
     }
 
     @Entity
-    private static class SubA extends Base {
+    private static class SharedIdSubA extends SharedIdBase {
     }
 
     @Entity
-    private static class SubB extends Base {
+    private static class SharedIdSubB extends SharedIdBase {
     }
 
     @Entity
-    private static class Holder {
+    private static class SharedIdHolder {
         @Id
         private long id;
         @Reference
-        private final Map<Class<? extends Base>, Base> eager = new HashMap<>();
+        private final Map<Class<? extends SharedIdBase>, SharedIdBase> eager = new HashMap<>();
         @Reference(lazy = true)
-        private final Map<Class<? extends Base>, Base> lazy = new HashMap<>();
+        private final Map<Class<? extends SharedIdBase>, SharedIdBase> lazy = new HashMap<>();
     }
 }
