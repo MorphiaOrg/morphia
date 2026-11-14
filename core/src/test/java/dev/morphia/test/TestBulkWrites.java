@@ -493,6 +493,24 @@ public class TestBulkWrites extends TestBase {
         });
     }
 
+    @Test
+    public void laterBatchErrorKeepsRecordedFailures() {
+        withTestConfig(List.of(Reading.class, Exploding.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+            Reading dup = new Reading("k");
+
+            // the second batch fails before reaching the server, so nothing is known about its documents
+            RuntimeException e = assertThrows(RuntimeException.class,
+                    () -> getDs().insert(List.of(dup, new Exploding()), new InsertManyOptions().ordered(false)));
+            MorphiaBulkWriteException recorded = (MorphiaBulkWriteException) java.util.Arrays.stream(e.getSuppressed())
+                    .filter(MorphiaBulkWriteException.class::isInstance)
+                    .findFirst().orElseThrow();
+            assertSame(dup, recorded.getFailedEntities().get(0));
+            assertNull(dup.id);
+        });
+    }
+
     @Entity("readings")
     @Indexes(@Index(fields = @Field("key"), options = @IndexOptions(unique = true)))
     private static class Reading {
@@ -530,6 +548,17 @@ public class TestBulkWrites extends TestBase {
 
         SpecialReading(String key) {
             super(key);
+        }
+    }
+
+    @Entity("exploding")
+    private static class Exploding {
+        @Id
+        ObjectId id;
+
+        @PrePersist
+        void explode() {
+            throw new IllegalStateException("boom");
         }
     }
 

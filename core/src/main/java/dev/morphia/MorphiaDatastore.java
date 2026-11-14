@@ -17,7 +17,6 @@ import com.mongodb.ClientSessionOptions;
 import com.mongodb.MongoBulkWriteException;
 import com.mongodb.MongoCommandException;
 import com.mongodb.MongoDriverInformation;
-import com.mongodb.MongoException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.WriteConcern;
 import com.mongodb.bulk.BulkWriteError;
@@ -155,7 +154,7 @@ public class MorphiaDatastore implements Datastore {
     private DatastoreOperations operations;
     // the database with a codec that dispatches on each document's class, for list inserts mixing entity classes
     @Nullable
-    private MongoDatabase batchDatabase;
+    private volatile MongoDatabase batchDatabase;
 
     /**
      * @param client the mongo client
@@ -493,7 +492,12 @@ public class MorphiaDatastore implements Datastore {
         BitSet hadNullId = nullIds(entities);
         BulkWriteFailures failures = new BulkWriteFailures(entities.size());
         VersionBumpInfo[] infos = new VersionBumpInfo[entities.size()];
-        insertBatches(groupByCollection(indexed(entities), options), options, failures, infos);
+        try {
+            insertBatches(groupByCollection(indexed(entities), options), options, failures, infos);
+        } catch (RuntimeException e) {
+            abandonBulkWrite(entities, hadNullId, infos, failures, e);
+            throw e;
+        }
         finishBulkWrite(entities, hadNullId, infos, failures);
     }
 
@@ -545,7 +549,8 @@ public class MorphiaDatastore implements Datastore {
                             .forEach(item -> failures.recordUnprocessed(item.entity(), item.index())));
                     return true;
                 }
-            } catch (MongoException e) {
+            } catch (RuntimeException e) {
+                // the outcome of this batch is unknown
                 rollback(batch, infos);
                 throw e;
             }
@@ -563,7 +568,10 @@ public class MorphiaDatastore implements Datastore {
 
     /**
      * @return true if writes through this datastore run in an active transaction
+     * @hidden
+     * @morphia.internal
      */
+    @MorphiaInternal
     protected boolean inTransaction() {
         return false;
     }
@@ -580,9 +588,27 @@ public class MorphiaDatastore implements Datastore {
      */
     private <T> void finishBulkWrite(List<T> entities, BitSet hadNullId, @Nullable VersionBumpInfo[] infos,
             BulkWriteFailures failures) {
-        if (!failures.hasFailures()) {
-            return;
+        if (failures.hasFailures()) {
+            resetNotStored(entities, hadNullId, infos, failures);
+            failures.throwIfFailed();
         }
+    }
+
+    /**
+     * When a list write fails partway with an error that says nothing about individual entities, the entities already known not
+     * to be stored are still reset for retry, and attached to the error as a suppressed {@link MorphiaBulkWriteException}.
+     */
+    private <T> void abandonBulkWrite(List<T> entities, BitSet hadNullId, @Nullable VersionBumpInfo[] infos,
+            BulkWriteFailures failures, RuntimeException e) {
+        MorphiaBulkWriteException recorded = failures.toException();
+        if (recorded != null) {
+            resetNotStored(entities, hadNullId, infos, failures);
+            e.addSuppressed(recorded);
+        }
+    }
+
+    private <T> void resetNotStored(List<T> entities, BitSet hadNullId, @Nullable VersionBumpInfo[] infos,
+            BulkWriteFailures failures) {
         BitSet notStored = failures.notStored();
         // the same instance can appear twice in a list; if one occurrence was stored, its id and version are real
         Set<Object> stored = Collections.newSetFromMap(new IdentityHashMap<>());
@@ -601,7 +627,6 @@ public class MorphiaDatastore implements Datastore {
                 mapper.getEntityModel(entity.getClass()).getIdProperty().setValue(entity, null);
             }
         }
-        failures.throwIfFailed();
     }
 
     /**
@@ -802,6 +827,19 @@ public class MorphiaDatastore implements Datastore {
 
         BitSet hadNullId = nullIds(entities);
         BulkWriteFailures failures = new BulkWriteFailures(entities.size());
+        try {
+            saveAll(batched, individual, options, failures);
+        } catch (RuntimeException e) {
+            abandonBulkWrite(entities, hadNullId, null, failures, e);
+            throw e;
+        }
+
+        finishBulkWrite(entities, hadNullId, null, failures);
+        return entities;
+    }
+
+    private <T> void saveAll(List<Indexed<T>> batched, List<Indexed<T>> individual, InsertManyOptions options,
+            BulkWriteFailures failures) {
         boolean stopped = insertBatches(groupByCollection(batched, options), options, failures, null);
 
         InsertOneOptions insertOneOptions = new InsertOneOptions()
@@ -825,9 +863,6 @@ public class MorphiaDatastore implements Datastore {
                 stopped = stopAtFailure;
             }
         }
-
-        finishBulkWrite(entities, hadNullId, null, failures);
-        return entities;
     }
 
     @Override
@@ -1412,13 +1447,13 @@ public class MorphiaDatastore implements Datastore {
         }
     }
 
-    @MorphiaInternal
     private record BatchKey(String collection, @Nullable WriteConcern writeConcern) {
     }
 
     private record Indexed<T>(T entity, int index) {
     }
 
+    @MorphiaInternal
     private static class VersionBumpInfo {
         private final Object entity;
 

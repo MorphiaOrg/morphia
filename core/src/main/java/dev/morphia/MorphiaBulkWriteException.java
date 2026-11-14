@@ -19,13 +19,21 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * Thrown when a list insert or save ({@link Datastore#insert(List, InsertManyOptions)},
  * {@link Datastore#save(List, InsertManyOptions)}) stores some entities but not others.
  * <p>
- * {@link #getFailedEntities()} are the entities that were rejected, and {@link #getUnprocessedEntities()} are those never
- * sent because an ordered write stopped at a failure. Together they are exactly the entities that weren't stored, and
- * they can be retried: ids that Morphia generated for them are cleared so a retry inserts them again. Indexes, here and in
+ * {@link #getFailedEntities()} are the entities that were rejected, and {@link #getUnprocessedEntities()} are those not
+ * written because the write stopped at a failure. Together they are exactly the entities that weren't stored, and they can
+ * be retried: ids that Morphia generated for them are cleared so a retry inserts them again. Indexes, here and in
  * {@link #getWriteErrors()}, refer to positions in the list that was passed in.
  * <p>
  * Inside a transaction, any write error aborts the transaction, so nothing is stored unless the transaction is retried
- * and commits. List writes in a transaction stop at the first failure even when unordered.
+ * and commits. List writes in a transaction stop at the first failure even when unordered; the rest are reported as
+ * unprocessed, though the server may already have attempted some of them before the transaction aborted.
+ * <p>
+ * If a list write later fails with an error that isn't about individual entities (a network error, say), that error is
+ * thrown instead, with a {@code MorphiaBulkWriteException} for the failures recorded so far attached as a suppressed
+ * exception.
+ * <p>
+ * When the only failures are version conflicts, no server reported an error, and {@link #getServerAddress()} returns the
+ * driver's default address.
  *
  * @see InsertManyOptions#ordered(boolean)
  * @since 3.0
@@ -106,7 +114,7 @@ public class MorphiaBulkWriteException extends MongoBulkWriteException {
 
     /**
      * @param <T> the entity type
-     * @return the entities never sent because an ordered write stopped first, ordered by their position in the caller's list.
+     * @return the entities not written because the write stopped at a failure, ordered by their position in the caller's list.
      *         Always empty for unordered writes outside a transaction.
      */
     @SuppressWarnings("unchecked")

@@ -176,8 +176,19 @@ public final class BulkWriteFailures {
      * Throws a {@link MorphiaBulkWriteException} describing what wasn't stored, if anything wasn't.
      */
     public void throwIfFailed() {
+        MorphiaBulkWriteException exception = toException();
+        if (exception != null) {
+            throw exception;
+        }
+    }
+
+    /**
+     * @return a {@link MorphiaBulkWriteException} describing what wasn't stored, or null if everything was
+     */
+    @Nullable
+    public MorphiaBulkWriteException toException() {
         if (!hasFailures()) {
-            return;
+            return null;
         }
         List<Object> notSent = unprocessed.stream()
                 .sorted(Comparator.comparingInt(Unprocessed::index))
@@ -189,7 +200,7 @@ public final class BulkWriteFailures {
         BulkWriteResult result = unacknowledged
                 ? BulkWriteResult.unacknowledged()
                 : BulkWriteResult.acknowledged(inserted, matched, 0, modified, List.of(), List.of());
-        throw new MorphiaBulkWriteException(message, failures, notSent, result, writeConcernError,
+        return new MorphiaBulkWriteException(message, failures, notSent, result, writeConcernError,
                 serverAddress != null ? serverAddress : new ServerAddress(), errorLabels, cause);
     }
 

@@ -345,7 +345,9 @@ public interface Datastore {
      * New entities going to the same collection are sent in one batch; entities that already have an id, or have a
      * {@code @Version} property, are saved one at a time after the batches. Writes are ordered by default and stop at the first
      * entity that fails, whether the server rejects it or its version conflicts. Use
-     * {@link InsertManyOptions#ordered(boolean) ordered(false)} to save every entity that can be saved.
+     * {@link InsertManyOptions#ordered(boolean) ordered(false)} to save every entity that can be saved. Failures of
+     * individually saved entities, such as a {@link com.mongodb.MongoWriteException} or a {@link VersionMismatchException}, are
+     * reported through the {@link MorphiaBulkWriteException} rather than thrown directly.
      *
      * @param entities the entities to save
      * @param <T>      the type of the entity
@@ -363,7 +365,9 @@ public interface Datastore {
      * New entities going to the same collection are sent in one batch; entities that already have an id, or have a
      * {@code @Version} property, are saved one at a time after the batches. Writes are ordered by default and stop at the first
      * entity that fails, whether the server rejects it or its version conflicts. Use
-     * {@link InsertManyOptions#ordered(boolean) ordered(false)} to save every entity that can be saved.
+     * {@link InsertManyOptions#ordered(boolean) ordered(false)} to save every entity that can be saved. Failures of
+     * individually saved entities, such as a {@link com.mongodb.MongoWriteException} or a {@link VersionMismatchException}, are
+     * reported through the {@link MorphiaBulkWriteException} rather than thrown directly.
      *
      * @param entities the entities to save
      * @param <T>      the type of the entity
