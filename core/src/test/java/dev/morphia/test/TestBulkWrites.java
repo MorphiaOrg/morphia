@@ -566,6 +566,73 @@ public class TestBulkWrites extends TestBase {
         });
     }
 
+    @Test
+    public void versionConflictInTransactionKeepsSavedIds() {
+        withTestConfig(List.of(VersionedReading.class), () -> {
+            getDs().applyIndexes();
+            VersionedReading stale = staleCopy("s");
+            VersionedReading fresh = new VersionedReading("f");
+
+            try (MorphiaSession session = getDs().startSession()) {
+                session.startTransaction();
+                assertThrows(MorphiaBulkWriteException.class, () -> session.save(List.of(fresh, stale)));
+                // a version conflict doesn't abort the transaction, so what was saved can still commit
+                assertNotNull(fresh.id);
+                session.commitTransaction();
+            }
+            assertEquals(1, getDatabase().getCollection("vreadings").countDocuments(new Document("key", "f")));
+        });
+    }
+
+    @Test
+    public void abortedTransactionRestoresIndividuallySavedVersions() {
+        withTestConfig(List.of(Reading.class, VersionedReading.class), () -> {
+            getDs().applyIndexes();
+            VersionedReading versioned = getDs().save(new VersionedReading("v"));
+            Long version = versioned.version;
+            getDs().save(new Reading("a"));
+            Reading clash = getDs().save(new Reading("b"));
+            clash.key = "a";
+
+            try (MorphiaSession session = getDs().startSession()) {
+                session.startTransaction();
+                assertThrows(MorphiaBulkWriteException.class, () -> session.save(List.of(versioned, clash)));
+                if (session.hasActiveTransaction()) {
+                    session.abortTransaction();
+                }
+            }
+            assertEquals(version, versioned.version);
+        });
+    }
+
+    @Test
+    public void unacknowledgedIndividualInsertMarksResultUnacknowledged() {
+        withTestConfig(List.of(Reading.class, UnacknowledgedVersioned.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+
+            MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class,
+                    () -> getDs().save(List.of(new Reading("k"), new UnacknowledgedVersioned()),
+                            new InsertManyOptions().ordered(false).writeConcern(null)));
+            assertFalse(e.getWriteResult().wasAcknowledged());
+        });
+    }
+
+    @Test
+    public void upsertsAppearInWriteResult() {
+        withTestConfig(List.of(Reading.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+            Reading upserted = new Reading("u");
+            upserted.id = new ObjectId();
+
+            MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class,
+                    () -> getDs().save(List.of(new Reading("k"), upserted), new InsertManyOptions().ordered(false)));
+            assertEquals(1, e.getWriteResult().getUpserts().size());
+            assertEquals(1, e.getWriteResult().getUpserts().get(0).getIndex());
+        });
+    }
+
     @Entity("readings")
     @Indexes(@Index(fields = @Field("key"), options = @IndexOptions(unique = true)))
     private static class Reading {
@@ -638,6 +705,14 @@ public class TestBulkWrites extends TestBase {
         VersionedReading(String key) {
             this.key = key;
         }
+    }
+
+    @Entity(value = "unack", concern = "UNACKNOWLEDGED")
+    private static class UnacknowledgedVersioned {
+        @Id
+        ObjectId id;
+        @Version
+        Long version;
     }
 
     @Entity("lreadings")

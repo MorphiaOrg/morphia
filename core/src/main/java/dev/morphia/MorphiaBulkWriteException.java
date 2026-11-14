@@ -24,11 +24,12 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * be retried: ids that Morphia generated for them are cleared so a retry inserts them again. Indexes, here and in
  * {@link #getWriteErrors()}, refer to positions in the list that was passed in.
  * <p>
- * Inside a transaction, any write error aborts the transaction, so nothing is stored unless the transaction is retried
- * and commits. List writes in a transaction stop at the first failure even when unordered; the rest are reported as
- * unprocessed, though the server may already have attempted some of them before the transaction aborted. Since nothing in
- * the write is stored, Morphia rolls back the version bumps and generated ids of every entity in it, not just the listed
- * ones.
+ * Inside a transaction, a server write error aborts the transaction, so nothing is stored unless the transaction is
+ * retried and commits. List writes in a transaction stop at the first failure even when unordered; the rest are reported as
+ * unprocessed, though the server may already have attempted some of them before the transaction aborted. After a server
+ * write error, Morphia rolls back the version bumps and generated ids of every entity in the write, not just the listed
+ * ones. A version conflict doesn't abort the transaction, so the entities saved before it keep their ids and versions and
+ * can still be committed.
  * <p>
  * If a list write later fails with an error that isn't about individual entities (a network error, say), that error is
  * thrown instead, with a {@code MorphiaBulkWriteException} attached as a suppressed exception. It lists the failures recorded

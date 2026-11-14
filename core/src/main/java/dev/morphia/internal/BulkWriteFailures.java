@@ -12,7 +12,9 @@ import com.mongodb.MongoWriteException;
 import com.mongodb.ServerAddress;
 import com.mongodb.bulk.BulkWriteError;
 import com.mongodb.bulk.BulkWriteResult;
+import com.mongodb.bulk.BulkWriteUpsert;
 import com.mongodb.bulk.WriteConcernError;
+import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 import com.mongodb.lang.Nullable;
 
@@ -37,6 +39,8 @@ public final class BulkWriteFailures {
     private final List<Unprocessed> unprocessed = new ArrayList<>();
 
     private final Set<String> errorLabels = new LinkedHashSet<>();
+
+    private final List<BulkWriteUpsert> upserts = new ArrayList<>();
 
     private int inserted;
 
@@ -81,16 +85,26 @@ public final class BulkWriteFailures {
     /**
      * Records one entity saved individually.
      *
-     * @param result the replace's result, or null if the entity was inserted
+     * @param result the save's {@link InsertOneResult} or {@link UpdateResult}
+     * @param index  the entity's position in the caller's list
      */
-    public void recordSaved(@Nullable UpdateResult result) {
-        if (result == null) {
-            inserted++;
-        } else if (!result.wasAcknowledged()) {
-            unacknowledged = true;
-        } else {
-            matched += (int) result.getMatchedCount();
-            modified += (int) result.getModifiedCount();
+    public void recordSaved(Object result, int index) {
+        if (result instanceof InsertOneResult insert) {
+            if (insert.wasAcknowledged()) {
+                inserted++;
+            } else {
+                unacknowledged = true;
+            }
+        } else if (result instanceof UpdateResult update) {
+            if (!update.wasAcknowledged()) {
+                unacknowledged = true;
+            } else {
+                matched += (int) update.getMatchedCount();
+                modified += (int) update.getModifiedCount();
+                if (update.getUpsertedId() != null) {
+                    upserts.add(new BulkWriteUpsert(index, update.getUpsertedId()));
+                }
+            }
         }
     }
 
@@ -156,6 +170,13 @@ public final class BulkWriteFailures {
     }
 
     /**
+     * @return true if the server rejected any entity. In a transaction, that aborts the transaction.
+     */
+    public boolean hasServerErrors() {
+        return failures.stream().anyMatch(f -> f.error() != null);
+    }
+
+    /**
      * @return true if any entity was rejected or never sent
      */
     public boolean hasFailures() {
@@ -199,7 +220,7 @@ public final class BulkWriteFailures {
                 conflicts);
         BulkWriteResult result = unacknowledged
                 ? BulkWriteResult.unacknowledged()
-                : BulkWriteResult.acknowledged(inserted, matched, 0, modified, List.of(), List.of());
+                : BulkWriteResult.acknowledged(inserted, matched, 0, modified, upserts, List.of());
         return new MorphiaBulkWriteException(message, failures, notSent, result, writeConcernError,
                 serverAddress != null ? serverAddress : new ServerAddress(), errorLabels, cause);
     }

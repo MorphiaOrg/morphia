@@ -619,8 +619,8 @@ public class MorphiaDatastore implements Datastore {
     private <T> void resetNotStored(List<T> entities, BitSet hadNullId, @Nullable VersionBumpInfo[] infos,
             BulkWriteFailures failures) {
         BitSet notStored = failures.notStored();
-        if (inTransaction()) {
-            // the failure aborted the transaction, so nothing in this write is stored
+        if (inTransaction() && failures.hasServerErrors()) {
+            // a server write error aborted the transaction, so nothing in this write is stored
             notStored.set(0, entities.size());
         }
         // the same instance can appear twice in a list; if one occurrence was stored, its id and version are real
@@ -840,19 +840,21 @@ public class MorphiaDatastore implements Datastore {
 
         BitSet hadNullId = nullIds(entities);
         BulkWriteFailures failures = new BulkWriteFailures(entities.size());
+        // each individually saved entity's version before its save, so an aborted transaction can restore it
+        VersionBumpInfo[] infos = new VersionBumpInfo[entities.size()];
         try {
-            saveAll(batched, individual, options, failures);
+            saveAll(batched, individual, options, failures, infos);
         } catch (RuntimeException e) {
-            abandonBulkWrite(entities, hadNullId, null, failures, e);
+            abandonBulkWrite(entities, hadNullId, infos, failures, e);
             throw e;
         }
 
-        finishBulkWrite(entities, hadNullId, null, failures);
+        finishBulkWrite(entities, hadNullId, infos, failures);
         return entities;
     }
 
     private <T> void saveAll(List<Indexed<T>> batched, List<Indexed<T>> individual, InsertManyOptions options,
-            BulkWriteFailures failures) {
+            BulkWriteFailures failures, VersionBumpInfo[] infos) {
         boolean stopped;
         try {
             stopped = insertBatches(groupByCollection(batched, options), options, failures, null);
@@ -873,8 +875,9 @@ public class MorphiaDatastore implements Datastore {
                 failures.recordUnprocessed(entity, item.index());
                 continue;
             }
+            infos[item.index()] = versionSnapshot(entity);
             try {
-                failures.recordSaved(save(getCollection(entity.getClass()), entity, insertOneOptions));
+                failures.recordSaved(save(getCollection(entity.getClass()), entity, insertOneOptions), item.index());
             } catch (MongoWriteException e) {
                 failures.recordWriteFailure(entity, item.index(), e);
                 stopped = stopAtFailure;
@@ -989,10 +992,9 @@ public class MorphiaDatastore implements Datastore {
     }
 
     /**
-     * @return the replace's result, or null if the entity was inserted
+     * @return the {@link InsertOneResult} or {@link UpdateResult} of the write
      */
-    @Nullable
-    private <T> UpdateResult save(MongoCollection collection, T entity, InsertOneOptions options) {
+    private <T> Object save(MongoCollection collection, T entity, InsertOneOptions options) {
         collection = configureCollection(options, collection);
 
         EntityModel entityModel = mapper.getEntityModel(entity.getClass());
@@ -1002,8 +1004,7 @@ public class MorphiaDatastore implements Datastore {
 
         try {
             if (id == null || info.versioned() && info.newVersion() == 1) {
-                operations.insertOne(collection, entity, options);
-                return null;
+                return operations.insertOne(collection, entity, options);
             } else {
                 ReplaceOptions updateOptions = new ReplaceOptions()
                         .bypassDocumentValidation(options.bypassDocumentValidation())
@@ -1081,6 +1082,18 @@ public class MorphiaDatastore implements Datastore {
             collection = ((WriteConfigurable<?>) options).configure(collection);
         }
         return collection;
+    }
+
+    /**
+     * @return the entity's current version, to restore later; not a bump
+     */
+    private <T> VersionBumpInfo versionSnapshot(T entity) {
+        PropertyModel versionProperty = mapper.getEntityModel(entity.getClass()).getVersionProperty();
+        if (versionProperty == null) {
+            return new VersionBumpInfo(entity);
+        }
+        Long current = (Long) versionProperty.getValue(entity);
+        return new VersionBumpInfo(entity, versionProperty, current, current);
     }
 
     private <T> VersionBumpInfo updateVersioning(EntityModel entityModel, T entity) {
