@@ -74,6 +74,11 @@ public class SessionDatastore extends MorphiaDatastore implements MorphiaSession
     }
 
     @Override
+    protected boolean inTransaction() {
+        return hasActiveTransaction();
+    }
+
+    @Override
     public boolean notifyMessageSent() {
         return session.notifyMessageSent();
     }

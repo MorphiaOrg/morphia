@@ -18,6 +18,7 @@ import dev.morphia.annotations.Indexes;
 import dev.morphia.annotations.PrePersist;
 import dev.morphia.annotations.Transient;
 import dev.morphia.annotations.Version;
+import dev.morphia.transactions.MorphiaSession;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -430,6 +431,30 @@ public class TestBulkWrites extends TestBase {
             getDs().applyIndexes();
             VersionedReading stale = staleCopy("s");
             assertThrows(VersionMismatchException.class, () -> getDs().save(stale));
+        });
+    }
+
+    @Test
+    public void bulkInsertStopsAtFirstFailureInTransaction() {
+        withTestConfig(List.of(Reading.class, Note.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+            getDatabase().createCollection("notes");
+            Note n1 = new Note();
+            Note n2 = new Note();
+            List<Object> list = List.of(new Reading("a"), new Reading("k"), n1, n2);
+
+            try (MorphiaSession session = getDs().startSession()) {
+                session.startTransaction();
+                MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class,
+                        () -> session.insert(list, new InsertManyOptions().ordered(false)));
+                assertEquals(List.of(n1, n2), e.getUnprocessedEntities());
+                if (session.hasActiveTransaction()) {
+                    session.abortTransaction();
+                }
+            }
+            assertEquals(0, count("notes"));
+            assertEquals(1, count("readings"));
         });
     }
 

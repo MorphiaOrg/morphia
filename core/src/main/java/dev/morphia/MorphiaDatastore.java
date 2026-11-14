@@ -546,8 +546,19 @@ public class MorphiaDatastore implements Datastore {
         return false;
     }
 
+    /**
+     * Ordered writes stop at the first failure. So does any write in a transaction: the failure aborts the transaction, and
+     * every later write in it would fail too.
+     */
     private boolean stopsAtFirstFailure(InsertManyOptions options) {
-        return options.driver().isOrdered();
+        return options.driver().isOrdered() || inTransaction();
+    }
+
+    /**
+     * @return true if writes through this datastore run in an active transaction
+     */
+    protected boolean inTransaction() {
+        return false;
     }
 
     private static <T> void rollback(List<Indexed<T>> batch, @Nullable VersionBumpInfo[] infos) {
