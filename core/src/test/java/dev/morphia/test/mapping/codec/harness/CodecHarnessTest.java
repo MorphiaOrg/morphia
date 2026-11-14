@@ -149,18 +149,12 @@ public class CodecHarnessTest {
     private static final EncoderContext PLAIN = EncoderContext.builder().build();
     private static final DecoderContext DECODER = DecoderContext.builder().build();
     /**
-     * Cases the lifecycle codecs still read differently from the plain ones, by listener:
-     * <ul>
-     * <li>through a {@code Document}, {@code DocumentReader} can't convert a string stored for a number, which the plain and
-     * streaming paths do, and an id stored as another type is converted from the {@code Document}'s value rather than read;
-     * <li>both lifecycle paths take a null discriminator as a missing one, where the plain path rejects it.
-     * </ul>
+     * Cases a listener still reads differently from the plain codec, by listener. Adding a listener must not change what
+     * an entity decodes to, so both are empty and every case is required to match.
      */
     private static final Map<GlobalListener, Set<String>> LIFECYCLE_DIVERGENCES = Map.of(
-            GlobalListener.DOCUMENT, Set.of("foreign/scalars-schema-drift", "foreign/pet-string-id-for-object-id",
-                    "foreign/pet-document-id", "foreign/pet-null-discriminator", "foreign/ticket-int-id-for-string-id",
-                    "foreign/ticket-long-id-for-string-id"),
-            GlobalListener.STREAMING, Set.of("foreign/pet-null-discriminator"));
+            GlobalListener.DOCUMENT, Set.<String> of(),
+            GlobalListener.STREAMING, Set.<String> of());
 
     private final MongoClient client = offlineClient();
 
