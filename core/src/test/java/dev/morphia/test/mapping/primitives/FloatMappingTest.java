@@ -51,9 +51,9 @@ public class FloatMappingTest extends TestBase {
 
     @Entity
     private static class Floats {
-        private final List<Float[]> listWrapperArray = new ArrayList<>();
-        private final List<float[]> listPrimitiveArray = new ArrayList<>();
-        private final List<Float> listWrapper = new ArrayList<>();
+        private List<Float[]> listWrapperArray = new ArrayList<>();
+        private List<float[]> listPrimitiveArray = new ArrayList<>();
+        private List<Float> listWrapper = new ArrayList<>();
         @Id
         private ObjectId id;
         private float singlePrimitive;

@@ -58,7 +58,7 @@ public class TestUUIDs extends TestBase {
 
     @Entity(useDiscriminator = false)
     private static class ContainsUUID {
-        private final UUID uuid = UUID.randomUUID();
+        private UUID uuid = UUID.randomUUID();
         @Id
         private ObjectId id;
     }
@@ -66,7 +66,7 @@ public class TestUUIDs extends TestBase {
     @Entity(useDiscriminator = false)
     private static class ContainsUuidId {
         @Id
-        private final UUID id = UUID.randomUUID();
+        private UUID id = UUID.randomUUID();
         @Transient
         boolean preload = false;
 

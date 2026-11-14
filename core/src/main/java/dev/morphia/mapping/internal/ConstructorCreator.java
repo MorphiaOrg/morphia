@@ -5,6 +5,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -153,15 +154,71 @@ public class ConstructorCreator implements MorphiaInstanceCreator {
                     .orElseThrow(() -> new IllegalStateException(Sofia.lifecycleNoargs(model.getType())));
         }
 
+        // a constructor taking every final property comes first so that none of them has to be set reflectively (JEP 500),
+        // then the one taking the most properties
+        List<String> finals = finalProperties(model);
         return constructors.stream()
                 .filter(it -> stream(it.getParameters())
                         .allMatch(param -> Objects.equals(propertyMap.get(getParameterName(param)), param.getType())))
-                .sorted((o1, o2) -> compare(o2.getParameterCount(), o1.getParameterCount()))
+                .sorted(Comparator.<Constructor<?>> comparingInt(it -> missing(finals, it).size())
+                        .thenComparing((o1, o2) -> compare(o2.getParameterCount(), o1.getParameterCount())))
                 .findFirst()
                 .orElse(null);
     }
 
-    private static boolean hasLifecycleEvents(EntityModel model) {
+    /**
+     * @param model the model
+     * @return the names of the final properties the constructor used to create {@code model}'s instances doesn't take, which
+     *         must then be set reflectively
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public static List<String> reflectiveFinals(EntityModel model) {
+        List<String> finals = finalProperties(model);
+        if (finals.isEmpty()) {
+            return finals;
+        }
+        if (hasLifecycleEvents(model)) {
+            // created with the no-arg constructor
+            return finals;
+        }
+        Constructor<?> constructor = bestConstructor(model);
+        if (constructor == null) {
+            // instances are created with the full constructor. its parameters may name properties by their mapped names,
+            // which don't bind, so those finals are still set reflectively
+            try {
+                constructor = getFullConstructor(model);
+            } catch (MappingException e) {
+                // no instances can be created at all, which mapping reports on its own
+                return List.of();
+            }
+        }
+        return missing(finals, constructor);
+    }
+
+    private static List<String> finalProperties(EntityModel model) {
+        // a final ignored by the configuration isn't stored, so there's nothing to pass a constructor
+        return model.getProperties().stream()
+                .filter(property -> property.isFinal() && !property.isIgnoredFinal())
+                .map(PropertyModel::getName)
+                .toList();
+    }
+
+    private static List<String> missing(List<String> finals, Constructor<?> constructor) {
+        List<String> missing = new ArrayList<>(finals);
+        for (Parameter parameter : constructor.getParameters()) {
+            missing.remove(getParameterName(parameter));
+        }
+        return missing;
+    }
+
+    /**
+     * @param model the model
+     * @return true if the type has lifecycle methods, which requires a no-arg constructor
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public static boolean hasLifecycleEvents(EntityModel model) {
         return model.hasLifecycle(PreLoad.class)
                 || model.hasLifecycle(PostLoad.class)
                 || model.hasLifecycle(PrePersist.class)

@@ -52,9 +52,9 @@ public class ByteMappingTest extends TestBase {
 
     @Entity
     private static class Bytes {
-        private final List<Byte[]> listWrapperArray = new ArrayList<>();
-        private final List<byte[]> listPrimitiveArray = new ArrayList<>();
-        private final List<Byte> listWrapper = new ArrayList<>();
+        private List<Byte[]> listWrapperArray = new ArrayList<>();
+        private List<byte[]> listPrimitiveArray = new ArrayList<>();
+        private List<Byte> listWrapper = new ArrayList<>();
         @Id
         private ObjectId id;
         private byte singlePrimitive;

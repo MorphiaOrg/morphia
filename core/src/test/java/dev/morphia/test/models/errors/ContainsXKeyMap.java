@@ -11,7 +11,7 @@ import org.bson.types.ObjectId;
 
 @Entity
 public class ContainsXKeyMap<T> {
-    public final Map<T, String> values = new HashMap<>();
+    public Map<T, String> values = new HashMap<>();
     @Id
     public ObjectId id;
 
