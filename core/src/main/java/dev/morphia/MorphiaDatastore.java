@@ -507,6 +507,8 @@ public class MorphiaDatastore implements Datastore {
     private <T> boolean insertBatches(Map<BatchKey, List<Indexed<T>>> batches, InsertManyOptions options,
             BulkWriteFailures failures, @Nullable VersionBumpInfo[] infos) {
         boolean stopAtFailure = stopsAtFirstFailure(options);
+        // an instance listed more than once is bumped once, and every occurrence shares that bump
+        Map<Object, VersionBumpInfo> bumped = new IdentityHashMap<>();
         List<Entry<BatchKey, List<Indexed<T>>>> entries = new ArrayList<>(batches.entrySet());
         for (int b = 0; b < entries.size(); b++) {
             List<Indexed<T>> batch = entries.get(b).getValue();
@@ -517,13 +519,18 @@ public class MorphiaDatastore implements Datastore {
                 list.add(item.entity());
                 indexes[i] = item.index();
                 if (infos != null) {
-                    infos[item.index()] = updateVersioning(mapper.getEntityModel(item.entity().getClass()), item.entity());
+                    infos[item.index()] = bumped.computeIfAbsent(item.entity(),
+                            entity -> updateVersioning(mapper.getEntityModel(entity.getClass()), entity));
                 }
             }
 
             try {
                 InsertManyResult result = operations.insertMany(batchCollection(entries.get(b).getKey()), list, options);
-                failures.recordInserted(result.getInsertedIds().size());
+                if (result.wasAcknowledged()) {
+                    failures.recordInserted(result.getInsertedIds().size());
+                } else {
+                    failures.recordUnacknowledged();
+                }
             } catch (MongoBulkWriteException e) {
                 if (e.getWriteErrors().isEmpty()) {
                     // only a write concern error: no document was rejected, but we can't say what's durable
@@ -577,17 +584,20 @@ public class MorphiaDatastore implements Datastore {
             return;
         }
         BitSet notStored = failures.notStored();
-        // the same instance can appear twice in a list; if one occurrence was stored, its id is real
+        // the same instance can appear twice in a list; if one occurrence was stored, its id and version are real
         Set<Object> stored = Collections.newSetFromMap(new IdentityHashMap<>());
         for (int i = notStored.nextClearBit(0); i < entities.size(); i = notStored.nextClearBit(i + 1)) {
             stored.add(entities.get(i));
         }
         for (int i = notStored.nextSetBit(0); i >= 0; i = notStored.nextSetBit(i + 1)) {
             T entity = entities.get(i);
+            if (stored.contains(entity)) {
+                continue;
+            }
             if (infos != null && infos[i] != null) {
                 infos[i].rollbackVersion();
             }
-            if (hadNullId.get(i) && !stored.contains(entity)) {
+            if (hadNullId.get(i)) {
                 mapper.getEntityModel(entity.getClass()).getIdProperty().setValue(entity, null);
             }
         }

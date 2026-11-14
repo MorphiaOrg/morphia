@@ -458,6 +458,41 @@ public class TestBulkWrites extends TestBase {
         });
     }
 
+    @Test
+    public void unacknowledgedListWritesReturnNormally() {
+        withTestConfig(List.of(Reading.class), () -> {
+            InsertManyOptions options = new InsertManyOptions().writeConcern(com.mongodb.WriteConcern.UNACKNOWLEDGED);
+            getDs().insert(List.of(new Reading("a"), new Reading("b")), options);
+            getDs().save(List.of(new Reading("c"), new Reading("d")), options);
+        });
+    }
+
+    @Test
+    public void sameVersionedInstanceTwiceKeepsStoredVersion() {
+        withTestConfig(List.of(VersionedReading.class), () -> {
+            getDs().applyIndexes();
+            VersionedReading r = new VersionedReading("a");
+
+            assertThrows(MorphiaBulkWriteException.class, () -> getDs().insert(List.of(r, r)));
+            Long stored = getDatabase().getCollection("vreadings").find().first().getLong("version");
+            assertEquals(stored, r.version);
+            r.key = "a2";
+            getDs().save(r);
+        });
+    }
+
+    @Test
+    public void sameVersionedInstanceTwiceNeitherStored() {
+        withTestConfig(List.of(VersionedReading.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new VersionedReading("k"));
+            VersionedReading r = new VersionedReading("k");
+
+            assertThrows(MorphiaBulkWriteException.class, () -> getDs().insert(List.of(r, r)));
+            assertNull(r.version);
+        });
+    }
+
     @Entity("readings")
     @Indexes(@Index(fields = @Field("key"), options = @IndexOptions(unique = true)))
     private static class Reading {

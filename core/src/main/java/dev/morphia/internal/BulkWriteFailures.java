@@ -72,6 +72,13 @@ public final class BulkWriteFailures {
     }
 
     /**
+     * Records a batch sent with an unacknowledged write concern, whose outcome isn't known.
+     */
+    public void recordUnacknowledged() {
+        unacknowledged = true;
+    }
+
+    /**
      * Records one entity saved individually.
      *
      * @param result the replace's result, or null if the entity was inserted
