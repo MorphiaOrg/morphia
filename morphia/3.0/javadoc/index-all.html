@@ -435,6 +435,14 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">A positive 32-bit integer that specifies the number of buckets into which input documents are grouped.</div>
 </dd>
+<dt><a href="dev/morphia/BulkWriteFailure.html" class="type-name-link" title="class in dev.morphia">BulkWriteFailure</a> - Record Class in <a href="dev/morphia/package-summary.html">dev.morphia</a></dt>
+<dd>
+<div class="block">One entity that a list insert or save did not store.</div>
+</dd>
+<dt><a href="dev/morphia/BulkWriteFailure.html#%3Cinit%3E(java.lang.Object,int,com.mongodb.WriteError,java.lang.RuntimeException)" class="member-name-link">BulkWriteFailure(Object, int, WriteError, RuntimeException)</a> - Constructor for record class dev.morphia.<a href="dev/morphia/BulkWriteFailure.html" title="class in dev.morphia">BulkWriteFailure</a></dt>
+<dd>
+<div class="block">Creates a failure.</div>
+</dd>
 <dt><a href="dev/morphia/aggregation/AggregationOptions.html#bypassDocumentValidation(boolean)" class="member-name-link">bypassDocumentValidation(boolean)</a> - Method in class dev.morphia.aggregation.<a href="dev/morphia/aggregation/AggregationOptions.html" title="class in dev.morphia.aggregation">AggregationOptions</a></dt>
 <dd>
 <div class="block">Enables the aggregation to bypass document validation during the operation.</div>
@@ -1251,6 +1259,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">The ending index</div>
 </dd>
+<dt><a href="dev/morphia/BulkWriteFailure.html#entity()" class="member-name-link">entity()</a> - Method in record class dev.morphia.<a href="dev/morphia/BulkWriteFailure.html" title="class in dev.morphia">BulkWriteFailure</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./dev/morphia/BulkWriteFailure.html#param-entity"><code>entity</code></a> record component.</div>
+</dd>
 <dt><a href="dev/morphia/aggregation/expressions/ComparisonExpressions.html#eq(java.lang.Object,java.lang.Object)" class="member-name-link">eq(Object, Object)</a> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/ComparisonExpressions.html" title="class in dev.morphia.aggregation.expressions">ComparisonExpressions</a></dt>
 <dd>
 <div class="block">Creates an equality check expression</div>
@@ -1259,9 +1271,21 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Specifies equality condition.</div>
 </dd>
+<dt><a href="dev/morphia/BulkWriteFailure.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class dev.morphia.<a href="dev/morphia/BulkWriteFailure.html" title="class in dev.morphia">BulkWriteFailure</a></dt>
+<dd>
+<div class="block">Indicates whether some other object is "equal to" this one.</div>
+</dd>
 <dt><a href="dev/morphia/critter/parser/PropertyFinder.Properties.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/PropertyFinder.Properties.html" title="class in dev.morphia.critter.parser">PropertyFinder.Properties</a></dt>
 <dd>
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
+</dd>
+<dt><a href="dev/morphia/BulkWriteFailure.html#error()" class="member-name-link">error()</a> - Method in record class dev.morphia.<a href="dev/morphia/BulkWriteFailure.html" title="class in dev.morphia">BulkWriteFailure</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./dev/morphia/BulkWriteFailure.html#param-error"><code>error</code></a> record component.</div>
+</dd>
+<dt><a href="dev/morphia/BulkWriteFailure.html#exception()" class="member-name-link">exception()</a> - Method in record class dev.morphia.<a href="dev/morphia/BulkWriteFailure.html" title="class in dev.morphia">BulkWriteFailure</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./dev/morphia/BulkWriteFailure.html#param-exception"><code>exception</code></a> record component.</div>
 </dd>
 <dt><a href="dev/morphia/aggregation/stages/Projection.html#exclude(java.lang.String)" class="member-name-link">exclude(String)</a> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/Projection.html" title="class in dev.morphia.aggregation.stages">Projection</a></dt>
 <dd>
@@ -1550,6 +1574,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Defines a $geoWithin filter.</div>
 </dd>
+<dt><a href="dev/morphia/MorphiaBulkWriteException.html#getFailedEntities()" class="member-name-link">getFailedEntities()</a> - Method in exception dev.morphia.<a href="dev/morphia/MorphiaBulkWriteException.html" title="class in dev.morphia">MorphiaBulkWriteException</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="dev/morphia/MorphiaBulkWriteException.html#getFailures()" class="member-name-link">getFailures()</a> - Method in exception dev.morphia.<a href="dev/morphia/MorphiaBulkWriteException.html" title="class in dev.morphia">MorphiaBulkWriteException</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="dev/morphia/aggregation/expressions/Miscellaneous.html#getField(java.lang.Object)" class="member-name-link">getField(Object)</a> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/Miscellaneous.html" title="class in dev.morphia.aggregation.expressions">Miscellaneous</a></dt>
 <dd>
 <div class="block">Returns the value of a specified field from a document.</div>
@@ -1564,11 +1592,15 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="dev/morphia/query/Query.html#getLoggedQuery()" class="member-name-link">getLoggedQuery()</a> - Method in interface dev.morphia.query.<a href="dev/morphia/query/Query.html" title="interface in dev.morphia.query">Query</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="dev/morphia/MorphiaBulkWriteException.html#getMessage()" class="member-name-link">getMessage()</a> - Method in exception dev.morphia.<a href="dev/morphia/MorphiaBulkWriteException.html" title="class in dev.morphia">MorphiaBulkWriteException</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="dev/morphia/aggregation/expressions/impls/ConvertType.html#getName()" class="member-name-link">getName()</a> - Method in enum class dev.morphia.aggregation.expressions.impls.<a href="dev/morphia/aggregation/expressions/impls/ConvertType.html" title="enum class in dev.morphia.aggregation.expressions.impls">ConvertType</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/query/MorphiaCursor.html#getServerAddress()" class="member-name-link">getServerAddress()</a> - Method in class dev.morphia.query.<a href="dev/morphia/query/MorphiaCursor.html" title="class in dev.morphia.query">MorphiaCursor</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/query/MorphiaCursor.html#getServerCursor()" class="member-name-link">getServerCursor()</a> - Method in class dev.morphia.query.<a href="dev/morphia/query/MorphiaCursor.html" title="class in dev.morphia.query">MorphiaCursor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="dev/morphia/MorphiaBulkWriteException.html#getUnprocessedEntities()" class="member-name-link">getUnprocessedEntities()</a> - Method in exception dev.morphia.<a href="dev/morphia/MorphiaBulkWriteException.html" title="class in dev.morphia">MorphiaBulkWriteException</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="dev/morphia/mapping/DateStorage.html#getZone()" class="member-name-link">getZone()</a> - Method in enum class dev.morphia.mapping.<a href="dev/morphia/mapping/DateStorage.html" title="enum class in dev.morphia.mapping">DateStorage</a></dt>
 <dd>&nbsp;</dd>
@@ -1646,6 +1678,10 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:H">H</h2>
 <dl class="index">
+<dt><a href="dev/morphia/BulkWriteFailure.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class dev.morphia.<a href="dev/morphia/BulkWriteFailure.html" title="class in dev.morphia">BulkWriteFailure</a></dt>
+<dd>
+<div class="block">Returns a hash code value for this object.</div>
+</dd>
 <dt><a href="dev/morphia/critter/parser/PropertyFinder.Properties.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/PropertyFinder.Properties.html" title="class in dev.morphia.critter.parser">PropertyFinder.Properties</a></dt>
 <dd>
 <div class="block">Returns a hash code value for this object.</div>
@@ -1802,6 +1838,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="dev/morphia/aggregation/stages/GeoNear.html#includeLocs(java.lang.String)" class="member-name-link">includeLocs(String)</a> - Method in class dev.morphia.aggregation.stages.<a href="dev/morphia/aggregation/stages/GeoNear.html" title="class in dev.morphia.aggregation.stages">GeoNear</a></dt>
 <dd>
 <div class="block">Optional.</div>
+</dd>
+<dt><a href="dev/morphia/BulkWriteFailure.html#index()" class="member-name-link">index()</a> - Method in record class dev.morphia.<a href="dev/morphia/BulkWriteFailure.html" title="class in dev.morphia">BulkWriteFailure</a></dt>
+<dd>
+<div class="block">Returns the value of the <a href="./dev/morphia/BulkWriteFailure.html#param-index"><code>index</code></a> record component.</div>
 </dd>
 <dt><a href="dev/morphia/aggregation/expressions/impls/IndexExpression.html" class="type-name-link" title="class in dev.morphia.aggregation.expressions.impls">IndexExpression</a> - Class in <a href="dev/morphia/aggregation/expressions/impls/package-summary.html">dev.morphia.aggregation.expressions.impls</a></dt>
 <dd>
@@ -2488,6 +2528,11 @@ loadScripts(document, 'script');</script>
 <dt><a href="dev/morphia/Morphia.html" class="type-name-link" title="class in dev.morphia">Morphia</a> - Class in <a href="dev/morphia/package-summary.html">dev.morphia</a></dt>
 <dd>
 <div class="block">Entry point for working with Morphia</div>
+</dd>
+<dt><a href="dev/morphia/MorphiaBulkWriteException.html" class="type-name-link" title="class in dev.morphia">MorphiaBulkWriteException</a> - Exception in <a href="dev/morphia/package-summary.html">dev.morphia</a></dt>
+<dd>
+<div class="block">Thrown when a list insert or save (<a href="dev/morphia/Datastore.html#insert(java.util.List,dev.morphia.InsertManyOptions)"><code>Datastore.insert(List, InsertManyOptions)</code></a>,
+ <a href="dev/morphia/Datastore.html#save(java.util.List,dev.morphia.InsertManyOptions)"><code>Datastore.save(List, InsertManyOptions)</code></a>) stores some entities but not others.</div>
 </dd>
 <dt><a href="dev/morphia/config/MorphiaConfig.html" class="type-name-link" title="interface in dev.morphia.config">MorphiaConfig</a> - Interface in <a href="dev/morphia/config/package-summary.html">dev.morphia.config</a></dt>
 <dd>
@@ -3802,6 +3847,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="dev/morphia/aggregation/expressions/AccumulatorExpressions.html#topN(java.lang.Object,java.lang.Object,dev.morphia.query.Sort...)" class="member-name-link">topN(Object, Object, Sort...)</a> - Static method in class dev.morphia.aggregation.expressions.<a href="dev/morphia/aggregation/expressions/AccumulatorExpressions.html" title="class in dev.morphia.aggregation.expressions">AccumulatorExpressions</a></dt>
 <dd>
 <div class="block">Returns an aggregation of the top n elements within a group, according to the specified sort order.</div>
+</dd>
+<dt><a href="dev/morphia/BulkWriteFailure.html#toString()" class="member-name-link">toString()</a> - Method in record class dev.morphia.<a href="dev/morphia/BulkWriteFailure.html" title="class in dev.morphia">BulkWriteFailure</a></dt>
+<dd>
+<div class="block">Returns a string representation of this record class.</div>
 </dd>
 <dt><a href="dev/morphia/critter/parser/PropertyFinder.Properties.html#toString()" class="member-name-link">toString()</a> - Method in record class dev.morphia.critter.parser.<a href="dev/morphia/critter/parser/PropertyFinder.Properties.html" title="class in dev.morphia.critter.parser">PropertyFinder.Properties</a></dt>
 <dd>

@@ -266,12 +266,24 @@ implements dev.morphia.internal.WriteConfigurable&lt;<a href="InsertManyOptions.
 <section class="detail" id="ordered(boolean)">
 <h3>ordered</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a></span>&nbsp;<span class="element-name">ordered</span><wbr><span class="parameters">(boolean&nbsp;ordered)</span></div>
-<div class="block">Sets whether the server should insert the documents in the order provided.</div>
+<div class="block">Sets whether the server should insert the documents in the order provided.
+ <p>
+ Ordered (the default) stops at the first document that fails; nothing after it is written. Unordered attempts every
+ document and stores all the valid ones in one round trip, which is usually what you want when loading a batch that may
+ contain duplicates. Either way, a failure throws <a href="MorphiaBulkWriteException.html" title="class in dev.morphia"><code>MorphiaBulkWriteException</code></a> listing what wasn't stored. In a
+ transaction, list writes stop at the first failure regardless.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>ordered</code> - true if documents should be inserted in order</dd>
 <dt>Returns:</dt>
 <dd>this</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list-long">
+<li><a href="Datastore.html#insert(java.util.List,dev.morphia.InsertManyOptions)"><code>Datastore.insert(List, InsertManyOptions)</code></a></li>
+<li><a href="Datastore.html#save(java.util.List,dev.morphia.InsertManyOptions)"><code>Datastore.save(List, InsertManyOptions)</code></a></li>
+</ul>
+</dd>
 </dl>
 </section>
 </li>

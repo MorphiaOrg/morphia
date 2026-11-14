@@ -106,43 +106,52 @@ loadScripts(document, 'script');</script>
 </li>
 <li>
 <div id="class-summary">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="class-summary-tab0" role="tab" aria-selected="true" aria-controls="class-summary.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary', 2)" class="active-table-tab">All Classes and Interfaces</button><button id="class-summary-tab1" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab1', 2)" class="table-tab">Interfaces</button><button id="class-summary-tab2" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab2', 2)" class="table-tab">Classes</button><button id="class-summary-tab5" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab5', 2)" class="table-tab">Exceptions</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="class-summary-tab0" role="tab" aria-selected="true" aria-controls="class-summary.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary', 2)" class="active-table-tab">All Classes and Interfaces</button><button id="class-summary-tab1" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab1', 2)" class="table-tab">Interfaces</button><button id="class-summary-tab2" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab2', 2)" class="table-tab">Classes</button><button id="class-summary-tab4" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab4', 2)" class="table-tab">Record Classes</button><button id="class-summary-tab5" role="tab" aria-selected="false" aria-controls="class-summary.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('class-summary', 'class-summary-tab5', 2)" class="table-tab">Exceptions</button></div>
 <div id="class-summary.tabpanel" role="tabpanel" aria-labelledby="class-summary-tab0">
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color class-summary class-summary-tab1"><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab1">
+<div class="col-first even-row-color class-summary class-summary-tab4"><a href="BulkWriteFailure.html" title="class in dev.morphia">BulkWriteFailure</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab4">
+<div class="block">One entity that a list insert or save did not store.</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="Datastore.html" title="interface in dev.morphia">Datastore</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab1">
 <div class="block">Datastore interface to get/delete/save objects</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="DeleteOptions.html" title="class in dev.morphia">DeleteOptions</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">The options to apply when removing documents from the MongoCollection</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab5"><a href="DocumentNotFoundException.html" title="class in dev.morphia">DocumentNotFoundException</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab5">
+<div class="col-first odd-row-color class-summary class-summary-tab5"><a href="DocumentNotFoundException.html" title="class in dev.morphia">DocumentNotFoundException</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab5">
 <div class="block">This exception is thrown when a replace finds no document to replace, either because no document has the entity's ID or because the
  entity's shard key values do not match the stored document.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">Options related to insertion of documents into MongoDB.</div>
-</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="InsertManyOptions.html" title="class in dev.morphia">InsertManyOptions</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Options related to insertion of documents into MongoDB.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab5"><a href="MissingIdException.html" title="class in dev.morphia">MissingIdException</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab5">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="InsertOneOptions.html" title="class in dev.morphia">InsertOneOptions</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="block">Options related to insertion of documents into MongoDB.</div>
+</div>
+<div class="col-first even-row-color class-summary class-summary-tab5"><a href="MissingIdException.html" title="class in dev.morphia">MissingIdException</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab5">
 <div class="block">Thrown when an ID value is expected but not found.</div>
 </div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
+<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ModifyOptions.html" title="class in dev.morphia">ModifyOptions</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">
 <div class="block">Defines the options for a "find and modify" operation.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab2"><a href="Morphia.html" title="class in dev.morphia">Morphia</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="Morphia.html" title="class in dev.morphia">Morphia</a></div>
+<div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">Entry point for working with Morphia</div>
+</div>
+<div class="col-first odd-row-color class-summary class-summary-tab5"><a href="MorphiaBulkWriteException.html" title="class in dev.morphia">MorphiaBulkWriteException</a></div>
+<div class="col-last odd-row-color class-summary class-summary-tab5">
+<div class="block">Thrown when a list insert or save (<a href="Datastore.html#insert(java.util.List,dev.morphia.InsertManyOptions)"><code>Datastore.insert(List, InsertManyOptions)</code></a>,
+ <a href="Datastore.html#save(java.util.List,dev.morphia.InsertManyOptions)"><code>Datastore.save(List, InsertManyOptions)</code></a>) stores some entities but not others.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="MorphiaDatastore.DatastoreOperations.html" title="class in dev.morphia">MorphiaDatastore.DatastoreOperations</a></div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
