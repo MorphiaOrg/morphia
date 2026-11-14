@@ -212,6 +212,10 @@ before the ones with an id or version (one by one). Keep that order; document it
 In `insert(List)`, on `MongoBulkWriteException` roll back only the failed and unprocessed entities. On any other
 `MongoException` (network, timeout — outcome unknown) keep today's behavior of rolling back the whole group.
 
+Refined during review: the same instance listed more than once is version-bumped once (bumps are shared by identity),
+not once per occurrence. If any occurrence is stored, the instance is stored, so it keeps its bumped version and id even
+when another occurrence is reported as a failure (typically the duplicate `_id`).
+
 ### Generated ids (gap 4)
 
 Decided: clear generated ids.
