@@ -2,7 +2,7 @@
 
 Origin: https://github.com/MorphiaOrg/morphia/issues/3360 (milestone 3.0.0)
 
-Status: **design, not yet implemented**
+Status: **implemented**
 
 ## Problem
 

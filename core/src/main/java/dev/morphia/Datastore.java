@@ -208,10 +208,18 @@ public interface Datastore {
 
     /**
      * Inserts a List of entities in to the mapped collection.
+     * <p>
+     * Entities going to the same collection are sent in one batch. Writes are ordered by default: each batch stops at the first
+     * document the server rejects (a duplicate key, say), and no later batch is sent. Use
+     * {@link InsertManyOptions#ordered(boolean) ordered(false)} to have every valid entity stored in one round trip. Ordering
+     * applies within each collection, not across a list that spans collections.
      *
      * @param entities the entities to insert
      * @param <T>      the type of the entity
+     * @throws MorphiaBulkWriteException if any entity wasn't stored. It lists the rejected entities and those never sent, by
+     *                                   their position in {@code entities}, and both can be retried.
      * @since 2.0
+     * @see #insert(List, InsertManyOptions)
      */
     default <T> void insert(List<T> entities) {
         insert(entities, new InsertManyOptions());
@@ -219,10 +227,17 @@ public interface Datastore {
 
     /**
      * Inserts entities in to the mapped collection.
+     * <p>
+     * Entities going to the same collection are sent in one batch. Writes are ordered by default: each batch stops at the first
+     * document the server rejects (a duplicate key, say), and no later batch is sent. Use
+     * {@link InsertManyOptions#ordered(boolean) ordered(false)} to have every valid entity stored in one round trip. Ordering
+     * applies within each collection, not across a list that spans collections.
      *
      * @param entities the entities to insert
      * @param options  the options to apply to the insert operation
      * @param <T>      the type of the entity
+     * @throws MorphiaBulkWriteException if any entity wasn't stored. It lists the rejected entities and those never sent, by
+     *                                   their position in {@code entities}, and both can be retried.
      * @since 2.0
      */
     <T> void insert(List<T> entities, InsertManyOptions options);
@@ -326,10 +341,17 @@ public interface Datastore {
 
     /**
      * Saves the entities (Objects) and updates the @Id field
+     * <p>
+     * New entities going to the same collection are sent in one batch; entities that already have an id, or have a
+     * {@code @Version} property, are saved one at a time after the batches. Writes are ordered by default and stop at the first
+     * entity that fails, whether the server rejects it or its version conflicts. Use
+     * {@link InsertManyOptions#ordered(boolean) ordered(false)} to save every entity that can be saved.
      *
      * @param entities the entities to save
      * @param <T>      the type of the entity
      * @return the saved entities
+     * @throws MorphiaBulkWriteException if any entity wasn't saved. It lists the rejected entities and those never sent, by
+     *                                   their position in {@code entities}, and both can be retried.
      */
     default <T> List<T> save(List<T> entities) {
         return save(entities, new InsertManyOptions());
@@ -337,11 +359,18 @@ public interface Datastore {
 
     /**
      * Saves the entities (Objects) and updates the @Id field
+     * <p>
+     * New entities going to the same collection are sent in one batch; entities that already have an id, or have a
+     * {@code @Version} property, are saved one at a time after the batches. Writes are ordered by default and stop at the first
+     * entity that fails, whether the server rejects it or its version conflicts. Use
+     * {@link InsertManyOptions#ordered(boolean) ordered(false)} to save every entity that can be saved.
      *
      * @param entities the entities to save
      * @param <T>      the type of the entity
      * @param options  the options to apply to the save operation
      * @return the saved entities
+     * @throws MorphiaBulkWriteException if any entity wasn't saved. It lists the rejected entities and those never sent, by
+     *                                   their position in {@code entities}, and both can be retried.
      * @since 2.0
      */
     <T> List<T> save(List<T> entities, InsertManyOptions options);
