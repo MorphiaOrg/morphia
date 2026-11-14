@@ -1,0 +1,869 @@
+package dev.morphia.test;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
+import com.mongodb.client.MongoDatabase;
+
+import dev.morphia.BulkWriteFailure;
+import dev.morphia.InsertManyOptions;
+import dev.morphia.MorphiaBulkWriteException;
+import dev.morphia.VersionMismatchException;
+import dev.morphia.annotations.Entity;
+import dev.morphia.annotations.Field;
+import dev.morphia.annotations.Id;
+import dev.morphia.annotations.Index;
+import dev.morphia.annotations.IndexOptions;
+import dev.morphia.annotations.Indexes;
+import dev.morphia.annotations.PrePersist;
+import dev.morphia.annotations.Transient;
+import dev.morphia.annotations.Version;
+import dev.morphia.transactions.MorphiaSession;
+
+import org.awaitility.Awaitility;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+public class TestBulkWrites extends TestBase {
+
+    /**
+     * Runs {@code body} with the profiler on and asserts how many insert commands each collection received. The server doesn't
+     * always make profiler entries visible by the time a write returns, so this polls for the expected counts.
+     */
+    private void assertInsertCommands(Runnable body, Map<String, Integer> expected) {
+        MongoDatabase database = getDatabase();
+        database.runCommand(new Document("profile", 0));
+        database.getCollection("system.profile").drop();
+        database.runCommand(new Document("profile", 2));
+        try {
+            body.run();
+            Map<String, Integer> counts = Awaitility.await()
+                    .atMost(5, TimeUnit.SECONDS)
+                    .pollInterval(50, TimeUnit.MILLISECONDS)
+                    .until(() -> insertCounts(database, expected.keySet()), counted -> counted.entrySet().stream()
+                            .allMatch(entry -> entry.getValue() >= expected.get(entry.getKey())));
+            assertEquals(expected, counts);
+        } finally {
+            database.runCommand(new Document("profile", 0));
+        }
+    }
+
+    private static Map<String, Integer> insertCounts(MongoDatabase database, Set<String> collections) {
+        Map<String, Integer> counts = new LinkedHashMap<>();
+        for (String collection : collections) {
+            counts.put(collection, (int) database.getCollection("system.profile")
+                    .countDocuments(new Document("op", "insert").append("ns", database.getName() + "." + collection)));
+        }
+        return counts;
+    }
+
+    @Test
+    public void parentAndSubclassShareOneInsert() {
+        withTestConfig(List.of(Animal.class, Dog.class), () -> {
+            assertInsertCommands(() -> getDs().insert(List.of(new Animal("a"), new Dog("d"), new Animal("a2"))),
+                    Map.of("animals", 1));
+            List<String> types = getDatabase().getCollection("animals").find()
+                    .map(d -> d.getString("_t"))
+                    .into(new java.util.ArrayList<>());
+            assertEquals(List.of(Animal.class.getName(), Dog.class.getName(), Animal.class.getName()), types);
+        });
+    }
+
+    @Test
+    public void unrelatedClassesSameCollectionShareOneInsert() {
+        withTestConfig(List.of(Foo.class, Bar.class), () -> {
+            assertInsertCommands(() -> getDs().insert(List.of(new Foo(), new Bar(), new Foo())), Map.of("shared", 1));
+            assertEquals(3, getDatabase().getCollection("shared").countDocuments());
+        });
+    }
+
+    @Test
+    public void lifecycleCallbacksFireOnce() {
+        withTestConfig(List.of(Counted.class, CountedChild.class), () -> {
+            Counted parent = new Counted();
+            CountedChild child = new CountedChild();
+            getDs().insert(List.of(parent, child));
+            assertEquals(1, parent.prePersists);
+            assertEquals(1, child.prePersists);
+        });
+    }
+
+    @Test
+    public void subclassWithOwnCollectionBatchedSeparately() {
+        withTestConfig(List.of(Animal.class, Cat.class), () -> {
+            assertInsertCommands(() -> getDs().insert(List.of(new Animal("a"), new Cat("c"), new Animal("a2"))),
+                    Map.of("animals", 1, "cats", 1));
+        });
+    }
+
+    @Test
+    public void differentWriteConcernsBatchedSeparately() {
+        withTestConfig(List.of(Majority.class, W1.class, AlsoW1.class), () -> {
+            // the options' write concern overrides the entities', so clear it to let the @Entity concerns apply
+            InsertManyOptions options = new InsertManyOptions().writeConcern(null);
+            assertInsertCommands(() -> getDs().insert(List.of(new Majority(), new W1(), new Majority()), options),
+                    Map.of("shared2", 2));
+            assertInsertCommands(() -> getDs().insert(List.of(new W1(), new AlsoW1(), new W1()), options),
+                    Map.of("shared2", 1));
+        });
+    }
+
+    @Test
+    public void emptyAndAllSucceed() {
+        withTestConfig(List.of(Animal.class), () -> {
+            getDs().insert(List.<Animal> of());
+            getDs().insert(List.of(new Animal("a"), new Animal("b"), new Animal("c")));
+            assertEquals(3, getDs().find(Animal.class).count());
+        });
+    }
+
+    private long count(String collection) {
+        return getDatabase().getCollection(collection).countDocuments();
+    }
+
+    private static List<String> keys(List<Reading> readings) {
+        return readings.stream().map(r -> r.key).toList();
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = { 0, 2, 4 })
+    public void orderedDuplicateAtStartMiddleEnd(int position) {
+        withTestConfig(List.of(Reading.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+            List<Reading> list = new ArrayList<>();
+            for (int i = 0; i < 5; i++) {
+                list.add(new Reading(i == position ? "k" : "r" + i));
+            }
+
+            MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class, () -> getDs().insert(list));
+            assertEquals(List.of(position), e.getFailures().stream().map(BulkWriteFailure::index).toList());
+            assertSame(list.get(position), e.getFailedEntities().get(0));
+            assertEquals(list.subList(position + 1, 5), e.getUnprocessedEntities());
+            assertEquals(position, e.getWriteErrors().get(0).getIndex());
+            assertEquals(position + 1, count("readings"));
+        });
+    }
+
+    @Test
+    public void unorderedStoresEverythingValid() {
+        withTestConfig(List.of(Reading.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+            List<Reading> list = List.of(new Reading("a"), new Reading("k"), new Reading("b"), new Reading("k"), new Reading("c"));
+
+            MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class,
+                    () -> getDs().insert(list, new InsertManyOptions().ordered(false)));
+            assertEquals(List.of(1, 3), e.getFailures().stream().map(BulkWriteFailure::index).toList());
+            assertTrue(e.getUnprocessedEntities().isEmpty());
+            assertEquals(4, count("readings"));
+        });
+    }
+
+    @Test
+    public void twoCollectionsOrdered() {
+        withTestConfig(List.of(Reading.class, Note.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+            Note n1 = new Note();
+            Note n2 = new Note();
+            List<Object> list = List.of(new Reading("a"), n1, new Reading("k"), n2);
+
+            MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class, () -> getDs().insert(list));
+            assertEquals(2, e.getWriteErrors().get(0).getIndex());
+            assertSame(list.get(2), e.getFailedEntities().get(0));
+            assertEquals(List.of(n1, n2), e.getUnprocessedEntities());
+            assertEquals(0, count("notes"));
+        });
+    }
+
+    @Test
+    public void twoCollectionsUnordered() {
+        withTestConfig(List.of(Reading.class, Note.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+            List<Object> list = List.of(new Note(), new Reading("k"), new Note(), new Reading("a"));
+
+            MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class,
+                    () -> getDs().insert(list, new InsertManyOptions().ordered(false)));
+            assertEquals(1, e.getWriteErrors().get(0).getIndex());
+            assertSame(list.get(1), e.getFailedEntities().get(0));
+            assertTrue(e.getUnprocessedEntities().isEmpty());
+            assertEquals(2, count("notes"));
+            assertEquals(2, count("readings"));
+        });
+    }
+
+    @Test
+    public void mixedClassBatchOrdered() {
+        withTestConfig(List.of(Reading.class, SpecialReading.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+            SpecialReading s1 = new SpecialReading("s1");
+            SpecialReading s2 = new SpecialReading("s2");
+            List<Reading> list = List.of(new Reading("a"), new Reading("k"), s1, s2);
+
+            MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class, () -> getDs().insert(list));
+            assertEquals(List.of(s1, s2), e.getUnprocessedEntities());
+            assertEquals(2, count("readings"));
+        });
+    }
+
+    @Test
+    public void sameInstanceTwice() {
+        withTestConfig(List.of(Reading.class), () -> {
+            getDs().applyIndexes();
+            Reading r = new Reading("a");
+
+            MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class, () -> getDs().insert(List.of(r, r)));
+            assertEquals(List.of(1), e.getFailures().stream().map(BulkWriteFailure::index).toList());
+            assertEquals(1, count("readings"));
+            assertNotNull(r.id, "the instance was stored at index 0, so its id must survive the failure at index 1");
+        });
+    }
+
+    @Test
+    public void equalByValueEntitiesStayDistinct() {
+        withTestConfig(List.of(Reading.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+            Reading first = new Reading("k");
+            Reading second = new Reading("k");
+
+            MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class,
+                    () -> getDs().insert(List.of(first, second), new InsertManyOptions().ordered(false)));
+            assertEquals(List.of(0, 1), e.getFailures().stream().map(BulkWriteFailure::index).toList());
+            assertSame(first, e.getFailedEntities().get(0));
+            assertSame(second, e.getFailedEntities().get(1));
+        });
+    }
+
+    @Test
+    public void immutableInputList() {
+        withTestConfig(List.of(Reading.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+            List<Reading> list = List.of(new Reading("a"), new Reading("k"), new Reading("b"));
+
+            MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class, () -> getDs().insert(list));
+            assertEquals(List.of("a", "k", "b"), keys(list));
+            assertThrows(UnsupportedOperationException.class, () -> e.getFailedEntities().clear());
+        });
+    }
+
+    @Test
+    public void versionedInsertRollsBackOnlyNotStored() {
+        withTestConfig(List.of(VersionedReading.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new VersionedReading("k"));
+            List<VersionedReading> list = List.of(new VersionedReading("a"), new VersionedReading("b"),
+                    new VersionedReading("k"), new VersionedReading("c"));
+
+            assertThrows(MorphiaBulkWriteException.class, () -> getDs().insert(list));
+            assertEquals(1L, list.get(0).version);
+            assertEquals(1L, list.get(1).version);
+            assertNull(list.get(2).version);
+            assertNull(list.get(3).version);
+        });
+    }
+
+    @Test
+    public void generatedIdsClearedOnNotStored() {
+        withTestConfig(List.of(Reading.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+            Reading stored = new Reading("x");
+            Reading dup = new Reading("k");
+            Reading unsent = new Reading("y");
+            Reading assigned = new Reading("z");
+            ObjectId assignedId = new ObjectId();
+            assigned.id = assignedId;
+
+            assertThrows(MorphiaBulkWriteException.class, () -> getDs().insert(List.of(stored, dup, unsent, assigned)));
+            assertNotNull(stored.id);
+            assertNull(dup.id);
+            assertNull(unsent.id);
+            assertEquals(assignedId, assigned.id);
+        });
+    }
+
+    @Test
+    public void retryNotStoredSucceeds() {
+        withTestConfig(List.of(Reading.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+            List<Reading> list = List.of(new Reading("a"), new Reading("k"), new Reading("b"), new Reading("c"));
+
+            MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class, () -> getDs().insert(list));
+            getDatabase().getCollection("readings").deleteOne(new Document("key", "k"));
+            List<Reading> retry = new ArrayList<>(e.<Reading> getFailedEntities());
+            retry.addAll(e.getUnprocessedEntities());
+
+            getDs().save(retry);
+            assertEquals(4, count("readings"));
+        });
+    }
+
+    @Test
+    public void nonGeneratedIdTypeNotReset() {
+        withTestConfig(List.of(LongIdReading.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new LongIdReading(1, "k"));
+            LongIdReading dup = new LongIdReading(2, "k");
+            LongIdReading unsent = new LongIdReading(3, "y");
+
+            assertThrows(MorphiaBulkWriteException.class, () -> getDs().insert(List.of(dup, unsent)));
+            assertEquals(2, dup.id);
+            assertEquals(3, unsent.id);
+        });
+    }
+
+    @Test
+    public void saveMixedNewAndExistingOrdered() {
+        withTestConfig(List.of(Reading.class, VersionedReading.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+            Reading existing = getDs().save(new Reading("e"));
+            existing.key = "e2";
+            VersionedReading versioned = new VersionedReading("v");
+            List<Object> list = List.of(new Reading("a"), existing, new Reading("k"), versioned);
+
+            MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class, () -> getDs().save(list));
+            assertEquals(List.of(2), e.getFailures().stream().map(BulkWriteFailure::index).toList());
+            assertEquals(List.of(existing, versioned), e.getUnprocessedEntities());
+            assertEquals(0, count("vreadings"));
+        });
+    }
+
+    @Test
+    public void saveMixedNewAndExistingUnordered() {
+        withTestConfig(List.of(Reading.class, VersionedReading.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+            Reading existing = getDs().save(new Reading("e"));
+            existing.key = "e2";
+            List<Object> list = List.of(new Reading("a"), existing, new Reading("k"), new VersionedReading("v"));
+
+            MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class,
+                    () -> getDs().save(list, new InsertManyOptions().ordered(false)));
+            assertEquals(List.of(2), e.getFailures().stream().map(BulkWriteFailure::index).toList());
+            assertTrue(e.getUnprocessedEntities().isEmpty());
+            assertEquals(1, count("vreadings"));
+            assertEquals(1, getDatabase().getCollection("readings").countDocuments(new Document("key", "e2")));
+        });
+    }
+
+    @Test
+    public void saveOneByOneWriteError() {
+        withTestConfig(List.of(Reading.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("a"));
+            Reading b = getDs().save(new Reading("b"));
+            b.key = "a";
+            Reading c = new Reading("c");
+
+            MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class,
+                    () -> getDs().save(List.of(b, c), new InsertManyOptions().ordered(false)));
+            BulkWriteFailure failure = e.getFailures().get(0);
+            assertSame(b, failure.entity());
+            assertEquals(0, failure.index());
+            assertNotNull(failure.error());
+            assertEquals(0, e.getWriteErrors().get(0).getIndex());
+            assertEquals(1, getDatabase().getCollection("readings").countDocuments(new Document("key", "c")));
+        });
+    }
+
+    private VersionedReading staleCopy(String key) {
+        VersionedReading original = getDs().save(new VersionedReading(key));
+        VersionedReading stale = getDs().find(VersionedReading.class).filter(dev.morphia.query.filters.Filters.eq("_id", original.id))
+                .first();
+        original.key = key + "-changed";
+        getDs().save(original);
+        return stale;
+    }
+
+    @Test
+    public void saveStaleVersionUnordered() {
+        withTestConfig(List.of(VersionedReading.class), () -> {
+            getDs().applyIndexes();
+            VersionedReading stale = staleCopy("s");
+            Long staleVersion = stale.version;
+            VersionedReading after = new VersionedReading("y");
+
+            MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class,
+                    () -> getDs().save(List.of(new VersionedReading("x"), stale, after), new InsertManyOptions().ordered(false)));
+            BulkWriteFailure failure = e.getFailures().get(0);
+            assertEquals(1, failure.index());
+            assertInstanceOf(VersionMismatchException.class, failure.exception());
+            assertTrue(e.getWriteErrors().isEmpty());
+            assertEquals(staleVersion, stale.version);
+            assertNotNull(after.id);
+            assertEquals(1, getDatabase().getCollection("vreadings").countDocuments(new Document("key", "y")));
+        });
+    }
+
+    @Test
+    public void saveStaleVersionOrdered() {
+        withTestConfig(List.of(VersionedReading.class), () -> {
+            getDs().applyIndexes();
+            VersionedReading stale = staleCopy("s");
+            VersionedReading after = new VersionedReading("y");
+
+            MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class,
+                    () -> getDs().save(List.of(new VersionedReading("x"), stale, after)));
+            assertEquals(List.of(after), e.getUnprocessedEntities());
+            assertInstanceOf(VersionMismatchException.class, e.getCause());
+            assertEquals(0, getDatabase().getCollection("vreadings").countDocuments(new Document("key", "y")));
+        });
+    }
+
+    @Test
+    public void saveSingleEntityUnchanged() {
+        withTestConfig(List.of(VersionedReading.class), () -> {
+            getDs().applyIndexes();
+            VersionedReading stale = staleCopy("s");
+            assertThrows(VersionMismatchException.class, () -> getDs().save(stale));
+        });
+    }
+
+    @Test
+    public void bulkInsertStopsAtFirstFailureInTransaction() {
+        withTestConfig(List.of(Reading.class, Note.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+            getDatabase().createCollection("notes");
+            Note n1 = new Note();
+            Note n2 = new Note();
+            List<Object> list = List.of(new Reading("a"), new Reading("k"), n1, n2);
+
+            try (MorphiaSession session = getDs().startSession()) {
+                session.startTransaction();
+                MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class,
+                        () -> session.insert(list, new InsertManyOptions().ordered(false)));
+                assertEquals(List.of(n1, n2), e.getUnprocessedEntities());
+                assertNull(((Reading) list.get(0)).id, "the transaction aborted, so the 'stored' entity isn't stored");
+                if (session.hasActiveTransaction()) {
+                    session.abortTransaction();
+                }
+            }
+            assertEquals(0, count("notes"));
+            assertEquals(1, count("readings"));
+        });
+    }
+
+    @Test
+    public void unacknowledgedListWritesReturnNormally() {
+        withTestConfig(List.of(Reading.class), () -> {
+            InsertManyOptions options = new InsertManyOptions().writeConcern(com.mongodb.WriteConcern.UNACKNOWLEDGED);
+            getDs().insert(List.of(new Reading("a"), new Reading("b")), options);
+            getDs().save(List.of(new Reading("c"), new Reading("d")), options);
+        });
+    }
+
+    @Test
+    public void sameVersionedInstanceTwiceKeepsStoredVersion() {
+        withTestConfig(List.of(VersionedReading.class), () -> {
+            getDs().applyIndexes();
+            VersionedReading r = new VersionedReading("a");
+
+            assertThrows(MorphiaBulkWriteException.class, () -> getDs().insert(List.of(r, r)));
+            Long stored = getDatabase().getCollection("vreadings").find().first().getLong("version");
+            assertEquals(stored, r.version);
+            r.key = "a2";
+            getDs().save(r);
+        });
+    }
+
+    @Test
+    public void sameVersionedInstanceTwiceNeitherStored() {
+        withTestConfig(List.of(VersionedReading.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new VersionedReading("k"));
+            VersionedReading r = new VersionedReading("k");
+
+            assertThrows(MorphiaBulkWriteException.class, () -> getDs().insert(List.of(r, r)));
+            assertNull(r.version);
+        });
+    }
+
+    @Test
+    public void laterBatchErrorKeepsRecordedFailures() {
+        withTestConfig(List.of(Reading.class, Exploding.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+            Reading dup = new Reading("k");
+
+            // the second batch fails before reaching the server, so nothing is known about its documents
+            RuntimeException e = assertThrows(RuntimeException.class,
+                    () -> getDs().insert(List.of(dup, new Exploding()), new InsertManyOptions().ordered(false)));
+            MorphiaBulkWriteException recorded = (MorphiaBulkWriteException) java.util.Arrays.stream(e.getSuppressed())
+                    .filter(MorphiaBulkWriteException.class::isInstance)
+                    .findFirst().orElseThrow();
+            assertSame(dup, recorded.getFailedEntities().get(0));
+            assertNull(dup.id);
+        });
+    }
+
+    private static MorphiaBulkWriteException suppressed(RuntimeException e) {
+        return (MorphiaBulkWriteException) java.util.Arrays.stream(e.getSuppressed())
+                .filter(MorphiaBulkWriteException.class::isInstance)
+                .findFirst().orElseThrow();
+    }
+
+    @Test
+    public void laterBatchErrorReportsUnsentBatches() {
+        withTestConfig(List.of(Reading.class, Exploding.class, Note.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+            Note note = new Note();
+
+            RuntimeException e = assertThrows(RuntimeException.class,
+                    () -> getDs().insert(List.of(new Reading("k"), new Exploding(), note), new InsertManyOptions().ordered(false)));
+            assertEquals(List.of(note), suppressed(e).getUnprocessedEntities());
+            assertEquals(0, count("notes"));
+        });
+    }
+
+    @Test
+    public void writeConcernErrorReportsUnsentBatches() {
+        withTestConfig(List.of(Reading.class, Note.class, Animal.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+            Animal animal = new Animal("a");
+            // a single-node server can't satisfy w:5, so every batch gets a write concern error
+            InsertManyOptions options = new InsertManyOptions().ordered(false).writeConcern(new com.mongodb.WriteConcern(5));
+
+            com.mongodb.MongoBulkWriteException e = assertThrows(com.mongodb.MongoBulkWriteException.class,
+                    () -> getDs().insert(List.of(new Reading("k"), new Note(), animal), options));
+            assertFalse(e instanceof MorphiaBulkWriteException);
+            assertEquals(List.of(animal), suppressed(e).getUnprocessedEntities());
+        });
+    }
+
+    @Test
+    public void saveListErrorKeepsRecordedFailures() {
+        withTestConfig(List.of(Reading.class, Exploding.class, VersionedReading.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+            Reading dup = new Reading("k");
+            VersionedReading individual = new VersionedReading("v");
+
+            RuntimeException e = assertThrows(RuntimeException.class,
+                    () -> getDs().save(List.of(dup, new Exploding(), individual), new InsertManyOptions().ordered(false)));
+            MorphiaBulkWriteException recorded = suppressed(e);
+            assertSame(dup, recorded.getFailedEntities().get(0));
+            assertEquals(List.of(individual), recorded.getUnprocessedEntities());
+            assertNull(dup.id);
+        });
+    }
+
+    @Test
+    public void versionConflictInTransactionKeepsSavedIds() {
+        withTestConfig(List.of(VersionedReading.class), () -> {
+            getDs().applyIndexes();
+            VersionedReading stale = staleCopy("s");
+            VersionedReading fresh = new VersionedReading("f");
+
+            try (MorphiaSession session = getDs().startSession()) {
+                session.startTransaction();
+                assertThrows(MorphiaBulkWriteException.class, () -> session.save(List.of(fresh, stale)));
+                // a version conflict doesn't abort the transaction, so what was saved can still commit
+                assertNotNull(fresh.id);
+                session.commitTransaction();
+            }
+            assertEquals(1, getDatabase().getCollection("vreadings").countDocuments(new Document("key", "f")));
+        });
+    }
+
+    @Test
+    public void abortedTransactionRestoresIndividuallySavedVersions() {
+        withTestConfig(List.of(Reading.class, VersionedReading.class), () -> {
+            getDs().applyIndexes();
+            VersionedReading versioned = getDs().save(new VersionedReading("v"));
+            Long version = versioned.version;
+            getDs().save(new Reading("a"));
+            Reading clash = getDs().save(new Reading("b"));
+            clash.key = "a";
+
+            try (MorphiaSession session = getDs().startSession()) {
+                session.startTransaction();
+                assertThrows(MorphiaBulkWriteException.class, () -> session.save(List.of(versioned, clash)));
+                if (session.hasActiveTransaction()) {
+                    session.abortTransaction();
+                }
+            }
+            assertEquals(version, versioned.version);
+        });
+    }
+
+    @Test
+    public void unacknowledgedIndividualInsertMarksResultUnacknowledged() {
+        withTestConfig(List.of(Reading.class, UnacknowledgedVersioned.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+
+            MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class,
+                    () -> getDs().save(List.of(new Reading("k"), new UnacknowledgedVersioned()),
+                            new InsertManyOptions().ordered(false).writeConcern(null)));
+            assertFalse(e.getWriteResult().wasAcknowledged());
+        });
+    }
+
+    @Test
+    public void upsertsAppearInWriteResult() {
+        withTestConfig(List.of(Reading.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+            Reading upserted = new Reading("u");
+            upserted.id = new ObjectId();
+
+            MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class,
+                    () -> getDs().save(List.of(new Reading("k"), upserted), new InsertManyOptions().ordered(false)));
+            assertEquals(1, e.getWriteResult().getUpserts().size());
+            assertEquals(1, e.getWriteResult().getUpserts().get(0).getIndex());
+        });
+    }
+
+    @Test
+    public void transactionAbortingErrorRestoresEveryEntity() {
+        withTestConfig(List.of(VersionedReading.class, Reading.class), () -> {
+            getDs().applyIndexes();
+            Reading contested = getDs().save(new Reading("c"));
+            VersionedReading fresh = new VersionedReading("f");
+
+            try (MorphiaSession session = getDs().startSession()) {
+                session.startTransaction();
+                // pin the transaction's snapshot, then change the document outside it so the save inside conflicts
+                session.find(Reading.class).first();
+                getDatabase().getCollection("readings").updateOne(new Document("_id", contested.id),
+                        new Document("$set", new Document("key", "outside")));
+                contested.key = "inside";
+
+                com.mongodb.MongoException e = assertThrows(com.mongodb.MongoException.class,
+                        () -> session.save(List.of(fresh, contested)));
+                assertTrue(e.hasErrorLabel(com.mongodb.MongoException.TRANSIENT_TRANSACTION_ERROR_LABEL), e.toString());
+                if (session.hasActiveTransaction()) {
+                    session.abortTransaction();
+                }
+            }
+            assertNull(fresh.id);
+            assertNull(fresh.version);
+        });
+    }
+
+    @Test
+    public void abortedTransactionRestoresInstanceSavedTwice() {
+        withTestConfig(List.of(Reading.class, VersionedReading.class), () -> {
+            getDs().applyIndexes();
+            VersionedReading versioned = getDs().save(new VersionedReading("v"));
+            Long version = versioned.version;
+            getDs().save(new Reading("a"));
+            Reading clash = getDs().save(new Reading("b"));
+            clash.key = "a";
+
+            try (MorphiaSession session = getDs().startSession()) {
+                session.startTransaction();
+                assertThrows(MorphiaBulkWriteException.class, () -> session.save(List.of(versioned, versioned, clash)));
+                if (session.hasActiveTransaction()) {
+                    session.abortTransaction();
+                }
+            }
+            assertEquals(version, versioned.version);
+        });
+    }
+
+    @Entity("readings")
+    @Indexes(@Index(fields = @Field("key"), options = @IndexOptions(unique = true)))
+    private static class Reading {
+        @Id
+        ObjectId id;
+        String key;
+
+        Reading() {
+        }
+
+        Reading(String key) {
+            this.key = key;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            return o instanceof Reading other && java.util.Objects.equals(key, other.key);
+        }
+
+        @Override
+        public int hashCode() {
+            return java.util.Objects.hashCode(key);
+        }
+
+        @Override
+        public String toString() {
+            return "Reading(" + key + ")";
+        }
+    }
+
+    @Entity("readings")
+    private static class SpecialReading extends Reading {
+        SpecialReading() {
+        }
+
+        SpecialReading(String key) {
+            super(key);
+        }
+    }
+
+    @Entity("exploding")
+    private static class Exploding {
+        @Id
+        ObjectId id;
+
+        @PrePersist
+        void explode() {
+            throw new IllegalStateException("boom");
+        }
+    }
+
+    @Entity("notes")
+    private static class Note {
+        @Id
+        ObjectId id;
+    }
+
+    @Entity("vreadings")
+    @Indexes(@Index(fields = @Field("key"), options = @IndexOptions(unique = true)))
+    private static class VersionedReading {
+        @Id
+        ObjectId id;
+        @Version
+        Long version;
+        String key;
+
+        VersionedReading() {
+        }
+
+        VersionedReading(String key) {
+            this.key = key;
+        }
+    }
+
+    @Entity(value = "unack", concern = "UNACKNOWLEDGED")
+    private static class UnacknowledgedVersioned {
+        @Id
+        ObjectId id;
+        @Version
+        Long version;
+    }
+
+    @Entity("lreadings")
+    @Indexes(@Index(fields = @Field("key"), options = @IndexOptions(unique = true)))
+    private static class LongIdReading {
+        @Id
+        long id;
+        String key;
+
+        LongIdReading() {
+        }
+
+        LongIdReading(long id, String key) {
+            this.id = id;
+            this.key = key;
+        }
+    }
+
+    @Entity("animals")
+    private static class Animal {
+        @Id
+        ObjectId id;
+        String name;
+
+        Animal() {
+        }
+
+        Animal(String name) {
+            this.name = name;
+        }
+    }
+
+    @Entity("animals")
+    private static class Dog extends Animal {
+        Dog() {
+        }
+
+        Dog(String name) {
+            super(name);
+        }
+    }
+
+    @Entity("cats")
+    private static class Cat extends Animal {
+        Cat() {
+        }
+
+        Cat(String name) {
+            super(name);
+        }
+    }
+
+    @Entity("shared")
+    private static class Foo {
+        @Id
+        ObjectId id;
+    }
+
+    @Entity("shared")
+    private static class Bar {
+        @Id
+        ObjectId id;
+    }
+
+    @Entity("counted")
+    private static class Counted {
+        @Id
+        ObjectId id;
+        @Transient
+        int prePersists;
+
+        @PrePersist
+        void prePersist() {
+            prePersists++;
+        }
+    }
+
+    @Entity("counted")
+    private static class CountedChild extends Counted {
+    }
+
+    @Entity(value = "shared2", concern = "MAJORITY")
+    private static class Majority {
+        @Id
+        ObjectId id;
+    }
+
+    @Entity(value = "shared2", concern = "W1")
+    private static class W1 {
+        @Id
+        ObjectId id;
+    }
+
+    @Entity(value = "shared2", concern = "W1")
+    private static class AlsoW1 {
+        @Id
+        ObjectId id;
+    }
+}

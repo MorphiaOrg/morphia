@@ -1,21 +1,26 @@
 package dev.morphia;
 
 import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ServiceLoader;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.mongodb.ClientSessionOptions;
+import com.mongodb.MongoBulkWriteException;
 import com.mongodb.MongoCommandException;
 import com.mongodb.MongoDriverInformation;
 import com.mongodb.MongoException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.WriteConcern;
+import com.mongodb.bulk.BulkWriteError;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
@@ -44,8 +49,10 @@ import dev.morphia.annotations.Validation;
 import dev.morphia.annotations.internal.IndexHelper;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
+import dev.morphia.internal.BulkWriteFailures;
 import dev.morphia.internal.CollectionConfigurable;
 import dev.morphia.internal.CollectionConfiguration;
+import dev.morphia.internal.DispatchingCodec;
 import dev.morphia.internal.ReadConfigurable;
 import dev.morphia.internal.WriteConfigurable;
 import dev.morphia.mapping.CritterMapper;
@@ -96,7 +103,9 @@ import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
 import static org.bson.Document.parse;
+import static org.bson.codecs.configuration.CodecRegistries.fromCodecs;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
+import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 /**
  * A generic (type-safe) wrapper around mongodb collections
@@ -144,6 +153,9 @@ public class MorphiaDatastore implements Datastore {
     // each entity type's collection, with the entity's write concern applied
     private final Map<Class<?>, MongoCollection<?>> collections = new ConcurrentHashMap<>();
     private DatastoreOperations operations;
+    // the database with a codec that dispatches on each document's class, for list inserts mixing entity classes
+    @Nullable
+    private volatile MongoDatabase batchDatabase;
 
     /**
      * @param client the mongo client
@@ -476,28 +488,223 @@ public class MorphiaDatastore implements Datastore {
             return;
         }
 
-        Map<Class<?>, List<T>> grouped = groupByType(entities, model -> false);
+        warnOnAlternateCollection(entities, options);
 
-        String alternate = options.collection();
-        if (alternate != null && grouped.size() > 1) {
-            Sofia.logInsertManyAlternateCollection(alternate);
+        BitSet hadNullId = nullIds(entities);
+        BulkWriteFailures failures = new BulkWriteFailures(entities.size());
+        VersionBumpInfo[] infos = new VersionBumpInfo[entities.size()];
+        try {
+            insertBatches(groupByCollection(indexed(entities), options), options, failures, infos);
+        } catch (RuntimeException e) {
+            abandonBulkWrite(entities, hadNullId, infos, failures, e);
+            throw e;
         }
+        finishBulkWrite(entities, hadNullId, infos, failures);
+    }
 
-        grouped.forEach((key, list) -> {
-            EntityModel model = mapper.getEntityModel(key);
-            List<VersionBumpInfo> infos = list.stream()
-                    .map(entity -> updateVersioning(model, entity))
-                    .collect(Collectors.toList());
+    /**
+     * Sends one {@code insertMany} per batch, recording the outcome. When the write stops at the first failure, everything
+     * after the failed document is recorded as unprocessed.
+     *
+     * @param infos where to record version bumps, by position in the caller's list; null to skip versioning
+     * @return true if a failure stopped the write before every batch was sent
+     */
+    private <T> boolean insertBatches(Map<BatchKey, List<Indexed<T>>> batches, InsertManyOptions options,
+            BulkWriteFailures failures, @Nullable VersionBumpInfo[] infos) {
+        boolean stopAtFailure = stopsAtFirstFailure(options);
+        // an instance listed more than once is bumped once, and every occurrence shares that bump
+        Map<Object, VersionBumpInfo> bumped = new IdentityHashMap<>();
+        List<Entry<BatchKey, List<Indexed<T>>>> entries = new ArrayList<>(batches.entrySet());
+        for (int b = 0; b < entries.size(); b++) {
+            List<Indexed<T>> batch = entries.get(b).getValue();
+            List<Object> list = new ArrayList<>(batch.size());
+            int[] indexes = new int[batch.size()];
+            for (int i = 0; i < batch.size(); i++) {
+                Indexed<T> item = batch.get(i);
+                list.add(item.entity());
+                indexes[i] = item.index();
+                if (infos != null) {
+                    infos[item.index()] = bumped.computeIfAbsent(item.entity(),
+                            entity -> updateVersioning(mapper.getEntityModel(entity.getClass()), entity));
+                }
+            }
 
             try {
-                MongoCollection<T> collection = configureCollection(options,
-                        (MongoCollection<T>) getCollection(key));
-                operations.insertMany(collection, list, options);
-            } catch (MongoException e) {
-                infos.forEach(VersionBumpInfo::rollbackVersion);
+                InsertManyResult result = operations.insertMany(batchCollection(entries.get(b).getKey()), list, options);
+                if (result.wasAcknowledged()) {
+                    failures.recordInserted(result.getInsertedIds().size());
+                } else {
+                    failures.recordUnacknowledged();
+                }
+            } catch (MongoBulkWriteException e) {
+                if (e.getWriteErrors().isEmpty()) {
+                    // only a write concern error: no document was rejected, but we can't say what's durable
+                    abandonBatch(entries, b, infos, failures);
+                    throw e;
+                }
+                failures.recordBulkFailure(e, list, indexes);
+                if (stopAtFailure) {
+                    int failed = e.getWriteErrors().stream().mapToInt(BulkWriteError::getIndex).max().orElseThrow();
+                    batch.subList(failed + 1, batch.size()).forEach(item -> failures.recordUnprocessed(item.entity(), item.index()));
+                    entries.subList(b + 1, entries.size()).forEach(entry -> entry.getValue()
+                            .forEach(item -> failures.recordUnprocessed(item.entity(), item.index())));
+                    return true;
+                }
+            } catch (RuntimeException e) {
+                abandonBatch(entries, b, infos, failures);
                 throw e;
             }
-        });
+        }
+        return false;
+    }
+
+    /**
+     * The outcome of batch {@code b} is unknown, so its version bumps are rolled back, but the batches after it were never sent.
+     */
+    private static <T> void abandonBatch(List<Entry<BatchKey, List<Indexed<T>>>> entries, int b,
+            @Nullable VersionBumpInfo[] infos, BulkWriteFailures failures) {
+        rollback(entries.get(b).getValue(), infos);
+        entries.subList(b + 1, entries.size()).forEach(entry -> entry.getValue()
+                .forEach(item -> failures.recordUnprocessed(item.entity(), item.index())));
+    }
+
+    /**
+     * Ordered writes stop at the first failure. So does any write in a transaction: the failure aborts the transaction, and
+     * every later write in it would fail too.
+     */
+    private boolean stopsAtFirstFailure(InsertManyOptions options) {
+        return options.driver().isOrdered() || inTransaction();
+    }
+
+    /**
+     * @return true if writes through this datastore run in an active transaction
+     * @hidden
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    protected boolean inTransaction() {
+        return false;
+    }
+
+    private static <T> void rollback(List<Indexed<T>> batch, @Nullable VersionBumpInfo[] infos) {
+        if (infos != null) {
+            batch.forEach(item -> infos[item.index()].rollbackVersion());
+        }
+    }
+
+    /**
+     * After a list write: rolls back version bumps and clears generated ids on every entity that wasn't stored, so they can be
+     * retried, then throws if anything wasn't stored.
+     */
+    private <T> void finishBulkWrite(List<T> entities, BitSet hadNullId, @Nullable VersionBumpInfo[] infos,
+            BulkWriteFailures failures) {
+        if (failures.hasFailures()) {
+            // a server write error aborts a transaction; a version conflict doesn't
+            resetNotStored(entities, hadNullId, infos, failures, inTransaction() && failures.hasServerErrors());
+            failures.throwIfFailed();
+        }
+    }
+
+    /**
+     * When a list write fails partway with an error that says nothing about individual entities, the entities already known not
+     * to be stored are still reset for retry, and attached to the error as a suppressed {@link MorphiaBulkWriteException}.
+     */
+    private <T> void abandonBulkWrite(List<T> entities, BitSet hadNullId, @Nullable VersionBumpInfo[] infos,
+            BulkWriteFailures failures, RuntimeException e) {
+        MorphiaBulkWriteException recorded = failures.toException();
+        // a server or driver error aborts a transaction, so nothing in this write is stored; a client-side error doesn't
+        boolean aborted = inTransaction() && e instanceof MongoException;
+        if (recorded != null || aborted) {
+            resetNotStored(entities, hadNullId, infos, failures, aborted);
+        }
+        if (recorded != null) {
+            e.addSuppressed(recorded);
+        }
+    }
+
+    /**
+     * @param transactionAborted true if the write's transaction was aborted, so nothing in it is stored
+     */
+    private <T> void resetNotStored(List<T> entities, BitSet hadNullId, @Nullable VersionBumpInfo[] infos,
+            BulkWriteFailures failures, boolean transactionAborted) {
+        BitSet notStored = failures.notStored();
+        if (transactionAborted) {
+            notStored.set(0, entities.size());
+        }
+        // the same instance can appear twice in a list; if one occurrence was stored, its id and version are real
+        Set<Object> stored = Collections.newSetFromMap(new IdentityHashMap<>());
+        for (int i = notStored.nextClearBit(0); i < entities.size(); i = notStored.nextClearBit(i + 1)) {
+            stored.add(entities.get(i));
+        }
+        for (int i = notStored.nextSetBit(0); i >= 0; i = notStored.nextSetBit(i + 1)) {
+            T entity = entities.get(i);
+            if (stored.contains(entity)) {
+                continue;
+            }
+            if (infos != null && infos[i] != null) {
+                infos[i].rollbackVersion();
+            }
+            if (hadNullId.get(i)) {
+                mapper.getEntityModel(entity.getClass()).getIdProperty().setValue(entity, null);
+            }
+        }
+    }
+
+    /**
+     * @return the positions of the entities that have an id property with no value
+     */
+    private <T> BitSet nullIds(List<T> entities) {
+        BitSet bits = new BitSet(entities.size());
+        for (int i = 0; i < entities.size(); i++) {
+            T entity = entities.get(i);
+            PropertyModel idProperty = mapper.getEntityModel(entity.getClass()).getIdProperty();
+            if (idProperty != null && idProperty.getValue(entity) == null) {
+                bits.set(i);
+            }
+        }
+        return bits;
+    }
+
+    private <T> void warnOnAlternateCollection(List<T> entities, InsertManyOptions options) {
+        String alternate = options.collection();
+        if (alternate != null && entities.stream().map(Object::getClass).distinct().count() > 1) {
+            Sofia.logInsertManyAlternateCollection(alternate);
+        }
+    }
+
+    private static <T> List<Indexed<T>> indexed(List<T> entities) {
+        List<Indexed<T>> indexed = new ArrayList<>(entities.size());
+        for (int i = 0; i < entities.size(); i++) {
+            indexed.add(new Indexed<>(entities.get(i), i));
+        }
+        return indexed;
+    }
+
+    /**
+     * Groups entities into one batch per collection and write concern, in the order each first appears.
+     */
+    private <T> Map<BatchKey, List<Indexed<T>>> groupByCollection(List<Indexed<T>> entities, InsertManyOptions options) {
+        Map<BatchKey, List<Indexed<T>>> batches = new LinkedHashMap<>();
+        for (Indexed<T> item : entities) {
+            EntityModel model = mapper.getEntityModel(item.entity().getClass());
+            String collection = options.collection() != null ? options.collection() : model.collectionName();
+            WriteConcern concern = options.writeConcern() != null ? options.writeConcern() : model.writeConcern();
+            batches.computeIfAbsent(new BatchKey(collection, concern), k -> new ArrayList<>())
+                    .add(item);
+        }
+        return batches;
+    }
+
+    /**
+     * A collection that encodes each document with its own class's codec, so one batch can mix entity classes. Built directly
+     * rather than through {@link #configureCollection}, whose alternate-collection handling would drop that codec.
+     */
+    private MongoCollection<Object> batchCollection(BatchKey key) {
+        if (batchDatabase == null) {
+            batchDatabase = database.withCodecRegistry(fromRegistries(fromCodecs(new DispatchingCodec(codecRegistry)), codecRegistry));
+        }
+        MongoCollection<Object> collection = batchDatabase.getCollection(key.collection(), Object.class);
+        return key.writeConcern() != null ? collection.withWriteConcern(key.writeConcern()) : collection;
     }
 
     @Override
@@ -624,39 +831,75 @@ public class MorphiaDatastore implements Datastore {
             return List.of();
         }
 
-        Map<Class<?>, List<T>> grouped = new LinkedHashMap<>();
-        List<T> list = new ArrayList<>();
-        for (T entity : entities) {
-            Class<?> type = entity.getClass();
+        warnOnAlternateCollection(entities, options);
 
-            EntityModel model = getMapper().getEntityModel(type);
+        // new entities go out in batches first; those with an id or a version are saved one at a time afterward
+        List<Indexed<T>> batched = new ArrayList<>();
+        List<Indexed<T>> individual = new ArrayList<>();
+        for (Indexed<T> item : indexed(entities)) {
+            EntityModel model = getMapper().getEntityModel(item.entity().getClass());
             PropertyModel idProperty = model.getIdProperty();
-            if (idProperty != null && idProperty.getValue(entity) != null || model.getVersionProperty() != null) {
-                list.add(entity);
+            if (idProperty != null && idProperty.getValue(item.entity()) != null || model.getVersionProperty() != null) {
+                individual.add(item);
             } else {
-                grouped.computeIfAbsent(type, c -> new ArrayList<>())
-                        .add(entity);
+                batched.add(item);
             }
         }
 
-        String alternate = options.collection();
-        if (grouped.size() > 1 && alternate != null) {
-            Sofia.logInsertManyAlternateCollection(alternate);
+        BitSet hadNullId = nullIds(entities);
+        BulkWriteFailures failures = new BulkWriteFailures(entities.size());
+        // each individually saved entity's version before its save, so an aborted transaction can restore it
+        VersionBumpInfo[] infos = new VersionBumpInfo[entities.size()];
+        try {
+            saveAll(batched, individual, options, failures, infos);
+        } catch (RuntimeException e) {
+            abandonBulkWrite(entities, hadNullId, infos, failures, e);
+            throw e;
         }
 
-        for (Entry<Class<?>, List<T>> entry : grouped.entrySet()) {
-            MongoCollection<T> collection = configureCollection(options, (MongoCollection<T>) getCollection(entry.getKey()));
-            operations.insertMany(collection, entry.getValue(), options);
+        finishBulkWrite(entities, hadNullId, infos, failures);
+        return entities;
+    }
+
+    private <T> void saveAll(List<Indexed<T>> batched, List<Indexed<T>> individual, InsertManyOptions options,
+            BulkWriteFailures failures, VersionBumpInfo[] infos) {
+        boolean stopped;
+        try {
+            stopped = insertBatches(groupByCollection(batched, options), options, failures, null);
+        } catch (RuntimeException e) {
+            individual.forEach(item -> failures.recordUnprocessed(item.entity(), item.index()));
+            throw e;
         }
 
         InsertOneOptions insertOneOptions = new InsertOneOptions()
                 .bypassDocumentValidation(options.bypassDocumentValidation())
-                .collection(alternate)
+                .collection(options.collection())
                 .writeConcern(options.writeConcern());
-        for (T entity : list) {
-            save(entity, insertOneOptions);
+        boolean stopAtFailure = stopsAtFirstFailure(options);
+        Map<Object, VersionBumpInfo> snapshots = new IdentityHashMap<>();
+        for (int i = 0; i < individual.size(); i++) {
+            Indexed<T> item = individual.get(i);
+            T entity = item.entity();
+            if (stopped) {
+                failures.recordUnprocessed(entity, item.index());
+                continue;
+            }
+            // an instance listed more than once is restored to its version before the first save
+            infos[item.index()] = snapshots.computeIfAbsent(entity, this::versionSnapshot);
+            try {
+                failures.recordSaved(save(getCollection(entity.getClass()), entity, insertOneOptions), item.index());
+            } catch (MongoWriteException e) {
+                failures.recordWriteFailure(entity, item.index(), e);
+                stopped = stopAtFailure;
+            } catch (VersionMismatchException e) {
+                failures.recordException(entity, item.index(), e);
+                stopped = stopAtFailure;
+            } catch (RuntimeException e) {
+                // this entity's outcome is unknown, but the ones after it were never sent
+                individual.subList(i + 1, individual.size()).forEach(rest -> failures.recordUnprocessed(rest.entity(), rest.index()));
+                throw e;
+            }
         }
-        return entities;
     }
 
     @Override
@@ -758,7 +1001,10 @@ public class MorphiaDatastore implements Datastore {
         return doTransaction(startSession(options), transaction);
     }
 
-    private <T> void save(MongoCollection collection, T entity, InsertOneOptions options) {
+    /**
+     * @return the {@link InsertOneResult} or {@link UpdateResult} of the write
+     */
+    private <T> Object save(MongoCollection collection, T entity, InsertOneOptions options) {
         collection = configureCollection(options, collection);
 
         EntityModel entityModel = mapper.getEntityModel(entity.getClass());
@@ -768,7 +1014,7 @@ public class MorphiaDatastore implements Datastore {
 
         try {
             if (id == null || info.versioned() && info.newVersion() == 1) {
-                operations.insertOne(collection, entity, options);
+                return operations.insertOne(collection, entity, options);
             } else {
                 ReplaceOptions updateOptions = new ReplaceOptions()
                         .bypassDocumentValidation(options.bypassDocumentValidation())
@@ -785,6 +1031,7 @@ public class MorphiaDatastore implements Datastore {
                     info.rollbackVersion();
                     throw new VersionMismatchException(entity.getClass(), id);
                 }
+                return updateResult;
             }
         } catch (MongoWriteException e) {
             if (info.versioned()) {
@@ -822,24 +1069,6 @@ public class MorphiaDatastore implements Datastore {
         return codecRegistry;
     }
 
-    @NonNull
-    private <T> Map<Class<?>, List<T>> groupByType(List<T> entities, Predicate<EntityModel> special) {
-        Map<Class<?>, List<T>> grouped = new LinkedHashMap<>();
-        for (T entity : entities) {
-            Class<?> type = entity.getClass();
-
-            EntityModel model = getMapper().getEntityModel(type);
-            if (special.test(model)) {
-                grouped.computeIfAbsent(Void.class, c -> new ArrayList<>())
-                        .add(entity);
-            } else {
-                grouped.computeIfAbsent(type, c -> new ArrayList<>())
-                        .add(entity);
-            }
-        }
-        return grouped;
-    }
-
     /**
      * Applies configuration options to the collection
      *
@@ -863,6 +1092,18 @@ public class MorphiaDatastore implements Datastore {
             collection = ((WriteConfigurable<?>) options).configure(collection);
         }
         return collection;
+    }
+
+    /**
+     * @return the entity's current version, to restore later; not a bump
+     */
+    private <T> VersionBumpInfo versionSnapshot(T entity) {
+        PropertyModel versionProperty = mapper.getEntityModel(entity.getClass()).getVersionProperty();
+        if (versionProperty == null) {
+            return new VersionBumpInfo(entity);
+        }
+        Long current = (Long) versionProperty.getValue(entity);
+        return new VersionBumpInfo(entity, versionProperty, current, current);
     }
 
     private <T> VersionBumpInfo updateVersioning(EntityModel entityModel, T entity) {
@@ -1251,6 +1492,12 @@ public class MorphiaDatastore implements Datastore {
         public long getDeletedCount() {
             return 0;
         }
+    }
+
+    private record BatchKey(String collection, @Nullable WriteConcern writeConcern) {
+    }
+
+    private record Indexed<T>(T entity, int index) {
     }
 
     @MorphiaInternal

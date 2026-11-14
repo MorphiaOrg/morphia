@@ -1,5 +1,7 @@
 package dev.morphia;
 
+import java.util.List;
+
 import com.mongodb.WriteConcern;
 import com.mongodb.lang.Nullable;
 
@@ -133,9 +135,16 @@ public class InsertManyOptions implements WriteConfigurable<InsertManyOptions>, 
 
     /**
      * Sets whether the server should insert the documents in the order provided.
+     * <p>
+     * Ordered (the default) stops at the first document that fails; nothing after it is written. Unordered attempts every
+     * document and stores all the valid ones in one round trip, which is usually what you want when loading a batch that may
+     * contain duplicates. Either way, a failure throws {@link MorphiaBulkWriteException} listing what wasn't stored. In a
+     * transaction, list writes stop at the first failure regardless.
      *
      * @param ordered true if documents should be inserted in order
      * @return this
+     * @see Datastore#insert(List, InsertManyOptions)
+     * @see Datastore#save(List, InsertManyOptions)
      */
     public InsertManyOptions ordered(boolean ordered) {
         options.ordered(ordered);
