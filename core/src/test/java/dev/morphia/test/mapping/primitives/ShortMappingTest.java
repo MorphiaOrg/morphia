@@ -49,9 +49,9 @@ public class ShortMappingTest extends TestBase {
 
     @Entity
     private static class Shorts {
-        private final List<Short[]> listWrapperArray = new ArrayList<>();
-        private final List<short[]> listPrimitiveArray = new ArrayList<>();
-        private final List<Short> listWrapper = new ArrayList<>();
+        private List<Short[]> listWrapperArray = new ArrayList<>();
+        private List<short[]> listPrimitiveArray = new ArrayList<>();
+        private List<Short> listWrapper = new ArrayList<>();
         @Id
         private ObjectId id;
         private short singlePrimitive;

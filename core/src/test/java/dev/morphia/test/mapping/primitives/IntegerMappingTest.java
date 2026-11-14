@@ -52,9 +52,9 @@ public class IntegerMappingTest extends TestBase {
 
     @Entity
     private static class Integers {
-        private final List<Integer[]> listWrapperArray = new ArrayList<>();
-        private final List<int[]> listPrimitiveArray = new ArrayList<>();
-        private final List<Integer> listWrapper = new ArrayList<>();
+        private List<Integer[]> listWrapperArray = new ArrayList<>();
+        private List<int[]> listPrimitiveArray = new ArrayList<>();
+        private List<Integer> listWrapper = new ArrayList<>();
         @Id
         private ObjectId id;
         private int singlePrimitive;

@@ -382,7 +382,7 @@ public interface MorphiaConfig {
     }
 
     /**
-     * Instructs Morphia to ignore final fields.
+     * Instructs Morphia to ignore final fields: they're neither saved nor loaded.
      *
      * @return true if Morphia should ignore final fields
      */

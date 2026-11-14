@@ -29,7 +29,7 @@ public class TestInterceptors extends TestBase {
     @Entity
     static class E {
         @Id
-        private final ObjectId id = new ObjectId();
+        private ObjectId id = new ObjectId();
 
         private boolean called;
 

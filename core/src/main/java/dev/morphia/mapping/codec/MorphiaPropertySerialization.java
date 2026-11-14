@@ -19,6 +19,7 @@ public class MorphiaPropertySerialization implements PropertySerialization<Objec
     private final boolean storeNulls;
     private final boolean storeEmpties;
     private final boolean neverSerialized;
+    private final boolean ignoredFinal;
 
     /**
      * @param config   the configuration to use
@@ -27,7 +28,15 @@ public class MorphiaPropertySerialization implements PropertySerialization<Objec
     public MorphiaPropertySerialization(MorphiaConfig config, PropertyModel property) {
         storeNulls = config.storeNulls();
         storeEmpties = config.storeEmpties();
-        neverSerialized = property.hasAnnotation(LoadOnly.class) || config.ignoreFinals() && property.isFinal();
+        ignoredFinal = config.ignoreFinals() && property.isFinal();
+        neverSerialized = property.hasAnnotation(LoadOnly.class) || ignoredFinal;
+    }
+
+    /**
+     * @return true if the property is a final one that's never stored because the configuration ignores finals
+     */
+    public boolean isIgnoredFinal() {
+        return ignoredFinal;
     }
 
     @Override

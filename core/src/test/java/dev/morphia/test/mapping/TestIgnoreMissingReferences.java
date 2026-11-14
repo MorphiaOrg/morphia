@@ -53,6 +53,6 @@ public class TestIgnoreMissingReferences extends TestBase {
     @Entity
     private static class StringHolder {
         @Id
-        private final ObjectId id = new ObjectId();
+        private ObjectId id = new ObjectId();
     }
 }

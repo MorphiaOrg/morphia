@@ -317,7 +317,7 @@ public class TestIndexes extends TestBase {
     @Entity("circles")
     @Indexes(@Index(fields = @Field("radius")))
     private static class Circle extends Shape {
-        private final double radius = 1;
+        private double radius = 1;
 
         Circle() {
             description = "Circles are round and can be rolled along the ground.";
@@ -327,7 +327,7 @@ public class TestIndexes extends TestBase {
     @Entity
     private static class CircularEmbeddedEntity {
         @Id
-        private final ObjectId id = new ObjectId();
+        private ObjectId id = new ObjectId();
         private String name;
         @Indexed
         private CircularEmbeddedEntity a;
@@ -336,7 +336,7 @@ public class TestIndexes extends TestBase {
     @Entity
     @Indexes(@Index(fields = @Field("offerExpiresAt"), options = @IndexOptions(expireAfterSeconds = 5)))
     private static class ClassAnnotation {
-        private final Date offerExpiresAt = new Date();
+        private Date offerExpiresAt = new Date();
         @Id
         private ObjectId id;
     }
@@ -366,7 +366,7 @@ public class TestIndexes extends TestBase {
     @Entity
     private static class HasExpiryField {
         @Indexed(options = @IndexOptions(expireAfterSeconds = 5))
-        private final Date offerExpiresAt = new Date();
+        private Date offerExpiresAt = new Date();
         @Id
         private ObjectId id;
     }
@@ -390,7 +390,7 @@ public class TestIndexes extends TestBase {
     @Entity
     private static class NamedIndexOnValue {
         @Indexed(options = @IndexOptions(name = "value_ascending"))
-        private final long value = 4;
+        private long value = 4;
         @Id
         private ObjectId id;
     }

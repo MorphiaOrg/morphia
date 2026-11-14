@@ -12,7 +12,7 @@ import org.bson.types.ObjectId;
 
 @Entity(useDiscriminator = false)
 public class MapLike implements Map<String, String> {
-    private final Map<String, String> realMap = new HashMap<>();
+    private Map<String, String> realMap = new HashMap<>();
     @Id
     private ObjectId id;
 

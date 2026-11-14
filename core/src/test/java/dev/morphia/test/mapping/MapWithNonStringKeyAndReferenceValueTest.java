@@ -71,9 +71,9 @@ public class MapWithNonStringKeyAndReferenceValueTest extends ProxyTestBase {
 
     private static class ParentEntity extends TestEntity {
         @Reference
-        private final Map<Integer, ChildEntity> childMap = new HashMap<>();
+        private Map<Integer, ChildEntity> childMap = new HashMap<>();
         @Reference(lazy = true)
-        private final Map<Integer, ChildEntity> lazyChildMap = new HashMap<>();
+        private Map<Integer, ChildEntity> lazyChildMap = new HashMap<>();
     }
 
     private static class ChildEntity extends TestEntity {

@@ -15,6 +15,7 @@ import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.validation.ConstraintViolation.Level;
 import dev.morphia.mapping.validation.classrules.DuplicatedAttributeNames;
 import dev.morphia.mapping.validation.classrules.EntityOrExternal;
+import dev.morphia.mapping.validation.classrules.FinalFieldsInConstructor;
 import dev.morphia.mapping.validation.classrules.MultipleVersions;
 import dev.morphia.mapping.validation.classrules.ShardKeyNames;
 import dev.morphia.mapping.validation.fieldrules.ContradictingAnnotations;
@@ -47,7 +48,8 @@ public class MappingValidator {
             new MultipleVersions(),
             new EntityOrExternal(),
             new DuplicatedAttributeNames(),
-            new ShardKeyNames());
+            new ShardKeyNames(),
+            new FinalFieldsInConstructor());
 
     private static final List<PropertyConstraint> PROPERTY_RULES = List.of(
             new IdDoesNotMix(),

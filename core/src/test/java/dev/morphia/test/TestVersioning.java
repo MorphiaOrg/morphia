@@ -452,7 +452,7 @@ public class TestVersioning extends TestBase {
 
     private static class InittedPrimitive extends TestEntity {
         @Version
-        private final long hubba = 18;
+        private long hubba = 18;
         private String name;
 
         @Override
@@ -476,7 +476,7 @@ public class TestVersioning extends TestBase {
 
     private static class InittedWrapper extends TestEntity {
         @Version
-        private final Long hubba = 12L;
+        private Long hubba = 12L;
         private String name;
 
         @Override

@@ -12,7 +12,7 @@ public class FacebookUser {
     @Id
     public long id;
     @Reference
-    public final List<FacebookUser> friends = new ArrayList<>();
+    public List<FacebookUser> friends = new ArrayList<>();
     public int loginCount;
     public String username;
 

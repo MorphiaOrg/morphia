@@ -361,7 +361,9 @@ public class EntityDecoder<T> implements Decoder<T> {
     protected void decodeModel(BsonReader reader, DecoderContext decoderContext,
             MorphiaInstanceCreator instanceCreator, CodecPlan plan, @Nullable PropertyModel model) {
 
-        if (model == null) {
+        // a final the configuration ignores is never stored, so one in an older document is skipped rather than set
+        // reflectively (JEP 500)
+        if (model == null || model.isIgnoredFinal()) {
             reader.skipValue();
             return;
         }

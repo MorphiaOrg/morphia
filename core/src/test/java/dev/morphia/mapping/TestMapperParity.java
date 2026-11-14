@@ -28,6 +28,7 @@ import dev.morphia.mapping.codec.pojo.PropertyModel;
 import dev.morphia.mapping.codec.pojo.TypeData;
 import dev.morphia.mapping.codec.pojo.WildCardTypeData;
 import dev.morphia.mapping.codec.pojo.critter.CritterEntityModel;
+import dev.morphia.mapping.internal.FinalFieldMutation;
 
 import org.bson.codecs.pojo.PropertyAccessor;
 import org.junit.jupiter.api.Test;
@@ -268,7 +269,9 @@ public class TestMapperParity {
         Object sample = sample(property.getType());
         try {
             String initial = String.valueOf(accessor.get(prototype));
-            if (sample == null) {
+            // a JVM that denies writing final fields (JEP 500) fails both mappers' writes, just with different wrappers, and
+            // Morphia doesn't write them there: the entity fails to map unless a constructor takes them
+            if (sample == null || property.isFinal() && FinalFieldMutation.denied()) {
                 return initial;
             }
             Object instance = instances.get();

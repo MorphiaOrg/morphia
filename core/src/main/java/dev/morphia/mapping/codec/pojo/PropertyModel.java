@@ -33,6 +33,7 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.Reference;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.Conversions;
+import dev.morphia.mapping.codec.MorphiaPropertySerialization;
 import dev.morphia.mapping.codec.references.MorphiaProxy;
 
 import org.bson.codecs.pojo.PropertyAccessor;
@@ -83,6 +84,7 @@ public class PropertyModel {
         loadNames.addAll(other.loadNames);
         serialization = other.serialization;
         normalizedType = other.normalizedType;
+        isFinal = other.isFinal;
     }
 
     /**
@@ -359,6 +361,15 @@ public class PropertyModel {
      */
     public final boolean shouldSerialize(@Nullable Object value) {
         return serialization == null || serialization.shouldSerialize(value);
+    }
+
+    /**
+     * @return true if this is a final property that's never stored because the configuration ignores finals
+     * @morphia.internal
+     */
+    @MorphiaInternal
+    public final boolean isIgnoredFinal() {
+        return serialization instanceof MorphiaPropertySerialization morphia && morphia.isIgnoredFinal();
     }
 
     public PropertyModel serialization(PropertySerialization serialization) {

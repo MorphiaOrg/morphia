@@ -44,7 +44,7 @@ class Box {
 @Entity
 class Item {
     @Id
-    private final UUID id = UUID.randomUUID();
+    private UUID id = UUID.randomUUID();
     private String name;
 
     Item() {

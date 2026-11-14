@@ -68,9 +68,9 @@ public class BooleanMappingTest extends TestBase {
 
     @Entity
     private static class Booleans {
-        private final List<Boolean[]> booleans = new ArrayList<>();
-        private final List<boolean[]> booleanPrimitives = new ArrayList<>();
-        private final List<Boolean> list = new ArrayList<>();
+        private List<Boolean[]> booleans = new ArrayList<>();
+        private List<boolean[]> booleanPrimitives = new ArrayList<>();
+        private List<Boolean> list = new ArrayList<>();
         @Id
         private ObjectId id;
         private boolean singlePrimitive;

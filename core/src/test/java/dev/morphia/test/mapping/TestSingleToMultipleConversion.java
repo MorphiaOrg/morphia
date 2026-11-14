@@ -53,7 +53,7 @@ public class TestSingleToMultipleConversion extends TestBase {
 
     @Entity(value = "B", useDiscriminator = false)
     private static class HasEmbeddedStringy {
-        private final HasString hs = new HasString();
+        private HasString hs = new HasString();
         @Id
         private ObjectId id;
     }
@@ -92,13 +92,13 @@ public class TestSingleToMultipleConversion extends TestBase {
 
     @Entity(value = "A", useDiscriminator = false)
     private static class HasSingleString {
-        private final String s = "foo";
+        private String s = "foo";
         @Id
         private ObjectId id;
     }
 
     @Entity
     private static class HasString {
-        private final String s = "foo";
+        private String s = "foo";
     }
 }

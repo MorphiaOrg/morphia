@@ -32,11 +32,11 @@ public class MapKeyTypeConstraintTest extends TestBase {
 
     private static class MapWithWrongKeyType2 extends TestEntity {
         @Reference
-        private final Map<Integer, Integer> shouldBeOk = new HashMap<>();
+        private Map<Integer, Integer> shouldBeOk = new HashMap<>();
 
     }
 
     private static class MapWithWrongKeyType3 extends TestEntity {
-        private final Map<BigDecimal, Integer> shouldBeOk = new HashMap<>();
+        private Map<BigDecimal, Integer> shouldBeOk = new HashMap<>();
     }
 }

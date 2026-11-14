@@ -47,9 +47,9 @@ public class CharacterMappingTest extends TestBase {
 
     @Entity
     public static class Characters {
-        private final List<Character[]> listWrapperArray = new ArrayList<>();
-        private final List<char[]> listPrimitiveArray = new ArrayList<>();
-        private final List<Character> listWrapper = new ArrayList<>();
+        private List<Character[]> listWrapperArray = new ArrayList<>();
+        private List<char[]> listPrimitiveArray = new ArrayList<>();
+        private List<Character> listWrapper = new ArrayList<>();
         @Id
         private ObjectId id;
         private char singlePrimitive;

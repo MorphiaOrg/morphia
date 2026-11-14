@@ -97,8 +97,8 @@ public class MapReferenceSharedIdTest extends ProxyTestBase {
         @Id
         private long id;
         @Reference
-        private final Map<Class<? extends SharedIdBase>, SharedIdBase> eager = new HashMap<>();
+        private Map<Class<? extends SharedIdBase>, SharedIdBase> eager = new HashMap<>();
         @Reference(lazy = true)
-        private final Map<Class<? extends SharedIdBase>, SharedIdBase> lazy = new HashMap<>();
+        private Map<Class<? extends SharedIdBase>, SharedIdBase> lazy = new HashMap<>();
     }
 }

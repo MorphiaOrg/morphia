@@ -381,7 +381,7 @@ public class TestUpdateOperations extends TestBase {
 
     @Entity
     private static class ContainsIntArray {
-        private final Integer[] values = { 1, 2, 3 };
+        private Integer[] values = { 1, 2, 3 };
         @Id
         private ObjectId id;
     }
@@ -546,7 +546,7 @@ public class TestUpdateOperations extends TestBase {
     public static class MapsOfStuff {
         @Id
         private ObjectId id;
-        private final Map<String, TestEntity> map = new HashMap<>();
+        private Map<String, TestEntity> map = new HashMap<>();
 
     }
 
@@ -554,7 +554,7 @@ public class TestUpdateOperations extends TestBase {
     private static final class Parent {
         @Id
         private ObjectId id;
-        private final Set<Child> children = new HashSet<>();
+        private Set<Child> children = new HashSet<>();
     }
 
     public static class Stuff1 extends TestEntity {

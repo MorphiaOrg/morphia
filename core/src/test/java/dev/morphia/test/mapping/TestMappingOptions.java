@@ -309,7 +309,7 @@ public class TestMappingOptions extends TestBase {
     @Entity
     private static class HasList implements Serializable {
         @Id
-        private final ObjectId id = new ObjectId();
+        private ObjectId id = new ObjectId();
         private List<String> names;
 
         HasList() {
@@ -319,7 +319,7 @@ public class TestMappingOptions extends TestBase {
     @Entity
     private static class HasMap implements Serializable {
         @Id
-        private final ObjectId id = new ObjectId();
+        private ObjectId id = new ObjectId();
         private Map<String, String> properties;
 
         HasMap() {
@@ -329,7 +329,7 @@ public class TestMappingOptions extends TestBase {
     @Entity
     private static class HasCollectionValuedMap implements Serializable {
         @Id
-        private final ObjectId id = new ObjectId();
+        private ObjectId id = new ObjectId();
         private Map<String, Collection<String>> properties;
 
         HasCollectionValuedMap() {
@@ -339,7 +339,7 @@ public class TestMappingOptions extends TestBase {
     @Entity
     private static class HasComplexObjectValuedMap implements Serializable {
         @Id
-        private final ObjectId id = new ObjectId();
+        private ObjectId id = new ObjectId();
         private Map<String, ComplexObject> properties;
 
         HasComplexObjectValuedMap() {

@@ -50,9 +50,9 @@ public class DoubleMappingTest extends TestBase {
 
     @Entity
     private static class Doubles {
-        private final List<Double[]> listWrapperArray = new ArrayList<>();
-        private final List<double[]> listPrimitiveArray = new ArrayList<>();
-        private final List<Double> listWrapper = new ArrayList<>();
+        private List<Double[]> listWrapperArray = new ArrayList<>();
+        private List<double[]> listPrimitiveArray = new ArrayList<>();
+        private List<Double> listWrapper = new ArrayList<>();
         @Id
         private ObjectId id;
         private double singlePrimitive;

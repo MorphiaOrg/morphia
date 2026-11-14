@@ -142,19 +142,19 @@ public class TestEnumMapping extends TestBase {
     private static class Class1 {
         @Id
         private ObjectId id;
-        private final Map<String, Foo> map = new HashMap<>();
+        private Map<String, Foo> map = new HashMap<>();
     }
 
     @Entity
     private static class ContainsEnum {
         @Id
         private ObjectId id;
-        private final Foo foo = Foo.BAR;
+        private Foo foo = Foo.BAR;
     }
 
     @Entity(useDiscriminator = false)
     private static class Customer {
-        private final Map<WebTemplateType, WebTemplate> map = new HashMap<>();
+        private Map<WebTemplateType, WebTemplate> map = new HashMap<>();
         @Id
         private ObjectId id;
 
@@ -166,7 +166,7 @@ public class TestEnumMapping extends TestBase {
 
     @Entity(useDiscriminator = false)
     private static class CustomerWithArrayList {
-        private final Map<WebTemplateType, List<WebTemplate>> mapWithArrayList = new HashMap<>();
+        private Map<WebTemplateType, List<WebTemplate>> mapWithArrayList = new HashMap<>();
         @Id
         private ObjectId id;
 
@@ -177,7 +177,7 @@ public class TestEnumMapping extends TestBase {
 
     @Entity(useDiscriminator = false)
     private static class CustomerWithList {
-        private final Map<WebTemplateType, List<WebTemplate>> mapWithList = new HashMap<>();
+        private Map<WebTemplateType, List<WebTemplate>> mapWithList = new HashMap<>();
         @Id
         private ObjectId id;
 
@@ -188,7 +188,7 @@ public class TestEnumMapping extends TestBase {
 
     @Entity
     private static class WebTemplate {
-        private final ObjectId id = new ObjectId();
+        private ObjectId id = new ObjectId();
         private String templateName;
         private String content;
 
