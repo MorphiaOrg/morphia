@@ -1,21 +1,27 @@
 package dev.morphia;
 
 import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ServiceLoader;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.mongodb.ClientSessionOptions;
+import com.mongodb.MongoBulkWriteException;
 import com.mongodb.MongoCommandException;
 import com.mongodb.MongoDriverInformation;
 import com.mongodb.MongoException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.WriteConcern;
+import com.mongodb.bulk.BulkWriteError;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
@@ -44,6 +50,7 @@ import dev.morphia.annotations.Validation;
 import dev.morphia.annotations.internal.IndexHelper;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.config.MorphiaConfig;
+import dev.morphia.internal.BulkWriteFailures;
 import dev.morphia.internal.CollectionConfigurable;
 import dev.morphia.internal.CollectionConfiguration;
 import dev.morphia.internal.DispatchingCodec;
@@ -484,21 +491,112 @@ public class MorphiaDatastore implements Datastore {
 
         warnOnAlternateCollection(entities, options);
 
-        groupByCollection(indexed(entities), options).forEach((key, batch) -> {
+        BitSet hadNullId = nullIds(entities);
+        BulkWriteFailures failures = new BulkWriteFailures(entities.size());
+        VersionBumpInfo[] infos = new VersionBumpInfo[entities.size()];
+        insertBatches(groupByCollection(indexed(entities), options), options, failures, infos);
+        finishBulkWrite(entities, hadNullId, infos, failures);
+    }
+
+    /**
+     * Sends one {@code insertMany} per batch, recording the outcome. When the write stops at the first failure, everything
+     * after the failed document is recorded as unprocessed.
+     *
+     * @param infos where to record version bumps, by position in the caller's list; null to skip versioning
+     * @return true if a failure stopped the write before every batch was sent
+     */
+    private <T> boolean insertBatches(Map<BatchKey, List<Indexed<T>>> batches, InsertManyOptions options,
+            BulkWriteFailures failures, @Nullable VersionBumpInfo[] infos) {
+        boolean stopAtFailure = stopsAtFirstFailure(options);
+        List<Entry<BatchKey, List<Indexed<T>>>> entries = new ArrayList<>(batches.entrySet());
+        for (int b = 0; b < entries.size(); b++) {
+            List<Indexed<T>> batch = entries.get(b).getValue();
             List<Object> list = new ArrayList<>(batch.size());
-            List<VersionBumpInfo> infos = new ArrayList<>(batch.size());
-            for (Indexed<T> item : batch) {
+            int[] indexes = new int[batch.size()];
+            for (int i = 0; i < batch.size(); i++) {
+                Indexed<T> item = batch.get(i);
                 list.add(item.entity());
-                infos.add(updateVersioning(mapper.getEntityModel(item.entity().getClass()), item.entity()));
+                indexes[i] = item.index();
+                if (infos != null) {
+                    infos[item.index()] = updateVersioning(mapper.getEntityModel(item.entity().getClass()), item.entity());
+                }
             }
 
             try {
-                operations.insertMany(batchCollection(key), list, options);
+                InsertManyResult result = operations.insertMany(batchCollection(entries.get(b).getKey()), list, options);
+                failures.recordInserted(result.getInsertedIds().size());
+            } catch (MongoBulkWriteException e) {
+                if (e.getWriteErrors().isEmpty()) {
+                    // only a write concern error: no document was rejected, but we can't say what's durable
+                    rollback(batch, infos);
+                    throw e;
+                }
+                failures.recordBulkFailure(e, list, indexes);
+                if (stopAtFailure) {
+                    int failed = e.getWriteErrors().stream().mapToInt(BulkWriteError::getIndex).max().orElseThrow();
+                    batch.subList(failed + 1, batch.size()).forEach(item -> failures.recordUnprocessed(item.entity(), item.index()));
+                    entries.subList(b + 1, entries.size()).forEach(entry -> entry.getValue()
+                            .forEach(item -> failures.recordUnprocessed(item.entity(), item.index())));
+                    return true;
+                }
             } catch (MongoException e) {
-                infos.forEach(VersionBumpInfo::rollbackVersion);
+                rollback(batch, infos);
                 throw e;
             }
-        });
+        }
+        return false;
+    }
+
+    private boolean stopsAtFirstFailure(InsertManyOptions options) {
+        return options.driver().isOrdered();
+    }
+
+    private static <T> void rollback(List<Indexed<T>> batch, @Nullable VersionBumpInfo[] infos) {
+        if (infos != null) {
+            batch.forEach(item -> infos[item.index()].rollbackVersion());
+        }
+    }
+
+    /**
+     * After a list write: rolls back version bumps and clears generated ids on every entity that wasn't stored, so they can be
+     * retried, then throws if anything wasn't stored.
+     */
+    private <T> void finishBulkWrite(List<T> entities, BitSet hadNullId, @Nullable VersionBumpInfo[] infos,
+            BulkWriteFailures failures) {
+        if (!failures.hasFailures()) {
+            return;
+        }
+        BitSet notStored = failures.notStored();
+        // the same instance can appear twice in a list; if one occurrence was stored, its id is real
+        Set<Object> stored = Collections.newSetFromMap(new IdentityHashMap<>());
+        for (int i = notStored.nextClearBit(0); i < entities.size(); i = notStored.nextClearBit(i + 1)) {
+            stored.add(entities.get(i));
+        }
+        for (int i = notStored.nextSetBit(0); i >= 0; i = notStored.nextSetBit(i + 1)) {
+            T entity = entities.get(i);
+            if (infos != null && infos[i] != null) {
+                infos[i].rollbackVersion();
+            }
+            if (hadNullId.get(i) && !stored.contains(entity)) {
+                mapper.getEntityModel(entity.getClass()).getIdProperty().setValue(entity, null);
+            }
+        }
+        failures.throwIfFailed();
+    }
+
+    /**
+     * @return the positions of the entities that have an id property with no value
+     */
+    private <T> BitSet nullIds(List<T> entities) {
+        BitSet bits = new BitSet(entities.size());
+        for (int i = 0; i < entities.size(); i++) {
+            T entity = entities.get(i);
+            PropertyModel idProperty = mapper.getEntityModel(entity.getClass()).getIdProperty();
+            if (idProperty != null && idProperty.getValue(entity) == null) {
+                bits.set(i);
+            }
+        }
+        return bits;
     }
 
     private <T> void warnOnAlternateCollection(List<T> entities, InsertManyOptions options) {
