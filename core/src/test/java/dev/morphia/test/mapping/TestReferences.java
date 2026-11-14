@@ -1406,6 +1406,24 @@ public class TestReferences extends ProxyTestBase {
         private NodeA partner;
     }
 
+    @Entity
+    private static class IdOnlyNodeA {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String name;
+        @Reference(idOnly = true, ignoreMissing = true)
+        private IdOnlyNodeB partner;
+    }
+
+    @Entity
+    private static class IdOnlyNodeB {
+        @Id
+        private ObjectId id = new ObjectId();
+        private String name;
+        @Reference(idOnly = true, ignoreMissing = true)
+        private IdOnlyNodeA partner;
+    }
+
     @Test
     public void testReferenceDeduplication() {
         // A single document with two @Reference fields pointing to the same entity.
@@ -1583,6 +1601,27 @@ public class TestReferences extends ProxyTestBase {
         Assertions.assertEquals("beta", loaded.partner.name);
         Assertions.assertNotNull(loaded.partner.partner);
         Assertions.assertEquals("alpha", loaded.partner.partner.name);
+    }
+
+    /**
+     * Two entity types referring to each other through id-only references (#1658).
+     */
+    @Test
+    public void testCyclicIdOnlyReference() {
+        IdOnlyNodeA a = new IdOnlyNodeA();
+        a.name = "alpha";
+        IdOnlyNodeB b = new IdOnlyNodeB();
+        b.name = "beta";
+        a.partner = b;
+        b.partner = a;
+        getDs().save(a);
+        getDs().save(b);
+
+        IdOnlyNodeA loaded = getDs().find(IdOnlyNodeA.class).filter(eq("_id", a.id)).first();
+        Assertions.assertNotNull(loaded);
+        Assertions.assertNotNull(loaded.partner);
+        Assertions.assertEquals("beta", loaded.partner.name);
+        Assertions.assertSame(loaded, loaded.partner.partner, "the cycle closes on the entity being decoded");
     }
 
     /**
