@@ -17,6 +17,7 @@ import com.mongodb.ClientSessionOptions;
 import com.mongodb.MongoBulkWriteException;
 import com.mongodb.MongoCommandException;
 import com.mongodb.MongoDriverInformation;
+import com.mongodb.MongoException;
 import com.mongodb.MongoWriteException;
 import com.mongodb.WriteConcern;
 import com.mongodb.bulk.BulkWriteError;
@@ -598,7 +599,8 @@ public class MorphiaDatastore implements Datastore {
     private <T> void finishBulkWrite(List<T> entities, BitSet hadNullId, @Nullable VersionBumpInfo[] infos,
             BulkWriteFailures failures) {
         if (failures.hasFailures()) {
-            resetNotStored(entities, hadNullId, infos, failures);
+            // a server write error aborts a transaction; a version conflict doesn't
+            resetNotStored(entities, hadNullId, infos, failures, inTransaction() && failures.hasServerErrors());
             failures.throwIfFailed();
         }
     }
@@ -610,17 +612,23 @@ public class MorphiaDatastore implements Datastore {
     private <T> void abandonBulkWrite(List<T> entities, BitSet hadNullId, @Nullable VersionBumpInfo[] infos,
             BulkWriteFailures failures, RuntimeException e) {
         MorphiaBulkWriteException recorded = failures.toException();
+        // a server or driver error aborts a transaction, so nothing in this write is stored; a client-side error doesn't
+        boolean aborted = inTransaction() && e instanceof MongoException;
+        if (recorded != null || aborted) {
+            resetNotStored(entities, hadNullId, infos, failures, aborted);
+        }
         if (recorded != null) {
-            resetNotStored(entities, hadNullId, infos, failures);
             e.addSuppressed(recorded);
         }
     }
 
+    /**
+     * @param transactionAborted true if the write's transaction was aborted, so nothing in it is stored
+     */
     private <T> void resetNotStored(List<T> entities, BitSet hadNullId, @Nullable VersionBumpInfo[] infos,
-            BulkWriteFailures failures) {
+            BulkWriteFailures failures, boolean transactionAborted) {
         BitSet notStored = failures.notStored();
-        if (inTransaction() && failures.hasServerErrors()) {
-            // a server write error aborted the transaction, so nothing in this write is stored
+        if (transactionAborted) {
             notStored.set(0, entities.size());
         }
         // the same instance can appear twice in a list; if one occurrence was stored, its id and version are real
@@ -868,6 +876,7 @@ public class MorphiaDatastore implements Datastore {
                 .collection(options.collection())
                 .writeConcern(options.writeConcern());
         boolean stopAtFailure = stopsAtFirstFailure(options);
+        Map<Object, VersionBumpInfo> snapshots = new IdentityHashMap<>();
         for (int i = 0; i < individual.size(); i++) {
             Indexed<T> item = individual.get(i);
             T entity = item.entity();
@@ -875,7 +884,8 @@ public class MorphiaDatastore implements Datastore {
                 failures.recordUnprocessed(entity, item.index());
                 continue;
             }
-            infos[item.index()] = versionSnapshot(entity);
+            // an instance listed more than once is restored to its version before the first save
+            infos[item.index()] = snapshots.computeIfAbsent(entity, this::versionSnapshot);
             try {
                 failures.recordSaved(save(getCollection(entity.getClass()), entity, insertOneOptions), item.index());
             } catch (MongoWriteException e) {

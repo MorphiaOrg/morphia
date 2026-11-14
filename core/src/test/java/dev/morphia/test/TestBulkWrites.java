@@ -633,6 +633,54 @@ public class TestBulkWrites extends TestBase {
         });
     }
 
+    @Test
+    public void transactionAbortingErrorRestoresEveryEntity() {
+        withTestConfig(List.of(VersionedReading.class, Reading.class), () -> {
+            getDs().applyIndexes();
+            Reading contested = getDs().save(new Reading("c"));
+            VersionedReading fresh = new VersionedReading("f");
+
+            try (MorphiaSession session = getDs().startSession()) {
+                session.startTransaction();
+                // pin the transaction's snapshot, then change the document outside it so the save inside conflicts
+                session.find(Reading.class).first();
+                getDatabase().getCollection("readings").updateOne(new Document("_id", contested.id),
+                        new Document("$set", new Document("key", "outside")));
+                contested.key = "inside";
+
+                com.mongodb.MongoException e = assertThrows(com.mongodb.MongoException.class,
+                        () -> session.save(List.of(fresh, contested)));
+                assertTrue(e.hasErrorLabel(com.mongodb.MongoException.TRANSIENT_TRANSACTION_ERROR_LABEL), e.toString());
+                if (session.hasActiveTransaction()) {
+                    session.abortTransaction();
+                }
+            }
+            assertNull(fresh.id);
+            assertNull(fresh.version);
+        });
+    }
+
+    @Test
+    public void abortedTransactionRestoresInstanceSavedTwice() {
+        withTestConfig(List.of(Reading.class, VersionedReading.class), () -> {
+            getDs().applyIndexes();
+            VersionedReading versioned = getDs().save(new VersionedReading("v"));
+            Long version = versioned.version;
+            getDs().save(new Reading("a"));
+            Reading clash = getDs().save(new Reading("b"));
+            clash.key = "a";
+
+            try (MorphiaSession session = getDs().startSession()) {
+                session.startTransaction();
+                assertThrows(MorphiaBulkWriteException.class, () -> session.save(List.of(versioned, versioned, clash)));
+                if (session.hasActiveTransaction()) {
+                    session.abortTransaction();
+                }
+            }
+            assertEquals(version, versioned.version);
+        });
+    }
+
     @Entity("readings")
     @Indexes(@Index(fields = @Field("key"), options = @IndexOptions(unique = true)))
     private static class Reading {
