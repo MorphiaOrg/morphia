@@ -11,10 +11,10 @@ import com.mongodb.lang.Nullable;
 import dev.morphia.annotations.internal.MorphiaInternal;
 import dev.morphia.mapping.codec.BsonTypeMap;
 import dev.morphia.mapping.codec.Conversions;
-import dev.morphia.sofia.Sofia;
 
 import org.bson.BsonBinary;
 import org.bson.BsonDbPointer;
+import org.bson.BsonInvalidOperationException;
 import org.bson.BsonJavaScript;
 import org.bson.BsonJavaScriptWithScope;
 import org.bson.BsonReader;
@@ -83,6 +83,7 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public BsonBinary readBinaryData() {
+        verifyBsonType("readBinaryData", BsonType.BINARY);
         Object value = stage().value();
         if (value instanceof UUID) {
             return new BsonBinary((UUID) value);
@@ -135,6 +136,7 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public boolean readBoolean() {
+        verifyBsonType("readBoolean", BsonType.BOOLEAN);
         return stage().value();
     }
 
@@ -151,11 +153,16 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public long readDateTime() {
-        Long value = conversions.convert(stage().value(), long.class);
-        if (value != null) {
-            return value;
+        // dates are also stored as epoch numbers and numeric strings; a document or array is not one of those
+        BsonType type = getCurrentBsonType();
+        if (type == BsonType.DOCUMENT || type == BsonType.ARRAY) {
+            throw wrongType("readDateTime", BsonType.DATE_TIME, type);
         }
-        throw new IllegalStateException(Sofia.valueCannotBeNull());
+        Long value = conversions.convert(stage().value(), long.class);
+        if (value == null) {
+            throw wrongType("readDateTime", BsonType.DATE_TIME, type);
+        }
+        return value;
     }
 
     @Override
@@ -166,6 +173,7 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public double readDouble() {
+        verifyBsonType("readDouble", BsonType.DOUBLE);
         return stage().value();
     }
 
@@ -187,6 +195,7 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public int readInt32() {
+        verifyBsonType("readInt32", BsonType.INT32);
         return stage().value();
     }
 
@@ -198,6 +207,7 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public long readInt64() {
+        verifyBsonType("readInt64", BsonType.INT64);
         return stage().value();
     }
 
@@ -209,6 +219,7 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public Decimal128 readDecimal128() {
+        verifyBsonType("readDecimal128", BsonType.DECIMAL128);
         return stage().value();
     }
 
@@ -220,6 +231,7 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public String readJavaScript() {
+        verifyBsonType("readJavaScript", BsonType.JAVASCRIPT);
         return stage().<BsonJavaScript> value().getCode();
     }
 
@@ -231,6 +243,7 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public String readJavaScriptWithScope() {
+        verifyBsonType("readJavaScriptWithScope", BsonType.JAVASCRIPT_WITH_SCOPE);
         return stage().<BsonJavaScriptWithScope> value().getCode();
     }
 
@@ -283,6 +296,7 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public ObjectId readObjectId() {
+        verifyBsonType("readObjectId", BsonType.OBJECT_ID);
         return stage().value();
     }
 
@@ -294,6 +308,7 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public BsonRegularExpression readRegularExpression() {
+        verifyBsonType("readRegularExpression", BsonType.REGULAR_EXPRESSION);
         return stage().value();
     }
 
@@ -305,6 +320,7 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public BsonDbPointer readDBPointer() {
+        verifyBsonType("readDBPointer", BsonType.DB_POINTER);
         return stage().value();
     }
 
@@ -326,6 +342,7 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public String readString() {
+        verifyBsonType("readString", BsonType.STRING);
         return stage().value();
     }
 
@@ -337,6 +354,7 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public String readSymbol() {
+        verifyBsonType("readSymbol", BsonType.SYMBOL);
         return stage().value();
     }
 
@@ -348,6 +366,7 @@ public class DocumentReader implements BsonReader {
 
     @Override
     public BsonTimestamp readTimestamp() {
+        verifyBsonType("readTimestamp", BsonType.TIMESTAMP);
         return stage().value();
     }
 
@@ -392,6 +411,23 @@ public class DocumentReader implements BsonReader {
             throw new BsonSerializationException(format("Expected element name to be '%s', not '%s'.",
                     expectedName, actualName));
         }
+    }
+
+    /**
+     * Rejects a value of another BSON type before reading it, as {@code BsonReader} does, so a caller that marked the
+     * reader can still rewind and convert the value.
+     */
+    private void verifyBsonType(String method, BsonType expected) {
+        BsonType actual = getCurrentBsonType();
+        if (actual != expected) {
+            throw wrongType(method, expected, actual);
+        }
+    }
+
+    private static BsonInvalidOperationException wrongType(String method, BsonType expected, BsonType actual) {
+        return new BsonInvalidOperationException(format(
+                "%s can only be called when CurrentBSONType is %s, not when CurrentBSONType is %s.",
+                method, expected, actual));
     }
 
     @Override

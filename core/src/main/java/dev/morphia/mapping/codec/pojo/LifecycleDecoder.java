@@ -96,10 +96,8 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
             if (!discriminated && discriminatorKey.equals(name)) {
                 if (type == BsonType.STRING) {
                     codec = codecFor(reader.readString());
-                } else if (type == BsonType.NULL) {
-                    // as if it were absent, as the Document path reads it
-                    reader.readNull();
                 } else {
+                    // null included: a present discriminator that isn't a string is rejected, as the plain codec does
                     throw notAString(discriminatorKey, type);
                 }
                 discriminated = true;
@@ -189,13 +187,15 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
         EntityModel model = getMorphiaCodec().getEntityModel();
         CodecPlan plan = getMorphiaCodec().getPlan();
         if (model.useDiscriminator()) {
-            Object stored = document.get(model.discriminatorKey());
-            if (stored != null && !(stored instanceof String)) {
-                throw notAString(model.discriminatorKey(), stored.getClass().getSimpleName());
-            }
-            String discriminator = (String) stored;
-            if (discriminator != null) {
-                MorphiaCodec<?> codec = codecFor(discriminator);
+            // Document.get is null both when the key is missing and when it's stored as null. only a present value is a
+            // discriminator, and one that isn't a string, null included, is rejected, as the plain codec rejects it
+            String discriminatorKey = model.discriminatorKey();
+            if (document.containsKey(discriminatorKey)) {
+                Object stored = document.get(discriminatorKey);
+                if (!(stored instanceof String)) {
+                    throw notAString(discriminatorKey, stored == null ? BsonType.NULL : stored.getClass().getSimpleName());
+                }
+                MorphiaCodec<?> codec = codecFor((String) stored);
                 model = codec.getEntityModel();
                 plan = codec.getPlan();
             }
@@ -302,15 +302,15 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
         throw new CodecConfigurationException(format("Non-entity class used as discriminator: '%s'.", discriminator));
     }
 
-    /**
-     * @return the document's discriminator, or null if it has none or it's stored as null. The reader is left where it was.
-     * @throws CodecConfigurationException if the discriminator isn't stored as a string
-     */
     private static CodecConfigurationException notAString(String discriminatorKey, Object storedAs) {
         return new CodecConfigurationException(format("The discriminator '%s' must be stored as a string, not as %s.",
                 discriminatorKey, storedAs));
     }
 
+    /**
+     * @return the document's discriminator, or null if the document has none. The reader is left where it was.
+     * @throws CodecConfigurationException if the discriminator isn't stored as a string, null included
+     */
     @Nullable
     private static String peekDiscriminator(BsonReader reader, String discriminatorKey) {
         BsonReaderMark mark = reader.getMark();
@@ -318,10 +318,6 @@ public class LifecycleDecoder<T> extends EntityDecoder<T> {
             reader.readStartDocument();
             while (reader.readBsonType() != BsonType.END_OF_DOCUMENT) {
                 if (discriminatorKey.equals(reader.readName())) {
-                    if (reader.getCurrentBsonType() == BsonType.NULL) {
-                        // as if it were absent, as the Document path reads it
-                        return null;
-                    }
                     if (reader.getCurrentBsonType() != BsonType.STRING) {
                         throw notAString(discriminatorKey, reader.getCurrentBsonType());
                     }
