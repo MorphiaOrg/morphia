@@ -511,6 +511,43 @@ public class TestBulkWrites extends TestBase {
         });
     }
 
+    private static MorphiaBulkWriteException suppressed(RuntimeException e) {
+        return (MorphiaBulkWriteException) java.util.Arrays.stream(e.getSuppressed())
+                .filter(MorphiaBulkWriteException.class::isInstance)
+                .findFirst().orElseThrow();
+    }
+
+    @Test
+    public void laterBatchErrorReportsUnsentBatches() {
+        withTestConfig(List.of(Reading.class, Exploding.class, Note.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+            Note note = new Note();
+
+            RuntimeException e = assertThrows(RuntimeException.class,
+                    () -> getDs().insert(List.of(new Reading("k"), new Exploding(), note), new InsertManyOptions().ordered(false)));
+            assertEquals(List.of(note), suppressed(e).getUnprocessedEntities());
+            assertEquals(0, count("notes"));
+        });
+    }
+
+    @Test
+    public void saveListErrorKeepsRecordedFailures() {
+        withTestConfig(List.of(Reading.class, Exploding.class, VersionedReading.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+            Reading dup = new Reading("k");
+            VersionedReading individual = new VersionedReading("v");
+
+            RuntimeException e = assertThrows(RuntimeException.class,
+                    () -> getDs().save(List.of(dup, new Exploding(), individual), new InsertManyOptions().ordered(false)));
+            MorphiaBulkWriteException recorded = suppressed(e);
+            assertSame(dup, recorded.getFailedEntities().get(0));
+            assertEquals(List.of(individual), recorded.getUnprocessedEntities());
+            assertNull(dup.id);
+        });
+    }
+
     @Entity("readings")
     @Indexes(@Index(fields = @Field("key"), options = @IndexOptions(unique = true)))
     private static class Reading {

@@ -550,8 +550,10 @@ public class MorphiaDatastore implements Datastore {
                     return true;
                 }
             } catch (RuntimeException e) {
-                // the outcome of this batch is unknown
+                // the outcome of this batch is unknown, but the batches after it were never sent
                 rollback(batch, infos);
+                entries.subList(b + 1, entries.size()).forEach(entry -> entry.getValue()
+                        .forEach(item -> failures.recordUnprocessed(item.entity(), item.index())));
                 throw e;
             }
         }
@@ -840,14 +842,21 @@ public class MorphiaDatastore implements Datastore {
 
     private <T> void saveAll(List<Indexed<T>> batched, List<Indexed<T>> individual, InsertManyOptions options,
             BulkWriteFailures failures) {
-        boolean stopped = insertBatches(groupByCollection(batched, options), options, failures, null);
+        boolean stopped;
+        try {
+            stopped = insertBatches(groupByCollection(batched, options), options, failures, null);
+        } catch (RuntimeException e) {
+            individual.forEach(item -> failures.recordUnprocessed(item.entity(), item.index()));
+            throw e;
+        }
 
         InsertOneOptions insertOneOptions = new InsertOneOptions()
                 .bypassDocumentValidation(options.bypassDocumentValidation())
                 .collection(options.collection())
                 .writeConcern(options.writeConcern());
         boolean stopAtFailure = stopsAtFirstFailure(options);
-        for (Indexed<T> item : individual) {
+        for (int i = 0; i < individual.size(); i++) {
+            Indexed<T> item = individual.get(i);
             T entity = item.entity();
             if (stopped) {
                 failures.recordUnprocessed(entity, item.index());
@@ -861,6 +870,10 @@ public class MorphiaDatastore implements Datastore {
             } catch (VersionMismatchException e) {
                 failures.recordException(entity, item.index(), e);
                 stopped = stopAtFailure;
+            } catch (RuntimeException e) {
+                // this entity's outcome is unknown, but the ones after it were never sent
+                individual.subList(i + 1, individual.size()).forEach(rest -> failures.recordUnprocessed(rest.entity(), rest.index()));
+                throw e;
             }
         }
     }

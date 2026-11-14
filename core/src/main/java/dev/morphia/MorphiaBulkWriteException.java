@@ -29,8 +29,9 @@ import dev.morphia.annotations.internal.MorphiaInternal;
  * unprocessed, though the server may already have attempted some of them before the transaction aborted.
  * <p>
  * If a list write later fails with an error that isn't about individual entities (a network error, say), that error is
- * thrown instead, with a {@code MorphiaBulkWriteException} for the failures recorded so far attached as a suppressed
- * exception.
+ * thrown instead, with a {@code MorphiaBulkWriteException} attached as a suppressed exception. It lists the failures recorded
+ * so far and, as unprocessed, the entities never sent; the entities in the write that failed aren't listed, since their outcome
+ * is unknown.
  * <p>
  * When the only failures are version conflicts, no server reported an error, and {@link #getServerAddress()} returns the
  * driver's default address.
@@ -41,9 +42,10 @@ import dev.morphia.annotations.internal.MorphiaInternal;
 public class MorphiaBulkWriteException extends MongoBulkWriteException {
     private final String message;
 
-    private final List<BulkWriteFailure> failures;
+    // entities needn't be serializable, so they don't travel with a serialized exception
+    private final transient List<BulkWriteFailure> failures;
 
-    private final List<?> unprocessed;
+    private final transient List<?> unprocessed;
 
     /**
      * Creates the exception.
@@ -98,7 +100,7 @@ public class MorphiaBulkWriteException extends MongoBulkWriteException {
      * @return the rejected entities with their errors, ordered by their position in the caller's list
      */
     public List<BulkWriteFailure> getFailures() {
-        return failures;
+        return failures != null ? failures : List.of();
     }
 
     /**
@@ -107,7 +109,7 @@ public class MorphiaBulkWriteException extends MongoBulkWriteException {
      */
     @SuppressWarnings("unchecked")
     public <T> List<T> getFailedEntities() {
-        return (List<T>) failures.stream()
+        return (List<T>) getFailures().stream()
                 .map(BulkWriteFailure::entity)
                 .toList();
     }
@@ -119,6 +121,6 @@ public class MorphiaBulkWriteException extends MongoBulkWriteException {
      */
     @SuppressWarnings("unchecked")
     public <T> List<T> getUnprocessedEntities() {
-        return (List<T>) unprocessed;
+        return (List<T>) (unprocessed != null ? unprocessed : List.of());
     }
 }
