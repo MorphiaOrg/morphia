@@ -250,17 +250,33 @@ bare, so callers get the unprocessed entities and one exception type for `save(L
 
 ### Inside a transaction
 
-Any write error aborts a MongoDB transaction, so nothing the batch "stored" will be committed, and further writes in
+A server write error aborts a MongoDB transaction, so nothing the batch "stored" will be committed, and further writes in
 the same transaction fail. Inside a session with an active transaction (`MorphiaSession`), stop at the first failing
 group/entity regardless of `ordered`: report its failures, mark everything not yet sent as unprocessed, and throw.
-Don't clear generated ids or roll back versions differently from the non-transactional case; the caller is expected to
-retry the whole transaction. The exception's javadoc and the docs say that "stored" entities are only stored if the
-transaction commits.
+
+Resetting for retry (refined during review):
+
+- After a **server write error**, or any `MongoException` escaping the write (a write conflict labeled
+  `TransientTransactionError`, say), the transaction is aborted, so reset **every** entity in the write: roll back
+  version bumps and clear generated ids, not just the listed ones. Otherwise the driver's `withTransaction()` retry
+  would reuse ids and versions from the aborted attempt.
+- A **version conflict** is detected client-side and doesn't abort the transaction, so only the conflicting entity is
+  reset; entities saved before it keep their ids and versions and can still commit.
+- `save(List)` snapshots each individually saved entity's version before its save (shared by identity, so an instance
+  listed twice restores to its version before the first save), so the reset can restore versions on that path too.
+
+The exception's javadoc and the docs say that "stored" entities are only stored if the transaction commits.
 
 ### Non-bulk errors
 
-Anything that isn't a write error (connection failures, timeouts, `MongoCommandException`) propagates unchanged and
-immediately, as today. We can't say what was stored.
+Anything that isn't a per-entity write error (connection failures, timeouts, `MongoCommandException`, a
+write-concern-only `MongoBulkWriteException`, client-side encoding or lifecycle failures) propagates unchanged and
+immediately: we can't say what the failing batch stored. Refined during review: before rethrowing, Morphia still
+
+- rolls back the failing batch's version bumps (outcome unknown, as before);
+- records every later batch or individual entity as unprocessed (they were never sent);
+- resets the entities already known not to be stored, and attaches a `MorphiaBulkWriteException` describing them as a
+  suppressed exception, so callers can recover what is known.
 
 ## Open questions
 
