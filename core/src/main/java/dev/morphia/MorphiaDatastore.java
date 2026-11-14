@@ -538,7 +538,7 @@ public class MorphiaDatastore implements Datastore {
             } catch (MongoBulkWriteException e) {
                 if (e.getWriteErrors().isEmpty()) {
                     // only a write concern error: no document was rejected, but we can't say what's durable
-                    rollback(batch, infos);
+                    abandonBatch(entries, b, infos, failures);
                     throw e;
                 }
                 failures.recordBulkFailure(e, list, indexes);
@@ -550,14 +550,21 @@ public class MorphiaDatastore implements Datastore {
                     return true;
                 }
             } catch (RuntimeException e) {
-                // the outcome of this batch is unknown, but the batches after it were never sent
-                rollback(batch, infos);
-                entries.subList(b + 1, entries.size()).forEach(entry -> entry.getValue()
-                        .forEach(item -> failures.recordUnprocessed(item.entity(), item.index())));
+                abandonBatch(entries, b, infos, failures);
                 throw e;
             }
         }
         return false;
+    }
+
+    /**
+     * The outcome of batch {@code b} is unknown, so its version bumps are rolled back, but the batches after it were never sent.
+     */
+    private static <T> void abandonBatch(List<Entry<BatchKey, List<Indexed<T>>>> entries, int b,
+            @Nullable VersionBumpInfo[] infos, BulkWriteFailures failures) {
+        rollback(entries.get(b).getValue(), infos);
+        entries.subList(b + 1, entries.size()).forEach(entry -> entry.getValue()
+                .forEach(item -> failures.recordUnprocessed(item.entity(), item.index())));
     }
 
     /**
@@ -612,6 +619,10 @@ public class MorphiaDatastore implements Datastore {
     private <T> void resetNotStored(List<T> entities, BitSet hadNullId, @Nullable VersionBumpInfo[] infos,
             BulkWriteFailures failures) {
         BitSet notStored = failures.notStored();
+        if (inTransaction()) {
+            // the failure aborted the transaction, so nothing in this write is stored
+            notStored.set(0, entities.size());
+        }
         // the same instance can appear twice in a list; if one occurrence was stored, its id and version are real
         Set<Object> stored = Collections.newSetFromMap(new IdentityHashMap<>());
         for (int i = notStored.nextClearBit(0); i < entities.size(); i = notStored.nextClearBit(i + 1)) {

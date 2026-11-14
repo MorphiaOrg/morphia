@@ -27,6 +27,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -449,6 +450,7 @@ public class TestBulkWrites extends TestBase {
                 MorphiaBulkWriteException e = assertThrows(MorphiaBulkWriteException.class,
                         () -> session.insert(list, new InsertManyOptions().ordered(false)));
                 assertEquals(List.of(n1, n2), e.getUnprocessedEntities());
+                assertNull(((Reading) list.get(0)).id, "the transaction aborted, so the 'stored' entity isn't stored");
                 if (session.hasActiveTransaction()) {
                     session.abortTransaction();
                 }
@@ -528,6 +530,22 @@ public class TestBulkWrites extends TestBase {
                     () -> getDs().insert(List.of(new Reading("k"), new Exploding(), note), new InsertManyOptions().ordered(false)));
             assertEquals(List.of(note), suppressed(e).getUnprocessedEntities());
             assertEquals(0, count("notes"));
+        });
+    }
+
+    @Test
+    public void writeConcernErrorReportsUnsentBatches() {
+        withTestConfig(List.of(Reading.class, Note.class, Animal.class), () -> {
+            getDs().applyIndexes();
+            getDs().save(new Reading("k"));
+            Animal animal = new Animal("a");
+            // a single-node server can't satisfy w:5, so every batch gets a write concern error
+            InsertManyOptions options = new InsertManyOptions().ordered(false).writeConcern(new com.mongodb.WriteConcern(5));
+
+            com.mongodb.MongoBulkWriteException e = assertThrows(com.mongodb.MongoBulkWriteException.class,
+                    () -> getDs().insert(List.of(new Reading("k"), new Note(), animal), options));
+            assertFalse(e instanceof MorphiaBulkWriteException);
+            assertEquals(List.of(animal), suppressed(e).getUnprocessedEntities());
         });
     }
 
