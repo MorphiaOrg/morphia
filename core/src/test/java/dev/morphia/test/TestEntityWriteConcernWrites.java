@@ -1,7 +1,9 @@
 package dev.morphia.test;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import com.mongodb.MongoWriteException;
@@ -159,11 +161,16 @@ public class TestEntityWriteConcernWrites extends TestBase {
                 getDs().find(W1.class).findAndDelete();
                 getDs().find(W1.class).findAndDelete(new FindAndDeleteOptions().writeConcern(WriteConcern.JOURNALED));
 
-                List<Document> concerns = database.getCollection("system.profile")
-                        .find(new Document("command.findAndModify", "w1_writes"))
-                        .map(entry -> entry.get("command", Document.class).get("writeConcern", Document.class))
-                        .into(new ArrayList<>());
-                assertEquals(List.of(new Document("w", 1), new Document("j", true)), concerns);
+                // profiler entries can show up after the commands return
+                List<Document> concerns = Awaitility.await()
+                        .atMost(5, TimeUnit.SECONDS)
+                        .pollInterval(50, TimeUnit.MILLISECONDS)
+                        .until(() -> database.getCollection("system.profile")
+                                .find(new Document("command.findAndModify", "w1_writes"))
+                                .map(entry -> entry.get("command", Document.class).get("writeConcern", Document.class))
+                                .into(new ArrayList<>()), found -> found.size() >= 2);
+                // {w: 1} can only come from the entity and {j: true} only from the options; entries in the same millisecond have no set order
+                assertEquals(Set.of(new Document("w", 1), new Document("j", true)), new HashSet<>(concerns));
             } finally {
                 database.runCommand(new Document("profile", 0));
             }
