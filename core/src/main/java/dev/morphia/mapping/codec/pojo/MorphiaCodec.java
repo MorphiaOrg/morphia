@@ -111,7 +111,7 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
             throw new IllegalArgumentException("The plan is for %s, not %s".formatted(plan.model().getType().getName(),
                     model.getType().getName()));
         }
-        this.plan = plan != null ? plan : new CodecPlan(model, propertyCodecs(model));
+        this.plan = plan != null ? plan : new CodecPlan(model, propertyCodecs(model, registry));
     }
 
     @Override
@@ -296,11 +296,11 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
     }
 
     /**
-     * Resolves each property's codec against this codec's datastore. They live in the plan, never on the shared
-     * {@code PropertyModel}, so datastores and sessions sharing a mapper each get their own: a {@code ReferenceCodec}
-     * fetches through the datastore it was built for.
+     * Resolves property codecs using the supplied registry, preserving the driver's cycle detection during codec
+     * construction. They live in the plan, never on the shared {@code PropertyModel}, so datastores and sessions sharing
+     * a mapper each get their own: a {@code ReferenceCodec} fetches through the datastore it was built for.
      */
-    private Codec<?>[] propertyCodecs(EntityModel model) {
+    private Codec<?>[] propertyCodecs(EntityModel model, CodecRegistry registry) {
         List<PropertyModel> properties = model.getProperties();
         Codec<?>[] codecs = new Codec<?>[properties.size()];
         for (int slot = 0; slot < codecs.length; slot++) {
@@ -311,7 +311,7 @@ public class MorphiaCodec<T> implements CollectibleCodec<T> {
                 // an untyped id is read as the decode session and references read ids, so all three agree on its value
                 codecs[slot] = ObjectCodec.forIds(datastore.getCodecRegistry());
             } else if (property.getTypeData().getTypeParameters().isEmpty()) {
-                codecs[slot] = datastore.getCodecRegistry().get(property.getType());
+                codecs[slot] = registry.get(property.getType());
             } else {
                 codecs[slot] = propertyCodecRegistry.get(property.getTypeData());
             }
