@@ -83,4 +83,23 @@
             <artifactId>jsonassert</artifactId>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>code-audits</id>
+            <activation>
+                <property>
+                    <name>code-audits</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.revapi</groupId>
+                        <artifactId>revapi-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

@@ -67,6 +67,7 @@
         <morphia.minor.version>3.0</morphia.minor.version>
         <revapi.maven.plugin.version>0.15.1</revapi.maven.plugin.version>
         <revapi.java.version>0.28.4</revapi.java.version>
+        <revapi.reporter.json.version>0.5.1</revapi.reporter.json.version>
         <roaster.version>2.29.0.Final</roaster.version>
         <slf4j.version>2.0.20</slf4j.version>
         <sofia.version>0.25</sofia.version>
@@ -115,6 +116,11 @@
                             <artifactId>revapi-java</artifactId>
                             <version>${revapi.java.version}</version>
                         </dependency>
+                        <dependency>
+                            <groupId>org.revapi</groupId>
+                            <artifactId>revapi-reporter-json</artifactId>
+                            <version>${revapi.reporter.json.version}</version>
+                        </dependency>
                     </dependencies>
                     <executions>
                         <execution>
@@ -122,11 +128,22 @@
                             <goals>
                                 <goal>check</goal>
                             </goals>
-                            <phase>none</phase>
+                            <phase>verify</phase>
                         </execution>
                     </executions>
                     <configuration>
+                        <!-- RELEASE selects the newest version older than this build; exclude prereleases. -->
+                        <versionFormat>\d+\.\d+\.\d+</versionFormat>
+                        <failOnUnresolvedArtifacts>true</failOnUnresolvedArtifacts>
+                        <failCriticality>error</failCriticality>
                         <failBuildOnProblemsFound>true</failBuildOnProblemsFound>
+                        <analysisConfiguration>
+                            <revapi.reporter.json>
+                                <minSeverity>EQUIVALENT</minSeverity>
+                                <output>${project.build.directory}/revapi.json</output>
+                                <indent>true</indent>
+                            </revapi.reporter.json>
+                        </analysisConfiguration>
                         <analysisConfigurationFiles>
                             <analysisConfigurationFile>${maven.multiModuleProjectDirectory}/config/revapi.json</analysisConfigurationFile>
                         </analysisConfigurationFiles>

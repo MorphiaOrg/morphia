@@ -1,0 +1,42 @@
+name: Code Audits
+
+on:
+  workflow_call:
+    inputs:
+      java:
+        required: false
+        type: string
+        default: '17'
+
+permissions:
+  contents: read
+
+jobs:
+  CodeAudits:
+    name: Code Audits
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Java
+        uses: actions/setup-java@v6
+        with:
+          java-version: ${{ inputs.java }}
+          distribution: temurin
+          server-id: central
+          cache: maven
+
+      - name: Run audits
+        run: ./mvnw -B -ntp -U install -Dcode-audits
+
+      - name: Collect API compatibility reports
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: revapi-reports
+          path: |
+            core/target/revapi.json
+            kotlin/target/revapi.json
+            validation/target/revapi.json
+          retention-days: 7

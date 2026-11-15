@@ -15,6 +15,12 @@
         "patch": {
           "severity": "EQUIVALENT"
         }
+      },
+      "onAllowed": {
+        "criticality": "documented"
+      },
+      "onDisallowed": {
+        "criticality": "error"
       }
     }
   },
