@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   CodeAudits:
-    uses: evanchooly/workflows/.github/workflows/code-audits.yml@master
+    uses: ./.github/workflows/code-audits.yml
     with:
       java: 17
   # build.yml directly rather than the shared pull-request.yml: that one's nested auto-merge job can only wait on its own

@@ -21,7 +21,7 @@ permissions:
 
 jobs:
   CodeAudits:
-    uses: evanchooly/workflows/.github/workflows/code-audits.yml@master
+    uses: ./.github/workflows/code-audits.yml
     with:
       java: 17
 
