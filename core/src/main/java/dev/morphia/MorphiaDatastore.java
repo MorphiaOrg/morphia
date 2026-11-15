@@ -413,8 +413,7 @@ public class MorphiaDatastore implements Datastore {
 
     @Override
     public <T> DeleteResult delete(T entity) {
-        // DeleteOptions defaults to ACKNOWLEDGED, which would replace the collection's concern, so set the entity's
-        return delete(entity, new DeleteOptions().writeConcern(mapper.getEntityModel(entity.getClass()).writeConcern()));
+        return delete(entity, new DeleteOptions());
     }
 
     @Override
@@ -735,6 +734,10 @@ public class MorphiaDatastore implements Datastore {
             var updates = ((MergingEncoder<T>) new MergingEncoder(query, morphiaCodec, mapper.getConfig()))
                     .encode(entity);
             execute = query.update(updateOptions, updates.toArray(new UpdateOperator[0]));
+        }
+        // an unacknowledged write reports no counts and might not have landed yet, so there's nothing to check or read back
+        if (!execute.wasAcknowledged()) {
+            return entity;
         }
         if (execute.getMatchedCount() != 1) {
             if (info.versioned()) {
