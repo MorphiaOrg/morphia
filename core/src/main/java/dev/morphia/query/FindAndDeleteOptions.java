@@ -20,7 +20,7 @@ import org.bson.conversions.Bson;
  */
 public class FindAndDeleteOptions extends FindOneAndDeleteOptions implements WriteConfigurable<FindAndDeleteOptions>,
         CollectionConfigurable<FindAndDeleteOptions> {
-    private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
+    private WriteConcern writeConcern;
     private String collection;
 
     @Override

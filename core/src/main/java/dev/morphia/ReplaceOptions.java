@@ -31,7 +31,7 @@ import org.bson.conversions.Bson;
  * @since 2.3
  */
 public class ReplaceOptions extends com.mongodb.client.model.ReplaceOptions implements WriteConfigurable<ReplaceOptions> {
-    private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
+    private WriteConcern writeConcern;
 
     /**
      * Creates a new options wrapper

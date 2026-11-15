@@ -31,7 +31,7 @@ public interface CollectionConfigurable<T> extends CollectionConfiguration {
      * @param collection the mapped collection
      * @param database   the database
      * @param <T>        the collection type
-     * @return either the alternate collection if one is defined or the collection passed in
+     * @return either the alternate collection, with the mapped collection's write concern, if one is defined or the collection passed in
      * @hidden
      * @morphia.internal
      */
@@ -39,7 +39,9 @@ public interface CollectionConfigurable<T> extends CollectionConfiguration {
     default <T> MongoCollection<T> prepare(@Nullable MongoCollection<T> collection, MongoDatabase database) {
         String alternateName = collection();
         if (alternateName != null) {
-            collection = database.getCollection(alternateName, collection.getDocumentClass());
+            // the mapped collection carries the entity's write concern, which applies wherever the entity is written
+            collection = database.getCollection(alternateName, collection.getDocumentClass())
+                    .withWriteConcern(collection.getWriteConcern());
         }
 
         return collection;

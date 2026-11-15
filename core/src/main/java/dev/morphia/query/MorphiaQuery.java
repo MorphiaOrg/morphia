@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import com.mongodb.ExplainVerbosity;
+import com.mongodb.WriteConcern;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -87,8 +88,11 @@ public class MorphiaQuery<T> implements Query<T> {
         // a lazy reference's proxy class maps as its entity
         model = mapper.mapEntity(type);
         if (options.collection() != null) {
-            collection = datastore.getDatabase().getCollection(options.collection())
-                    .withDocumentClass(type);
+            collection = datastore.getDatabase().getCollection(options.collection(), type);
+            WriteConcern concern = model != null ? model.writeConcern() : null;
+            if (concern != null) {
+                collection = collection.withWriteConcern(concern);
+            }
             collectionName = options.collection();
         } else {
             collection = datastore.getCollection(type);
@@ -266,7 +270,7 @@ public class MorphiaQuery<T> implements Query<T> {
             }
         }
 
-        MongoCollection<T> mongoCollection = options.prepare(collection, datastore.getDatabase());
+        MongoCollection<T> mongoCollection = datastore.configureCollection(options, collection);
 
         return options.multi() ? datastore.operations().updateMany(mongoCollection, queryObject, updateOperations, options)
                 : datastore.operations().updateOne(mongoCollection, queryObject, updateOperations, options);
@@ -288,7 +292,7 @@ public class MorphiaQuery<T> implements Query<T> {
                 .collect(toList());
         final Document queryObject = toDocument();
 
-        MongoCollection<T> mongoCollection = datastore.configureCollection(options, datastore.configureCollection(options, collection));
+        MongoCollection<T> mongoCollection = datastore.configureCollection(options, collection);
         return options.multi()
                 ? datastore.operations().updateMany(mongoCollection, queryObject, updateOperations, options)
                 : datastore.operations().updateOne(mongoCollection, queryObject, updateOperations, options);

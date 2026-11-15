@@ -18,7 +18,7 @@ import org.bson.BsonValue;
  */
 public class InsertManyOptions implements WriteConfigurable<InsertManyOptions>, CollectionConfigurable<InsertManyOptions> {
     private com.mongodb.client.model.InsertManyOptions options = new com.mongodb.client.model.InsertManyOptions();
-    private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
+    private WriteConcern writeConcern;
     private String collection;
 
     /**

@@ -33,7 +33,7 @@ import org.bson.BsonValue;
 public class InsertOneOptions implements WriteConfigurable<InsertOneOptions>,
         CollectionConfigurable<InsertOneOptions> {
     private com.mongodb.client.model.InsertOneOptions options = new com.mongodb.client.model.InsertOneOptions();
-    private WriteConcern writeConcern = WriteConcern.ACKNOWLEDGED;
+    private WriteConcern writeConcern;
     private boolean unset;
     private String collection;
 

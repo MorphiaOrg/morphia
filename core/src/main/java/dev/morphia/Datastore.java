@@ -247,7 +247,8 @@ public interface Datastore {
      *
      * @param entity the entity to merge back in to the database
      * @param <T>    the type of the entity
-     * @return the new merged entity. NOTE: this is a database fetch.
+     * @return the new merged entity. NOTE: this is a database fetch, unless the write is unacknowledged, when the entity passed in is
+     *         returned.
      */
     <T> T merge(T entity);
 
@@ -257,7 +258,8 @@ public interface Datastore {
      * @param entity  the entity to merge back in to the database
      * @param options the options to apply
      * @param <T>     the type of the entity
-     * @return the new merged entity. NOTE: this is a database fetch.
+     * @return the new merged entity. NOTE: this is a database fetch, unless the write is unacknowledged, when the entity passed in is
+     *         returned.
      * @since 2.0
      */
     <T> T merge(T entity, InsertOneOptions options);
