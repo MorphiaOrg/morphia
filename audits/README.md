@@ -3,8 +3,9 @@
 This module is being rebuilt around the [operator audit design](../design/mongodb-operator-audits.md).
 The current milestones provide offline regression tests, a read-only corpus inventory,
 compiler-resolved public API metadata, artifact-based capability comparison, and descriptive
-example identity proposals. Pinned docs acquisition, existing-test migration, executable
-generation and the `gh` publisher remain planned.
+example identity proposals, pinned docs acquisition, and an offline structured document
+adapter. Capability normalization, existing-test migration, executable generation and the
+`gh` publisher remain planned.
 
 Run the tests from the repository root:
 
@@ -283,3 +284,82 @@ need explicit immutable source/resource pins; no parser is permitted to fetch am
 The next PR prototypes the pinned Snooty adapter and connects operator/example provenance.
 The real manual and parser pins plus the symlink/shared-include observations are recorded in
 `design/operator-audits-progress.md`; production catalog generation remains pending.
+
+## Pinned structured document adapter
+
+`documents/DocumentParsing.kt` exports a verified `SourceBundle` snapshot to the isolated
+helper in `parser/adapter.py`. The helper validates every transported resource hash and
+uses MongoDB's Snooty parser at commit `0c26866083a02177a52ade1ccb17cc61a2816be7`,
+CPython 3.12.16, and the exact dependencies recorded in `parser/uv.lock`. The explicit
+`typing-extensions` dependency repairs an upstream omission. No AST database or publisher
+is needed. The runtime checks the exact platform-selected dependency versions and installed RECORD
+hashes (detecting local drift; no toolchain attestation), and records adapter/lock digests, source
+content pin and exact transport digest. The standalone helper trusts the source pin in its
+input; use the Kotlin coordinator to bind it to a verified source manifest.
+
+Prepare the isolated environment explicitly (installation may use the network):
+
+```sh
+uv sync --frozen --project audits/parser
+```
+
+Run its real parser regressions offline after installation:
+
+```sh
+audits/parser/.venv/bin/python -I -B audits/parser/tests/test_adapter.py
+```
+
+The ordinary JVM test suite does not install or require Python; its real parser integration
+case skips unless `audits.parser.python` and `audits.parser.adapter` are explicitly supplied.
+CI runs the locked parser suite and this coordinator integration under both mapper settings. Tests exercise nested includes, IO ranges and whitespace, external-file
+provenance, Giza extracts, substitutions, language tabs, unknown directives, missing resources,
+and network/read confinement. The Kotlin suite checks transport/provenance, input drift,
+exit status, deadlines, output bounds and strict JSON. No example code is executed.
+
+After compiling the audit module, invoke `dev.morphia.audits.documents.DocumentsMainKt`
+with the bundle directory, expected source-content SHA-256, absolute isolated Python path,
+absolute `adapter.py` path, and one or more project-source-relative `.txt` page ids. For example,
+pass `reference/operator/aggregation/median.txt` for the selected manual property. Output is
+UTF-8 JSON: READY exits 0, PARTIAL exits 3; invalid input/runtime fails with a diagnostic on
+stderr and exits 2. The coordinator's defaults are a 120-second deadline and 64 MiB stdout
+budget (1 MiB stderr); its library API permits explicit bounded budgets. Outputs are candidates;
+accepted catalogs, curated tests, locks and fixture directories are never replaced.
+
+The versioned Morphia-owned tree retains raw and expanded pages, plain text, identifiers,
+directives and arguments, options, language/code attributes, nested include chains, and
+external-file dependencies checked against captured raw hashes (both Snooty digest sizes).
+The coordinator independently cross-checks returned origin paths/hashes against the bundle. Additional scalar/structured
+attributes survive as canonical JSON strings; downstream normalization must explicitly handle
+node kinds before claiming category completeness. `reportedLine` is a parser hint at the
+owning RST directive, **not** an invented location within an external snippet. Generated YAML
+content has an explicit unknown/generated position. Raw trees preserve the evidence before
+postprocessing resolves includes/substitutions. The currently supported property layout is
+an exact pinned `snooty.toml` plus `source/`; other configured source roots diagnose as unsupported.
+
+Parsing materializes a private source tree from exported bytes. It blocks remote HTTP,
+sockets, child processes, and reads outside the private source and controlled Python/adapter
+runtime roots; writes are restricted to a private cache. These Python audit hooks constrain
+the trusted pinned parser; they are not an OS sandbox for arbitrary Python programs. Snooty's
+process pool is replaced with one worker thread, and ambient MIME tables are excluded.
+Snooty file enumeration uses the verified private bundle as its path jail so declared shared
+RST links outside the selected property can resolve; its nested-project/cycle traversal rules
+remain in force. Unhealthy links themselves are suppressed without hiding healthy ancestor
+links or sibling includes. The native coordinator additionally enforces time/output bounds
+and kills descendants on failure.
+Unresolved links, remote inventories/shared includes, missing files, unknown directives, parser
+exceptions and incomplete dependencies remain explicit PARTIAL results. All diagnostics are
+retained, including unrelated captured pages; this adapter makes no operator-absence claim.
+A later normalizer will scope domain health and classify nonsemantic cross-reference failures.
+
+To upgrade, change the immutable parser revision, supported Python pin and dependency lock
+in one reviewable change; update coordinator/runtime guards together. Run both JVM mapper
+configurations, these real parser regressions, and the pinned median/lookup/setWindowFields
+probe. Review changed nodes/diagnostics and source provenance before accepting new artifacts.
+Never silently retry with an unpinned parser or fetch dependencies during parsing.
+
+The immutable manual probe can be checked with
+`python -I -B audits/parser/verify_manual_probe.py <document-report.json>`. It requires
+exactly the configured source pin and three page ids, both trees, complete captured example
+file dependencies, definition identifiers and all root/feature version events. The deliberately
+incomplete bundle must remain PARTIAL. At the recorded pin the adapter retains 3/34/21 code
+blocks and 2/20/20 external files for median/lookup/setWindowFields respectively.

@@ -235,6 +235,18 @@ RST parser for a declared subset. Require identical fixture contracts and explic
 diagnostics. Do not expand the existing heuristics into an undocumented fallback that drops
 features. Record the decision and dependency update procedure in this design.
 
+The phase-2 spike selected a pinned Snooty helper rather than extending the old RST scanner.
+The implemented boundary (`audits/parser` and `audits/.../documents`) uses Snooty commit
+`0c26866083a02177a52ade1ccb17cc61a2816be7`, CPython 3.12.16 and a frozen dependency lock.
+It retains raw and expanded owned trees, include origins, unknown/generated positions,
+external dependency hashes and diagnostics; it does not yet normalize a production capability
+catalog. A real offline run over the pinned manual produces both trees for median, lookup
+and setWindowFields. The selected source probe remains PARTIAL because inventories and
+additional references are deliberately absent. This demonstrates usable extraction without
+pretending that cross-reference failures prove absent operators. Full dependency acquisition,
+health classification and capability/scenario normalization remain subsequent work.
+The parser README documents runtime setup, constraints and the coordinated upgrade procedure.
+
 ### Capability identity, Morphia coverage, and version evidence
 
 Use a key consisting of server product, operator token, and execution context. Contexts

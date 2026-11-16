@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.type.LogicalType
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import dev.morphia.audits.api.ApiInventory
+import dev.morphia.audits.documents.DocumentReport
 import dev.morphia.audits.naming.ExampleNameRegistry
 import dev.morphia.audits.naming.NameProposal
 import dev.morphia.audits.naming.NamingRequest
@@ -77,6 +78,8 @@ object AuditJson {
 
     fun sourceAcquisition(json: String): SourceAcquisitionReport =
         read(json, SourceAcquisitionReport::class.java)
+
+    fun documents(json: String): DocumentReport = read(json, DocumentReport::class.java)
 
     private fun <T> read(json: String, type: Class<T>): T {
         val tree = requireNotNull(mapper.readTree(json)) { "Empty JSON input" }

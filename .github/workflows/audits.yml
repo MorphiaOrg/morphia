@@ -35,3 +35,35 @@ jobs:
           name: operator-audit-tests
           path: audits/target/surefire-reports
           retention-days: 7
+
+  ParserTests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Java for coordinator integration
+        uses: actions/setup-java@v6
+        with:
+          java-version: '17'
+          distribution: temurin
+          cache: maven
+
+      - name: Setup isolated parser Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12.16'
+
+      - name: Install pinned runtime manager
+        run: python -m pip install uv==0.13.7
+
+      - name: Install frozen parser dependencies
+        run: uv sync --frozen --project audits/parser --no-python-downloads
+
+      - name: Run offline structured parser regressions
+        run: audits/parser/.venv/bin/python -I -B audits/parser/tests/test_adapter.py
+
+      - name: Verify coordinator integration with both mappers
+        run: |
+          ./mvnw -B -ntp -Daudits -pl audits test -Dtest=DocumentParsingTest -Dmorphia.mapper=critter -Daudits.parser.python="$PWD/audits/parser/.venv/bin/python" -Daudits.parser.adapter="$PWD/audits/parser/adapter.py"
+          ./mvnw -B -ntp -Daudits -pl audits test -Dtest=DocumentParsingTest -Dmorphia.mapper=reflection -Daudits.parser.python="$PWD/audits/parser/.venv/bin/python" -Daudits.parser.adapter="$PWD/audits/parser/adapter.py"

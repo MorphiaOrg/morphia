@@ -1,8 +1,9 @@
 # Operator audit implementation progress
 
-Current branch: `audits-pinned-sources`; PR base: `audits-example-identities`.
+Current branch: `audits-snooty-adapter`; PR base: `audits-pinned-sources`.
 Stack (PR head branches): #4512 `audits-pipeline-design` → #4513 `audits-source-inventory` →
-#4514 `audits-coverage-contracts` → #4515 `audits-example-identities` → pinned sources (in progress).
+#4514 `audits-coverage-contracts` → #4515 `audits-example-identities` → #4516 `audits-pinned-sources` →
+Snooty adapter (in progress).
 Each PR targets its predecessor; #4512 targets `master`.
 Use `git worktree list` to locate the checkout on this machine.
 
@@ -392,15 +393,161 @@ cmp audits/catalog/legacy-corpus.json /tmp/operator-corpus.json
   root is hash-bound and capture requires its inputs; a future reader invariant may mirror it.
   README wrapping and next-step status have been corrected. This is internal tooling; no
   Morphia 3.0 product-documentation changes are needed.
-- No source work has been committed/pushed yet; no source acquisition PR exists. Worktree
-  files are authoritative. Do not rerun old /tmp prototypes or restore deleted source resolvers.
+- Acquisition is committed/pushed in #4516; worktree source files and its recorded head are
+  authoritative. Do not rerun old /tmp prototypes or restore deleted source resolvers.
+
+## Pinned acquisition published checkpoint
+
+- PR [#4516](https://github.com/MorphiaOrg/morphia/pull/4516) targets #4515.
+- Head: `42ac900713020d0f904aba5d8e804747f7614b0b`; final 120-test verification under both
+  mappers, three local review rounds, formatting, graph update, protected-input checks and
+  real byte-identical offline replay are complete.
+- Copilot CLI remains quota-blocked. Remote review was requested with
+  `gh pr edit 4516 --add-reviewer '@copilot'`; GitHub accepted it with no review/pending request.
+- All CI passed on the recorded head: OfflineTests, Code Audits, full Build and Critter AOT.
+  No delayed review findings were present. The next branch started after these gates passed.
+  Do not wait for merge; do not merge without authorization.
+- The post-publication status was carried into `audits-snooty-adapter`; the #4516 worktree
+  is clean. No merge was requested or performed.
+
+## Snooty adapter checkpoint (in progress)
+
+- Branch `audits-snooty-adapter` starts at #4516 head after all gates passed. Phase 2b must
+  prove a pinned parser boundary and a Morphia-owned interchange with source/dependency
+  provenance, explicit diagnostics and no ambient network. Production capability extraction
+  may need its own focused stacked PR after the adapter is proved.
+- Installed isolated CPython 3.12.16 at `/tmp/morphia-audits-python` with uv, using cache
+  `/tmp/morphia-audits-uv-cache`. Host Python versions are too new for the pinned package.
+- Prototype venv `/tmp/morphia-snooty-prototype-venv` installs Snooty at immutable commit
+  `0c26866083a02177a52ade1ccb17cc61a2816be7`. Installation log `/tmp/morphia-snooty-install.log`,
+  initial dependency freeze `/tmp/morphia-snooty-prototype-freeze.txt` (must regenerate/lock
+  after resolving missing dependencies). No global Python environment was changed.
+- First import found the undeclared `typing_extensions` dependency; the committed project
+  now pins it explicitly. `audits/parser/uv.lock` freezes the parser Git commit and transitive
+  package versions/hashes. CPython is pinned at 3.12.16; actual installed distributions are
+  checked against the lock and included in output provenance.
+- The prototype proved both raw and expanded ASTs: 3 representative real pages, include roots
+  (including Giza YAML), 2/20/20 external dependencies for median/lookup/setWindowFields,
+  language variants and separate root/feature version events. The broad selected snapshot
+  produces thousands of unrelated missing-reference diagnostics; preserve these as PARTIAL,
+  then classify health by evidence/domain in the normalization milestone.
+- `audits/parser/adapter.py` and Kotlin `documents/` now implement the boundary. The coordinator
+  verifies a SourceBundle, exports exact bytes, invokes an absolute isolated runtime with
+  cleaned environment and bounded deadline/output, checks response scope and provenance,
+  and returns candidates only. Ordinary JVM tests/builds do not install Python or parse live docs.
+- The owned tree keeps plain title/code text, directives/arguments, identifiers, language/tabs,
+  options and canonical JSON extra attributes, raw and expanded trees, nested include chains,
+  raw resource hashes and parser dependency hashes. Generated positions stay unknown; RST
+  line numbers are explicitly parser-reported hints, not external-snippet spans.
+- Helper guards block network, processes, source writes and reads outside private source and
+  controlled runtime roots. This constrains the trusted pinned parser, not arbitrary Python.
+  Upstream always creates a process pool, even with one worker; use one worker thread instead.
+  Ambient `/etc/mime.types` caused a real blocked read; fixed by initializing the runtime MIME
+  table without host files. Runtime setup and coordinated upgrades are documented in README.
+- The real coordinator run succeeds offline with raw and expanded trees for all three pages,
+  no PARSER_FAILED diagnostic, and explicit PARTIAL results for missing resources/inventories.
+  `/tmp/morphia-adapter-real-report.json` is exploratory evidence and must be regenerated after
+  adapter changes. The source pin remains `7ca545e9212f459b6b8e2cc18e8141d5338d5f158aa158facc68d1944776d6d1`.
+- Current verification: 127 JVM tests pass with Critter and reflection; 11 actual pinned-parser
+  fixture tests pass. Formatting is applied, graph refreshed, protected inputs unchanged.
+  Real replay after the final fixes passed twice with byte-identical JSON (7,429,246 bytes;
+  SHA-256 `4eedd7eb4edd6a0bae785b5edaed02ce9da06653b4a27820770776a5abc72355`).
+  All three pages have complete captured example-file dependencies; 2,765 deduplicated
+  diagnostics and 32 blocked URLs keep overall source health explicitly PARTIAL. The executable
+  `audits/parser/verify_manual_probe.py` preserves acceptance checks for the immutable real
+  median/lookup/window probe: definitions, root/feature version events, raw/expanded trees,
+  dependency closure and code provenance. Expected code block counts are 3/34/21.
+- Review round 1 found valid issues in static-asset digest size (Snooty uses 32-byte and 64-byte
+  Blake2), missing include-dependency records defaulting to empty, page/conversion failure
+  isolation, ambiguous diagnostic path bases, environment version completeness, link ordering/
+  unhealthy-link traversal, and missing coordinator origin checks. All are fixed. Source
+  diagnostics are validated at the input boundary; malformed transport is deliberately INVALID
+  rather than a PARTIAL parse. Per-page adapter compatibility failures retain explicit diagnostics.
+- Runtime checks now compare the marker-selected lock dependency graph exactly (including
+  duplicate/missing distribution detection) and installed RECORD hashes. These detect local
+  drift; archive hash verification belongs to frozen installation, not an independent toolchain
+  attestation. Controlled runtime + parser-hook constraints remain the documented threat model.
+- Link materialization reaches a fixpoint; links in source-error chains are suppressed rather
+  than traversed. Bundle-relative requested diagnostic/include paths and canonical resource
+  origins are distinct from explicit project-source-relative page/dependency file ids.
+  The coordinator rejects unknown/mismatched node/dependency origin hashes. Unicode page order
+  uses code-point-compatible UTF-8 comparison on both sides. Guard tests directly exercise file,
+  socket and process denial; directory listings/chdir/dir_fd open were also constrained.
+- Remaining review notes are deliberate limits: report-wide conservative PARTIAL until the
+  planned domain-health normalizer, explicit whole-snapshot transport cap, and polled native
+  process budgets like the existing Git boundary. Source text/attribute values are intentionally
+  preserved exactly rather than blindly sanitizing literal text; the private root is canonicalized
+  before use to avoid temp-path aliases. Oversized candidates fail closed and cannot replace data.
+- CI installs the frozen runtime explicitly in a separate ParserTests job; the offline JVM job
+  remains independent. This is internal tooling; no product-doc edits needed. Copilot was retried
+  and remains monthly-quota blocked. Round 2 is running at `/tmp/morphia-adapter-claude-2.jsonl`;
+  prior concerns are recorded above and `/tmp/morphia-adapter-claude-1.log`.
+- Round 2 confirmed every earlier fix, then found that suppressing every link in an error
+  chain also suppressed healthy ancestor directories. Fixed to suppress only the offending path.
+  The new real-parser regression also exposed upstream's property-root traversal jail: declared
+  shared RST outside the property was skipped. Enumeration now uses the verified private bundle
+  as its jail while preserving upstream cycle/nested-project traversal. Healthy sibling content
+  survives a bad descendant link, and the report stays explicitly PARTIAL.
+- Fixed the low-priority posix_spawn and dir_fd mutation guard gaps; source-relative diagnostic
+  ids now map deterministically to normalized bundle paths (project config special-cased).
+  Kotlin validates diagnostic path shapes, requires captured sources for parser-reported origins,
+  and requires nonnull source/digest evidence for complete dependencies. Added relevant fixtures.
+- Rejected duplicating Blake2 inside Kotlin: the coordinator independently binds SHA-256 raw
+  resource origins; Python checks upstream Blake2 variants against those exact bytes. Upstream
+  digests remain parser metadata. A duplicate crypto implementation/library would add cost
+  without improving the stated independent raw-origin check; malformed/missing digests reject.
+- Current tests: 127 JVM cases pass Critter after these changes; reflection is rerunning.
+  All 13 actual-parser tests pass. Round 3 (final allowed local round) is running in
+  `/tmp/morphia-adapter-claude-3.jsonl`. The final real replay is being repeated after these
+  path/traversal changes; the earlier report digest above is superseded until updated below.
+- All three allowed local review rounds are complete. Round 3 confirmed prior fixes and no
+  unsafe READY, and found one final valid cross-boundary defect: a failed literalinclude could
+  identify the suppressed symlink itself as a raw resource, causing Kotlin to discard an otherwise
+  useful PARTIAL report. Fixed by giving unavailable/symlink-only origins explicit null path/hash
+  and unknown precision. Python regression now includes the bad literalinclude and healthy sibling.
+- Added an actual Kotlin → locked Python → Kotlin integration regression using a locally created
+  Git source bundle with a healthy shared directory link and bad descendant link. It verifies
+  the healthy explanation survives, failed dependencies have unknown origins, and PARTIAL returns
+  normally. No optional runtime is installed by ordinary Maven; this case skips unless explicit
+  runtime/adapter properties are given. ParserTests CI supplies them and runs both mapper settings.
+- Final targeted checks in progress: 128 JVM cases including integration under both mappers,
+  13 parser fixtures, immutable real replay twice, formatting/graph/protected-input checks.
+  All review findings were evaluated and fixed or recorded as intentional above; no fourth
+  local review round is needed under the three-round maximum. Copilot remains unavailable.
+- No implementation commit or PR exists yet. After final checks, commit/push a PR targeting
+  `audits-pinned-sources`. Do not start the next PR until this one passes CI and available
+  reviews; do not wait for merge or merge without authorization.
+
+
+## Structured parser final verification
+
+- All 128 JVM tests pass under Critter and reflection with the explicit locked runtime,
+  including the real Git-bundle → Kotlin → Python → Kotlin blocked-link integration.
+  All 13 real-parser fixtures pass. Without explicit runtime properties only the integration
+  case skips; ordinary offline JVM tests still need no Python installation.
+- The final manual replay passed twice with byte-identical JSON: 7,429,246 bytes, SHA-256
+  `78c72e7709dc085a042f74e8bc5cfcd88b6a7151e082d31f324e180b2eea8684`.
+  This supersedes intermediate adapter-report hashes above (source bundle pin unchanged).
+  The executable probe verifies 3/34/21 code blocks and 2/20/20 external files, definition
+  identifiers and distinct root/feature version evidence. Overall PARTIAL remains correct:
+  2,765 deduplicated diagnostics, 32 blocked URLs, all requested example dependencies captured.
+- Three local review rounds completed; all concrete findings fixed and verified, deliberate
+  limits and the rejected duplicate-crypto suggestion documented above. Final review's only
+  blocker was the unresolved symlink origin, now covered by both parser and full coordinator
+  integration. Copilot remains monthly-quota unavailable; request remote review after publication.
+- Repository formatting, AST graph refresh, whitespace checks and protected core/annotations/
+  util/legacy-doc/corpus-catalog comparisons pass. No accepted data, tests, names or locks moved.
+- Ready to commit/push `audits-snooty-adapter` targeting `audits-pinned-sources`, then gate
+  the next branch on CI/reviews. Follow with production capability/scenario normalization and
+  domain health, then descriptive test migration, curated repairs, typed generation and monitoring/
+  opt-in issue publication. Do not merge without authorization.
 
 ## Next steps
 
-1. Pinned acquisition/manifests, 120-test verification and three local review rounds are
-   complete. Commit/push the acquisition PR and pass CI before advancing.
-2. Publish targeting `audits-example-identities`; after CI and review gates pass, continue
-   the structured parser adapter on top. Do not wait for merges.
+1. Prove and implement the offline pinned parser adapter, with regression fixtures and
+   explicit provenance/diagnostics; run both mappers and available local review rounds.
+2. Publish targeting `audits-pinned-sources`; after CI/review gates pass, continue capability
+   normalization/scenario semantics on top. Do not wait for merges.
 3. Continue with pinned source acquisition/structured parsing, scenario semantics and the
    naming backport, curated repairs, executable generation, monitoring and the publisher.
    Preserve progress and merge order; do not merge without a user request.
