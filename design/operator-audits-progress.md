@@ -83,15 +83,25 @@ cmp audits/catalog/legacy-corpus.json /tmp/operator-corpus.json
   helper counts indentation characters, so it is not a general RST indentation model.
   The live pipeline is disabled and the documented parser limitations remain explicit.
 
+## Published checkpoint
+
+- Foundation implementation: `90588411ea00b7dc662b90edb2e79d46c3d2fa41`.
+- Plan and implementation pushed to `origin/audits-pipeline-design`.
+- PR: [#4512](https://github.com/MorphiaOrg/morphia/pull/4512), open against `master`.
+- Final checks after round 3 fixes passed: 18 tests for each mapper selection,
+  formatting, graph update, actionlint, XML, protected inputs, and catalog reproducibility.
+- GitHub Copilot review was requested at `lite` effort. Its response on the implementation
+  commit reports insufficient remaining quota, so no remote code review was performed.
+  Local review rounds are complete; there are no remote inline findings to address.
+- CI started successfully; its checks were still running when this checkpoint was recorded.
+  Inspect the PR checks before merging. The PR has not been merged.
+- The deliberately created stale-test class and non-git docs-directory sentinel were removed
+  after verification. No user fixture, docs checkout, or tracked core file was changed.
+
 ## Next steps
 
-1. Final checks after round 3 fixes are complete: 18 tests for each mapper selection,
-   formatting, graph update, actionlint, XML, protected inputs, and catalog reproducibility.
-2. Commit this foundation, push `audits-pipeline-design`, and open its PR against `master`.
-   Explain the temporary retirement of unsafe live audits and the later publisher milestone.
-3. Request GitHub Copilot review and evaluate findings (up to three cycles). If review quota
-   prevents it, record that limitation accurately. Record the PR URL and final checkpoint here.
-4. Wait for user review before the next implementation milestone. Follow the design's ordered
+1. Evaluate CI and any subsequent human review feedback on PR #4512. Do not merge unless asked.
+2. Wait for user review before the next implementation milestone. Follow the design's ordered
    migration: pinned source acquisition, structured parsing, stable identity/fixture migration,
    coverage/version model and generation, then reporting and the separately enabled publisher.
 
