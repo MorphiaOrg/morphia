@@ -33,6 +33,10 @@
         </dependency>
     </dependencies>
 
+    <properties>
+        <audits.mainClass>dev.morphia.audits.CorpusInventoryMainKt</audits.mainClass>
+    </properties>
+
     <build>
         <defaultGoal>test</defaultGoal>
         <sourceDirectory>src/main/kotlin</sourceDirectory>
@@ -81,7 +85,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.6.3</version>
                 <configuration>
-                    <mainClass>dev.morphia.audits.CorpusInventoryMainKt</mainClass>
+                    <mainClass>${audits.mainClass}</mainClass>
                     <classpathScope>compile</classpathScope>
                 </configuration>
             </plugin>
