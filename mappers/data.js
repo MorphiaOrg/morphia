@@ -1,5 +1,5 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1794845361186,
+  "lastUpdate": 1794845364201,
   "repoUrl": "https://github.com/MorphiaOrg/morphia",
   "entries": {
     "Mapper: reflection": [
@@ -3918,6 +3918,298 @@ window.BENCHMARK_DATA = {
             "value": 589.894557,
             "unit": "ms/op",
             "extra": "iterations: 1\nforks: 5\nthreads: 1"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "name": "Justin Lee",
+            "username": "evanchooly",
+            "email": "evanchooly@users.noreply.github.com"
+          },
+          "committer": {
+            "name": "GitHub",
+            "username": "web-flow",
+            "email": "noreply@github.com"
+          },
+          "id": "1ff98e9eebbf9bf81680d3cd4c85f33167ba20c6",
+          "message": "Fix stack overflow for recursive embedded types (#4510)\n\nPreserve the supplied codec registry during property resolution to retain cycle detection for recursive entity types. Add persistence regressions for recursive fields, containers, refresh, and custom codecs.",
+          "timestamp": "2026-11-16T02:59:33Z",
+          "url": "https://github.com/MorphiaOrg/morphia/commit/1ff98e9eebbf9bf81680d3cd4c85f33167ba20c6"
+        },
+        "date": 1794845363719,
+        "tool": "jmh",
+        "benches": [
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"SIMPLE\",\"variant\":\"critter-runtime\"} )",
+            "value": 909.5532064706916,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"NESTED\",\"variant\":\"critter-runtime\"} )",
+            "value": 2831.0012517992072,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"COLLECTIONS\",\"variant\":\"critter-runtime\"} )",
+            "value": 9484.868690611718,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"POLYMORPHIC\",\"variant\":\"critter-runtime\"} )",
+            "value": 4645.906213342215,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"LIFECYCLE\",\"variant\":\"critter-runtime\"} )",
+            "value": 561.8752621285405,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"ARRAYS\",\"variant\":\"critter-runtime\"} )",
+            "value": 34609.82652544345,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"CONCRETE_COLLECTIONS\",\"variant\":\"critter-runtime\"} )",
+            "value": 2863.2259763672164,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decode ( {\"model\":\"LAZY_REFERENCE\",\"variant\":\"critter-runtime\"} )",
+            "value": 2585.465162661881,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MixedCodecBenchmark.decode ( {\"variant\":\"critter-runtime\"} )",
+            "value": 27476.277253469925,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MixedCodecBenchmark.encode ( {\"variant\":\"critter-runtime\"} )",
+            "value": 25327.856483324093,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.QueryBenchmark.queryDocument ( {\"variant\":\"critter-runtime\"} )",
+            "value": 1572.978307631446,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.QueryBenchmark.translatedPath ( {\"variant\":\"critter-runtime\"} )",
+            "value": 349.94147617040204,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MappingBenchmark.coldStart ( {\"variant\":\"critter-runtime\"} )",
+            "value": 407.5532876,
+            "unit": "ms/op",
+            "extra": "iterations: 1\nforks: 10\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MappingBenchmark.scanEverything ( {\"variant\":\"critter-runtime\"} )",
+            "value": 1370.8078456,
+            "unit": "ms/op",
+            "extra": "iterations: 1\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MappingBenchmark.scanModelsPackage ( {\"variant\":\"critter-runtime\"} )",
+            "value": 597.0626296,
+            "unit": "ms/op",
+            "extra": "iterations: 1\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"SIMPLE\",\"variant\":\"critter-runtime\"} )",
+            "value": 908.5491440589534,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"NESTED\",\"variant\":\"critter-runtime\"} )",
+            "value": 2851.9749490616578,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"COLLECTIONS\",\"variant\":\"critter-runtime\"} )",
+            "value": 9829.364705179682,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"POLYMORPHIC\",\"variant\":\"critter-runtime\"} )",
+            "value": 4731.410785001389,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"LIFECYCLE\",\"variant\":\"critter-runtime\"} )",
+            "value": 585.2665146097002,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"ARRAYS\",\"variant\":\"critter-runtime\"} )",
+            "value": 35086.55566960098,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"CONCRETE_COLLECTIONS\",\"variant\":\"critter-runtime\"} )",
+            "value": 2937.5722108326977,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.decodeInCursor ( {\"model\":\"LAZY_REFERENCE\",\"variant\":\"critter-runtime\"} )",
+            "value": 2623.2290326475318,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"SIMPLE\",\"variant\":\"critter-runtime\"} )",
+            "value": 842.9238734494143,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"NESTED\",\"variant\":\"critter-runtime\"} )",
+            "value": 2595.845352002846,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"COLLECTIONS\",\"variant\":\"critter-runtime\"} )",
+            "value": 9199.702749097754,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"POLYMORPHIC\",\"variant\":\"critter-runtime\"} )",
+            "value": 4830.829395073359,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"LIFECYCLE\",\"variant\":\"critter-runtime\"} )",
+            "value": 408.88891210541755,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"ARRAYS\",\"variant\":\"critter-runtime\"} )",
+            "value": 39228.12753128487,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"CONCRETE_COLLECTIONS\",\"variant\":\"critter-runtime\"} )",
+            "value": 2487.8146052564844,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.CodecBenchmark.encode ( {\"model\":\"LAZY_REFERENCE\",\"variant\":\"critter-runtime\"} )",
+            "value": 1847.4981151490304,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.DatastoreBenchmark.copy ( {\"variant\":\"critter-runtime\"} )",
+            "value": 4.370437381009315,
+            "unit": "us/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.DatastoreBenchmark.copyAndDecode ( {\"variant\":\"critter-runtime\"} )",
+            "value": 9.042203873182576,
+            "unit": "us/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.DocumentShapesBenchmark.decode ( {\"shape\":\"AS_WRITTEN\",\"variant\":\"critter-runtime\"} )",
+            "value": 885.7984189060063,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.DocumentShapesBenchmark.decode ( {\"shape\":\"NO_DISCRIMINATOR\",\"variant\":\"critter-runtime\"} )",
+            "value": 1332.0906773680363,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.DocumentShapesBenchmark.decode ( {\"shape\":\"SCHEMA_DRIFT\",\"variant\":\"critter-runtime\"} )",
+            "value": 5162.98065095551,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.decode ( {\"listener\":\"DOCUMENT\",\"model\":\"SIMPLE\",\"variant\":\"critter-runtime\"} )",
+            "value": 2203.1601479543906,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.decode ( {\"listener\":\"DOCUMENT\",\"model\":\"NESTED\",\"variant\":\"critter-runtime\"} )",
+            "value": 10502.991894600518,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.decode ( {\"listener\":\"ENTITY\",\"model\":\"SIMPLE\",\"variant\":\"critter-runtime\"} )",
+            "value": 973.7474768587155,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.decode ( {\"listener\":\"ENTITY\",\"model\":\"NESTED\",\"variant\":\"critter-runtime\"} )",
+            "value": 2976.1129900593373,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.encode ( {\"listener\":\"DOCUMENT\",\"model\":\"SIMPLE\",\"variant\":\"critter-runtime\"} )",
+            "value": 1774.6028106408069,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.encode ( {\"listener\":\"DOCUMENT\",\"model\":\"NESTED\",\"variant\":\"critter-runtime\"} )",
+            "value": 7487.098973610314,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.encode ( {\"listener\":\"ENTITY\",\"model\":\"SIMPLE\",\"variant\":\"critter-runtime\"} )",
+            "value": 881.7473842694538,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.ListenerBenchmark.encode ( {\"listener\":\"ENTITY\",\"model\":\"NESTED\",\"variant\":\"critter-runtime\"} )",
+            "value": 2734.0137279787114,
+            "unit": "ns/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
+          },
+          {
+            "name": "dev.morphia.benchmarks.MappingBenchmark.warmMapping ( {\"variant\":\"critter-runtime\"} )",
+            "value": 30.776622906874408,
+            "unit": "us/op",
+            "extra": "iterations: 3\nforks: 5\nthreads: 1"
           }
         ]
       }
