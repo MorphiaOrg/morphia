@@ -7,5 +7,8 @@ fun main(args: Array<String>) {
     require(args.size == 2) {
         "Usage: CorpusInventoryMainKt <repository-root> <repository-revision>"
     }
-    print(CorpusInventory.capture(Path.of(args[0]), args[1]).toJson())
+    System.out.write(
+        CorpusInventory.capture(Path.of(args[0]), args[1]).toJson().toByteArray(Charsets.UTF_8)
+    )
+    System.out.flush()
 }
