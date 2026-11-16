@@ -1,13 +1,37 @@
-name: Audits
+name: Operator Audit Tests
 
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - 'audits/**'
+      - 'pom.xml'
+      - '.github/workflows/audits.yml'
+
+permissions:
+  contents: read
 
 jobs:
-  Audits:
-    uses: evanchooly/workflows/.github/workflows/build.yml@master
-    with:
-      maven-flags: "-Daudits"
-      java: 17
-    secrets:
-      GH_TOKEN: ${{ secrets.GH_OAUTH }}
+  OfflineTests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Java
+        uses: actions/setup-java@v6
+        with:
+          java-version: '17'
+          distribution: temurin
+          cache: maven
+
+      - name: Run offline operator audit tests
+        run: ./mvnw -B -ntp -Daudits -pl audits verify
+
+      - name: Collect test reports
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: operator-audit-tests
+          path: audits/target/surefire-reports
+          retention-days: 7

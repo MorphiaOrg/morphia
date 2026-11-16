@@ -1,22 +1,11 @@
-@file:OptIn(ExperimentalStdlibApi::class)
-
 package dev.morphia.audits.rst
 
-import com.antwerkz.expression.RegularExpression
-import com.antwerkz.expression.RegularExpression.Companion.char
-import com.antwerkz.expression.toRegex
-
-enum class Separator(val separator: Char) {
+/** Legacy heading partitioning; it is not the future documentation AST contract. */
+enum class Separator(separator: Char) {
     DASH('-'),
-    TILDE('~'),
-    TICK('`'),
-    TERMINAL(0.toChar());
+    TILDE('~');
 
-    fun next(): Separator {
-        return if (ordinal < entries.size) entries[ordinal + 1] else TERMINAL
-    }
-
-    val section = let { RegularExpression.startOfInput().atLeast(5) { char(separator) } }.toRegex()
+    private val section = Regex("${Regex.escape(separator.toString())}{5,}")
 
     fun partition(input: List<String>): Map<String, MutableList<String>> {
         var name = "main"
@@ -30,7 +19,6 @@ enum class Separator(val separator: Char) {
                 partitions[name] = mutableListOf()
             }
         }
-
         return partitions
     }
 }

@@ -27,13 +27,13 @@
           <option name="goals">
             <list>
               <option value="install" />
+              <option value="-DskipTests" />
             </list>
           </option>
           <option name="multimoduleDir" />
           <option name="pomFileName" value="pom.xml" />
           <option name="profilesMap">
             <map>
-              <entry key="audits" value="true" />
             </map>
           </option>
           <option name="projectsCmdOptionValues">

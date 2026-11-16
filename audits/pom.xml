@@ -10,9 +10,6 @@
     <artifactId>morphia-audits</artifactId>
     <name>Morphia Audits</name>
     <packaging>jar</packaging>
-    <properties>
-        <jackson.version>2.18.2</jackson.version>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -21,45 +18,17 @@
             <version>${kotlin.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.kohsuke</groupId>
-            <artifactId>github-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-model</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm-tree</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jsoup</groupId>
-            <artifactId>jsoup</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.asciidoctor</groupId>
-            <artifactId>asciidoctorj</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.forge.roaster</groupId>
-            <artifactId>roaster-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.forge.roaster</groupId>
-            <artifactId>roaster-jdt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.antwerkz.super-expressive</groupId>
-            <artifactId>super-expressive</artifactId>
-            <version>0.3.3</version>
-        </dependency>
-        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
             <scope>compile</scope>
         </dependency>
     </dependencies>
@@ -91,7 +60,29 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <apiVersion>1.8</apiVersion>
+                    <apiVersion>2.1</apiVersion>
+                    <jvmTarget>${kotlin.compiler.jvmTarget}</jvmTarget>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/offline/*Test.java</include>
+                    </includes>
+                    <failIfNoTests>true</failIfNoTests>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.6.3</version>
+                <configuration>
+                    <mainClass>dev.morphia.audits.CorpusInventoryMainKt</mainClass>
+                    <classpathScope>compile</classpathScope>
                 </configuration>
             </plugin>
 
@@ -104,86 +95,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>audits</id>
-            <activation>
-                <property>
-                    <name>audits</name>
-                </property>
-            </activation>
-            <properties>
-                <skipTests>false</skipTests>
-            </properties>
-        </profile>
-        <profile>
-            <id>clone docs</id>
-            <activation>
-                <file>
-                    <missing>target/mongodb-docs</missing>
-                </file>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <version>3.6.3</version>
-                        <executions>
-                            <execution>
-                                <phase>generate-resources</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>git</executable>
-                                    <arguments>
-                                        <argument>clone</argument>
-                                        <argument>--depth</argument>
-                                        <argument>1</argument>
-                                        <argument>https://github.com/mongodb/docs.git</argument>
-                                        <argument>target/mongodb-docs</argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>update docs</id>
-            <activation>
-                <file>
-                    <exists>target/mongodb-docs</exists>
-                </file>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <version>3.6.3</version>
-                        <executions>
-                            <execution>
-                                <phase>generate-resources</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <executable>git</executable>
-                                    <workingDirectory>target/mongodb-docs</workingDirectory>
-                                    <arguments>
-                                        <argument>pull</argument>
-                                        <argument>-q</argument>
-                                    </arguments>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>
