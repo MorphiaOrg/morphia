@@ -11,6 +11,9 @@ import com.fasterxml.jackson.databind.type.LogicalType
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import dev.morphia.audits.api.ApiInventory
+import dev.morphia.audits.naming.ExampleNameRegistry
+import dev.morphia.audits.naming.NameProposal
+import dev.morphia.audits.naming.NamingRequest
 import java.security.MessageDigest
 import java.util.HexFormat
 
@@ -58,6 +61,12 @@ object AuditJson {
     fun api(json: String): ApiInventory = read(json, ApiInventory::class.java)
 
     fun report(json: String): CoverageReport = read(json, CoverageReport::class.java)
+
+    fun names(json: String): ExampleNameRegistry = read(json, ExampleNameRegistry::class.java)
+
+    fun namingRequest(json: String): NamingRequest = read(json, NamingRequest::class.java)
+
+    fun nameProposal(json: String): NameProposal = read(json, NameProposal::class.java)
 
     private fun <T> read(json: String, type: Class<T>): T {
         val tree = requireNotNull(mapper.readTree(json)) { "Empty JSON input" }

@@ -1,7 +1,7 @@
 # Operator audit implementation progress
 
-Current branch: `audits-coverage-contracts`; PR base: `audits-source-inventory`.
-Stack: #4512 (`master`) → #4513 (`audits-pipeline-design`) → coverage contracts (in progress).
+Current branch: `audits-example-identities`; PR base: `audits-coverage-contracts`.
+Stack: #4512 (`master`) → #4513 (`audits-pipeline-design`) → #4514 (`audits-source-inventory`) → example identities (in progress).
 Foundation branch: `audits-pipeline-design`; PR #4512 targets `master`.
 Use `git worktree list` to locate the checkout on this machine.
 
@@ -205,11 +205,72 @@ cmp audits/catalog/legacy-corpus.json /tmp/operator-corpus.json
 - Current worktree files are authoritative. Do not rerun old `/tmp/audits-source/*` or
   `/tmp/audits-contracts/*` prototypes: they predate fixes and can restore discarded code.
 
+## Coverage contracts published checkpoint
+
+- PR [#4514](https://github.com/MorphiaOrg/morphia/pull/4514) targets #4513.
+- Head: `3c2e2469a7fc313f8f1871062bcf4db20478e4e7`; all CI passed, including offline tests,
+  full build, Critter AOT and Code Audits. The initial Code Audits failure was HTTP 429
+  downloading the parent POM from Maven Central; the isolated retry passed unchanged.
+- Three local review rounds complete; final approval. Copilot CLI remains quota exhausted;
+  remote review was requested with `gh pr edit 4514 --add-reviewer '@copilot'`. GitHub
+  accepted that command but supplied no review or pending request at the final gate check.
+- Core sources, tests, fixture bytes, locks and legacy docs remain unchanged.
+
+## Example identities checkpoint (in progress)
+
+- Branch `audits-example-identities` starts at #4514 after all CI and available local review
+  gates passed. No merge is required or authorized.
+- Implement shared ASCII Java/folder name synthesis, evidence-backed persistent name mapping,
+  deterministic collision handling, read-only candidate reconciliation and CLI/tests.
+- New inputs are already grouped reference scenarios with AST plain-text titles. Actual
+  language-tab grouping and extraction belong to the pinned structured-parser milestone.
+- Preserve accepted names across title/content changes when stable source identity matches;
+  never use ordinals as matching evidence or encounter-order counters as disambiguators.
+- Require reviewed mappings for ambiguity/moves/renames and dispositions for disappearance
+  in declared complete scopes. Names/aliases and physical inherited/neighbor names reserve
+  their destinations. No fixtures are renamed in this PR.
+- Contracts, synthesis, read-only reconciliation, collision guards, strict JSON and UTF-8
+  CLI are implemented. The final 103-test suite passes Critter and reflection. Repository
+  formatting and graph refresh passed. Three local review rounds are complete and approved.
+- Persistent reviewed-decision rationale/evidence and pinned current request catalog are
+  implemented and tested. Latest trace and previous physical bindings are explicit.
+- Round 1 found valid issues: new duplicates could displace established names; asymmetric
+  qualifier availability let an unqualified duplicate win; conflicting weak/strong identity
+  evidence was ignored. Fixed with established/reviewed name precedence, mandatory qualifiers
+  for every colliding new case, conflicting-evidence diagnostics and numeric-anchor guards.
+- Also fixed current-only automatic identity matching, old-location reservation after moves,
+  case-folded destination namespaces, canonical owner resolution for alias names, fixture-leaf
+  path budget checks before collisions, and CLI separation of input/engine failures.
+- Language is intentionally absent from the canonical name: equivalent tabs share one emitted
+  scenario; genuinely distinct language variants require distinct meaningful names. Language
+  remains part of matching scope so unrelated variants are never reconciled automatically.
+- Eight new regression tests reproduce the review findings. An additional self-check found
+  aliases incorrectly projected onto a new destination after a reviewed move; alias keys now
+  reserve identities separately from explicit historical physical bindings. A second-pass
+  reconciliation regression ensures the resulting registry stays valid.
+- Round 2 approved the stated contracts and confirmed all round-1 fixes. Its two additional
+  evidence guards are fixed: nonempty contrary match sets excluding the chosen identity are
+  conflicts even when ambiguous, and all numeric auto-anchor endings need corroboration.
+  The trailing-dot leaf finding was already fixed; a regression now covers it explicitly.
+- Final round 3 approved with no blocking correctness defects and confirmed both evidence
+  guards and the move/alias second-pass regression. Its stale documentation notes were
+  already corrected during review. The optional case-only rename scenario uses stale
+  physical inventory before cutover; retaining that safe failure is intentional. Registry
+  promotion and the physical rename must happen atomically in the later migration step.
+- Copilot CLI remains quota blocked. Do not restore earlier prototypes.
+- Protected source/test/fixture/lock/legacy-doc paths and the preservation catalog are unchanged.
+  No product-documentation update is needed for this internal tooling milestone.
+- Existing TemplatedTestBase uses default-locale first-letter conversion. Before any actual
+  backport, change that adapter to Locale.ROOT and test the real method/folder round trip.
+  The new module's locale-independent naming contract does not claim that legacy change yet.
+- Worktree files are authoritative; no production registry or fixture rename is fabricated.
+
 ## Next steps
 
-1. Coverage contracts/reporting and three local review rounds are complete.
-2. Commit/push a PR targeting `audits-source-inventory`; after CI and available review gates
-   pass, start the descriptive naming/registry PR on top automatically. Do not wait for merges.
+1. Example identities implementation, 103-test verification and three local review rounds
+   are complete; commit/push and pass CI before advancing.
+2. Commit/push targeting `audits-coverage-contracts`; after CI and available review gates
+   pass, start pinned acquisition/structured parsing on top. Do not wait for merges.
 3. Continue with pinned source acquisition/structured parsing, scenario semantics and the
    naming backport, curated repairs, executable generation, monitoring and the publisher.
    Preserve progress and merge order; do not merge without a user request.
