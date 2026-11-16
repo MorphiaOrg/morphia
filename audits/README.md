@@ -1,9 +1,10 @@
 # Operator audits
 
 This module is being rebuilt around the [operator audit design](../design/mongodb-operator-audits.md).
-The foundation provides offline regression tests and a read-only inventory of the
-existing curated corpus. The source-inventory milestone adds compiler-resolved public API metadata. It does not yet provide the new operator-coverage comparison,
-pinned docs acquisition, descriptive-name migration, or `gh` publisher.
+The current milestones provide offline regression tests, a read-only corpus inventory,
+compiler-resolved public API metadata, and artifact-based capability comparison. Pinned docs
+acquisition, descriptive-name migration, executable generation, and the `gh` publisher remain
+planned.
 
 Run the tests from the repository root:
 
@@ -104,5 +105,61 @@ name; malformed comments retain `documentationErrors`.
 The artifact inventories declared public members and record header components; it does not
 invent implicit accessors, constructors, bridges, or copies of inherited methods. It makes
 no operator-support or category-completeness claim. Expected inventory manifests and
-coverage comparison belong to the next milestone: `aggregation.expression` alone cannot
+coverage comparison are described below: `aggregation.expression` alone cannot
 prove accumulator/window support, and a test directory proves no API coverage.
+
+## Capability contracts and coverage reports
+
+The coverage package compares a versioned capability catalog, an independent coverage plan,
+and the source API inventory. It does not acquire documentation or rewrite accepted inputs.
+The catalog contains pinned sources, source-span/digest evidence, context-specific capability
+keys, facets, all lifecycle events, constraints and example-extraction state. First observation,
+operator introduction, feature introduction, Morphia `since`, and server requirements remain
+separate facts. Unknown/conflicting version evidence is reported without guessing a release.
+A lifecycle removal notice does not erase a current observation; a deliberate policy exclusion
+can suppress support checks while preserving that evidence.
+
+The plan declares all eight contexts, accepted identities and lower bounds, explicit evidence
+for empty contexts, API input scope, binding exceptions, exclusions, and reviewed omissions.
+New identities are allowed. Missing accepted identities, lost categories, and unexplained
+count drops invalidate their discovery domain. A broken example does not hide an independently
+verified new capability. Invalid/empty API inventories invalidate the comparison.
+
+Unambiguous method-level tags map ordinary operator APIs automatically. All compatible
+discovery contexts must be healthy before inference; broad or conflicting claims remain
+`UNKNOWN_MAPPING`. Explicit bindings select every public overload of a factory/builder member
+where aliases or multiple contexts require a decision. Unresolved selectors and overload
+groups claiming different operator tokens produce binding errors and a partial report,
+rather than a false missing-API finding. Raw BSON bindings have a distinct state. Version checks inspect every selected overload and retain class/method annotation
+origins. A later minimum on an inferred API can indicate a feature variant requiring a binding,
+so it is ambiguous rather than automatically incorrect.
+
+API presence, version annotations, serialization, behavior, and example extraction have
+independent report states. This milestone has no execution attestations: serialization and
+behavior are always `NOT_ASSESSED`, including for existing fixture directories and raw BSON.
+`COMPARED` means discovery/comparison completed, not that all operators are supported or tested.
+
+After compiling the module:
+
+```sh
+./mvnw -q -Daudits -pl audits exec:java \
+  -Daudits.mainClass=dev.morphia.audits.coverage.CoverageMainKt \
+  -Dexec.args="catalog.json plan.json api-inventory.json"
+```
+
+Add `--markdown` before the three paths for a human summary. JSON is the default output.
+Both outputs use UTF-8. Exit status is 0 for `COMPARED`, 3 for `PARTIAL`, and 2 for `INVALID`;
+the command still emits a structured report for input failures. Store output as a candidate
+artifact and retain all three inputs. A partial result cannot replace the accepted catalog;
+future publication evaluates healthy domains individually.
+
+The wire definitions are in `coverage/Contracts.kt`, with explicit `schemaVersion: 1`.
+Strict JSON decoding rejects unknown fields, duplicate keys, numeric enum ordinals, null
+collection elements, scalar coercion, missing required fields and trailing input. API compiler
+provenance must be explicit. Source records use immutable Git revisions or content digests,
+parser digests and a normalizer version; evidence references and source spans are checked.
+Input order is canonicalized where it is not semantic; no clock values enter report hashes.
+
+No production MongoDB catalog is fabricated here. The offline tests construct small synthetic
+catalogs; the pinned acquisition/parser milestone will supply the real accepted observations.
+Descriptive example naming/identity and the existing-test backport follow in separate work.

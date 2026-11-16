@@ -3,8 +3,8 @@
 Status: milestone 0 (the offline preservation foundation) is implemented in
 [PR #4512](https://github.com/MorphiaOrg/morphia/pull/4512). The source API inventory portion
 of step 1 is implemented in [PR #4513](https://github.com/MorphiaOrg/morphia/pull/4513);
-its coverage/naming contracts and
-steps 2–7 remain planned.
+Capability/evidence and coverage contracts are implemented on `audits-coverage-contracts`.
+Descriptive naming/identity and steps 2–7 remain planned.
 See [implementation progress](operator-audits-progress.md) for delivered behavior,
 validation, review results, and the next checkpoint.
 
@@ -241,7 +241,8 @@ equivalences explicitly; two spellings or contexts can share an implementation w
 losing their separate documentation evidence. Treat options, syntax forms, and context
 availability as capability facets with their own lifecycle.
 
-Example of the logical model, not a claim that the schema has been implemented:
+Illustrative logical view; the versioned wire contracts are defined in
+`audits/src/main/kotlin/dev/morphia/audits/coverage/Contracts.kt`:
 
 ```yaml
 key: mongodb-server/group-accumulator/$median
