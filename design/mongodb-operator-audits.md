@@ -1,6 +1,9 @@
 # MongoDB operator audits: evaluation and implementation plan
 
-Status: proposed design; implementation is not part of this change.
+Status: milestone 0 (the offline preservation foundation) is implemented in
+[PR #4512](https://github.com/MorphiaOrg/morphia/pull/4512). Steps 1–7 remain planned.
+See [implementation progress](operator-audits-progress.md) for delivered behavior,
+validation, review results, and the next checkpoint.
 
 Evaluated on 2026-11-15 against Morphia commit `1ff98e9eebbf9bf81680d3cd4c85f33167ba20c6`.
 The upstream examples below were checked at MongoDB docs commit
@@ -28,7 +31,7 @@ existing Revapi `code-audits` checks, nor expanded into a second SemVer checker 
 Internal design documentation belongs in `design/`; product documentation changes, if
 subsequently needed, belong in the separate morphia-docs repository.
 
-## Current implementation and evidence
+## Evaluated baseline implementation and evidence
 
 ### Data flow and reviewed surface
 
@@ -737,9 +740,10 @@ where acquisition, parser, or runner changes are independent.
 | 6. Run continuous monitoring | Offline PR checks; scheduled discovery; retained JSON/evidence artifacts; capability-driven server matrix. Add the separate `gh`-backed publisher only after reports are reliable, with fake-process unit tests and an explicitly approved disposable-repository mutation test. | Additions, option/version changes, broken includes and stale overrides are categorized correctly. CLI reads paginate/filter correctly, metadata is preserved, retries reconcile uncertain writes, and reruns produce no duplicate issues or file churn. |
 | 7. Retire obsolete paths | Remove live-HTML duplicate discovery and the legacy code paths already disabled in step 0 after their relevant coverage is replaced. Remove dead properties/dependencies and replace the audits README with operating/troubleshooting instructions. Keep frozen legacy docs pages until a separate migration retires them. Decide the old SinceAudit disposition separately. | One documented operator pipeline remains; clean builds cannot pull a moving docs tree or rewrite curated core data. All old coverage, assertion skips, and exclusions are accounted for. |
 
-Steps 0–1 are the first implementation milestone. They prevent misleading success and
-protect existing work before changing extraction. Steps 2–3 establish reliable source and
-semantic models. Only then should steps 4–6 replace locks and automate generation/publication.
+Step 0 is delivered separately in PR #4512 to protect existing curated work before
+changing extraction. Step 1 is next: define data contracts and honest coverage reporting.
+Steps 2–3 establish reliable source and semantic models. Only then should steps 4–6
+replace locks and automate generation/publication.
 
 Track progress with explicit metrics rather than a speculative “100% automatic” target:
 all discovered capabilities accounted for; all 235 locks plus `lockd` and 17 exclusions
@@ -789,4 +793,4 @@ directory with API 1.9 and the resolved dependency classpath. That override comp
 already deprecated; it is evidence about current parser behavior, not the proposed permanent
 toolchain setting. The probe results are recorded above so future regression fixtures can
 reproduce them. The source-acquisition/parser spike and full end-to-end server validation
-remain implementation work, not completed validation of this proposed design.
+remain later implementation work; milestone 0 does not claim that validation.

@@ -90,11 +90,13 @@ cmp audits/catalog/legacy-corpus.json /tmp/operator-corpus.json
 - PR: [#4512](https://github.com/MorphiaOrg/morphia/pull/4512), open against `master`.
 - Final checks after round 3 fixes passed: 18 tests for each mapper selection,
   formatting, graph update, actionlint, XML, protected inputs, and catalog reproducibility.
-- GitHub Copilot review was requested at `lite` effort. Its response on the implementation
-  commit reports insufficient remaining quota, so no remote code review was performed.
-  Local review rounds are complete; there are no remote inline findings to address.
-- CI started successfully; its checks were still running when this checkpoint was recorded.
-  Inspect the PR checks before merging. The PR has not been merged.
+- GitHub Copilot review was requested at `lite` effort. Its initial response reported
+  insufficient quota, but a later completed review found one stale design-status sentence.
+  The design now explicitly identifies milestone 0 as implemented and steps 1–7 as planned;
+  its baseline evaluation and next-step description are consistent with this checkpoint.
+  No code findings were raised in the remote review. Local review rounds are complete.
+- Audit tests and code-audit CI passed. The full build and Critter AOT checks were still
+  running at the latest checkpoint. Inspect the PR checks before merging; it is not merged.
 - The deliberately created stale-test class and non-git docs-directory sentinel were removed
   after verification. No user fixture, docs checkout, or tracked core file was changed.
 
@@ -102,8 +104,9 @@ cmp audits/catalog/legacy-corpus.json /tmp/operator-corpus.json
 
 1. Evaluate CI and any subsequent human review feedback on PR #4512. Do not merge unless asked.
 2. Wait for user review before the next implementation milestone. Follow the design's ordered
-   migration: pinned source acquisition, structured parsing, stable identity/fixture migration,
-   coverage/version model and generation, then reporting and the separately enabled publisher.
+   migration: data contracts and honest coverage reporting, pinned source acquisition and
+   structured parsing, scenario semantics and descriptive-name backporting, curated repair
+   migration, executable test generation, then monitoring and the separately enabled publisher.
 
 ## Temporary local evidence
 
