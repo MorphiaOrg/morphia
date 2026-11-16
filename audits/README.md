@@ -228,3 +228,58 @@ contains synthetic identity tests; the production registry and coordinated legac
 are populated after structured extraction. The existing resource-discovery adapter's default
 locale conversion must be migrated to `Locale.ROOT` and tested with the actual helper during
 that backport; this module does not claim it has already renamed or repaired core tests.
+
+
+## Pinned source bundles
+
+The source package captures immutable Git objects into a standalone, verified bundle. Ordinary
+Maven builds/tests never fetch a docs repository. Offline source tests use small local Git
+repositories; they require native Git with `--no-lazy-fetch` support (verified with Git 2.53).
+No `gh`, MongoDB server, Python parser, credentials or real docs checkout is needed for them.
+
+`audits/config/manual-probe.json` is a reproducible selected-source request at the reviewed
+MongoDB docs pin. It is a raw-source probe, not a production operator catalog.
+
+A strict schema-1 `GitSourceRequest` declares the repository URI/full commit, project root,
+source label/role/channel, selected paths, allowed symlink dependency roots, and file/byte
+budgets plus a per-command timeout. Object capture has its own session deadline. Labels are
+caller-provided metadata, not a release inferred from the path. Capturing
+reads raw objects rather than a dirty checkout. Git replacement objects, checkout filters and
+implicit blob fetching cannot change those bytes. Git version is retained separately from the
+content hash; changing execution budgets does not change content identity. Identity, label,
+role and channel are pinned because they affect interpretation. Commits and every selected
+parent tree are hash-checked through native Git; no second Git-format parser is maintained.
+
+The explicit acquisition command supports an existing offline object cache or a new filtered
+fetch. Run it only after compiling the module, with fresh output directories whose parents exist:
+
+```sh
+./mvnw -q -Daudits -pl audits exec:java \
+  -Daudits.mainClass=dev.morphia.audits.sources.SourcesMainKt \
+  -Dexec.args="source-request.json audits/target/source-bundle --repository /path/to/git-cache"
+```
+
+Replace `--repository /path/to/git-cache` with `--fetch-to audits/target/source-git` to explicitly
+acquire the full pinned commit's tree and hydrate selected/dependency blobs in bulk. It creates
+a new bare Git cache without checkout. Existing cache/bundle directories are never replaced.
+The command emits a UTF-8 `SourceAcquisitionReport`: exit 0 `READY`, 3 `PARTIAL`, 2 `INVALID`.
+A partial manifest records missing, undeclared or cyclic source dependencies; it is never a
+claim that an operator or example is absent. Keep the report and inputs with the candidate.
+
+Bundles contain a completed manifest and flat SHA-256-named blobs. Tracked file modes,
+original Git object IDs, raw symlink text and per-file hashes are retained. The completed
+manifest is published only after verification; a failed invocation cleans its new candidate.
+`READY` means the selected raw Git objects/link closure are captured; document-level, generated
+and remote dependencies are assessed by the following parser/resolver milestone.
+`SourceBundle.open(path, expectedContentSha256)` verifies the pin, every blob and dependency
+health. `read(repositoryRelativePath)` resolves virtual links only through declared resources
+and returns canonical origin plus the link chain. Symlinks are metadata, not filesystem links. Embedded `.`/`..` navigation after a named
+component and trailing-slash targets remain explicitly unresolved; the resolver never treats
+lexical path cleanup as filesystem symlink semantics.
+Reads recheck bytes to detect drift. No source scripts or examples execute during acquisition.
+
+This is the acquisition boundary, not the documentation parser. Remote shared includes still
+need explicit immutable source/resource pins; no parser is permitted to fetch ambient URLs.
+The next PR prototypes the pinned Snooty adapter and connects operator/example provenance.
+The real manual and parser pins plus the symlink/shared-include observations are recorded in
+`design/operator-audits-progress.md`; production catalog generation remains pending.

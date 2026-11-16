@@ -6,7 +6,8 @@ of step 1 is implemented in [PR #4513](https://github.com/MorphiaOrg/morphia/pul
 capability/evidence and coverage contracts are implemented in
 [PR #4514](https://github.com/MorphiaOrg/morphia/pull/4514).
 The descriptive naming/identity contracts are implemented on the next stacked branch;
-production parsing, the coordinated naming backport and steps 2–7 remain planned.
+Pinned raw-source acquisition for step 2 is implemented on `audits-pinned-sources`.
+Structured parsing, the coordinated naming backport and steps 3–7 remain planned.
 See [implementation progress](operator-audits-progress.md) for delivered behavior,
 validation, review results, and the next checkpoint.
 
@@ -187,7 +188,7 @@ Proposed repository contract:
 
 | Location | Ownership |
 | --- | --- |
-| `audits/config/source-pins.yaml` | Docs repository/revision, manual property roots and release labels, parser version/digest, allowed dependent resource sources. Human-reviewed or updated by a dedicated automation PR. |
+| `audits/config/source-pins.json` | Docs repository/revision, manual property roots and release labels, parser version/digest, allowed dependent resource sources. Human-reviewed or updated by a dedicated automation PR. |
 | `audits/catalog/` | Versioned, normalized accepted capability observations, provenance, and schema. Includes the baseline needed for offline comparison; large raw caches belong in retained artifacts/content-addressed storage. |
 | `audits/fixtures/` | Small, redistributable pinned RST/YAML/example dependency fixtures and expected parser outputs, including historical layouts and known failures. Preserve source attribution/licensing. |
 | `audits/overrides/` | Structured, validated corrections and exemptions; copied curated snapshots where extraction cannot yet reproduce existing behavior. |
@@ -747,8 +748,9 @@ where acquisition, parser, or runner changes are independent.
 | 7. Retire obsolete paths | Remove live-HTML duplicate discovery and the legacy code paths already disabled in step 0 after their relevant coverage is replaced. Remove dead properties/dependencies and replace the audits README with operating/troubleshooting instructions. Keep frozen legacy docs pages until a separate migration retires them. Decide the old SinceAudit disposition separately. | One documented operator pipeline remains; clean builds cannot pull a moving docs tree or rewrite curated core data. All old coverage, assertion skips, and exclusions are accounted for. |
 
 Step 0 is delivered separately in PR #4512 to protect existing curated work before
-changing extraction. Step 1 is next: define data contracts and honest coverage reporting.
-Steps 2–3 establish reliable source and semantic models. Only then should steps 4–6
+changing extraction. Step 1 contracts are delivered in PRs #4513–#4515. Raw-source
+acquisition is implemented on `audits-pinned-sources`; the remaining parts of steps 2–3
+establish reliable document and semantic models. Only then should steps 4–6
 replace locks and automate generation/publication.
 
 Track progress with explicit metrics rather than a speculative “100% automatic” target:
