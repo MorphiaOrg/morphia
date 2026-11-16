@@ -1,6 +1,7 @@
 # Operator audit implementation progress
 
-Current branch: `audits-source-inventory`; PR base: `audits-pipeline-design`.
+Current branch: `audits-coverage-contracts`; PR base: `audits-source-inventory`.
+Stack: #4512 (`master`) → #4513 (`audits-pipeline-design`) → coverage contracts (in progress).
 Foundation branch: `audits-pipeline-design`; PR #4512 targets `master`.
 Use `git worktree list` to locate the checkout on this machine.
 
@@ -116,7 +117,11 @@ cmp audits/catalog/legacy-corpus.json /tmp/operator-corpus.json
 - Current branch/worktree: `audits-source-inventory`, based on the fully checked foundation.
 - Code, 40-test verification under both mapper selections, three local review rounds,
   reproducibility, protected-input checks, formatting and graph update are complete.
-  Remote review and CI gates are pending on the published PR.
+  All CI passed on `088d719e32bd92db9a52dcfbf0e8ff77f9c5d2ab`. Claude verified the final
+  manifest/UTF-8 corrections with no remaining defects. Copilot CLI and GitHub review
+  requests are quota-blocked; the earlier available review rounds were completed.
+  GitHub rejected the PR review request with HTTP 422 `NO_QUOTA_REMAINING`.
+  The user resumed after an unrelated tool-approval usage reset; no code was lost.
 - JDK compiler adapter parses and analyzes explicit source/classpath inputs, hashes the
   same immutable source bytes, and emits JSON on stdout. Processors and implicit source
   discovery are disabled; it never invokes generation or source execution.
@@ -155,16 +160,59 @@ cmp audits/catalog/legacy-corpus.json /tmp/operator-corpus.json
   report decisions remain the next PR's responsibility. No support claim is inferred here.
 - No changes to core, accepted fixtures, locks, or the preservation catalog.
 
+## Coverage contracts checkpoint
+
+- Branch `audits-coverage-contracts` starts at the checked source-inventory head.
+- Next PR scope: context-specific capability/provenance/version data contracts, explicit
+  bindings to source API declarations, expected-inventory completeness, strict JSON IO,
+  and independent API/version/serialization/behavior report states.
+- Descriptive-name synthesis and its persisted identity registry are a separate focused
+  stacked PR immediately after this one; actual backporting remains step 3a after parsing.
+- Report generation remains offline/read-only and never publishes GitHub issues.
+- Data model must keep definition introductions separate from feature events and first
+  observations. Missing/conflicting evidence stays unknown/conflicting. No directory or
+  Java file can establish serialization/behavior coverage.
+- Adding Jackson's Kotlin module with the existing managed Jackson version for strict
+  DTO decoding; keep duplicate/unknown/null/coercion/trailing-input checks explicit.
+- Implemented contracts, strict JSON codecs, version/range parsing, cross-reference and
+  scope checks, pure per-domain comparison, conservative tag inference, overload annotation
+  checks, lifecycle retention, and UTF-8 JSON/Markdown CLI with distinct exit states.
+- The final 73-test suite passes Critter and reflection. Three local review rounds are
+  complete; round 3 approved the corrected implementation with no correctness defects.
+  Tests include protocol failures, missing identities, independent example/API
+  domains, definition/facet introductions, first-observation uncertainty, API aliases and
+  overloads, strict JSON, and read-only CLI success/partial/invalid reports.
+- Round 1 found and fixed eight concrete issues: current observations require a definition
+  rooted in that source (imported historical evidence may supplement it); every inferred
+  overload claim must agree on context; stale/mixed bindings become explicit plan errors
+  and a partial report; diagnostics sort by context/code/subject/message; evidence roles are
+  enforced for facets, constraints and dispositions; unparsed raw versions stay unknown;
+  Markdown retains documentation state and details. Each failure has regression coverage.
+- Round 2 confirmed all prior fixes and found current-facet evidence, unrelated-context
+  token claims, and unused historical binding gaps. Current definition/feature identities
+  now share one evidence-aware scope function; bindings must target that scope or accepted
+  expectations; token claims use the same context table as inference. Markdown diagnostics
+  now retain context and subject. The stale test-count note was already updated during review.
+- Strict JSON decoding also read the real 3,159-declaration core API artifact successfully.
+  Formatting/graph refresh, protected-input checks, and byte-identical legacy reproduction pass.
+- Round 3 confirmed every round-2 fix and approved the implementation. Its optional facet
+  diagnostic-label improvement was applied. Historical policy exclusions remain valid
+  records even when inactive: unlike bindings, they claim no API and hide no current row;
+  retiring those records is not necessary for this comparison contract.
+- Copilot CLI was retried and remains unavailable due to monthly quota exhaustion.
+- No live documentation catalog has been generated; fixtures are explicitly synthetic.
+  No existing core tests, locks, fixtures, annotations, or legacy docs were changed.
+- Current worktree files are authoritative. Do not rerun old `/tmp/audits-source/*` or
+  `/tmp/audits-contracts/*` prototypes: they predate fixes and can restore discarded code.
+
 ## Next steps
 
-1. Request/evaluate remote review and CI for PR #4513; fix valid findings before moving on.
-   Its implementation and local checks are complete. Do not wait for a merge.
-2. After those gates pass, start the next stacked branch/PR automatically from
-   `audits-source-inventory`: capability/evidence and version schemas, persistent
-   descriptive-name contracts, expected-inventory completeness, and honest coverage reports.
+1. Coverage contracts/reporting and three local review rounds are complete.
+2. Commit/push a PR targeting `audits-source-inventory`; after CI and available review gates
+   pass, start the descriptive naming/registry PR on top automatically. Do not wait for merges.
 3. Continue with pinned source acquisition/structured parsing, scenario semantics and the
-   descriptive-name backport, curated repairs, executable generation, then monitoring and
-   the separate publisher. Keep progress current; do not merge the stack unless requested.
+   naming backport, curated repairs, executable generation, monitoring and the publisher.
+   Preserve progress and merge order; do not merge without a user request.
 
 ## Temporary local evidence
 
