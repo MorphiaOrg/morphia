@@ -14,6 +14,9 @@ import dev.morphia.audits.api.ApiInventory
 import dev.morphia.audits.naming.ExampleNameRegistry
 import dev.morphia.audits.naming.NameProposal
 import dev.morphia.audits.naming.NamingRequest
+import dev.morphia.audits.sources.GitSourceManifest
+import dev.morphia.audits.sources.GitSourceRequest
+import dev.morphia.audits.sources.SourceAcquisitionReport
 import java.security.MessageDigest
 import java.util.HexFormat
 
@@ -67,6 +70,13 @@ object AuditJson {
     fun namingRequest(json: String): NamingRequest = read(json, NamingRequest::class.java)
 
     fun nameProposal(json: String): NameProposal = read(json, NameProposal::class.java)
+
+    fun sourceRequest(json: String): GitSourceRequest = read(json, GitSourceRequest::class.java)
+
+    fun sourceManifest(json: String): GitSourceManifest = read(json, GitSourceManifest::class.java)
+
+    fun sourceAcquisition(json: String): SourceAcquisitionReport =
+        read(json, SourceAcquisitionReport::class.java)
 
     private fun <T> read(json: String, type: Class<T>): T {
         val tree = requireNotNull(mapper.readTree(json)) { "Empty JSON input" }

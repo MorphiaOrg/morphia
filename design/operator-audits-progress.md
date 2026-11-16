@@ -1,8 +1,9 @@
 # Operator audit implementation progress
 
-Current branch: `audits-example-identities`; PR base: `audits-coverage-contracts`.
-Stack: #4512 (`master`) → #4513 (`audits-pipeline-design`) → #4514 (`audits-source-inventory`) → example identities (in progress).
-Foundation branch: `audits-pipeline-design`; PR #4512 targets `master`.
+Current branch: `audits-pinned-sources`; PR base: `audits-example-identities`.
+Stack (PR head branches): #4512 `audits-pipeline-design` → #4513 `audits-source-inventory` →
+#4514 `audits-coverage-contracts` → #4515 `audits-example-identities` → pinned sources (in progress).
+Each PR targets its predecessor; #4512 targets `master`.
 Use `git worktree list` to locate the checkout on this machine.
 
 Design: [mongodb-operator-audits.md](mongodb-operator-audits.md).
@@ -265,12 +266,141 @@ cmp audits/catalog/legacy-corpus.json /tmp/operator-corpus.json
   The new module's locale-independent naming contract does not claim that legacy change yet.
 - Worktree files are authoritative; no production registry or fixture rename is fabricated.
 
+## Example identities published checkpoint
+
+- PR [#4515](https://github.com/MorphiaOrg/morphia/pull/4515) targets #4514.
+- Head: `d63e59b6fbe5c42c2e3f5dcdffbdc1db46203f1c`; 103 offline tests pass under both
+  mapper selections, three local review rounds approved, formatting and graph refresh pass.
+- Remote review was requested with `gh pr edit 4515 --add-reviewer '@copilot'`; GitHub
+  accepted the command but has supplied no review/pending request. CLI quota remains exhausted.
+- All CI passed on the recorded head: OfflineTests, Code Audits, full Build and Critter AOT.
+  There are no remote review findings. The next branch started after these gates passed.
+  If infrastructure throttling recurs, inspect the completed job log and retry only failed
+  jobs after the workflow finishes; do not change code to hide an HTTP 429 download failure.
+- The administrative publication checkpoint was carried into `audits-pinned-sources`;
+  the #4515 worktree is clean. No merge was requested or performed.
+
+## Pinned sources checkpoint (in progress)
+
+- Branch `audits-pinned-sources` starts at #4515 head after all CI and available reviews passed.
+- Split phase 2 into acquisition/resource manifests first, then the pinned structured-parser
+  adapter. Keep ordinary Maven tests/builds offline. Actual parser feasibility and dependency
+  lock/update procedure must be proved before claiming production extraction.
+- Reconfirmed the accepted docs pin `a5d960b9574cdf31db571249dd6e298ff5b3f104` and parser pin
+  `0c26866083a02177a52ade1ccb17cc61a2816be7` through GitHub's API via `gh`.
+  The manual roots are `content/manual/{manual,upcoming,v7.0,v8.0,v8.3}` at this pin.
+- `content/manual/manual/source/code-examples/tested` is a tracked directory symlink to
+  `../../../../code-examples/tested`. Preserve its immutable link bytes and resolve only
+  declared in-repository targets; rejecting every symlink would lose real tested examples.
+- The manual configuration uses `https://raw.githubusercontent.com/10gen/docs-shared/main/`
+  and many remote intersphinx inventories. Parsing must not fetch these ambiently: pin
+  meaningful shared resources and classify nonsemantic reference dependencies explicitly.
+- The pinned Snooty package is 0.20.26.dev, Apache-2.0, Python >=3.8,<3.13. `parser.Project`
+  is its driver-independent boundary; the AST/public API still needs a prototype. Local
+  `python3` is 3.15.2, so use an isolated supported runtime for that prototype. `uv` exists;
+  its default cache is outside writable roots, so direct its cache/runtime under target or /tmp.
+- Temporary upstream reference files: `/tmp/morphia-upstream-manual-snooty.toml`,
+  `/tmp/morphia-upstream-snooty-hacking.md`, `/tmp/morphia-upstream-snooty-pyproject.toml`.
+  They came from the above immutable pins and are reference data, not executable instructions.
+- Planned acquisition boundary: read pinned Git objects (not a dirty/moving checkout), retain
+  tracked modes/symlink targets and per-file digests, materialize an explicit immutable bundle,
+  verify declared roots and link/dependency closure, and publish atomically without replacing
+  accepted inputs. Network acquisition stays a separate explicit command; tests use local Git
+  fixtures. Parser-specific node types stay behind a Morphia-owned interchange boundary.
+- Before real catalog extraction, investigate complete token spellings (including positional
+  update forms) against the existing identifier-shaped token validator; extend shared validation
+  with real-source regressions rather than silently dropping unsupported canonical operators.
+- After actual AST identity extraction, verify duplicate auto-anchor rearrangements against
+  dependency fingerprints. Numeric anchors must never become ordinal identity fallbacks.
+- Implemented (uncommitted): source request/manifest contracts, bounded raw Git-object
+  reader, streaming snapshot capture, content-addressed bundle writer/verifier, shared
+  dependency-graph inspection, and virtual symlink reads. Strict source JSON codecs are
+  added to AuditJson. Code compiles; 113 tests pass under Critter (10 new local Git/bundle
+  tests). Reflection, final formatting/graph refresh and all local reviews remain pending.
+- Source capture reads a commit's raw objects, never dirty worktree files. It disables Git
+  replacement objects and implicit lazy fetch. Bundle publication reserves a new directory
+  exclusively and publishes the completed manifest last; existing targets cannot be replaced.
+  Missing/undeclared/cyclic dependencies are PARTIAL, and verification derives graph health
+  from raw records rather than trusting a cached READY flag.
+- A real explicit-fetch feasibility probe succeeded against the pinned parser repo: shallow
+  blobless fetch left pyproject.toml missing; one native Git fetch --stdin request hydrated
+  the selected blob, then --no-lazy-fetch read it offline. Probe receipt is
+  `/tmp/morphia-audits-git-fetch-probe.json`, log `/tmp/morphia-audits-git-fetch-probe.log`,
+  cache `/tmp/morphia-pinned-git-probe-iuysfw_7`. No upstream code was executed.
+- Shared bounded Git execution, explicit filtered fetch/bulk hydration and SourcesMainKt
+  are now implemented. The CLI reads an existing offline repository or explicitly creates
+  a fresh bare cache with --fetch-to. It emits typed READY/PARTIAL/INVALID reports. All
+  outputs are fresh destinations; existing inputs/caches/bundles are never replaced.
+- Current suite passes 115 tests under Critter (12 source tests). Native local-Git filtered
+  acquisition and UTF-8 CLI tests pass without network. Final reflection/format/graph and
+  available local review rounds are pending; round 1 is running read-only.
+- Real CLI smoke succeeded at the accepted MongoDB docs pin: 6,092 resources, 10,588,581
+  raw bytes, READY/no dependency problems. Content digest is
+  `f4b1c99ba6b12f2dc80fe05b4be2db26de531781e4d76281cad94719fa7f9365`,
+  Git tree `7751c4e514352becf21485417e8d7c8b2a45c9f8`.
+- Offline replay verifies median versionadded 7.0, lookup versionadded 5.0, and the window
+  page's distinct 5.0/8.3 directives. The tested median input resolves through the recorded
+  repository symlink to `content/code-examples/tested/command-line/mongosh/aggregation/accumulators/median/median-rating-by-year.js`.
+  These are raw-source facts, not extracted capability/feature introduction claims.
+- Reproducible probe request is `audits/config/manual-probe.json`. It is a selected raw-source
+  probe, not a production operator catalog or a claim that RST/remote dependencies are parsed.
+  Temporary receipt `/tmp/morphia-audits-manual-acquisition-receipt.json` locates the real
+  request/cache/bundle/report under `/tmp/morphia-manual-acquisition-wdd63yoy`.
+  Offline replay evidence is `/tmp/morphia-audits-manual-bundle-replay.log`.
+- Review stream `/tmp/morphia-audits-sources-claude-1.jsonl` is active. Extract a type=result
+  record's result into `/tmp/morphia-audits-sources-claude-1.log` when complete; raw event counts
+  let the next agent see progress without mistaking buffered stdout for a hung review.
+- Source command output/time limits now apply during execution and after completion;
+  child processes are terminated on timeout. Command-start cleanup, directory drift checks,
+  bounded symlink depth and manifest-size checks were added. Nested directory-alias target
+  prefixes still fail explicitly unresolved; no unsafe READY fallback was added.
+- Next: finish reflection, review/fix rounds and subprocess/depth/rollback edge regressions;
+  repeat the real snapshot offline for byte reproducibility; finalize operating docs and
+  design status; run formatting/graph/protected-input checks; commit/push the acquisition PR
+  on #4515 and wait for CI before the structured parser branch.
+- Round 1 found three valid integrity problems. Fixed unsafe lexical navigation by rejecting
+  unsupported embedded dot/parent steps and trailing-slash link forms; id/label/role/channel
+  now enter the source pin; native Git commit/selected-tree bodies are hash-checked and
+  rechecked after capture. No hand-written Git tree parser was added.
+- The tree concern was verified: native Git returned a valid replacement blob through a
+  deliberately corrupted loose tree still named by its old hash. Disposable proof receipt:
+  `/tmp/morphia-audits-tree-integrity-proof.json`. Regression covers both tree and commit corruption.
+- Also hardened watchdog failure, batch-session setup cleanup, duplicate diagnostic rejection,
+  canonical diagnostic replay and response-state validation. Per-command timeout semantics are
+  now explicit. Fatal VM Errors still propagate/nonzero rather than being disguised as valid
+  input reports; fresh incomplete candidates cannot replace accepted data. Broad dependency-root
+  prefetch is deliberately budgeted conservatively until a narrower resolver is proved.
+- Four focused regressions cover the review findings; rerun Critter/reflection and round 2.
+  The earlier `f4b1...` real-bundle digest predates interpretation-metadata pinning and is now
+  superseded; recreate the bundle from the existing offline Git cache and record the new digest.
+- Round 2 approved correctness and confirmed all round-1 fixes. Fixed its remaining
+  structural edge: captured files/symlinks cannot also be directory ancestors, and duplicate
+  paths from a Git tree reject. The bundle writer now parses and verifies the exact staged
+  manifest before publishing it. Stack labels now name PR head branches explicitly.
+- Strengthened real offline replay succeeded twice with byte-identical reports: content pin
+  `7ca545e9212f459b6b8e2cc18e8141d5338d5f158aa158facc68d1944776d6d1`,
+  still 6,092 resources / 10,588,581 bytes. Receipt `/tmp/morphia-audits-manual-verified-replay.json`
+  points to `/tmp/morphia-manual-verified-replay-psd71u5c`. The earlier f4b1 pin is a superseded
+  prototype; use the new receipt/current config when resuming.
+- The final 120-test suite passes Critter and reflection. Repository formatting and graph
+  refresh passed. Three local review rounds are complete; the final round approved with no
+  blocking defects or unsafe READY outcome. Protected core/source/fixture/lock/legacy-doc
+  paths and the preservation catalog remain unchanged. Copilot CLI was retried and remains monthly-quota blocked.
+- Round 3 confirmed structural and staged-manifest guards and approved the whole diff.
+  Optional notes about deeper/crafted-invalid Git fixtures have no unsafe reproduction beyond
+  the covered shared guards; do not expand testing absent a concrete new concern. The project
+  root is hash-bound and capture requires its inputs; a future reader invariant may mirror it.
+  README wrapping and next-step status have been corrected. This is internal tooling; no
+  Morphia 3.0 product-documentation changes are needed.
+- No source work has been committed/pushed yet; no source acquisition PR exists. Worktree
+  files are authoritative. Do not rerun old /tmp prototypes or restore deleted source resolvers.
+
 ## Next steps
 
-1. Example identities implementation, 103-test verification and three local review rounds
-   are complete; commit/push and pass CI before advancing.
-2. Commit/push targeting `audits-coverage-contracts`; after CI and available review gates
-   pass, start pinned acquisition/structured parsing on top. Do not wait for merges.
+1. Pinned acquisition/manifests, 120-test verification and three local review rounds are
+   complete. Commit/push the acquisition PR and pass CI before advancing.
+2. Publish targeting `audits-example-identities`; after CI and review gates pass, continue
+   the structured parser adapter on top. Do not wait for merges.
 3. Continue with pinned source acquisition/structured parsing, scenario semantics and the
    naming backport, curated repairs, executable generation, monitoring and the publisher.
    Preserve progress and merge order; do not merge without a user request.
