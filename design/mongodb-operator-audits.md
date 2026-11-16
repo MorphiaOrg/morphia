@@ -3,8 +3,10 @@
 Status: milestone 0 (the offline preservation foundation) is implemented in
 [PR #4512](https://github.com/MorphiaOrg/morphia/pull/4512). The source API inventory portion
 of step 1 is implemented in [PR #4513](https://github.com/MorphiaOrg/morphia/pull/4513);
-Capability/evidence and coverage contracts are implemented on `audits-coverage-contracts`.
-Descriptive naming/identity and steps 2–7 remain planned.
+capability/evidence and coverage contracts are implemented in
+[PR #4514](https://github.com/MorphiaOrg/morphia/pull/4514).
+The descriptive naming/identity contracts are implemented on the next stacked branch;
+production parsing, the coordinated naming backport and steps 2–7 remain planned.
 See [implementation progress](operator-audits-progress.md) for delivered behavior,
 validation, review results, and the next checkpoint.
 

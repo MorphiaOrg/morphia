@@ -2,9 +2,9 @@
 
 This module is being rebuilt around the [operator audit design](../design/mongodb-operator-audits.md).
 The current milestones provide offline regression tests, a read-only corpus inventory,
-compiler-resolved public API metadata, and artifact-based capability comparison. Pinned docs
-acquisition, descriptive-name migration, executable generation, and the `gh` publisher remain
-planned.
+compiler-resolved public API metadata, artifact-based capability comparison, and descriptive
+example identity proposals. Pinned docs acquisition, existing-test migration, executable
+generation and the `gh` publisher remain planned.
 
 Run the tests from the repository root:
 
@@ -162,4 +162,69 @@ Input order is canonicalized where it is not semantic; no clock values enter rep
 
 No production MongoDB catalog is fabricated here. The offline tests construct small synthetic
 catalogs; the pinned acquisition/parser milestone will supply the real accepted observations.
-Descriptive example naming/identity and the existing-test backport follow in separate work.
+Shared example identity contracts are described below; the existing-test backport follows
+structured extraction.
+
+## Descriptive example identities
+
+`naming/DescriptiveNames.kt` is the shared naming contract for the future generator and
+existing-test migration. AST plain-text titles become ASCII lowerCamelCase stems and
+`test`-prefixed methods: “Calculate Median Ratings by Year” becomes
+`calculateMedianRatingsByYear` / `testCalculateMedianRatingsByYear`. The bare stem is a legal
+Java identifier and portable folder name. Keywords, restricted Java identifiers, device names
+and numeric starts receive a `case` prefix. Unicode uses NFKD, drops combining marks, and
+escapes remaining letters/symbols as `unicode` plus the hexadecimal code point. Acronyms use
+`Locale.ROOT`; names over 80 characters need a reviewed bounded abbreviation. Repository-relative
+resource paths have a 240-byte UTF-8 budget, reserving 32 bytes plus a separator for fixture
+leaves; emitters use `fixturePath` to enforce that leaf contract. The future emitter must also
+validate its checkout-root prefix and Java output paths. Nothing is silently truncated.
+
+`NameReconciliation.propose(acceptedRegistry, request)` is pure and emits a candidate registry,
+resolutions and diagnostics. Each request declares complete capability/language scopes and
+already-grouped reference scenarios, source evidence, recovered context titles and physical
+namespace inventory. Document names must be stable source-root-qualified logical paths;
+snippet identities must include their logical source path/label. Fingerprints represent the
+normalized scenario **and dependencies**, supplied by the future parser/semantic layer.
+Equivalent language tabs are grouped upstream; distinct scenarios must not share a candidate.
+This module does not invent fingerprints or infer equivalence from matching titles.
+
+Reconciliation matches within the same capability/language: explicit labels or referenced
+snippets first, then a unique anchor plus enclosing context, then a unique fingerprint.
+Contrary match sets that exclude the chosen identity require review. Numeric auto-anchor endings need fingerprint corroboration; historical observations retain provenance but only
+the latest observation supplies automatic identity matches.
+Established stems persist across cosmetic title edits and content changes with stable labels.
+No ordinal, line number or nearest-match score can select an identity. Multiple matches,
+competing observations, unexplained disappearances and automatic destination moves remain
+unresolved. Reviewed assignments can establish a new name, choose an existing identity, or
+rename/move it; renames retain previous qualified names as aliases. Splits/merges require
+explicit new assignments and dispositions. Retired names remain reserved. The request pins
+the current catalog; assignment and retirement rationale/evidence persist in registry decision
+records so later reconciliations retain the review trail.
+
+Collision checks cover capability-qualified keys, shared resource directories, target classes,
+accepted aliases/tombstones, previous physical bindings after moves, and supplied folder/method
+inventory, including inherited helpers. Destination namespaces also compare without case.
+Folder comparisons normalize with NFKC and root-locale case conversion. All colliding
+new scenarios advance together through meaningful enclosing-title qualifiers; every new
+duplicate must disambiguate, while established names and reviewed assignments take precedence.
+Encounter-order counters never decide a winner. An entry may ignore only its proven existing binding.
+Ambiguities need reviewed names rather than overwriting a neighbor. Source titles and
+observations remain separate from canonical names. The namespace inventory is explicit input;
+the future migration/generator must obtain it from the physical corpus/compiler, not guess it.
+
+After compiling the module:
+
+```sh
+./mvnw -q -Daudits -pl audits exec:java \
+  -Daudits.mainClass=dev.morphia.audits.naming.NamesMainKt \
+  -Dexec.args="accepted-names.json naming-request.json"
+```
+
+All three artifacts have strict schema version 1 contracts in `naming/NameContracts.kt`.
+The command emits UTF-8 JSON to stdout: exit 0 `READY`, 3 `UNRESOLVED`, 2 `INVALID`.
+A partial proposal cannot replace the accepted registry; retain its inputs for review.
+No command changes a registry, test method, fixture directory or source checkout. This PR
+contains synthetic identity tests; the production registry and coordinated legacy rename
+are populated after structured extraction. The existing resource-discovery adapter's default
+locale conversion must be migrated to `Locale.ROOT` and tested with the actual helper during
+that backport; this module does not claim it has already renamed or repaired core tests.
