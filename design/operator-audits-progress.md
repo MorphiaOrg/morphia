@@ -108,9 +108,15 @@ cmp audits/catalog/legacy-corpus.json /tmp/operator-corpus.json
 - The deliberately created stale-test class and non-git docs-directory sentinel were removed
   after verification. No user fixture, docs checkout, or tracked core file was changed.
 
-## Source inventory implementation checkpoint (in progress)
+## Source inventory published checkpoint
 
-- New branch/worktree `audits-source-inventory` starts at the fully checked foundation head.
+- PR [#4513](https://github.com/MorphiaOrg/morphia/pull/4513) targets
+  `audits-pipeline-design` (#4512). Merge order is #4512 then #4513; neither is merged.
+- Source inventory implementation commit: `d96700f73b52225d6148bfe17308a94076edc2fe`.
+- Current branch/worktree: `audits-source-inventory`, based on the fully checked foundation.
+- Code, 40-test verification under both mapper selections, three local review rounds,
+  reproducibility, protected-input checks, formatting and graph update are complete.
+  Remote review and CI gates are pending on the published PR.
 - JDK compiler adapter parses and analyzes explicit source/classpath inputs, hashes the
   same immutable source bytes, and emits JSON on stdout. Processors and implicit source
   discovery are disabled; it never invokes generation or source execution.
@@ -151,12 +157,11 @@ cmp audits/catalog/legacy-corpus.json /tmp/operator-corpus.json
 
 ## Next steps
 
-1. Finish source-inventory implementation and real-core smoke testing; run final offline
-   tests with Critter then reflection, formatting, and local review rounds. Those checks
-   are complete for this candidate. Commit/push a PR
-   targeting `audits-pipeline-design`, request remote review, and evaluate CI/findings.
-2. After those gates pass, start the next stacked PR automatically: capability/evidence and
-   version schemas, persistent descriptive-name contracts, completeness, and honest reports.
+1. Request/evaluate remote review and CI for PR #4513; fix valid findings before moving on.
+   Its implementation and local checks are complete. Do not wait for a merge.
+2. After those gates pass, start the next stacked branch/PR automatically from
+   `audits-source-inventory`: capability/evidence and version schemas, persistent
+   descriptive-name contracts, expected-inventory completeness, and honest coverage reports.
 3. Continue with pinned source acquisition/structured parsing, scenario semantics and the
    descriptive-name backport, curated repairs, executable generation, then monitoring and
    the separate publisher. Keep progress current; do not merge the stack unless requested.

@@ -2,7 +2,8 @@
 
 Status: milestone 0 (the offline preservation foundation) is implemented in
 [PR #4512](https://github.com/MorphiaOrg/morphia/pull/4512). The source API inventory portion
-of step 1 is implemented on `audits-source-inventory`; its coverage/naming contracts and
+of step 1 is implemented in [PR #4513](https://github.com/MorphiaOrg/morphia/pull/4513);
+its coverage/naming contracts and
 steps 2–7 remain planned.
 See [implementation progress](operator-audits-progress.md) for delivered behavior,
 validation, review results, and the next checkpoint.
