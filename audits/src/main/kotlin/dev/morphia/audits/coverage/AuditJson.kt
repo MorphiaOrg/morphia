@@ -17,6 +17,7 @@ import dev.morphia.audits.documents.DocumentReport
 import dev.morphia.audits.naming.ExampleNameRegistry
 import dev.morphia.audits.naming.NameProposal
 import dev.morphia.audits.naming.NamingRequest
+import dev.morphia.audits.scenarios.ScenarioExtractionPlan
 import dev.morphia.audits.shell.ShellProgramRequest
 import dev.morphia.audits.sources.GitSourceManifest
 import dev.morphia.audits.sources.GitSourceRequest
@@ -54,12 +55,49 @@ object AuditJson {
     fun write(value: Any): String =
         mapper.writerWithDefaultPrettyPrinter().writeValueAsString(value) + "\n"
 
+    /** Count the actual UTF-8 JSON stream without allocating an amplified artifact. */
+    fun requireMaximumSize(value: Any, maximumBytes: Int) {
+        require(maximumBytes > 0)
+        val output =
+            object : java.io.OutputStream() {
+                var count = 0L
+
+                fun reserve(length: Int) {
+                    count += length
+                    if (count > maximumBytes) throw ArtifactSizeLimit(maximumBytes)
+                }
+
+                override fun write(value: Int) = reserve(1)
+
+                override fun write(bytes: ByteArray, offset: Int, length: Int) = reserve(length)
+            }
+        try {
+            mapper
+                .writerWithDefaultPrettyPrinter()
+                .writeValue(java.io.OutputStreamWriter(output, Charsets.UTF_8), value)
+            output.write('\n'.code)
+        } catch (failure: com.fasterxml.jackson.databind.JsonMappingException) {
+            var cause: Throwable? = failure
+            repeat(16) {
+                if (cause is ArtifactSizeLimit) throw cause as ArtifactSizeLimit
+                cause = cause?.cause
+            }
+            throw failure
+        }
+    }
+
+    private class ArtifactSizeLimit(maximum: Int) :
+        IllegalArgumentException("Serialized artifact exceeds $maximum bytes")
+
     fun hash(value: Any): String =
         HexFormat.of()
             .formatHex(
                 MessageDigest.getInstance("SHA-256")
                     .digest(write(value).toByteArray(Charsets.UTF_8))
             )
+
+    fun scenarioPlan(json: String): ScenarioExtractionPlan =
+        read(json, ScenarioExtractionPlan::class.java)
 
     fun programRequest(json: String): ShellProgramRequest =
         read(json, ShellProgramRequest::class.java)

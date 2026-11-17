@@ -504,3 +504,18 @@ Output is candidate JSON on stdout; exit status is 0 for `NORMALIZED`, 3 for `UN
 order. Reports are write-only: regenerate from the source request rather than deserializing
 encoded BSON or operation classes. There is no document-grouping heuristic, baseline promotion,
 server execution or accepted fixture migration in this command.
+
+## Native scenario groups
+
+`ScenarioExtraction.extract` connects the owned document AST to ordered programs and descriptive
+name candidates using explicit IO ownership, selected heading scopes and reviewed language/tab
+policies. Raw sources, external snippet receipts, selection options and foreign variants survive.
+Unknown grouping/setup or missing dependencies prevent complete-scope name reconciliation.
+Program normalization and source grouping have independent states; complete grouping does not
+prove execution or assigned names. See the [extraction contract](../design/operator-audits-scenario-extraction.md)
+for the plan schema, CLI, provenance and remaining legacy-layout work.
+
+`ScenariosMainKt <bundle> <source-sha256> <documents.json> <plan.json>` emits read-only candidate
+JSON. `ScenarioExtraction.namingRequest` requires physical name inventory and can select independent
+healthy scopes before calling the existing registry reconciler. No fixture, test, accepted name
+registry or GitHub issue is written by either operation.

@@ -836,3 +836,8 @@ The [ordered program normalization contract](operator-audits-programs.md) record
 closed AST grammar, explicit source roles and shell dialects, typed commands and dependencies,
 legacy document-stream adapter, expected-outcome ownership and limitations before automatic
 source grouping and existing-test migration.
+
+The [native scenario extraction contract](operator-audits-scenario-extraction.md) connects explicit
+owned IO groups to ordered program normalization and persisted descriptive-name candidates. It
+records foreign/unknown variants, snippet ownership, grouping completeness and the remaining
+legacy section/setup integration before any existing-test migration.
