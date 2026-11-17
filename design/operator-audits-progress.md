@@ -744,6 +744,13 @@ cmp audits/catalog/legacy-corpus.json /tmp/operator-corpus.json
   (core/docs/util/annotations/critter-maven) and byte-identical legacy corpus reproduction pass.
   `actionlint` is not installed in this environment; the workflow change is one `-Dtest` list.
 
+## Discovery published checkpoint
+
+- PR [#4518](https://github.com/MorphiaOrg/morphia/pull/4518) targets #4517 (`audits-snooty-adapter`).
+  Implementation head `36de9b54db2385ef2499ae0ea31d584565d3e323`. The user asked to publish before round 3 and to push any
+  round-3 fixes as follow-up commits once Codex can review.
+- Remote review requested with `gh pr edit 4518 --add-reviewer '@copilot'`. CI pending.
+
 ## Next steps
 
 1. Final local review round 3 for discovery: Codex hit its usage limit at 19:55 (reset 20:30) and
