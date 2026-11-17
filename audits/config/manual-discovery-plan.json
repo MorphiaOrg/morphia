@@ -1,0 +1,213 @@
+{
+  "schemaVersion": 1,
+  "product": "mongodb",
+  "definitionRoots": [
+    "reference/operator",
+    "reference/mql/window-functions"
+  ],
+  "catalogs": [
+    {
+      "id": "predicates",
+      "context": "QUERY_PREDICATE",
+      "page": "reference/mql/query-predicates.txt",
+      "includeDescendants": true,
+      "sections": [],
+      "excludedSections": [],
+      "headers": [
+        "Name",
+        "Operator"
+      ],
+      "ignoredHeaders": [
+        "Operator Type"
+      ],
+      "referenceRoles": [
+        "query"
+      ],
+      "primaryDefinitionRole": "query",
+      "fallbackDefinitionRoles": [],
+      "minimumMembers": 30,
+      "format": "TABLE_FIRST_COLUMN"
+    },
+    {
+      "id": "projections",
+      "context": "QUERY_PROJECTION",
+      "page": "reference/mql/projection.txt",
+      "includeDescendants": false,
+      "sections": [],
+      "excludedSections": [],
+      "headers": [
+        "Name"
+      ],
+      "ignoredHeaders": [],
+      "referenceRoles": [
+        "projection",
+        "expression"
+      ],
+      "primaryDefinitionRole": "projection",
+      "fallbackDefinitionRoles": [
+        "expression"
+      ],
+      "minimumMembers": 4,
+      "format": "TABLE_FIRST_COLUMN"
+    },
+    {
+      "id": "updates",
+      "context": "UPDATE_OPERATOR",
+      "page": "reference/mql/update.txt",
+      "includeDescendants": false,
+      "sections": [
+        "array-update-operators",
+        "bitwise-update-operators",
+        "field-update-operators",
+        "positional-update-operators"
+      ],
+      "excludedSections": [],
+      "headers": [
+        "Name"
+      ],
+      "ignoredHeaders": [],
+      "referenceRoles": [
+        "update"
+      ],
+      "primaryDefinitionRole": "update",
+      "fallbackDefinitionRoles": [],
+      "minimumMembers": 18,
+      "format": "TABLE_FIRST_COLUMN"
+    },
+    {
+      "id": "update-modifiers",
+      "context": "UPDATE_MODIFIER",
+      "page": "reference/mql/update.txt",
+      "includeDescendants": false,
+      "sections": [
+        "array-update-modifiers"
+      ],
+      "excludedSections": [],
+      "headers": [
+        "Name"
+      ],
+      "ignoredHeaders": [],
+      "referenceRoles": [
+        "update"
+      ],
+      "primaryDefinitionRole": "update",
+      "fallbackDefinitionRoles": [],
+      "minimumMembers": 4,
+      "format": "TABLE_FIRST_COLUMN"
+    },
+    {
+      "id": "stages",
+      "context": "PIPELINE_STAGE",
+      "page": "reference/mql/aggregation-stages.txt",
+      "includeDescendants": false,
+      "sections": [],
+      "excludedSections": [],
+      "headers": [
+        "Stage"
+      ],
+      "ignoredHeaders": [
+        "Command"
+      ],
+      "referenceRoles": [
+        "pipeline"
+      ],
+      "primaryDefinitionRole": "pipeline",
+      "fallbackDefinitionRoles": [],
+      "minimumMembers": 40,
+      "format": "TABLE_FIRST_COLUMN"
+    },
+    {
+      "id": "expressions",
+      "context": "AGGREGATION_EXPRESSION",
+      "page": "reference/mql/expressions.txt",
+      "includeDescendants": false,
+      "sections": [],
+      "excludedSections": [
+        "window-operators"
+      ],
+      "headers": [
+        "Name"
+      ],
+      "ignoredHeaders": [
+        "Component"
+      ],
+      "referenceRoles": [
+        "expression",
+        "group"
+      ],
+      "primaryDefinitionRole": "expression",
+      "fallbackDefinitionRoles": [
+        "group"
+      ],
+      "minimumMembers": 150,
+      "format": "TABLE_FIRST_COLUMN"
+    },
+    {
+      "id": "accumulators",
+      "context": "GROUP_ACCUMULATOR",
+      "page": "reference/mql/accumulators.txt",
+      "includeDescendants": false,
+      "sections": [],
+      "excludedSections": [],
+      "headers": [
+        "Name"
+      ],
+      "ignoredHeaders": [],
+      "referenceRoles": [
+        "group"
+      ],
+      "primaryDefinitionRole": "group",
+      "fallbackDefinitionRoles": [],
+      "minimumMembers": 25,
+      "format": "TABLE_FIRST_COLUMN"
+    },
+    {
+      "id": "window-functions",
+      "context": "WINDOW_FUNCTION",
+      "page": "reference/mql/window-functions.txt",
+      "includeDescendants": false,
+      "sections": [],
+      "excludedSections": [],
+      "headers": [
+        "Name"
+      ],
+      "ignoredHeaders": [],
+      "referenceRoles": [
+        "window"
+      ],
+      "primaryDefinitionRole": "window",
+      "fallbackDefinitionRoles": [
+        "group",
+        "expression"
+      ],
+      "minimumMembers": 24,
+      "format": "TABLE_FIRST_COLUMN"
+    },
+    {
+      "id": "window-stage-functions",
+      "context": "WINDOW_FUNCTION",
+      "page": "reference/operator/aggregation/setWindowFields.txt",
+      "includeDescendants": false,
+      "sections": [
+        "window-operators"
+      ],
+      "excludedSections": [],
+      "headers": [
+        "Name"
+      ],
+      "ignoredHeaders": [],
+      "referenceRoles": [
+        "group",
+        "window",
+        "expression"
+      ],
+      "primaryDefinitionRole": "window",
+      "fallbackDefinitionRoles": [
+        "group",
+        "expression"
+      ],
+      "minimumMembers": 30,
+      "format": "OPERATOR_REFERENCE_LIST"
+    }
+  ]
+}

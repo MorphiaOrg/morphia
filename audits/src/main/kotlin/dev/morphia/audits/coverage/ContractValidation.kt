@@ -8,7 +8,6 @@ import javax.lang.model.SourceVersion
 internal object ContractValidation {
     private val sha256 = Regex("[0-9a-f]{64}")
     private val revision = Regex("[0-9a-f]{40}")
-    private val token = Regex("\\$[A-Za-z_][A-Za-z0-9_]*")
     private val product = Regex("[a-z][a-z0-9-]*")
     private val facet = Regex("[a-z][a-z0-9-]*")
 
@@ -20,8 +19,7 @@ internal object ContractValidation {
                 ':' !in path &&
                 path.split('/').none { it in setOf("", ".", "..") })
 
-    fun operatorToken(value: String): String? =
-        value.trim().split(Regex("\\s+"), limit = 2).first().takeIf { token.matches(it) }
+    fun operatorToken(value: String): String? = OperatorTokens.leading(value)
 
     fun validate(
         catalog: CapabilityCatalog,
@@ -41,7 +39,7 @@ internal object ContractValidation {
             )
         fun key(key: CapabilityKey) {
             check(
-                key.product == plan.product && token.matches(key.token),
+                key.product == plan.product && OperatorTokens.valid(key.token),
                 "INVALID_CAPABILITY_KEY",
                 "Invalid product/operator key",
                 key.id(),

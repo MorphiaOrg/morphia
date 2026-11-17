@@ -147,7 +147,7 @@ object DocumentParsing {
         }
     }
 
-    private fun validateOrigins(report: DocumentReport, bundle: VerifiedSourceBundle) {
+    internal fun validateOrigins(report: DocumentReport, bundle: VerifiedSourceBundle) {
         val resources = bundle.manifest.resources.associateBy { it.path }
         fun check(origin: DocumentOrigin) {
             require((origin.path == null) == (origin.sha256 == null)) {

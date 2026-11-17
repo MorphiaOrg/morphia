@@ -1,9 +1,9 @@
 # Operator audit implementation progress
 
-Current branch: `audits-snooty-adapter`; PR base: `audits-pinned-sources`.
+Current branch: `audits-capability-normalization`; PR base: `audits-snooty-adapter` (#4517).
 Stack (PR head branches): #4512 `audits-pipeline-design` → #4513 `audits-source-inventory` →
 #4514 `audits-coverage-contracts` → #4515 `audits-example-identities` → #4516 `audits-pinned-sources` →
-Snooty adapter (in progress).
+#4517 `audits-snooty-adapter` → capability discovery (in progress).
 Each PR targets its predecessor; #4512 targets `master`.
 Use `git worktree list` to locate the checkout on this machine.
 
@@ -542,15 +542,235 @@ cmp audits/catalog/legacy-corpus.json /tmp/operator-corpus.json
   domain health, then descriptive test migration, curated repairs, typed generation and monitoring/
   opt-in issue publication. Do not merge without authorization.
 
+
+## Structured parser published checkpoint
+
+- PR [#4517](https://github.com/MorphiaOrg/morphia/pull/4517) targets #4516
+  (`audits-pinned-sources`). Head `8748bc6969de3176997de4a1a71b0f3e92f1c794`.
+- Final 128-test JVM verification (both mappers, including actual parser integration), 13 parser
+  regressions, three local review rounds with all findings addressed, source preservation,
+  formatting/graph refresh and byte-identical real replay are complete. Source files at this
+  committed head are authoritative; do not restore old /tmp adapter prototypes.
+- Remote review requested using `gh pr edit 4517 --add-reviewer '@copilot'`; GitHub accepted
+  it but again lists no pending request/review. Local CLI remains monthly-quota exhausted.
+- All exact-head CI passed: OfflineTests 1m41s, ParserTests 1m56s, Code Audits 2m45s,
+  full Build 5m46s and Critter AOT 6m03s. No delayed remote findings were present.
+  The normalization branch started after these gates passed.
+- This status update was carried into `audits-capability-normalization`; the published parser
+  worktree is clean. No merge was authorized or performed.
+
+## Capability normalization checkpoint (in progress)
+
+- Branch/worktree `audits-capability-normalization` starts at #4517 head after all gates passed.
+  No normalization production code exists yet. Build evidence-backed capabilities and version
+  events from owned document trees, with explicit source/page/context health and cross-checks
+  against documentation catalogs. Keep example extraction health independent of definitions.
+- The verified source bundle already contains 310 `.txt` operator pages (not just the three
+  retained probe outputs), plus includes and tested examples. Current probe verifies three
+  representative pages. Measure full extraction size/runtime and inspect actual definition/catalog
+  shapes before choosing batch/normalization boundaries; do not guess context from filenames.
+- Contracts in `coverage/Contracts.kt` and `naming/NameContracts.kt` are authoritative. Evidence
+  spans need raw-source checks: `DocumentOrigin.reportedLine` is only a parser hint, particularly
+  for substitutions and generated content. Preserve unknown introduction/version/facet scope.
+- Full operator probe succeeded through the existing coordinator: 310 retained pages, PARTIAL,
+  2,765 diagnostics, 190,978,095 bytes of pretty JSON, 68.87 seconds. Native helper compact output
+  fits the explicit 128 MiB budget; pretty artifacts are larger. `/tmp/morphia-audits-all-operator-documents.json`
+  uses the original source pin. Temp launcher `/tmp/FullDocumentsProbe.java` is exploratory only.
+- The original probe omitted MQL catalogs. Explicitly fetched a new immutable bundle including
+  `reference/mql`: receipt `/tmp/morphia-normalization-source-receipt.json`, root
+  `/tmp/morphia-normalization-source-4jepdujh`, 6,132 resources, content pin
+  `9632a61a4f77b83161d81b7da8fc63e11ab94112d7b73c3bcf49da6ced5e165a`.
+  MQL-only parsing retained 40 pages, 17,188,869-byte pretty JSON, 37.38s, PARTIAL/2,510 diagnostics.
+  Artifact `/tmp/morphia-audits-mql-documents.json`; its source pin differs from the operator probe,
+  so do not pretend those two reports are one coherent snapshot. Reparse operators or all 350
+  pages under the new source pin for final combined validation.
+- Actual AST tables are `directive/list-table` → `list` → row `listItem` → `list` → cell `listItem`.
+  First-column references establish membership; description-column operator mentions do not.
+  Catalog headers include Name/Stage; Command tables are outside the eight modeled contexts.
+  Update's Array Update Modifiers section distinguishes four modifiers from other update operators.
+- Definition roles in the old operator scope: expression157, group37, pipeline46, query39,
+  update22, projection3 (plus115 data fields). Do not equate every group role with accumulator:
+  12 are window-only legacy definitions. MQL introduces explicit `window` definitions for24
+  common functions and a 25-row accumulator catalog. Supplemental setWindowFields operator
+  catalogs and MQL query subcatalogs need inspection, not guessed category inference.
+- MQL expression catalog references some absent `exp.*` targets whose only definition is `grp.*`
+  (avg, median, concatArrays, etc.). Context membership can prove availability even if an upstream
+  cross-reference is broken. Never borrow an accumulator introduction for an expression/window
+  variant: preserve unscoped/uncertain notices with UNKNOWN confidence until evidence assigns them.
+  Atlas search/searchMeta/vectorSearch catalog rows also lack local definitions in the selected
+  bundle; missing metadata/examples must not become an invented absent operator.
+- Generated YAML catalog nodes have unknown positions. Use honest raw-file evidence and include
+  provenance, or verify an exact raw-source span; never invent a YAML/RST line from a hint.
+  Diagnostics in the old full probe: TargetNotFound1637, CannotOpenFile1086, FetchError29,
+  UnnamedPage13. Classify cross-reference/config inventory failures separately; scope missing
+  input/output/literalinclude problems to examples when the owning directive proves that scope.
+- Shared token validators currently accept only `$identifier`; actual positional `$`, `$[]`,
+  `$[<identifier>]` need explicit supported identity semantics and regression cases, not omission.
+- Reuse the locked parser interpreter from the parser worktree when useful; point adapter at this
+  worktree. Source bundle receipt and final real report paths are recorded above. Keep ordinary
+  Maven offline and protect curated core/source/docs/lock/data files until their explicit migration.
+
+
+## Discovery implementation checkpoint (in progress)
+
+- New production code: `discovery/DiscoveryContracts.kt`, `DocumentFacts.kt`,
+  `SourceEvidenceIndex.kt`, `CatalogDiscovery.kt`, `LifecycleFacts.kt`,
+  `DiscoveryDependencies.kt`, `DiscoveryMain.kt`; strict AuditJson discovery codecs;
+  shared `coverage/OperatorTokens.kt` now also validates naming scopes. Positional `$`, `$[]`,
+  `$[<identifier>]` are canonical identities; concrete `$[element]` is syntax, not a new operator.
+- `audits/config/manual-discovery-probe.json` selects MQL + operators at the same immutable pin;
+  `manual-discovery-plan.json` explicitly assigns all eight contexts, AST section/header selectors,
+  role fallbacks, and independent lower bounds. Both are probes, not accepted production catalogs.
+- Coherent 350-page artifact `/tmp/morphia-audits-discovery-documents.json` uses the new 9632... pin:
+  207,511,569 pretty-JSON bytes, 71.38s, 2,510 diagnostics, PARTIAL. Native compact transport fits
+  128 MiB. Read with a JVM heap such as `-Xmx3g`; ordinary fixture tests stay small/offline.
+- Initial normalizer output contained 324 capability/context keys. Real window-stage catalog is
+  a labeled operator-reference list (not one bullet per operator); added a narrow explicit list
+  adapter that accepts leading operator names or colon-labeled reference groups, never arbitrary
+  prose references. This should add the legacy window-only functions on the next full replay.
+- Definition roles alone never assign execution context. First-column catalog membership does;
+  expression aliases can use group definitions but their introductions remain UNKNOWN unless
+  independent context-specific source evidence establishes them. Root/feature versions stay separate;
+  generated positions remain unknown; actual raw spans/hashes or honest whole-resource evidence
+  are retained. Raw source directive arguments, including substitutions, are preserved where provable.
+- First local review is complete: `/tmp/morphia-discovery-claude-1.log`; detailed notes also at
+  `/home/evanchooly/.claude/plans/read-only-review-of-the-staged-tiger.md`. Seven valid concerns:
+  persisted origin checks, unverified catalog evidence, fallback roles hiding native-context gaps,
+  root/feature ownership, nested list versions, lost include diagnostics/unknown dependency kinds,
+  and inconsistent primary-role policies. Fixes are in progress, with regression coverage.
+- Applied fixes: reuse internal DocumentParsing origin validator; verify catalog names against raw
+  references/first-cell text; track native primary contexts independently of fallback use; limit
+  confirmed roots to owned definition body/section; preserve nested features and skip nested-list
+  catalog introductions; validate per-context primary policies before scanning. Source/hash mismatch
+  deliberately remains INVALID, rather than accepting a partially trusted artifact. A unique verified
+  raw YAML line is legitimate evidence; it is not an invented generated RST span.
+- `DiscoveryDependencies` retains include attempts even when they yield no nodes, scopes known
+  failed literal files separately, retains all outside-scope diagnostics, and treats unexplained
+  incomplete dependency graphs as definition uncertainty. Do not classify every incomplete graph
+  as merely an example error. Canonical policy + document input hashes bind discovery provenance.
+- Last complete suite before final review fixes: 138 cases/1 optional parser integration skip.
+  Current tests add forged membership, stale origins, failed includes, dependency uncertainty,
+  positional rows, nested Definition headings/page notices and nested-list lifecycle regressions.
+  Current build log `/tmp/morphia-discovery-tests.log`; validate it before relying on a test count.
+- No discovery commit/PR exists. Remaining: finish review fixes, add missing focused regressions,
+  full real replay + catalog contract/coverage validation, docs/design status, both mapper suites
+  with explicit parser integration, formatting/graph/protected checks, at most two more local review
+  rounds (Copilot CLI quota still unavailable), then commit/push targeting `audits-snooty-adapter`.
+  Do not start the following branch until its CI/reviews pass; no merge authorization exists.
+
+
+## Discovery verification update
+
+- Current suite: 153 tests pass under Critter with both optional locked-parser integrations
+  enabled (25 discovery regressions). The previous 151-test checkpoint passed reflection;
+  rerun reflection for the final current suite after review fixes. ParserTests CI now selects
+  both DocumentParsingTest and CatalogDiscoveryTest under both mapper settings.
+- Real direct `DiscoveryMainKt --parse` completed successfully (PARTIAL, exit3), retaining336
+  capability/context observations and915 raw evidence records. Current expected counts:
+  predicates37, projections4, update operators18, modifiers4, stages47, expressions165,
+  accumulators25, window functions36. The supplemental window list recovered the12 legacy
+  window-only group declarations. Native-context ambiguity remains explicit rather than guessed.
+- Current 350-page artifact normalization repeated byte-identically: 1,645,229-byte report,
+  SHA-256 `99037863374a5974abe2b5e5555aed94006e2c00bcb5ef5b8c9098a68d71d7b7`.
+  Receipt `/tmp/morphia-discovery-replay-receipt.json`; policy pin
+  `1d9ae9c826ea059de850b542d4e86411d751eeff12d761e46522b811d4edf118`.
+  These supersede earlier unreviewed normalization outputs. Keep source/document inputs.
+- Real catalog handed off to the existing CoverageMain and compiler API inventory (3,159 public
+  declarations): PARTIAL/368 root+facet rows, not INVALID. The temporary schema-smoke plan was
+  deliberately self-derived only to validate transport/contracts; it is NOT an accepted absence
+  baseline and must never be committed as one. Permanent regression now verifies catalog→API
+  inventory→coverage contracts using a small explicit fixture policy.
+- Stored report origins are rechecked before evidence use. Raw role/name references support
+  catalog members; fabricated names cannot produce observations. Version source arguments are
+  read back independently, retaining unresolved substitutions instead of upgrading them to dates.
+  Page notices, nested Definition headings and nested operator lists cannot introduce a root.
+- Known doc-link CannotOpenFile failures and sharedinclude failures explicitly owned by Example(s)
+  require AST ownership plus raw source syntax before being classified as reference/example errors.
+  Unknown dependency graphs and unclassified includes remain definition uncertainty. All unused
+  diagnostics remain OUTSIDE_SCOPE, not silently discarded. No production source facts were massaged.
+- Canonical policy and parse-input pins are now present in both the report and catalog tool trace.
+  Report decoding checks state/context/catalog/problem consistency. The direct CLI validates policy
+  before invoking the native parser; it needs no temporary Java launcher.
+- Round2 is running: `/tmp/morphia-discovery-claude-2.jsonl`. Copilot was retried for this unit and
+  remains monthly-quota blocked (`/tmp/morphia-discovery-copilot-1.log`). Max one further local
+  round after this. README/design status updated; graph refresh performed, final refresh pending.
+- No discovery commit/PR yet. Finish round2 findings, final tests/replay/format/graph/preservation
+  checks, final available review if needed, then publish targeting #4517. Do not merge the stack.
+
+## Discovery round 2 outcomes (2026-11-16)
+
+- Round 2 completed (`/tmp/morphia-discovery-claude-2.log`; notes in
+  `/home/evanchooly/.claude/plans/round-2-read-only-review-twinkling-river.md`). It confirmed every
+  round-1 fix and raised six main and four lower-priority findings. All were evaluated:
+  1. Multi-line `:doc:` links: fixed. The raw check reads the whole paragraph from the reported line.
+  2. Example sharedinclude ownership: fixed. Owners are filtered per including page.
+  3. Stored parse-input pin: fixed. `normalize` recomputes the export hash and rejects a mismatch.
+  4. Hint-miss evidence: fixed. A parser-reported hint is satisfied only by that raw line or a line
+     inside the same raw paragraph. The first strict version (exact line only) made 26 real window
+     catalog members unverified because Snooty reports labeled-list roles at the paragraph start;
+     the paragraph span restores them without accepting matches elsewhere in the file.
+  5. Deep-target root notices: fixed. A notice in the target's own body is a root event at any depth.
+  6. Undocumented exit on VM errors: intentionally not caught, consistent with the acquisition
+     boundary. INVALID (2) means invalid input; out-of-memory/stack overflow exit nonzero with the
+     JVM's diagnostic. README now states this. READY exit 0 now has a CLI test.
+  7. Feature facets: fixed. Heading evidence requires a raw section underline at the reported
+     line (Snooty reports headings at the underline; indented tab headings included).
+  8. Multi-operator pages: fixed. Section notices outside every target stay UNKNOWN when the page
+     defines more than one operator (real effect: one `$regex` 6.1 feature notice).
+  9. Report decoding: fixed for normalizer identity, evidence references and page capability keys.
+     Canonical list ordering is not re-verified on decode; output ordering is deterministic.
+  10. Plan selectors: fixed. Repeated selectors/roles and select+exclude overlaps are rejected.
+- Ten new regressions (35 discovery cases). The test fixture now reports headings at their
+  underline, matching the real parser.
+
+## Discovery final verification (2026-11-16)
+
+- 163 tests pass under Critter and reflection with both optional locked-parser integrations;
+  without parser properties only those 2 skip. All 13 actual-parser fixture tests pass.
+  Logs: `/tmp/morphia-discovery-final-{critter,reflection,noparser}.log`.
+- Real replay of the coherent 350-page artifact (source pin `9632...`, plan pin `1d9ae9c8...`)
+  repeated byte-identically: 1,638,636 bytes, SHA-256
+  `66072a31caf92de7acd821a293a9823f02417d5363a77f832794a85d6f72dd92`, exit 3/PARTIAL,
+  `/tmp/morphia-discovery-r3/report-{1,2}.json`. This supersedes the `9903...` report above.
+  Same 336 capability/context keys, 915 evidence records, 32 facets and 165 version events;
+  the only event change is the intended `$regex` feature notice becoming UNKNOWN.
+- QUERY_PROJECTION, UPDATE_OPERATOR, UPDATE_MODIFIER and WINDOW_FUNCTION are healthy.
+  Definition-level `CannotOpenFile` fell from 25 to 14 (8 moved to REFERENCE). The remaining 14
+  come from `:doc:` links in generated YAML extracts and included fragments (merge/out/text/
+  redact) that have no owning AST node on the page, so they stay definition uncertainty rather
+  than being guessed. GROUP_ACCUMULATOR keeps its 12 legacy `grp.*` window-only definitions as
+  explicit unassigned review items; a reviewed disposition list belongs in an accepted plan.
+- Spotless, `git diff --check`, graph update, protected-path diff against `3c78eb7`
+  (core/docs/util/annotations/critter-maven) and byte-identical legacy corpus reproduction pass.
+  `actionlint` is not installed in this environment; the workflow change is one `-Dtest` list.
+
+## Discovery published checkpoint
+
+- PR [#4518](https://github.com/MorphiaOrg/morphia/pull/4518) targets #4517 (`audits-snooty-adapter`).
+  Implementation head `36de9b54db2385ef2499ae0ea31d584565d3e323`. The user asked to publish before round 3 and to push any
+  round-3 fixes as follow-up commits once Codex can review.
+- Remote review requested with `gh pr edit 4518 --add-reviewer '@copilot'`. CI pending.
+
+## Discovery review round 3 (Codex, after publication)
+
+- Codex reviewed `8748bc6...HEAD` once its usage limit reset (`/tmp/morphia-discovery-codex-3.log`).
+  Two valid P2 findings, both fixed with regressions:
+  1. A blank hinted line still started the paragraph span, so a stale/forged origin could borrow
+     evidence from the following paragraph. The span now stops at the first blank line, including
+     the hinted line itself.
+  2. Report decoding never tied `catalogMembers` to the context's capabilities; an emptied member
+     list decoded. Members must now be distinct, sorted and equal to the context's capability tokens.
+- 163 tests pass under Critter and reflection with parser integrations. The real replay is unchanged
+  and byte-identical (`66072a31...`). Three local review rounds are complete; no fourth is needed.
+  Fixes pushed to #4518 as a follow-up commit.
+
 ## Next steps
 
-1. Prove and implement the offline pinned parser adapter, with regression fixtures and
-   explicit provenance/diagnostics; run both mappers and available local review rounds.
-2. Publish targeting `audits-pinned-sources`; after CI/review gates pass, continue capability
-   normalization/scenario semantics on top. Do not wait for merges.
-3. Continue with pinned source acquisition/structured parsing, scenario semantics and the
-   naming backport, curated repairs, executable generation, monitoring and the publisher.
-   Preserve progress and merge order; do not merge without a user request.
+1. Watch #4518 CI and any remote review; fix or answer findings (max 3 remote cycles).
+2. Commit and publish discovery targeting `audits-snooty-adapter` (#4517); request remote review and
+   wait for CI. Do not wait for merges; do not merge without a user request.
+3. Then: accepted coverage plan/expectations, scenario semantics and the naming backport, curated
+   repairs, executable generation, monitoring and the opt-in publisher.
 
 ## Temporary local evidence
 
