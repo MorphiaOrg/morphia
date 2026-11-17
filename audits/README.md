@@ -447,3 +447,17 @@ The current pinned manual contains genuine catalog/definition disagreements and 
 external metadata. The probe deliberately reports those, including legacy role ambiguity,
 instead of rewriting source facts or fixtures to produce READY. An accepted production baseline,
 source dispositions and complete pinned external resources follow in subsequent stages.
+
+## BSON scenario comparison
+
+`dev.morphia.audits.semantics.BsonComparison` provides a pure, bounded comparator over driver
+`BsonValue` trees and lists of result documents. Defaults preserve BSON types, numeric
+representations, document keys, arrays, pipelines and duplicate results. Explicit RFC 6901
+paths can relax document key order or finite numeric values of the same BSON type.
+`ResultOrder.UNORDERED` relaxes only the top-level result multiset; nested arrays remain ordered.
+Invalid/cyclic inputs or resource limits return `INVALID`, never a passing comparison.
+
+The [comparison contract](../design/operator-audits-bson-comparison.md) documents the policies,
+old-versus-new regression probes and the required compatibility assessment before migrating
+existing expectations. Core assertions and curated data continue to use their preserved paths;
+this is the oracle for the upcoming scenario runner, not an execution attestation.

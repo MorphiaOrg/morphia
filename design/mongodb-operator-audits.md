@@ -353,6 +353,11 @@ unsupported cases. Do not execute arbitrary documentation JavaScript to discover
 Actual operations execute only as planned against disposable test databases, with timeouts,
 controlled collections/topology, and capability-specific requirements.
 
+The first step 3 slice supplies the standalone BSON comparator and controlled compatibility
+probes. Its exact defaults, path policies and remaining migration gate are documented in
+[the comparison contract](operator-audits-bson-comparison.md). It does not replace core assertions
+or attest behavior coverage until scenario execution and migration are verified.
+
 ### Descriptive example names and backporting existing tests
 
 Test methods and data directories must use legal identifiers synthesized from the example's
