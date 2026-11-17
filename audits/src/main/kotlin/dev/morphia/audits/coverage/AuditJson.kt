@@ -17,6 +17,7 @@ import dev.morphia.audits.documents.DocumentReport
 import dev.morphia.audits.naming.ExampleNameRegistry
 import dev.morphia.audits.naming.NameProposal
 import dev.morphia.audits.naming.NamingRequest
+import dev.morphia.audits.shell.ShellProgramRequest
 import dev.morphia.audits.sources.GitSourceManifest
 import dev.morphia.audits.sources.GitSourceRequest
 import dev.morphia.audits.sources.SourceAcquisitionReport
@@ -60,6 +61,9 @@ object AuditJson {
                     .digest(write(value).toByteArray(Charsets.UTF_8))
             )
 
+    fun programRequest(json: String): ShellProgramRequest =
+        read(json, ShellProgramRequest::class.java)
+
     fun catalog(json: String): CapabilityCatalog = read(json, CapabilityCatalog::class.java)
 
     fun plan(json: String): CoveragePlan = read(json, CoveragePlan::class.java)
@@ -99,6 +103,15 @@ object AuditJson {
                 tree.path("schemaVersion").intValue() == 1
         ) {
             "Expected explicit schemaVersion 1 for ${type.simpleName}"
+        }
+        if (type == ShellProgramRequest::class.java) {
+            require(
+                tree.has("resultOrder") &&
+                    tree.path("blocks").isArray &&
+                    tree.path("blocks").all { it.isObject && it.has("format") }
+            ) {
+                "Program requests require explicit resultOrder and block format"
+            }
         }
         if (type == ApiInventory::class.java) {
             val parser = tree.path("parser")

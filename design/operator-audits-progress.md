@@ -1,10 +1,10 @@
 # Operator audit implementation progress
 
-Current branch: `audits-shell-semantics`; PR base: `audits-bson-comparison` (#4519).
+Current branch: `audits-scenario-programs`; PR base: `audits-shell-semantics` (#4520).
 Stack (PR head branches): #4512 `audits-pipeline-design` → #4513 `audits-source-inventory` →
 #4514 `audits-coverage-contracts` → #4515 `audits-example-identities` → #4516 `audits-pinned-sources` →
 #4517 `audits-snooty-adapter` → #4518 `audits-capability-normalization` →
-#4519 `audits-bson-comparison` → shell semantics (in progress).
+#4519 `audits-bson-comparison` → #4520 `audits-shell-semantics` → scenario programs (in progress).
 Each PR targets its predecessor; #4512 targets `master`.
 Use `git worktree list` to locate the checkout on this machine.
 
@@ -984,3 +984,110 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
 - Next slice: complete scenario normalization (ordered setup/actions, explicit dependencies,
   multi-collection/index/query/update/pipeline forms, expected results/errors and source grouping).
   Use the persisted names and strict comparator; do not silently reshape legacy document streams.
+
+## Ordered scenario programs start (2026-11-16)
+
+- #4520 published at `8dd1ef154f7fff04a24ceeaca2c407e56e31c8c1`. All exact-head checks passed:
+  OfflineTests 1m25s, ParserTests 2m11s, CodeAudits 2m10s, Build 6m04s, Critter 7m10s.
+  Three local reviews completed clean; remote review requested but no comments/reviews/requests
+  returned (Copilot quota unavailable). No merges performed or authorized.
+- New worktree/branch: `~/dev/worktrees/audits-scenario-programs` / `audits-scenario-programs`,
+  based on #4520. Literal implementation and its 215 tests are committed on the parent.
+- Next slice: typed ordered program model, explicit source units/block roles, pure variable
+  bindings/dependency provenance, collection aliases, setup inserts/indexes and find/aggregate/
+  update operations. Preserve unsupported code and prevent any partial program from becoming
+  executable coverage. Documentation grouping/result streams/naming integration still need work.
+- Important design constraint: a JS primitive number is not the same as an explicit BSON Int32/
+  Double/Long constructor object. Do not cache a binding's serialized BSON value and then reuse
+  it as a constructor argument. Retain the pure initializer AST and captured bindings, re-lower
+  with an explicit storage/initializer/constructor-argument mode, and record dependencies.
+  Constructor shadowing, later assignments and forward references require explicit handling.
+- Parser spans use a source-unit prefix offset (0 for programs, 1 for literal envelopes).
+  Continue omitting invalid wrapper/unary hints; never infer exact spans by text scanning.
+- This was the initial branch checkpoint; implementation progress is recorded below. Commits/push
+  remain authorized, but complete tests/reviews before publication. Frozen core data remains preserved.
+
+
+## Ordered scenario programs implementation checkpoint (2026-11-17)
+
+- Uncommitted implementation on `audits-scenario-programs`, based on green #4520. No new PR yet.
+- Added bounded ordered-program normalization with explicit source roles/formats and shell dialect,
+  captured pure initializer ASTs, binding/dependency provenance, namespace aliases, typed inserts,
+  indexes, finds/cursor modifiers, aggregation and updates, explicit expected-result/error ownership.
+  Failures preserve raw sources and diagnostics but discard all executable commands/expectations.
+- Shared literal lowerer now resolves captured bindings separately in storage/initializer/constructor
+  argument contexts. BSON snapshots retain exact bytes/type/key order and decode fresh copies.
+  Legacy fixture documents use two declared BSON-reader framing grammars without brace counting,
+  source sanitization or inferred JavaScript semantics. No source/test-data mutations or execution.
+- Added strict source-request decoding and a read-only JSON CLI. Snapshot reports are write-only;
+  no untrusted encoded-BSON input reader or arbitrary operation-class deserialization is accepted.
+- Verified pinned mongosh API names and reserved database members. Cursor `projection` is supported;
+  `toArray` is terminal. Legacy insert retains document-versus-batch intent. Ambiguous result owners,
+  even a mixed write/read pair, require an explicit selector. Private `_bsontype` dispatch is blocked.
+- Latest Critter-configured audit run passes 238 tests, two optional native integrations skipped;
+  log `/tmp/morphia-program-critter.log`. Includes CLI exit/input preservation, snapshot isolation,
+  literal regressions and ordered-program tests. Reflection/final formatting/graph/corpus checks pending.
+- Still pending before publication: real-corpus bounded probes, design/README and representative
+  fixtures, independent local review rounds and fixes. Automatic docs source grouping/identity
+  reconciliation, actual legacy-name migration and behavior attestations remain later slices.
+
+## Ordered program probe and review preparation
+
+- Real-input exploratory replay completed: 4,798 blocks, zero unexpected exceptions. Under an
+  explicit MONGOSH assumption and one-action-per-block framing, 1,043/3,130 documentation blocks,
+  140/1,660 legacy files and 4/8 deliberate probes normalized. These are structural measurements,
+  not source language attribution, grouped scenarios or approved migration coverage.
+- Explicit legacy document format accepts 1,484/1,660 frozen fixture files without brace counting
+  or rewriting. Remaining inputs stay unsupported. Scratch helper `/tmp/MorphiaProgramProbe.java`,
+  results `/tmp/morphia-program-probe.tsv`; input identities match the parent shell-probe receipt.
+- Added the program design/README and a synthetic multi-collection JSON request fixture. The CLI
+  accepts requests only and emits write-only snapshot reports. Added a regression that unsupported
+  programs retain every validated raw source block, including those after the rejected block.
+- Final formatting and both requested mapper configurations are next, then independent review.
+  Source grouping, actual legacy semantic assessment and descriptive-name migration remain pending.
+
+
+## Ordered program local review round 1 resolutions
+
+- Independent review found five valid defects, all reproduced and addressed. Expected shell output
+  now has its own mode: displayed whole numbers in Int32 range cannot prove Int32 versus Double,
+  so they remain unsupported rather than borrowing input serialization defaults. Undefined is
+  likewise unresolved. Typed source constructors/declared reviewed legacy data remain available;
+  grouping must never inject such evidence. Added both-shell-profile and typed/fractional cases.
+- Malformed ObjectId/base64 legacy constructors now produce unsupported parser verdicts instead
+  of escaping as IllegalArgumentException. Pinned mongosh namespace predicates are enforced for
+  shell and declared legacy namespaces. Aggregate explain is rejected pending a separate model.
+- JSON requests must explicitly provide resultOrder and every block format, even though the
+  in-process Kotlin API retains convenience defaults. Added missing-field transport regressions.
+- Review validated captured binding scopes, primitive/constructor re-lowering, insert-copy semantics,
+  cursor ordering/materialization, ownership, all-or-nothing failure and bounded snapshots/framing.
+  Complete findings: `/tmp/morphia-program-claude-1.log`; upstream probes `/tmp/review-probe/`.
+- Both initial configurations passed 240 tests; post-fix verification/review round 2 still pending.
+  Copilot CLI availability was attempted and returned monthly quota exhausted.
+
+## Ordered program post-review verification
+
+- Corrected suite passes 244 tests with Critter (two optional native integrations skipped).
+  Added CLI regression for malformed legacy constructors, requiring exit 3 and empty stderr.
+  Reflection and resumed independent review round 2 are running; source is frozen for review.
+- Final 4,798-input replay reproduced the initial counts and zero unexpected exceptions after the
+  fixes: `/tmp/morphia-program-final-probe.tsv`. No acceptance/migration claim derives from it.
+- Root formatting passed after fixes. Program design now records display-type uncertainty, pinned
+  namespace validity, separate explain semantics and mandatory JSON transport decisions.
+
+## Ordered program final local verification
+
+- Review round 2 is clean: all five verified findings fixed, no new actionable issues. Independent
+  Java 17 probes covered both failure and typed/unambiguous success paths, namespace names, explain,
+  transport omissions and retained sources. Full summary `/tmp/morphia-program-claude-2.log` (the reviewer could write only its plan file).
+- Final Critter and reflection runs each pass 244 audit tests with two optional native-parser
+  integrations skipped locally. Logs `/tmp/morphia-program-{critter,reflection}.log`.
+- Formatting, graph refresh and protected-path/corpus checks complete before commit. No core data,
+  test names, locks or accepted catalogs are changed. Internal audit design requires no product
+  documentation changes in the separate morphia-docs repository.
+- Copilot CLI unavailable due monthly quota; request remote review and inspect feedback after
+  publication. The next slice starts only after exact-head CI and available review feedback pass.
+- Remaining next slice: group owned native documentation blocks using explicit language/tab and
+  source roles; preserve all setup/include/snippet dependencies; distinguish display uncertainty;
+  reconcile persisted descriptive identities. Then assess/migrate the frozen legacy corpus before
+  replacing its ordinal names and lock-based generation. No merges authorized for this stack.

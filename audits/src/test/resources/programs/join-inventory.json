@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "dialect": "MONGOSH",
+  "resultOrder": "ORDERED",
+  "blocks": [
+    {
+      "id": "seedOrders",
+      "role": "SETUP",
+      "format": "SHELL",
+      "namespace": null,
+      "expectedFor": null,
+      "expectedError": null,
+      "source": "const orders = db.orders; orders.insertMany([{_id:1,item:'almonds',quantity:2}]); db.inventory.insertOne({_id:10,item:'almonds',stock:20}); orders.createIndex({item:1});"
+    },
+    {
+      "id": "joinInventory",
+      "role": "ACTION",
+      "format": "SHELL",
+      "namespace": null,
+      "expectedFor": null,
+      "expectedError": null,
+      "source": "const pipeline = [{$lookup:{from:'inventory',localField:'item',foreignField:'item',as:'matches'}},{$project:{_id:0,item:1,'matches.stock':1}}]; orders.aggregate(pipeline).toArray();"
+    },
+    {
+      "id": "publishedResult",
+      "role": "EXPECTED",
+      "format": "SHELL",
+      "namespace": null,
+      "expectedFor": {
+        "block": "joinInventory",
+        "command": 0
+      },
+      "expectedError": null,
+      "source": "[{item:'almonds',matches:[{stock:NumberInt(20)}]}]"
+    }
+  ]
+}

@@ -4,8 +4,9 @@ This module is being rebuilt around the [operator audit design](../design/mongod
 The current milestones provide offline regression tests, a read-only corpus inventory,
 compiler-resolved public API metadata, artifact-based capability comparison, and descriptive
 example identity proposals, pinned docs acquisition, and an offline structured document
-adapter and evidence-backed capability discovery. Scenario semantics, existing-test migration,
-executable generation and the `gh` publisher remain planned.
+adapter and evidence-backed capability discovery. Strict BSON comparison, shell values and declared ordered scenario programs are now available.
+Automatic documentation grouping, existing-test migration, executable generation and the `gh`
+publisher remain planned.
 
 Run the tests from the repository root:
 
@@ -473,3 +474,33 @@ The [literal contract and parser decision](../design/operator-audits-shell-liter
 measured compatibility, limits and the remaining ordered-scenario integration. The optional
 [parser comparison probe](probes/shell/README.md) accepts explicitly acquired artifacts; ordinary
 Maven builds need no Node runtime or upstream documentation checkout.
+
+
+## Declared ordered scenario programs
+
+The [program design](../design/operator-audits-programs.md) describes the closed AST grammar,
+source roles, shell dialects and expected-result ownership. `ShellPrograms.normalize` is pure:
+it preserves complete validated source blocks and produces typed, bounded commands without
+running JavaScript, contacting MongoDB or writing fixtures. Unsupported input yields no partial
+commands or expectations. `NORMALIZED` is a structural result, not executable coverage.
+
+The JSON request names every block's role and format explicitly. `SHELL` uses the pinned Rhino
+AST and explicit shell dialect. `LEGACY_DOCUMENTS` uses the maintained BSON reader as a declared
+fixture format; it does not infer how MongoDB shell code would serialize values. Legacy setup
+and pipeline fragments additionally require their logical namespace. Multiple action commands
+require an explicit `expectedFor` owner. Expected errors require source-backed metadata. Displayed whole numbers cannot prove Int32
+versus Double; ambiguous expected values remain unsupported until typed evidence is supplied.
+
+After compiling the module, normalize the synthetic multi-collection fixture:
+
+```sh
+./mvnw -q -Daudits -pl audits exec:java \
+  -Daudits.mainClass=dev.morphia.audits.shell.ProgramsMainKt \
+  -Dexec.args="audits/src/test/resources/programs/join-inventory.json"
+```
+
+Output is candidate JSON on stdout; exit status is 0 for `NORMALIZED`, 3 for `UNSUPPORTED` and
+2 for `INVALID`. BSON snapshots contain exact encoded bytes, preserving numeric types and key
+order. Reports are write-only: regenerate from the source request rather than deserializing
+encoded BSON or operation classes. There is no document-grouping heuristic, baseline promotion,
+server execution or accepted fixture migration in this command.
