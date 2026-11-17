@@ -1091,3 +1091,216 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   source roles; preserve all setup/include/snippet dependencies; distinguish display uncertainty;
   reconcile persisted descriptive identities. Then assess/migrate the frozen legacy corpus before
   replacing its ordinal names and lock-based generation. No merges authorized for this stack.
+
+## Ordered program publication checkpoint
+
+- PR #4521: https://github.com/MorphiaOrg/morphia/pull/4521
+  branch `audits-scenario-programs`, base `audits-shell-semantics`, published head
+  `5c3ee24502ff2e9a080e98b2dc1b5414e479a20c`.
+- Exact-head OfflineTests, ParserTests, CodeAudits, Build and Critter CI are running. Remote Copilot
+  review requested; no comments/reviews/pending requests returned on initial inspection.
+- This checkpoint is intentionally uncommitted while CI runs; do not reset the published head just
+  to record status. Carry the checkpoint into the next child worktree after the gate is green.
+- No next implementation branch has started yet. Continue grouping/identity work after exact-head
+  CI and available review feedback pass; no merge is required or authorized.
+
+## Native scenario extraction starts (2026-11-17)
+
+- #4521 is green at `5c3ee24502ff2e9a080e98b2dc1b5414e479a20c`: all five exact-head checks
+  passed, including the two native parser integrations in CI. Local review round 2 clean; remote
+  review requested, no comments/reviews/pending requests. Proof `/tmp/morphia-program-pr-final-status.json`.
+- New child branch/worktree `audits-scenario-extraction`, based on #4521. Carried the publication
+  checkpoint here and restored the parent journal after saving `/tmp/morphia-program-published-progress.md`.
+- Next implementation: explicit structured documentation block/source ownership and grouping,
+  language/tab roles, dependencies and provenance, program normalization integration and persisted
+  descriptive identity proposals. Untyped display output must never be relabeled as legacy data
+  or given constructors to bypass ambiguity. No next-slice implementation or review started yet.
+- Ten published PRs now (#4512–#4521); expected total 16–20, depending on legacy migration scope.
+  Existing tests/data/locks/names and accepted catalogs remain untouched. No merges performed.
+
+## Native extraction investigation checkpoint
+
+- Examined owned DocumentContracts/DocumentParsing, discovery source evidence/dependency ownership,
+  naming contracts and the plan's scenario/migration gates. No next-slice production code written yet.
+- Pinned native median has an explicit io-code-block containing input/output children with snippet
+  references; setWindowFields has nine such pairs inside language tabs and descriptive sections.
+  Lookup retains both syntax examples and multilingual example sections. Use native parent ownership,
+  not nearest-block pairing. Preserve unknown/foreign blocks and malformed language labels.
+- Important: code node origins for external io inputs/outputs can identify the hosting RST directive;
+  the referenced snippet path and dependency receipt supply separate provenance. Retain both, including
+  selection/range options and include chains, rather than treating the reported page line as the
+  physical snippet body location. Existing report is `/tmp/morphia-audits-discovery-documents.json`.
+- Shell output numeric ambiguity is present in real median/window results, not only synthetic probes.
+  Do not reinterpret these outputs as LEGACY_DOCUMENTS or synthesize constructors. Structural pairing,
+  semantic normalization, dependency completeness, naming and execution coverage remain separate states.
+- Avoid creating an inventory-only PR merely to increase the stack: next slice should connect native
+  source ownership/grouping to meaningful scenario/name proposals, with explicit unsupported states.
+  Actual migration, typed execution/generation and publishing remain unfinished.
+
+## Native scenario extraction implementation checkpoint
+
+- Uncommitted production code now exists under `audits/.../scenarios`: explicit reviewed page/section,
+  language/tab and count policies; bounded owned-AST traversal; native io input/output ownership;
+  separate hosting-directive and snippet resource/dependency provenance; pure program normalization;
+  and NamingScenario construction plus a guard against partial-scope name reconciliation.
+- Unknown/foreign variants remain explicit and are never assumed equivalent by matching titles.
+  Selected standalone code remains visible; reference/unknown blocks outside an io group block
+  completeness instead of being guessed as setup or a neighboring output. JSON output is not
+  silently treated as shell/legacy data. Program failure and source-grouping completeness differ.
+- Initial compile and existing 244 tests passed. New ScenarioExtractionTest regressions cover typed
+  io/name proposals, display ambiguity, snippet-derived generic titles, persisted names through
+  rearrangement/title edits, unassigned setup, foreign tabs, count drops, duplicate groups, output
+  language uncertainty, argument edges, input pins and budgets. Their first compile is in progress.
+- Log `/tmp/morphia-extraction-critter.log`. No local review, final formatting/graph/preservation
+  checks, docs or CLI yet. Explicit-label association and additional source-health checks still need
+  attention before considering this slice complete. No commit or new PR on this branch yet.
+
+## Native scenario extraction verification and probe
+
+- 262 audit tests pass with both Critter and reflection, including 18 new extraction regressions;
+  two optional native integrations skip locally. Root formatting and optional graph refresh passed.
+  Logs `/tmp/morphia-extraction-{critter,reflection,spotless,graph}.log`.
+- Native source health now preserves explicit diagnostic dispositions. Confirmed cross-reference
+  failures and diagnostics owned exclusively by declared foreign tabs do not invalidate a healthy
+  reference scope. Unknown/mixed errors remain blocking. Added isolation/mixed-ownership tests.
+- The native three-page probe finds median 1, lookup 7 and window 8 reference groups, plus two foreign
+  groups. Window's ninth IO group is foreign; corrected this exploratory reference-count policy.
+  All 16 reference naming inputs are structurally complete. Fourteen programs remain unsupported
+  solely for EXPECTED_TYPE_AMBIGUOUS; two normalize. No server execution or migrated coverage claim.
+- Same-heading concise/verbose lookup examples are distinguished by authored snippet names, with
+  the original section title retained. Native name proposal now resolves all 16 without ordinals.
+  `audits/probes/scenarios/` records the exploratory policy, provenance and reproducibility contract.
+- Coherent native inputs are unchanged. The catalog pin is recomputed canonically through
+  AuditJson.hash, separately from its transport-file hash. Final probe hashes/receipt are pending
+  the canonical-pin replay; first independent local review has not started yet. Source is frozen.
+- Next semantics work should model the numeric uncertainty of published output explicitly (while
+  retaining strict typed reference-versus-DSL comparison), rather than manually editing 14 outputs.
+  Legacy section/setup grouping, corpus migration and full generation remain pending too.
+
+
+## Native canonical replay receipt
+
+- Canonical catalog pin `61c0879656464120f041fc857467efe06e5381ad28427f3f1e8726baf6c9ac09`;
+  transport-file pin `8d805200d1eb6d94797f3330babd6b7b4cce2b96986c0f2b24f37e4cbe044928`.
+- Final two extraction runs are byte-identical: 1,100,933 bytes, SHA
+  `f8853465838381ac477c4a2860627720012005e6f0fdc7ad0c5eba7e2a7ce384`.
+  Report/repeat `/tmp/morphia-scenario-probe-review{,-repeat}.json`, name proposal
+  `/tmp/morphia-scenario-probe-names-review.json` (READY, 16 resolutions). Probe receipt updated.
+- Independent local review round 1 starts now; Copilot availability will be checked. No production
+  code changes during the review. Commit/push remain authorized after fixes and verification.
+
+
+## Native extraction review round 1 resolutions in progress
+
+- Independent review reproduced the exact native receipt and found nine actionable concerns.
+  Full record `/tmp/morphia-extraction-claude-1.log` and reviewer plan file outside the worktree.
+- Added streaming serialized-size enforcement (including repeated ancestor metadata) and stdout
+  failure detection; directive allowlists; data/display-format rejection as foreign languages;
+  true leaf section-label scope; and label identity validation after label association.
+- Scenario fingerprints are deferred until semantic setup/dataset/constraint closure is known.
+  Page-wide foreign/unrelated assets must not masquerade as that closure. Program hashes remain.
+  Authored references supply display names, while verified canonical resources remain provenance.
+- Diagnostic traversal/paragraph work shares the extraction budget, with cached raw lines.
+  The full-input node/depth limit is deliberate before whole-report origin validation; documented
+  batching/API limit choices instead of treating unselected nodes as unbounded trusted input.
+- An additional verified finding: positional line ranges cannot be durable snippet IDs. Physical
+  verification and authored marker identity are now separate; formatting transformations do not
+  define identity. Added targeted regressions for these cases and verified test bundle manifests.
+- Existing 262 tests passed after production fixes. Expanded regression compile/run in progress;
+  final native replay/receipt, both configurations and follow-up independent review remain pending.
+
+
+## Native review regression verification
+
+- 269 audit tests passed after the Unicode writer-boundary correction. Added an authored-symlink
+  title test; its fixture initially lacked the explicit symlink dependency root required by the
+  verified bundle contract. The fixture now declares that root; both mapper configurations rerun.
+- Streaming size verification now uses the same character generator and UTF-8 encoding as the
+  emitted artifact, including supplementary Unicode. The stdout failure test uses a fully verified
+  synthetic bundle and checks `/dev/full` where available. No source authenticity claim is made
+  for the synthetic AST fixtures.
+- Review findings 1–7 and 9 addressed; 8's traversal/paragraph costs now charged/cached. Its
+  full-artifact node-bound observation is an intentional input-validation constraint, documented
+  with selected-page batching and explicit API limits. No unsupported claim of selected-only
+  validation remains. The positional-identity finding is also addressed.
+- Final native replay/receipt and independent follow-up review are still required before commit.
+
+## Native extractor post-fix state
+
+- The full expanded suite passed 270 tests in both configurations (two optional native integrations
+  skipped locally). A final factual-evidence cleanup is being reverified: null/positional identity
+  is never printed as a verified source identity; physical snippet evidence remains separate.
+- All nine first-review items have concrete resolutions. The complete-input AST limit remains
+  intentional and documented; diagnostic work is now charged and raw paragraphs cached. Reports
+  have a 64 MiB streaming serialization cap and failed stdout writes return exit 2.
+- Normalization-independent naming behavior is preserved. Positional ranges have no STABLE_ID;
+  authored markers do. Labels associate before identity validation, and broad sections cannot give
+  one child their whole-section label. Unknown directives and data-format labels remain unresolved.
+- Final native replay/receipt update and resumed review round 2 are next. Current source is frozen;
+  all changes remain uncommitted on audits-scenario-extraction, based on green #4521. No new PR yet.
+
+## Native replay guard caught a default-namespace regression
+
+- The stricter directive allowlist initially omitted Snooty's empty-string default namespace (unit
+  fixtures had used null). Native replay returned PARTIAL with count-drop/unknown-language diagnostics,
+  so no naming request or accepted artifact was promoted. Default namespace support now explicitly
+  includes empty string, with a native-shaped regression. Unknown namespaces remain unresolved.
+- Current combined command reruns Critter, reflection and the native replay sequentially to avoid
+  reading changing compiled classes. Log paths remain `/tmp/morphia-extraction-{critter,reflection}.log`;
+  coordinator `/tmp/morphia-extraction-native-replay.py`; final artifacts `/tmp/morphia-scenario-final-*`.
+- After it passes: copy `/tmp/morphia-scenario-final-receipt.json` to the checked-in probe receipt,
+  refresh graph, then resume local review session `0979b5cb-d047-4a4d-b26f-59bef55879f7` for round 2.
+  Source remains uncommitted; no #4522/next PR yet. Do not treat earlier replay hashes as current.
+
+## Native post-review final replay
+
+- 271 audit tests pass in each mapper configuration, two optional native integrations skipped.
+  `/tmp/morphia-extraction-{critter,reflection}.log` contain the final runs.
+- Native default-namespace regression is fixed. Two final extraction runs are byte-identical:
+  1,101,995 bytes, SHA `4bd4b94743ab5773429f06ece5102fa2be1d181810b6efbf2c49ef33918cf659`.
+  Grouping READY: 16 reference plus 2 foreign groups. Name proposal READY: 16 resolutions.
+  Program states remain 2 NORMALIZED and 14 EXPECTED_TYPE_AMBIGUOUS, with no fabricated types.
+- Receipt copied from `/tmp/morphia-scenario-final-receipt.json`; actual report/repeat/names are
+  `/tmp/morphia-scenario-final-{report,repeat,names}.json`. No accepted catalog/name registry changes.
+- First-review concerns preserved in `/tmp/morphia-extraction-review1-concerns.md` before resuming
+  the reviewer. Follow-up review round 2 starts now; source remains frozen and uncommitted.
+
+## Native extraction final review round
+
+- Round 2 verified every prior fix and the exact native receipt. It found one remaining low issue:
+  case-sensitive/data-format foreign labels. Replaced the denylist with a known programming-language
+  allowlist, validated with Locale.ROOT while preserving explicit spelling for actual selection.
+  Regression rejects JSON/Json/XML/CSV/MIME formats and unknown labels; known Python/C#/SQL remain valid.
+- 272 audit tests now pass in both configurations (two optional native integrations skipped).
+  Final native replay remains READY with 16 names, 16 reference plus 2 foreign groups, and byte
+  identity across repeats. Receipt refreshed; it now also records AuditJson's source digest.
+- Third/final independent local review starts now, focused on the last policy fix and final receipt.
+  Source is frozen. No commit or PR on this branch yet; publication remains authorized after review.
+
+## Final-round command-shell finding
+
+- Round 3 verified the language allowlist and current receipt, then identified one additional low
+  issue: sh/bash/PowerShell snippets may be setup or mongosh invocation, so they cannot be silently
+  declared foreign examples. Removed those labels and added rejection plus concrete mongoimport
+  setup preservation regressions. No other actionable findings remained in the third review.
+- Completing the third round with targeted verification of this small correction, not starting
+  a fourth broad review. The combined command reruns both configurations and the native receipt.
+  Source stays frozen afterward. Publication remains pending this verification and final checks.
+
+## Native extraction final local gate
+
+- Three broad review rounds completed. The sole remaining round-3 command-shell finding is fixed
+  and its exact correction confirmed by the reviewer (`/tmp/morphia-extraction-claude-3-verification.log`).
+  All prior findings resolved; intentional fingerprint/global-input-bound decisions documented.
+- Final suites: 272 tests pass with Critter and reflection, two optional native integrations skipped.
+  Native replay remains byte-identical at 1,101,995 bytes / SHA
+  `4bd4b94743ab5773429f06ece5102fa2be1d181810b6efbf2c49ef33918cf659`;
+  16 reference + 2 foreign groups, 16 descriptive names, 2 normalized programs and 14 explicit
+  published-number type ambiguities. Receipt includes all five changed production source hashes.
+- Final root formatting/graph refresh, protected-path checks and byte-identical legacy corpus pass.
+  No core changes, names/data/locks changes, accepted catalog or registry promotion, or issue writes.
+- Copilot CLI remains unavailable due monthly quota; request remote review after publication,
+  inspect exact-head CI/feedback, then continue to the next stacked slice without a merge.
+- Next implementation target: model published numeric uncertainty explicitly so common outputs
+  become automated without fabricated BSON types; strict typed reference-versus-DSL comparison
+  remains separate. Then legacy setup/section grouping and the actual descriptive-name backport.
