@@ -20,7 +20,7 @@ An owned parse is candidate evidence tied to those inputs; checking its input pi
 independently authenticate every parsed byte. Retain the parser artifact and source bundle for
 reproduction/review. This command does not promote or hydrate an accepted executable artifact.
 
-Only explicit native IO ownership assigns action/expected roles automatically. The group retains
+Under the default policy, only explicit native IO ownership assigns action/expected roles automatically. The group retains
 raw code, attributes, ancestor containers, heading titles/anchors, direct labels, include origins
 and snippet references/range options. Explicit std labels bind to their authored following sibling.
 A section label is identity evidence only when that leaf section owns one group. Broader labels
@@ -43,7 +43,8 @@ nested IO owners and ambiguous source roles remain unresolved. Explicit foreign 
 their blocks and provenance without creating executable reference scenarios or competing names.
 Standalone selected code is retained too. Reference/unknown standalone blocks block completeness:
 setup and earlier variables must be grouped deliberately rather than silently omitted. Non-IO
-legacy sections therefore remain incomplete until explicit grouping/context support is added.
+legacy sections remain incomplete under the default policy; the opt-in section contract below
+provides reviewed grouping and authored context.
 
 Structural grouping does not prove that setup or a sample dataset is available, that constraints
 are satisfied, or that a scenario can execute. The complete source dependency list remains in the
@@ -114,11 +115,18 @@ parser errors versus cross-reference errors, independent healthy naming scopes, 
 count/section drops, dependency failures, argument edges, input pins and resource bounds. The
 progress journal records native pinned-document probes and local review outcomes.
 
-Remaining work includes explicit ordered section/setup grouping for legacy layouts, semantic
-language-equivalence decisions, dataset/constraint contracts, actual frozen-corpus comparison and
+The opt-in section/setup extension below handles reviewed legacy layouts. Remaining work includes
+additional layout contracts, semantic language-equivalence decisions, dataset/constraint contracts, actual frozen-corpus comparison and
 descriptive-name backport, curated repairs, generation and execution. Existing core tests, fixtures,
 ordinal names and locks remain unchanged in this slice.
 
 The native-io:2 normalizer selects the explicit expected-only SHELL_RESULTS grammar for owned
 reference outputs. It handles printed document streams without reshaping their source or applying
 typed legacy-reader defaults. See [printed results](operator-audits-shell-results.md).
+
+## Opt-in standalone sections
+
+`native-sections:1` adds reviewed direct section/tab ownership and declared shared setup. Default
+plans retain the native IO policy described above. See
+[section assembly](operator-audits-section-assembly.md) for the commands-then-result and source-only
+contracts, authored page/tab name recovery, setup provenance and independent normalization status.

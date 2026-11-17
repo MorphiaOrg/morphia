@@ -32,6 +32,27 @@ object ShellPrograms {
         return result
     }
 
+    /** Classification only: accepts declaration/setup-only input, never an executable artifact. */
+    internal fun inspect(request: ShellProgramRequest): ProgramInspection {
+        require(
+            request.blocks.all { it.role == ProgramRole.ACTION && it.format == ProgramFormat.SHELL }
+        )
+        val result =
+            Processor(request.copy(blocks = request.blocks.toList()), ShellProgramLimits(), false)
+                .run()
+        return ProgramInspection(
+            result.state,
+            result.commands.map { it.id.block to it.operation.kind },
+            result.problems,
+        )
+    }
+
+    internal data class ProgramInspection(
+        val state: ShellLiteralState,
+        val operations: List<Pair<String, ShellOperationKind>>,
+        val problems: List<ProgramProblem>,
+    )
+
     private class Stop(
         val code: String,
         message: String,
@@ -81,7 +102,11 @@ object ShellPrograms {
         val modelVersion: Int = 2,
     )
 
-    private class Processor(val request: ShellProgramRequest, val limits: ShellProgramLimits) {
+    private class Processor(
+        val request: ShellProgramRequest,
+        val limits: ShellProgramLimits,
+        val requireAction: Boolean = true,
+    ) {
         val sources = mutableListOf<ProgramSource>()
         val records = mutableListOf<ProgramBinding>()
         val commands = mutableListOf<ShellCommand>()
@@ -123,7 +148,7 @@ object ShellPrograms {
                         }
                     }
                 }
-                if (commands.none { it.role == ProgramRole.ACTION })
+                if (requireAction && commands.none { it.role == ProgramRole.ACTION })
                     stop("NO_ACTION", "No supported action was provided")
                 val expectations = resolveExpectations()
                 val meaning =

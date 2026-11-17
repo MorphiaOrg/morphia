@@ -26,7 +26,22 @@ data class ScenarioPageRule(
     val foreignTabs: List<String>,
     val dialect: ShellDialect,
     val resultOrder: ResultOrder,
+    val sectionAssembly: SectionAssemblyPolicy? = null,
 )
+
+/** Reviewed ownership contract; absent means native IO ownership only. */
+data class SectionAssemblyPolicy(
+    val layout: SectionLayout,
+    val sharedSetupSections: List<String> = emptyList(),
+    val scenarioTabs: List<String> = emptyList(),
+    /** Explicit legacy highlighting aliases, still parsed with the closed shell grammar. */
+    val additionalShellLanguages: List<String> = emptyList(),
+)
+
+enum class SectionLayout {
+    SOURCE_ONLY,
+    COMMANDS_THEN_RESULT,
+}
 
 data class ScenarioSection(
     val title: String,
@@ -116,6 +131,8 @@ data class ExtractedScenarioPage(
     val sourceDiagnostics: List<ScenarioSourceDiagnostic>,
     /** Completeness of selected source grouping; never behavioral or serialization coverage. */
     val namingComplete: Boolean,
+    /** Declared setup is retained even if all consumers disappear. */
+    val sharedSetup: List<ScenarioCode> = emptyList(),
 )
 
 enum class ScenarioExtractionState {
