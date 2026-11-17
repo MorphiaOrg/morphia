@@ -63,6 +63,9 @@ jobs:
       - name: Run offline structured parser regressions
         run: audits/parser/.venv/bin/python -I -B audits/parser/tests/test_adapter.py
 
+      - name: Run offline probe contract regressions
+        run: python -B -m unittest discover -s audits/probes/shell-results -p 'test_*.py'
+
       - name: Verify coordinator integration with both mappers
         run: |
           ./mvnw -B -ntp -Daudits -pl audits test -Dtest=DocumentParsingTest,CatalogDiscoveryTest -Dmorphia.mapper=critter -Daudits.parser.python="$PWD/audits/parser/.venv/bin/python" -Daudits.parser.adapter="$PWD/audits/parser/adapter.py"

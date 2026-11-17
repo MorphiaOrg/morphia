@@ -8,6 +8,7 @@ import dev.morphia.audits.semantics.ResultOrder
 /** Formats are declared, never selected by retrying unrelated language parsers. */
 enum class ProgramFormat {
     SHELL,
+    SHELL_RESULTS,
     LEGACY_DOCUMENTS,
     TEXT,
 }

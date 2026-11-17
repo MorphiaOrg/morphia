@@ -55,12 +55,16 @@ internal class ShellValueLowering(
     val source: String,
     val dialect: ShellDialect,
     val limits: ShellLiteralLimits,
+    val spanOffsetsReliable: Boolean = true,
     val prefix: Int = 1,
     val bindings: ShellValueBindings = ShellValueBindings.EMPTY,
     val budget: ShellValueBudget = ShellValueBudget(limits.maximumNodes),
 ) {
 
     fun span(node: AstNode): ShellSpan? {
+        // Rhino 1.9.1 String-input cursor positions can undercount supplementary characters
+        // in comments/identifiers, while literal fast paths reset them. Omit uncertain hints.
+        if (!spanOffsetsReliable) return null
         // Rhino 1.9.1's UnaryExpression constructor discards operatorPosition;
         // even an in-range hint can omit a sign/comment. Do not publish it.
         if (node is UnaryExpression) return null

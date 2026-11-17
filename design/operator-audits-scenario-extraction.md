@@ -118,3 +118,7 @@ Remaining work includes explicit ordered section/setup grouping for legacy layou
 language-equivalence decisions, dataset/constraint contracts, actual frozen-corpus comparison and
 descriptive-name backport, curated repairs, generation and execution. Existing core tests, fixtures,
 ordinal names and locks remain unchanged in this slice.
+
+The native-io:2 normalizer selects the explicit expected-only SHELL_RESULTS grammar for owned
+reference outputs. It handles printed document streams without reshaping their source or applying
+typed legacy-reader defaults. See [printed results](operator-audits-shell-results.md).

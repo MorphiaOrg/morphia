@@ -485,11 +485,13 @@ running JavaScript, contacting MongoDB or writing fixtures. Unsupported input yi
 commands or expectations. `NORMALIZED` is a structural result, not executable coverage.
 
 The JSON request names every block's role and format explicitly. `SHELL` uses the pinned Rhino
-AST and explicit shell dialect. `LEGACY_DOCUMENTS` uses the maintained BSON reader as a declared
-fixture format; it does not infer how MongoDB shell code would serialize values. Legacy setup
-and pipeline fragments additionally require their logical namespace. Multiple action commands
-require an explicit `expectedFor` owner. Expected errors require source-backed metadata. Displayed whole numbers cannot prove Int32
-versus Double; ambiguous expected values remain unsupported until typed evidence is supplied.
+AST and explicit shell dialect. Expected-only `SHELL_RESULTS` handles printed document streams
+without rewriting them; see the [format design](../design/operator-audits-shell-results.md).
+`LEGACY_DOCUMENTS` uses the maintained BSON reader as a declared typed fixture format; it does not
+infer shell serialization. Legacy setup/pipeline fragments require their logical namespace.
+Multiple action commands require an explicit `expectedFor` owner. Expected errors require source-backed
+metadata. Published whole numbers retain explicit Int32/Double alternatives; unsupported display
+profiles remain visible failures. Typed reference-versus-DSL parity remains strict and independent.
 
 After compiling the module, normalize the synthetic multi-collection fixture:
 

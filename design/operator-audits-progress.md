@@ -1441,3 +1441,120 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
 - Next slice after available reviews and exact-head CI pass: legacy section/setup grouping, followed
   by actual descriptive-name backport and curated-repair migration. Later executable DSL generation,
   execution attestations, scheduled monitoring, the enabled separate gh publisher and cleanup remain.
+
+## Published expectations publication checkpoint
+
+- PR #4523: https://github.com/MorphiaOrg/morphia/pull/4523
+  branch `audits-published-expectations`, base `audits-scenario-extraction`, head
+  `2d7b5c942dfedc72f3257a8db9dec99b25ab0289`.
+- Twelve PRs are now published. All five exact-head checks are running: OfflineTests, Code Audits,
+  ParserTests, Build and Critter (AOT). Remote Copilot review requested; no reviews, comments or
+  pending requests appeared, consistent with its unavailable quota. Local final review is clean.
+- Keep the reviewed/published head fixed while checks run. This publication checkpoint is deliberately
+  uncommitted; carry it into the next child worktree after CI and available feedback pass, then restore
+  this parent journal only after saving a copy. No merges performed or authorized.
+
+## Legacy scenario grouping start (2026-11-17)
+
+- #4523 is green at `2d7b5c942dfedc72f3257a8db9dec99b25ab0289`: OfflineTests, ParserTests,
+  Code Audits, Build and Critter all pass. The conditional Dependabot automerge job is skipped.
+  All three local review rounds completed with a clean final round. Remote Copilot was requested
+  but quota remains unavailable; no comments, reviews or pending requests to address.
+- Exact-head proof `/tmp/morphia-published-pr-final-status.json`, inline feedback proof
+  `/tmp/morphia-published-pr-final-comments.json`. Twelve PRs published. No merges authorized/performed.
+- New branch/worktree `audits-legacy-scenarios`, based on #4523. Saved the parent's publication journal
+  to `/tmp/morphia-published-publication-progress.md`, copied it here, then restored only that parent
+  journal. Parent is clean. This next branch has no implementation/commit/PR yet.
+- Next scope: replace the old first-example data/index inheritance with provenance-backed native
+  section/setup grouping. Preserve ancestor-owned setup order and variables; never borrow from an
+  unrelated sibling or pair output by ordinal/proximity alone. Keep foreign/unknown variants and
+  ambiguity explicit; retain every original block. Reuse shared closed program normalization and
+  descriptive identity reconciliation, not the legacy destructive parser.
+- Existing inventory has 556 cases and 378 distinct display labels; 110 labels are only `main`.
+  Actual name backport therefore needs recovered native context or reviewed mappings, not blindly
+  sanitizing today's labels. Core coverage discovery/resource lookup and retained ordinal readers
+  must be updated before any real method/folder cutover. Do not change protected corpus bytes yet.
+- First implementation work remains: inspect representative owned AST/section shapes and define
+  explicit assembly policy/roles, then implement/test and capture a native replay. Final execution,
+  curations, registry promotion and issue publishing are still later milestones.
+
+## Legacy printed-result implementation checkpoint
+
+- Native inspection found a prerequisite for section assembly: `$abs` has real insert/aggregate
+  commands plus four newline-separated result documents. The old `main` label loses its useful
+  source context. Preserved owned blocks/metadata in `/tmp/morphia-abs-native-blocks.json` and the
+  selected-page projection `/tmp/morphia-legacy-selected-pages.json`; the original 350-page report
+  remains `/tmp/morphia-audits-discovery-documents.json` with the same source/input pins.
+- Implemented explicit expected-only SHELL_RESULTS framing, parser identity ordered-program:3;
+  output/meaning schemas stay 2. The maintained lexer finds boundaries, then the existing AST
+  lowerer validates every untouched fragment and retains published type uncertainty. No source/data
+  rewrites, namespace inference, automatic parser fallback or execution. Section assembly is next.
+- The adapter requires an isolated package bridge to pinned Rhino TokenStream. A real Unicode
+  regression exposed logical cursor undercounting in line comments: structural boundaries now use
+  verified physical UTF-16 cursor positions. New fragments with surrogate code units omit uncertain
+  AST hints; existing literal diagnostic behavior is preserved. Documented the tradeoff and classpath
+  scope in design/operator-audits-shell-results.md for independent review.
+- First 18 new framing tests plus the previous suite pass under Critter: 320 total, 2 optional skips.
+  Added a pinned raw-source $abs fixture/test; next run will include it. Reflection, native replay,
+  root formatting, graph refresh and independent reviews remain before commit/publication.
+- The rate-limit interruption rejected the earlier test-writing/build command before execution.
+  Resumed after reset; tests now exist. No review or implementation work was lost, no approval
+  check was bypassed. All current implementation is uncommitted on audits-legacy-scenarios.
+
+## Printed-result verification and first review gate
+
+- Explicit native IO output ownership now selects SHELL_RESULTS automatically; native-io:2 records
+  that policy revision without using encounter ordinals for names/identity. Ordinary SHELL requests
+  retain their format/diagnostic behavior. Standalone legacy section ownership is not implemented yet.
+- 323 audit tests pass with Critter and reflection (two optional native integrations skip). Root
+  formatting and graph refresh pass. Tests cover the raw $abs fixture, IO integration, Unicode,
+  constructors/type uncertainty, malformed tails, duplicate/order preservation and shared limits.
+  The formatting-character regression asserts rejection; lexer and framing can validly report
+  different syntax codes. The earlier over-specific assertion was corrected, not source behavior.
+- Native $abs replay retains 2 commands and 4 rows, repeats byte-identically at SHA
+  `5c93e8400bf9a0285bf99e4588356438e37bae424fe4adad970f4de5417a9c06`.
+  Source extraction honestly remains PARTIAL with 3 unassigned blocks; explicit reviewed roles are
+  matched by digest/provenance/text, not ordinal. Receipt audits/probes/shell-results/receipt.json.
+- The prior IO experiment remains 16 normalized references + 2 foreign groups, 16 byte-identical
+  descriptive names. Repeated report 1,259,384 bytes / SHA
+  `57cfd44777a4c8e0cb95167c76c10a2da1e4a0a9ca7031963ebc1fbe7eba982d`.
+  Receipt audits/probes/shell-results/native-io-receipt.json; the prior checkpoint is retained.
+- Shared probe provenance now hashes all audits source namespaces (including the lexer adapter),
+  ordered compiled classpath entries and build inputs. The native stream probe verifies those inputs
+  remain fixed through execution. Source/runtime identities remain distinct, not a source authenticity
+  claim for compiled code. Native artifacts /tmp/morphia-shell-results-probe and
+  /tmp/morphia-shell-results-io-probe; logs /tmp/morphia-legacy-{critter,reflection,native,io-native}.log.
+- Copilot quota check with valid read-only flags again reports monthly quota exceeded;
+  /tmp/morphia-legacy-copilot-1.log. Source and receipts freeze for the first available independent
+  review. No commit or PR yet on this branch. Preserve core corpus bytes until actual migration.
+
+## Printed-result review findings and final local gate
+
+- The first external CLI review wrote complete findings before its final response hit the weekly
+  limit. Saved notes /tmp/morphia-legacy-review1-concerns.md and interrupted output
+  /tmp/morphia-legacy-claude-interrupted-notes.md. Its adapter/physical-cursor analysis accepted the
+  pinned classpath design; this was input for corrections, not an approval of the final code.
+- Five substantive findings are fixed: HTML-like/hashbang comments can no longer hide rows/fields;
+  every outer gap is validated as whitespace/comma or a whitelisted lexer-owned comment (including
+  invisible format characters around comments); source selection is a strict bijection; format docs
+  are current; both probes emit schema 2 and verify runtime/source/file inputs before/after execution.
+- Two nits resolved: per-token sets are hoisted; lexer-contract drift deliberately aborts a batch
+  and is documented as an upgrade incompatibility. The informational existing ordinary-SHELL
+  supplementary-character AST-hint limitation is tracked separately; hints never establish identity
+  or rewrite authority. New printed fragments omit uncertain hints. No substantive finding rejected.
+- Added regression cases for hidden rows/fields, comment/trivia boundaries, and source-selection/input
+  mutation. Final suites: 325 tests with Critter and reflection, 2 optional integration skips each;
+  6 Python probe contract tests pass and are included in ParserTests CI. Root formatting/graph refresh
+  pass. The strict comparator, protected project paths, locks and legacy corpus remain unchanged;
+  exact corpus reproduction passes.
+- With both external CLIs quota-limited, a fresh independent review process verified the frozen
+  corrections (round 2). No actionable findings; it ran the six probe tests and 22 additional
+  compiled-runtime cases, and verified current source/runtime/artifact digests. Notes
+  /tmp/morphia-legacy-independent-review2.md. No further broad review round is needed.
+- Final schema-2 receipts retain the same report identities: native abs
+  5c93e8400bf9a0285bf99e4588356438e37bae424fe4adad970f4de5417a9c06 (2 commands / 4 rows),
+  native IO 57cfd44777a4c8e0cb95167c76c10a2da1e4a0a9ca7031963ebc1fbe7eba982d
+  (16 normalized references / 2 foreign groups / unchanged 16 names). No execution coverage claimed.
+- Publish stacked on #4523, request remote review, and inspect exact-head CI/feedback before the next
+  child. No merges authorized/performed. Next scope remains section/setup assembly and recovered
+  descriptive context for legacy names, followed by the actual method/folder cutover.

@@ -28,3 +28,8 @@ solely because printed whole numbers did not establish one BSON type. No source 
 expected-data files were invented. Descriptive naming proposals remain identical. The checked-in
 receipt records this pinned experiment; these counts are not a baseline for inferring absence from
 future sources, nor proof of setup/data closure, execution or reference-versus-DSL parity.
+
+Current coordinators emit receipt schema 2: all audits source namespaces, build inputs and the shared
+provenance helper are explicit. Runtime/source/file inputs are checked before and after execution.
+Older schema-1 receipts retain their historical checkpoint meaning; reruns on newer code should save
+a new receipt rather than replace an accepted experiment. Native probes require Python 3.11+.
