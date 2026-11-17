@@ -21,7 +21,7 @@ import org.mozilla.javascript.ast.*
  * Builds a canonical MQL command plan; it never executes a documentation program or database call.
  */
 object ShellPrograms {
-    const val PARSER = "rhino:1.9.1/ordered-program:2"
+    const val PARSER = "rhino:1.9.1/ordered-program:3"
 
     fun normalize(
         request: ShellProgramRequest,
@@ -294,6 +294,12 @@ object ShellPrograms {
                         "Error blocks need explicit text/error metadata",
                         invalid = true,
                     )
+                if (unit.format == ProgramFormat.SHELL_RESULTS && unit.role != ProgramRole.EXPECTED)
+                    stop(
+                        "RESULT_FORMAT",
+                        "Printed shell results are expected-output only",
+                        invalid = true,
+                    )
                 unit.namespace?.let { namespace ->
                     if (
                         !validCollection(namespace.collection) ||
@@ -353,6 +359,7 @@ object ShellPrograms {
             offset: Int,
             scope: Map<String, Bound>,
             dependencies: MutableSet<String>,
+            offsetsReliable: Boolean = true,
         ): ShellValueLowering {
             val bindings =
                 object : ShellValueBindings {
@@ -439,6 +446,7 @@ object ShellPrograms {
                 unit.source,
                 request.dialect,
                 limits.values,
+                spanOffsetsReliable = offsetsReliable,
                 prefix = offset,
                 bindings = bindings,
                 budget = budget,
@@ -960,29 +968,46 @@ object ShellPrograms {
                         dependencies.toList(),
                     )
             } else {
-                prefix = 1
-                val root = parse(unit.source, true)
-                val wrapper =
-                    (root.statements.singleOrNull() as? ExpressionStatement)?.expression
-                        as? ParenthesizedExpression
-                        ?: stop("EXPECTED_VALUE", "Expected one result value")
-                val v =
-                    evaluator(unit, prefix, environment, dependencies)
-                        .published(wrapper.expression, 0, ::snapshot)
-                val docs =
+                val fragments =
+                    if (unit.format == ProgramFormat.SHELL_RESULTS)
+                        ShellResultFraming.frames(unit.source, limits.values, budget)
+                    else listOf(ShellSpan(0, unit.source.length))
+                val docs = mutableListOf<PublishedDocument>()
+                for (fragment in fragments) {
+                    prefix = 1 - fragment.start
+                    val fragmentSource = unit.source.substring(fragment.start, fragment.end)
+                    val root = parse(fragmentSource, true)
+                    val wrapper =
+                        (root.statements.singleOrNull() as? ExpressionStatement)?.expression
+                            as? ParenthesizedExpression
+                            ?: stop("EXPECTED_VALUE", "Expected one result value")
+                    val v =
+                        evaluator(
+                                unit,
+                                prefix,
+                                environment,
+                                dependencies,
+                                offsetsReliable =
+                                    unit.format != ProgramFormat.SHELL_RESULTS ||
+                                        fragmentSource.none { Character.isSurrogate(it) },
+                            )
+                            .published(wrapper.expression, 0, ::snapshot)
                     when (v) {
-                        is PublishedDocument -> listOf(v)
+                        is PublishedDocument -> docs += v
                         is PublishedArray ->
-                            v.items.map {
-                                it as? PublishedDocument
-                                    ?: stop(
-                                        "EXPECTED_DOCUMENTS",
-                                        "Expected results must contain documents",
-                                    )
-                            }
+                            docs +=
+                                v.items.map {
+                                    it as? PublishedDocument
+                                        ?: stop(
+                                            "EXPECTED_DOCUMENTS",
+                                            "Expected results must contain documents",
+                                        )
+                                }
                         else -> stop("EXPECTED_DOCUMENTS", "Expected a document or document array")
                     }
-                storePublished(v)
+                    storePublished(v)
+                }
+
                 pending += PendingExpectation(unit, null, dependencies.toList(), docs)
             }
         }

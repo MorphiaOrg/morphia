@@ -15,7 +15,7 @@ import javax.lang.model.SourceVersion
 
 /** Native io ownership only: no neighboring-block pairing, JavaScript evaluation or mutation. */
 object ScenarioExtraction {
-    const val VERSION = "native-io:1"
+    const val VERSION = "native-io:2"
     private val digest = Regex("[0-9a-f]{64}")
     private val shellLabels = setOf("javascript", "js", "shell", "mongosh")
     private val foreignLabels =
@@ -810,7 +810,15 @@ object ScenarioExtraction {
                             dialect = rule.dialect,
                             blocks =
                                 blocks.mapIndexed { i, b ->
-                                    ProgramBlock("block-$i", b.source, requireNotNull(b.role))
+                                    ProgramBlock(
+                                        "block-$i",
+                                        b.source,
+                                        requireNotNull(b.role),
+                                        format =
+                                            if (b.role == ProgramRole.EXPECTED)
+                                                ProgramFormat.SHELL_RESULTS
+                                            else ProgramFormat.SHELL,
+                                    )
                                 },
                             resultOrder = rule.resultOrder,
                         )

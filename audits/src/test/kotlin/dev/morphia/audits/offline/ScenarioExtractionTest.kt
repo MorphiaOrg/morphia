@@ -1023,4 +1023,18 @@ class ScenarioExtractionTest {
             assertNotNull(it.naming)
         }
     }
+
+    @Test
+    fun explicitlyOwnedIoResultsNormalizePrintedDocumentStreams() {
+        val report =
+            extract(root(section("Two Published Rows", "two-rows", io(output = "{v:1}\n{v:2}"))))
+        assertEquals(ScenarioExtractionState.READY, report.state, report.problems.toString())
+        val scenario = report.scenarios.single()
+        val program = requireNotNull(scenario.program)
+        assertEquals(ShellLiteralState.NORMALIZED, program.state, program.problems.toString())
+        assertEquals(ProgramFormat.SHELL_RESULTS, program.sources.last().format)
+        assertEquals("{v:1}\n{v:2}", program.sources.last().source)
+        assertEquals(2, program.expectations.single().published!!.size)
+        assertNotNull(scenario.naming)
+    }
 }

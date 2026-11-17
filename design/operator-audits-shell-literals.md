@@ -144,3 +144,8 @@ before library parsing; special values use locale-independent constants. Per the
 [js-bson decimal parser](https://github.com/mongodb/js-bson/blob/7348ff59c70c4cbe39d39ba6dc3f2291569e6848/src/decimal128.ts),
 NaN spellings/signs yield the canonical positive NaN encoding, while infinity retains its sign.
 Java's Unicode-digit acceptance and default-locale case folding must not change normalization.
+
+Printed multi-document results use an isolated adapter to the same pinned lexer before strict AST
+lowering. See the [printed-result design](operator-audits-shell-results.md) for its package-visibility
+and physical-position contract and the additional upgrade regressions. Literal storage semantics
+remain separate from printed result constraints.

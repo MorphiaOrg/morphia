@@ -16,7 +16,7 @@ identities are source references, not generated example names; persisted descrip
 come from the naming registry. Command selectors use a block and local command offset only to
 associate operations within the same request.
 
-Roles are `SETUP`, `ACTION`, `EXPECTED` and `EXPECTED_ERROR`. Formats are `SHELL`,
+Roles are `SETUP`, `ACTION`, `EXPECTED` and `EXPECTED_ERROR`. Formats are `SHELL`, expected-only `SHELL_RESULTS`,
 `LEGACY_DOCUMENTS` and error-only `TEXT`. A legacy setup/action fragment needs its explicit logical
 namespace. Null database means the future runner's isolated default database, not a real database
 name. Shell blocks derive namespaces from their AST; conflicting external namespace metadata is
@@ -100,7 +100,8 @@ migration metadata. Parser acceptance is not a license to change the interpretat
 fixtures. The old core fixture reader is still untouched and will be migrated after independent
 semantic assessment.
 
-Expected result blocks contain a document or ordered document array in shell format, or declared
+Expected result blocks contain a document/array in SHELL, an explicit
+[printed document stream](operator-audits-shell-results.md) in SHELL_RESULTS, or declared typed
 legacy documents. Program result schema 2 records modern shell output as explicit
 [published read-result constraints](operator-audits-published-expectations.md), independently from
 exact typed legacy expectations. Displayed whole numbers never inherit input-storage defaults;
