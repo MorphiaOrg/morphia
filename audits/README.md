@@ -4,8 +4,8 @@ This module is being rebuilt around the [operator audit design](../design/mongod
 The current milestones provide offline regression tests, a read-only corpus inventory,
 compiler-resolved public API metadata, artifact-based capability comparison, and descriptive
 example identity proposals, pinned docs acquisition, and an offline structured document
-adapter. Capability normalization, existing-test migration, executable generation and the
-`gh` publisher remain planned.
+adapter and evidence-backed capability discovery. Scenario semantics, existing-test migration,
+executable generation and the `gh` publisher remain planned.
 
 Run the tests from the repository root:
 
@@ -363,3 +363,87 @@ exactly the configured source pin and three page ids, both trees, complete captu
 file dependencies, definition identifiers and all root/feature version events. The deliberately
 incomplete bundle must remain PARTIAL. At the recorded pin the adapter retains 3/34/21 code
 blocks and 2/20/20 external files for median/lookup/setWindowFields respectively.
+
+## Capability discovery from document evidence
+
+`discovery/CatalogDiscovery.kt` normalizes a verified source bundle and the owned document
+model into a candidate `CapabilityCatalog`. `DiscoveryPlan` is an independently reviewed
+policy: logical definition roots, catalog pages, AST section/header selectors, execution
+contexts, supported reference roles and count lower bounds. It contains no encounter-order
+operator/example names. `manual-discovery-probe.json` includes current MQL catalogs and
+window pages omitted by the earlier three-page probe; `manual-discovery-plan.json` is the
+matching eight-context probe policy. They are evaluation inputs, not an accepted production
+coverage baseline.
+
+Only table first-column names and declared operator-reference lists count as catalog members.
+Description mentions do not. A narrow list adapter supports leading names and colon-labeled
+reference groups under an explicit catalog section. Unexpected shapes, uncovered operator
+tables, missing pages, count drops and unresolved role/context assignments stay actionable.
+Update modifier sections are distinct from ordinary update operators. Definition roles alone
+do not establish availability: some window-only functions still use `group`, and expression
+catalogs can refer to accumulator definitions. Positional `$`, `$[]` and `$[<identifier>]`
+are canonical identities in coverage and naming; a concrete `$[element]` is application syntax.
+
+Every observed capability has verified raw declaration or catalog-reference/name evidence.
+Reported origins and digests are rechecked when loading persisted document reports, and the
+stored parse-input pin must match the export recomputed from the bundle. Parser runtime fields
+(adapter, lock, interpreter) are reported provenance, not verified offline. Unique verified raw
+lines have exact byte hashes, including line endings; ambiguous/generated locations use honest
+whole-resource evidence. A parser-reported line is satisfied only by that raw line or, for
+inline roles that Snooty reports at their paragraph start, a line within the same raw paragraph;
+a match elsewhere in the file never stands in for it. Feature facets require a raw section
+underline at the reported heading position. The normalizer does not invent an RST position inside YAML
+or an external snippet. Catalog counts/identities still need the independent accepted expectations
+in `CoveragePlan`; deriving that baseline from the current candidate would defeat drop detection.
+
+Root lifecycle notices require an owned definition body/section. Nested feature sections,
+including a nested heading named Definition, cannot introduce the root operator. Nested catalog
+lists cannot introduce their parent. Cross-context aliases, unresolved substitutions, generated
+positions and unverified scope preserve UNKNOWN confidence. Section notices outside every target
+stay UNKNOWN when the page defines more than one operator. A section's 8.3 feature addition
+therefore cannot turn an operator introduced in 5.0 into a new 8.3 operator. Parser-rendered
+version values are never substituted for independently available raw source arguments.
+
+Discovery, versions, examples and references have separate diagnostics. A failed `:doc:` link
+is a reference problem when an AST doc role owns the reported position and the raw paragraph
+contains the role; links from generated YAML extracts or includes without an owning AST node
+stay definition uncertainty. Example-include ownership is decided separately for each page. A verified failed
+literalinclude/input/output affects examples; an unexplained dependency graph can affect
+definition health. Include attempts stay reachable even when they produce no AST nodes.
+All other parser diagnostics are retained as outside the selected scope rather than discarded.
+Missing inventories and unrelated cross-references do not erase independently verified
+capabilities. A definition used by a fallback context does not prove its native context complete.
+Unassigned declarations remain in the report for explicit review, without invented API gaps.
+
+The result records canonical policy and document-input hashes, parser/runtime provenance and
+source pins; the catalog's normalizer identity carries the same policy/input trace. Context,
+catalog and diagnostic states, the catalog's normalizer identity, evidence references and page
+capability keys are checked when decoding the report. Plans that repeat selectors or roles, or
+both select and exclude a header or section, are rejected because they would change the policy
+pin without changing its meaning. Examples remain
+NOT_ASSESSED unless source problems prove them unresolved; no serialization/behavior success
+is inferred and no shell example executes.
+
+After compiling, run `dev.morphia.audits.discovery.DiscoveryMainKt` with either:
+
+```text
+<bundle> <source-content-sha256> <document-report.json> <discovery-plan.json>
+<bundle> <source-content-sha256> --parse <absolute-isolated-python> <absolute-adapter.py> <discovery-plan.json>
+```
+
+The second form selects captured definition/catalog pages, invokes the locked helper and
+normalizes its result directly. Native parsing has a 600-second deadline and 128 MiB compact
+output cap; saved document reports have a 512 MiB input budget. The full pinned 350-page probe
+parsed in about 71 seconds and produced about 208 MB of pretty document JSON; use a JVM heap
+such as `-Xmx3g` for full-scope evaluation. Ordinary tests use small fixtures. The command emits
+UTF-8 candidate JSON: READY exits 0 and PARTIAL exits 3. Input/runtime validation failures
+exit 2 with stderr diagnostics. Unrecoverable VM errors (for example, out of memory) are not
+caught: they exit nonzero with the JVM's own diagnostic rather than being reported as INVALID
+input.
+It does not replace accepted catalogs or publish issues. Retain the source bundle and policy
+when evaluating a result; partial discovery cannot establish operator absence.
+
+The current pinned manual contains genuine catalog/definition disagreements and missing
+external metadata. The probe deliberately reports those, including legacy role ambiguity,
+instead of rewriting source facts or fixtures to produce READY. An accepted production baseline,
+source dispositions and complete pinned external resources follow in subsequent stages.

@@ -11,6 +11,8 @@ import com.fasterxml.jackson.databind.type.LogicalType
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import dev.morphia.audits.api.ApiInventory
+import dev.morphia.audits.discovery.DiscoveryPlan
+import dev.morphia.audits.discovery.DiscoveryReport
 import dev.morphia.audits.documents.DocumentReport
 import dev.morphia.audits.naming.ExampleNameRegistry
 import dev.morphia.audits.naming.NameProposal
@@ -80,6 +82,13 @@ object AuditJson {
         read(json, SourceAcquisitionReport::class.java)
 
     fun documents(json: String): DocumentReport = read(json, DocumentReport::class.java)
+
+    fun discoveryPlan(json: String): DiscoveryPlan = read(json, DiscoveryPlan::class.java)
+
+    fun discoveryReport(json: String): DiscoveryReport = read(json, DiscoveryReport::class.java)
+
+    /** Canonical JSON attribute strings stay typed at the adapter boundary. */
+    fun textValue(json: String): String = requireNotNull(mapper.readValue(json, String::class.java))
 
     private fun <T> read(json: String, type: Class<T>): T {
         val tree = requireNotNull(mapper.readTree(json)) { "Empty JSON input" }

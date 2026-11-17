@@ -65,5 +65,5 @@ jobs:
 
       - name: Verify coordinator integration with both mappers
         run: |
-          ./mvnw -B -ntp -Daudits -pl audits test -Dtest=DocumentParsingTest -Dmorphia.mapper=critter -Daudits.parser.python="$PWD/audits/parser/.venv/bin/python" -Daudits.parser.adapter="$PWD/audits/parser/adapter.py"
-          ./mvnw -B -ntp -Daudits -pl audits test -Dtest=DocumentParsingTest -Dmorphia.mapper=reflection -Daudits.parser.python="$PWD/audits/parser/.venv/bin/python" -Daudits.parser.adapter="$PWD/audits/parser/adapter.py"
+          ./mvnw -B -ntp -Daudits -pl audits test -Dtest=DocumentParsingTest,CatalogDiscoveryTest -Dmorphia.mapper=critter -Daudits.parser.python="$PWD/audits/parser/.venv/bin/python" -Daudits.parser.adapter="$PWD/audits/parser/adapter.py"
+          ./mvnw -B -ntp -Daudits -pl audits test -Dtest=DocumentParsingTest,CatalogDiscoveryTest -Dmorphia.mapper=reflection -Daudits.parser.python="$PWD/audits/parser/.venv/bin/python" -Daudits.parser.adapter="$PWD/audits/parser/adapter.py"

@@ -440,7 +440,7 @@ object NameReconciliation {
         fun scope(scope: ScenarioScope) {
             check(
                 scope.capability.key.product.matches(Regex("[a-z][a-z0-9-]*")) &&
-                    scope.capability.key.token.matches(Regex("\\$[A-Za-z_][A-Za-z0-9_]*")) &&
+                    dev.morphia.audits.coverage.OperatorTokens.valid(scope.capability.key.token) &&
                     (scope.capability.facet == null ||
                         scope.capability.facet.matches(Regex("[a-z][a-z0-9-]*"))) &&
                     language.matches(scope.language),

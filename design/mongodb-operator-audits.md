@@ -247,6 +247,15 @@ pretending that cross-reference failures prove absent operators. Full dependency
 health classification and capability/scenario normalization remain subsequent work.
 The parser README documents runtime setup, constraints and the coordinated upgrade procedure.
 
+The discovery implementation now consumes that owned tree with an independent selector policy
+for MQL tables and declared operator-reference lists. Catalog membership assigns execution
+contexts; legacy definition roles and cross-context aliases are cross-checked rather than
+silently treated as equivalent. Raw byte evidence, root/feature lifecycle ownership, parser
+failure domains and unresolved declarations remain explicit. The current pinned manual probe
+is deliberately partial where its catalogs disagree with declarations or external resources
+are unavailable. It is not an accepted absence baseline or execution attestation; the independent
+coverage expectations and later scenario/promotion stages still govern those claims.
+
 ### Capability identity, Morphia coverage, and version evidence
 
 Use a key consisting of server product, operator token, and execution context. Contexts
