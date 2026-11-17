@@ -101,13 +101,13 @@ fixtures. The old core fixture reader is still untouched and will be migrated af
 semantic assessment.
 
 Expected result blocks contain a document or ordered document array in shell format, or declared
-legacy documents. Displayed whole numbers in the Int32 range do not distinguish an Int32 from
-an integral Double, regardless of the input shell dialect. A separate expected-value mode rejects
-these ambiguous numbers (and undefined) instead of applying input-storage defaults. Explicit
-BSON constructors or reviewed typed legacy data can supply the missing evidence; fractional
-numbers retain unambiguous Double semantics. Source grouping must preserve this uncertainty,
-never insert constructors or change formats just to make an output parse. Expected values can
-use earlier pure bindings, subject to the same display-type checks. A program with exactly one action can omit
+legacy documents. Program result schema 2 records modern shell output as explicit
+[published read-result constraints](operator-audits-published-expectations.md), independently from
+exact typed legacy expectations. Displayed whole numbers never inherit input-storage defaults;
+Int32/Double alternatives remain explicit. Unknown display profiles and undefined remain
+unsupported. Source grouping must preserve uncertainty, never insert constructors or change formats
+just to make an output parse. Expected values can use earlier pure bindings with captured
+context/dependencies. A program with exactly one action can omit
 `expectedFor`; multiple actions require a selector, including mixed write/read commands. Duplicate
 expectations for one action need an upstream grouping decision. The normalizer never chooses the
 nearest action or silently combines language tabs. Error blocks require text plus explicit code,
@@ -148,3 +148,8 @@ carry setup and include/snippet dependencies, reconcile persisted descriptive id
 independently assess legacy fixtures before changing core tests. Execution, API binding,
 version constraints, curated overrides and generation remain separate stages. `NORMALIZED`
 continues to leave serialization/behavior coverage unassessed until the appropriate attestation.
+
+Published pattern roots and typed snapshot bytes now share the 8 MiB stored-value budget
+(`maximumStoredValueBytes`); JSON escaping/keys count for published text. See the
+[published-expectation contract](operator-audits-published-expectations.md) for per-program versus
+whole-report caps.

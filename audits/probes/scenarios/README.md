@@ -29,7 +29,7 @@ a physical name inventory and resolves collisions. Distinct concise/verbose look
 disambiguate a repeated heading without ordinal suffixes. An empty inventory was used only for
 the new synthetic destinations in this probe.
 
-Two reference programs normalize; 14 remain unsupported because printed integral values cannot
+At the initial ordered-program schema-1 checkpoint, two reference programs normalized; 14 remained unsupported because printed integral values cannot
 prove Int32 versus Double. They must not receive invented constructors or a legacy-data format.
 All cross-reference and foreign include diagnostics remain in the report with explicit source
 health dispositions. There is no claim that datasets are acquired, programs execute, Morphia DSL
@@ -37,3 +37,6 @@ serialization matches, or the proposed names can safely replace the existing cor
 
 Two runs reproduced byte-identical extraction output. The checked-in receipt records the plan,
 input and output identities and measurements; it is evidence for this experiment only.
+
+The later [published-expectations replay](../published-expectations/README.md) measures the same
+source groups with schema-2 explicit output constraints; this receipt retains the original experiment.

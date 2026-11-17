@@ -56,7 +56,7 @@ object AuditJson {
         mapper.writerWithDefaultPrettyPrinter().writeValueAsString(value) + "\n"
 
     /** Count the actual UTF-8 JSON stream without allocating an amplified artifact. */
-    fun requireMaximumSize(value: Any, maximumBytes: Int) {
+    fun requireMaximumSize(value: Any, maximumBytes: Int): Int {
         require(maximumBytes > 0)
         val output =
             object : java.io.OutputStream() {
@@ -84,9 +84,10 @@ object AuditJson {
             }
             throw failure
         }
+        return output.count.toInt()
     }
 
-    private class ArtifactSizeLimit(maximum: Int) :
+    internal class ArtifactSizeLimit(maximum: Int) :
         IllegalArgumentException("Serialized artifact exceeds $maximum bytes")
 
     fun hash(value: Any): String =

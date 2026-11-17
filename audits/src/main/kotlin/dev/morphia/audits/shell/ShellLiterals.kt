@@ -14,7 +14,7 @@ import org.mozilla.javascript.ast.*
 
 /** Parses a single shell value without compiling, evaluating or executing JavaScript programs. */
 object ShellLiterals {
-    const val PARSER = "rhino:1.9.1/shell-literal:1"
+    const val PARSER = "rhino:1.9.1/shell-literal:2"
 
     fun normalize(
         source: String,

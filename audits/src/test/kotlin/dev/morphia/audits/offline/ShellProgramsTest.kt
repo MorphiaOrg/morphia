@@ -1,6 +1,7 @@
 package dev.morphia.audits.offline
 
 import dev.morphia.audits.coverage.AuditJson
+import dev.morphia.audits.published.*
 import dev.morphia.audits.shell.*
 import org.bson.*
 import org.junit.jupiter.api.Assertions.*
@@ -36,81 +37,40 @@ class ShellProgramsTest {
 
     @Test
     fun displayedWholeNumbersNeverInheritInputSerializationTypes() {
-        for (dialect in ShellDialect.entries) {
-            val request =
+        fun result(source: String, dialect: ShellDialect = ShellDialect.MONGOSH) =
+            ShellPrograms.normalize(
                 ShellProgramRequest(
                     dialect = dialect,
                     blocks =
                         listOf(
                             ProgramBlock("action", "db.items.aggregate([]);", ProgramRole.ACTION),
-                            ProgramBlock("result", "[{avg:2}]", ProgramRole.EXPECTED),
+                            ProgramBlock("result", source, ProgramRole.EXPECTED),
                         ),
                 )
-            val ambiguous = ShellPrograms.normalize(request)
-            assertEquals("EXPECTED_TYPE_AMBIGUOUS", ambiguous.problems.single().code)
-            assertTrue(ambiguous.commands.isEmpty())
-            val typed =
-                ShellPrograms.normalize(
-                    request.copy(
-                        blocks =
-                            listOf(
-                                request.blocks[0],
-                                request.blocks[1].copy(source = "[{avg:NumberInt(2)}]"),
-                            )
-                    )
-                )
-            assertEquals(ShellLiteralState.NORMALIZED, typed.state, typed.problems.toString())
-            assertEquals(
-                BsonType.INT32,
-                typed.expectations
-                    .single()
-                    .documents!!
-                    .single()
-                    .value()
-                    .asDocument()["avg"]!!
-                    .bsonType,
             )
-            val fractional =
-                ShellPrograms.normalize(
-                    request.copy(
-                        blocks =
-                            listOf(
-                                request.blocks[0],
-                                request.blocks[1].copy(source = "[{avg:2.5}]"),
-                            )
-                    )
-                )
-            assertEquals(
-                ShellLiteralState.NORMALIZED,
-                fractional.state,
-                fractional.problems.toString(),
-            )
-            assertEquals(
-                BsonType.DOUBLE,
-                fractional.expectations
-                    .single()
-                    .documents!!
-                    .single()
-                    .value()
-                    .asDocument()["avg"]!!
-                    .bsonType,
-            )
-        }
-        val request =
-            ShellProgramRequest(
-                dialect = ShellDialect.MONGOSH,
-                blocks =
-                    listOf(
-                        ProgramBlock("action", "db.items.aggregate([]);", ProgramRole.ACTION),
-                        ProgramBlock("result", "[{avg:Double(2)}]", ProgramRole.EXPECTED),
-                    ),
-            )
-        val typed = ShellPrograms.normalize(request)
-        assertEquals(ShellLiteralState.NORMALIZED, typed.state, typed.problems.toString())
+        val ambiguous = result("[{avg:2}]")
+        assertEquals(ShellLiteralState.NORMALIZED, ambiguous.state)
+        assertNull(ambiguous.expectations.single().documents)
         assertEquals(
-            BsonType.DOUBLE,
-            typed.expectations.single().documents!!.single().value().asDocument()["avg"]!!.bsonType,
+            PublishedWholeNumber(2),
+            ambiguous.expectations.single().published!!.single().fields.single().value,
         )
+        for (dialect in listOf(ShellDialect.LEGACY_MONGO, ShellDialect.UNSPECIFIED)) {
+            assertEquals("PUBLISHED_PROFILE", result("[{avg:2}]", dialect).problems.single().code)
+        }
+        for ((source, type) in
+            listOf(
+                "NumberInt(2)" to BsonType.INT32,
+                "Double(2)" to BsonType.DOUBLE,
+                "2.5" to BsonType.DOUBLE,
+            )) {
+            val typed = result("[{avg:$source}]")
+            assertEquals(ShellLiteralState.NORMALIZED, typed.state, typed.problems.toString())
+            val constraint =
+                typed.expectations.single().published!!.single().fields.single().value
+                    as PublishedExact
+            assertEquals(type, constraint.value.bsonType)
+        }
     }
 
     @Test

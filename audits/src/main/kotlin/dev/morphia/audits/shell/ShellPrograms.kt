@@ -1,6 +1,7 @@
 package dev.morphia.audits.shell
 
 import dev.morphia.audits.coverage.AuditJson
+import dev.morphia.audits.published.*
 import dev.morphia.audits.semantics.BsonSnapshot
 import dev.morphia.audits.semantics.BsonSnapshotLimit
 import java.nio.CharBuffer
@@ -20,12 +21,16 @@ import org.mozilla.javascript.ast.*
  * Builds a canonical MQL command plan; it never executes a documentation program or database call.
  */
 object ShellPrograms {
-    const val PARSER = "rhino:1.9.1/ordered-program:1"
+    const val PARSER = "rhino:1.9.1/ordered-program:2"
 
     fun normalize(
         request: ShellProgramRequest,
         limits: ShellProgramLimits = ShellProgramLimits(),
-    ): ShellProgramResult = Processor(request.copy(blocks = request.blocks.toList()), limits).run()
+    ): ShellProgramResult {
+        val result = Processor(request.copy(blocks = request.blocks.toList()), limits).run()
+        AuditJson.requireMaximumSize(result, limits.maximumArtifactBytes)
+        return result
+    }
 
     private class Stop(
         val code: String,
@@ -51,6 +56,7 @@ object ShellPrograms {
         val block: ProgramBlock,
         val values: List<BsonSnapshot>?,
         val dependencies: List<String>,
+        val published: List<PublishedDocument>? = null,
     )
 
     private data class CommandMeaning(
@@ -62,6 +68,8 @@ object ShellPrograms {
     private data class ExpectationMeaning(
         val command: Int,
         val documents: List<BsonSnapshot>?,
+        val published: List<PublishedDocument>?,
+        val publishedProfile: String?,
         val error: ProgramExpectedError?,
         val order: dev.morphia.audits.semantics.ResultOrder,
     )
@@ -70,6 +78,7 @@ object ShellPrograms {
         val dialect: ShellDialect,
         val commands: List<CommandMeaning>,
         val expectations: List<ExpectationMeaning>,
+        val modelVersion: Int = 2,
     )
 
     private class Processor(val request: ShellProgramRequest, val limits: ShellProgramLimits) {
@@ -125,21 +134,32 @@ object ShellPrograms {
                             ExpectationMeaning(
                                 commands.indexOfFirst { c -> c.id == it.command },
                                 it.documents,
+                                it.published,
+                                it.publishedProfile,
                                 it.error,
                                 it.order,
                             )
                         },
                     )
+                AuditJson.requireMaximumSize(meaning, limits.maximumArtifactBytes)
                 ShellProgramResult(
-                    state = ShellLiteralState.NORMALIZED,
-                    parser = PARSER,
-                    dialect = request.dialect,
-                    sources = sources.toList(),
-                    bindings = records.toList(),
-                    commands = commands.toList(),
-                    expectations = expectations,
-                    semanticSha256 = AuditJson.hash(meaning),
-                    problems = emptyList(),
+                        state = ShellLiteralState.NORMALIZED,
+                        parser = PARSER,
+                        dialect = request.dialect,
+                        sources = sources.toList(),
+                        bindings = records.toList(),
+                        commands = commands.toList(),
+                        expectations = expectations,
+                        semanticSha256 = AuditJson.hash(meaning),
+                        problems = emptyList(),
+                    )
+                    .also { AuditJson.requireMaximumSize(it, limits.maximumArtifactBytes) }
+            } catch (failure: AuditJson.ArtifactSizeLimit) {
+                failed(
+                    "ARTIFACT_LIMIT",
+                    failure.message ?: "Program exceeds artifact size limit",
+                    block?.let { ProgramLocation(it.id, null) },
+                    false,
                 )
             } catch (failure: Stop) {
                 failed(
@@ -338,6 +358,38 @@ object ShellPrograms {
                 object : ShellValueBindings {
                     override fun contains(name: String) = name in scope
 
+                    override fun published(
+                        name: String,
+                        depth: Int,
+                        reference: ShellSpan?,
+                    ): PublishedValue? {
+                        val binding = scope[name] ?: return null
+                        if (binding.record.kind != ProgramBindingKind.VALUE)
+                            throw ShellLiterals.UnsupportedLiteral(
+                                "BINDING_TYPE",
+                                "$name is a namespace, not a value",
+                                reference,
+                            )
+                        dependencies += binding.record.id
+                        return try {
+                            binding.expression?.let {
+                                evaluator(binding.block, 0, binding.captured, dependencies)
+                                    .published(it, depth + 1, ::snapshot)
+                            }
+                                ?: throw ShellLiterals.UnsupportedLiteral(
+                                    "EXPECTED_TYPE_AMBIGUOUS",
+                                    "Uninitialized binding has no proven stored BSON type",
+                                    reference,
+                                )
+                        } catch (failure: ShellLiterals.UnsupportedLiteral) {
+                            throw ShellLiterals.UnsupportedLiteral(
+                                failure.code,
+                                "Binding $name: ${failure.message}",
+                                reference,
+                            )
+                        }
+                    }
+
                     override fun resolve(
                         name: String,
                         use: ShellValueUse,
@@ -408,9 +460,21 @@ object ShellPrograms {
                     stop("BSON_ENCODING", failure.message ?: "Value is not losslessly encodable")
                 }
             storedBytes += result.byteLength
-            if (storedBytes > limits.maximumTotalSnapshotBytes)
-                stop("SNAPSHOT_LIMIT", "Program exceeds stored value budget")
+            if (storedBytes > limits.maximumStoredValueBytes)
+                stop("STORED_VALUE_LIMIT", "Program exceeds stored value budget")
             return result
+        }
+
+        fun storePublished(value: PublishedValue) {
+            val remaining = (limits.maximumStoredValueBytes - storedBytes).toInt()
+            if (remaining <= 0) stop("STORED_VALUE_LIMIT", "Program exceeds stored value budget")
+            try {
+                // Count the entire root once, including JSON escaping, keys and type metadata.
+                // Snapshot bytes already retained by exact leaves share this conservative budget.
+                storedBytes += AuditJson.requireMaximumSize(value, remaining)
+            } catch (failure: AuditJson.ArtifactSizeLimit) {
+                stop("STORED_VALUE_LIMIT", "Program exceeds stored value budget")
+            }
         }
 
         fun document(node: AstNode, dependencies: MutableSet<String>): BsonDocument =
@@ -885,33 +949,42 @@ object ShellPrograms {
                 return
             }
             val dependencies = linkedSetOf<String>()
-            val docs =
-                if (unit.format == ProgramFormat.LEGACY_DOCUMENTS) {
-                    val parsed = LegacyDocuments.parse(unit.source, limits.values)
-                    if (parsed.state != ShellLiteralState.NORMALIZED)
-                        stop("EXPECTED_DOCUMENTS", parsed.problems.joinToString { it.code })
-                    parsed.documents
-                } else {
-                    prefix = 1
-                    val root = parse(unit.source, true)
-                    val wrapper =
-                        (root.statements.singleOrNull() as? ExpressionStatement)?.expression
-                            as? ParenthesizedExpression
-                            ?: stop("EXPECTED_VALUE", "Expected one result value")
-                    val v = value(wrapper.expression, dependencies, ShellValueUse.EXPECTED)
+            if (unit.format == ProgramFormat.LEGACY_DOCUMENTS) {
+                val parsed = LegacyDocuments.parse(unit.source, limits.values)
+                if (parsed.state != ShellLiteralState.NORMALIZED)
+                    stop("EXPECTED_DOCUMENTS", parsed.problems.joinToString { it.code })
+                pending +=
+                    PendingExpectation(
+                        unit,
+                        parsed.documents.map { snapshot(it) },
+                        dependencies.toList(),
+                    )
+            } else {
+                prefix = 1
+                val root = parse(unit.source, true)
+                val wrapper =
+                    (root.statements.singleOrNull() as? ExpressionStatement)?.expression
+                        as? ParenthesizedExpression
+                        ?: stop("EXPECTED_VALUE", "Expected one result value")
+                val v =
+                    evaluator(unit, prefix, environment, dependencies)
+                        .published(wrapper.expression, 0, ::snapshot)
+                val docs =
                     when (v) {
-                        is BsonDocument -> listOf(v)
-                        is BsonArray ->
-                            if (v.all { it is BsonDocument }) v.map { it.asDocument() }
-                            else
-                                stop(
-                                    "EXPECTED_DOCUMENTS",
-                                    "Expected results must contain documents",
-                                )
+                        is PublishedDocument -> listOf(v)
+                        is PublishedArray ->
+                            v.items.map {
+                                it as? PublishedDocument
+                                    ?: stop(
+                                        "EXPECTED_DOCUMENTS",
+                                        "Expected results must contain documents",
+                                    )
+                            }
                         else -> stop("EXPECTED_DOCUMENTS", "Expected a document or document array")
                     }
-                }
-            pending += PendingExpectation(unit, docs.map { snapshot(it) }, dependencies.toList())
+                storePublished(v)
+                pending += PendingExpectation(unit, null, dependencies.toList(), docs)
+            }
         }
 
         fun resolveExpectations(): List<ProgramExpectation> {
@@ -929,9 +1002,28 @@ object ShellPrograms {
                             "EXPECTED_OWNER",
                             "Expected output needs one unambiguous explicit action owner",
                         )
+                    if (pending.published != null) {
+                        when (val operation = selected.operation) {
+                            is FindOperation -> Unit
+                            is AggregateOperation -> {
+                                val options = operation.options?.value()?.asDocument()
+                                if (options != null && options.keys.any { it in decodingOptions })
+                                    stop(
+                                        "PUBLISHED_PROFILE",
+                                        "Source overrides the pinned mongosh BSON decoding profile",
+                                    )
+                            }
+                            else ->
+                                stop(
+                                    "PUBLISHED_PROFILE",
+                                    "Published mongosh expectations require a find or aggregate read result",
+                                )
+                        }
+                    }
                     ProgramExpectation(
                         command = selected.id,
                         documents = pending.values,
+                        published = pending.published,
                         error = pending.block.expectedError,
                         order = request.resultOrder,
                         source = ProgramLocation(pending.block.id, null),
@@ -946,6 +1038,18 @@ object ShellPrograms {
             return result
         }
     }
+
+    private val decodingOptions =
+        setOf(
+            "promoteLongs",
+            "promoteValues",
+            "promoteBuffers",
+            "useBigInt64",
+            "bsonRegExp",
+            "raw",
+            "fieldsAsRaw",
+            "enableUtf8Validation",
+        )
 
     private val modifiers =
         mapOf(

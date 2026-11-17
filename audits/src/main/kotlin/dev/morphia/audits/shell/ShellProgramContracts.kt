@@ -1,5 +1,7 @@
 package dev.morphia.audits.shell
 
+import dev.morphia.audits.published.PublishedDocument
+import dev.morphia.audits.published.PublishedReadProfile
 import dev.morphia.audits.semantics.BsonSnapshot
 import dev.morphia.audits.semantics.ResultOrder
 
@@ -171,16 +173,19 @@ data class ProgramExpectation(
     val order: ResultOrder,
     val source: ProgramLocation,
     val dependencies: List<String>,
+    val published: List<PublishedDocument>? = null,
 ) {
     init {
-        require((documents == null) != (error == null))
+        require(listOf(documents, error, published).count { it != null } == 1)
     }
+
+    val publishedProfile: String? = if (published != null) PublishedReadProfile.ID else null
 }
 
 data class ProgramProblem(val code: String, val message: String, val source: ProgramLocation?)
 
 data class ShellProgramResult(
-    val schemaVersion: Int = 1,
+    val schemaVersion: Int = 2,
     val state: ShellLiteralState,
     val parser: String,
     val dialect: ShellDialect,
@@ -193,7 +198,7 @@ data class ShellProgramResult(
     val problems: List<ProgramProblem>,
 ) {
     init {
-        require(schemaVersion == 1)
+        require(schemaVersion == 2)
         require(
             (state == ShellLiteralState.NORMALIZED) ==
                 (problems.isEmpty() && semanticSha256 != null)
@@ -211,11 +216,13 @@ data class ShellProgramLimits(
     val maximumCommands: Int = 512,
     val maximumCharacters: Int = 1_048_576,
     val maximumSnapshotBytes: Int = 1_048_576,
-    val maximumTotalSnapshotBytes: Int = 8_388_608,
+    val maximumStoredValueBytes: Int = 8_388_608,
+    val maximumArtifactBytes: Int = 67_108_864,
 ) {
     init {
         require(maximumBlocks in 1..256 && maximumBindings in 1..1024 && maximumCommands in 1..1024)
         require(maximumCharacters in 1..4_194_304 && maximumSnapshotBytes in 32..16_777_216)
-        require(maximumTotalSnapshotBytes in maximumSnapshotBytes..67_108_864)
+        require(maximumStoredValueBytes in maximumSnapshotBytes..67_108_864)
+        require(maximumArtifactBytes in 1024..134_217_728)
     }
 }
