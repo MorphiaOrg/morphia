@@ -154,6 +154,18 @@ data class DiscoveryReport(
         require(pages.all { keys.containsAll(it.capabilities) })
         require((state == DiscoveryState.READY) == contexts.all { it.healthy })
         require(
+            contexts.all { context ->
+                context.catalogMembers == context.catalogMembers.distinct().sorted() &&
+                    context.catalogMembers.toSet() ==
+                        catalog.capabilities
+                            .filter { it.key.context == context.context }
+                            .map { it.key.token }
+                            .toSet()
+            }
+        ) {
+            "Context catalog members must match the context's capabilities"
+        }
+        require(
             contexts.all {
                 it.healthy == it.problems.isEmpty() &&
                     it.observed ==

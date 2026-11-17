@@ -117,7 +117,7 @@ internal class SourceEvidenceIndex(private val bundle: VerifiedSourceBundle) {
             else if (!paragraph) null
             else
                 (hint until lines.text.size)
-                    .takeWhile { it == hint || lines.text[it].isNotBlank() }
+                    .takeWhile { lines.text[it].isNotBlank() }
                     .filter { it in candidates }
                     .singleOrNull()
         if (

@@ -1603,6 +1603,7 @@ class CatalogDiscoveryTest {
         assertEquals(1L, at(1)!!.startLine)
         assertNull(at(2), "A match outside the reported paragraph must not stand in for it")
         assertEquals(5L, at(4)!!.startLine, "Inline roles are reported at the paragraph start")
+        assertNull(at(3), "A blank hinted line must not borrow the following paragraph")
     }
 
     @Test
@@ -1785,6 +1786,10 @@ class CatalogDiscoveryTest {
             }
         assertNotEquals(json, dangling)
         assertThrows(Exception::class.java) { AuditJson.discoveryReport(dangling) }
+        // Decoding constructs the report, so the constructor invariant guards stored JSON too.
+        assertThrows(IllegalArgumentException::class.java) {
+            report.copy(contexts = report.contexts.map { it.copy(catalogMembers = emptyList()) })
+        }
     }
 
     @Test

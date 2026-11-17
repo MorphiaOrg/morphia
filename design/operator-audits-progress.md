@@ -751,11 +751,22 @@ cmp audits/catalog/legacy-corpus.json /tmp/operator-corpus.json
   round-3 fixes as follow-up commits once Codex can review.
 - Remote review requested with `gh pr edit 4518 --add-reviewer '@copilot'`. CI pending.
 
+## Discovery review round 3 (Codex, after publication)
+
+- Codex reviewed `8748bc6...HEAD` once its usage limit reset (`/tmp/morphia-discovery-codex-3.log`).
+  Two valid P2 findings, both fixed with regressions:
+  1. A blank hinted line still started the paragraph span, so a stale/forged origin could borrow
+     evidence from the following paragraph. The span now stops at the first blank line, including
+     the hinted line itself.
+  2. Report decoding never tied `catalogMembers` to the context's capabilities; an emptied member
+     list decoded. Members must now be distinct, sorted and equal to the context's capability tokens.
+- 163 tests pass under Critter and reflection with parser integrations. The real replay is unchanged
+  and byte-identical (`66072a31...`). Three local review rounds are complete; no fourth is needed.
+  Fixes pushed to #4518 as a follow-up commit.
+
 ## Next steps
 
-1. Final local review round 3 for discovery: Codex hit its usage limit at 19:55 (reset 20:30) and
-   Copilot CLI remains monthly-quota blocked, so round 3 is queued to run with Codex after the
-   reset (`/tmp/morphia-discovery-codex-3.log`). Fix valid findings; this is the last local round.
+1. Watch #4518 CI and any remote review; fix or answer findings (max 3 remote cycles).
 2. Commit and publish discovery targeting `audits-snooty-adapter` (#4517); request remote review and
    wait for CI. Do not wait for merges; do not merge without a user request.
 3. Then: accepted coverage plan/expectations, scenario semantics and the naming backport, curated
