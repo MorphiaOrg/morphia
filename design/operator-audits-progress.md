@@ -1,9 +1,9 @@
 # Operator audit implementation progress
 
-Current branch: `audits-capability-normalization`; PR base: `audits-snooty-adapter` (#4517).
+Current branch: `audits-bson-comparison`; PR base: `audits-capability-normalization` (#4518).
 Stack (PR head branches): #4512 `audits-pipeline-design` → #4513 `audits-source-inventory` →
 #4514 `audits-coverage-contracts` → #4515 `audits-example-identities` → #4516 `audits-pinned-sources` →
-#4517 `audits-snooty-adapter` → capability discovery (in progress).
+#4517 `audits-snooty-adapter` → #4518 `audits-capability-normalization` → BSON comparison (in progress).
 Each PR targets its predecessor; #4512 targets `master`.
 Use `git worktree list` to locate the checkout on this machine.
 
@@ -766,11 +766,15 @@ cmp audits/catalog/legacy-corpus.json /tmp/operator-corpus.json
 
 ## Next steps
 
-1. Watch #4518 CI and any remote review; fix or answer findings (max 3 remote cycles).
-2. Commit and publish discovery targeting `audits-snooty-adapter` (#4517); request remote review and
-   wait for CI. Do not wait for merges; do not merge without a user request.
-3. Then: accepted coverage plan/expectations, scenario semantics and the naming backport, curated
-   repairs, executable generation, monitoring and the opt-in publisher.
+1. Discovery is published as #4518 at `4fdbe24fc8106efe275e8ea6dd9aef772ddba529`.
+   All five exact-head checks passed; no remote comments/reviews or pending review requests.
+   Local review findings are resolved. This satisfies the user's gate for the next stacked PR.
+2. Active worktree: `~/dev/worktrees/audits-bson-comparison`, branch `audits-bson-comparison`,
+   based on #4518. First step 3 slice: strict BSON comparator, explicit path policies, bounded
+   multiset matching and controlled old/new comparison probes. No core/data migration yet.
+3. Then: accepted coverage plan/expectations, shell AST scenario semantics and naming backport,
+   curated repairs, executable generation, monitoring and the opt-in publisher.
+   Do not wait for merges; do not merge without a user request.
 
 ## Temporary local evidence
 
@@ -782,3 +786,55 @@ Old implementation scripts under `/tmp` predate later fixes: do not rerun them b
 
 The separate 3.0 product-doc checkout was consulted; this internal audit foundation needs
 no product-documentation changes. Legacy operator AsciiDoc tables are intentionally untouched.
+
+## BSON comparison implementation checkpoint (2026-11-16)
+
+- Confirmed the takeover against the design and GitHub: #4518 implements capability discovery,
+  not scenario semantics or fixture migration. The 336-key catalog remains honestly PARTIAL.
+- Added `semantics/BsonComparison{,Contracts}.kt` and offline regressions. BSON is pinned to the
+  repository driver version; JSONAssert is test-only for controlled compatibility probes.
+- Contract and migration gate: `design/operator-audits-bson-comparison.md`.
+- In progress: both-mapper test runs, required local review, graph/format/preservation checks,
+  then commit and publish targeting `audits-capability-normalization`.
+
+## BSON comparison review round 1
+
+- Claude found a real boundary issue: raw/lazy BSON containers permit duplicate keys, implicit
+  decoding and uncounted linear lookups. They are now rejected before traversal; driver BSON
+  exceptions return INVALID. Plain materialized containers remain the supported input contract.
+- Added negative/relative Decimal128 and negative-zero tests, work exhaustion during candidate
+  comparison/matching, raw/corrupt/lazy container tests and the missing old-mode probe rows.
+- Corrected stale stack metadata and mismatch wording; cached the pointer-validation regex.
+  Changed matching to iterative augmentation so result count cannot increase the call stack.
+- Kept the single audits-only BSON version reference to `${driver.version}` instead of widening
+  parent dependency management for one consumer; it uses the same version property as the driver.
+- Copilot CLI attempted; unavailable due monthly quota (`/tmp/morphia-bson-copilot-1.log`).
+- Audit tests do not instantiate either mapper. Both requested mapper configurations are still run
+  to follow repository verification policy; this is not a claim of serialization/behavior parity.
+
+## BSON comparison review round 2
+
+- All round-1 findings verified resolved or documented. The independent reviewer confirmed
+  iterative matching and budget counts against the exhaustive oracle.
+- Fixed Java null array values and null result-list elements escaping validation; null BSON
+  input is INVALID and distinct from `BsonNull`. Added a regression for both input forms.
+- Removed the now-unnecessary broad BSON exception catch after rejecting raw/lazy containers,
+  so unexpected implementation errors remain visible. Corrected remaining mismatch wording.
+- Final local review and final test/format/preservation checks pending before publication.
+
+## BSON comparison final verification
+
+- Final local review (round 3) found no remaining correctness issues. Applied the optional
+  wording/wrapping nits. All reviewer findings and the rejected dependency-management nit
+  are recorded above; no fourth round is needed.
+- 188 audit tests pass with both Critter and reflection configurations, including 25 comparator regressions.
+  Two unchanged native-parser integrations skip without their explicit Python properties.
+  Reflection final run: `/tmp/morphia-bson-reflection.log`; Critter: `/tmp/morphia-bson-critter.log`.
+- The independent small-multiset oracle checks 729 input pairs. The comparator does not invoke
+  a mapper or attest actual server behavior; running both configurations follows repo policy.
+- The legacy corpus reproduces byte-identically and protected core/annotations/util/docs/
+  critter-maven paths remain unchanged. Root Spotless passes. Product docs on docs-redesign
+  were consulted; this internal comparator requires no product documentation change.
+- Publish this branch targeting #4518, request remote Copilot review, then check exact-head CI
+  and any remote comments. No merge is authorized. Next: pinned shell parser compatibility
+  spike and scenario lowering, followed by descriptive-name migration and curated repairs.
