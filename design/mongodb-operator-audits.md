@@ -357,6 +357,9 @@ The first step 3 slice supplies the standalone BSON comparator and controlled co
 probes. Its exact defaults, path policies and remaining migration gate are documented in
 [the comparison contract](operator-audits-bson-comparison.md). It does not replace core assertions
 or attest behavior coverage until scenario execution and migration are verified.
+The following [shell literal slice](operator-audits-shell-literals.md) pins a maintained AST
+parser and lowers an explicit BSON value subset with dialect/source preservation. Complete
+ordered scenarios and legacy result streams remain subsequent integration work.
 
 ### Descriptive example names and backporting existing tests
 

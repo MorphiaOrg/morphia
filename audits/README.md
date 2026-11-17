@@ -461,3 +461,15 @@ The [comparison contract](../design/operator-audits-bson-comparison.md) document
 old-versus-new regression probes and the required compatibility assessment before migrating
 existing expectations. Core assertions and curated data continue to use their preserved paths;
 this is the oracle for the upcoming scenario runner, not an execution attestation.
+
+## Shell BSON values
+
+`dev.morphia.audits.shell.ShellLiterals.normalize` lowers one value through the pinned Rhino AST
+and a closed BSON constructor allowlist. It preserves the raw block and requires an explicit
+shell dialect. Unknown calls, bindings, computed syntax, invalid regexes and ambiguous defaults
+remain unsupported. It never evaluates documentation programs or overwrites fixtures.
+
+The [literal contract and parser decision](../design/operator-audits-shell-literals.md) records
+measured compatibility, limits and the remaining ordered-scenario integration. The optional
+[parser comparison probe](probes/shell/README.md) accepts explicitly acquired artifacts; ordinary
+Maven builds need no Node runtime or upstream documentation checkout.

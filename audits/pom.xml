@@ -13,6 +13,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.mozilla</groupId>
+            <artifactId>rhino</artifactId>
+            <version>1.9.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>bson</artifactId>
             <version>${driver.version}</version>
