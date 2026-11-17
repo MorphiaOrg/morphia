@@ -1,11 +1,28 @@
 # Operator audit implementation progress
 
-Current branch: `audits-bson-comparison`; PR base: `audits-capability-normalization` (#4518).
+Current branch: `audits-shell-semantics`; PR base: `audits-bson-comparison` (#4519).
 Stack (PR head branches): #4512 `audits-pipeline-design` → #4513 `audits-source-inventory` →
 #4514 `audits-coverage-contracts` → #4515 `audits-example-identities` → #4516 `audits-pinned-sources` →
-#4517 `audits-snooty-adapter` → #4518 `audits-capability-normalization` → BSON comparison (in progress).
+#4517 `audits-snooty-adapter` → #4518 `audits-capability-normalization` →
+#4519 `audits-bson-comparison` → shell semantics (in progress).
 Each PR targets its predecessor; #4512 targets `master`.
 Use `git worktree list` to locate the checkout on this machine.
+
+## Current status at a glance
+
+- Published infrastructure: #4512 foundation, #4513 API inventory, #4514 coverage contracts,
+  #4515 persisted names, #4516 pinned acquisition, #4517 structured docs and #4518 capability
+  discovery. Discovery is deliberately PARTIAL where upstream evidence is unresolved.
+- #4519 strict BSON comparison is published and all five exact-head checks pass at
+  `27a3fa7c1db2d22a6b0fc6e1c3d0f53f0e45f257`; local review is complete.
+- This branch adds shell BSON literals: 215 audit tests pass in both requested configurations,
+  including 27 literal tests. Two existing Python integrations skip without explicit properties.
+  Three local review rounds are complete; the final round found no remaining correctness issues.
+  Check publication/CI with `gh pr view audits-shell-semantics`; its base is #4519.
+- Still required: complete ordered scenarios and result streams, independently reviewed current
+  coverage expectations, actual descriptive-name backport, curated repair/lock migration, typed
+  executable generation, monitoring, enabled gh issue publication and obsolete-path cleanup.
+  No core fixture/test naming migration or lock retirement has occurred. No merges are authorized.
 
 Design: [mongodb-operator-audits.md](mongodb-operator-audits.md).
 The reviewed plan is committed as `3c78eb7b4cccf5c661bc2183d25cf3984ddda3ad`.
@@ -764,7 +781,7 @@ cmp audits/catalog/legacy-corpus.json /tmp/operator-corpus.json
   and byte-identical (`66072a31...`). Three local review rounds are complete; no fourth is needed.
   Fixes pushed to #4518 as a follow-up commit.
 
-## Next steps
+## Discovery checkpoint next steps (historical)
 
 1. Discovery is published as #4518 at `4fdbe24fc8106efe275e8ea6dd9aef772ddba529`.
    All five exact-head checks passed; no remote comments/reviews or pending review requests.
@@ -838,3 +855,132 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
 - Publish this branch targeting #4518, request remote Copilot review, then check exact-head CI
   and any remote comments. No merge is authorized. Next: pinned shell parser compatibility
   spike and scenario lowering, followed by descriptive-name migration and curated repairs.
+
+## Shell semantics start (2026-11-16)
+
+- #4519 published at `27a3fa7c1db2d22a6b0fc6e1c3d0f53f0e45f257`. All five exact-head checks
+  passed: OfflineTests 1m24s, ParserTests 2m07s, CodeAudits 2m34s, Build 6m00s, Critter 6m05s.
+  Remote review was requested; no pending request/review/comment was returned (Copilot unavailable).
+- New worktree `~/dev/worktrees/audits-shell-semantics`, branch `audits-shell-semantics`,
+  based on #4519. No merges. Next slice selects/pins a maintained shell AST parser using
+  source-backed corpus probes, then lowers supported syntax into typed BSON/scenario operations
+  while preserving raw blocks and explicitly rejecting unsupported constructs without execution.
+- Parser candidates: Rhino public Java AST (fits Java 17, no extra runtime) and Acorn ESTree
+  (requires an isolated pinned Node runtime). Primary release/source documentation is being checked;
+  no parser has been selected or added to the production dependency graph yet.
+
+## Shell literal implementation checkpoint
+
+- Selected Rhino 1.9.1 public AST after comparing it with Acorn 8.19.0. Candidate JAR SHA-256:
+  `12dbb224cea124a5d32968722e8eb161c967bf15f3c9a795d1b05592b1147975`.
+  The parser is a compile dependency only in audits; no JavaScript program is compiled or evaluated.
+  Regex syntax validation uses the pinned engine's regex compiler without matching or running code.
+- Added initial `shell/ShellLiteral{Contracts,Constructors}.kt` and `ShellLiterals.kt`, plus
+  17 offline tests. Single-value lowering is a focused slice, not a complete scenario model.
+  Profiles distinguish MONGOSH, LEGACY_MONGO and UNSPECIFIED; defaults cannot silently change
+  int/double/undefined types. Explicit supported constructors retain BSON types and key order.
+- First compile succeeded. Initial tests exposed unusable Rhino offsets on synthetic wrapper
+  expressions; invalid hints are now omitted while retaining the entire raw source. Rerun pending.
+  Local reviews, reflection verification, docs/benchmark harness, formatting and PR publication
+  are still pending; do not treat this worktree as reviewed or complete.
+- Benchmark artifacts (all read-only, no code evaluation): `/tmp/morphia-shell-spike-{corpus.jsonl,input.tsv,receipt.json}`,
+  `/tmp/morphia-shell-{rhino,acorn}-results.tsv`, `/tmp/MorphiaShellSpike.java`,
+  `/tmp/morphia-shell-acorn-spike.cjs`, `/tmp/morphia-shell-prepare-spike.py`.
+  4,798 cases = 3,130 owned doc code nodes + 1,660 hash-verified legacy JSON files + 8 probes.
+  Corpus SHA `cb074470e038340aeccfc4126a02ec0545bd7b46a1b335884c537bdc4da7570d`;
+  TSV SHA `0177bc33e5723cc1fcac603c0865ba4cb3a1a2d88d8705ba5626699e1a15c7b4`.
+- Syntax acceptance is not normalization success. Ten acceptance differences include mathematical
+  assignments, two C# blocks that happen to tokenize as JS, a shell command and a PCRE literal.
+  Lowering rejects unsupported syntax, computed values, calls and placeholders atomically.
+- Rhino accepts 1,343/1,660 legacy files as a script or value; Acorn accepts 1,342. The 317 Rhino
+  failures are mainly newline-separated result documents (235 expected + 72 data files), plus
+  7 actions and 3 indexes. 160/704 locked JSON files fail this single-script/value benchmark.
+  This is evidence for an explicit result-stream adapter, not permission to strip or reshape data.
+
+## Shell literal verification checkpoint
+
+- 206 audit tests pass with Critter, including 18 literal regressions. Reflection is running.
+  Logs: `/tmp/morphia-shell-critter-final.log`, `/tmp/morphia-shell-reflection.log`.
+- Fixed Rhino's `undefined` keyword representation and nullable invalid span hints. Added
+  JS regex syntax validation (compile only, never match/evaluate a program), regex resource
+  guards, BSON NUL checks and strict UTF-8 handling for source/decoded strings and keys.
+- Reproducible benchmark checked in under `audits/probes/shell/`; it verifies dependency and
+  legacy fixture hashes and performs no acquisition. Its 4,798 cases reproduce both input
+  hashes above and the same ten acceptance differences with IDE recovery disabled.
+- Decision/limitations documented in `design/operator-audits-shell-literals.md`; audit README
+  and main design link to it. Individual literals are not complete scenarios or a wire DTO.
+- Local review 1 running (`/tmp/morphia-shell-claude-1.jsonl`); Copilot availability attempted
+  (`/tmp/morphia-shell-copilot-1.log`). No review findings have been applied yet. Formatting,
+  graph refresh, protected-path/corpus checks, final review and PR publication are still pending.
+
+## Array metadata correction during local review
+
+- A focused public-AST probe showed `destructuringLength` is 1 for `[]` and 2 for `[1,]`;
+  treating it as element count wrongly rejected both. Sparse arrays actually carry explicit
+  EmptyExpression nodes. Switched to that evidence and added empty/trailing-comma/hole cases.
+- This is an additional valid implementation finding; the first independent review is still
+  running. Final full tests must be repeated after this fix before any commit/publication.
+
+## Shell literal review round 1 resolutions
+
+- Verified the high-priority Long finding against pinned official js-bson and mongosh sources:
+  numeric Long uses low bits with zero high bits. Corrected this separately from NumberLong/
+  string Long; added negative, large and wraparound cases. Source pins are in the literal design.
+- Double string coercion is now unsupported, avoiding Java float grammar replacing JavaScript.
+  NumberLong numeric rejection wording now identifies a conservative policy rather than a shell
+  capability assertion. Canonical 64-bit strings reject forms the native parser would not accept.
+- Aligned production/benchmark Rhino to VERSION_ECMASCRIPT; Acorn remains pinned at ECMA 2026.
+  Re-ran the checked-in probe: same 4,798 inputs/hashes, 10 differences and table counts. The
+  machine receipt preserves helper/runtime provenance after final formatting.
+- UNSPECIFIED now accepts unambiguous Double values while rejecting ambiguous Int32 defaults.
+  Representation catches are local to explicit parsing boundaries, not the entire dispatcher.
+- Added constructor/regex/nested-array span tests. They exposed a second upstream position bug:
+  UnaryExpression ignores operatorPosition, omitting the sign even with an in-range hint. Omit
+  unary spans and retain whole raw blocks; do not infer offsets by scanning source text.
+- First review validated no program execution, wrapper rejection, recursion handling, getters/
+  methods, regex s-flag support, dependency pin and date/binary/timestamp ranges. The empty-array
+  correction above was already applied. Current final run is pending after the unary hint fix;
+  review round 2 has not started. Nothing on this branch is committed or published yet.
+- The temporary literal probe measured all 4,798 inputs with zero unexpected exceptions;
+  initial 844 doc blocks and 615 legacy files normalized under an explicit MONGOSH assumption.
+  That assumption is not a verified source/legacy interpretation or migration acceptance.
+
+## Shell literal review round 2 resolutions
+
+- All eight first-round findings verified resolved. Four new findings were valid and fixed:
+  native JS regex dotAll `s` is not serialized as BSON `s`; RegExp string `source` can differ
+  from its argument; Java integer/decimal parsers accept Unicode digits that js-bson does not;
+  Decimal128 special-value parsing depended on the default locale.
+- Verified pinned official source with gh (the web fetcher's cache missed these revisions):
+  serializer blob `08e81eca3d151dce91f547baf4149c66be9d150c`, decimal blob
+  `8f491b3ce975444863e607d77032591d6f4b7a02`, mongosh shell wrapper blob
+  `690994f62e941d7c3b8a1041d4a89e1cecd91d68`. Commit links in the design are valid.
+- JS regex flags limited to i/m. Explicit BSONRegExp retains s/x. Empty/slash/line-terminator
+  RegExp string source forms remain unsupported instead of guessing canonical source escapes.
+- ASCII numeric grammars, bounded decimal input and Locale.ROOT special-value handling added;
+  NaN uses js-bson's canonical positive encoding. Added Unicode, Turkish locale and regex-source
+  regressions. Tests must pass and the third/final local review is pending before publication.
+- Root formatting/graph/protected paths and benchmark helper identities passed before these
+  fixes. Repeat required checks for the final implementation. #4519 remains green at 27a3fa7c;
+  rechecked remote feedback and found no reviews/comments/pending requests.
+
+## Shell literal final verification
+
+- Final local review (round 3) is clean. It verified round-2 fixes against js-bson 7.3.3 bundled
+  with local mongosh 2.14.1 and Java BSON 5.14.0, including regex serialization, ASCII strings,
+  locale-independent special values and finite Decimal128 byte equality for edge cases. This
+  is additional native-library evidence, not execution of the pinned source revision or docs code.
+- 215 audit tests pass with both Critter and reflection configurations, including 27 literal tests.
+  Two unchanged native-parser integrations skip without their explicit properties. Logs:
+  `/tmp/morphia-shell-critter-final.log`, `/tmp/morphia-shell-reflection.log`.
+- Final temporary literal probe: all 4,798 inputs completed without unexpected exceptions,
+  `/tmp/morphia-shell-literal-final-results.tsv`. Its MONGOSH profile remains an explicit probe
+  assumption, not a source/legacy interpretation or acceptance of migrated expectations.
+- Checked-in comparative receipt verifies all helper/parser identities and reproduces input hashes.
+  Legacy corpus reproduces byte-identically; core/annotations/util/docs/critter-maven and its
+  frozen catalog remain unchanged. Final root formatting/graph/preservation checks precede commit.
+- Copilot CLI unavailable due monthly quota. Request remote review after publication, inspect
+  comments and exact-head CI, then continue without a merge once the existing gate is satisfied.
+- Next slice: complete scenario normalization (ordered setup/actions, explicit dependencies,
+  multi-collection/index/query/update/pipeline forms, expected results/errors and source grouping).
+  Use the persisted names and strict comparator; do not silently reshape legacy document streams.
