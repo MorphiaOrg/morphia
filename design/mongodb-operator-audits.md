@@ -831,3 +831,8 @@ already deprecated; it is evidence about current parser behavior, not the propos
 toolchain setting. The probe results are recorded above so future regression fixtures can
 reproduce them. The source-acquisition/parser spike and full end-to-end server validation
 remain later implementation work; milestone 0 does not claim that validation.
+
+The [ordered program normalization contract](operator-audits-programs.md) records the implemented
+closed AST grammar, explicit source roles and shell dialects, typed commands and dependencies,
+legacy document-stream adapter, expected-outcome ownership and limitations before automatic
+source grouping and existing-test migration.
