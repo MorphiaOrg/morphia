@@ -425,4 +425,25 @@ class ShellProgramsTest {
             )
         assertEquals(ShellLiteralState.NORMALIZED, ShellPrograms.normalize(explicit).state)
     }
+
+    @Test
+    fun inspectionCanClassifySetupWithoutWeakeningTheExecutableActionContract() {
+        val request =
+            ShellProgramRequest(
+                dialect = ShellDialect.MONGOSH,
+                blocks = listOf(ProgramBlock("declaration", "const n=1;", ProgramRole.ACTION)),
+            )
+        val inspection = ShellPrograms.inspect(request)
+        assertEquals(ShellLiteralState.NORMALIZED, inspection.state)
+        assertTrue(inspection.operations.isEmpty())
+        assertEquals("NO_ACTION", ShellPrograms.normalize(request).problems.single().code)
+        val unsafe =
+            ShellPrograms.inspect(
+                request.copy(
+                    blocks = listOf(ProgramBlock("unsafe", "db.items.drop();", ProgramRole.ACTION))
+                )
+            )
+        assertEquals(ShellLiteralState.UNSUPPORTED, unsafe.state)
+        assertTrue(unsafe.operations.isEmpty())
+    }
 }

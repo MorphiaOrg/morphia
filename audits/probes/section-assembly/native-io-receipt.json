@@ -1,0 +1,230 @@
+{
+  "schemaVersion": 2,
+  "gitHead": "febc1d9ad81b6b97448b0e3b85d08c93ef7ffbcb",
+  "gitStatus": "M audits/README.md\n M audits/src/main/kotlin/dev/morphia/audits/scenarios/ScenarioContracts.kt\n M audits/src/main/kotlin/dev/morphia/audits/scenarios/ScenarioExtraction.kt\n M audits/src/main/kotlin/dev/morphia/audits/shell/ShellPrograms.kt\n M audits/src/test/kotlin/dev/morphia/audits/offline/ScenarioExtractionTest.kt\n M audits/src/test/kotlin/dev/morphia/audits/offline/ShellProgramsTest.kt\n M design/mongodb-operator-audits.md\n M design/operator-audits-progress.md\n M design/operator-audits-scenario-extraction.md\n?? audits/probes/section-assembly/native-io-receipt.json\n?? audits/probes/section-assembly/plan.json\n?? audits/probes/section-assembly/printed-results-receipt.json\n?? audits/probes/section-assembly/receipt.json\n?? audits/probes/section-assembly/replay.py\n?? audits/src/main/kotlin/dev/morphia/audits/scenarios/SectionPrograms.kt\n?? design/operator-audits-section-assembly.md",
+  "javaVersion": "openjdk version \"17.0.17\" 2025-10-21\nOpenJDK Runtime Environment Temurin-17.0.17+10 (build 17.0.17+10)\nOpenJDK 64-Bit Server VM Temurin-17.0.17+10 (build 17.0.17+10, mixed mode, sharing)",
+  "pythonVersion": "3.12.16 (main, Oct 26 2026, 14:08:45) [Clang 23.1.3 ]",
+  "runtimeClasspath": [
+    {
+      "index": 0,
+      "path": "/home/evanchooly/dev/worktrees/audits-section-assembly/audits/target/classes",
+      "kind": "DIRECTORY",
+      "fileCount": 387,
+      "sha256": "8bade98facc2f43661f347451783222fc4e12cb76f42e6070cbf5813c055935d"
+    },
+    {
+      "index": 1,
+      "path": "/home/evanchooly/.m2/repository/org/jetbrains/kotlin/kotlin-stdlib/2.3.21/kotlin-stdlib-2.3.21.jar",
+      "kind": "FILE",
+      "sha256": "6f64eac736db9434dd6925b4a518b9d1d17177652320c37916cf9ba3ce7d7d7a"
+    },
+    {
+      "index": 2,
+      "path": "/home/evanchooly/.m2/repository/org/jetbrains/annotations/13.0/annotations-13.0.jar",
+      "kind": "FILE",
+      "sha256": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478"
+    },
+    {
+      "index": 3,
+      "path": "/home/evanchooly/.m2/repository/org/ow2/asm/asm-tree/9.11.1/asm-tree-9.11.1.jar",
+      "kind": "FILE",
+      "sha256": "2b15c3c1b288a9fad3bb2cd6d988ba9521554914ed1f2a2029141fa3f483154a"
+    },
+    {
+      "index": 4,
+      "path": "/home/evanchooly/.m2/repository/org/ow2/asm/asm/9.11.1/asm-9.11.1.jar",
+      "kind": "FILE",
+      "sha256": "ae4e6e10d59d0a1500317764b21881ad883f8550e33c66e6142f7032c6fb566c"
+    },
+    {
+      "index": 5,
+      "path": "/home/evanchooly/.m2/repository/org/junit/jupiter/junit-jupiter-api/6.1.3/junit-jupiter-api-6.1.3.jar",
+      "kind": "FILE",
+      "sha256": "555d6cf20fa1710884dd01b86cc5785397ba73e21ada2d4b784f5f1a14dcafc4"
+    },
+    {
+      "index": 6,
+      "path": "/home/evanchooly/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar",
+      "kind": "FILE",
+      "sha256": "48e2df636cab6563ced64dcdff8abb2355627cb236ef0bf37598682ddf742f1b"
+    },
+    {
+      "index": 7,
+      "path": "/home/evanchooly/.m2/repository/org/junit/platform/junit-platform-commons/6.1.3/junit-platform-commons-6.1.3.jar",
+      "kind": "FILE",
+      "sha256": "a4774ae923c109544034aeae7c762cf017fbcdd1342403ba90e0921984b608c3"
+    },
+    {
+      "index": 8,
+      "path": "/home/evanchooly/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar",
+      "kind": "FILE",
+      "sha256": "b509448ac506d607319f182537f0b35d71007582ec741832a1f111e5b5b70b38"
+    },
+    {
+      "index": 9,
+      "path": "/home/evanchooly/.m2/repository/org/jspecify/jspecify/1.0.0/jspecify-1.0.0.jar",
+      "kind": "FILE",
+      "sha256": "1fad6e6be7557781e4d33729d49ae1cdc8fdda6fe477bb0cc68ce351eafdfbab"
+    },
+    {
+      "index": 10,
+      "path": "/home/evanchooly/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.23.0/jackson-databind-2.23.0.jar",
+      "kind": "FILE",
+      "sha256": "abd1edd2736c764da03fe6cb7a9de70d48dd0a198aed131604c564bff62f9cc1"
+    },
+    {
+      "index": 11,
+      "path": "/home/evanchooly/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.23/jackson-annotations-2.23.jar",
+      "kind": "FILE",
+      "sha256": "e5b60c3088e0887b290ff9226394354589a1dad583743944b7f5538661056b4c"
+    },
+    {
+      "index": 12,
+      "path": "/home/evanchooly/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.23.0/jackson-core-2.23.0.jar",
+      "kind": "FILE",
+      "sha256": "449798beb4c4ec26de9cc25b39ca2198036883fb905ca968cbef7136d19a25d9"
+    },
+    {
+      "index": 13,
+      "path": "/home/evanchooly/.m2/repository/com/fasterxml/jackson/module/jackson-module-kotlin/2.23.0/jackson-module-kotlin-2.23.0.jar",
+      "kind": "FILE",
+      "sha256": "2a4a60663eefeef16e056e8c9a1f9454f58e74c85ada798963b937491b9dcae5"
+    },
+    {
+      "index": 14,
+      "path": "/home/evanchooly/.m2/repository/org/jetbrains/kotlin/kotlin-reflect/2.3.21/kotlin-reflect-2.3.21.jar",
+      "kind": "FILE",
+      "sha256": "33e37d9dfa86c7a29ab34e975b5f4a1287b458878611051f3485652220c1a2cb"
+    },
+    {
+      "index": 15,
+      "path": "/home/evanchooly/.m2/repository/org/junit/jupiter/junit-jupiter/6.1.3/junit-jupiter-6.1.3.jar",
+      "kind": "FILE",
+      "sha256": "6b0a14075c74221de53047e363860b7d19fce802bebc152df2c35c4089c6c379"
+    },
+    {
+      "index": 16,
+      "path": "/home/evanchooly/.m2/repository/org/junit/jupiter/junit-jupiter-engine/6.1.3/junit-jupiter-engine-6.1.3.jar",
+      "kind": "FILE",
+      "sha256": "414559e78bbfa3bdb2eab009ac3ab1e22369ac31117c270a0bd666da115c5c6c"
+    },
+    {
+      "index": 17,
+      "path": "/home/evanchooly/.m2/repository/org/junit/platform/junit-platform-engine/6.1.3/junit-platform-engine-6.1.3.jar",
+      "kind": "FILE",
+      "sha256": "21ad7ad3a35beda16387979317be1833a72a71d812f9a66ee4b9a7bafb56334c"
+    },
+    {
+      "index": 18,
+      "path": "/home/evanchooly/.m2/repository/org/junit/jupiter/junit-jupiter-params/6.1.3/junit-jupiter-params-6.1.3.jar",
+      "kind": "FILE",
+      "sha256": "05c51cedba2c06a9770707391e006cee825876937dea580b94a265ce145d4939"
+    },
+    {
+      "index": 19,
+      "path": "/home/evanchooly/.m2/repository/org/mongodb/bson/5.14.0/bson-5.14.0.jar",
+      "kind": "FILE",
+      "sha256": "6299c18ad698681440f17cf86172dfab169530082959fd9949244982394ea99d"
+    },
+    {
+      "index": 20,
+      "path": "/home/evanchooly/.m2/repository/org/mozilla/rhino/1.9.1/rhino-1.9.1.jar",
+      "kind": "FILE",
+      "sha256": "12dbb224cea124a5d32968722e8eb161c967bf15f3c9a795d1b05592b1147975"
+    }
+  ],
+  "normalizerSources": {
+    "audits/src/main/kotlin/dev/morphia/audits/CorpusInventory.kt": "457b857e01c62590a044de9d6cd27d240ce9a518575bd9a0246f1cedb2580e9b",
+    "audits/src/main/kotlin/dev/morphia/audits/CorpusInventoryMain.kt": "b04e0a29df58444a0e9ac718fb6d6fbaebab9875d3010950a52a1405c72d1fcd",
+    "audits/src/main/kotlin/dev/morphia/audits/SinceAudit.kt": "2360209b32dee0dedb582a375e4b4145b400d705869b61599ec099a7f70535c7",
+    "audits/src/main/kotlin/dev/morphia/audits/api/ApiInventory.kt": "de5d48c11fd14862791c0c74f187b9083dcc66fba41223f056ba21b7149d9305",
+    "audits/src/main/kotlin/dev/morphia/audits/api/ApiInventoryMain.kt": "d493abe629ec919a57bdfe6ed82a71234e6949d7746429a00b2931bc00f73737",
+    "audits/src/main/kotlin/dev/morphia/audits/api/CompilerTypes.kt": "5fcdb219badfbf1377db71757ac9a746b8c1e1c25a706c23218265e3230cd30d",
+    "audits/src/main/kotlin/dev/morphia/audits/api/MorphiaApiInventory.kt": "e83636290735c89fe0e7eb628fea0b3c7b9158a533e1baa0b168b647091b96e8",
+    "audits/src/main/kotlin/dev/morphia/audits/api/SourceClasspath.kt": "e8dc9ae136759912f00b5aa4dd1094b8ca70ea0f55300a72ee139b62a929328d",
+    "audits/src/main/kotlin/dev/morphia/audits/coverage/AuditJson.kt": "70205895cba459235f7be084993aeb2c0f297f262eb2b204ca240973a53e9953",
+    "audits/src/main/kotlin/dev/morphia/audits/coverage/ContractValidation.kt": "bebd9bd6ad1981f9a9681077e1fa7ae5832b8a98cc89fa4c2c5f7074e39b0fe7",
+    "audits/src/main/kotlin/dev/morphia/audits/coverage/Contracts.kt": "2d9ccbc9477c6e70f66e90d6dc7092c2d71d665f09021ae990a308c4c8290186",
+    "audits/src/main/kotlin/dev/morphia/audits/coverage/CoverageComparison.kt": "7ff58d919f2797fed0ce45d73812869193bc785d1927768f99e314a091e7d1d4",
+    "audits/src/main/kotlin/dev/morphia/audits/coverage/CoverageMain.kt": "04cab7923d7ddc0910627c0ef6e821eec3cb07ca8ed658226a6b2258a1257c77",
+    "audits/src/main/kotlin/dev/morphia/audits/coverage/OperatorTokens.kt": "107e16463fa61567589f26d2607d2043fd385f428edbef115c239e0994b570dc",
+    "audits/src/main/kotlin/dev/morphia/audits/coverage/Versions.kt": "d59eddb02709f0af756f5396d54f14690f0fa9cec8b3e456738ee6853886fbf7",
+    "audits/src/main/kotlin/dev/morphia/audits/discovery/CatalogDiscovery.kt": "71cdff3963594d920f73d359f546aeecc0bae8906ed27653cf7abb074c3cd030",
+    "audits/src/main/kotlin/dev/morphia/audits/discovery/DiscoveryContracts.kt": "0d564c9c5acbd7419ebebcd1167811b190d1e706ec81b08826dec08336e45d38",
+    "audits/src/main/kotlin/dev/morphia/audits/discovery/DiscoveryDependencies.kt": "d91d93a35ffaacf32e758047b6ac6d8effadfdf14e4ddd8aad739089247f5c0b",
+    "audits/src/main/kotlin/dev/morphia/audits/discovery/DiscoveryMain.kt": "498aef03cef3e06b61fed7e4b9b775aca7c6e6e1bec86a1d465049294fd8ef88",
+    "audits/src/main/kotlin/dev/morphia/audits/discovery/DocumentFacts.kt": "1f0946a8a02661947115f89ff193be564bb962e3a764219f667b5c79fb1c3f15",
+    "audits/src/main/kotlin/dev/morphia/audits/discovery/LifecycleFacts.kt": "3a3cb6ae2bf13bab1ad00c444f40576cdf63fddbd73010c424bc8f579f3601a1",
+    "audits/src/main/kotlin/dev/morphia/audits/discovery/SourceEvidenceIndex.kt": "c03d98e874463cc2306f9f2401fee35850b6036838ea312c5fa80ef8a5a474da",
+    "audits/src/main/kotlin/dev/morphia/audits/documents/DocumentContracts.kt": "c4441e1a01da004fdf624fde1857dd7387f872bf16c23310bfec99fe5b8ae069",
+    "audits/src/main/kotlin/dev/morphia/audits/documents/DocumentParsing.kt": "a1930fccfc167a249ffa6d87a482552ff0b7273af20f1d03552b023a757520bc",
+    "audits/src/main/kotlin/dev/morphia/audits/documents/DocumentsMain.kt": "ad552d2d592cb5a030bbcdc3382cd927e9f3dc916c0f24d80b8a50c9ab10546a",
+    "audits/src/main/kotlin/dev/morphia/audits/model/CodeBlock.kt": "8b9f05755cfb7748d6e66a817a108de7a4dd50938687a2335e0ea012ac66f79c",
+    "audits/src/main/kotlin/dev/morphia/audits/model/MorphiaElement.kt": "b6a73f7ddf0af50e45ad85714b2e96568810b36eef47fa9eba77eb651a6f9866",
+    "audits/src/main/kotlin/dev/morphia/audits/model/Operator.kt": "558df525fa1606ffc73e9655d90b2089749ffd5957a33f6c359e4f81a8f5d4d4",
+    "audits/src/main/kotlin/dev/morphia/audits/model/OperatorType.kt": "f6860687c463b5feba0d252baa8743ae771b8e60f6699b4b1733eade91679862",
+    "audits/src/main/kotlin/dev/morphia/audits/naming/DescriptiveNames.kt": "48ce23e790983f97848db4ece4560fd77751be8a4648baf83c0120c0de214d5c",
+    "audits/src/main/kotlin/dev/morphia/audits/naming/NameContracts.kt": "b6a7d98f2cd1cbf24d2b9b72259bd0efd4c25716a256d39d2aa72da11c2fdd2c",
+    "audits/src/main/kotlin/dev/morphia/audits/naming/NameReconciliation.kt": "84ba41335b7f3347dfff9dcf092dbd7218cfd616cc861ce5da435c9880735d65",
+    "audits/src/main/kotlin/dev/morphia/audits/naming/NamesMain.kt": "9286053fa682234fd07b6e6ff94e71b3a558ecf21b2c725a6ef5a31ace024896",
+    "audits/src/main/kotlin/dev/morphia/audits/published/PublishedComparison.kt": "bd74433ba83b20e1fe99d8dbb83bc728d5af2699cdbc2f5e14f434934e03f6f9",
+    "audits/src/main/kotlin/dev/morphia/audits/published/PublishedContracts.kt": "770306ef47404ce8ad4d0f2ce66f4999c99fd2a3ded778dcea509bcada59c3fb",
+    "audits/src/main/kotlin/dev/morphia/audits/rst/OperatorExample.kt": "2f5fe4d8c9a1cf3c05aed8dd840037d160bd86bd7a6c1381d1408e36e7732869",
+    "audits/src/main/kotlin/dev/morphia/audits/rst/ParsingSupport.kt": "f4b9e502102dd245593bc140d80470667979951756eee65930018eecc5b52309",
+    "audits/src/main/kotlin/dev/morphia/audits/rst/RstDocument.kt": "bdefabe64933a6179bda6e8294232e06a0a48754a679c66d18bffb068ed0e800",
+    "audits/src/main/kotlin/dev/morphia/audits/rst/Separator.kt": "a241ca294a6c909e2d1b94cbeea4bf4dfb1e8388d03ac9b2bd62d0041ba55f6d",
+    "audits/src/main/kotlin/dev/morphia/audits/scenarios/ScenarioContracts.kt": "bdd05de488dd6ce82d85ed79075ec1f2c3aaa0c32fa9719c0b3262cc01623af4",
+    "audits/src/main/kotlin/dev/morphia/audits/scenarios/ScenarioExtraction.kt": "32565763017dddb861f6f97248e0de5d235c7010d1cec4c8c75d6615452cc939",
+    "audits/src/main/kotlin/dev/morphia/audits/scenarios/ScenarioSourceHealth.kt": "3c0f7e68bbc3a591381680c90360c6a06521d52e7455e30e186a3ab69ce28c92",
+    "audits/src/main/kotlin/dev/morphia/audits/scenarios/ScenariosMain.kt": "76471bda985f77f31c41568779bfc6f76fdf05e84ecbebd3a1fb8324deed1467",
+    "audits/src/main/kotlin/dev/morphia/audits/scenarios/SectionPrograms.kt": "1dbe92ef7bd5158ed184f6482ba2fc05c23d7b9d35955abcf0aa97e1b19e1b55",
+    "audits/src/main/kotlin/dev/morphia/audits/semantics/BsonComparison.kt": "81bf8a3525496261146b8dcdce52eddd1d92808480a380288e544900e85951cb",
+    "audits/src/main/kotlin/dev/morphia/audits/semantics/BsonComparisonContracts.kt": "f1f62b41f3b56cd26d546712f47cc7446f4ec039c5a5c66513ab08746c02fafe",
+    "audits/src/main/kotlin/dev/morphia/audits/semantics/BsonSnapshot.kt": "733a98f02715aa71db1c061347953026d57d5289262f72d26e0f63a45caf2236",
+    "audits/src/main/kotlin/dev/morphia/audits/shell/LegacyDocuments.kt": "f1f26ad5eb2b4b7f13162c66dcc2a9d97630ecec7a7b401f5298fa694fd15536",
+    "audits/src/main/kotlin/dev/morphia/audits/shell/ProgramsMain.kt": "5292909907f4bfa2b6f510fbc098c84694aff4d41a2f5c5ff1a5dcac72d19654",
+    "audits/src/main/kotlin/dev/morphia/audits/shell/ShellLiteralConstructors.kt": "3d351f94d89c24b58effbb96ebcc24e8295adaaef2e986ba705fc9add8c18e35",
+    "audits/src/main/kotlin/dev/morphia/audits/shell/ShellLiteralContracts.kt": "5f18dbb4bf95bf40fd1773d6274387576c34323a04763046f93ce213737505d8",
+    "audits/src/main/kotlin/dev/morphia/audits/shell/ShellLiterals.kt": "9c2e148a06bbb30fba6b94d2f1dd036cd4ea2d29029e64fb13967cd0e7ae07d7",
+    "audits/src/main/kotlin/dev/morphia/audits/shell/ShellProgramContracts.kt": "3471e57f3ea4a369f577fdf9819e7044734c1481f58e2cb4b20c898ba1f3d191",
+    "audits/src/main/kotlin/dev/morphia/audits/shell/ShellPrograms.kt": "6090e8363fbec6177f77d420739b5477c18156bfb34fab44d60571ebb21c0604",
+    "audits/src/main/kotlin/dev/morphia/audits/shell/ShellRegularExpressions.kt": "9538f0f96da23e8cbd37c9fe1f2db84d6bb6da962701dad33e1ffd5b7fb6b996",
+    "audits/src/main/kotlin/dev/morphia/audits/shell/ShellResultFraming.kt": "6d4d7fe580727ca5ec7603f74cef13a3252398d0d6290f418e52913717b806a4",
+    "audits/src/main/kotlin/dev/morphia/audits/shell/ShellValueLowering.kt": "c655c7342d31925d20d232c81c33a2abb21300d0e8d6103c6eeb971a9bcb549d",
+    "audits/src/main/kotlin/dev/morphia/audits/sources/GitAcquisition.kt": "9b65565db0a243172e1db1fb98528ad3b7dc983d6c069ebc97f240d6507698bf",
+    "audits/src/main/kotlin/dev/morphia/audits/sources/GitCommands.kt": "46d5eefac9f4b9c440a02cf9859100112e6334f5d5d500a18f96805a686f3274",
+    "audits/src/main/kotlin/dev/morphia/audits/sources/GitObjectSession.kt": "5e435f84f2ad2aea9e797ac39a3741ff284a6038ebb89976587d86314998569c",
+    "audits/src/main/kotlin/dev/morphia/audits/sources/GitObjects.kt": "10a68385e3c71e4ecce405c32e472b62617ed533144d2eae2c06935fa6396c34",
+    "audits/src/main/kotlin/dev/morphia/audits/sources/GitSnapshot.kt": "41b3d20a343418d752efcb91a9217aa5231d1a0bf5758205facefec7c4cd6c66",
+    "audits/src/main/kotlin/dev/morphia/audits/sources/SourceBundle.kt": "34c01b1fdcabadc84fc2b953a1f00ee2babdf3c6385cb9ab24b92f09b64ca187",
+    "audits/src/main/kotlin/dev/morphia/audits/sources/SourceContracts.kt": "90c4d9fa4538bf01c257efa374234d650f8537aabc1366e162dd0e749b5c66d3",
+    "audits/src/main/kotlin/dev/morphia/audits/sources/SourceGraph.kt": "55e140324a7930d796544c8f4ee25f032f654c95f94c6a72a69392b8d21fc74f",
+    "audits/src/main/kotlin/dev/morphia/audits/sources/SourcesMain.kt": "2c3436447f1c92b485647c1c534c0a3bf08f82dc7f913bdfa1a76e42985e0562",
+    "audits/src/main/kotlin/org/mozilla/javascript/AuditShellLexer.kt": "cf89467515e95c160cd07f52467ecfd9dd450e31497b72fa26848340bbdfe0a0"
+  },
+  "buildInputs": {
+    "pom.xml": "92b8765d2b46dff99835f858cbcb6e291361359458b0e96741aa178e8da8ac96",
+    "audits/pom.xml": "ab8970f43506311f377b4512505561b1d3ccd83bfe4c68dc02aba4dbb10b06b8"
+  },
+  "runtimeReceiptHelperSha256": "a0b2239917907ac784f4575970bc1dffdffa9ec9e655ae959ab6b2986ec7b620",
+  "purpose": "Exploratory published-constraint normalization; not an accepted baseline or execution attestation",
+  "sourceSha256": "9632a61a4f77b83161d81b7da8fc63e11ab94112d7b73c3bcf49da6ced5e165a",
+  "documentInputSha256": "08992fea5b191dde64035beeba3524d02e020f9621e28f7f349b0e106f173675",
+  "documentReportSha256": "0552bd357b5fb8d220772aab42ddfb7b746fd3450e5459f03320729a72b4da98",
+  "catalogSha256": "61c0879656464120f041fc857467efe06e5381ad28427f3f1e8726baf6c9ac09",
+  "planSha256": "f9488d0af2a91efbd9b2e7e0a7f58006f21a643718c0cdd78be159125ae5cc3d",
+  "planFileSha256": "75d3b4bf39039651f0bbb3ac90483d78fb63b74e7060d72c52c8f503357eae4d",
+  "reportSha256": "3934078559427ad8e7e8220542231dc99fffc09178eb0a5f11c180e9eed41408",
+  "reportBytes": 1259561,
+  "repeatByteIdentical": true,
+  "referenceGroups": 16,
+  "foreignGroups": 2,
+  "programStates": {
+    "NORMALIZED": 16
+  },
+  "proposedNames": 16,
+  "nameProposalSha256": "5615ff95a85717df3aac0d9e87fe4dfebce36a0b679110017ca194f42460d8e1",
+  "priorNameProposalSha256": "5615ff95a85717df3aac0d9e87fe4dfebce36a0b679110017ca194f42460d8e1",
+  "physicalInventory": "Empty only for synthetic fixture.* destinations; not a core migration inventory",
+  "probeSha256": "26737175704096f2931a01e825598e3b553e229f770094e3aa88f5877d769a88"
+}

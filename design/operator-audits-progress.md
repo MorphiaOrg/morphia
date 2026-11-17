@@ -1558,3 +1558,120 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
 - Publish stacked on #4523, request remote review, and inspect exact-head CI/feedback before the next
   child. No merges authorized/performed. Next scope remains section/setup assembly and recovered
   descriptive context for legacy names, followed by the actual method/folder cutover.
+
+## Printed-result publication checkpoint
+
+- PR #4524: https://github.com/MorphiaOrg/morphia/pull/4524
+  branch `audits-legacy-scenarios`, base `audits-published-expectations`, head
+  `febc1d9ad81b6b97448b0e3b85d08c93ef7ffbcb`.
+- Thirteen PRs published. All five required exact-head checks are running. Remote Copilot review
+  requested; initial feedback/reviews/requests are empty. Local round-2 review is clean, after the
+  retained first-round findings were fixed. Claude/Copilot CLI quotas remain unavailable.
+- Keep this reviewed head unchanged while CI runs. Carry this uncommitted publication checkpoint
+  into the next child only after exact-head CI and available feedback pass, saving a copy before
+  restoring this parent journal. No merges authorized/performed.
+- Next implementation: real legacy section/setup ownership and descriptive source context. Native
+  abs source grouping is still PARTIAL despite its now-normalizable raw result stream. Existing
+  556 cases (including 110 generic `main` labels) and all fixture/lock bytes remain protected until
+  the manifest/coverage-loader migration can perform a coordinated method/folder/reference cutover.
+
+## Section assembly start (2026-11-17)
+
+- #4524 is green at febc1d9ad81b6b97448b0e3b85d08c93ef7ffbcb. All five required checks pass;
+  conditional Dependabot automerge is skipped. No remote comments/reviews/pending requests or inline
+  feedback. Exact-head proof /tmp/morphia-legacy-pr-final-status.json and
+  /tmp/morphia-legacy-pr-final-comments.json. Thirteen PRs published, no merges authorized/performed.
+- Created audits-section-assembly from that head after the gate. Copied the predecessor publication
+  journal here and saved /tmp/morphia-legacy-publication-progress.md before restoring that parent
+  journal. Parent is clean; this child has no implementation/commit/PR yet.
+- Next scope is source ownership for standalone legacy sections, typed setup/command inspection,
+  explicit reviewed layout policies, and authored section/tab/page titles for descriptive naming.
+  Never infer a seed namespace/type from a printed sample or borrow the first sibling's state.
+  Reference-only source and ambiguous semantics must remain visible independently of naming.
+- Existing raw inputs/probes remain available: /tmp/morphia-audits-discovery-documents.json,
+  /tmp/morphia-legacy-selected-pages.json, /tmp/morphia-abs-native-blocks.json and the pinned bundle
+  /tmp/morphia-normalization-source-4jepdujh/bundle. The abs example is a concrete first target.
+- CLI review quotas remain unavailable; the independent review agent is available for required
+  design/code verification. Do not label that as completed Claude approval.
+
+## Section assembly implementation checkpoint
+
+- Opt-in SectionAssemblyPolicy now owns direct standalone section/tab code, with reviewed
+  COMMANDS_THEN_RESULT and SOURCE_ONLY layouts. Internal closed-shell inspection classifies
+  declarations/inserts/indexes separately from one final query/aggregate/update action. Public
+  normalization retains NO_ACTION. No source rewriting, JavaScript execution or parser fallback.
+- Explicit ordered shared setup selectors replace sibling inheritance and apply to standalone/native
+  IO groups. Setup is retained at page level, including zero-consumer cases; replicated source and
+  embedded programs share global budgets. Authored page/tab title recovery feeds existing naming.
+- First independent design round found four valid gaps: foreign/missing local setup languages,
+  setup selection outside example scopes, zero-consumer source retention, and missing native-IO
+  tab name/context propagation. All have corrections and regressions. Notes
+  /tmp/morphia-sections-design-review.md. Initial 335-test Critter pass preceded those corrections;
+  expanded suite is running. No final review, commit or publication yet.
+- New pinned probe plan/replay under audits/probes/section-assembly targets automatic abs ownership
+  and two explicitly source-only acos tabs. Probe/receipts still need execution after the final
+  build. Existing native IO names and physical corpus bytes must remain unchanged.
+
+## Section assembly native proof and second review
+
+- First full gate passed 343 tests with both mapper flags, six Python probe tests, root formatting,
+  graph refresh, exact corpus reproduction and protected-path checks. New native report SHA
+  34addd51d6425f843fccf603b77effb6729516cdcbd15bf3a7824b5d6d49fc20 (680,983 bytes):
+  3 reference groups, zero unassigned, 1 normalized abs program / 2 commands / 4 rows, 2 source-only
+  acos groups, 3 names: absExpressionOperator, inverseCosineOfValueInDegrees,
+  inverseCosineOfValueInRadians. Abs semantic SHA matches the prior explicit reviewed program:
+  ef4be2463922b87de2d8b6d421ca70dbba3682326959f303de77849fb2a78724.
+- Prior IO probe retains 16 normalized references + 2 foreign groups and byte-identical 16 name
+  proposals. New report SHA 3934078559427ad8e7e8220542231dc99fffc09178eb0a5f11c180e9eed41408,
+  1,259,561 bytes (new normalizer/additive policy/page fields). Default-policy abs remains honestly
+  unassigned, and its explicit printed-result program SHA is unchanged. Artifacts live under
+  /tmp/morphia-section-assembly-{probe,io-probe,printed-probe}; source/build/probe/helper/classpath
+  provenance verified by the second review. Native receipts still need copying after final gate.
+- Round 2 found one valid medium issue: shared JS setup made language-only Python observations
+  mixed/unresolved, blocking an otherwise healthy reference scope. Verified in compiled standalone
+  and native IO cases. Fixed by classifying the owner's inputs independently, retaining strict
+  local SETUP language checks, and omitting shared shell blocks from FOREIGN candidates. Declared
+  published tails do not classify input language. Shared setup remains at page level. New regression
+  covers standalone, IO, actual Python syntax and JSON-highlighted output.
+- Current final gate is running sequential Critter/reflection/format/probes/graph with that correction.
+  Expect 344 tests; do not claim final approval yet. Round 3 remains, then commit/push stacked PR14
+  on #4524, request remote review and await exact-head CI before starting actual backport work.
+- Claude weekly quota remains until Nov 19; Copilot availability check still reports monthly quota
+  exceeded (/tmp/morphia-sections-copilot-availability.log). Independent review notes:
+  /tmp/morphia-sections-{design-review,code-review2}.md. No merges authorized/performed.
+
+## Final section assembly review correction
+
+- Three broad local rounds are complete. Round 3 verified the foreign-classification correction and
+  final receipts, then found a valid budget issue: role inspection still parsed shared source before
+  discarding it from foreign observations. A bounded 500-owner/200k-literal probe demonstrated the
+  repeated source work. Notes /tmp/morphia-sections-code-review3.md. No substantive finding rejected.
+- Corrected the call order: one ownVariant helper classifies owner language/container evidence before
+  assignment and again at emission. FOREIGN/UNRESOLVED standalone owners bypass semantic inspection.
+  Shared setup is attached only to reference owners and charged before inspection; native IO charges
+  retained setup before normalization. Foreign standalone blocks retain unassigned semantic roles.
+- A final serialized verification gate is running. After it passes, refresh the three receipt copies,
+  obtain focused completion verification (/tmp/morphia-sections-focused-verification.md), and publish
+  PR14. Do not run a fourth broad review. Current compiled evidence is being regenerated; no commit,
+  push or PR yet. Preserve the 556-case physical corpus and all lock/fixture bytes until backport.
+
+## Section assembly final local gate
+
+- Final suites pass: 344 tests with Critter and reflection, zero failures/errors and two optional
+  integration skips each; six Python probe contract tests pass. Root formatting, graph refresh,
+  exact legacy-corpus reproduction and protected-path checks pass. No core, fixture, lock,
+  strict-comparator or accepted legacy-catalog bytes changed.
+- Final schema-2 receipts are copied under audits/probes/section-assembly. Repeated native reports
+  and names retain the identities above. The new plan produces 3 reference groups / 3 descriptive
+  names / zero unassigned blocks, with one normalized abs program and two honest source-only acos
+  observations. Prior sixteen names and explicit abs program remain byte-identical.
+- Focused completion verification is clean after the maximum three broad rounds. It verifies the
+  final call order, four compiled cases (including 500 foreign owners with a 200k shared literal),
+  local missing/foreign setup rejection and all copied source/runtime/artifact identities. Notes
+  /tmp/morphia-sections-focused-verification.md. All six substantive findings across the rounds
+  were fixed; none rejected. No remaining actionable finding in scope.
+- Predecessor #4524 remains OPEN at febc1d9ad81 with all five required exact-head checks successful;
+  conditional Dependabot automerge skipped. Proof /tmp/morphia-sections-parent-status.json.
+  Publish this branch as stacked PR14, request remote review, then check exact-head CI/feedback.
+  Next scope is a complete physical binding/name migration manifest and descriptor-based coverage
+  discovery before coordinated method/folder/reference renames. No merge authorization.

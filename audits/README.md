@@ -521,3 +521,10 @@ for the plan schema, CLI, provenance and remaining legacy-layout work.
 JSON. `ScenarioExtraction.namingRequest` requires physical name inventory and can select independent
 healthy scopes before calling the existing registry reconciler. No fixture, test, accepted name
 registry or GitHub issue is written by either operation.
+
+Standalone legacy layouts can opt into `sectionAssembly`; see the
+[section/setup contract](../design/operator-audits-section-assembly.md). It preserves raw source,
+uses declared shared setup selectors, and recovers authored page/tab titles for naming. A
+`SOURCE_ONLY` group is explicitly non-executable. The pinned `probes/section-assembly/replay.py`
+experiment covers automatic `$abs` ownership and descriptive `$acos` tab names without creating
+seed data from displayed samples. Existing generated core tests/resources have not yet migrated.

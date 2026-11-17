@@ -1037,4 +1037,584 @@ class ScenarioExtractionTest {
         assertEquals(2, program.expectations.single().published!!.size)
         assertNotNull(scenario.naming)
     }
+
+    private fun assembledRule(
+        layout: SectionLayout = SectionLayout.COMMANDS_THEN_RESULT,
+        shared: List<String> = emptyList(),
+        tabs: List<String> = emptyList(),
+        aliases: List<String> = emptyList(),
+    ) = rule().copy(sectionAssembly = SectionAssemblyPolicy(layout, shared, tabs, aliases))
+
+    private fun standalone(title: String, anchor: String, vararg sources: String) =
+        section(title, anchor, *sources.map { code(it) }.toTypedArray())
+
+    @Test
+    fun standaloneSectionAssignsTypedSetupActionAndUntouchedPrintedResults() {
+        val seed = "db.items.insertMany([{v:1},{v:2}]);"
+        val query = "db.items.find({});"
+        val result = "{v:1}\n{v:2}"
+        val tree = root(standalone("Read All Items", "read-all", seed, query, result))
+        val old = extract(tree)
+        assertEquals(3, old.pages.single().unassignedReferenceBlocks)
+        val report = extract(tree, assembledRule())
+        assertEquals(ScenarioExtractionState.READY, report.state, report.problems.toString())
+        assertTrue(report.pages.single().unassigned.isEmpty())
+        val scenario = report.scenarios.single()
+        assertEquals(
+            listOf(ProgramRole.SETUP, ProgramRole.ACTION, ProgramRole.EXPECTED),
+            scenario.blocks.map { it.role },
+        )
+        assertEquals(listOf(seed, query, result), scenario.blocks.map { it.source })
+        val program = requireNotNull(scenario.program)
+        assertEquals(ShellLiteralState.NORMALIZED, program.state, program.problems.toString())
+        assertEquals(2, program.commands.size)
+        assertEquals(2, program.expectations.single().published!!.size)
+        assertEquals("readAllItems", DescriptiveNames.stem(scenario.naming!!.trace.displayTitle))
+    }
+
+    @Test
+    fun genericExampleUsesAuthoredPageTitleAndDoesNotDependOnSiblingOrder() {
+        val example = section("Example", "example", code("db.items.find({});"), code("[]"))
+        val other = standalone("Find Positive Values", "positive", "db.items.find({v:1});", "[]")
+        fun tree(vararg children: DocumentNode) =
+            node("root", children = listOf(section("Absolute Value", "abs", *children)))
+        val policy = assembledRule().copy(sections = listOf("example", "positive"))
+        val first = extract(tree(example, other), policy)
+        val reordered = extract(tree(other, example), policy)
+        val name = first.scenarios.single { it.sections.last().anchor == "example" }.naming!!
+        val second = reordered.scenarios.single { it.sections.last().anchor == "example" }.naming!!
+        assertEquals("absoluteValue", DescriptiveNames.stem(name.trace.displayTitle))
+        assertEquals(name, second)
+    }
+
+    @Test
+    fun declaredSharedSetupIsOrderedAndNeverBorrowedFromFirstSibling() {
+        val setup = standalone("Seed Items", "seed", "const n=2;", "db.items.insertOne({v:n});")
+        val first = standalone("First Query", "first", "db.items.find({v:n});", "[{v:2}]")
+        val second = standalone("Second Query", "second", "db.items.find({});", "[{v:2}]")
+        val policy = assembledRule(shared = listOf("seed"))
+        val report = extract(root(second, setup, first), policy)
+        assertEquals(ScenarioExtractionState.READY, report.state, report.problems.toString())
+        assertEquals(2, report.scenarios.size)
+        report.scenarios.forEach {
+            assertEquals(
+                ShellLiteralState.NORMALIZED,
+                it.program!!.state,
+                it.program!!.problems.toString(),
+            )
+            assertEquals(
+                listOf(
+                    ProgramRole.SETUP,
+                    ProgramRole.SETUP,
+                    ProgramRole.ACTION,
+                    ProgramRole.EXPECTED,
+                ),
+                it.blocks.map { b -> b.role },
+            )
+            assertEquals("const n=2;", it.blocks.first().source)
+        }
+        val without = extract(root(setup, first, second), assembledRule())
+        assertTrue(
+            without.scenarios
+                .single { it.sections.last().anchor == "second" }
+                .blocks
+                .none { it.source.contains("insertOne") }
+        )
+        assertNull(without.scenarios.single { it.sections.last().anchor == "first" }.program)
+    }
+
+    @Test
+    fun sharedSetupCannotBeAnActionOrAnUnresolvedLanguage() {
+        for (setup in
+            listOf(code("db.items.find({});"), code("db.items.insertOne({v:1});", "bash"))) {
+            val report =
+                extract(
+                    root(
+                        section("Shared", "shared", setup),
+                        standalone("Read Items", "read", "db.items.find({});", "[]"),
+                    ),
+                    assembledRule(shared = listOf("shared")),
+                )
+            assertEquals(ScenarioExtractionState.PARTIAL, report.state)
+            assertTrue(report.pages.single().unassigned.isNotEmpty())
+            assertTrue(report.scenarios.all { it.naming == null && it.program == null })
+        }
+        val missing =
+            extract(
+                root(standalone("Read Items", "read", "db.items.find({});", "[]")),
+                assembledRule(shared = listOf("absent")),
+            )
+        assertEquals(ScenarioExtractionState.PARTIAL, missing.state)
+        assertTrue(missing.problems.any { it.code == "MISSING_OR_AMBIGUOUS_SHARED_SETUP" })
+    }
+
+    @Test
+    fun sharedSetupAlsoPrecedesExplicitIoInputs() {
+        val report =
+            extract(
+                root(
+                    standalone("Shared Seed", "shared", "db.items.insertOne({v:1});"),
+                    section("Read Items", "read", io()),
+                ),
+                assembledRule(shared = listOf("shared")),
+            )
+        assertEquals(ScenarioExtractionState.READY, report.state, report.problems.toString())
+        val scenario = report.scenarios.single()
+        assertEquals(ProgramRole.SETUP, scenario.blocks.first().role)
+        assertEquals(ShellLiteralState.NORMALIZED, scenario.program!!.state)
+        assertEquals(2, scenario.program!!.commands.size)
+    }
+
+    @Test
+    fun tabTitlesNameSourceOnlySamplesWithoutInventingSeeds() {
+        fun tab(id: String, title: String) =
+            node(
+                "directive",
+                name = "tab",
+                options = mapOf("tabid" to AuditJson.write(id).trim()),
+                arguments = listOf(node("text", text = title)),
+                children =
+                    listOf(
+                        code("{v:1}", "bash"),
+                        code("db.items.aggregate([]);", "bash"),
+                        code("{v:1}", "bash"),
+                    ),
+            )
+        val degrees = tab("degrees", "Inverse Cosine of Value in Degrees")
+        val radians = tab("radians", "Inverse Cosine of Value in Radians")
+        val policy =
+            assembledRule(
+                SectionLayout.SOURCE_ONLY,
+                tabs = listOf("degrees", "radians"),
+                aliases = listOf("bash"),
+            )
+        fun run(vararg variants: DocumentNode) =
+            extract(
+                root(
+                    section(
+                        "Example",
+                        "example",
+                        node("directive", name = "tabs", children = variants.toList()),
+                    )
+                ),
+                policy,
+            )
+        val report = run(degrees, radians)
+        assertEquals(ScenarioExtractionState.READY, report.state, report.problems.toString())
+        assertEquals(2, report.scenarios.size)
+        assertTrue(
+            report.scenarios.all {
+                it.program == null &&
+                    it.blocks.all { b -> b.role == null } &&
+                    it.normalizationProblem == "SOURCE_ONLY_SECTION"
+            }
+        )
+        val names = report.scenarios.map { it.naming!! }.sortedBy { it.id }
+        assertEquals(
+            setOf("inverseCosineOfValueInDegrees", "inverseCosineOfValueInRadians"),
+            names.map { DescriptiveNames.stem(it.trace.displayTitle) }.toSet(),
+        )
+        assertEquals(names, run(radians, degrees).scenarios.map { it.naming!! }.sortedBy { it.id })
+        assertEquals(2, names.map { it.trace.location.enclosingContext }.distinct().size)
+    }
+
+    @Test
+    fun undeclaredTabsAndHiddenSelectorContainersCannotBecomeComplete() {
+        val unknown =
+            node(
+                "directive",
+                name = "future-selector",
+                children = listOf(code("db.items.find({});")),
+            )
+        val report =
+            extract(root(section("Read Items", "read", unknown, code("[]"))), assembledRule())
+        assertEquals(ScenarioExtractionState.PARTIAL, report.state)
+        assertNull(report.scenarios.single().naming)
+        val tab =
+            node(
+                "directive",
+                name = "tab",
+                options = mapOf("tabid" to "\"unknown\""),
+                children = listOf(code("db.items.find({});"), code("[]")),
+            )
+        assertEquals(
+            ScenarioExtractionState.PARTIAL,
+            extract(root(section("Read Items", "read", tab)), assembledRule()).state,
+        )
+    }
+
+    @Test
+    fun ambiguousCommandsAndPrintedSamplesRemainOwnedWithoutExecutablePlans() {
+        val sources =
+            listOf(
+                listOf("{v:1}", "db.items.find({});", "[{v:1}]"),
+                listOf("db.items.find({});", "db.items.find({v:1});", "[]"),
+                listOf("db.items.insertOne({v:1}); db.items.find({});", "[]"),
+                listOf("db.items.find({});", "const n=1;", "[]"),
+            )
+        for (blocks in sources) {
+            val report =
+                extract(
+                    root(standalone("Read Items", "read", *blocks.toTypedArray())),
+                    assembledRule(),
+                )
+            assertEquals(ScenarioExtractionState.READY, report.state, report.problems.toString())
+            val scenario = report.scenarios.single()
+            assertNull(scenario.program)
+            assertNotNull(scenario.normalizationProblem)
+            assertNotNull(scenario.naming)
+            assertEquals(blocks, scenario.blocks.map { it.source })
+        }
+    }
+
+    @Test
+    fun repeatedSharedSourceIsChargedBeforeProgramConstruction() {
+        val tree =
+            root(
+                standalone("Shared Seed", "shared", "db.items.insertOne({v:1});"),
+                standalone("First Query", "first", "db.items.find({});", "[]"),
+                standalone("Second Query", "second", "db.items.find({});", "[]"),
+            )
+        val (bundle, document) = fixture(tree)
+        val originalCharacters =
+            "db.items.insertOne({v:1});".length + 2 * ("db.items.find({});".length + 2)
+        assertThrows(IllegalArgumentException::class.java) {
+            ScenarioExtraction.extract(
+                bundle,
+                document,
+                plan(assembledRule(shared = listOf("shared"))),
+                ScenarioExtractionLimits(maximumCodeCharacters = originalCharacters + 1),
+            )
+        }
+    }
+
+    @Test
+    fun declaredSharedSectionOutsideExampleSelectionIsRetainedEvenWithoutConsumers() {
+        val shared = standalone("Shared Seed", "shared", "db.items.insertOne({v:1});")
+        val consumer =
+            section(
+                "Examples",
+                "examples",
+                standalone("Read Items", "read", "db.items.find({});", "[{v:1}]"),
+            )
+        val tree =
+            node("root", children = listOf(section("Operator", "operator", shared, consumer)))
+        val report = extract(tree, assembledRule(shared = listOf("shared")))
+        assertEquals(ScenarioExtractionState.READY, report.state, report.problems.toString())
+        assertEquals(1, report.scenarios.size)
+        assertEquals(
+            "db.items.insertOne({v:1});",
+            report.pages.single().sharedSetup.single().source,
+        )
+        assertEquals(2, report.scenarios.single().program!!.commands.size)
+        val noConsumer =
+            extract(
+                node(
+                    "root",
+                    children =
+                        listOf(
+                            section("Operator", "operator", shared, section("Examples", "examples"))
+                        ),
+                ),
+                assembledRule(shared = listOf("shared")),
+            )
+        assertEquals(ScenarioExtractionState.PARTIAL, noConsumer.state)
+        assertEquals(1, noConsumer.pages.single().sharedSetup.size)
+        assertTrue(noConsumer.scenarios.isEmpty())
+    }
+
+    @Test
+    fun ownSetupLanguagesMustBeKnownReferenceLanguages() {
+        for (seed in
+            listOf(
+                code("db.items.insertOne({v:1});", "python"),
+                code("db.items.insertOne({v:1});", "bash"),
+                node("code", text = "db.items.insertOne({v:1});"),
+            )) {
+            val report =
+                extract(
+                    root(
+                        section("Read Items", "read", seed, code("db.items.find({});"), code("[]"))
+                    ),
+                    assembledRule(),
+                )
+            assertEquals(ScenarioExtractionState.PARTIAL, report.state)
+            assertNull(report.scenarios.single().program)
+            assertNull(report.scenarios.single().naming)
+        }
+    }
+
+    @Test
+    fun authoredScenarioTabsAlsoNameNativeIoAndQualifyNestedTitles() {
+        fun tab(id: String, title: String, nested: Boolean) =
+            node(
+                "directive",
+                name = "tab",
+                options = mapOf("tabid" to AuditJson.write(id).trim()),
+                arguments = listOf(node("text", text = title)),
+                children = listOf(if (nested) section("Read Values", "read", io()) else io()),
+            )
+        val policy = assembledRule(tabs = listOf("degrees", "radians"))
+        for (nested in listOf(false, true)) {
+            val report =
+                extract(
+                    root(
+                        section(
+                            "Example",
+                            "example",
+                            node(
+                                "directive",
+                                name = "tabs",
+                                children =
+                                    listOf(
+                                        tab("degrees", "Values In Degrees", nested),
+                                        tab("radians", "Values In Radians", nested),
+                                    ),
+                            ),
+                        )
+                    ),
+                    policy,
+                )
+            assertEquals(ScenarioExtractionState.READY, report.state, report.problems.toString())
+            assertEquals(2, report.scenarios.size)
+            val names = report.scenarios.map { it.naming!! }
+            assertEquals(2, names.map { it.trace.location.enclosingContext }.distinct().size)
+            if (nested)
+                assertEquals(
+                    setOf("Values In Degrees", "Values In Radians"),
+                    names.map { it.contextTitles.first() }.toSet(),
+                )
+            else
+                assertEquals(
+                    setOf("Values In Degrees", "Values In Radians"),
+                    names.map { it.trace.displayTitle }.toSet(),
+                )
+        }
+    }
+
+    @Test
+    fun sharedDependencyOrderIsDeclaredAndNeverCanonicalizedAlphabetically() {
+        val first = standalone("Initial Binding", "z-first", "const n=1;")
+        val second = standalone("Seed Items", "a-second", "db.items.insertOne({v:n});")
+        val consumer = standalone("Read Items", "read", "db.items.find({});", "[{v:1}]")
+        val report =
+            extract(
+                root(second, consumer, first),
+                assembledRule(shared = listOf("z-first", "a-second")),
+            )
+        assertEquals(ScenarioExtractionState.READY, report.state, report.problems.toString())
+        assertEquals(
+            listOf("z-first", "a-second"),
+            report.plan.pages.single().sectionAssembly!!.sharedSetupSections,
+        )
+        assertEquals(ShellLiteralState.NORMALIZED, report.scenarios.single().program!!.state)
+        val reversed =
+            extract(
+                root(first, second, consumer),
+                assembledRule(shared = listOf("a-second", "z-first")),
+            )
+        assertEquals(ScenarioExtractionState.PARTIAL, reversed.state)
+        assertTrue(reversed.problems.any { it.code == "UNSUPPORTED_SHARED_SETUP" })
+    }
+
+    @Test
+    fun sharedSelectionDoesNotSweepInUnselectedDescendants() {
+        val shared =
+            section(
+                "Shared Seed",
+                "shared",
+                code("db.items.insertOne({v:1});"),
+                standalone("Unrelated Child", "unrelated", "db.items.drop();"),
+            )
+        val tree =
+            node(
+                "root",
+                children =
+                    listOf(
+                        section(
+                            "Operator",
+                            "operator",
+                            shared,
+                            section(
+                                "Examples",
+                                "examples",
+                                standalone("Read Items", "read", "db.items.find({});", "[]"),
+                            ),
+                        )
+                    ),
+            )
+        val report = extract(tree, assembledRule(shared = listOf("shared")))
+        assertEquals(ScenarioExtractionState.READY, report.state, report.problems.toString())
+        assertEquals(1, report.pages.single().sharedSetup.size)
+        assertTrue(report.scenarios.single().blocks.none { it.source.contains("drop") })
+    }
+
+    @Test
+    fun explicitlyReviewedLegacyHighlightingRemainsClosedShellForInputAndOutput() {
+        val tree =
+            root(
+                section(
+                    "Read Items",
+                    "read",
+                    code("db.items.insertOne({v:1});", "bash"),
+                    code("db.items.find({});", "bash"),
+                    code("[{v:1}]", "bash"),
+                )
+            )
+        val report = extract(tree, assembledRule(aliases = listOf("bash")))
+        assertEquals(ScenarioExtractionState.READY, report.state, report.problems.toString())
+        assertEquals(ShellLiteralState.NORMALIZED, report.scenarios.single().program!!.state)
+        val shellCommand =
+            extract(
+                root(standalone("Read Items", "read", "echo hello", "[]")),
+                assembledRule(aliases = listOf("bash")),
+            )
+        assertNull(shellCommand.scenarios.single().program)
+    }
+
+    @Test
+    fun nestedScenarioTabPathsAndPolicyValidationAreUnambiguous() {
+        fun tab(id: String, children: List<DocumentNode>) =
+            node(
+                "directive",
+                name = "tab",
+                options = mapOf("tabid" to AuditJson.write(id).trim()),
+                arguments = listOf(node("text", text = "Scenario $id")),
+                children = children,
+            )
+        val nested = listOf("first", "second").map { tab(it, listOf(tab("inner", listOf(io())))) }
+        val policy = assembledRule(tabs = listOf("first", "second", "inner"))
+        val report =
+            extract(
+                root(
+                    section(
+                        "Example",
+                        "example",
+                        node("directive", name = "tabs", children = nested),
+                    )
+                ),
+                policy,
+            )
+        assertEquals(ScenarioExtractionState.READY, report.state, report.problems.toString())
+        assertEquals(
+            2,
+            report.scenarios.map { it.naming!!.trace.location.enclosingContext }.distinct().size,
+        )
+        assertEquals(
+            setOf("Scenario first", "Scenario second"),
+            report.scenarios.map { it.naming!!.contextTitles.first() }.toSet(),
+        )
+        for (bad in
+            listOf(
+                assembledRule(tabs = listOf("shell")),
+                assembledRule(tabs = listOf("bad/path")),
+                assembledRule(shared = listOf("seed", "seed")),
+                assembledRule(aliases = listOf("python")),
+            )) {
+            assertThrows(IllegalArgumentException::class.java) {
+                extract(root(section("Read Items", "read", io())), bad)
+            }
+        }
+        val unknown = node("directive", name = "future-selector", children = listOf(io()))
+        assertEquals(
+            ScenarioExtractionState.PARTIAL,
+            extract(root(section("Read Items", "read", unknown)), policy).state,
+        )
+    }
+
+    @Test
+    fun nestedUnknownInputContainerCannotHideInsideAnIoOwner() {
+        val input =
+            node(
+                "directive",
+                name = "input",
+                children =
+                    listOf(
+                        node(
+                            "directive",
+                            name = "future-selector",
+                            children = listOf(code("db.items.find({});")),
+                        )
+                    ),
+            )
+        val output = node("directive", name = "output", children = listOf(code("[]")))
+        val group = node("directive", name = "io-code-block", children = listOf(input, output))
+        val report = extract(root(section("Read Items", "read", group)), assembledRule())
+        assertEquals(ScenarioExtractionState.PARTIAL, report.state)
+        assertNull(report.scenarios.single().program)
+        assertNull(report.scenarios.single().naming)
+    }
+
+    @Test
+    fun sharedShellSetupDoesNotReclassifyForeignStandaloneOrIoCandidates() {
+        val seed = standalone("Shared Seed", "shared", "db.items.insertOne({v:1});")
+        val reference = standalone("Read Items", "read", "db.items.find({});", "[]")
+        val foreignIo =
+            section(
+                "Python Query",
+                "foreign",
+                node(
+                    "directive",
+                    name = "io-code-block",
+                    children =
+                        listOf(
+                            node(
+                                "directive",
+                                name = "input",
+                                children = listOf(code("db.items.find({});", "python")),
+                            ),
+                            node(
+                                "directive",
+                                name = "output",
+                                children = listOf(code("[]", "javascript")),
+                            ),
+                        ),
+                ),
+            )
+        val foreignSection =
+            section(
+                "Python Query",
+                "foreign",
+                code("db.items.find({});", "python"),
+                code("[]", "json"),
+            )
+        val actualPython =
+            section(
+                "Python Query",
+                "foreign",
+                code("items.find({\"v\": True})", "python"),
+                code("[]", "json"),
+            )
+        for (foreign in listOf(foreignIo, foreignSection, actualPython)) {
+            val baseline = extract(root(reference, foreign), assembledRule())
+            val report =
+                extract(root(foreign, seed, reference), assembledRule(shared = listOf("shared")))
+            assertEquals(
+                ScenarioExtractionState.READY,
+                baseline.state,
+                baseline.problems.toString(),
+            )
+            assertEquals(ScenarioExtractionState.READY, report.state, report.problems.toString())
+            assertEquals(1, report.pages.single().foreignGroups)
+            val observed = report.scenarios.single { it.variant == ScenarioVariant.FOREIGN }
+            assertEquals(
+                baseline.scenarios
+                    .single { it.variant == ScenarioVariant.FOREIGN }
+                    .blocks
+                    .map { it.source },
+                observed.blocks.map { it.source },
+            )
+            assertEquals(2, observed.blocks.size)
+            if (foreign !== foreignIo) {
+                assertEquals("FOREIGN_SECTION", observed.normalizationProblem)
+                assertTrue(observed.blocks.all { it.role == null })
+            }
+            assertNull(observed.program)
+            assertNull(observed.naming)
+            val executable = report.scenarios.single { it.variant == ScenarioVariant.REFERENCE }
+            assertEquals(ShellLiteralState.NORMALIZED, executable.program!!.state)
+            assertEquals(3, executable.blocks.size)
+            assertEquals(1, report.pages.single().sharedSetup.size)
+        }
+    }
 }

@@ -841,3 +841,7 @@ The [native scenario extraction contract](operator-audits-scenario-extraction.md
 owned IO groups to ordered program normalization and persisted descriptive-name candidates. It
 records foreign/unknown variants, snippet ownership, grouping completeness and the remaining
 legacy section/setup integration before any existing-test migration.
+
+The [opt-in section assembly contract](operator-audits-section-assembly.md) extends source ownership
+to reviewed legacy section/tab layouts and explicit shared setup, with authored descriptive titles
+and source-only semantics. Physical descriptive-name backport remains the next migration step.
