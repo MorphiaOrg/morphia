@@ -1,6 +1,7 @@
 package dev.morphia.audits.offline
 
 import dev.morphia.audits.coverage.AuditJson
+import dev.morphia.audits.published.*
 import dev.morphia.audits.shell.*
 import java.nio.file.Path
 import java.util.concurrent.TimeUnit
@@ -34,14 +35,20 @@ class ProgramTransportTest {
         )
         assertEquals(
             20,
-            result.expectations
-                .single()
-                .documents!!
-                .single()
+            (((result.expectations
+                            .single()
+                            .published!!
+                            .single()
+                            .fields
+                            .single { it.name == "matches" }
+                            .value as PublishedArray)
+                        .items
+                        .single() as PublishedDocument)
+                    .fields
+                    .single()
+                    .value as PublishedExact)
+                .value
                 .value()
-                .asDocument()["matches"]!!
-                .asArray()[0]
-                .asDocument()["stock"]!!
                 .asInt32()
                 .value,
         )

@@ -1304,3 +1304,140 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
 - Next implementation target: model published numeric uncertainty explicitly so common outputs
   become automated without fabricated BSON types; strict typed reference-versus-DSL comparison
   remains separate. Then legacy setup/section grouping and the actual descriptive-name backport.
+
+## Native extraction publication checkpoint
+
+- PR #4522: https://github.com/MorphiaOrg/morphia/pull/4522
+  branch `audits-scenario-extraction`, base `audits-scenario-programs`, head
+  `9b17912cb1bca306cc70772bec03b6c000293f93`.
+- Eleven PRs published in the stack. All five exact-head checks are running; remote Copilot review
+  requested, no initial comments/reviews/pending requests. No merges performed or authorized.
+- This status checkpoint remains uncommitted to preserve the reviewed/published CI head. Carry it
+  into the next child worktree after CI and available review feedback pass, then restore this parent
+  journal only after saving a copy. Next slice: explicit published numeric uncertainty patterns.
+
+## Published expectation semantics start (2026-11-17)
+
+- #4522 is green at `9b17912cb1bca306cc70772bec03b6c000293f93`: all five exact-head checks pass.
+  Three broad local reviews completed and every finding resolved/verified. Copilot quota unavailable;
+  remote review requested, no comments/reviews/pending requests. No merges authorized or performed.
+- New branch/worktree `audits-published-expectations`, based on #4522. Carried the publication
+  checkpoint here; parent journal restored only after saving `/tmp/morphia-extraction-published-progress.md`.
+  Exact-head proof `/tmp/morphia-extraction-pr-final-status.json`. Eleven PRs published so far.
+- Next slice: explicit published-value uncertainty, beginning with finite whole printed numbers
+  that can denote Int32 or Double. Preserve source and encode the allowed type/value alternatives;
+  never fabricate a single expected BSON type or loosen typed reference-versus-DSL comparison.
+- Integrate this secondary published-expectation model with ordered programs while keeping unknown
+  syntax/all-or-nothing failures explicit. Preserve result order, duplicate counts, field presence
+  and nested array/document order. No expectations generated from the implementation under test.
+- Native baseline: 16 reference groups/names, 2 normalized programs, 14 blocked solely on
+  EXPECTED_TYPE_AMBIGUOUS. Use the same pinned replay to measure the improvement, not as an accepted
+  behavioral baseline. Dataset/constraint/setup closure and actual migration still remain later work.
+- No expectation-pattern implementation or review started yet on this branch.
+
+## Published expectation implementation checkpoint
+
+- Implemented closed published constraints and bounded matching, integrated into ordered-program
+  output schema/parser version 2. No typed-comparator changes. Pinned modern read-result profile;
+  unknown/legacy display profiles and BSON-decoding overrides fail explicitly. Existing typed legacy
+  document fragments retain their path. Shell strings also account for legacy BSON Symbol promotion.
+- Shared closed AST lowering now produces either concrete BSON or explicit published constraints;
+  captured bindings retain context/dependencies. Fixed ECMAScript numeric-key enumeration in input
+  objects, with typed BSON comparison still preserving the full original BSON order.
+- Added expanded-text/artifact bounds, NaN/Decimal128 display constraints, non-greedy multiset
+  matching and regression coverage. First compile passed; three old expectation assertions updated
+  to the new representation. Critter suite is running; reflection, native replay and reviews remain.
+- Current branch has uncommitted implementation only. No new PR or merge. Resume from this branch;
+  do not rerun /tmp patch scripts against already changed files. Native replay and receipt still
+  need refreshing in a separate published-expectations probe; prior receipt documents prior output.
+
+## Published expectations local verification and review start
+
+- 296 audit tests pass with Critter and reflection; the two optional native parser integrations skip
+  locally. Required root formatting and AST graph refresh pass. Corpus reproduction is byte-identical;
+  protected core/annotations/util/docs/critter paths, locks/data and strict typed comparator are unchanged.
+- Checked-in offline replay coordinator now reproduces the native experiment: 16 reference programs
+  NORMALIZED, two foreign variants, 16 byte-identical descriptive names. Repeated report is 1,259,256
+  bytes / SHA `8fa09867b37405275bbe578c262b56702910d0c7d929c8ed49f3485e892fa79d`.
+  Receipt `audits/probes/published-expectations/receipt.json`; artifacts `/tmp/morphia-published-probe`.
+  The improvement is 2 to 16 normalized programs; no execution or migration is claimed.
+- Copilot CLI quota check again returned monthly quota exceeded; log
+  `/tmp/morphia-published-copilot-1.log`. Proceed with the available independent local reviewer and
+  request remote review after publication. Source is frozen for the first review round.
+- Current branch is still uncommitted/unpublished. Next: verify findings, repeat available reviews
+  (maximum three broad rounds), rerun affected checks/replay, commit and publish stacked on #4522.
+
+## Published expectations first review fixes
+
+- First independent review completed: four actionable findings, all verified and fixed. Full notes
+  `/tmp/morphia-published-review1-concerns.md`, output `/tmp/morphia-published-claude-1.log`, review
+  session `83da5bc8-644f-4318-a9f5-4ff001f5bf32`. No findings rejected.
+- Exact-scalar matching now rejects type mismatches before calling typed comparison, honors caller
+  limits and charges both leaf costs. Regression covers a valid depth-150 array against a scalar
+  under depth-200 limits. Per-candidate long-key comparison is also charged to the shared budget.
+- Both meaning and full normalized-artifact size checks now run inside the program failure boundary:
+  ARTIFACT_LIMIT preserves source/provenance without executable commands, and extraction continues.
+  A real default-limit control-character expansion regression exercises this path end to end.
+  The final output-cap check remains a documented fail-closed backstop for an oversized failure artifact.
+- Published DBRef-shaped documents are conservatively unsupported at every depth (both $ref/$id
+  keys); input storage is unchanged. Verified the finding against pinned official deserializer/db_ref
+  sources, not only the installed shell. Undefined remains unsupported; null is not widened because
+  the pinned decoder preserves undefined distinctly. Corrected an interim null-display assumption.
+- Replay now records ordered compiled classpath file/tree hashes, every audits Kotlin source hash,
+  Java/Python versions, Git HEAD/dirty status. Source and runtime identities remain separate evidence.
+  Meaning hashes explicitly include model version 2 and published profile. Naming remains independent.
+- 300 tests pass with Critter/reflection after these fixes. A final small malformed-field-budget cleanup
+  is under the same sequential verification/replay command; second review starts once it completes.
+  No new commit/PR yet. Copilot CLI remains unavailable due quota; publication remains authorized.
+
+## Published expectations second review gate
+
+- Final malformed-field checks now validate/charge each field incrementally rather than scanning
+  an uncharged list first. Both 300-test suites pass, formatting/graph refresh pass, and the refreshed
+  native replay is repeat-identical: 1,259,256 bytes, SHA
+  `ebc6bd0bcf598c48271b0ec63dfd54ff1797a616f7e8f47d076fc3472f233703`.
+  All 16 reference programs normalize; two foreign variants and the 16 identical names are preserved.
+- The report hash changed from the first checkpoint because model version 2 is now part of meaning
+  identity; the naming proposal hash remains `5615ff95a85717df3aac0d9e87fe4dfebce36a0b679110017ca194f42460d8e1`.
+- Source and receipt are frozen for round 2. Verify all first-round corrections, profile source pins,
+  shared limits and the strengthened compiled-runtime receipt. No commit/PR on this branch yet.
+
+## Published expectations second-round correction and final review
+
+- Round 2 confirmed every prior finding fixed and verified the exact pinned decoder/provider rules,
+  all 64 source digests, 21 compiled classpath identities and the native receipt. One new valid
+  concern: published text/keys bypassed the stored-value budget, allowing sub-cap expanded outputs
+  to overflow the aggregate report. Notes `/tmp/morphia-published-review2-concerns.md`, result
+  `/tmp/morphia-published-claude-2.log`. No substantive findings rejected.
+- Renamed the program limit to `maximumStoredValueBytes`: concrete snapshot bytes and full published
+  roots now share its 8 MiB default. Count encoded UTF-8 JSON once per root, including escaped
+  controls, Unicode, field names and type metadata; exact leaves conservatively pay both retained
+  snapshot and serialized-root costs. Exhaustion is a scoped STORED_VALUE_LIMIT, not partial commands.
+- Added shared typed/published quota coverage and a two-program default-limit extraction regression
+  (600 references × 10,000 control characters per program) proving source grouping survives the
+  amplification case. The independent aggregate report limit remains an explicit batch boundary;
+  it cannot promise an unbounded number of otherwise valid programs. Narrowed the design accordingly.
+- 302 tests pass under both mappers, two optional native integrations skip. Root formatting, graph
+  refresh and native replay pass; report SHA remains `ebc6bd0bcf598c48271b0ec63dfd54ff1797a616f7e8f47d076fc3472f233703`,
+  all 16 references normalize, 2 foreign groups and all 16 names remain unchanged. Receipt refreshed.
+- Source is frozen for the third/final broad local review. Verify this correction and existing fixes;
+  publication remains pending that gate. No commits or PR on this branch yet.
+
+## Published expectations final local gate
+
+- Three independent local review rounds completed. Round 1's four findings and round 2's shared
+  quota finding are fixed; round 3 confirms no actionable findings and verifies all prior fixes,
+  all 64 source hashes, the probe, all 21 compiled classpath identities and the native report.
+  Final review `/tmp/morphia-published-claude-3.log`; concerns/verification retained in
+  `/tmp/morphia-published-review3-concerns.md`. No fourth broad round is needed.
+- Final verification: 302 tests pass with both Critter and reflection, two optional native parser
+  integrations skip locally. Required root formatting and graph refresh pass. Legacy corpus
+  reproduction is byte-identical; protected project paths and strict typed comparator remain unchanged.
+- Native report repeats at 1,259,256 bytes / SHA
+  `ebc6bd0bcf598c48271b0ec63dfd54ff1797a616f7e8f47d076fc3472f233703`;
+  16 reference programs normalize, two foreign groups retained, 16 descriptive names byte-identical.
+- Publish this branch stacked on #4522, request remote review and inspect exact-head CI/feedback.
+  Copilot CLI remains unavailable due monthly quota. No merges authorized or performed.
+- Next slice after available reviews and exact-head CI pass: legacy section/setup grouping, followed
+  by actual descriptive-name backport and curated-repair migration. Later executable DSL generation,
+  execution attestations, scheduled monitoring, the enabled separate gh publisher and cleanup remain.

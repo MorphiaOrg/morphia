@@ -780,12 +780,22 @@ class ScenarioExtractionTest {
         val report =
             extract(root(section("Find Integral Averages", "averages", io(output = "[{avg:2}]"))))
         assertEquals(ScenarioExtractionState.READY, report.state)
-        assertEquals(ShellLiteralState.UNSUPPORTED, report.scenarios.single().program!!.state)
+        assertEquals(ShellLiteralState.NORMALIZED, report.scenarios.single().program!!.state)
+        assertNull(report.scenarios.single().program!!.expectations.single().documents)
         assertEquals(
-            "EXPECTED_TYPE_AMBIGUOUS",
-            report.scenarios.single().program!!.problems.single().code,
+            dev.morphia.audits.published.PublishedWholeNumber(2),
+            report.scenarios
+                .single()
+                .program!!
+                .expectations
+                .single()
+                .published!!
+                .single()
+                .fields
+                .single()
+                .value,
         )
-        assertTrue(report.scenarios.single().program!!.commands.isEmpty())
+        assertFalse(report.scenarios.single().program!!.commands.isEmpty())
         assertNotNull(report.scenarios.single().naming)
         assertNull(report.scenarios.single().naming!!.trace.location.fingerprint)
     }
@@ -977,6 +987,40 @@ class ScenarioExtractionTest {
         }
         assertThrows(IllegalArgumentException::class.java) {
             ScenarioExtraction.extract(bundle, document.copy(inputSha256 = "f".repeat(64)), plan())
+        }
+    }
+
+    @Test
+    fun oversizedPublishedProgramRetainsItsSourceGroupWithoutAbortingExtraction() {
+        val input = "const x='" + "\\x01".repeat(10_000) + "'; db.items.find({});"
+        val output = "[{v:[" + List(1500) { "x" }.joinToString(",") + "]}]"
+        val report =
+            extract(root(section("Large Published Result", "large-result", io(input, output))))
+        assertEquals(ScenarioExtractionState.READY, report.state, report.problems.toString())
+        val scenario = report.scenarios.single()
+        assertEquals(ShellLiteralState.UNSUPPORTED, scenario.program!!.state)
+        assertEquals("STORED_VALUE_LIMIT", scenario.program!!.problems.single().code)
+        assertTrue(scenario.program!!.commands.isEmpty())
+        assertNotNull(scenario.naming)
+    }
+
+    @Test
+    fun twoSubcapExpandedOutputsCannotAmplifyTheWholeReport() {
+        val input = "const x='" + "\\x01".repeat(10_000) + "'; db.items.find({});"
+        val output = "[{v:[" + List(600) { "x" }.joinToString(",") + "]}]"
+        val report =
+            extract(
+                root(
+                    section("First Large Result", "first-large", io(input, output)),
+                    section("Second Large Result", "second-large", io(input, output)),
+                )
+            )
+        assertEquals(ScenarioExtractionState.READY, report.state, report.problems.toString())
+        assertEquals(2, report.scenarios.size)
+        report.scenarios.forEach {
+            assertEquals("STORED_VALUE_LIMIT", it.program!!.problems.single().code)
+            assertTrue(it.program!!.commands.isEmpty())
+            assertNotNull(it.naming)
         }
     }
 }

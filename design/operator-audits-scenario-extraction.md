@@ -56,7 +56,9 @@ shell program model. Multiple actions require unambiguous expected ownership und
 Output language uncertainty has an explicit normalization reason; JSON display text is not relabeled
 as legacy fixture data. Unsupported programs retain their own problems and no partial executable
 commands. Displayed integral numbers cannot acquire Int32/Double types from input-shell defaults.
-Nothing adds constructors or edits source just to obtain successful normalization.
+Nothing adds constructors or edits source just to obtain successful normalization. Modern read
+outputs now use explicit [published constraints](operator-audits-published-expectations.md), so
+representable type alternatives need not block normalization. Typed parity remains separate.
 
 Source grouping completeness and program normalization are independent. A fully owned example
 with an unsupported operator form or ambiguous displayed result can retain a descriptive source

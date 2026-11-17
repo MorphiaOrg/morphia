@@ -1,5 +1,7 @@
 package dev.morphia.audits.shell
 
+import dev.morphia.audits.published.*
+import dev.morphia.audits.semantics.BsonSnapshot
 import dev.morphia.audits.shell.ShellLiterals.UnsupportedLiteral
 import java.nio.CharBuffer
 import java.nio.charset.CharacterCodingException
@@ -19,6 +21,8 @@ internal enum class ShellValueUse {
 internal interface ShellValueBindings {
     fun resolve(name: String, use: ShellValueUse, depth: Int, reference: ShellSpan?): BsonValue?
 
+    fun published(name: String, depth: Int, reference: ShellSpan?): PublishedValue? = null
+
     fun contains(name: String): Boolean = false
 
     companion object {
@@ -37,6 +41,12 @@ internal interface ShellValueBindings {
 /** Shared across binding expansion so a small source cannot expand without a work bound. */
 internal class ShellValueBudget(private val maximumNodes: Int) {
     private var nodes = 0
+    private var characters = 0L
+
+    fun text(length: Int): Boolean {
+        characters += length
+        return characters <= 16_777_216
+    }
 
     fun take(): Boolean = ++nodes <= maximumNodes
 }
@@ -65,27 +75,103 @@ internal class ShellValueLowering(
     fun unsupported(node: AstNode, code: String, message: String): Nothing =
         throw UnsupportedLiteral(code, message, span(node))
 
-    fun value(node: AstNode, depth: Int, use: ShellValueUse = ShellValueUse.STORAGE): BsonValue {
+    private interface Factory<T> {
+        fun scalar(value: BsonValue): T
+
+        fun text(value: String): T
+
+        fun number(value: Double, node: AstNode): T
+
+        fun array(values: List<T>): T
+
+        fun document(values: Map<String, T>): T
+
+        fun resolve(node: Name, depth: Int): T?
+    }
+
+    fun value(node: AstNode, depth: Int, use: ShellValueUse = ShellValueUse.STORAGE): BsonValue =
+        lower(
+            node,
+            depth,
+            use,
+            object : Factory<BsonValue> {
+                override fun scalar(value: BsonValue) = value
+
+                override fun text(value: String) = BsonString(value)
+
+                override fun number(value: Double, node: AstNode) = number(value, node, use)
+
+                override fun array(values: List<BsonValue>) = BsonArray(values)
+
+                override fun document(values: Map<String, BsonValue>) =
+                    BsonDocument().apply { values.forEach { (k, v) -> this[k] = v } }
+
+                override fun resolve(node: Name, depth: Int) =
+                    bindings.resolve(node.identifier, use, depth, span(node))
+            },
+        )
+
+    fun published(
+        node: AstNode,
+        depth: Int,
+        snapshot: (BsonValue) -> BsonSnapshot,
+    ): PublishedValue {
+        if (dialect != ShellDialect.MONGOSH)
+            unsupported(
+                node,
+                "PUBLISHED_PROFILE",
+                "Published shell results require the pinned mongosh read-result profile",
+            )
+        return lower(
+            node,
+            depth,
+            ShellValueUse.EXPECTED,
+            object : Factory<PublishedValue> {
+                override fun scalar(value: BsonValue): PublishedValue =
+                    when {
+                        value is BsonDouble && value.value.isNaN() -> PublishedDoubleNaN
+                        value is BsonDecimal128 -> PublishedDecimal128(value.value.toString())
+                        else -> PublishedExact(snapshot(value))
+                    }
+
+                override fun text(value: String) = PublishedText(value)
+
+                override fun number(value: Double, node: AstNode): PublishedValue =
+                    if (isInt32(value)) PublishedWholeNumber(value.toInt())
+                    else scalar(BsonDouble(value))
+
+                override fun array(values: List<PublishedValue>) = PublishedArray(values)
+
+                override fun document(values: Map<String, PublishedValue>) =
+                    PublishedDocument(values.map { PublishedField(it.key, it.value) })
+
+                override fun resolve(node: Name, depth: Int) =
+                    bindings.published(node.identifier, depth, span(node))
+            },
+        )
+    }
+
+    private fun <T> lower(node: AstNode, depth: Int, use: ShellValueUse, factory: Factory<T>): T {
         if (!budget.take() || depth > limits.maximumDepth)
             unsupported(node, "VALUE_LIMIT", "Shell value exceeds AST node/depth limit")
         return when (node) {
-            is ParenthesizedExpression -> value(node.expression, depth + 1, use)
-            is StringLiteral -> BsonString(string(node.value, node))
-            is NumberLiteral -> number(node.number, node, use)
+            is ParenthesizedExpression -> lower(node.expression, depth + 1, use, factory)
+            is StringLiteral -> factory.text(string(node.value, node))
+            is NumberLiteral -> factory.number(node.number, node)
             is KeywordLiteral ->
                 when (node.type) {
-                    Token.TRUE -> BsonBoolean.TRUE
-                    Token.FALSE -> BsonBoolean.FALSE
-                    Token.NULL -> BsonNull.VALUE
-                    Token.UNDEFINED -> undefined(node, use)
+                    Token.TRUE -> factory.scalar(BsonBoolean.TRUE)
+                    Token.FALSE -> factory.scalar(BsonBoolean.FALSE)
+                    Token.NULL -> factory.scalar(BsonNull.VALUE)
+                    Token.UNDEFINED -> factory.scalar(undefined(node, use))
                     else -> unsupported(node, "KEYWORD", "Unsupported value keyword")
                 }
             is Name ->
-                bindings.resolve(node.identifier, use, depth, span(node))
+                factory.resolve(node, depth)
                     ?: when (node.identifier) {
-                        "NaN" -> BsonDouble(Double.NaN)
-                        "Infinity" -> BsonDouble(Double.POSITIVE_INFINITY)
-                        "undefined" -> undefined(node, use)
+                        "NaN" -> factory.number(Double.NaN, node)
+                        "Infinity" -> factory.number(Double.POSITIVE_INFINITY, node)
+                        "undefined" -> factory.scalar(undefined(node, use))
                         else ->
                             unsupported(
                                 node,
@@ -114,15 +200,15 @@ internal class ShellValueLowering(
                 if (!operand.isNumber)
                     unsupported(node, "COMPUTED_VALUE", "Numeric unary operand required")
                 val n = operand.asNumber().doubleValue()
-                number(if (node.operator == Token.NEG) -n else n, node, use)
+                factory.number(if (node.operator == Token.NEG) -n else n, node)
             }
             is ArrayLiteral -> {
                 if (node.elements.any { it is EmptyExpression })
                     unsupported(node, "ARRAY_HOLE", "Sparse arrays require an explicit disposition")
-                BsonArray(node.elements.map { value(it, depth + 1, use) })
+                factory.array(node.elements.map { lower(it, depth + 1, use, factory) })
             }
             is ObjectLiteral -> {
-                val result = BsonDocument()
+                val result = linkedMapOf<String, T>()
                 for (element in node.elements) {
                     val property =
                         element as? ObjectProperty
@@ -135,7 +221,7 @@ internal class ShellValueLowering(
                         )
                     val key =
                         when (val keyNode = property.key) {
-                            is Name -> keyNode.identifier
+                            is Name -> string(keyNode.identifier, keyNode)
                             is StringLiteral -> string(keyNode.value, keyNode)
                             else ->
                                 unsupported(
@@ -164,12 +250,31 @@ internal class ShellValueLowering(
                         )
                     if (result.containsKey(key))
                         unsupported(property, "DUPLICATE_KEY", "Duplicate BSON key: $key")
-                    result[key] = value(property.value, depth + 1, use)
+                    result[key] = lower(property.value, depth + 1, use, factory)
                 }
-                result
+                if (use == ShellValueUse.EXPECTED && "\$ref" in result && "\$id" in result)
+                    unsupported(
+                        node,
+                        "PUBLISHED_DBREF",
+                        "DBRef-shaped published documents need an explicit display rule",
+                    )
+                factory.document(
+                    JavaScriptKeyOrder.order(result.keys.toList()).associateWith {
+                        result.getValue(it)
+                    }
+                )
             }
-            is RegExpLiteral ->
-                ShellRegularExpressions.javascript(node.value, node.flags, span(node))
+            is RegExpLiteral -> {
+                if (use == ShellValueUse.EXPECTED)
+                    unsupported(
+                        node,
+                        "PUBLISHED_REGEX",
+                        "Printed JavaScript regex does not prove the original BSON pattern/options",
+                    )
+                factory.scalar(
+                    ShellRegularExpressions.javascript(node.value, node.flags, span(node))
+                )
+            }
             is FunctionCall -> {
                 if (node.isOptionalCall || node is NewExpression && node.initializer != null)
                     unsupported(
@@ -190,14 +295,22 @@ internal class ShellValueLowering(
                             "CALL_TARGET",
                             "Only explicit BSON constructors are supported",
                         )
+                if (use == ShellValueUse.EXPECTED && name == "RegExp")
+                    unsupported(
+                        node,
+                        "PUBLISHED_REGEX",
+                        "Printed JavaScript regex does not prove original BSON pattern/options",
+                    )
                 if (bindings.contains(name))
                     unsupported(node, "SHADOWED_CONSTRUCTOR", "Constructor name is shadowed: $name")
-                ShellLiteralConstructors.construct(
-                    name,
-                    node is NewExpression,
-                    node.arguments.map { value(it, depth + 1, ShellValueUse.ARGUMENT) },
-                    span(node),
-                    dialect,
+                factory.scalar(
+                    ShellLiteralConstructors.construct(
+                        name,
+                        node is NewExpression,
+                        node.arguments.map { value(it, depth + 1, ShellValueUse.ARGUMENT) },
+                        span(node),
+                        dialect,
+                    )
                 )
             }
             else ->
@@ -230,6 +343,8 @@ internal class ShellValueLowering(
             }
 
     private fun string(value: String, node: AstNode): String {
+        if (!budget.text(value.length))
+            unsupported(node, "VALUE_LIMIT", "Expanded shell text exceeds character budget")
         try {
             Charsets.UTF_8.newEncoder()
                 .onMalformedInput(CodingErrorAction.REPORT)
@@ -245,15 +360,17 @@ internal class ShellValueLowering(
         return value
     }
 
+    private fun isInt32(value: Double) =
+        value.isFinite() &&
+            value >= Int.MIN_VALUE &&
+            value <= Int.MAX_VALUE &&
+            value == kotlin.math.floor(value) &&
+            value.toRawBits() != (-0.0).toRawBits()
+
     private fun number(value: Double, node: AstNode, use: ShellValueUse): BsonValue {
         if (use == ShellValueUse.INITIALIZER || use == ShellValueUse.ARGUMENT)
             return BsonDouble(value)
-        val int32 =
-            value.isFinite() &&
-                value >= Int.MIN_VALUE &&
-                value <= Int.MAX_VALUE &&
-                value == kotlin.math.floor(value) &&
-                value.toRawBits() != (-0.0).toRawBits()
+        val int32 = isInt32(value)
         if (use == ShellValueUse.EXPECTED) {
             if (int32)
                 unsupported(
