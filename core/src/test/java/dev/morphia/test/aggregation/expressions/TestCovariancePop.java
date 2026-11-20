@@ -20,12 +20,12 @@ public class TestCovariancePop extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/covariancePop/example1
+     * test data: dev/morphia/test/aggregation/expressions/covariancePop/covariancePopExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testCovariancePopExpressionOperator() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(setWindowFields().partitionBy("$state").sortBy(ascending("orderDate"))
                         .output(output("covariancePopForState").operator(covariancePop(year("$orderDate"), "$quantity"))

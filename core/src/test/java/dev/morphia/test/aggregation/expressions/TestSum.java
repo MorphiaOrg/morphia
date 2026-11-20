@@ -20,12 +20,12 @@ import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 
 public class TestSum extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/sum/example1
+     * test data: dev/morphia/test/aggregation/expressions/sum/useInGroupStage
      * 
      */
     @Test
     @DisplayName("Use in ``$group`` Stage")
-    public void testExample1() {
+    public void testUseInGroupStage() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation
                         .pipeline(group(id(document().field("day", dayOfYear("$date")).field("year", year("$date"))))
@@ -33,23 +33,23 @@ public class TestSum extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/sum/example2
+     * test data: dev/morphia/test/aggregation/expressions/sum/useInProjectStage
      * 
      */
     @Test
     @DisplayName("Use in ``$project`` Stage")
-    public void testExample2() {
+    public void testUseInProjectStage() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("quizTotal", sum("$quizzes"))
                 .include("labTotal", sum("$labs")).include("examTotal", sum("$final", "$midterm"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/sum/example3
+     * test data: dev/morphia/test/aggregation/expressions/sum/useInSetWindowFieldsStage
      * 
      */
     @Test
     @DisplayName("Use in ``$setWindowFields`` Stage")
-    public void testExample3() {
+    public void testUseInSetWindowFieldsStage() {
         checkMinServerVersion("5.0.0");
         testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                 .sortBy(Sort.ascending("orderDate")).output(output("sumQuantityForState").operator(sum("$quantity"))

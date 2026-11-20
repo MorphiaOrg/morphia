@@ -15,50 +15,50 @@ import static dev.morphia.query.updates.UpdateOperators.set;
 public class TestPositional extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/updates/positional/example1
+     * test data: dev/morphia/test/query/updates/positional/updateValuesInAnArray
      */
     @Test
     @DisplayName("Update Values in an Array")
-    public void testExample1() {
+    public void testUpdateValuesInAnArray() {
         testUpdate(new ActionTestOptions().skipDataCheck(true), (query) -> query.filter(eq("_id", 1), eq("grades", 80)),
                 set("grades.$", 82));
     }
 
     /**
-     * test data: dev/morphia/test/query/updates/positional/example2
+     * test data: dev/morphia/test/query/updates/positional/updateDocumentsInAnArray
      */
     @Test
     @DisplayName("Update Documents in an Array")
-    public void testExample2() {
+    public void testUpdateDocumentsInAnArray() {
         testUpdate((query) -> query.filter(eq("_id", 4), eq("grades.grade", 85)), set("grades.$.std", 6));
     }
 
     /**
-     * test data: dev/morphia/test/query/updates/positional/example3
+     * test data: dev/morphia/test/query/updates/positional/updateEmbeddedDocumentsUsingMultipleFieldMatches
      */
     @Test
     @DisplayName("Update Embedded Documents Using Multiple Field Matches")
-    public void testExample3() {
+    public void testUpdateEmbeddedDocumentsUsingMultipleFieldMatches() {
         testUpdate((query) -> query.filter(eq("_id", 5), elemMatch("grades", lte("grade", 90), gt("mean", 80))),
                 set("grades.$.std", 6));
     }
 
     /**
-     * test data: dev/morphia/test/query/updates/positional/example4
+     * test data: dev/morphia/test/query/updates/positional/updateWithMultipleArrayMatches
      */
     @Test
     @DisplayName("Update with Multiple Array Matches")
-    public void testExample4() {
+    public void testUpdateWithMultipleArrayMatches() {
         testUpdate((query) -> query.filter(eq("activity_ids", 1), eq("grades", 95), eq("deans_list", 2021)),
                 set("deans_list.$", 2022));
     }
 
     /**
-     * test data: dev/morphia/test/query/updates/positional/example5
+     * test data: dev/morphia/test/query/updates/positional/updateNestedArraysInConjunctionWith
      */
     @Test
     @DisplayName("Update Nested Arrays in Conjunction with ``$[]``")
-    public void testExample5() {
+    public void testUpdateNestedArraysInConjunctionWith() {
         // docs out of date?
     }
 }

@@ -18,22 +18,22 @@ import static dev.morphia.query.filters.Filters.geoWithin;
 public class TestGeoWithin extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/filters/geoWithin/example1
+     * test data: dev/morphia/test/query/filters/geoWithin/withinAPolygon
      */
     @Test
     @DisplayName("Within a Polygon")
-    public void testExample1() {
+    public void testWithinAPolygon() {
         var points = List.of(new Position(0, 0), new Position(3, 6), new Position(6, 1), new Position(0, 0));
         testQuery(new ActionTestOptions().skipDataCheck(true),
                 (query) -> query.filter(geoWithin("loc", new Polygon(points))));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/geoWithin/example2
+     * test data: dev/morphia/test/query/filters/geoWithin/withinABigPolygon
      */
     @Test
     @DisplayName("Within a \"Big\" Polygon")
-    public void testExample2() {
+    public void testWithinABigPolygon() {
         var coords = new PolygonCoordinates(List.of(new Position(-100, 60), new Position(-100, 0),
                 new Position(-100, -60), new Position(100, -60), new Position(100, 60), new Position(-100, 60)));
         testQuery(new ActionTestOptions().skipDataCheck(true), (query) -> query.filter(geoWithin("loc",

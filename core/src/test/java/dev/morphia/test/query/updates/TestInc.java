@@ -11,11 +11,11 @@ import static dev.morphia.query.updates.UpdateOperators.inc;
 public class TestInc extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/updates/inc/example1
+     * test data: dev/morphia/test/query/updates/inc/incUpdateOperator
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testIncUpdateOperator() {
         testUpdate((query) -> query.filter(eq("sku", "abc123")), inc("quantity", -2), inc("metrics.orders", 1));
     }
 }

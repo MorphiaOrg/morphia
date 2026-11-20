@@ -10,18 +10,18 @@ import org.junit.jupiter.api.Test;
 public class TestListClusterCatalog extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/listClusterCatalog/example1
+     * test data: dev/morphia/test/aggregation/stages/listClusterCatalog/listInformationFromAllCollections
      *
      * use sample_mflix db.aggregate([ { $listClusterCatalog: {} } ])
      */
     @Disabled
     @Test
     @DisplayName("List Information from All Collections")
-    public void testExample1() {
+    public void testListInformationFromAllCollections() {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/listClusterCatalog/example2
+     * test data: dev/morphia/test/aggregation/stages/listClusterCatalog/balancingConfiguration
      *
      * use sample_mflix db.aggregate([ { $listClusterCatalog: {
      * balancingConfiguration: true } } ])
@@ -29,6 +29,6 @@ public class TestListClusterCatalog extends TemplatedTestBase {
     @Disabled
     @Test
     @DisplayName("Balancing Configuration")
-    public void testExample2() {
+    public void testBalancingConfiguration() {
     }
 }

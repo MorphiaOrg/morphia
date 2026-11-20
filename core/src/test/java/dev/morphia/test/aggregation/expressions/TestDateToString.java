@@ -11,12 +11,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestDateToString extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/dateToString/example1
+     * test data: dev/morphia/test/aggregation/expressions/dateToString/dateToStringExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testDateToStringExpressionOperator() {
         testPipeline(new ActionTestOptions().serverVersion("7.0.0"), (aggregation) -> aggregation.pipeline(project()
                 .include("yearMonthDayUTC", dateToString().date("$date").format("%Y-%m-%d"))
                 .include("timewithOffsetNY",

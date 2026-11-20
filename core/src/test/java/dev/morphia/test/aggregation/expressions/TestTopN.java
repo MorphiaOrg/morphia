@@ -26,35 +26,35 @@ public class TestTopN extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/topN/example1
+     * test data: dev/morphia/test/aggregation/expressions/topN/findTheThreeHighestScores
      * 
      */
     @Test
     @DisplayName("Find the Three Highest ``Scores``")
-    public void testExample1() {
+    public void testFindTheThreeHighestScores() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation.pipeline(
                 match(eq("gameId", "G1")),
                 group(id("$gameId")).field("playerId", topN(3, array("$playerId", "$score"), descending("score")))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/topN/example2
+     * test data: dev/morphia/test/aggregation/expressions/topN/findingTheThreeHighestScoreDocumentsAcrossMultipleGames
      * 
      */
     @Test
     @DisplayName("Finding the Three Highest Score Documents Across Multiple Games")
-    public void testExample2() {
+    public void testFindingTheThreeHighestScoreDocumentsAcrossMultipleGames() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation.pipeline(
                 group(id("$gameId")).field("playerId", topN(3, array("$playerId", "$score"), descending("score")))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/topN/example3
+     * test data: dev/morphia/test/aggregation/expressions/topN/computingNBasedOnTheGroupKeyForGroup
      * 
      */
     @Test
     @DisplayName("Computing ``n`` Based on the Group Key for ``$group``")
-    public void testExample3() {
+    public void testComputingNBasedOnTheGroupKeyForGroup() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(group(id(document("gameId", "$gameId"))).field("gamescores", topN(
                         condition(ComparisonExpressions.eq("$gameId", "G2"), 1, 3), "$score", descending("score")))));

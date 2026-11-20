@@ -23,24 +23,24 @@ public class TestDateTrunc extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/dateTrunc/example1
+     * test data: dev/morphia/test/aggregation/expressions/dateTrunc/truncateOrderDatesInAProjectPipelineStage
      * 
      */
     @Test
     @DisplayName("Truncate Order Dates in a ``$project`` Pipeline Stage")
-    public void testExample1() {
+    public void testTruncateOrderDatesInAProjectPipelineStage() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("_id").include("orderDate").include("truncatedOrderDate",
                         dateTrunc("$orderDate", WEEK).binSize(2).timezone("America/Los_Angeles").startOfWeek(MONDAY))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/dateTrunc/example2
+     * test data: dev/morphia/test/aggregation/expressions/dateTrunc/truncateOrderDatesAndObtainQuantitySumInAGroupPipelineStage
      * 
      */
     @Test
     @DisplayName("Truncate Order Dates and Obtain Quantity Sum in a ``$group`` Pipeline Stage")
-    public void testExample2() {
+    public void testTruncateOrderDatesAndObtainQuantitySumInAGroupPipelineStage() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation
                         .pipeline(group(id().field("truncatedOrderDate", dateTrunc("$orderDate", MONTH).binSize(6)))

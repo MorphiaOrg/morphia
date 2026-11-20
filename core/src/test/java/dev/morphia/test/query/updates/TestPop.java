@@ -11,20 +11,20 @@ import static dev.morphia.query.updates.UpdateOperators.pop;
 public class TestPop extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/updates/pop/example1
+     * test data: dev/morphia/test/query/updates/pop/removeTheFirstItemOfAnArray
      */
     @Test
     @DisplayName("Remove the First Item of an Array")
-    public void testExample1() {
+    public void testRemoveTheFirstItemOfAnArray() {
         testUpdate((query) -> query.filter(eq("_id", 1)), pop("scores").removeFirst());
     }
 
     /**
-     * test data: dev/morphia/test/query/updates/pop/example2
+     * test data: dev/morphia/test/query/updates/pop/removeTheLastItemOfAnArray
      */
     @Test
     @DisplayName("Remove the Last Item of an Array")
-    public void testExample2() {
+    public void testRemoveTheLastItemOfAnArray() {
         testUpdate((query) -> query.filter(eq("_id", 10)), pop("scores"));
     }
 }

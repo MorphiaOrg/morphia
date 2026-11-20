@@ -17,49 +17,49 @@ import static dev.morphia.query.updates.UpdateOperators.pull;
 public class TestPull extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/updates/pull/example1
+     * test data: dev/morphia/test/query/updates/pull/removeAllItemsThatEqualASpecifiedValue
      */
     @Test
     @DisplayName("Remove All Items That Equal a Specified Value")
-    public void testExample1() {
+    public void testRemoveAllItemsThatEqualASpecifiedValue() {
         testUpdate((query) -> query.filter(), pull("fruits", in(List.of("apples", "oranges"))),
                 pull("vegetables", "carrots"));
     }
 
     /**
-     * test data: dev/morphia/test/query/updates/pull/example2
+     * test data: dev/morphia/test/query/updates/pull/removeAllItemsThatMatchASpecifiedPullCondition
      */
     @Test
     @DisplayName("Remove All Items That Match a Specified ``$pull`` Condition")
-    public void testExample2() {
+    public void testRemoveAllItemsThatMatchASpecifiedPullCondition() {
         testUpdate((query) -> query.filter(eq("_id", 1)), pull("votes", gte(6)));
     }
 
     /**
-     * test data: dev/morphia/test/query/updates/pull/example3
+     * test data: dev/morphia/test/query/updates/pull/removeAllItemsThatMatchASpecifiedPullConditionWithBulkWrite
      */
     @Disabled("test is irrelevant to Morphia")
     @Test
     @DisplayName("Remove All Items That Match a Specified ``$pull`` Condition With :method:`~db.collection.bulkWrite()`")
-    public void testExample3() {
+    public void testRemoveAllItemsThatMatchASpecifiedPullConditionWithBulkWrite() {
 
     }
 
     /**
-     * test data: dev/morphia/test/query/updates/pull/example4
+     * test data: dev/morphia/test/query/updates/pull/removeItemsFromAnArrayOfDocuments
      */
     @Test
     @DisplayName("Remove Items from an Array of Documents")
-    public void testExample4() {
+    public void testRemoveItemsFromAnArrayOfDocuments() {
         testUpdate((query) -> query.filter(), pull("results", eq("score", 8), eq("item", "B")));
     }
 
     /**
-     * test data: dev/morphia/test/query/updates/pull/example5
+     * test data: dev/morphia/test/query/updates/pull/removeDocumentsFromNestedArrays
      */
     @Test
     @DisplayName("Remove Documents from Nested Arrays")
-    public void testExample5() {
+    public void testRemoveDocumentsFromNestedArrays() {
         testUpdate((query) -> query.filter(), pull("results", elemMatch("answers", eq("q", 2), gte("a", 8))));
     }
 }

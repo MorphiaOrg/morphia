@@ -19,12 +19,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestDayOfWeek extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/dayOfWeek/example1
+     * test data: dev/morphia/test/aggregation/expressions/dayOfWeek/dayOfWeekExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testDayOfWeekExpressionOperator() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("year", year("$date"))
                 .include("month", month("$date")).include("day", dayOfMonth("$date")).include("hour", hour("$date"))
                 .include("minutes", minute("$date")).include("seconds", second("$date"))

@@ -15,35 +15,35 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestMap extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/map/example1
+     * test data: dev/morphia/test/aggregation/expressions/map/addToEachElementOfAnArray
      * 
      */
     @Test
     @DisplayName("Add to Each Element of an Array")
-    public void testExample1() {
+    public void testAddToEachElementOfAnArray() {
         testPipeline(new ActionTestOptions().removeIds(true), (aggregation) -> aggregation
                 .pipeline(project().include("adjustedGrades", map("$quizzes", add("$$grade", 2)).as("grade"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/map/example2
+     * test data: dev/morphia/test/aggregation/expressions/map/truncateEachArrayElement
      * 
      */
     @Test
     @DisplayName("Truncate Each Array Element")
-    public void testExample2() {
+    public void testTruncateEachArrayElement() {
         testPipeline(new ActionTestOptions().removeIds(true),
                 (aggregation) -> aggregation.pipeline(project().include("city", "$city").include("integerValues",
                         map("$distances", trunc("$$decimalValue")).as("decimalValue"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/map/example3
+     * test data: dev/morphia/test/aggregation/expressions/map/convertCelsiusTemperaturesToFahrenheit
      * 
      */
     @Test
     @DisplayName("Convert Celsius Temperatures to Fahrenheit")
-    public void testExample3() {
+    public void testConvertCelsiusTemperaturesToFahrenheit() {
         testPipeline(new ActionTestOptions().removeIds(true), (aggregation) -> aggregation.pipeline(addFields()
                 .field("tempsF", map("$tempsC", add(multiply("$$tempInCelsius", 1.8), 32)).as("tempInCelsius"))));
     }

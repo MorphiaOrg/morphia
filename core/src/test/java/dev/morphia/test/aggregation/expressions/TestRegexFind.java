@@ -21,23 +21,23 @@ import static dev.morphia.aggregation.stages.Unwind.unwind;
 
 public class TestRegexFind extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/regexFind/example1
+     * test data: dev/morphia/test/aggregation/expressions/regexFind/regexFindAndItsOptions
      * 
      */
     @Test
     @DisplayName("``$regexFind`` and Its Options")
-    public void testExample1() {
+    public void testRegexFindAndItsOptions() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
                 .pipeline(addFields().field("returnObject", regexFind("$description").pattern("line"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/regexFind/example2
+     * test data: dev/morphia/test/aggregation/expressions/regexFind/useRegexFindToParseEmailFromString
      * 
      */
     @Test
     @DisplayName("Use ``$regexFind`` to Parse Email from String")
-    public void testExample2() {
+    public void testUseRegexFindToParseEmailFromString() {
         testPipeline((aggregation) -> aggregation.pipeline(
                 addFields().field("email",
                         regexFind("$comment").pattern("[a-z0-9_.+-]+@[a-z0-9_.+-]+\\.[a-z0-9_.+-]+").options("i")),
@@ -45,12 +45,12 @@ public class TestRegexFind extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/regexFind/example3
+     * test data: dev/morphia/test/aggregation/expressions/regexFind/applyRegexFindToStringElementsOfAnArray
      * 
      */
     @Test
     @DisplayName("Apply ``$regexFind`` to String Elements of an Array")
-    public void testExample3() {
+    public void testApplyRegexFindToStringElementsOfAnArray() {
         testPipeline((aggregation) -> aggregation.pipeline(unwind("details"),
                 addFields()
                         .field("regexemail",
@@ -64,12 +64,12 @@ public class TestRegexFind extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/regexFind/example4
+     * test data: dev/morphia/test/aggregation/expressions/regexFind/useCapturedGroupingsToParseUserName
      * 
      */
     @Test
     @DisplayName("Use Captured Groupings to Parse User Name")
-    public void testExample4() {
+    public void testUseCapturedGroupingsToParseUserName() {
         testPipeline(
                 (aggregation) -> aggregation
                         .pipeline(

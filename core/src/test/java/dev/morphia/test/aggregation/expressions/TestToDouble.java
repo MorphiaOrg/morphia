@@ -11,12 +11,12 @@ import static dev.morphia.aggregation.stages.AddFields.addFields;
 
 public class TestToDouble extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/toDouble/example1
+     * test data: dev/morphia/test/aggregation/expressions/toDouble/toDoubleExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testToDoubleExpressionOperator() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(addFields().field("degrees", toDouble(substrBytes("$temp", 0, 4)))));
     }

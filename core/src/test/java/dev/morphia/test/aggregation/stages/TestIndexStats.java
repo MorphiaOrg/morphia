@@ -10,12 +10,12 @@ import static dev.morphia.aggregation.stages.IndexStats.indexStats;
 
 public class TestIndexStats extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/stages/indexStats/example1
+     * test data: dev/morphia/test/aggregation/stages/indexStats/indexStatsAggregationStage
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testIndexStatsAggregationStage() {
         testPipeline(new ActionTestOptions().skipDataCheck(true), (aggregation) -> aggregation.pipeline(indexStats()));
     }
 }

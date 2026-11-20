@@ -11,12 +11,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestType extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/type/example1
+     * test data: dev/morphia/test/aggregation/expressions/type/typeExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testTypeExpressionOperator() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(project().include("a", type("$a"))));
     }

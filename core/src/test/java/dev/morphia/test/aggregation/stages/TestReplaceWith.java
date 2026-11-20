@@ -20,34 +20,34 @@ import static dev.morphia.query.filters.Filters.gte;
 
 public class TestReplaceWith extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/stages/replaceWith/example1
+     * test data: dev/morphia/test/aggregation/stages/replaceWith/replaceWithAnEmbeddedDocumentField
      * 
      */
     @Test
     @DisplayName("``$replaceWith`` an Embedded Document Field")
-    public void testExample1() {
+    public void testReplaceWithAnEmbeddedDocumentField() {
         testPipeline((aggregation) -> aggregation.pipeline(replaceWith(mergeObjects()
                 .add(document().field("dogs", 0).field("cats", 0).field("birds", 0).field("fish", 0)).add("$pets"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/replaceWith/example2
+     * test data: dev/morphia/test/aggregation/stages/replaceWith/replaceWithADocumentNestedInAnArray
      * 
      */
     @Test
     @DisplayName("``$replaceWith`` a Document Nested in an Array")
-    public void testExample2() {
+    public void testReplaceWithADocumentNestedInAnArray() {
         testPipeline((aggregation) -> aggregation.pipeline(unwind("grades"), match(gte("grades.grade", 90)),
                 replaceWith("$grades")));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/replaceWith/example3
+     * test data: dev/morphia/test/aggregation/stages/replaceWith/replaceWithANewlyCreatedDocument
      * 
      */
     @Test
     @DisplayName("``$replaceWith`` a Newly Created Document")
-    public void testExample3() {
+    public void testReplaceWithANewlyCreatedDocument() {
         testPipeline(new ActionTestOptions().orderMatters(false).skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(match(eq("status", "C")),
                         replaceWith().field("_id", "$_id").field("item", "$item")
@@ -56,13 +56,13 @@ public class TestReplaceWith extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/replaceWith/example4
+     * test data: dev/morphia/test/aggregation/stages/replaceWith/replaceWithANewDocumentCreatedFromRootAndADefaultDocument
      * 
      */
     @Disabled("failing oddly")
     @Test
     @DisplayName("``$replaceWith`` a New Document Created from ``$$ROOT`` and a Default Document")
-    public void testExample4() {
+    public void testReplaceWithANewDocumentCreatedFromRootAndADefaultDocument() {
         testPipeline((aggregation) -> aggregation.pipeline(replaceWith(mergeObjects().add(
                 document().field("_id", "").field("name", "").field("email", "").field("cell", "").field("home", ""))
                 .add(ROOT))));

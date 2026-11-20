@@ -20,34 +20,34 @@ public class TestDenseRank extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/denseRank/example1
+     * test data: dev/morphia/test/aggregation/expressions/denseRank/denseRankPartitionsByAnIntegerField
      * 
      */
     @Test
     @DisplayName("Dense Rank Partitions by an Integer Field")
-    public void testExample1() {
+    public void testDenseRankPartitionsByAnIntegerField() {
         testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                 .sortBy(descending("quantity")).output(output("denseRankQuantityForState").operator(denseRank()))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/denseRank/example2
+     * test data: dev/morphia/test/aggregation/expressions/denseRank/denseRankPartitionsByADateField
      * 
      */
     @Test
     @DisplayName("Dense Rank Partitions by a Date Field")
-    public void testExample2() {
+    public void testDenseRankPartitionsByADateField() {
         testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                 .sortBy(ascending("orderDate")).output(output("denseRankOrderDateForState").operator(denseRank()))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/denseRank/example3
+     * test data: dev/morphia/test/aggregation/expressions/denseRank/denseRankForDuplicateNullAndMissingValues
      * 
      */
     @Test
     @DisplayName("Dense Rank for Duplicate, Null, and Missing Values")
-    public void testExample3() {
+    public void testDenseRankForDuplicateNullAndMissingValues() {
         testPipeline(new ActionTestOptions().serverVersion("8.0.0"),
                 (aggregation) -> aggregation
                         .pipeline(setWindowFields().partitionBy("$state").sortBy(descending("quantity"))

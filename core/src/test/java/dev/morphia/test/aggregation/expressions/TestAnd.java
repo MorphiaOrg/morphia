@@ -12,12 +12,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestAnd extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/and/example1
+     * test data: dev/morphia/test/aggregation/expressions/and/andExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testAndExpressionOperator() {
         testPipeline(aggregation -> aggregation.pipeline(
                 project().include("item").include("qty").include("result", and(gt("$qty", 100), lt("$qty", 250)))));
 

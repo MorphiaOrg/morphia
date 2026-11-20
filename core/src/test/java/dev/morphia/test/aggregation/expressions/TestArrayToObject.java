@@ -16,23 +16,23 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestArrayToObject extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/arrayToObject/example1
+     * test data: dev/morphia/test/aggregation/expressions/arrayToObject/arrayToObjectExample
      * 
      */
     @Test
     @DisplayName("``$arrayToObject``  Example")
-    public void testExample1() {
+    public void testArrayToObjectExample() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("item").include("dimensions", arrayToObject("$dimensions"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/arrayToObject/example2
+     * test data: dev/morphia/test/aggregation/expressions/arrayToObject/objectToArrayArrayToObjectExample
      * 
      */
     @Test
     @DisplayName("``$objectToArray`` + ``$arrayToObject`` Example")
-    public void testExample2() {
+    public void testObjectToArrayArrayToObjectExample() {
         testPipeline((aggregation) -> aggregation.pipeline(addFields().field("instock", objectToArray("$instock")),
                 addFields().field("instock",
                         concatArrays("$instock", array(document().field("k", "total").field("v", sum("$instock.v"))))),

@@ -16,21 +16,21 @@ import static dev.morphia.query.filters.Filters.expr;
 public class TestExpr extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/filters/expr/example1
+     * test data: dev/morphia/test/query/filters/expr/compareTwoFieldsFromASingleDocument
      */
     @Test
     @DisplayName("Compare Two Fields from A Single Document")
-    public void testExample1() {
+    public void testCompareTwoFieldsFromASingleDocument() {
         testQuery((query) -> query.filter(expr(gt("$spent", "$budget"))));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/expr/example2
+     * test data: dev/morphia/test/query/filters/expr/useExprWithConditionalStatements
      */
     @Disabled("parsing bug in Document's json parsing at $cond")
     @Test
     @DisplayName("Using ``$expr`` With Conditional Statements")
-    public void testExample2() {
+    public void testUseExprWithConditionalStatements() {
         testQuery((query) -> query
                 .filter(expr(lt(condition(gte("qty", 100), multiply("$price", 0.5), multiply("$price", 0.75)), 5.0))));
     }

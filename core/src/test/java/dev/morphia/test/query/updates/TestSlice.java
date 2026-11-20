@@ -16,38 +16,38 @@ import static dev.morphia.query.updates.UpdateOperators.push;
 public class TestSlice extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/updates/slice/example1
+     * test data: dev/morphia/test/query/updates/slice/sliceFromTheEndOfTheArray
      */
     @Test
     @DisplayName("Slice from the End of the Array")
-    public void testExample1() {
+    public void testSliceFromTheEndOfTheArray() {
         testUpdate((query) -> query.filter(eq("_id", 1)), push("scores", List.of(80, 78, 86)).slice(-5));
     }
 
     /**
-     * test data: dev/morphia/test/query/updates/slice/example2
+     * test data: dev/morphia/test/query/updates/slice/sliceFromTheFrontOfTheArray
      */
     @Test
     @DisplayName("Slice from the Front of the Array")
-    public void testExample2() {
+    public void testSliceFromTheFrontOfTheArray() {
         testUpdate((query) -> query.filter(eq("_id", 2)), push("scores", List.of(100, 20)).slice(3));
     }
 
     /**
-     * test data: dev/morphia/test/query/updates/slice/example3
+     * test data: dev/morphia/test/query/updates/slice/updateArrayUsingSliceOnly
      */
     @Test
     @DisplayName("Update Array Using Slice Only")
-    public void testExample3() {
+    public void testUpdateArrayUsingSliceOnly() {
         testUpdate((query) -> query.filter(eq("_id", 3)), push("scores", List.of()).slice(-3));
     }
 
     /**
-     * test data: dev/morphia/test/query/updates/slice/example4
+     * test data: dev/morphia/test/query/updates/slice/useSliceWithOtherPushModifiers
      */
     @Test
     @DisplayName("Use ``$slice`` with Other ``$push`` Modifiers")
-    public void testExample4() {
+    public void testUseSliceWithOtherPushModifiers() {
         // the Map order throws off structural checks
         testUpdate(new ActionTestOptions().skipActionCheck(true), (query) -> query.filter(eq("_id", 5)),
                 push("quizzes",

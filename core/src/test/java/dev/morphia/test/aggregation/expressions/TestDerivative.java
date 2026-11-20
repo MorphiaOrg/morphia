@@ -24,12 +24,12 @@ public class TestDerivative extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/derivative/example1
+     * test data: dev/morphia/test/aggregation/expressions/derivative/derivativeWindowFunctionExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testDerivativeWindowFunctionExpressionOperator() {
         testPipeline(new ActionTestOptions().removeIds(true),
                 (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$truckID")
                         .sortBy(ascending("timeStamp")).output(output("truckAverageSpeed")

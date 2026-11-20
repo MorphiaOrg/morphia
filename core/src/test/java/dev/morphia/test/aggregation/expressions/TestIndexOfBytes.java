@@ -11,12 +11,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestIndexOfBytes extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/indexOfBytes/example1
+     * test data: dev/morphia/test/aggregation/expressions/indexOfBytes/indexOfBytesExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testIndexOfBytesExpressionOperator() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(project().include("byteLocation", indexOfBytes("$item", "foo"))));
     }

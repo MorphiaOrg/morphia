@@ -12,12 +12,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 public class TestBitNot extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/bitNot/example1
+     * test data: dev/morphia/test/aggregation/expressions/bitNot/bitNotExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testBitNotExpressionOperator() {
         testPipeline(new ActionTestOptions().serverVersion("6.3.0"),
                 aggregation -> aggregation.pipeline(project().include("result", bitNot("$a"))));
     }

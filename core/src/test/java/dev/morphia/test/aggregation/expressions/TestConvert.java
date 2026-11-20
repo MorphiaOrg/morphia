@@ -19,12 +19,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestConvert extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/convert/example1
+     * test data: dev/morphia/test/aggregation/expressions/convert/convertExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testConvertExpressionOperator() {
         testPipeline((aggregation) -> aggregation.pipeline(
                 addFields().field("convertedPrice", convert("$price", DECIMAL).onError("Error").onNull(0.0))
                         .field("convertedQty",

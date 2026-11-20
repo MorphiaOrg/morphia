@@ -14,22 +14,22 @@ import static dev.morphia.aggregation.stages.Projection.project;
 public class TestBitAnd extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/bitAnd/example1
+     * test data: dev/morphia/test/aggregation/expressions/bitAnd/bitwiseAndWithTwoIntegers
      */
     @Test
     @DisplayName("Bitwise ``AND`` with Two Integers ")
-    public void testExample1() {
+    public void testBitwiseAndWithTwoIntegers() {
         testPipeline(new ActionTestOptions().serverVersion("7.0.0"),
                 aggregation -> aggregation.pipeline(project().include("result", bitAnd("$a", "$b"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/bitAnd/example2
+     * test data: dev/morphia/test/aggregation/expressions/bitAnd/bitwiseAndWithALongAndInteger
      *
      */
     @Test
     @DisplayName("Bitwise ``AND`` with a Long and Integer ")
-    public void testExample2() throws FileNotFoundException {
+    public void testBitwiseAndWithALongAndInteger() throws FileNotFoundException {
         testPipeline(new ActionTestOptions().serverVersion("7.0.0"),
                 aggregation -> aggregation.pipeline(project().include("result", bitAnd("$a", 63L))));
     }

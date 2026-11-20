@@ -21,23 +21,23 @@ import static dev.morphia.query.filters.Filters.text;
 
 public class TestMeta extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/meta/example1
+     * test data: dev/morphia/test/aggregation/expressions/meta/metaTextScoreAggregation
      * 
      */
     @Test
     @DisplayName("``$meta: \"textScore\"`` :: Aggregation")
-    public void testExample1() {
+    public void testMetaTextScoreAggregation() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(match(text("cake")), group(id(meta())).field("count", sum(1))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/meta/example2
+     * test data: dev/morphia/test/aggregation/expressions/meta/metaTextScoreFindAndProject
      * 
      */
     @Test
     @DisplayName("``$meta: \"textScore\"`` :: Find and Project")
-    public void testExample2() {
+    public void testMetaTextScoreFindAndProject() {
         testQuery(
                 new ActionTestOptions().orderMatters(false)
                         .findOptions(new FindOptions().projection().project(Meta.textScore("score"))),
@@ -45,21 +45,21 @@ public class TestMeta extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/meta/example3
+     * test data: dev/morphia/test/aggregation/expressions/meta/metaIndexKeyAggregation
      */
     @Test
     @DisplayName("``$meta: \"indexKey\"`` :: Aggregation")
-    public void testExample3() {
+    public void testMetaIndexKeyAggregation() {
         testPipeline(new ActionTestOptions().removeIds(true), aggregation -> aggregation
                 .pipeline(match(eq("type", "apparel")), addFields().field("idxKey", meta(INDEXKEY))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/meta/example4
+     * test data: dev/morphia/test/aggregation/expressions/meta/metaIndexKeyFindAndProject
      */
     @Test
     @DisplayName("``$meta: \"indexKey\"`` :: Find and Project")
-    public void testExample4() {
+    public void testMetaIndexKeyFindAndProject() {
         testQuery(
                 new ActionTestOptions().orderMatters(false).removeIds(true)
                         .findOptions(new FindOptions().projection().project(Meta.indexKey("idxKey"))),
@@ -67,21 +67,21 @@ public class TestMeta extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/meta/example5
+     * test data: dev/morphia/test/aggregation/expressions/meta/metaIndexKeyAggregationWithoutSupportingIndex
      */
     @Test
     @DisplayName("``$meta: \"indexKey\"`` :: Aggregation [1]")
-    public void testExample5() {
+    public void testMetaIndexKeyAggregationWithoutSupportingIndex() {
         testPipeline(new ActionTestOptions().removeIds(true), (aggregation) -> aggregation
                 .pipeline(match(gte("price", 10)), addFields().field("idxKey", meta(INDEXKEY))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/meta/example6
+     * test data: dev/morphia/test/aggregation/expressions/meta/metaIndexKeyFindAndProjectWithoutSupportingIndex
      */
     @Test
     @DisplayName("``$meta: \"indexKey\"`` :: Find and Project [1]")
-    public void testExample6() {
+    public void testMetaIndexKeyFindAndProjectWithoutSupportingIndex() {
         testQuery(
                 new ActionTestOptions().orderMatters(false).removeIds(true)
                         .findOptions(new FindOptions().projection().project(Meta.indexKey("idxKey"))),

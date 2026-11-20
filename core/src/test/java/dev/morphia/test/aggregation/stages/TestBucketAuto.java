@@ -25,22 +25,22 @@ import static java.util.Collections.singleton;
 
 public class TestBucketAuto extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/stages/bucketAuto/example1
+     * test data: dev/morphia/test/aggregation/stages/bucketAuto/singleFacetAggregation
      * 
      */
     @Test
     @DisplayName("Single Facet Aggregation")
-    public void testExample1() {
+    public void testSingleFacetAggregation() {
         testPipeline((aggregation) -> aggregation.pipeline(autoBucket().groupBy("$price").buckets(4)));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/bucketAuto/example2
+     * test data: dev/morphia/test/aggregation/stages/bucketAuto/multiFacetedAggregation
      * 
      */
     @Test
     @DisplayName("Multi-Faceted Aggregation")
-    public void testExample2() {
+    public void testMultiFacetedAggregation() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(facet().field("price", autoBucket().groupBy("$price").buckets(4))
                         .field("year",
@@ -52,7 +52,7 @@ public class TestBucketAuto extends TemplatedTestBase {
 
     @Test
     @DisplayName("Multi-Faceted Aggregation")
-    public void testExample3() {
+    public void testMultiFacetedAggregationAsPipeline() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(facet().field("price", autoBucket().groupBy("$price").buckets(4))
                         .field("year",

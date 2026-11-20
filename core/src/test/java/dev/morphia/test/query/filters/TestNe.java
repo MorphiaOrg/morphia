@@ -12,31 +12,31 @@ import static dev.morphia.query.updates.UpdateOperators.set;
 public class TestNe extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/filters/ne/example1
+     * test data: dev/morphia/test/query/filters/ne/matchDocumentFieldsThatAreNotEqual
      */
     @Test
     @DisplayName("Match Document Fields That Are Not Equal")
-    public void testExample1() {
+    public void testMatchDocumentFieldsThatAreNotEqual() {
         testQuery(new ActionTestOptions().removeIds(true), (query) -> query.filter(ne("quantity", 20)));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/ne/example2
+     * test data: dev/morphia/test/query/filters/ne/updateBasedOnNotEqualEmbeddedDocumentFields
      */
     @Test
     @DisplayName("Update Based on Not Equal Embedded Document Fields")
-    public void testExample2() {
+    public void testUpdateBasedOnNotEqualEmbeddedDocumentFields() {
         testUpdate(new ActionTestOptions().removeIds(true), (query) -> query.filter(ne("carrier.fee", 1)),
                 set("price", 9.99));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/ne/example3
+     * test data: dev/morphia/test/query/filters/ne/arrays
      * 
      */
     @Test
     @DisplayName("Arrays")
-    public void testExample3() {
+    public void testArrays() {
         testQuery(new ActionTestOptions().removeIds(true),
                 (query) -> query.filter(ne("type", new String[] { "hardware", "fasteners" })));
     }

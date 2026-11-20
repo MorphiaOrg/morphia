@@ -12,23 +12,23 @@ import static dev.morphia.aggregation.stages.Sort.sort;
 
 public class TestBinarySize extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/binarySize/example1
+     * test data: dev/morphia/test/aggregation/expressions/binarySize/binarySizeExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testBinarySizeExpressionOperator() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("name", "$name").include("imageSize", binarySize("$binary"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/binarySize/example2
+     * test data: dev/morphia/test/aggregation/expressions/binarySize/findLargestBinaryData
      * 
      */
     @Test
     @DisplayName("Find Largest Binary Data")
-    public void testExample2() {
+    public void testFindLargestBinaryData() {
         testPipeline((aggregation) -> aggregation.pipeline(
                 project().include("name", "$name").include("imageSize", binarySize("$binary")),
                 sort().descending("imageSize"), limit(1)));

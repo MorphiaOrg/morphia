@@ -16,39 +16,39 @@ import static dev.morphia.query.updates.UpdateOperators.push;
 public class TestPush extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/updates/push/example1
+     * test data: dev/morphia/test/query/updates/push/appendAValueToAnArray
      */
     @Test
     @DisplayName("Append a Value to an Array")
-    public void testExample1() {
+    public void testAppendAValueToAnArray() {
         testUpdate((query) -> query.filter(eq("_id", 1)), push("scores", 89));
     }
 
     /**
-     * test data: dev/morphia/test/query/updates/push/example2
+     * test data: dev/morphia/test/query/updates/push/appendAValueToArraysInMultipleDocuments
      */
     @Test
     @DisplayName("Append a Value to Arrays in Multiple Documents")
-    public void testExample2() {
+    public void testAppendAValueToArraysInMultipleDocuments() {
         UpdateOptions updateOptions = new UpdateOptions().multi(true);
         testUpdate((query) -> query.filter(), push("scores", 95));
     }
 
     /**
-     * test data: dev/morphia/test/query/updates/push/example3
+     * test data: dev/morphia/test/query/updates/push/appendMultipleValuesToAnArray
      */
     @Test
     @DisplayName("Append Multiple Values to an Array")
-    public void testExample3() {
+    public void testAppendMultipleValuesToAnArray() {
         testUpdate((query) -> query.filter(eq("_id", 1)), push("scores", List.of(90, 92, 85)));
     }
 
     /**
-     * test data: dev/morphia/test/query/updates/push/example4
+     * test data: dev/morphia/test/query/updates/push/usePushOperatorWithMultipleModifiers
      */
     @Test
     @DisplayName("Use ``$push`` Operator with Multiple Modifiers")
-    public void testExample4() {
+    public void testUsePushOperatorWithMultipleModifiers() {
         testUpdate((query) -> query.filter(eq("_id", 5)),
                 push("quizzes", List.of(document("wk", 5).field("score", 8), document("wk", 6).field("score", 7),
                         document("wk", 7).field("score", 6))).sort(descending("score")).slice(3));

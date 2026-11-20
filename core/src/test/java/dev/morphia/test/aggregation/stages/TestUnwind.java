@@ -25,54 +25,54 @@ import static java.util.Arrays.asList;
 
 public class TestUnwind extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/stages/unwind/example1
+     * test data: dev/morphia/test/aggregation/stages/unwind/unwindArray
      * 
      */
     @Test
     @DisplayName("Unwind Array")
-    public void testExample1() {
+    public void testUnwindArray() {
         testPipeline((aggregation) -> aggregation.pipeline(unwind("sizes")));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/unwind/example2
+     * test data: dev/morphia/test/aggregation/stages/unwind/missingOrNonArrayValues
      * 
      */
     @Test
     @DisplayName("Missing or Non-array Values")
-    public void testExample2() {
+    public void testMissingOrNonArrayValues() {
         testPipeline((aggregation) -> aggregation.pipeline(unwind("sizes")));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/unwind/example3
+     * test data: dev/morphia/test/aggregation/stages/unwind/preserveNullAndEmptyArraysAndIncludeArrayIndex
      * 
      */
     @Test
     @DisplayName("``preserveNullAndEmptyArrays`` and ``includeArrayIndex``")
-    public void testExample3() {
+    public void testPreserveNullAndEmptyArraysAndIncludeArrayIndex() {
         testPipeline((aggregation) -> aggregation.pipeline(unwind("sizes").preserveNullAndEmptyArrays(true)));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/unwind/example4
+     * test data: dev/morphia/test/aggregation/stages/unwind/groupByUnwoundValues
      * 
      */
     @Test
     @DisplayName("Group by Unwound Values")
-    public void testExample4() {
+    public void testGroupByUnwoundValues() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(unwind("sizes").preserveNullAndEmptyArrays(true),
                         group(id("$sizes")).field("averagePrice", avg("$price")), sort().descending("averagePrice")));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/unwind/example5
+     * test data: dev/morphia/test/aggregation/stages/unwind/unwindEmbeddedArrays
      * 
      */
     @Test
     @DisplayName("Unwind Embedded Arrays")
-    public void testExample5() {
+    public void testUnwindEmbeddedArrays() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation.pipeline(unwind("items"),
                 unwind("items.tags"),
                 group(id("$items.tags")).field("totalSalesAmount", sum(multiply("$items.price", "$items.quantity")))));

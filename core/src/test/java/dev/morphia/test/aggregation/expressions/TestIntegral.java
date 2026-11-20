@@ -21,12 +21,12 @@ public class TestIntegral extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/integral/example1
+     * test data: dev/morphia/test/aggregation/expressions/integral/integralExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testIntegralExpressionOperator() {
         testPipeline(new ActionTestOptions().removeIds(true),
                 (aggregation) -> aggregation
                         .pipeline(setWindowFields().partitionBy("$powerMeterID").sortBy(Sort.ascending("timeStamp"))

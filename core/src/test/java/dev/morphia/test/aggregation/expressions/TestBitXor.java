@@ -12,12 +12,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 public class TestBitXor extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/bitXor/example1
+     * test data: dev/morphia/test/aggregation/expressions/bitXor/bitXorExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testBitXorExpressionOperator() {
         testPipeline(new ActionTestOptions().serverVersion("6.3.0"),
                 aggregation -> aggregation.pipeline(project().include("result", bitXor("$a", "$b"))));
     }

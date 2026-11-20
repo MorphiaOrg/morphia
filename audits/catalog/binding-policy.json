@@ -1,55 +1,55 @@
 {
+  "manualMethods" : [ {
+    "method" : "testUsePercentileInASetWindowFieldStagePlaceholder",
+    "reason" : "Empty placeholder for the $setWindowFields example; it has no fixture and asserts nothing.",
+    "type" : "dev.morphia.test.aggregation.expressions.TestPercentile"
+  }, {
+    "method" : "testBucket",
+    "reason" : "Handwritten entity-mapped $bucket test without a documentation fixture.",
+    "type" : "dev.morphia.test.aggregation.stages.TestBucket"
+  }, {
+    "method" : "testBucketWithBoundariesWithSizeLessThanTwo",
+    "reason" : "Handwritten $bucket boundary validation test without a documentation fixture.",
+    "type" : "dev.morphia.test.aggregation.stages.TestBucket"
+  }, {
+    "method" : "testBucketWithOptions",
+    "reason" : "Handwritten entity-mapped $bucket options test without a documentation fixture.",
+    "type" : "dev.morphia.test.aggregation.stages.TestBucket"
+  }, {
+    "method" : "testBucketWithUnsortedBoundaries",
+    "reason" : "Handwritten $bucket boundary validation test without a documentation fixture.",
+    "type" : "dev.morphia.test.aggregation.stages.TestBucket"
+  }, {
+    "method" : "testBucketWithoutOptions",
+    "reason" : "Handwritten entity-mapped $bucket test without a documentation fixture.",
+    "type" : "dev.morphia.test.aggregation.stages.TestBucket"
+  }, {
+    "method" : "testWithGranularity",
+    "reason" : "Handwritten entity-mapped $bucketAuto granularity test without a documentation fixture.",
+    "type" : "dev.morphia.test.aggregation.stages.TestBucketAuto"
+  }, {
+    "method" : "testWithoutGranularity",
+    "reason" : "Handwritten entity-mapped $bucketAuto test without a documentation fixture.",
+    "type" : "dev.morphia.test.aggregation.stages.TestBucketAuto"
+  }, {
+    "method" : "testChangeStreamOptions",
+    "reason" : "Handwritten $changeStream option encoding test without a documentation fixture.",
+    "type" : "dev.morphia.test.aggregation.stages.TestChangeStream"
+  }, {
+    "method" : "testLookup",
+    "reason" : "Handwritten entity-mapped $lookup test without a documentation fixture.",
+    "type" : "dev.morphia.test.aggregation.stages.TestLookup"
+  }, {
+    "method" : "testUnwind",
+    "reason" : "Handwritten entity-mapped $unwind test without a documentation fixture.",
+    "type" : "dev.morphia.test.aggregation.stages.TestUnwind"
+  } ],
   "schemaVersion" : 1,
   "unboundResources" : [ {
-    "resource" : "aggregation/expressions/tsIncrement/example2",
-    "reason" : "Change-stream watch example kept only as a name and lock marker; it has no action, data or test method."
+    "reason" : "Change-stream watch example kept only as a name and lock marker; it has no action, data or test method.",
+    "resource" : "aggregation/expressions/tsIncrement/useTsIncrementInAChangeStreamCursorToMonitorCollectionChanges"
   }, {
-    "resource" : "aggregation/expressions/tsSecond/example2",
-    "reason" : "Change-stream watch example kept only as a name and lock marker; it has no action, data or test method."
-  } ],
-  "manualMethods" : [ {
-    "type" : "dev.morphia.test.aggregation.expressions.TestPercentile",
-    "method" : "testExample5",
-    "reason" : "Empty placeholder for the $setWindowFields example; it has no fixture and asserts nothing."
-  }, {
-    "type" : "dev.morphia.test.aggregation.stages.TestBucket",
-    "method" : "testBucket",
-    "reason" : "Handwritten entity-mapped $bucket test without a documentation fixture."
-  }, {
-    "type" : "dev.morphia.test.aggregation.stages.TestBucket",
-    "method" : "testBucketWithBoundariesWithSizeLessThanTwo",
-    "reason" : "Handwritten $bucket boundary validation test without a documentation fixture."
-  }, {
-    "type" : "dev.morphia.test.aggregation.stages.TestBucket",
-    "method" : "testBucketWithOptions",
-    "reason" : "Handwritten entity-mapped $bucket options test without a documentation fixture."
-  }, {
-    "type" : "dev.morphia.test.aggregation.stages.TestBucket",
-    "method" : "testBucketWithUnsortedBoundaries",
-    "reason" : "Handwritten $bucket boundary validation test without a documentation fixture."
-  }, {
-    "type" : "dev.morphia.test.aggregation.stages.TestBucket",
-    "method" : "testBucketWithoutOptions",
-    "reason" : "Handwritten entity-mapped $bucket test without a documentation fixture."
-  }, {
-    "type" : "dev.morphia.test.aggregation.stages.TestBucketAuto",
-    "method" : "testWithGranularity",
-    "reason" : "Handwritten entity-mapped $bucketAuto granularity test without a documentation fixture."
-  }, {
-    "type" : "dev.morphia.test.aggregation.stages.TestBucketAuto",
-    "method" : "testWithoutGranularity",
-    "reason" : "Handwritten entity-mapped $bucketAuto test without a documentation fixture."
-  }, {
-    "type" : "dev.morphia.test.aggregation.stages.TestChangeStream",
-    "method" : "testChangeStreamOptions",
-    "reason" : "Handwritten $changeStream option encoding test without a documentation fixture."
-  }, {
-    "type" : "dev.morphia.test.aggregation.stages.TestLookup",
-    "method" : "testLookup",
-    "reason" : "Handwritten entity-mapped $lookup test without a documentation fixture."
-  }, {
-    "type" : "dev.morphia.test.aggregation.stages.TestUnwind",
-    "method" : "testUnwind",
-    "reason" : "Handwritten entity-mapped $unwind test without a documentation fixture."
+    "reason" : "Change-stream watch example kept only as a name and lock marker; it has no action, data or test method.",
+    "resource" : "aggregation/expressions/tsSecond/useTsSecondInAChangeStreamCursorToMonitorCollectionChanges"
   } ]
 }

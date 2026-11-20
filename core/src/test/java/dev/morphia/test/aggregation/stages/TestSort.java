@@ -13,23 +13,23 @@ import static dev.morphia.query.filters.Filters.text;
 
 public class TestSort extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/stages/sort/example1
+     * test data: dev/morphia/test/aggregation/stages/sort/ascendingDescendingSort
      * 
      */
     @Test
     @DisplayName("Ascending/Descending Sort")
-    public void testExample1() {
+    public void testAscendingDescendingSort() {
         testPipeline(new ActionTestOptions().skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(sort().descending("age").ascending("posts")));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/sort/example2
+     * test data: dev/morphia/test/aggregation/stages/sort/textScoreMetadataSort
      * 
      */
     @Test
     @DisplayName("Text Score Metadata Sort")
-    public void testExample2() {
+    public void testTextScoreMetadataSort() {
         getDatabase().getCollection(EXAMPLE_TEST_COLLECTION).createIndex(new Document("$**", "text"));
         testPipeline(new ActionTestOptions().skipDataCheck(true), (aggregation) -> aggregation
                 .pipeline(match(text("operating")), sort().meta("score").descending("posts")));

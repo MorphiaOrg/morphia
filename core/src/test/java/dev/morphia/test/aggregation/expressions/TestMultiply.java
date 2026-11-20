@@ -10,12 +10,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestMultiply extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/multiply/example1
+     * test data: dev/morphia/test/aggregation/expressions/multiply/multiplyExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testMultiplyExpressionOperator() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("date").include("item").include("total", multiply("$price", "$quantity"))));
     }

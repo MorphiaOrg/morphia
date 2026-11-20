@@ -11,12 +11,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestPow extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/pow/example1
+     * test data: dev/morphia/test/aggregation/expressions/pow/powExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testPowExpressionOperator() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("variance", pow(stdDevPop("$scores.score"), 2))));
     }

@@ -18,12 +18,12 @@ public class TestTsSecond extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/tsSecond/example1
+     * test data: dev/morphia/test/aggregation/expressions/tsSecond/obtainTheNumberOfSecondsFromATimestampField
      * 
      */
     @Test
     @DisplayName("Obtain the Number of Seconds from a Timestamp Field")
-    public void testExample1() {
+    public void testObtainTheNumberOfSecondsFromATimestampField() {
         testPipeline(new ActionTestOptions(), (aggregation) -> aggregation.pipeline(
                 project().suppressId().include("saleTimestamp").include("saleSeconds", tsSecond("$saleTimestamp"))));
     }

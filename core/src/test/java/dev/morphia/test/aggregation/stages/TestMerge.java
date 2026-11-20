@@ -29,12 +29,12 @@ import static dev.morphia.query.filters.Filters.lt;
 
 public class TestMerge extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/stages/merge/example1
+     * test data: dev/morphia/test/aggregation/stages/merge/onDemandMaterializedViewInitialCreation
      * 
      */
     @Test
     @DisplayName("On-Demand Materialized View: Initial Creation")
-    public void testExample1() {
+    public void testOnDemandMaterializedViewInitialCreation() {
         testPipeline(new ActionTestOptions().skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(
                         group(id().field("fiscal_year", "$fiscal_year").field("dept", "$dept")).field("salaries",
@@ -43,12 +43,12 @@ public class TestMerge extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/merge/example2
+     * test data: dev/morphia/test/aggregation/stages/merge/onDemandMaterializedViewUpdateReplaceData
      * 
      */
     @Test
     @DisplayName("On-Demand Materialized View: Update/Replace Data")
-    public void testExample2() {
+    public void testOnDemandMaterializedViewUpdateReplaceData() {
         testPipeline(new ActionTestOptions().skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(match(gte("fiscal_year", 2019)),
                         group(id().field("fiscal_year", "$fiscal_year").field("dept", "$dept")).field("salaries",
@@ -57,12 +57,12 @@ public class TestMerge extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/merge/example3
+     * test data: dev/morphia/test/aggregation/stages/merge/onlyInsertNewData
      * 
      */
     @Test
     @DisplayName("Only Insert New Data")
-    public void testExample3() {
+    public void testOnlyInsertNewData() {
         loadData("orgArchive", 1);
         loadData("salaries", 2);
         loadIndex(discoverResourceName(), "orgArchive");
@@ -76,24 +76,24 @@ public class TestMerge extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/merge/example4
+     * test data: dev/morphia/test/aggregation/stages/merge/mergeResultsFromMultipleCollections
      * 
      */
     @Test
     @DisplayName("Merge Results from Multiple Collections")
-    public void testExample4() {
+    public void testMergeResultsFromMultipleCollections() {
         testPipeline(new ActionTestOptions().skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(group().field("_id", "$quarter").field("purchased", sum("$qty")),
                         merge("quarterlyreport").on("_id").whenMatched(MERGE).whenNotMatched(INSERT)));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/merge/example5
+     * test data: dev/morphia/test/aggregation/stages/merge/useThePipelineToCustomizeTheMerge
      * 
      */
     @Test
     @DisplayName("Use the Pipeline to Customize the Merge")
-    public void testExample5() {
+    public void testUseThePipelineToCustomizeTheMerge() {
         testPipeline(new ActionTestOptions().skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(
                         match(gte("date", LocalDate.of(2019, Month.MAY, 7)),
@@ -107,34 +107,34 @@ public class TestMerge extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/merge/example6
+     * test data: dev/morphia/test/aggregation/stages/merge/useVariablesToCustomizeTheMergeMergeStage
      * 
      */
     @Test
     @DisplayName("Use Variables to Customize the Merge :: Merge Stage")
-    public void testExample6() {
+    public void testUseVariablesToCustomizeTheMergeMergeStage() {
         // merging in to another db complicates the test infra and doesn't really
         // provide much value as another test
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/merge/example7
+     * test data: dev/morphia/test/aggregation/stages/merge/useVariablesToCustomizeTheMergeAggregateCommand
      * 
      */
     @Test
     @DisplayName("Use Variables to Customize the Merge :: Aggregate Command")
-    public void testExample7() {
+    public void testUseVariablesToCustomizeTheMergeAggregateCommand() {
         // merging in to another db complicates the test infra and doesn't really
         // provide much value as another test
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/merge/example8
+     * test data: dev/morphia/test/aggregation/stages/merge/useVariablesToCustomizeTheMergeMergeAndAggregate
      * 
      */
     @Test
     @DisplayName("Use Variables to Customize the Merge :: Merge and Aggregate")
-    public void testExample8() {
+    public void testUseVariablesToCustomizeTheMergeMergeAndAggregate() {
         // merging in to another db complicates the test infra and doesn't really
         // provide much value as another test
     }

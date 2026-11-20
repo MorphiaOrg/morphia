@@ -17,12 +17,12 @@ import static dev.morphia.query.Sort.ascending;
 
 public class TestAddToSet extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/addToSet/example1
+     * test data: dev/morphia/test/aggregation/expressions/addToSet/useInGroupStage
      * 
      */
     @Test
     @DisplayName("Use in ``$group`` Stage")
-    public void testExample1() {
+    public void testUseInGroupStage() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 aggregation -> aggregation
                         .pipeline(group(Group.id().field("day", dayOfYear("$date")).field("year", year("$date")))
@@ -33,12 +33,12 @@ public class TestAddToSet extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/addToSet/example2
+     * test data: dev/morphia/test/aggregation/expressions/addToSet/useInSetWindowFieldsStage
      * 
      */
     @Test
     @DisplayName("Use in ``$setWindowFields`` Stage")
-    public void testExample2() {
+    public void testUseInSetWindowFieldsStage() {
         if (1 == 1)
             return;
         testPipeline(new ActionTestOptions().orderMatters(false),

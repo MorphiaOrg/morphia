@@ -13,23 +13,23 @@ import static dev.morphia.aggregation.stages.Projection.project;
 public class TestBitOr extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/bitOr/example1
+     * test data: dev/morphia/test/aggregation/expressions/bitOr/bitwiseOrWithTwoIntegers
      */
     @Test
     @DisplayName("Bitwise ``OR`` with Two Integers ")
-    public void testExample1() {
+    public void testBitwiseOrWithTwoIntegers() {
         testPipeline(new ActionTestOptions().serverVersion("6.3.0"),
                 aggregation -> aggregation.pipeline(project().include("result", bitOr("$a", "$b"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/bitOr/example2
+     * test data: dev/morphia/test/aggregation/expressions/bitOr/bitwiseOrWithALongAndInteger
      *
      */
     @Disabled("this is getting odd unexpected results from the server")
     @Test
     @DisplayName("Bitwise ``OR`` with a Long and Integer ")
-    public void testExample2() {
+    public void testBitwiseOrWithALongAndInteger() {
         testPipeline(new ActionTestOptions().serverVersion("6.3.0").removeIds(true).orderMatters(false),
                 aggregation -> aggregation.pipeline(project().include("result", bitOr("$a", 63L))));
     }

@@ -10,12 +10,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestAnyElementTrue extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/anyElementTrue/example1
+     * test data: dev/morphia/test/aggregation/expressions/anyElementTrue/anyElementTrueExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testAnyElementTrueExpressionOperator() {
         testPipeline(aggregation -> aggregation.pipeline(
                 project().suppressId().include("responses").include("isAnyTrue", anyElementTrue("$responses"))));
 

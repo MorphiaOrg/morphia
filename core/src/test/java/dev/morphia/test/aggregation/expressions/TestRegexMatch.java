@@ -12,24 +12,24 @@ import static dev.morphia.aggregation.stages.AddFields.addFields;
 
 public class TestRegexMatch extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/regexMatch/example1
+     * test data: dev/morphia/test/aggregation/expressions/regexMatch/regexMatchAndItsOptions
      * 
      */
     @Test
     @DisplayName("``$regexMatch`` and Its Options")
-    public void testExample1() {
+    public void testRegexMatchAndItsOptions() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
                 .pipeline(addFields().field("result", regexMatch("$description").pattern("line"))));
 
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/regexMatch/example2
+     * test data: dev/morphia/test/aggregation/expressions/regexMatch/useRegexMatchToCheckEmailAddress
      * 
      */
     @Test
     @DisplayName("Use ``$regexMatch`` to Check Email Address")
-    public void testExample2() {
+    public void testUseRegexMatchToCheckEmailAddress() {
         testPipeline((aggregation) -> aggregation.pipeline(addFields().field("category", condition(
                 regexMatch("$comment").pattern("[a-z0-9_.+-]+@mongodb.com").options("i"), "Employee", "External"))));
     }

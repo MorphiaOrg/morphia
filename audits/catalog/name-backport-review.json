@@ -1,0 +1,592 @@
+{
+  "schemaVersion": 1,
+  "pageTitles": [
+    {
+      "folder": "aggregation/expressions/abs",
+      "title": "$abs (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/abs.txt"
+    },
+    {
+      "folder": "aggregation/expressions/allElementsTrue",
+      "title": "$allElementsTrue (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/allElementsTrue.txt"
+    },
+    {
+      "folder": "aggregation/expressions/and",
+      "title": "$and (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/and.txt"
+    },
+    {
+      "folder": "aggregation/expressions/anyElementTrue",
+      "title": "$anyElementTrue (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/anyElementTrue.txt"
+    },
+    {
+      "folder": "aggregation/expressions/arrayElemAt",
+      "title": "$arrayElemAt (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/arrayElemAt.txt"
+    },
+    {
+      "folder": "aggregation/expressions/binarySize",
+      "title": "$binarySize (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/binarySize.txt"
+    },
+    {
+      "folder": "aggregation/expressions/bitNot",
+      "title": "$bitNot (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/bitNot.txt"
+    },
+    {
+      "folder": "aggregation/expressions/bitXor",
+      "title": "$bitXor (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/bitXor.txt"
+    },
+    {
+      "folder": "aggregation/expressions/ceil",
+      "title": "$ceil (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/ceil.txt"
+    },
+    {
+      "folder": "aggregation/expressions/cmp",
+      "title": "$cmp (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/cmp.txt"
+    },
+    {
+      "folder": "aggregation/expressions/concat",
+      "title": "$concat (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/concat.txt"
+    },
+    {
+      "folder": "aggregation/expressions/concatArrays",
+      "title": "$concatArrays (accumulator operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/concatArrays.txt"
+    },
+    {
+      "folder": "aggregation/expressions/cond",
+      "title": "$cond (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/cond.txt"
+    },
+    {
+      "folder": "aggregation/expressions/convert",
+      "title": "$convert (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/convert.txt"
+    },
+    {
+      "folder": "aggregation/expressions/covariancePop",
+      "title": "$covariancePop (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/covariancePop.txt"
+    },
+    {
+      "folder": "aggregation/expressions/covarianceSamp",
+      "title": "$covarianceSamp (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/covarianceSamp.txt"
+    },
+    {
+      "folder": "aggregation/expressions/dateFromParts",
+      "title": "$dateFromParts (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/dateFromParts.txt"
+    },
+    {
+      "folder": "aggregation/expressions/dateToParts",
+      "title": "$dateToParts (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/dateToParts.txt"
+    },
+    {
+      "folder": "aggregation/expressions/dateToString",
+      "title": "$dateToString (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/dateToString.txt"
+    },
+    {
+      "folder": "aggregation/expressions/dayOfMonth",
+      "title": "$dayOfMonth (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/dayOfMonth.txt"
+    },
+    {
+      "folder": "aggregation/expressions/dayOfWeek",
+      "title": "$dayOfWeek (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/dayOfWeek.txt"
+    },
+    {
+      "folder": "aggregation/expressions/dayOfYear",
+      "title": "$dayOfYear (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/dayOfYear.txt"
+    },
+    {
+      "folder": "aggregation/expressions/degreesToRadians",
+      "title": "$degreesToRadians (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/degreesToRadians.txt"
+    },
+    {
+      "folder": "aggregation/expressions/derivative",
+      "title": "$derivative (Window Function) (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/derivative.txt"
+    },
+    {
+      "folder": "aggregation/expressions/divide",
+      "title": "$divide (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/divide.txt"
+    },
+    {
+      "folder": "aggregation/expressions/eq",
+      "title": "$eq (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/eq.txt"
+    },
+    {
+      "folder": "aggregation/expressions/exp",
+      "title": "$exp (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/exp.txt"
+    },
+    {
+      "folder": "aggregation/expressions/filter",
+      "title": "$filter (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/filter.txt"
+    },
+    {
+      "folder": "aggregation/expressions/floor",
+      "title": "$floor (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/floor.txt"
+    },
+    {
+      "folder": "aggregation/expressions/gt",
+      "title": "$gt (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/gt.txt"
+    },
+    {
+      "folder": "aggregation/expressions/gte",
+      "title": "$gte (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/gte.txt"
+    },
+    {
+      "folder": "aggregation/expressions/hour",
+      "title": "$hour (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/hour.txt"
+    },
+    {
+      "folder": "aggregation/expressions/in",
+      "title": "$in (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/in.txt"
+    },
+    {
+      "folder": "aggregation/expressions/indexOfArray",
+      "title": "$indexOfArray (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/indexOfArray.txt"
+    },
+    {
+      "folder": "aggregation/expressions/indexOfBytes",
+      "title": "$indexOfBytes (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/indexOfBytes.txt"
+    },
+    {
+      "folder": "aggregation/expressions/indexOfCP",
+      "title": "$indexOfCP (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/indexOfCP.txt"
+    },
+    {
+      "folder": "aggregation/expressions/integral",
+      "title": "$integral (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/integral.txt"
+    },
+    {
+      "folder": "aggregation/expressions/isArray",
+      "title": "$isArray (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/isArray.txt"
+    },
+    {
+      "folder": "aggregation/expressions/isoDayOfWeek",
+      "title": "$isoDayOfWeek (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/isoDayOfWeek.txt"
+    },
+    {
+      "folder": "aggregation/expressions/isoWeek",
+      "title": "$isoWeek (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/isoWeek.txt"
+    },
+    {
+      "folder": "aggregation/expressions/isoWeekYear",
+      "title": "$isoWeekYear (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/isoWeekYear.txt"
+    },
+    {
+      "folder": "aggregation/expressions/let",
+      "title": "$let (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/let.txt"
+    },
+    {
+      "folder": "aggregation/expressions/ln",
+      "title": "$ln (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/ln.txt"
+    },
+    {
+      "folder": "aggregation/expressions/log",
+      "title": "$log (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/log.txt"
+    },
+    {
+      "folder": "aggregation/expressions/log10",
+      "title": "$log10 (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/log10.txt"
+    },
+    {
+      "folder": "aggregation/expressions/lt",
+      "title": "$lt (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/lt.txt"
+    },
+    {
+      "folder": "aggregation/expressions/lte",
+      "title": "$lte (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/lte.txt"
+    },
+    {
+      "folder": "aggregation/expressions/ltrim",
+      "title": "$ltrim (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/ltrim.txt"
+    },
+    {
+      "folder": "aggregation/expressions/millisecond",
+      "title": "$millisecond (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/millisecond.txt"
+    },
+    {
+      "folder": "aggregation/expressions/minute",
+      "title": "$minute (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/minute.txt"
+    },
+    {
+      "folder": "aggregation/expressions/mod",
+      "title": "$mod (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/mod.txt"
+    },
+    {
+      "folder": "aggregation/expressions/month",
+      "title": "$month (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/month.txt"
+    },
+    {
+      "folder": "aggregation/expressions/multiply",
+      "title": "$multiply (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/multiply.txt"
+    },
+    {
+      "folder": "aggregation/expressions/ne",
+      "title": "$ne (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/ne.txt"
+    },
+    {
+      "folder": "aggregation/expressions/not",
+      "title": "$not (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/not.txt"
+    },
+    {
+      "folder": "aggregation/expressions/or",
+      "title": "$or (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/or.txt"
+    },
+    {
+      "folder": "aggregation/expressions/pow",
+      "title": "$pow (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/pow.txt"
+    },
+    {
+      "folder": "aggregation/expressions/radiansToDegrees",
+      "title": "$radiansToDegrees (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/radiansToDegrees.txt"
+    },
+    {
+      "folder": "aggregation/expressions/range",
+      "title": "$range (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/range.txt"
+    },
+    {
+      "folder": "aggregation/expressions/replaceAll",
+      "title": "$replaceAll (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/replaceAll.txt"
+    },
+    {
+      "folder": "aggregation/expressions/replaceOne",
+      "title": "$replaceOne (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/replaceOne.txt"
+    },
+    {
+      "folder": "aggregation/expressions/reverseArray",
+      "title": "$reverseArray (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/reverseArray.txt"
+    },
+    {
+      "folder": "aggregation/expressions/round",
+      "title": "$round (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/round.txt"
+    },
+    {
+      "folder": "aggregation/expressions/rtrim",
+      "title": "$rtrim (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/rtrim.txt"
+    },
+    {
+      "folder": "aggregation/expressions/sampleRate",
+      "title": "$sampleRate (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/sampleRate.txt"
+    },
+    {
+      "folder": "aggregation/expressions/second",
+      "title": "$second (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/second.txt"
+    },
+    {
+      "folder": "aggregation/expressions/setDifference",
+      "title": "$setDifference (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/setDifference.txt"
+    },
+    {
+      "folder": "aggregation/expressions/setEquals",
+      "title": "$setEquals (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/setEquals.txt"
+    },
+    {
+      "folder": "aggregation/expressions/setIsSubset",
+      "title": "$setIsSubset (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/setIsSubset.txt"
+    },
+    {
+      "folder": "aggregation/expressions/setUnion",
+      "title": "$setUnion (accumulator operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/setUnion.txt"
+    },
+    {
+      "folder": "aggregation/expressions/size",
+      "title": "$size (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/size.txt"
+    },
+    {
+      "folder": "aggregation/expressions/slice",
+      "title": "$slice (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/slice.txt"
+    },
+    {
+      "folder": "aggregation/expressions/split",
+      "title": "$split (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/split.txt"
+    },
+    {
+      "folder": "aggregation/expressions/sqrt",
+      "title": "$sqrt (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/sqrt.txt"
+    },
+    {
+      "folder": "aggregation/expressions/strcasecmp",
+      "title": "$strcasecmp (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/strcasecmp.txt"
+    },
+    {
+      "folder": "aggregation/expressions/switch",
+      "title": "$switch (aggregation expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/switch.txt"
+    },
+    {
+      "folder": "aggregation/expressions/toBool",
+      "title": "$toBool (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/toBool.txt"
+    },
+    {
+      "folder": "aggregation/expressions/toDate",
+      "title": "$toDate (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/toDate.txt"
+    },
+    {
+      "folder": "aggregation/expressions/toDecimal",
+      "title": "$toDecimal (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/toDecimal.txt"
+    },
+    {
+      "folder": "aggregation/expressions/toDouble",
+      "title": "$toDouble (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/toDouble.txt"
+    },
+    {
+      "folder": "aggregation/expressions/toInt",
+      "title": "$toInt (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/toInt.txt"
+    },
+    {
+      "folder": "aggregation/expressions/toLong",
+      "title": "$toLong (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/toLong.txt"
+    },
+    {
+      "folder": "aggregation/expressions/toLower",
+      "title": "$toLower (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/toLower.txt"
+    },
+    {
+      "folder": "aggregation/expressions/toObjectId",
+      "title": "$toObjectId (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/toObjectId.txt"
+    },
+    {
+      "folder": "aggregation/expressions/toString",
+      "title": "$toString (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/toString.txt"
+    },
+    {
+      "folder": "aggregation/expressions/toUUID",
+      "title": "$toUUID (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/toUUID.txt"
+    },
+    {
+      "folder": "aggregation/expressions/toUpper",
+      "title": "$toUpper (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/toUpper.txt"
+    },
+    {
+      "folder": "aggregation/expressions/trim",
+      "title": "$trim (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/trim.txt"
+    },
+    {
+      "folder": "aggregation/expressions/trunc",
+      "title": "$trunc (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/trunc.txt"
+    },
+    {
+      "folder": "aggregation/expressions/type",
+      "title": "$type (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/type.txt"
+    },
+    {
+      "folder": "aggregation/expressions/week",
+      "title": "$week (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/week.txt"
+    },
+    {
+      "folder": "aggregation/expressions/year",
+      "title": "$year (expression operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/year.txt"
+    },
+    {
+      "folder": "aggregation/stages/count",
+      "title": "$count (aggregation stage)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/count.txt"
+    },
+    {
+      "folder": "aggregation/stages/facet",
+      "title": "$facet (aggregation stage)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/facet.txt"
+    },
+    {
+      "folder": "aggregation/stages/indexStats",
+      "title": "$indexStats (aggregation stage)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/indexStats.txt"
+    },
+    {
+      "folder": "aggregation/stages/limit",
+      "title": "$limit (aggregation stage)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/limit.txt"
+    },
+    {
+      "folder": "aggregation/stages/sample",
+      "title": "$sample (aggregation stage)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/sample.txt"
+    },
+    {
+      "folder": "aggregation/stages/skip",
+      "title": "$skip (aggregation stage)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/skip.txt"
+    },
+    {
+      "folder": "aggregation/stages/sortByCount",
+      "title": "$sortByCount (aggregation stage)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/aggregation/sortByCount.txt"
+    },
+    {
+      "folder": "query/filters/box",
+      "title": "$box (query predicate operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/query/box.txt"
+    },
+    {
+      "folder": "query/filters/center",
+      "title": "$center (query predicate operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/query/center.txt"
+    },
+    {
+      "folder": "query/filters/centerSphere",
+      "title": "$centerSphere (query predicate operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/query/centerSphere.txt"
+    },
+    {
+      "folder": "query/filters/maxDistance",
+      "title": "$maxDistance (query predicate operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/query/maxDistance.txt"
+    },
+    {
+      "folder": "query/filters/polygon",
+      "title": "$polygon (query predicate operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/query/polygon.txt"
+    },
+    {
+      "folder": "query/filters/where",
+      "title": "$where (query predicate operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/query/where.txt"
+    },
+    {
+      "folder": "query/updates/currentDate",
+      "title": "$currentDate (update operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/update/currentDate.txt"
+    },
+    {
+      "folder": "query/updates/inc",
+      "title": "$inc (update operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/update/inc.txt"
+    },
+    {
+      "folder": "query/updates/pullAll",
+      "title": "$pullAll (update operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/update/pullAll.txt"
+    },
+    {
+      "folder": "query/updates/setOnInsert",
+      "title": "$setOnInsert (update operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/update/setOnInsert.txt"
+    },
+    {
+      "folder": "query/updates/unset",
+      "title": "$unset (update operator)",
+      "source": "mongodb/docs@a5d960b9574cdf31db571249dd6e298ff5b3f104:content/manual/manual/source/reference/operator/update/unset.txt"
+    }
+  ],
+  "reviewedStems": [
+    {
+      "resource": "aggregation/expressions/meta/example5",
+      "stem": "metaIndexKeyAggregationWithoutSupportingIndex",
+      "reason": "Legacy title carries a parser '[1]' suffix; the docs describe this $meta indexKey aggregation as returning no index key because no index supports the price filter."
+    },
+    {
+      "resource": "aggregation/expressions/meta/example6",
+      "stem": "metaIndexKeyFindAndProjectWithoutSupportingIndex",
+      "reason": "Legacy title carries a parser '[1]' suffix; the docs describe this $meta indexKey find as returning no index key because no index supports the price filter."
+    },
+    {
+      "resource": "aggregation/expressions/percentile/example5",
+      "stem": "usePercentileInASetWindowFieldStagePlaceholder",
+      "reason": "Empty manual placeholder with no fixture; its title duplicates the bound $setWindowFields example, so the name records that it is a placeholder."
+    },
+    {
+      "resource": "aggregation/stages/bucketAuto/example3",
+      "stem": "multiFacetedAggregationAsPipeline",
+      "reason": "Second legacy copy of 'Multi-Faceted Aggregation'; its action is the array-wrapped pipeline form of the same $facet scenario (example2 holds the bare stage)."
+    },
+    {
+      "resource": "aggregation/stages/planCacheStats/example3",
+      "stem": "findCacheEntryDetailsForAPlanCacheShapeHash",
+      "reason": "Second legacy copy of 'Find Cache Entry Details for a Query Hash'; its expected output uses the newer planCacheShapeHash field where example2 uses queryHash."
+    },
+    {
+      "resource": "aggregation/stages/project/example6",
+      "stem": "includeSpecificFieldsFromEmbeddedDocumentsAsStage",
+      "reason": "Second legacy copy of 'Include Specific Fields from Embedded Documents'; its action is the bare stage form of example5's array-wrapped pipeline."
+    },
+    {
+      "resource": "aggregation/stages/project/example9",
+      "stem": "arrayIndexesAreUnsupportedFromShellInsert",
+      "reason": "Second legacy copy of 'Array Indexes are Unsupported'; its data is the raw db.pizzas.insert shell source rather than example8's document."
+    }
+  ]
+}

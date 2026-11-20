@@ -10,12 +10,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestIsoWeekYear extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/isoWeekYear/example1
+     * test data: dev/morphia/test/aggregation/expressions/isoWeekYear/isoWeekYearExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testIsoWeekYearExpressionOperator() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("yearNumber", isoWeekYear("$date"))));
     }
 

@@ -11,12 +11,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestExp extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/exp/example1
+     * test data: dev/morphia/test/aggregation/expressions/exp/expExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testExpExpressionOperator() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("effectiveRate", subtract(exp("$interestRate"), 1))));
     }

@@ -19,12 +19,12 @@ import static dev.morphia.query.Sort.*;
 
 public class TestPush extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/push/example1
+     * test data: dev/morphia/test/aggregation/expressions/push/useInGroupStage
      * 
      */
     @Test
     @DisplayName("Use in ``$group`` Stage")
-    public void testExample1() {
+    public void testUseInGroupStage() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(sort().ascending("date").ascending("item"),
                         group(id().field("day", dayOfYear("$date")).field("year", year("$date"))).field("itemsSold",
@@ -32,12 +32,12 @@ public class TestPush extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/push/example2
+     * test data: dev/morphia/test/aggregation/expressions/push/useInSetWindowFieldsStage
      * 
      */
     @Test
     @DisplayName("Use in ``$setWindowFields`` Stage")
-    public void testExample2() {
+    public void testUseInSetWindowFieldsStage() {
         checkMinServerVersion("5.0.0");
         testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                 .sortBy(ascending("orderDate")).output(output("quantitiesForState").operator(push("$quantity")).window()

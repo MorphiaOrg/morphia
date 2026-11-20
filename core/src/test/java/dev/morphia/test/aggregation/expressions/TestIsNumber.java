@@ -18,23 +18,23 @@ import static dev.morphia.aggregation.stages.Group.id;
 
 public class TestIsNumber extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/isNumber/example1
+     * test data: dev/morphia/test/aggregation/expressions/isNumber/useIsNumberToCheckIfAFieldIsNumeric
      * 
      */
     @Test
     @DisplayName("Use $isNumber to Check if a Field is Numeric")
-    public void testExample1() {
+    public void testUseIsNumberToCheckIfAFieldIsNumeric() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(addFields().field("isNumber", isNumber("$reading")).field("hasType", type("$reading"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/isNumber/example2
+     * test data: dev/morphia/test/aggregation/expressions/isNumber/conditionallyModifyFieldsUsingIsNumber
      * 
      */
     @Test
     @DisplayName("Conditionally Modify Fields using $isNumber")
-    public void testExample2() {
+    public void testConditionallyModifyFieldsUsingIsNumber() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
                         addFields().field("points",

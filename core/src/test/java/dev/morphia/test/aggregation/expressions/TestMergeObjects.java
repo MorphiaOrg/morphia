@@ -17,12 +17,12 @@ import static dev.morphia.aggregation.stages.ReplaceRoot.replaceRoot;
 
 public class TestMergeObjects extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/mergeObjects/example1
+     * test data: dev/morphia/test/aggregation/expressions/mergeObjects/mergeObjects
      * 
      */
     @Test
     @DisplayName("``$mergeObjects``")
-    public void testExample1() {
+    public void testMergeObjects() {
         loadData("items", 2);
         testPipeline((aggregation) -> aggregation.pipeline(
                 lookup("items").foreignField("item").localField("item").as("fromItems"),
@@ -30,12 +30,12 @@ public class TestMergeObjects extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/mergeObjects/example2
+     * test data: dev/morphia/test/aggregation/expressions/mergeObjects/mergeObjectsAsAnAccumulator
      * 
      */
     @Test
     @DisplayName("``$mergeObjects`` as an Accumulator")
-    public void testExample2() {
+    public void testMergeObjectsAsAnAccumulator() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
                 .pipeline(group(id("$item")).field("mergedSales", mergeObjects().add("$quantity"))));
     }

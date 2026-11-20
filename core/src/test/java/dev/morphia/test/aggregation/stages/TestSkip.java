@@ -10,12 +10,12 @@ import static dev.morphia.aggregation.stages.Skip.skip;
 
 public class TestSkip extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/stages/skip/example1
+     * test data: dev/morphia/test/aggregation/stages/skip/skipAggregationStage
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testSkipAggregationStage() {
         testPipeline(new ActionTestOptions().skipDataCheck(true), (aggregation) -> aggregation.pipeline(skip(5)));
     }
 }

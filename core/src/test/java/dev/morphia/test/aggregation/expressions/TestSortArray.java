@@ -23,24 +23,24 @@ public class TestSortArray extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/sortArray/example1
+     * test data: dev/morphia/test/aggregation/expressions/sortArray/sortOnAField
      * 
      */
     @Test
     @DisplayName("Sort on a Field ")
-    public void testExample1() {
+    public void testSortOnAField() {
         testPipeline(new ActionTestOptions(), (aggregation) -> aggregation
                 .pipeline(project().suppressId().include("result", sortArray("$team", ascending("name")))));
 
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/sortArray/example2
+     * test data: dev/morphia/test/aggregation/expressions/sortArray/sortOnASubfield
      * 
      */
     @Test
     @DisplayName("Sort on a Subfield")
-    public void testExample2() {
+    public void testSortOnASubfield() {
         testPipeline(new ActionTestOptions(), (aggregation) -> {
             return aggregation
                     .pipeline(project().suppressId().include("result", sortArray("$team", descending("address.city"))));
@@ -49,23 +49,23 @@ public class TestSortArray extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/sortArray/example3
+     * test data: dev/morphia/test/aggregation/expressions/sortArray/sortOnMultipleFields
      * 
      */
     @Test
     @DisplayName("Sort on Multiple Fields")
-    public void testExample3() {
+    public void testSortOnMultipleFields() {
         testPipeline(new ActionTestOptions(), (aggregation) -> aggregation.pipeline(
                 project().suppressId().include("result", sortArray("$team", descending("age"), ascending("name")))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/sortArray/example4
+     * test data: dev/morphia/test/aggregation/expressions/sortArray/sortAnArrayOfIntegers
      * 
      */
     @Test
     @DisplayName("Sort an Array of Integers")
-    public void testExample4() {
+    public void testSortAnArrayOfIntegers() {
         testPipeline(new ActionTestOptions(), (aggregation) -> {
             return aggregation.pipeline(
                     project().suppressId().include("result", sortArray(array(1, 4, 1, 6, 12, 5), naturalAscending())));
@@ -74,12 +74,12 @@ public class TestSortArray extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/sortArray/example5
+     * test data: dev/morphia/test/aggregation/expressions/sortArray/sortOnMixedTypeFields
      * 
      */
     @Test
     @DisplayName("Sort on Mixed Type Fields")
-    public void testExample5() {
+    public void testSortOnMixedTypeFields() {
         testPipeline(
                 new ActionTestOptions().orderMatters(false), (
                         aggregation) -> aggregation

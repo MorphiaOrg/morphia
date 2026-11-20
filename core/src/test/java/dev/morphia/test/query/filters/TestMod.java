@@ -10,47 +10,47 @@ import static dev.morphia.query.filters.Filters.mod;
 public class TestMod extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/filters/mod/example1
+     * test data: dev/morphia/test/query/filters/mod/useModToSelectDocuments
      */
     @Test
     @DisplayName("Use ``$mod`` to Select Documents")
-    public void testExample1() {
+    public void testUseModToSelectDocuments() {
         testQuery((query) -> query.filter(mod("qty", 4, 0)));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/mod/example2
+     * test data: dev/morphia/test/query/filters/mod/notEnoughElementsError
      */
     @Test
     @DisplayName("Not Enough Elements Error")
-    public void testExample2() {
+    public void testNotEnoughElementsError() {
         // ignored
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/mod/example3
+     * test data: dev/morphia/test/query/filters/mod/tooManyElementsError
      */
     @Test
     @DisplayName("Too Many Elements Error")
-    public void testExample3() {
+    public void testTooManyElementsError() {
         // ignored
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/mod/example4
+     * test data: dev/morphia/test/query/filters/mod/floatingPointArguments
      */
     @Test
     @DisplayName("Floating Point Arguments")
-    public void testExample4() {
+    public void testFloatingPointArguments() {
         testQuery((query) -> query.filter(mod("qty", 4.0, 0.0)));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/mod/example5
+     * test data: dev/morphia/test/query/filters/mod/negativeDividend
      */
     @Test
     @DisplayName("Negative Dividend")
-    public void testExample5() {
+    public void testNegativeDividend() {
         testQuery((query) -> query.filter(mod("qty", -4, -0)));
     }
 }

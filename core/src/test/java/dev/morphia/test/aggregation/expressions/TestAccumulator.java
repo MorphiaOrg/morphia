@@ -13,12 +13,12 @@ import static dev.morphia.aggregation.expressions.AccumulatorExpressions.accumul
 
 public class TestAccumulator extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/accumulator/example1
+     * test data: dev/morphia/test/aggregation/expressions/accumulator/useAccumulatorToImplementTheAvgOperator
      * 
      */
     @Test
     @DisplayName("Use ``$accumulator`` to Implement the ``$avg`` Operator")
-    public void testExample1() {
+    public void testUseAccumulatorToImplementTheAvgOperator() {
         testPipeline(new ActionTestOptions().orderMatters(false).skipActionCheck(true),
                 aggregation -> aggregation.pipeline(Group.group(Group.id("$author")).field("avgCopies", accumulator("""
                         function() {
@@ -43,12 +43,12 @@ public class TestAccumulator extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/accumulator/example2
+     * test data: dev/morphia/test/aggregation/expressions/accumulator/useInitArgsToVaryTheInitialStateByGroup
      * 
      */
     @Test
     @DisplayName("Use ``initArgs`` to Vary the Initial State by Group")
-    public void testExample2() {
+    public void testUseInitArgsToVaryTheInitialStateByGroup() {
         testPipeline(new ActionTestOptions().orderMatters(false).skipActionCheck(true), aggregation -> aggregation
                 .pipeline(Group.group(Group.id().field("city", "$city")).field("restaurants", accumulator("""
                         function(city, userProfileCity) {       \s

@@ -10,12 +10,12 @@ import static dev.morphia.aggregation.stages.Sample.sample;
 
 public class TestSample extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/stages/sample/example1
+     * test data: dev/morphia/test/aggregation/stages/sample/sampleAggregationStage
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testSampleAggregationStage() {
         testPipeline(new ActionTestOptions().skipDataCheck(true), (aggregation) -> aggregation.pipeline(sample(3)));
     }
 }

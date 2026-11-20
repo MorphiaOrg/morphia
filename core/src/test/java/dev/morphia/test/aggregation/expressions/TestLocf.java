@@ -21,23 +21,23 @@ public class TestLocf extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/locf/example1
+     * test data: dev/morphia/test/aggregation/expressions/locf/fillMissingValuesWithTheLastObservedValue
      * 
      */
     @Test
     @DisplayName("Fill Missing Values with the Last Observed Value")
-    public void testExample1() {
+    public void testFillMissingValuesWithTheLastObservedValue() {
         testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false), (aggregation) -> aggregation.pipeline(
                 setWindowFields().sortBy(ascending("time")).output(output("price").operator(locf("$price")))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/locf/example2
+     * test data: dev/morphia/test/aggregation/expressions/locf/useMultipleFillMethodsInASingleStage
      * 
      */
     @Test
     @DisplayName("Use Multiple Fill Methods in a Single Stage")
-    public void testExample2() {
+    public void testUseMultipleFillMethodsInASingleStage() {
         testPipeline(new ActionTestOptions().removeIds(true),
                 (aggregation) -> aggregation.pipeline(setWindowFields().sortBy(ascending("time")).output(
                         output("linearFillPrice").operator(linearFill("$price")),

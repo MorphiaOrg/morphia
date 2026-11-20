@@ -16,35 +16,35 @@ import static dev.morphia.aggregation.stages.SetWindowFields.setWindowFields;
 
 public class TestMin extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/min/example1
+     * test data: dev/morphia/test/aggregation/expressions/min/useInGroupStage
      * 
      */
     @Test
     @DisplayName("Use in ``$group`` Stage")
-    public void testExample1() {
+    public void testUseInGroupStage() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(group(id("$item")).field("minQuantity", min("$quantity"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/min/example2
+     * test data: dev/morphia/test/aggregation/expressions/min/useInProjectStage
      * 
      */
     @Test
     @DisplayName("Use in ``$project`` Stage")
-    public void testExample2() {
+    public void testUseInProjectStage() {
         testPipeline(new ActionTestOptions(),
                 (aggregation) -> aggregation.pipeline(project().include("quizMin", min("$quizzes"))
                         .include("labMin", min("$labs")).include("examMin", min("$final", "$midterm"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/min/example3
+     * test data: dev/morphia/test/aggregation/expressions/min/useInSetWindowFieldsStage
      * 
      */
     @Test
     @DisplayName("Use in ``$setWindowFields`` Stage")
-    public void testExample3() {
+    public void testUseInSetWindowFieldsStage() {
         checkMinServerVersion("5.0.0");
         testPipeline(new ActionTestOptions(),
                 (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")

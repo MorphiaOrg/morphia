@@ -26,12 +26,12 @@ public class TestDateSubtract extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/dateSubtract/example1
+     * test data: dev/morphia/test/aggregation/expressions/dateSubtract/subtractAFixedAmount
      * 
      */
     @Test
     @DisplayName("Subtract A Fixed Amount")
-    public void testExample1() {
+    public void testSubtractAFixedAmount() {
         testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
                         match(expr(eq(year("$logout"), 2021)), expr(eq(month("$logout"), 1))),
@@ -39,12 +39,12 @@ public class TestDateSubtract extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/dateSubtract/example2
+     * test data: dev/morphia/test/aggregation/expressions/dateSubtract/filterByRelativeDates
      * 
      */
     @Test
     @DisplayName("Filter by Relative Dates")
-    public void testExample2() {
+    public void testFilterByRelativeDates() {
         // $$NOW is a little pointless
         /*
          * testPipeline(new dev.morphia.test.util.ActionTestOptions() , (aggregation) ->
@@ -58,12 +58,12 @@ public class TestDateSubtract extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/dateSubtract/example3
+     * test data: dev/morphia/test/aggregation/expressions/dateSubtract/adjustForDaylightSavingsTime
      * 
      */
     @Test
     @DisplayName("Adjust for Daylight Savings Time")
-    public void testExample3() {
+    public void testAdjustForDaylightSavingsTime() {
         testPipeline((aggregation) -> aggregation.pipeline(project().suppressId().include("location")
                 .include("start", dateToString().date("$login").format("%Y-%m-%d %H:%M"))
                 .include("days",

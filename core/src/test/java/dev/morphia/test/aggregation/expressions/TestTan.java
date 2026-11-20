@@ -12,23 +12,23 @@ import static dev.morphia.aggregation.stages.AddFields.addFields;
 
 public class TestTan extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/tan/example1
+     * test data: dev/morphia/test/aggregation/expressions/tan/tangentOfValueInDegrees
      * 
      */
     @Test
     @DisplayName("main :: Tangent of Value in Degrees")
-    public void testExample1() {
+    public void testTangentOfValueInDegrees() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(addFields().field("side_b", multiply(tan(degreesToRadians("$angle_a")), "$side_a"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/tan/example2
+     * test data: dev/morphia/test/aggregation/expressions/tan/tangentOfValueInRadians
      * 
      */
     @Test
     @DisplayName("main :: Tangent of Value in Radians")
-    public void testExample2() {
+    public void testTangentOfValueInRadians() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(addFields().field("side_b", multiply(tan("$angle_a"), "$side_a"))));
     }

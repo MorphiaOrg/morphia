@@ -15,24 +15,24 @@ import static dev.morphia.aggregation.stages.Set.set;
 
 public class TestRegexFindAll extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/regexFindAll/example1
+     * test data: dev/morphia/test/aggregation/expressions/regexFindAll/regexFindAllAndItsOptions
      * 
      */
     @Test
     @DisplayName("``$regexFindAll`` and Its Options")
-    public void testExample1() {
+    public void testRegexFindAllAndItsOptions() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
                 .pipeline(addFields().field("returnObject", regexFindAll("$description").pattern("line"))));
 
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/regexFindAll/example2
+     * test data: dev/morphia/test/aggregation/expressions/regexFindAll/useRegexFindAllToParseEmailFromString
      * 
      */
     @Test
     @DisplayName("Use ``$regexFindAll`` to Parse Email from String")
-    public void testExample2() {
+    public void testUseRegexFindAllToParseEmailFromString() {
         testPipeline((aggregation) -> aggregation.pipeline(
                 addFields().field("email",
                         regexFindAll("$comment").pattern("[a-z0-9_.+-]+@[a-z0-9_.+-]+\\.[a-z0-9_.+-]+").options("i")),
@@ -40,12 +40,12 @@ public class TestRegexFindAll extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/regexFindAll/example3
+     * test data: dev/morphia/test/aggregation/expressions/regexFindAll/useCapturedGroupingsToParseUserName
      * 
      */
     @Test
     @DisplayName("Use Captured Groupings to Parse User Name")
-    public void testExample3() {
+    public void testUseCapturedGroupingsToParseUserName() {
         testPipeline(
                 (aggregation) -> aggregation.pipeline(
                         addFields().field("names",

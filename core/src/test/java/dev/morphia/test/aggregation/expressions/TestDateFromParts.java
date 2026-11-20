@@ -10,12 +10,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestDateFromParts extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/dateFromParts/example1
+     * test data: dev/morphia/test/aggregation/expressions/dateFromParts/dateFromPartsExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testDateFromPartsExpressionOperator() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("date", dateFromParts().year(2017).month(2).day(8).hour(12))
                         .include("date_iso", dateFromParts().isoWeekYear(2017).isoWeek(6).isoDayOfWeek(3).hour(12))

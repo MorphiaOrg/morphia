@@ -541,14 +541,15 @@ or method that is neither bound nor listed fails the import, and so does a polic
 bound or missing. See the [binding design](../design/operator-audits-binding-manifest.md).
 
 `BindingsMainKt <repository-root> <revision> <policy.json> <catalog-out> <descriptor-out>` writes
-the evidence catalog (`audits/catalog/legacy-bindings.json`) and core's runtime descriptor
-(`core/src/test/resources/dev/morphia/test/example-bindings.json`) to the explicit paths given:
+an evidence catalog and core's runtime descriptor
+(`core/src/test/resources/dev/morphia/test/example-bindings.json`) to the explicit paths given.
+`audits/catalog/legacy-bindings.json` is the frozen pre-backport import; write new catalogs elsewhere:
 
 ```sh
 ./mvnw -q -Daudits -pl audits exec:java \
   -Daudits.mainClass=dev.morphia.audits.bindings.BindingsMainKt \
   -Dexec.args="$PWD <revision> $PWD/audits/catalog/binding-policy.json \
-    $PWD/audits/catalog/legacy-bindings.json \
+    $PWD/audits/target/current-bindings.json \
     $PWD/core/src/test/resources/dev/morphia/test/example-bindings.json"
 ```
 
@@ -558,3 +559,13 @@ directions (declared tests and physical fixture directories), reject unknown or 
 duplicate owners and inherited ownership, and require every bound method to round-trip through the
 template loader's naming convention. `TemplatedTestBase.discoverResourceName` resolves fixtures
 through the descriptor, so a manual test cannot load a fixture by convention.
+
+## Descriptive-name backport
+
+The existing corpus now uses descriptive method and fixture names; see the
+[backport design](../design/operator-audits-name-backport.md). `audits/catalog/name-backport.json` is
+the legacy-to-descriptive ledger; `name-backport-review.json` holds the pinned page titles and
+reviewed stems it was planned from. `NameBackportMainKt plan <root> <revision>` rewrites only the
+ledger. `apply` was the one-time migration; rerunning it on the migrated tree is refused because no
+ordinal names remain to rename. `LegacyBindingsTest` keeps the ledger, the pre-backport snapshots
+and the live sources consistent.

@@ -781,6 +781,10 @@ changing extraction. Step 1 contracts are delivered in PRs #4513–#4515. Raw-so
 acquisition is implemented on `audits-pinned-sources`; the remaining parts of steps 2–3
 establish reliable document and semantic models. Only then should steps 4–6
 replace locks and automate generation/publication.
+Steps 2–3 continue through #4525. Step 3a is delivered in two stacked PRs: an explicit
+method/fixture binding manifest that replaces the ordinal coverage scan (#4529,
+[binding design](operator-audits-binding-manifest.md)), then the coordinated descriptive rename
+of all 556 legacy cases ([backport design](operator-audits-name-backport.md)).
 
 Track progress with explicit metrics rather than a speculative “100% automatic” target:
 all discovered capabilities accounted for; all 235 locks plus `lockd` and 17 exclusions

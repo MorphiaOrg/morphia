@@ -13,12 +13,12 @@ import static dev.morphia.aggregation.stages.Match.match;
 
 public class TestSampleRate extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/sampleRate/example1
+     * test data: dev/morphia/test/aggregation/expressions/sampleRate/sampleRateExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testSampleRateExpressionOperator() {
         testPipeline(new ActionTestOptions().skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(match(sampleRate(0.33)), Count.count("numMatches")));
     }

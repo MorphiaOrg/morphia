@@ -14,11 +14,11 @@ import static dev.morphia.query.filters.Filters.centerSphere;
 public class TestCenterSphere extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/filters/centerSphere/example1
+     * test data: dev/morphia/test/query/filters/centerSphere/centerSphereQueryPredicateOperator
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testCenterSphereQueryPredicateOperator() {
         testQuery(new ActionTestOptions().skipDataCheck(true),
                 (query) -> query.filter(centerSphere("loc", new Point(new Position(-88, 30)), 0.0025232135648)));
     }

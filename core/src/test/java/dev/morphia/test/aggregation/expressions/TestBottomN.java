@@ -26,35 +26,35 @@ public class TestBottomN extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/bottomN/example1
+     * test data: dev/morphia/test/aggregation/expressions/bottomN/findTheThreeLowestScores
      * 
      */
     @Test
     @DisplayName("Find the Three Lowest ``Scores``")
-    public void testExample1() {
+    public void testFindTheThreeLowestScores() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation.pipeline(
                 match(Filters.eq("gameId", "G1")),
                 group(id("$gameId")).field("playerId", bottomN(3, array("$playerId", "$score"), descending("score")))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/bottomN/example2
+     * test data: dev/morphia/test/aggregation/expressions/bottomN/findingTheThreeLowestScoreDocumentsAcrossMultipleGames
      * 
      */
     @Test
     @DisplayName("Finding the Three Lowest Score Documents Across Multiple Games")
-    public void testExample2() {
+    public void testFindingTheThreeLowestScoreDocumentsAcrossMultipleGames() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation.pipeline(
                 group(id("$gameId")).field("playerId", bottomN(3, array("$playerId", "$score"), descending("score")))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/bottomN/example3
+     * test data: dev/morphia/test/aggregation/expressions/bottomN/computingNBasedOnTheGroupKeyForGroup
      * 
      */
     @Test
     @DisplayName("Computing ``n`` Based on the Group Key for ``$group``")
-    public void testExample3() {
+    public void testComputingNBasedOnTheGroupKeyForGroup() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(group(id(document("gameId", "$gameId"))).field("gamescores",
                         bottomN(condition(eq("$gameId", "G2"), 1, 3), "$score", descending("score")))));

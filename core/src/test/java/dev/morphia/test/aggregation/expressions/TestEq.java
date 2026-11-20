@@ -10,12 +10,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestEq extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/eq/example1
+     * test data: dev/morphia/test/aggregation/expressions/eq/eqExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testEqExpressionOperator() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().suppressId().include("item").include("qty").include("qtyEq250", eq("$qty", 250))));
     }

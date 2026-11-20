@@ -23,66 +23,66 @@ public class TestSetField extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/setField/example1
+     * test data: dev/morphia/test/aggregation/expressions/setField/addFieldsThatContainPeriods
      * 
      */
     @Test
     @DisplayName("Add Fields that Contain Periods (``.``)")
-    public void testExample1() {
+    public void testAddFieldsThatContainPeriods() {
         testPipeline(new ActionTestOptions(), (aggregation) -> aggregation
                 .pipeline(replaceWith(setField("price.usd", ROOT, "$price")), unset("price")));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/setField/example2
+     * test data: dev/morphia/test/aggregation/expressions/setField/addFieldsThatStartWithADollarSign
      * 
      */
     @Test
     @DisplayName("Add Fields that Start with a Dollar Sign (``$``)")
-    public void testExample2() {
+    public void testAddFieldsThatStartWithADollarSign() {
         testPipeline((aggregation) -> aggregation.pipeline(replaceWith(setField(literal("$price"), ROOT, "$price")),
                 unset("price")));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/setField/example3
+     * test data: dev/morphia/test/aggregation/expressions/setField/updateFieldsThatContainPeriods
      * 
      */
     @Test
     @DisplayName("Update Fields that Contain Periods (``.``)")
-    public void testExample3() {
+    public void testUpdateFieldsThatContainPeriods() {
         testPipeline((aggregation) -> aggregation.pipeline(match(eq("_id", 1)),
                 replaceWith(setField("price.usd", ROOT, 49.99))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/setField/example4
+     * test data: dev/morphia/test/aggregation/expressions/setField/updateFieldsThatStartWithADollarSign
      * 
      */
     @Test
     @DisplayName("Update Fields that Start with a Dollar Sign (``$``)")
-    public void testExample4() {
+    public void testUpdateFieldsThatStartWithADollarSign() {
         testPipeline((aggregation) -> aggregation.pipeline(match(eq("_id", 1)),
                 replaceWith(setField(literal("$price"), ROOT, 49.99))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/setField/example5
+     * test data: dev/morphia/test/aggregation/expressions/setField/removeFieldsThatContainPeriods
      * 
      */
     @Test
     @DisplayName("Remove Fields that Contain Periods (``.``)")
-    public void testExample5() {
+    public void testRemoveFieldsThatContainPeriods() {
         testPipeline((aggregation) -> aggregation.pipeline(replaceWith(setField("price.usd", ROOT, REMOVE))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/setField/example6
+     * test data: dev/morphia/test/aggregation/expressions/setField/removeFieldsThatStartWithADollarSign
      * 
      */
     @Test
     @DisplayName("Remove Fields that Start with a Dollar Sign (``$``)")
-    public void testExample6() {
+    public void testRemoveFieldsThatStartWithADollarSign() {
         testPipeline((aggregation) -> aggregation.pipeline(replaceWith(setField(literal("$price"), ROOT, REMOVE))));
     }
 

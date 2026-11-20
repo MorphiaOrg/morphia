@@ -10,12 +10,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestReplaceAll extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/replaceAll/example1
+     * test data: dev/morphia/test/aggregation/expressions/replaceAll/replaceAllExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testReplaceAllExpressionOperator() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("item", replaceAll("$item", "blue paint", "red paint"))));
     }

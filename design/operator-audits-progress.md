@@ -1,12 +1,13 @@
 # Operator audit implementation progress
 
-Current branch: `audits-binding-manifest`; PR base: `audits-section-assembly` (#4525).
+Current branch: `audits-descriptive-names`; PR base: `audits-binding-manifest` (#4529).
 Stack (PR head branches): #4512 `audits-pipeline-design` → #4513 `audits-source-inventory` →
 #4514 `audits-coverage-contracts` → #4515 `audits-example-identities` → #4516 `audits-pinned-sources` →
 #4517 `audits-snooty-adapter` → #4518 `audits-capability-normalization` →
 #4519 `audits-bson-comparison` → #4520 `audits-shell-semantics` → #4521 `audits-scenario-programs` →
 #4522 `audits-scenario-extraction` → #4523 `audits-published-expectations` →
-#4524 `audits-legacy-scenarios` → #4525 `audits-section-assembly` → binding manifest (in progress).
+#4524 `audits-legacy-scenarios` → #4525 `audits-section-assembly` → #4529 `audits-binding-manifest` →
+descriptive-name backport (in progress).
 Each PR targets its predecessor; #4512 targets `master`.
 Use `git worktree list` to locate the checkout on this machine.
 
@@ -1751,3 +1752,27 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   (default-locale lowercasing, late duplicate-owner detection); all fixed with regressions. Round 2
   verified the fixes and found the audits workflow did not trigger on core operator test/fixture
   changes; its path filter now includes them. No finding rejected.
+
+## Binding manifest publication checkpoint
+
+- PR #4529 (branch audits-binding-manifest, base #4525) is green on all five required checks; no
+  remote comments or reviews (Copilot review requested; its quota appears exhausted). No merges.
+
+## Descriptive-name backport (step 3a cutover, 2026-11-20)
+
+- Branch audits-descriptive-names from #4529. `NameBackport` plans from the frozen
+  legacy-bindings/legacy-corpus snapshots plus `name-backport-review.json` (110 pinned page titles at
+  docs a5d960b9 for generic labels, 7 reviewed stems). Ledger `name-backport.json`: 556 renames
+  (439 name-file titles, 110 page titles, 7 reviewed). `apply` moved 2450 fixture files as pure
+  renames and edited only method declarations and "test data" Javadocs.
+- Self-found defects before review: (a) a method without Javadoc took the previous method's Javadoc
+  (fixed with an annotation/modifier-only check plus a verify rule that every "test data" line names
+  its own method's fixture); (b) "main :: <tab>" titles produced testMain... names (generic section
+  dropped). The tree was regenerated from a clean reset after each fix. Note: exec:java does not
+  recompile; run `compile exec:java`.
+- Gates: core operator packages 569 tests, 0 failures, 7 skips with Critter then reflection; audits
+  357 tests (2 optional skips) with both mapper flags. Review round 1 (independent agent): ledger
+  provenance not enforced, ledger not tied to the reviewed inputs, and no negative verify tests; all
+  fixed. No `exampleN`/`testExampleN` remains in the operator packages.
+- Next: steps 4 (lock/override migration) onward.
+- Review round 2 verified all fixes; nothing significant remains. Publishing as stacked PR on #4529.

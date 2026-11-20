@@ -11,12 +11,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestSetIntersection extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/setIntersection/example1
+     * test data: dev/morphia/test/aggregation/expressions/setIntersection/elementsArrayExample
      * 
      */
     @Test
     @DisplayName("Elements Array Example")
-    public void testExample1() {
+    public void testElementsArrayExample() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation
                         .pipeline(project().suppressId().include("flowerFieldA").include("flowerFieldB")
@@ -24,12 +24,12 @@ public class TestSetIntersection extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/setIntersection/example2
+     * test data: dev/morphia/test/aggregation/expressions/setIntersection/retrieveDocumentsForRolesGrantedToTheCurrentUser
      * 
      */
     @Test
     @DisplayName("Retrieve Documents for Roles Granted to the Current User")
-    public void testExample2() {
+    public void testRetrieveDocumentsForRolesGrantedToTheCurrentUser() {
         // this requires auth and roles configuration which the tests won't have
     }
 

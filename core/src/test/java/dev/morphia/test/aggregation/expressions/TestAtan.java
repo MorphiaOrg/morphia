@@ -12,23 +12,23 @@ import static dev.morphia.aggregation.stages.AddFields.addFields;
 
 public class TestAtan extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/atan/example1
+     * test data: dev/morphia/test/aggregation/expressions/atan/inverseTangentOfValueInDegrees
      * 
      */
     @Test
     @DisplayName("main :: Inverse Tangent of Value in Degrees")
-    public void testExample1() {
+    public void testInverseTangentOfValueInDegrees() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(addFields().field("angle_a", radiansToDegrees(atan(divide("$side_b", "$side_a"))))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/atan/example2
+     * test data: dev/morphia/test/aggregation/expressions/atan/inverseTangentOfValueInRadians
      * 
      */
     @Test
     @DisplayName("main :: Inverse Tangent of Value in Radians")
-    public void testExample2() {
+    public void testInverseTangentOfValueInRadians() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(addFields().field("angle_a", atan(divide("$side_b", "$side_a")))));
     }

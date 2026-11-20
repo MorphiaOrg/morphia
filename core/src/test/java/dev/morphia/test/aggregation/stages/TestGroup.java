@@ -24,35 +24,35 @@ import static dev.morphia.query.filters.Filters.lt;
 
 public class TestGroup extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/stages/group/example1
+     * test data: dev/morphia/test/aggregation/stages/group/countTheNumberOfDocumentsInACollection
      * 
      */
     @Test
     @DisplayName("Count the Number of Documents in a Collection")
-    public void testExample1() {
+    public void testCountTheNumberOfDocumentsInACollection() {
         checkMinServerVersion("5.0.0");
         testPipeline(
                 (aggregation) -> aggregation.pipeline(group(id(null)).field("count", AccumulatorExpressions.count())));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/group/example2
+     * test data: dev/morphia/test/aggregation/stages/group/retrieveDistinctValues
      * 
      */
     @Test
     @DisplayName("Retrieve Distinct Values")
-    public void testExample2() {
+    public void testRetrieveDistinctValues() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(group(id("$item"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/group/example3
+     * test data: dev/morphia/test/aggregation/stages/group/groupByItemHaving
      * 
      */
     @Test
     @DisplayName("Group by Item Having")
-    public void testExample3() {
+    public void testGroupByItemHaving() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
                         group(id("$item")).field("totalSaleAmount", sum(multiply("$price", "$quantity"))),
@@ -60,12 +60,12 @@ public class TestGroup extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/group/example4
+     * test data: dev/morphia/test/aggregation/stages/group/calculateCountSumAndAverage
      * 
      */
     @Test
     @DisplayName("Calculate Count, Sum, and Average")
-    public void testExample4() {
+    public void testCalculateCountSumAndAverage() {
         testPipeline((aggregation) -> aggregation.pipeline(
                 match(gte("date", LocalDate.of(2014, Month.JANUARY, 1)),
                         lt("date", LocalDate.of(2015, Month.JANUARY, 1))),
@@ -76,12 +76,12 @@ public class TestGroup extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/group/example5
+     * test data: dev/morphia/test/aggregation/stages/group/pivotData
      * 
      */
     @Test
     @DisplayName("Pivot Data")
-    public void testExample5() {
+    public void testPivotData() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(group(id("$author")).field("books", push("$title"))));
     }

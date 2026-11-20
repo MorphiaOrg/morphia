@@ -17,23 +17,23 @@ public class TestIfNull extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/ifNull/example1
+     * test data: dev/morphia/test/aggregation/expressions/ifNull/singleInputExpression
      * 
      */
     @Test
     @DisplayName("Single Input Expression")
-    public void testExample1() {
+    public void testSingleInputExpression() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("item").include("description",
                 ifNull().target("$description").replacement("Unspecified"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/ifNull/example2
+     * test data: dev/morphia/test/aggregation/expressions/ifNull/multipleInputExpressions
      * 
      */
     @Test
     @DisplayName("Multiple Input Expressions")
-    public void testExample2() {
+    public void testMultipleInputExpressions() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("item").include("value",
                 ifNull().input("$description", "$quantity").replacement("Unspecified"))));
     }

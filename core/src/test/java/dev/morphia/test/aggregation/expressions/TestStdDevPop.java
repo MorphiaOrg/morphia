@@ -16,33 +16,33 @@ import static dev.morphia.query.Sort.*;
 
 public class TestStdDevPop extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/stdDevPop/example1
+     * test data: dev/morphia/test/aggregation/expressions/stdDevPop/useInGroupStage
      * 
      */
     @Test
     @DisplayName("Use in ``$group`` Stage")
-    public void testExample1() {
+    public void testUseInGroupStage() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(group(id("$quiz")).field("stdDev", stdDevPop("$score"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/stdDevPop/example2
+     * test data: dev/morphia/test/aggregation/expressions/stdDevPop/useInProjectStage
      * 
      */
     @Test
     @DisplayName("Use in ``$project`` Stage")
-    public void testExample2() {
+    public void testUseInProjectStage() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("stdDev", stdDevPop("$scores.score"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/stdDevPop/example3
+     * test data: dev/morphia/test/aggregation/expressions/stdDevPop/useInSetWindowFieldsStage
      * 
      */
     @Test
     @DisplayName("Use in ``$setWindowFields`` Stage")
-    public void testExample3() {
+    public void testUseInSetWindowFieldsStage() {
         checkMinServerVersion("5.0.0");
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")

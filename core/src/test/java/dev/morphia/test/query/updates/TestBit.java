@@ -13,29 +13,29 @@ import static dev.morphia.query.updates.UpdateOperators.xor;
 public class TestBit extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/updates/bit/example1
+     * test data: dev/morphia/test/query/updates/bit/bitwiseAnd
      */
     @Test
     @DisplayName("Bitwise AND")
-    public void testExample1() {
+    public void testBitwiseAnd() {
         testUpdate((query) -> query.filter(eq("_id", 1)), and("expdata", 10));
     }
 
     /**
-     * test data: dev/morphia/test/query/updates/bit/example2
+     * test data: dev/morphia/test/query/updates/bit/bitwiseOr
      */
     @Test
     @DisplayName("Bitwise OR")
-    public void testExample2() {
+    public void testBitwiseOr() {
         testUpdate((query) -> query.filter(eq("_id", 2)), or("expdata", 5));
     }
 
     /**
-     * test data: dev/morphia/test/query/updates/bit/example3
+     * test data: dev/morphia/test/query/updates/bit/bitwiseXor
      */
     @Test
     @DisplayName("Bitwise XOR")
-    public void testExample3() {
+    public void testBitwiseXor() {
         testUpdate((query) -> query.filter(eq("_id", 3)), xor("expdata", 5));
     }
 }
