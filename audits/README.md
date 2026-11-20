@@ -569,3 +569,11 @@ reviewed stems it was planned from. `NameBackportMainKt plan <root> <revision>` 
 ledger. `apply` was the one-time migration; rerunning it on the migrated tree is refused because no
 ordinal names remain to rename. `LegacyBindingsTest` keeps the ledger, the pre-backport snapshots
 and the live sources consistent.
+
+## Curated repair inventory
+
+`RepairsMainKt <repository-root> <revision> <repair-review.json> <out>` classifies every lock reason
+and operator exclusion through the reviewed `audits/catalog/repair-review.json`, and inventories each
+bound test's `ActionTestOptions` and executed assertion paths. The committed result is
+`audits/catalog/curated-repairs.json`; an audits test requires it to equal a fresh capture. See the
+[repair design](../design/operator-audits-curated-repairs.md).

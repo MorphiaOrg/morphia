@@ -13,6 +13,7 @@ on:
       - 'core/src/test/java/dev/morphia/test/query/**'
       - 'core/src/test/java/dev/morphia/test/TemplatedTestBase.java'
       - 'core/src/test/java/dev/morphia/test/ExampleBindings.java'
+      - 'core/src/test/java/dev/morphia/test/util/ActionTestOptions.java'
 
 permissions:
   contents: read

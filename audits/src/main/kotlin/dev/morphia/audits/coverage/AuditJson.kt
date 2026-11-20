@@ -23,6 +23,8 @@ import dev.morphia.audits.documents.DocumentReport
 import dev.morphia.audits.naming.ExampleNameRegistry
 import dev.morphia.audits.naming.NameProposal
 import dev.morphia.audits.naming.NamingRequest
+import dev.morphia.audits.repairs.CuratedRepairReport
+import dev.morphia.audits.repairs.RepairReview
 import dev.morphia.audits.scenarios.ScenarioExtractionPlan
 import dev.morphia.audits.shell.ShellProgramRequest
 import dev.morphia.audits.sources.GitSourceManifest
@@ -150,6 +152,11 @@ object AuditJson {
         read(json, NameBackportReview::class.java)
 
     fun nameBackport(json: String): NameBackportLedger = read(json, NameBackportLedger::class.java)
+
+    fun repairReview(json: String): RepairReview = read(json, RepairReview::class.java)
+
+    fun curatedRepairs(json: String): CuratedRepairReport =
+        read(json, CuratedRepairReport::class.java)
 
     /** Canonical JSON attribute strings stay typed at the adapter boundary. */
     fun textValue(json: String): String = requireNotNull(mapper.readValue(json, String::class.java))
