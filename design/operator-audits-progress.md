@@ -1,13 +1,13 @@
 # Operator audit implementation progress
 
-Current branch: `audits-descriptive-names`; PR base: `audits-binding-manifest` (#4529).
+Current branch: `audits-curated-repairs`; PR base: `audits-descriptive-names` (#4530).
 Stack (PR head branches): #4512 `audits-pipeline-design` → #4513 `audits-source-inventory` →
 #4514 `audits-coverage-contracts` → #4515 `audits-example-identities` → #4516 `audits-pinned-sources` →
 #4517 `audits-snooty-adapter` → #4518 `audits-capability-normalization` →
 #4519 `audits-bson-comparison` → #4520 `audits-shell-semantics` → #4521 `audits-scenario-programs` →
 #4522 `audits-scenario-extraction` → #4523 `audits-published-expectations` →
 #4524 `audits-legacy-scenarios` → #4525 `audits-section-assembly` → #4529 `audits-binding-manifest` →
-descriptive-name backport (in progress).
+#4530 `audits-descriptive-names` → curated repair inventory (in progress).
 Each PR targets its predecessor; #4512 targets `master`.
 Use `git worktree list` to locate the checkout on this machine.
 
@@ -1776,3 +1776,18 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   fixed. No `exampleN`/`testExampleN` remains in the operator packages.
 - Next: steps 4 (lock/override migration) onward.
 - Review round 2 verified all fixes; nothing significant remains. Publishing as stacked PR on #4529.
+
+## Curated repair inventory (step 4 slice 1, 2026-11-20)
+
+- PR #4530 published (stacked on #4529). Branch audits-curated-repairs adds `CuratedRepairs`,
+  reviewed `repair-review.json` (182 distinct lock reasons in 7 categories, 17 exclusions in 5) and
+  `curated-repairs.json`. 236 locked examples: 234 PRESERVED_CURATED, 2 NOT_EXECUTED; 320 UNCORRECTED.
+  Assertion paths: 509 SERIALIZATION, 466 BEHAVIOR, 2 CUSTOM; 7 disabled and 26 empty bound tests.
+- Self-found defect: a shadowed helper set made every method report all three helpers; fixed before
+  committing the inventory, with a synthetic test per assertion path.
+- Next: migrate the MORPHIA_FORM family through declared equivalences/overrides.
+- Review round 1 (independent agent): disabled tests were counted as executing (fixed, DISABLED
+  count), nine reasons misfiled by retirement rule (Morphia enum spellings -> MORPHIA_FORM; broken
+  source and wrong documented values -> DOCS_ERROR), plus lows (ActionTestOptions workflow trigger,
+  unsupported helper/non-literal option forms now fail). All fixed.
+- Review round 2 verified the fixes; its one remaining doc overstatement was fixed (unchained skip calls now fail). Publishing stacked on #4530.
