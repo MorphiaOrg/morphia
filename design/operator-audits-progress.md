@@ -1829,5 +1829,5 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
 - Review round 2 verified all fixes and flagged that the committed mongodb/docs pages are CC BY-NC-SA
   3.0, unsuitable for this Apache-2.0 repository. The pages were removed; the reviewed
   form-review.json now pins every page and include blob id, capture fails on a mismatch, and the
-  networked recheck (fetch.py pages + FormMainKt capture) reproduces the committed report. Committing
-  pages for an offline re-extraction is left as an explicit decision for the maintainer.
+  networked recheck (fetch.py pages + FormMainKt capture) reproduces the committed report.
+- Maintainer decision (2026-11-20): the documentation pages are not committed.

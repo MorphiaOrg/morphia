@@ -29,8 +29,8 @@ declarations pin each page and include blob id, and `capture` fails if the pages
 Include targets that are not tracked files (generated extracts) are recorded per override as
 `unexpandedIncludes`.
 
-The pages themselves are not committed: `mongodb/docs` is licensed CC BY-NC-SA 3.0, which does not
-fit this Apache-2.0 repository. Offline checks therefore start from the recorded source text; the
+The pages themselves are never committed (a maintainer decision): `mongodb/docs` is licensed
+CC BY-NC-SA 3.0, which does not fit this Apache-2.0 repository. Offline checks therefore start from the recorded source text; the
 networked recheck is `fetch.py pages` followed by `FormMainKt capture`, which must reproduce the
 committed report byte for byte.
 
