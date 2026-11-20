@@ -1,0 +1,3260 @@
+{
+  "classes" : [ {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/abs",
+    "type" : "dev.morphia.test.aggregation.expressions.TestAbs",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/accumulator",
+    "type" : "dev.morphia.test.aggregation.expressions.TestAccumulator",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/acos",
+    "type" : "dev.morphia.test.aggregation.expressions.TestAcos",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/acosh",
+    "type" : "dev.morphia.test.aggregation.expressions.TestAcosh",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/add",
+    "type" : "dev.morphia.test.aggregation.expressions.TestAdd",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/addToSet",
+    "type" : "dev.morphia.test.aggregation.expressions.TestAddToSet",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/allElementsTrue",
+    "type" : "dev.morphia.test.aggregation.expressions.TestAllElementsTrue",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/and",
+    "type" : "dev.morphia.test.aggregation.expressions.TestAnd",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/anyElementTrue",
+    "type" : "dev.morphia.test.aggregation.expressions.TestAnyElementTrue",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/arrayElemAt",
+    "type" : "dev.morphia.test.aggregation.expressions.TestArrayElemAt",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/arrayToObject",
+    "type" : "dev.morphia.test.aggregation.expressions.TestArrayToObject",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/asin",
+    "type" : "dev.morphia.test.aggregation.expressions.TestAsin",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/asinh",
+    "type" : "dev.morphia.test.aggregation.expressions.TestAsinh",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/atan",
+    "type" : "dev.morphia.test.aggregation.expressions.TestAtan",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/atan2",
+    "type" : "dev.morphia.test.aggregation.expressions.TestAtan2",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/atanh",
+    "type" : "dev.morphia.test.aggregation.expressions.TestAtanh",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/avg",
+    "type" : "dev.morphia.test.aggregation.expressions.TestAvg",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/binarySize",
+    "type" : "dev.morphia.test.aggregation.expressions.TestBinarySize",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/bitAnd",
+    "type" : "dev.morphia.test.aggregation.expressions.TestBitAnd",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/bitNot",
+    "type" : "dev.morphia.test.aggregation.expressions.TestBitNot",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/bitOr",
+    "type" : "dev.morphia.test.aggregation.expressions.TestBitOr",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/bitXor",
+    "type" : "dev.morphia.test.aggregation.expressions.TestBitXor",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/bottom",
+    "type" : "dev.morphia.test.aggregation.expressions.TestBottom",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/bottomN",
+    "type" : "dev.morphia.test.aggregation.expressions.TestBottomN",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/bsonSize",
+    "type" : "dev.morphia.test.aggregation.expressions.TestBsonSize",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/ceil",
+    "type" : "dev.morphia.test.aggregation.expressions.TestCeil",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/cmp",
+    "type" : "dev.morphia.test.aggregation.expressions.TestCmp",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/concat",
+    "type" : "dev.morphia.test.aggregation.expressions.TestConcat",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/concatArrays",
+    "type" : "dev.morphia.test.aggregation.expressions.TestConcatArrays",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/cond",
+    "type" : "dev.morphia.test.aggregation.expressions.TestCond",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/convert",
+    "type" : "dev.morphia.test.aggregation.expressions.TestConvert",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/cos",
+    "type" : "dev.morphia.test.aggregation.expressions.TestCos",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/cosh",
+    "type" : "dev.morphia.test.aggregation.expressions.TestCosh",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/count",
+    "type" : "dev.morphia.test.aggregation.expressions.TestCount",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/covariancePop",
+    "type" : "dev.morphia.test.aggregation.expressions.TestCovariancePop",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/covarianceSamp",
+    "type" : "dev.morphia.test.aggregation.expressions.TestCovarianceSamp",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/dateAdd",
+    "type" : "dev.morphia.test.aggregation.expressions.TestDateAdd",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/dateDiff",
+    "type" : "dev.morphia.test.aggregation.expressions.TestDateDiff",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/dateFromParts",
+    "type" : "dev.morphia.test.aggregation.expressions.TestDateFromParts",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/dateFromString",
+    "type" : "dev.morphia.test.aggregation.expressions.TestDateFromString",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/dateSubtract",
+    "type" : "dev.morphia.test.aggregation.expressions.TestDateSubtract",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/dateToParts",
+    "type" : "dev.morphia.test.aggregation.expressions.TestDateToParts",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/dateToString",
+    "type" : "dev.morphia.test.aggregation.expressions.TestDateToString",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/dateTrunc",
+    "type" : "dev.morphia.test.aggregation.expressions.TestDateTrunc",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/dayOfMonth",
+    "type" : "dev.morphia.test.aggregation.expressions.TestDayOfMonth",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/dayOfWeek",
+    "type" : "dev.morphia.test.aggregation.expressions.TestDayOfWeek",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/dayOfYear",
+    "type" : "dev.morphia.test.aggregation.expressions.TestDayOfYear",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/degreesToRadians",
+    "type" : "dev.morphia.test.aggregation.expressions.TestDegreesToRadians",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/denseRank",
+    "type" : "dev.morphia.test.aggregation.expressions.TestDenseRank",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/derivative",
+    "type" : "dev.morphia.test.aggregation.expressions.TestDerivative",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/divide",
+    "type" : "dev.morphia.test.aggregation.expressions.TestDivide",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/documentNumber",
+    "type" : "dev.morphia.test.aggregation.expressions.TestDocumentNumber",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/eq",
+    "type" : "dev.morphia.test.aggregation.expressions.TestEq",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/exp",
+    "type" : "dev.morphia.test.aggregation.expressions.TestExp",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/expMovingAvg",
+    "type" : "dev.morphia.test.aggregation.expressions.TestExpMovingAvg",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    }, {
+      "method" : "testExample5",
+      "resource" : "example5"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/filter",
+    "type" : "dev.morphia.test.aggregation.expressions.TestFilter",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/first",
+    "type" : "dev.morphia.test.aggregation.expressions.TestFirst",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    }, {
+      "method" : "testExample5",
+      "resource" : "example5"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/firstN",
+    "type" : "dev.morphia.test.aggregation.expressions.TestFirstN",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/floor",
+    "type" : "dev.morphia.test.aggregation.expressions.TestFloor",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/function",
+    "type" : "dev.morphia.test.aggregation.expressions.TestFunction",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/getField",
+    "type" : "dev.morphia.test.aggregation.expressions.TestGetField",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/gt",
+    "type" : "dev.morphia.test.aggregation.expressions.TestGt",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/gte",
+    "type" : "dev.morphia.test.aggregation.expressions.TestGte",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/hour",
+    "type" : "dev.morphia.test.aggregation.expressions.TestHour",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/ifNull",
+    "type" : "dev.morphia.test.aggregation.expressions.TestIfNull",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/in",
+    "type" : "dev.morphia.test.aggregation.expressions.TestIn",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/indexOfArray",
+    "type" : "dev.morphia.test.aggregation.expressions.TestIndexOfArray",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/indexOfBytes",
+    "type" : "dev.morphia.test.aggregation.expressions.TestIndexOfBytes",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/indexOfCP",
+    "type" : "dev.morphia.test.aggregation.expressions.TestIndexOfCP",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/integral",
+    "type" : "dev.morphia.test.aggregation.expressions.TestIntegral",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/isArray",
+    "type" : "dev.morphia.test.aggregation.expressions.TestIsArray",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/isNumber",
+    "type" : "dev.morphia.test.aggregation.expressions.TestIsNumber",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/isoDayOfWeek",
+    "type" : "dev.morphia.test.aggregation.expressions.TestIsoDayOfWeek",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/isoWeek",
+    "type" : "dev.morphia.test.aggregation.expressions.TestIsoWeek",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/isoWeekYear",
+    "type" : "dev.morphia.test.aggregation.expressions.TestIsoWeekYear",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/last",
+    "type" : "dev.morphia.test.aggregation.expressions.TestLast",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    }, {
+      "method" : "testExample5",
+      "resource" : "example5"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/lastN",
+    "type" : "dev.morphia.test.aggregation.expressions.TestLastN",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/let",
+    "type" : "dev.morphia.test.aggregation.expressions.TestLet",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/linearFill",
+    "type" : "dev.morphia.test.aggregation.expressions.TestLinearFill",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/literal",
+    "type" : "dev.morphia.test.aggregation.expressions.TestLiteral",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/ln",
+    "type" : "dev.morphia.test.aggregation.expressions.TestLn",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/locf",
+    "type" : "dev.morphia.test.aggregation.expressions.TestLocf",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/log",
+    "type" : "dev.morphia.test.aggregation.expressions.TestLog",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/log10",
+    "type" : "dev.morphia.test.aggregation.expressions.TestLog10",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/lt",
+    "type" : "dev.morphia.test.aggregation.expressions.TestLt",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/lte",
+    "type" : "dev.morphia.test.aggregation.expressions.TestLte",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/ltrim",
+    "type" : "dev.morphia.test.aggregation.expressions.TestLtrim",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/map",
+    "type" : "dev.morphia.test.aggregation.expressions.TestMap",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/max",
+    "type" : "dev.morphia.test.aggregation.expressions.TestMax",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/maxN",
+    "type" : "dev.morphia.test.aggregation.expressions.TestMaxN",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/median",
+    "type" : "dev.morphia.test.aggregation.expressions.TestMedian",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/mergeObjects",
+    "type" : "dev.morphia.test.aggregation.expressions.TestMergeObjects",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    }, {
+      "method" : "testExample5",
+      "resource" : "example5"
+    }, {
+      "method" : "testExample6",
+      "resource" : "example6"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/meta",
+    "type" : "dev.morphia.test.aggregation.expressions.TestMeta",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/millisecond",
+    "type" : "dev.morphia.test.aggregation.expressions.TestMillisecond",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/min",
+    "type" : "dev.morphia.test.aggregation.expressions.TestMin",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/minN",
+    "type" : "dev.morphia.test.aggregation.expressions.TestMinN",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/minute",
+    "type" : "dev.morphia.test.aggregation.expressions.TestMinute",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/mod",
+    "type" : "dev.morphia.test.aggregation.expressions.TestMod",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/month",
+    "type" : "dev.morphia.test.aggregation.expressions.TestMonth",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/multiply",
+    "type" : "dev.morphia.test.aggregation.expressions.TestMultiply",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/ne",
+    "type" : "dev.morphia.test.aggregation.expressions.TestNe",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/not",
+    "type" : "dev.morphia.test.aggregation.expressions.TestNot",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/objectToArray",
+    "type" : "dev.morphia.test.aggregation.expressions.TestObjectToArray",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/or",
+    "type" : "dev.morphia.test.aggregation.expressions.TestOr",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    } ],
+    "manual" : [ {
+      "method" : "testExample5",
+      "reason" : "Empty placeholder for the $setWindowFields example; it has no fixture and asserts nothing."
+    } ],
+    "resources" : "dev/morphia/test/aggregation/expressions/percentile",
+    "type" : "dev.morphia.test.aggregation.expressions.TestPercentile",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/pow",
+    "type" : "dev.morphia.test.aggregation.expressions.TestPow",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/push",
+    "type" : "dev.morphia.test.aggregation.expressions.TestPush",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/radiansToDegrees",
+    "type" : "dev.morphia.test.aggregation.expressions.TestRadiansToDegrees",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/rand",
+    "type" : "dev.morphia.test.aggregation.expressions.TestRand",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/range",
+    "type" : "dev.morphia.test.aggregation.expressions.TestRange",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/rank",
+    "type" : "dev.morphia.test.aggregation.expressions.TestRank",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/reduce",
+    "type" : "dev.morphia.test.aggregation.expressions.TestReduce",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/regexFind",
+    "type" : "dev.morphia.test.aggregation.expressions.TestRegexFind",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/regexFindAll",
+    "type" : "dev.morphia.test.aggregation.expressions.TestRegexFindAll",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/regexMatch",
+    "type" : "dev.morphia.test.aggregation.expressions.TestRegexMatch",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/replaceAll",
+    "type" : "dev.morphia.test.aggregation.expressions.TestReplaceAll",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/replaceOne",
+    "type" : "dev.morphia.test.aggregation.expressions.TestReplaceOne",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/reverseArray",
+    "type" : "dev.morphia.test.aggregation.expressions.TestReverseArray",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/round",
+    "type" : "dev.morphia.test.aggregation.expressions.TestRound",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/rtrim",
+    "type" : "dev.morphia.test.aggregation.expressions.TestRtrim",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/sampleRate",
+    "type" : "dev.morphia.test.aggregation.expressions.TestSampleRate",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/second",
+    "type" : "dev.morphia.test.aggregation.expressions.TestSecond",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/setDifference",
+    "type" : "dev.morphia.test.aggregation.expressions.TestSetDifference",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/setEquals",
+    "type" : "dev.morphia.test.aggregation.expressions.TestSetEquals",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    }, {
+      "method" : "testExample5",
+      "resource" : "example5"
+    }, {
+      "method" : "testExample6",
+      "resource" : "example6"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/setField",
+    "type" : "dev.morphia.test.aggregation.expressions.TestSetField",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/setIntersection",
+    "type" : "dev.morphia.test.aggregation.expressions.TestSetIntersection",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/setIsSubset",
+    "type" : "dev.morphia.test.aggregation.expressions.TestSetIsSubset",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/setUnion",
+    "type" : "dev.morphia.test.aggregation.expressions.TestSetUnion",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/shift",
+    "type" : "dev.morphia.test.aggregation.expressions.TestShift",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/sin",
+    "type" : "dev.morphia.test.aggregation.expressions.TestSin",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/sinh",
+    "type" : "dev.morphia.test.aggregation.expressions.TestSinh",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/size",
+    "type" : "dev.morphia.test.aggregation.expressions.TestSize",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/slice",
+    "type" : "dev.morphia.test.aggregation.expressions.TestSlice",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    }, {
+      "method" : "testExample5",
+      "resource" : "example5"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/sortArray",
+    "type" : "dev.morphia.test.aggregation.expressions.TestSortArray",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/split",
+    "type" : "dev.morphia.test.aggregation.expressions.TestSplit",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/sqrt",
+    "type" : "dev.morphia.test.aggregation.expressions.TestSqrt",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/stdDevPop",
+    "type" : "dev.morphia.test.aggregation.expressions.TestStdDevPop",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/stdDevSamp",
+    "type" : "dev.morphia.test.aggregation.expressions.TestStdDevSamp",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/strLenBytes",
+    "type" : "dev.morphia.test.aggregation.expressions.TestStrLenBytes",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/strLenCP",
+    "type" : "dev.morphia.test.aggregation.expressions.TestStrLenCP",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/strcasecmp",
+    "type" : "dev.morphia.test.aggregation.expressions.TestStrcasecmp",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/substrBytes",
+    "type" : "dev.morphia.test.aggregation.expressions.TestSubstrBytes",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/substrCP",
+    "type" : "dev.morphia.test.aggregation.expressions.TestSubstrCP",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/subtract",
+    "type" : "dev.morphia.test.aggregation.expressions.TestSubtract",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/sum",
+    "type" : "dev.morphia.test.aggregation.expressions.TestSum",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/switch",
+    "type" : "dev.morphia.test.aggregation.expressions.TestSwitch",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/tan",
+    "type" : "dev.morphia.test.aggregation.expressions.TestTan",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/tanh",
+    "type" : "dev.morphia.test.aggregation.expressions.TestTanh",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/toBool",
+    "type" : "dev.morphia.test.aggregation.expressions.TestToBool",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/toDate",
+    "type" : "dev.morphia.test.aggregation.expressions.TestToDate",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/toDecimal",
+    "type" : "dev.morphia.test.aggregation.expressions.TestToDecimal",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/toDouble",
+    "type" : "dev.morphia.test.aggregation.expressions.TestToDouble",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/toInt",
+    "type" : "dev.morphia.test.aggregation.expressions.TestToInt",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/toLong",
+    "type" : "dev.morphia.test.aggregation.expressions.TestToLong",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/toLower",
+    "type" : "dev.morphia.test.aggregation.expressions.TestToLower",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/toObjectId",
+    "type" : "dev.morphia.test.aggregation.expressions.TestToObjectId",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/toString",
+    "type" : "dev.morphia.test.aggregation.expressions.TestToString",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/toUUID",
+    "type" : "dev.morphia.test.aggregation.expressions.TestToUUID",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/toUpper",
+    "type" : "dev.morphia.test.aggregation.expressions.TestToUpper",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/top",
+    "type" : "dev.morphia.test.aggregation.expressions.TestTop",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/topN",
+    "type" : "dev.morphia.test.aggregation.expressions.TestTopN",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/trim",
+    "type" : "dev.morphia.test.aggregation.expressions.TestTrim",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/trunc",
+    "type" : "dev.morphia.test.aggregation.expressions.TestTrunc",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/tsIncrement",
+    "type" : "dev.morphia.test.aggregation.expressions.TestTsIncrement",
+    "unbound" : [ {
+      "reason" : "Change-stream watch example kept only as a name and lock marker; it has no action, data or test method.",
+      "resource" : "example2"
+    } ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/tsSecond",
+    "type" : "dev.morphia.test.aggregation.expressions.TestTsSecond",
+    "unbound" : [ {
+      "reason" : "Change-stream watch example kept only as a name and lock marker; it has no action, data or test method.",
+      "resource" : "example2"
+    } ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/type",
+    "type" : "dev.morphia.test.aggregation.expressions.TestType",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/unsetField",
+    "type" : "dev.morphia.test.aggregation.expressions.TestUnsetField",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/week",
+    "type" : "dev.morphia.test.aggregation.expressions.TestWeek",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/year",
+    "type" : "dev.morphia.test.aggregation.expressions.TestYear",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/expressions/zip",
+    "type" : "dev.morphia.test.aggregation.expressions.TestZip",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    }, {
+      "method" : "testExample5",
+      "resource" : "example5"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/addFields",
+    "type" : "dev.morphia.test.aggregation.stages.TestAddFields",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ {
+      "method" : "testBucket",
+      "reason" : "Handwritten entity-mapped $bucket test without a documentation fixture."
+    }, {
+      "method" : "testBucketWithBoundariesWithSizeLessThanTwo",
+      "reason" : "Handwritten $bucket boundary validation test without a documentation fixture."
+    }, {
+      "method" : "testBucketWithOptions",
+      "reason" : "Handwritten entity-mapped $bucket options test without a documentation fixture."
+    }, {
+      "method" : "testBucketWithUnsortedBoundaries",
+      "reason" : "Handwritten $bucket boundary validation test without a documentation fixture."
+    }, {
+      "method" : "testBucketWithoutOptions",
+      "reason" : "Handwritten entity-mapped $bucket test without a documentation fixture."
+    } ],
+    "resources" : "dev/morphia/test/aggregation/stages/bucket",
+    "type" : "dev.morphia.test.aggregation.stages.TestBucket",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ {
+      "method" : "testWithGranularity",
+      "reason" : "Handwritten entity-mapped $bucketAuto granularity test without a documentation fixture."
+    }, {
+      "method" : "testWithoutGranularity",
+      "reason" : "Handwritten entity-mapped $bucketAuto test without a documentation fixture."
+    } ],
+    "resources" : "dev/morphia/test/aggregation/stages/bucketAuto",
+    "type" : "dev.morphia.test.aggregation.stages.TestBucketAuto",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testChangeStream",
+      "resource" : "changeStream"
+    } ],
+    "manual" : [ {
+      "method" : "testChangeStreamOptions",
+      "reason" : "Handwritten $changeStream option encoding test without a documentation fixture."
+    } ],
+    "resources" : "dev/morphia/test/aggregation/stages/changeStream",
+    "type" : "dev.morphia.test.aggregation.stages.TestChangeStream",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/count",
+    "type" : "dev.morphia.test.aggregation.stages.TestCount",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    }, {
+      "method" : "testExample5",
+      "resource" : "example5"
+    }, {
+      "method" : "testExample6",
+      "resource" : "example6"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/currentOp",
+    "type" : "dev.morphia.test.aggregation.stages.TestCurrentOp",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/densify",
+    "type" : "dev.morphia.test.aggregation.stages.TestDensify",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/documents",
+    "type" : "dev.morphia.test.aggregation.stages.TestDocuments",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/facet",
+    "type" : "dev.morphia.test.aggregation.stages.TestFacet",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    }, {
+      "method" : "testExample5",
+      "resource" : "example5"
+    }, {
+      "method" : "testExample6",
+      "resource" : "example6"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/fill",
+    "type" : "dev.morphia.test.aggregation.stages.TestFill",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    }, {
+      "method" : "testExample5",
+      "resource" : "example5"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/geoNear",
+    "type" : "dev.morphia.test.aggregation.stages.TestGeoNear",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/graphLookup",
+    "type" : "dev.morphia.test.aggregation.stages.TestGraphLookup",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    }, {
+      "method" : "testExample5",
+      "resource" : "example5"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/group",
+    "type" : "dev.morphia.test.aggregation.stages.TestGroup",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/indexStats",
+    "type" : "dev.morphia.test.aggregation.stages.TestIndexStats",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/limit",
+    "type" : "dev.morphia.test.aggregation.stages.TestLimit",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/listClusterCatalog",
+    "type" : "dev.morphia.test.aggregation.stages.TestListClusterCatalog",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    }, {
+      "method" : "testExample5",
+      "resource" : "example5"
+    }, {
+      "method" : "testExample6",
+      "resource" : "example6"
+    }, {
+      "method" : "testExample7",
+      "resource" : "example7"
+    } ],
+    "manual" : [ {
+      "method" : "testLookup",
+      "reason" : "Handwritten entity-mapped $lookup test without a documentation fixture."
+    } ],
+    "resources" : "dev/morphia/test/aggregation/stages/lookup",
+    "type" : "dev.morphia.test.aggregation.stages.TestLookup",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/match",
+    "type" : "dev.morphia.test.aggregation.stages.TestMatch",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    }, {
+      "method" : "testExample5",
+      "resource" : "example5"
+    }, {
+      "method" : "testExample6",
+      "resource" : "example6"
+    }, {
+      "method" : "testExample7",
+      "resource" : "example7"
+    }, {
+      "method" : "testExample8",
+      "resource" : "example8"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/merge",
+    "type" : "dev.morphia.test.aggregation.stages.TestMerge",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/out",
+    "type" : "dev.morphia.test.aggregation.stages.TestOut",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/planCacheStats",
+    "type" : "dev.morphia.test.aggregation.stages.TestPlanCacheStats",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    }, {
+      "method" : "testExample5",
+      "resource" : "example5"
+    }, {
+      "method" : "testExample6",
+      "resource" : "example6"
+    }, {
+      "method" : "testExample7",
+      "resource" : "example7"
+    }, {
+      "method" : "testExample8",
+      "resource" : "example8"
+    }, {
+      "method" : "testExample9",
+      "resource" : "example9"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/project",
+    "type" : "dev.morphia.test.aggregation.stages.TestProject",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/redact",
+    "type" : "dev.morphia.test.aggregation.stages.TestRedact",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/replaceRoot",
+    "type" : "dev.morphia.test.aggregation.stages.TestReplaceRoot",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/replaceWith",
+    "type" : "dev.morphia.test.aggregation.stages.TestReplaceWith",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/sample",
+    "type" : "dev.morphia.test.aggregation.stages.TestSample",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    }, {
+      "method" : "testExample5",
+      "resource" : "example5"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/set",
+    "type" : "dev.morphia.test.aggregation.stages.TestSet",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/setWindowFields",
+    "type" : "dev.morphia.test.aggregation.stages.TestSetWindowFields",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/skip",
+    "type" : "dev.morphia.test.aggregation.stages.TestSkip",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/sort",
+    "type" : "dev.morphia.test.aggregation.stages.TestSort",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/sortByCount",
+    "type" : "dev.morphia.test.aggregation.stages.TestSortByCount",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/unionWith",
+    "type" : "dev.morphia.test.aggregation.stages.TestUnionWith",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/aggregation/stages/unset",
+    "type" : "dev.morphia.test.aggregation.stages.TestUnset",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    }, {
+      "method" : "testExample5",
+      "resource" : "example5"
+    } ],
+    "manual" : [ {
+      "method" : "testUnwind",
+      "reason" : "Handwritten entity-mapped $unwind test without a documentation fixture."
+    } ],
+    "resources" : "dev/morphia/test/aggregation/stages/unwind",
+    "type" : "dev.morphia.test.aggregation.stages.TestUnwind",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/all",
+    "type" : "dev.morphia.test.query.filters.TestAll",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/and",
+    "type" : "dev.morphia.test.query.filters.TestAnd",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/bitsAllClear",
+    "type" : "dev.morphia.test.query.filters.TestBitsAllClear",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/bitsAllSet",
+    "type" : "dev.morphia.test.query.filters.TestBitsAllSet",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/bitsAnyClear",
+    "type" : "dev.morphia.test.query.filters.TestBitsAnyClear",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/bitsAnySet",
+    "type" : "dev.morphia.test.query.filters.TestBitsAnySet",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/box",
+    "type" : "dev.morphia.test.query.filters.TestBox",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/center",
+    "type" : "dev.morphia.test.query.filters.TestCenter",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/centerSphere",
+    "type" : "dev.morphia.test.query.filters.TestCenterSphere",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/comment",
+    "type" : "dev.morphia.test.query.filters.TestComment",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/elemMatch",
+    "type" : "dev.morphia.test.query.filters.TestElemMatch",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    }, {
+      "method" : "testExample5",
+      "resource" : "example5"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/eq",
+    "type" : "dev.morphia.test.query.filters.TestEq",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/exists",
+    "type" : "dev.morphia.test.query.filters.TestExists",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/expr",
+    "type" : "dev.morphia.test.query.filters.TestExpr",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/geoIntersects",
+    "type" : "dev.morphia.test.query.filters.TestGeoIntersects",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/geoWithin",
+    "type" : "dev.morphia.test.query.filters.TestGeoWithin",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/gt",
+    "type" : "dev.morphia.test.query.filters.TestGt",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/gte",
+    "type" : "dev.morphia.test.query.filters.TestGte",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/in",
+    "type" : "dev.morphia.test.query.filters.TestIn",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/lt",
+    "type" : "dev.morphia.test.query.filters.TestLt",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/lte",
+    "type" : "dev.morphia.test.query.filters.TestLte",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/maxDistance",
+    "type" : "dev.morphia.test.query.filters.TestMaxDistance",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/minDistance",
+    "type" : "dev.morphia.test.query.filters.TestMinDistance",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    }, {
+      "method" : "testExample5",
+      "resource" : "example5"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/mod",
+    "type" : "dev.morphia.test.query.filters.TestMod",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/ne",
+    "type" : "dev.morphia.test.query.filters.TestNe",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/near",
+    "type" : "dev.morphia.test.query.filters.TestNear",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/nearSphere",
+    "type" : "dev.morphia.test.query.filters.TestNearSphere",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/nin",
+    "type" : "dev.morphia.test.query.filters.TestNin",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/nor",
+    "type" : "dev.morphia.test.query.filters.TestNor",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/polygon",
+    "type" : "dev.morphia.test.query.filters.TestPolygon",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/rand",
+    "type" : "dev.morphia.test.query.filters.TestRand",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    }, {
+      "method" : "testExample5",
+      "resource" : "example5"
+    }, {
+      "method" : "testExample6",
+      "resource" : "example6"
+    }, {
+      "method" : "testExample7",
+      "resource" : "example7"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/regex",
+    "type" : "dev.morphia.test.query.filters.TestRegex",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    }, {
+      "method" : "testExample5",
+      "resource" : "example5"
+    }, {
+      "method" : "testExample6",
+      "resource" : "example6"
+    }, {
+      "method" : "testExample7",
+      "resource" : "example7"
+    }, {
+      "method" : "testExample8",
+      "resource" : "example8"
+    }, {
+      "method" : "testExample9",
+      "resource" : "example9"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/text",
+    "type" : "dev.morphia.test.query.filters.TestText",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/type",
+    "type" : "dev.morphia.test.query.filters.TestType",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/filters/where",
+    "type" : "dev.morphia.test.query.filters.TestWhere",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/updates/addToSet",
+    "type" : "dev.morphia.test.query.updates.TestAddToSet",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/updates/bit",
+    "type" : "dev.morphia.test.query.updates.TestBit",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/updates/currentDate",
+    "type" : "dev.morphia.test.query.updates.TestCurrentDate",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/updates/each",
+    "type" : "dev.morphia.test.query.updates.TestEach",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/updates/inc",
+    "type" : "dev.morphia.test.query.updates.TestInc",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/updates/max",
+    "type" : "dev.morphia.test.query.updates.TestMax",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/updates/min",
+    "type" : "dev.morphia.test.query.updates.TestMin",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/updates/mul",
+    "type" : "dev.morphia.test.query.updates.TestMul",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/updates/pop",
+    "type" : "dev.morphia.test.query.updates.TestPop",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/updates/position",
+    "type" : "dev.morphia.test.query.updates.TestPosition",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    }, {
+      "method" : "testExample5",
+      "resource" : "example5"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/updates/positional",
+    "type" : "dev.morphia.test.query.updates.TestPositional",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    }, {
+      "method" : "testExample5",
+      "resource" : "example5"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/updates/pull",
+    "type" : "dev.morphia.test.query.updates.TestPull",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/updates/pullAll",
+    "type" : "dev.morphia.test.query.updates.TestPullAll",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/updates/push",
+    "type" : "dev.morphia.test.query.updates.TestPush",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/updates/rename",
+    "type" : "dev.morphia.test.query.updates.TestRename",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/updates/set",
+    "type" : "dev.morphia.test.query.updates.TestSet",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/updates/setOnInsert",
+    "type" : "dev.morphia.test.query.updates.TestSetOnInsert",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/updates/slice",
+    "type" : "dev.morphia.test.query.updates.TestSlice",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    }, {
+      "method" : "testExample2",
+      "resource" : "example2"
+    }, {
+      "method" : "testExample3",
+      "resource" : "example3"
+    }, {
+      "method" : "testExample4",
+      "resource" : "example4"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/updates/sort",
+    "type" : "dev.morphia.test.query.updates.TestSort",
+    "unbound" : [ ]
+  }, {
+    "bindings" : [ {
+      "method" : "testExample1",
+      "resource" : "example1"
+    } ],
+    "manual" : [ ],
+    "resources" : "dev/morphia/test/query/updates/unset",
+    "type" : "dev.morphia.test.query.updates.TestUnset",
+    "unbound" : [ ]
+  } ],
+  "packages" : [ "dev.morphia.test.aggregation.expressions", "dev.morphia.test.aggregation.stages", "dev.morphia.test.query.filters", "dev.morphia.test.query.updates" ],
+  "schemaVersion" : 1
+}

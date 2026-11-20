@@ -7,6 +7,12 @@ on:
       - 'audits/**'
       - 'pom.xml'
       - '.github/workflows/audits.yml'
+      # Operator example sources and fixtures feed the committed binding descriptor check.
+      - 'core/src/test/resources/dev/morphia/test/**'
+      - 'core/src/test/java/dev/morphia/test/aggregation/**'
+      - 'core/src/test/java/dev/morphia/test/query/**'
+      - 'core/src/test/java/dev/morphia/test/TemplatedTestBase.java'
+      - 'core/src/test/java/dev/morphia/test/ExampleBindings.java'
 
 permissions:
   contents: read

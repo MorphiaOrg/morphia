@@ -102,6 +102,10 @@ public abstract class TemplatedTestBase extends TestBase {
 
     protected String discoverResourceName() {
         var method = findTestMethod();
+        String bound = ExampleBindings.resource(method);
+        if (bound != null) {
+            return bound;
+        }
         String methodName = method.getName();
 
         if (methodName.startsWith("test")) {
