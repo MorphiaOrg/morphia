@@ -10,12 +10,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestStrLenBytes extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/strLenBytes/example1
+     * test data: dev/morphia/test/aggregation/expressions/strLenBytes/singleByteAndMultibyteCharacterSet
      * 
      */
     @Test
     @DisplayName("Single-Byte and Multibyte Character Set")
-    public void testExample1() {
+    public void testSingleByteAndMultibyteCharacterSet() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("name").include("length", strLenBytes("$name"))));
     }

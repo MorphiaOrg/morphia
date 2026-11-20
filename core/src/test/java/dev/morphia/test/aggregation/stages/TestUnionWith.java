@@ -16,11 +16,11 @@ import static dev.morphia.aggregation.stages.UnionWith.unionWith;
 
 public class TestUnionWith extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/stages/unionWith/example1
+     * test data: dev/morphia/test/aggregation/stages/unionWith/report1AllSalesByYearAndStoresAndItems
      */
     @Test
     @DisplayName("Report 1: All Sales by Year and Stores and Items")
-    public void testExample1() {
+    public void testReport1AllSalesByYearAndStoresAndItems() {
         loadData("sales_2018", 1);
         loadData("sales_2019", 2);
         loadData("sales_2020", 3);
@@ -31,11 +31,11 @@ public class TestUnionWith extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/unionWith/example2
+     * test data: dev/morphia/test/aggregation/stages/unionWith/report2AggregatedSalesByItems
      */
     @Test
     @DisplayName("Report 2: Aggregated Sales by Items")
-    public void testExample2() {
+    public void testReport2AggregatedSalesByItems() {
         loadData("sales_2018", 1);
         loadData("sales_2019", 2);
         loadData("sales_2020", 3);
@@ -45,11 +45,11 @@ public class TestUnionWith extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/unionWith/example3
+     * test data: dev/morphia/test/aggregation/stages/unionWith/createAUnionWithSpecifiedDocuments
      */
     @Test
     @DisplayName("Create a Union with Specified Documents")
-    public void testExample3() {
+    public void testCreateAUnionWithSpecifiedDocuments() {
         checkMinServerVersion("6.0.0");
         testPipeline(
                 (aggregation) -> aggregation.pipeline(unionWith(documents(document("_id", 4).field("flavor", "orange"),
@@ -57,11 +57,11 @@ public class TestUnionWith extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/unionWith/example4
+     * test data: dev/morphia/test/aggregation/stages/unionWith/namespacesInSubpipelines
      */
     @Test
     @DisplayName("Namespaces in Subpipelines")
-    public void testExample4() {
+    public void testNamespacesInSubpipelines() {
         // this is just an error case in the docs. nothing to test.
     }
 

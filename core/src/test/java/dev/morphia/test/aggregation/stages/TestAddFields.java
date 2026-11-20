@@ -22,12 +22,12 @@ import static org.bson.Document.parse;
 
 public class TestAddFields extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/stages/addFields/example1
+     * test data: dev/morphia/test/aggregation/stages/addFields/usingTwoAddFieldsStages
      * 
      */
     @Test
     @DisplayName("Using Two ``$addFields`` Stages")
-    public void testExample1() {
+    public void testUsingTwoAddFieldsStages() {
         List<Document> list = List.of(
                 parse("{ _id: 1, student: 'Maya', homework: [ 10, 5, 10 ],quiz: [ 10, 8 ],extraCredit: 0 }"),
                 parse("{ _id: 2, student: 'Ryan', homework: [ 5, 6, 5 ],quiz: [ 8, 8 ],extraCredit: 8 }"));
@@ -49,45 +49,45 @@ public class TestAddFields extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/addFields/example2
+     * test data: dev/morphia/test/aggregation/stages/addFields/addingFieldsToAnEmbeddedDocument
      * 
      */
     @Test
     @DisplayName("Adding Fields to an Embedded Document")
-    public void testExample2() {
+    public void testAddingFieldsToAnEmbeddedDocument() {
         testPipeline((aggregation) -> aggregation.pipeline(addFields().field("specs.fuel_type", "unleaded")));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/addFields/example3
+     * test data: dev/morphia/test/aggregation/stages/addFields/overwritingAnExistingField
      * 
      */
     @Test
     @DisplayName("Overwriting an existing field")
-    public void testExample3() {
+    public void testOverwritingAnExistingField() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(addFields().field("cats", 20)));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/addFields/example4
+     * test data: dev/morphia/test/aggregation/stages/addFields/addElementToAnArray
      * 
      */
     @Test
     @DisplayName("Add Element to an Array")
-    public void testExample4() {
+    public void testAddElementToAnArray() {
         testPipeline((aggregation) -> aggregation.pipeline(match(eq("_id", 1)),
                 addFields().field("homework", concatArrays("$homework", array(7)))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/addFields/example5
+     * test data: dev/morphia/test/aggregation/stages/addFields/removeFields
      * 
      * db.labReadings.aggregate( [ { $addFields: { date: "$$REMOVE" } } ] )
      */
     @Test
     @DisplayName("Remove Fields")
-    public void testExample5() {
+    public void testRemoveFields() {
         testPipeline(new ActionTestOptions().removeIds(true),
                 aggregation -> aggregation.pipeline(addFields().field("date", REMOVE)));
     }

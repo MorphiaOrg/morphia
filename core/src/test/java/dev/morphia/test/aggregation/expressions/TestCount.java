@@ -22,24 +22,24 @@ public class TestCount extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/count/example1
+     * test data: dev/morphia/test/aggregation/expressions/count/useInGroupStage
      * 
      */
     @Test
     @DisplayName("Use in ``$group`` Stage")
-    public void testExample1() {
+    public void testUseInGroupStage() {
         testPipeline(new ActionTestOptions().orderMatters(false), aggregation -> aggregation.pipeline(
                 group(Group.id("$state")).field("countNumberOfDocumentsForState", AccumulatorExpressions.count())));
 
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/count/example2
+     * test data: dev/morphia/test/aggregation/expressions/count/useInSetWindowFieldsStage
      * 
      */
     @Test
     @DisplayName("Use in ``$setWindowFields`` Stage")
-    public void testExample2() {
+    public void testUseInSetWindowFieldsStage() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 aggregation -> aggregation.pipeline(setWindowFields().partitionBy(("$state"))
                         .sortBy(ascending("orderDate")).output(output("countNumberOfDocumentsForState")

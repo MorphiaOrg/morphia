@@ -11,12 +11,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestSetIsSubset extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/setIsSubset/example1
+     * test data: dev/morphia/test/aggregation/expressions/setIsSubset/setIsSubsetExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testSetIsSubsetExpressionOperator() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(project().suppressId().include("flowerFieldA")
                         .include("flowerFieldB").include("AisSubset", setIsSubset("$flowerFieldA", "$flowerFieldB"))));

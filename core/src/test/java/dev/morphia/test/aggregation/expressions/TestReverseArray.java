@@ -10,12 +10,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestReverseArray extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/reverseArray/example1
+     * test data: dev/morphia/test/aggregation/expressions/reverseArray/reverseArrayExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testReverseArrayExpressionOperator() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("name").include("reverseFavorites", reverseArray("$favorites"))));
     }

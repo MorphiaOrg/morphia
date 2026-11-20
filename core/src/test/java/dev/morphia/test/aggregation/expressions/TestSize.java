@@ -12,12 +12,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestSize extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/size/example1
+     * test data: dev/morphia/test/aggregation/expressions/size/sizeExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testSizeExpressionOperator() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("item").include("numberOfColors",
                 condition(isArray("$colors"), size("$colors"), "NA"))));
     }

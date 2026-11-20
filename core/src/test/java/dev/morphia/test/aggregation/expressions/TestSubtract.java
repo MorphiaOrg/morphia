@@ -12,34 +12,34 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestSubtract extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/subtract/example1
+     * test data: dev/morphia/test/aggregation/expressions/subtract/subtractNumbers
      * 
      */
     @Test
     @DisplayName("Subtract Numbers")
-    public void testExample1() {
+    public void testSubtractNumbers() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("item").include("total", subtract(add("$price", "$fee"), "$discount"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/subtract/example2
+     * test data: dev/morphia/test/aggregation/expressions/subtract/subtractTwoDates
      * 
      */
     @Test
     @DisplayName("Subtract Two Dates")
-    public void testExample2() {
+    public void testSubtractTwoDates() {
         testPipeline(new ActionTestOptions().skipDataCheck(true), (aggregation) -> aggregation
                 .pipeline(project().include("item").include("dateDifference", subtract("$$NOW", "$date"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/subtract/example3
+     * test data: dev/morphia/test/aggregation/expressions/subtract/subtractMillisecondsFromADate
      * 
      */
     @Test
     @DisplayName("Subtract Milliseconds from a Date")
-    public void testExample3() {
+    public void testSubtractMillisecondsFromADate() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("item").include("dateDifference", subtract("$date", 5 * 60 * 1000))));
     }

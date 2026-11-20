@@ -26,12 +26,12 @@ public class TestSetWindowFields extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/setWindowFields/example1
+     * test data: dev/morphia/test/aggregation/stages/setWindowFields/documentsWindowExamples
      * 
      */
     @Test
     @DisplayName("Documents Window Examples")
-    public void testExample1() {
+    public void testDocumentsWindowExamples() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                         .sortBy(ascending("orderDate")).output(output("cumulativeQuantityForState")
@@ -39,31 +39,31 @@ public class TestSetWindowFields extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/setWindowFields/example2
+     * test data: dev/morphia/test/aggregation/stages/setWindowFields/rangeWindowExample
      * 
      */
     @Test
     @DisplayName("Range Window Example")
-    public void testExample2() {
+    public void testRangeWindowExample() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(setWindowFields().partitionBy("$state").sortBy(ascending("price")).output(
                         output("quantityFromSimilarOrders").operator(sum("$quantity")).window().range(-10, 10))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/setWindowFields/example3
+     * test data: dev/morphia/test/aggregation/stages/setWindowFields/timeRangeWindowExamples
      * 
      */
     @Test
     @DisplayName("Time Range Window Examples")
-    public void testExample3() {
+    public void testTimeRangeWindowExamples() {
         testPipeline((aggregation) -> aggregation.pipeline(
                 setWindowFields().partitionBy("$state").sortBy(ascending("orderDate")).output(output("recentOrders")
                         .operator(push("$orderDate")).window().range("unbounded", 10, TimeUnit.MONTH))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/setWindowFields/example4
+     * test data: dev/morphia/test/aggregation/stages/setWindowFields/comparisonWithPreviousValuesExample
      * 
      * db.cakeSales.aggregate( [ { $setWindowFields: { partitionBy: "$type", sortBy:
      * { orderDate: 1 }, output: { previousPrice: { $shift: { output: "$price", by:
@@ -73,7 +73,7 @@ public class TestSetWindowFields extends TemplatedTestBase {
      */
     @Test
     @DisplayName("Comparison with Previous Values Example")
-    public void testExample4() {
+    public void testComparisonWithPreviousValuesExample() {
         testPipeline((aggregation) -> aggregation.pipeline(
                 setWindowFields().partitionBy("$type").sortBy(ascending("orderDate"))
                         .output(output("previousPrice").operator(shift("$price", -1))),

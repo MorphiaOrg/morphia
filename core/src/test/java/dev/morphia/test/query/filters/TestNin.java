@@ -14,20 +14,20 @@ import static dev.morphia.query.updates.UpdateOperators.set;
 public class TestNin extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/filters/nin/example1
+     * test data: dev/morphia/test/query/filters/nin/selectOnUnmatchingDocuments
      */
     @Test
     @DisplayName("Select on Unmatching Documents")
-    public void testExample1() {
+    public void testSelectOnUnmatchingDocuments() {
         testQuery(new ActionTestOptions().removeIds(true), (query) -> query.filter(nin("quantity", List.of(5, 15))));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/nin/example2
+     * test data: dev/morphia/test/query/filters/nin/selectOnElementsNotInAnArray
      */
     @Test
     @DisplayName("Select on Elements Not in an Array")
-    public void testExample2() {
+    public void testSelectOnElementsNotInAnArray() {
         testUpdate(new ActionTestOptions().removeIds(true), (query) -> query.filter(nin("tags", List.of("school"))),
                 set("exclude", true));
     }

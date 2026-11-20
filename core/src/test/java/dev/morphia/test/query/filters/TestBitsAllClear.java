@@ -9,32 +9,32 @@ import static dev.morphia.query.filters.Filters.bitsAllClear;
 
 public class TestBitsAllClear extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/query/filters/bitsAllClear/example1
+     * test data: dev/morphia/test/query/filters/bitsAllClear/bitPositionArray
      * 
      */
     @Test
     @DisplayName("Bit Position Array")
-    public void testExample1() {
+    public void testBitPositionArray() {
         testQuery((query) -> query.filter(bitsAllClear("a", new int[] { 1, 5 })));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/bitsAllClear/example2
+     * test data: dev/morphia/test/query/filters/bitsAllClear/integerBitmask
      * 
      */
     @Test
     @DisplayName("Integer Bitmask")
-    public void testExample2() {
+    public void testIntegerBitmask() {
         testQuery((query) -> query.filter(bitsAllClear("a", 35)));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/bitsAllClear/example3
+     * test data: dev/morphia/test/query/filters/bitsAllClear/binDataBitmask
      * 
      */
     @Test
     @DisplayName("BinData Bitmask")
-    public void testExample3() {
+    public void testBinDataBitmask() {
         testQuery((query) -> query.filter(bitsAllClear("a", new byte[] { 32 })));
     }
 

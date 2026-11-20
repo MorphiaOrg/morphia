@@ -10,12 +10,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestSetEquals extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/setEquals/example1
+     * test data: dev/morphia/test/aggregation/expressions/setEquals/setEqualsExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testSetEqualsExpressionOperator() {
         testPipeline((aggregation) -> aggregation.pipeline(project().suppressId().include("cakes").include("cupcakes")
                 .include("sameFlavors", setEquals("$cakes", "$cupcakes"))));
     }

@@ -12,21 +12,21 @@ import static dev.morphia.query.filters.Filters.mod;
 public class TestComment extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/filters/comment/example1
+     * test data: dev/morphia/test/query/filters/comment/attachACommentToFind
      */
     @Test
     @DisplayName("Attach a Comment to ``find``")
-    public void testExample1() {
+    public void testAttachACommentToFind() {
         ActionTestOptions options = new ActionTestOptions().skipDataCheck(true);
         testQuery(options, (query) -> query.filter(mod("x", 2, 0), comment("Find even values.")));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/comment/example2
+     * test data: dev/morphia/test/query/filters/comment/attachACommentToAnAggregationExpression
      */
     @Test
     @DisplayName("Attach a Comment to an Aggregation Expression")
-    public void testExample2() {
+    public void testAttachACommentToAnAggregationExpression() {
         // this example is for an aggregation
     }
 }

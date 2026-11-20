@@ -8,11 +8,11 @@ import org.junit.jupiter.api.Test;
 public class TestMaxDistance extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/filters/maxDistance/example1
+     * test data: dev/morphia/test/query/filters/maxDistance/maxDistanceQueryPredicateOperator
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testMaxDistanceQueryPredicateOperator() {
         // legacy coordinates just won't be supported for now
 
         /*

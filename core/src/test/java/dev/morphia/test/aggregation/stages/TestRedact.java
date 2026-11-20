@@ -19,23 +19,23 @@ import static dev.morphia.query.filters.Filters.eq;
 
 public class TestRedact extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/stages/redact/example1
+     * test data: dev/morphia/test/aggregation/stages/redact/evaluateAccessAtEveryDocumentLevel
      * 
      */
     @Test
     @DisplayName("Evaluate Access at Every Document Level")
-    public void testExample1() {
+    public void testEvaluateAccessAtEveryDocumentLevel() {
         testPipeline((aggregation) -> aggregation.pipeline(match(eq("year", 2014)),
                 redact(condition(gt(size(setIntersection("$tags", array("STLW", "G"))), 0), DESCEND, PRUNE))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/redact/example2
+     * test data: dev/morphia/test/aggregation/stages/redact/excludeAllFieldsAtAGivenLevel
      * 
      */
     @Test
     @DisplayName("Exclude All Fields at a Given Level")
-    public void testExample2() {
+    public void testExcludeAllFieldsAtAGivenLevel() {
         testPipeline((aggregation) -> aggregation.pipeline(match(eq("status", "A")),
                 redact(condition(ComparisonExpressions.eq("$level", 5), PRUNE, DESCEND))));
     }

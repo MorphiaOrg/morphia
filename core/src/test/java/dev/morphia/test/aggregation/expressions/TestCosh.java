@@ -12,23 +12,23 @@ import static dev.morphia.aggregation.stages.AddFields.addFields;
 
 public class TestCosh extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/cosh/example1
+     * test data: dev/morphia/test/aggregation/expressions/cosh/hyperbolicCosineInDegrees
      * 
      */
     @Test
     @DisplayName("main :: Hyperbolic Cosine in Degrees")
-    public void testExample1() {
+    public void testHyperbolicCosineInDegrees() {
         testPipeline(new ActionTestOptions().removeIds(true), (aggregation) -> aggregation
                 .pipeline(addFields().field("cosh_output", cosh(degreesToRadians("$angle")))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/cosh/example2
+     * test data: dev/morphia/test/aggregation/expressions/cosh/hyperbolicCosineInRadians
      * 
      */
     @Test
     @DisplayName("main :: Hyperbolic Cosine in Radians")
-    public void testExample2() {
+    public void testHyperbolicCosineInRadians() {
         testPipeline(new ActionTestOptions().removeIds(true),
                 (aggregation) -> aggregation.pipeline(addFields().field("cosh_output", cosh("$angle"))));
     }

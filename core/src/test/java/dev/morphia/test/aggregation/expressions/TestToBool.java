@@ -14,12 +14,12 @@ import static dev.morphia.aggregation.stages.Match.match;
 
 public class TestToBool extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/toBool/example1
+     * test data: dev/morphia/test/aggregation/expressions/toBool/toBoolExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testToBoolExpressionOperator() {
         testPipeline(
                 (aggregation) -> aggregation.pipeline(
                         addFields().field("convertedShippedFlag",

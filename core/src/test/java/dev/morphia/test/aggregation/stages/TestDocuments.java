@@ -20,12 +20,12 @@ public class TestDocuments extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/documents/example1
+     * test data: dev/morphia/test/aggregation/stages/documents/testAPipelineStage
      * 
      */
     @Test
     @DisplayName("Test a Pipeline Stage")
-    public void testExample1() {
+    public void testTestAPipelineStage() {
         testPipeline(new ActionTestOptions().skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(
                         documents(document().field("x", 10), document().field("x", 2), document().field("x", 5)),
@@ -33,12 +33,12 @@ public class TestDocuments extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/documents/example2
+     * test data: dev/morphia/test/aggregation/stages/documents/useADocumentsStageInALookupStage
      * 
      */
     @Test
     @DisplayName("Use a ``$documents`` Stage in a ``$lookup`` Stage")
-    public void testExample2() {
+    public void testUseADocumentsStageInALookupStage() {
         testPipeline(new ActionTestOptions().removeIds(true), aggregation -> {
             return aggregation.pipeline(match(),
                     lookup().localField("zip").foreignField("zip_id").as("city_state")

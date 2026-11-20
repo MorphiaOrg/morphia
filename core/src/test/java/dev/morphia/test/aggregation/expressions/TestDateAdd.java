@@ -24,12 +24,12 @@ public class TestDateAdd extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/dateAdd/example1
+     * test data: dev/morphia/test/aggregation/expressions/dateAdd/addAFutureDate
      * 
      */
     @Test
     @DisplayName("Add a Future Date")
-    public void testExample1() {
+    public void testAddAFutureDate() {
         testPipeline(new ActionTestOptions().removeIds(true),
                 aggregation -> aggregation.pipeline(
                         project().include("expectedDeliveryDate", dateAdd("$purchaseDate", 3, TimeUnit.DAY)),
@@ -38,12 +38,12 @@ public class TestDateAdd extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/dateAdd/example2
+     * test data: dev/morphia/test/aggregation/expressions/dateAdd/filterOnADateRange
      * 
      */
     @Test
     @DisplayName("Filter on a Date Range")
-    public void testExample2() {
+    public void testFilterOnADateRange() {
         testPipeline(aggregation -> aggregation.pipeline(
                 match(expr(gt("$deliveryDate", dateAdd("$purchaseDate", 5, TimeUnit.DAY)))),
 
@@ -56,12 +56,12 @@ public class TestDateAdd extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/dateAdd/example3
+     * test data: dev/morphia/test/aggregation/expressions/dateAdd/adjustForDaylightSavingsTime
      * 
      */
     @Test
     @DisplayName("Adjust for Daylight Savings Time")
-    public void testExample3() {
+    public void testAdjustForDaylightSavingsTime() {
         testPipeline(aggregation -> aggregation.pipeline(project().suppressId().include("location")
                 .include("start", dateToString().date("$login").format("%Y-%m-%d %H:%M"))
                 .include("days",

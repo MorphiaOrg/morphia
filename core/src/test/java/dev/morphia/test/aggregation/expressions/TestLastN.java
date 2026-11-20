@@ -26,7 +26,7 @@ public class TestLastN extends TemplatedTestBase {
 
     @Test
     @DisplayName("Find the Last Three Player Scores for a Single Game")
-    public void testExample1() {
+    public void testFindTheLastThreePlayerScoresForASingleGame() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation
                         .pipeline(
@@ -40,7 +40,7 @@ public class TestLastN extends TemplatedTestBase {
 
     @Test
     @DisplayName("Finding the Last Three Player Scores Across Multiple Games")
-    public void testExample2() {
+    public void testFindingTheLastThreePlayerScoresAcrossMultipleGames() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation
                         .pipeline(group(id("$gameId"))
@@ -52,7 +52,7 @@ public class TestLastN extends TemplatedTestBase {
 
     @Test
     @DisplayName("Using ``$sort`` With ``$lastN``")
-    public void testExample3() {
+    public void testUsingSortWithLastN() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation
                         .pipeline(
@@ -66,7 +66,7 @@ public class TestLastN extends TemplatedTestBase {
 
     @Test
     @DisplayName("Computing ``n`` Based on the Group Key for ``$group``")
-    public void testExample4() {
+    public void testComputingNBasedOnTheGroupKeyForGroup() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation
                         .pipeline(group(id().field("gameId", "$gameId"))
@@ -76,7 +76,7 @@ public class TestLastN extends TemplatedTestBase {
     }
 
     @Test
-    public void testExample5() {
+    public void testUsingLastNAsAnAggregationExpression() {
         //  needs db.aggregate() support
     }
 

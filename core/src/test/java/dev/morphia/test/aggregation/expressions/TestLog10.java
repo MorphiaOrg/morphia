@@ -11,12 +11,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestLog10 extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/log10/example1
+     * test data: dev/morphia/test/aggregation/expressions/log10/log10ExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testLog10ExpressionOperator() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("pH", multiply(-1, log10("$H3O")))));
     }
 

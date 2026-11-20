@@ -12,32 +12,32 @@ import static dev.morphia.query.filters.Filters.lt;
 
 public class TestElemMatch extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/query/filters/elemMatch/example1
+     * test data: dev/morphia/test/query/filters/elemMatch/elementMatch
      * 
      */
     @Test
     @DisplayName("Element Match")
-    public void testExample1() {
+    public void testElementMatch() {
         testQuery((query) -> query.filter(elemMatch("results", gte(80), lt(85))));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/elemMatch/example2
+     * test data: dev/morphia/test/query/filters/elemMatch/arrayOfEmbeddedDocuments
      * 
      */
     @Test
     @DisplayName("Array of Embedded Documents")
-    public void testExample2() {
+    public void testArrayOfEmbeddedDocuments() {
         testQuery((query) -> query.filter(elemMatch("results", eq("product", "xyz"), gte("score", 8))));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/elemMatch/example3
+     * test data: dev/morphia/test/query/filters/elemMatch/singleQueryCondition
      * 
      */
     @Test
     @DisplayName("Single Query Condition")
-    public void testExample3() {
+    public void testSingleQueryCondition() {
         testQuery((query) -> query.filter(elemMatch("results", eq("product", "xyz"))));
     }
 

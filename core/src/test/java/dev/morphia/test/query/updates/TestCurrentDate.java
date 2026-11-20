@@ -14,22 +14,22 @@ import static dev.morphia.query.updates.UpdateOperators.set;
 public class TestCurrentDate extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/updates/currentDate/example1
+     * test data: dev/morphia/test/query/updates/currentDate/currentDateUpdateOperator
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testCurrentDateUpdateOperator() {
         testUpdate(new ActionTestOptions().skipDataCheck(true), (query) -> query.filter(eq("_id", 1)),
                 currentDate("lastModified"), currentDate("cancellation.date").type(TypeSpecification.TIMESTAMP),
                 set("cancellation.reason", "user request"), set("status", "D"));
     }
 
     /**
-     * test data: dev/morphia/test/query/updates/currentDate/example2
+     * test data: dev/morphia/test/query/updates/currentDate/aggregationAlternativeToCurrentDate
      */
     @Test
     @DisplayName("Aggregation Alternative to ``$currentDate``")
-    public void testExample2() {
+    public void testAggregationAlternativeToCurrentDate() {
         // this one isn't an operator test as such and updates with a pipeline are
         // tested elsewhere
     }

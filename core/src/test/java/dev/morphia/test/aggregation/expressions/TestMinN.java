@@ -24,12 +24,12 @@ public class TestMinN extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/minN/example1
+     * test data: dev/morphia/test/aggregation/expressions/minN/findTheMinimumThreeScoresForASingleGame
      * 
      */
     @Test
     @DisplayName("Find the Minimum Three ``Scores`` for a Single Game")
-    public void testExample1() {
+    public void testFindTheMinimumThreeScoresForASingleGame() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(match(eq("gameId", "G1")),
                         group(id("$gameId")).field("minScores", minN(3, array("$score", "$playerId")))));
@@ -37,24 +37,24 @@ public class TestMinN extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/minN/example2
+     * test data: dev/morphia/test/aggregation/expressions/minN/findingTheMinimumThreeDocumentsAcrossMultipleGames
      * 
      */
     @Test
     @DisplayName("Finding the Minimum Three Documents Across Multiple Games")
-    public void testExample2() {
+    public void testFindingTheMinimumThreeDocumentsAcrossMultipleGames() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
                 .pipeline(group(id("$gameId")).field("minScores", minN(3, array("$score", "$playerId")))));
 
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/minN/example3
+     * test data: dev/morphia/test/aggregation/expressions/minN/computingNBasedOnTheGroupKeyForGroup
      * 
      */
     @Test
     @DisplayName("Computing ``n`` Based on the Group Key for ``$group``")
-    public void testExample3() {
+    public void testComputingNBasedOnTheGroupKeyForGroup() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(group(id().field("gameId", "$gameId")).field("gamescores", minN(
                         condition(ComparisonExpressions.eq("$gameId", "G2"), 1, 3), array("$score", "$playerId")))));

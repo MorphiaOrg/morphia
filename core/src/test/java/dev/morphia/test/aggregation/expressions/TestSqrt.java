@@ -13,12 +13,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestSqrt extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/sqrt/example1
+     * test data: dev/morphia/test/aggregation/expressions/sqrt/sqrtExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testSqrtExpressionOperator() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("distance",
                 sqrt(add(pow(subtract("$p2.y", "$p1.y"), 2), pow(subtract("$p2.x", "$p1.x"), 2))))));
     }

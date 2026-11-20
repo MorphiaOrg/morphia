@@ -17,11 +17,11 @@ import static dev.morphia.query.updates.UpdateOperators.push;
 public class TestSort extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/updates/sort/example1
+     * test data: dev/morphia/test/query/updates/sort/sortArrayOfDocumentsByAFieldInTheDocuments
      */
     @Test
     @DisplayName("Sort Array of Documents by a Field in the Documents")
-    public void testExample1() {
+    public void testSortArrayOfDocumentsByAFieldInTheDocuments() {
         // the Map order throws off structural checks
         testUpdate(new ActionTestOptions().skipActionCheck(true), (query) -> query.filter(eq("_id", 1)),
                 push("quizzes",
@@ -30,29 +30,29 @@ public class TestSort extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/query/updates/sort/example2
+     * test data: dev/morphia/test/query/updates/sort/sortArrayElementsThatAreNotDocuments
      */
     @Test
     @DisplayName("Sort Array Elements That Are Not Documents")
-    public void testExample2() {
+    public void testSortArrayElementsThatAreNotDocuments() {
         testUpdate((query) -> query.filter(eq("_id", 2)), push("tests", List.of(40, 60)).sort(1));
     }
 
     /**
-     * test data: dev/morphia/test/query/updates/sort/example3
+     * test data: dev/morphia/test/query/updates/sort/updateArrayUsingSortOnly
      */
     @Test
     @DisplayName("Update Array Using Sort Only")
-    public void testExample3() {
+    public void testUpdateArrayUsingSortOnly() {
         testUpdate((query) -> query.filter(eq("_id", 3)), push("tests", List.of()).sort(-1));
     }
 
     /**
-     * test data: dev/morphia/test/query/updates/sort/example4
+     * test data: dev/morphia/test/query/updates/sort/useSortWithOtherPushModifiers
      */
     @Test
     @DisplayName("Use ``$sort`` with Other ``$push`` Modifiers")
-    public void testExample4() {
+    public void testUseSortWithOtherPushModifiers() {
         // the Map order throws off structural checks
         testUpdate(new ActionTestOptions().skipActionCheck(true), (query) -> query.filter(eq("_id", 5)),
                 push("quizzes",

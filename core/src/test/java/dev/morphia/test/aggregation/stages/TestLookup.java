@@ -29,36 +29,36 @@ import static java.util.Arrays.asList;
 
 public class TestLookup extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/stages/lookup/example1
+     * test data: dev/morphia/test/aggregation/stages/lookup/performASingleEqualityJoinWithLookup
      * 
      */
     @Test
     @DisplayName("Perform a Single Equality Join with ``$lookup``")
-    public void testExample1() {
+    public void testPerformASingleEqualityJoinWithLookup() {
         loadData("inventory", 2);
         testPipeline((aggregation) -> aggregation
                 .pipeline(lookup("inventory").localField("item").foreignField("sku").as("inventory_docs")));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/lookup/example2
+     * test data: dev/morphia/test/aggregation/stages/lookup/useLookupWithAnArray
      * 
      */
     @Test
     @DisplayName("Use ``$lookup`` with an Array")
-    public void testExample2() {
+    public void testUseLookupWithAnArray() {
         loadData("members", 2);
         testPipeline((aggregation) -> aggregation
                 .pipeline(lookup("members").localField("enrollmentlist").foreignField("name").as("enrollee_info")));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/lookup/example3
+     * test data: dev/morphia/test/aggregation/stages/lookup/useLookupWithMergeObjects
      * 
      */
     @Test
     @DisplayName("Use ``$lookup`` with ``$mergeObjects``")
-    public void testExample3() {
+    public void testUseLookupWithMergeObjects() {
         loadData("items", 2);
         testPipeline((aggregation) -> aggregation.pipeline(
                 lookup("items").localField("item").foreignField("item").as("fromItems"),
@@ -66,12 +66,12 @@ public class TestLookup extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/lookup/example4
+     * test data: dev/morphia/test/aggregation/stages/lookup/performMultipleJoinsAndACorrelatedSubqueryWithLookup
      * 
      */
     @Test
     @DisplayName("Perform Multiple Joins and a Correlated Subquery with ``$lookup``")
-    public void testExample4() {
+    public void testPerformMultipleJoinsAndACorrelatedSubqueryWithLookup() {
         loadData("warehouses", 2);
         testPipeline(
                 (aggregation) -> aggregation
@@ -84,12 +84,12 @@ public class TestLookup extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/lookup/example5
+     * test data: dev/morphia/test/aggregation/stages/lookup/performAnUncorrelatedSubqueryWithLookup
      * 
      */
     @Test
     @DisplayName("Perform an Uncorrelated Subquery with ``$lookup``")
-    public void testExample5() {
+    public void testPerformAnUncorrelatedSubqueryWithLookup() {
         loadData("holidays", 2);
         testPipeline((aggregation) -> aggregation.pipeline(lookup("holidays")
                 .pipeline(match(eq("year", 2018)),
@@ -100,12 +100,12 @@ public class TestLookup extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/lookup/example6
+     * test data: dev/morphia/test/aggregation/stages/lookup/performAConciseCorrelatedSubqueryWithLookup
      * 
      */
     @Test
     @DisplayName("Perform a Concise Correlated Subquery with ``$lookup``")
-    public void testExample6() {
+    public void testPerformAConciseCorrelatedSubqueryWithLookup() {
         checkMinServerVersion("6.0.0");
         loadData("restaurants", 2);
         testPipeline((aggregation) -> aggregation.pipeline(lookup("restaurants").localField("restaurant_name")
@@ -134,14 +134,14 @@ public class TestLookup extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/lookup/example7
+     * test data: dev/morphia/test/aggregation/stages/lookup/namespacesInSubpipelines
      * 
      * db.cakeFlavors.aggregate( [ { $lookup: { from: "cakeFlavors", pipeline: [ {
      * $documents: [ {} ] } ], as: "test" } } ] )
      */
     @Test
     @DisplayName("Namespaces in Subpipelines")
-    public void testExample7() {
+    public void testNamespacesInSubpipelines() {
         // this is just an error case in the docs. nothing to test.
     }
 

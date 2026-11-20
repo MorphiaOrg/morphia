@@ -18,11 +18,11 @@ public class TestTsIncrement extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/tsIncrement/example1
+     * test data: dev/morphia/test/aggregation/expressions/tsIncrement/obtainTheIncrementingOrdinalFromATimestampField
      */
     @Test
     @DisplayName("Obtain the Incrementing Ordinal from a Timestamp Field")
-    public void testExample1() {
+    public void testObtainTheIncrementingOrdinalFromATimestampField() {
         testPipeline(new ActionTestOptions(), (aggregation) -> aggregation.pipeline(project().suppressId()
                 .include("saleTimestamp").include("saleIncrement", tsIncrement("$saleTimestamp"))));
     }

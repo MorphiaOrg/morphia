@@ -18,22 +18,22 @@ import static java.util.List.of;
 
 public class TestPercentile extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/percentile/example1
+     * test data: dev/morphia/test/aggregation/expressions/percentile/calculateASingleValueAsAnAccumulator
      */
     @Test
     @DisplayName("Calculate a Single Value as an Accumulator")
-    public void testExample1() {
+    public void testCalculateASingleValueAsAnAccumulator() {
         testPipeline(new ActionTestOptions().serverVersion("7.0.0").orderMatters(false), aggregation -> aggregation
                 .pipeline(group().field("test01_percentiles", percentile("$test01", of(0.95)))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/percentile/example2
+     * test data: dev/morphia/test/aggregation/expressions/percentile/calculateMultipleValuesAsAnAccumulator
      *
      */
     @Test
     @DisplayName("Calculate Multiple Values as an Accumulator")
-    public void testExample2() {
+    public void testCalculateMultipleValuesAsAnAccumulator() {
         testPipeline(new ActionTestOptions().serverVersion("7.0.0").orderMatters(false),
                 aggregation -> aggregation
                         .pipeline(group().field("test01_percentiles", percentile("$test01", of(0.5, 0.75, 0.9, 0.95)))
@@ -43,24 +43,24 @@ public class TestPercentile extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/percentile/example3
+     * test data: dev/morphia/test/aggregation/expressions/percentile/usePercentileInAProjectStage
      *
      */
     @Test
     @DisplayName("Use |operatorName| in a ``$project`` Stage")
-    public void testExample3() {
+    public void testUsePercentileInAProjectStage() {
         testPipeline(new ActionTestOptions().serverVersion("7.0.0").orderMatters(false),
                 aggregation -> aggregation.pipeline(project().suppressId().include("studentId").include(
                         "testPercentiles", percentile(List.of("$test01", "$test02", "$test03"), of(0.5, 0.95)))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/percentile/example4
+     * test data: dev/morphia/test/aggregation/expressions/percentile/usePercentileInASetWindowFieldStage
      *
      */
     @Test
     @DisplayName("Use |operatorName| in a ``$setWindowField`` Stage")
-    public void testExample4() {
+    public void testUsePercentileInASetWindowFieldStage() {
 
         testPipeline(new ActionTestOptions().serverVersion("7.0.0").orderMatters(false),
                 aggregation -> aggregation.pipeline(
@@ -74,7 +74,7 @@ public class TestPercentile extends TemplatedTestBase {
 
     @Test
     @DisplayName("Use |operatorName| in a ``$setWindowField`` Stage")
-    public void testExample5() {
+    public void testUsePercentileInASetWindowFieldStagePlaceholder() {
 
     }
 

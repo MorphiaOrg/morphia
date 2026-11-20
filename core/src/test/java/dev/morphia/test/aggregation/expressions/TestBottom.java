@@ -16,12 +16,12 @@ import static dev.morphia.query.filters.Filters.eq;
 
 public class TestBottom extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/bottom/example1
+     * test data: dev/morphia/test/aggregation/expressions/bottom/findTheBottomScore
      * 
      */
     @Test
     @DisplayName("Find the Bottom ``Score``")
-    public void testExample1() {
+    public void testFindTheBottomScore() {
         checkMinServerVersion("5.2.0");
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation.pipeline(
                 match(eq("gameId", "G1")),
@@ -29,12 +29,12 @@ public class TestBottom extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/bottom/example2
+     * test data: dev/morphia/test/aggregation/expressions/bottom/findingTheBottomScoreAcrossMultipleGames
      * 
      */
     @Test
     @DisplayName("Finding the Bottom ``Score`` Across Multiple Games")
-    public void testExample2() {
+    public void testFindingTheBottomScoreAcrossMultipleGames() {
         checkMinServerVersion("5.2.0");
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation.pipeline(
                 group(id("$gameId")).field("playerId", bottom(array("$playerId", "$score"), descending("score")))));

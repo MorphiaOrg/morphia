@@ -11,12 +11,12 @@ import static dev.morphia.aggregation.stages.Sort.sort;
 
 public class TestToObjectId extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/toObjectId/example1
+     * test data: dev/morphia/test/aggregation/expressions/toObjectId/toObjectIdExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testToObjectIdExpressionOperator() {
         testPipeline((aggregation) -> aggregation.pipeline(addFields().field("convertedId", toObjectId("$_id")),
                 sort().descending("convertedId")));
     }

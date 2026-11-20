@@ -17,21 +17,21 @@ import static java.util.List.of;
 public class TestGeoIntersects extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/filters/geoIntersects/example1
+     * test data: dev/morphia/test/query/filters/geoIntersects/intersectsAPolygon
      */
     @Test
     @DisplayName("Intersects a Polygon")
-    public void testExample1() {
+    public void testIntersectsAPolygon() {
         testQuery(new ActionTestOptions().skipDataCheck(true), (query) -> query.filter(geoIntersects("loc",
                 new Polygon(of(new Position(0, 0), new Position(3, 6), new Position(6, 1), new Position(0, 0))))));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/geoIntersects/example2
+     * test data: dev/morphia/test/query/filters/geoIntersects/intersectsABigPolygon
      */
     @Test
     @DisplayName("Intersects a \"Big\" Polygon")
-    public void testExample2() {
+    public void testIntersectsABigPolygon() {
         var exterior = new PolygonCoordinates(of(new Position(-100, 60), new Position(-100, 0), new Position(-100, -60),
                 new Position(100, -60), new Position(100, 60), new Position(-100, 60)));
         testQuery(new ActionTestOptions().skipDataCheck(true), (query) -> query.filter(geoIntersects("loc", new Polygon(

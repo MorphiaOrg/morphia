@@ -1,8 +1,8 @@
 {
   "classes" : [ {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testAbsExpressionOperator",
+      "resource" : "absExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/abs",
@@ -10,11 +10,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testUseAccumulatorToImplementTheAvgOperator",
+      "resource" : "useAccumulatorToImplementTheAvgOperator"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseInitArgsToVaryTheInitialStateByGroup",
+      "resource" : "useInitArgsToVaryTheInitialStateByGroup"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/accumulator",
@@ -22,11 +22,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testInverseCosineOfValueInDegrees",
+      "resource" : "inverseCosineOfValueInDegrees"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testInverseCosineOfValueInRadians",
+      "resource" : "inverseCosineOfValueInRadians"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/acos",
@@ -34,11 +34,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testInverseHyperbolicCosineInDegrees",
+      "resource" : "inverseHyperbolicCosineInDegrees"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testInverseHyperbolicCosineInRadians",
+      "resource" : "inverseHyperbolicCosineInRadians"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/acosh",
@@ -46,11 +46,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testAddNumbers",
+      "resource" : "addNumbers"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testPerformAdditionOnADate",
+      "resource" : "performAdditionOnADate"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/add",
@@ -58,11 +58,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testUseInGroupStage",
+      "resource" : "useInGroupStage"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseInSetWindowFieldsStage",
+      "resource" : "useInSetWindowFieldsStage"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/addToSet",
@@ -70,8 +70,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testAllElementsTrueExpressionOperator",
+      "resource" : "allElementsTrueExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/allElementsTrue",
@@ -79,8 +79,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testAndExpressionOperator",
+      "resource" : "andExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/and",
@@ -88,8 +88,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testAnyElementTrueExpressionOperator",
+      "resource" : "anyElementTrueExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/anyElementTrue",
@@ -97,8 +97,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testArrayElemAtExpressionOperator",
+      "resource" : "arrayElemAtExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/arrayElemAt",
@@ -106,11 +106,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testArrayToObjectExample",
+      "resource" : "arrayToObjectExample"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testObjectToArrayArrayToObjectExample",
+      "resource" : "objectToArrayArrayToObjectExample"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/arrayToObject",
@@ -118,11 +118,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testInverseSineOfValueInDegrees",
+      "resource" : "inverseSineOfValueInDegrees"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testInverseSineOfValueInRadians",
+      "resource" : "inverseSineOfValueInRadians"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/asin",
@@ -130,11 +130,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testInverseHyperbolicSineInDegrees",
+      "resource" : "inverseHyperbolicSineInDegrees"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testInverseHyperbolicSineInRadians",
+      "resource" : "inverseHyperbolicSineInRadians"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/asinh",
@@ -142,11 +142,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testInverseTangentOfValueInDegrees",
+      "resource" : "inverseTangentOfValueInDegrees"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testInverseTangentOfValueInRadians",
+      "resource" : "inverseTangentOfValueInRadians"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/atan",
@@ -154,11 +154,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testInverseTangentOfValueInDegrees",
+      "resource" : "inverseTangentOfValueInDegrees"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testInverseTangentOfValueInRadians",
+      "resource" : "inverseTangentOfValueInRadians"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/atan2",
@@ -166,11 +166,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testInverseHyperbolicTangentInDegrees",
+      "resource" : "inverseHyperbolicTangentInDegrees"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testInverseHyperbolicTangentInRadians",
+      "resource" : "inverseHyperbolicTangentInRadians"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/atanh",
@@ -178,14 +178,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testUseInGroupStage",
+      "resource" : "useInGroupStage"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseInProjectStage",
+      "resource" : "useInProjectStage"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testUseInSetWindowFieldsStage",
+      "resource" : "useInSetWindowFieldsStage"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/avg",
@@ -193,11 +193,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testBinarySizeExpressionOperator",
+      "resource" : "binarySizeExpressionOperator"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testFindLargestBinaryData",
+      "resource" : "findLargestBinaryData"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/binarySize",
@@ -205,11 +205,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testBitwiseAndWithALongAndInteger",
+      "resource" : "bitwiseAndWithALongAndInteger"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testBitwiseAndWithTwoIntegers",
+      "resource" : "bitwiseAndWithTwoIntegers"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/bitAnd",
@@ -217,8 +217,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testBitNotExpressionOperator",
+      "resource" : "bitNotExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/bitNot",
@@ -226,11 +226,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testBitwiseOrWithALongAndInteger",
+      "resource" : "bitwiseOrWithALongAndInteger"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testBitwiseOrWithTwoIntegers",
+      "resource" : "bitwiseOrWithTwoIntegers"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/bitOr",
@@ -238,8 +238,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testBitXorExpressionOperator",
+      "resource" : "bitXorExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/bitXor",
@@ -247,11 +247,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testFindTheBottomScore",
+      "resource" : "findTheBottomScore"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testFindingTheBottomScoreAcrossMultipleGames",
+      "resource" : "findingTheBottomScoreAcrossMultipleGames"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/bottom",
@@ -259,14 +259,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testComputingNBasedOnTheGroupKeyForGroup",
+      "resource" : "computingNBasedOnTheGroupKeyForGroup"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testFindTheThreeLowestScores",
+      "resource" : "findTheThreeLowestScores"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testFindingTheThreeLowestScoreDocumentsAcrossMultipleGames",
+      "resource" : "findingTheThreeLowestScoreDocumentsAcrossMultipleGames"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/bottomN",
@@ -274,14 +274,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testReturnCombinedSizeOfAllDocumentsInACollection",
+      "resource" : "returnCombinedSizeOfAllDocumentsInACollection"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testReturnDocumentWithLargestSpecifiedField",
+      "resource" : "returnDocumentWithLargestSpecifiedField"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testReturnSizesOfDocuments",
+      "resource" : "returnSizesOfDocuments"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/bsonSize",
@@ -289,8 +289,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testCeilExpressionOperator",
+      "resource" : "ceilExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/ceil",
@@ -298,8 +298,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testCmpExpressionOperator",
+      "resource" : "cmpExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/cmp",
@@ -307,8 +307,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testConcatExpressionOperator",
+      "resource" : "concatExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/concat",
@@ -316,8 +316,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testConcatArraysAccumulatorOperator",
+      "resource" : "concatArraysAccumulatorOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/concatArrays",
@@ -325,8 +325,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testCondExpressionOperator",
+      "resource" : "condExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/cond",
@@ -334,8 +334,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testConvertExpressionOperator",
+      "resource" : "convertExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/convert",
@@ -343,11 +343,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testCosineOfValueInDegrees",
+      "resource" : "cosineOfValueInDegrees"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testCosineOfValueInRadians",
+      "resource" : "cosineOfValueInRadians"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/cos",
@@ -355,11 +355,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testHyperbolicCosineInDegrees",
+      "resource" : "hyperbolicCosineInDegrees"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testHyperbolicCosineInRadians",
+      "resource" : "hyperbolicCosineInRadians"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/cosh",
@@ -367,11 +367,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testUseInGroupStage",
+      "resource" : "useInGroupStage"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseInSetWindowFieldsStage",
+      "resource" : "useInSetWindowFieldsStage"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/count",
@@ -379,8 +379,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testCovariancePopExpressionOperator",
+      "resource" : "covariancePopExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/covariancePop",
@@ -388,8 +388,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testCovarianceSampExpressionOperator",
+      "resource" : "covarianceSampExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/covarianceSamp",
@@ -397,14 +397,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testAddAFutureDate",
+      "resource" : "addAFutureDate"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testAdjustForDaylightSavingsTime",
+      "resource" : "adjustForDaylightSavingsTime"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testFilterOnADateRange",
+      "resource" : "filterOnADateRange"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/dateAdd",
@@ -412,14 +412,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testElapsedTime",
+      "resource" : "elapsedTime"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testResultPrecision",
+      "resource" : "resultPrecision"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testWeeksPerMonth",
+      "resource" : "weeksPerMonth"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/dateDiff",
@@ -427,8 +427,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testDateFromPartsExpressionOperator",
+      "resource" : "dateFromPartsExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/dateFromParts",
@@ -436,14 +436,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testConvertingDates",
+      "resource" : "convertingDates"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testOnError",
+      "resource" : "onError"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testOnNull",
+      "resource" : "onNull"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/dateFromString",
@@ -451,14 +451,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testAdjustForDaylightSavingsTime",
+      "resource" : "adjustForDaylightSavingsTime"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testFilterByRelativeDates",
+      "resource" : "filterByRelativeDates"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testSubtractAFixedAmount",
+      "resource" : "subtractAFixedAmount"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/dateSubtract",
@@ -466,8 +466,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testDateToPartsExpressionOperator",
+      "resource" : "dateToPartsExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/dateToParts",
@@ -475,8 +475,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testDateToStringExpressionOperator",
+      "resource" : "dateToStringExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/dateToString",
@@ -484,11 +484,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testTruncateOrderDatesAndObtainQuantitySumInAGroupPipelineStage",
+      "resource" : "truncateOrderDatesAndObtainQuantitySumInAGroupPipelineStage"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testTruncateOrderDatesInAProjectPipelineStage",
+      "resource" : "truncateOrderDatesInAProjectPipelineStage"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/dateTrunc",
@@ -496,8 +496,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testDayOfMonthExpressionOperator",
+      "resource" : "dayOfMonthExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/dayOfMonth",
@@ -505,8 +505,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testDayOfWeekExpressionOperator",
+      "resource" : "dayOfWeekExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/dayOfWeek",
@@ -514,8 +514,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testDayOfYearExpressionOperator",
+      "resource" : "dayOfYearExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/dayOfYear",
@@ -523,8 +523,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testDegreesToRadiansExpressionOperator",
+      "resource" : "degreesToRadiansExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/degreesToRadians",
@@ -532,14 +532,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testDenseRankForDuplicateNullAndMissingValues",
+      "resource" : "denseRankForDuplicateNullAndMissingValues"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testDenseRankPartitionsByADateField",
+      "resource" : "denseRankPartitionsByADateField"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testDenseRankPartitionsByAnIntegerField",
+      "resource" : "denseRankPartitionsByAnIntegerField"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/denseRank",
@@ -547,8 +547,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testDerivativeWindowFunctionExpressionOperator",
+      "resource" : "derivativeWindowFunctionExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/derivative",
@@ -556,8 +556,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testDivideExpressionOperator",
+      "resource" : "divideExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/divide",
@@ -565,11 +565,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testDocumentNumberForDuplicateNullAndMissingValues",
+      "resource" : "documentNumberForDuplicateNullAndMissingValues"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testDocumentNumberForEachState",
+      "resource" : "documentNumberForEachState"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/documentNumber",
@@ -577,8 +577,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testEqExpressionOperator",
+      "resource" : "eqExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/eq",
@@ -586,8 +586,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testExpExpressionOperator",
+      "resource" : "expExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/exp",
@@ -595,11 +595,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testExponentialMovingAverageUsingAlpha",
+      "resource" : "exponentialMovingAverageUsingAlpha"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testExponentialMovingAverageUsingN",
+      "resource" : "exponentialMovingAverageUsingN"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/expMovingAvg",
@@ -607,20 +607,20 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testFilterBasedOnRegularExpressionMatch",
+      "resource" : "filterBasedOnRegularExpressionMatch"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testFilterBasedOnStringEqualityMatch",
+      "resource" : "filterBasedOnStringEqualityMatch"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testFilterExpressionOperator",
+      "resource" : "filterExpressionOperator"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testLimitGreaterThanPossibleMatches",
+      "resource" : "limitGreaterThanPossibleMatches"
     }, {
-      "method" : "testExample5",
-      "resource" : "example5"
+      "method" : "testUseTheLimitField",
+      "resource" : "useTheLimitField"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/filter",
@@ -628,14 +628,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testMissingData",
+      "resource" : "missingData"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseInGroupStage",
+      "resource" : "useInGroupStage"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testUseInSetWindowFieldsStage",
+      "resource" : "useInSetWindowFieldsStage"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/first",
@@ -643,20 +643,20 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testComputingNBasedOnTheGroupKeyForGroup",
+      "resource" : "computingNBasedOnTheGroupKeyForGroup"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testFindTheFirstThreePlayerScoresForASingleGame",
+      "resource" : "findTheFirstThreePlayerScoresForASingleGame"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testFindingTheFirstThreePlayerScoresAcrossMultipleGames",
+      "resource" : "findingTheFirstThreePlayerScoresAcrossMultipleGames"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testUsingFirstNAsAnAggregationExpression",
+      "resource" : "usingFirstNAsAnAggregationExpression"
     }, {
-      "method" : "testExample5",
-      "resource" : "example5"
+      "method" : "testUsingSortWithFirstN",
+      "resource" : "usingSortWithFirstN"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/firstN",
@@ -664,8 +664,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testFloorExpressionOperator",
+      "resource" : "floorExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/floor",
@@ -673,11 +673,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testAlternativeToWhere",
+      "resource" : "alternativeToWhere"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUsageExample",
+      "resource" : "usageExample"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/function",
@@ -685,14 +685,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testQueryAFieldInASubDocument",
+      "resource" : "queryAFieldInASubDocument"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testQueryFieldsThatContainPeriods",
+      "resource" : "queryFieldsThatContainPeriods"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testQueryFieldsThatStartWithADollarSign",
+      "resource" : "queryFieldsThatStartWithADollarSign"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/getField",
@@ -700,8 +700,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testGtExpressionOperator",
+      "resource" : "gtExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/gt",
@@ -709,8 +709,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testGteExpressionOperator",
+      "resource" : "gteExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/gte",
@@ -718,8 +718,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testHourExpressionOperator",
+      "resource" : "hourExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/hour",
@@ -727,11 +727,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testMultipleInputExpressions",
+      "resource" : "multipleInputExpressions"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testSingleInputExpression",
+      "resource" : "singleInputExpression"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/ifNull",
@@ -739,8 +739,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testInExpressionOperator",
+      "resource" : "inExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/in",
@@ -748,8 +748,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testIndexOfArrayExpressionOperator",
+      "resource" : "indexOfArrayExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/indexOfArray",
@@ -757,8 +757,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testIndexOfBytesExpressionOperator",
+      "resource" : "indexOfBytesExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/indexOfBytes",
@@ -766,8 +766,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testIndexOfCpExpressionOperator",
+      "resource" : "indexOfCpExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/indexOfCP",
@@ -775,8 +775,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testIntegralExpressionOperator",
+      "resource" : "integralExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/integral",
@@ -784,8 +784,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testIsArrayExpressionOperator",
+      "resource" : "isArrayExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/isArray",
@@ -793,11 +793,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testConditionallyModifyFieldsUsingIsNumber",
+      "resource" : "conditionallyModifyFieldsUsingIsNumber"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseIsNumberToCheckIfAFieldIsNumeric",
+      "resource" : "useIsNumberToCheckIfAFieldIsNumeric"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/isNumber",
@@ -805,8 +805,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testIsoDayOfWeekExpressionOperator",
+      "resource" : "isoDayOfWeekExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/isoDayOfWeek",
@@ -814,8 +814,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testIsoWeekExpressionOperator",
+      "resource" : "isoWeekExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/isoWeek",
@@ -823,8 +823,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testIsoWeekYearExpressionOperator",
+      "resource" : "isoWeekYearExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/isoWeekYear",
@@ -832,11 +832,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testUseInGroupStage",
+      "resource" : "useInGroupStage"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseInSetWindowFieldsStage",
+      "resource" : "useInSetWindowFieldsStage"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/last",
@@ -844,20 +844,20 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testComputingNBasedOnTheGroupKeyForGroup",
+      "resource" : "computingNBasedOnTheGroupKeyForGroup"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testFindTheLastThreePlayerScoresForASingleGame",
+      "resource" : "findTheLastThreePlayerScoresForASingleGame"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testFindingTheLastThreePlayerScoresAcrossMultipleGames",
+      "resource" : "findingTheLastThreePlayerScoresAcrossMultipleGames"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testUsingLastNAsAnAggregationExpression",
+      "resource" : "usingLastNAsAnAggregationExpression"
     }, {
-      "method" : "testExample5",
-      "resource" : "example5"
+      "method" : "testUsingSortWithLastN",
+      "resource" : "usingSortWithLastN"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/lastN",
@@ -865,8 +865,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testLetExpressionOperator",
+      "resource" : "letExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/let",
@@ -874,11 +874,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testFillMissingValuesWithLinearInterpolation",
+      "resource" : "fillMissingValuesWithLinearInterpolation"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseMultipleFillMethodsInASingleStage",
+      "resource" : "useMultipleFillMethodsInASingleStage"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/linearFill",
@@ -886,11 +886,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testProjectANewFieldWithValue1",
+      "resource" : "projectANewFieldWithValue1"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testTreatAsALiteral",
+      "resource" : "treatAsALiteral"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/literal",
@@ -898,8 +898,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testLnExpressionOperator",
+      "resource" : "lnExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/ln",
@@ -907,11 +907,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testFillMissingValuesWithTheLastObservedValue",
+      "resource" : "fillMissingValuesWithTheLastObservedValue"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseMultipleFillMethodsInASingleStage",
+      "resource" : "useMultipleFillMethodsInASingleStage"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/locf",
@@ -919,8 +919,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testLogExpressionOperator",
+      "resource" : "logExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/log",
@@ -928,8 +928,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testLog10ExpressionOperator",
+      "resource" : "log10ExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/log10",
@@ -937,8 +937,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testLtExpressionOperator",
+      "resource" : "ltExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/lt",
@@ -946,8 +946,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testLteExpressionOperator",
+      "resource" : "lteExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/lte",
@@ -955,8 +955,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testLtrimExpressionOperator",
+      "resource" : "ltrimExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/ltrim",
@@ -964,14 +964,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testAddToEachElementOfAnArray",
+      "resource" : "addToEachElementOfAnArray"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testConvertCelsiusTemperaturesToFahrenheit",
+      "resource" : "convertCelsiusTemperaturesToFahrenheit"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testTruncateEachArrayElement",
+      "resource" : "truncateEachArrayElement"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/map",
@@ -979,14 +979,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testUseInGroupStage",
+      "resource" : "useInGroupStage"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseInProjectStage",
+      "resource" : "useInProjectStage"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testUseInSetWindowFieldsStage",
+      "resource" : "useInSetWindowFieldsStage"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/max",
@@ -994,14 +994,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testComputingNBasedOnTheGroupKeyForGroup",
+      "resource" : "computingNBasedOnTheGroupKeyForGroup"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testFindTheMaximumThreeScoresForASingleGame",
+      "resource" : "findTheMaximumThreeScoresForASingleGame"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testFindingTheMaximumThreeScoresAcrossMultipleGames",
+      "resource" : "findingTheMaximumThreeScoresAcrossMultipleGames"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/maxN",
@@ -1009,14 +1009,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testUseMedianAsAnAccumulator",
+      "resource" : "useMedianAsAnAccumulator"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseMedianInAProjectStage",
+      "resource" : "useMedianInAProjectStage"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testUseMedianInASetWindowFieldStage",
+      "resource" : "useMedianInASetWindowFieldStage"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/median",
@@ -1024,11 +1024,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testMergeObjects",
+      "resource" : "mergeObjects"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testMergeObjectsAsAnAccumulator",
+      "resource" : "mergeObjectsAsAnAccumulator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/mergeObjects",
@@ -1036,23 +1036,23 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testMetaIndexKeyAggregation",
+      "resource" : "metaIndexKeyAggregation"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testMetaIndexKeyAggregationWithoutSupportingIndex",
+      "resource" : "metaIndexKeyAggregationWithoutSupportingIndex"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testMetaIndexKeyFindAndProject",
+      "resource" : "metaIndexKeyFindAndProject"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testMetaIndexKeyFindAndProjectWithoutSupportingIndex",
+      "resource" : "metaIndexKeyFindAndProjectWithoutSupportingIndex"
     }, {
-      "method" : "testExample5",
-      "resource" : "example5"
+      "method" : "testMetaTextScoreAggregation",
+      "resource" : "metaTextScoreAggregation"
     }, {
-      "method" : "testExample6",
-      "resource" : "example6"
+      "method" : "testMetaTextScoreFindAndProject",
+      "resource" : "metaTextScoreFindAndProject"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/meta",
@@ -1060,8 +1060,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testMillisecondExpressionOperator",
+      "resource" : "millisecondExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/millisecond",
@@ -1069,14 +1069,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testUseInGroupStage",
+      "resource" : "useInGroupStage"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseInProjectStage",
+      "resource" : "useInProjectStage"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testUseInSetWindowFieldsStage",
+      "resource" : "useInSetWindowFieldsStage"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/min",
@@ -1084,14 +1084,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testComputingNBasedOnTheGroupKeyForGroup",
+      "resource" : "computingNBasedOnTheGroupKeyForGroup"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testFindTheMinimumThreeScoresForASingleGame",
+      "resource" : "findTheMinimumThreeScoresForASingleGame"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testFindingTheMinimumThreeDocumentsAcrossMultipleGames",
+      "resource" : "findingTheMinimumThreeDocumentsAcrossMultipleGames"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/minN",
@@ -1099,8 +1099,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testMinuteExpressionOperator",
+      "resource" : "minuteExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/minute",
@@ -1108,11 +1108,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testModExpressionOperator",
+      "resource" : "modExpressionOperator"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testNegativeDividend",
+      "resource" : "negativeDividend"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/mod",
@@ -1120,8 +1120,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testMonthExpressionOperator",
+      "resource" : "monthExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/month",
@@ -1129,8 +1129,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testMultiplyExpressionOperator",
+      "resource" : "multiplyExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/multiply",
@@ -1138,8 +1138,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testNeExpressionOperator",
+      "resource" : "neExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/ne",
@@ -1147,8 +1147,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testNotExpressionOperator",
+      "resource" : "notExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/not",
@@ -1156,14 +1156,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testObjectToArrayArrayToObjectExample",
+      "resource" : "objectToArrayArrayToObjectExample"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testObjectToArrayExample",
+      "resource" : "objectToArrayExample"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testObjectToArrayToSumNestedFields",
+      "resource" : "objectToArrayToSumNestedFields"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/objectToArray",
@@ -1171,8 +1171,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testOrExpressionOperator",
+      "resource" : "orExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/or",
@@ -1180,20 +1180,20 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testCalculateASingleValueAsAnAccumulator",
+      "resource" : "calculateASingleValueAsAnAccumulator"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testCalculateMultipleValuesAsAnAccumulator",
+      "resource" : "calculateMultipleValuesAsAnAccumulator"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testUsePercentileInAProjectStage",
+      "resource" : "usePercentileInAProjectStage"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testUsePercentileInASetWindowFieldStage",
+      "resource" : "usePercentileInASetWindowFieldStage"
     } ],
     "manual" : [ {
-      "method" : "testExample5",
+      "method" : "testUsePercentileInASetWindowFieldStagePlaceholder",
       "reason" : "Empty placeholder for the $setWindowFields example; it has no fixture and asserts nothing."
     } ],
     "resources" : "dev/morphia/test/aggregation/expressions/percentile",
@@ -1201,8 +1201,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testPowExpressionOperator",
+      "resource" : "powExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/pow",
@@ -1210,11 +1210,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testUseInGroupStage",
+      "resource" : "useInGroupStage"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseInSetWindowFieldsStage",
+      "resource" : "useInSetWindowFieldsStage"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/push",
@@ -1222,8 +1222,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testRadiansToDegreesExpressionOperator",
+      "resource" : "radiansToDegreesExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/radiansToDegrees",
@@ -1231,11 +1231,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testGenerateRandomDataPoints",
+      "resource" : "generateRandomDataPoints"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testSelectRandomItemsFromACollection",
+      "resource" : "selectRandomItemsFromACollection"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/rand",
@@ -1243,8 +1243,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testRangeExpressionOperator",
+      "resource" : "rangeExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/range",
@@ -1252,14 +1252,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testRankPartitionsByADateField",
+      "resource" : "rankPartitionsByADateField"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testRankPartitionsByAnIntegerField",
+      "resource" : "rankPartitionsByAnIntegerField"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testRankPartitionsContainingDuplicateValuesNullsOrMissingData",
+      "resource" : "rankPartitionsContainingDuplicateValuesNullsOrMissingData"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/rank",
@@ -1267,14 +1267,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testArrayConcatenation",
+      "resource" : "arrayConcatenation"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testMultiplication",
+      "resource" : "multiplication"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testStringConcatenation",
+      "resource" : "stringConcatenation"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/reduce",
@@ -1282,17 +1282,17 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testApplyRegexFindToStringElementsOfAnArray",
+      "resource" : "applyRegexFindToStringElementsOfAnArray"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testRegexFindAndItsOptions",
+      "resource" : "regexFindAndItsOptions"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testUseCapturedGroupingsToParseUserName",
+      "resource" : "useCapturedGroupingsToParseUserName"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testUseRegexFindToParseEmailFromString",
+      "resource" : "useRegexFindToParseEmailFromString"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/regexFind",
@@ -1300,14 +1300,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testRegexFindAllAndItsOptions",
+      "resource" : "regexFindAllAndItsOptions"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseCapturedGroupingsToParseUserName",
+      "resource" : "useCapturedGroupingsToParseUserName"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testUseRegexFindAllToParseEmailFromString",
+      "resource" : "useRegexFindAllToParseEmailFromString"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/regexFindAll",
@@ -1315,11 +1315,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testRegexMatchAndItsOptions",
+      "resource" : "regexMatchAndItsOptions"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseRegexMatchToCheckEmailAddress",
+      "resource" : "useRegexMatchToCheckEmailAddress"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/regexMatch",
@@ -1327,8 +1327,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testReplaceAllExpressionOperator",
+      "resource" : "replaceAllExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/replaceAll",
@@ -1336,8 +1336,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testReplaceOneExpressionOperator",
+      "resource" : "replaceOneExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/replaceOne",
@@ -1345,8 +1345,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testReverseArrayExpressionOperator",
+      "resource" : "reverseArrayExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/reverseArray",
@@ -1354,8 +1354,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testRoundExpressionOperator",
+      "resource" : "roundExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/round",
@@ -1363,8 +1363,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testRtrimExpressionOperator",
+      "resource" : "rtrimExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/rtrim",
@@ -1372,8 +1372,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSampleRateExpressionOperator",
+      "resource" : "sampleRateExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/sampleRate",
@@ -1381,8 +1381,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSecondExpressionOperator",
+      "resource" : "secondExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/second",
@@ -1390,8 +1390,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSetDifferenceExpressionOperator",
+      "resource" : "setDifferenceExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/setDifference",
@@ -1399,8 +1399,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSetEqualsExpressionOperator",
+      "resource" : "setEqualsExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/setEquals",
@@ -1408,23 +1408,23 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testAddFieldsThatContainPeriods",
+      "resource" : "addFieldsThatContainPeriods"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testAddFieldsThatStartWithADollarSign",
+      "resource" : "addFieldsThatStartWithADollarSign"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testRemoveFieldsThatContainPeriods",
+      "resource" : "removeFieldsThatContainPeriods"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testRemoveFieldsThatStartWithADollarSign",
+      "resource" : "removeFieldsThatStartWithADollarSign"
     }, {
-      "method" : "testExample5",
-      "resource" : "example5"
+      "method" : "testUpdateFieldsThatContainPeriods",
+      "resource" : "updateFieldsThatContainPeriods"
     }, {
-      "method" : "testExample6",
-      "resource" : "example6"
+      "method" : "testUpdateFieldsThatStartWithADollarSign",
+      "resource" : "updateFieldsThatStartWithADollarSign"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/setField",
@@ -1432,11 +1432,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testElementsArrayExample",
+      "resource" : "elementsArrayExample"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testRetrieveDocumentsForRolesGrantedToTheCurrentUser",
+      "resource" : "retrieveDocumentsForRolesGrantedToTheCurrentUser"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/setIntersection",
@@ -1444,8 +1444,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSetIsSubsetExpressionOperator",
+      "resource" : "setIsSubsetExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/setIsSubset",
@@ -1453,8 +1453,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSetUnionAccumulatorOperator",
+      "resource" : "setUnionAccumulatorOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/setUnion",
@@ -1462,11 +1462,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testShiftUsingANegativeInteger",
+      "resource" : "shiftUsingANegativeInteger"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testShiftUsingAPositiveInteger",
+      "resource" : "shiftUsingAPositiveInteger"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/shift",
@@ -1474,11 +1474,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSineOfValueInDegrees",
+      "resource" : "sineOfValueInDegrees"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testSineOfValueInRadians",
+      "resource" : "sineOfValueInRadians"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/sin",
@@ -1486,11 +1486,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testHyperbolicSineOfValueInDegrees",
+      "resource" : "hyperbolicSineOfValueInDegrees"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testHyperbolicSineOfValueInRadians",
+      "resource" : "hyperbolicSineOfValueInRadians"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/sinh",
@@ -1498,8 +1498,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSizeExpressionOperator",
+      "resource" : "sizeExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/size",
@@ -1507,8 +1507,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSliceExpressionOperator",
+      "resource" : "sliceExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/slice",
@@ -1516,20 +1516,20 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSortAnArrayOfIntegers",
+      "resource" : "sortAnArrayOfIntegers"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testSortOnAField",
+      "resource" : "sortOnAField"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testSortOnASubfield",
+      "resource" : "sortOnASubfield"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testSortOnMixedTypeFields",
+      "resource" : "sortOnMixedTypeFields"
     }, {
-      "method" : "testExample5",
-      "resource" : "example5"
+      "method" : "testSortOnMultipleFields",
+      "resource" : "sortOnMultipleFields"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/sortArray",
@@ -1537,8 +1537,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSplitExpressionOperator",
+      "resource" : "splitExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/split",
@@ -1546,8 +1546,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSqrtExpressionOperator",
+      "resource" : "sqrtExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/sqrt",
@@ -1555,14 +1555,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testUseInGroupStage",
+      "resource" : "useInGroupStage"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseInProjectStage",
+      "resource" : "useInProjectStage"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testUseInSetWindowFieldsStage",
+      "resource" : "useInSetWindowFieldsStage"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/stdDevPop",
@@ -1570,11 +1570,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testUseInGroupStage",
+      "resource" : "useInGroupStage"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseInSetWindowFieldsStage",
+      "resource" : "useInSetWindowFieldsStage"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/stdDevSamp",
@@ -1582,8 +1582,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSingleByteAndMultibyteCharacterSet",
+      "resource" : "singleByteAndMultibyteCharacterSet"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/strLenBytes",
@@ -1591,8 +1591,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSingleByteAndMultibyteCharacterSet",
+      "resource" : "singleByteAndMultibyteCharacterSet"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/strLenCP",
@@ -1600,8 +1600,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testStrcasecmpExpressionOperator",
+      "resource" : "strcasecmpExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/strcasecmp",
@@ -1609,11 +1609,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSingleByteAndMultibyteCharacterSet",
+      "resource" : "singleByteAndMultibyteCharacterSet"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testSingleByteCharacterSet",
+      "resource" : "singleByteCharacterSet"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/substrBytes",
@@ -1621,11 +1621,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSingleByteAndMultibyteCharacterSet",
+      "resource" : "singleByteAndMultibyteCharacterSet"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testSingleByteCharacterSet",
+      "resource" : "singleByteCharacterSet"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/substrCP",
@@ -1633,14 +1633,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSubtractMillisecondsFromADate",
+      "resource" : "subtractMillisecondsFromADate"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testSubtractNumbers",
+      "resource" : "subtractNumbers"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testSubtractTwoDates",
+      "resource" : "subtractTwoDates"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/subtract",
@@ -1648,14 +1648,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testUseInGroupStage",
+      "resource" : "useInGroupStage"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseInProjectStage",
+      "resource" : "useInProjectStage"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testUseInSetWindowFieldsStage",
+      "resource" : "useInSetWindowFieldsStage"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/sum",
@@ -1663,8 +1663,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSwitchAggregationExpressionOperator",
+      "resource" : "switchAggregationExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/switch",
@@ -1672,11 +1672,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testTangentOfValueInDegrees",
+      "resource" : "tangentOfValueInDegrees"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testTangentOfValueInRadians",
+      "resource" : "tangentOfValueInRadians"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/tan",
@@ -1684,11 +1684,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testHyperbolicTangentInDegrees",
+      "resource" : "hyperbolicTangentInDegrees"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testHyperbolicTangentInRadians",
+      "resource" : "hyperbolicTangentInRadians"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/tanh",
@@ -1696,8 +1696,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testToBoolExpressionOperator",
+      "resource" : "toBoolExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/toBool",
@@ -1705,8 +1705,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testToDateExpressionOperator",
+      "resource" : "toDateExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/toDate",
@@ -1714,8 +1714,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testToDecimalExpressionOperator",
+      "resource" : "toDecimalExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/toDecimal",
@@ -1723,8 +1723,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testToDoubleExpressionOperator",
+      "resource" : "toDoubleExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/toDouble",
@@ -1732,8 +1732,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testToIntExpressionOperator",
+      "resource" : "toIntExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/toInt",
@@ -1741,8 +1741,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testToLongExpressionOperator",
+      "resource" : "toLongExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/toLong",
@@ -1750,8 +1750,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testToLowerExpressionOperator",
+      "resource" : "toLowerExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/toLower",
@@ -1759,8 +1759,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testToObjectIdExpressionOperator",
+      "resource" : "toObjectIdExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/toObjectId",
@@ -1768,8 +1768,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testToStringExpressionOperator",
+      "resource" : "toStringExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/toString",
@@ -1777,8 +1777,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testToUuidExpressionOperator",
+      "resource" : "toUuidExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/toUUID",
@@ -1786,8 +1786,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testToUpperExpressionOperator",
+      "resource" : "toUpperExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/toUpper",
@@ -1795,11 +1795,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testFindTheTopScore",
+      "resource" : "findTheTopScore"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testFindTheTopScoreAcrossMultipleGames",
+      "resource" : "findTheTopScoreAcrossMultipleGames"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/top",
@@ -1807,14 +1807,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testComputingNBasedOnTheGroupKeyForGroup",
+      "resource" : "computingNBasedOnTheGroupKeyForGroup"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testFindTheThreeHighestScores",
+      "resource" : "findTheThreeHighestScores"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testFindingTheThreeHighestScoreDocumentsAcrossMultipleGames",
+      "resource" : "findingTheThreeHighestScoreDocumentsAcrossMultipleGames"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/topN",
@@ -1822,8 +1822,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testTrimExpressionOperator",
+      "resource" : "trimExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/trim",
@@ -1831,8 +1831,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testTruncExpressionOperator",
+      "resource" : "truncExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/trunc",
@@ -1840,32 +1840,32 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testObtainTheIncrementingOrdinalFromATimestampField",
+      "resource" : "obtainTheIncrementingOrdinalFromATimestampField"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/tsIncrement",
     "type" : "dev.morphia.test.aggregation.expressions.TestTsIncrement",
     "unbound" : [ {
       "reason" : "Change-stream watch example kept only as a name and lock marker; it has no action, data or test method.",
-      "resource" : "example2"
+      "resource" : "useTsIncrementInAChangeStreamCursorToMonitorCollectionChanges"
     } ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testObtainTheNumberOfSecondsFromATimestampField",
+      "resource" : "obtainTheNumberOfSecondsFromATimestampField"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/tsSecond",
     "type" : "dev.morphia.test.aggregation.expressions.TestTsSecond",
     "unbound" : [ {
       "reason" : "Change-stream watch example kept only as a name and lock marker; it has no action, data or test method.",
-      "resource" : "example2"
+      "resource" : "useTsSecondInAChangeStreamCursorToMonitorCollectionChanges"
     } ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testTypeExpressionOperator",
+      "resource" : "typeExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/type",
@@ -1873,14 +1873,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testRemoveASubfield",
+      "resource" : "removeASubfield"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testRemoveFieldsThatContainPeriods",
+      "resource" : "removeFieldsThatContainPeriods"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testRemoveFieldsThatStartWithADollarSign",
+      "resource" : "removeFieldsThatStartWithADollarSign"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/unsetField",
@@ -1888,8 +1888,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testWeekExpressionOperator",
+      "resource" : "weekExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/week",
@@ -1897,8 +1897,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testYearExpressionOperator",
+      "resource" : "yearExpressionOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/year",
@@ -1906,11 +1906,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testFilteringAndPreservingIndexes",
+      "resource" : "filteringAndPreservingIndexes"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testMatrixTransposition",
+      "resource" : "matrixTransposition"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/expressions/zip",
@@ -1918,20 +1918,20 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testAddElementToAnArray",
+      "resource" : "addElementToAnArray"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testAddingFieldsToAnEmbeddedDocument",
+      "resource" : "addingFieldsToAnEmbeddedDocument"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testOverwritingAnExistingField",
+      "resource" : "overwritingAnExistingField"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testRemoveFields",
+      "resource" : "removeFields"
     }, {
-      "method" : "testExample5",
-      "resource" : "example5"
+      "method" : "testUsingTwoAddFieldsStages",
+      "resource" : "usingTwoAddFieldsStages"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/addFields",
@@ -1939,11 +1939,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testBucketByYearAndFilterByBucketResults",
+      "resource" : "bucketByYearAndFilterByBucketResults"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseBucketWithFacetToBucketByMultipleFields",
+      "resource" : "useBucketWithFacetToBucketByMultipleFields"
     } ],
     "manual" : [ {
       "method" : "testBucket",
@@ -1966,14 +1966,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testMultiFacetedAggregation",
+      "resource" : "multiFacetedAggregation"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testMultiFacetedAggregationAsPipeline",
+      "resource" : "multiFacetedAggregationAsPipeline"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testSingleFacetAggregation",
+      "resource" : "singleFacetAggregation"
     } ],
     "manual" : [ {
       "method" : "testWithGranularity",
@@ -1999,8 +1999,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testCountAggregationStage",
+      "resource" : "countAggregationStage"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/count",
@@ -2008,23 +2008,23 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testInactiveSessionsReplicaSet",
+      "resource" : "inactiveSessionsReplicaSet"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testInactiveSessionsShardedCluster",
+      "resource" : "inactiveSessionsShardedCluster"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testInactiveSessionsShardedClusterLocalOpsTrue",
+      "resource" : "inactiveSessionsShardedClusterLocalOpsTrue"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testSampledQueriesReplicaSet",
+      "resource" : "sampledQueriesReplicaSet"
     }, {
-      "method" : "testExample5",
-      "resource" : "example5"
+      "method" : "testSampledQueriesShardedClusterMongodShardsvr",
+      "resource" : "sampledQueriesShardedClusterMongodShardsvr"
     }, {
-      "method" : "testExample6",
-      "resource" : "example6"
+      "method" : "testSampledQueriesShardedClusterMongos",
+      "resource" : "sampledQueriesShardedClusterMongos"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/currentOp",
@@ -2032,11 +2032,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testDensifictionWithPartitions",
+      "resource" : "densifictionWithPartitions"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testDensifyTimeSeriesData",
+      "resource" : "densifyTimeSeriesData"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/densify",
@@ -2044,11 +2044,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testTestAPipelineStage",
+      "resource" : "testAPipelineStage"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseADocumentsStageInALookupStage",
+      "resource" : "useADocumentsStageInALookupStage"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/documents",
@@ -2056,8 +2056,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testFacetAggregationStage",
+      "resource" : "facetAggregationStage"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/facet",
@@ -2065,23 +2065,23 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testFillDataForDistinctPartitions",
+      "resource" : "fillDataForDistinctPartitions"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testFillMissingFieldValuesBasedOnTheLastObservedValue",
+      "resource" : "fillMissingFieldValuesBasedOnTheLastObservedValue"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testFillMissingFieldValuesWithAConstantValue",
+      "resource" : "fillMissingFieldValuesWithAConstantValue"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testFillMissingFieldValuesWithLinearInterpolation",
+      "resource" : "fillMissingFieldValuesWithLinearInterpolation"
     }, {
-      "method" : "testExample5",
-      "resource" : "example5"
+      "method" : "testIndicateIfAFieldWasPopulatedUsingFill",
+      "resource" : "indicateIfAFieldWasPopulatedUsingFill"
     }, {
-      "method" : "testExample6",
-      "resource" : "example6"
+      "method" : "testInterpolateIdenticalValuesInDifferentPartitions",
+      "resource" : "interpolateIdenticalValuesInDifferentPartitions"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/fill",
@@ -2089,20 +2089,20 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testGeoNearWithBoundLetOption",
+      "resource" : "geoNearWithBoundLetOption"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testGeoNearWithTheLetOption",
+      "resource" : "geoNearWithTheLetOption"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testMaximumDistance",
+      "resource" : "maximumDistance"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testMinimumDistance",
+      "resource" : "minimumDistance"
     }, {
-      "method" : "testExample5",
-      "resource" : "example5"
+      "method" : "testSpecifyWhichGeospatialIndexToUse",
+      "resource" : "specifyWhichGeospatialIndexToUse"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/geoNear",
@@ -2110,14 +2110,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testAcrossMultipleCollections",
+      "resource" : "acrossMultipleCollections"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testWithAQueryFilter",
+      "resource" : "withAQueryFilter"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testWithinASingleCollection",
+      "resource" : "withinASingleCollection"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/graphLookup",
@@ -2125,20 +2125,20 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testCalculateCountSumAndAverage",
+      "resource" : "calculateCountSumAndAverage"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testCountTheNumberOfDocumentsInACollection",
+      "resource" : "countTheNumberOfDocumentsInACollection"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testGroupByItemHaving",
+      "resource" : "groupByItemHaving"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testPivotData",
+      "resource" : "pivotData"
     }, {
-      "method" : "testExample5",
-      "resource" : "example5"
+      "method" : "testRetrieveDistinctValues",
+      "resource" : "retrieveDistinctValues"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/group",
@@ -2146,8 +2146,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testIndexStatsAggregationStage",
+      "resource" : "indexStatsAggregationStage"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/indexStats",
@@ -2155,8 +2155,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testLimitAggregationStage",
+      "resource" : "limitAggregationStage"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/limit",
@@ -2164,11 +2164,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testBalancingConfiguration",
+      "resource" : "balancingConfiguration"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testListInformationFromAllCollections",
+      "resource" : "listInformationFromAllCollections"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/listClusterCatalog",
@@ -2176,26 +2176,26 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testNamespacesInSubpipelines",
+      "resource" : "namespacesInSubpipelines"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testPerformAConciseCorrelatedSubqueryWithLookup",
+      "resource" : "performAConciseCorrelatedSubqueryWithLookup"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testPerformASingleEqualityJoinWithLookup",
+      "resource" : "performASingleEqualityJoinWithLookup"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testPerformAnUncorrelatedSubqueryWithLookup",
+      "resource" : "performAnUncorrelatedSubqueryWithLookup"
     }, {
-      "method" : "testExample5",
-      "resource" : "example5"
+      "method" : "testPerformMultipleJoinsAndACorrelatedSubqueryWithLookup",
+      "resource" : "performMultipleJoinsAndACorrelatedSubqueryWithLookup"
     }, {
-      "method" : "testExample6",
-      "resource" : "example6"
+      "method" : "testUseLookupWithAnArray",
+      "resource" : "useLookupWithAnArray"
     }, {
-      "method" : "testExample7",
-      "resource" : "example7"
+      "method" : "testUseLookupWithMergeObjects",
+      "resource" : "useLookupWithMergeObjects"
     } ],
     "manual" : [ {
       "method" : "testLookup",
@@ -2206,11 +2206,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testEqualityMatch",
+      "resource" : "equalityMatch"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testPerformACount",
+      "resource" : "performACount"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/match",
@@ -2218,29 +2218,29 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testMergeResultsFromMultipleCollections",
+      "resource" : "mergeResultsFromMultipleCollections"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testOnDemandMaterializedViewInitialCreation",
+      "resource" : "onDemandMaterializedViewInitialCreation"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testOnDemandMaterializedViewUpdateReplaceData",
+      "resource" : "onDemandMaterializedViewUpdateReplaceData"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testOnlyInsertNewData",
+      "resource" : "onlyInsertNewData"
     }, {
-      "method" : "testExample5",
-      "resource" : "example5"
+      "method" : "testUseThePipelineToCustomizeTheMerge",
+      "resource" : "useThePipelineToCustomizeTheMerge"
     }, {
-      "method" : "testExample6",
-      "resource" : "example6"
+      "method" : "testUseVariablesToCustomizeTheMergeAggregateCommand",
+      "resource" : "useVariablesToCustomizeTheMergeAggregateCommand"
     }, {
-      "method" : "testExample7",
-      "resource" : "example7"
+      "method" : "testUseVariablesToCustomizeTheMergeMergeAndAggregate",
+      "resource" : "useVariablesToCustomizeTheMergeMergeAndAggregate"
     }, {
-      "method" : "testExample8",
-      "resource" : "example8"
+      "method" : "testUseVariablesToCustomizeTheMergeMergeStage",
+      "resource" : "useVariablesToCustomizeTheMergeMergeStage"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/merge",
@@ -2248,11 +2248,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testOutputToADifferentDatabase",
+      "resource" : "outputToADifferentDatabase"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testOutputToSameDatabase",
+      "resource" : "outputToSameDatabase"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/out",
@@ -2260,14 +2260,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testFindCacheEntryDetailsForAPlanCacheShapeHash",
+      "resource" : "findCacheEntryDetailsForAPlanCacheShapeHash"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testFindCacheEntryDetailsForAQueryHash",
+      "resource" : "findCacheEntryDetailsForAQueryHash"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testReturnInformationForAllEntriesInTheQueryCache",
+      "resource" : "returnInformationForAllEntriesInTheQueryCache"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/planCacheStats",
@@ -2275,32 +2275,32 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testArrayIndexesAreUnsupported",
+      "resource" : "arrayIndexesAreUnsupported"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testArrayIndexesAreUnsupportedFromShellInsert",
+      "resource" : "arrayIndexesAreUnsupportedFromShellInsert"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testConditionallyExcludeFields",
+      "resource" : "conditionallyExcludeFields"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testExcludeFieldsFromOutputDocuments",
+      "resource" : "excludeFieldsFromOutputDocuments"
     }, {
-      "method" : "testExample5",
-      "resource" : "example5"
+      "method" : "testIncludeComputedFields",
+      "resource" : "includeComputedFields"
     }, {
-      "method" : "testExample6",
-      "resource" : "example6"
+      "method" : "testIncludeSpecificFieldsFromEmbeddedDocuments",
+      "resource" : "includeSpecificFieldsFromEmbeddedDocuments"
     }, {
-      "method" : "testExample7",
-      "resource" : "example7"
+      "method" : "testIncludeSpecificFieldsFromEmbeddedDocumentsAsStage",
+      "resource" : "includeSpecificFieldsFromEmbeddedDocumentsAsStage"
     }, {
-      "method" : "testExample8",
-      "resource" : "example8"
+      "method" : "testIncludeSpecificFieldsInOutputDocuments",
+      "resource" : "includeSpecificFieldsInOutputDocuments"
     }, {
-      "method" : "testExample9",
-      "resource" : "example9"
+      "method" : "testSuppressIdFieldInTheOutputDocuments",
+      "resource" : "suppressIdFieldInTheOutputDocuments"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/project",
@@ -2308,11 +2308,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testEvaluateAccessAtEveryDocumentLevel",
+      "resource" : "evaluateAccessAtEveryDocumentLevel"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testExcludeAllFieldsAtAGivenLevel",
+      "resource" : "excludeAllFieldsAtAGivenLevel"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/redact",
@@ -2320,17 +2320,17 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testReplaceRootWithADocumentNestedInAnArray",
+      "resource" : "replaceRootWithADocumentNestedInAnArray"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testReplaceRootWithANewDocumentCreatedFromRootAndADefaultDocument",
+      "resource" : "replaceRootWithANewDocumentCreatedFromRootAndADefaultDocument"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testReplaceRootWithANewlyCreatedDocument",
+      "resource" : "replaceRootWithANewlyCreatedDocument"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testReplaceRootWithAnEmbeddedDocumentField",
+      "resource" : "replaceRootWithAnEmbeddedDocumentField"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/replaceRoot",
@@ -2338,17 +2338,17 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testReplaceWithADocumentNestedInAnArray",
+      "resource" : "replaceWithADocumentNestedInAnArray"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testReplaceWithANewDocumentCreatedFromRootAndADefaultDocument",
+      "resource" : "replaceWithANewDocumentCreatedFromRootAndADefaultDocument"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testReplaceWithANewlyCreatedDocument",
+      "resource" : "replaceWithANewlyCreatedDocument"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testReplaceWithAnEmbeddedDocumentField",
+      "resource" : "replaceWithAnEmbeddedDocumentField"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/replaceWith",
@@ -2356,8 +2356,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSampleAggregationStage",
+      "resource" : "sampleAggregationStage"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/sample",
@@ -2365,20 +2365,20 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testAddElementToAnArray",
+      "resource" : "addElementToAnArray"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testAddingFieldsToAnEmbeddedDocument",
+      "resource" : "addingFieldsToAnEmbeddedDocument"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testCreatingANewFieldWithExistingFields",
+      "resource" : "creatingANewFieldWithExistingFields"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testOverwritingAnExistingField",
+      "resource" : "overwritingAnExistingField"
     }, {
-      "method" : "testExample5",
-      "resource" : "example5"
+      "method" : "testUsingTwoSetStages",
+      "resource" : "usingTwoSetStages"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/set",
@@ -2386,17 +2386,17 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testComparisonWithPreviousValuesExample",
+      "resource" : "comparisonWithPreviousValuesExample"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testDocumentsWindowExamples",
+      "resource" : "documentsWindowExamples"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testRangeWindowExample",
+      "resource" : "rangeWindowExample"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testTimeRangeWindowExamples",
+      "resource" : "timeRangeWindowExamples"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/setWindowFields",
@@ -2404,8 +2404,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSkipAggregationStage",
+      "resource" : "skipAggregationStage"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/skip",
@@ -2413,11 +2413,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testAscendingDescendingSort",
+      "resource" : "ascendingDescendingSort"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testTextScoreMetadataSort",
+      "resource" : "textScoreMetadataSort"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/sort",
@@ -2425,8 +2425,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSortByCountAggregationStage",
+      "resource" : "sortByCountAggregationStage"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/sortByCount",
@@ -2434,17 +2434,17 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testCreateAUnionWithSpecifiedDocuments",
+      "resource" : "createAUnionWithSpecifiedDocuments"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testNamespacesInSubpipelines",
+      "resource" : "namespacesInSubpipelines"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testReport1AllSalesByYearAndStoresAndItems",
+      "resource" : "report1AllSalesByYearAndStoresAndItems"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testReport2AggregatedSalesByItems",
+      "resource" : "report2AggregatedSalesByItems"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/unionWith",
@@ -2452,14 +2452,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testRemoveASingleField",
+      "resource" : "removeASingleField"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testRemoveEmbeddedFields",
+      "resource" : "removeEmbeddedFields"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testRemoveTopLevelFields",
+      "resource" : "removeTopLevelFields"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/aggregation/stages/unset",
@@ -2467,20 +2467,20 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testGroupByUnwoundValues",
+      "resource" : "groupByUnwoundValues"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testMissingOrNonArrayValues",
+      "resource" : "missingOrNonArrayValues"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testPreserveNullAndEmptyArraysAndIncludeArrayIndex",
+      "resource" : "preserveNullAndEmptyArraysAndIncludeArrayIndex"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testUnwindArray",
+      "resource" : "unwindArray"
     }, {
-      "method" : "testExample5",
-      "resource" : "example5"
+      "method" : "testUnwindEmbeddedArrays",
+      "resource" : "unwindEmbeddedArrays"
     } ],
     "manual" : [ {
       "method" : "testUnwind",
@@ -2491,11 +2491,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testUseAllToMatchValues",
+      "resource" : "useAllToMatchValues"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseAllWithElemMatch",
+      "resource" : "useAllWithElemMatch"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/all",
@@ -2503,11 +2503,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testAndQueriesWithMultipleExpressionsSpecifyingTheSameField",
+      "resource" : "andQueriesWithMultipleExpressionsSpecifyingTheSameField"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testAndQueriesWithMultipleExpressionsSpecifyingTheSameOperator",
+      "resource" : "andQueriesWithMultipleExpressionsSpecifyingTheSameOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/and",
@@ -2515,14 +2515,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testBinDataBitmask",
+      "resource" : "binDataBitmask"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testBitPositionArray",
+      "resource" : "bitPositionArray"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testIntegerBitmask",
+      "resource" : "integerBitmask"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/bitsAllClear",
@@ -2530,14 +2530,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testBinDataBitmask",
+      "resource" : "binDataBitmask"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testBitPositionArray",
+      "resource" : "bitPositionArray"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testIntegerBitmask",
+      "resource" : "integerBitmask"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/bitsAllSet",
@@ -2545,14 +2545,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testBinDataBitmask",
+      "resource" : "binDataBitmask"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testBitPositionArray",
+      "resource" : "bitPositionArray"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testIntegerBitmask",
+      "resource" : "integerBitmask"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/bitsAnyClear",
@@ -2560,14 +2560,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testBinDataBitmask",
+      "resource" : "binDataBitmask"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testBitPositionArray",
+      "resource" : "bitPositionArray"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testIntegerBitmask",
+      "resource" : "integerBitmask"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/bitsAnySet",
@@ -2575,8 +2575,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testBoxQueryPredicateOperator",
+      "resource" : "boxQueryPredicateOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/box",
@@ -2584,8 +2584,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testCenterQueryPredicateOperator",
+      "resource" : "centerQueryPredicateOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/center",
@@ -2593,8 +2593,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testCenterSphereQueryPredicateOperator",
+      "resource" : "centerSphereQueryPredicateOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/centerSphere",
@@ -2602,11 +2602,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testAttachACommentToAnAggregationExpression",
+      "resource" : "attachACommentToAnAggregationExpression"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testAttachACommentToFind",
+      "resource" : "attachACommentToFind"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/comment",
@@ -2614,14 +2614,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testArrayOfEmbeddedDocuments",
+      "resource" : "arrayOfEmbeddedDocuments"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testElementMatch",
+      "resource" : "elementMatch"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testSingleQueryCondition",
+      "resource" : "singleQueryCondition"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/elemMatch",
@@ -2629,20 +2629,20 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testArrayElementEqualsAValue",
+      "resource" : "arrayElementEqualsAValue"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testEqualsASpecifiedValue",
+      "resource" : "equalsASpecifiedValue"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testEqualsAnArrayValue",
+      "resource" : "equalsAnArrayValue"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testFieldInEmbeddedDocumentEqualsAValue",
+      "resource" : "fieldInEmbeddedDocumentEqualsAValue"
     }, {
-      "method" : "testExample5",
-      "resource" : "example5"
+      "method" : "testRegexMatchBehaviour",
+      "resource" : "regexMatchBehaviour"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/eq",
@@ -2650,11 +2650,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testExistsAndNotEqualTo",
+      "resource" : "existsAndNotEqualTo"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testNullValues",
+      "resource" : "nullValues"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/exists",
@@ -2662,11 +2662,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testCompareTwoFieldsFromASingleDocument",
+      "resource" : "compareTwoFieldsFromASingleDocument"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseExprWithConditionalStatements",
+      "resource" : "useExprWithConditionalStatements"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/expr",
@@ -2674,11 +2674,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testIntersectsABigPolygon",
+      "resource" : "intersectsABigPolygon"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testIntersectsAPolygon",
+      "resource" : "intersectsAPolygon"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/geoIntersects",
@@ -2686,11 +2686,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testWithinABigPolygon",
+      "resource" : "withinABigPolygon"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testWithinAPolygon",
+      "resource" : "withinAPolygon"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/geoWithin",
@@ -2698,11 +2698,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testMatchDocumentFields",
+      "resource" : "matchDocumentFields"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testPerformAnUpdateBasedOnEmbeddedDocumentFields",
+      "resource" : "performAnUpdateBasedOnEmbeddedDocumentFields"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/gt",
@@ -2710,11 +2710,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testMatchDocumentFields",
+      "resource" : "matchDocumentFields"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testPerformAnUpdateBasedOnEmbeddedDocumentFields",
+      "resource" : "performAnUpdateBasedOnEmbeddedDocumentFields"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/gte",
@@ -2722,14 +2722,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testUseTheInOperatorToMatchValues",
+      "resource" : "useTheInOperatorToMatchValues"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseTheInOperatorToMatchValuesInAnArray",
+      "resource" : "useTheInOperatorToMatchValuesInAnArray"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testUseTheInOperatorWithARegularExpression",
+      "resource" : "useTheInOperatorWithARegularExpression"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/in",
@@ -2737,11 +2737,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testMatchDocumentFields",
+      "resource" : "matchDocumentFields"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testPerformAnUpdateBasedOnEmbeddedDocumentFields",
+      "resource" : "performAnUpdateBasedOnEmbeddedDocumentFields"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/lt",
@@ -2749,11 +2749,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testMatchDocumentFields",
+      "resource" : "matchDocumentFields"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testPerformAnUpdateBasedOnEmbeddedDocumentFields",
+      "resource" : "performAnUpdateBasedOnEmbeddedDocumentFields"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/lte",
@@ -2761,8 +2761,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testMaxDistanceQueryPredicateOperator",
+      "resource" : "maxDistanceQueryPredicateOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/maxDistance",
@@ -2770,11 +2770,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testUseWithNear",
+      "resource" : "useWithNear"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseWithNearSphere",
+      "resource" : "useWithNearSphere"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/minDistance",
@@ -2782,20 +2782,20 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testFloatingPointArguments",
+      "resource" : "floatingPointArguments"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testNegativeDividend",
+      "resource" : "negativeDividend"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testNotEnoughElementsError",
+      "resource" : "notEnoughElementsError"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testTooManyElementsError",
+      "resource" : "tooManyElementsError"
     }, {
-      "method" : "testExample5",
-      "resource" : "example5"
+      "method" : "testUseModToSelectDocuments",
+      "resource" : "useModToSelectDocuments"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/mod",
@@ -2803,14 +2803,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testArrays",
+      "resource" : "arrays"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testMatchDocumentFieldsThatAreNotEqual",
+      "resource" : "matchDocumentFieldsThatAreNotEqual"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testUpdateBasedOnNotEqualEmbeddedDocumentFields",
+      "resource" : "updateBasedOnNotEqualEmbeddedDocumentFields"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/ne",
@@ -2818,11 +2818,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testQueryOnGeoJsonData",
+      "resource" : "queryOnGeoJsonData"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testQueryOnLegacyCoordinates",
+      "resource" : "queryOnLegacyCoordinates"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/near",
@@ -2830,11 +2830,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSpecifyCenterPointUsingGeoJson",
+      "resource" : "specifyCenterPointUsingGeoJson"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testSpecifyCenterPointUsingLegacyCoordinates",
+      "resource" : "specifyCenterPointUsingLegacyCoordinates"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/nearSphere",
@@ -2842,11 +2842,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSelectOnElementsNotInAnArray",
+      "resource" : "selectOnElementsNotInAnArray"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testSelectOnUnmatchingDocuments",
+      "resource" : "selectOnUnmatchingDocuments"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/nin",
@@ -2854,14 +2854,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testNorAndAdditionalComparisons",
+      "resource" : "norAndAdditionalComparisons"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testNorAndExists",
+      "resource" : "norAndExists"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testNorQueryWithTwoExpressions",
+      "resource" : "norQueryWithTwoExpressions"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/nor",
@@ -2869,8 +2869,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testPolygonQueryPredicateOperator",
+      "resource" : "polygonQueryPredicateOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/polygon",
@@ -2878,11 +2878,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testGenerateRandomDataPoints",
+      "resource" : "generateRandomDataPoints"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testSelectRandomItemsFromACollection",
+      "resource" : "selectRandomItemsFromACollection"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/rand",
@@ -2890,26 +2890,26 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testExtendRegexOptionsToMatchCharactersOutsideOfAscii",
+      "resource" : "extendRegexOptionsToMatchCharactersOutsideOfAscii"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testIgnoreWhiteSpacesInPattern",
+      "resource" : "ignoreWhiteSpacesInPattern"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testMultilineMatchForLinesStartingWithSpecifiedPattern",
+      "resource" : "multilineMatchForLinesStartingWithSpecifiedPattern"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testPerformALikeMatch",
+      "resource" : "performALikeMatch"
     }, {
-      "method" : "testExample5",
-      "resource" : "example5"
+      "method" : "testPerformCaseInsensitiveRegularExpressionMatch",
+      "resource" : "performCaseInsensitiveRegularExpressionMatch"
     }, {
-      "method" : "testExample6",
-      "resource" : "example6"
+      "method" : "testUseARegularExpressionToMatchCaseInStrings",
+      "resource" : "useARegularExpressionToMatchCaseInStrings"
     }, {
-      "method" : "testExample7",
-      "resource" : "example7"
+      "method" : "testUseTheDotCharacterToMatchNewLine",
+      "resource" : "useTheDotCharacterToMatchNewLine"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/regex",
@@ -2917,32 +2917,32 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testCaseAndDiacriticInsensitivity",
+      "resource" : "caseAndDiacriticInsensitivity"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testCaseSensitivity",
+      "resource" : "caseSensitivity"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testDiacriticSensitiveSearch",
+      "resource" : "diacriticSensitiveSearch"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testExcludeDocumentsThatContainATerm",
+      "resource" : "excludeDocumentsThatContainATerm"
     }, {
-      "method" : "testExample5",
-      "resource" : "example5"
+      "method" : "testMatchAnyOfTheSearchTerms",
+      "resource" : "matchAnyOfTheSearchTerms"
     }, {
-      "method" : "testExample6",
-      "resource" : "example6"
+      "method" : "testQueryADifferentLanguage",
+      "resource" : "queryADifferentLanguage"
     }, {
-      "method" : "testExample7",
-      "resource" : "example7"
+      "method" : "testRelevanceScoreExamples",
+      "resource" : "relevanceScoreExamples"
     }, {
-      "method" : "testExample8",
-      "resource" : "example8"
+      "method" : "testTextWithASingleWord",
+      "resource" : "textWithASingleWord"
     }, {
-      "method" : "testExample9",
-      "resource" : "example9"
+      "method" : "testTextWithAnExactString",
+      "resource" : "textWithAnExactString"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/text",
@@ -2950,14 +2950,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testQueryingByDataType",
+      "resource" : "queryingByDataType"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testQueryingByMinKeyAndMaxKey",
+      "resource" : "queryingByMinKeyAndMaxKey"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testQueryingByMultipleDataTypes",
+      "resource" : "queryingByMultipleDataTypes"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/type",
@@ -2965,8 +2965,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testWhereQueryPredicateOperator",
+      "resource" : "whereQueryPredicateOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/filters/where",
@@ -2974,14 +2974,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testAddToArray",
+      "resource" : "addToArray"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testEachModifier",
+      "resource" : "eachModifier"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testValueAlreadyExists",
+      "resource" : "valueAlreadyExists"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/updates/addToSet",
@@ -2989,14 +2989,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testBitwiseAnd",
+      "resource" : "bitwiseAnd"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testBitwiseOr",
+      "resource" : "bitwiseOr"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testBitwiseXor",
+      "resource" : "bitwiseXor"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/updates/bit",
@@ -3004,11 +3004,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testAggregationAlternativeToCurrentDate",
+      "resource" : "aggregationAlternativeToCurrentDate"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testCurrentDateUpdateOperator",
+      "resource" : "currentDateUpdateOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/updates/currentDate",
@@ -3016,11 +3016,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testUseEachWithAddToSetOperator",
+      "resource" : "useEachWithAddToSetOperator"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseEachWithPushOperator",
+      "resource" : "useEachWithPushOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/updates/each",
@@ -3028,8 +3028,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testIncUpdateOperator",
+      "resource" : "incUpdateOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/updates/inc",
@@ -3037,11 +3037,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testUseMaxToCompareDates",
+      "resource" : "useMaxToCompareDates"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseMaxToCompareNumbers",
+      "resource" : "useMaxToCompareNumbers"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/updates/max",
@@ -3049,11 +3049,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testUseMinToCompareDates",
+      "resource" : "useMinToCompareDates"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUseMinToCompareNumbers",
+      "resource" : "useMinToCompareNumbers"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/updates/min",
@@ -3061,14 +3061,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testApplyMulOperatorToANonExistingField",
+      "resource" : "applyMulOperatorToANonExistingField"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testMultiplyMixedNumericTypes",
+      "resource" : "multiplyMixedNumericTypes"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testMultiplyTheValueOfAField",
+      "resource" : "multiplyTheValueOfAField"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/updates/mul",
@@ -3076,11 +3076,11 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testRemoveTheFirstItemOfAnArray",
+      "resource" : "removeTheFirstItemOfAnArray"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testRemoveTheLastItemOfAnArray",
+      "resource" : "removeTheLastItemOfAnArray"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/updates/pop",
@@ -3088,14 +3088,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testAddElementsAtTheStartOfTheArray",
+      "resource" : "addElementsAtTheStartOfTheArray"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testAddElementsToTheMiddleOfTheArray",
+      "resource" : "addElementsToTheMiddleOfTheArray"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testUseANegativeArrayIndexPositionToAddElementsToTheArray",
+      "resource" : "useANegativeArrayIndexPositionToAddElementsToTheArray"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/updates/position",
@@ -3103,20 +3103,20 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testUpdateDocumentsInAnArray",
+      "resource" : "updateDocumentsInAnArray"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testUpdateEmbeddedDocumentsUsingMultipleFieldMatches",
+      "resource" : "updateEmbeddedDocumentsUsingMultipleFieldMatches"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testUpdateNestedArraysInConjunctionWith",
+      "resource" : "updateNestedArraysInConjunctionWith"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testUpdateValuesInAnArray",
+      "resource" : "updateValuesInAnArray"
     }, {
-      "method" : "testExample5",
-      "resource" : "example5"
+      "method" : "testUpdateWithMultipleArrayMatches",
+      "resource" : "updateWithMultipleArrayMatches"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/updates/positional",
@@ -3124,20 +3124,20 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testRemoveAllItemsThatEqualASpecifiedValue",
+      "resource" : "removeAllItemsThatEqualASpecifiedValue"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testRemoveAllItemsThatMatchASpecifiedPullCondition",
+      "resource" : "removeAllItemsThatMatchASpecifiedPullCondition"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testRemoveAllItemsThatMatchASpecifiedPullConditionWithBulkWrite",
+      "resource" : "removeAllItemsThatMatchASpecifiedPullConditionWithBulkWrite"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testRemoveDocumentsFromNestedArrays",
+      "resource" : "removeDocumentsFromNestedArrays"
     }, {
-      "method" : "testExample5",
-      "resource" : "example5"
+      "method" : "testRemoveItemsFromAnArrayOfDocuments",
+      "resource" : "removeItemsFromAnArrayOfDocuments"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/updates/pull",
@@ -3145,8 +3145,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testPullAllUpdateOperator",
+      "resource" : "pullAllUpdateOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/updates/pullAll",
@@ -3154,17 +3154,17 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testAppendAValueToAnArray",
+      "resource" : "appendAValueToAnArray"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testAppendAValueToArraysInMultipleDocuments",
+      "resource" : "appendAValueToArraysInMultipleDocuments"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testAppendMultipleValuesToAnArray",
+      "resource" : "appendMultipleValuesToAnArray"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testUsePushOperatorWithMultipleModifiers",
+      "resource" : "usePushOperatorWithMultipleModifiers"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/updates/push",
@@ -3172,14 +3172,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testRenameAField",
+      "resource" : "renameAField"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testRenameAFieldInAnEmbeddedDocument",
+      "resource" : "renameAFieldInAnEmbeddedDocument"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testRenameAFieldThatDoesNotExist",
+      "resource" : "renameAFieldThatDoesNotExist"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/updates/rename",
@@ -3187,14 +3187,14 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSetElementsInArrays",
+      "resource" : "setElementsInArrays"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testSetFieldsInEmbeddedDocuments",
+      "resource" : "setFieldsInEmbeddedDocuments"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testSetTopLevelFields",
+      "resource" : "setTopLevelFields"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/updates/set",
@@ -3202,8 +3202,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSetOnInsertUpdateOperator",
+      "resource" : "setOnInsertUpdateOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/updates/setOnInsert",
@@ -3211,17 +3211,17 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSliceFromTheEndOfTheArray",
+      "resource" : "sliceFromTheEndOfTheArray"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testSliceFromTheFrontOfTheArray",
+      "resource" : "sliceFromTheFrontOfTheArray"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testUpdateArrayUsingSliceOnly",
+      "resource" : "updateArrayUsingSliceOnly"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testUseSliceWithOtherPushModifiers",
+      "resource" : "useSliceWithOtherPushModifiers"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/updates/slice",
@@ -3229,17 +3229,17 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testSortArrayElementsThatAreNotDocuments",
+      "resource" : "sortArrayElementsThatAreNotDocuments"
     }, {
-      "method" : "testExample2",
-      "resource" : "example2"
+      "method" : "testSortArrayOfDocumentsByAFieldInTheDocuments",
+      "resource" : "sortArrayOfDocumentsByAFieldInTheDocuments"
     }, {
-      "method" : "testExample3",
-      "resource" : "example3"
+      "method" : "testUpdateArrayUsingSortOnly",
+      "resource" : "updateArrayUsingSortOnly"
     }, {
-      "method" : "testExample4",
-      "resource" : "example4"
+      "method" : "testUseSortWithOtherPushModifiers",
+      "resource" : "useSortWithOtherPushModifiers"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/updates/sort",
@@ -3247,8 +3247,8 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testExample1",
-      "resource" : "example1"
+      "method" : "testUnsetUpdateOperator",
+      "resource" : "unsetUpdateOperator"
     } ],
     "manual" : [ ],
     "resources" : "dev/morphia/test/query/updates/unset",

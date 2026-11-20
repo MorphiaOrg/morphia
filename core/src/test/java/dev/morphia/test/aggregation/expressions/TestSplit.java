@@ -18,12 +18,12 @@ import static dev.morphia.aggregation.stages.Unwind.unwind;
 
 public class TestSplit extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/split/example1
+     * test data: dev/morphia/test/aggregation/expressions/split/splitExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testSplitExpressionOperator() {
         testPipeline(new ActionTestOptions().skipActionCheck(true),
                 (aggregation) -> aggregation.pipeline(
                         project().include("city_state", split("$city", ", ")).include("qty"), unwind("city_state"),

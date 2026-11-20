@@ -30,7 +30,7 @@ public class TestFirstN extends TemplatedTestBase {
 
     @Test
     @DisplayName("Find the First Three Player Scores for a Single Game")
-    public void testExample1() {
+    public void testFindTheFirstThreePlayerScoresForASingleGame() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
                         match(eq("gameId", "G1")),
@@ -42,7 +42,7 @@ public class TestFirstN extends TemplatedTestBase {
 
     @Test
     @DisplayName("Finding the First Three Player Scores Across Multiple Games")
-    public void testExample2() {
+    public void testFindingTheFirstThreePlayerScoresAcrossMultipleGames() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
                         group(id("$gameId"))
@@ -54,7 +54,7 @@ public class TestFirstN extends TemplatedTestBase {
 
     @Test
     @DisplayName("Using ``$sort`` With ``$firstN``")
-    public void testExample3() {
+    public void testUsingSortWithFirstN() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
                         sort().descending("score"),
@@ -67,7 +67,7 @@ public class TestFirstN extends TemplatedTestBase {
 
     @Test
     @DisplayName("Computing ``n`` Based on the Group Key for ``$group``")
-    public void testExample4() {
+    public void testComputingNBasedOnTheGroupKeyForGroup() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
                         group(id()
@@ -82,7 +82,7 @@ public class TestFirstN extends TemplatedTestBase {
 
     @Disabled("this needs to run against the db rather than a collection and that requires fixes in the agg code")
     @Test
-    public void testExample5() {
+    public void testUsingFirstNAsAnAggregationExpression() {
         testPipeline(
                 (aggregation) -> aggregation.pipeline(
                         documents(document().field("array", array(10, 20, 30, 40))),

@@ -32,7 +32,8 @@ public class ExampleBindingsTest {
 
     @Test
     public void resourcesComeFromTheDescriptor() throws NoSuchMethodException {
-        assertEquals("example1", ExampleBindings.resource(TestAbs.class.getDeclaredMethod("testExample1")));
+        assertEquals("absExpressionOperator",
+                ExampleBindings.resource(TestAbs.class.getDeclaredMethod("testAbsExpressionOperator")));
         assertNull(ExampleBindings.lookup(FiltersTest.class));
     }
 

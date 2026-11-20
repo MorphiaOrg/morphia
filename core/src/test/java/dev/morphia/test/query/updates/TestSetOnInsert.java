@@ -16,11 +16,11 @@ import static dev.morphia.query.updates.UpdateOperators.setOnInsert;
 public class TestSetOnInsert extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/updates/setOnInsert/example1
+     * test data: dev/morphia/test/query/updates/setOnInsert/setOnInsertUpdateOperator
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testSetOnInsertUpdateOperator() {
         var options = new ActionTestOptions().skipDataCheck(true).updateOptions(new UpdateOptions().upsert(true));
         testUpdate(options, (query) -> query.filter(Filters.eq("_id", 1)), set("item", "apple"),
                 setOnInsert(Map.of("defaultQty", 100)));

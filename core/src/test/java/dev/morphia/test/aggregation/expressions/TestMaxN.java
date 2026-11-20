@@ -25,12 +25,12 @@ public class TestMaxN extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/maxN/example1
+     * test data: dev/morphia/test/aggregation/expressions/maxN/findTheMaximumThreeScoresForASingleGame
      * 
      */
     @Test
     @DisplayName("Find the Maximum Three ``Scores`` for a Single Game")
-    public void testExample1() {
+    public void testFindTheMaximumThreeScoresForASingleGame() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(match(eq("gameId", "G1")),
                         group(id("$gameId")).field("maxThreeScores", maxN(3, array("$score", "$playerId")))));
@@ -38,24 +38,24 @@ public class TestMaxN extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/maxN/example2
+     * test data: dev/morphia/test/aggregation/expressions/maxN/findingTheMaximumThreeScoresAcrossMultipleGames
      * 
      */
     @Test
     @DisplayName("Finding the Maximum Three Scores Across Multiple Games")
-    public void testExample2() {
+    public void testFindingTheMaximumThreeScoresAcrossMultipleGames() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
                 .pipeline(group(id("$gameId")).field("maxScores", maxN(3, array("$score", "$playerId")))));
 
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/maxN/example3
+     * test data: dev/morphia/test/aggregation/expressions/maxN/computingNBasedOnTheGroupKeyForGroup
      * 
      */
     @Test
     @DisplayName("Computing ``n`` Based on the Group Key for ``$group``")
-    public void testExample3() {
+    public void testComputingNBasedOnTheGroupKeyForGroup() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(group(id().field("gameId", "$gameId")).field("gamescores", maxN(
                         condition(ComparisonExpressions.eq("$gameId", "G2"), 1, 3), array("$score", "$playerId")))));

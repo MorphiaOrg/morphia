@@ -4,6 +4,7 @@ import dev.morphia.audits.bindings.BindingDisposition
 import dev.morphia.audits.bindings.BindingPolicy
 import dev.morphia.audits.bindings.LegacyBindings
 import dev.morphia.audits.bindings.ManualMethod
+import dev.morphia.audits.bindings.NameBackport
 import dev.morphia.audits.bindings.UnboundResource
 import dev.morphia.audits.coverage.AuditJson
 import java.nio.file.Files
@@ -260,7 +261,8 @@ class LegacyBindingsTest {
     }
 
     /**
-     * The committed descriptor must be exactly what the reviewed policy produces from the sources.
+     * The committed descriptor must be exactly what the reviewed policy produces from the sources,
+     * and those sources must be the pre-backport import with only the ledger's renames applied.
      */
     @Test
     fun committedDescriptorMatchesTheReviewedPolicy() {
@@ -277,7 +279,15 @@ class LegacyBindingsTest {
                 AuditJson.bindingPolicy(read("audits/catalog/binding-policy.json")),
             )
 
-        assertEquals(committed, catalog)
+        val ledger = AuditJson.nameBackport(read("audits/catalog/name-backport.json"))
+        val corpus = AuditJson.corpus(read("audits/catalog/legacy-corpus.json"))
+        val review = AuditJson.nameBackportReview(read("audits/catalog/name-backport-review.json"))
+        assertEquals(
+            ledger,
+            NameBackport.plan(committed, corpus, review, NameBackport.inheritedMethods(root)),
+        )
+        assertEquals(NameBackport.project(committed, ledger, committed.repositoryRevision), catalog)
+        NameBackport.verify(root, corpus, ledger)
         assertEquals(
             read("core/src/test/resources/dev/morphia/test/example-bindings.json"),
             AuditJson.write(catalog.descriptor()),

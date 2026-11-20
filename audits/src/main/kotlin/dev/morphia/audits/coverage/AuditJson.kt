@@ -10,10 +10,13 @@ import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.databind.type.LogicalType
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import dev.morphia.audits.CorpusInventory
 import dev.morphia.audits.api.ApiInventory
 import dev.morphia.audits.bindings.BindingDescriptor
 import dev.morphia.audits.bindings.BindingPolicy
 import dev.morphia.audits.bindings.LegacyBindingCatalog
+import dev.morphia.audits.bindings.NameBackportLedger
+import dev.morphia.audits.bindings.NameBackportReview
 import dev.morphia.audits.discovery.DiscoveryPlan
 import dev.morphia.audits.discovery.DiscoveryReport
 import dev.morphia.audits.documents.DocumentReport
@@ -140,6 +143,13 @@ object AuditJson {
 
     fun bindingDescriptor(json: String): BindingDescriptor =
         read(json, BindingDescriptor::class.java)
+
+    fun corpus(json: String): CorpusInventory = read(json, CorpusInventory::class.java)
+
+    fun nameBackportReview(json: String): NameBackportReview =
+        read(json, NameBackportReview::class.java)
+
+    fun nameBackport(json: String): NameBackportLedger = read(json, NameBackportLedger::class.java)
 
     /** Canonical JSON attribute strings stay typed at the adapter boundary. */
     fun textValue(json: String): String = requireNotNull(mapper.readValue(json, String::class.java))

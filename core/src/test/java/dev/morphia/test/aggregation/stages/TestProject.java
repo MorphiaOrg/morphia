@@ -15,75 +15,75 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestProject extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/stages/project/example1
+     * test data: dev/morphia/test/aggregation/stages/project/includeSpecificFieldsInOutputDocuments
      * 
      */
     @Test
     @DisplayName("Include Specific Fields in Output Documents")
-    public void testExample1() {
+    public void testIncludeSpecificFieldsInOutputDocuments() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("title").include("author")));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/project/example2
+     * test data: dev/morphia/test/aggregation/stages/project/suppressIdFieldInTheOutputDocuments
      * 
      */
     @Test
     @DisplayName("Suppress ``_id`` Field in the Output Documents")
-    public void testExample2() {
+    public void testSuppressIdFieldInTheOutputDocuments() {
         testPipeline((aggregation) -> aggregation.pipeline(project().suppressId().include("title").include("author")));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/project/example3
+     * test data: dev/morphia/test/aggregation/stages/project/excludeFieldsFromOutputDocuments
      * 
      */
     @Test
     @DisplayName("Exclude Fields from Output Documents")
-    public void testExample3() {
+    public void testExcludeFieldsFromOutputDocuments() {
         testPipeline(new ActionTestOptions().skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(project().exclude("lastModified")));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/project/example4
+     * test data: dev/morphia/test/aggregation/stages/project/conditionallyExcludeFields
      * 
      */
     @Test
     @DisplayName("Conditionally Exclude Fields")
-    public void testExample4() {
+    public void testConditionallyExcludeFields() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("title").include("author.first").include("author.last")
                         .include("author.middle", condition(eq("", "$author.middle"), REMOVE, "$author.middle"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/project/example5
+     * test data: dev/morphia/test/aggregation/stages/project/includeSpecificFieldsFromEmbeddedDocuments
      * 
      */
     @Test
     @DisplayName("Include Specific Fields from Embedded Documents")
-    public void testExample5() {
+    public void testIncludeSpecificFieldsFromEmbeddedDocuments() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("stop.title")));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/project/example7
+     * test data: dev/morphia/test/aggregation/stages/project/includeSpecificFieldsFromEmbeddedDocumentsAsStage
      *
      */
     @Test
     @DisplayName("Include Specific Fields from Embedded Documents")
-    public void testExample6() {
+    public void testIncludeSpecificFieldsFromEmbeddedDocumentsAsStage() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("stop.title")));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/project/example6
+     * test data: dev/morphia/test/aggregation/stages/project/includeComputedFields
      *
      */
     @Test
     @DisplayName("Include Computed Fields")
-    public void testExample7() {
+    public void testIncludeComputedFields() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("title")
                 .include("isbn", document().field("prefix", substrBytes("$isbn", 0, 3))
                         .field("group", substrBytes("$isbn", 3, 2)).field("publisher", substrBytes("$isbn", 5, 4))
@@ -92,22 +92,22 @@ public class TestProject extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/project/example8
+     * test data: dev/morphia/test/aggregation/stages/project/arrayIndexesAreUnsupported
      * 
      */
     @Test
     @DisplayName("Array Indexes are Unsupported")
-    public void testExample8() {
+    public void testArrayIndexesAreUnsupported() {
         testPipeline((aggregation) -> aggregation.pipeline(project().suppressId().include("x", "$name")));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/project/example9
+     * test data: dev/morphia/test/aggregation/stages/project/arrayIndexesAreUnsupportedFromShellInsert
      * 
      */
     @Test
     @DisplayName("Array Indexes are Unsupported")
-    public void testExample9() {
+    public void testArrayIndexesAreUnsupportedFromShellInsert() {
         // unsupported multiple examples here
         /*
          * testPipeline(new dev.morphia.test.util.ActionTestOptions(). removeIds(false),

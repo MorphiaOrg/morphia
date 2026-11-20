@@ -14,22 +14,22 @@ import static dev.morphia.query.filters.Filters.gt;
 
 public class TestAll extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/query/filters/all/example1
+     * test data: dev/morphia/test/query/filters/all/useAllToMatchValues
      * 
      */
     @Test
     @DisplayName("Use ``$all`` to Match Values")
-    public void testExample1() {
+    public void testUseAllToMatchValues() {
         testQuery((query) -> query.filter(all("tags", List.of("appliance", "school", "book"))));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/all/example2
+     * test data: dev/morphia/test/query/filters/all/useAllWithElemMatch
      * 
      */
     @Test
     @DisplayName("Use ``$all`` with ``$elemMatch``")
-    public void testExample2() {
+    public void testUseAllWithElemMatch() {
         testQuery((query) -> query.filter(all("qty",
                 List.of(elemMatch(eq("size", "M"), gt("num", 50)), elemMatch(eq("num", 100), eq("color", "green"))))));
     }

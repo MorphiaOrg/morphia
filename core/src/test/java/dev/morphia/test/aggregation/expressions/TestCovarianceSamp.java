@@ -20,12 +20,12 @@ public class TestCovarianceSamp extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/covarianceSamp/example1
+     * test data: dev/morphia/test/aggregation/expressions/covarianceSamp/covarianceSampExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testCovarianceSampExpressionOperator() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(setWindowFields().partitionBy("$state").sortBy(ascending("orderDate"))
                         .output(output("covarianceSampForState")

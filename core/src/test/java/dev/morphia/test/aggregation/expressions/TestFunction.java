@@ -11,12 +11,12 @@ import static dev.morphia.aggregation.stages.AddFields.addFields;
 
 public class TestFunction extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/function/example1
+     * test data: dev/morphia/test/aggregation/expressions/function/usageExample
      * 
      */
     @Test
     @DisplayName("Example 1: Usage Example")
-    public void testExample1() {
+    public void testUsageExample() {
         testPipeline(new ActionTestOptions().skipActionCheck(true),
                 (aggregation) -> aggregation.pipeline(addFields().field("isFound", function("""
                         function(name) {
@@ -29,12 +29,12 @@ public class TestFunction extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/function/example2
+     * test data: dev/morphia/test/aggregation/expressions/function/alternativeToWhere
      * 
      */
     @Test
     @DisplayName("Example 2: Alternative to ``$where``")
-    public void testExample2() {
+    public void testAlternativeToWhere() {
         // example doesn't really apply to morphia
     }
 

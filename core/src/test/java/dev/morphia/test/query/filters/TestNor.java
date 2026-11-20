@@ -14,31 +14,31 @@ import static dev.morphia.query.filters.Filters.nor;
 public class TestNor extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/filters/nor/example1
+     * test data: dev/morphia/test/query/filters/nor/norQueryWithTwoExpressions
      */
     @Test
     @DisplayName("``$nor`` Query with Two Expressions")
-    public void testExample1() {
+    public void testNorQueryWithTwoExpressions() {
         testQuery(new ActionTestOptions().skipDataCheck(true),
                 (query) -> query.filter(nor(eq("price", 1.99), eq("sale", true))));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/nor/example2
+     * test data: dev/morphia/test/query/filters/nor/norAndAdditionalComparisons
      */
     @Test
     @DisplayName("``$nor`` and Additional Comparisons")
-    public void testExample2() {
+    public void testNorAndAdditionalComparisons() {
         testQuery(new ActionTestOptions().skipDataCheck(true),
                 (query) -> query.filter(nor(eq("price", 1.99), lt("qty", 20), eq("sale", true))));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/nor/example3
+     * test data: dev/morphia/test/query/filters/nor/norAndExists
      */
     @Test
     @DisplayName("``$nor`` and ``$exists``")
-    public void testExample3() {
+    public void testNorAndExists() {
         testQuery(new ActionTestOptions().skipDataCheck(true), (query) -> query
                 .filter(nor(eq("price", 1.99), exists("price").not(), eq("sale", true), exists("sale").not())
 

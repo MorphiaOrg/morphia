@@ -14,20 +14,20 @@ import static dev.morphia.query.updates.UpdateOperators.push;
 public class TestEach extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/updates/each/example1
+     * test data: dev/morphia/test/query/updates/each/useEachWithPushOperator
      */
     @Test
     @DisplayName("Use ``$each``  with ``$push`` Operator")
-    public void testExample1() {
+    public void testUseEachWithPushOperator() {
         testUpdate((query) -> query.filter(eq("_id", 1)), push("scores", List.of(90, 92, 85)));
     }
 
     /**
-     * test data: dev/morphia/test/query/updates/each/example2
+     * test data: dev/morphia/test/query/updates/each/useEachWithAddToSetOperator
      */
     @Test
     @DisplayName("Use ``$each``  with ``$addToSet`` Operator")
-    public void testExample2() {
+    public void testUseEachWithAddToSetOperator() {
         testUpdate((query) -> query.filter(eq("_id", 2)),
                 addToSet("tags", List.of("camera", "electronics", "accessories")));
     }

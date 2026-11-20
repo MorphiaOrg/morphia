@@ -10,12 +10,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestFloor extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/floor/example1
+     * test data: dev/morphia/test/aggregation/expressions/floor/floorExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testFloorExpressionOperator() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("value").include("floorValue", floor("$value"))));
     }

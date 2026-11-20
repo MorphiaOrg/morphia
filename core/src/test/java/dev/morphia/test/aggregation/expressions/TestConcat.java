@@ -10,12 +10,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestConcat extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/concat/example1
+     * test data: dev/morphia/test/aggregation/expressions/concat/concatExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testConcatExpressionOperator() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("itemDescription", concat("$item", " - ", "$description"))));
     }

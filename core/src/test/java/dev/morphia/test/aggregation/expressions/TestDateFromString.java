@@ -10,34 +10,34 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestDateFromString extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/dateFromString/example1
+     * test data: dev/morphia/test/aggregation/expressions/dateFromString/convertingDates
      * 
      */
     @Test
     @DisplayName("Converting Dates")
-    public void testExample1() {
+    public void testConvertingDates() {
         testPipeline((aggregation) -> aggregation.pipeline(
                 project().include("date", dateFromString().dateString("$date").timeZone("America/New_York"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/dateFromString/example2
+     * test data: dev/morphia/test/aggregation/expressions/dateFromString/onError
      * 
      */
     @Test
     @DisplayName("``onError``")
-    public void testExample2() {
+    public void testOnError() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("date",
                 dateFromString().dateString("$date").timeZone("$timezone").onError("$date"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/dateFromString/example3
+     * test data: dev/morphia/test/aggregation/expressions/dateFromString/onNull
      * 
      */
     @Test
     @DisplayName("``onNull``")
-    public void testExample3() {
+    public void testOnNull() {
         testPipeline((aggregation) -> aggregation.pipeline(
                 project().include("date", dateFromString().dateString("$date").timeZone("$timezone").onNull("oops"))
 

@@ -28,12 +28,12 @@ import static org.bson.Document.parse;
 
 public class TestBucket extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/stages/bucket/example1
+     * test data: dev/morphia/test/aggregation/stages/bucket/bucketByYearAndFilterByBucketResults
      * 
      */
     @Test
     @DisplayName("Bucket by Year and Filter by Bucket Results")
-    public void testExample1() {
+    public void testBucketByYearAndFilterByBucketResults() {
         testPipeline((aggregation) -> aggregation.pipeline(bucket()
                 .groupBy("$year_born").boundaries(1840, 1850, 1860, 1870, 1880).defaultValue("Other")
                 .outputField("count", sum(1)).outputField("artists", push()
@@ -42,12 +42,12 @@ public class TestBucket extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/bucket/example2
+     * test data: dev/morphia/test/aggregation/stages/bucket/useBucketWithFacetToBucketByMultipleFields
      * 
      */
     @Test
     @DisplayName("Use $bucket with $facet to Bucket by Multiple Fields")
-    public void testExample2() {
+    public void testUseBucketWithFacetToBucketByMultipleFields() {
         testPipeline(
                 (aggregation) -> aggregation.pipeline(facet()
                         .field("price",

@@ -14,23 +14,23 @@ import static dev.morphia.aggregation.stages.Sort.sort;
 public class TestFirst extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/first/example1
+     * test data: dev/morphia/test/aggregation/expressions/first/useInGroupStage
      * 
      */
     @Test
     @DisplayName("Use in ``$group`` Stage")
-    public void testExample1() {
+    public void testUseInGroupStage() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
                 .pipeline(sort().ascending("item", "date"), group(id("$item")).field("firstSale", first("$date"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/first/example2
+     * test data: dev/morphia/test/aggregation/expressions/first/missingData
      * 
      */
     @Test
     @DisplayName("Missing Data")
-    public void testExample2() {
+    public void testMissingData() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
                 .pipeline(sort().ascending("item", "price"), group(id("$item")).field("inStock", first("$quantity"))
 
@@ -38,12 +38,12 @@ public class TestFirst extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/first/example3
+     * test data: dev/morphia/test/aggregation/expressions/first/useInSetWindowFieldsStage
      * 
      */
     @Test
     @DisplayName("Use in ``$setWindowFields`` Stage")
-    public void testExample3() {
+    public void testUseInSetWindowFieldsStage() {
         // this example starts importing a bunch of stuff and gets more complicated than
         // I care
         // to make the parser support. we have working examples already.

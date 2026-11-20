@@ -19,24 +19,24 @@ public class TestShift extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/shift/example1
+     * test data: dev/morphia/test/aggregation/expressions/shift/shiftUsingAPositiveInteger
      * 
      */
     @Test
     @DisplayName("Shift Using a Positive Integer")
-    public void testExample1() {
+    public void testShiftUsingAPositiveInteger() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(setWindowFields().partitionBy("$state").sortBy(descending("quantity"))
                         .output(output("shiftQuantityForState").operator(shift("$quantity", 1, "Not available")))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/shift/example2
+     * test data: dev/morphia/test/aggregation/expressions/shift/shiftUsingANegativeInteger
      * 
      */
     @Test
     @DisplayName("Shift Using a Negative Integer")
-    public void testExample2() {
+    public void testShiftUsingANegativeInteger() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(setWindowFields().partitionBy("$state").sortBy(descending("quantity"))
                         .output(output("shiftQuantityForState").operator(shift("$quantity", -1, "Not available")))));

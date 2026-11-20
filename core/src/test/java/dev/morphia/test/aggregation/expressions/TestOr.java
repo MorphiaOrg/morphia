@@ -12,12 +12,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestOr extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/or/example1
+     * test data: dev/morphia/test/aggregation/expressions/or/orExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testOrExpressionOperator() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().include("item").include("result", or(gt("$qty", 250), lt("$qty", 200)))));
     }

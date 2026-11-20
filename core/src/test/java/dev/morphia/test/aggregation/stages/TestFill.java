@@ -23,57 +23,57 @@ public class TestFill extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/fill/example1
+     * test data: dev/morphia/test/aggregation/stages/fill/fillMissingFieldValuesWithAConstantValue
      * 
      */
     @Test
     @DisplayName("Fill Missing Field Values with a Constant Value")
-    public void testExample1() {
+    public void testFillMissingFieldValuesWithAConstantValue() {
         testPipeline(new ActionTestOptions().removeIds(true), aggregation -> aggregation
                 .pipeline(fill().field("bootsSold", 0).field("sandalsSold", 0).field("sneakersSold", 0)));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/fill/example2
+     * test data: dev/morphia/test/aggregation/stages/fill/fillMissingFieldValuesWithLinearInterpolation
      * 
      */
     @Test
     @DisplayName("Fill Missing Field Values with Linear Interpolation")
-    public void testExample2() {
+    public void testFillMissingFieldValuesWithLinearInterpolation() {
         testPipeline(new ActionTestOptions().removeIds(true),
                 aggregation -> aggregation.pipeline(fill().sortBy(ascending("time")).field("price", Method.LINEAR)));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/fill/example3
+     * test data: dev/morphia/test/aggregation/stages/fill/fillMissingFieldValuesBasedOnTheLastObservedValue
      * 
      */
     @Test
     @DisplayName("Fill Missing Field Values Based on the Last Observed Value")
-    public void testExample3() {
+    public void testFillMissingFieldValuesBasedOnTheLastObservedValue() {
         testPipeline(new ActionTestOptions().removeIds(true),
                 aggregation -> aggregation.pipeline(fill().sortBy(ascending("date")).field("score", Method.LOCF)));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/fill/example4
+     * test data: dev/morphia/test/aggregation/stages/fill/fillDataForDistinctPartitions
      * 
      */
     @Test
     @DisplayName("Fill Data for Distinct Partitions")
-    public void testExample4() {
+    public void testFillDataForDistinctPartitions() {
         testPipeline(new ActionTestOptions().removeIds(true),
                 aggregation -> aggregation.pipeline(fill().sortBy(ascending("date"))
                         .partitionBy(document("restaurant", "$restaurant")).field("score", Method.LOCF)));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/fill/example5
+     * test data: dev/morphia/test/aggregation/stages/fill/indicateIfAFieldWasPopulatedUsingFill
      * 
      */
     @Test
     @DisplayName("Indicate if a Field was Populated Using ``$fill``")
-    public void testExample5() {
+    public void testIndicateIfAFieldWasPopulatedUsingFill() {
         testPipeline(new ActionTestOptions().removeIds(true),
                 (aggregation) -> aggregation
                         .pipeline(
@@ -84,12 +84,12 @@ public class TestFill extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/fill/example6
+     * test data: dev/morphia/test/aggregation/stages/fill/interpolateIdenticalValuesInDifferentPartitions
      * 
      */
     @Test
     @DisplayName("Interpolate Identical Values in Different Partitions")
-    public void testExample6() {
+    public void testInterpolateIdenticalValuesInDifferentPartitions() {
         testPipeline(new ActionTestOptions().removeIds(true),
                 aggregation -> aggregation.pipeline(fill().sortBy(ascending("date"))
                         .partitionBy(document("restaurant", "$restaurant")).field("score", Method.LINEAR)));

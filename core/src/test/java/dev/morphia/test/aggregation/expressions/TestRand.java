@@ -19,24 +19,24 @@ import static dev.morphia.query.filters.Filters.expr;
 
 public class TestRand extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/rand/example1
+     * test data: dev/morphia/test/aggregation/expressions/rand/generateRandomDataPoints
      * 
      */
     @Test
     @DisplayName("Generate Random Data Points")
-    public void testExample1() {
+    public void testGenerateRandomDataPoints() {
         testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false).skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(set().field("amount", multiply(rand(), 100)),
                         set().field("amount", floor("$amount")), merge("donors")));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/rand/example2
+     * test data: dev/morphia/test/aggregation/expressions/rand/selectRandomItemsFromACollection
      * 
      */
     @Test
     @DisplayName("Select Random Items From a Collection")
-    public void testExample2() {
+    public void testSelectRandomItemsFromACollection() {
         testPipeline(new ActionTestOptions().orderMatters(false).skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(match(eq("district", 3)), match(expr(lt(0.5, rand()))),
                         project().suppressId().include("name").include("registered")));

@@ -13,12 +13,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestToInt extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/toInt/example1
+     * test data: dev/morphia/test/aggregation/expressions/toInt/toIntExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testToIntExpressionOperator() {
         testPipeline((aggregation) -> aggregation.pipeline(
                 addFields().field("convertedPrice", toDecimal("$price")).field("convertedQty", toInt("$qty")),
                 project().include("item").include("totalPrice", multiply("$convertedPrice", "$convertedQty"))));

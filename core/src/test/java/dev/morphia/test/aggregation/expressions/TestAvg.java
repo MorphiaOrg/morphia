@@ -14,24 +14,24 @@ import static dev.morphia.aggregation.stages.Projection.*;
 
 public class TestAvg extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/avg/example1
+     * test data: dev/morphia/test/aggregation/expressions/avg/useInGroupStage
      * 
      */
     @Test
     @DisplayName("Use in ``$group`` Stage")
-    public void testExample1() {
+    public void testUseInGroupStage() {
         testPipeline(new ActionTestOptions().orderMatters(false), aggregation -> aggregation.pipeline(group(id("$item"))
                 .field("avgAmount", avg(multiply("$price", "$quantity"))).field("avgQuantity", avg("$quantity"))));
 
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/avg/example2
+     * test data: dev/morphia/test/aggregation/expressions/avg/useInProjectStage
      * 
      */
     @Test
     @DisplayName("Use in ``$project`` Stage")
-    public void testExample2() {
+    public void testUseInProjectStage() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 aggregation -> aggregation.pipeline(project().include("quizAvg", avg("$quizzes"))
                         .include("labAvg", avg("$labs")).include("examAvg", avg("$final", "$midterm"))));
@@ -39,12 +39,12 @@ public class TestAvg extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/avg/example3
+     * test data: dev/morphia/test/aggregation/expressions/avg/useInSetWindowFieldsStage
      * 
      */
     @Test
     @DisplayName("Use in ``$setWindowFields`` Stage")
-    public void testExample3() {
+    public void testUseInSetWindowFieldsStage() {
         // this has an include and throws off the parser
         /*
          * testPipeline(new dev.morphia.test.util.ActionTestOptions()

@@ -11,12 +11,12 @@ import static dev.morphia.aggregation.stages.Unwind.unwind;
 
 public class TestSortByCount extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/stages/sortByCount/example1
+     * test data: dev/morphia/test/aggregation/stages/sortByCount/sortByCountAggregationStage
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testSortByCountAggregationStage() {
         // orderMatters is false here because of the indeterminate sort order on equal
         // values
         testPipeline(new ActionTestOptions().orderMatters(false),

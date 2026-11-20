@@ -15,24 +15,24 @@ import static dev.morphia.query.Sort.*;
 
 public class TestLast extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/last/example1
+     * test data: dev/morphia/test/aggregation/expressions/last/useInGroupStage
      * 
      */
     @Test
     @DisplayName("Use in ``$group`` Stage")
-    public void testExample1() {
+    public void testUseInGroupStage() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(sort().ascending("item").ascending("date"),
                         group(id("$item")).field("lastSalesDate", last("$date"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/last/example2
+     * test data: dev/morphia/test/aggregation/expressions/last/useInSetWindowFieldsStage
      * 
      */
     @Test
     @DisplayName("Use in ``$setWindowFields`` Stage")
-    public void testExample2() {
+    public void testUseInSetWindowFieldsStage() {
         // this example starts importing a bunch of stuff and gets more complicated than
         // I care
         // to make the parser support. we have working examples already.

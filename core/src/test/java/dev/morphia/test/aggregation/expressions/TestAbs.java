@@ -11,12 +11,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestAbs extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/abs/example1
+     * test data: dev/morphia/test/aggregation/expressions/abs/absExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testAbsExpressionOperator() {
         testPipeline(aggregation -> aggregation
                 .pipeline(project().include("delta", abs(subtract("$startTemp", "$endTemp")))));
 

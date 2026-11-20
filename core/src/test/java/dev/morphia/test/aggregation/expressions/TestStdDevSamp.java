@@ -15,23 +15,23 @@ import static dev.morphia.query.Sort.*;
 
 public class TestStdDevSamp extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/stdDevSamp/example1
+     * test data: dev/morphia/test/aggregation/expressions/stdDevSamp/useInGroupStage
      * 
      */
     @Test
     @DisplayName("Use in ``$group`` Stage")
-    public void testExample1() {
+    public void testUseInGroupStage() {
         testPipeline((aggregation) -> aggregation.pipeline(sample(100),
                 group(id(null)).field("ageStdDev", stdDevSamp("$age"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/stdDevSamp/example2
+     * test data: dev/morphia/test/aggregation/expressions/stdDevSamp/useInSetWindowFieldsStage
      * 
      */
     @Test
     @DisplayName("Use in ``$setWindowFields`` Stage")
-    public void testExample2() {
+    public void testUseInSetWindowFieldsStage() {
         checkMinServerVersion("5.0.0");
         testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                 .sortBy(ascending("orderDate")).output(output("stdDevSampQuantityForState")

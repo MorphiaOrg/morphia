@@ -17,21 +17,21 @@ import static dev.morphia.query.filters.Filters.or;
 public class TestAnd extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/filters/and/example1
+     * test data: dev/morphia/test/query/filters/and/andQueriesWithMultipleExpressionsSpecifyingTheSameField
      */
     @Test
     @DisplayName("``AND`` Queries With Multiple Expressions Specifying the Same Field")
-    public void testExample1() {
+    public void testAndQueriesWithMultipleExpressionsSpecifyingTheSameField() {
         testQuery(new ActionTestOptions().skipDataCheck(true),
                 (query) -> query.filter(and(ne("price", 1.99), exists("price"))));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/and/example2
+     * test data: dev/morphia/test/query/filters/and/andQueriesWithMultipleExpressionsSpecifyingTheSameOperator
      */
     @Test
     @DisplayName("``AND`` Queries With Multiple Expressions Specifying the Same Operator")
-    public void testExample2() {
+    public void testAndQueriesWithMultipleExpressionsSpecifyingTheSameOperator() {
         testQuery(new ActionTestOptions().skipDataCheck(true),
                 (query) -> query.filter(and(or(lt("qty", 10), gt("qty", 50)), or(eq("sale", true), lt("price", 5)))));
     }

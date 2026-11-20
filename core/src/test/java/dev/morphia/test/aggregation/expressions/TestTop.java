@@ -23,24 +23,24 @@ public class TestTop extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/top/example1
+     * test data: dev/morphia/test/aggregation/expressions/top/findTheTopScore
      * 
      */
     @Test
     @DisplayName("Find the Top ``Score``")
-    public void testExample1() {
+    public void testFindTheTopScore() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation.pipeline(
                 match(eq("gameId", "G1")),
                 group(id("$gameId")).field("playerId", top(array("$playerId", "$score"), descending("score")))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/top/example2
+     * test data: dev/morphia/test/aggregation/expressions/top/findTheTopScoreAcrossMultipleGames
      * 
      */
     @Test
     @DisplayName("Find the Top ``Score`` Across Multiple Games")
-    public void testExample2() {
+    public void testFindTheTopScoreAcrossMultipleGames() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation.pipeline(
                 group(id("$gameId")).field("playerId", top(array("$playerId", "$score"), descending("score")))));
     }

@@ -13,90 +13,90 @@ import static dev.morphia.query.filters.Filters.*;
 public class TestText extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/filters/text/example1
+     * test data: dev/morphia/test/query/filters/text/textWithASingleWord
      */
     @Test
     @DisplayName("``$text`` with a Single Word")
-    public void testExample1() {
+    public void testTextWithASingleWord() {
         testQuery((query) -> query.filter(text("coffee")));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/text/example2
+     * test data: dev/morphia/test/query/filters/text/matchAnyOfTheSearchTerms
      */
     @Test
     @DisplayName("Match Any of the ``$search`` Terms")
-    public void testExample2() {
+    public void testMatchAnyOfTheSearchTerms() {
         testQuery(new ActionTestOptions().orderMatters(false), (query) -> query.filter(text("bake coffee cake")
 
         ));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/text/example3
+     * test data: dev/morphia/test/query/filters/text/textWithAnExactString
      */
     @Test
     @DisplayName("``$text`` with an Exact String")
-    public void testExample3() {
+    public void testTextWithAnExactString() {
         testQuery(new ActionTestOptions().orderMatters(false), (query) -> query.filter(text("\"coffee shop\"")
 
         ));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/text/example4
+     * test data: dev/morphia/test/query/filters/text/excludeDocumentsThatContainATerm
      */
     @Test
     @DisplayName("Exclude Documents That Contain a Term")
-    public void testExample4() {
+    public void testExcludeDocumentsThatContainATerm() {
         testQuery(new ActionTestOptions().orderMatters(false), (query) -> query.filter(text("coffee -shop")
 
         ));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/text/example5
+     * test data: dev/morphia/test/query/filters/text/queryADifferentLanguage
      */
     @Test
     @DisplayName("Query a Different Language")
-    public void testExample5() {
+    public void testQueryADifferentLanguage() {
         testQuery(new ActionTestOptions().orderMatters(false), (query) -> query.filter(text("leche").language("es")));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/text/example6
+     * test data: dev/morphia/test/query/filters/text/caseAndDiacriticInsensitivity
      */
     @Test
     @DisplayName("Case and Diacritic Insensitivity")
-    public void testExample6() {
+    public void testCaseAndDiacriticInsensitivity() {
         testQuery(new ActionTestOptions().orderMatters(false), (query) -> query.filter(text("сы́рники CAFÉS")));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/text/example7
+     * test data: dev/morphia/test/query/filters/text/caseSensitivity
      */
     @Test
     @DisplayName("Case Sensitivity")
-    public void testExample7() {
+    public void testCaseSensitivity() {
         testQuery((query) -> query.filter(text("Coffee").caseSensitive(true)));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/text/example8
+     * test data: dev/morphia/test/query/filters/text/diacriticSensitiveSearch
      */
     @Test
     @DisplayName("Diacritic Sensitive Search")
-    public void testExample8() {
+    public void testDiacriticSensitiveSearch() {
         testQuery(new ActionTestOptions().orderMatters(false),
                 (query) -> query.filter(text("CAFÉ").diacriticSensitive(true)));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/text/example9
+     * test data: dev/morphia/test/query/filters/text/relevanceScoreExamples
      */
     @Test
     @DisplayName("Relevance Score Examples")
-    public void testExample9() {
+    public void testRelevanceScoreExamples() {
         ActionTestOptions options = new ActionTestOptions()
                 .findOptions(new FindOptions().projection().project(textScore("score")));
         testQuery(options, (query) -> query.filter(text("cake")));

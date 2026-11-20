@@ -17,12 +17,12 @@ import static dev.morphia.query.filters.Filters.eq;
 
 public class TestGeoNear extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/stages/geoNear/example1
+     * test data: dev/morphia/test/aggregation/stages/geoNear/maximumDistance
      * 
      */
     @Test
     @DisplayName("Maximum Distance")
-    public void testExample1() {
+    public void testMaximumDistance() {
         testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(geoNear(new Point(new Position(-73.99279, 40.719296)))
                         .distanceField("dist.calculated").maxDistance(2).query(eq("category", "Parks"))
@@ -30,32 +30,32 @@ public class TestGeoNear extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/geoNear/example2
+     * test data: dev/morphia/test/aggregation/stages/geoNear/minimumDistance
      * 
      */
     @Test
     @DisplayName("Minimum Distance")
-    public void testExample2() {
+    public void testMinimumDistance() {
         // this example isn't representable in morphia as is
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/geoNear/example3
+     * test data: dev/morphia/test/aggregation/stages/geoNear/geoNearWithTheLetOption
      * 
      */
     @Test
     @DisplayName("$geoNear with the ``let`` option")
-    public void testExample3() {
+    public void testGeoNearWithTheLetOption() {
         // let doesn't apply to morphia
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/geoNear/example4
+     * test data: dev/morphia/test/aggregation/stages/geoNear/geoNearWithBoundLetOption
      *
      */
     @Test
     @DisplayName("$geoNear with Bound ``let`` Option")
-    public void testExample4() {
+    public void testGeoNearWithBoundLetOption() {
         testPipeline(new ActionTestOptions().serverVersion("6.0.0").removeIds(true).orderMatters(false),
                 (aggregation) -> aggregation.pipeline(
                         lookup(EXAMPLE_TEST_COLLECTION).as("joinedField").let("pt", "$location")
@@ -64,12 +64,12 @@ public class TestGeoNear extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/geoNear/example3
+     * test data: dev/morphia/test/aggregation/stages/geoNear/specifyWhichGeospatialIndexToUse
      *
      */
     @Test
     @DisplayName("Specify Which Geospatial Index to Use")
-    public void testExample5() {
+    public void testSpecifyWhichGeospatialIndexToUse() {
         testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false).skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(geoNear(new Point(new Position(-73.98142, 40.71782)))
                         .distanceField("dist.calculated").key("location").query(eq("category", "Parks")), limit(5)));

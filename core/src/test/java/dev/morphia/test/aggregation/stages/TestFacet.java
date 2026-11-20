@@ -18,12 +18,12 @@ import static dev.morphia.query.filters.Filters.exists;
 
 public class TestFacet extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/stages/facet/example1
+     * test data: dev/morphia/test/aggregation/stages/facet/facetAggregationStage
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testFacetAggregationStage() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(facet()
                         .field("categorizedByTags", unwind("tags"), sortByCount("$tags"))

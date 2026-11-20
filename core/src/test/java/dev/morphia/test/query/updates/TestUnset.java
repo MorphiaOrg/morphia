@@ -12,11 +12,11 @@ import static dev.morphia.query.updates.UpdateOperators.unset;
 public class TestUnset extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/updates/unset/example1
+     * test data: dev/morphia/test/query/updates/unset/unsetUpdateOperator
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testUnsetUpdateOperator() {
         testUpdate(new ActionTestOptions().removeIds(true).orderMatters(false),
                 (query) -> query.filter(eq("sku", "unknown")), unset("quantity", "instock"));
     }

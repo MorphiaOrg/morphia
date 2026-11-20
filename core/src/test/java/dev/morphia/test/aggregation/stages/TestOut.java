@@ -14,23 +14,23 @@ import static dev.morphia.aggregation.stages.Out.out;
 
 public class TestOut extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/stages/out/example1
+     * test data: dev/morphia/test/aggregation/stages/out/outputToSameDatabase
      * 
      */
     @Test
     @DisplayName("Output to Same Database")
-    public void testExample1() {
+    public void testOutputToSameDatabase() {
         testPipeline(new ActionTestOptions().skipDataCheck(true), (aggregation) -> aggregation
                 .pipeline(group(id("$author")).field("books", push().single("$title")), out(Author.class)));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/out/example2
+     * test data: dev/morphia/test/aggregation/stages/out/outputToADifferentDatabase
      * 
      */
     @Test
     @DisplayName("Output to a Different Database")
-    public void testExample2() {
+    public void testOutputToADifferentDatabase() {
         testPipeline(new ActionTestOptions().skipDataCheck(true),
                 (aggregation) -> aggregation.pipeline(group(id("$author")).field("books", push().single("$title")),
                         out(Author.class).database("reporting")));

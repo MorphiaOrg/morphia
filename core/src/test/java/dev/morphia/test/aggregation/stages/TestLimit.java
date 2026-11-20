@@ -11,12 +11,12 @@ import static dev.morphia.aggregation.stages.Limit.limit;
 public class TestLimit extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/limit/example1
+     * test data: dev/morphia/test/aggregation/stages/limit/limitAggregationStage
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testLimitAggregationStage() {
         testPipeline(new ActionTestOptions().skipDataCheck(true), (aggregation) -> aggregation.pipeline(limit(5)));
     }
 }

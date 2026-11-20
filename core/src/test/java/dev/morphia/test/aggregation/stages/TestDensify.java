@@ -21,12 +21,12 @@ public class TestDensify extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/densify/example1
+     * test data: dev/morphia/test/aggregation/stages/densify/densifyTimeSeriesData
      * 
      */
     @Test
     @DisplayName("Densify Time Series Data")
-    public void testExample1() {
+    public void testDensifyTimeSeriesData() {
         testPipeline(
                 new ActionTestOptions().removeIds(true), (
                         aggregation) -> aggregation
@@ -38,12 +38,12 @@ public class TestDensify extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/stages/densify/example2
+     * test data: dev/morphia/test/aggregation/stages/densify/densifictionWithPartitions
      * 
      */
     @Test
     @DisplayName("Densifiction with Partitions")
-    public void testExample2() {
+    public void testDensifictionWithPartitions() {
         testPipeline(new ActionTestOptions().removeIds(true).orderMatters(false), (aggregation) -> aggregation
                 .pipeline(densify("altitude", Range.full(200)).partitionByFields("variety")));
     }

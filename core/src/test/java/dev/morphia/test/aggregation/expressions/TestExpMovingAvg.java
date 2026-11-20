@@ -20,24 +20,24 @@ public class TestExpMovingAvg extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/expMovingAvg/example1
+     * test data: dev/morphia/test/aggregation/expressions/expMovingAvg/exponentialMovingAverageUsingN
      * 
      */
     @Test
     @DisplayName("Exponential Moving Average Using ``N``")
-    public void testExample1() {
+    public void testExponentialMovingAverageUsingN() {
         testPipeline(new ActionTestOptions().removeIds(true),
                 (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$stock").sortBy(ascending("date"))
                         .output(output("expMovingAvgForStock").operator(expMovingAvg("$price", 2)))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/expMovingAvg/example2
+     * test data: dev/morphia/test/aggregation/expressions/expMovingAvg/exponentialMovingAverageUsingAlpha
      * 
      */
     @Test
     @DisplayName("Exponential Moving Average Using ``alpha``")
-    public void testExample2() {
+    public void testExponentialMovingAverageUsingAlpha() {
         testPipeline(new ActionTestOptions().removeIds(true),
                 (aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$stock").sortBy(ascending("date"))
                         .output(output("expMovingAvgForStock").operator(expMovingAvg("$price", 0.75)))));

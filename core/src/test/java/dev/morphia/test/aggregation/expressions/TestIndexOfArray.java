@@ -10,12 +10,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestIndexOfArray extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/indexOfArray/example1
+     * test data: dev/morphia/test/aggregation/expressions/indexOfArray/indexOfArrayExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testIndexOfArrayExpressionOperator() {
         testPipeline((aggregation) -> aggregation.pipeline(project().include("index", indexOfArray("$items", 2))));
     }
 

@@ -11,12 +11,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestTrim extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/trim/example1
+     * test data: dev/morphia/test/aggregation/expressions/trim/trimExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testTrimExpressionOperator() {
         testPipeline(new ActionTestOptions().orderMatters(false), (aggregation) -> aggregation
                 .pipeline(project().include("item").include("description", trim("$description"))));
     }

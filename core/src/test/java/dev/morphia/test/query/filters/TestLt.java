@@ -12,20 +12,20 @@ import static dev.morphia.query.updates.UpdateOperators.set;
 public class TestLt extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/filters/lt/example1
+     * test data: dev/morphia/test/query/filters/lt/matchDocumentFields
      */
     @Test
     @DisplayName("Match Document Fields")
-    public void testExample1() {
+    public void testMatchDocumentFields() {
         testQuery(new ActionTestOptions().removeIds(true), (query) -> query.filter(lt("quantity", 20)));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/lt/example2
+     * test data: dev/morphia/test/query/filters/lt/performAnUpdateBasedOnEmbeddedDocumentFields
      */
     @Test
     @DisplayName("Perform an Update Based on Embedded Document Fields")
-    public void testExample2() {
+    public void testPerformAnUpdateBasedOnEmbeddedDocumentFields() {
         testUpdate(new ActionTestOptions().removeIds(true), (query) -> query.filter(lt("carrier.fee", 20)),
                 set("price", 9.99));
     }

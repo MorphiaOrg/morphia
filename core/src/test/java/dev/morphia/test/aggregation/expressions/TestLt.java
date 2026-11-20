@@ -10,12 +10,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestLt extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/lt/example1
+     * test data: dev/morphia/test/aggregation/expressions/lt/ltExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testLtExpressionOperator() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().suppressId().include("item").include("qty").include("qtyLt250", lt("$qty", 250))));
     }

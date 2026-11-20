@@ -14,21 +14,21 @@ import static dev.morphia.query.filters.Filters.near;
 public class TestNear extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/filters/near/example1
+     * test data: dev/morphia/test/query/filters/near/queryOnGeoJsonData
      */
     @Test
     @DisplayName("Query on GeoJSON Data")
-    public void testExample1() {
+    public void testQueryOnGeoJsonData() {
         testQuery(new ActionTestOptions().skipDataCheck(true), (query) -> query.filter(
                 near("location", new Point(new Position(-73.9667, 40.78))).minDistance(1000.0).maxDistance(5000.0)));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/near/example2
+     * test data: dev/morphia/test/query/filters/near/queryOnLegacyCoordinates
      */
     @Test
     @DisplayName("Query on Legacy Coordinates")
-    public void testExample2() {
+    public void testQueryOnLegacyCoordinates() {
         // legacy coordinates just won't be supported for now
         /*
          * testQuery(new QueryTestOptions().skipDataCheck(true), (query) ->

@@ -11,20 +11,20 @@ import static dev.morphia.query.filters.Filters.exists;
 public class TestExists extends TemplatedTestBase {
 
     /**
-     * test data: dev/morphia/test/query/filters/exists/example1
+     * test data: dev/morphia/test/query/filters/exists/existsAndNotEqualTo
      */
     @Test
     @DisplayName("Exists and Not Equal To")
-    public void testExample1() {
+    public void testExistsAndNotEqualTo() {
         testQuery(new ActionTestOptions().removeIds(true), (query) -> query.filter(exists("saffron")));
     }
 
     /**
-     * test data: dev/morphia/test/query/filters/exists/example2
+     * test data: dev/morphia/test/query/filters/exists/nullValues
      */
     @Test
     @DisplayName("Null Values")
-    public void testExample2() {
+    public void testNullValues() {
         testQuery(new ActionTestOptions().removeIds(true), (query) -> query.filter(exists("cinnamon").not()
 
         ));

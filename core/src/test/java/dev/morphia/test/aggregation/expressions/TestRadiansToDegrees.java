@@ -11,12 +11,12 @@ import static dev.morphia.aggregation.stages.AddFields.addFields;
 
 public class TestRadiansToDegrees extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/radiansToDegrees/example1
+     * test data: dev/morphia/test/aggregation/expressions/radiansToDegrees/radiansToDegreesExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testRadiansToDegreesExpressionOperator() {
         testPipeline(new ActionTestOptions().removeIds(true),
                 (aggregation) -> aggregation.pipeline(addFields().field("angle_a_deg", radiansToDegrees("$angle_a"))
                         .field("angle_b_deg", radiansToDegrees("$angle_b"))

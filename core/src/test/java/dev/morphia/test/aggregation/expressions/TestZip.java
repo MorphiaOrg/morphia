@@ -16,23 +16,23 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestZip extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/zip/example1
+     * test data: dev/morphia/test/aggregation/expressions/zip/matrixTransposition
      * 
      */
     @Test
     @DisplayName("Matrix Transposition")
-    public void testExample1() {
+    public void testMatrixTransposition() {
         testPipeline((aggregation) -> aggregation.pipeline(project().suppressId().include("transposed",
                 zip(elementAt("$matrix", 0), elementAt("$matrix", 1), elementAt("$matrix", 2)))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/zip/example2
+     * test data: dev/morphia/test/aggregation/expressions/zip/filteringAndPreservingIndexes
      * 
      */
     @Test
     @DisplayName("Filtering and Preserving Indexes")
-    public void testExample2() {
+    public void testFilteringAndPreservingIndexes() {
         testPipeline((aggregation) -> {
             return aggregation.pipeline(project().suppressId().include("pages",
                     filter(zip("$pages", range(0, size("$pages"))),

@@ -11,12 +11,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestIndexOfCP extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/indexOfCP/example1
+     * test data: dev/morphia/test/aggregation/expressions/indexOfCP/indexOfCpExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testIndexOfCpExpressionOperator() {
         testPipeline(new ActionTestOptions().orderMatters(false),
                 (aggregation) -> aggregation.pipeline(project().include("cpLocation", indexOfCP("$item", "foo"))));
     }

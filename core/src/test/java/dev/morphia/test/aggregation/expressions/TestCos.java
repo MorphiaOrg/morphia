@@ -12,23 +12,23 @@ import static dev.morphia.aggregation.stages.AddFields.addFields;
 
 public class TestCos extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/cos/example1
+     * test data: dev/morphia/test/aggregation/expressions/cos/cosineOfValueInDegrees
      * 
      */
     @Test
     @DisplayName("main :: Cosine of Value in Degrees")
-    public void testExample1() {
+    public void testCosineOfValueInDegrees() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(addFields().field("side_a", multiply(cos(degreesToRadians("$angle_a")), "$hypotenuse"))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/cos/example2
+     * test data: dev/morphia/test/aggregation/expressions/cos/cosineOfValueInRadians
      * 
      */
     @Test
     @DisplayName("main :: Cosine of Value in Radians")
-    public void testExample2() {
+    public void testCosineOfValueInRadians() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(addFields().field("side_b", multiply(cos("$angle_a"), "$hypotenuse"))));
     }

@@ -28,12 +28,12 @@ public class TestDateDiff extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/dateDiff/example1
+     * test data: dev/morphia/test/aggregation/expressions/dateDiff/elapsedTime
      * 
      */
     @Test
     @DisplayName("Elapsed Time")
-    public void testExample1() {
+    public void testElapsedTime() {
         testPipeline((aggregation) -> aggregation.pipeline(
                 group(id(null)).field("averageTime", avg(dateDiff("$purchased", "$delivered", TimeUnit.DAY))),
                 project().suppressId().include("numDays", trunc("$averageTime", 1))
@@ -42,12 +42,12 @@ public class TestDateDiff extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/dateDiff/example2
+     * test data: dev/morphia/test/aggregation/expressions/dateDiff/resultPrecision
      * 
      */
     @Test
     @DisplayName("Result Precision")
-    public void testExample2() {
+    public void testResultPrecision() {
         testPipeline((aggregation) -> aggregation.pipeline(project().suppressId().include("start", "$start")
                 .include("end", "$end").include("years", dateDiff("$start", "$end", YEAR))
                 .include("months", dateDiff("$start", "$end", MONTH))
@@ -55,12 +55,12 @@ public class TestDateDiff extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/dateDiff/example3
+     * test data: dev/morphia/test/aggregation/expressions/dateDiff/weeksPerMonth
      * 
      */
     @Test
     @DisplayName("Weeks Per Month")
-    public void testExample3() {
+    public void testWeeksPerMonth() {
         testPipeline((aggregation) -> aggregation
                 .pipeline(project().suppressId().include("wks_default", dateDiff("$start", "$end", WEEK))
                         .include("wks_monday", dateDiff("$start", "$end", WEEK).startOfWeek(MONDAY))

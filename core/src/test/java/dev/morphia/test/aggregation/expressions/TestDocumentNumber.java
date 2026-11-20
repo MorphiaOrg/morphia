@@ -19,23 +19,23 @@ public class TestDocumentNumber extends TemplatedTestBase {
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/documentNumber/example1
+     * test data: dev/morphia/test/aggregation/expressions/documentNumber/documentNumberForEachState
      * 
      */
     @Test
     @DisplayName("Document Number for Each State")
-    public void testExample1() {
+    public void testDocumentNumberForEachState() {
         testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                 .sortBy(descending("quantity")).output(output("documentNumberForState").operator(documentNumber()))));
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/documentNumber/example2
+     * test data: dev/morphia/test/aggregation/expressions/documentNumber/documentNumberForDuplicateNullAndMissingValues
      * 
      */
     @Test
     @DisplayName("Document Number for Duplicate, Null, and Missing Values")
-    public void testExample2() {
+    public void testDocumentNumberForDuplicateNullAndMissingValues() {
         testPipeline((aggregation) -> aggregation.pipeline(setWindowFields().partitionBy("$state")
                 .sortBy(descending("quantity")).output(output("documentNumberForState").operator(documentNumber()))));
     }

@@ -11,24 +11,24 @@ import static dev.morphia.aggregation.stages.AddFields.addFields;
 
 public class TestAcosh extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/acosh/example1
+     * test data: dev/morphia/test/aggregation/expressions/acosh/inverseHyperbolicCosineInDegrees
      * 
      */
     @Test
     @DisplayName("main :: Inverse Hyperbolic Cosine in Degrees")
-    public void testExample1() {
+    public void testInverseHyperbolicCosineInDegrees() {
         testPipeline(aggregation -> aggregation
                 .pipeline(addFields().field("y-coordinate", radiansToDegrees(acosh("$x-coordinate")))));
 
     }
 
     /**
-     * test data: dev/morphia/test/aggregation/expressions/acosh/example2
+     * test data: dev/morphia/test/aggregation/expressions/acosh/inverseHyperbolicCosineInRadians
      * 
      */
     @Test
     @DisplayName("main :: Inverse Hyperbolic Cosine in Radians")
-    public void testExample2() {
+    public void testInverseHyperbolicCosineInRadians() {
         testPipeline(aggregation -> aggregation.pipeline(addFields().field("y-coordinate", acosh("$x-coordinate"))));
 
     }

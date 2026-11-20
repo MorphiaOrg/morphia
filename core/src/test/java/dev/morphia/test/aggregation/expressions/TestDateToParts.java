@@ -10,12 +10,12 @@ import static dev.morphia.aggregation.stages.Projection.project;
 
 public class TestDateToParts extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/dateToParts/example1
+     * test data: dev/morphia/test/aggregation/expressions/dateToParts/dateToPartsExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testDateToPartsExpressionOperator() {
         testPipeline((aggregation) -> aggregation.pipeline(
                 project().include("date", dateToParts("$date")).include("date_iso", dateToParts("$date").iso8601(true))
                         .include("date_timezone", dateToParts("$date").timezone("America/New_York"))));

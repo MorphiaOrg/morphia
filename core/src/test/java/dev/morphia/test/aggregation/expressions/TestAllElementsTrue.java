@@ -11,12 +11,12 @@ import static dev.morphia.aggregation.expressions.SetExpressions.allElementsTrue
 
 public class TestAllElementsTrue extends TemplatedTestBase {
     /**
-     * test data: dev/morphia/test/aggregation/expressions/allElementsTrue/example1
+     * test data: dev/morphia/test/aggregation/expressions/allElementsTrue/allElementsTrueExpressionOperator
      * 
      */
     @Test
     @DisplayName("main")
-    public void testExample1() {
+    public void testAllElementsTrueExpressionOperator() {
         testPipeline(new ActionTestOptions().orderMatters(false), aggregation -> aggregation.pipeline(Projection
                 .project().suppressId().include("responses").include("isAllTrue", allElementsTrue("$responses"))));
 
