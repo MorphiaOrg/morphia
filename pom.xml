@@ -347,11 +347,6 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.kohsuke</groupId>
-                <artifactId>github-api</artifactId>
-                <version>1.330</version>
-            </dependency>
-            <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-tree</artifactId>
                 <version>${asm.version}</version>
@@ -365,11 +360,6 @@
                 <groupId>org.jsoup</groupId>
                 <artifactId>jsoup</artifactId>
                 <version>1.24.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.asciidoctor</groupId>
-                <artifactId>asciidoctorj</artifactId>
-                <version>3.0.1</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.forge.roaster</groupId>
@@ -454,9 +444,6 @@
                     <name>audits</name>
                 </property>
             </activation>
-            <properties>
-                <skipTests>true</skipTests>
-            </properties>
             <subprojects>
                 <subproject>audits</subproject>
             </subprojects>

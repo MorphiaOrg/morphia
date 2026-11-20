@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Operator Audits" type="MavenRunConfiguration" factoryName="Maven">
+  <configuration default="false" name="Operator Audit Tests" type="MavenRunConfiguration" factoryName="Maven">
     <MavenSettings>
       <option name="myGeneralSettings" />
       <option name="myRunnerSettings" />
@@ -13,8 +13,9 @@
             <list>
               <option value="-e" />
               <option value="-Daudits" />
-              <option value="install" />
-              <option value="spotless:apply" />
+              <option value="-pl" />
+              <option value="audits" />
+              <option value="verify" />
             </list>
           </option>
           <option name="multimoduleDir" />
@@ -30,8 +31,6 @@
         </MavenRunnerParameters>
       </option>
     </MavenSettings>
-    <method v="2">
-      <option name="Maven.BeforeRunTask" enabled="true" file="$PROJECT_DIR$/build-plugins/pom.xml" goal="install" />
-    </method>
+    <method v="2" />
   </configuration>
 </component>

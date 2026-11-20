@@ -21,7 +21,7 @@ The current development branch targets **Java 17**, **Maven 4**, and the **Mongo
 | `util/` | Shared test utilities and internal helpers |
 | `examples/` | Runnable usage examples (also serve as integration tests) |
 | `docs/` | Antora-based documentation sources |
-| `audits/` | Code-audit tooling (enabled via the `audits` Maven profile) |
+| `audits/` | Offline operator-audit tests and corpus inventory (`-Daudits -pl audits`) |
 | `config/` | Shared IDE formatter / FindBugs / RevAPI config files |
 | `.github/` | CI workflows, issue templates, JBang helper scripts |
 
@@ -156,7 +156,7 @@ Workflows live in `.github/workflows/`:
 |------|---------|-------------|
 | `pull-request.yml` | PR opened/updated | Code audits + full build |
 | `build.yml` | Push to non-dependabot branches / tags | Matrix build across MongoDB and driver versions; release |
-| `audits.yml` | Scheduled / manual | Extra code-quality audits |
+| `audits.yml` | PR paths / manual | Offline operator-audit tests; no docs acquisition or GitHub publication |
 | `claude.yml` | `@claude` comment | Invokes Claude AI assistant |
 
 The build matrix is generated dynamically by JBang scripts in `.github/` (`BuildMatrix.java`, `DriverVersions.java`, `DriverSnapshot.java`).
@@ -201,4 +201,4 @@ The `pull-request.yml` workflow runs on every PR and is the gating check:
 | `-am` | Also build upstream dependencies |
 | `-T 1C` | Parallel build (1 thread per core) |
 | `-e` | Show full exception stack traces |
-| `-Paudits` | Activate the `audits` Maven profile |
+| `-Daudits -pl audits` | Run the offline operator-audit module |
