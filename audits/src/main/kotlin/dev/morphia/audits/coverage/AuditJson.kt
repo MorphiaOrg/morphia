@@ -11,6 +11,9 @@ import com.fasterxml.jackson.databind.type.LogicalType
 import com.fasterxml.jackson.module.kotlin.KotlinFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import dev.morphia.audits.api.ApiInventory
+import dev.morphia.audits.bindings.BindingDescriptor
+import dev.morphia.audits.bindings.BindingPolicy
+import dev.morphia.audits.bindings.LegacyBindingCatalog
 import dev.morphia.audits.discovery.DiscoveryPlan
 import dev.morphia.audits.discovery.DiscoveryReport
 import dev.morphia.audits.documents.DocumentReport
@@ -129,6 +132,14 @@ object AuditJson {
     fun discoveryPlan(json: String): DiscoveryPlan = read(json, DiscoveryPlan::class.java)
 
     fun discoveryReport(json: String): DiscoveryReport = read(json, DiscoveryReport::class.java)
+
+    fun bindingPolicy(json: String): BindingPolicy = read(json, BindingPolicy::class.java)
+
+    fun legacyBindings(json: String): LegacyBindingCatalog =
+        read(json, LegacyBindingCatalog::class.java)
+
+    fun bindingDescriptor(json: String): BindingDescriptor =
+        read(json, BindingDescriptor::class.java)
 
     /** Canonical JSON attribute strings stay typed at the adapter boundary. */
     fun textValue(json: String): String = requireNotNull(mapper.readValue(json, String::class.java))

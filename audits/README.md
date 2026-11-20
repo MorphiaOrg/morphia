@@ -528,3 +528,33 @@ uses declared shared setup selectors, and recovers authored page/tab titles for 
 `SOURCE_ONLY` group is explicitly non-executable. The pinned `probes/section-assembly/replay.py`
 experiment covers automatic `$abs` ownership and descriptive `$acos` tab names without creating
 seed data from displayed samples. Existing generated core tests/resources have not yet migrated.
+
+## Physical example bindings
+
+`LegacyBindings.capture` parses the four operator test packages with the JDK parser (no
+processors, attribution or execution) and records every JUnit method's actual fixture ownership:
+`BOUND` to exactly one fixture directory, a reviewed `MANUAL` test in a templated class, or an
+`INDEPENDENT` test in a class without templated fixtures. Display titles, `@Disabled`, empty bodies
+and body digests remain visible as declared source evidence; an empty or disabled bound method is
+not behavioral coverage. Reviewed exceptions live in `audits/catalog/binding-policy.json`; a fixture
+or method that is neither bound nor listed fails the import, and so does a policy entry that is now
+bound or missing. See the [binding design](../design/operator-audits-binding-manifest.md).
+
+`BindingsMainKt <repository-root> <revision> <policy.json> <catalog-out> <descriptor-out>` writes
+the evidence catalog (`audits/catalog/legacy-bindings.json`) and core's runtime descriptor
+(`core/src/test/resources/dev/morphia/test/example-bindings.json`) to the explicit paths given:
+
+```sh
+./mvnw -q -Daudits -pl audits exec:java \
+  -Daudits.mainClass=dev.morphia.audits.bindings.BindingsMainKt \
+  -Dexec.args="$PWD <revision> $PWD/audits/catalog/binding-policy.json \
+    $PWD/audits/catalog/legacy-bindings.json \
+    $PWD/core/src/test/resources/dev/morphia/test/example-bindings.json"
+```
+
+Core reads only the descriptor; ordinary core builds have no audits dependency. Its
+`TestCoverageExtension` and the offline `ExampleBindingsTest` check descriptor membership in both
+directions (declared tests and physical fixture directories), reject unknown or missing classes,
+duplicate owners and inherited ownership, and require every bound method to round-trip through the
+template loader's naming convention. `TemplatedTestBase.discoverResourceName` resolves fixtures
+through the descriptor, so a manual test cannot load a fixture by convention.

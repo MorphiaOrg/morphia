@@ -1,10 +1,12 @@
 # Operator audit implementation progress
 
-Current branch: `audits-scenario-programs`; PR base: `audits-shell-semantics` (#4520).
+Current branch: `audits-binding-manifest`; PR base: `audits-section-assembly` (#4525).
 Stack (PR head branches): #4512 `audits-pipeline-design` → #4513 `audits-source-inventory` →
 #4514 `audits-coverage-contracts` → #4515 `audits-example-identities` → #4516 `audits-pinned-sources` →
 #4517 `audits-snooty-adapter` → #4518 `audits-capability-normalization` →
-#4519 `audits-bson-comparison` → #4520 `audits-shell-semantics` → scenario programs (in progress).
+#4519 `audits-bson-comparison` → #4520 `audits-shell-semantics` → #4521 `audits-scenario-programs` →
+#4522 `audits-scenario-extraction` → #4523 `audits-published-expectations` →
+#4524 `audits-legacy-scenarios` → #4525 `audits-section-assembly` → binding manifest (in progress).
 Each PR targets its predecessor; #4512 targets `master`.
 Use `git worktree list` to locate the checkout on this machine.
 
@@ -1675,3 +1677,77 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   Publish this branch as stacked PR14, request remote review, then check exact-head CI/feedback.
   Next scope is a complete physical binding/name migration manifest and descriptor-based coverage
   discovery before coordinated method/folder/reference renames. No merge authorization.
+
+## Section assembly publication checkpoint
+
+- PR #4525: https://github.com/MorphiaOrg/morphia/pull/4525
+  branch audits-section-assembly, base audits-legacy-scenarios (#4524), head
+  8259898a66e5558068f1a571fe1e1d80dc952cb5. Fourteen PRs published; no merges performed.
+- Local reviews and final gate pass as recorded above. Requested remote review; initial feedback,
+  reviews, pending requests and inline comments are empty. Exact-head CI is running. Proof files
+  /tmp/morphia-sections-pr-{status,comments}.json. Keep this reviewed head unchanged during CI.
+- Carry this uncommitted publication checkpoint into the next child only after required exact-head
+  CI and available feedback pass. Save a copy before restoring this parent journal. Next work:
+  complete binding/name migration manifest, manifest-based coverage discovery, then the coordinated
+  descriptive method/folder/reference cutover with fixture/lock bytes preserved.
+
+## Binding manifest start (2026-11-17)
+
+- #4525 is green at 8259898a66e5558068f1a571fe1e1d80dc952cb5. All five required checks pass;
+  conditional Dependabot automerge skipped. No remote comments, reviews, inline feedback or pending
+  requests. Proof /tmp/morphia-sections-pr-final-{status,comments}.json. Fourteen PRs published;
+  none merged by this task.
+- Created audits-binding-manifest from that reviewed head, carried the publication checkpoint here,
+  saved /tmp/morphia-sections-publication-progress.md and restored the clean parent journal.
+- Next scope: a complete physical Java method/resource binding manifest and manifest-based core
+  coverage discovery before coordinated descriptive method/folder/reference backport. Provisional
+  investigation notes /tmp/morphia-binding-manifest-notes.md need design/code review before adoption.
+- Existing discoverResourceName already supports general test-prefixed stems; TestCoverageExtension
+  still scans only testExample* and silently returns for zero methods/no resource folder. The
+  historical corpus inventories files/titles/markers but lacks actual method/body/options bindings.
+  Replacing framework code changes files in its broad historical source list: preserve the original
+  snapshot and every curated fixture/lock byte, recording intentional framework deltas separately.
+- No implementation, commit or PR on this child yet. Available independent reviewer is idle;
+  external CLI quotas remain as recorded above. Do not claim completed Claude approval.
+
+## Physical binding investigation
+
+- Read-only Javac AST probe /tmp/InspectLegacyBindings.java produced
+  /tmp/morphia-legacy-java-bindings.json: 260 classes / 566 JUnit methods in the four operator packages.
+  259 template classes / 565 methods; one independent TestCollectionStats method.
+- Legacy-convention comparison finds 554 unique bound resource cases, no duplicate owners; two
+  unbound marker-only cases: tsIncrement/example2 and tsSecond/example2 (awkward watch examples).
+  Eleven template methods have no resource: ten manual cases plus empty TestPercentile#testExample5.
+  Bound TestLastN#testExample5 is empty; TestFirstN#testExample5 disabled/missing DisplayName;
+  disabled TestExpr#testExample2 display title differs from its name resource. Preserve and report
+  these facts explicitly; do not infer behavioral coverage or manufacture missing tests.
+- Initial slice design in design/operator-audits-binding-manifest.md is pending independent review.
+  Current implementation has not started. Original historical catalog remains immutable; a later
+  intentional framework-source delta must be distinguished from unchanged curated case bytes.
+
+## Binding manifest implementation (Claude, 2026-11-20)
+
+- Resumed after Codex quota exhaustion (Codex until 2026-11-21 14:51; Copilot monthly quota also
+  exhausted). The /tmp investigation files were gone; the probe was rebuilt from source.
+- Implemented `dev.morphia.audits.bindings.LegacyBindings` (javac parse-only import),
+  `BindingsMainKt`, reviewed `audits/catalog/binding-policy.json`, evidence catalog
+  `audits/catalog/legacy-bindings.json` and core descriptor
+  `core/src/test/resources/dev/morphia/test/example-bindings.json`. Core `ExampleBindings` validates
+  the closed descriptor; `TestCoverageExtension` and offline `ExampleBindingsTest` check membership in
+  both directions; `discoverResourceName` resolves bound fixtures through the descriptor.
+- Real import: 554 BOUND, 11 MANUAL, 1 INDEPENDENT over 260 classes; two unbound marker-only
+  fixtures. 30 bound methods have empty bodies, 7 are disabled; recorded as evidence only.
+- Gates: 5 LegacyBindingsTest + 3 ExampleBindingsTest pass; all four operator packages pass with
+  Critter then reflection (569 tests, 0 failures, 7 disabled skips each). Mutations (extra fixture,
+  removed class entry) fail ExampleBindingsTest. Fresh CorpusInventory capture equals the accepted
+  catalog for examples/exclusions/auxiliary resources; only the intended framework sources changed.
+- Next: descriptive method/folder/reference backport (step 3a). Survey: 111 generic `main`/missing
+  titles, at most one per operator page, so the pinned page title (e.g. `$abs (expression operator)`
+  at docs a5d960b9) supplies context; four duplicate-title groups plus two `[1]` meta titles need
+  reviewed qualifiers. No title exceeds the 80-character stem cap.
+- Local review: Codex and Copilot CLIs unavailable (quota); an independent review agent ran two
+  rounds. Round 1 found three valid gaps (unbound fixtures not checked as marker-only, committed
+  descriptor not tied to the reviewed policy, descriptor package list not pinned) plus two lows
+  (default-locale lowercasing, late duplicate-owner detection); all fixed with regressions. Round 2
+  verified the fixes and found the audits workflow did not trigger on core operator test/fixture
+  changes; its path filter now includes them. No finding rejected.
