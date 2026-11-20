@@ -223,6 +223,53 @@ class CuratedRepairsTest {
         )
     }
 
+    @Test
+    fun retiredLocksKeepTheirCategories() {
+        resource("reordered/action.json")
+        resource("kept/lock", "Reorder pipeline")
+        resource("kept/action.json")
+        source(
+            """
+            @Test public void testReordered() { testPipeline(a -> a); }
+            @Test public void testKept() { testPipeline(a -> a); }
+            """
+        )
+        val fixture = "query/filters/eq/reordered"
+        val report =
+            CuratedRepairs.capture(
+                repository,
+                "baseline",
+                descriptor("testReordered" to "reordered", "testKept" to "kept"),
+                review(
+                    "reorder pipeline" to "MORPHIA_FORM",
+                    "wrong name from parser" to "EXTRACTION",
+                ),
+                mapOf(fixture to "Reorder pipeline\nWrong name from parser\n"),
+            )
+        with(report.examples.single { it.fixture == fixture }) {
+            assertEquals(RepairDisposition.OVERRIDDEN, disposition)
+            assertEquals(listOf("EXTRACTION", "MORPHIA_FORM"), categories)
+            assertEquals(emptyList<Any>(), markers)
+        }
+        assertEquals(1, report.summary["disposition.OVERRIDDEN"])
+        assertEquals(1, report.summary["examples.locked"])
+
+        resource("reordered/lock", "Reorder pipeline")
+        val message =
+            assertThrows(IllegalArgumentException::class.java) {
+                    CuratedRepairs.capture(
+                        repository,
+                        "baseline",
+                        descriptor("testReordered" to "reordered", "testKept" to "kept"),
+                        review("reorder pipeline" to "MORPHIA_FORM"),
+                        mapOf(fixture to "Reorder pipeline", "query/filters/eq/gone" to "x"),
+                    )
+                }
+                .message!!
+        assertTrue("Retired lock is still present: $fixture" in message, message)
+        assertTrue("Retired lock for an unknown fixture: query/filters/eq/gone" in message, message)
+    }
+
     /**
      * The committed inventory must be what the reviewed classification produces from the sources.
      */
@@ -243,10 +290,14 @@ class CuratedRepairsTest {
                     read("core/src/test/resources/dev/morphia/test/example-bindings.json")
                 ),
                 AuditJson.repairReview(read("audits/catalog/repair-review.json")),
+                AuditJson.formReview(read("audits/catalog/form-review.json"))
+                    .declarations
+                    .associate { it.fixture to it.lock },
             )
 
         assertEquals(read("audits/catalog/curated-repairs.json"), AuditJson.write(report))
-        assertEquals(236, report.summary["examples.locked"])
+        assertEquals(193, report.summary["examples.locked"])
+        assertEquals(43, report.summary["disposition.OVERRIDDEN"])
         assertEquals(17, report.exclusions.size)
         assertEquals(
             0,

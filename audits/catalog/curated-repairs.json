@@ -577,14 +577,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/bottomN/computingNBasedOnTheGroupKeyForGroup",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "b9e436f27be163d32c9116ed94ab0911f93b85d9845118a787be5a408fa380bc",
-      "text" : "morphia generates the more succinct array version vs the document version from the docs\ndocument order differs"
-    } ],
+    "markers" : [ ],
     "method" : "testComputingNBasedOnTheGroupKeyForGroup",
     "options" : [ {
       "argument" : "false",
@@ -679,14 +675,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/cmp/cmpExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
-      "text" : "reorder pipeline"
-    } ],
+    "markers" : [ ],
     "method" : "testCmpExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestCmp"
@@ -716,14 +708,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/cond/condExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "fd98b0ba84e5fbdeca45e858c631317602ece197b444b671a8cd4240b93cc532",
-      "text" : "morphia generates the more succinct array version vs the document version from the docs"
-    } ],
+    "markers" : [ ],
     "method" : "testCondExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestCond"
@@ -1053,14 +1041,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/dateToString/dateToStringExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "52314f8989d5111024d78af05163f8aff29e2d82a23b092309890cf1d614bc7d",
-      "text" : "rearranged arguments to match morphia's"
-    } ],
+    "markers" : [ ],
     "method" : "testDateToStringExpressionOperator",
     "options" : [ {
       "argument" : "7.0.0",
@@ -1238,14 +1222,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/eq/eqExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
-      "text" : "reorder pipeline"
-    } ],
+    "markers" : [ ],
     "method" : "testEqExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestEq"
@@ -1296,14 +1276,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/filter/filterBasedOnRegularExpressionMatch",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "fc3c9842e91c9f0b0c93bb850d625d5e220332231daf5d6a2398aaf6cc9da853",
-      "text" : "rearrange elements"
-    } ],
+    "markers" : [ ],
     "method" : "testFilterBasedOnRegularExpressionMatch",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestFilter"
@@ -1311,14 +1287,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/filter/filterBasedOnStringEqualityMatch",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "fc3c9842e91c9f0b0c93bb850d625d5e220332231daf5d6a2398aaf6cc9da853",
-      "text" : "rearrange elements"
-    } ],
+    "markers" : [ ],
     "method" : "testFilterBasedOnStringEqualityMatch",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestFilter"
@@ -1326,14 +1298,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/filter/filterExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "6f52ed65332f0be4ef37c5213073e94224d53e2d4634c4aaa26134a32a21bcd6",
-      "text" : "the codec produces items in a different order"
-    } ],
+    "markers" : [ ],
     "method" : "testFilterExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestFilter"
@@ -1352,14 +1320,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/filter/useTheLimitField",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "fc3c9842e91c9f0b0c93bb850d625d5e220332231daf5d6a2398aaf6cc9da853",
-      "text" : "rearrange elements"
-    } ],
+    "markers" : [ ],
     "method" : "testUseTheLimitField",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestFilter"
@@ -1406,14 +1370,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/firstN/computingNBasedOnTheGroupKeyForGroup",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "58f4a3fd5261c9ba1ff92fa36d5cfff7b5395b3520cc0181ea457375473b7725",
-      "text" : "use the shorter cond form"
-    } ],
+    "markers" : [ ],
     "method" : "testComputingNBasedOnTheGroupKeyForGroup",
     "options" : [ {
       "argument" : "false",
@@ -1550,14 +1510,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/gt/gtExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
-      "text" : "reorder pipeline"
-    } ],
+    "markers" : [ ],
     "method" : "testGtExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestGt"
@@ -1565,14 +1521,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/gte/gteExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
-      "text" : "reorder pipeline"
-    } ],
+    "markers" : [ ],
     "method" : "testGteExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestGte"
@@ -1689,14 +1641,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/isArray/isArrayExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "c4529109c89ee24f0a64bd08c2b0abc76d2dbb09459ad396c9afb09a6298b5ab",
-      "text" : "use a different form of $isArray to match morphia's rendering\nuse shorter form of cond"
-    } ],
+    "markers" : [ ],
     "method" : "testIsArrayExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestIsArray"
@@ -1795,14 +1743,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/lastN/computingNBasedOnTheGroupKeyForGroup",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "c7a80bc42692b60a49b7798516f8c9af58c15079fcef989ecf8322671d2d933d",
-      "text" : "use the shorter form of cond"
-    } ],
+    "markers" : [ ],
     "method" : "testComputingNBasedOnTheGroupKeyForGroup",
     "options" : [ {
       "argument" : "false",
@@ -1870,14 +1814,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/let/letExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "3e05a7a89116f49a4be5ea18c694d86de961a7c2bce5958e4aaded57361f3777",
-      "text" : "use the shorter form of $cond"
-    } ],
+    "markers" : [ ],
     "method" : "testLetExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestLet"
@@ -2013,14 +1953,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/lt/ltExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
-      "text" : "reorder pipeline"
-    } ],
+    "markers" : [ ],
     "method" : "testLtExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestLt"
@@ -2028,14 +1964,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/lte/lteExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
-      "text" : "reorder pipeline"
-    } ],
+    "markers" : [ ],
     "method" : "testLteExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestLte"
@@ -2054,14 +1986,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/map/addToEachElementOfAnArray",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "30c5a96566f78dbffa6dfa597668858f5da0511ff6f506f0d1943984c67dfacc",
-      "text" : "reorder pipeline to match morphia's order"
-    } ],
+    "markers" : [ ],
     "method" : "testAddToEachElementOfAnArray",
     "options" : [ {
       "argument" : "true",
@@ -2090,14 +2018,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/map/truncateEachArrayElement",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "30c5a96566f78dbffa6dfa597668858f5da0511ff6f506f0d1943984c67dfacc",
-      "text" : "reorder pipeline to match morphia's order"
-    } ],
+    "markers" : [ ],
     "method" : "testTruncateEachArrayElement",
     "options" : [ {
       "argument" : "true",
@@ -2148,14 +2072,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/maxN/computingNBasedOnTheGroupKeyForGroup",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "887b00c165c463eee845fb5235d5aae2eb2fd9b680b62b72bacdb6f46a36cd56",
-      "text" : "cond uses the shorter format"
-    } ],
+    "markers" : [ ],
     "method" : "testComputingNBasedOnTheGroupKeyForGroup",
     "options" : [ {
       "argument" : "false",
@@ -2422,14 +2342,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/minN/computingNBasedOnTheGroupKeyForGroup",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "293c230b0f5885f15045cfb17bf980e09412e7271b543ae012e024749975b60f",
-      "text" : "update the docs version to use the short version morphia generates"
-    } ],
+    "markers" : [ ],
     "method" : "testComputingNBasedOnTheGroupKeyForGroup",
     "options" : [ {
       "argument" : "false",
@@ -2527,14 +2443,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/ne/neExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
-      "text" : "reorder pipeline"
-    } ],
+    "markers" : [ ],
     "method" : "testNeExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestNe"
@@ -2869,14 +2781,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/reduce/stringConcatenation",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "0654b84b5ca1b27df79c66f71ef658e66d2fc21b4a3b9d059d740dfcbe8da918",
-      "text" : "use the short form for $cond"
-    } ],
+    "markers" : [ ],
     "method" : "testStringConcatenation",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestReduce"
@@ -3112,14 +3020,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/setDifference/setDifferenceExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "e18dfdc16e2c6ea874220bb8df22daa6deeee8af8f83a3b9e264115e2f694ea8",
-      "text" : "rearrange suppress id"
-    } ],
+    "markers" : [ ],
     "method" : "testSetDifferenceExpressionOperator",
     "options" : [ {
       "argument" : "false",
@@ -3211,14 +3115,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/setIntersection/elementsArrayExample",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "e18dfdc16e2c6ea874220bb8df22daa6deeee8af8f83a3b9e264115e2f694ea8",
-      "text" : "rearrange suppress id"
-    } ],
+    "markers" : [ ],
     "method" : "testElementsArrayExample",
     "options" : [ {
       "argument" : "false",
@@ -3258,14 +3158,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/setUnion/setUnionAccumulatorOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "e17fac3fb207733c3d2910b145f4878ecdbee2a2d8c8f7d6337bb23cd582cc6b",
-      "text" : "rearrange suppress id\n"
-    } ],
+    "markers" : [ ],
     "method" : "testSetUnionAccumulatorOperator",
     "options" : [ {
       "argument" : "false",
@@ -3345,14 +3241,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/size/sizeExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "aae0020d062ca8823586feb8233268a2534c4cf4b1b0a0ea0466ad0cd6699453",
-      "text" : "adjust the form of $cond"
-    } ],
+    "markers" : [ ],
     "method" : "testSizeExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestSize"
@@ -3441,14 +3333,10 @@
     "assertions" : [ "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/split/splitExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "2057c929ec31a45871bb1ddf92836a0a1f499a45bbea08a1255f3c99c32035cf",
-      "text" : "change the form of the regex to match morphia's generated form"
-    } ],
+    "markers" : [ ],
     "method" : "testSplitExpressionOperator",
     "options" : [ {
       "argument" : "true",
@@ -3950,14 +3838,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/topN/computingNBasedOnTheGroupKeyForGroup",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "b996f490e3f0fd383b2004f413117597fcf368482ddb5a397401dded8050e9dc",
-      "text" : "update the docs version to use the short version morphia generates\nfix the ordering of the doc"
-    } ],
+    "markers" : [ ],
     "method" : "testComputingNBasedOnTheGroupKeyForGroup",
     "options" : [ {
       "argument" : "false",
@@ -4173,14 +4057,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/zip/matrixTransposition",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "056a22209e771acd4b5147863b602e5e5c84aac0543867d07b57238546c213b1",
-      "text" : "use 0 instead of false to suppress _id"
-    } ],
+    "markers" : [ ],
     "method" : "testMatrixTransposition",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestZip"
@@ -5011,14 +4891,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/match/performACount",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "f4d1df3572b7f6609a6790a2e3ed7ff9ba810af856fe0ba90952b6f62566be8f",
-      "text" : "make the $or match morphia's"
-    } ],
+    "markers" : [ ],
     "method" : "testPerformACount",
     "options" : [ {
       "argument" : "false",
@@ -5258,14 +5134,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/project/conditionallyExcludeFields",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "765e01c51243034a826b020beab66d4f25bfb70425af29c87835a38ad6f2ff0b",
-      "text" : "use the short form of $cond"
-    } ],
+    "markers" : [ ],
     "method" : "testConditionallyExcludeFields",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.stages.TestProject"
@@ -5298,14 +5170,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/project/includeSpecificFieldsFromEmbeddedDocuments",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "765e01c51243034a826b020beab66d4f25bfb70425af29c87835a38ad6f2ff0b",
-      "text" : "use the short form of $cond"
-    } ],
+    "markers" : [ ],
     "method" : "testIncludeSpecificFieldsFromEmbeddedDocuments",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.stages.TestProject"
@@ -5350,14 +5218,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/redact/evaluateAccessAtEveryDocumentLevel",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "3e05a7a89116f49a4be5ea18c694d86de961a7c2bce5958e4aaded57361f3777",
-      "text" : "use the shorter form of $cond"
-    } ],
+    "markers" : [ ],
     "method" : "testEvaluateAccessAtEveryDocumentLevel",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.stages.TestRedact"
@@ -5365,14 +5229,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/redact/excludeAllFieldsAtAGivenLevel",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "3e05a7a89116f49a4be5ea18c694d86de961a7c2bce5958e4aaded57361f3777",
-      "text" : "use the shorter form of $cond"
-    } ],
+    "markers" : [ ],
     "method" : "testExcludeAllFieldsAtAGivenLevel",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.stages.TestRedact"
@@ -5663,14 +5523,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/sortByCount/sortByCountAggregationStage",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "a066206654825ef2cd16ea52ea0f9fa3d8153d208a5aa06af37456ec6185528a",
-      "text" : "reformat pipeline"
-    } ],
+    "markers" : [ ],
     "method" : "testSortByCountAggregationStage",
     "options" : [ {
       "argument" : "false",
@@ -5780,14 +5636,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/unwind/missingOrNonArrayValues",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "c5a7a789184f49548e8898f0058131a778ebbec62bfbe2fcab68d0a120a33915",
-      "text" : "morphia doesn't generate this shape of $unwind"
-    } ],
+    "markers" : [ ],
     "method" : "testMissingOrNonArrayValues",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.stages.TestUnwind"
@@ -6149,14 +6001,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/eq/arrayElementEqualsAValue",
     "helpers" : [ "testQuery" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "d44250df032b5e3b48fca9bc05f3e506db006e91faf4a853765cce135730f4da",
-      "text" : "update action to use shortened version of $eq"
-    } ],
+    "markers" : [ ],
     "method" : "testArrayElementEqualsAValue",
     "options" : [ ],
     "type" : "dev.morphia.test.query.filters.TestEq"
@@ -6164,14 +6012,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/eq/equalsASpecifiedValue",
     "helpers" : [ "testQuery" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "d44250df032b5e3b48fca9bc05f3e506db006e91faf4a853765cce135730f4da",
-      "text" : "update action to use shortened version of $eq"
-    } ],
+    "markers" : [ ],
     "method" : "testEqualsASpecifiedValue",
     "options" : [ ],
     "type" : "dev.morphia.test.query.filters.TestEq"
@@ -6179,14 +6023,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/eq/equalsAnArrayValue",
     "helpers" : [ "testQuery" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "d44250df032b5e3b48fca9bc05f3e506db006e91faf4a853765cce135730f4da",
-      "text" : "update action to use shortened version of $eq"
-    } ],
+    "markers" : [ ],
     "method" : "testEqualsAnArrayValue",
     "options" : [ ],
     "type" : "dev.morphia.test.query.filters.TestEq"
@@ -6194,14 +6034,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/eq/fieldInEmbeddedDocumentEqualsAValue",
     "helpers" : [ "testQuery" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "d44250df032b5e3b48fca9bc05f3e506db006e91faf4a853765cce135730f4da",
-      "text" : "update action to use shortened version of $eq"
-    } ],
+    "markers" : [ ],
     "method" : "testFieldInEmbeddedDocumentEqualsAValue",
     "options" : [ ],
     "type" : "dev.morphia.test.query.filters.TestEq"
@@ -6874,14 +6710,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/regex/extendRegexOptionsToMatchCharactersOutsideOfAscii",
     "helpers" : [ "testQuery" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "325089cbcd67f665e409dba7cc4d42b95d111fa080e25715bb1a8ef3dcdbdc3a",
-      "text" : "change the form of regex used\n"
-    } ],
+    "markers" : [ ],
     "method" : "testExtendRegexOptionsToMatchCharactersOutsideOfAscii",
     "options" : [ ],
     "type" : "dev.morphia.test.query.filters.TestRegex"
@@ -7135,14 +6967,10 @@
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/type/queryingByMultipleDataTypes",
     "helpers" : [ "testQuery" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "a1f0944e912ca102f402d78239f988cbf2217d038a09a9b2642a717c946bdce0",
-      "text" : "the docs had two actions showing the two forms. picked the form morphia uses."
-    } ],
+    "markers" : [ ],
     "method" : "testQueryingByMultipleDataTypes",
     "options" : [ ],
     "type" : "dev.morphia.test.query.filters.TestType"
@@ -7950,7 +7778,7 @@
     "folder" : "aggregation/stages/shardedDataDistribution",
     "reason" : "an admin function and not generally suited for morphia"
   } ],
-  "repositoryRevision" : "3b6d572cef96ebb8b8d2f8d37db18bbe3469454a",
+  "repositoryRevision" : "cb6974cec9bba0d6a5243b5d253e26faf672a8c1",
   "schemaVersion" : 1,
   "summary" : {
     "assertion.BEHAVIOR" : 466,
@@ -7966,16 +7794,17 @@
     "category.SHELL_SYNTAX" : 25,
     "category.UNTESTABLE" : 2,
     "disposition.NOT_EXECUTED" : 2,
-    "disposition.PRESERVED_CURATED" : 234,
+    "disposition.OVERRIDDEN" : 43,
+    "disposition.PRESERVED_CURATED" : 191,
     "disposition.UNCORRECTED" : 320,
     "examples" : 556,
-    "examples.locked" : 236,
+    "examples.locked" : 193,
     "exclusion.DEFERRED" : 1,
     "exclusion.ENVIRONMENT_UNAVAILABLE" : 3,
     "exclusion.NON_OPERATOR" : 1,
     "exclusion.POLICY_EXCLUSION" : 11,
     "exclusion.TESTED_ELSEWHERE" : 1,
-    "markers.lock" : 235,
+    "markers.lock" : 192,
     "markers.lockd" : 1,
     "option.findOptions" : 6,
     "option.orderMatters" : 107,

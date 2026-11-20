@@ -785,6 +785,9 @@ Steps 2–3 continue through #4525. Step 3a is delivered in two stacked PRs: an 
 method/fixture binding manifest that replaces the ordinal coverage scan (#4529,
 [binding design](operator-audits-binding-manifest.md)), then the coordinated descriptive rename
 of all 556 legacy cases ([backport design](operator-audits-name-backport.md)).
+Step 4 starts with the [curated repair inventory](operator-audits-curated-repairs.md) and then
+retires 43 `MORPHIA_FORM` locks through declared equivalence rules proven against the historical
+documentation each fixture came from ([form migration](operator-audits-form-migration.md)).
 
 Track progress with explicit metrics rather than a speculative “100% automatic” target:
 all discovered capabilities accounted for; all 235 locks plus `lockd` and 17 exclusions

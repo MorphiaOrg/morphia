@@ -72,6 +72,11 @@ enum class RepairDisposition {
     PRESERVED_CURATED,
     /** A marker-only fixture with no test; nothing executes. */
     NOT_EXECUTED,
+    /**
+     * The lock was retired: a declared override reproduces the curated fixture from its documented
+     * source under declared equivalence rules (see [FormMigration]).
+     */
+    OVERRIDDEN,
 }
 
 data class CuratedExample(
@@ -120,11 +125,16 @@ object CuratedRepairs {
 
     fun reason(line: String): String = line.trim().lowercase(Locale.ROOT)
 
+    /**
+     * [retired] maps a fixture whose lock was replaced by a declared override to that lock's text,
+     * which still supplies the example's categories.
+     */
     fun capture(
         repository: Path,
         revision: String,
         descriptor: BindingDescriptor,
         review: RepairReview,
+        retired: Map<String, String> = emptyMap(),
     ): CuratedRepairReport {
         require(review.schemaVersion == 1) { "Unsupported repair review ${review.schemaVersion}" }
         val names = review.categories.map { it.name }
@@ -158,9 +168,14 @@ object CuratedRepairs {
                                     sha256(bytes),
                                 )
                             }
+                    val fixture = "${type.resources.removePrefix("dev/morphia/test/")}/$resource"
+                    val retiredLock = retired[fixture]
+                    if (retiredLock != null && markers.isNotEmpty()) {
+                        problems += "Retired lock is still present: $fixture"
+                    }
                     val categories =
-                        markers
-                            .flatMap { it.text.lines() }
+                        (markers.map { it.text } + listOfNotNull(retiredLock))
+                            .flatMap { it.lines() }
                             .filter { it.isNotBlank() }
                             .mapNotNull { line ->
                                 val key = reason(line)
@@ -198,7 +213,7 @@ object CuratedRepairs {
                                 )
                         }
                     CuratedExample(
-                        fixture = "${type.resources.removePrefix("dev/morphia/test/")}/$resource",
+                        fixture = fixture,
                         type = type.type,
                         method = method,
                         markers = markers,
@@ -206,6 +221,7 @@ object CuratedRepairs {
                         disposition =
                             when {
                                 method == null -> RepairDisposition.NOT_EXECUTED
+                                retiredLock != null -> RepairDisposition.OVERRIDDEN
                                 markers.isEmpty() -> RepairDisposition.UNCORRECTED
                                 else -> RepairDisposition.PRESERVED_CURATED
                             },
@@ -217,6 +233,9 @@ object CuratedRepairs {
                 }
             }
         (review.reasons.keys - used).forEach { problems += "Stale reviewed lock reason: $it" }
+        (retired.keys - examples.map { it.fixture }.toSet()).forEach {
+            problems += "Retired lock for an unknown fixture: $it"
+        }
         val exclusionNames = review.exclusionCategories.map { it.name }.toSet()
         val exclusions =
             listOf(
