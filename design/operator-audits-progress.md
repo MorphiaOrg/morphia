@@ -1791,3 +1791,43 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   source and wrong documented values -> DOCS_ERROR), plus lows (ActionTestOptions workflow trigger,
   unsupported helper/non-literal option forms now fail). All fixed.
 - Review round 2 verified the fixes; its one remaining doc overstatement was fixed (unchained skip calls now fail). Publishing stacked on #4530.
+
+## Curated repairs publication checkpoint
+
+- PR #4531 (branch audits-curated-repairs, base #4530) is green on all five required checks. A
+  Copilot review was requested; none has arrived (quota). No merges.
+
+## MORPHIA_FORM lock migration (step 4 slice 2, 2026-11-20)
+
+- Branch audits-morphia-form from #4531. The pinned manual is not the fixtures' source (its `$cond`
+  page now uses another dataset), and Morphia history has no pre-curation copy (fixture and lock were
+  committed together), so each fixture's source is its `mongodb/docs` page as of the Morphia commit
+  that created (`first`) or last regenerated (`last`) it. `fetch.py` acquires pages and tracked
+  includes via `gh`; generated `/includes/extracts/` files are not tracked and stay as directives.
+  The manual's later move to `content/manual/manual/source/` is handled; one page has no commit
+  holding it at its `last` date and keeps its `first` source.
+- `FormEquivalence` defines ten canonicalizing rules applied to both sides; `FormMigration` compares
+  action (with rules), data, expected and index (exactly) with the strict comparator and requires the
+  declared rules to be sufficient and each necessary. Review `form-review.json`: 43 declarations
+  (39 `first`, 4 `last`; 3 need no rule) and 23 gaps (8 residual, 9 source, 4 fixture, 2 page).
+  `form-migration.json` records source text, digests, page/include blob ids and retired lock text.
+  Spot checks of page and include blob ids against GitHub matched.
+- Applied: 43 lock files deleted; no other core file changed. Inventory: 43 OVERRIDDEN, 191
+  PRESERVED_CURATED, 193 locked. NameBackport.verify accepts a lock as absent only when the migration
+  retired it with the legacy-corpus digest.
+- Self-found: BsonDocument.equals ignores key order, so rule tests compare with the strict
+  comparator; the JSON reader reads `{$regex: "p", $options: "o"}` as a regex literal (harmless,
+  both sides are canonicalized). `EXISTS_BOOLEAN` was drafted and dropped as unexercised.
+- Gates: core operator packages 569 tests, 0 failures, 7 skips with Critter then reflection; audits
+  377 tests (2 optional skips) with both mapper flags.
+- Review round 1 (independent agent): all 43 retirements confirmed sound. Valid findings, all fixed:
+  provenance was not checkable offline (pages now committed and re-extracted by the drift test;
+  fetch.py verifies every blob id against GitHub), ALTERNATIVE_COMMANDS asserted an unchecked
+  equivalence (now needs a reviewed justification), SINGLE_ARGUMENT_ARRAY reached query `$size`,
+  `$literal` content was canonicalized, and untracked includes were indistinguishable from failed
+  downloads (now recorded as unexpandedIncludes).
+- Review round 2 verified all fixes and flagged that the committed mongodb/docs pages are CC BY-NC-SA
+  3.0, unsuitable for this Apache-2.0 repository. The pages were removed; the reviewed
+  form-review.json now pins every page and include blob id, capture fails on a mismatch, and the
+  networked recheck (fetch.py pages + FormMainKt capture) reproduces the committed report. Committing
+  pages for an offline re-extraction is left as an explicit decision for the maintainer.

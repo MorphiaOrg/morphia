@@ -1,0 +1,2162 @@
+{
+  "overrides" : [ {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "7171140049a90ee4e0c8972f0e405a0f36263ce1ff68bf3358f2f35290c8824d",
+      "text" : "db.gamescores.aggregate([\n   {\n      $group:\n      {\n         _id: {\"gameId\": \"$gameId\"},\n         gamescores:\n            {\n               $bottomN:\n                  {\n                     output: \"$score\",\n                     n: { $cond: { if: {$eq: [\"$gameId\",\"G2\"] }, then: 1, else: 3 } },\n                     sortBy: { \"score\": -1 }\n                  }\n            }\n      }\n   }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "34336408cd7ae4866c15c9d272a29f47efce56dbdd4924d76d9e253d8b4486f0",
+      "text" : "db.gamescores.insertMany([\n   { playerId: \"PlayerA\", gameId: \"G1\", score: 31 },\n   { playerId: \"PlayerB\", gameId: \"G1\", score: 33 },\n   { playerId: \"PlayerC\", gameId: \"G1\", score: 99 },\n   { playerId: \"PlayerD\", gameId: \"G1\", score: 1 },\n   { playerId: \"PlayerA\", gameId: \"G2\", score: 10 },\n   { playerId: \"PlayerB\", gameId: \"G2\", score: 14 },\n   { playerId: \"PlayerC\", gameId: \"G2\", score: 66 },\n   { playerId: \"PlayerD\", gameId: \"G2\", score: 80 }\n])"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "0a827a6f6f965d6a5e89edc8c43a42e4ee5cd1f85a7238221184e4b31550536d",
+      "text" : "[\n   { _id: { gameId: \"G2\" }, gamescores: [ 10 ] },\n   { _id: { gameId: \"G1\" }, gamescores: [ 33, 31, 1 ] }\n]"
+    } ],
+    "example" : "Computing ``n`` Based on the Group Key for ``$group``",
+    "fixture" : "aggregation/expressions/bottomN/computingNBasedOnTheGroupKeyForGroup",
+    "fixtureFiles" : {
+      "action.json" : "bf22217d83fd67b9c7e83b83fb378067f645980fa67f28ae7e1583502def9c24",
+      "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
+      "expected.json" : "353b9ef5d5d94b8d4686820206be94359e42facbb298bf05e5518455368089eb",
+      "name" : "8c3e270deda46265063d5d4a54cdb7950436d97cb2c26bcbeee1e151851f7d76"
+    },
+    "includes" : [ ],
+    "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
+    "pageBlob" : "6c13c2ef114628ba3582ee463c1a86b8b9edb9bf",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "b9e436f27be163d32c9116ed94ab0911f93b85d9845118a787be5a408fa380bc",
+      "text" : "morphia generates the more succinct array version vs the document version from the docs\ndocument order differs"
+    },
+    "rules" : [ "COND_ARRAY", "NAMED_ARGUMENTS" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "d497b13c81d4853dce0760e07390cf9d03c33c28",
+      "path" : "source/reference/operator/aggregation/bottomN.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "d0f684229860f617fa7c8ce9124ef4825712493e80ec37499fc541d7906288b2",
+      "text" : "db.inventory.aggregate(\n   [\n     {\n       $project:\n          {\n            item: 1,\n            qty: 1,\n            cmpTo250: { $cmp: [ \"$qty\", 250 ] },\n            _id: 0\n          }\n     }\n   ]\n)"
+    }, {
+      "role" : "DATA",
+      "sha256" : "db8c53d0109b6671d674748aa2e4ac1859b372ec6302b9168f7f73c0be2b3b39",
+      "text" : "{ \"_id\" : 1, \"item\" : \"abc1\", description: \"product 1\", qty: 300 }\n{ \"_id\" : 2, \"item\" : \"abc2\", description: \"product 2\", qty: 200 }\n{ \"_id\" : 3, \"item\" : \"xyz1\", description: \"product 3\", qty: 250 }\n{ \"_id\" : 4, \"item\" : \"VWZ1\", description: \"product 4\", qty: 300 }\n{ \"_id\" : 5, \"item\" : \"VWZ2\", description: \"product 5\", qty: 180 }"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "7d46541b24bf9d52432e438a0bd08f53ac4988957e3fe6d61f4229fb5345b6dc",
+      "text" : "{ \"item\" : \"abc1\", \"qty\" : 300, \"cmpTo250\" : 1 }\n{ \"item\" : \"abc2\", \"qty\" : 200, \"cmpTo250\" : -1 }\n{ \"item\" : \"xyz1\", \"qty\" : 250, \"cmpTo250\" : 0 }\n{ \"item\" : \"VWZ1\", \"qty\" : 300, \"cmpTo250\" : 1 }\n{ \"item\" : \"VWZ2\", \"qty\" : 180, \"cmpTo250\" : -1 }"
+    } ],
+    "example" : "main",
+    "fixture" : "aggregation/expressions/cmp/cmpExpressionOperator",
+    "fixtureFiles" : {
+      "action.json" : "3a96d92b4b6c9514c1994d83e4e04870dcf00f0906c28cc33fa2aeb6a2fbbe18",
+      "data.json" : "db8c53d0109b6671d674748aa2e4ac1859b372ec6302b9168f7f73c0be2b3b39",
+      "expected.json" : "7d46541b24bf9d52432e438a0bd08f53ac4988957e3fe6d61f4229fb5345b6dc",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "e3fa7926b676ae107cb77e843f9ce50b2289e008",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
+      "text" : "reorder pipeline"
+    },
+    "rules" : [ "PROJECT_ID_FIRST" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "b89791d6434ba071253241c8b38dd683d332ba69",
+      "path" : "source/reference/operator/aggregation/cmp.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "f289394396ce7e30e0b85586f77b6f04e741c0aee8840d7ab42f9b663128574e",
+      "text" : "db.inventory.aggregate(\n   [\n      {\n         $project:\n           {\n             item: 1,\n             discount:\n               {\n                 $cond: { if: { $gte: [ \"$qty\", 250 ] }, then: 30, else: 20 }\n               }\n           }\n      }\n   ]\n)"
+    }, {
+      "role" : "DATA",
+      "sha256" : "02426b96130e602fe499e5facd289d6034d67a41bb9f51aa214cefa15907806e",
+      "text" : "{ \"_id\" : 1, \"item\" : \"abc1\", qty: 300 }\n{ \"_id\" : 2, \"item\" : \"abc2\", qty: 200 }\n{ \"_id\" : 3, \"item\" : \"xyz1\", qty: 250 }"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "15f55e0bd596ae038967567cc42de49868748c317582050906a2a1757b0e8f92",
+      "text" : "{ \"_id\" : 1, \"item\" : \"abc1\", \"discount\" : 30 }\n{ \"_id\" : 2, \"item\" : \"abc2\", \"discount\" : 20 }\n{ \"_id\" : 3, \"item\" : \"xyz1\", \"discount\" : 30 }"
+    } ],
+    "example" : "main",
+    "fixture" : "aggregation/expressions/cond/condExpressionOperator",
+    "fixtureFiles" : {
+      "action.json" : "5fdbbe45d012f52390c69aad293ba52ec62233c1bc68de6474ce18d98ccfc2f6",
+      "data.json" : "02426b96130e602fe499e5facd289d6034d67a41bb9f51aa214cefa15907806e",
+      "expected.json" : "15f55e0bd596ae038967567cc42de49868748c317582050906a2a1757b0e8f92",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "914125372599704f56defd0ab1a9776d921d2fe5",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "fd98b0ba84e5fbdeca45e858c631317602ece197b444b671a8cd4240b93cc532",
+      "text" : "morphia generates the more succinct array version vs the document version from the docs"
+    },
+    "rules" : [ "COND_ARRAY" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/cond.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "439cf99fc25d3bb77b649f272ba567e7eeeab963cf7cf769e37ed1b8fb9750b9",
+      "text" : "db.sales.aggregate(\n   [\n     {\n       $project: {\n          yearMonthDayUTC: { $dateToString: { format: \"%Y-%m-%d\", date: \"$date\" } },\n          timewithOffsetNY: { $dateToString: { format: \"%H:%M:%S:%L%z\", date: \"$date\", timezone: \"America/New_York\"} },\n          timewithOffset430: { $dateToString: { format: \"%H:%M:%S:%L%z\", date: \"$date\", timezone: \"+04:30\" } },\n          minutesOffsetNY: { $dateToString: { format: \"%Z\", date: \"$date\", timezone: \"America/New_York\" } },\n          minutesOffset430: { $dateToString: { format: \"%Z\", date: \"$date\", timezone: \"+04:30\" } },\n          abbreviated_month: { $dateToString: {format: \"%b\", date: \"$date\", timezone: \"+04:30\" } },\n          full_month: { $dateToString: { format: \"%B\", date: \"$date\", timezone: \"+04:30\" } }\n       }\n     }\n   ]\n)"
+    }, {
+      "role" : "DATA",
+      "sha256" : "c5b66b571352b14e396fc2bd22fe8424bcab458fc8b34f29d506c69ea17478d7",
+      "text" : "{\n  \"_id\" : 1,\n  \"item\" : \"abc\",\n  \"price\" : 10,\n  \"quantity\" : 2,\n  \"date\" : ISODate(\"2014-01-01T08:15:39.736Z\")\n}"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "9370f9a7795d12e19bf1f6d6ffd2b7ac0b65852647d151814c729036d95e1f26",
+      "text" : "{\n   \"_id\" : 1,\n   \"yearMonthDayUTC\" : \"2014-01-01\",\n   \"timewithOffsetNY\" : \"03:15:39:736-0500\",\n   \"timewithOffset430\" : \"12:45:39:736+0430\",\n   \"minutesOffsetNY\" : \"-300\",\n   \"minutesOffset430\" : \"270\",\n   \"abbreviated_month\": \"Jan\",\n   \"full_month\": \"January\"\n}"
+    } ],
+    "example" : "main",
+    "fixture" : "aggregation/expressions/dateToString/dateToStringExpressionOperator",
+    "fixtureFiles" : {
+      "action.json" : "7a3de5545595cbc4e039a1495871b0552af0727fc82eb6bff39bb4b9f60b3a60",
+      "data.json" : "b992824e783933784664ec75c80cd9f5c513e90b691128aca2d24eea6b7659f8",
+      "expected.json" : "10fda565c9037af300348225d9cbb58946f4fdcf6541a2d15ff5ec10b5ea0c0e",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "3c53000302392ff1f16165d9e7c932f102f719f0",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "52314f8989d5111024d78af05163f8aff29e2d82a23b092309890cf1d614bc7d",
+      "text" : "rearranged arguments to match morphia's"
+    },
+    "rules" : [ "NAMED_ARGUMENTS" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "b2d4041710ee0667261f8f5e2e40390265df85fd",
+      "path" : "source/reference/operator/aggregation/dateToString.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "62de54fdd0cae2af8fe95c4fac614043c33a1e9d3cbb9a4a1738b908355855d6",
+      "text" : "db.inventory.aggregate(\n   [\n     {\n       $project:\n          {\n            item: 1,\n            qty: 1,\n            qtyEq250: { $eq: [ \"$qty\", 250 ] },\n            _id: 0\n          }\n     }\n   ]\n)"
+    }, {
+      "role" : "DATA",
+      "sha256" : "db8c53d0109b6671d674748aa2e4ac1859b372ec6302b9168f7f73c0be2b3b39",
+      "text" : "{ \"_id\" : 1, \"item\" : \"abc1\", description: \"product 1\", qty: 300 }\n{ \"_id\" : 2, \"item\" : \"abc2\", description: \"product 2\", qty: 200 }\n{ \"_id\" : 3, \"item\" : \"xyz1\", description: \"product 3\", qty: 250 }\n{ \"_id\" : 4, \"item\" : \"VWZ1\", description: \"product 4\", qty: 300 }\n{ \"_id\" : 5, \"item\" : \"VWZ2\", description: \"product 5\", qty: 180 }"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "e06cf7fb4c2d5e3476e12531ac7494a4955c1ecd6b350aff3ae84f2d6e32612e",
+      "text" : "{ \"item\" : \"abc1\", \"qty\" : 300, \"qtyEq250\" : false }\n{ \"item\" : \"abc2\", \"qty\" : 200, \"qtyEq250\" : false }\n{ \"item\" : \"xyz1\", \"qty\" : 250, \"qtyEq250\" : true }\n{ \"item\" : \"VWZ1\", \"qty\" : 300, \"qtyEq250\" : false }\n{ \"item\" : \"VWZ2\", \"qty\" : 180, \"qtyEq250\" : false }"
+    } ],
+    "example" : "main",
+    "fixture" : "aggregation/expressions/eq/eqExpressionOperator",
+    "fixtureFiles" : {
+      "action.json" : "df1e4665f5b930eb213b67608a162a5c6f513684fca5f20394aa28ec8b5117c4",
+      "data.json" : "db8c53d0109b6671d674748aa2e4ac1859b372ec6302b9168f7f73c0be2b3b39",
+      "expected.json" : "e06cf7fb4c2d5e3476e12531ac7494a4955c1ecd6b350aff3ae84f2d6e32612e",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "7bf1ae5a7fdb3f2457dfa5c70f474649d3343ccd",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
+      "text" : "reorder pipeline"
+    },
+    "rules" : [ "PROJECT_ID_FIRST" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "b89791d6434ba071253241c8b38dd683d332ba69",
+      "path" : "source/reference/operator/aggregation/eq.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "2cf80de01a3eb0a9f7e42832f2406b2d046cf40efbd8b2f9b817c5b770eb5be2",
+      "text" : "db.sales.aggregate( [\n   {\n      $project: {\n         items: {\n            $filter: {\n               input: \"$items\",\n               as: \"item\",\n               cond: {\n                  $regexMatch: { input: \"$$item.name\", regex: /^p/ }\n               } \n            }\n         }\n      }\n   }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "53e42fa432e886682843ec99b0feceaa38d28ab39e463d880b2539d2794b3e93",
+      "text" : "db.sales.insertMany( [\n   {\n      _id: 0,\n      items: [\n         { item_id: 43, quantity: 2, price: 10, name: \"pen\" },\n         { item_id: 2, quantity: 1, price: 240, name: \"briefcase\" }\n      ]\n   },\n   {\n      _id: 1,\n      items: [\n         { item_id: 23, quantity: 3, price: 110, name: \"notebook\" },\n         { item_id: 103, quantity: 4, price: 5, name: \"pen\" },\n         { item_id: 38, quantity: 1, price: 300, name: \"printer\" }\n      ]\n   },\n   {\n      _id: 2,\n      items: [\n         { item_id: 4, quantity: 1, price: 23, name: \"paper\" }\n      ]\n   }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "06c99ad74377923e29e1fb0dba744e89c78909167509cc54e859cda14162f8cf",
+      "text" : "[\n   {\n      _id: 0,\n      items: [ { item_id: 43, quantity: 2, price: 10, name: 'pen' } ]\n   },\n   {\n      _id: 1,\n      items: [\n         { item_id: 103, quantity: 4, price: 5, name: 'pen' },\n         { item_id: 38, quantity: 1, price: 300, name: 'printer' }\n      ]\n   },\n   {\n      _id: 2,\n      items: [ { item_id: 4, quantity: 1, price: 23, name: 'paper' } ]\n   }\n]"
+    } ],
+    "example" : "Filter Based on Regular Expression Match",
+    "fixture" : "aggregation/expressions/filter/filterBasedOnRegularExpressionMatch",
+    "fixtureFiles" : {
+      "action.json" : "b9eeaab349ae3ce1129857d3cb72fc7fd8dee5d0c5d11f5bea1ef779c83cd78f",
+      "data.json" : "6711b66e72d647efb01793c12aee7a65081dba2afa11ac5cc5d90096563ec341",
+      "expected.json" : "001245d788acbd4157a5c9e1ba9d102dc7bd38546f073c43d26bfe348c299ecd",
+      "name" : "a547651298a22b5d427c6a05ad2b2314ba56c6240e87e68eefdfaf95e5151c23"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "origin" : "7e4567cf008b68b2e9dc6075b6217df8de3b5a90",
+    "pageBlob" : "c0a5679050c445a70bb50d3d0ef7b05cb7c4903d",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "fc3c9842e91c9f0b0c93bb850d625d5e220332231daf5d6a2398aaf6cc9da853",
+      "text" : "rearrange elements"
+    },
+    "rules" : [ "NAMED_ARGUMENTS" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/aggregation/filter.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "83faa2631d9545913d0982daaa45c01894e29aeb208d2f5bb3c04b0a722c567c",
+      "text" : "db.sales.aggregate( [\n   {\n      $project: {\n         items: {\n            $filter: {\n               input: \"$items\",\n               as: \"item\",\n               cond: { $eq: [ \"$$item.name\", \"pen\"] }\n            }\n         }\n      }\n   }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "53e42fa432e886682843ec99b0feceaa38d28ab39e463d880b2539d2794b3e93",
+      "text" : "db.sales.insertMany( [\n   {\n      _id: 0,\n      items: [\n         { item_id: 43, quantity: 2, price: 10, name: \"pen\" },\n         { item_id: 2, quantity: 1, price: 240, name: \"briefcase\" }\n      ]\n   },\n   {\n      _id: 1,\n      items: [\n         { item_id: 23, quantity: 3, price: 110, name: \"notebook\" },\n         { item_id: 103, quantity: 4, price: 5, name: \"pen\" },\n         { item_id: 38, quantity: 1, price: 300, name: \"printer\" }\n      ]\n   },\n   {\n      _id: 2,\n      items: [\n         { item_id: 4, quantity: 1, price: 23, name: \"paper\" }\n      ]\n   }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "184eb1012b2a62a17a6fa2b49132c0b77b124ece14668d0840d10b184f962462",
+      "text" : "[\n   {\n      _id: 0,\n      items: [ { item_id: 43, quantity: 2, price: 10, name: 'pen' } ]\n   },\n   {\n      _id: 1,\n      items: [ { item_id: 103, quantity: 4, price: 5, name: 'pen' } ]\n   },\n   { _id: 2, items: [] }\n]"
+    } ],
+    "example" : "Filter Based on String Equality Match",
+    "fixture" : "aggregation/expressions/filter/filterBasedOnStringEqualityMatch",
+    "fixtureFiles" : {
+      "action.json" : "fc294ae406b7808f690d06d7863972ea347b6a1c6c03c212fc811f5a80d24b33",
+      "data.json" : "6711b66e72d647efb01793c12aee7a65081dba2afa11ac5cc5d90096563ec341",
+      "expected.json" : "eb71e56e95a55c0c9f2268601a04b64f66817fd57fdb6df448752d0e517be40a",
+      "name" : "f7aac272446ec611617814286c2340f30cf3b2115a5ca21389fbb2fc824d0b81"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "origin" : "7e4567cf008b68b2e9dc6075b6217df8de3b5a90",
+    "pageBlob" : "c0a5679050c445a70bb50d3d0ef7b05cb7c4903d",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "fc3c9842e91c9f0b0c93bb850d625d5e220332231daf5d6a2398aaf6cc9da853",
+      "text" : "rearrange elements"
+    },
+    "rules" : [ "NAMED_ARGUMENTS" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/aggregation/filter.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "9cea8937520c6a5e9f6e0f6c35b276a570bbea9ba459408451867727290d79fe",
+      "text" : "db.sales.aggregate( [\n   {\n      $project: {\n         items: {\n            $filter: {\n               input: \"$items\", \n               as: \"item\", \n               cond: { $gte: [ \"$$item.price\", 100 ] } \n            }\n         }\n      }\n   }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "6dfb6ca01a408964afc5aac662a63360b5d91f72595606239b2b3c990210b89e",
+      "text" : "db.sales.insertMany( [\n   {\n      _id: 0,\n      items: [\n         { item_id: 43, quantity: 2, price: 10 },\n         { item_id: 2, quantity: 1, price: 240 }\n      ]\n   },\n   {\n      _id: 1,\n      items: [\n         { item_id: 23, quantity: 3, price: 110 },\n         { item_id: 103, quantity: 4, price: 5 },\n         { item_id: 38, quantity: 1, price: 300 }\n      ]\n   },\n   {\n      _id: 2,\n      items: [\n         { item_id: 4, quantity: 1, price: 23 }\n      ]\n   }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "cd6b46b394ba513c4904d87464122b71807b1d0a858cf0483afe31fb024e6e66",
+      "text" : "{\n   \"_id\" : 0,\n   \"items\" : [\n      { \"item_id\" : 2, \"quantity\" : 1, \"price\" : 240 }\n   ]\n}\n{\n   \"_id\" : 1,\n   \"items\" : [\n      { \"item_id\" : 23, \"quantity\" : 3, \"price\" : 110 },\n      { \"item_id\" : 38, \"quantity\" : 1, \"price\" : 300 }\n   ]\n}\n{ \"_id\" : 2, \"items\" : [ ] }"
+    } ],
+    "example" : "main",
+    "fixture" : "aggregation/expressions/filter/filterExpressionOperator",
+    "fixtureFiles" : {
+      "action.json" : "5f6b7c125d5bfad5f3f6783184be47b227caa7c5be53758bd0806bc026231199",
+      "data.json" : "3acb538912b8d22186995d4824d01a3e4bfa41b1ee2462be4cb90ceae01438c4",
+      "expected.json" : "b3ac85916fb39378da272580a81a9476a4ffa14991771a376395eecc8f828b5e",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "406bdfabb5424bbf5946971211e927ed5a49d39a",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "6f52ed65332f0be4ef37c5213073e94224d53e2d4634c4aaa26134a32a21bcd6",
+      "text" : "the codec produces items in a different order"
+    },
+    "rules" : [ "NAMED_ARGUMENTS" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/filter.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "89bf42e8d8ca4821c7e19f84823ecf477d3a17b5560fb76d0f08a247bfabbc7b",
+      "text" : "db.sales.aggregate( [\n   {\n      $project: {\n         items: {\n            $filter: {\n               input: \"$items\",\n               as: \"item\", \n               cond: { $gte: [ \"$$item.price\", 100 ] }, \n               limit: 1 \n            }\n         }\n      }\n   }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "53e42fa432e886682843ec99b0feceaa38d28ab39e463d880b2539d2794b3e93",
+      "text" : "db.sales.insertMany( [\n   {\n      _id: 0,\n      items: [\n         { item_id: 43, quantity: 2, price: 10, name: \"pen\" },\n         { item_id: 2, quantity: 1, price: 240, name: \"briefcase\" }\n      ]\n   },\n   {\n      _id: 1,\n      items: [\n         { item_id: 23, quantity: 3, price: 110, name: \"notebook\" },\n         { item_id: 103, quantity: 4, price: 5, name: \"pen\" },\n         { item_id: 38, quantity: 1, price: 300, name: \"printer\" }\n      ]\n   },\n   {\n      _id: 2,\n      items: [\n         { item_id: 4, quantity: 1, price: 23, name: \"paper\" }\n      ]\n   }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "2a19ec5f724eec080dc433cf538bacc33c162db7c50ae3768afd8d1098193e98",
+      "text" : "[\n   {\n      _id: 0,\n      items: [ { item_id: 2, quantity: 1, price: 240, name: 'briefcase' } ]\n   },\n   {\n      _id: 1,\n      items: [ { item_id: 23, quantity: 3, price: 110, name: 'notebook' } ]\n   },\n   { _id: 2, items: [] }\n]"
+    } ],
+    "example" : "Use the limit Field",
+    "fixture" : "aggregation/expressions/filter/useTheLimitField",
+    "fixtureFiles" : {
+      "action.json" : "b82fdb97ee37e2e6ed8327e1405e01d46b2b48b4291c6f8cedb9c6ca2653b26b",
+      "data.json" : "6711b66e72d647efb01793c12aee7a65081dba2afa11ac5cc5d90096563ec341",
+      "expected.json" : "18e46ecffa6680477cb48a02a1b65ebfc098cd756486b9802f34394dda2d7274",
+      "name" : "64df51302ac9d65b8d7badb8c65c243891fc9bedfd439977b7f00f88cda3475c"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "origin" : "7e4567cf008b68b2e9dc6075b6217df8de3b5a90",
+    "pageBlob" : "c0a5679050c445a70bb50d3d0ef7b05cb7c4903d",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "fc3c9842e91c9f0b0c93bb850d625d5e220332231daf5d6a2398aaf6cc9da853",
+      "text" : "rearrange elements"
+    },
+    "rules" : [ "NAMED_ARGUMENTS" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/aggregation/filter.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "3ea43ad699a68f125b37451e0636d9538960df9228415be16bbab089ff4a0310",
+      "text" : "db.gamescores.aggregate([\n   {\n      $group:\n      {\n         _id: {\"gameId\": \"$gameId\"},\n         gamescores:\n            {\n               $firstN:\n                  {\n                     input: \"$score\",\n                     n: { $cond: { if: {$eq: [\"$gameId\",\"G2\"] }, then: 1, else: 3 } }\n                  }\n            }\n      }\n   }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "34336408cd7ae4866c15c9d272a29f47efce56dbdd4924d76d9e253d8b4486f0",
+      "text" : "db.gamescores.insertMany([\n   { playerId: \"PlayerA\", gameId: \"G1\", score: 31 },\n   { playerId: \"PlayerB\", gameId: \"G1\", score: 33 },\n   { playerId: \"PlayerC\", gameId: \"G1\", score: 99 },\n   { playerId: \"PlayerD\", gameId: \"G1\", score: 1 },\n   { playerId: \"PlayerA\", gameId: \"G2\", score: 10 },\n   { playerId: \"PlayerB\", gameId: \"G2\", score: 14 },\n   { playerId: \"PlayerC\", gameId: \"G2\", score: 66 },\n   { playerId: \"PlayerD\", gameId: \"G2\", score: 80 }\n])"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "9227f11a50f99ef7d022f955074ce021cecd7987e6f35fc319ef0ece3ae003f9",
+      "text" : "[\n   { _id: { gameId: 'G1' }, gamescores: [ 31, 33, 99 ] },\n   { _id: { gameId: 'G2' }, gamescores: [ 10 ] }\n]"
+    } ],
+    "example" : "Computing ``n`` Based on the Group Key for ``$group``",
+    "fixture" : "aggregation/expressions/firstN/computingNBasedOnTheGroupKeyForGroup",
+    "fixtureFiles" : {
+      "action.json" : "628baa95b19b04841791426b0257b21a54d774a360cf5059adb35ddbb8bb6e43",
+      "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
+      "expected.json" : "09e9a37567908bca0ceea48445201856db6dcf3636223805a1ce1c3037975df9",
+      "name" : "8c3e270deda46265063d5d4a54cdb7950436d97cb2c26bcbeee1e151851f7d76"
+    },
+    "includes" : [ ],
+    "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
+    "pageBlob" : "99783a2c7028cff9efa22b354f9672de17454b07",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "58f4a3fd5261c9ba1ff92fa36d5cfff7b5395b3520cc0181ea457375473b7725",
+      "text" : "use the shorter cond form"
+    },
+    "rules" : [ "COND_ARRAY" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "efbc9f9fa2ee51515cf986e1f74e3b8e9f9d31fa",
+      "path" : "source/reference/operator/aggregation/firstN.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "841c0c0de36e74fd7f967a50c6c79909cd0eeb14a000be7a53f5a9bb223e32c2",
+      "text" : "db.inventory.aggregate(\n   [\n     {\n       $project:\n          {\n            item: 1,\n            qty: 1,\n            qtyGt250: { $gt: [ \"$qty\", 250 ] },\n            _id: 0\n          }\n     }\n   ]\n)"
+    }, {
+      "role" : "DATA",
+      "sha256" : "db8c53d0109b6671d674748aa2e4ac1859b372ec6302b9168f7f73c0be2b3b39",
+      "text" : "{ \"_id\" : 1, \"item\" : \"abc1\", description: \"product 1\", qty: 300 }\n{ \"_id\" : 2, \"item\" : \"abc2\", description: \"product 2\", qty: 200 }\n{ \"_id\" : 3, \"item\" : \"xyz1\", description: \"product 3\", qty: 250 }\n{ \"_id\" : 4, \"item\" : \"VWZ1\", description: \"product 4\", qty: 300 }\n{ \"_id\" : 5, \"item\" : \"VWZ2\", description: \"product 5\", qty: 180 }"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "84e6ceed470d7021814f1318ba5d9be88f4a99fc80916c0b5524a7424f3aef8e",
+      "text" : "{ \"item\" : \"abc1\", \"qty\" : 300, \"qtyGt250\" : true }\n{ \"item\" : \"abc2\", \"qty\" : 200, \"qtyGt250\" : false }\n{ \"item\" : \"xyz1\", \"qty\" : 250, \"qtyGt250\" : false }\n{ \"item\" : \"VWZ1\", \"qty\" : 300, \"qtyGt250\" : true }\n{ \"item\" : \"VWZ2\", \"qty\" : 180, \"qtyGt250\" : false }"
+    } ],
+    "example" : "main",
+    "fixture" : "aggregation/expressions/gt/gtExpressionOperator",
+    "fixtureFiles" : {
+      "action.json" : "97274b9ac59c6875c4c9900a191f56f2dcab29d91765f214d4d7ac365e97d97f",
+      "data.json" : "db8c53d0109b6671d674748aa2e4ac1859b372ec6302b9168f7f73c0be2b3b39",
+      "expected.json" : "84e6ceed470d7021814f1318ba5d9be88f4a99fc80916c0b5524a7424f3aef8e",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "a8fd1e09b2e178cbd0a559f56eee94d7a2e90776",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
+      "text" : "reorder pipeline"
+    },
+    "rules" : [ "PROJECT_ID_FIRST" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "b89791d6434ba071253241c8b38dd683d332ba69",
+      "path" : "source/reference/operator/aggregation/gt.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "4e4cfe4e831ec055cf5f56b5c5b074a2a1fa314f4ac97c08c19ad2ac0e5d4d32",
+      "text" : "db.inventory.aggregate(\n   [\n     {\n       $project:\n          {\n            item: 1,\n            qty: 1,\n            qtyGte250: { $gte: [ \"$qty\", 250 ] },\n            _id: 0\n          }\n     }\n   ]\n)"
+    }, {
+      "role" : "DATA",
+      "sha256" : "db8c53d0109b6671d674748aa2e4ac1859b372ec6302b9168f7f73c0be2b3b39",
+      "text" : "{ \"_id\" : 1, \"item\" : \"abc1\", description: \"product 1\", qty: 300 }\n{ \"_id\" : 2, \"item\" : \"abc2\", description: \"product 2\", qty: 200 }\n{ \"_id\" : 3, \"item\" : \"xyz1\", description: \"product 3\", qty: 250 }\n{ \"_id\" : 4, \"item\" : \"VWZ1\", description: \"product 4\", qty: 300 }\n{ \"_id\" : 5, \"item\" : \"VWZ2\", description: \"product 5\", qty: 180 }"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "93a4d9aeb1d7fdb7c6aa39b0a53f9794372559eb8b9010045a0e03d1c21366d5",
+      "text" : "{ \"item\" : \"abc1\", \"qty\" : 300, \"qtyGte250\" : true }\n{ \"item\" : \"abc2\", \"qty\" : 200, \"qtyGte250\" : false }\n{ \"item\" : \"xyz1\", \"qty\" : 250, \"qtyGte250\" : true }\n{ \"item\" : \"VWZ1\", \"qty\" : 300, \"qtyGte250\" : true }\n{ \"item\" : \"VWZ2\", \"qty\" : 180, \"qtyGte250\" : false }"
+    } ],
+    "example" : "main",
+    "fixture" : "aggregation/expressions/gte/gteExpressionOperator",
+    "fixtureFiles" : {
+      "action.json" : "f6fa3710f70ae572aa280a1de89d5cf35f7aacc766147b192be09da0c1e9039a",
+      "data.json" : "db8c53d0109b6671d674748aa2e4ac1859b372ec6302b9168f7f73c0be2b3b39",
+      "expected.json" : "93a4d9aeb1d7fdb7c6aa39b0a53f9794372559eb8b9010045a0e03d1c21366d5",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "18230f5639cd5638df0cfab9bc416b2352c1293c",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
+      "text" : "reorder pipeline"
+    },
+    "rules" : [ "PROJECT_ID_FIRST" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "b89791d6434ba071253241c8b38dd683d332ba69",
+      "path" : "source/reference/operator/aggregation/gte.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "c0caea6d4418f6ce9025a241e4b5fa2df979889d5f7f12b56d51285a59be3b20",
+      "text" : "db.warehouses.aggregate( [\n   { $project:\n      { items: \n          { $cond:\n            {\n              if: { $and: [ { $isArray: \"$instock\" },\n                            { $isArray: \"$ordered\" } \n                          ] },\n              then: { $concatArrays: [ \"$instock\", \"$ordered\" ] },\n              else: \"One or more fields is not an array.\"\n            }\n          }\n      }\n   }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "278bd708d00fe10b6762c79b4b0c07abbbd7ff61e0ec2cbb2d81860a81ae9a35",
+      "text" : "db.warehouses.insertMany( [\n   { \"_id\" : 1, instock: [ \"chocolate\" ], ordered: [ \"butter\", \"apples\" ] },\n   { \"_id\" : 2, instock: [ \"apples\", \"pudding\", \"pie\" ] },\n   { \"_id\" : 3, instock: [ \"pears\", \"pecans\"], ordered: [ \"cherries\" ] },\n   { \"_id\" : 4, instock: [ \"ice cream\" ], ordered: [ ] }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "37e445138cf161a4387b910dd70d9e7c521b7a6ae0f1212dca32f55fef899ba6",
+      "text" : "{ \"_id\" : 1, \"items\" : [ \"chocolate\", \"butter\", \"apples\" ] }\n{ \"_id\" : 2, \"items\" : \"One or more fields is not an array.\" }\n{ \"_id\" : 3, \"items\" : [ \"pears\", \"pecans\", \"cherries\" ] }\n{ \"_id\" : 4, \"items\" : [ \"ice cream\" ] }"
+    } ],
+    "example" : "main",
+    "fixture" : "aggregation/expressions/isArray/isArrayExpressionOperator",
+    "fixtureFiles" : {
+      "action.json" : "51b80c3e28f218827b63ee93504a6b4163e549aed479ef13d17b3dc12581111e",
+      "data.json" : "cc13858c08c4dacb3059123ed7afb762fe76c2e3d0935c458cb4e18669028b9a",
+      "expected.json" : "37e445138cf161a4387b910dd70d9e7c521b7a6ae0f1212dca32f55fef899ba6",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ {
+      "blob" : "fb7443cdd8dd6104b19a12acca96cb9208824776",
+      "path" : "source/includes/aggregation/fact-arrays-in-arguments.rst"
+    } ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "bc5c7095f3dd2b19238a8edaa22444ced7d9b66b",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "c4529109c89ee24f0a64bd08c2b0abc76d2dbb09459ad396c9afb09a6298b5ab",
+      "text" : "use a different form of $isArray to match morphia's rendering\nuse shorter form of cond"
+    },
+    "rules" : [ "COND_ARRAY", "SINGLE_ARGUMENT_ARRAY" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "190e04195a5e4f9cd0651bfc71cfa65928fb8ce5",
+      "path" : "source/reference/operator/aggregation/isArray.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "c8e0f6592a7294e8cf894755bb175ed1a82c4f19ca641c06396871e304635df6",
+      "text" : "db.gamescores.aggregate([\n   {\n      $group:\n      {\n         _id: {\"gameId\": \"$gameId\"},\n         gamescores:\n            {\n               $lastN:\n                  {\n                     input: \"$score\",\n                     n: { $cond: { if: {$eq: [\"$gameId\",\"G2\"] }, then: 1, else: 3 } }\n                  }\n            }\n      }\n   }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "34336408cd7ae4866c15c9d272a29f47efce56dbdd4924d76d9e253d8b4486f0",
+      "text" : "db.gamescores.insertMany([\n   { playerId: \"PlayerA\", gameId: \"G1\", score: 31 },\n   { playerId: \"PlayerB\", gameId: \"G1\", score: 33 },\n   { playerId: \"PlayerC\", gameId: \"G1\", score: 99 },\n   { playerId: \"PlayerD\", gameId: \"G1\", score: 1 },\n   { playerId: \"PlayerA\", gameId: \"G2\", score: 10 },\n   { playerId: \"PlayerB\", gameId: \"G2\", score: 14 },\n   { playerId: \"PlayerC\", gameId: \"G2\", score: 66 },\n   { playerId: \"PlayerD\", gameId: \"G2\", score: 80 }\n])"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "571d76dd11fa9ecb44b435c34ee59c6ee2839233de22e58caac38c0e0c0f1ac1",
+      "text" : "[\n   { _id: { gameId: \"G1\" }, gamescores: [ 33, 99, 1 ] },\n   { _id: { gameId: \"G2\" }, gamescores: [ 80 ] }\n]"
+    } ],
+    "example" : "Computing ``n`` Based on the Group Key for ``$group``",
+    "fixture" : "aggregation/expressions/lastN/computingNBasedOnTheGroupKeyForGroup",
+    "fixtureFiles" : {
+      "action.json" : "ab2857e07b83bc910e70eea8e43ba781f01bd746d9a2c76f3d744b8659ff090a",
+      "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
+      "expected.json" : "f0ed2d35a1f2f890dd982adb4ceaa6624f608db33be0955fd0cfa03d7d39c68f",
+      "name" : "8c3e270deda46265063d5d4a54cdb7950436d97cb2c26bcbeee1e151851f7d76"
+    },
+    "includes" : [ ],
+    "origin" : "f9e469c9ce77fc5f8cef56e14b3e60944dc02128",
+    "pageBlob" : "eb90d0dcc67be06173b80d0c88e3eb60c33ae15b",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "c7a80bc42692b60a49b7798516f8c9af58c15079fcef989ecf8322671d2d933d",
+      "text" : "use the shorter form of cond"
+    },
+    "rules" : [ "COND_ARRAY" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "26310c7ddaaa6b1936d57da6da95fe8b7a4f1c96",
+      "path" : "source/reference/operator/aggregation/lastN.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "20c282451fb0895047cfd309e80b15c5242887646d57eeec0f0fcae4ba788a5a",
+      "text" : "db.sales.aggregate( [\n   {\n      $project: {\n         finalTotal: {\n            $let: {\n               vars: {\n                  total: { $add: [ '$price', '$tax' ] },\n                  discounted: { $cond: { if: '$applyDiscount', then: 0.9, else: 1 } }\n               },\n               in: { $multiply: [ \"$$total\", \"$$discounted\" ] }\n            }\n         }\n      }\n   }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "d912c28ae6742a047611aae2ab7ff329920db906b2f3bb927701a0451fc1598c",
+      "text" : "{ _id: 1, price: 10, tax: 0.50, applyDiscount: true }\n{ _id: 2, price: 10, tax: 0.25, applyDiscount: false }"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "342cb8c299c82032ec90bf94fa25aac959b989cab945adc908c62e06553ca95f",
+      "text" : "{ \"_id\" : 1, \"finalTotal\" : 9.450000000000001 }\n{ \"_id\" : 2, \"finalTotal\" : 10.25 }"
+    } ],
+    "example" : "main",
+    "fixture" : "aggregation/expressions/let/letExpressionOperator",
+    "fixtureFiles" : {
+      "action.json" : "3a1e198f2f392072bea2554911237b253c44f51d2cd5a4c48e5c2490e37869fc",
+      "data.json" : "d912c28ae6742a047611aae2ab7ff329920db906b2f3bb927701a0451fc1598c",
+      "expected.json" : "342cb8c299c82032ec90bf94fa25aac959b989cab945adc908c62e06553ca95f",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "f5cd4d9c72b930532bb6ceb2ced035cbaa020707",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "3e05a7a89116f49a4be5ea18c694d86de961a7c2bce5958e4aaded57361f3777",
+      "text" : "use the shorter form of $cond"
+    },
+    "rules" : [ "COND_ARRAY" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "26668d05722f74657f802e17701f9c4d565f59b4",
+      "path" : "source/reference/operator/aggregation/let.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "0f8298246a5c494e1e1b18164d13c57ca868ff9566d9785bc98ccf407be642ac",
+      "text" : "db.inventory.aggregate(\n   [\n     {\n       $project:\n          {\n            item: 1,\n            qty: 1,\n            qtyLt250: { $lt: [ \"$qty\", 250 ] },\n            _id: 0\n          }\n     }\n   ]\n)"
+    }, {
+      "role" : "DATA",
+      "sha256" : "db8c53d0109b6671d674748aa2e4ac1859b372ec6302b9168f7f73c0be2b3b39",
+      "text" : "{ \"_id\" : 1, \"item\" : \"abc1\", description: \"product 1\", qty: 300 }\n{ \"_id\" : 2, \"item\" : \"abc2\", description: \"product 2\", qty: 200 }\n{ \"_id\" : 3, \"item\" : \"xyz1\", description: \"product 3\", qty: 250 }\n{ \"_id\" : 4, \"item\" : \"VWZ1\", description: \"product 4\", qty: 300 }\n{ \"_id\" : 5, \"item\" : \"VWZ2\", description: \"product 5\", qty: 180 }"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "4d17c108f4c7343e101057b639486cfa3924460994cc0823e0b34b33a21d501b",
+      "text" : "{ \"item\" : \"abc1\", \"qty\" : 300, \"qtyLt250\" : false }\n{ \"item\" : \"abc2\", \"qty\" : 200, \"qtyLt250\" : true }\n{ \"item\" : \"xyz1\", \"qty\" : 250, \"qtyLt250\" : false }\n{ \"item\" : \"VWZ1\", \"qty\" : 300, \"qtyLt250\" : false }\n{ \"item\" : \"VWZ2\", \"qty\" : 180, \"qtyLt250\" : true }"
+    } ],
+    "example" : "main",
+    "fixture" : "aggregation/expressions/lt/ltExpressionOperator",
+    "fixtureFiles" : {
+      "action.json" : "3c924a30d352494e546fd7e64879d6a7c7156787f717e80ae9d4d4d771ef9be6",
+      "data.json" : "db8c53d0109b6671d674748aa2e4ac1859b372ec6302b9168f7f73c0be2b3b39",
+      "expected.json" : "4d17c108f4c7343e101057b639486cfa3924460994cc0823e0b34b33a21d501b",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "a1b6c905911b75973144e2359fb714b053e3515c",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
+      "text" : "reorder pipeline"
+    },
+    "rules" : [ "PROJECT_ID_FIRST" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "b89791d6434ba071253241c8b38dd683d332ba69",
+      "path" : "source/reference/operator/aggregation/lt.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "daec2beff71f5b3ce2f3a771d293bedda488625cbbfb982f850019fb2730586b",
+      "text" : "db.inventory.aggregate(\n   [\n     {\n       $project:\n          {\n            item: 1,\n            qty: 1,\n            qtyLte250: { $lte: [ \"$qty\", 250 ] },\n            _id: 0\n          }\n     }\n   ]\n)"
+    }, {
+      "role" : "DATA",
+      "sha256" : "db8c53d0109b6671d674748aa2e4ac1859b372ec6302b9168f7f73c0be2b3b39",
+      "text" : "{ \"_id\" : 1, \"item\" : \"abc1\", description: \"product 1\", qty: 300 }\n{ \"_id\" : 2, \"item\" : \"abc2\", description: \"product 2\", qty: 200 }\n{ \"_id\" : 3, \"item\" : \"xyz1\", description: \"product 3\", qty: 250 }\n{ \"_id\" : 4, \"item\" : \"VWZ1\", description: \"product 4\", qty: 300 }\n{ \"_id\" : 5, \"item\" : \"VWZ2\", description: \"product 5\", qty: 180 }"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "039232afe0e48cd415c5843260b11271b87612d780457033c7ac40c37b96bc5b",
+      "text" : "{ \"item\" : \"abc1\", \"qty\" : 300, \"qtyLte250\" : false }\n{ \"item\" : \"abc2\", \"qty\" : 200, \"qtyLte250\" : true }\n{ \"item\" : \"xyz1\", \"qty\" : 250, \"qtyLte250\" : true }\n{ \"item\" : \"VWZ1\", \"qty\" : 300, \"qtyLte250\" : false }\n{ \"item\" : \"VWZ2\", \"qty\" : 180, \"qtyLte250\" : true }"
+    } ],
+    "example" : "main",
+    "fixture" : "aggregation/expressions/lte/lteExpressionOperator",
+    "fixtureFiles" : {
+      "action.json" : "39b4f9594c7b497f90ea54985e7fb14402cee0cf9c7fbdac43a6c7cc86a7ff39",
+      "data.json" : "db8c53d0109b6671d674748aa2e4ac1859b372ec6302b9168f7f73c0be2b3b39",
+      "expected.json" : "039232afe0e48cd415c5843260b11271b87612d780457033c7ac40c37b96bc5b",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "c4ae0ea4521bf29bc2d79a4bb9008f6f49625012",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
+      "text" : "reorder pipeline"
+    },
+    "rules" : [ "PROJECT_ID_FIRST" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "b89791d6434ba071253241c8b38dd683d332ba69",
+      "path" : "source/reference/operator/aggregation/lte.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "a92a3e7cadb081feaf207f21e61472bb3655e3689c1bc7d4d746a9fe29469bdc",
+      "text" : "db.grades.aggregate( [\n   {\n      $project: {\n         adjustedGrades: {\n           $map: {\n             input: \"$quizzes\",\n             as: \"grade\",\n             in: { $add: [ \"$$grade\", 2 ] }\n           }\n         }\n      }\n   }\n ] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "f4c2ab926b12361ad84e2509863cbe2f48b6fedd064184c8a5cc7178925ec471",
+      "text" : "db.grades.insertMany( [\n  { quizzes: [ 5, 6, 7 ] },\n  { quizzes: [ ] },\n  { quizzes: [ 3, 8, 9 ] }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "8ca7ab75fe2d6e680c453c774961d58da6f75231696284437bd86c434fd26e47",
+      "text" : "[\n  {\n    _id: ObjectId(\"6390b8f7237da390c6869a62\"),\n    adjustedGrades: [ 7, 8, 9 ]\n  },\n  { \n    _id: ObjectId(\"6390b8f7237da390c6869a63\"),\n    adjustedGrades: []\n  },\n  {\n    _id: ObjectId(\"6390b8f7237da390c6869a64\"),\n    adjustedGrades: [ 5, 10, 11 ]\n  }\n]"
+    } ],
+    "example" : "Add to Each Element of an Array",
+    "fixture" : "aggregation/expressions/map/addToEachElementOfAnArray",
+    "fixtureFiles" : {
+      "action.json" : "d494f6a8007bff45f3a44063612c78aee967d05721060b80f67eff97084b6503",
+      "data.json" : "6784301e16c4430ab78aea22083e5a73dc624e3dd710ba571c2f2647ca5eb5be",
+      "expected.json" : "27f58a1c344dfc0d04f70b9aec49ac837cabc21501b9671d405dbaad03ecb01a",
+      "name" : "a500015a23eb156af91d13344b2686d12c843de7f472ebd9b9edfd8f814051bd"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "origin" : "aac41b3aaf402fae15ff8a1ebcf9df0759d92878",
+    "pageBlob" : "42cd94292518bce21ea6a17604a49007ddd649b2",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "30c5a96566f78dbffa6dfa597668858f5da0511ff6f506f0d1943984c67dfacc",
+      "text" : "reorder pipeline to match morphia's order"
+    },
+    "rules" : [ "NAMED_ARGUMENTS" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/map.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "df48163f95cca49f2eeb54157c86e4afbc1dcb9f354635835964f8e7a80d075c",
+      "text" : "db.deliveries.aggregate( [\n   {\n      $project: {\n         city: \"$city\",\n         integerValues: {\n            $map: {\n               input: \"$distances\",\n               as: \"decimalValue\",\n               in: { $trunc: \"$$decimalValue\" }\n            }\n         }\n      }\n   }\n ] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "d45d07b37948d2c48798f64de2ae8ca084e8785a294df23c863dd071263da77e",
+      "text" : "db.deliveries.insertMany( [\n  {\n    \"city\" : \"Bakersfield\",\n    \"distances\" : [ 34.57, 81.96, 44.24 ]\n  },\n  {\n    \"city\" : \"Barstow\", \n    \"distances\" : [ 73.28, 9.67, 124.36 ]\n  },\n  {\n    \"city\" : \"San Bernadino\",\n    \"distances\" : [ 16.04, 3.25, 6.82 ]\n  }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "3ed65890a1e924dc02300ddfa292ce18b124e5983de40af8cf54160cdfaf9a6a",
+      "text" : "[\n  {\n    _id: ObjectId(\"6390b9b1237da390c6869a65\"),\n    city: 'Bakersfield',\n    integerValues: [ 34, 81, 44 ]\n  },\n  {\n    _id: ObjectId(\"6390b9b1237da390c6869a66\"),\n    city: 'Barstow',\n    integerValues: [ 73, 9, 124 ]\n  },\n  {\n    _id: ObjectId(\"6390b9b1237da390c6869a67\"),\n    city: 'San Bernadino',\n    integerValues: [ 16, 3, 6 ]\n  }\n]"
+    } ],
+    "example" : "Truncate Each Array Element",
+    "fixture" : "aggregation/expressions/map/truncateEachArrayElement",
+    "fixtureFiles" : {
+      "action.json" : "84a85de412ad663deb84af83af3857559be7f2d43553e73b9185787d1808cd87",
+      "data.json" : "265c314dae4826572205d1e19b1c0ab241f67a9ffb43bbfbb4a7b7d790c9eaeb",
+      "expected.json" : "2862a26e17325377ccc33969f9f336d58441bb85d1b363b207a4dcf3d7395fb0",
+      "name" : "5a1987a505e0c9c55f4e5d91a62bb26578e04bec79f26036d243d367836731e0"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "origin" : "aac41b3aaf402fae15ff8a1ebcf9df0759d92878",
+    "pageBlob" : "42cd94292518bce21ea6a17604a49007ddd649b2",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "30c5a96566f78dbffa6dfa597668858f5da0511ff6f506f0d1943984c67dfacc",
+      "text" : "reorder pipeline to match morphia's order"
+    },
+    "rules" : [ "NAMED_ARGUMENTS" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/map.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "05583ab2b0b29688029513bdc5295e290c5ecaa1aa0f032708ae4ffbbaa7845b",
+      "text" : "db.gamescores.aggregate([\n   {\n      $group:\n      {\n         _id: {\"gameId\": \"$gameId\"},\n         gamescores:\n            {\n               $maxN:\n                  {\n                     input: [\"$score\",\"$playerId\"],\n                     n: { $cond: { if: {$eq: [\"$gameId\",\"G2\"] }, then: 1, else: 3 } }\n                  }\n            }\n      }\n   }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "34336408cd7ae4866c15c9d272a29f47efce56dbdd4924d76d9e253d8b4486f0",
+      "text" : "db.gamescores.insertMany([\n   { playerId: \"PlayerA\", gameId: \"G1\", score: 31 },\n   { playerId: \"PlayerB\", gameId: \"G1\", score: 33 },\n   { playerId: \"PlayerC\", gameId: \"G1\", score: 99 },\n   { playerId: \"PlayerD\", gameId: \"G1\", score: 1 },\n   { playerId: \"PlayerA\", gameId: \"G2\", score: 10 },\n   { playerId: \"PlayerB\", gameId: \"G2\", score: 14 },\n   { playerId: \"PlayerC\", gameId: \"G2\", score: 66 },\n   { playerId: \"PlayerD\", gameId: \"G2\", score: 80 }\n])"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "49bc5051131e87bfc5dfbde6a9c72e69cca3e89370c4c2114775a323dfb8c5da",
+      "text" : "[\n   { _id: { gameId: 'G2' }, gamescores: [ [ 80, 'PlayerD' ] ] },\n   {\n      _id: { gameId: 'G1' },\n      gamescores: [ [ 99, 'PlayerC' ], [ 33, 'PlayerB' ], [ 31, 'PlayerA' ] ]\n   }\n]"
+    } ],
+    "example" : "Computing ``n`` Based on the Group Key for ``$group``",
+    "fixture" : "aggregation/expressions/maxN/computingNBasedOnTheGroupKeyForGroup",
+    "fixtureFiles" : {
+      "action.json" : "18d9d3270c402b3f6bd100aa329ea893d97997ff7e05b45a282693b54f9714ca",
+      "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
+      "expected.json" : "7e966d22431e21de85f52a4a06a4e2fd0da9912d407f9de8561165b2568d0fa7",
+      "name" : "8c3e270deda46265063d5d4a54cdb7950436d97cb2c26bcbeee1e151851f7d76"
+    },
+    "includes" : [ ],
+    "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
+    "pageBlob" : "75206683857d348c555a0c512696915266e8fd83",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "887b00c165c463eee845fb5235d5aae2eb2fd9b680b62b72bacdb6f46a36cd56",
+      "text" : "cond uses the shorter format"
+    },
+    "rules" : [ "COND_ARRAY" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "e473868337d01610afb03e550b561ca771245aff",
+      "path" : "source/reference/operator/aggregation/maxN.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "7605f201b87685279b3e75423ace149af3d2e604305341ae9777bfc95fa04c59",
+      "text" : "db.gamescores.aggregate([\n   {\n      $group:\n      {\n         _id: {\"gameId\": \"$gameId\"},\n         gamescores:\n            {\n               $minN:\n                  {\n                     input: [\"$score\",\"$playerId\"],\n                     n: { $cond: { if: {$eq: [\"$gameId\",\"G2\"] }, then: 1, else: 3 } }\n                  }\n            }\n      }\n   }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "34336408cd7ae4866c15c9d272a29f47efce56dbdd4924d76d9e253d8b4486f0",
+      "text" : "db.gamescores.insertMany([\n   { playerId: \"PlayerA\", gameId: \"G1\", score: 31 },\n   { playerId: \"PlayerB\", gameId: \"G1\", score: 33 },\n   { playerId: \"PlayerC\", gameId: \"G1\", score: 99 },\n   { playerId: \"PlayerD\", gameId: \"G1\", score: 1 },\n   { playerId: \"PlayerA\", gameId: \"G2\", score: 10 },\n   { playerId: \"PlayerB\", gameId: \"G2\", score: 14 },\n   { playerId: \"PlayerC\", gameId: \"G2\", score: 66 },\n   { playerId: \"PlayerD\", gameId: \"G2\", score: 80 }\n])"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "fc9114794b02471504cd68aa6795394f22a0355bb7db1b5d2a967f012cd1c888",
+      "text" : "[\n   { _id: { gameId: 'G2' }, gamescores: [ [ 10, 'PlayerA' ] ] },\n   {\n      _id: { gameId: 'G1' },\n      gamescores: [ [ 1, 'PlayerD' ], [ 31, 'PlayerA' ], [ 33, 'PlayerB' ] ]\n   }\n]"
+    } ],
+    "example" : "Computing ``n`` Based on the Group Key for ``$group``",
+    "fixture" : "aggregation/expressions/minN/computingNBasedOnTheGroupKeyForGroup",
+    "fixtureFiles" : {
+      "action.json" : "036df52068be5d2165aa4aa7107de7de4675935b14c29d96537051d4bb113507",
+      "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
+      "expected.json" : "44217c9e309bd8df367c96c8363c4f95d5c958b5520c862e316ad83fcdd148bf",
+      "name" : "8c3e270deda46265063d5d4a54cdb7950436d97cb2c26bcbeee1e151851f7d76"
+    },
+    "includes" : [ ],
+    "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
+    "pageBlob" : "f998dbd7720b7f9e66137c1e9d6ff795bbaa04d5",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "293c230b0f5885f15045cfb17bf980e09412e7271b543ae012e024749975b60f",
+      "text" : "update the docs version to use the short version morphia generates"
+    },
+    "rules" : [ "COND_ARRAY" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "e473868337d01610afb03e550b561ca771245aff",
+      "path" : "source/reference/operator/aggregation/minN.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "1f2473302a9ace1b31bd1b53c14b26a55097acccd860860ddaac4597541a3410",
+      "text" : "db.inventory.aggregate(\n   [\n     {\n       $project:\n          {\n            item: 1,\n            qty: 1,\n            qtyNe250: { $ne: [ \"$qty\", 250 ] },\n            _id: 0\n          }\n     }\n   ]\n)"
+    }, {
+      "role" : "DATA",
+      "sha256" : "db8c53d0109b6671d674748aa2e4ac1859b372ec6302b9168f7f73c0be2b3b39",
+      "text" : "{ \"_id\" : 1, \"item\" : \"abc1\", description: \"product 1\", qty: 300 }\n{ \"_id\" : 2, \"item\" : \"abc2\", description: \"product 2\", qty: 200 }\n{ \"_id\" : 3, \"item\" : \"xyz1\", description: \"product 3\", qty: 250 }\n{ \"_id\" : 4, \"item\" : \"VWZ1\", description: \"product 4\", qty: 300 }\n{ \"_id\" : 5, \"item\" : \"VWZ2\", description: \"product 5\", qty: 180 }"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "faa3345615eb647a8f9a629bb672645b8d6e973a8792d33332fe8d9b62cabe56",
+      "text" : "{ \"item\" : \"abc1\", \"qty\" : 300, \"qtyNe250\" : true }\n{ \"item\" : \"abc2\", \"qty\" : 200, \"qtyNe250\" : true }\n{ \"item\" : \"xyz1\", \"qty\" : 250, \"qtyNe250\" : false }\n{ \"item\" : \"VWZ1\", \"qty\" : 300, \"qtyNe250\" : true }\n{ \"item\" : \"VWZ2\", \"qty\" : 180, \"qtyNe250\" : true }"
+    } ],
+    "example" : "main",
+    "fixture" : "aggregation/expressions/ne/neExpressionOperator",
+    "fixtureFiles" : {
+      "action.json" : "d78b5b1e1619c5d30fec77a1617f8c7c491350bc0bbc8598692e650e419f35c4",
+      "data.json" : "db8c53d0109b6671d674748aa2e4ac1859b372ec6302b9168f7f73c0be2b3b39",
+      "expected.json" : "faa3345615eb647a8f9a629bb672645b8d6e973a8792d33332fe8d9b62cabe56",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "ef66debc94e80aeed914a5889773b680688d2634",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
+      "text" : "reorder pipeline"
+    },
+    "rules" : [ "PROJECT_ID_FIRST" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "d3aedc270fc14feb019a86c8018699c98b26de28",
+      "path" : "source/reference/operator/aggregation/ne.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "6bf0c4ed53679169dcc1cb387fde378f8953dc33531b7c5a5214e512fd8a34d8",
+      "text" : "db.people.aggregate(\n   [\n     // Filter to return only non-empty arrays\n     { $match: { \"hobbies\": { $gt: [ ] } } },\n     {\n       $project: {\n         \"name\": 1,\n         \"bio\": {\n           $reduce: {\n             input: \"$hobbies\",\n             initialValue: \"My hobbies include:\",\n             in: {\n               $concat: [\n                 \"$$value\",\n                 {\n                   $cond: {\n                     if: { $eq: [ \"$$value\", \"My hobbies include:\" ] },\n                     then: \" \",\n                     else: \", \"\n                   }\n                 },\n                 \"$$this\"\n               ]\n             }\n           }\n         }\n       }\n     }\n   ]\n)"
+    }, {
+      "role" : "DATA",
+      "sha256" : "e4cafd01c7762ed6d33a551185ef74b38f2f5687b93f21ad7277bc323c4151d6",
+      "text" : "{ \"_id\" : 1, \"name\" : \"Melissa\", \"hobbies\" : [ \"softball\", \"drawing\", \"reading\" ] }\n{ \"_id\" : 2, \"name\" : \"Brad\", \"hobbies\" : [ \"gaming\", \"skateboarding\" ] }\n{ \"_id\" : 3, \"name\" : \"Scott\", \"hobbies\" : [ \"basketball\", \"music\", \"fishing\" ] }\n{ \"_id\" : 4, \"name\" : \"Tracey\", \"hobbies\" : [ \"acting\", \"yoga\" ] }\n{ \"_id\" : 5, \"name\" : \"Josh\", \"hobbies\" : [ \"programming\" ] }\n{ \"_id\" : 6, \"name\" : \"Claire\" }"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "8bca2ce6954c28c3226097bb7ae78caea3a8dbd79fc84fc99e2e271376130688",
+      "text" : "{ \"_id\" : 1, \"name\" : \"Melissa\", \"bio\" : \"My hobbies include: softball, drawing, reading\" }\n{ \"_id\" : 2, \"name\" : \"Brad\", \"bio\" : \"My hobbies include: gaming, skateboarding\" }\n{ \"_id\" : 3, \"name\" : \"Scott\", \"bio\" : \"My hobbies include: basketball, music, fishing\" }\n{ \"_id\" : 4, \"name\" : \"Tracey\", \"bio\" : \"My hobbies include: acting, yoga\" }\n{ \"_id\" : 5, \"name\" : \"Josh\", \"bio\" : \"My hobbies include: programming\" }"
+    } ],
+    "example" : "String Concatenation",
+    "fixture" : "aggregation/expressions/reduce/stringConcatenation",
+    "fixtureFiles" : {
+      "action.json" : "6d1c07baa84b1eda5fe8226b1269d4962b84c116593b770ba1b281d21e2431ce",
+      "data.json" : "e4cafd01c7762ed6d33a551185ef74b38f2f5687b93f21ad7277bc323c4151d6",
+      "expected.json" : "8bca2ce6954c28c3226097bb7ae78caea3a8dbd79fc84fc99e2e271376130688",
+      "name" : "2d909cdeb2514082e43cef484ff738a140a5d11f78a473fe5501e9048c7d0c1f"
+    },
+    "includes" : [ ],
+    "origin" : "1e38798fbaaffb6945159e208bcd33318c425121",
+    "pageBlob" : "6a36a6a69ad4600f7ba7656f7d4dfc7db0c891fd",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "0654b84b5ca1b27df79c66f71ef658e66d2fc21b4a3b9d059d740dfcbe8da918",
+      "text" : "use the short form for $cond"
+    },
+    "rules" : [ "COND_ARRAY" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "ca3e8a737ee08af6482a9eed3a1abfe708edd5c8",
+      "path" : "source/reference/operator/aggregation/reduce.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "36017863a660a38f7d761d721c9b81af3e9c8f066fd364e7cae8aee299c6e0e1",
+      "text" : "db.flowers.aggregate(\n   [\n     { $project: { flowerFieldA: 1, flowerFieldB: 1, inBOnly: { $setDifference: [ \"$flowerFieldB\", \"$flowerFieldA\" ] }, _id: 0 } }\n   ]\n)"
+    }, {
+      "role" : "DATA",
+      "sha256" : "6443ea787dad4fdfbd05b758c7838ea1b3cd69c19b2e0fe36fad50c454f6eeed",
+      "text" : "db.flowers.insertMany( [\n   { \"_id\" : 1, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"rose\", \"orchid\" ] },\n   { \"_id\" : 2, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"orchid\", \"rose\", \"orchid\" ] },\n   { \"_id\" : 3, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"rose\", \"orchid\", \"jasmine\" ] },\n   { \"_id\" : 4, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"jasmine\", \"rose\" ] },\n   { \"_id\" : 5, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ ] },\n   { \"_id\" : 6, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ [ \"rose\" ], [ \"orchid\" ] ] },\n   { \"_id\" : 7, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ [ \"rose\", \"orchid\" ] ] },\n   { \"_id\" : 8, \"flowerFieldA\" : [ ], \"flowerFieldB\" : [ ] },\n   { \"_id\" : 9, \"flowerFieldA\" : [ ], \"flowerFieldB\" : [ \"rose\" ] }\n] ) "
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "8cbf847fdada28369e0fa16678c8cb2b5805e560019110eba10e96c42c7fa6c2",
+      "text" : "{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"rose\", \"orchid\" ], \"inBOnly\" : [ ] }\n{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"orchid\", \"rose\", \"orchid\" ], \"inBOnly\" : [ ] }\n{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"rose\", \"orchid\", \"jasmine\" ], \"inBOnly\" : [ \"jasmine\" ] }\n{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"jasmine\", \"rose\" ], \"inBOnly\" : [ \"jasmine\" ] }\n{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ ], \"inBOnly\" : [ ] }\n{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ [ \"rose\" ], [ \"orchid\" ] ], \"inBOnly\" : [ [ \"rose\" ], [ \"orchid\" ] ] }\n{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ [ \"rose\", \"orchid\" ] ], \"inBOnly\" : [ [ \"rose\", \"orchid\" ] ] }\n{ \"flowerFieldA\" : [ ], \"flowerFieldB\" : [ ], \"inBOnly\" : [ ] }\n{ \"flowerFieldA\" : [ ], \"flowerFieldB\" : [ \"rose\" ], \"inBOnly\" : [ \"rose\" ] }"
+    } ],
+    "example" : "main",
+    "fixture" : "aggregation/expressions/setDifference/setDifferenceExpressionOperator",
+    "fixtureFiles" : {
+      "action.json" : "27bd806d72da1bdf2f2ba28859dbbbbf8aa278500c2cc127c682e7d360bb75d5",
+      "data.json" : "01b6f83876510cb9f326b4cef4476f019a54cd5894b583866e11f34cdeae218a",
+      "expected.json" : "8cbf847fdada28369e0fa16678c8cb2b5805e560019110eba10e96c42c7fa6c2",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ {
+      "blob" : "9ba8fe6005b2e4e5e7a77bbf7c6535da3355c571",
+      "path" : "source/includes/important-set-operator-semantics.rst"
+    } ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "0bd381ef5fd752e0f024a2bb47a6c1e6dbd6032f",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "e18dfdc16e2c6ea874220bb8df22daa6deeee8af8f83a3b9e264115e2f694ea8",
+      "text" : "rearrange suppress id"
+    },
+    "rules" : [ "PROJECT_ID_FIRST" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "e0848b6ada3e691ecada5da38e717de2d2545843",
+      "path" : "source/reference/operator/aggregation/setDifference.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "4bd656bf3a0bf7fcf58d48cebc35d289a96551a492cc5ca6facdf1f6df6bcb0e",
+      "text" : "db.flowers.aggregate(\n   [\n     { $project: { flowerFieldA: 1, flowerFieldB: 1, commonToBoth: { $setIntersection: [ \"$flowerFieldA\", \"$flowerFieldB\" ] }, _id: 0 } }\n   ]\n)"
+    }, {
+      "role" : "DATA",
+      "sha256" : "235abb598e8a6e49afc65a2668bf4b842a8badf5acc9df5f440efce53725833b",
+      "text" : "db.flowers.insertMany( [\n   { \"_id\" : 1, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"rose\", \"orchid\" ] },\n   { \"_id\" : 2, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"orchid\", \"rose\", \"orchid\" ] },\n   { \"_id\" : 3, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"rose\", \"orchid\", \"jasmine\" ] },\n   { \"_id\" : 4, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"jasmine\", \"rose\" ] },\n   { \"_id\" : 5, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ ] },\n   { \"_id\" : 6, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ [ \"rose\" ], [ \"orchid\" ] ] },\n   { \"_id\" : 7, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ [ \"rose\", \"orchid\" ] ] },\n   { \"_id\" : 8, \"flowerFieldA\" : [ ], \"flowerFieldB\" : [ ] },\n   { \"_id\" : 9, \"flowerFieldA\" : [ ], \"flowerFieldB\" : [ \"rose\" ] }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "63b3f4e4385a7c5dac743827bf52b813a3c14fed55f5afa5c8aece57cecb3d42",
+      "text" : "{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"rose\", \"orchid\" ], \"commonToBoth\" : [ \"orchid\", \"rose\" ] }\n{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"orchid\", \"rose\", \"orchid\" ], \"commonToBoth\" : [ \"orchid\", \"rose\" ] }\n{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"rose\", \"orchid\", \"jasmine\" ], \"commonToBoth\" : [ \"orchid\", \"rose\" ] }\n{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"jasmine\", \"rose\" ], \"commonToBoth\" : [ \"rose\" ] }\n{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ ], \"commonToBoth\" : [ ] }\n{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ [ \"rose\" ], [ \"orchid\" ] ], \"commonToBoth\" : [ ] }\n{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ [ \"rose\", \"orchid\" ] ], \"commonToBoth\" : [ ] }\n{ \"flowerFieldA\" : [ ], \"flowerFieldB\" : [ ], \"commonToBoth\" : [ ] }\n{ \"flowerFieldA\" : [ ], \"flowerFieldB\" : [ \"rose\" ], \"commonToBoth\" : [ ] }"
+    } ],
+    "example" : "Elements Array Example",
+    "fixture" : "aggregation/expressions/setIntersection/elementsArrayExample",
+    "fixtureFiles" : {
+      "action.json" : "0b134270dce3c0cf23d90635460dce61c82062ae1453f78c93ee547d0f96fef5",
+      "data.json" : "01b6f83876510cb9f326b4cef4476f019a54cd5894b583866e11f34cdeae218a",
+      "expected.json" : "63b3f4e4385a7c5dac743827bf52b813a3c14fed55f5afa5c8aece57cecb3d42",
+      "name" : "9d8d5c4836b95a43d1f884822ceb0e553edbb25c7bbfe524b3f7effb616a6385"
+    },
+    "includes" : [ {
+      "blob" : "9ba8fe6005b2e4e5e7a77bbf7c6535da3355c571",
+      "path" : "source/includes/important-set-operator-semantics.rst"
+    }, {
+      "blob" : "8b933e78dea0c9ba4dfdefecb2782016a3cb4f24",
+      "path" : "source/includes/user-roles-system-variable-introduction.rst"
+    }, {
+      "blob" : "711d4a43692d7d0ef7f60601b1c5d5ddbeb2a078",
+      "path" : "source/includes/user-roles-system-variable-example-login-john.rst"
+    }, {
+      "blob" : "7f403be75e2e104b24b37bdd3091313f4ab183bd",
+      "path" : "source/includes/user-roles-system-variable-example-description-start.rst"
+    }, {
+      "blob" : "d32e451912bb4540707d5b135cbde8ac2845e567",
+      "path" : "source/includes/user-roles-system-variable-example-pipeline.rst"
+    }, {
+      "blob" : "b073a76eddf629d930a40a016ff6aea5f740dd8b",
+      "path" : "source/includes/user-roles-system-variable-example-description.rst"
+    }, {
+      "blob" : "fac6ff81e05ea4ac635055b12503378699188835",
+      "path" : "source/includes/user-roles-system-variable-example-output-john.rst"
+    }, {
+      "blob" : "affd0ae6225b4f04a2e2c18637eb6d641f5d3768",
+      "path" : "source/includes/user-roles-system-variable-example-login-jane.rst"
+    }, {
+      "blob" : "cf47e33cdcee2e76826eb6e1204cb0d298627439",
+      "path" : "source/includes/user-roles-system-variable-example-output-jane.rst"
+    } ],
+    "origin" : "162455b3b4312eb783f51ede4f8d944d2586286a",
+    "pageBlob" : "35a7a8a1e624fa7385262e64d42fd7bf1bdd2782",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "e18dfdc16e2c6ea874220bb8df22daa6deeee8af8f83a3b9e264115e2f694ea8",
+      "text" : "rearrange suppress id"
+    },
+    "rules" : [ "PROJECT_ID_FIRST" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "e0848b6ada3e691ecada5da38e717de2d2545843",
+      "path" : "source/reference/operator/aggregation/setIntersection.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "505edb1e4bde2908694f17718f020da56a9df0140f79eab66f2d9f3d76ee0318",
+      "text" : "db.flowers.aggregate(\n   [\n     { $project: { flowerFieldA:1, flowerFieldB: 1, allValues: { $setUnion: [ \"$flowerFieldA\", \"$flowerFieldB\" ] }, _id: 0 } }\n   ]\n)"
+    }, {
+      "role" : "DATA",
+      "sha256" : "6443ea787dad4fdfbd05b758c7838ea1b3cd69c19b2e0fe36fad50c454f6eeed",
+      "text" : "db.flowers.insertMany( [\n   { \"_id\" : 1, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"rose\", \"orchid\" ] },\n   { \"_id\" : 2, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"orchid\", \"rose\", \"orchid\" ] },\n   { \"_id\" : 3, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"rose\", \"orchid\", \"jasmine\" ] },\n   { \"_id\" : 4, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"jasmine\", \"rose\" ] },\n   { \"_id\" : 5, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ ] },\n   { \"_id\" : 6, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ [ \"rose\" ], [ \"orchid\" ] ] },\n   { \"_id\" : 7, \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ [ \"rose\", \"orchid\" ] ] },\n   { \"_id\" : 8, \"flowerFieldA\" : [ ], \"flowerFieldB\" : [ ] },\n   { \"_id\" : 9, \"flowerFieldA\" : [ ], \"flowerFieldB\" : [ \"rose\" ] }\n] ) "
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "1512ea57843cc59b806529b1377d79f1a5b4576eae873a1ce12af6a456d87d8b",
+      "text" : "{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ \"rose\", \"orchid\" ], \"allValues\": [ \"orchid\", \"rose\" ] }\n{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ \"orchid\", \"rose\", \"orchid\" ], \"allValues\": [ \"orchid\", \"rose\" ] }\n{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ \"rose\", \"orchid\", \"jasmine\" ], \"allValues\": [ \"orchid\", \"rose\", \"jasmine\" ] }\n{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ \"jasmine\", \"rose\" ], \"allValues\": [ \"orchid\", \"rose\", \"jasmine\" ] }\n{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ ], \"allValues\": [ \"orchid\", \"rose\" ] }\n{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ [ \"rose\" ], [ \"orchid\" ] ], \"allValues\": [ \"orchid\", \"rose\", [ \"rose\" ], [ \"orchid\" ] ] }\n{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ [ \"rose\", \"orchid\" ] ], \"allValues\": [ \"orchid\", \"rose\", [ \"rose\", \"orchid\" ] ] }\n{ \"flowerFieldA\": [ ], \"flowerFieldB\": [ ], \"allValues\": [ ] }\n{ \"flowerFieldA\": [ ], \"flowerFieldB\": [ \"rose\" ], \"allValues\": [ \"rose\" ] }"
+    } ],
+    "example" : "main",
+    "fixture" : "aggregation/expressions/setUnion/setUnionAccumulatorOperator",
+    "fixtureFiles" : {
+      "action.json" : "58a773e31fc06aca6ece771f62acaa30b338a6c3a2e6a99c060c1bd7cc7833dd",
+      "data.json" : "01b6f83876510cb9f326b4cef4476f019a54cd5894b583866e11f34cdeae218a",
+      "expected.json" : "1512ea57843cc59b806529b1377d79f1a5b4576eae873a1ce12af6a456d87d8b",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ {
+      "blob" : "9ba8fe6005b2e4e5e7a77bbf7c6535da3355c571",
+      "path" : "source/includes/important-set-operator-semantics.rst"
+    } ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "5fb7cb7683edfc6e33c1129ce27a7d763725669c",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "e17fac3fb207733c3d2910b145f4878ecdbee2a2d8c8f7d6337bb23cd582cc6b",
+      "text" : "rearrange suppress id\n"
+    },
+    "rules" : [ "PROJECT_ID_FIRST" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "e0848b6ada3e691ecada5da38e717de2d2545843",
+      "path" : "source/reference/operator/aggregation/setUnion.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "a21bdf2e6d169c79a696d17397d438700c5f05d76200cace56a093a0d83d7c75",
+      "text" : "db.inventory.aggregate([\n   {\n      $project: {\n         item: 1,\n         numberOfColors: { $cond: { if: { $isArray: \"$colors\" }, then: { $size: \"$colors\" }, else: \"NA\"} }\n      } \n   }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "ff7538eae13f527665e22771e62b9495e7e17f32568cfad2adfa85ba0576bfec",
+      "text" : "{ \"_id\" : 1, \"item\" : \"ABC1\", \"description\" : \"product 1\", colors: [ \"blue\", \"black\", \"red\" ] }\n{ \"_id\" : 2, \"item\" : \"ABC2\", \"description\" : \"product 2\", colors: [ \"purple\" ] }\n{ \"_id\" : 3, \"item\" : \"XYZ1\", \"description\" : \"product 3\", colors: [ ] }\n{ \"_id\" : 4, \"item\" : \"ZZZ1\", \"description\" : \"product 4 - missing colors\" }\n{ \"_id\" : 5, \"item\" : \"ZZZ2\", \"description\" : \"product 5 - colors is string\", colors: \"blue,red\" }"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "7346b20dd9752dde43e5841accc09bb6d314b2e74a3dffab21ae19a678b433c4",
+      "text" : "{ \"_id\" : 1, \"item\" : \"ABC1\", \"numberOfColors\" : 3 }\n{ \"_id\" : 2, \"item\" : \"ABC2\", \"numberOfColors\" : 1 }\n{ \"_id\" : 3, \"item\" : \"XYZ1\", \"numberOfColors\" : 0 }\n{ \"_id\" : 4, \"item\" : \"ZZZ1\", \"numberOfColors\" : \"NA\" }\n{ \"_id\" : 5, \"item\" : \"ZZZ2\", \"numberOfColors\" : \"NA\" }"
+    } ],
+    "example" : "main",
+    "fixture" : "aggregation/expressions/size/sizeExpressionOperator",
+    "fixtureFiles" : {
+      "action.json" : "dd92d298a1191b2bfe47aedf35258b7deb6bfb3e0457271c2e62297ca92017b2",
+      "data.json" : "ff7538eae13f527665e22771e62b9495e7e17f32568cfad2adfa85ba0576bfec",
+      "expected.json" : "7346b20dd9752dde43e5841accc09bb6d314b2e74a3dffab21ae19a678b433c4",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "b0b66a16ae0f3d126ddf3c7bb10fb253fe1a9ef1",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "aae0020d062ca8823586feb8233268a2534c4cf4b1b0a0ea0466ad0cd6699453",
+      "text" : "adjust the form of $cond"
+    },
+    "rules" : [ "COND_ARRAY", "SINGLE_ARGUMENT_ARRAY" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/size.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "13f07e717b0d701f3ff6aa3d0a13b7ead0d886adc5e1fd5b212a212db030785a",
+      "text" : "db.deliveries.aggregate([\n  { $project : { city_state : { $split: [\"$city\", \", \"] }, qty : 1 } },\n  { $unwind : \"$city_state\" },\n  { $match : { city_state : /[A-Z]{2}/ } },\n  { $group : { _id: { \"state\" : \"$city_state\" }, total_qty : { \"$sum\" : \"$qty\" } } },\n  { $sort : { total_qty : -1 } }\n]);"
+    }, {
+      "role" : "DATA",
+      "sha256" : "249a0c550901ef9df36c07cfce986e5c31ddf04a7087192a7b2ec4dde1f37087",
+      "text" : "{ \"_id\" : 1, \"city\" : \"Berkeley, CA\", \"qty\" : 648 }\n{ \"_id\" : 2, \"city\" : \"Bend, OR\", \"qty\" : 491 }\n{ \"_id\" : 3, \"city\" : \"Kensington, CA\", \"qty\" : 233 }\n{ \"_id\" : 4, \"city\" : \"Eugene, OR\", \"qty\" : 842 }\n{ \"_id\" : 5, \"city\" : \"Reno, NV\", \"qty\" : 655 }\n{ \"_id\" : 6, \"city\" : \"Portland, OR\", \"qty\" : 408 }\n{ \"_id\" : 7, \"city\" : \"Sacramento, CA\", \"qty\" : 574 }"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "7558ca78e0274388591c2431499c0d737c75b9e322acdccc3ce3f2781e75c434",
+      "text" : "{ \"_id\" : { \"state\" : \"OR\" }, \"total_qty\" : 1741 }\n{ \"_id\" : { \"state\" : \"CA\" }, \"total_qty\" : 1455 }\n{ \"_id\" : { \"state\" : \"NV\" }, \"total_qty\" : 655 }"
+    } ],
+    "example" : "main",
+    "fixture" : "aggregation/expressions/split/splitExpressionOperator",
+    "fixtureFiles" : {
+      "action.json" : "c71a76a532434797ef610d133174dd57c74951d5b3a3359c379f458852a6a973",
+      "data.json" : "249a0c550901ef9df36c07cfce986e5c31ddf04a7087192a7b2ec4dde1f37087",
+      "expected.json" : "7558ca78e0274388591c2431499c0d737c75b9e322acdccc3ce3f2781e75c434",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "ae02591d100b051c6b547a9a03ea8360bb284bdb",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "2057c929ec31a45871bb1ddf92836a0a1f499a45bbea08a1255f3c99c32035cf",
+      "text" : "change the form of the regex to match morphia's generated form"
+    },
+    "rules" : [ "REGEX_FORM" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "dd8638fb493316581481d0fc9413339ee019bb3a",
+      "path" : "source/reference/operator/aggregation/split.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "c3765d7f98342679fda818463c567e9f533b600fb5a43c8240da664499d8dbc8",
+      "text" : "db.gamescores.aggregate([\n   {\n      $group:\n      {\n         _id: {\"gameId\": \"$gameId\"},\n         gamescores:\n            {\n               $topN:\n                  {\n                     output: \"$score\",\n                     n: { $cond: { if: {$eq: [\"$gameId\",\"G2\"] }, then: 1, else: 3 } },\n                     sortBy: { \"score\": -1 }\n                  }\n            }\n      }\n   }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "34336408cd7ae4866c15c9d272a29f47efce56dbdd4924d76d9e253d8b4486f0",
+      "text" : "db.gamescores.insertMany([\n   { playerId: \"PlayerA\", gameId: \"G1\", score: 31 },\n   { playerId: \"PlayerB\", gameId: \"G1\", score: 33 },\n   { playerId: \"PlayerC\", gameId: \"G1\", score: 99 },\n   { playerId: \"PlayerD\", gameId: \"G1\", score: 1 },\n   { playerId: \"PlayerA\", gameId: \"G2\", score: 10 },\n   { playerId: \"PlayerB\", gameId: \"G2\", score: 14 },\n   { playerId: \"PlayerC\", gameId: \"G2\", score: 66 },\n   { playerId: \"PlayerD\", gameId: \"G2\", score: 80 }\n])"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "cbdb11eda34caac9874e65f962979646ef03541d6bf8a6d066eb1fd328da55d3",
+      "text" : "[\n   { _id: { gameId: 'G1' }, gamescores: [ 99, 33, 31 ] },\n   { _id: { gameId: 'G2' }, gamescores: [ 80 ] }\n]"
+    } ],
+    "example" : "Computing ``n`` Based on the Group Key for ``$group``",
+    "fixture" : "aggregation/expressions/topN/computingNBasedOnTheGroupKeyForGroup",
+    "fixtureFiles" : {
+      "action.json" : "f9c57111b63f78bc8ab906768edd3fbf9b7d4222e3b49f8432b05a73251fe136",
+      "data.json" : "6831b8684b7cb54ed19676649116bb3eb6152f1e077ee8aac64840a8ef132fae",
+      "expected.json" : "c85b080d12e933f27c59fa7b49d3baa2ca30bf110a6a00a782169accb23cb373",
+      "name" : "8c3e270deda46265063d5d4a54cdb7950436d97cb2c26bcbeee1e151851f7d76"
+    },
+    "includes" : [ ],
+    "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
+    "pageBlob" : "5327b184fa5b8f1342bd6cfd26f8318c09d5709c",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "b996f490e3f0fd383b2004f413117597fcf368482ddb5a397401dded8050e9dc",
+      "text" : "update the docs version to use the short version morphia generates\nfix the ordering of the doc"
+    },
+    "rules" : [ "COND_ARRAY", "NAMED_ARGUMENTS" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "d497b13c81d4853dce0760e07390cf9d03c33c28",
+      "path" : "source/reference/operator/aggregation/topN.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "903320a02c40610278f21ae1b9c1864d4947be0b124a6f54d9a6db6abe0e12bf",
+      "text" : "db.matrices.aggregate([{\n  $project: {\n    _id: false,\n    transposed: {\n      $zip: {\n        inputs: [\n          { $arrayElemAt: [ \"$matrix\", 0 ] },\n          { $arrayElemAt: [ \"$matrix\", 1 ] },\n          { $arrayElemAt: [ \"$matrix\", 2 ] },\n        ]\n      }\n    }\n  }\n}])"
+    }, {
+      "role" : "DATA",
+      "sha256" : "21bf475d0b2bc1a9eb5ce78a8fea5802fb049ecf2e4c6b25fe299fe81dc300b5",
+      "text" : "db.matrices.insertMany([\n  { matrix: [[1, 2], [2, 3], [3, 4]] },\n  { matrix: [[8, 7], [7, 6], [5, 4]] },\n])"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "a94e1316d2c0e0a6f883fbb2f6a518a03d9cb10b54058437c61d243ffa52990e",
+      "text" : "{ \"transposed\" : [ [ 1, 2, 3 ], [ 2, 3, 4 ] ] }\n{ \"transposed\" : [ [ 8, 7, 5 ], [ 7, 6, 4 ] ] }"
+    } ],
+    "example" : "Matrix Transposition",
+    "fixture" : "aggregation/expressions/zip/matrixTransposition",
+    "fixtureFiles" : {
+      "action.json" : "f8a07842c446d16891aa1ebafe51fd8e2cb33609078b5ff72289b46d4a5a5902",
+      "data.json" : "d54e8b49b7eeff7d6b51d12e856a2cd7ee035cadf8e6810485f53b327ccb6754",
+      "expected.json" : "a94e1316d2c0e0a6f883fbb2f6a518a03d9cb10b54058437c61d243ffa52990e",
+      "name" : "fd18eae2a00adeae47030b954ae43637b12f90ad809e610634dfed84ce22bc80"
+    },
+    "includes" : [ ],
+    "origin" : "9559001fffde3bca28f60aa3e405dff22baefd44",
+    "pageBlob" : "88768190850e225b4aee38ddde325830c65b55a2",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "056a22209e771acd4b5147863b602e5e5c84aac0543867d07b57238546c213b1",
+      "text" : "use 0 instead of false to suppress _id"
+    },
+    "rules" : [ "PROJECTION_FLAGS" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "08e800f56f6f44b44a625756fc1c3c64061055b9",
+      "path" : "source/reference/operator/aggregation/zip.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "c46b0bc0af9d6c915396ce5138350f5439ee4c1616d1d82248ad840616333672",
+      "text" : "db.articles.aggregate( [\n  { $match: { $or: [ { score: { $gt: 70, $lt: 90 } }, { views: { $gte: 1000 } } ] } },\n  { $group: { _id: null, count: { $sum: 1 } } }\n] );"
+    }, {
+      "role" : "DATA",
+      "sha256" : "c4c317a7e7d91b8a07497e4d8e15846483453e3f49cdc47e2ef8babb32ea3e8d",
+      "text" : "{ \"_id\" : ObjectId(\"512bc95fe835e68f199c8686\"), \"author\" : \"dave\", \"score\" : 80, \"views\" : 100 }\n{ \"_id\" : ObjectId(\"512bc962e835e68f199c8687\"), \"author\" : \"dave\", \"score\" : 85, \"views\" : 521 }\n{ \"_id\" : ObjectId(\"55f5a192d4bede9ac365b257\"), \"author\" : \"ahn\", \"score\" : 60, \"views\" : 1000 }\n{ \"_id\" : ObjectId(\"55f5a192d4bede9ac365b258\"), \"author\" : \"li\", \"score\" : 55, \"views\" : 5000 }\n{ \"_id\" : ObjectId(\"55f5a1d3d4bede9ac365b259\"), \"author\" : \"annT\", \"score\" : 60, \"views\" : 50 }\n{ \"_id\" : ObjectId(\"55f5a1d3d4bede9ac365b25a\"), \"author\" : \"li\", \"score\" : 94, \"views\" : 999 }\n{ \"_id\" : ObjectId(\"55f5a1d3d4bede9ac365b25b\"), \"author\" : \"ty\", \"score\" : 95, \"views\" : 1000 }"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "69831df7dac2273fcc1fcbabefdeeb1d5c182aed4ca87a436395205a23cd9db6",
+      "text" : "{ \"_id\" : null, \"count\" : 5 }"
+    } ],
+    "example" : "Perform a Count",
+    "fixture" : "aggregation/stages/match/performACount",
+    "fixtureFiles" : {
+      "action.json" : "37e93b76aea565b45b41dd52c2e131c10c72a2b313196f27565f8a59bb58f705",
+      "data.json" : "c4c317a7e7d91b8a07497e4d8e15846483453e3f49cdc47e2ef8babb32ea3e8d",
+      "expected.json" : "69831df7dac2273fcc1fcbabefdeeb1d5c182aed4ca87a436395205a23cd9db6",
+      "name" : "f2386cdff58c91786b03bce21b8ff0eda03fb238b8df70f666e0e2e638497794"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "3139f56b4248eac375cc97846a48b772c0b2a1ca",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "f4d1df3572b7f6609a6790a2e3ed7ff9ba810af856fe0ba90952b6f62566be8f",
+      "text" : "make the $or match morphia's"
+    },
+    "rules" : [ "FIELD_OPERATORS_AND" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/match.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "46f01c4ab50c3ed958316a6cf816f1c72f81fc0d13fca182b6f3d762fd55986a",
+      "text" : "db.books.aggregate( [ \n   {\n      $project: { \n         title: 1,\n         \"author.first\": 1,\n         \"author.last\" : 1,\n         \"author.middle\": {\n            $cond: {\n               if: { $eq: [ \"\", \"$author.middle\" ] }, \n               then: \"$$REMOVE\",\n               else: \"$author.middle\"\n            } \n         }\n      }\n   }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "d891709ca80ab2e9af39eeb33039684efb6301333e9c618b3d2f2319d1a69baf",
+      "text" : "{\n  \"_id\" : 1,\n  title: \"abc123\",\n  isbn: \"0001122223334\",\n  author: { last: \"zzz\", first: \"aaa\" },\n  copies: 5,\n  lastModified: \"2016-07-28\"\n}\n{\n  \"_id\" : 2,\n  title: \"Baked Goods\",\n  isbn: \"9999999999999\",\n  author: { last: \"xyz\", first: \"abc\", middle: \"\" },\n  copies: 2,\n  lastModified: \"2017-07-21\"\n}\n{\n  \"_id\" : 3,\n  title: \"Ice Cream Cakes\",\n  isbn: \"8888888888888\",\n  author: { last: \"xyz\", first: \"abc\", middle: \"mmm\" },\n  copies: 5,\n  lastModified: \"2017-07-22\"\n}"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "dcf0a7ef98d42bb537d1d57f55e51172ddf80b187e0312590d1634cd3ff02262",
+      "text" : "{ \"_id\" : 1, \"title\" : \"abc123\", \"author\" : { \"last\" : \"zzz\", \"first\" : \"aaa\" } }\n{ \"_id\" : 2, \"title\" : \"Baked Goods\", \"author\" : { \"last\" : \"xyz\", \"first\" : \"abc\" } }\n{ \"_id\" : 3, \"title\" : \"Ice Cream Cakes\", \"author\" : { \"last\" : \"xyz\", \"first\" : \"abc\", \"middle\" : \"mmm\" } }"
+    } ],
+    "example" : "Conditionally Exclude Fields",
+    "fixture" : "aggregation/stages/project/conditionallyExcludeFields",
+    "fixtureFiles" : {
+      "action.json" : "44cb19a2455e91a568bdf0f604949c375b5a7a65a695b86601d6053fd127dc64",
+      "data.json" : "9199f6cdd2b313b53a2d04204c1a8419d0b4f51e90509424d70c800f363bfb7f",
+      "expected.json" : "dcf0a7ef98d42bb537d1d57f55e51172ddf80b187e0312590d1634cd3ff02262",
+      "name" : "0d29a7da2b30914c27bb641f3ba2a5eb4b02714d075b136ab1fea51eec6df127"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "4e9f1877cac04f5696bea79a2079e5afdb1daa6d",
+      "path" : "source/includes/project-stage-and-array-index.rst"
+    }, {
+      "blob" : "79e5fffe681489dae9c020f08b2b73e7743a5f59",
+      "path" : "source/includes/aggregation/fact-project-stage-placement.rst"
+    } ],
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "6139e853557792da45aaaf91a90530d9221b5823",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "765e01c51243034a826b020beab66d4f25bfb70425af29c87835a38ad6f2ff0b",
+      "text" : "use the short form of $cond"
+    },
+    "rules" : [ "COND_ARRAY" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/project.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "01c84c9c64cae00296bb2cba1a39b6001f79998da79976a31e7a81aae3027920",
+      "text" : "db.bookmarks.aggregate( [ { $project: { \"stop.title\": 1 } } ] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "416e6f532d41ad064859dff2e7241a0847403046944278d39a86d08feee026c9",
+      "text" : "{ _id: 1, user: \"1234\", stop: { title: \"book1\", author: \"xyz\", page: 32 } }\n{ _id: 2, user: \"7890\", stop: [ { title: \"book2\", author: \"abc\", page: 5 }, { title: \"book3\", author: \"ijk\", page: 100 } ] }"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "7571ffa9296e2ef439e04e60a839aec03d2b58da5a4d5df2af21663e65fa6cd6",
+      "text" : "{ \"_id\" : 1, \"stop\" : { \"title\" : \"book1\" } }\n{ \"_id\" : 2, \"stop\" : [ { \"title\" : \"book2\" }, { \"title\" : \"book3\" } ] }"
+    } ],
+    "example" : "Include Specific Fields from Embedded Documents",
+    "fixture" : "aggregation/stages/project/includeSpecificFieldsFromEmbeddedDocuments",
+    "fixtureFiles" : {
+      "action.json" : "1815f3b328d84819af65dd0e2f6335648c70fb6ec0578958679deaea7f106c7c",
+      "data.json" : "416e6f532d41ad064859dff2e7241a0847403046944278d39a86d08feee026c9",
+      "expected.json" : "7571ffa9296e2ef439e04e60a839aec03d2b58da5a4d5df2af21663e65fa6cd6",
+      "name" : "4d6b9d4e75106a6cd9acd95f0870df1e76f40d6ba39cc31dd77d0c296eaaa311"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "4e9f1877cac04f5696bea79a2079e5afdb1daa6d",
+      "path" : "source/includes/project-stage-and-array-index.rst"
+    }, {
+      "blob" : "79e5fffe681489dae9c020f08b2b73e7743a5f59",
+      "path" : "source/includes/aggregation/fact-project-stage-placement.rst"
+    } ],
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "6139e853557792da45aaaf91a90530d9221b5823",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "765e01c51243034a826b020beab66d4f25bfb70425af29c87835a38ad6f2ff0b",
+      "text" : "use the short form of $cond"
+    },
+    "rules" : [ ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/project.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "ad5a2fe4eb6bec61079bda52007043d573093f6895683370ee58bdb3a373fc97",
+      "text" : "var userAccess = [ \"STLW\", \"G\" ];\ndb.forecasts.aggregate(\n   [\n     { $match: { year: 2014 } },\n     { $redact: {\n        $cond: {\n           if: { $gt: [ { $size: { $setIntersection: [ \"$tags\", userAccess ] } }, 0 ] },\n           then: \"$$DESCEND\",\n           else: \"$$PRUNE\"\n         }\n       }\n     }\n   ]\n);"
+    }, {
+      "role" : "DATA",
+      "sha256" : "635086e1437ffb49b27b4a99cfccf6181fd99ff1d79bcf377b72ac3eb8ffdf27",
+      "text" : "{\n  _id: 1,\n  title: \"123 Department Report\",\n  tags: [ \"G\", \"STLW\" ],\n  year: 2014,\n  subsections: [\n    {\n      subtitle: \"Section 1: Overview\",\n      tags: [ \"SI\", \"G\" ],\n      content:  \"Section 1: This is the content of section 1.\"\n    },\n    {\n      subtitle: \"Section 2: Analysis\",\n      tags: [ \"STLW\" ],\n      content: \"Section 2: This is the content of section 2.\"\n    },\n    {\n      subtitle: \"Section 3: Budgeting\",\n      tags: [ \"TK\" ],\n      content: {\n        text: \"Section 3: This is the content of section 3.\",\n        tags: [ \"HCS\" ]\n      }\n    }\n  ]\n}"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "43d09ac97a36a71c73d0f626182669cd1e17f1d03272a4b1ec026cae5a20b04c",
+      "text" : "{\n  \"_id\" : 1,\n  \"title\" : \"123 Department Report\",\n  \"tags\" : [ \"G\", \"STLW\" ],\n  \"year\" : 2014,\n  \"subsections\" : [\n    {\n      \"subtitle\" : \"Section 1: Overview\",\n      \"tags\" : [ \"SI\", \"G\" ],\n      \"content\" : \"Section 1: This is the content of section 1.\"\n    },\n    {\n      \"subtitle\" : \"Section 2: Analysis\",\n      \"tags\" : [ \"STLW\" ],\n      \"content\" : \"Section 2: This is the content of section 2.\"\n    }\n  ]\n}"
+    } ],
+    "example" : "Evaluate Access at Every Document Level",
+    "fixture" : "aggregation/stages/redact/evaluateAccessAtEveryDocumentLevel",
+    "fixtureFiles" : {
+      "action.json" : "32261187412d91e32aec318d8d5d7a5732403dea8a831773fbe8795b998976b8",
+      "data.json" : "98acc97988766c5a7e2e5acc65dc04c77d51055874786d84c0e6d2ae5252d137",
+      "expected.json" : "6de971b2acdd976af350bca4537827bb4ee7547f24eff5308323682d2b138277",
+      "name" : "b2ac4dcbc92da3cbf42795db311d9b8fe4940ed6712243e5ca8fd369929acdb3"
+    },
+    "includes" : [ {
+      "blob" : "d2d1b17bb85ebcccffbe3f650b9a33bd6a994bf9",
+      "path" : "source/images/redact-security-architecture.rst"
+    } ],
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "f2e69d3c53225905352e90e34c67ac3ac18c599b",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "3e05a7a89116f49a4be5ea18c694d86de961a7c2bce5958e4aaded57361f3777",
+      "text" : "use the shorter form of $cond"
+    },
+    "rules" : [ "COND_ARRAY" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "5345ef589188df237b4db66c0eb75aa8792d1a52",
+      "path" : "source/reference/operator/aggregation/redact.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "652519784349d24233b6e59a0a4b1e390adfa053f437da67630c20ad6a87766e",
+      "text" : "db.accounts.aggregate(\n  [\n    { $match: { status: \"A\" } },\n    {\n      $redact: {\n        $cond: {\n          if: { $eq: [ \"$level\", 5 ] },\n          then: \"$$PRUNE\",\n          else: \"$$DESCEND\"\n        }\n      }\n    }\n  ]\n);"
+    }, {
+      "role" : "DATA",
+      "sha256" : "abecfaa201f404edccd7f871b608fbe5d669ad071ab6966ff984a2e677822468",
+      "text" : "{\n  _id: 1,\n  level: 1,\n  acct_id: \"xyz123\",\n  cc: {\n    level: 5,\n    type: \"yy\",\n    num: 000000000000,\n    exp_date: ISODate(\"2015-11-01T00:00:00.000Z\"),\n    billing_addr: {\n      level: 5,\n      addr1: \"123 ABC Street\",\n      city: \"Some City\"\n    },\n    shipping_addr: [\n      {\n        level: 3,\n        addr1: \"987 XYZ Ave\",\n        city: \"Some City\"\n      },\n      {\n        level: 3,\n        addr1: \"PO Box 0123\",\n        city: \"Some City\"\n      }\n    ]\n  },\n  status: \"A\"\n}"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "e6ae6491b91b2949a5b153d1d7208cafbbd3c3948bbfe6474992eb16789d7f0d",
+      "text" : "{\n  \"_id\" : 1,\n  \"level\" : 1,\n  \"acct_id\" : \"xyz123\",\n  \"status\" : \"A\"\n}"
+    } ],
+    "example" : "Exclude All Fields at a Given Level",
+    "fixture" : "aggregation/stages/redact/excludeAllFieldsAtAGivenLevel",
+    "fixtureFiles" : {
+      "action.json" : "e7389b7bd0c26e1c15e0df013c3ac9ce746556050a5cac247246abd068b5d113",
+      "data.json" : "bab3c3d2ed8257f97c0c8e128703a1845294f5192bcad338507698668d1393d7",
+      "expected.json" : "0ff2f2061a84670e7b7ab9073a08f8e2b8b10b9b762463eeb90afca6215ccb61",
+      "name" : "3825b7233540957bd54c66284617d64da9f73cd92b9ecf897ed5c9d3ad787d07"
+    },
+    "includes" : [ {
+      "blob" : "d2d1b17bb85ebcccffbe3f650b9a33bd6a994bf9",
+      "path" : "source/images/redact-security-architecture.rst"
+    } ],
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "f2e69d3c53225905352e90e34c67ac3ac18c599b",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "3e05a7a89116f49a4be5ea18c694d86de961a7c2bce5958e4aaded57361f3777",
+      "text" : "use the shorter form of $cond"
+    },
+    "rules" : [ "COND_ARRAY" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "5345ef589188df237b4db66c0eb75aa8792d1a52",
+      "path" : "source/reference/operator/aggregation/redact.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "ba28d5b0f53db3fc8db47df8be7fb8f13743c136826372d5dd6a2ce10ca3b29c",
+      "text" : "db.exhibits.aggregate( [ { $unwind: \"$tags\" },  { $sortByCount: \"$tags\" } ] )   "
+    }, {
+      "role" : "DATA",
+      "sha256" : "5a13b9fba73cd0853b69a82931a46ed48dc95b535710d7bf21a68321eefb7ff2",
+      "text" : "{ \"_id\" : 1, \"title\" : \"The Pillars of Society\", \"artist\" : \"Grosz\", \"year\" : 1926, \"tags\" : [ \"painting\", \"satire\", \"Expressionism\", \"caricature\" ] }\n{ \"_id\" : 2, \"title\" : \"Melancholy III\", \"artist\" : \"Munch\", \"year\" : 1902, \"tags\" : [ \"woodcut\", \"Expressionism\" ] }\n{ \"_id\" : 3, \"title\" : \"Dancer\", \"artist\" : \"Miro\", \"year\" : 1925, \"tags\" : [ \"oil\", \"Surrealism\", \"painting\" ] }\n{ \"_id\" : 4, \"title\" : \"The Great Wave off Kanagawa\", \"artist\" : \"Hokusai\", \"tags\" : [ \"woodblock\", \"ukiyo-e\" ] }\n{ \"_id\" : 5, \"title\" : \"The Persistence of Memory\", \"artist\" : \"Dali\", \"year\" : 1931, \"tags\" : [ \"Surrealism\", \"painting\", \"oil\" ] }\n{ \"_id\" : 6, \"title\" : \"Composition VII\", \"artist\" : \"Kandinsky\", \"year\" : 1913, \"tags\" : [ \"oil\", \"painting\", \"abstract\" ] }\n{ \"_id\" : 7, \"title\" : \"The Scream\", \"artist\" : \"Munch\", \"year\" : 1893, \"tags\" : [ \"Expressionism\", \"painting\", \"oil\" ] }\n{ \"_id\" : 8, \"title\" : \"Blue Flower\", \"artist\" : \"O'Keefe\", \"year\" : 1918, \"tags\" : [ \"abstract\", \"painting\" ] }"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "4568a9f4aac5e2ae94c5b4145e4268fb24bba7049ad7de162585c0eff74cfb9e",
+      "text" : "{ \"_id\" : \"painting\", \"count\" : 6 }\n{ \"_id\" : \"oil\", \"count\" : 4 }\n{ \"_id\" : \"Expressionism\", \"count\" : 3 }\n{ \"_id\" : \"Surrealism\", \"count\" : 2 }\n{ \"_id\" : \"abstract\", \"count\" : 2 }\n{ \"_id\" : \"woodblock\", \"count\" : 1 }\n{ \"_id\" : \"woodcut\", \"count\" : 1 }\n{ \"_id\" : \"ukiyo-e\", \"count\" : 1 }\n{ \"_id\" : \"satire\", \"count\" : 1 }\n{ \"_id\" : \"caricature\", \"count\" : 1 }"
+    } ],
+    "example" : "main",
+    "fixture" : "aggregation/stages/sortByCount/sortByCountAggregationStage",
+    "fixtureFiles" : {
+      "action.json" : "539fbf46c1779231965703efd74e119320ad57302bb7dcdfd6b3c745558bb8a8",
+      "data.json" : "5a13b9fba73cd0853b69a82931a46ed48dc95b535710d7bf21a68321eefb7ff2",
+      "expected.json" : "4568a9f4aac5e2ae94c5b4145e4268fb24bba7049ad7de162585c0eff74cfb9e",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ {
+      "blob" : "7e86ea18abe6cadf6783795f59299eb473070fae",
+      "path" : "source/includes/fact-allowDiskUseByDefault.rst"
+    } ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "7f92ddf55c937279fafe343fe4853b49f66ed742",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "a066206654825ef2cd16ea52ea0f9fa3d8153d208a5aa06af37456ec6185528a",
+      "text" : "reformat pipeline"
+    },
+    "rules" : [ ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "2147ffb41ccc450346e3f1a21a3dd7905e4adc74",
+      "path" : "source/reference/operator/aggregation/sortByCount.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "dbd7ccda9c057810fa79d00f5eb83c1305eb6474933343dc4d8ec744205d1605",
+      "text" : "db.clothing.aggregate( [ { $unwind: { path: \"$sizes\" } } ] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "0b2a31d1e2c157aed20df164e50b5af136546a95b54fab5757e3344ec9bfc05e",
+      "text" : "db.clothing.insertMany([\n  { \"_id\" : 1, \"item\" : \"Shirt\", \"sizes\": [ \"S\", \"M\", \"L\"] },\n  { \"_id\" : 2, \"item\" : \"Shorts\", \"sizes\" : [ ] },\n  { \"_id\" : 3, \"item\" : \"Hat\", \"sizes\": \"M\" },\n  { \"_id\" : 4, \"item\" : \"Gloves\" },\n  { \"_id\" : 5, \"item\" : \"Scarf\", \"sizes\" : null }\n])"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "1f47cf77731d9920149894d156eb85160ccff6660d353078d109e185f7024dfd",
+      "text" : "{ _id: 1, item: 'Shirt', sizes: 'S' },\n{ _id: 1, item: 'Shirt', sizes: 'M' },\n{ _id: 1, item: 'Shirt', sizes: 'L' },\n{ _id: 3, item: 'Hat', sizes: 'M' }"
+    } ],
+    "example" : "Missing or Non-array Values",
+    "fixture" : "aggregation/stages/unwind/missingOrNonArrayValues",
+    "fixtureFiles" : {
+      "action.json" : "57fc7715ef88f485071aab39e29b1ee7721bc8e9db0b7c598d3fae715379559a",
+      "data.json" : "ad1d98ccb8fc72ccefc9ae5139c36a8866480027332a86c86a86f78f24827722",
+      "expected.json" : "1f47cf77731d9920149894d156eb85160ccff6660d353078d109e185f7024dfd",
+      "name" : "27457547c2e4396c5adf504d6071e275cadbbb0fdf41fad360f16f62ac8915a0"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "a48530d2f807435f11dbfb681202e04027bd0c1e",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "c5a7a789184f49548e8898f0058131a778ebbec62bfbe2fcab68d0a120a33915",
+      "text" : "morphia doesn't generate this shape of $unwind"
+    },
+    "rules" : [ "UNWIND_PATH" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/unwind.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "c898c8a1c11e267e92cd3902ef71a043ce0b6ca03b269796f198419294d791a9",
+      "text" : "db.inventory.find( { tags: { $eq: \"B\" } } )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "51abd3c3389d41b63baff1599996b7aede0843ff018f1c2e72f83e5c940dd1d7",
+      "text" : "db.inventory.insertMany( [\n   { _id: 1, item: { name: \"ab\", code: \"123\" }, qty: 15, tags: [ \"A\", \"B\", \"C\" ] },\n   { _id: 2, item: { name: \"cd\", code: \"123\" }, qty: 20, tags: [ \"B\" ] },\n   { _id: 3, item: { name: \"ij\", code: \"456\" }, qty: 25, tags: [ \"A\", \"B\" ] },\n   { _id: 4, item: { name: \"xy\", code: \"456\" }, qty: 30, tags: [ \"B\", \"A\" ] },\n   { _id: 5, item: { name: \"mn\", code: \"000\" }, qty: 20, tags: [ [ \"A\", \"B\" ], \"C\" ] }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "2c8b935b37dd335eea90126089179f2347150def3261ac1c5cfc4b881674d2cc",
+      "text" : "[\n   { _id: 1, item: { name: \"ab\", code: \"123\" }, qty: 15, tags: [ \"A\", \"B\", \"C\" ] },\n   { _id: 2, item: { name: \"cd\", code: \"123\" }, qty: 20, tags: [ \"B\" ] },\n   { _id: 3, item: { name: \"ij\", code: \"456\" }, qty: 25, tags: [ \"A\", \"B\" ] },\n   { _id: 4, item: { name: \"xy\", code: \"456\" }, qty: 30, tags: [ \"B\", \"A\" ] }\n]"
+    } ],
+    "example" : "Array Element Equals a Value",
+    "fixture" : "query/filters/eq/arrayElementEqualsAValue",
+    "fixtureFiles" : {
+      "action.json" : "cec796547f5dedb0a18f94df5235860d4e5a48bd9dd47188ca8b8a4d2e7c472f",
+      "data.json" : "f206414eed811bc399631036af5d247aa1917f912b49442f27902704b4dffcae",
+      "expected.json" : "101d72b8bcb1068a3ba14eb485da07fc27d8f16c1651fb5905750a65d8334e9e",
+      "name" : "9eca7f34baf3b365a23a17d9b4d4abf3384a6be0ca3ec9e7c7cc2c14b13ee410"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "b9acbd89b94e90716152e19ec82bc57d4039e3f1",
+      "path" : "source/includes/fact-comparison-order.rst"
+    } ],
+    "origin" : "726a1a6fcd0127bd53f37c9459716a7112722430",
+    "pageBlob" : "c1245a4ad7ed4d950b37dd9b02c75890ac3e33ed",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "d44250df032b5e3b48fca9bc05f3e506db006e91faf4a853765cce135730f4da",
+      "text" : "update action to use shortened version of $eq"
+    },
+    "rules" : [ "EQ_SHORTHAND" ],
+    "shape" : "FIND",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/eq.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "bd3d56bc5e0dff4591eed4ba0aa93782b52d7b2e7df579ad050ab45454b3dd00",
+      "text" : "db.inventory.find( { qty: { $eq: 20 } } )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "51abd3c3389d41b63baff1599996b7aede0843ff018f1c2e72f83e5c940dd1d7",
+      "text" : "db.inventory.insertMany( [\n   { _id: 1, item: { name: \"ab\", code: \"123\" }, qty: 15, tags: [ \"A\", \"B\", \"C\" ] },\n   { _id: 2, item: { name: \"cd\", code: \"123\" }, qty: 20, tags: [ \"B\" ] },\n   { _id: 3, item: { name: \"ij\", code: \"456\" }, qty: 25, tags: [ \"A\", \"B\" ] },\n   { _id: 4, item: { name: \"xy\", code: \"456\" }, qty: 30, tags: [ \"B\", \"A\" ] },\n   { _id: 5, item: { name: \"mn\", code: \"000\" }, qty: 20, tags: [ [ \"A\", \"B\" ], \"C\" ] }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "35747647312bc0ba19afc47521a5f541814884e1cd45c70a15982ad3839e7322",
+      "text" : "[\n   { _id: 2, item: { name: \"cd\", code: \"123\" }, qty: 20, tags: [ \"B\" ] },\n   { _id: 5, item: { name: \"mn\", code: \"000\" }, qty: 20, tags: [ [ \"A\", \"B\" ], \"C\" ] }\n]"
+    } ],
+    "example" : "Equals a Specified Value",
+    "fixture" : "query/filters/eq/equalsASpecifiedValue",
+    "fixtureFiles" : {
+      "action.json" : "e1ffe9129e84a91107a98566d5c0ac064cf528a52979b8b5dd5e4d3ef986e143",
+      "data.json" : "f206414eed811bc399631036af5d247aa1917f912b49442f27902704b4dffcae",
+      "expected.json" : "9872e47a59d27918e99523f1597b7fe84f07d474ed7f443368b8dac2eaad7b18",
+      "name" : "b85cd157779a4a1e15b3ba100a6de23dbdbf3618362f44b32464ed055ac6a9bb"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "b9acbd89b94e90716152e19ec82bc57d4039e3f1",
+      "path" : "source/includes/fact-comparison-order.rst"
+    } ],
+    "origin" : "726a1a6fcd0127bd53f37c9459716a7112722430",
+    "pageBlob" : "c1245a4ad7ed4d950b37dd9b02c75890ac3e33ed",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "d44250df032b5e3b48fca9bc05f3e506db006e91faf4a853765cce135730f4da",
+      "text" : "update action to use shortened version of $eq"
+    },
+    "rules" : [ "EQ_SHORTHAND" ],
+    "shape" : "FIND",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/eq.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "1d8efbb8db0c37a9064dea36a04dec20883db854c9acc9db775c44a26112fc01",
+      "text" : "db.inventory.find( { tags: { $eq: [ \"A\", \"B\" ] } } )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "51abd3c3389d41b63baff1599996b7aede0843ff018f1c2e72f83e5c940dd1d7",
+      "text" : "db.inventory.insertMany( [\n   { _id: 1, item: { name: \"ab\", code: \"123\" }, qty: 15, tags: [ \"A\", \"B\", \"C\" ] },\n   { _id: 2, item: { name: \"cd\", code: \"123\" }, qty: 20, tags: [ \"B\" ] },\n   { _id: 3, item: { name: \"ij\", code: \"456\" }, qty: 25, tags: [ \"A\", \"B\" ] },\n   { _id: 4, item: { name: \"xy\", code: \"456\" }, qty: 30, tags: [ \"B\", \"A\" ] },\n   { _id: 5, item: { name: \"mn\", code: \"000\" }, qty: 20, tags: [ [ \"A\", \"B\" ], \"C\" ] }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "d9e22cc1e1f72756fe77236cad31d2739e18c18f9fe34a5ce91e03f949be6f93",
+      "text" : "[\n   { _id: 3, item: { name: \"ij\", code: \"456\" }, qty: 25, tags: [ \"A\", \"B\" ] },\n   { _id: 5, item: { name: \"mn\", code: \"000\" }, qty: 20, tags: [ [ \"A\", \"B\" ], \"C\" ] }\n]"
+    } ],
+    "example" : "Equals an Array Value",
+    "fixture" : "query/filters/eq/equalsAnArrayValue",
+    "fixtureFiles" : {
+      "action.json" : "0ce698bb9952fdaac5d2408b468a47e287157a7df3a6a17d7d635ed2fefab7df",
+      "data.json" : "f206414eed811bc399631036af5d247aa1917f912b49442f27902704b4dffcae",
+      "expected.json" : "1983d375f67e559a5d3b1164f8c1095847408f378c8cbbabbe909919eac5d112",
+      "name" : "8983ba7b000b9a6a9e6d2971f75063a97a8a0351e6a4e68cf127b4dc91f81cfe"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "b9acbd89b94e90716152e19ec82bc57d4039e3f1",
+      "path" : "source/includes/fact-comparison-order.rst"
+    } ],
+    "origin" : "726a1a6fcd0127bd53f37c9459716a7112722430",
+    "pageBlob" : "c1245a4ad7ed4d950b37dd9b02c75890ac3e33ed",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "d44250df032b5e3b48fca9bc05f3e506db006e91faf4a853765cce135730f4da",
+      "text" : "update action to use shortened version of $eq"
+    },
+    "rules" : [ "EQ_SHORTHAND" ],
+    "shape" : "FIND",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/eq.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "20840666bdbc00d64db334a560a1d98f4b41836620258eeb966b252811c82c18",
+      "text" : "db.inventory.find( { \"item.name\": { $eq: \"ab\" } } )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "51abd3c3389d41b63baff1599996b7aede0843ff018f1c2e72f83e5c940dd1d7",
+      "text" : "db.inventory.insertMany( [\n   { _id: 1, item: { name: \"ab\", code: \"123\" }, qty: 15, tags: [ \"A\", \"B\", \"C\" ] },\n   { _id: 2, item: { name: \"cd\", code: \"123\" }, qty: 20, tags: [ \"B\" ] },\n   { _id: 3, item: { name: \"ij\", code: \"456\" }, qty: 25, tags: [ \"A\", \"B\" ] },\n   { _id: 4, item: { name: \"xy\", code: \"456\" }, qty: 30, tags: [ \"B\", \"A\" ] },\n   { _id: 5, item: { name: \"mn\", code: \"000\" }, qty: 20, tags: [ [ \"A\", \"B\" ], \"C\" ] }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "a0e6803bed9bd4364e5a0ca0f79724346ff70632de16ffc4012cb48e8c82e6c9",
+      "text" : "[ { _id: 1, item: { name: \"ab\", code: \"123\" }, qty: 15, tags: [ \"A\", \"B\", \"C\" ] } ]"
+    } ],
+    "example" : "Field in Embedded Document Equals a Value",
+    "fixture" : "query/filters/eq/fieldInEmbeddedDocumentEqualsAValue",
+    "fixtureFiles" : {
+      "action.json" : "c6d631398ae13f757366fbf1e152f3eae1ce476102154fceca2b6749a93945dc",
+      "data.json" : "f206414eed811bc399631036af5d247aa1917f912b49442f27902704b4dffcae",
+      "expected.json" : "a0e6803bed9bd4364e5a0ca0f79724346ff70632de16ffc4012cb48e8c82e6c9",
+      "name" : "aee2fe5829d7c27eb904d6ac753e1471414326cf2b058aadc8a543baa41c54f3"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "b9acbd89b94e90716152e19ec82bc57d4039e3f1",
+      "path" : "source/includes/fact-comparison-order.rst"
+    } ],
+    "origin" : "726a1a6fcd0127bd53f37c9459716a7112722430",
+    "pageBlob" : "c1245a4ad7ed4d950b37dd9b02c75890ac3e33ed",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "d44250df032b5e3b48fca9bc05f3e506db006e91faf4a853765cce135730f4da",
+      "text" : "update action to use shortened version of $eq"
+    },
+    "rules" : [ "EQ_SHORTHAND" ],
+    "shape" : "FIND",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/eq.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "5bf9d97cf5b4f98444de09d07ae48e56235c919c9c362ed47a11f9d7280b58f1",
+      "text" : "db.songs.find( { artist: { $regex: /\\byster/ } } )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "fe57eeed227fadcb73a7c902c24044435de23ac575895943964c7bcd7dc05ea3",
+      "text" : "db.songs.insertMany( [\n   { _id: 0, \"artist\" : \"Blue Öyster Cult\", \"title\": \"The Reaper\" },\n   { _id: 1, \"artist\": \"Blue Öyster Cult\", \"title\": \"Godzilla\" },\n   { _id: 2, \"artist\" : \"Blue Oyster Cult\", \"title\": \"Take Me Away\" }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "d09a635d695924fe15d25f30ee55bf48b9035c3a488a597999b9097e99cccae1",
+      "text" : "[\n   { _id: 0, artist: 'Blue Öyster Cult', title: 'The Reaper' },\n   { _id: 1, artist: 'Blue Öyster Cult', title: 'Godzilla' }\n]"
+    } ],
+    "example" : "Extend Regex Options to Match Characters Outside of ASCII",
+    "fixture" : "query/filters/regex/extendRegexOptionsToMatchCharactersOutsideOfAscii",
+    "fixtureFiles" : {
+      "action.json" : "5bf9d97cf5b4f98444de09d07ae48e56235c919c9c362ed47a11f9d7280b58f1",
+      "data.json" : "0232ec5bcdaf988555f622efa08974691ae84793083a54d71ce6e5f3b62bcbc7",
+      "expected.json" : "a3af199ab728a8ba8d55d6ba9e8f8a9e911b8453b1ddbfa9e99bce31f5defc95",
+      "name" : "8424a0f286903ab13131a2262cf877e64446c77ccc56cad18285060103a040bc"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "1c76d95ca483b2924600db416405d9e9850d96b3",
+      "path" : "source/includes/fact-6.1-pcre2.rst"
+    }, {
+      "blob" : "f4aed20c61204db749b75164d5205e7125f2cadd",
+      "path" : "source/includes/indexes/case-insensitive-regex-queries.rst"
+    } ],
+    "origin" : "f5efa7c2b14d22ec139f3ea5a0e37bca1aefa874",
+    "pageBlob" : "77b0633b93d27b990ed4bf848da8629144fd5e73",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "325089cbcd67f665e409dba7cc4d42b95d111fa080e25715bb1a8ef3dcdbdc3a",
+      "text" : "change the form of regex used\n"
+    },
+    "rules" : [ ],
+    "shape" : "FIND",
+    "source" : {
+      "commit" : "dc702637685119e48f0f7980de92e0bea87afd54",
+      "path" : "source/reference/operator/query/regex.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "abed3ccbe9e0eece268657d70d2682c3fbbad8cac7bba06f6884a1667f7cceab",
+      "text" : "db.grades.find( { classAverage : { $type : [ 2 , 1 ] } } );\ndb.grades.find( { classAverage : { $type : [ \"string\" , \"double\" ] } } );"
+    }, {
+      "role" : "DATA",
+      "sha256" : "d1f159ca42d8939f590ba3bcfc3b202f8cd663b89b3057ca2f058ebe4c00d7a2",
+      "text" : "db.grades.insertMany( [\n      { _id : 1, name : \"Alice King\" , classAverage : 87.333333333333333 },\n      { _id : 2, name : \"Bob Jenkins\", classAverage : \"83.52\" },\n      { _id : 3, name : \"Cathy Hart\", classAverage: \"94.06\" },\n      { _id : 4, name : \"Drew Williams\" , classAverage : NumberInt(\"93\") }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "8ce91c91d210a4003bbdf1dbe35227d561cd5fd80f46d7aee72c6d44ac7ad0fd",
+      "text" : "{ _id : 1, name : \"Alice King\", classAverage : 87.33333333333333 }\n{ _id : 2, name : \"Bob Jenkins\", classAverage : \"83.52\" }\n{ _id : 3, name : \"Cathy Hart\", classAverage : \"94.06\" } "
+    } ],
+    "example" : "Querying by Multiple Data Types",
+    "fixture" : "query/filters/type/queryingByMultipleDataTypes",
+    "fixtureFiles" : {
+      "action.json" : "0efc4ec67fb9ce67ef1ad052ac14d884bd742ea14c60c9528b72a54d112a150a",
+      "data.json" : "20b8aea83fa0ddd88b6e760e8a6044e9636433541ba9a1b8f4b1f9874e4c125a",
+      "expected.json" : "d4d816ab10899b6ca1b11c8177ec041c1d8c5e40a63c3e040d9032b62e67b093",
+      "name" : "7504ab1f4910de0a5a3663babc806b05bfbb68e565964ebe9579cf30eb9d44d7"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "a5cdd66b913b1f650b648124247c19889cbc6f59",
+      "path" : "source/includes/fact-bson-types.rst"
+    } ],
+    "origin" : "f5efa7c2b14d22ec139f3ea5a0e37bca1aefa874",
+    "pageBlob" : "0902d6a741899af1732131889743c75df2d9cc6e",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "a1f0944e912ca102f402d78239f988cbf2217d038a09a9b2642a717c946bdce0",
+      "text" : "the docs had two actions showing the two forms. picked the form morphia uses."
+    },
+    "rules" : [ "ALTERNATIVE_COMMANDS" ],
+    "shape" : "FIND",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/type.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  } ],
+  "repositoryRevision" : "cb6974cec9bba0d6a5243b5d253e26faf672a8c1",
+  "rules" : [ {
+    "description" : "$cond: {if: a, then: b, else: c} and $cond: [a, b, c] are the same expression; the array form is canonical.",
+    "rule" : "COND_ARRAY"
+  }, {
+    "description" : "In a query predicate {f: {$eq: v}} matches the same documents as {f: v} unless v is a regular expression or a document whose first key is an operator; the short form is canonical.",
+    "rule" : "EQ_SHORTHAND"
+  }, {
+    "description" : "In a query predicate f: /p/o, {$regex: /p/o}, {$regex: \"p\", $options: \"o\"} and {$regex: /p/, $options: \"o\"} are the same match; {$regex: \"p\", $options: \"o\"} with sorted options is canonical.",
+    "rule" : "REGEX_FORM"
+  }, {
+    "description" : "{f: {$gt: a, $lt: b}} is {$and: [{f: {$gt: a}}, {f: {$lt: b}}]}: each operator on a field is evaluated independently, so a one-field clause with several comparison operators is canonically an $and of one-operator clauses.",
+    "rule" : "FIELD_OPERATORS_AND"
+  }, {
+    "description" : "An expression operator that takes one argument accepts it bare or as a one-element argument list: {$isArray: [\"$a\"]} is {$isArray: \"$a\"}. The bare form is canonical; an argument that is itself an array literal is left wrapped.",
+    "rule" : "SINGLE_ARGUMENT_ARRAY"
+  }, {
+    "description" : "The position of _id inside a projection does not change its output; _id first is canonical.",
+    "rule" : "PROJECT_ID_FIRST"
+  }, {
+    "description" : "A top-level projection value of true or false is the same as 1 or 0; the number is canonical.",
+    "rule" : "PROJECTION_FLAGS"
+  }, {
+    "description" : "$unwind: \"$p\" is $unwind: {path: \"$p\"}; the document form is canonical.",
+    "rule" : "UNWIND_PATH"
+  }, {
+    "description" : "An action block holds several commands of the same kind on one collection and the fixture holds one of them. The tool does not prove the alternatives equivalent: each use needs a reviewed justification in its declaration.",
+    "rule" : "ALTERNATIVE_COMMANDS"
+  }, {
+    "description" : "The top-level keys of an operator that takes only named arguments (for example $filter, $map, $dateToString, $bottomN, $fill, $graphLookup) may appear in any order; sorted keys are canonical. Nested values, including sort specifications, keep their order.",
+    "rule" : "NAMED_ARGUMENTS"
+  } ],
+  "schemaVersion" : 1,
+  "sourceRepository" : "mongodb/docs",
+  "summary" : {
+    "gap.FIXTURE_UNSUPPORTED" : 4,
+    "gap.NO_MATCHING_EXAMPLE" : 0,
+    "gap.PAGE_UNSUPPORTED" : 2,
+    "gap.RESIDUAL_DIFFERENCE" : 8,
+    "gap.SOURCE_UNSUPPORTED" : 9,
+    "overrides" : 43,
+    "overrides.exact" : 3,
+    "rule.ALTERNATIVE_COMMANDS" : 1,
+    "rule.COND_ARRAY" : 14,
+    "rule.EQ_SHORTHAND" : 4,
+    "rule.FIELD_OPERATORS_AND" : 1,
+    "rule.NAMED_ARGUMENTS" : 9,
+    "rule.PROJECTION_FLAGS" : 1,
+    "rule.PROJECT_ID_FIRST" : 10,
+    "rule.REGEX_FORM" : 1,
+    "rule.SINGLE_ARGUMENT_ARRAY" : 2,
+    "rule.UNWIND_PATH" : 1,
+    "unresolved" : 23
+  },
+  "unresolved" : [ {
+    "detail" : "data.json TYPE at /9/responses/0",
+    "fixture" : "aggregation/expressions/allElementsTrue/allElementsTrueExpressionOperator",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "source" : {
+      "commit" : "a1a6a389dc78ceac367b900d0d5f1ec970cf8fff",
+      "path" : "source/reference/operator/aggregation/allElementsTrue.txt"
+    }
+  }, {
+    "detail" : "data.json TYPE at /9/responses/0",
+    "fixture" : "aggregation/expressions/anyElementTrue/anyElementTrueExpressionOperator",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "source" : {
+      "commit" : "a1a6a389dc78ceac367b900d0d5f1ec970cf8fff",
+      "path" : "source/reference/operator/aggregation/anyElementTrue.txt"
+    }
+  }, {
+    "detail" : "CONSTRUCTOR_FORMAT",
+    "fixture" : "aggregation/expressions/dateDiff/weeksPerMonth",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "82d4c1b3d80d091b8df087511e2b375302e1e199",
+    "source" : {
+      "commit" : "6c860eaa7d438e1355c61785a5adadc1ede12b55",
+      "path" : "source/reference/operator/aggregation/dateDiff.txt"
+    }
+  }, {
+    "detail" : "action VALUE at /0/$project/truncatedOrderDate/$dateTrunc/startOfWeek",
+    "fixture" : "aggregation/expressions/dateTrunc/truncateOrderDatesInAProjectPipelineStage",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "source" : {
+      "commit" : "1006d39b673115f3dad63823db2bd1b0d42ed591",
+      "path" : "source/reference/operator/aggregation/dateTrunc.txt"
+    }
+  }, {
+    "detail" : "UNSUPPORTED_AST",
+    "fixture" : "aggregation/expressions/function/usageExample",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "63596df39613156559056e0132c679595be92b06",
+    "source" : {
+      "commit" : "08259c7f00dda8a063d3bb055d95c300138da19a",
+      "path" : "source/reference/operator/aggregation/function.txt"
+    }
+  }, {
+    "detail" : "COLLECTION_REQUIRED",
+    "fixture" : "aggregation/expressions/lastN/usingLastNAsAnAggregationExpression",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
+    "source" : {
+      "commit" : "efbc9f9fa2ee51515cf986e1f74e3b8e9f9d31fa",
+      "path" : "source/reference/operator/aggregation/lastN.txt"
+    }
+  }, {
+    "detail" : "CONSTRUCTOR_FORMAT",
+    "fixture" : "aggregation/expressions/map/convertCelsiusTemperaturesToFahrenheit",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "aac41b3aaf402fae15ff8a1ebcf9df0759d92878",
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/map.txt"
+    }
+  }, {
+    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
+    "fixture" : "aggregation/expressions/regexFindAll/useRegexFindAllToParseEmailFromString",
+    "gap" : "PAGE_UNSUPPORTED",
+    "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
+    "source" : {
+      "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
+      "path" : "source/reference/operator/aggregation/regexFindAll.txt"
+    }
+  }, {
+    "detail" : "data.json syntax",
+    "fixture" : "aggregation/expressions/zip/filteringAndPreservingIndexes",
+    "gap" : "FIXTURE_UNSUPPORTED",
+    "origin" : "9559001fffde3bca28f60aa3e405dff22baefd44",
+    "source" : {
+      "commit" : "08e800f56f6f44b44a625756fc1c3c64061055b9",
+      "path" : "source/reference/operator/aggregation/zip.txt"
+    }
+  }, {
+    "detail" : "action KEY_ORDER at /0/$densify/range",
+    "fixture" : "aggregation/stages/densify/densifictionWithPartitions",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "source" : {
+      "commit" : "5da30db6b468d0ade6a2aefe795985d5b756aa16",
+      "path" : "source/reference/operator/aggregation/densify.txt"
+    }
+  }, {
+    "detail" : "expected syntax",
+    "fixture" : "aggregation/stages/facet/facetAggregationStage",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/facet.txt"
+    }
+  }, {
+    "detail" : "CONSTRUCTOR_FORMAT",
+    "fixture" : "aggregation/stages/fill/fillDataForDistinctPartitions",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "source" : {
+      "commit" : "7861c1d4feb4d9f24c13e764f4e0e8f71fa01d5a",
+      "path" : "source/reference/operator/aggregation/fill.txt"
+    }
+  }, {
+    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/4.2-changes-geoNear-limit.rst",
+    "fixture" : "aggregation/stages/geoNear/maximumDistance",
+    "gap" : "PAGE_UNSUPPORTED",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "source" : {
+      "commit" : "9c258a2f304c6f08f4dfc6b9d466abd543a90888",
+      "path" : "source/reference/operator/aggregation/geoNear.txt"
+    }
+  }, {
+    "detail" : "data for several collections",
+    "fixture" : "aggregation/stages/graphLookup/acrossMultipleCollections",
+    "gap" : "FIXTURE_UNSUPPORTED",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "source" : {
+      "commit" : "fbff8bd22e055259d67b394c854f128340571b1f",
+      "path" : "source/reference/operator/aggregation/graphLookup.txt"
+    }
+  }, {
+    "detail" : "data for several collections",
+    "fixture" : "aggregation/stages/lookup/performAConciseCorrelatedSubqueryWithLookup",
+    "gap" : "FIXTURE_UNSUPPORTED",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "source" : {
+      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
+      "path" : "source/reference/operator/aggregation/lookup.txt"
+    }
+  }, {
+    "detail" : "CONSTRUCTOR_FORMAT",
+    "fixture" : "aggregation/stages/lookup/performAnUncorrelatedSubqueryWithLookup",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "source" : {
+      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
+      "path" : "source/reference/operator/aggregation/lookup.txt"
+    }
+  }, {
+    "detail" : "data for several collections",
+    "fixture" : "aggregation/stages/lookup/performMultipleJoinsAndACorrelatedSubqueryWithLookup",
+    "gap" : "FIXTURE_UNSUPPORTED",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "source" : {
+      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
+      "path" : "source/reference/operator/aggregation/lookup.txt"
+    }
+  }, {
+    "detail" : "CONSTRUCTOR_FORMAT",
+    "fixture" : "aggregation/stages/merge/useThePipelineToCustomizeTheMerge",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/merge.txt"
+    }
+  }, {
+    "detail" : "data.json VALUE at /2/description",
+    "fixture" : "query/filters/regex/ignoreWhiteSpacesInPattern",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "f5efa7c2b14d22ec139f3ea5a0e37bca1aefa874",
+    "source" : {
+      "commit" : "dc702637685119e48f0f7980de92e0bea87afd54",
+      "path" : "source/reference/operator/query/regex.txt"
+    }
+  }, {
+    "detail" : "data.json VALUE at /2/description",
+    "fixture" : "query/filters/regex/multilineMatchForLinesStartingWithSpecifiedPattern",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "f5efa7c2b14d22ec139f3ea5a0e37bca1aefa874",
+    "source" : {
+      "commit" : "dc702637685119e48f0f7980de92e0bea87afd54",
+      "path" : "source/reference/operator/query/regex.txt"
+    }
+  }, {
+    "detail" : "data.json VALUE at /2/description",
+    "fixture" : "query/filters/regex/useARegularExpressionToMatchCaseInStrings",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "f5efa7c2b14d22ec139f3ea5a0e37bca1aefa874",
+    "source" : {
+      "commit" : "dc702637685119e48f0f7980de92e0bea87afd54",
+      "path" : "source/reference/operator/query/regex.txt"
+    }
+  }, {
+    "detail" : "data.json VALUE at /2/description",
+    "fixture" : "query/filters/regex/useTheDotCharacterToMatchNewLine",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "f5efa7c2b14d22ec139f3ea5a0e37bca1aefa874",
+    "source" : {
+      "commit" : "dc702637685119e48f0f7980de92e0bea87afd54",
+      "path" : "source/reference/operator/query/regex.txt"
+    }
+  }, {
+    "detail" : "CONSTRUCTOR_TYPE",
+    "fixture" : "query/filters/type/queryingByDataType",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "f5efa7c2b14d22ec139f3ea5a0e37bca1aefa874",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/type.txt"
+    }
+  } ]
+}

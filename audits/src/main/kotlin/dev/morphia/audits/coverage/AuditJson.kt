@@ -24,6 +24,9 @@ import dev.morphia.audits.naming.ExampleNameRegistry
 import dev.morphia.audits.naming.NameProposal
 import dev.morphia.audits.naming.NamingRequest
 import dev.morphia.audits.repairs.CuratedRepairReport
+import dev.morphia.audits.repairs.FormMigration
+import dev.morphia.audits.repairs.FormMigrationReport
+import dev.morphia.audits.repairs.FormReview
 import dev.morphia.audits.repairs.RepairReview
 import dev.morphia.audits.scenarios.ScenarioExtractionPlan
 import dev.morphia.audits.shell.ShellProgramRequest
@@ -157,6 +160,14 @@ object AuditJson {
 
     fun curatedRepairs(json: String): CuratedRepairReport =
         read(json, CuratedRepairReport::class.java)
+
+    fun formReview(json: String): FormReview = read(json, FormReview::class.java)
+
+    fun formMigration(json: String): FormMigrationReport =
+        read(json, FormMigrationReport::class.java)
+
+    fun formCandidates(json: String): FormMigration.Candidates =
+        read(json, FormMigration.Candidates::class.java)
 
     /** Canonical JSON attribute strings stay typed at the adapter boundary. */
     fun textValue(json: String): String = requireNotNull(mapper.readValue(json, String::class.java))

@@ -69,7 +69,7 @@ where the lock describes the edit in shell or numeric terms.
 
 ## Next
 
-Migrate one family at a time. `MORPHIA_FORM` comes first because it is the largest category and needs
-no new extraction. Express each correction as a declared equivalence or override applied to the
-extracted scenario, and prove that the replacement matches the preserved curated fixture under both
-mappers before removing that example's lock.
+The `MORPHIA_FORM` family is migrated in [the form migration](operator-audits-form-migration.md):
+43 locks are retired as `OVERRIDDEN`, and the inventory now counts 193 locked examples. The other
+families follow one at a time, each expressed as a declared equivalence or override applied to the
+extracted scenario and proven against the preserved curated fixture before its lock is removed.

@@ -367,7 +367,17 @@ object NameBackport {
      * Checks a migrated tree: every preserved fixture file has its original bytes at its new path,
      * and no ordinal method, fixture directory or "test data" reference remains in scope.
      */
-    fun verify(repository: Path, corpus: CorpusInventory, ledger: NameBackportLedger) {
+    /**
+     * [retired] maps a repository-relative fixture file that a later reviewed migration removed to
+     * the SHA-256 it had; it must be gone, and the legacy file it replaces must have had that
+     * digest.
+     */
+    fun verify(
+        repository: Path,
+        corpus: CorpusInventory,
+        ledger: NameBackportLedger,
+        retired: Map<String, String> = emptyMap(),
+    ) {
         val root = repository.toRealPath()
         val prefix = "core/src/test/resources/dev/morphia/test/"
         val moved =
@@ -375,11 +385,24 @@ object NameBackport {
                 .filter { it.oldResource != null }
                 .associate { prefix + it.oldResource to prefix + it.newResource }
         val problems = mutableListOf<String>()
+        val known =
+            corpus.examples
+                .flatMap { example ->
+                    val target = moved[example.path] ?: example.path
+                    example.files.map { target + it.path.removePrefix(example.path) }
+                }
+                .toSet()
+        (retired.keys - known).forEach { problems += "Retired file was never preserved: $it" }
         corpus.examples.forEach { example ->
             val target = moved[example.path] ?: example.path
             example.files.forEach { file ->
-                val path = root.resolve(target + file.path.removePrefix(example.path))
-                if (!Files.isRegularFile(path)) {
+                val relative = target + file.path.removePrefix(example.path)
+                val path = root.resolve(relative)
+                val retiredDigest = retired[relative]
+                if (retiredDigest != null) {
+                    if (retiredDigest != file.sha256) problems += "Retired file differs: $path"
+                    if (path.exists()) problems += "Retired file is still present: $path"
+                } else if (!Files.isRegularFile(path)) {
                     problems += "Missing preserved fixture file $path"
                 } else if (sha256(Files.readAllBytes(path)) != file.sha256) {
                     problems += "Fixture bytes changed: $path"

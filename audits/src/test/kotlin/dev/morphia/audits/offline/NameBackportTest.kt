@@ -286,6 +286,27 @@ class NameBackportTest {
             { source.writeText(migrated.replaceFirst("eq/firstCase", "eq/secondCase")) },
             { source.writeText(migrated) },
         )
+        val lock = fixtures.resolve("firstCase/lock")
+        lock.writeText("keep\n")
+        val locked = CorpusInventory.capture(repository, "locked")
+        val digest =
+            locked.examples.flatMap { it.files }.single { it.path.endsWith("/lock") }.sha256
+        val retired =
+            mapOf(
+                "core/src/test/resources/dev/morphia/test/query/filters/eq/firstCase/lock" to digest
+            )
+        val stillThere =
+            assertThrows(IllegalArgumentException::class.java) {
+                NameBackport.verify(repository, locked, ledger, retired)
+            }
+        assertTrue("Retired file is still present" in stillThere.message!!, stillThere.message)
+        Files.delete(lock)
+        NameBackport.verify(repository, locked, ledger, retired)
+        val wrong =
+            assertThrows(IllegalArgumentException::class.java) {
+                NameBackport.verify(repository, locked, ledger, mapOf(retired.keys.single() to "0"))
+            }
+        assertTrue("Retired file differs" in wrong.message!!, wrong.message)
         rejects(
             "Unparsed test data Javadoc",
             { source.writeText(migrated.replaceFirst("eq/firstCase", "eq/firstCase see a/b")) },

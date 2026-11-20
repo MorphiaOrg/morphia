@@ -287,7 +287,16 @@ class LegacyBindingsTest {
             NameBackport.plan(committed, corpus, review, NameBackport.inheritedMethods(root)),
         )
         assertEquals(NameBackport.project(committed, ledger, committed.repositoryRevision), catalog)
-        NameBackport.verify(root, corpus, ledger)
+        val forms = AuditJson.formMigration(read("audits/catalog/form-migration.json"))
+        NameBackport.verify(
+            root,
+            corpus,
+            ledger,
+            forms.overrides.associate {
+                "core/src/test/resources/dev/morphia/test/${it.fixture}/lock" to
+                    it.retiredLock.sha256
+            },
+        )
         assertEquals(
             read("core/src/test/resources/dev/morphia/test/example-bindings.json"),
             AuditJson.write(catalog.descriptor()),

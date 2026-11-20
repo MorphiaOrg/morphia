@@ -572,8 +572,29 @@ and the live sources consistent.
 
 ## Curated repair inventory
 
-`RepairsMainKt <repository-root> <revision> <repair-review.json> <out>` classifies every lock reason
+`RepairsMainKt <repository-root> <revision> <repair-review.json> <form-review.json> <out>` classifies every lock reason
 and operator exclusion through the reviewed `audits/catalog/repair-review.json`, and inventories each
 bound test's `ActionTestOptions` and executed assertion paths. The committed result is
 `audits/catalog/curated-repairs.json`; an audits test requires it to equal a fresh capture. See the
 [repair design](../design/operator-audits-curated-repairs.md).
+
+## MORPHIA_FORM lock migration
+
+`audits/probes/form-sources/fetch.py` fetches the historical `mongodb/docs` pages behind locked
+`MORPHIA_FORM` fixtures (it is the only networked step). `FormMainKt` then works offline:
+
+```sh
+python3 -I audits/probes/form-sources/fetch.py candidates "$PWD" first /tmp/first.json
+python3 -I audits/probes/form-sources/fetch.py candidates "$PWD" last /tmp/last.json
+python3 -I audits/probes/form-sources/fetch.py pages /tmp/first.json /tmp/pages
+python3 -I audits/probes/form-sources/fetch.py pages /tmp/last.json /tmp/pages
+./mvnw -q -Daudits -pl audits compile exec:java \
+  -Daudits.mainClass=dev.morphia.audits.repairs.FormMainKt \
+  -Dexec.args="draft $PWD /tmp/pages mongodb/docs /tmp/form-review.json /tmp/first.json /tmp/last.json"
+```
+
+`draft` only proposes a review. The reviewed `audits/catalog/form-review.json` is consumed by
+`capture <root> <revision> <pages> <review> <out>`, which writes `audits/catalog/form-migration.json`,
+and by `apply <root> <report>`, which deletes the retired locks. An audits test rechecks the committed
+report against the tree without the pages. See the [migration design](../design/operator-audits-form-migration.md).
+
