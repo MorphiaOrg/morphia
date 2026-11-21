@@ -574,7 +574,7 @@ and the live sources consistent.
 
 `RepairsMainKt <repository-root> <revision> <repair-review.json> <form-review.json> <out>` classifies every lock reason
 and operator exclusion through the reviewed `audits/catalog/repair-review.json`, and inventories each
-bound test's `ActionTestOptions` and executed assertion paths. The committed result is
+bound test's `ActionTestOptions`, executed assertion paths and extra `loadData` collections. The committed result is
 `audits/catalog/curated-repairs.json`; an audits test requires it to equal a fresh capture. See the
 [repair design](../design/operator-audits-curated-repairs.md).
 
@@ -593,7 +593,9 @@ python3 -I audits/probes/form-sources/fetch.py pages /tmp/last.json /tmp/pages
   -Dexec.args="draft $PWD /tmp/pages mongodb/docs /tmp/form-review.json /tmp/first.json /tmp/last.json"
 ```
 
-`draft` only proposes a review. The reviewed `audits/catalog/form-review.json` is consumed by
+`draft` only proposes a review. Every command reads the tests' extra collections
+(`loadData("airports", 2)` → `data2.json`) from the committed `audits/catalog/curated-repairs.json`,
+so recapture that inventory first when a test's `loadData` calls change. The reviewed `audits/catalog/form-review.json` is consumed by
 `capture <root> <revision> <pages> <review> <out>`, which writes `audits/catalog/form-migration.json`,
 and by `apply <root> <report>`, which deletes the retired locks. An audits test rechecks the committed
 report against the tree without the pages. See the [migration design](../design/operator-audits-form-migration.md).

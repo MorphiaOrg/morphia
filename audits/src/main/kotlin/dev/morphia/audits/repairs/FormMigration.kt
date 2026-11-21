@@ -119,6 +119,8 @@ data class FormOverride(
     val retiredLock: RepairMarker,
     /** SHA-256 of every remaining fixture file, by file name. */
     val fixtureFiles: Map<String, String>,
+    /** The test's extra collections by data file, as the repair inventory records them. */
+    val collections: Map<String, String> = emptyMap(),
 )
 
 data class FormInclude(val path: String, val blob: String)
@@ -161,6 +163,7 @@ object FormMigration {
         pages: Path,
         sourceRepository: String,
         candidates: List<List<Candidate>>,
+        collections: Map<String, Map<String, String>> = emptyMap(),
     ): FormReview {
         val root = repository.toRealPath()
         val declarations = mutableListOf<FormDeclaration>()
@@ -172,7 +175,8 @@ object FormMigration {
             .forEach { (fixture, choices) ->
                 val lock = folder(root, fixture).resolve("lock")
                 require(lock.isRegularFile()) { "$fixture has no lock" }
-                val outcomes = choices.map { it to examine(root, pages, fixture, it.source) }
+                val bound = collections[fixture].orEmpty()
+                val outcomes = choices.map { it to examine(root, pages, fixture, it.source, bound) }
                 val reproduced = outcomes.firstOrNull { it.second is Examined.Reproduced }
                 if (reproduced != null) {
                     val (candidate, outcome) = reproduced
@@ -207,6 +211,7 @@ object FormMigration {
         revision: String,
         pages: Path,
         review: FormReview,
+        collections: Map<String, Map<String, String>> = emptyMap(),
     ): FormMigrationReport {
         require(review.schemaVersion == 1) { "Unsupported form review ${review.schemaVersion}" }
         val root = repository.toRealPath()
@@ -225,7 +230,11 @@ object FormMigration {
                 if (lock.isRegularFile() && Files.readString(lock) != declaration.lock) {
                     problems += "${declaration.fixture}: lock text differs from the declaration"
                 }
-                when (val outcome = examine(root, pages, declaration.fixture, declaration.source)) {
+                val bound = collections[declaration.fixture].orEmpty()
+                when (
+                    val outcome =
+                        examine(root, pages, declaration.fixture, declaration.source, bound)
+                ) {
                     is Examined.Gap -> {
                         problems +=
                             "${declaration.fixture}: declared rules do not reproduce the fixture: " +
@@ -269,6 +278,7 @@ object FormMigration {
                                     sha256(declaration.lock.toByteArray()),
                                 ),
                             fixtureFiles = fixtureFiles(folder),
+                            collections = bound,
                         )
                     }
                 }
@@ -277,7 +287,10 @@ object FormMigration {
             if (!folder(root, unresolved.fixture).resolve("lock").isRegularFile()) {
                 problems += "${unresolved.fixture}: an unresolved fixture must keep its lock"
             }
-            when (val outcome = examine(root, pages, unresolved.fixture, unresolved.source)) {
+            val bound = collections[unresolved.fixture].orEmpty()
+            when (
+                val outcome = examine(root, pages, unresolved.fixture, unresolved.source, bound)
+            ) {
                 is Examined.Reproduced ->
                     problems +=
                         "${unresolved.fixture}: reproducible with ${outcome.rules}; declare it"
@@ -296,9 +309,15 @@ object FormMigration {
     /**
      * Rechecks a committed report against the tree without the documentation pages: the recorded
      * source text must still reproduce each fixture under exactly its declared rules, and each
-     * retired lock must be gone while each unresolved fixture keeps its lock.
+     * retired lock must be gone while each unresolved fixture keeps its lock. [collections] are the
+     * tests' extra collections from the repair inventory; each override must record the same.
      */
-    fun verify(repository: Path, review: FormReview, report: FormMigrationReport) {
+    fun verify(
+        repository: Path,
+        review: FormReview,
+        report: FormMigrationReport,
+        collections: Map<String, Map<String, String>> = emptyMap(),
+    ) {
         val root = repository.toRealPath()
         val problems = mutableListOf<String>()
         val declared = review.declarations.associateBy { it.fixture }
@@ -331,7 +350,13 @@ object FormMigration {
             if (fixtureFiles(folder) != override.fixtureFiles) {
                 problems += "${override.fixture}: fixture files changed since the override"
             }
-            when (val outcome = reproduce(folder, override.shape, override.blocks)) {
+            if (collections[override.fixture].orEmpty() != override.collections) {
+                problems += "${override.fixture}: test collections changed since the override"
+            }
+            when (
+                val outcome =
+                    reproduce(folder, override.shape, override.blocks, override.collections)
+            ) {
                 is Examined.Gap ->
                     problems += "${override.fixture}: ${outcome.gap} ${outcome.detail}"
                 is Examined.Reproduced ->
@@ -349,6 +374,12 @@ object FormMigration {
         }
         require(problems.isEmpty()) { problems.joinToString("\n") }
     }
+
+    /** The extra collections each bound test loads, by fixture, from the repair inventory. */
+    fun collections(inventory: CuratedRepairReport): Map<String, Map<String, String>> =
+        inventory.examples
+            .filter { it.collections.isNotEmpty() }
+            .associate { it.fixture to it.collections }
 
     /** Deletes each retired lock after checking that every one still holds the recorded text. */
     fun apply(repository: Path, report: FormMigrationReport) {
@@ -407,7 +438,13 @@ object FormMigration {
         data class Gap(val gap: FormGap, val detail: String) : Examined
     }
 
-    private fun examine(root: Path, pages: Path, fixture: String, source: FormSource): Examined {
+    private fun examine(
+        root: Path,
+        pages: Path,
+        fixture: String,
+        source: FormSource,
+        collections: Map<String, String>,
+    ): Examined {
         val folder = folder(root, fixture)
         val page = pages.resolve(source.commit).resolve(source.path)
         require(page.isRegularFile()) { "Missing source page $page" }
@@ -464,7 +501,7 @@ object FormMigration {
                 is Examined.Gap -> return documented
                 else -> (documented as Documented).alternatives.first().shape
             }
-        return when (val outcome = reproduce(folder, shape, blocks)) {
+        return when (val outcome = reproduce(folder, shape, blocks, collections)) {
             is Examined.Gap -> outcome
             is Examined.Reproduced ->
                 outcome.copy(
@@ -481,8 +518,15 @@ object FormMigration {
         val many: Boolean,
     )
 
-    /** The documented example lowered to commands; it never executes anything. */
-    private class Documented(val alternatives: List<Action>, val data: List<BsonValue>)
+    /**
+     * The documented example lowered to commands; it never executes anything. [data] holds the
+     * documented documents by collection; [collection] is the one the action runs against.
+     */
+    private class Documented(
+        val alternatives: List<Action>,
+        val collection: String,
+        val data: Map<String, List<BsonValue>>,
+    )
 
     private fun documented(blocks: List<SourceBlock>): Any {
         fun gap(gap: FormGap, detail: String) = Examined.Gap(gap, detail)
@@ -514,24 +558,37 @@ object FormMigration {
                     it.operation as? InsertOperation
                         ?: return gap(FormGap.SOURCE_UNSUPPORTED, "setup ${it.operation.kind}")
                 }
-        if (
-            program.commands
-                .filter { it.role == ProgramRole.SETUP }
-                .map { it.namespace }
-                .toSet()
-                .size > 1
-        ) {
-            return gap(FormGap.FIXTURE_UNSUPPORTED, "data for several collections")
-        }
-        val data =
-            inserts.flatMap { insert -> insert.documents.map { it.value() } } +
-                listings.flatMap {
-                    documents(it.text) ?: return gap(FormGap.SOURCE_UNSUPPORTED, "data syntax")
-                }
         val commands = program.commands.filter { it.role == ProgramRole.ACTION }
         if (commands.isEmpty() || commands.map { it.namespace }.toSet().size != 1) {
             return gap(FormGap.SOURCE_UNSUPPORTED, "${commands.size} action commands")
         }
+        val namespaces =
+            (commands + program.commands.filter { it.role == ProgramRole.SETUP }).map {
+                it.namespace
+            }
+        if (namespaces.any { it == null || it.database != null }) {
+            return gap(FormGap.SOURCE_UNSUPPORTED, "command outside the current database")
+        }
+        val collection = commands.first().namespace!!.collection
+        val inserted =
+            program.commands
+                .filter { it.role == ProgramRole.SETUP }
+                .zip(inserts)
+                .groupBy({ it.first.namespace!!.collection }) { (_, insert) ->
+                    insert.documents.map { it.value() }
+                }
+                .mapValues { (_, documents) -> documents.flatten() }
+        // A listing names no collection; it is the action's only when nothing else is documented.
+        if (listings.isNotEmpty() && (inserted.keys - collection).isNotEmpty()) {
+            return gap(FormGap.SOURCE_UNSUPPORTED, "document listing beside several collections")
+        }
+        val listed =
+            listings.flatMap {
+                documents(it.text) ?: return gap(FormGap.SOURCE_UNSUPPORTED, "data syntax")
+            }
+        val data =
+            if (listings.isEmpty()) inserted
+            else inserted + (collection to inserted[collection].orEmpty() + listed)
         val alternatives =
             commands.map { command ->
                 when (val operation = command.operation) {
@@ -571,12 +628,17 @@ object FormMigration {
         if (alternatives.map { it.shape to it.many }.toSet().size != 1) {
             return gap(FormGap.SOURCE_UNSUPPORTED, "action commands of different kinds")
         }
-        return Documented(alternatives, data)
+        return Documented(alternatives, collection, data)
     }
 
-    private fun reproduce(folder: Path, shape: ActionShape, blocks: List<SourceBlock>): Examined {
+    private fun reproduce(
+        folder: Path,
+        shape: ActionShape,
+        blocks: List<SourceBlock>,
+        collections: Map<String, String>,
+    ): Examined {
         val files = Files.list(folder).use { stream -> stream.map { it.name }.sorted().toList() }
-        (files - fixtureFileNames)
+        (files - fixtureFileNames - collections.keys)
             .takeIf { it.isNotEmpty() }
             ?.let {
                 return Examined.Gap(FormGap.FIXTURE_UNSUPPORTED, "files $it")
@@ -598,14 +660,26 @@ object FormMigration {
             documents(unwrap(curatedText.trim()))
                 ?: return Examined.Gap(FormGap.FIXTURE_UNSUPPORTED, "action.json syntax")
 
-        exact(
-                folder,
-                "data.json",
-                documented.data.takeIf { blocks.any { it.role == BlockRole.DATA } },
+        // data.json is loaded into the action's collection; every other documented collection
+        // must be a data file the test loads into a collection of that name.
+        if (documented.collection in collections.values) {
+            return Examined.Gap(
+                FormGap.FIXTURE_UNSUPPORTED,
+                "a data file targets the action collection",
             )
+        }
+        (documented.data.keys - documented.collection - collections.values.toSet())
+            .sorted()
+            .firstOrNull()
             ?.let {
+                return Examined.Gap(FormGap.FIXTURE_UNSUPPORTED, "no data file for collection $it")
+            }
+        (mapOf("data.json" to documented.collection) + collections).toSortedMap().forEach {
+            (file, collection) ->
+            exact(folder, file, documented.data[collection])?.let {
                 return it
             }
+        }
         val expected = blocks.filter { it.role == BlockRole.EXPECTED }
         exact(
                 folder,

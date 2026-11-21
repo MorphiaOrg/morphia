@@ -183,6 +183,92 @@ class FormMigrationTest {
     }
 
     @Test
+    fun extraCollectionsAreComparedWithTheDataFilesTheTestLoads() {
+        page(commit, documented)
+        include(
+            commit,
+            "/includes/sample-inventory.rst",
+            inventory +
+                """
+                |
+                |
+                |.. code-block:: javascript
+                |
+                |   db.prices.insertMany( [ { "_id" : 1, "price" : 5 } ] )
+                """
+                    .trimMargin(),
+        )
+        curated()
+        fixture("useCond", "data2.json", """{ "_id" : 1, "price" : 5 }""")
+        val bound = mapOf(fixture to mapOf("data2.json" to "prices"))
+
+        fun gap(collections: Map<String, Map<String, String>>) =
+            FormMigration.draft(repository, pages, "mongodb/docs", candidates(), collections)
+                .unresolved
+                .single()
+                .let { it.gap to it.detail }
+        assertEquals(FormGap.FIXTURE_UNSUPPORTED to "files [data2.json]", gap(emptyMap()))
+        assertEquals(
+            FormGap.FIXTURE_UNSUPPORTED to "no data file for collection prices",
+            gap(mapOf(fixture to mapOf("data2.json" to "costs"))),
+        )
+        assertEquals(
+            FormGap.FIXTURE_UNSUPPORTED to "a data file targets the action collection",
+            gap(mapOf(fixture to mapOf("data2.json" to "inventory"))),
+        )
+
+        val review = FormMigration.draft(repository, pages, "mongodb/docs", candidates(), bound)
+        assertEquals(listOf(FormRule.COND_ARRAY), review.declarations.single().rules)
+        val report = FormMigration.capture(repository, "head", pages, review, bound)
+        assertEquals(bound.getValue(fixture), report.overrides.single().collections)
+        FormMigration.apply(repository, report)
+        FormMigration.verify(repository, review, report, bound)
+        val changed =
+            assertThrows(IllegalArgumentException::class.java) {
+                FormMigration.verify(repository, review, report)
+            }
+        assertTrue("test collections changed" in changed.message!!, changed.message)
+
+        // The extra collection's data must match exactly, like data.json.
+        fixture("useCond", "lock", lockText)
+        fixture("useCond", "data2.json", """{ "_id" : 1, "price" : 5.0 }""")
+        assertEquals(FormGap.RESIDUAL_DIFFERENCE to "data2.json TYPE at /0/price", gap(bound))
+    }
+
+    @Test
+    fun dataThatNamesNoCollectionOrAnotherDatabaseIsAGap() {
+        page(commit, documented)
+        curated()
+        fun gap(data: String) =
+            include(commit, "/includes/sample-inventory.rst", data).let {
+                FormMigration.draft(repository, pages, "mongodb/docs", candidates())
+                    .unresolved
+                    .single()
+                    .let { it.gap to it.detail }
+            }
+        // A listing names no collection, so it cannot be told apart beside several collections.
+        assertEquals(
+            FormGap.SOURCE_UNSUPPORTED to "document listing beside several collections",
+            gap(
+                """
+                |.. code-block:: javascript
+                |
+                |   { "_id" : 1, "item" : "abc1", "qty" : 300 }
+                |
+                |.. code-block:: javascript
+                |
+                |   db.prices.insertMany( [ { "_id" : 1, "price" : 5 } ] )
+                """
+                    .trimMargin()
+            ),
+        )
+        assertEquals(
+            FormGap.SOURCE_UNSUPPORTED to "command outside the current database",
+            gap(inventory.replace("db.inventory.", "db.getSiblingDB(\"other\").inventory.")),
+        )
+    }
+
+    @Test
     fun anyOtherEditKeepsTheLock() {
         page(commit, documented)
         include(commit, "/includes/sample-inventory.rst", inventory)
@@ -390,11 +476,11 @@ class FormMigrationTest {
         val review = AuditJson.formReview(read("audits/catalog/form-review.json"))
         val report = AuditJson.formMigration(read("audits/catalog/form-migration.json"))
         assertEquals(read("audits/catalog/form-review.json"), AuditJson.write(review))
-        FormMigration.verify(root, review, report)
+        val inventory = AuditJson.curatedRepairs(read("audits/catalog/curated-repairs.json"))
+        FormMigration.verify(root, review, report, FormMigration.collections(inventory))
         // Pages are not committed (separate licence); the review pins their blob ids instead.
         report.overrides.forEach { assertEquals(40, it.pageBlob.length) }
 
-        val inventory = AuditJson.curatedRepairs(read("audits/catalog/curated-repairs.json"))
         val formOnly = inventory.examples.filter { it.categories == listOf("MORPHIA_FORM") }
         assertEquals(
             formOnly.map { it.fixture }.toSet(),
@@ -407,7 +493,7 @@ class FormMigrationTest {
                 .map { it.fixture }
                 .toSet(),
         )
-        assertEquals(43, report.overrides.size)
-        assertEquals(23, report.unresolved.size)
+        assertEquals(46, report.overrides.size)
+        assertEquals(20, report.unresolved.size)
     }
 }

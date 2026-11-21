@@ -1831,3 +1831,15 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   form-review.json now pins every page and include blob id, capture fails on a mismatch, and the
   networked recheck (fetch.py pages + FormMainKt capture) reproduces the committed report.
 - Maintainer decision (2026-11-20): the documentation pages are not committed.
+
+## Multi-collection data in the form migration (step 4 slice 3, 2026-11-20)
+
+- Branch audits-form-collections from #4532. The repair inventory now records each bound test's
+  literal `loadData("<collection>", N)` calls as `collections` (11 tests); other call forms fail the
+  inventory. The form migration groups documented data by collection, compares the action's with
+  `data.json` and every other one exactly with the data file bound to that collection name, and
+  records the bindings in each override; verify fails if the inventory's change.
+- Three fixtures kept as "data for several collections" now reproduce from their recorded pages
+  (`$graphLookup` across collections, two `$lookup` subqueries) under `NAMED_ARGUMENTS`, one also
+  under `PROJECT_ID_FIRST`; their locks are retired. Totals: 46 overrides, 20 unresolved; inventory
+  46 OVERRIDDEN, 188 PRESERVED_CURATED, 190 locked. No other gap changed on recapture.

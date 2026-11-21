@@ -11,11 +11,16 @@ private const val USAGE =
 
 /**
  * Drafts, captures and applies the MORPHIA_FORM lock migration. Pages are read from an explicit
- * directory laid out as `<pages>/<commit>/<path>`; nothing is fetched.
+ * directory laid out as `<pages>/<commit>/<path>`; nothing is fetched. The tests' extra collections
+ * come from the committed repair inventory, `audits/catalog/curated-repairs.json`.
  */
 fun main(args: Array<String>) {
     fun read(path: String) =
         Files.readAllBytes(Path.of(path)).decodeToString(throwOnInvalidSequence = true)
+    fun collections(root: String) =
+        FormMigration.collections(
+            AuditJson.curatedRepairs(read("$root/audits/catalog/curated-repairs.json"))
+        )
     when (args.firstOrNull()) {
         "draft" -> {
             require(args.size >= 6) { USAGE }
@@ -25,6 +30,7 @@ fun main(args: Array<String>) {
                     Path.of(args[2]),
                     args[3],
                     args.drop(5).map { AuditJson.formCandidates(read(it)).candidates },
+                    collections(args[1]),
                 )
             Files.writeString(Path.of(args[4]), AuditJson.write(review))
         }
@@ -36,6 +42,7 @@ fun main(args: Array<String>) {
                     args[2],
                     Path.of(args[3]),
                     AuditJson.formReview(read(args[4])),
+                    collections(args[1]),
                 )
             Files.writeString(Path.of(args[5]), AuditJson.write(report))
         }

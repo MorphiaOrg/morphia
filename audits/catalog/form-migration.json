@@ -13,6 +13,7 @@
       "sha256" : "0a827a6f6f965d6a5e89edc8c43a42e4ee5cd1f85a7238221184e4b31550536d",
       "text" : "[\n   { _id: { gameId: \"G2\" }, gamescores: [ 10 ] },\n   { _id: { gameId: \"G1\" }, gamescores: [ 33, 31, 1 ] }\n]"
     } ],
+    "collections" : { },
     "example" : "Computing ``n`` Based on the Group Key for ``$group``",
     "fixture" : "aggregation/expressions/bottomN/computingNBasedOnTheGroupKeyForGroup",
     "fixtureFiles" : {
@@ -50,6 +51,7 @@
       "sha256" : "7d46541b24bf9d52432e438a0bd08f53ac4988957e3fe6d61f4229fb5345b6dc",
       "text" : "{ \"item\" : \"abc1\", \"qty\" : 300, \"cmpTo250\" : 1 }\n{ \"item\" : \"abc2\", \"qty\" : 200, \"cmpTo250\" : -1 }\n{ \"item\" : \"xyz1\", \"qty\" : 250, \"cmpTo250\" : 0 }\n{ \"item\" : \"VWZ1\", \"qty\" : 300, \"cmpTo250\" : 1 }\n{ \"item\" : \"VWZ2\", \"qty\" : 180, \"cmpTo250\" : -1 }"
     } ],
+    "collections" : { },
     "example" : "main",
     "fixture" : "aggregation/expressions/cmp/cmpExpressionOperator",
     "fixtureFiles" : {
@@ -87,6 +89,7 @@
       "sha256" : "15f55e0bd596ae038967567cc42de49868748c317582050906a2a1757b0e8f92",
       "text" : "{ \"_id\" : 1, \"item\" : \"abc1\", \"discount\" : 30 }\n{ \"_id\" : 2, \"item\" : \"abc2\", \"discount\" : 20 }\n{ \"_id\" : 3, \"item\" : \"xyz1\", \"discount\" : 30 }"
     } ],
+    "collections" : { },
     "example" : "main",
     "fixture" : "aggregation/expressions/cond/condExpressionOperator",
     "fixtureFiles" : {
@@ -136,6 +139,7 @@
       "sha256" : "9370f9a7795d12e19bf1f6d6ffd2b7ac0b65852647d151814c729036d95e1f26",
       "text" : "{\n   \"_id\" : 1,\n   \"yearMonthDayUTC\" : \"2014-01-01\",\n   \"timewithOffsetNY\" : \"03:15:39:736-0500\",\n   \"timewithOffset430\" : \"12:45:39:736+0430\",\n   \"minutesOffsetNY\" : \"-300\",\n   \"minutesOffset430\" : \"270\",\n   \"abbreviated_month\": \"Jan\",\n   \"full_month\": \"January\"\n}"
     } ],
+    "collections" : { },
     "example" : "main",
     "fixture" : "aggregation/expressions/dateToString/dateToStringExpressionOperator",
     "fixtureFiles" : {
@@ -185,6 +189,7 @@
       "sha256" : "e06cf7fb4c2d5e3476e12531ac7494a4955c1ecd6b350aff3ae84f2d6e32612e",
       "text" : "{ \"item\" : \"abc1\", \"qty\" : 300, \"qtyEq250\" : false }\n{ \"item\" : \"abc2\", \"qty\" : 200, \"qtyEq250\" : false }\n{ \"item\" : \"xyz1\", \"qty\" : 250, \"qtyEq250\" : true }\n{ \"item\" : \"VWZ1\", \"qty\" : 300, \"qtyEq250\" : false }\n{ \"item\" : \"VWZ2\", \"qty\" : 180, \"qtyEq250\" : false }"
     } ],
+    "collections" : { },
     "example" : "main",
     "fixture" : "aggregation/expressions/eq/eqExpressionOperator",
     "fixtureFiles" : {
@@ -222,6 +227,7 @@
       "sha256" : "06c99ad74377923e29e1fb0dba744e89c78909167509cc54e859cda14162f8cf",
       "text" : "[\n   {\n      _id: 0,\n      items: [ { item_id: 43, quantity: 2, price: 10, name: 'pen' } ]\n   },\n   {\n      _id: 1,\n      items: [\n         { item_id: 103, quantity: 4, price: 5, name: 'pen' },\n         { item_id: 38, quantity: 1, price: 300, name: 'printer' }\n      ]\n   },\n   {\n      _id: 2,\n      items: [ { item_id: 4, quantity: 1, price: 23, name: 'paper' } ]\n   }\n]"
     } ],
+    "collections" : { },
     "example" : "Filter Based on Regular Expression Match",
     "fixture" : "aggregation/expressions/filter/filterBasedOnRegularExpressionMatch",
     "fixtureFiles" : {
@@ -271,6 +277,7 @@
       "sha256" : "184eb1012b2a62a17a6fa2b49132c0b77b124ece14668d0840d10b184f962462",
       "text" : "[\n   {\n      _id: 0,\n      items: [ { item_id: 43, quantity: 2, price: 10, name: 'pen' } ]\n   },\n   {\n      _id: 1,\n      items: [ { item_id: 103, quantity: 4, price: 5, name: 'pen' } ]\n   },\n   { _id: 2, items: [] }\n]"
     } ],
+    "collections" : { },
     "example" : "Filter Based on String Equality Match",
     "fixture" : "aggregation/expressions/filter/filterBasedOnStringEqualityMatch",
     "fixtureFiles" : {
@@ -320,6 +327,7 @@
       "sha256" : "cd6b46b394ba513c4904d87464122b71807b1d0a858cf0483afe31fb024e6e66",
       "text" : "{\n   \"_id\" : 0,\n   \"items\" : [\n      { \"item_id\" : 2, \"quantity\" : 1, \"price\" : 240 }\n   ]\n}\n{\n   \"_id\" : 1,\n   \"items\" : [\n      { \"item_id\" : 23, \"quantity\" : 3, \"price\" : 110 },\n      { \"item_id\" : 38, \"quantity\" : 1, \"price\" : 300 }\n   ]\n}\n{ \"_id\" : 2, \"items\" : [ ] }"
     } ],
+    "collections" : { },
     "example" : "main",
     "fixture" : "aggregation/expressions/filter/filterExpressionOperator",
     "fixtureFiles" : {
@@ -369,6 +377,7 @@
       "sha256" : "2a19ec5f724eec080dc433cf538bacc33c162db7c50ae3768afd8d1098193e98",
       "text" : "[\n   {\n      _id: 0,\n      items: [ { item_id: 2, quantity: 1, price: 240, name: 'briefcase' } ]\n   },\n   {\n      _id: 1,\n      items: [ { item_id: 23, quantity: 3, price: 110, name: 'notebook' } ]\n   },\n   { _id: 2, items: [] }\n]"
     } ],
+    "collections" : { },
     "example" : "Use the limit Field",
     "fixture" : "aggregation/expressions/filter/useTheLimitField",
     "fixtureFiles" : {
@@ -418,6 +427,7 @@
       "sha256" : "9227f11a50f99ef7d022f955074ce021cecd7987e6f35fc319ef0ece3ae003f9",
       "text" : "[\n   { _id: { gameId: 'G1' }, gamescores: [ 31, 33, 99 ] },\n   { _id: { gameId: 'G2' }, gamescores: [ 10 ] }\n]"
     } ],
+    "collections" : { },
     "example" : "Computing ``n`` Based on the Group Key for ``$group``",
     "fixture" : "aggregation/expressions/firstN/computingNBasedOnTheGroupKeyForGroup",
     "fixtureFiles" : {
@@ -455,6 +465,7 @@
       "sha256" : "84e6ceed470d7021814f1318ba5d9be88f4a99fc80916c0b5524a7424f3aef8e",
       "text" : "{ \"item\" : \"abc1\", \"qty\" : 300, \"qtyGt250\" : true }\n{ \"item\" : \"abc2\", \"qty\" : 200, \"qtyGt250\" : false }\n{ \"item\" : \"xyz1\", \"qty\" : 250, \"qtyGt250\" : false }\n{ \"item\" : \"VWZ1\", \"qty\" : 300, \"qtyGt250\" : true }\n{ \"item\" : \"VWZ2\", \"qty\" : 180, \"qtyGt250\" : false }"
     } ],
+    "collections" : { },
     "example" : "main",
     "fixture" : "aggregation/expressions/gt/gtExpressionOperator",
     "fixtureFiles" : {
@@ -492,6 +503,7 @@
       "sha256" : "93a4d9aeb1d7fdb7c6aa39b0a53f9794372559eb8b9010045a0e03d1c21366d5",
       "text" : "{ \"item\" : \"abc1\", \"qty\" : 300, \"qtyGte250\" : true }\n{ \"item\" : \"abc2\", \"qty\" : 200, \"qtyGte250\" : false }\n{ \"item\" : \"xyz1\", \"qty\" : 250, \"qtyGte250\" : true }\n{ \"item\" : \"VWZ1\", \"qty\" : 300, \"qtyGte250\" : true }\n{ \"item\" : \"VWZ2\", \"qty\" : 180, \"qtyGte250\" : false }"
     } ],
+    "collections" : { },
     "example" : "main",
     "fixture" : "aggregation/expressions/gte/gteExpressionOperator",
     "fixtureFiles" : {
@@ -529,6 +541,7 @@
       "sha256" : "37e445138cf161a4387b910dd70d9e7c521b7a6ae0f1212dca32f55fef899ba6",
       "text" : "{ \"_id\" : 1, \"items\" : [ \"chocolate\", \"butter\", \"apples\" ] }\n{ \"_id\" : 2, \"items\" : \"One or more fields is not an array.\" }\n{ \"_id\" : 3, \"items\" : [ \"pears\", \"pecans\", \"cherries\" ] }\n{ \"_id\" : 4, \"items\" : [ \"ice cream\" ] }"
     } ],
+    "collections" : { },
     "example" : "main",
     "fixture" : "aggregation/expressions/isArray/isArrayExpressionOperator",
     "fixtureFiles" : {
@@ -569,6 +582,7 @@
       "sha256" : "571d76dd11fa9ecb44b435c34ee59c6ee2839233de22e58caac38c0e0c0f1ac1",
       "text" : "[\n   { _id: { gameId: \"G1\" }, gamescores: [ 33, 99, 1 ] },\n   { _id: { gameId: \"G2\" }, gamescores: [ 80 ] }\n]"
     } ],
+    "collections" : { },
     "example" : "Computing ``n`` Based on the Group Key for ``$group``",
     "fixture" : "aggregation/expressions/lastN/computingNBasedOnTheGroupKeyForGroup",
     "fixtureFiles" : {
@@ -606,6 +620,7 @@
       "sha256" : "342cb8c299c82032ec90bf94fa25aac959b989cab945adc908c62e06553ca95f",
       "text" : "{ \"_id\" : 1, \"finalTotal\" : 9.450000000000001 }\n{ \"_id\" : 2, \"finalTotal\" : 10.25 }"
     } ],
+    "collections" : { },
     "example" : "main",
     "fixture" : "aggregation/expressions/let/letExpressionOperator",
     "fixtureFiles" : {
@@ -643,6 +658,7 @@
       "sha256" : "4d17c108f4c7343e101057b639486cfa3924460994cc0823e0b34b33a21d501b",
       "text" : "{ \"item\" : \"abc1\", \"qty\" : 300, \"qtyLt250\" : false }\n{ \"item\" : \"abc2\", \"qty\" : 200, \"qtyLt250\" : true }\n{ \"item\" : \"xyz1\", \"qty\" : 250, \"qtyLt250\" : false }\n{ \"item\" : \"VWZ1\", \"qty\" : 300, \"qtyLt250\" : false }\n{ \"item\" : \"VWZ2\", \"qty\" : 180, \"qtyLt250\" : true }"
     } ],
+    "collections" : { },
     "example" : "main",
     "fixture" : "aggregation/expressions/lt/ltExpressionOperator",
     "fixtureFiles" : {
@@ -680,6 +696,7 @@
       "sha256" : "039232afe0e48cd415c5843260b11271b87612d780457033c7ac40c37b96bc5b",
       "text" : "{ \"item\" : \"abc1\", \"qty\" : 300, \"qtyLte250\" : false }\n{ \"item\" : \"abc2\", \"qty\" : 200, \"qtyLte250\" : true }\n{ \"item\" : \"xyz1\", \"qty\" : 250, \"qtyLte250\" : true }\n{ \"item\" : \"VWZ1\", \"qty\" : 300, \"qtyLte250\" : false }\n{ \"item\" : \"VWZ2\", \"qty\" : 180, \"qtyLte250\" : true }"
     } ],
+    "collections" : { },
     "example" : "main",
     "fixture" : "aggregation/expressions/lte/lteExpressionOperator",
     "fixtureFiles" : {
@@ -717,6 +734,7 @@
       "sha256" : "8ca7ab75fe2d6e680c453c774961d58da6f75231696284437bd86c434fd26e47",
       "text" : "[\n  {\n    _id: ObjectId(\"6390b8f7237da390c6869a62\"),\n    adjustedGrades: [ 7, 8, 9 ]\n  },\n  { \n    _id: ObjectId(\"6390b8f7237da390c6869a63\"),\n    adjustedGrades: []\n  },\n  {\n    _id: ObjectId(\"6390b8f7237da390c6869a64\"),\n    adjustedGrades: [ 5, 10, 11 ]\n  }\n]"
     } ],
+    "collections" : { },
     "example" : "Add to Each Element of an Array",
     "fixture" : "aggregation/expressions/map/addToEachElementOfAnArray",
     "fixtureFiles" : {
@@ -766,6 +784,7 @@
       "sha256" : "3ed65890a1e924dc02300ddfa292ce18b124e5983de40af8cf54160cdfaf9a6a",
       "text" : "[\n  {\n    _id: ObjectId(\"6390b9b1237da390c6869a65\"),\n    city: 'Bakersfield',\n    integerValues: [ 34, 81, 44 ]\n  },\n  {\n    _id: ObjectId(\"6390b9b1237da390c6869a66\"),\n    city: 'Barstow',\n    integerValues: [ 73, 9, 124 ]\n  },\n  {\n    _id: ObjectId(\"6390b9b1237da390c6869a67\"),\n    city: 'San Bernadino',\n    integerValues: [ 16, 3, 6 ]\n  }\n]"
     } ],
+    "collections" : { },
     "example" : "Truncate Each Array Element",
     "fixture" : "aggregation/expressions/map/truncateEachArrayElement",
     "fixtureFiles" : {
@@ -815,6 +834,7 @@
       "sha256" : "49bc5051131e87bfc5dfbde6a9c72e69cca3e89370c4c2114775a323dfb8c5da",
       "text" : "[\n   { _id: { gameId: 'G2' }, gamescores: [ [ 80, 'PlayerD' ] ] },\n   {\n      _id: { gameId: 'G1' },\n      gamescores: [ [ 99, 'PlayerC' ], [ 33, 'PlayerB' ], [ 31, 'PlayerA' ] ]\n   }\n]"
     } ],
+    "collections" : { },
     "example" : "Computing ``n`` Based on the Group Key for ``$group``",
     "fixture" : "aggregation/expressions/maxN/computingNBasedOnTheGroupKeyForGroup",
     "fixtureFiles" : {
@@ -852,6 +872,7 @@
       "sha256" : "fc9114794b02471504cd68aa6795394f22a0355bb7db1b5d2a967f012cd1c888",
       "text" : "[\n   { _id: { gameId: 'G2' }, gamescores: [ [ 10, 'PlayerA' ] ] },\n   {\n      _id: { gameId: 'G1' },\n      gamescores: [ [ 1, 'PlayerD' ], [ 31, 'PlayerA' ], [ 33, 'PlayerB' ] ]\n   }\n]"
     } ],
+    "collections" : { },
     "example" : "Computing ``n`` Based on the Group Key for ``$group``",
     "fixture" : "aggregation/expressions/minN/computingNBasedOnTheGroupKeyForGroup",
     "fixtureFiles" : {
@@ -889,6 +910,7 @@
       "sha256" : "faa3345615eb647a8f9a629bb672645b8d6e973a8792d33332fe8d9b62cabe56",
       "text" : "{ \"item\" : \"abc1\", \"qty\" : 300, \"qtyNe250\" : true }\n{ \"item\" : \"abc2\", \"qty\" : 200, \"qtyNe250\" : true }\n{ \"item\" : \"xyz1\", \"qty\" : 250, \"qtyNe250\" : false }\n{ \"item\" : \"VWZ1\", \"qty\" : 300, \"qtyNe250\" : true }\n{ \"item\" : \"VWZ2\", \"qty\" : 180, \"qtyNe250\" : true }"
     } ],
+    "collections" : { },
     "example" : "main",
     "fixture" : "aggregation/expressions/ne/neExpressionOperator",
     "fixtureFiles" : {
@@ -926,6 +948,7 @@
       "sha256" : "8bca2ce6954c28c3226097bb7ae78caea3a8dbd79fc84fc99e2e271376130688",
       "text" : "{ \"_id\" : 1, \"name\" : \"Melissa\", \"bio\" : \"My hobbies include: softball, drawing, reading\" }\n{ \"_id\" : 2, \"name\" : \"Brad\", \"bio\" : \"My hobbies include: gaming, skateboarding\" }\n{ \"_id\" : 3, \"name\" : \"Scott\", \"bio\" : \"My hobbies include: basketball, music, fishing\" }\n{ \"_id\" : 4, \"name\" : \"Tracey\", \"bio\" : \"My hobbies include: acting, yoga\" }\n{ \"_id\" : 5, \"name\" : \"Josh\", \"bio\" : \"My hobbies include: programming\" }"
     } ],
+    "collections" : { },
     "example" : "String Concatenation",
     "fixture" : "aggregation/expressions/reduce/stringConcatenation",
     "fixtureFiles" : {
@@ -963,6 +986,7 @@
       "sha256" : "8cbf847fdada28369e0fa16678c8cb2b5805e560019110eba10e96c42c7fa6c2",
       "text" : "{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"rose\", \"orchid\" ], \"inBOnly\" : [ ] }\n{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"orchid\", \"rose\", \"orchid\" ], \"inBOnly\" : [ ] }\n{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"rose\", \"orchid\", \"jasmine\" ], \"inBOnly\" : [ \"jasmine\" ] }\n{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"jasmine\", \"rose\" ], \"inBOnly\" : [ \"jasmine\" ] }\n{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ ], \"inBOnly\" : [ ] }\n{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ [ \"rose\" ], [ \"orchid\" ] ], \"inBOnly\" : [ [ \"rose\" ], [ \"orchid\" ] ] }\n{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ [ \"rose\", \"orchid\" ] ], \"inBOnly\" : [ [ \"rose\", \"orchid\" ] ] }\n{ \"flowerFieldA\" : [ ], \"flowerFieldB\" : [ ], \"inBOnly\" : [ ] }\n{ \"flowerFieldA\" : [ ], \"flowerFieldB\" : [ \"rose\" ], \"inBOnly\" : [ \"rose\" ] }"
     } ],
+    "collections" : { },
     "example" : "main",
     "fixture" : "aggregation/expressions/setDifference/setDifferenceExpressionOperator",
     "fixtureFiles" : {
@@ -1003,6 +1027,7 @@
       "sha256" : "63b3f4e4385a7c5dac743827bf52b813a3c14fed55f5afa5c8aece57cecb3d42",
       "text" : "{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"rose\", \"orchid\" ], \"commonToBoth\" : [ \"orchid\", \"rose\" ] }\n{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"orchid\", \"rose\", \"orchid\" ], \"commonToBoth\" : [ \"orchid\", \"rose\" ] }\n{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"rose\", \"orchid\", \"jasmine\" ], \"commonToBoth\" : [ \"orchid\", \"rose\" ] }\n{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ \"jasmine\", \"rose\" ], \"commonToBoth\" : [ \"rose\" ] }\n{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ ], \"commonToBoth\" : [ ] }\n{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ [ \"rose\" ], [ \"orchid\" ] ], \"commonToBoth\" : [ ] }\n{ \"flowerFieldA\" : [ \"rose\", \"orchid\" ], \"flowerFieldB\" : [ [ \"rose\", \"orchid\" ] ], \"commonToBoth\" : [ ] }\n{ \"flowerFieldA\" : [ ], \"flowerFieldB\" : [ ], \"commonToBoth\" : [ ] }\n{ \"flowerFieldA\" : [ ], \"flowerFieldB\" : [ \"rose\" ], \"commonToBoth\" : [ ] }"
     } ],
+    "collections" : { },
     "example" : "Elements Array Example",
     "fixture" : "aggregation/expressions/setIntersection/elementsArrayExample",
     "fixtureFiles" : {
@@ -1067,6 +1092,7 @@
       "sha256" : "1512ea57843cc59b806529b1377d79f1a5b4576eae873a1ce12af6a456d87d8b",
       "text" : "{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ \"rose\", \"orchid\" ], \"allValues\": [ \"orchid\", \"rose\" ] }\n{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ \"orchid\", \"rose\", \"orchid\" ], \"allValues\": [ \"orchid\", \"rose\" ] }\n{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ \"rose\", \"orchid\", \"jasmine\" ], \"allValues\": [ \"orchid\", \"rose\", \"jasmine\" ] }\n{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ \"jasmine\", \"rose\" ], \"allValues\": [ \"orchid\", \"rose\", \"jasmine\" ] }\n{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ ], \"allValues\": [ \"orchid\", \"rose\" ] }\n{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ [ \"rose\" ], [ \"orchid\" ] ], \"allValues\": [ \"orchid\", \"rose\", [ \"rose\" ], [ \"orchid\" ] ] }\n{ \"flowerFieldA\": [ \"rose\", \"orchid\" ], \"flowerFieldB\": [ [ \"rose\", \"orchid\" ] ], \"allValues\": [ \"orchid\", \"rose\", [ \"rose\", \"orchid\" ] ] }\n{ \"flowerFieldA\": [ ], \"flowerFieldB\": [ ], \"allValues\": [ ] }\n{ \"flowerFieldA\": [ ], \"flowerFieldB\": [ \"rose\" ], \"allValues\": [ \"rose\" ] }"
     } ],
+    "collections" : { },
     "example" : "main",
     "fixture" : "aggregation/expressions/setUnion/setUnionAccumulatorOperator",
     "fixtureFiles" : {
@@ -1107,6 +1133,7 @@
       "sha256" : "7346b20dd9752dde43e5841accc09bb6d314b2e74a3dffab21ae19a678b433c4",
       "text" : "{ \"_id\" : 1, \"item\" : \"ABC1\", \"numberOfColors\" : 3 }\n{ \"_id\" : 2, \"item\" : \"ABC2\", \"numberOfColors\" : 1 }\n{ \"_id\" : 3, \"item\" : \"XYZ1\", \"numberOfColors\" : 0 }\n{ \"_id\" : 4, \"item\" : \"ZZZ1\", \"numberOfColors\" : \"NA\" }\n{ \"_id\" : 5, \"item\" : \"ZZZ2\", \"numberOfColors\" : \"NA\" }"
     } ],
+    "collections" : { },
     "example" : "main",
     "fixture" : "aggregation/expressions/size/sizeExpressionOperator",
     "fixtureFiles" : {
@@ -1156,6 +1183,7 @@
       "sha256" : "7558ca78e0274388591c2431499c0d737c75b9e322acdccc3ce3f2781e75c434",
       "text" : "{ \"_id\" : { \"state\" : \"OR\" }, \"total_qty\" : 1741 }\n{ \"_id\" : { \"state\" : \"CA\" }, \"total_qty\" : 1455 }\n{ \"_id\" : { \"state\" : \"NV\" }, \"total_qty\" : 655 }"
     } ],
+    "collections" : { },
     "example" : "main",
     "fixture" : "aggregation/expressions/split/splitExpressionOperator",
     "fixtureFiles" : {
@@ -1193,6 +1221,7 @@
       "sha256" : "cbdb11eda34caac9874e65f962979646ef03541d6bf8a6d066eb1fd328da55d3",
       "text" : "[\n   { _id: { gameId: 'G1' }, gamescores: [ 99, 33, 31 ] },\n   { _id: { gameId: 'G2' }, gamescores: [ 80 ] }\n]"
     } ],
+    "collections" : { },
     "example" : "Computing ``n`` Based on the Group Key for ``$group``",
     "fixture" : "aggregation/expressions/topN/computingNBasedOnTheGroupKeyForGroup",
     "fixtureFiles" : {
@@ -1230,6 +1259,7 @@
       "sha256" : "a94e1316d2c0e0a6f883fbb2f6a518a03d9cb10b54058437c61d243ffa52990e",
       "text" : "{ \"transposed\" : [ [ 1, 2, 3 ], [ 2, 3, 4 ] ] }\n{ \"transposed\" : [ [ 8, 7, 5 ], [ 7, 6, 4 ] ] }"
     } ],
+    "collections" : { },
     "example" : "Matrix Transposition",
     "fixture" : "aggregation/expressions/zip/matrixTransposition",
     "fixtureFiles" : {
@@ -1256,6 +1286,207 @@
   }, {
     "blocks" : [ {
       "role" : "ACTION",
+      "sha256" : "2307d7043a9abff0bcb4efcb4efe26c89801cbfab9d54f1d483d0fe04ad826cc",
+      "text" : "db.travelers.aggregate( [\n   {\n      $graphLookup: {\n         from: \"airports\",\n         startWith: \"$nearestAirport\",\n         connectFromField: \"connects\",\n         connectToField: \"airport\",\n         maxDepth: 2,\n         depthField: \"numConnections\",\n         as: \"destinations\"\n      }\n   }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "9e65b5237a8a6b4f089a95db77210ebcd7002a8bdad987aa7a3318cf6286e226",
+      "text" : "db.airports.insertMany( [\n   { \"_id\" : 0, \"airport\" : \"JFK\", \"connects\" : [ \"BOS\", \"ORD\" ] },\n   { \"_id\" : 1, \"airport\" : \"BOS\", \"connects\" : [ \"JFK\", \"PWM\" ] },\n   { \"_id\" : 2, \"airport\" : \"ORD\", \"connects\" : [ \"JFK\" ] },\n   { \"_id\" : 3, \"airport\" : \"PWM\", \"connects\" : [ \"BOS\", \"LHR\" ] },\n   { \"_id\" : 4, \"airport\" : \"LHR\", \"connects\" : [ \"PWM\" ] }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "3aa8e45153559c0739bedc0b185c162c7c6537334e9ae99f3948aad905ac2828",
+      "text" : "db.travelers.insertMany( [\n   { \"_id\" : 1, \"name\" : \"Dev\", \"nearestAirport\" : \"JFK\" },\n   { \"_id\" : 2, \"name\" : \"Eliot\", \"nearestAirport\" : \"JFK\" },\n   { \"_id\" : 3, \"name\" : \"Jeff\", \"nearestAirport\" : \"BOS\" }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "8edc5a26ee75d1eca3d8e4ab7d5e6655d9072cd1c3c3120fd6e8a07d1ff1c1ec",
+      "text" : "{\n   \"_id\" : 1,\n   \"name\" : \"Dev\",\n   \"nearestAirport\" : \"JFK\",\n   \"destinations\" : [\n      { \"_id\" : 3,\n        \"airport\" : \"PWM\",\n        \"connects\" : [ \"BOS\", \"LHR\" ],\n        \"numConnections\" : NumberLong(2) },\n      { \"_id\" : 2,\n        \"airport\" : \"ORD\",\n        \"connects\" : [ \"JFK\" ],\n        \"numConnections\" : NumberLong(1) },\n      { \"_id\" : 1,\n        \"airport\" : \"BOS\",\n        \"connects\" : [ \"JFK\", \"PWM\" ],\n        \"numConnections\" : NumberLong(1) },\n      { \"_id\" : 0,\n        \"airport\" : \"JFK\",\n        \"connects\" : [ \"BOS\", \"ORD\" ],\n        \"numConnections\" : NumberLong(0) }\n   ]\n}\n{\n   \"_id\" : 2,\n   \"name\" : \"Eliot\",\n   \"nearestAirport\" : \"JFK\",\n   \"destinations\" : [\n      { \"_id\" : 3,\n        \"airport\" : \"PWM\",\n        \"connects\" : [ \"BOS\", \"LHR\" ],\n        \"numConnections\" : NumberLong(2) },\n      { \"_id\" : 2,\n        \"airport\" : \"ORD\",\n        \"connects\" : [ \"JFK\" ],\n        \"numConnections\" : NumberLong(1) },\n      { \"_id\" : 1,\n        \"airport\" : \"BOS\",\n        \"connects\" : [ \"JFK\", \"PWM\" ],\n        \"numConnections\" : NumberLong(1) },\n      { \"_id\" : 0,\n        \"airport\" : \"JFK\",\n        \"connects\" : [ \"BOS\", \"ORD\" ],\n        \"numConnections\" : NumberLong(0) } ]\n}\n{\n   \"_id\" : 3,\n   \"name\" : \"Jeff\",\n   \"nearestAirport\" : \"BOS\",\n   \"destinations\" : [\n      { \"_id\" : 2,\n        \"airport\" : \"ORD\",\n        \"connects\" : [ \"JFK\" ],\n        \"numConnections\" : NumberLong(2) },\n      { \"_id\" : 3,\n        \"airport\" : \"PWM\",\n        \"connects\" : [ \"BOS\", \"LHR\" ],\n        \"numConnections\" : NumberLong(1) },\n      { \"_id\" : 4,\n        \"airport\" : \"LHR\",\n        \"connects\" : [ \"PWM\" ],\n        \"numConnections\" : NumberLong(2) },\n      { \"_id\" : 0,\n        \"airport\" : \"JFK\",\n        \"connects\" : [ \"BOS\", \"ORD\" ],\n        \"numConnections\" : NumberLong(1) },\n      { \"_id\" : 1,\n        \"airport\" : \"BOS\",\n        \"connects\" : [ \"JFK\", \"PWM\" ],\n        \"numConnections\" : NumberLong(0) }\n   ]\n}"
+    } ],
+    "collections" : {
+      "data2.json" : "airports"
+    },
+    "example" : "Across Multiple Collections",
+    "fixture" : "aggregation/stages/graphLookup/acrossMultipleCollections",
+    "fixtureFiles" : {
+      "action.json" : "605bde048bff6db6a77944897b2df3024bd5c19158386dbfedf765486f47c1ee",
+      "data.json" : "00061634b23aeb5b13f358628171b20dd87ace338afa8b215a93425424ba9ea1",
+      "data2.json" : "c31732455fc49cd4428e47822663db4ee0c9116e7031a2e1da8f0f1ffa850205",
+      "expected.json" : "4d8f3e5295b46da09ca3cad0636c361668e6dbbe153419f294674219a9623ff5",
+      "name" : "068903a39c63f8c83b724e2fa3024427b5554c7ceb0d05c972c48097cefb5777"
+    },
+    "includes" : [ {
+      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
+      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
+    }, {
+      "blob" : "6beb75178564cf0b943050f7e6ef2d96165ce728",
+      "path" : "source/includes/fact-graphlookup-memory-restrictions.rst"
+    } ],
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "d00d3c58699ec5ad0505fdcab3026e35f522ce87",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "837a91236817cbc098b8d616cb3ef2e055d7ba25a14e79ec7a9e509765c910b1",
+      "text" : "updated pipeline order\n"
+    },
+    "rules" : [ "NAMED_ARGUMENTS" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "fbff8bd22e055259d67b394c854f128340571b1f",
+      "path" : "source/reference/operator/aggregation/graphLookup.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "e88aa82d43d7a31be24ab74b2b0182fbe4251549720165f2b9d07bc6e02d6fd7",
+      "text" : "db.orders.aggregate( [\n   {\n      $lookup: {\n         from: \"restaurants\",\n         localField: \"restaurant_name\",\n         foreignField: \"name\",\n         let: { orders_drink: \"$drink\" },\n         pipeline: [ {\n            $match: {\n               $expr: { $in: [ \"$$orders_drink\", \"$beverages\" ] }\n            }\n         } ],\n         as: \"matches\"\n      }\n   }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "cf9bb8e288e3bd8c40d17640f7ea2c54bd735d98f0da08e3edf99bbe99672e39",
+      "text" : "db.restaurants.insertMany( [\n   {\n      _id: 1,\n      name: \"American Steak House\",\n      food: [ \"filet\", \"sirloin\" ],\n      beverages: [ \"beer\", \"wine\" ]\n   },\n   {\n      _id: 2,\n      name: \"Honest John Pizza\",\n      food: [ \"cheese pizza\", \"pepperoni pizza\" ],\n      beverages: [ \"soda\" ]\n   }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "4491423d568e98ff6e4706df55d9301989ba84de4ecc211081fbd2ac1be9aa81",
+      "text" : "db.orders.insertMany( [\n   {\n      _id: 1,\n      item: \"filet\",\n      restaurant_name: \"American Steak House\"\n   },\n   {\n      _id: 2,\n      item: \"cheese pizza\",\n      restaurant_name: \"Honest John Pizza\",\n      drink: \"lemonade\"\n   },\n   {\n      _id: 3,\n      item: \"cheese pizza\",\n      restaurant_name: \"Honest John Pizza\",\n      drink: \"soda\"\n   }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "af6ea8a1cc5e26b5323cf3dbf7852fc7cecb2b1476cdc2af8ba13888976a2b9f",
+      "text" : "{\n   \"_id\" : 1, \"item\" : \"filet\",\n   \"restaurant_name\" : \"American Steak House\",\n   \"matches\" : [ ]\n}\n{\n   \"_id\" : 2, \"item\" : \"cheese pizza\",\n   \"restaurant_name\" : \"Honest John Pizza\",\n   \"drink\" : \"lemonade\",\n   \"matches\" : [ ]\n}\n{\n   \"_id\" : 3, \"item\" : \"cheese pizza\",\n   \"restaurant_name\" : \"Honest John Pizza\",\n   \"drink\" : \"soda\",\n   \"matches\" : [ {\n      \"_id\" : 2, \"name\" : \"Honest John Pizza\",\n      \"food\" : [ \"cheese pizza\", \"pepperoni pizza\" ],\n      \"beverages\" : [ \"soda\" ]\n   } ]\n}"
+    } ],
+    "collections" : {
+      "data2.json" : "restaurants"
+    },
+    "example" : "Perform a Concise Correlated Subquery with ``$lookup``",
+    "fixture" : "aggregation/stages/lookup/performAConciseCorrelatedSubqueryWithLookup",
+    "fixtureFiles" : {
+      "action.json" : "ef7be37c6af7c4b5a5b9931973e645cbc2b54226e8a66c8ee89a85f9dfad38a8",
+      "data.json" : "bc9a58f4f42bc0a666158b7b4371c9e9c4fb676cc56a37c0c9f90e4434d69723",
+      "data2.json" : "265a3a3a34f536d5b2d5cf3370633b8cc87184f518832d59cf3f78cf66b0e38d",
+      "expected.json" : "886f238edb2036aac0bfb144ec4f97460889f339d888e3b691d2ad1a39bfa8df",
+      "name" : "a9be7317f25f2143370d8d4d0af97d16c0bec1de3f65de1cce15cd5f5557a3e6"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "a6db8d865a30fa63796cb4e6d922f9f6ba8797e6",
+      "path" : "source/includes/lookup-from.rst"
+    }, {
+      "blob" : "fd70caec15ce236248000b806e1fdeb87f6cd487",
+      "path" : "source/includes/uncorrelated-subquery.rst"
+    }, {
+      "blob" : "83eabc44fb10dd9eb0adca3ecdb7ed56efb7e2b8",
+      "path" : "source/includes/fact-let-variable-access-note.rst"
+    }, {
+      "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
+      "path" : "source/includes/expr-operators-and-indexes.rst"
+    }, {
+      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
+      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
+    }, {
+      "blob" : "d71a97278c9c8c4c41a37c5c35461d5b43d59625",
+      "path" : "source/includes/fact-sbe-lookup-overview.rst"
+    } ],
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "75ee098f441675901521feb8eb890ec763ede2c396181d1b24fdbfc226285754",
+      "text" : "rearrange the order"
+    },
+    "rules" : [ "NAMED_ARGUMENTS" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
+      "path" : "source/reference/operator/aggregation/lookup.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "5645bd3e90c8c17411aaa1dae2bb5237b3b33e5945574697dbb82147ac60f8ce",
+      "text" : "db.orders.aggregate( [\n   {\n      $lookup:\n         {\n           from: \"warehouses\",\n           let: { order_item: \"$item\", order_qty: \"$ordered\" },\n           pipeline: [\n              { $match: \n                 { $expr: \n                    { $and: \n                       [ \n                         { $eq: [ \"$stock_item\",  \"$$order_item\" ] }, \n                         { $gte: [ \"$instock\", \"$$order_qty\" ] }\n                       ] \n                    }\n                 }\n              },\n              { $project: { stock_item: 0, _id: 0 } }\n           ],\n           as: \"stockdata\"\n         }\n    }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "b7a96aa0017ee6a024e66b5ca4f66ffac1cb39eb4290f1f6d0c904dcd203162c",
+      "text" : "db.orders.insertMany( [\n  { \"_id\" : 1, \"item\" : \"almonds\", \"price\" : 12, \"ordered\" : 2 },\n  { \"_id\" : 2, \"item\" : \"pecans\", \"price\" : 20, \"ordered\" : 1 },\n  { \"_id\" : 3, \"item\" : \"cookies\", \"price\" : 10, \"ordered\" : 60 }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "ee09dd166fe1abda5ee02510ed0d7eeebbb14610b9dc1e1ec6a6874aba182d0a",
+      "text" : "db.warehouses.insertMany( [\n  { \"_id\" : 1, \"stock_item\" : \"almonds\", warehouse: \"A\", \"instock\" : 120 },\n  { \"_id\" : 2, \"stock_item\" : \"pecans\", warehouse: \"A\", \"instock\" : 80 },\n  { \"_id\" : 3, \"stock_item\" : \"almonds\", warehouse: \"B\", \"instock\" : 60 },\n  { \"_id\" : 4, \"stock_item\" : \"cookies\", warehouse: \"B\", \"instock\" : 40 },\n  { \"_id\" : 5, \"stock_item\" : \"cookies\", warehouse: \"A\", \"instock\" : 80 }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "b17e64631becc816bb1fd03cad5357799c4fc7af897071cb93ebb220515baac9",
+      "text" : "{\n  _id: 1,\n  item: 'almonds',\n  price: 12,\n  ordered: 2,\n  stockdata: [\n    { warehouse: 'A', instock: 120 },\n    { warehouse: 'B', instock: 60 }\n  ]\n},\n{\n  _id: 2,\n  item: 'pecans',\n  price: 20,\n  ordered: 1,\n  stockdata: [ { warehouse: 'A', instock: 80 } ]\n},\n{\n  _id: 3,\n  item: 'cookies',\n  price: 10,\n  ordered: 60,\n  stockdata: [ { warehouse: 'A', instock: 80 } ]\n}"
+    } ],
+    "collections" : {
+      "data2.json" : "warehouses"
+    },
+    "example" : "Perform Multiple Joins and a Correlated Subquery with ``$lookup``",
+    "fixture" : "aggregation/stages/lookup/performMultipleJoinsAndACorrelatedSubqueryWithLookup",
+    "fixtureFiles" : {
+      "action.json" : "9976f0f7ed6edb3ab79834eabc4bbc8d47a7da71f354f25349b3bfdfcee0867f",
+      "data.json" : "b6e571c27a19ec2d623ffcc4f09fb074347839f7b8c23c036077f284aa2e20cf",
+      "data2.json" : "d0d781550ad9cd92f1b519e5fea182bfae1fa27e0ca9c7cf324a4d1c99c16b4d",
+      "expected.json" : "0935a83d0af8b7f9ddfed63746babf413a6ff991d0cee97248ea6628690611dc",
+      "name" : "775674c652e949fda9b7bb80e1c8cd21cc96462541b653068c915c6fe4119e64"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "a6db8d865a30fa63796cb4e6d922f9f6ba8797e6",
+      "path" : "source/includes/lookup-from.rst"
+    }, {
+      "blob" : "fd70caec15ce236248000b806e1fdeb87f6cd487",
+      "path" : "source/includes/uncorrelated-subquery.rst"
+    }, {
+      "blob" : "83eabc44fb10dd9eb0adca3ecdb7ed56efb7e2b8",
+      "path" : "source/includes/fact-let-variable-access-note.rst"
+    }, {
+      "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
+      "path" : "source/includes/expr-operators-and-indexes.rst"
+    }, {
+      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
+      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
+    }, {
+      "blob" : "d71a97278c9c8c4c41a37c5c35461d5b43d59625",
+      "path" : "source/includes/fact-sbe-lookup-overview.rst"
+    } ],
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
+      "text" : "reorder pipeline"
+    },
+    "rules" : [ "PROJECT_ID_FIRST", "NAMED_ARGUMENTS" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
+      "path" : "source/reference/operator/aggregation/lookup.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
       "sha256" : "c46b0bc0af9d6c915396ce5138350f5439ee4c1616d1d82248ad840616333672",
       "text" : "db.articles.aggregate( [\n  { $match: { $or: [ { score: { $gt: 70, $lt: 90 } }, { views: { $gte: 1000 } } ] } },\n  { $group: { _id: null, count: { $sum: 1 } } }\n] );"
     }, {
@@ -1267,6 +1498,7 @@
       "sha256" : "69831df7dac2273fcc1fcbabefdeeb1d5c182aed4ca87a436395205a23cd9db6",
       "text" : "{ \"_id\" : null, \"count\" : 5 }"
     } ],
+    "collections" : { },
     "example" : "Perform a Count",
     "fixture" : "aggregation/stages/match/performACount",
     "fixtureFiles" : {
@@ -1316,6 +1548,7 @@
       "sha256" : "dcf0a7ef98d42bb537d1d57f55e51172ddf80b187e0312590d1634cd3ff02262",
       "text" : "{ \"_id\" : 1, \"title\" : \"abc123\", \"author\" : { \"last\" : \"zzz\", \"first\" : \"aaa\" } }\n{ \"_id\" : 2, \"title\" : \"Baked Goods\", \"author\" : { \"last\" : \"xyz\", \"first\" : \"abc\" } }\n{ \"_id\" : 3, \"title\" : \"Ice Cream Cakes\", \"author\" : { \"last\" : \"xyz\", \"first\" : \"abc\", \"middle\" : \"mmm\" } }"
     } ],
+    "collections" : { },
     "example" : "Conditionally Exclude Fields",
     "fixture" : "aggregation/stages/project/conditionallyExcludeFields",
     "fixtureFiles" : {
@@ -1371,6 +1604,7 @@
       "sha256" : "7571ffa9296e2ef439e04e60a839aec03d2b58da5a4d5df2af21663e65fa6cd6",
       "text" : "{ \"_id\" : 1, \"stop\" : { \"title\" : \"book1\" } }\n{ \"_id\" : 2, \"stop\" : [ { \"title\" : \"book2\" }, { \"title\" : \"book3\" } ] }"
     } ],
+    "collections" : { },
     "example" : "Include Specific Fields from Embedded Documents",
     "fixture" : "aggregation/stages/project/includeSpecificFieldsFromEmbeddedDocuments",
     "fixtureFiles" : {
@@ -1426,6 +1660,7 @@
       "sha256" : "43d09ac97a36a71c73d0f626182669cd1e17f1d03272a4b1ec026cae5a20b04c",
       "text" : "{\n  \"_id\" : 1,\n  \"title\" : \"123 Department Report\",\n  \"tags\" : [ \"G\", \"STLW\" ],\n  \"year\" : 2014,\n  \"subsections\" : [\n    {\n      \"subtitle\" : \"Section 1: Overview\",\n      \"tags\" : [ \"SI\", \"G\" ],\n      \"content\" : \"Section 1: This is the content of section 1.\"\n    },\n    {\n      \"subtitle\" : \"Section 2: Analysis\",\n      \"tags\" : [ \"STLW\" ],\n      \"content\" : \"Section 2: This is the content of section 2.\"\n    }\n  ]\n}"
     } ],
+    "collections" : { },
     "example" : "Evaluate Access at Every Document Level",
     "fixture" : "aggregation/stages/redact/evaluateAccessAtEveryDocumentLevel",
     "fixtureFiles" : {
@@ -1466,6 +1701,7 @@
       "sha256" : "e6ae6491b91b2949a5b153d1d7208cafbbd3c3948bbfe6474992eb16789d7f0d",
       "text" : "{\n  \"_id\" : 1,\n  \"level\" : 1,\n  \"acct_id\" : \"xyz123\",\n  \"status\" : \"A\"\n}"
     } ],
+    "collections" : { },
     "example" : "Exclude All Fields at a Given Level",
     "fixture" : "aggregation/stages/redact/excludeAllFieldsAtAGivenLevel",
     "fixtureFiles" : {
@@ -1506,6 +1742,7 @@
       "sha256" : "4568a9f4aac5e2ae94c5b4145e4268fb24bba7049ad7de162585c0eff74cfb9e",
       "text" : "{ \"_id\" : \"painting\", \"count\" : 6 }\n{ \"_id\" : \"oil\", \"count\" : 4 }\n{ \"_id\" : \"Expressionism\", \"count\" : 3 }\n{ \"_id\" : \"Surrealism\", \"count\" : 2 }\n{ \"_id\" : \"abstract\", \"count\" : 2 }\n{ \"_id\" : \"woodblock\", \"count\" : 1 }\n{ \"_id\" : \"woodcut\", \"count\" : 1 }\n{ \"_id\" : \"ukiyo-e\", \"count\" : 1 }\n{ \"_id\" : \"satire\", \"count\" : 1 }\n{ \"_id\" : \"caricature\", \"count\" : 1 }"
     } ],
+    "collections" : { },
     "example" : "main",
     "fixture" : "aggregation/stages/sortByCount/sortByCountAggregationStage",
     "fixtureFiles" : {
@@ -1546,6 +1783,7 @@
       "sha256" : "1f47cf77731d9920149894d156eb85160ccff6660d353078d109e185f7024dfd",
       "text" : "{ _id: 1, item: 'Shirt', sizes: 'S' },\n{ _id: 1, item: 'Shirt', sizes: 'M' },\n{ _id: 1, item: 'Shirt', sizes: 'L' },\n{ _id: 3, item: 'Hat', sizes: 'M' }"
     } ],
+    "collections" : { },
     "example" : "Missing or Non-array Values",
     "fixture" : "aggregation/stages/unwind/missingOrNonArrayValues",
     "fixtureFiles" : {
@@ -1595,6 +1833,7 @@
       "sha256" : "2c8b935b37dd335eea90126089179f2347150def3261ac1c5cfc4b881674d2cc",
       "text" : "[\n   { _id: 1, item: { name: \"ab\", code: \"123\" }, qty: 15, tags: [ \"A\", \"B\", \"C\" ] },\n   { _id: 2, item: { name: \"cd\", code: \"123\" }, qty: 20, tags: [ \"B\" ] },\n   { _id: 3, item: { name: \"ij\", code: \"456\" }, qty: 25, tags: [ \"A\", \"B\" ] },\n   { _id: 4, item: { name: \"xy\", code: \"456\" }, qty: 30, tags: [ \"B\", \"A\" ] }\n]"
     } ],
+    "collections" : { },
     "example" : "Array Element Equals a Value",
     "fixture" : "query/filters/eq/arrayElementEqualsAValue",
     "fixtureFiles" : {
@@ -1647,6 +1886,7 @@
       "sha256" : "35747647312bc0ba19afc47521a5f541814884e1cd45c70a15982ad3839e7322",
       "text" : "[\n   { _id: 2, item: { name: \"cd\", code: \"123\" }, qty: 20, tags: [ \"B\" ] },\n   { _id: 5, item: { name: \"mn\", code: \"000\" }, qty: 20, tags: [ [ \"A\", \"B\" ], \"C\" ] }\n]"
     } ],
+    "collections" : { },
     "example" : "Equals a Specified Value",
     "fixture" : "query/filters/eq/equalsASpecifiedValue",
     "fixtureFiles" : {
@@ -1699,6 +1939,7 @@
       "sha256" : "d9e22cc1e1f72756fe77236cad31d2739e18c18f9fe34a5ce91e03f949be6f93",
       "text" : "[\n   { _id: 3, item: { name: \"ij\", code: \"456\" }, qty: 25, tags: [ \"A\", \"B\" ] },\n   { _id: 5, item: { name: \"mn\", code: \"000\" }, qty: 20, tags: [ [ \"A\", \"B\" ], \"C\" ] }\n]"
     } ],
+    "collections" : { },
     "example" : "Equals an Array Value",
     "fixture" : "query/filters/eq/equalsAnArrayValue",
     "fixtureFiles" : {
@@ -1751,6 +1992,7 @@
       "sha256" : "a0e6803bed9bd4364e5a0ca0f79724346ff70632de16ffc4012cb48e8c82e6c9",
       "text" : "[ { _id: 1, item: { name: \"ab\", code: \"123\" }, qty: 15, tags: [ \"A\", \"B\", \"C\" ] } ]"
     } ],
+    "collections" : { },
     "example" : "Field in Embedded Document Equals a Value",
     "fixture" : "query/filters/eq/fieldInEmbeddedDocumentEqualsAValue",
     "fixtureFiles" : {
@@ -1803,6 +2045,7 @@
       "sha256" : "d09a635d695924fe15d25f30ee55bf48b9035c3a488a597999b9097e99cccae1",
       "text" : "[\n   { _id: 0, artist: 'Blue Öyster Cult', title: 'The Reaper' },\n   { _id: 1, artist: 'Blue Öyster Cult', title: 'Godzilla' }\n]"
     } ],
+    "collections" : { },
     "example" : "Extend Regex Options to Match Characters Outside of ASCII",
     "fixture" : "query/filters/regex/extendRegexOptionsToMatchCharactersOutsideOfAscii",
     "fixtureFiles" : {
@@ -1858,6 +2101,7 @@
       "sha256" : "8ce91c91d210a4003bbdf1dbe35227d561cd5fd80f46d7aee72c6d44ac7ad0fd",
       "text" : "{ _id : 1, name : \"Alice King\", classAverage : 87.33333333333333 }\n{ _id : 2, name : \"Bob Jenkins\", classAverage : \"83.52\" }\n{ _id : 3, name : \"Cathy Hart\", classAverage : \"94.06\" } "
     } ],
+    "collections" : { },
     "example" : "Querying by Multiple Data Types",
     "fixture" : "query/filters/type/queryingByMultipleDataTypes",
     "fixtureFiles" : {
@@ -1897,7 +2141,7 @@
     },
     "unexpandedIncludes" : [ ]
   } ],
-  "repositoryRevision" : "cb6974cec9bba0d6a5243b5d253e26faf672a8c1",
+  "repositoryRevision" : "2d7ea55d3162d421bea8a71457675984777a7eaa",
   "rules" : [ {
     "description" : "$cond: {if: a, then: b, else: c} and $cond: [a, b, c] are the same expression; the array form is canonical.",
     "rule" : "COND_ARRAY"
@@ -1932,24 +2176,24 @@
   "schemaVersion" : 1,
   "sourceRepository" : "mongodb/docs",
   "summary" : {
-    "gap.FIXTURE_UNSUPPORTED" : 4,
+    "gap.FIXTURE_UNSUPPORTED" : 1,
     "gap.NO_MATCHING_EXAMPLE" : 0,
     "gap.PAGE_UNSUPPORTED" : 2,
     "gap.RESIDUAL_DIFFERENCE" : 8,
     "gap.SOURCE_UNSUPPORTED" : 9,
-    "overrides" : 43,
+    "overrides" : 46,
     "overrides.exact" : 3,
     "rule.ALTERNATIVE_COMMANDS" : 1,
     "rule.COND_ARRAY" : 14,
     "rule.EQ_SHORTHAND" : 4,
     "rule.FIELD_OPERATORS_AND" : 1,
-    "rule.NAMED_ARGUMENTS" : 9,
+    "rule.NAMED_ARGUMENTS" : 12,
     "rule.PROJECTION_FLAGS" : 1,
-    "rule.PROJECT_ID_FIRST" : 10,
+    "rule.PROJECT_ID_FIRST" : 11,
     "rule.REGEX_FORM" : 1,
     "rule.SINGLE_ARGUMENT_ARRAY" : 2,
     "rule.UNWIND_PATH" : 1,
-    "unresolved" : 23
+    "unresolved" : 20
   },
   "unresolved" : [ {
     "detail" : "data.json TYPE at /9/responses/0",
@@ -2069,36 +2313,9 @@
       "path" : "source/reference/operator/aggregation/geoNear.txt"
     }
   }, {
-    "detail" : "data for several collections",
-    "fixture" : "aggregation/stages/graphLookup/acrossMultipleCollections",
-    "gap" : "FIXTURE_UNSUPPORTED",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "source" : {
-      "commit" : "fbff8bd22e055259d67b394c854f128340571b1f",
-      "path" : "source/reference/operator/aggregation/graphLookup.txt"
-    }
-  }, {
-    "detail" : "data for several collections",
-    "fixture" : "aggregation/stages/lookup/performAConciseCorrelatedSubqueryWithLookup",
-    "gap" : "FIXTURE_UNSUPPORTED",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "source" : {
-      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
-      "path" : "source/reference/operator/aggregation/lookup.txt"
-    }
-  }, {
     "detail" : "CONSTRUCTOR_FORMAT",
     "fixture" : "aggregation/stages/lookup/performAnUncorrelatedSubqueryWithLookup",
     "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "source" : {
-      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
-      "path" : "source/reference/operator/aggregation/lookup.txt"
-    }
-  }, {
-    "detail" : "data for several collections",
-    "fixture" : "aggregation/stages/lookup/performMultipleJoinsAndACorrelatedSubqueryWithLookup",
-    "gap" : "FIXTURE_UNSUPPORTED",
     "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
     "source" : {
       "commit" : "c360d9dc787de55021969f368a0860be6008f706",

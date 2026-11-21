@@ -5,8 +5,8 @@ The second slice of step 4 of [the operator audit plan](mongodb-operator-audits.
 category is `MORPHIA_FORM` with declared equivalences, and retires a lock only when its documented
 source, under those rules, is BSON-identical to the preserved curated fixture.
 
-Of the 77 `MORPHIA_FORM` examples, 66 carry no other category. 43 of those locks are retired here;
-23 stay, each with a recorded gap. The 11 mixed examples wait for their other families.
+Of the 77 `MORPHIA_FORM` examples, 66 carry no other category. 46 of those locks are retired here;
+20 stay, each with a recorded gap. The 11 mixed examples wait for their other families.
 
 ## Which documentation is the source
 
@@ -43,8 +43,8 @@ treats the spellings alike is part of the rule (`FormRule.description`).
 | Rule | Uses | Equivalence | Not applied to |
 | --- | --- | --- | --- |
 | `COND_ARRAY` | 14 | `$cond: {if, then, else}` ≡ `$cond: [if, then, else]` | any other `$cond` document |
-| `PROJECT_ID_FIRST` | 10 | position of `_id` in a projection | other projected fields, whose order is output order |
-| `NAMED_ARGUMENTS` | 9 | top-level key order of an allowlisted named-argument operator (`$filter`, `$map`, `$dateToString`, `$bottomN`, `$fill`, `$graphLookup`, ...) | nested values such as `sortBy`, and every operator outside the allowlist |
+| `PROJECT_ID_FIRST` | 11 | position of `_id` in a projection | other projected fields, whose order is output order |
+| `NAMED_ARGUMENTS` | 12 | top-level key order of an allowlisted named-argument operator (`$filter`, `$map`, `$dateToString`, `$bottomN`, `$fill`, `$graphLookup`, ...) | nested values such as `sortBy`, and every operator outside the allowlist |
 | `EQ_SHORTHAND` | 4 | `{f: {$eq: v}}` ≡ `{f: v}` in a query predicate | a regex `v`, an operator-document `v`, the aggregation `$eq` expression |
 | `SINGLE_ARGUMENT_ARRAY` | 2 | `{$isArray: ["$a"]}` ≡ `{$isArray: "$a"}` for single-argument expression operators | an argument that is itself an array literal (`[[1]]`); query predicates, where `$size` is the query operator |
 | `REGEX_FORM` | 1 | `f: /p/o`, `{$regex: /p/o}`, `{$regex: "p", $options: "o"}`, `{$regex: /p/, $options: "o"}` | options given in both places |
@@ -67,6 +67,13 @@ Sphinx does) and selects the example by the fixture's `name`. Then:
 
 - the action is lowered by the shell normalizer, and data blocks by the shell normalizer (insert
   programs) or the legacy document reader (document listings); nothing is executed;
+- documented data is grouped by collection. The action's collection is compared with `data.json`;
+  every other one with the data file the test loads into a collection of that name
+  (`loadData("airports", 2)` → `data2.json`, as the repair inventory records it). A documented
+  collection without such a file, a data file bound to the action's own collection, or a document
+  listing beside several collections (it names none) is a `FIXTURE_UNSUPPORTED` or
+  `SOURCE_UNSUPPORTED` gap. Each override records its bindings, and verification fails if the
+  inventory's differ;
 - action, data, expected results and index are compared with the strict BSON comparator, which keeps
   key order and BSON types. Only the action takes rules. Data, expected and index must match exactly,
   because a lock does not say which files were edited;
@@ -102,13 +109,17 @@ migration retired it with the digest the legacy corpus recorded.
 - `SOURCE_UNSUPPORTED` (9): constructors the strict shell normalizer rejects (`Date` without an
   explicit time, and one typed-value constructor), a JavaScript function body, an expression example
   without a collection, and an unparseable printed result.
-- `FIXTURE_UNSUPPORTED` (4): data for several collections (`data2.json`) and one data file the legacy
-  reader cannot parse.
+- `FIXTURE_UNSUPPORTED` (1): a data file the legacy reader cannot parse.
 - `PAGE_UNSUPPORTED` (2): a generated `/includes/extracts/` file inside the example section.
 
 ## Next
 
+Test bodies are not compared: a bound test that writes data directly (`insert`, `getDs().save`,
+driver calls) is outside this check. None of the 46 retired fixtures' tests does today; recording
+such writes in the repair inventory is a separate rule.
+
 The remaining families follow the same pattern. `EXTRACTION` and `SHELL_SYNTAX` need the native
 extractor; `NUMERIC_TYPE` needs typed overrides; `DOCS_ERROR` and `FIXTURE_CURATION` stay as reviewed
-corrections pinned to a source digest. Multi-collection data is the most common remaining
-`MORPHIA_FORM` gap and should come before further rules.
+corrections pinned to a source digest. The three multi-collection fixtures that were kept for
+their data are now retired; the remaining `MORPHIA_FORM` gaps are source constructors the strict
+normalizer rejects and real residual edits.
