@@ -65,8 +65,11 @@ This is an in-process API; `BsonValue` is not serialized through the audit DTO J
 - A closed constructor allowlist supports explicit numeric, date, ObjectId, timestamp, binary,
   UUID and regex values. Unknown constructors, nested constructor expressions and unsupported
   argument forms remain unresolved. No dynamic defaults such as current-time dates or generated
-  ObjectIds are synthesized. Date strings require an explicit offset and millisecond precision;
-  local-time/date-only strings and sub-millisecond policies need separate reviewed handling.
+  ObjectIds are synthesized. Date strings require an explicit offset and millisecond precision,
+  except where the shell defines the omission: `ISODate` reads an omitted time as midnight and an
+  omitted offset as UTC (also `-0500` without its colon), and `new Date` a date-only string as UTC
+  midnight, as ECMAScript does ([shell dates](operator-audits-form-migration.md#shell-dates)).
+  Local-time `new Date` strings and sub-millisecond policies stay unsupported.
 - `Date(...)` as a function produces runtime text and is rejected. Explicit `new Date(...)`
   and direct `ISODate(...)` are distinct supported forms. Timestamp defaults/zero timestamps
   with server-generated behavior remain unsupported rather than becoming fixed expectations.

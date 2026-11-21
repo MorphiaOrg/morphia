@@ -863,14 +863,10 @@
     "categories" : [ "FIXTURE_CURATION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/dateAdd/addAFutureDate",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "14b73c303710e64ca56e908f8b7e8486fa492b36cb6d6ef03d608bf95cc495d7",
-      "text" : "update the name of the target collection for the merge"
-    } ],
+    "markers" : [ ],
     "method" : "testAddAFutureDate",
     "options" : [ {
       "argument" : "true",
@@ -4549,14 +4545,10 @@
     "categories" : [ "MORPHIA_FORM" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/fill/fillDataForDistinctPartitions",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
-      "text" : "reorder pipeline"
-    } ],
+    "markers" : [ ],
     "method" : "testFillDataForDistinctPartitions",
     "options" : [ {
       "argument" : "true",
@@ -4978,14 +4970,10 @@
       "data2.json" : "holidays"
     },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/lookup/performAnUncorrelatedSubqueryWithLookup",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "7212bcc2284c2a4eadb774b5d3fc9467dca891e6d430a6f1c5094f87f0bc00b5",
-      "text" : "reorder pipeline\n"
-    } ],
+    "markers" : [ ],
     "method" : "testPerformAnUncorrelatedSubqueryWithLookup",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.stages.TestLookup"
@@ -5010,14 +4998,10 @@
       "data2.json" : "members"
     },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/lookup/useLookupWithAnArray",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "9473115fe0e20ae14aa010fd44e3af42d0d8e2f244a8c8bb8f028870bab9dcb7",
-      "text" : "reorder pipeline\ntweak the data files"
-    } ],
+    "markers" : [ ],
     "method" : "testUseLookupWithAnArray",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.stages.TestLookup"
@@ -7369,14 +7353,10 @@
     "categories" : [ "DOCS_ERROR" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "query/updates/max/useMaxToCompareDates",
     "helpers" : [ "testUpdate" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "560089032bab2886d3285253a3084499e90a9a8ed9800cfea62faeed26dbb68d",
-      "text" : "examples had a complete different doc in expected"
-    } ],
+    "markers" : [ ],
     "method" : "testUseMaxToCompareDates",
     "options" : [ ],
     "type" : "dev.morphia.test.query.updates.TestMax"
@@ -8041,7 +8021,7 @@
     "folder" : "aggregation/stages/shardedDataDistribution",
     "reason" : "an admin function and not generally suited for morphia"
   } ],
-  "repositoryRevision" : "0a22114689746d4002dcc54c74f64e6e200dc358",
+  "repositoryRevision" : "999780b568eeb66656b5292382e487ba129c6b9e",
   "schemaVersion" : 1,
   "summary" : {
     "assertion.BEHAVIOR" : 466,
@@ -8057,17 +8037,17 @@
     "category.SHELL_SYNTAX" : 25,
     "category.UNTESTABLE" : 2,
     "disposition.NOT_EXECUTED" : 2,
-    "disposition.OVERRIDDEN" : 123,
-    "disposition.PRESERVED_CURATED" : 111,
+    "disposition.OVERRIDDEN" : 128,
+    "disposition.PRESERVED_CURATED" : 106,
     "disposition.UNCORRECTED" : 320,
     "examples" : 556,
-    "examples.locked" : 113,
+    "examples.locked" : 108,
     "exclusion.DEFERRED" : 1,
     "exclusion.ENVIRONMENT_UNAVAILABLE" : 3,
     "exclusion.NON_OPERATOR" : 1,
     "exclusion.POLICY_EXCLUSION" : 11,
     "exclusion.TESTED_ELSEWHERE" : 1,
-    "markers.lock" : 112,
+    "markers.lock" : 107,
     "markers.lockd" : 1,
     "option.findOptions" : 6,
     "option.orderMatters" : 107,

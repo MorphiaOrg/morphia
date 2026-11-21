@@ -8,16 +8,17 @@ applies the same machinery to `NUMERIC_TYPE` locks through declared number retyp
 [Numeric retypes](#numeric-retypes)), and another to `DOCS_ERROR` and `FIXTURE_CURATION` locks
 through reviewed value corrections (see [Reviewed corrections](#reviewed-corrections)).
 
-Of the 77 `MORPHIA_FORM` examples, 66 carry no other category. 46 of those locks are retired here;
-20 stay, each with a recorded gap. The 11 mixed examples wait for their other families. Of the 26
+Of the 77 `MORPHIA_FORM` examples, 66 carry no other category. 48 of those locks are retired here;
+18 stay, each with a recorded gap. The 11 mixed examples wait for their other families. Of the 26
 `NUMERIC_TYPE` examples, 24 carry no category besides `MORPHIA_FORM`; 17 of those are retired and
 7 stay with a gap. Of the 52 locked examples filed as `DOCS_ERROR` or `FIXTURE_CURATION` with no
-family outside these four, 32 are retired and 20 stay with a gap. The `EXTRACTION` and
+family outside these four, 35 are retired and 17 stay with a gap. The `EXTRACTION` and
 `SHELL_SYNTAX` locks need nothing declared: 28 of their 92 fixtures equal what the current pipeline
-extracts from the pinned page (see [Handled natively](#handled-natively)). In all, 123 locks are
-retired and 111 are kept with a gap; only the two untestable change-stream fixtures are outside the
+extracts from the pinned page (see [Handled natively](#handled-natively)). In all, 128 locks are
+retired and 106 are kept with a gap; only the two untestable change-stream fixtures are outside the
 review. Seven of those retirements depend on [generated extracts](#generated-extracts), which the
-page reader now assembles from their YAML sources.
+page reader now assembles from their YAML sources, and five on [shell dates](#shell-dates) whose
+omitted time or offset the shell defines.
 
 ## Which documentation is the source
 
@@ -57,8 +58,8 @@ treats the spellings alike is part of the rule (`FormRule.description`).
 | Rule | Uses | Equivalence | Not applied to |
 | --- | --- | --- | --- |
 | `COND_ARRAY` | 14 | `$cond: {if, then, else}` ≡ `$cond: [if, then, else]` | any other `$cond` document |
-| `PROJECT_ID_FIRST` | 11 | position of `_id` in a projection | other projected fields, whose order is output order |
-| `NAMED_ARGUMENTS` | 12 | top-level key order of an allowlisted named-argument operator (`$filter`, `$map`, `$dateToString`, `$bottomN`, `$fill`, `$graphLookup`, ...) | nested values such as `sortBy`, and every operator outside the allowlist |
+| `PROJECT_ID_FIRST` | 12 | position of `_id` in a projection | other projected fields, whose order is output order |
+| `NAMED_ARGUMENTS` | 14 | top-level key order of an allowlisted named-argument operator (`$filter`, `$map`, `$dateToString`, `$bottomN`, `$fill`, `$graphLookup`, ...) | nested values such as `sortBy`, and every operator outside the allowlist |
 | `EQ_SHORTHAND` | 4 | `{f: {$eq: v}}` ≡ `{f: v}` in a query predicate | a regex `v`, an operator-document `v`, the aggregation `$eq` expression |
 | `SINGLE_ARGUMENT_ARRAY` | 2 | `{$isArray: ["$a"]}` ≡ `{$isArray: "$a"}` for single-argument expression operators | an argument that is itself an array literal (`[[1]]`); query predicates, where `$size` is the query operator |
 | `REGEX_FORM` | 1 | `f: /p/o`, `{$regex: /p/o}`, `{$regex: "p", $options: "o"}`, `{$regex: /p/, $options: "o"}` | options given in both places |
@@ -195,6 +196,29 @@ A reviewer records this by moving the fixture to `unresolved` with gap `REJECTED
 `capture` accepts a rejection only while the fixture still reproduces and the reason is not blank;
 once it stops reproducing, its real gap must be reviewed instead.
 
+## Shell dates
+
+The shell normalizer accepted only dates with an explicit time and UTC offset, deferring date-only
+and local-time strings to a reviewed rule. The rule follows what each form means where it runs:
+
+- `ISODate(...)`: mongosh (`shell-bson.ts`) and the legacy shell (`types.js`) read an omitted time
+  as midnight and an omitted offset as UTC, and accept an offset without its colon (`-0500`), though only after a time. So
+  `ISODate("2020-12-31")` is `2020-12-31T00:00:00Z` and `ISODate("2020-12-25T19:04:00")` is
+  `19:04:00Z`.
+- `new Date(...)`: ECMAScript reads a date-only string as UTC midnight but a date-time without an
+  offset as local time, so only the date-only form is added.
+
+The shells' compact (`20201231`), space-separated, minute-only and hour-only-offset forms are not
+reviewed and stay unsupported, as do impossible dates: `$dateDiff`'s "Result Precision" page
+inserts `ISODate("2011-06-31")`.
+
+Of the 16 fixtures this blocked, five retire: `$dateAdd`'s future date (the `$merge` target the
+harness uses), `$fill` and an uncorrelated `$lookup` (argument order), `$lookup` with an array
+(exact) and `$max` on dates (a wrong documented `desc`). The others report the gap behind the date:
+results the page does not document (3), JavaScript variable bindings (2), the impossible date, a
+`$fill` key order no rule covers, a duplicate key, an unsupported construct, a missing data file,
+and an action whose kind differs from the test's (below).
+
 ## What is compared
 
 For each fixture, the legacy extractor reads the recorded page (with tracked includes spliced in as
@@ -209,6 +233,11 @@ Sphinx does) and selects the example by the fixture's `name`. Then:
   listing beside several collections (it names none) is a `FIXTURE_UNSUPPORTED` or
   `SOURCE_UNSUPPORTED` gap. Each override records its bindings, and verification fails if the
   inventory's differ;
+- the fixture's action is read as the kind of action its test runs (`testPipeline`, `testQuery` or
+  `testUpdate`, from the repair inventory), and the documented action must be of that kind. Before,
+  the kind was taken from the page, so a page block of `updateOne` calls was compared, filter and
+  update document, with `$dateAdd`'s pipeline fixture, and corrections rewrote one into the other.
+  A test without exactly one helper is a `FIXTURE_UNSUPPORTED` gap;
 - action, data, expected results and index are compared with the strict BSON comparator, which keeps
   key order and BSON types. Form rules apply only to the action, and declared retypes and
   corrections to any file; everything else must match exactly, because a lock does not say which
@@ -240,17 +269,18 @@ migration retired it with the digest the legacy corpus recorded.
 
 `audits/catalog/form-review.json` lists every kept lock with its gap. By kind:
 
-- `SOURCE_UNSUPPORTED` (61): constructors the strict shell normalizer rejects (16, mostly `Date`
-  without an explicit time), printed results the document reader cannot parse (14), JavaScript
-  variable bindings (7), other shell syntax or constructs, data blocks in another database, and
-  expression examples without a collection.
-- `RESIDUAL_DIFFERENCE` (37): edits no declaration covers for the lock's categories, such as the
+- `SOURCE_UNSUPPORTED` (50): printed results the document reader cannot parse (14), JavaScript
+  variable bindings (9), constructors the strict shell normalizer rejects (4: an impossible date,
+  two typed-value constructors and `Date()` as a function), other shell syntax or constructs, data
+  blocks in another database, and expression examples without a collection.
+- `RESIDUAL_DIFFERENCE` (42): edits no declaration covers for the lock's categories, such as the
   four `$regex` fixtures that lost documented runs of spaces, BSON `undefined` in two data files,
   form edits under form locks the rules do not cover, string results where the page prints match
-  documents, and data or expected files with rows the page does not document, which a correction
-  may not replace wholesale.
-- `FIXTURE_UNSUPPORTED` (8): fixture files the legacy reader cannot parse, unsupported command
-  options, extra data files, and an action in the legacy `$near` coordinate form.
+  documents, a documented action of another kind than the test runs, and data or expected files
+  with rows the page does not document, which a correction may not replace wholesale.
+- `FIXTURE_UNSUPPORTED` (9): fixture files the legacy reader cannot parse, unsupported command
+  options, extra data files, a data file the test does not load, and a test that runs no single
+  helper.
 - `NO_MATCHING_EXAMPLE` (4): no example on the page carries the fixture's name.
 - `REJECTED` (1): reproducible, but the drafted declaration was rejected in review (see
   [Rejected declarations](#rejected-declarations)).
@@ -258,11 +288,11 @@ migration retired it with the digest the legacy corpus recorded.
 ## Next
 
 Test bodies are not compared: a bound test that writes data directly (`insert`, `getDs().save`,
-driver calls) is outside this check. None of the 123 retired fixtures' tests does today; recording
+driver calls) is outside this check. None of the 128 retired fixtures' tests does today; recording
 such writes in the repair inventory is a separate rule.
 
 The remaining families follow the same pattern. `EXTRACTION` and `SHELL_SYNTAX` need the native
 extractor; `NUMERIC_TYPE` needs typed overrides; `DOCS_ERROR` and `FIXTURE_CURATION` stay as reviewed
 corrections pinned to a source digest; those corrections are now in place. Generated include extracts are now
-assembled. The largest remaining gaps are `Date` constructors, unparseable printed results and
-JavaScript variable bindings; each is a separate extension of the extraction or normalizer.
+assembled and shell dates read as the shell defines them. The largest remaining gaps are
+unparseable printed results and JavaScript variable bindings; each is a separate extension of the extraction or normalizer.

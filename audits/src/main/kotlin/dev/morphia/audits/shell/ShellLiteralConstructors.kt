@@ -17,10 +17,31 @@ internal object ShellLiteralConstructors {
         Regex(
             "(?:[0-9]{4}|[+-][0-9]{6})-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?(?:Z|[+-][0-9]{2}:[0-9]{2})"
         )
+    // mongosh and the legacy shell parse ISODate's omitted time as midnight and its omitted offset
+    // as UTC, and accept an offset without its colon, but only after a time. Compact and hour-only
+    // forms are not reviewed.
+    private val shellIsoDate =
+        Regex(
+            "([0-9]{4}-[0-9]{2}-[0-9]{2})(?:T([0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]+)?)(?:(Z)|([+-][0-9]{2}):?([0-9]{2}))?)?"
+        )
+    // ECMAScript reads a date-only string as UTC midnight; a date-time without offset is local.
+    private val dateOnly = Regex("[0-9]{4}-[0-9]{2}-[0-9]{2}")
     private val asciiInteger = Regex("[+-]?[0-9]+")
     private val finiteDecimal = Regex("[+-]?(?:[0-9]+(?:\\.[0-9]*)?|\\.[0-9]+)(?:[eE][+-]?[0-9]+)?")
     private val canonicalLong = Regex("(?:\\+?0|[+-]?[1-9][0-9]*)")
     private val uuidPattern = Regex("[0-9a-fA-F]{8}-(?:[0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}")
+
+    /**
+     * [text] with the time and offset the shell would assume made explicit, where it assumes any.
+     */
+    private fun explicitDate(name: String, text: String): String {
+        if (explicitIsoDate.matches(text)) return text
+        if (name == "Date") return if (dateOnly.matches(text)) "${text}T00:00:00Z" else text
+        val match = shellIsoDate.matchEntire(text) ?: return text
+        val (date, time, utc, hours, minutes) = match.destructured
+        val offset = if (utc.isNotEmpty() || hours.isEmpty()) "Z" else "$hours:$minutes"
+        return "${date}T${time.ifEmpty { "00:00:00" }}$offset"
+    }
 
     fun construct(
         name: String,
@@ -184,7 +205,7 @@ internal object ShellLiteralConstructors {
                     unsupported("DATE_CALL", "Only direct ISODate calls are supported")
                 val millis =
                     if (arguments[0] is BsonString) {
-                        val text = string(0)
+                        val text = explicitDate(name, string(0))
                         if (!explicitIsoDate.matches(text))
                             unsupported(
                                 "CONSTRUCTOR_FORMAT",

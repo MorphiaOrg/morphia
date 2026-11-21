@@ -124,10 +124,12 @@ class FormMigrationTest {
     private fun facts(
         collections: Map<String, String> = emptyMap(),
         categories: List<String> = listOf("MORPHIA_FORM"),
+        helper: String = "testPipeline",
     ) =
         mapOf(
-            fixture to FixtureFacts(categories, collections),
-            "query/filters/type/byType" to FixtureFacts(listOf("MORPHIA_FORM")),
+            fixture to FixtureFacts(categories, collections, listOf(helper)),
+            "query/filters/type/byType" to
+                FixtureFacts(listOf("MORPHIA_FORM"), helpers = listOf("testQuery")),
         )
 
     private fun candidates(revision: String = commit) =
@@ -523,6 +525,24 @@ class FormMigrationTest {
     }
 
     @Test
+    fun theFixtureIsReadAsTheKindOfActionItsTestRuns() {
+        page(commit, documented)
+        include(commit, "/includes/sample-inventory.rst", inventory)
+        curated()
+        fun gap(facts: Map<String, FixtureFacts>) =
+            FormMigration.draft(repository, pages, "mongodb/docs", candidates(), facts)
+                .unresolved
+                .single()
+                .let { it.gap to it.detail }
+        // A documented pipeline is never compared with a fixture the test runs as an update.
+        assertEquals(
+            FormGap.RESIDUAL_DIFFERENCE to "action is PIPELINE, the test runs UPDATE",
+            gap(facts(helper = "testUpdate")),
+        )
+        assertEquals(FormGap.FIXTURE_UNSUPPORTED to "not one test helper", gap(facts(helper = "")))
+    }
+
+    @Test
     fun anyOtherEditKeepsTheLock() {
         page(commit, documented)
         include(commit, "/includes/sample-inventory.rst", inventory)
@@ -756,7 +776,7 @@ class FormMigrationTest {
                 .map { it.fixture }
                 .toSet(),
         )
-        assertEquals(123, report.overrides.size)
-        assertEquals(111, report.unresolved.size)
+        assertEquals(128, report.overrides.size)
+        assertEquals(106, report.unresolved.size)
     }
 }

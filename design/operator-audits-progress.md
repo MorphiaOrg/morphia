@@ -1934,3 +1934,28 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   Rejected: pinning every `extracts*.yaml` blob, since the tree comes from an unpaginated GraphQL
   listing and every fetch error now stops the run.
 - Review round 2: nothing new.
+
+- PR #4537 (branch audits-giza-extracts, base #4536) published.
+
+## Shell dates and the tested action kind (step 4 slice 8, 2026-11-20)
+
+- Branch audits-date-constructors from #4537. `ISODate` now reads an omitted time as midnight and
+  an omitted offset as UTC, and accepts `±HHMM`, as mongosh's `shell-bson.ts` (checked) and the
+  legacy `types.js` do; `new Date` accepts a date-only string as UTC midnight (ECMAScript). Local
+  `new Date` date-times, compact, minute-only and hour-only-offset forms stay unsupported.
+- Redrafting exposed that the fixture's action kind was taken from the page, so the shape check
+  could never fail: `$dateAdd`'s "Filter on a Date Range" matched a page block of `updateOne`
+  calls and drafted corrections turning the update documents into its `$match`/`$project`.
+  `FixtureFacts` now carries the test's helpers, and the documented action must be the kind the
+  test runs; a test without exactly one helper is `FIXTURE_UNSUPPORTED` (`$maxDistance`, whose
+  test is custom). No existing declaration changed.
+- Of the 16 `CONSTRUCTOR_FORMAT` gaps, 5 retire (2 `MORPHIA_FORM` argument orders, 2
+  `FIXTURE_CURATION`, 1 `DOCS_ERROR`); the rest show the gap behind the date. One stays: an
+  impossible `ISODate("2011-06-31")`.
+- Totals: 128 overrides, 106 unresolved; inventory 128 OVERRIDDEN, 106 PRESERVED_CURATED, 108
+  locked.
+- Review round 1 (independent agent): `ISODate` accepted an offset after a bare date
+  (`"2020-12-31Z"`), which both shells reject because their offset group sits inside the time
+  group; the offset now needs a time (recapture unchanged). The doc's breakdown of the 11 blocked
+  fixtures that did not retire was corrected.
+- Review round 2: nothing new.

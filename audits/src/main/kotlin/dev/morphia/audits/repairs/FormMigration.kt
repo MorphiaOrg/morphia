@@ -90,13 +90,24 @@ data class FormDeclaration(
 
 /**
  * What the repair inventory knows about a fixture's test: its lock categories, which decide what an
- * override may declare (form rules for MORPHIA_FORM, retypes for NUMERIC_TYPE), and the extra
- * collections it loads.
+ * override may declare (form rules for MORPHIA_FORM, retypes for NUMERIC_TYPE), the extra
+ * collections it loads, and the helpers it runs, which decide the kind of action it executes.
  */
 data class FixtureFacts(
     val categories: List<String>,
     val collections: Map<String, String> = emptyMap(),
-)
+    val helpers: List<String> = emptyList(),
+) {
+    /** The kind of action the test runs, when it runs exactly one helper. */
+    val tested: ActionShape?
+        get() =
+            when (helpers.singleOrNull()) {
+                "testPipeline" -> ActionShape.PIPELINE
+                "testQuery" -> ActionShape.FIND
+                "testUpdate" -> ActionShape.UPDATE
+                else -> null
+            }
+}
 
 /** Why a locked fixture cannot (yet) be reproduced from its documented source. */
 enum class FormGap {
@@ -462,7 +473,9 @@ object FormMigration {
 
     /** Each example's lock categories and extra collections, from the repair inventory. */
     fun facts(inventory: CuratedRepairReport): Map<String, FixtureFacts> =
-        inventory.examples.associate { it.fixture to FixtureFacts(it.categories, it.collections) }
+        inventory.examples.associate {
+            it.fixture to FixtureFacts(it.categories, it.collections, it.helpers)
+        }
 
     private fun facts(facts: Map<String, FixtureFacts>, fixture: String): FixtureFacts =
         requireNotNull(facts[fixture]) { "$fixture is not in the repair inventory" }
@@ -742,8 +755,14 @@ object FormMigration {
                 else -> parsed as Documented
             }
         val first = documented.alternatives.first()
-        if (first.shape != shape) {
-            return Examined.Gap(FormGap.RESIDUAL_DIFFERENCE, "action is ${first.shape}")
+        // The fixture's action is read as the kind its test runs, never as the page's kind.
+        val tested =
+            facts.tested ?: return Examined.Gap(FormGap.FIXTURE_UNSUPPORTED, "not one test helper")
+        if (first.shape != shape || first.shape != tested) {
+            return Examined.Gap(
+                FormGap.RESIDUAL_DIFFERENCE,
+                "action is ${first.shape}, the test runs $tested",
+            )
         }
         val curatedText = Files.readString(folder.resolve("action.json"))
         if (shape == ActionShape.UPDATE && ("updateMany" in curatedText) != first.many) {
