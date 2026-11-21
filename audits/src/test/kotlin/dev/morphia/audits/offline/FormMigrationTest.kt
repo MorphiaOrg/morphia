@@ -2,6 +2,7 @@ package dev.morphia.audits.offline
 
 import dev.morphia.audits.coverage.AuditJson
 import dev.morphia.audits.repairs.FixtureFacts
+import dev.morphia.audits.repairs.FormCorrection
 import dev.morphia.audits.repairs.FormDeclaration
 import dev.morphia.audits.repairs.FormGap
 import dev.morphia.audits.repairs.FormMigration
@@ -17,6 +18,8 @@ import java.nio.file.Path
 import kotlin.io.path.createDirectories
 import kotlin.io.path.exists
 import kotlin.io.path.writeText
+import org.bson.BsonInt32
+import org.bson.BsonString
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
@@ -347,6 +350,57 @@ class FormMigrationTest {
     }
 
     @Test
+    fun valueCorrectionsNeedADocsErrorOrCurationLock() {
+        page(commit, documented)
+        include(commit, "/includes/sample-inventory.rst", inventory)
+        curated()
+        fixture(
+            "useCond",
+            "expected.json",
+            """
+            |{ "_id" : 1, "item" : "abc1", "note" : "sale", "discount" : 30 }
+            |{ "_id" : 2, "item" : "abc2", "discount" : 25 }
+            """
+                .trimMargin(),
+        )
+        fun draft(vararg categories: String) =
+            FormMigration.draft(
+                repository,
+                pages,
+                "mongodb/docs",
+                candidates(),
+                facts(categories = categories.toList()),
+            )
+        assertEquals(
+            "expected.json EXTRA_FIELD at /0/note",
+            draft("MORPHIA_FORM").unresolved.single().detail,
+        )
+        val review = draft("MORPHIA_FORM", "DOCS_ERROR")
+        val declaration = review.declarations.single()
+        // The form difference keeps its rule; only the wrong value is corrected.
+        assertEquals(listOf(FormRule.COND_ARRAY), declaration.rules)
+        // Each field is corrected on its own; nothing else in the row is swept along.
+        assertEquals(
+            listOf(
+                FormCorrection.of("expected.json", "/0/note", null, BsonString("sale"), 2),
+                FormCorrection.of("expected.json", "/1/discount", BsonInt32(20), BsonInt32(25)),
+            ),
+            declaration.corrections,
+        )
+        val both = facts(categories = listOf("MORPHIA_FORM", "DOCS_ERROR"))
+        val report = FormMigration.capture(repository, "head", pages, review, both)
+        assertEquals(1, report.summary["overrides.corrected"])
+
+        // A page that now documents another value no longer matches the reviewed correction.
+        page(commit, documented.replace("\"discount\" : 20", "\"discount\" : 15"))
+        val stale =
+            assertThrows(IllegalArgumentException::class.java) {
+                FormMigration.capture(repository, "head", pages, review, both)
+            }
+        assertTrue("needs corrections" in stale.message!!, stale.message)
+    }
+
+    @Test
     fun anyOtherEditKeepsTheLock() {
         page(commit, documented)
         include(commit, "/includes/sample-inventory.rst", inventory)
@@ -563,7 +617,7 @@ class FormMigrationTest {
         // Pages are not committed (separate licence); the review pins their blob ids instead.
         report.overrides.forEach { assertEquals(40, it.pageBlob.length) }
 
-        val migrated = setOf("MORPHIA_FORM", "NUMERIC_TYPE")
+        val migrated = setOf("MORPHIA_FORM", "NUMERIC_TYPE", "DOCS_ERROR", "FIXTURE_CURATION")
         val formOnly =
             inventory.examples.filter {
                 it.categories.isNotEmpty() && migrated.containsAll(it.categories)
@@ -579,7 +633,7 @@ class FormMigrationTest {
                 .map { it.fixture }
                 .toSet(),
         )
-        assertEquals(62, report.overrides.size)
-        assertEquals(28, report.unresolved.size)
+        assertEquals(91, report.overrides.size)
+        assertEquals(51, report.unresolved.size)
     }
 }

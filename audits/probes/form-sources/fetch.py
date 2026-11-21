@@ -9,7 +9,9 @@ This is the only networked step of the form migration. It never edits the reposi
       mongodb/docs commit that touched the operator page at or before that commit's date.
       "first" uses the commit that created the fixture; "last" uses the latest commit that
       added or modified one of its files (pure renames do not count), which finds fixtures a
-      later audit run regenerated from newer pages. Writes a FormMigration.Candidates file.
+      later audit run regenerated from newer pages. When the last commit at that date removed the
+      page (the manual moved), its parent is used; when no commit holds the page by then, the
+      commit that first added it is. Writes a FormMigration.Candidates file.
 
   fetch.py pages <sources.json> <pages-dir>
       Fetch every page named by a candidates or review file, plus its absolute
@@ -68,18 +70,33 @@ def candidates(root, which, out, categories=("MORPHIA_FORM",)):
         page = f"reference/operator/{DOCS_DIRECTORY[package]}/{operator}.txt"
         found = []
         # The manual moved from source/ to content/manual/manual/source/; the last commit to
-        # touch the old path may be the one that removed it, so keep only pages that exist.
+        # touch the old path may be the one that removed it, in which case its parent holds the
+        # page as it last was.
         for root_path in ("source", "content/manual/manual/source"):
             path = f"{root_path}/{page}"
             history = run("gh", "api", f"repos/{REPOSITORY}/commits?path={path}&until={date}&per_page=1",
                           "--jq", ".[0] | .sha + \" \" + .commit.committer.date").strip()
-            if history and exists(history.split()[0], path):
-                found.append((history.split()[1], history.split()[0], path))
+            if not history:
+                continue
+            sha, when = history.split()
+            if not exists(sha, path):
+                sha = run("gh", "api", f"repos/{REPOSITORY}/commits/{sha}", "--jq", ".parents[0].sha").strip()
+            if exists(sha, path):
+                found.append((when, sha, path))
         if not found:
-            print(f"skipping {fixture}: no {REPOSITORY} commit holds {page} at {date}", file=sys.stderr)
-            continue
-        _, docs, path = max(found)
-        result.append({"fixture": fixture, "origin": commit, "source": {"commit": docs, "path": path}})
+            # The fixture predates every page (for example, written against unreleased docs): use
+            # the commit that first added the page, and let the comparison record any gap.
+            path = f"source/{page}"
+            first = run("gh", "api", "--paginate", f"repos/{REPOSITORY}/commits?path={path}",
+                        "--jq", ".[].sha").split()
+            if not first or not exists(first[-1], path):
+                print(f"skipping {fixture}: no {REPOSITORY} commit holds {page}", file=sys.stderr)
+                continue
+            print(f"{fixture}: no page at {date}; using the first one, {first[-1][:10]}", file=sys.stderr)
+            found.append(("", first[-1], path, "AFTER_ORIGIN"))
+        _, docs, path, relation = max(item + ("AT_ORIGIN",) if len(item) == 3 else item for item in found)
+        result.append({"fixture": fixture, "origin": commit,
+                       "source": {"commit": docs, "path": path, "relation": relation}})
     with open(out, "w") as handle:
         json.dump({"schemaVersion": 1, "candidates": result}, handle, indent=2)
         handle.write("\n")

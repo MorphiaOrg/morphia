@@ -109,14 +109,10 @@
     "categories" : [ "DOCS_ERROR" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/acosh/inverseHyperbolicCosineInDegrees",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "aee9244b4845d6ba9db0db9212cc36f095ee53e686611d25922cf939c1748f99",
-      "text" : "documentation has the radians value instead of the degrees"
-    } ],
+    "markers" : [ ],
     "method" : "testInverseHyperbolicCosineInDegrees",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestAcosh"
@@ -282,14 +278,10 @@
     "categories" : [ "DOCS_ERROR" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/asin/inverseSineOfValueInDegrees",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "aee9244b4845d6ba9db0db9212cc36f095ee53e686611d25922cf939c1748f99",
-      "text" : "documentation has the radians value instead of the degrees"
-    } ],
+    "markers" : [ ],
     "method" : "testInverseSineOfValueInDegrees",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestAsin"
@@ -322,14 +314,10 @@
     "categories" : [ "DOCS_ERROR" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/asinh/inverseHyperbolicSineInRadians",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "a974ed9667b18431bffa3e2ff8fc3c06ba33383be1b7373cb8c9dc30edf17b5e",
-      "text" : "expected has the wrong result"
-    } ],
+    "markers" : [ ],
     "method" : "testInverseHyperbolicSineInRadians",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestAsinh"
@@ -362,14 +350,10 @@
     "categories" : [ "DOCS_ERROR" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/atan2/inverseTangentOfValueInDegrees",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "aee9244b4845d6ba9db0db9212cc36f095ee53e686611d25922cf939c1748f99",
-      "text" : "documentation has the radians value instead of the degrees"
-    } ],
+    "markers" : [ ],
     "method" : "testInverseTangentOfValueInDegrees",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestAtan2"
@@ -456,14 +440,10 @@
     "categories" : [ "DOCS_ERROR" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/binarySize/binarySizeExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "415a8bc1bbc46f8123352f164b4dfb631d23610b6b2181db72b9014515d4ca9c",
-      "text" : "data has tea_set expected has teaset"
-    } ],
+    "markers" : [ ],
     "method" : "testBinarySizeExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestBinarySize"
@@ -663,14 +643,10 @@
     "categories" : [ "DOCS_ERROR" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/bsonSize/returnCombinedSizeOfAllDocumentsInACollection",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "11e98f8824649d52d8afc5097dc36bc22c96adb5cd39cec55ee32cee6439ab5c",
-      "text" : "bson sizes are off"
-    } ],
+    "markers" : [ ],
     "method" : "testReturnCombinedSizeOfAllDocumentsInACollection",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestBsonSize"
@@ -695,14 +671,10 @@
     "categories" : [ "DOCS_ERROR" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/bsonSize/returnSizesOfDocuments",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "422bebf10de483b03f2e544860bd388974a81ccda0f3abc4c6aae6f689a1343e",
-      "text" : "documented bson sizes are off"
-    } ],
+    "markers" : [ ],
     "method" : "testReturnSizesOfDocuments",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestBsonSize"
@@ -811,14 +783,10 @@
     "categories" : [ "DOCS_ERROR" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/cosh/hyperbolicCosineInDegrees",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "330bf6834d85146823ad757871f5099475a4bfc2667c4d41828ee00c4333ea1e",
-      "text" : "the expected angle is wrong and the cosh is wrong"
-    } ],
+    "markers" : [ ],
     "method" : "testHyperbolicCosineInDegrees",
     "options" : [ {
       "argument" : "true",
@@ -1034,14 +1002,10 @@
     "categories" : [ "FIXTURE_CURATION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/dateFromString/onNull",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "f23bc36aa0639700049c0211e44628f6a702e3c1852d89e387cf424ef80bb3b1",
-      "text" : "provided a simpler onNull()"
-    } ],
+    "markers" : [ ],
     "method" : "testOnNull",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestDateFromString"
@@ -1198,14 +1162,10 @@
     "categories" : [ "DOCS_ERROR" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/degreesToRadians/degreesToRadiansExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "1e54a0fba0447bbb68056624dc1db5438f9d69903b7c3f7a2963926cb0a9d7df",
-      "text" : "the angle_a's were different..."
-    } ],
+    "markers" : [ ],
     "method" : "testDegreesToRadiansExpressionOperator",
     "options" : [ {
       "argument" : "true",
@@ -1217,14 +1177,10 @@
     "categories" : [ "DOCS_ERROR" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/denseRank/denseRankForDuplicateNullAndMissingValues",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "999740bbaae012ae85a76f4e0db43372593a3fbd4a7ca64a60ed3615a94c30ee",
-      "text" : "actual data differs from the docs"
-    } ],
+    "markers" : [ ],
     "method" : "testDenseRankForDuplicateNullAndMissingValues",
     "options" : [ {
       "argument" : "8.0.0",
@@ -1642,14 +1598,10 @@
     "categories" : [ "DOCS_ERROR" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/hour/hourExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "32370e53bc255cbd49e6dd1caaf14249443d3bba95cac742ff4a0e6008200f60",
-      "text" : "the docs list a week field but the server does not return it"
-    } ],
+    "markers" : [ ],
     "method" : "testHourExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestHour"
@@ -2799,14 +2751,10 @@
     "categories" : [ "DOCS_ERROR" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/radiansToDegrees/radiansToDegreesExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "0aa3efd2e97c6683b606a33d58ad9026e5cbe9b4e9597dd032a3755b9c5924d2",
-      "text" : "angle_a was different again"
-    } ],
+    "markers" : [ ],
     "method" : "testRadiansToDegreesExpressionOperator",
     "options" : [ {
       "argument" : "true",
@@ -2897,14 +2845,10 @@
     "categories" : [ "DOCS_ERROR" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/rank/rankPartitionsContainingDuplicateValuesNullsOrMissingData",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "53d077de28e8d39a51da85eca15cee7efe6d8914323a33770d21ae0e3ff725b3",
-      "text" : "results in the docs don't match the results"
-    } ],
+    "markers" : [ ],
     "method" : "testRankPartitionsContainingDuplicateValuesNullsOrMissingData",
     "options" : [ {
       "argument" : "false",
@@ -3158,14 +3102,10 @@
     "categories" : [ "DOCS_ERROR" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/round/roundExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "bf34647a9cc2f830622bb3720a11718a2c688a90946c282a32d2b14d04afde0e",
-      "text" : "rounded values were wrong"
-    } ],
+    "markers" : [ ],
     "method" : "testRoundExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestRound"
@@ -3343,14 +3283,10 @@
     "categories" : [ "DOCS_ERROR", "MORPHIA_FORM" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/setIsSubset/setIsSubsetExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "d3bc3a1995bc6c03fc68cef5065de8001ac7557c0a6defbd8d10d40479bee6a3",
-      "text" : "rearrange suppress id\nthere was a \"blue\" flower in the expected?!?"
-    } ],
+    "markers" : [ ],
     "method" : "testSetIsSubsetExpressionOperator",
     "options" : [ {
       "argument" : "false",
@@ -3775,14 +3711,10 @@
     "categories" : [ "DOCS_ERROR" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/sum/useInGroupStage",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "b81402e0f99f7f08730540c0194906028f6c5775f4fd878b77e616fbcb7c895c",
-      "text" : "the totalAmount values are completely wrong"
-    } ],
+    "markers" : [ ],
     "method" : "testUseInGroupStage",
     "options" : [ {
       "argument" : "false",
@@ -4025,14 +3957,10 @@
     "categories" : [ "FIXTURE_CURATION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/toUUID/toUuidExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "3c20557ad13c51c50df22b2331d2441ac4c7b2c42dafe31153d09d48e5491d06",
-      "text" : "drop the ids"
-    } ],
+    "markers" : [ ],
     "method" : "testToUuidExpressionOperator",
     "options" : [ {
       "argument" : "true",
@@ -4154,14 +4082,10 @@
     "categories" : [ "DOCS_ERROR" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/trunc/truncExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "20bab9bd1066dd460a747f75360c392507285431bc6dc7e9b0afcebae2d24080",
-      "text" : "the expected results truncated 2 places instead of 1"
-    } ],
+    "markers" : [ ],
     "method" : "testTruncExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestTrunc"
@@ -4234,14 +4158,10 @@
     "categories" : [ "DOCS_ERROR" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/type/typeExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "2563b3784dea9141f1fabb0d01dee0682df8cfae4dbb614c08b7fc136a0b6493",
-      "text" : "expected type for _id 0 is wrong"
-    } ],
+    "markers" : [ ],
     "method" : "testTypeExpressionOperator",
     "options" : [ {
       "argument" : "false",
@@ -4904,14 +4824,10 @@
     "categories" : [ "FIXTURE_CURATION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/graphLookup/withAQueryFilter",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "d9c4a31198b52fba50dfc279422c563f8ef5afe9a1d43934de8b5ff2049ea4a9",
-      "text" : "update the lookup collection name"
-    } ],
+    "markers" : [ ],
     "method" : "testWithAQueryFilter",
     "options" : [ {
       "argument" : "false",
@@ -4923,14 +4839,10 @@
     "categories" : [ "FIXTURE_CURATION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/graphLookup/withinASingleCollection",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "95ddbc5b5eb802ffd82bb3fce30da8cce5a58186090c4d6c09def91fb006a333",
-      "text" : "updated the collection name in from"
-    } ],
+    "markers" : [ ],
     "method" : "testWithinASingleCollection",
     "options" : [ {
       "argument" : "false",
@@ -4996,14 +4908,10 @@
     "categories" : [ "DOCS_ERROR" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/group/pivotData",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "900f595f9c58e93db797a246f57e58c4373668532b58ab3a704895047b837d91",
-      "text" : "docs had wrong results"
-    } ],
+    "markers" : [ ],
     "method" : "testPivotData",
     "options" : [ {
       "argument" : "false",
@@ -5120,14 +5028,10 @@
       "data2.json" : "inventory"
     },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/lookup/performASingleEqualityJoinWithLookup",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "9473115fe0e20ae14aa010fd44e3af42d0d8e2f244a8c8bb8f028870bab9dcb7",
-      "text" : "reorder pipeline\ntweak the data files"
-    } ],
+    "markers" : [ ],
     "method" : "testPerformASingleEqualityJoinWithLookup",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.stages.TestLookup"
@@ -5188,14 +5092,10 @@
       "data2.json" : "items"
     },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/lookup/useLookupWithMergeObjects",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "9473115fe0e20ae14aa010fd44e3af42d0d8e2f244a8c8bb8f028870bab9dcb7",
-      "text" : "reorder pipeline\ntweak the data files"
-    } ],
+    "markers" : [ ],
     "method" : "testUseLookupWithMergeObjects",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.stages.TestLookup"
@@ -6643,14 +6543,10 @@
     "categories" : [ "DOCS_ERROR" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/gte/matchDocumentFields",
     "helpers" : [ "testQuery" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "4ba257ce62a1c3c60d9eb78eaa3f5b20c0364beeb9752660ac49dcf27289ebef",
-      "text" : "missing a closing brace"
-    } ],
+    "markers" : [ ],
     "method" : "testMatchDocumentFields",
     "options" : [ {
       "argument" : "true",
@@ -7975,14 +7871,10 @@
     "categories" : [ "DOCS_ERROR" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "query/updates/rename/renameAFieldInAnEmbeddedDocument",
     "helpers" : [ "testUpdate" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "1d5eaa1d6998c9638012b6ffe00cd557d8361132fd13cd8886f3847686728969",
-      "text" : "the input data had the same misspelling of name from the first example"
-    } ],
+    "markers" : [ ],
     "method" : "testRenameAFieldInAnEmbeddedDocument",
     "options" : [ ],
     "type" : "dev.morphia.test.query.updates.TestRename"
@@ -8007,14 +7899,10 @@
     "categories" : [ "DOCS_ERROR", "FIXTURE_CURATION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "query/updates/set/setElementsInArrays",
     "helpers" : [ "testUpdate" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "4a6241ea94086927499144dac43b81a596aa613853760024defbafea7d39f5e7",
-      "text" : "expected data didn't match input data where it wasn't modified by the update\nthe example assumes the updates from the previous example still exist"
-    } ],
+    "markers" : [ ],
     "method" : "testSetElementsInArrays",
     "options" : [ ],
     "type" : "dev.morphia.test.query.updates.TestSet"
@@ -8023,14 +7911,10 @@
     "categories" : [ "DOCS_ERROR", "FIXTURE_CURATION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "query/updates/set/setFieldsInEmbeddedDocuments",
     "helpers" : [ "testUpdate" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "4a6241ea94086927499144dac43b81a596aa613853760024defbafea7d39f5e7",
-      "text" : "expected data didn't match input data where it wasn't modified by the update\nthe example assumes the updates from the previous example still exist"
-    } ],
+    "markers" : [ ],
     "method" : "testSetFieldsInEmbeddedDocuments",
     "options" : [ ],
     "type" : "dev.morphia.test.query.updates.TestSet"
@@ -8285,7 +8169,7 @@
     "folder" : "aggregation/stages/shardedDataDistribution",
     "reason" : "an admin function and not generally suited for morphia"
   } ],
-  "repositoryRevision" : "4f179a4dc3a792d4ca1b25aa97c63717c1e5a640",
+  "repositoryRevision" : "f40e79729efd071532b834d21a0871ed030e2fd0",
   "schemaVersion" : 1,
   "summary" : {
     "assertion.BEHAVIOR" : 466,
@@ -8301,17 +8185,17 @@
     "category.SHELL_SYNTAX" : 25,
     "category.UNTESTABLE" : 2,
     "disposition.NOT_EXECUTED" : 2,
-    "disposition.OVERRIDDEN" : 62,
-    "disposition.PRESERVED_CURATED" : 172,
+    "disposition.OVERRIDDEN" : 91,
+    "disposition.PRESERVED_CURATED" : 143,
     "disposition.UNCORRECTED" : 320,
     "examples" : 556,
-    "examples.locked" : 174,
+    "examples.locked" : 145,
     "exclusion.DEFERRED" : 1,
     "exclusion.ENVIRONMENT_UNAVAILABLE" : 3,
     "exclusion.NON_OPERATOR" : 1,
     "exclusion.POLICY_EXCLUSION" : 11,
     "exclusion.TESTED_ELSEWHERE" : 1,
-    "markers.lock" : 173,
+    "markers.lock" : 144,
     "markers.lockd" : 1,
     "option.findOptions" : 6,
     "option.orderMatters" : 107,

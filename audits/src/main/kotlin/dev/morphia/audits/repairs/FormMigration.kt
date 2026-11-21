@@ -25,10 +25,27 @@ import java.util.HexFormat
 import kotlin.io.path.isRegularFile
 import kotlin.io.path.name
 import org.bson.BsonArray
+import org.bson.BsonDocument
 import org.bson.BsonValue
 
+/** How a source page's commit relates to the Morphia commit that wrote the fixture. */
+enum class SourceRelation {
+    /** The page as of the fixture's origin commit (or just before the manual move removed it). */
+    AT_ORIGIN,
+    /**
+     * The fixture predates every page at that path, so the source is the commit that first added
+     * the page. It pins the documented values a declaration changes; it is not where the fixture
+     * came from.
+     */
+    AFTER_ORIGIN,
+}
+
 /** A page of the documentation repository at an exact commit. */
-data class FormSource(val commit: String, val path: String) {
+data class FormSource(
+    val commit: String,
+    val path: String,
+    val relation: SourceRelation = SourceRelation.AT_ORIGIN,
+) {
     init {
         require(Regex("[0-9a-f]{40}").matches(commit)) {
             "Source commit must be a full SHA: $commit"
@@ -65,6 +82,10 @@ data class FormDeclaration(
     val includes: List<FormInclude> = emptyList(),
     /** Number type changes; allowed only when the lock is filed as NUMERIC_TYPE. */
     val retypes: List<NumericRetype> = emptyList(),
+    /** Value corrections; allowed only when the lock is filed as DOCS_ERROR or FIXTURE_CURATION. */
+    val corrections: List<FormCorrection> = emptyList(),
+    /** File name of the lock marker: `lock`, or `lockd` for the one fixture that spells it so. */
+    val marker: String = "lock",
 )
 
 /**
@@ -136,6 +157,7 @@ data class FormOverride(
     /** The test's extra collections by data file, as the repair inventory records them. */
     val collections: Map<String, String> = emptyMap(),
     val retypes: List<NumericRetype> = emptyList(),
+    val corrections: List<FormCorrection> = emptyList(),
 )
 
 data class FormInclude(val path: String, val blob: String)
@@ -159,8 +181,16 @@ data class FormMigrationReport(
  * index. A lock is retired only when the rules are sufficient and each one is necessary.
  */
 object FormMigration {
+    /** Lock marker names; one fixture spells its lock `lockd`. */
+    private val markers = setOf("lock", "lockd")
+
     private val fixtureFileNames =
-        setOf("action.json", "data.json", "expected.json", "index.json", "name", "lock")
+        setOf("action.json", "data.json", "expected.json", "index.json", "name") + markers
+
+    /** The fixture's lock marker, or where a `lock` would be if it has none. */
+    private fun lock(folder: Path): Path =
+        markers.map { folder.resolve(it) }.firstOrNull { it.isRegularFile() }
+            ?: folder.resolve("lock")
 
     /** A locked fixture and the page it is believed to come from. */
     data class Candidate(val fixture: String, val origin: String, val source: FormSource)
@@ -188,7 +218,7 @@ object FormMigration {
             .groupBy { it.fixture }
             .toSortedMap()
             .forEach { (fixture, choices) ->
-                val lock = folder(root, fixture).resolve("lock")
+                val lock = lock(folder(root, fixture))
                 require(lock.isRegularFile()) { "$fixture has no lock" }
                 val known = facts(facts, fixture)
                 val outcomes = choices.map { it to examine(root, pages, fixture, it.source, known) }
@@ -206,6 +236,8 @@ object FormMigration {
                             pageBlob = outcome.pageBlob,
                             includes = outcome.includes,
                             retypes = outcome.retypes,
+                            corrections = outcome.corrections,
+                            marker = lock.name,
                         )
                 } else {
                     val (candidate, outcome) = outcomes.first()
@@ -242,9 +274,13 @@ object FormMigration {
         val overrides =
             review.declarations.mapNotNull { declaration ->
                 val folder = folder(root, declaration.fixture)
-                val lock = folder.resolve("lock")
+                val lock = lock(folder)
                 if (lock.isRegularFile() && Files.readString(lock) != declaration.lock) {
                     problems += "${declaration.fixture}: lock text differs from the declaration"
+                }
+                if (lock.isRegularFile() && lock.name != declaration.marker) {
+                    problems +=
+                        "${declaration.fixture}: lock is ${lock.name}, declared ${declaration.marker}"
                 }
                 val known = facts(facts, declaration.fixture)
                 when (
@@ -274,6 +310,11 @@ object FormMigration {
                                 "${declaration.fixture}: needs retypes ${outcome.retypes}, " +
                                     "declared ${declaration.retypes}"
                         }
+                        if (outcome.corrections != declaration.corrections) {
+                            problems +=
+                                "${declaration.fixture}: needs corrections " +
+                                    "${outcome.corrections}, declared ${declaration.corrections}"
+                        }
                         if (
                             outcome.pageBlob != declaration.pageBlob ||
                                 outcome.includes != declaration.includes
@@ -294,19 +335,20 @@ object FormMigration {
                             rules = declaration.rules,
                             retiredLock =
                                 RepairMarker(
-                                    "lock",
+                                    declaration.marker,
                                     declaration.lock,
                                     sha256(declaration.lock.toByteArray()),
                                 ),
                             fixtureFiles = fixtureFiles(folder),
                             collections = known.collections,
                             retypes = declaration.retypes,
+                            corrections = declaration.corrections,
                         )
                     }
                 }
             }
         review.unresolved.forEach { unresolved ->
-            if (!folder(root, unresolved.fixture).resolve("lock").isRegularFile()) {
+            if (!lock(folder(root, unresolved.fixture)).isRegularFile()) {
                 problems += "${unresolved.fixture}: an unresolved fixture must keep its lock"
             }
             val known = facts(facts, unresolved.fixture)
@@ -357,7 +399,8 @@ object FormMigration {
                     declaration.lock != override.retiredLock.text ||
                     declaration.pageBlob != override.pageBlob ||
                     declaration.includes != override.includes ||
-                    declaration.retypes != override.retypes
+                    declaration.retypes != override.retypes ||
+                    declaration.corrections != override.corrections
             ) {
                 problems += "${override.fixture}: override differs from its declaration"
             }
@@ -367,7 +410,7 @@ object FormMigration {
                 }
             }
             val folder = folder(root, override.fixture)
-            if (folder.resolve("lock").isRegularFile()) {
+            if (lock(folder).isRegularFile()) {
                 problems += "${override.fixture}: retired lock is still present"
             }
             if (fixtureFiles(folder) != override.fixtureFiles) {
@@ -391,11 +434,16 @@ object FormMigration {
                             "${override.fixture}: needs retypes ${outcome.retypes}, " +
                                 "declared ${override.retypes}"
                     }
+                    if (outcome.corrections != override.corrections) {
+                        problems +=
+                            "${override.fixture}: needs corrections ${outcome.corrections}, " +
+                                "declared ${override.corrections}"
+                    }
                 }
             }
         }
         report.unresolved.forEach {
-            if (!folder(root, it.fixture).resolve("lock").isRegularFile()) {
+            if (!lock(folder(root, it.fixture)).isRegularFile()) {
                 problems += "${it.fixture}: unresolved fixture lost its lock"
             }
         }
@@ -412,7 +460,8 @@ object FormMigration {
     /** Deletes each retired lock after checking that every one still holds the recorded text. */
     fun apply(repository: Path, report: FormMigrationReport) {
         val root = repository.toRealPath()
-        val locks = report.overrides.map { folder(root, it.fixture).resolve("lock") to it }
+        val locks =
+            report.overrides.map { folder(root, it.fixture).resolve(it.retiredLock.name) to it }
         val problems =
             locks.mapNotNull { (lock, override) ->
                 when {
@@ -434,8 +483,10 @@ object FormMigration {
         val sorted = overrides.sortedBy { it.fixture }
         val summary = sortedMapOf<String, Int>()
         summary["overrides"] = sorted.size
-        summary["overrides.exact"] = sorted.count { it.rules.isEmpty() && it.retypes.isEmpty() }
+        summary["overrides.exact"] =
+            sorted.count { it.rules.isEmpty() && it.retypes.isEmpty() && it.corrections.isEmpty() }
         summary["overrides.retyped"] = sorted.count { it.retypes.isNotEmpty() }
+        summary["overrides.corrected"] = sorted.count { it.corrections.isNotEmpty() }
         summary["unresolved"] = review.unresolved.size
         FormRule.values().forEach { rule ->
             summary["rule.$rule"] = sorted.count { rule in it.rules }
@@ -463,6 +514,7 @@ object FormMigration {
             val unexpandedIncludes: List<String> = emptyList(),
             val example: String = "",
             val retypes: List<NumericRetype> = emptyList(),
+            val corrections: List<FormCorrection> = emptyList(),
         ) : Examined
 
         data class Gap(val gap: FormGap, val detail: String) : Examined
@@ -772,14 +824,24 @@ object FormMigration {
             source: List<BsonValue>,
             target: List<BsonValue>,
             retypes: List<NumericRetype>,
+            corrections: List<FormCorrection>,
         ): Mismatch? {
             val own = retypes.filter { it.file == file }
-            val (values, counts) =
+            val (retyped, counts) =
                 NumericRetypes.apply(source, own) ?: return Mismatch("$file retypes do not apply")
             own.zip(counts)
                 .firstOrNull { it.second == 0 }
                 ?.let {
                     return Mismatch("$file retype at ${it.first.pointer} changes nothing")
+                }
+            val values =
+                when (
+                    val corrected =
+                        FormCorrections.apply(retyped, corrections.filter { it.file == file })
+                ) {
+                    is FormCorrections.Result.Applied -> corrected.values
+                    is FormCorrections.Result.Stale ->
+                        return Mismatch("$file correction at ${corrected.pointer} is stale")
                 }
             val result = BsonComparison.compare(BsonArray(values), BsonArray(target))
             val label = if (file == "action.json") "action" else file
@@ -796,9 +858,13 @@ object FormMigration {
                 BsonComparisonState.INVALID -> Mismatch("$label ${result.problem}")
             }
         }
-        fun mismatch(rules: Set<FormRule>, retypes: List<NumericRetype>): Mismatch? {
+        fun mismatch(
+            rules: Set<FormRule>,
+            retypes: List<NumericRetype>,
+            corrections: List<FormCorrection> = emptyList(),
+        ): Mismatch? {
             compared.forEach { (file, source, target) ->
-                compare(file, source, target, retypes)?.let {
+                compare(file, source, target, retypes, corrections)?.let {
                     return it
                 }
             }
@@ -816,6 +882,7 @@ object FormMigration {
                         FormEquivalence.canonical(it.values, shape, rules),
                         target,
                         retypes,
+                        corrections,
                     )
                 }
             return if (results.any { it == null }) null else results.first()
@@ -825,28 +892,34 @@ object FormMigration {
         val allowed =
             if ("MORPHIA_FORM" in facts.categories) FormRule.values().toSet() else emptySet()
         val retyping = "NUMERIC_TYPE" in facts.categories
+        val correcting = facts.categories.any { it == "DOCS_ERROR" || it == "FIXTURE_CURATION" }
+
+        class Changes(val retypes: List<NumericRetype>, val corrections: List<FormCorrection>)
         /**
-         * The retypes that reproduce the fixture under [rules], or the first difference no retype
-         * explains. Action pointers depend on the rules, so each rule set derives its own.
+         * The retypes and corrections that reproduce the fixture under [rules], or the first
+         * difference neither explains. A difference is retyped when it can be, and corrected only
+         * otherwise. Action pointers depend on the rules, so each rule set derives its own.
          */
-        fun discover(rules: Set<FormRule>): Pair<List<NumericRetype>?, Mismatch?> {
+        fun discover(rules: Set<FormRule>): Pair<Changes?, Mismatch?> {
             var retypes = listOf<NumericRetype>()
+            var corrections = listOf<FormCorrection>()
             while (true) {
-                val found = mismatch(rules, retypes) ?: break
+                val found = mismatch(rules, retypes, corrections) ?: break
+                val difference =
+                    found.difference?.takeIf { retypes.size + corrections.size < 1000 }
+                        ?: return null to found
                 val leaf =
-                    found
-                        .takeIf { retyping && retypes.size < 1000 }
-                        ?.difference
-                        ?.takeIf { it.kind == BsonDifferenceKind.TYPE }
-                        ?.let { difference ->
-                            val pointer = difference.path.pointer
+                    difference
+                        .takeIf { retyping && it.kind == BsonDifferenceKind.TYPE }
+                        ?.let {
+                            val pointer = it.path.pointer
                             val from = NumericRetypes.at(found.documented, pointer)
                             val to = NumericRetypes.at(found.curated, pointer)
                             val type = NumericRetypes.type(to)
                             if (from == null || to == null || type == null) null
                             else
                                 NumericRetypes.convert(from, type)
-                                    ?.takeIf { it == to }
+                                    ?.takeIf { converted -> converted == to }
                                     ?.let {
                                         NumericRetype(
                                             found.file!!,
@@ -855,8 +928,45 @@ object FormMigration {
                                             type,
                                         )
                                     }
-                        } ?: return null to found
-                retypes = retypes + leaf
+                        }
+                if (leaf != null) {
+                    retypes = retypes + leaf
+                    continue
+                }
+                val pointer = difference.path.pointer
+                val before = NumericRetypes.at(found.documented, pointer)
+                val after = NumericRetypes.at(found.curated, pointer)
+                val correction =
+                    when {
+                        !correcting -> null
+                        // Never a whole file or a whole row or stage: every other difference in
+                        // it would go unreviewed.
+                        pointer.count { it == '/' } < 2 -> null
+                        // Key order is form, and a type change at the same value is a retype.
+                        difference.kind == BsonDifferenceKind.KEY_ORDER -> null
+                        difference.kind == BsonDifferenceKind.TYPE &&
+                            before != null &&
+                            after != null &&
+                            NumericRetypes.type(after)?.let {
+                                NumericRetypes.convert(before, it)
+                            } == after -> null
+                        difference.kind == BsonDifferenceKind.MISSING_FIELD ->
+                            before?.let { FormCorrection.of(found.file!!, pointer, it, null) }
+                        difference.kind == BsonDifferenceKind.EXTRA_FIELD -> {
+                            val holder =
+                                NumericRetypes.at(found.curated, pointer.substringBeforeLast('/'))
+                                    as? BsonDocument
+                            val key = pointer.substringAfterLast('/')
+                            holder
+                                ?.keys
+                                ?.indexOf(key.replace("~1", "/").replace("~0", "~"))
+                                ?.takeIf { it >= 0 }
+                                ?.let { FormCorrection.of(found.file!!, pointer, null, after, it) }
+                        }
+                        before == null || after == null -> null
+                        else -> FormCorrection.of(found.file!!, pointer, before, after)
+                    } ?: return null to found
+                corrections = corrections + correction
             }
             // One retype per file and type change, at the deepest pointer covering its numbers,
             // when that still reproduces the fixture.
@@ -872,30 +982,44 @@ object FormMigration {
                                 key.second,
                                 key.third,
                             )
-                    if (mismatch(rules, merged) == null) retypes = merged
+                    if (mismatch(rules, merged, corrections) == null) retypes = merged
                 }
-            return retypes.sortedWith(compareBy({ it.file }, { it.pointer })) to null
+            return Changes(
+                retypes.sortedWith(compareBy({ it.file }, { it.pointer })),
+                corrections,
+            ) to null
         }
         val (found, difference) = discover(allowed)
-        var retypes = found ?: return Examined.Gap(FormGap.RESIDUAL_DIFFERENCE, difference!!.detail)
-        // Drop every rule the comparison does not need, so each declared rule is necessary.
+        var changes = found ?: return Examined.Gap(FormGap.RESIDUAL_DIFFERENCE, difference!!.detail)
+        // Drop every rule the comparison does not need, so each declared rule is necessary. A rule
+        // is never traded for a correction: dropping it must not need more corrections.
         val needed = allowed.toMutableSet()
         FormRule.values().forEach { rule ->
             if (rule in needed) {
                 discover(needed - rule).first?.let {
-                    needed -= rule
-                    retypes = it
+                    if (it.corrections.size <= changes.corrections.size) {
+                        needed -= rule
+                        changes = it
+                    }
                 }
             }
         }
-        retypes.forEach { retype ->
-            check(mismatch(needed, retypes - retype) != null) { "Unneeded retype $retype" }
+        changes.retypes.forEach { retype ->
+            check(mismatch(needed, changes.retypes - retype, changes.corrections) != null) {
+                "Unneeded retype $retype"
+            }
+        }
+        changes.corrections.forEach { correction ->
+            check(mismatch(needed, changes.retypes, changes.corrections - correction) != null) {
+                "Unneeded correction $correction"
+            }
         }
         return Examined.Reproduced(
             FormRule.values().filter { it in needed },
             shape,
             blocks,
-            retypes = retypes,
+            retypes = changes.retypes,
+            corrections = changes.corrections,
         )
     }
 
@@ -956,7 +1080,7 @@ object FormMigration {
     private fun fixtureFiles(folder: Path): Map<String, String> =
         Files.list(folder).use { stream ->
             stream
-                .filter { it.isRegularFile() && it.name != "lock" }
+                .filter { it.isRegularFile() && it.name !in markers }
                 .toList()
                 .sortedBy { it.name }
                 .associate { it.name to sha256(Files.readAllBytes(it)) }
