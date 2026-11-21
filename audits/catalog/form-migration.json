@@ -3423,6 +3423,59 @@
   }, {
     "blocks" : [ {
       "role" : "ACTION",
+      "sha256" : "e45e4c9eb0ff667d82d09c84e3078d775dd36d6124b3650cad4c29df40d7f4de",
+      "text" : "db.stockSales.aggregate( [\n   {\n      $project:\n      {\n         _id: 0, saleTimestamp: 1, saleSeconds: { $tsSecond: \"$saleTimestamp\" }\n      }\n   }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "819f291b6debc8e2438c9362f0d19f051c497742c7fa497e27e703b5bfaa01d1",
+      "text" : "db.stockSales.insertMany( [\n   { _id: 0, symbol: \"ABC\", saleTimestamp: Timestamp(1622731060, 1) },\n   { _id: 1, symbol: \"ABC\", saleTimestamp: Timestamp(1622731060, 2) },\n   { _id: 2, symbol: \"DEF\", saleTimestamp: Timestamp(1714124193, 1) },\n   { _id: 3, symbol: \"DEF\", saleTimestamp: Timestamp(1714124193, 2) },\n   { _id: 4, symbol: \"DEF\", saleTimestamp: Timestamp(1714124193, 3) }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "d537b5f59fe266cb0dacdedf04920a7bed149a750bb41523f975c23c0abf53a5",
+      "text" : "{\n  saleTimestamp: Timestamp({ t: 1622731060, i: 1 }),\n  saleSeconds: Long(\"1622731060\")\n},\n{\n  saleTimestamp: Timestamp({ t: 1622731060, i: 2 }),\n  saleSeconds: Long(\"1622731060\")\n},\n{\n  saleTimestamp: Timestamp({ t: 1714124193, i: 1 }),\n  saleSeconds: Long(\"1714124193\")\n},\n{\n  saleTimestamp: Timestamp({ t: 1714124193, i: 2 }),\n  saleSeconds: Long(\"1714124193\")\n},\n{\n  saleTimestamp: Timestamp({ t: 1714124193, i: 3 }),\n  saleSeconds: Long(\"1714124193\")\n}"
+    } ],
+    "collections" : { },
+    "corrections" : [ ],
+    "example" : "Obtain the Number of Seconds from a Timestamp Field",
+    "fixture" : "aggregation/expressions/tsSecond/obtainTheNumberOfSecondsFromATimestampField",
+    "fixtureFiles" : {
+      "action.json" : "39904f1ea453dab39c5f95f50a3fef15a17d0ee61c1f53843ac99f1cdfaeb9ed",
+      "data.json" : "8f3ba9b30a404a6c614e8364f7ddc11aad70a2cc6d9d682b235f5e0aa7058ea7",
+      "expected.json" : "aa804aa5572cce9f7c3b3ee3b3c0b7c5b9492b2d2f645a91d18a65015cf2376d",
+      "name" : "f098a78b916fa95a2f0b97d194e31fd53cf3c6c4ae6cd45a7cc6834c20a001c8"
+    },
+    "includes" : [ {
+      "blob" : "cae80161291eadfe7c4c76d37dcb6b5ee9e40de6",
+      "path" : "source/includes/tsSecond-introduction.rst"
+    }, {
+      "blob" : "a70d0f7025666a855267cba1031cf183714121b2",
+      "path" : "source/includes/stockSales-example-collection.rst"
+    }, {
+      "blob" : "5d0412c61706673a101d1f2d14e7e224b5de7187",
+      "path" : "source/includes/stockSales-example-collection-create.rst"
+    }, {
+      "blob" : "f56012674985fd6d9fe5f558a661d55d6a717156",
+      "path" : "source/includes/cakeSales-example-collection.rst"
+    } ],
+    "origin" : "3f1e409bd15a70dbd2e5b065f8fe38f114bee495",
+    "pageBlob" : "b6c831c1be6bdf210a7260dc64061dd3489039cb",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "d6802e36506db9857e0e99c12f916f5f48948484ee596975b0414f962aec1e87",
+      "text" : "updated the Timestamp format"
+    },
+    "retypes" : [ ],
+    "rules" : [ ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "f5da63fabec244dde036582f5cbab8d7ea2b0881",
+      "path" : "source/reference/operator/aggregation/tsSecond.txt",
+      "relation" : "AT_ORIGIN"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
       "sha256" : "5a165066a94f0cff7ea8d1d5248eb586f923e31f37405597b6f79d177dcab7db",
       "text" : "db.coll.aggregate([{\n    $project: {\n       a : { $type: \"$a\" }\n    }\n}])"
     }, {
@@ -6487,6 +6540,59 @@
   }, {
     "blocks" : [ {
       "role" : "ACTION",
+      "sha256" : "3e4222e50ce01449799e7194adca62bb69af7ff764fc87f6deedd509e2d5a02a",
+      "text" : "db.products.updateOne(\n   { _id: 3 },\n   { $mul: { price: Int32(5) } }\n)"
+    }, {
+      "role" : "DATA",
+      "sha256" : "b68d21fa0c7bc0ed3f74e6272fbcaf87b571a2e02c78f58044a3535dc3f30843",
+      "text" : "db.products.insertOne( { _id: 3,  item: \"Scarf\", price: Decimal128(\"10\") } )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "32e5cd432ddcc45607e5fcafe214ecaf53c235bff5cb6e1346f2b97fd98c08bd",
+      "text" : "{ _id: 3, item: 'Scarf', price: Decimal128(\"50\") }"
+    } ],
+    "collections" : { },
+    "corrections" : [ ],
+    "example" : "Multiply Mixed Numeric Types",
+    "fixture" : "query/updates/mul/multiplyMixedNumericTypes",
+    "fixtureFiles" : {
+      "action.json" : "7587a4c994c1060dc12e35c51c5c63cfedc07f82d7d4f10a9cb8b781bb0e8a21",
+      "data.json" : "85e8fb8a57ea1662ce09aff6ecf1d51ae3ccb6916d257d82fcc54d88bd92c402",
+      "expected.json" : "42375a37ba980199c26ef3e3d4be4629086e31d52f4ecaf39e58c35495425442",
+      "name" : "919ad0361a0517e9e6642159e16acfc1ad045cd921ee8427f746c4afae90202b"
+    },
+    "includes" : [ {
+      "blob" : "5e6b70f902bb252f245d63ebe08566767f1553ff",
+      "path" : "source/includes/use-dot-notation.rst"
+    }, {
+      "blob" : "ac698feee23671aac82cf09e4f18bb3e3e20322e",
+      "path" : "source/includes/extracts-update-operations.yaml"
+    }, {
+      "blob" : "d16ecb02d62db5af0e83450c77a65c0b70114183",
+      "path" : "source/includes/extracts-update-operations-base.yaml"
+    }, {
+      "blob" : "3eddf446867bc82fd4404645462411a8ab8d4209",
+      "path" : "source/includes/fact-update-operator-processing-order.rst"
+    } ],
+    "origin" : "d220079dea743be8053d18f0f99325a455ccb6b6",
+    "pageBlob" : "366930f8850ed59f0f6996861cb296131c6655fb",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "64c9786b85d91648600fc031936cb7a0a17a01f26ae8c41634b3cf17c7394926",
+      "text" : "parser extracts incorrectly"
+    },
+    "retypes" : [ ],
+    "rules" : [ ],
+    "shape" : "UPDATE",
+    "source" : {
+      "commit" : "948002e14f1d94c10fb84b8fb833149a16531169",
+      "path" : "source/reference/operator/update/mul.txt",
+      "relation" : "AT_ORIGIN"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
       "sha256" : "9c0fd63e1ea62c7936a2e2ca1123d5eeee03a3e89ecf278666709dfeafa3a31f",
       "text" : "db.students.updateOne( { _id: 1 }, { $rename: { \"name.first\": \"name.fname\" } } )"
     }, {
@@ -6737,7 +6843,7 @@
     },
     "unexpandedIncludes" : [ ]
   } ],
-  "repositoryRevision" : "999780b568eeb66656b5292382e487ba129c6b9e",
+  "repositoryRevision" : "a249d35bbea6bb221bfe4b0de5a0a9fd2473d553",
   "rules" : [ {
     "description" : "$cond: {if: a, then: b, else: c} and $cond: [a, b, c] are the same expression; the array form is canonical.",
     "rule" : "COND_ARRAY"
@@ -6776,11 +6882,11 @@
     "gap.NO_MATCHING_EXAMPLE" : 4,
     "gap.PAGE_UNSUPPORTED" : 0,
     "gap.REJECTED" : 1,
-    "gap.RESIDUAL_DIFFERENCE" : 42,
-    "gap.SOURCE_UNSUPPORTED" : 50,
-    "overrides" : 128,
+    "gap.RESIDUAL_DIFFERENCE" : 47,
+    "gap.SOURCE_UNSUPPORTED" : 43,
+    "overrides" : 130,
     "overrides.corrected" : 20,
-    "overrides.exact" : 47,
+    "overrides.exact" : 49,
     "overrides.retyped" : 16,
     "rule.ALTERNATIVE_COMMANDS" : 1,
     "rule.COND_ARRAY" : 14,
@@ -6792,7 +6898,7 @@
     "rule.REGEX_FORM" : 1,
     "rule.SINGLE_ARGUMENT_ARRAY" : 2,
     "rule.UNWIND_PATH" : 1,
-    "unresolved" : 106
+    "unresolved" : 104
   },
   "unresolved" : [ {
     "detail" : "SYNTAX",
@@ -7125,9 +7231,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "expected syntax",
+    "detail" : "printed expected VALUE at /0/result/3",
     "fixture" : "aggregation/expressions/sortArray/sortOnMixedTypeFields",
-    "gap" : "SOURCE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "fade26d1eb91bbf587f35696f41ad98dfe706e34",
     "source" : {
       "commit" : "ee00283046ed2845155e52b20ffd1c5638d65d9c",
@@ -7255,23 +7361,13 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "expected syntax",
+    "detail" : "data.json VALUE at /0/symbol",
     "fixture" : "aggregation/expressions/tsIncrement/obtainTheIncrementingOrdinalFromATimestampField",
-    "gap" : "SOURCE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "d562cdcc2589f76539bcce1b8baf14bd402ac19a",
     "source" : {
       "commit" : "f5da63fabec244dde036582f5cbab8d7ea2b0881",
       "path" : "source/reference/operator/aggregation/tsIncrement.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "expected syntax",
-    "fixture" : "aggregation/expressions/tsSecond/obtainTheNumberOfSecondsFromATimestampField",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "3f1e409bd15a70dbd2e5b065f8fe38f114bee495",
-    "source" : {
-      "commit" : "f5da63fabec244dde036582f5cbab8d7ea2b0881",
-      "path" : "source/reference/operator/aggregation/tsSecond.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -7315,9 +7411,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "expected syntax",
+    "detail" : "action TYPE at /0/$facet/categorizedByPrice/0/$match/price/$exists",
     "fixture" : "aggregation/stages/facet/facetAggregationStage",
-    "gap" : "SOURCE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "source" : {
       "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
@@ -7385,9 +7481,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "expected syntax",
+    "detail" : "printed expected VALUE at /0/totalSaleAmount",
     "fixture" : "aggregation/stages/group/groupByItemHaving",
-    "gap" : "SOURCE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
     "source" : {
       "commit" : "50a2fb0cc5a95528ce1853159b02828a353352ae",
@@ -7775,19 +7871,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "expected syntax",
-    "fixture" : "query/updates/mul/multiplyMixedNumericTypes",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "d220079dea743be8053d18f0f99325a455ccb6b6",
-    "source" : {
-      "commit" : "948002e14f1d94c10fb84b8fb833149a16531169",
-      "path" : "source/reference/operator/update/mul.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "expected syntax",
+    "detail" : "printed expected VALUE at /0/price",
     "fixture" : "query/updates/mul/multiplyTheValueOfAField",
-    "gap" : "SOURCE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "d220079dea743be8053d18f0f99325a455ccb6b6",
     "source" : {
       "commit" : "948002e14f1d94c10fb84b8fb833149a16531169",
