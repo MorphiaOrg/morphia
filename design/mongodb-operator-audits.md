@@ -792,6 +792,9 @@ corrections and 38 `EXTRACTION`/`SHELL_SYNTAX` locks that the new pipeline handl
 (generated Giza extracts included), each
 proven against the historical documentation the fixture came
 from ([form migration](operator-audits-form-migration.md)).
+Step 5 follows the [test generation design](operator-audits-test-generation.md): a descriptor-driven
+runner with separate serialization, behavior and published checks, legacy cases joining it through
+a compatibility adapter against their documented references, then generation for unowned examples.
 
 Track progress with explicit metrics rather than a speculative “100% automatic” target:
 all discovered capabilities accounted for; all 235 locks plus `lockd` and 17 exclusions

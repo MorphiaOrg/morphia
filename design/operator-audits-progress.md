@@ -1994,3 +1994,22 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
 - Totals: 138 overrides, 96 unresolved; inventory 138 OVERRIDDEN, 96 PRESERVED_CURATED, 98
   locked.
 - Review round 1 (independent agent): nothing to fix. The binding fires only for a top-level `name = ...` statement; the model is stricter than JavaScript where a lexical or `var` redeclaration follows (only adds gaps).
+
+- PR #4540 (branch audits-js-bindings, base #4539) published. Step 4's exit criterion holds: every
+  locked example has a disposition (138 retired, 96 kept with a recorded gap).
+
+## Step 5 design (2026-11-21)
+
+- Branch audits-test-generation-design from #4540: `design/operator-audits-test-generation.md`.
+- Measured against a 2025 `mongodb/docs` checkout: about 550 documented operator examples, about
+  521 owned by legacy cases, about 29 unowned (mostly environment-bound admin stages and the
+  positional update operators). Generating only for unowned examples would cover almost nothing, so
+  legacy cases join a new runner through a compatibility adapter, with their documented sources
+  (form-migration overrides, pinned pages) as independent references.
+- Three review rounds (independent agent): identity contract; slice 1 restricted to exact
+  expectations; scenario and descriptor fields; separate databases for behavior parity;
+  composition on `TestBase`; completeness test; candidate attestation and rollback; curated BSON
+  never treated as a reference (`CURATED_REFERENCE`); converted scenarios replace legacy files and
+  are manifest-owned; a migrated-fixture ledger for the audits checks that guard fixture bytes;
+  harness collection-name corrections reverted; form rules and printed constraints ported before
+  cutover.
