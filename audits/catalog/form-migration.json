@@ -437,7 +437,13 @@
       "expected.json" : "7d46541b24bf9d52432e438a0bd08f53ac4988957e3fe6d61f4229fb5345b6dc",
       "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
     },
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
+      "path" : "source/includes/extracts-examples-eval.yaml"
+    }, {
+      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
+      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
+    } ],
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "e3fa7926b676ae107cb77e843f9ce50b2289e008",
     "retiredLock" : {
@@ -584,7 +590,10 @@
       "expected.json" : "a4ddf82a4cabdb843e0c789939bd0d75275466b614bb981b4bf94e35383154cf",
       "name" : "709bb2e0282adaebd442fa420fd790ae1bc4cfcc8160c26d81f3f59746607b97"
     },
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "4a4e0cf5eb9ef9a0a23e2f3aeb86b9a34fc15697",
+      "path" : "source/includes/extracts-date-format-specifiers.yaml"
+    } ],
     "origin" : "82d4c1b3d80d091b8df087511e2b375302e1e199",
     "pageBlob" : "d24517a6c3e5f96685d5fc3a474667d2569d57c7",
     "retiredLock" : {
@@ -681,6 +690,9 @@
     }, {
       "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
       "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "f8cea074d104c6d7540688c4a001bb12aef64c1a",
+      "path" : "source/includes/extracts-date-format-specifiers.yaml"
     } ],
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "3c53000302392ff1f16165d9e7c932f102f719f0",
@@ -843,7 +855,13 @@
       "expected.json" : "e06cf7fb4c2d5e3476e12531ac7494a4955c1ecd6b350aff3ae84f2d6e32612e",
       "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
     },
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
+      "path" : "source/includes/extracts-examples-eval.yaml"
+    }, {
+      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
+      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
+    } ],
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "7bf1ae5a7fdb3f2457dfa5c70f474649d3343ccd",
     "retiredLock" : {
@@ -884,7 +902,13 @@
       "expected.json" : "6fbf756ffb33f443ed94a0f1965a1a731f8113d176240038ce04b304fb0ab0ec",
       "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
     },
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "bbf5c44a10e62dc8903402b5aaf9baf1323ef458",
+      "path" : "source/includes/extracts-agg-expression-null.yaml"
+    }, {
+      "blob" : "8623cf2a56423be1b837696232e1d7f56f12569c",
+      "path" : "source/includes/extracts-agg-expression-null-base.yaml"
+    } ],
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "734eaab3d5843ee1da0575bba8ea5f526ee7edf8",
     "retiredLock" : {
@@ -1178,7 +1202,13 @@
       "expected.json" : "84e6ceed470d7021814f1318ba5d9be88f4a99fc80916c0b5524a7424f3aef8e",
       "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
     },
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
+      "path" : "source/includes/extracts-examples-eval.yaml"
+    }, {
+      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
+      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
+    } ],
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "a8fd1e09b2e178cbd0a559f56eee94d7a2e90776",
     "retiredLock" : {
@@ -1219,7 +1249,13 @@
       "expected.json" : "93a4d9aeb1d7fdb7c6aa39b0a53f9794372559eb8b9010045a0e03d1c21366d5",
       "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
     },
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
+      "path" : "source/includes/extracts-examples-eval.yaml"
+    }, {
+      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
+      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
+    } ],
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "18230f5639cd5638df0cfab9bc416b2352c1293c",
     "retiredLock" : {
@@ -1550,7 +1586,13 @@
       "expected.json" : "4d17c108f4c7343e101057b639486cfa3924460994cc0823e0b34b33a21d501b",
       "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
     },
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
+      "path" : "source/includes/extracts-examples-eval.yaml"
+    }, {
+      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
+      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
+    } ],
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "a1b6c905911b75973144e2359fb714b053e3515c",
     "retiredLock" : {
@@ -1591,7 +1633,13 @@
       "expected.json" : "039232afe0e48cd415c5843260b11271b87612d780457033c7ac40c37b96bc5b",
       "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
     },
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
+      "path" : "source/includes/extracts-examples-eval.yaml"
+    }, {
+      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
+      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
+    } ],
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "c4ae0ea4521bf29bc2d79a4bb9008f6f49625012",
     "retiredLock" : {
@@ -1739,6 +1787,12 @@
       "name" : "d5db7f2a4c71fd70ae322719d7d555e034b637ea7ce90869a8df38015a4315b1"
     },
     "includes" : [ {
+      "blob" : "48429813c7e668caccccfe27b3b2894cd4d066e7",
+      "path" : "source/includes/extracts-fact-aggregation-accumulator.yaml"
+    }, {
+      "blob" : "e2dda4a385450130f3ca31944a8c58804e80ce6d",
+      "path" : "source/includes/extracts-fact-aggregation-accumulator-base.yaml"
+    }, {
       "blob" : "f56012674985fd6d9fe5f558a661d55d6a717156",
       "path" : "source/includes/setWindowFields-example-collection.rst"
     }, {
@@ -1827,6 +1881,12 @@
       "name" : "d5db7f2a4c71fd70ae322719d7d555e034b637ea7ce90869a8df38015a4315b1"
     },
     "includes" : [ {
+      "blob" : "48429813c7e668caccccfe27b3b2894cd4d066e7",
+      "path" : "source/includes/extracts-fact-aggregation-accumulator.yaml"
+    }, {
+      "blob" : "e2dda4a385450130f3ca31944a8c58804e80ce6d",
+      "path" : "source/includes/extracts-fact-aggregation-accumulator-base.yaml"
+    }, {
       "blob" : "f56012674985fd6d9fe5f558a661d55d6a717156",
       "path" : "source/includes/setWindowFields-example-collection.rst"
     }, {
@@ -1914,7 +1974,13 @@
       "expected.json" : "faa3345615eb647a8f9a629bb672645b8d6e973a8792d33332fe8d9b62cabe56",
       "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
     },
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
+      "path" : "source/includes/extracts-examples-eval.yaml"
+    }, {
+      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
+      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
+    } ],
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "ef66debc94e80aeed914a5889773b680688d2634",
     "retiredLock" : {
@@ -2367,7 +2433,13 @@
       "expected.json" : "495fce628d6b6d8000f1775f01e4d1a34193268d80c6700972598845daf79953",
       "name" : "459906afedbceb0a25751d315dd64895b83b28495d41a3a11ffdce482f4e7917"
     },
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "5eea7db82afdd4723cac7050891df1f7c7042823",
+      "path" : "source/includes/extracts-3.4-agg-expression-null.yaml"
+    }, {
+      "blob" : "ee40a9d1b0d38be8227b5f23cea8c85c217aeb5a",
+      "path" : "source/includes/extracts-3.4-agg-expression-null-base.yaml"
+    } ],
     "origin" : "1e38798fbaaffb6945159e208bcd33318c425121",
     "pageBlob" : "6a36a6a69ad4600f7ba7656f7d4dfc7db0c891fd",
     "retiredLock" : {
@@ -2408,7 +2480,13 @@
       "expected.json" : "1a589cf01b04b0f0d43d0c3c3372ecb7e2f5bffaebecabb381a3c9d2ee617439",
       "name" : "48849f52c79abc16899163af1dd366899cb95a8e99c7354025a9c29035ec59e8"
     },
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "5eea7db82afdd4723cac7050891df1f7c7042823",
+      "path" : "source/includes/extracts-3.4-agg-expression-null.yaml"
+    }, {
+      "blob" : "ee40a9d1b0d38be8227b5f23cea8c85c217aeb5a",
+      "path" : "source/includes/extracts-3.4-agg-expression-null-base.yaml"
+    } ],
     "origin" : "1e38798fbaaffb6945159e208bcd33318c425121",
     "pageBlob" : "6a36a6a69ad4600f7ba7656f7d4dfc7db0c891fd",
     "retiredLock" : {
@@ -2449,7 +2527,13 @@
       "expected.json" : "8bca2ce6954c28c3226097bb7ae78caea3a8dbd79fc84fc99e2e271376130688",
       "name" : "2d909cdeb2514082e43cef484ff738a140a5d11f78a473fe5501e9048c7d0c1f"
     },
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "5eea7db82afdd4723cac7050891df1f7c7042823",
+      "path" : "source/includes/extracts-3.4-agg-expression-null.yaml"
+    }, {
+      "blob" : "ee40a9d1b0d38be8227b5f23cea8c85c217aeb5a",
+      "path" : "source/includes/extracts-3.4-agg-expression-null-base.yaml"
+    } ],
     "origin" : "1e38798fbaaffb6945159e208bcd33318c425121",
     "pageBlob" : "6a36a6a69ad4600f7ba7656f7d4dfc7db0c891fd",
     "retiredLock" : {
@@ -2463,6 +2547,147 @@
     "source" : {
       "commit" : "ca3e8a737ee08af6482a9eed3a1abfe708edd5c8",
       "path" : "source/reference/operator/aggregation/reduce.txt",
+      "relation" : "AT_ORIGIN"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "fbbf71db59d641098287a3daaa6822e36817b8ea9c3d15e907c33a33760b4bf6",
+      "text" : "db.products.aggregate([\n   { $addFields: { returnObject: { $regexFind: { input: \"$description\", regex: /line/ } } } }\n])"
+    }, {
+      "role" : "DATA",
+      "sha256" : "81d89e8d0804586b1d7e12d17802108b8e71d0067c745b6e7dd8292e0f566cf8",
+      "text" : "db.products.insertMany([\n   { _id: 1, description: \"Single LINE description.\" },\n   { _id: 2, description: \"First lines\\nsecond line\" },\n   { _id: 3, description: \"Many spaces before     line\" },\n   { _id: 4, description: \"Multiple\\nline descriptions\" },\n   { _id: 5, description: \"anchors, links and hyperlinks\" },\n   { _id: 6, description: \"métier work vocation\" }\n])"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "acf4709935ad586fbeafbc91ceb9b59f8221fdac66f45668937ced4ac1709379",
+      "text" : "{ \"_id\" : 1, \"description\" : \"Single LINE description.\", \"returnObject\" : null }\n{ \"_id\" : 2, \"description\" : \"First lines\\nsecond line\", \"returnObject\" : { \"match\" : \"line\", \"idx\" : 6, \"captures\" : [ ] } }\n{ \"_id\" : 3, \"description\" : \"Many spaces before     line\", \"returnObject\" : { \"match\" : \"line\", \"idx\" : 23, \"captures\" : [ ] } }\n{ \"_id\" : 4, \"description\" : \"Multiple\\nline descriptions\", \"returnObject\" : { \"match\" : \"line\", \"idx\" : 9, \"captures\" : [ ] } }\n{ \"_id\" : 5, \"description\" : \"anchors, links and hyperlinks\", \"returnObject\" : null }\n{ \"_id\" : 6, \"description\" : \"métier work vocation\", \"returnObject\" : null }"
+    } ],
+    "collections" : { },
+    "corrections" : [ ],
+    "example" : "``$regexFind`` and Its Options",
+    "fixture" : "aggregation/expressions/regexFind/regexFindAndItsOptions",
+    "fixtureFiles" : {
+      "action.json" : "17ad3aec55a6b753d5947506d52043f2ab1dab39b722018e530affaaf7f94cc1",
+      "data.json" : "6adc2003867ec6b4753d585cfa9027b71735b40a2fe19b9ad8e984d159fe519d",
+      "expected.json" : "acf4709935ad586fbeafbc91ceb9b59f8221fdac66f45668937ced4ac1709379",
+      "name" : "3de8dcda6f14576a88132e3099f42656f5ed655cdc63bef07dba17bd5ff1671e"
+    },
+    "includes" : [ {
+      "blob" : "7f5fc4b51bef04e8026d2d93ba49bc5a127bf3f6",
+      "path" : "source/includes/extracts-agg-regex.yaml"
+    }, {
+      "blob" : "1c76d95ca483b2924600db416405d9e9850d96b3",
+      "path" : "source/includes/fact-6.1-pcre2.rst"
+    } ],
+    "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
+    "pageBlob" : "5c8d71944fa06b2a6be5c7ee8007e6c263414992",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "95735d7058bd05e7672ba96658579cf7e86f156b181e3fd1e7ee8e3ba6811e66",
+      "text" : "example data needs multiple spaces that the parser eliminates"
+    },
+    "retypes" : [ ],
+    "rules" : [ ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
+      "path" : "source/reference/operator/aggregation/regexFind.txt",
+      "relation" : "AT_ORIGIN"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "115fc018b61fb9923c153a9c627ff5728aeafb30233c6c5299e3697bcbb5a216",
+      "text" : "db.products.aggregate([\n   { $addFields: { returnObject: { $regexFindAll: { input: \"$description\", regex: /line/ } } } }\n])"
+    }, {
+      "role" : "DATA",
+      "sha256" : "81d89e8d0804586b1d7e12d17802108b8e71d0067c745b6e7dd8292e0f566cf8",
+      "text" : "db.products.insertMany([\n   { _id: 1, description: \"Single LINE description.\" },\n   { _id: 2, description: \"First lines\\nsecond line\" },\n   { _id: 3, description: \"Many spaces before     line\" },\n   { _id: 4, description: \"Multiple\\nline descriptions\" },\n   { _id: 5, description: \"anchors, links and hyperlinks\" },\n   { _id: 6, description: \"métier work vocation\" }\n])"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "44c498587694b2399d46732f9c657055942f64952485f5017e900b66bc893a27",
+      "text" : "{\n   \"_id\" : 1,\n   \"description\" : \"Single LINE description.\",\n   \"returnObject\" : [ ]\n}\n{\n   \"_id\" : 2,\n   \"description\" : \"First lines\\nsecond line\",\n   \"returnObject\" : [ { \"match\" : \"line\", \"idx\" : 6, \"captures\" : [ ]}, { \"match\" : \"line\", \"idx\" : 19, \"captures\" : [ ] } ]\n}\n{\n   \"_id\" : 3,\n   \"description\" : \"Many spaces before     line\",\n   \"returnObject\" : [ { \"match\" : \"line\", \"idx\" : 23, \"captures\" : [ ] } ]\n}\n{\n   \"_id\" : 4,\n   \"description\" : \"Multiple\\nline descriptions\",\n   \"returnObject\" : [ { \"match\" : \"line\", \"idx\" : 9, \"captures\" : [ ] }\n] }\n\n{\n   \"_id\" : 5,\n   \"description\" : \"anchors, links and hyperlinks\",\n   \"returnObject\" : [ ]\n}\n{ \n   \"_id\" : 6,\n   \"description\" : \"métier work vocation\",\n   \"returnObject\" : [ ]\n}"
+    } ],
+    "collections" : { },
+    "corrections" : [ ],
+    "example" : "``$regexFindAll`` and Its Options",
+    "fixture" : "aggregation/expressions/regexFindAll/regexFindAllAndItsOptions",
+    "fixtureFiles" : {
+      "action.json" : "dc9aa419eb6929458ae38360a143250609469cd7f78e2461d7a939d89d53a304",
+      "data.json" : "6adc2003867ec6b4753d585cfa9027b71735b40a2fe19b9ad8e984d159fe519d",
+      "expected.json" : "6025b61a26bf2eb770d06b57a56cc469004f491a27292d5a1dbeb4e8e8efba58",
+      "name" : "9a76d8d7024fd2c7dc691709f2223e73bc86eec64f71e8615912e17170258de5"
+    },
+    "includes" : [ {
+      "blob" : "7f5fc4b51bef04e8026d2d93ba49bc5a127bf3f6",
+      "path" : "source/includes/extracts-agg-regex.yaml"
+    }, {
+      "blob" : "1c76d95ca483b2924600db416405d9e9850d96b3",
+      "path" : "source/includes/fact-6.1-pcre2.rst"
+    } ],
+    "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
+    "pageBlob" : "42d41fe7d1a5a0e70c7303fd2b435cf337017b25",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "95735d7058bd05e7672ba96658579cf7e86f156b181e3fd1e7ee8e3ba6811e66",
+      "text" : "example data needs multiple spaces that the parser eliminates"
+    },
+    "retypes" : [ ],
+    "rules" : [ ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
+      "path" : "source/reference/operator/aggregation/regexFindAll.txt",
+      "relation" : "AT_ORIGIN"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "f9ff548216bb22118cefd426367cfae07f6a36430d0123cf631564e828b938ea",
+      "text" : "db.products.aggregate([\n   { $addFields: { result: { $regexMatch: { input: \"$description\", regex: /line/ } } } }\n])"
+    }, {
+      "role" : "DATA",
+      "sha256" : "81d89e8d0804586b1d7e12d17802108b8e71d0067c745b6e7dd8292e0f566cf8",
+      "text" : "db.products.insertMany([\n   { _id: 1, description: \"Single LINE description.\" },\n   { _id: 2, description: \"First lines\\nsecond line\" },\n   { _id: 3, description: \"Many spaces before     line\" },\n   { _id: 4, description: \"Multiple\\nline descriptions\" },\n   { _id: 5, description: \"anchors, links and hyperlinks\" },\n   { _id: 6, description: \"métier work vocation\" }\n])"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "135f2bdf4cacd6153389c63dc49ea9beac2b79a7b348e0730ae1f9d7109a4947",
+      "text" : "{ \"_id\" : 1, \"description\" : \"Single LINE description.\", \"result\" : false }\n{ \"_id\" : 2, \"description\" : \"First lines\\nsecond line\", \"result\" : true }\n{ \"_id\" : 3, \"description\" : \"Many spaces before     line\", \"result\" : true }\n{ \"_id\" : 4, \"description\" : \"Multiple\\nline descriptions\", \"result\" : true }\n{ \"_id\" : 5, \"description\" : \"anchors, links and hyperlinks\", \"result\" : false }\n{ \"_id\" : 6, \"description\" : \"métier work vocation\", \"result\" : false }"
+    } ],
+    "collections" : { },
+    "corrections" : [ ],
+    "example" : "``$regexMatch`` and Its Options",
+    "fixture" : "aggregation/expressions/regexMatch/regexMatchAndItsOptions",
+    "fixtureFiles" : {
+      "action.json" : "a9f4c363f1d8a6a9b0a92210cbd00fdcae9f073f09921bf1d2178a6896f41511",
+      "data.json" : "6adc2003867ec6b4753d585cfa9027b71735b40a2fe19b9ad8e984d159fe519d",
+      "expected.json" : "135f2bdf4cacd6153389c63dc49ea9beac2b79a7b348e0730ae1f9d7109a4947",
+      "name" : "1711f452b5e74e1f64ceb1f096405c1f174d168255d3c3c9de4bf706d3c51db3"
+    },
+    "includes" : [ {
+      "blob" : "7f5fc4b51bef04e8026d2d93ba49bc5a127bf3f6",
+      "path" : "source/includes/extracts-agg-regex.yaml"
+    }, {
+      "blob" : "1c76d95ca483b2924600db416405d9e9850d96b3",
+      "path" : "source/includes/fact-6.1-pcre2.rst"
+    } ],
+    "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
+    "pageBlob" : "7d7cb97c757085b76945febfc527419c58b3170a",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "226f63100433778e7d16edf7e8e24840ab04af2589d75438f8cb531d4142cd30",
+      "text" : "docs had \"returns\" instead of \"result\"\n_id 2 had the wrong result"
+    },
+    "retypes" : [ ],
+    "rules" : [ ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
+      "path" : "source/reference/operator/aggregation/regexMatch.txt",
       "relation" : "AT_ORIGIN"
     },
     "unexpandedIncludes" : [ ]
@@ -2534,6 +2759,12 @@
     "includes" : [ {
       "blob" : "9ba8fe6005b2e4e5e7a77bbf7c6535da3355c571",
       "path" : "source/includes/important-set-operator-semantics.rst"
+    }, {
+      "blob" : "3ae8bf736443eaa8cf84e56de8d30b33dd6449bc",
+      "path" : "source/includes/extracts-fact-agg-top-level-expressions.yaml"
+    }, {
+      "blob" : "5366b8d724f1705e143d55a10e620d6fe50b37de",
+      "path" : "source/includes/extracts-parent-fact-agg-top-level-expressions.yaml"
     } ],
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "0bd381ef5fd752e0f024a2bb47a6c1e6dbd6032f",
@@ -2578,6 +2809,12 @@
     "includes" : [ {
       "blob" : "9ba8fe6005b2e4e5e7a77bbf7c6535da3355c571",
       "path" : "source/includes/important-set-operator-semantics.rst"
+    }, {
+      "blob" : "3ae8bf736443eaa8cf84e56de8d30b33dd6449bc",
+      "path" : "source/includes/extracts-fact-agg-top-level-expressions.yaml"
+    }, {
+      "blob" : "5366b8d724f1705e143d55a10e620d6fe50b37de",
+      "path" : "source/includes/extracts-parent-fact-agg-top-level-expressions.yaml"
     }, {
       "blob" : "8b933e78dea0c9ba4dfdefecb2782016a3cb4f24",
       "path" : "source/includes/user-roles-system-variable-introduction.rst"
@@ -2649,7 +2886,13 @@
       "expected.json" : "f1723ce17c2800c3714e193090f54a143199bdb0ee21d6bed131d031afbfd4d3",
       "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
     },
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "3ae8bf736443eaa8cf84e56de8d30b33dd6449bc",
+      "path" : "source/includes/extracts-fact-agg-top-level-expressions.yaml"
+    }, {
+      "blob" : "5366b8d724f1705e143d55a10e620d6fe50b37de",
+      "path" : "source/includes/extracts-parent-fact-agg-top-level-expressions.yaml"
+    } ],
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "ff6e81650027f3dc438b507783282c4a66986d20",
     "retiredLock" : {
@@ -2693,6 +2936,12 @@
     "includes" : [ {
       "blob" : "9ba8fe6005b2e4e5e7a77bbf7c6535da3355c571",
       "path" : "source/includes/important-set-operator-semantics.rst"
+    }, {
+      "blob" : "3ae8bf736443eaa8cf84e56de8d30b33dd6449bc",
+      "path" : "source/includes/extracts-fact-agg-top-level-expressions.yaml"
+    }, {
+      "blob" : "5366b8d724f1705e143d55a10e620d6fe50b37de",
+      "path" : "source/includes/extracts-parent-fact-agg-top-level-expressions.yaml"
     } ],
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "5fb7cb7683edfc6e33c1129ce27a7d763725669c",
@@ -2870,6 +3119,12 @@
       "name" : "13f25f9e86f0b9e61fadd6bf4b7abfb86a1c10d3a115219d3922ae7660f13653"
     },
     "includes" : [ {
+      "blob" : "48429813c7e668caccccfe27b3b2894cd4d066e7",
+      "path" : "source/includes/extracts-fact-aggregation-accumulator.yaml"
+    }, {
+      "blob" : "6f5d7d363aa3a93352c9cba4bd64f87570e732bf",
+      "path" : "source/includes/extracts-fact-aggregation-accumulator-base.yaml"
+    }, {
       "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
       "path" : "source/includes/fact-compatibility.rst"
     }, {
@@ -3189,7 +3444,13 @@
       "expected.json" : "a94e1316d2c0e0a6f883fbb2f6a518a03d9cb10b54058437c61d243ffa52990e",
       "name" : "fd18eae2a00adeae47030b954ae43637b12f90ad809e610634dfed84ce22bc80"
     },
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "5eea7db82afdd4723cac7050891df1f7c7042823",
+      "path" : "source/includes/extracts-3.4-agg-expression-null.yaml"
+    }, {
+      "blob" : "ee40a9d1b0d38be8227b5f23cea8c85c217aeb5a",
+      "path" : "source/includes/extracts-3.4-agg-expression-null-base.yaml"
+    } ],
     "origin" : "9559001fffde3bca28f60aa3e405dff22baefd44",
     "pageBlob" : "88768190850e225b4aee38ddde325830c65b55a2",
     "retiredLock" : {
@@ -3387,6 +3648,9 @@
     }, {
       "blob" : "6beb75178564cf0b943050f7e6ef2d96165ce728",
       "path" : "source/includes/fact-graphlookup-memory-restrictions.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
     } ],
     "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
     "pageBlob" : "d00d3c58699ec5ad0505fdcab3026e35f522ce87",
@@ -3440,6 +3704,9 @@
     }, {
       "blob" : "6beb75178564cf0b943050f7e6ef2d96165ce728",
       "path" : "source/includes/fact-graphlookup-memory-restrictions.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
     } ],
     "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
     "pageBlob" : "d00d3c58699ec5ad0505fdcab3026e35f522ce87",
@@ -3493,6 +3760,9 @@
     }, {
       "blob" : "6beb75178564cf0b943050f7e6ef2d96165ce728",
       "path" : "source/includes/fact-graphlookup-memory-restrictions.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
     } ],
     "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
     "pageBlob" : "d00d3c58699ec5ad0505fdcab3026e35f522ce87",
@@ -3546,6 +3816,12 @@
     }, {
       "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
       "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "be3fc6f1f30030dd8caec9c694d2bd8740bd1715",
+      "path" : "source/includes/extracts-agg-operators.yaml"
+    }, {
+      "blob" : "55d38e3e1a1f693539b2a660f6709730110d2fa5",
+      "path" : "source/includes/aggregation/fact-operator-availability.rst"
     }, {
       "blob" : "5ba8939bc7515c153aa2f6eef9953927f0183ce2",
       "path" : "source/includes/fact-sbe-group-overview.rst"
@@ -3625,6 +3901,9 @@
       "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
       "path" : "source/includes/expr-operators-and-indexes.rst"
     }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
+    }, {
       "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
       "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
     }, {
@@ -3702,6 +3981,9 @@
     }, {
       "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
       "path" : "source/includes/expr-operators-and-indexes.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
     }, {
       "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
       "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
@@ -3781,6 +4063,9 @@
       "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
       "path" : "source/includes/expr-operators-and-indexes.rst"
     }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
+    }, {
       "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
       "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
     }, {
@@ -3859,6 +4144,9 @@
       "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
       "path" : "source/includes/expr-operators-and-indexes.rst"
     }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
+    }, {
       "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
       "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
     }, {
@@ -3917,6 +4205,9 @@
     }, {
       "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
       "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
     } ],
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "3139f56b4248eac375cc97846a48b772c0b2a1ca",
@@ -3970,6 +4261,9 @@
     }, {
       "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
       "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
     } ],
     "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
     "pageBlob" : "3139f56b4248eac375cc97846a48b772c0b2a1ca",
@@ -4817,6 +5111,62 @@
   }, {
     "blocks" : [ {
       "role" : "ACTION",
+      "sha256" : "f26a44be9aa4105e60520122ea59c9865c3f4fad6b4d0c198f21ba9847421914",
+      "text" : "db.inventory.find( {\n                     qty: { $all: [\n                                    { \"$elemMatch\" : { size: \"M\", num: { $gt: 50} } },\n                                    { \"$elemMatch\" : { num : 100, color: \"green\" } }\n                                  ] }\n                   } )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "21fb1411d42bb0e9ee0d4fa6eb400295cfc6e466bf3bbe290e0213f699678749",
+      "text" : "{\n   _id: ObjectId(\"5234cc89687ea597eabee675\"),\n   code: \"xyz\",\n   tags: [ \"school\", \"book\", \"bag\", \"headphone\", \"appliance\" ],\n   qty: [\n          { size: \"S\", num: 10, color: \"blue\" },\n          { size: \"M\", num: 45, color: \"blue\" },\n          { size: \"L\", num: 100, color: \"green\" }\n        ]\n}\n\n{\n   _id: ObjectId(\"5234cc8a687ea597eabee676\"),\n   code: \"abc\",\n   tags: [ \"appliance\", \"school\", \"book\" ],\n   qty: [\n          { size: \"6\", num: 100, color: \"green\" },\n          { size: \"6\", num: 50, color: \"blue\" },\n          { size: \"8\", num: 100, color: \"brown\" }\n        ]\n}\n\n{\n   _id: ObjectId(\"5234ccb7687ea597eabee677\"),\n   code: \"efg\",\n   tags: [ \"school\", \"book\" ],\n   qty: [\n          { size: \"S\", num: 10, color: \"blue\" },\n          { size: \"M\", num: 100, color: \"blue\" },\n          { size: \"L\", num: 100, color: \"green\" }\n        ]\n}\n\n{\n   _id: ObjectId(\"52350353b2eff1353b349de9\"),\n   code: \"ijk\",\n   tags: [ \"electronics\", \"school\" ],\n   qty: [\n          { size: \"M\", num: 100, color: \"green\" }\n        ]\n}"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "a4508048b315a4cfac1753ff9021251daaf98974b8ba80f7d590cb9e847d2485",
+      "text" : "{\n   \"_id\" : ObjectId(\"5234ccb7687ea597eabee677\"),\n   \"code\" : \"efg\",\n   \"tags\" : [ \"school\", \"book\"],\n   \"qty\" : [\n             { \"size\" : \"S\", \"num\" : 10, \"color\" : \"blue\" },\n             { \"size\" : \"M\", \"num\" : 100, \"color\" : \"blue\" },\n             { \"size\" : \"L\", \"num\" : 100, \"color\" : \"green\" }\n           ]\n}\n\n{\n   \"_id\" : ObjectId(\"52350353b2eff1353b349de9\"),\n   \"code\" : \"ijk\",\n   \"tags\" : [ \"electronics\", \"school\" ],\n   \"qty\" : [\n             { \"size\" : \"M\", \"num\" : 100, \"color\" : \"green\" }\n           ]\n}"
+    } ],
+    "collections" : { },
+    "corrections" : [ ],
+    "example" : "Use ``$all`` with ``$elemMatch``",
+    "fixture" : "query/filters/all/useAllWithElemMatch",
+    "fixtureFiles" : {
+      "action.json" : "f26a44be9aa4105e60520122ea59c9865c3f4fad6b4d0c198f21ba9847421914",
+      "data.json" : "f8926c1cc0f8960de30e30f0fb235ac2f89e74ffbb84a4669e5df249a73e3850",
+      "expected.json" : "7ba4da9a923859e4b40017cd901830944061dea369adfe5b6be644b36754f0a3",
+      "name" : "22fd4dc63bfdc1658976b6a6e4eb529feca59aafdbba61230fafa9a66eb57d15"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "61c65e2f40f55fa8dc957ab209b96ea1f3cff254",
+      "path" : "source/includes/extracts-additional-examples.yaml"
+    } ],
+    "origin" : "807645683ea6dc6400be4946e753df0426b81809",
+    "pageBlob" : "87ec3ce26346162f90eb903f77e29c2e7d8925b5",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "a9301123188fa9aeb32f2eb7486d8fa2e9909a1a2b77eb4270c8c56c43ebfb05",
+      "text" : "source text has a missing quote"
+    },
+    "retypes" : [ ],
+    "rules" : [ ],
+    "shape" : "FIND",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/all.txt",
+      "relation" : "AT_ORIGIN"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
       "sha256" : "546f31c256c2b37282e737e572afbb574439b77656b921a56d7664889510677f",
       "text" : "db.places.find( {\n   loc: { $geoWithin: { $box:  [ [ 0, 0 ], [ 100, 100 ] ] } }\n} )"
     } ],
@@ -4889,6 +5239,62 @@
     "source" : {
       "commit" : "2b68884ad57110c9525b6dbdefcab1c0c8375f80",
       "path" : "source/reference/operator/query/center.txt",
+      "relation" : "AT_ORIGIN"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "9834262588b88c95eff7e9d84acd6600abd86b6ef2103bd8f54eec7181bbef3b",
+      "text" : "db.scores.find(\n   { results: { $elemMatch: { $gte: 80, $lt: 85 } } }\n)"
+    }, {
+      "role" : "DATA",
+      "sha256" : "4c97a99506b224d716ac57a4fc0ee43628b0ee18ac1b810944100c94bdd2edb9",
+      "text" : "{ _id: 1, results: [ 82, 85, 88 ] }\n{ _id: 2, results: [ 75, 88, 89 ] }"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "f28cd8fab525ad618e40cc11f17e8e3546c072d6c4322aef6dd8abb568fdaed2",
+      "text" : "{ \"_id\" : 1, \"results\" : [ 82, 85, 88 ] }"
+    } ],
+    "collections" : { },
+    "corrections" : [ ],
+    "example" : "Element Match",
+    "fixture" : "query/filters/elemMatch/elementMatch",
+    "fixtureFiles" : {
+      "action.json" : "9834262588b88c95eff7e9d84acd6600abd86b6ef2103bd8f54eec7181bbef3b",
+      "data.json" : "4c97a99506b224d716ac57a4fc0ee43628b0ee18ac1b810944100c94bdd2edb9",
+      "expected.json" : "06f390adfe635394dc9983a196fae28c59ca001c595ca0092f047f6adc2a4441",
+      "name" : "c86b017edd03c3ae8f0c34b8568f7a6d95a716072ebb834f21c28b8cb744cb87"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "61c65e2f40f55fa8dc957ab209b96ea1f3cff254",
+      "path" : "source/includes/extracts-additional-examples.yaml"
+    } ],
+    "origin" : "807645683ea6dc6400be4946e753df0426b81809",
+    "pageBlob" : "f5ff82ce948d31e2108b0e932810e1280f149961",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "424666fd24e9db8d87f4bbe2b442857c72be13adc83f0d601c187a486a9a6793",
+      "text" : "example's expected didn't match reality"
+    },
+    "retypes" : [ ],
+    "rules" : [ ],
+    "shape" : "FIND",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/elemMatch.txt",
       "relation" : "AT_ORIGIN"
     },
     "unexpandedIncludes" : [ ]
@@ -5131,6 +5537,9 @@
       "name" : "71725f683f39052f02baa9c6cc10addac3a698284ecd880ed20b7bb012cc6a1a"
     },
     "includes" : [ {
+      "blob" : "a5beafd7f6ce11d0c74d7b10228811823fe3fd14",
+      "path" : "source/includes/extracts-geospatial-long-lat.yaml"
+    }, {
       "blob" : "d0d4847310431dc55af1857b061eae59007ec37d",
       "path" : "source/includes/fact-geometry-hemisphere-limitation.rst"
     } ],
@@ -5170,6 +5579,9 @@
       "name" : "10eb61f8b9e2cb8538b7ee71a65966cc62fc923b81b10fac3edb7f157a0e986a"
     },
     "includes" : [ {
+      "blob" : "a5beafd7f6ce11d0c74d7b10228811823fe3fd14",
+      "path" : "source/includes/extracts-geospatial-long-lat.yaml"
+    }, {
       "blob" : "d0d4847310431dc55af1857b061eae59007ec37d",
       "path" : "source/includes/fact-geometry-hemisphere-limitation.rst"
     } ],
@@ -5393,6 +5805,68 @@
   }, {
     "blocks" : [ {
       "role" : "ACTION",
+      "sha256" : "0b6c350f9f05015a2dedca9da30efbbc5eba59458d0c56e9082ff91fc7e1e206",
+      "text" : "db.inventory.updateMany(\n   { tags: { $in: [ \"home\", \"school\" ] } },\n   { $set: { exclude: false } }\n)"
+    }, {
+      "role" : "DATA",
+      "sha256" : "65e89a7da00ea78beed6e0d2553048caa73bcd8c0c38f5c1c1c44f65775a52ab",
+      "text" : "db.inventory.insertMany( [\n   { \"item\": \"Pens\", \"quantity\": 350, \"tags\": [ \"school\", \"office\" ] },\n   { \"item\": \"Erasers\", \"quantity\": 15, \"tags\": [ \"school\", \"home\" ] },\n   { \"item\": \"Maps\", \"tags\": [ \"office\", \"storage\" ] },\n   { \"item\": \"Books\", \"quantity\": 5, \"tags\": [ \"school\", \"storage\", \"home\" ] }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "757fcc00f66ed6df0f22b4e8e8724f11882138f8ccdfcefe406ca5cc051cb2e3",
+      "text" : "{\n   item: 'Pens',\n   quantity: 350,\n   tags: [ 'school', 'office' ],\n   exclude: false\n },\n {\n   item: 'Erasers',\n   quantity: 15,\n   tags: [ 'school', 'home' ],\n   exclude: false\n },\n {\n   item: 'Books',\n   quantity: 5,\n   tags: [ 'school', 'storage', 'home' ],\n   exclude: false\n }"
+    } ],
+    "collections" : { },
+    "corrections" : [ ],
+    "example" : "Use the ``$in`` Operator to Match Values in an Array",
+    "fixture" : "query/filters/in/useTheInOperatorToMatchValuesInAnArray",
+    "fixtureFiles" : {
+      "action.json" : "0b6c350f9f05015a2dedca9da30efbbc5eba59458d0c56e9082ff91fc7e1e206",
+      "data.json" : "910d4131c4df803d0c71de3bc9f99ec55e9d48a6d4ed185e0b5cd799c44bd190",
+      "expected.json" : "14edfb225a33e7d21579d976f2697fc0057e996a23684286f8b0acaa8717f567",
+      "name" : "7b4e9c3da88867d8811e42f934ebab4c3c077cdf8a3d5fe31284fd72f6328f3b"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "b9acbd89b94e90716152e19ec82bc57d4039e3f1",
+      "path" : "source/includes/fact-comparison-order.rst"
+    }, {
+      "blob" : "30b290a800b4cbc61832f327768fee3bb6040468",
+      "path" : "source/includes/fact-atlas-search-operator.rst"
+    }, {
+      "blob" : "61c65e2f40f55fa8dc957ab209b96ea1f3cff254",
+      "path" : "source/includes/extracts-additional-examples.yaml"
+    } ],
+    "origin" : "7ddc79615aaf62f884703b31a036060df6961095",
+    "pageBlob" : "a1ad4613f10bb5eb67174b4a35c0505b04cf34ae",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "2fbdd27cdec0677dcb8fe178bed7b616bc7c49d8e50c167ba963d23e899cc897",
+      "text" : "code block had extra text in it\n"
+    },
+    "retypes" : [ ],
+    "rules" : [ ],
+    "shape" : "UPDATE",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/in.txt",
+      "relation" : "AT_ORIGIN"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
       "sha256" : "107c72de201c43c9b546bc4c536e620baa11ca9e057e9f2a49e910b45d8908dd",
       "text" : "db.inventory.find( { qty: { $mod: [ 4.0, 0 ] } } )"
     }, {
@@ -5436,6 +5910,57 @@
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
       "path" : "source/reference/operator/query/mod.txt",
+      "relation" : "AT_ORIGIN"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "4a662901371ebfd4a255598c52e9c3b6e9973c0bba1258fb7d4cedea6b8cc9a5",
+      "text" : "db.places.find(\n   {\n     location:\n       { $near :\n          {\n            $geometry: { type: \"Point\",  coordinates: [ -73.9667, 40.78 ] },\n            $minDistance: 1000,\n            $maxDistance: 5000\n          }\n       }\n   }\n)"
+    } ],
+    "collections" : { },
+    "corrections" : [ ],
+    "example" : "Query on GeoJSON Data",
+    "fixture" : "query/filters/near/queryOnGeoJsonData",
+    "fixtureFiles" : {
+      "action.json" : "584a24ed3029977fd85411132cab968a3adbdcc80be8eaa923b7f959f7e6a9fd",
+      "name" : "9157f3a1879b18c064e99778159cee1418bd95126aafe6b2f247654fdd744f5c"
+    },
+    "includes" : [ {
+      "blob" : "69d2a8115dafb1eb5cc88b3958386b6f62079b7b",
+      "path" : "source/includes/extracts-geospatial-long-lat.yaml"
+    }, {
+      "blob" : "c06a15831b78be20b8bedbee54fea72c27abf599",
+      "path" : "source/includes/fact-geo-near-special-indexes.rst"
+    }, {
+      "blob" : "e6c41e12d74350e98f0884af8a0547f028356603",
+      "path" : "source/includes/fact-near-sharded-cluster.rst"
+    }, {
+      "blob" : "d0af3b05b45ed55a7f4ce12fbb4b891adfe167b8",
+      "path" : "source/includes/fact-geo-near-returns-sorted-results.rst"
+    }, {
+      "blob" : "863fbf338696cb4b854049f161659d7eda9e08fd",
+      "path" : "source/includes/example-near-minDistance.rst"
+    } ],
+    "origin" : "52d461f742298f36a6ecf2ea02d8ebc332dc7168",
+    "pageBlob" : "38c44685031798ec800840f6b9b92c4509cd03e5",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "29e937aea7ad4e11fc0364647a71756f72454f2cf9e919bb0e945f42129b6baa",
+      "text" : "use floating point values"
+    },
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/location/$near",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "shape" : "FIND",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/near.txt",
       "relation" : "AT_ORIGIN"
     },
     "unexpandedIncludes" : [ ]
@@ -5624,6 +6149,9 @@
     }, {
       "blob" : "a5cdd66b913b1f650b648124247c19889cbc6f59",
       "path" : "source/includes/fact-bson-types.rst"
+    }, {
+      "blob" : "4e2e022eb95865da7e7a6bab33d940ac804f8810",
+      "path" : "source/includes/extracts-4.2-changes.yaml"
     } ],
     "origin" : "f5efa7c2b14d22ec139f3ea5a0e37bca1aefa874",
     "pageBlob" : "0902d6a741899af1732131889743c75df2d9cc6e",
@@ -5787,6 +6315,12 @@
     }, {
       "blob" : "3eddf446867bc82fd4404645462411a8ab8d4209",
       "path" : "source/includes/fact-update-operator-processing-order.rst"
+    }, {
+      "blob" : "ac698feee23671aac82cf09e4f18bb3e3e20322e",
+      "path" : "source/includes/extracts-update-operations.yaml"
+    }, {
+      "blob" : "d16ecb02d62db5af0e83450c77a65c0b70114183",
+      "path" : "source/includes/extracts-update-operations-base.yaml"
     } ],
     "origin" : "8a18df9304d31169e1338ef9d17e7b582d276016",
     "pageBlob" : "3e3454c095eda294d30ab5fdc72c3c99c594e81d",
@@ -5864,6 +6398,12 @@
     }, {
       "blob" : "3eddf446867bc82fd4404645462411a8ab8d4209",
       "path" : "source/includes/fact-update-operator-processing-order.rst"
+    }, {
+      "blob" : "ac698feee23671aac82cf09e4f18bb3e3e20322e",
+      "path" : "source/includes/extracts-update-operations.yaml"
+    }, {
+      "blob" : "d16ecb02d62db5af0e83450c77a65c0b70114183",
+      "path" : "source/includes/extracts-update-operations-base.yaml"
     } ],
     "origin" : "8a18df9304d31169e1338ef9d17e7b582d276016",
     "pageBlob" : "3e3454c095eda294d30ab5fdc72c3c99c594e81d",
@@ -5882,7 +6422,7 @@
     },
     "unexpandedIncludes" : [ ]
   } ],
-  "repositoryRevision" : "1166c8f816ef6d08257294b81ff25edfca14a8de",
+  "repositoryRevision" : "0a22114689746d4002dcc54c74f64e6e200dc358",
   "rules" : [ {
     "description" : "$cond: {if: a, then: b, else: c} and $cond: [a, b, c] are the same expression; the array form is canonical.",
     "rule" : "COND_ARRAY"
@@ -5917,15 +6457,16 @@
   "schemaVersion" : 1,
   "sourceRepository" : "mongodb/docs",
   "summary" : {
-    "gap.FIXTURE_UNSUPPORTED" : 5,
-    "gap.NO_MATCHING_EXAMPLE" : 2,
-    "gap.PAGE_UNSUPPORTED" : 23,
-    "gap.RESIDUAL_DIFFERENCE" : 28,
-    "gap.SOURCE_UNSUPPORTED" : 60,
-    "overrides" : 116,
+    "gap.FIXTURE_UNSUPPORTED" : 8,
+    "gap.NO_MATCHING_EXAMPLE" : 4,
+    "gap.PAGE_UNSUPPORTED" : 0,
+    "gap.REJECTED" : 1,
+    "gap.RESIDUAL_DIFFERENCE" : 37,
+    "gap.SOURCE_UNSUPPORTED" : 61,
+    "overrides" : 123,
     "overrides.corrected" : 18,
-    "overrides.exact" : 40,
-    "overrides.retyped" : 15,
+    "overrides.exact" : 46,
+    "overrides.retyped" : 16,
     "rule.ALTERNATIVE_COMMANDS" : 1,
     "rule.COND_ARRAY" : 14,
     "rule.EQ_SHORTHAND" : 4,
@@ -5936,7 +6477,7 @@
     "rule.REGEX_FORM" : 1,
     "rule.SINGLE_ARGUMENT_ARRAY" : 2,
     "rule.UNWIND_PATH" : 1,
-    "unresolved" : 118
+    "unresolved" : 111
   },
   "unresolved" : [ {
     "detail" : "SYNTAX",
@@ -6209,9 +6750,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
+    "detail" : "expected.json ARRAY_LENGTH at ",
     "fixture" : "aggregation/expressions/regexFind/applyRegexFindToStringElementsOfAnArray",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
     "source" : {
       "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
@@ -6219,19 +6760,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
-    "fixture" : "aggregation/expressions/regexFind/regexFindAndItsOptions",
-    "gap" : "PAGE_UNSUPPORTED",
-    "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
-    "source" : {
-      "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
-      "path" : "source/reference/operator/aggregation/regexFind.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
+    "detail" : "expected.json TYPE at /0/username",
     "fixture" : "aggregation/expressions/regexFind/useCapturedGroupingsToParseUserName",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
     "source" : {
       "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
@@ -6239,9 +6770,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
+    "detail" : "The page prints the result after $addFields (email as a match document) and again after $set (email as a string); the extractor reads the first, so the drafted corrections rewrite every email, which the lock does not describe.",
     "fixture" : "aggregation/expressions/regexFind/useRegexFindToParseEmailFromString",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "REJECTED",
     "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
     "source" : {
       "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
@@ -6249,19 +6780,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
-    "fixture" : "aggregation/expressions/regexFindAll/regexFindAllAndItsOptions",
-    "gap" : "PAGE_UNSUPPORTED",
-    "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
-    "source" : {
-      "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
-      "path" : "source/reference/operator/aggregation/regexFindAll.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
+    "detail" : "expected.json TYPE at /0/names/0",
     "fixture" : "aggregation/expressions/regexFindAll/useCapturedGroupingsToParseUserName",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
     "source" : {
       "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
@@ -6269,9 +6790,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
+    "detail" : "expected.json TYPE at /0/email/0",
     "fixture" : "aggregation/expressions/regexFindAll/useRegexFindAllToParseEmailFromString",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
     "source" : {
       "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
@@ -6279,19 +6800,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
-    "fixture" : "aggregation/expressions/regexMatch/regexMatchAndItsOptions",
-    "gap" : "PAGE_UNSUPPORTED",
-    "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
-    "source" : {
-      "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
-      "path" : "source/reference/operator/aggregation/regexMatch.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
+    "detail" : "SYNTAX",
     "fixture" : "aggregation/expressions/regexMatch/useRegexMatchToCheckEmailAddress",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "SOURCE_UNSUPPORTED",
     "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
     "source" : {
       "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
@@ -6529,9 +7040,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/4.2-changes-geoNear-limit.rst",
+    "detail" : "files [data1.json]",
     "fixture" : "aggregation/stages/geoNear/geoNearWithBoundLetOption",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "FIXTURE_UNSUPPORTED",
     "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
     "source" : {
       "commit" : "111836fb23076857f0cf9bcce15e694fe4a169e4",
@@ -6539,9 +7050,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/4.2-changes-geoNear-limit.rst",
+    "detail" : "aggregate options",
     "fixture" : "aggregation/stages/geoNear/geoNearWithTheLetOption",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "FIXTURE_UNSUPPORTED",
     "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
     "source" : {
       "commit" : "111836fb23076857f0cf9bcce15e694fe4a169e4",
@@ -6549,9 +7060,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/4.2-changes-geoNear-limit.rst",
+    "detail" : "files [data1.json]",
     "fixture" : "aggregation/stages/geoNear/maximumDistance",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "FIXTURE_UNSUPPORTED",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "source" : {
       "commit" : "9c258a2f304c6f08f4dfc6b9d466abd543a90888",
@@ -6729,16 +7240,6 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/additional-examples-arrays.rst",
-    "fixture" : "query/filters/all/useAllWithElemMatch",
-    "gap" : "PAGE_UNSUPPORTED",
-    "origin" : "807645683ea6dc6400be4946e753df0426b81809",
-    "source" : {
-      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
-      "path" : "source/reference/operator/query/all.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
     "detail" : "UNSUPPORTED_AST",
     "fixture" : "query/filters/centerSphere/centerSphereQueryPredicateOperator",
     "gap" : "SOURCE_UNSUPPORTED",
@@ -6749,19 +7250,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/additional-examples-arrays.rst",
-    "fixture" : "query/filters/elemMatch/elementMatch",
-    "gap" : "PAGE_UNSUPPORTED",
-    "origin" : "807645683ea6dc6400be4946e753df0426b81809",
-    "source" : {
-      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
-      "path" : "source/reference/operator/query/elemMatch.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/additional-examples-arrays.rst",
+    "detail" : "data.json ARRAY_LENGTH at ",
     "fixture" : "query/filters/elemMatch/singleQueryCondition",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "807645683ea6dc6400be4946e753df0426b81809",
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
@@ -6779,9 +7270,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/4.2-changes-type-0.rst",
+    "detail" : "data.json has no documented source",
     "fixture" : "query/filters/exists/existsAndNotEqualTo",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "52d461f742298f36a6ecf2ea02d8ebc332dc7168",
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
@@ -6789,9 +7280,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/4.2-changes-type-0.rst",
+    "detail" : "expected.json ARRAY_LENGTH at ",
     "fixture" : "query/filters/exists/nullValues",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "52d461f742298f36a6ecf2ea02d8ebc332dc7168",
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
@@ -6819,16 +7310,6 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/additional-examples-arrays.rst",
-    "fixture" : "query/filters/in/useTheInOperatorToMatchValuesInAnArray",
-    "gap" : "PAGE_UNSUPPORTED",
-    "origin" : "7ddc79615aaf62f884703b31a036060df6961095",
-    "source" : {
-      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
-      "path" : "source/reference/operator/query/in.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
     "detail" : "action.json syntax",
     "fixture" : "query/filters/maxDistance/maxDistanceQueryPredicateOperator",
     "gap" : "FIXTURE_UNSUPPORTED",
@@ -6839,9 +7320,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/ne_operators_selectivity.rst",
+    "detail" : "Arrays",
     "fixture" : "query/filters/ne/arrays",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "NO_MATCHING_EXAMPLE",
     "origin" : "2e4cc72d6b0b73a45c92f4ee1c66cb63ee8e5ed4",
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
@@ -6849,9 +7330,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/ne_operators_selectivity.rst",
+    "detail" : "expected.json ARRAY_LENGTH at ",
     "fixture" : "query/filters/ne/updateBasedOnNotEqualEmbeddedDocumentFields",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "7ddc79615aaf62f884703b31a036060df6961095",
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
@@ -6859,19 +7340,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include::  /includes/extracts/geospatial-long-lat-values.rst",
-    "fixture" : "query/filters/near/queryOnGeoJsonData",
-    "gap" : "PAGE_UNSUPPORTED",
-    "origin" : "52d461f742298f36a6ecf2ea02d8ebc332dc7168",
-    "source" : {
-      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
-      "path" : "source/reference/operator/query/near.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/nin_operators_selectivity.rst",
+    "detail" : "expected.json has no documented source",
     "fixture" : "query/filters/nin/selectOnElementsNotInAnArray",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "7ddc79615aaf62f884703b31a036060df6961095",
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
@@ -6939,9 +7410,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/4.4-changes-projection-sort-meta-list.rst",
+    "detail" : "Diacritic Sensitive Search",
     "fixture" : "query/filters/text/diacriticSensitiveSearch",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "NO_MATCHING_EXAMPLE",
     "origin" : "f5efa7c2b14d22ec139f3ea5a0e37bca1aefa874",
     "source" : {
       "commit" : "d7f95ad70b1073047e6b3b46f5950a5e54af8a9f",

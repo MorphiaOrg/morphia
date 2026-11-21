@@ -599,6 +599,9 @@ python3 -I audits/probes/form-sources/fetch.py pages /tmp/last.json /tmp/pages
 (`loadData("airports", 2)` → `data2.json`) from the committed `audits/catalog/curated-repairs.json`,
 so recapture that inventory first when a test's `loadData` calls change. The reviewed `audits/catalog/form-review.json` is consumed by
 `capture <root> <revision> <pages> <review> <out>`, which writes `audits/catalog/form-migration.json`,
-and by `apply <root> <report>`, which deletes the retired locks. An audits test rechecks the committed
+and by `apply <root> <report>`, which deletes the retired locks. To reject a drafted declaration,
+move its fixture to `unresolved` with gap `REJECTED` and the reason; `capture` keeps it rejected while it
+still reproduces. Generated `/includes/extracts/` files are assembled from the `extracts*.yaml` that
+`fetch.py pages` downloads with them. An audits test rechecks the committed
 report against the tree without the pages. See the [migration design](../design/operator-audits-form-migration.md).
 

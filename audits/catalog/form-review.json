@@ -191,7 +191,13 @@
   }, {
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/cmp/cmpExpressionOperator",
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
+      "path" : "source/includes/extracts-examples-eval.yaml"
+    }, {
+      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
+      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
+    } ],
     "justification" : null,
     "lock" : "reorder pipeline",
     "marker" : "lock",
@@ -263,7 +269,10 @@
       "pointer" : "/0/$project/date/$dateFromString/onNull"
     } ],
     "fixture" : "aggregation/expressions/dateFromString/onNull",
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "4a4e0cf5eb9ef9a0a23e2f3aeb86b9a34fc15697",
+      "path" : "source/includes/extracts-date-format-specifiers.yaml"
+    } ],
     "justification" : null,
     "lock" : "provided a simpler onNull()",
     "marker" : "lock",
@@ -310,6 +319,9 @@
     }, {
       "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
       "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "f8cea074d104c6d7540688c4a001bb12aef64c1a",
+      "path" : "source/includes/extracts-date-format-specifiers.yaml"
     } ],
     "justification" : null,
     "lock" : "rearranged arguments to match morphia's",
@@ -397,7 +409,13 @@
   }, {
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/eq/eqExpressionOperator",
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
+      "path" : "source/includes/extracts-examples-eval.yaml"
+    }, {
+      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
+      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
+    } ],
     "justification" : null,
     "lock" : "reorder pipeline",
     "marker" : "lock",
@@ -413,7 +431,13 @@
   }, {
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/exp/expExpressionOperator",
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "bbf5c44a10e62dc8903402b5aaf9baf1323ef458",
+      "path" : "source/includes/extracts-agg-expression-null.yaml"
+    }, {
+      "blob" : "8623cf2a56423be1b837696232e1d7f56f12569c",
+      "path" : "source/includes/extracts-agg-expression-null-base.yaml"
+    } ],
     "justification" : null,
     "lock" : "the interestRate values were not proper doubles",
     "marker" : "lock",
@@ -557,7 +581,13 @@
   }, {
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/gt/gtExpressionOperator",
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
+      "path" : "source/includes/extracts-examples-eval.yaml"
+    }, {
+      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
+      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
+    } ],
     "justification" : null,
     "lock" : "reorder pipeline",
     "marker" : "lock",
@@ -573,7 +603,13 @@
   }, {
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/gte/gteExpressionOperator",
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
+      "path" : "source/includes/extracts-examples-eval.yaml"
+    }, {
+      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
+      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
+    } ],
     "justification" : null,
     "lock" : "reorder pipeline",
     "marker" : "lock",
@@ -729,7 +765,13 @@
   }, {
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/lt/ltExpressionOperator",
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
+      "path" : "source/includes/extracts-examples-eval.yaml"
+    }, {
+      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
+      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
+    } ],
     "justification" : null,
     "lock" : "reorder pipeline",
     "marker" : "lock",
@@ -745,7 +787,13 @@
   }, {
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/lte/lteExpressionOperator",
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
+      "path" : "source/includes/extracts-examples-eval.yaml"
+    }, {
+      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
+      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
+    } ],
     "justification" : null,
     "lock" : "reorder pipeline",
     "marker" : "lock",
@@ -818,6 +866,12 @@
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/max/useInSetWindowFieldsStage",
     "includes" : [ {
+      "blob" : "48429813c7e668caccccfe27b3b2894cd4d066e7",
+      "path" : "source/includes/extracts-fact-aggregation-accumulator.yaml"
+    }, {
+      "blob" : "e2dda4a385450130f3ca31944a8c58804e80ce6d",
+      "path" : "source/includes/extracts-fact-aggregation-accumulator-base.yaml"
+    }, {
       "blob" : "f56012674985fd6d9fe5f558a661d55d6a717156",
       "path" : "source/includes/setWindowFields-example-collection.rst"
     }, {
@@ -856,6 +910,12 @@
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/min/useInSetWindowFieldsStage",
     "includes" : [ {
+      "blob" : "48429813c7e668caccccfe27b3b2894cd4d066e7",
+      "path" : "source/includes/extracts-fact-aggregation-accumulator.yaml"
+    }, {
+      "blob" : "e2dda4a385450130f3ca31944a8c58804e80ce6d",
+      "path" : "source/includes/extracts-fact-aggregation-accumulator-base.yaml"
+    }, {
       "blob" : "f56012674985fd6d9fe5f558a661d55d6a717156",
       "path" : "source/includes/setWindowFields-example-collection.rst"
     }, {
@@ -893,7 +953,13 @@
   }, {
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/ne/neExpressionOperator",
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
+      "path" : "source/includes/extracts-examples-eval.yaml"
+    }, {
+      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
+      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
+    } ],
     "justification" : null,
     "lock" : "reorder pipeline",
     "marker" : "lock",
@@ -1146,7 +1212,13 @@
   }, {
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/reduce/arrayConcatenation",
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "5eea7db82afdd4723cac7050891df1f7c7042823",
+      "path" : "source/includes/extracts-3.4-agg-expression-null.yaml"
+    }, {
+      "blob" : "ee40a9d1b0d38be8227b5f23cea8c85c217aeb5a",
+      "path" : "source/includes/extracts-3.4-agg-expression-null-base.yaml"
+    } ],
     "justification" : null,
     "lock" : "expected has a \"results\" field that shouldn't be there",
     "marker" : "lock",
@@ -1162,7 +1234,13 @@
   }, {
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/reduce/multiplication",
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "5eea7db82afdd4723cac7050891df1f7c7042823",
+      "path" : "source/includes/extracts-3.4-agg-expression-null.yaml"
+    }, {
+      "blob" : "ee40a9d1b0d38be8227b5f23cea8c85c217aeb5a",
+      "path" : "source/includes/extracts-3.4-agg-expression-null-base.yaml"
+    } ],
     "justification" : null,
     "lock" : "parser pulled wrong code block for expected",
     "marker" : "lock",
@@ -1178,7 +1256,13 @@
   }, {
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/reduce/stringConcatenation",
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "5eea7db82afdd4723cac7050891df1f7c7042823",
+      "path" : "source/includes/extracts-3.4-agg-expression-null.yaml"
+    }, {
+      "blob" : "ee40a9d1b0d38be8227b5f23cea8c85c217aeb5a",
+      "path" : "source/includes/extracts-3.4-agg-expression-null-base.yaml"
+    } ],
     "justification" : null,
     "lock" : "use the short form for $cond",
     "marker" : "lock",
@@ -1189,6 +1273,72 @@
     "source" : {
       "commit" : "ca3e8a737ee08af6482a9eed3a1abfe708edd5c8",
       "path" : "source/reference/operator/aggregation/reduce.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/regexFind/regexFindAndItsOptions",
+    "includes" : [ {
+      "blob" : "7f5fc4b51bef04e8026d2d93ba49bc5a127bf3f6",
+      "path" : "source/includes/extracts-agg-regex.yaml"
+    }, {
+      "blob" : "1c76d95ca483b2924600db416405d9e9850d96b3",
+      "path" : "source/includes/fact-6.1-pcre2.rst"
+    } ],
+    "justification" : null,
+    "lock" : "example data needs multiple spaces that the parser eliminates",
+    "marker" : "lock",
+    "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
+    "pageBlob" : "5c8d71944fa06b2a6be5c7ee8007e6c263414992",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
+      "path" : "source/reference/operator/aggregation/regexFind.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/regexFindAll/regexFindAllAndItsOptions",
+    "includes" : [ {
+      "blob" : "7f5fc4b51bef04e8026d2d93ba49bc5a127bf3f6",
+      "path" : "source/includes/extracts-agg-regex.yaml"
+    }, {
+      "blob" : "1c76d95ca483b2924600db416405d9e9850d96b3",
+      "path" : "source/includes/fact-6.1-pcre2.rst"
+    } ],
+    "justification" : null,
+    "lock" : "example data needs multiple spaces that the parser eliminates",
+    "marker" : "lock",
+    "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
+    "pageBlob" : "42d41fe7d1a5a0e70c7303fd2b435cf337017b25",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
+      "path" : "source/reference/operator/aggregation/regexFindAll.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/regexMatch/regexMatchAndItsOptions",
+    "includes" : [ {
+      "blob" : "7f5fc4b51bef04e8026d2d93ba49bc5a127bf3f6",
+      "path" : "source/includes/extracts-agg-regex.yaml"
+    }, {
+      "blob" : "1c76d95ca483b2924600db416405d9e9850d96b3",
+      "path" : "source/includes/fact-6.1-pcre2.rst"
+    } ],
+    "justification" : null,
+    "lock" : "docs had \"returns\" instead of \"result\"\n_id 2 had the wrong result",
+    "marker" : "lock",
+    "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
+    "pageBlob" : "7d7cb97c757085b76945febfc527419c58b3170a",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
+      "path" : "source/reference/operator/aggregation/regexMatch.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -1213,6 +1363,12 @@
     "includes" : [ {
       "blob" : "9ba8fe6005b2e4e5e7a77bbf7c6535da3355c571",
       "path" : "source/includes/important-set-operator-semantics.rst"
+    }, {
+      "blob" : "3ae8bf736443eaa8cf84e56de8d30b33dd6449bc",
+      "path" : "source/includes/extracts-fact-agg-top-level-expressions.yaml"
+    }, {
+      "blob" : "5366b8d724f1705e143d55a10e620d6fe50b37de",
+      "path" : "source/includes/extracts-parent-fact-agg-top-level-expressions.yaml"
     } ],
     "justification" : null,
     "lock" : "rearrange suppress id",
@@ -1232,6 +1388,12 @@
     "includes" : [ {
       "blob" : "9ba8fe6005b2e4e5e7a77bbf7c6535da3355c571",
       "path" : "source/includes/important-set-operator-semantics.rst"
+    }, {
+      "blob" : "3ae8bf736443eaa8cf84e56de8d30b33dd6449bc",
+      "path" : "source/includes/extracts-fact-agg-top-level-expressions.yaml"
+    }, {
+      "blob" : "5366b8d724f1705e143d55a10e620d6fe50b37de",
+      "path" : "source/includes/extracts-parent-fact-agg-top-level-expressions.yaml"
     }, {
       "blob" : "8b933e78dea0c9ba4dfdefecb2782016a3cb4f24",
       "path" : "source/includes/user-roles-system-variable-introduction.rst"
@@ -1278,7 +1440,13 @@
       "pointer" : "/2/flowerFieldB/1"
     } ],
     "fixture" : "aggregation/expressions/setIsSubset/setIsSubsetExpressionOperator",
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "3ae8bf736443eaa8cf84e56de8d30b33dd6449bc",
+      "path" : "source/includes/extracts-fact-agg-top-level-expressions.yaml"
+    }, {
+      "blob" : "5366b8d724f1705e143d55a10e620d6fe50b37de",
+      "path" : "source/includes/extracts-parent-fact-agg-top-level-expressions.yaml"
+    } ],
     "justification" : null,
     "lock" : "rearrange suppress id\nthere was a \"blue\" flower in the expected?!?",
     "marker" : "lock",
@@ -1297,6 +1465,12 @@
     "includes" : [ {
       "blob" : "9ba8fe6005b2e4e5e7a77bbf7c6535da3355c571",
       "path" : "source/includes/important-set-operator-semantics.rst"
+    }, {
+      "blob" : "3ae8bf736443eaa8cf84e56de8d30b33dd6449bc",
+      "path" : "source/includes/extracts-fact-agg-top-level-expressions.yaml"
+    }, {
+      "blob" : "5366b8d724f1705e143d55a10e620d6fe50b37de",
+      "path" : "source/includes/extracts-parent-fact-agg-top-level-expressions.yaml"
     } ],
     "justification" : null,
     "lock" : "rearrange suppress id\n",
@@ -1374,6 +1548,12 @@
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/sum/useInGroupStage",
     "includes" : [ {
+      "blob" : "48429813c7e668caccccfe27b3b2894cd4d066e7",
+      "path" : "source/includes/extracts-fact-aggregation-accumulator.yaml"
+    }, {
+      "blob" : "6f5d7d363aa3a93352c9cba4bd64f87570e732bf",
+      "path" : "source/includes/extracts-fact-aggregation-accumulator-base.yaml"
+    }, {
       "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
       "path" : "source/includes/fact-compatibility.rst"
     }, {
@@ -1518,7 +1698,13 @@
   }, {
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/zip/matrixTransposition",
-    "includes" : [ ],
+    "includes" : [ {
+      "blob" : "5eea7db82afdd4723cac7050891df1f7c7042823",
+      "path" : "source/includes/extracts-3.4-agg-expression-null.yaml"
+    }, {
+      "blob" : "ee40a9d1b0d38be8227b5f23cea8c85c217aeb5a",
+      "path" : "source/includes/extracts-3.4-agg-expression-null-base.yaml"
+    } ],
     "justification" : null,
     "lock" : "use 0 instead of false to suppress _id",
     "marker" : "lock",
@@ -1609,6 +1795,9 @@
     }, {
       "blob" : "6beb75178564cf0b943050f7e6ef2d96165ce728",
       "path" : "source/includes/fact-graphlookup-memory-restrictions.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
     } ],
     "justification" : null,
     "lock" : "updated pipeline order\n",
@@ -1637,6 +1826,9 @@
     }, {
       "blob" : "6beb75178564cf0b943050f7e6ef2d96165ce728",
       "path" : "source/includes/fact-graphlookup-memory-restrictions.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
     } ],
     "justification" : null,
     "lock" : "update the lookup collection name",
@@ -1665,6 +1857,9 @@
     }, {
       "blob" : "6beb75178564cf0b943050f7e6ef2d96165ce728",
       "path" : "source/includes/fact-graphlookup-memory-restrictions.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
     } ],
     "justification" : null,
     "lock" : "updated the collection name in from",
@@ -1693,6 +1888,12 @@
     }, {
       "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
       "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "be3fc6f1f30030dd8caec9c694d2bd8740bd1715",
+      "path" : "source/includes/extracts-agg-operators.yaml"
+    }, {
+      "blob" : "55d38e3e1a1f693539b2a660f6709730110d2fa5",
+      "path" : "source/includes/aggregation/fact-operator-availability.rst"
     }, {
       "blob" : "5ba8939bc7515c153aa2f6eef9953927f0183ce2",
       "path" : "source/includes/fact-sbe-group-overview.rst"
@@ -1740,6 +1941,9 @@
       "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
       "path" : "source/includes/expr-operators-and-indexes.rst"
     }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
+    }, {
       "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
       "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
     }, {
@@ -1785,6 +1989,9 @@
     }, {
       "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
       "path" : "source/includes/expr-operators-and-indexes.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
     }, {
       "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
       "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
@@ -1832,6 +2039,9 @@
       "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
       "path" : "source/includes/expr-operators-and-indexes.rst"
     }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
+    }, {
       "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
       "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
     }, {
@@ -1878,6 +2088,9 @@
       "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
       "path" : "source/includes/expr-operators-and-indexes.rst"
     }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
+    }, {
       "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
       "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
     }, {
@@ -1911,6 +2124,9 @@
     }, {
       "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
       "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
     } ],
     "justification" : null,
     "lock" : "wrong name from parser",
@@ -1939,6 +2155,9 @@
     }, {
       "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
       "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
     } ],
     "justification" : null,
     "lock" : "make the $or match morphia's",
@@ -2372,6 +2591,37 @@
     }
   }, {
     "corrections" : [ ],
+    "fixture" : "query/filters/all/useAllWithElemMatch",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "61c65e2f40f55fa8dc957ab209b96ea1f3cff254",
+      "path" : "source/includes/extracts-additional-examples.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "source text has a missing quote",
+    "marker" : "lock",
+    "origin" : "807645683ea6dc6400be4946e753df0426b81809",
+    "pageBlob" : "87ec3ce26346162f90eb903f77e29c2e7d8925b5",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/all.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
     "fixture" : "query/filters/box/boxQueryPredicateOperator",
     "includes" : [ {
       "blob" : "231e34e5ae706bd4cce129c3601d1066b2e85d8c",
@@ -2416,6 +2666,37 @@
     "source" : {
       "commit" : "2b68884ad57110c9525b6dbdefcab1c0c8375f80",
       "path" : "source/reference/operator/query/center.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "query/filters/elemMatch/elementMatch",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "61c65e2f40f55fa8dc957ab209b96ea1f3cff254",
+      "path" : "source/includes/extracts-additional-examples.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "example's expected didn't match reality",
+    "marker" : "lock",
+    "origin" : "807645683ea6dc6400be4946e753df0426b81809",
+    "pageBlob" : "f5ff82ce948d31e2108b0e932810e1280f149961",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/elemMatch.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -2546,6 +2827,9 @@
     "corrections" : [ ],
     "fixture" : "query/filters/geoIntersects/intersectsABigPolygon",
     "includes" : [ {
+      "blob" : "a5beafd7f6ce11d0c74d7b10228811823fe3fd14",
+      "path" : "source/includes/extracts-geospatial-long-lat.yaml"
+    }, {
       "blob" : "d0d4847310431dc55af1857b061eae59007ec37d",
       "path" : "source/includes/fact-geometry-hemisphere-limitation.rst"
     } ],
@@ -2570,6 +2854,9 @@
     "corrections" : [ ],
     "fixture" : "query/filters/geoIntersects/intersectsAPolygon",
     "includes" : [ {
+      "blob" : "a5beafd7f6ce11d0c74d7b10228811823fe3fd14",
+      "path" : "source/includes/extracts-geospatial-long-lat.yaml"
+    }, {
       "blob" : "d0d4847310431dc55af1857b061eae59007ec37d",
       "path" : "source/includes/fact-geometry-hemisphere-limitation.rst"
     } ],
@@ -2708,6 +2995,43 @@
     }
   }, {
     "corrections" : [ ],
+    "fixture" : "query/filters/in/useTheInOperatorToMatchValuesInAnArray",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "b9acbd89b94e90716152e19ec82bc57d4039e3f1",
+      "path" : "source/includes/fact-comparison-order.rst"
+    }, {
+      "blob" : "30b290a800b4cbc61832f327768fee3bb6040468",
+      "path" : "source/includes/fact-atlas-search-operator.rst"
+    }, {
+      "blob" : "61c65e2f40f55fa8dc957ab209b96ea1f3cff254",
+      "path" : "source/includes/extracts-additional-examples.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "code block had extra text in it\n",
+    "marker" : "lock",
+    "origin" : "7ddc79615aaf62f884703b31a036060df6961095",
+    "pageBlob" : "a1ad4613f10bb5eb67174b4a35c0505b04cf34ae",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/in.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
     "fixture" : "query/filters/mod/floatingPointArguments",
     "includes" : [ {
       "blob" : "29386fb4543b83467ddb0e4aefe4ff861bb48d07",
@@ -2728,6 +3052,42 @@
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
       "path" : "source/reference/operator/query/mod.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "query/filters/near/queryOnGeoJsonData",
+    "includes" : [ {
+      "blob" : "69d2a8115dafb1eb5cc88b3958386b6f62079b7b",
+      "path" : "source/includes/extracts-geospatial-long-lat.yaml"
+    }, {
+      "blob" : "c06a15831b78be20b8bedbee54fea72c27abf599",
+      "path" : "source/includes/fact-geo-near-special-indexes.rst"
+    }, {
+      "blob" : "e6c41e12d74350e98f0884af8a0547f028356603",
+      "path" : "source/includes/fact-near-sharded-cluster.rst"
+    }, {
+      "blob" : "d0af3b05b45ed55a7f4ce12fbb4b891adfe167b8",
+      "path" : "source/includes/fact-geo-near-returns-sorted-results.rst"
+    }, {
+      "blob" : "863fbf338696cb4b854049f161659d7eda9e08fd",
+      "path" : "source/includes/example-near-minDistance.rst"
+    } ],
+    "justification" : null,
+    "lock" : "use floating point values",
+    "marker" : "lock",
+    "origin" : "52d461f742298f36a6ecf2ea02d8ebc332dc7168",
+    "pageBlob" : "38c44685031798ec800840f6b9b92c4509cd03e5",
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/location/$near",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/near.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -2839,6 +3199,9 @@
     }, {
       "blob" : "a5cdd66b913b1f650b648124247c19889cbc6f59",
       "path" : "source/includes/fact-bson-types.rst"
+    }, {
+      "blob" : "4e2e022eb95865da7e7a6bab33d940ac804f8810",
+      "path" : "source/includes/extracts-4.2-changes.yaml"
     } ],
     "justification" : "The page runs db.grades.find({classAverage: {$type: [2, 1]}}) and db.grades.find({classAverage: {$type: [\"string\", \"double\"]}}) with one shared result; BSON type numbers 2 and 1 are the aliases \"string\" and \"double\".",
     "lock" : "the docs had two actions showing the two forms. picked the form morphia uses.",
@@ -2952,6 +3315,12 @@
     }, {
       "blob" : "3eddf446867bc82fd4404645462411a8ab8d4209",
       "path" : "source/includes/fact-update-operator-processing-order.rst"
+    }, {
+      "blob" : "ac698feee23671aac82cf09e4f18bb3e3e20322e",
+      "path" : "source/includes/extracts-update-operations.yaml"
+    }, {
+      "blob" : "d16ecb02d62db5af0e83450c77a65c0b70114183",
+      "path" : "source/includes/extracts-update-operations-base.yaml"
     } ],
     "justification" : null,
     "lock" : "expected data didn't match input data where it wasn't modified by the update\nthe example assumes the updates from the previous example still exist",
@@ -3004,6 +3373,12 @@
     }, {
       "blob" : "3eddf446867bc82fd4404645462411a8ab8d4209",
       "path" : "source/includes/fact-update-operator-processing-order.rst"
+    }, {
+      "blob" : "ac698feee23671aac82cf09e4f18bb3e3e20322e",
+      "path" : "source/includes/extracts-update-operations.yaml"
+    }, {
+      "blob" : "d16ecb02d62db5af0e83450c77a65c0b70114183",
+      "path" : "source/includes/extracts-update-operations-base.yaml"
     } ],
     "justification" : null,
     "lock" : "expected data didn't match input data where it wasn't modified by the update\nthe example assumes the updates from the previous example still exist",
@@ -3291,9 +3666,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
+    "detail" : "expected.json ARRAY_LENGTH at ",
     "fixture" : "aggregation/expressions/regexFind/applyRegexFindToStringElementsOfAnArray",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
     "source" : {
       "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
@@ -3301,19 +3676,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
-    "fixture" : "aggregation/expressions/regexFind/regexFindAndItsOptions",
-    "gap" : "PAGE_UNSUPPORTED",
-    "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
-    "source" : {
-      "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
-      "path" : "source/reference/operator/aggregation/regexFind.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
+    "detail" : "expected.json TYPE at /0/username",
     "fixture" : "aggregation/expressions/regexFind/useCapturedGroupingsToParseUserName",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
     "source" : {
       "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
@@ -3321,9 +3686,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
+    "detail" : "The page prints the result after $addFields (email as a match document) and again after $set (email as a string); the extractor reads the first, so the drafted corrections rewrite every email, which the lock does not describe.",
     "fixture" : "aggregation/expressions/regexFind/useRegexFindToParseEmailFromString",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "REJECTED",
     "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
     "source" : {
       "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
@@ -3331,19 +3696,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
-    "fixture" : "aggregation/expressions/regexFindAll/regexFindAllAndItsOptions",
-    "gap" : "PAGE_UNSUPPORTED",
-    "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
-    "source" : {
-      "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
-      "path" : "source/reference/operator/aggregation/regexFindAll.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
+    "detail" : "expected.json TYPE at /0/names/0",
     "fixture" : "aggregation/expressions/regexFindAll/useCapturedGroupingsToParseUserName",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
     "source" : {
       "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
@@ -3351,9 +3706,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
+    "detail" : "expected.json TYPE at /0/email/0",
     "fixture" : "aggregation/expressions/regexFindAll/useRegexFindAllToParseEmailFromString",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
     "source" : {
       "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
@@ -3361,19 +3716,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
-    "fixture" : "aggregation/expressions/regexMatch/regexMatchAndItsOptions",
-    "gap" : "PAGE_UNSUPPORTED",
-    "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
-    "source" : {
-      "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
-      "path" : "source/reference/operator/aggregation/regexMatch.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
+    "detail" : "SYNTAX",
     "fixture" : "aggregation/expressions/regexMatch/useRegexMatchToCheckEmailAddress",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "SOURCE_UNSUPPORTED",
     "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
     "source" : {
       "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
@@ -3611,9 +3956,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/4.2-changes-geoNear-limit.rst",
+    "detail" : "files [data1.json]",
     "fixture" : "aggregation/stages/geoNear/geoNearWithBoundLetOption",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "FIXTURE_UNSUPPORTED",
     "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
     "source" : {
       "commit" : "111836fb23076857f0cf9bcce15e694fe4a169e4",
@@ -3621,9 +3966,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/4.2-changes-geoNear-limit.rst",
+    "detail" : "aggregate options",
     "fixture" : "aggregation/stages/geoNear/geoNearWithTheLetOption",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "FIXTURE_UNSUPPORTED",
     "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
     "source" : {
       "commit" : "111836fb23076857f0cf9bcce15e694fe4a169e4",
@@ -3631,9 +3976,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/4.2-changes-geoNear-limit.rst",
+    "detail" : "files [data1.json]",
     "fixture" : "aggregation/stages/geoNear/maximumDistance",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "FIXTURE_UNSUPPORTED",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "source" : {
       "commit" : "9c258a2f304c6f08f4dfc6b9d466abd543a90888",
@@ -3811,16 +4156,6 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/additional-examples-arrays.rst",
-    "fixture" : "query/filters/all/useAllWithElemMatch",
-    "gap" : "PAGE_UNSUPPORTED",
-    "origin" : "807645683ea6dc6400be4946e753df0426b81809",
-    "source" : {
-      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
-      "path" : "source/reference/operator/query/all.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
     "detail" : "UNSUPPORTED_AST",
     "fixture" : "query/filters/centerSphere/centerSphereQueryPredicateOperator",
     "gap" : "SOURCE_UNSUPPORTED",
@@ -3831,19 +4166,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/additional-examples-arrays.rst",
-    "fixture" : "query/filters/elemMatch/elementMatch",
-    "gap" : "PAGE_UNSUPPORTED",
-    "origin" : "807645683ea6dc6400be4946e753df0426b81809",
-    "source" : {
-      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
-      "path" : "source/reference/operator/query/elemMatch.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/additional-examples-arrays.rst",
+    "detail" : "data.json ARRAY_LENGTH at ",
     "fixture" : "query/filters/elemMatch/singleQueryCondition",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "807645683ea6dc6400be4946e753df0426b81809",
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
@@ -3861,9 +4186,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/4.2-changes-type-0.rst",
+    "detail" : "data.json has no documented source",
     "fixture" : "query/filters/exists/existsAndNotEqualTo",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "52d461f742298f36a6ecf2ea02d8ebc332dc7168",
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
@@ -3871,9 +4196,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/4.2-changes-type-0.rst",
+    "detail" : "expected.json ARRAY_LENGTH at ",
     "fixture" : "query/filters/exists/nullValues",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "52d461f742298f36a6ecf2ea02d8ebc332dc7168",
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
@@ -3901,16 +4226,6 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/additional-examples-arrays.rst",
-    "fixture" : "query/filters/in/useTheInOperatorToMatchValuesInAnArray",
-    "gap" : "PAGE_UNSUPPORTED",
-    "origin" : "7ddc79615aaf62f884703b31a036060df6961095",
-    "source" : {
-      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
-      "path" : "source/reference/operator/query/in.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
     "detail" : "action.json syntax",
     "fixture" : "query/filters/maxDistance/maxDistanceQueryPredicateOperator",
     "gap" : "FIXTURE_UNSUPPORTED",
@@ -3921,9 +4236,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/ne_operators_selectivity.rst",
+    "detail" : "Arrays",
     "fixture" : "query/filters/ne/arrays",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "NO_MATCHING_EXAMPLE",
     "origin" : "2e4cc72d6b0b73a45c92f4ee1c66cb63ee8e5ed4",
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
@@ -3931,9 +4246,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/ne_operators_selectivity.rst",
+    "detail" : "expected.json ARRAY_LENGTH at ",
     "fixture" : "query/filters/ne/updateBasedOnNotEqualEmbeddedDocumentFields",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "7ddc79615aaf62f884703b31a036060df6961095",
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
@@ -3941,19 +4256,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include::  /includes/extracts/geospatial-long-lat-values.rst",
-    "fixture" : "query/filters/near/queryOnGeoJsonData",
-    "gap" : "PAGE_UNSUPPORTED",
-    "origin" : "52d461f742298f36a6ecf2ea02d8ebc332dc7168",
-    "source" : {
-      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
-      "path" : "source/reference/operator/query/near.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/nin_operators_selectivity.rst",
+    "detail" : "expected.json has no documented source",
     "fixture" : "query/filters/nin/selectOnElementsNotInAnArray",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "7ddc79615aaf62f884703b31a036060df6961095",
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
@@ -4021,9 +4326,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/4.4-changes-projection-sort-meta-list.rst",
+    "detail" : "Diacritic Sensitive Search",
     "fixture" : "query/filters/text/diacriticSensitiveSearch",
-    "gap" : "PAGE_UNSUPPORTED",
+    "gap" : "NO_MATCHING_EXAMPLE",
     "origin" : "f5efa7c2b14d22ec139f3ea5a0e37bca1aefa874",
     "source" : {
       "commit" : "d7f95ad70b1073047e6b3b46f5950a5e54af8a9f",

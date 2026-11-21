@@ -2901,14 +2901,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/regexFind/regexFindAndItsOptions",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "95735d7058bd05e7672ba96658579cf7e86f156b181e3fd1e7ee8e3ba6811e66",
-      "text" : "example data needs multiple spaces that the parser eliminates"
-    } ],
+    "markers" : [ ],
     "method" : "testRegexFindAndItsOptions",
     "options" : [ {
       "argument" : "false",
@@ -2952,14 +2948,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/regexFindAll/regexFindAllAndItsOptions",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "95735d7058bd05e7672ba96658579cf7e86f156b181e3fd1e7ee8e3ba6811e66",
-      "text" : "example data needs multiple spaces that the parser eliminates"
-    } ],
+    "markers" : [ ],
     "method" : "testRegexFindAllAndItsOptions",
     "options" : [ {
       "argument" : "false",
@@ -3003,14 +2995,10 @@
     "categories" : [ "DOCS_ERROR" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/regexMatch/regexMatchAndItsOptions",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "226f63100433778e7d16edf7e8e24840ab04af2589d75438f8cb531d4142cd30",
-      "text" : "docs had \"returns\" instead of \"result\"\n_id 2 had the wrong result"
-    } ],
+    "markers" : [ ],
     "method" : "testRegexMatchAndItsOptions",
     "options" : [ {
       "argument" : "false",
@@ -5910,14 +5898,10 @@
     "categories" : [ "DOCS_ERROR" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/all/useAllWithElemMatch",
     "helpers" : [ "testQuery" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "a9301123188fa9aeb32f2eb7486d8fa2e9909a1a2b77eb4270c8c56c43ebfb05",
-      "text" : "source text has a missing quote"
-    } ],
+    "markers" : [ ],
     "method" : "testUseAllWithElemMatch",
     "options" : [ ],
     "type" : "dev.morphia.test.query.filters.TestAll"
@@ -6188,14 +6172,10 @@
     "categories" : [ "DOCS_ERROR" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/elemMatch/elementMatch",
     "helpers" : [ "testQuery" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "424666fd24e9db8d87f4bbe2b442857c72be13adc83f0d601c187a486a9a6793",
-      "text" : "example's expected didn't match reality"
-    } ],
+    "markers" : [ ],
     "method" : "testElementMatch",
     "options" : [ ],
     "type" : "dev.morphia.test.query.filters.TestElemMatch"
@@ -6492,14 +6472,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/in/useTheInOperatorToMatchValuesInAnArray",
     "helpers" : [ "testUpdate" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "2fbdd27cdec0677dcb8fe178bed7b616bc7c49d8e50c167ba963d23e899cc897",
-      "text" : "code block had extra text in it\n"
-    } ],
+    "markers" : [ ],
     "method" : "testUseTheInOperatorToMatchValuesInAnArray",
     "options" : [ {
       "argument" : "false",
@@ -6742,14 +6718,10 @@
     "categories" : [ "NUMERIC_TYPE" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/near/queryOnGeoJsonData",
     "helpers" : [ "testQuery" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "29e937aea7ad4e11fc0364647a71756f72454f2cf9e919bb0e945f42129b6baa",
-      "text" : "use floating point values"
-    } ],
+    "markers" : [ ],
     "method" : "testQueryOnGeoJsonData",
     "options" : [ {
       "argument" : "true",
@@ -8069,7 +8041,7 @@
     "folder" : "aggregation/stages/shardedDataDistribution",
     "reason" : "an admin function and not generally suited for morphia"
   } ],
-  "repositoryRevision" : "1166c8f816ef6d08257294b81ff25edfca14a8de",
+  "repositoryRevision" : "0a22114689746d4002dcc54c74f64e6e200dc358",
   "schemaVersion" : 1,
   "summary" : {
     "assertion.BEHAVIOR" : 466,
@@ -8085,17 +8057,17 @@
     "category.SHELL_SYNTAX" : 25,
     "category.UNTESTABLE" : 2,
     "disposition.NOT_EXECUTED" : 2,
-    "disposition.OVERRIDDEN" : 116,
-    "disposition.PRESERVED_CURATED" : 118,
+    "disposition.OVERRIDDEN" : 123,
+    "disposition.PRESERVED_CURATED" : 111,
     "disposition.UNCORRECTED" : 320,
     "examples" : 556,
-    "examples.locked" : 120,
+    "examples.locked" : 113,
     "exclusion.DEFERRED" : 1,
     "exclusion.ENVIRONMENT_UNAVAILABLE" : 3,
     "exclusion.NON_OPERATOR" : 1,
     "exclusion.POLICY_EXCLUSION" : 11,
     "exclusion.TESTED_ELSEWHERE" : 1,
-    "markers.lock" : 119,
+    "markers.lock" : 112,
     "markers.lockd" : 1,
     "option.findOptions" : 6,
     "option.orderMatters" : 107,
