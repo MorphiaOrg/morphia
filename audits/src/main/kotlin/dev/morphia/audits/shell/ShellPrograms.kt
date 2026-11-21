@@ -690,11 +690,14 @@ object ShellPrograms {
             if (name in reservedBindings)
                 stop("RESERVED_BINDING", "Builtin binding cannot be shadowed: $name", node)
             val previous = environment[name]
+            // Both shells evaluate in sloppy mode, where assigning an undeclared name creates a
+            // mutable global (`stage = {...}` before `db.c.aggregate([stage])`).
             if (
                 declaration == ProgramDeclaration.ASSIGNMENT &&
-                    (previous == null || !previous.mutable)
+                    previous != null &&
+                    !previous.mutable
             )
-                stop("ASSIGNMENT_BINDING", "Assignment needs an existing mutable binding", node)
+                stop("ASSIGNMENT_BINDING", "Assignment needs a mutable binding", node)
             if (declaration != ProgramDeclaration.ASSIGNMENT && previous != null) {
                 if (
                     declaration != ProgramDeclaration.VAR ||

@@ -3769,14 +3769,10 @@
     "categories" : [ "SHELL_SYNTAX" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/toBool/toBoolExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "27981c19ef0369b49bc1dc93762da5033ce814f52d1176fa1f25892c09ac2442",
-      "text" : "inlined js variables to pipeline"
-    } ],
+    "markers" : [ ],
     "method" : "testToBoolExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestToBool"
@@ -3785,14 +3781,10 @@
     "categories" : [ "SHELL_SYNTAX" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/toDate/toDateExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "27981c19ef0369b49bc1dc93762da5033ce814f52d1176fa1f25892c09ac2442",
-      "text" : "inlined js variables to pipeline"
-    } ],
+    "markers" : [ ],
     "method" : "testToDateExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestToDate"
@@ -3801,14 +3793,10 @@
     "categories" : [ "SHELL_SYNTAX" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/toDecimal/toDecimalExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "9aaed99160ef3e47fb46c2e8a020ca27a623984e6a47e7b0f16f2a8d09c51f3a",
-      "text" : "inlined js variables to pipeline\nthe driver apparently can't parse Decimal128(...)"
-    } ],
+    "markers" : [ ],
     "method" : "testToDecimalExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestToDecimal"
@@ -3817,14 +3805,10 @@
     "categories" : [ "SHELL_SYNTAX" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/toDouble/toDoubleExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "27981c19ef0369b49bc1dc93762da5033ce814f52d1176fa1f25892c09ac2442",
-      "text" : "inlined js variables to pipeline"
-    } ],
+    "markers" : [ ],
     "method" : "testToDoubleExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestToDouble"
@@ -3833,14 +3817,10 @@
     "categories" : [ "SHELL_SYNTAX" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/toInt/toIntExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "9aaed99160ef3e47fb46c2e8a020ca27a623984e6a47e7b0f16f2a8d09c51f3a",
-      "text" : "inlined js variables to pipeline\nthe driver apparently can't parse Decimal128(...)"
-    } ],
+    "markers" : [ ],
     "method" : "testToIntExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestToInt"
@@ -3849,14 +3829,10 @@
     "categories" : [ "SHELL_SYNTAX" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/toLong/toLongExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "d3039553551b07ad0825e9a90f4a399bd212a778dacafa305449146ff465a87c",
-      "text" : "inlined js variables to pipeline\n"
-    } ],
+    "markers" : [ ],
     "method" : "testToLongExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestToLong"
@@ -3877,14 +3853,10 @@
     "categories" : [ "SHELL_SYNTAX" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/toObjectId/toObjectIdExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "d3039553551b07ad0825e9a90f4a399bd212a778dacafa305449146ff465a87c",
-      "text" : "inlined js variables to pipeline\n"
-    } ],
+    "markers" : [ ],
     "method" : "testToObjectIdExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestToObjectId"
@@ -3893,14 +3865,10 @@
     "categories" : [ "SHELL_SYNTAX" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/toString/toStringExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "9a64f1f00be4d34430fc03e3e6f7adca1514233b4616910d46ff05553027ceef",
-      "text" : "had to rework the pipeline to not use variables"
-    } ],
+    "markers" : [ ],
     "method" : "testToStringExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestToString"
@@ -8013,7 +7981,7 @@
     "folder" : "aggregation/stages/shardedDataDistribution",
     "reason" : "an admin function and not generally suited for morphia"
   } ],
-  "repositoryRevision" : "a249d35bbea6bb221bfe4b0de5a0a9fd2473d553",
+  "repositoryRevision" : "abc03f42140a30ab718989d2ed91c434588d4c38",
   "schemaVersion" : 1,
   "summary" : {
     "assertion.BEHAVIOR" : 466,
@@ -8029,17 +7997,17 @@
     "category.SHELL_SYNTAX" : 25,
     "category.UNTESTABLE" : 2,
     "disposition.NOT_EXECUTED" : 2,
-    "disposition.OVERRIDDEN" : 130,
-    "disposition.PRESERVED_CURATED" : 104,
+    "disposition.OVERRIDDEN" : 138,
+    "disposition.PRESERVED_CURATED" : 96,
     "disposition.UNCORRECTED" : 320,
     "examples" : 556,
-    "examples.locked" : 106,
+    "examples.locked" : 98,
     "exclusion.DEFERRED" : 1,
     "exclusion.ENVIRONMENT_UNAVAILABLE" : 3,
     "exclusion.NON_OPERATOR" : 1,
     "exclusion.POLICY_EXCLUSION" : 11,
     "exclusion.TESTED_ELSEWHERE" : 1,
-    "markers.lock" : 105,
+    "markers.lock" : 97,
     "markers.lockd" : 1,
     "option.findOptions" : 6,
     "option.orderMatters" : 107,

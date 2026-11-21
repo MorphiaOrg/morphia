@@ -3212,6 +3212,334 @@
   }, {
     "blocks" : [ {
       "role" : "ACTION",
+      "sha256" : "9e902e7ac917a9ad6269537777cebe701fd386abecea0dcc23d99dc026dc8fc3",
+      "text" : "// Define stage to add convertedShippedFlag field with the converted shipped value\n// Because all strings convert to true, include specific handling for \"false\" and \"\" \n\nshippedConversionStage = {\n   $addFields: {\n      convertedShippedFlag: { \n         $switch: { \n            branches: [\n              { case: { $eq: [ \"$shipped\", \"false\" ] }, then: false } , \n              { case: { $eq: [ \"$shipped\", \"\" ] }, then: false }\n            ],\n            default: { $toBool: \"$shipped\" }\n        }\n      }\n   }\n};\n\n// Define stage to filter documents and pass only the unshipped orders\n\nunshippedMatchStage = {\n   $match: { \"convertedShippedFlag\": false }\n};\n\ndb.orders.aggregate( [\n  shippedConversionStage,\n  unshippedMatchStage\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "f1f6a430d14455684dcc3ac7dad629b3b7735c7a6159db190eb96e07301f71bc",
+      "text" : "db.orders.insertMany( [\n   { _id: 1, item: \"apple\",  qty: 5, shipped: true },\n   { _id: 2, item: \"pie\",  qty: 10, shipped: 0  },\n   { _id: 3, item: \"ice cream\", shipped: 1 },\n   { _id: 4, item: \"almonds\", qty: 2, shipped: \"true\" },\n   { _id: 5, item: \"pecans\", shipped: \"false\" },  // Note: All strings convert to true\n   { _id: 6, item: \"nougat\", shipped: \"\"  }       // Note: All strings convert to true\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "7b62404640014d8566458733a7f3a8d09b8f9e192b4020ac1330c2f2c569a7f8",
+      "text" : "{ \"_id\" : 2, \"item\" : \"pie\", \"qty\" : 10, \"shipped\" : 0, \"convertedShippedFlag\" : false }\n{ \"_id\" : 5, \"item\" : \"pecans\", \"shipped\" : \"false\", \"convertedShippedFlag\" : false }\n{ \"_id\" : 6, \"item\" : \"nougat\", \"shipped\" : \"\", \"convertedShippedFlag\" : false }"
+    } ],
+    "collections" : { },
+    "corrections" : [ ],
+    "example" : "main",
+    "fixture" : "aggregation/expressions/toBool/toBoolExpressionOperator",
+    "fixtureFiles" : {
+      "action.json" : "4f1b48741b76b267c7d47c1548dab19302cf163aa7ceaa436a553b1737736071",
+      "data.json" : "5b5349329d0c344cb298e13fe8c64f812a50797f189e53cdeae32d65c6f943f7",
+      "expected.json" : "7b62404640014d8566458733a7f3a8d09b8f9e192b4020ac1330c2f2c569a7f8",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "59fa09a0b133d3a8b3dc7ca5c6d8c291b04687af",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "27981c19ef0369b49bc1dc93762da5033ce814f52d1176fa1f25892c09ac2442",
+      "text" : "inlined js variables to pipeline"
+    },
+    "retypes" : [ ],
+    "rules" : [ ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toBool.txt",
+      "relation" : "AT_ORIGIN"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "9d79af43e5ef6ddbd17887da7538b8e11bc90c118fdfd742b013075cd0a34b30",
+      "text" : "// Define stage to add convertedDate field with the converted order_date value\n\ndateConversionStage = { \n   $addFields: { \n      convertedDate: { $toDate: \"$order_date\" }\n   }\n};\n\n// Define stage to sort documents by the converted date\n\nsortStage = {\n   $sort: { \"convertedDate\": 1 }\n};\n\ndb.orders.aggregate( [\n   dateConversionStage,\n   sortStage\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "fd7936cb3988dc40b2709e13570f8610d39f7a644dcefd874aa3576d5a77deec",
+      "text" : "db.orders.insertMany( [\n   { _id: 1, item: \"apple\", qty: 5, price: 2, order_date: new Date( \"2018-03-20\" ) },\n   { _id: 2, item: \"pie\", qty: 10, price: 3, order_date: new Date( \"2018-03-22\" ) },\n   { _id: 3, item: \"ice cream\", qty: 2, price: 4, order_date: \"2018-03-15\" },\n   { _id: 4, item: \"almonds\" , qty: 5, price: 7, order_date: \"2018-03-15 +10:00\" }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "200252997adaf6c4e6d555829d6e19d4a7bafb5254f93dd9168c709bb3e9a20f",
+      "text" : "{\n   _id: 4,\n   item: 'almonds',\n   qty: 5,\n   price: 7,\n   order_date: '2018-03-15 +10:00',\n   convertedDate: ISODate(\"2018-03-14T14:00:00.000Z\")\n},\n{\n   _id: 3,\n   item: 'ice cream',\n   qty: 2,\n   price: 4,\n   order_date: '2018-03-15',\n   convertedDate: ISODate(\"2018-03-15T00:00:00.000Z\")\n},\n{\n   _id: 1,\n   item: 'apple',\n   qty: 5,\n   price: 2,\n   order_date: ISODate(\"2018-03-20T00:00:00.000Z\"),\n   convertedDate: ISODate(\"2018-03-20T00:00:00.000Z\")\n},\n{\n   _id: 2,\n   item: 'pie',\n   qty: 10,\n   price: 3,\n   order_date: ISODate(\"2018-03-22T00:00:00.000Z\"),\n   convertedDate: ISODate(\"2018-03-22T00:00:00.000Z\")\n}"
+    } ],
+    "collections" : { },
+    "corrections" : [ ],
+    "example" : "main",
+    "fixture" : "aggregation/expressions/toDate/toDateExpressionOperator",
+    "fixtureFiles" : {
+      "action.json" : "ef89bfa918c2372135aec7177e610934a69791c0758172f7db9fa5b9b67db5c0",
+      "data.json" : "8c74a7742b6b737c975ae521a72bbef723bc92087efb0ee1ff800dd5783cf318",
+      "expected.json" : "61eaf14d47e50cc27ef2e2f9d9c1a92061270613b086183f023c1a8ef0d37d35",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "42e6ac3c9fbe47779b5041740e65ca7dc431ee1e",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "27981c19ef0369b49bc1dc93762da5033ce814f52d1176fa1f25892c09ac2442",
+      "text" : "inlined js variables to pipeline"
+    },
+    "retypes" : [ ],
+    "rules" : [ ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toDate.txt",
+      "relation" : "AT_ORIGIN"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "376c2a6200a0d5b460cd231fd9d5ba7f6bcee81f2ddf376cf6ca77d83e0bb9cc",
+      "text" : "// Define stage to add convertedPrice and convertedQty fields with the converted price and qty values\n\npriceQtyConversionStage = { \n   $addFields: { \n      convertedPrice: { $toDecimal: \"$price\" },\n      convertedQty: { $toInt: \"$qty\" },\n   }\n};\n\n// Define stage to calculate total price by multiplying convertedPrice and convertedQty fields \n\n\ntotalPriceCalculationStage = { \n   $project: { item: 1, totalPrice: { $multiply: [ \"$convertedPrice\", \"$convertedQty\" ] } }\n};\n\ndb.orders.aggregate( [\n   priceQtyConversionStage,\n   totalPriceCalculationStage\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "cd2276f8190d391ed0e966b4bf9ab94f02ccc92e35ab0f1d8b914fbbb1c62926",
+      "text" : "db.orders.insertMany( [\n   { _id: 1, item: \"apple\", qty: 5, price: 10 },\n   { _id: 2, item: \"pie\", qty: 10, price: NumberDecimal(\"20.0\") },\n   { _id: 3, item: \"ice cream\", qty: 2, price: \"4.99\" },\n   { _id: 4, item: \"almonds\",  qty: 5, price: 5 }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "4604f3e015cedfb4900adf77e56e21aae2c5e7c778e6500614cdb8bdd09da98e",
+      "text" : "{ _id: 1, item: 'apple', totalPrice: Decimal128(\"50\") },\n{ _id: 2, item: 'pie', totalPrice: Decimal128(\"200.0\") },\n{ _id: 3, item: 'ice cream', totalPrice: Decimal128(\"9.98\") },\n{ _id: 4, item: 'almonds', totalPrice: Decimal128(\"25\") }"
+    } ],
+    "collections" : { },
+    "corrections" : [ ],
+    "example" : "main",
+    "fixture" : "aggregation/expressions/toDecimal/toDecimalExpressionOperator",
+    "fixtureFiles" : {
+      "action.json" : "9223abd4ed7f4b3132e7f54a596723895d7793dacbde440a603f5bb19f0f03a4",
+      "data.json" : "e019101e7a2bf444039d383b7e8c2a89f058c64a289745d7e39de7416fd75e17",
+      "expected.json" : "1aeb9c0e4bb0a1c68046b5b14079a0567ed2d62e3d9643a3e9bf385c671e367d",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "c99961a98c6d719c24b646bb93b9ed44ba50ccb9",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "9aaed99160ef3e47fb46c2e8a020ca27a623984e6a47e7b0f16f2a8d09c51f3a",
+      "text" : "inlined js variables to pipeline\nthe driver apparently can't parse Decimal128(...)"
+    },
+    "retypes" : [ ],
+    "rules" : [ ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toDecimal.txt",
+      "relation" : "AT_ORIGIN"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "95971e6700d01320b326c1392321368a1571c6939f8197cf7d27329b2f41174e",
+      "text" : "// Define stage to add degrees field with converted value\n\ntempConversionStage = { \n   $addFields: { \n      degrees: { $toDouble: { $substrBytes: [ \"$temp\", 0, 4 ] } } \n   }\n};\n\n\ndb.weather.aggregate( [\n   tempConversionStage,\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "097eff6a37e378cfca26fb69fe374362f320c9418e38fec627398f8c1ad2dd30",
+      "text" : "db.weather.insertMany( [\n   { _id: 1, date: new Date(\"2018-06-01\"), temp: \"26.1C\" },\n   { _id: 2,  date: new Date(\"2018-06-02\"), temp: \"25.1C\" },\n   { _id: 3,  date: new Date(\"2018-06-03\"), temp: \"25.4C\" },\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "383fbd01f90451cf8ce9df42286190500be4f76a4a72052cad1763a40f237c1a",
+      "text" : "{ \"_id\" : 1, \"date\" : ISODate(\"2018-06-01T00:00:00Z\"), \"temp\" : \"26.1C\", \"degrees\" : 26.1 }\n{ \"_id\" : 2, \"date\" : ISODate(\"2018-06-02T00:00:00Z\"), \"temp\" : \"25.1C\", \"degrees\" : 25.1 }\n{ \"_id\" : 3, \"date\" : ISODate(\"2018-06-03T00:00:00Z\"), \"temp\" : \"25.4C\", \"degrees\" : 25.4 }"
+    } ],
+    "collections" : { },
+    "corrections" : [ ],
+    "example" : "main",
+    "fixture" : "aggregation/expressions/toDouble/toDoubleExpressionOperator",
+    "fixtureFiles" : {
+      "action.json" : "955ca2cdffe60be3cd0395a61e2aca37b7f84975747b61e56b6fbd73d581860d",
+      "data.json" : "b45cad3e5392190b461dc7c5a85edebbfeb69d5897259a621767344ccf679cc7",
+      "expected.json" : "383fbd01f90451cf8ce9df42286190500be4f76a4a72052cad1763a40f237c1a",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "841cf871bf27156a2df51a01f374e4fc94484ff5",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "27981c19ef0369b49bc1dc93762da5033ce814f52d1176fa1f25892c09ac2442",
+      "text" : "inlined js variables to pipeline"
+    },
+    "retypes" : [ ],
+    "rules" : [ ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toDouble.txt",
+      "relation" : "AT_ORIGIN"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "376c2a6200a0d5b460cd231fd9d5ba7f6bcee81f2ddf376cf6ca77d83e0bb9cc",
+      "text" : "// Define stage to add convertedPrice and convertedQty fields with the converted price and qty values\n\npriceQtyConversionStage = { \n   $addFields: { \n      convertedPrice: { $toDecimal: \"$price\" },\n      convertedQty: { $toInt: \"$qty\" },\n   }\n};\n\n// Define stage to calculate total price by multiplying convertedPrice and convertedQty fields \n\n\ntotalPriceCalculationStage = { \n   $project: { item: 1, totalPrice: { $multiply: [ \"$convertedPrice\", \"$convertedQty\" ] } }\n};\n\ndb.orders.aggregate( [\n   priceQtyConversionStage,\n   totalPriceCalculationStage\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "bd5c614ad46e373eace9c7a02f78a59f3850fd6c43deb6c9a099c67a0d386633",
+      "text" : "db.orders.insertMany( [\n   { _id: 1, item: \"apple\", qty: \"5\", price: 10 },\n   { _id: 2, item: \"pie\", qty: \"10\", price: NumberDecimal(\"20.0\") },\n   { _id: 3, item: \"ice cream\", qty: \"2\", price: \"4.99\" },\n   { _id: 4, item: \"almonds\" ,  qty: \"5\", price: 5 }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "4604f3e015cedfb4900adf77e56e21aae2c5e7c778e6500614cdb8bdd09da98e",
+      "text" : "{ _id: 1, item: 'apple', totalPrice: Decimal128(\"50\") },\n{ _id: 2, item: 'pie', totalPrice: Decimal128(\"200.0\") },\n{ _id: 3, item: 'ice cream', totalPrice: Decimal128(\"9.98\") },\n{ _id: 4, item: 'almonds', totalPrice: Decimal128(\"25\") }"
+    } ],
+    "collections" : { },
+    "corrections" : [ ],
+    "example" : "main",
+    "fixture" : "aggregation/expressions/toInt/toIntExpressionOperator",
+    "fixtureFiles" : {
+      "action.json" : "9223abd4ed7f4b3132e7f54a596723895d7793dacbde440a603f5bb19f0f03a4",
+      "data.json" : "ade906b6207d03678c0949b60f1e056f43e37f5844ace92902dd719c30c68074",
+      "expected.json" : "1aeb9c0e4bb0a1c68046b5b14079a0567ed2d62e3d9643a3e9bf385c671e367d",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "92e7b0bc372a5cdb13d181cd2224afe167bf4c4f",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "9aaed99160ef3e47fb46c2e8a020ca27a623984e6a47e7b0f16f2a8d09c51f3a",
+      "text" : "inlined js variables to pipeline\nthe driver apparently can't parse Decimal128(...)"
+    },
+    "retypes" : [ ],
+    "rules" : [ ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toInt.txt",
+      "relation" : "AT_ORIGIN"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "d375f6f99dcfaced45bf35e1ebd3bea2f99a21690e4bf3aa5187bceccf45f8c0",
+      "text" : "// Define stage to add convertedQty field with converted qty value\n\nqtyConversionStage = { \n   $addFields: { \n      convertedQty: { $toLong: \"$qty\" }\n   }\n};\n\n// Define stage to sort documents by the converted qty values\n\nsortStage = {\n   $sort: { \"convertedQty\": -1 }\n};\n\n\ndb.orders.aggregate( [\n   qtyConversionStage,\n   sortStage\n])"
+    }, {
+      "role" : "DATA",
+      "sha256" : "15683d7b645dd1896e83e88cb5bfdcc1c83ed980933c919d13182855978347f4",
+      "text" : "db.orders.insertMany( [\n   { _id: 1, item: \"apple\", qty: NumberInt(5) },\n   { _id: 2, item: \"pie\", qty: \"100\" },\n   { _id: 3, item: \"ice cream\", qty: NumberLong(\"500\") },\n   { _id: 4, item: \"almonds\", qty: \"50\" },\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "bf372c8790f638b431a0057dee39a8e00825921c9e2f40544bdd99d8a47899a7",
+      "text" : "{ _id: 3, item: 'ice cream', qty: Long(\"500\"), convertedQty: Long(\"500\") },\n{ _id: 2, item: 'pie', qty: '100', convertedQty: Long(\"100\") },\n{ _id: 4, item: 'almonds', qty: '50', convertedQty: Long(\"50\") },\n{ _id: 1, item: 'apple', qty: 5, convertedQty: Long(\"5\") }"
+    } ],
+    "collections" : { },
+    "corrections" : [ ],
+    "example" : "main",
+    "fixture" : "aggregation/expressions/toLong/toLongExpressionOperator",
+    "fixtureFiles" : {
+      "action.json" : "95e1c2aee3ffbb7287d6e47dbae66bf319bd69c077ec37cf8589f1ac23941bee",
+      "data.json" : "ff1c4286b247c904155b5f85cfdea487fca34274348081bf391ddf2ffb4d7bac",
+      "expected.json" : "a674c182a338e45fa901ef1c47521020cccbf5f1e2653895823118c2f923fc33",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "0e95704326f3ccb1c2afeec425ae8f3b0df18e21",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "d3039553551b07ad0825e9a90f4a399bd212a778dacafa305449146ff465a87c",
+      "text" : "inlined js variables to pipeline\n"
+    },
+    "retypes" : [ ],
+    "rules" : [ ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "eeaa9d3ad8bf480d333ca978a1d7b8ff30677870",
+      "path" : "source/reference/operator/aggregation/toLong.txt",
+      "relation" : "AT_ORIGIN"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "38c4f5f74bad940fb73aa3b582c816a2fc4f262470c4667e8988482599295bfe",
+      "text" : "// Define stage to add convertedId field with converted _id value\n\nidConversionStage = { \n   $addFields: { \n      convertedId: { $toObjectId: \"$_id\" }\n   }\n};\n\n// Define stage to sort documents by the converted qty values\n\nsortStage = {\n   $sort: { \"convertedId\": -1 }\n};\n\n\ndb.orders.aggregate( [\n   idConversionStage,\n   sortStage\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "ae2e6b10a725bf4899036deadf84bab7bdf42c60ca531895a4295f9dce12ee33",
+      "text" : "db.orders.insertMany( [\n   { _id: \"5ab9cbe531c2ab715d42129a\", item: \"apple\", qty: 10 },\n   { _id: ObjectId(\"5ab9d0b831c2ab715d4212a8\"), item: \"pie\", qty: 5 },\n   { _id: ObjectId(\"5ab9d2d331c2ab715d4212b3\"), item: \"ice cream\", qty: 20 },\n   { _id: \"5ab9e16431c2ab715d4212b4\", item: \"almonds\", qty: 50 },\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "6aa2826d4d9b926330bc17c21a6ba3afa0d4354ea7e7bfa20d28c8e7681de70a",
+      "text" : "{\n  _id: '5ab9e16431c2ab715d4212b4',\n  item: 'almonds',\n  qty: 50,\n  convertedId: ObjectId(\"5ab9e16431c2ab715d4212b4\")\n},\n{\n  _id: ObjectId(\"5ab9d2d331c2ab715d4212b3\"),\n  item: 'ice cream',\n  qty: 20,\n  convertedId: ObjectId(\"5ab9d2d331c2ab715d4212b3\")\n},\n{\n  _id: ObjectId(\"5ab9d0b831c2ab715d4212a8\"),\n  item: 'pie',\n  qty: 5,\n  convertedId: ObjectId(\"5ab9d0b831c2ab715d4212a8\")\n},\n{\n  _id: '5ab9cbe531c2ab715d42129a',\n  item: 'apple',\n  qty: 10,\n  convertedId: ObjectId(\"5ab9cbe531c2ab715d42129a\")\n}"
+    } ],
+    "collections" : { },
+    "corrections" : [ ],
+    "example" : "main",
+    "fixture" : "aggregation/expressions/toObjectId/toObjectIdExpressionOperator",
+    "fixtureFiles" : {
+      "action.json" : "481dc3c044bea7b59be8cf0a0dc38fe22cb723bf2a52e05c4697d7986fe06d83",
+      "data.json" : "f85d410fa66c6541e18d6291ea787fb70f71ba6ab39db3014dc7b5a47d284855",
+      "expected.json" : "3023e5f5e15da2947ec40f736f7ac0c2b38864d342bc208a16d0511255277d1e",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "09cec0a9a44620357d55c8bf913799d96261f0b7",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "d3039553551b07ad0825e9a90f4a399bd212a778dacafa305449146ff465a87c",
+      "text" : "inlined js variables to pipeline\n"
+    },
+    "retypes" : [ ],
+    "rules" : [ ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toObjectId.txt",
+      "relation" : "AT_ORIGIN"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "8c4fd604d0fb871d5bfd9668dfe2435200b1cd84dfdcedafd3ec400896847194",
+      "text" : "// Define stage to add convertedZipCode field with the converted zipcode value\n\nzipConversionStage = {\n   $addFields: {\n      convertedZipCode: { $toString: \"$zipcode\" }\n   }\n};\n\n// Define stage to sort documents by the converted zipcode\n\nsortStage = {\n   $sort: { \"convertedZipCode\": 1 }\n};\n\ndb.orders.aggregate( [\n  zipConversionStage,\n  sortStage\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "7b1a5dd206a233793c616d124b1c90eb3fe2c1d9e25b844c6b0720eb9d519645",
+      "text" : "db.orders.insertMany( [\n   { _id: 1, item: \"apple\",  qty: 5, zipcode: 93445 },\n   { _id: 2, item: \"almonds\", qty: 2, zipcode: \"12345-0030\" },\n   { _id: 3, item: \"peaches\",  qty: 5, zipcode: 12345 },\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "d4b84c6bca473037671a8df859e3838b7968af7330ba7db495f17c9b6b3a19fb",
+      "text" : "{\n  _id: 3,\n  item: 'peaches',\n  qty: 5,\n  zipcode: 12345,\n  convertedZipCode: '12345'\n},\n{\n  _id: 2,\n  item: 'almonds',\n  qty: 2,\n  zipcode: '12345-0030',\n  convertedZipCode: '12345-0030'\n},\n{\n  _id: 1,\n  item: 'apple',\n  qty: 5,\n  zipcode: 93445,\n  convertedZipCode: '93445'\n}"
+    } ],
+    "collections" : { },
+    "corrections" : [ ],
+    "example" : "main",
+    "fixture" : "aggregation/expressions/toString/toStringExpressionOperator",
+    "fixtureFiles" : {
+      "action.json" : "17982e27a41e3039045032b5a51119df82a662fff896b21d56b12dc7833c3288",
+      "data.json" : "daf486e3c2e43e3837c9485f48d6628d63c0344dbfbdddbecf8d67cc42deb3cc",
+      "expected.json" : "74ba5c6db0a7836540a2ebeeb06d8c14321c201fcf42c94faec757a2bc3cbd95",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "89b3c01ffb5a803027a5e42ea2f41e2828a823f5",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "9a64f1f00be4d34430fc03e3e6f7adca1514233b4616910d46ff05553027ceef",
+      "text" : "had to rework the pipeline to not use variables"
+    },
+    "retypes" : [ ],
+    "rules" : [ ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toString.txt",
+      "relation" : "AT_ORIGIN"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
       "sha256" : "00041609996d908ff645da34ebeabceed2963f20af2ebfb431fd80fb538b5747",
       "text" : "db.products.aggregate( [\n   {\n      $project: {\n         name: 1,\n         price: 1,\n         UUID: {\n            $toUUID: \"$UUID\"\n         }\n      }\n   }\n] )"
     }, {
@@ -6843,7 +7171,7 @@
     },
     "unexpandedIncludes" : [ ]
   } ],
-  "repositoryRevision" : "a249d35bbea6bb221bfe4b0de5a0a9fd2473d553",
+  "repositoryRevision" : "abc03f42140a30ab718989d2ed91c434588d4c38",
   "rules" : [ {
     "description" : "$cond: {if: a, then: b, else: c} and $cond: [a, b, c] are the same expression; the array form is canonical.",
     "rule" : "COND_ARRAY"
@@ -6882,11 +7210,11 @@
     "gap.NO_MATCHING_EXAMPLE" : 4,
     "gap.PAGE_UNSUPPORTED" : 0,
     "gap.REJECTED" : 1,
-    "gap.RESIDUAL_DIFFERENCE" : 47,
-    "gap.SOURCE_UNSUPPORTED" : 43,
-    "overrides" : 130,
+    "gap.RESIDUAL_DIFFERENCE" : 48,
+    "gap.SOURCE_UNSUPPORTED" : 34,
+    "overrides" : 138,
     "overrides.corrected" : 20,
-    "overrides.exact" : 49,
+    "overrides.exact" : 57,
     "overrides.retyped" : 16,
     "rule.ALTERNATIVE_COMMANDS" : 1,
     "rule.COND_ARRAY" : 14,
@@ -6898,7 +7226,7 @@
     "rule.REGEX_FORM" : 1,
     "rule.SINGLE_ARGUMENT_ARRAY" : 2,
     "rule.UNWIND_PATH" : 1,
-    "unresolved" : 104
+    "unresolved" : 96
   },
   "unresolved" : [ {
     "detail" : "SYNTAX",
@@ -6971,9 +7299,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "ASSIGNMENT_BINDING",
+    "detail" : "printed expected VALUE at /3/totalPrice",
     "fixture" : "aggregation/expressions/convert/convertExpressionOperator",
-    "gap" : "SOURCE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "source" : {
       "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
@@ -7278,86 +7606,6 @@
     "source" : {
       "commit" : "8562c94b38de3e8c83552bcd41558548e5220eef",
       "path" : "source/reference/operator/aggregation/tan.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "ASSIGNMENT_BINDING",
-    "fixture" : "aggregation/expressions/toBool/toBoolExpressionOperator",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "source" : {
-      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
-      "path" : "source/reference/operator/aggregation/toBool.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "ASSIGNMENT_BINDING",
-    "fixture" : "aggregation/expressions/toDate/toDateExpressionOperator",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "source" : {
-      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
-      "path" : "source/reference/operator/aggregation/toDate.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "ASSIGNMENT_BINDING",
-    "fixture" : "aggregation/expressions/toDecimal/toDecimalExpressionOperator",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "source" : {
-      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
-      "path" : "source/reference/operator/aggregation/toDecimal.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "ASSIGNMENT_BINDING",
-    "fixture" : "aggregation/expressions/toDouble/toDoubleExpressionOperator",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "source" : {
-      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
-      "path" : "source/reference/operator/aggregation/toDouble.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "ASSIGNMENT_BINDING",
-    "fixture" : "aggregation/expressions/toInt/toIntExpressionOperator",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "source" : {
-      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
-      "path" : "source/reference/operator/aggregation/toInt.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "ASSIGNMENT_BINDING",
-    "fixture" : "aggregation/expressions/toLong/toLongExpressionOperator",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "source" : {
-      "commit" : "eeaa9d3ad8bf480d333ca978a1d7b8ff30677870",
-      "path" : "source/reference/operator/aggregation/toLong.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "ASSIGNMENT_BINDING",
-    "fixture" : "aggregation/expressions/toObjectId/toObjectIdExpressionOperator",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "source" : {
-      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
-      "path" : "source/reference/operator/aggregation/toObjectId.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "ASSIGNMENT_BINDING",
-    "fixture" : "aggregation/expressions/toString/toStringExpressionOperator",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "source" : {
-      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
-      "path" : "source/reference/operator/aggregation/toString.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {

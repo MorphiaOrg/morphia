@@ -1980,3 +1980,17 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   printed result would have passed, since printed whole numbers accept either type; fixtures filed
   as `NUMERIC_TYPE` are now barred from the printed path (no current gap or retirement changes).
 - Review round 2: the guard applies only to a match, so a real printed difference keeps its gap; nothing new.
+
+- PR #4539 (branch audits-printed-results, base #4538) published.
+
+## Implicit globals (step 4 slice 10, 2026-11-21)
+
+- Branch audits-js-bindings from #4539. The nine `ASSIGNMENT_BINDING` gaps were pages that assign
+  pipeline stages to undeclared names, which both shells accept in sloppy mode as mutable globals.
+  `ShellPrograms` now treats a statement-level assignment to an unbound, unreserved name that way;
+  assigning a `const` and redeclaring the name lexically stay rejected.
+- Eight `SHELL_SYNTAX` locks ("inlined js variables to pipeline") retire exactly; `$convert` now
+  shows a real printed `Decimal128("0")` against the fixture's `0.0`.
+- Totals: 138 overrides, 96 unresolved; inventory 138 OVERRIDDEN, 96 PRESERVED_CURATED, 98
+  locked.
+- Review round 1 (independent agent): nothing to fix. The binding fires only for a top-level `name = ...` statement; the model is stricter than JavaScript where a lexical or `var` redeclaration follows (only adds gaps).
