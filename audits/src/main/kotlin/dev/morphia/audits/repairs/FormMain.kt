@@ -9,7 +9,8 @@ private const val USAGE =
     """Usage: FormMainKt draft <repository-root> <pages> <source-repository> <review-out> <candidates.json>...
        FormMainKt capture <repository-root> <revision> <pages> <review.json> <out>
        FormMainKt apply <repository-root> <report.json>
-       FormMainKt migrate <repository-root> <revision> <fixture> <test-type#method>"""
+       FormMainKt migrate <repository-root> <revision> <fixture> <test-type#method>
+       FormMainKt manifest <repository-root>"""
 
 /**
  * Drafts, captures and applies the MORPHIA_FORM lock migration. Pages are read from an explicit
@@ -76,6 +77,16 @@ fun main(args: Array<String>) {
                 )
             val migrations = (ledger.migrations + migrated).sortedBy { it.fixture }
             Files.writeString(ledgerPath, AuditJson.write(ledger.copy(migrations = migrations)))
+        }
+        "manifest" -> {
+            require(args.size == 2) { USAGE }
+            val root = Path.of(args[1])
+            val ledger =
+                AuditJson.fixtureMigration(read("${args[1]}/audits/catalog/fixture-migration.json"))
+            Files.writeString(
+                root.resolve(CaseManifests.PATH),
+                AuditJson.write(CaseManifests.capture(root, ledger)),
+            )
         }
         else -> throw IllegalArgumentException(USAGE)
     }

@@ -204,10 +204,23 @@ Generated files live only under:
 
 A legacy case cut over to the runner (slice 5) keeps its test source where it is. Its fixture
 directory's `data.json`, `action.json` and `expected.json` are replaced by a `scenario.json` in the
-same reviewed change, so an example never has two fixtures. The manifest owns those converted
-scenarios as `converted` entries: the fixture directory of each is a manifest-owned path, checked
-and rewritten like generated files, under the same conflict rule; the handwritten test that uses
-it is protected.
+same reviewed change, so an example never has two fixtures. The manifest lists those scenarios as
+`GENERATED` files at their legacy paths, and slice 5 extends the completeness walk to them.
+
+`core/src/test/resources/dev/morphia/test/generated/manifest.json` lists every case (qualified name,
+kind `MIGRATED` or `GENERATED`, scenario resource, owning test) and every owned file with its
+SHA-256. A `GENERATED` file is rewritten by generation; a `PROTECTED` one never is: moved
+handwritten bodies, the runner's self-test scenarios and the golden vectors. Nothing outside the
+owned paths is written by generation. A file under the generated roots that the manifest does not
+list is a conflict, not something to overwrite. When generation would write an operator's class and
+that class is protected, it reports a gap instead of touching it.
+
+An offline core test checks completeness both ways:
+- every manifest case has exactly one JUnit test and one scenario of the same name;
+- every file under the generated roots (except the manifest itself), every test method of any JUnit
+  kind and every scenario is in the manifest; nested test classes are rejected.
+
+The legacy `ExampleBindingsTest` keeps covering the legacy packages.
 
 ### Migrated fixtures
 
@@ -266,8 +279,11 @@ A candidate records:
      - the binding manifest is updated, so the example keeps exactly one owner.
    - **Vectors:** the first golden vectors.
    - No generator yet.
-2. **Registry, manifest and completeness.** The identity statuses and the one-owner registry check,
-   the manifest schema with `converted` entries, and the two-way completeness test.
+2. **Registry, manifest and completeness.** The one-owner registry check (legacy bindings against
+   manifest cases), the manifest schema (cases, and owned files as `GENERATED` or `PROTECTED`), and
+   the two-way completeness test. `SOURCE_REMOVED` arrives with the adapter (slice 3), the
+   first step that pairs a legacy case with its documented scenario; `AMBIGUOUS` and `UNNAMED` arrive
+   with the generator, the first step that matches extracted scenarios to owners.
 3. **Compatibility adapter.**
    - **Descriptor:** built for a legacy case from the binding manifest and backport ledger.
    - **Scenario:** emitted from its reference (see

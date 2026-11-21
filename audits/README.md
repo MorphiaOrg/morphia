@@ -611,6 +611,10 @@ deletes the legacy fixture directory and records the move in `audits/catalog/fix
 Run it before editing the legacy test, because it records the bound method's body digest; then move
 the body into the named test, move the fixture's declaration in `form-review.json` from
 `declarations` to `migrated` (it keeps pinning the source, and the ledger's copy must match it), and
-regenerate `example-bindings.json`, the repair inventory and the form report. See the [test generation design](../design/operator-audits-test-generation.md). An audits test rechecks the committed
+regenerate `example-bindings.json`, the repair inventory and the form report. `manifest <root>` rewrites `core/src/test/resources/dev/morphia/test/generated/manifest.json` from
+the migration ledger: every case with its scenario and test, and every owned file with its digest.
+Core's `GeneratedCasesTest` checks the namespace against it in both directions, and an audits test
+requires it to equal a fresh capture and every example to have one owner. See the
+[test generation design](../design/operator-audits-test-generation.md). An audits test rechecks the committed
 report against the tree without the pages. See the [migration design](../design/operator-audits-form-migration.md).
 

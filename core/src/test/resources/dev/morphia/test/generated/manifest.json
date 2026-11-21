@@ -1,0 +1,26 @@
+{
+  "cases" : [ {
+    "kind" : "MIGRATED",
+    "name" : "aggregation/expressions/round/roundExpressionOperator",
+    "scenario" : "/dev/morphia/test/generated/fixtures/expressions/round/roundExpressionOperator/scenario.json",
+    "test" : "dev.morphia.test.generated.expressions.TestRound#roundExpressionOperator"
+  } ],
+  "files" : [ {
+    "owner" : "PROTECTED",
+    "path" : "src/test/java/dev/morphia/test/generated/expressions/TestRound.java",
+    "sha256" : "6abe26be2247d04fb1865980cfd2dc8e09978492cd20b3bc26d562c02f8b6798"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/round/roundExpressionOperator/scenario.json",
+    "sha256" : "79be7a769e0425ad801826b2525502b2dfcb62e5edbb24c1771abae2682e1140"
+  }, {
+    "owner" : "PROTECTED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/runner/crossDatabase/scenario.json",
+    "sha256" : "cbee0e532d5860b826a27bbddda925f621fe69033d0220da7cbdb63acc2aec56"
+  }, {
+    "owner" : "PROTECTED",
+    "path" : "src/test/resources/dev/morphia/test/generated/vectors/strict.json",
+    "sha256" : "88907960a183757fef6f2793f6ce64057ce3fa5c28e8c4a65fb44f07f2047db8"
+  } ],
+  "schemaVersion" : 1
+}

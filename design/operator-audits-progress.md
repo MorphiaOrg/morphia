@@ -2053,3 +2053,25 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   only in the ledger (the frozen catalog pins the legacy body's hash, not its text). The adapter
   slice reads legacy options from source and will store the hash-checked body text so the flag can
   be re-derived offline.
+
+- PR #4542 (branch audits-case-runner, base #4541) published.
+
+## Step 5 slice 2: case manifest and completeness (2026-11-21)
+
+- Branch audits-case-manifest from #4542. `core/src/test/resources/dev/morphia/test/generated/
+  manifest.json` lists every case of the generated namespace (name, kind, scenario, test) and every
+  file it owns with its SHA-256, as `GENERATED` (scenarios) or `PROTECTED` (moved handwritten
+  bodies). `FormMainKt manifest` captures it from the migration ledger.
+- Core `GeneratedCases.verifyAll` (offline, `GeneratedCasesTest`) checks both directions: every
+  listed case has its `@Test` and a scenario of the same name, every owned file exists with its
+  digest, and every generated source, `@Test` and scenario (runner self-tests aside) is listed.
+- Audits: the committed manifest must equal a fresh capture, and `CaseManifests.owners` fails if an
+  example has more than one owner across the legacy bindings and the manifest.
+- `SOURCE_REMOVED` moves to the adapter slice and `AMBIGUOUS`/`UNNAMED` to the generator slice.
+- Review round 1 (independent agent): the walk now covers every file under the generated roots
+  (the vectors and runner self-tests are `PROTECTED` files, only the manifest is exempt), any JUnit
+  test kind through `@Testable` and nested classes; the owners check folds case; the design's
+  manifest section matches the schema.
+- Review round 2: `getMethods()` missed package-private tests and `isTest` accepted only declared
+  `@Test` methods; both now use one scan of declared methods up the hierarchy, of any JUnit kind.
+  The owners check folds case with `Locale.ROOT`.

@@ -1,6 +1,7 @@
 package dev.morphia.audits.offline
 
 import dev.morphia.audits.coverage.AuditJson
+import dev.morphia.audits.repairs.CaseManifests
 import dev.morphia.audits.repairs.FixtureMigration
 import java.nio.file.Files
 import java.nio.file.Path
@@ -89,6 +90,34 @@ class FixtureMigrationTest {
         assertThrows(IllegalArgumentException::class.java) {
             FixtureMigration.verify(root, ledger, inventory, unreviewed)
         }
+    }
+
+    @Test
+    fun theCommittedManifestListsEveryCaseWithOneOwner() {
+        val manifest = AuditJson.caseManifest(read(CaseManifests.PATH))
+        assertEquals(CaseManifests.capture(root, ledger), manifest)
+        val descriptor =
+            AuditJson.bindingDescriptor(
+                read("core/src/test/resources/dev/morphia/test/example-bindings.json")
+            )
+        CaseManifests.owners(descriptor, manifest)
+        val legacy = descriptor.classes.first { it.bindings.isNotEmpty() }
+        val claimed =
+            manifest.copy(
+                cases =
+                    manifest.cases +
+                        manifest.cases
+                            .first()
+                            .copy(
+                                name =
+                                    "${legacy.resources.removePrefix("dev/morphia/test/")}/${legacy.bindings.first().resource}"
+                            )
+            )
+        val failure =
+            assertThrows(IllegalArgumentException::class.java) {
+                CaseManifests.owners(descriptor, claimed)
+            }
+        assertTrue("more than one owner" in failure.message!!, failure.message)
     }
 
     @Test
