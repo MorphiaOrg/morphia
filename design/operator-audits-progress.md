@@ -2103,3 +2103,28 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   only recognizes a literal `orderMatters(false)`, but fails closed: `convert` cross-checks the
   inventory and the runner checks the real options at run time.
 - Review round 2: nothing new.
+
+- PR #4544 (branch audits-case-adapter, base #4543) published.
+
+## Step 5 slice 4a: form rules in core (2026-11-21)
+
+- Branch audits-case-rules from #4544. `FormRules` ports `FormEquivalence` to Java (every rewriting
+  rule; `ALTERNATIVE_COMMANDS` selects a command, so the runner still refuses it). Golden vectors
+  (`generated/vectors/rules.json`, 25 cases with positives and negatives, expected outputs produced
+  by the Kotlin rules) run through both ports; the audits test also requires every rewriting rule
+  to have a vector. Expected outputs are stored as extended JSON text, because a
+  `{$regex, $options}` document would be read back as a regular expression.
+- The runner compares serialization after applying the scenario's rules to both sides, and
+  `FixtureMigration.scenario` writes an override's rules. `cond/condExpressionOperator`
+  (`COND_ARRAY`) is converted and passes under both mappers.
+- Totals: form report 135 overrides; inventory 555 examples, 137 OVERRIDDEN, 98 locked.
+- Review round 1: the port is equivalent and the runner and emission changes are sound. Low
+  findings, all missing vectors, were added: a string pattern with unsorted options, field
+  operators inside `$or`/`$and`/`$nor`, `$eq` and a regex through a pipeline `$match`, a
+  `$unionWith` pipeline, projection flags in `$project`, and `{f: {$eq: {}}}`.
+- Review round 2 (medium): the string-pattern vector never reached the string branch, because the
+  JSON reader turns `{$regex, $options}` into a regular expression, which also sorts its options.
+  Vector inputs now spell such keys with `#` (`{"#regex": "p", "#options": "mi"}`), and both
+  harnesses and the generator read `#` as `$`. The string branch and option sorting are now
+  covered in both ports.
+- Review round 3: nothing new.

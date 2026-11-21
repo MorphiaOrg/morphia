@@ -1,6 +1,8 @@
 package dev.morphia.test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -10,6 +12,8 @@ import com.mongodb.client.MongoDatabase;
 
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.AggregationImpl;
+import dev.morphia.test.FormRules.Rule;
+import dev.morphia.test.FormRules.Shape;
 import dev.morphia.test.util.ActionTestOptions;
 
 import org.bson.BsonArray;
@@ -31,8 +35,9 @@ import static org.junit.jupiter.api.Assertions.fail;
  * identically seeded databases and leave the same results and collections;</li>
  * <li><b>published expectation</b>: both results equal the documented results.</li>
  * </ol>
- * This first runner supports aggregations with exact expected documents and no declared form rules, ignored fields,
- * tolerances, datasets or indexes; a scenario that needs any of them fails rather than being checked loosely.
+ * Serialization is compared after the scenario's declared form rules ({@link FormRules}) are applied to both sides.
+ * This runner supports aggregations with exact expected documents and no ignored fields, tolerances, datasets or
+ * indexes; a scenario that needs any of them fails rather than being checked loosely.
  */
 public class OperatorCaseRunner {
     private static final JsonWriterSettings JSON = JsonWriterSettings.builder().indent(true).build();
@@ -87,7 +92,12 @@ public class OperatorCaseRunner {
             Aggregation<Document> aggregation = dsl.apply(test.getDs().aggregate(aggregationOptions().collection(collection)));
             BsonArray emitted = bson(((AggregationImpl<Document>) aggregation).pipeline());
             BsonArray documented = action.getArray("pipeline");
-            if (!StrictBson.equal(documented, emitted)) {
+            // Both sides take the declared rules; the documented pipeline itself is what runs.
+            Set<Rule> rules = EnumSet.noneOf(Rule.class);
+            scenario.getDocument("comparison").getArray("rules")
+                    .forEach(rule -> rules.add(Rule.valueOf(rule.asString().getValue())));
+            if (!StrictBson.equal(new BsonArray(FormRules.canonical(documented.getValues(), Shape.PIPELINE, rules)),
+                    new BsonArray(FormRules.canonical(emitted.getValues(), Shape.PIPELINE, rules)))) {
                 fail(operatorCase.resource() + ": serialization differs\ndocumented: " + json(documented) + "\nmorphia:    "
                         + json(emitted));
             }
@@ -138,8 +148,10 @@ public class OperatorCaseRunner {
         if (!scenario.getArray("indexes").isEmpty()) {
             unsupported.add("indexes");
         }
-        if (!comparison.getArray("rules").isEmpty()) {
-            unsupported.add("form rules");
+        for (BsonValue rule : comparison.getArray("rules")) {
+            if (Arrays.stream(Rule.values()).noneMatch(known -> known.name().equals(rule.asString().getValue()))) {
+                unsupported.add("rule " + rule.asString().getValue());
+            }
         }
         if (!comparison.getArray("ignore").isEmpty()) {
             unsupported.add("ignored fields");

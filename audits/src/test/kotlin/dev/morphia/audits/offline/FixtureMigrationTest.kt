@@ -3,6 +3,7 @@ package dev.morphia.audits.offline
 import dev.morphia.audits.coverage.AuditJson
 import dev.morphia.audits.repairs.CaseManifests
 import dev.morphia.audits.repairs.FixtureMigration
+import dev.morphia.audits.repairs.FormRule
 import dev.morphia.audits.repairs.MIGRATED
 import java.nio.file.Files
 import java.nio.file.Path
@@ -127,11 +128,25 @@ class FixtureMigrationTest {
     }
 
     @Test
-    fun onlyExactOverridesCanBeMigrated() {
+    fun overridesWithRetypesOrCorrectionsCannotBeMigratedYet() {
         val form = AuditJson.formMigration(read("audits/catalog/form-migration.json"))
-        val withRules = form.overrides.first { it.rules.isNotEmpty() }
-        assertThrows(IllegalArgumentException::class.java) {
-            FixtureMigration.scenario(withRules, false)
-        }
+        listOf(
+                form.overrides.first { it.retypes.isNotEmpty() },
+                form.overrides.first { it.corrections.isNotEmpty() },
+            )
+            .forEach {
+                assertThrows(IllegalArgumentException::class.java) {
+                    FixtureMigration.scenario(it, true)
+                }
+            }
+        // Declared rules travel with the scenario.
+        val withRules =
+            form.overrides.first {
+                it.rules == listOf(FormRule.COND_ARRAY) &&
+                    it.retypes.isEmpty() &&
+                    it.corrections.isEmpty() &&
+                    it.collections.isEmpty()
+            }
+        assertTrue("\"COND_ARRAY\"" in FixtureMigration.scenario(withRules, true))
     }
 }

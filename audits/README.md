@@ -611,8 +611,9 @@ deletes the legacy fixture directory and records the move in `audits/catalog/fix
 Run it before editing the legacy test, because it records the bound method's body digest; then move
 the body into the named test, move the fixture's declaration in `form-review.json` from
 `declarations` to `migrated` (it keeps pinning the source, and the ledger's copy must match it), and
-regenerate `example-bindings.json`, the repair inventory and the form report. `convert <root> <revision> <fixture>` converts a `testPipeline` case with an exact accepted override
-in place: its legacy fixture files are replaced by the scenario, its unchanged test runs through the
+regenerate `example-bindings.json`, the repair inventory and the form report. `convert <root> <revision> <fixture>` converts a `testPipeline` case with an accepted override (its
+declared form rules travel with the scenario; retypes, corrections and alternative commands are not
+supported yet) in place: its legacy fixture files are replaced by the scenario, its unchanged test runs through the
 runner's compatibility adapter, and the ledger records the move (kind `CONVERTED`, with the legacy
 body text). Move its declaration to `migrated` as for `migrate`.
 

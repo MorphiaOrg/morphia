@@ -463,59 +463,6 @@
   }, {
     "blocks" : [ {
       "role" : "ACTION",
-      "sha256" : "f289394396ce7e30e0b85586f77b6f04e741c0aee8840d7ab42f9b663128574e",
-      "text" : "db.inventory.aggregate(\n   [\n      {\n         $project:\n           {\n             item: 1,\n             discount:\n               {\n                 $cond: { if: { $gte: [ \"$qty\", 250 ] }, then: 30, else: 20 }\n               }\n           }\n      }\n   ]\n)"
-    }, {
-      "role" : "DATA",
-      "sha256" : "02426b96130e602fe499e5facd289d6034d67a41bb9f51aa214cefa15907806e",
-      "text" : "{ \"_id\" : 1, \"item\" : \"abc1\", qty: 300 }\n{ \"_id\" : 2, \"item\" : \"abc2\", qty: 200 }\n{ \"_id\" : 3, \"item\" : \"xyz1\", qty: 250 }"
-    }, {
-      "role" : "EXPECTED",
-      "sha256" : "15f55e0bd596ae038967567cc42de49868748c317582050906a2a1757b0e8f92",
-      "text" : "{ \"_id\" : 1, \"item\" : \"abc1\", \"discount\" : 30 }\n{ \"_id\" : 2, \"item\" : \"abc2\", \"discount\" : 20 }\n{ \"_id\" : 3, \"item\" : \"xyz1\", \"discount\" : 30 }"
-    } ],
-    "collections" : { },
-    "corrections" : [ ],
-    "example" : "main",
-    "fixture" : "aggregation/expressions/cond/condExpressionOperator",
-    "fixtureFiles" : {
-      "action.json" : "5fdbbe45d012f52390c69aad293ba52ec62233c1bc68de6474ce18d98ccfc2f6",
-      "data.json" : "02426b96130e602fe499e5facd289d6034d67a41bb9f51aa214cefa15907806e",
-      "expected.json" : "15f55e0bd596ae038967567cc42de49868748c317582050906a2a1757b0e8f92",
-      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
-    },
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    } ],
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "914125372599704f56defd0ab1a9776d921d2fe5",
-    "retiredLock" : {
-      "name" : "lock",
-      "sha256" : "fd98b0ba84e5fbdeca45e858c631317602ece197b444b671a8cd4240b93cc532",
-      "text" : "morphia generates the more succinct array version vs the document version from the docs"
-    },
-    "retypes" : [ ],
-    "rules" : [ "COND_ARRAY" ],
-    "shape" : "PIPELINE",
-    "source" : {
-      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
-      "path" : "source/reference/operator/aggregation/cond.txt",
-      "relation" : "AT_ORIGIN"
-    },
-    "unexpandedIncludes" : [ ]
-  }, {
-    "blocks" : [ {
-      "role" : "ACTION",
       "sha256" : "680315556d5f7127ac939e947cfaba1d632fa02bc7c1f4fbcc9f8b45f03a437d",
       "text" : "db.trigonometry.aggregate( [\n   {\n      $addFields : {\n         \"cosh_output\" : { $cosh : { $degreesToRadians : \"$angle\" } }\n      }\n   }\n] )"
     }, {
@@ -7089,7 +7036,7 @@
     },
     "unexpandedIncludes" : [ ]
   } ],
-  "repositoryRevision" : "24d39a8da7a73e1a2535cb6796911812223d904f",
+  "repositoryRevision" : "70fde7825fcaa6f09efde4cab59b09318dfe6ee6",
   "rules" : [ {
     "description" : "$cond: {if: a, then: b, else: c} and $cond: [a, b, c] are the same expression; the array form is canonical.",
     "rule" : "COND_ARRAY"
@@ -7130,12 +7077,12 @@
     "gap.REJECTED" : 1,
     "gap.RESIDUAL_DIFFERENCE" : 48,
     "gap.SOURCE_UNSUPPORTED" : 34,
-    "overrides" : 136,
+    "overrides" : 135,
     "overrides.corrected" : 20,
     "overrides.exact" : 55,
     "overrides.retyped" : 16,
     "rule.ALTERNATIVE_COMMANDS" : 1,
-    "rule.COND_ARRAY" : 14,
+    "rule.COND_ARRAY" : 13,
     "rule.EQ_SHORTHAND" : 4,
     "rule.FIELD_OPERATORS_AND" : 1,
     "rule.NAMED_ARGUMENTS" : 14,

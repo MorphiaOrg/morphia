@@ -212,34 +212,6 @@
     }
   }, {
     "corrections" : [ ],
-    "fixture" : "aggregation/expressions/cond/condExpressionOperator",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    } ],
-    "justification" : null,
-    "lock" : "morphia generates the more succinct array version vs the document version from the docs",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "914125372599704f56defd0ab1a9776d921d2fe5",
-    "retypes" : [ ],
-    "rules" : [ "COND_ARRAY" ],
-    "source" : {
-      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
-      "path" : "source/reference/operator/aggregation/cond.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
     "fixture" : "aggregation/expressions/cosh/hyperbolicCosineInDegrees",
     "includes" : [ ],
     "justification" : null,
@@ -3722,6 +3694,34 @@
     }
   } ],
   "migrated" : [ {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/cond/condExpressionOperator",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "justification" : null,
+    "lock" : "morphia generates the more succinct array version vs the document version from the docs",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "914125372599704f56defd0ab1a9776d921d2fe5",
+    "retypes" : [ ],
+    "rules" : [ "COND_ARRAY" ],
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/cond.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/round/roundExpressionOperator",
     "includes" : [ ],

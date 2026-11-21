@@ -299,9 +299,11 @@ A candidate records:
      - `findOptions`, `updateOptions` and `serverVersion` become action options and requirements.
    - **Evidence:** each migrated case's ledger entry keeps the legacy body text, checked against the
      frozen catalog's body digest, so the options it mapped can be re-derived offline.
-4. **Form rules and printed constraints in core**, each ported with its golden vectors, so cases that
-   need them can be checked rather than reported as gaps. Coming before cutover, they let
-   cases with declared rules or printed results convert in one pass.
+4. **Form rules and printed constraints in core**, as two PRs: the form rules first (`FormRules`,
+   applied to both sides of the serialization check, with `cond/condExpressionOperator` converted
+   under `COND_ARRAY`), then the printed constraints. Each is ported with its golden vectors, so
+   cases that need them can be checked rather than reported as gaps. Coming before cutover, they
+   let cases with declared rules or printed results convert in one pass.
 5. **Legacy cutover by context.**
    - **Per context:** convert the bound fixtures, replacing their legacy files, and route the cases
      through the adapter. Each case then gains the behavior check and the strict comparator.

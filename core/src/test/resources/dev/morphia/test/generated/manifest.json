@@ -1,5 +1,10 @@
 {
   "cases" : [ {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/cond/condExpressionOperator",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/cond/condExpressionOperator/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestCond#testCondExpressionOperator"
+  }, {
     "kind" : "MIGRATED",
     "name" : "aggregation/expressions/round/roundExpressionOperator",
     "scenario" : "/dev/morphia/test/generated/fixtures/expressions/round/roundExpressionOperator/scenario.json",
@@ -16,6 +21,10 @@
     "sha256" : "6abe26be2247d04fb1865980cfd2dc8e09978492cd20b3bc26d562c02f8b6798"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/cond/condExpressionOperator/scenario.json",
+    "sha256" : "9627b77e4649c4391067edb6f2a81ef987735807885784502949c255813279e9"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/trunc/truncExpressionOperator/scenario.json",
     "sha256" : "44cc5777d8cf3bfeec8602a44a44bad26842be9599204255625cd843b13ceefa"
   }, {
@@ -26,6 +35,10 @@
     "owner" : "PROTECTED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/runner/crossDatabase/scenario.json",
     "sha256" : "cbee0e532d5860b826a27bbddda925f621fe69033d0220da7cbdb63acc2aec56"
+  }, {
+    "owner" : "PROTECTED",
+    "path" : "src/test/resources/dev/morphia/test/generated/vectors/rules.json",
+    "sha256" : "696773e8dba654d832605a6e495db8bf4c6e5b79b07de6be5c70ee66252d6f56"
   }, {
     "owner" : "PROTECTED",
     "path" : "src/test/resources/dev/morphia/test/generated/vectors/strict.json",

@@ -123,7 +123,7 @@ object FixtureMigration {
                     "comparison",
                     BsonDocument()
                         .append("order", BsonString(if (ordered) "ORDERED" else "UNORDERED"))
-                        .append("rules", BsonArray())
+                        .append("rules", BsonArray(override.rules.map { BsonString(it.name) }))
                         .append("ignore", BsonArray())
                         .append("tolerance", BsonNull.VALUE),
                 )
