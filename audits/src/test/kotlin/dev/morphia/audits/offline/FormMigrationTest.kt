@@ -401,6 +401,104 @@ class FormMigrationTest {
     }
 
     @Test
+    fun aReviewerCanRejectADraftedDeclaration() {
+        page(commit, documented)
+        include(commit, "/includes/sample-inventory.rst", inventory)
+        curated()
+        fixture(
+            "useCond",
+            "expected.json",
+            """
+            |{ "_id" : 1, "item" : "abc1", "discount" : 30 }
+            |{ "_id" : 2, "item" : "abc2", "discount" : 25 }
+            """
+                .trimMargin(),
+        )
+        val both = facts(categories = listOf("MORPHIA_FORM", "DOCS_ERROR"))
+        val drafted = FormMigration.draft(repository, pages, "mongodb/docs", candidates(), both)
+        val declaration = drafted.declarations.single()
+        fun rejected(reason: String) =
+            drafted.copy(
+                declarations = emptyList(),
+                unresolved =
+                    listOf(
+                        FormUnresolved(
+                            declaration.fixture,
+                            declaration.origin,
+                            declaration.source,
+                            FormGap.REJECTED,
+                            reason,
+                        )
+                    ),
+            )
+        val review = rejected("the lock does not describe the discount change")
+        val report = FormMigration.capture(repository, "head", pages, review, both)
+        assertEquals(1, report.summary["gap.REJECTED"])
+        FormMigration.apply(repository, report)
+        assertTrue(
+            repository.resolve("core/src/test/resources/dev/morphia/test/$fixture/lock").exists()
+        )
+        FormMigration.verify(repository, review, report, both)
+
+        val blank =
+            assertThrows(IllegalArgumentException::class.java) {
+                FormMigration.capture(repository, "head", pages, rejected(" "), both)
+            }
+        assertTrue("reviewer's reason" in blank.message!!, blank.message)
+
+        // A rejection is only for a fixture the tool reproduces; any other gap must be reviewed.
+        fixture("useCond", "data.json", """{ "_id" : 1, "item" : "abc1", "qty" : 300.0 }""")
+        val stale =
+            assertThrows(IllegalArgumentException::class.java) {
+                FormMigration.capture(repository, "head", pages, review, both)
+            }
+        assertTrue("reviewed REJECTED" in stale.message!!, stale.message)
+    }
+
+    @Test
+    fun generatedExtractsAreAssembledFromTheirYaml() {
+        // Giza builds /includes/extracts/<ref>.rst from extracts*.yaml; the page is not tracked.
+        page(
+            commit,
+            documented.replace("include:: /includes/sample", "include::  /includes/extracts/sample"),
+        )
+        include(
+            commit,
+            "/includes/extracts-inventory.yaml",
+            """
+            |ref: _inventory
+            |content: |
+            |  .. code-block:: javascript
+            |
+            |     db.{{collection}}.insertMany( [
+            |        { "_id" : 1, "item" : "abc1", "qty" : 300 },
+            |        { "_id" : 2, "item" : "abc2", "qty" : 200 }
+            |     ] )
+            |replacement:
+            |  collection: "orders"
+            |---
+            |ref: sample-inventory
+            |inherit:
+            |  ref: _inventory
+            |  file: extracts-inventory.yaml
+            |replacement:
+            |  collection: "inventory"
+            |...
+            """
+                .trimMargin(),
+        )
+        curated()
+        val review = FormMigration.draft(repository, pages, "mongodb/docs", candidates(), facts())
+        val declaration = review.declarations.single()
+        assertEquals(listOf(FormRule.COND_ARRAY), declaration.rules)
+        assertEquals(
+            listOf("source/includes/extracts-inventory.yaml"),
+            declaration.includes.map { it.path }.distinct(),
+        )
+        FormMigration.capture(repository, "head", pages, review, facts())
+    }
+
+    @Test
     fun fixtureFilesMustReadOneDocumentPerLine() {
         page(commit, documented)
         include(commit, "/includes/sample-inventory.rst", inventory)
@@ -658,7 +756,7 @@ class FormMigrationTest {
                 .map { it.fixture }
                 .toSet(),
         )
-        assertEquals(116, report.overrides.size)
-        assertEquals(118, report.unresolved.size)
+        assertEquals(123, report.overrides.size)
+        assertEquals(111, report.unresolved.size)
     }
 }

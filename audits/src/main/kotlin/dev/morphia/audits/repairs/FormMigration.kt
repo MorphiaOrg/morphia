@@ -110,6 +110,12 @@ enum class FormGap {
     FIXTURE_UNSUPPORTED,
     /** Every declared rule applied, and the fixture still differs from the source. */
     RESIDUAL_DIFFERENCE,
+    /**
+     * The tool reproduces the fixture, but a reviewer rejected the declaration it drafts: its
+     * corrections are not the edits the lock describes. The detail is the reviewer's reason; only a
+     * reviewer sets this gap, and capture checks that the fixture still reproduces.
+     */
+    REJECTED,
 }
 
 data class FormUnresolved(
@@ -356,8 +362,12 @@ object FormMigration {
                 val outcome = examine(root, pages, unresolved.fixture, unresolved.source, known)
             ) {
                 is Examined.Reproduced ->
-                    problems +=
-                        "${unresolved.fixture}: reproducible with ${outcome.rules}; declare it"
+                    if (unresolved.gap != FormGap.REJECTED) {
+                        problems +=
+                            "${unresolved.fixture}: reproducible with ${outcome.rules}; declare it"
+                    } else if (unresolved.detail.isBlank()) {
+                        problems += "${unresolved.fixture}: a rejection needs the reviewer's reason"
+                    }
                 is Examined.Gap ->
                     if (outcome.gap != unresolved.gap || outcome.detail != unresolved.detail) {
                         problems +=
@@ -1028,7 +1038,7 @@ object FormMigration {
         )
     }
 
-    private val include = Regex("""^(\s*)\.\. include:: (/\S+)\s*$""")
+    private val include = Regex("""^(\s*)\.\. include::\s+(/\S+)\s*$""")
 
     /**
      * Splices `.. include::` targets into the page, as Sphinx does, re-indented to the directive.
@@ -1042,12 +1052,25 @@ object FormMigration {
         includes: MutableList<FormInclude>,
         unexpanded: MutableList<String>,
         depth: Int,
+        extracts: GizaExtracts = GizaExtracts(tree.resolve("$sourceRoot/includes")),
     ): List<String> {
         require(depth <= 8) { "Includes nest too deeply at $path" }
         val bytes = Files.readAllBytes(tree.resolve(path))
         if (depth > 0) includes += FormInclude(path, gitBlob(bytes))
         val lines = bytes.decodeToString(throwOnInvalidSequence = true).lines()
-        return lines.flatMapIndexed { index, line ->
+        return splice(tree, sourceRoot, lines, includes, unexpanded, depth, extracts)
+    }
+
+    private fun splice(
+        tree: Path,
+        sourceRoot: String,
+        lines: List<String>,
+        includes: MutableList<FormInclude>,
+        unexpanded: MutableList<String>,
+        depth: Int,
+        extracts: GizaExtracts,
+    ): List<String> =
+        lines.flatMapIndexed { index, line ->
             val match = include.matchEntire(line)
             val next = lines.getOrNull(index + 1)
             val options =
@@ -1056,19 +1079,50 @@ object FormMigration {
                     next.indexOfFirst { !it.isWhitespace() } > line.indexOf('.') &&
                     next.trim().startsWith(":")
             val target = match?.let { sourceRoot + it.groupValues[2] }
-            if (target != null && !options && !tree.resolve(target).isRegularFile()) {
-                unexpanded += target
-            }
-            if (target == null || options || !tree.resolve(target).isRegularFile()) listOf(line)
-            else {
-                val indent = match.groupValues[1]
-                require(".." !in target.split('/')) { "Invalid include $target" }
-                expand(tree, sourceRoot, target, includes, unexpanded, depth + 1).map {
-                    if (it.isBlank()) it else indent + it
+            val indent = match?.groupValues?.get(1) ?: ""
+            fun indented(spliced: List<String>) =
+                spliced.map { if (it.isBlank()) it else indent + it }
+            when {
+                target == null || options -> listOf(line)
+                tree.resolve(target).isRegularFile() -> {
+                    require(".." !in target.split('/')) { "Invalid include $target" }
+                    indented(
+                        expand(tree, sourceRoot, target, includes, unexpanded, depth + 1, extracts)
+                    )
+                }
+                else -> {
+                    // A generated extract is assembled from the YAML Giza builds it from.
+                    val prefix = "$sourceRoot/includes/extracts/"
+                    val extract =
+                        target
+                            .takeIf { it.startsWith(prefix) && it.endsWith(".rst") }
+                            ?.let { extracts.resolve(it.removePrefix(prefix).removeSuffix(".rst")) }
+                    if (extract == null || depth >= 8) {
+                        unexpanded += target
+                        listOf(line)
+                    } else {
+                        extract.files.forEach {
+                            includes +=
+                                FormInclude(
+                                    tree.relativize(it).toString(),
+                                    gitBlob(Files.readAllBytes(it)),
+                                )
+                        }
+                        indented(
+                            splice(
+                                tree,
+                                sourceRoot,
+                                extract.content.lines(),
+                                includes,
+                                unexpanded,
+                                depth + 1,
+                                extracts,
+                            )
+                        )
+                    }
                 }
             }
         }
-    }
 
     /**
      * Whether `TemplatedTestBase.loadJson` reads [text] as [documents]: each line is one document,

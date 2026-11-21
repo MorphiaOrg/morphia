@@ -10,13 +10,14 @@ through reviewed value corrections (see [Reviewed corrections](#reviewed-correct
 
 Of the 77 `MORPHIA_FORM` examples, 66 carry no other category. 46 of those locks are retired here;
 20 stay, each with a recorded gap. The 11 mixed examples wait for their other families. Of the 26
-`NUMERIC_TYPE` examples, 24 carry no category besides `MORPHIA_FORM`; 16 of those are retired and
-8 stay with a gap. Of the 52 locked examples filed as `DOCS_ERROR` or `FIXTURE_CURATION` with no
-family outside these four, 29 are retired and 23 stay with a gap. The `EXTRACTION` and
-`SHELL_SYNTAX` locks need nothing declared: 25 of their 92 fixtures equal what the current pipeline
-extracts from the pinned page (see [Handled natively](#handled-natively)). In all, 116 locks are
-retired and 118 are kept with a gap; only the two untestable change-stream fixtures are outside the
-review.
+`NUMERIC_TYPE` examples, 24 carry no category besides `MORPHIA_FORM`; 17 of those are retired and
+7 stay with a gap. Of the 52 locked examples filed as `DOCS_ERROR` or `FIXTURE_CURATION` with no
+family outside these four, 32 are retired and 20 stay with a gap. The `EXTRACTION` and
+`SHELL_SYNTAX` locks need nothing declared: 28 of their 92 fixtures equal what the current pipeline
+extracts from the pinned page (see [Handled natively](#handled-natively)). In all, 123 locks are
+retired and 111 are kept with a gap; only the two untestable change-stream fixtures are outside the
+review. Seven of those retirements depend on [generated extracts](#generated-extracts), which the
+page reader now assembles from their YAML sources.
 
 ## Which documentation is the source
 
@@ -37,8 +38,10 @@ with its exact commit and git blob id, as is every `.. include::` it splices in,
 re-fetched and checked against GitHub. `fetch.py` refuses any page or include, fetched or already
 on disk, whose git blob id differs from the one GitHub reports for that path and commit. The reviewed
 declarations pin each page and include blob id, and `capture` fails if the pages it reads differ.
-Include targets that are not tracked files (generated extracts) are recorded per override as
-`unexpandedIncludes`.
+Generated `/includes/extracts/` targets are not tracked files; they are assembled from the YAML
+they are built from (see [Generated extracts](#generated-extracts)), and each YAML file used is
+pinned like any other include. A target that is neither tracked nor resolvable is recorded per
+override as `unexpandedIncludes`.
 
 The pages themselves are never committed (a maintainer decision): `mongodb/docs` is licensed
 CC BY-NC-SA 3.0, which does not fit this Apache-2.0 repository. Offline checks therefore start from the recorded source text; the
@@ -120,7 +123,7 @@ retype): those stay gaps. Corrections apply in order, after retypes, and each mu
 Rules are preferred to corrections: minimizing the rules never drops one if that needs more
 corrections. Only `DOCS_ERROR` and `FIXTURE_CURATION` locks may declare corrections.
 
-Every correction was read against its lock reason. Eleven of the 29 retired locks need none at all:
+Every correction was read against its lock reason. Eleven of the first 29 retired locks need none at all:
 the fixture equals the pinned page. Those pages already showed the corrected values before the
 fixtures were written, so each lock's deviation was against some other, unidentified source (probably a
 version branch or a stale checkout the legacy extractor read), not against these pages. The other 18
@@ -131,6 +134,9 @@ simpler `onNull` (`$dateFromString`), ids the fixture drops (`$toUUID`), and the
 collection name the harness loads data into. One correction goes beyond its lock's wording:
 `$degreesToRadians` also removes the documented `ObjectId` `_id` from its expected row, which the
 lock ("the angle_a's were different") does not mention; it is accepted as a reviewed decision.
+The three `DOCS_ERROR` locks retired later through [generated extracts](#generated-extracts)
+(`$regexMatch`, `$all` with `$elemMatch`, `$elemMatch`) need no correction either, for the same
+reason: their pinned pages predate the fixtures and already match them.
 
 `$toUUID`'s fixture predates every page at its path, so its source is the commit that first added
 the page, recorded as `relation: AFTER_ORIGIN`. That source pins the values the correction changes;
@@ -146,12 +152,48 @@ in an array, truncated pipelines, text the old reader could not parse. The plan 
 once the new pipeline handles the case natively, so these categories allow no declared change: a
 lock is retired only when the fixture equals, BSON-identically, what the strict shell normalizer
 and document reader extract from the pinned page, with only the declarations its other categories
-allow. 25 of 92 do. Ten of them were wrong example names: the curated `name` file now selects the
+allow. 28 of 92 do (three of them through [generated extracts](#generated-extracts)). Ten of them were wrong example names: the curated `name` file now selects the
 example the current extractor gives that title. Several others only changed layout (unwrapping an
 array, one document per line) for the tests' line-based reader; that layout is checked, not
 assumed: every data, expected and index file must read, one document per line as
 `TemplatedTestBase.loadJson` reads it, as the same documents the comparison sees, or the fixture is
 a `FIXTURE_UNSUPPORTED` gap.
+
+## Generated extracts
+
+Many pages include `/includes/extracts/<ref>.rst`, a file the docs build (Giza) generates and Git
+does not track. `GizaExtracts` rebuilds it from the `source/includes/extracts*.yaml` documents at
+the page's commit: the document whose `ref` matches supplies `content`, an `inherit` (or `source`)
+entry supplies the inherited `content` and `replacement` values, the document's own replacements
+override inherited ones, and each `{{name}}` is substituted. An extract is left as a directive, and
+recorded as unexpanded, when its `ref` is not defined exactly once, its inheritance cannot be
+followed, a placeholder stays unreplaced, or an entry in the chain has a field Giza renders beyond
+the content (`title`, `style`, `only`, `pre`, `post`, `append`), which the assembler does not
+reproduce. Includes are recognized with any whitespace after
+`include::`, as Sphinx accepts; two pages spell it with two spaces.
+
+`fetch.py` downloads every `extracts*.yaml` at a page's commit when the page names an untracked
+extract, through GraphQL tree listings and batched blob queries, verifying each blob id. Verified
+blobs are remembered in `<pages>/.verified.json`, so a rerun checks unchanged files without
+spending the REST quota. An absence is remembered only when GitHub answers 404; any other failure stops
+the fetch.
+
+With extracts assembled, no fixture is a `PAGE_UNSUPPORTED` gap any more. Seven locks retire: the
+three `$regexFind`/`$regexFindAll`/`$regexMatch` "and its options" examples, `$all` with
+`$elemMatch`, `$elemMatch`, `$in` on arrays (all exact) and `$near`, whose integer coordinates
+become doubles as its `NUMERIC_TYPE` lock says. The other sixteen now report the gap behind the
+extract: residual edits (9), an unsupported source construct (1), unsupported fixture files or options (3), no matching example (2) and
+one rejection.
+
+### Rejected declarations
+
+`$regexFind`'s email example reproduces with seven corrections, but the page prints its result
+twice, after `$addFields` (each email a match document) and after `$set` (each email a string), and
+the extractor reads the first. The drafted corrections therefore rewrite every email, which the lock
+("the expected doesn't match the comments in data", "tweak the options format") does not describe.
+A reviewer records this by moving the fixture to `unresolved` with gap `REJECTED` and the reason.
+`capture` accepts a rejection only while the fixture still reproduces and the reason is not blank;
+once it stops reproducing, its real gap must be reviewed instead.
 
 ## What is compared
 
@@ -198,27 +240,29 @@ migration retired it with the digest the legacy corpus recorded.
 
 `audits/catalog/form-review.json` lists every kept lock with its gap. By kind:
 
-- `SOURCE_UNSUPPORTED` (60): constructors the strict shell normalizer rejects (16, mostly `Date`
+- `SOURCE_UNSUPPORTED` (61): constructors the strict shell normalizer rejects (16, mostly `Date`
   without an explicit time), printed results the document reader cannot parse (14), JavaScript
   variable bindings (7), other shell syntax or constructs, data blocks in another database, and
   expression examples without a collection.
-- `RESIDUAL_DIFFERENCE` (28): edits no declaration covers for the lock's categories, such as the
+- `RESIDUAL_DIFFERENCE` (37): edits no declaration covers for the lock's categories, such as the
   four `$regex` fixtures that lost documented runs of spaces, BSON `undefined` in two data files,
-  form edits under form locks the rules do not cover, and data or expected files with rows the page
-  does not document, which a correction may not replace wholesale.
-- `PAGE_UNSUPPORTED` (23): a generated `/includes/extracts/` file inside the example section.
-- `FIXTURE_UNSUPPORTED` (5): fixture files the legacy reader cannot parse, unsupported command
-  options, and an action in the legacy `$near` coordinate form.
-- `NO_MATCHING_EXAMPLE` (2): no example on the page carries the fixture's name.
+  form edits under form locks the rules do not cover, string results where the page prints match
+  documents, and data or expected files with rows the page does not document, which a correction
+  may not replace wholesale.
+- `FIXTURE_UNSUPPORTED` (8): fixture files the legacy reader cannot parse, unsupported command
+  options, extra data files, and an action in the legacy `$near` coordinate form.
+- `NO_MATCHING_EXAMPLE` (4): no example on the page carries the fixture's name.
+- `REJECTED` (1): reproducible, but the drafted declaration was rejected in review (see
+  [Rejected declarations](#rejected-declarations)).
 
 ## Next
 
 Test bodies are not compared: a bound test that writes data directly (`insert`, `getDs().save`,
-driver calls) is outside this check. None of the 116 retired fixtures' tests does today; recording
+driver calls) is outside this check. None of the 123 retired fixtures' tests does today; recording
 such writes in the repair inventory is a separate rule.
 
 The remaining families follow the same pattern. `EXTRACTION` and `SHELL_SYNTAX` need the native
 extractor; `NUMERIC_TYPE` needs typed overrides; `DOCS_ERROR` and `FIXTURE_CURATION` stay as reviewed
-corrections pinned to a source digest; those corrections are now in place. The largest remaining
-gaps are generated include extracts, `Date` constructors, unparseable printed results and
+corrections pinned to a source digest; those corrections are now in place. Generated include extracts are now
+assembled. The largest remaining gaps are `Date` constructors, unparseable printed results and
 JavaScript variable bindings; each is a separate extension of the extraction or normalizer.

@@ -1903,3 +1903,34 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   passed by construction because the comparison parses whole files; every data/expected/index file
   must now also read one document per line as the Java tests read it (all 116 overrides do; no gap
   changed). The wrong-name count (10, not 13) and its attribution were corrected.
+
+- PR #4536 (branch audits-native-extraction, base #4535) published.
+
+## Generated Giza extracts (step 4 slice 7, 2026-11-20)
+
+- Branch audits-giza-extracts from #4536. `GizaExtracts` assembles untracked
+  `/includes/extracts/<ref>.rst` targets from `extracts*.yaml` (`ref`, `content`, `inherit`/`source`,
+  `replacement`; the child's replacements override inherited ones). Each YAML file used is pinned as
+  an include. Includes now match with any whitespace after `include::` (two pages use two spaces).
+- `fetch.py` fetches the extracts YAML through GraphQL tree listings and batched blob queries, and
+  keeps a verified-blob cache (`<pages>/.verified.json`, absence cached too) so reruns do not spend
+  the REST quota, which a full recheck had exhausted.
+- Redraft of every reviewed fixture: no existing declaration changed beyond include pins (21 pages
+  now splice extracts outside their examples). All 23 `PAGE_UNSUPPORTED` gaps are gone: 7 retire
+  (3 EXTRACTION, 3 DOCS_ERROR with no correction, `$near` with an INT32→DOUBLE retype), 16 report
+  the gap behind the extract.
+- New `REJECTED` gap for a reviewer-rejected draft: `$regexFind`'s email example reproduces only by
+  correcting every email, because the extractor reads the page's intermediate `$addFields` result
+  rather than the final `$set` one; the lock does not describe that. `capture` accepts a rejection
+  only while the fixture reproduces and the reason is not blank.
+- Totals: 123 overrides, 111 unresolved; inventory 123 OVERRIDDEN, 111 PRESERVED_CURATED, 113
+  locked.
+- Review round 1 (independent agent): extracts with fields Giza renders beyond `content` (`title`,
+  `style`, `only`, `pre`, `post`, `append`) and refs defined twice in one file now stay unexpanded
+  (one page's include pins changed, no gap); `fetch.py` cached any `gh` failure as a permanent
+  absence, so it now caches only a 404. All 228 cached absences were purged and the pages
+  refetched: 125 were confirmed 404s, and the other 103 keys are no longer requested by the
+  review (a recapture changed nothing). The doc's breakdown of the former page gaps was off by one.
+  Rejected: pinning every `extracts*.yaml` blob, since the tree comes from an unpaginated GraphQL
+  listing and every fetch error now stops the run.
+- Review round 2: nothing new.
