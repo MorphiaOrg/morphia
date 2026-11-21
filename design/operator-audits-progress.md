@@ -1843,3 +1843,21 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   (`$graphLookup` across collections, two `$lookup` subqueries) under `NAMED_ARGUMENTS`, one also
   under `PROJECT_ID_FIRST`; their locks are retired. Totals: 46 overrides, 20 unresolved; inventory
   46 OVERRIDDEN, 188 PRESERVED_CURATED, 190 locked. No other gap changed on recapture.
+
+- PR #4533 (branch audits-form-collections, base #4532) published. Maintainer direction
+  (2026-11-20): continue the plan PR after PR without pausing for review between them; never merge.
+
+## NUMERIC_TYPE lock migration (step 4 slice 4, 2026-11-20)
+
+- Branch audits-numeric-types from #4533. `NumericRetype` declares that every int32/int64/double of
+  one type under a pointer of one file becomes another type at exactly the same value; Decimal128 is
+  excluded. Retypes are discovered from numeric TYPE differences, merged per file and type change
+  into the deepest covering pointer when that still reproduces exactly, and must each be necessary.
+- Lock categories (from the inventory, now passed as `FixtureFacts` with the collections) gate the
+  override: rules need MORPHIA_FORM, retypes NUMERIC_TYPE. Recapturing the existing 46 overrides
+  and 20 gaps gave identical results.
+- `fetch.py candidates` takes optional categories. 24 NUMERIC_TYPE locks without other families:
+  16 retired (one, `$exp`, exact; 15 int32->double retypes in geometry, `$mod`, `$nearSphere`,
+  `$linearFill` and `$percentile`), 8 kept (`$indexOfBytes`/`$indexOfCP` document strings, `$mul`
+  uses Decimal128, source/page/fixture gaps). Totals: 62 overrides, 28 unresolved; inventory 62
+  OVERRIDDEN, 172 PRESERVED_CURATED, 174 locked.

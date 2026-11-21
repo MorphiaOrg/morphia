@@ -1323,14 +1323,10 @@
     "categories" : [ "NUMERIC_TYPE" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/exp/expExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "48c76ee2fd4eea3635729558d3eea865bcb767152e9c9fc19dec664be694ac2f",
-      "text" : "the interestRate values were not proper doubles"
-    } ],
+    "markers" : [ ],
     "method" : "testExpExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestExp"
@@ -1961,14 +1957,10 @@
     "categories" : [ "NUMERIC_TYPE" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/linearFill/fillMissingValuesWithLinearInterpolation",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "d0726571f1eb324b0770311523b7398c0edbbe2ca0dda5335789a75ef0c6230c",
-      "text" : "some numbers need to be doubles (because of the fill?)"
-    } ],
+    "markers" : [ ],
     "method" : "testFillMissingValuesWithLinearInterpolation",
     "options" : [ {
       "argument" : "false",
@@ -1983,14 +1975,10 @@
     "categories" : [ "NUMERIC_TYPE" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/linearFill/useMultipleFillMethodsInASingleStage",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "d0726571f1eb324b0770311523b7398c0edbbe2ca0dda5335789a75ef0c6230c",
-      "text" : "some numbers need to be doubles (because of the fill?)"
-    } ],
+    "markers" : [ ],
     "method" : "testUseMultipleFillMethodsInASingleStage",
     "options" : [ {
       "argument" : "false",
@@ -2700,14 +2688,10 @@
     "categories" : [ "NUMERIC_TYPE" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/percentile/calculateASingleValueAsAnAccumulator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "440e8ab161dc64744d03da502dc8ba4334769e999d6110a758f24501e4dcc467",
-      "text" : "numbers need to be doubles"
-    } ],
+    "markers" : [ ],
     "method" : "testCalculateASingleValueAsAnAccumulator",
     "options" : [ {
       "argument" : "false",
@@ -2722,14 +2706,10 @@
     "categories" : [ "NUMERIC_TYPE" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/percentile/calculateMultipleValuesAsAnAccumulator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "440e8ab161dc64744d03da502dc8ba4334769e999d6110a758f24501e4dcc467",
-      "text" : "numbers need to be doubles"
-    } ],
+    "markers" : [ ],
     "method" : "testCalculateMultipleValuesAsAnAccumulator",
     "options" : [ {
       "argument" : "false",
@@ -2744,14 +2724,10 @@
     "categories" : [ "NUMERIC_TYPE" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/percentile/usePercentileInAProjectStage",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "440e8ab161dc64744d03da502dc8ba4334769e999d6110a758f24501e4dcc467",
-      "text" : "numbers need to be doubles"
-    } ],
+    "markers" : [ ],
     "method" : "testUsePercentileInAProjectStage",
     "options" : [ {
       "argument" : "false",
@@ -2766,14 +2742,10 @@
     "categories" : [ "NUMERIC_TYPE" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/percentile/usePercentileInASetWindowFieldStage",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "440e8ab161dc64744d03da502dc8ba4334769e999d6110a758f24501e4dcc467",
-      "text" : "numbers need to be doubles"
-    } ],
+    "markers" : [ ],
     "method" : "testUsePercentileInASetWindowFieldStage",
     "options" : [ {
       "argument" : "false",
@@ -6324,14 +6296,10 @@
     "categories" : [ "NUMERIC_TYPE" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/box/boxQueryPredicateOperator",
     "helpers" : [ "testQuery" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "2d2b93c03641322a104c171257ebda87c7ef693fc69b77bcfa288100d7895f7d",
-      "text" : "converted the point values to doubles"
-    } ],
+    "markers" : [ ],
     "method" : "testBoxQueryPredicateOperator",
     "options" : [ {
       "argument" : "true",
@@ -6343,14 +6311,10 @@
     "categories" : [ "NUMERIC_TYPE" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/center/centerQueryPredicateOperator",
     "helpers" : [ "testQuery" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "2d2b93c03641322a104c171257ebda87c7ef693fc69b77bcfa288100d7895f7d",
-      "text" : "converted the point values to doubles"
-    } ],
+    "markers" : [ ],
     "method" : "testCenterQueryPredicateOperator",
     "options" : [ {
       "argument" : "true",
@@ -6585,14 +6549,10 @@
     "categories" : [ "NUMERIC_TYPE" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/geoIntersects/intersectsABigPolygon",
     "helpers" : [ "testQuery" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "2d2b93c03641322a104c171257ebda87c7ef693fc69b77bcfa288100d7895f7d",
-      "text" : "converted the point values to doubles"
-    } ],
+    "markers" : [ ],
     "method" : "testIntersectsABigPolygon",
     "options" : [ {
       "argument" : "true",
@@ -6604,14 +6564,10 @@
     "categories" : [ "NUMERIC_TYPE" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/geoIntersects/intersectsAPolygon",
     "helpers" : [ "testQuery" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "2d2b93c03641322a104c171257ebda87c7ef693fc69b77bcfa288100d7895f7d",
-      "text" : "converted the point values to doubles"
-    } ],
+    "markers" : [ ],
     "method" : "testIntersectsAPolygon",
     "options" : [ {
       "argument" : "true",
@@ -6623,14 +6579,10 @@
     "categories" : [ "NUMERIC_TYPE" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/geoWithin/withinABigPolygon",
     "helpers" : [ "testQuery" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "2d2b93c03641322a104c171257ebda87c7ef693fc69b77bcfa288100d7895f7d",
-      "text" : "converted the point values to doubles"
-    } ],
+    "markers" : [ ],
     "method" : "testWithinABigPolygon",
     "options" : [ {
       "argument" : "true",
@@ -6642,14 +6594,10 @@
     "categories" : [ "NUMERIC_TYPE" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/geoWithin/withinAPolygon",
     "helpers" : [ "testQuery" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "2d2b93c03641322a104c171257ebda87c7ef693fc69b77bcfa288100d7895f7d",
-      "text" : "converted the point values to doubles"
-    } ],
+    "markers" : [ ],
     "method" : "testWithinAPolygon",
     "options" : [ {
       "argument" : "true",
@@ -6885,14 +6833,10 @@
     "categories" : [ "NUMERIC_TYPE" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/mod/floatingPointArguments",
     "helpers" : [ "testQuery" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "9a3e1cde9242cece3452bb62f0f2be38685f417744b684a58caaf93a8c0203d8",
-      "text" : "made the 0 a floating point to work the Java's type system"
-    } ],
+    "markers" : [ ],
     "method" : "testFloatingPointArguments",
     "options" : [ ],
     "type" : "dev.morphia.test.query.filters.TestMod"
@@ -7033,14 +6977,10 @@
     "categories" : [ "NUMERIC_TYPE" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/nearSphere/specifyCenterPointUsingGeoJson",
     "helpers" : [ "testQuery" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "881863e574fae6e1e1e7e272397b0e074a2a762f546cd6440e57375f3b5be698",
-      "text" : "change distances to floating point"
-    } ],
+    "markers" : [ ],
     "method" : "testSpecifyCenterPointUsingGeoJson",
     "options" : [ {
       "argument" : "true",
@@ -7143,14 +7083,10 @@
     "categories" : [ "NUMERIC_TYPE" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/polygon/polygonQueryPredicateOperator",
     "helpers" : [ "testQuery" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "2d2b93c03641322a104c171257ebda87c7ef693fc69b77bcfa288100d7895f7d",
-      "text" : "converted the point values to doubles"
-    } ],
+    "markers" : [ ],
     "method" : "testPolygonQueryPredicateOperator",
     "options" : [ {
       "argument" : "true",
@@ -8349,7 +8285,7 @@
     "folder" : "aggregation/stages/shardedDataDistribution",
     "reason" : "an admin function and not generally suited for morphia"
   } ],
-  "repositoryRevision" : "2d7ea55d3162d421bea8a71457675984777a7eaa",
+  "repositoryRevision" : "4f179a4dc3a792d4ca1b25aa97c63717c1e5a640",
   "schemaVersion" : 1,
   "summary" : {
     "assertion.BEHAVIOR" : 466,
@@ -8365,17 +8301,17 @@
     "category.SHELL_SYNTAX" : 25,
     "category.UNTESTABLE" : 2,
     "disposition.NOT_EXECUTED" : 2,
-    "disposition.OVERRIDDEN" : 46,
-    "disposition.PRESERVED_CURATED" : 188,
+    "disposition.OVERRIDDEN" : 62,
+    "disposition.PRESERVED_CURATED" : 172,
     "disposition.UNCORRECTED" : 320,
     "examples" : 556,
-    "examples.locked" : 190,
+    "examples.locked" : 174,
     "exclusion.DEFERRED" : 1,
     "exclusion.ENVIRONMENT_UNAVAILABLE" : 3,
     "exclusion.NON_OPERATOR" : 1,
     "exclusion.POLICY_EXCLUSION" : 11,
     "exclusion.TESTED_ELSEWHERE" : 1,
-    "markers.lock" : 189,
+    "markers.lock" : 173,
     "markers.lockd" : 1,
     "option.findOptions" : 6,
     "option.orderMatters" : 107,
