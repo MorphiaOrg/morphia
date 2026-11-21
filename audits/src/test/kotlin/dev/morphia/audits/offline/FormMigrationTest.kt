@@ -401,6 +401,30 @@ class FormMigrationTest {
     }
 
     @Test
+    fun fixtureFilesMustReadOneDocumentPerLine() {
+        page(commit, documented)
+        include(commit, "/includes/sample-inventory.rst", inventory)
+        curated()
+        // The same documents, laid out as the page prints them: the tests' line reader fails.
+        fixture(
+            "useCond",
+            "data.json",
+            """
+            |[
+            |  { "_id" : 1, "item" : "abc1", "qty" : 300 },
+            |  { "_id" : 2, "item" : "abc2", "qty" : 200 }
+            |]
+            """
+                .trimMargin(),
+        )
+        val gap = FormMigration.draft(repository, pages, "mongodb/docs", candidates(), facts())
+        assertEquals(
+            FormGap.FIXTURE_UNSUPPORTED to "data.json is not one document per line",
+            gap.unresolved.single().let { it.gap to it.detail },
+        )
+    }
+
+    @Test
     fun anyOtherEditKeepsTheLock() {
         page(commit, documented)
         include(commit, "/includes/sample-inventory.rst", inventory)
@@ -617,10 +641,11 @@ class FormMigrationTest {
         // Pages are not committed (separate licence); the review pins their blob ids instead.
         report.overrides.forEach { assertEquals(40, it.pageBlob.length) }
 
-        val migrated = setOf("MORPHIA_FORM", "NUMERIC_TYPE", "DOCS_ERROR", "FIXTURE_CURATION")
+        // Every locked example is either retired or kept with its gap, except the untestable
+        // change-stream fixtures, which have no test to compare against.
         val formOnly =
             inventory.examples.filter {
-                it.categories.isNotEmpty() && migrated.containsAll(it.categories)
+                it.categories.isNotEmpty() && "UNTESTABLE" !in it.categories
             }
         assertEquals(
             formOnly.map { it.fixture }.toSet(),
@@ -633,7 +658,7 @@ class FormMigrationTest {
                 .map { it.fixture }
                 .toSet(),
         )
-        assertEquals(91, report.overrides.size)
-        assertEquals(51, report.unresolved.size)
+        assertEquals(116, report.overrides.size)
+        assertEquals(118, report.unresolved.size)
     }
 }

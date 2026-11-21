@@ -75,7 +75,7 @@ where the lock describes the edit in shell or numeric terms.
 ## Next
 
 The `MORPHIA_FORM` family is migrated in [the form migration](operator-audits-form-migration.md):
-together with the `NUMERIC_TYPE`, `DOCS_ERROR` and `FIXTURE_CURATION` families, 91 locks are
-retired as `OVERRIDDEN`, and the inventory now counts 145 locked examples. The other
+together with the other families, 116 locks are retired as `OVERRIDDEN`, and the inventory now
+counts 120 locked examples. The other
 families follow one at a time, each expressed as a declared equivalence or override applied to the
 extracted scenario and proven against the preserved curated fixture before its lock is removed.

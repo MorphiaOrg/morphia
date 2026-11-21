@@ -1885,3 +1885,21 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   misattributed to later upstream fixes (their pinned pages predate the fixtures); corrected. The
   `$toUUID` source after the fixture's origin is now explicit (`SourceRelation.AFTER_ORIGIN`). Type-
   only and key-order differences are never corrections. Totals unchanged.
+
+- PR #4535 (branch audits-reviewed-corrections, base #4534) published.
+
+## Natively handled extraction locks (step 4 slice 6, 2026-11-20)
+
+- Branch audits-native-extraction from #4535. No code change: `EXTRACTION` and `SHELL_SYNTAX`
+  allow no declared change, so a lock retires only when the current pipeline reproduces the
+  fixture exactly (plus what its other categories allow). 92 such locks: 25 retired (10 were wrong
+  example names the curated name file now selects), 67 kept with gaps. Every locked example except the two UNTESTABLE
+  ones is now in the review: 116 overrides, 118 unresolved; inventory 116 OVERRIDDEN, 118
+  PRESERVED_CURATED, 120 locked.
+- Remaining gaps by cause: 23 generated include extracts, 16 `Date`/typed constructors, 14
+  unparseable printed results, 7 JavaScript variable bindings, 28 residual edits.
+
+- Review round 1 (independent agent): layout-only locks (unwrapped arrays, one document per line)
+  passed by construction because the comparison parses whole files; every data/expected/index file
+  must now also read one document per line as the Java tests read it (all 116 overrides do; no gap
+  changed). The wrong-name count (10, not 13) and its attribution were corrected.

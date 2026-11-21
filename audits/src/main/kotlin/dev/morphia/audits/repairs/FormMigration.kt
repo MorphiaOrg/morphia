@@ -769,13 +769,18 @@ object FormMigration {
             if (source == null) {
                 return Examined.Gap(FormGap.RESIDUAL_DIFFERENCE, "$file has no documented source")
             }
-            compared +=
-                Triple(
-                    file,
-                    source,
-                    documents(Files.readString(path))
-                        ?: return Examined.Gap(FormGap.FIXTURE_UNSUPPORTED, "$file syntax"),
+            val text = Files.readString(path)
+            val parsed =
+                documents(text) ?: return Examined.Gap(FormGap.FIXTURE_UNSUPPORTED, "$file syntax")
+            // The tests read these files one document per line, so a layout that only parses as a
+            // whole (wrapped in an array, or a document over several lines) is not equivalent.
+            if (!readsByLine(text, parsed)) {
+                return Examined.Gap(
+                    FormGap.FIXTURE_UNSUPPORTED,
+                    "$file is not one document per line",
                 )
+            }
+            compared += Triple(file, source, parsed)
             return null
         }
         (mapOf("data.json" to documented.collection) + collections).toSortedMap().forEach {
@@ -1063,6 +1068,24 @@ object FormMigration {
                 }
             }
         }
+    }
+
+    /**
+     * Whether `TemplatedTestBase.loadJson` reads [text] as [documents]: each line is one document,
+     * after stripping a `[`...`]` that wraps the whole line.
+     */
+    private fun readsByLine(text: String, documents: List<BsonValue>): Boolean {
+        val lines = text.split('\n').let { if (it.last().isEmpty()) it.dropLast(1) else it }
+        val rows =
+            lines.map { line ->
+                val json =
+                    if (line.startsWith("[") && line.endsWith("]"))
+                        line.substring(1, line.length - 1)
+                    else line
+                runCatching { BsonDocument.parse(json) }.getOrNull() ?: return false
+            }
+        return BsonComparison.compare(BsonArray(rows), BsonArray(documents)).state ==
+            BsonComparisonState.EQUAL
     }
 
     /** The template helpers drop a leading `db.<collection>.<method>(` and its closing paren. */
