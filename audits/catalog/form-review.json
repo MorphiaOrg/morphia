@@ -96,6 +96,22 @@
     }
   }, {
     "corrections" : [ ],
+    "fixture" : "aggregation/expressions/bottom/findTheBottomScore",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "unwrap expected data from the array",
+    "marker" : "lock",
+    "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
+    "pageBlob" : "4e023b7f63c3cb354881f1d8b33bda0704a54b27",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "6d4e32603515774eb7e9636fc90129503a229546",
+      "path" : "source/reference/operator/aggregation/bottom.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
     "fixture" : "aggregation/expressions/bottomN/computingNBasedOnTheGroupKeyForGroup",
     "includes" : [ ],
     "justification" : null,
@@ -258,6 +274,25 @@
     "source" : {
       "commit" : "10a40551da600ac1b21ac6e45d7348a8c38c1a97",
       "path" : "source/reference/operator/aggregation/dateFromString.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/dateToParts/dateToPartsExpressionOperator",
+    "includes" : [ {
+      "blob" : "6a0d8df9a641e1e37b9f1f4bcc35eeea213c4963",
+      "path" : "source/includes/fact-olson-tz-behavior.rst"
+    } ],
+    "justification" : null,
+    "lock" : "pipeline was trunc'd in the parser\n",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "00f720ba7b9e0eb461559ced0fa6ae7d5d308337",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "6560e617067dff1934063555ec97e57cad362fc8",
+      "path" : "source/reference/operator/aggregation/dateToParts.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -781,6 +816,28 @@
     }
   }, {
     "corrections" : [ ],
+    "fixture" : "aggregation/expressions/max/useInSetWindowFieldsStage",
+    "includes" : [ {
+      "blob" : "f56012674985fd6d9fe5f558a661d55d6a717156",
+      "path" : "source/includes/setWindowFields-example-collection.rst"
+    }, {
+      "blob" : "13694f7d606928cb63fd6b471d29c52c8a6e7f40",
+      "path" : "source/includes/setWindowFields-partition-sort-date.rst"
+    } ],
+    "justification" : null,
+    "lock" : "data is from include file",
+    "marker" : "lock",
+    "origin" : "4774dcba942556fdc81d25c2d94c18e3173ab505",
+    "pageBlob" : "5d1a75ffee6c641b70fe3ec8a562b543ab2c2b20",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "d84aad6501cde0bf6dcb41c1ce9bddbabc8e3acb",
+      "path" : "source/reference/operator/aggregation/max.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
     "fixture" : "aggregation/expressions/maxN/computingNBasedOnTheGroupKeyForGroup",
     "includes" : [ ],
     "justification" : null,
@@ -793,6 +850,28 @@
     "source" : {
       "commit" : "e473868337d01610afb03e550b561ca771245aff",
       "path" : "source/reference/operator/aggregation/maxN.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/min/useInSetWindowFieldsStage",
+    "includes" : [ {
+      "blob" : "f56012674985fd6d9fe5f558a661d55d6a717156",
+      "path" : "source/includes/setWindowFields-example-collection.rst"
+    }, {
+      "blob" : "13694f7d606928cb63fd6b471d29c52c8a6e7f40",
+      "path" : "source/includes/setWindowFields-partition-sort-date.rst"
+    } ],
+    "justification" : null,
+    "lock" : "data is from include file",
+    "marker" : "lock",
+    "origin" : "4774dcba942556fdc81d25c2d94c18e3173ab505",
+    "pageBlob" : "55ed24d632e4f22e2fc78d291fe1b5ec63e44f63",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "d84aad6501cde0bf6dcb41c1ce9bddbabc8e3acb",
+      "path" : "source/reference/operator/aggregation/min.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -1012,6 +1091,22 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/range/rangeExpressionOperator",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "data file had extraneous text",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "049a4c1dbcea45b1efb87ce37cf240f08aacfd02",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "616d57a126410ad4be0b4c8abeb00660f987f605",
+      "path" : "source/reference/operator/aggregation/range.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
     "corrections" : [ {
       "curated" : "{\"v\": {\"$numberInt\": \"5\"}}",
       "documented" : "{\"v\": {\"$numberInt\": \"6\"}}",
@@ -1046,6 +1141,38 @@
     "source" : {
       "commit" : "bbf28d22d81f59de79cdb8d3df567988cabd2cfe",
       "path" : "source/reference/operator/aggregation/rank.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/reduce/arrayConcatenation",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "expected has a \"results\" field that shouldn't be there",
+    "marker" : "lock",
+    "origin" : "1e38798fbaaffb6945159e208bcd33318c425121",
+    "pageBlob" : "6a36a6a69ad4600f7ba7656f7d4dfc7db0c891fd",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "ca3e8a737ee08af6482a9eed3a1abfe708edd5c8",
+      "path" : "source/reference/operator/aggregation/reduce.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/reduce/multiplication",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "parser pulled wrong code block for expected",
+    "marker" : "lock",
+    "origin" : "1e38798fbaaffb6945159e208bcd33318c425121",
+    "pageBlob" : "6a36a6a69ad4600f7ba7656f7d4dfc7db0c891fd",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "ca3e8a737ee08af6482a9eed3a1abfe708edd5c8",
+      "path" : "source/reference/operator/aggregation/reduce.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -1213,6 +1340,22 @@
     }
   }, {
     "corrections" : [ ],
+    "fixture" : "aggregation/expressions/sortArray/sortAnArrayOfIntegers",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "the expected results didn't have the 'result' element",
+    "marker" : "lock",
+    "origin" : "fade26d1eb91bbf587f35696f41ad98dfe706e34",
+    "pageBlob" : "3d856d55893b313e1ec9816fa52a234c43025c86",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "ee00283046ed2845155e52b20ffd1c5638d65d9c",
+      "path" : "source/reference/operator/aggregation/sortArray.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
     "fixture" : "aggregation/expressions/split/splitExpressionOperator",
     "includes" : [ ],
     "justification" : null,
@@ -1285,6 +1428,38 @@
     }
   }, {
     "corrections" : [ ],
+    "fixture" : "aggregation/expressions/top/findTheTopScore",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "unwrap expected from array",
+    "marker" : "lock",
+    "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
+    "pageBlob" : "dac943172bc076df53af92fd955cceff4b78fac1",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "6d4e32603515774eb7e9636fc90129503a229546",
+      "path" : "source/reference/operator/aggregation/top.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/top/findTheTopScoreAcrossMultipleGames",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "had to unwrap the results from the array",
+    "marker" : "lock",
+    "origin" : "b4a0827dd0435771f3c42861402d6155f109bfe8",
+    "pageBlob" : "dac943172bc076df53af92fd955cceff4b78fac1",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "6d4e32603515774eb7e9636fc90129503a229546",
+      "path" : "source/reference/operator/aggregation/top.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
     "fixture" : "aggregation/expressions/topN/computingNBasedOnTheGroupKeyForGroup",
     "includes" : [ ],
     "justification" : null,
@@ -1354,6 +1529,75 @@
     "source" : {
       "commit" : "08e800f56f6f44b44a625756fc1c3c64061055b9",
       "path" : "source/reference/operator/aggregation/zip.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/addFields/overwritingAnExistingField",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "justification" : null,
+    "lock" : "parser pulls wrong code block for expected",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "265803b8d934ddedd4f37e31f74afdf491f6f75f",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/addFields.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/bucketAuto/singleFacetAggregation",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "wrong name from parser",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "3b07c7071063998d64970ee0626c4e334f7a7091",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "ab1ddea48c5a51dc16b4672f276f6b6c6b132ff0",
+      "path" : "source/reference/operator/aggregation/bucketAuto.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/densify/densifyTimeSeriesData",
+    "includes" : [ {
+      "blob" : "324ff3f0609ab2cf2413bbb59ea90d6a5299bdae",
+      "path" : "source/includes/fact-densify-description.rst"
+    }, {
+      "blob" : "5e6b70f902bb252f245d63ebe08566767f1553ff",
+      "path" : "source/includes/use-dot-notation.rst"
+    }, {
+      "blob" : "a5cfb5928c49a16fe608858a55943bd0a9495e67",
+      "path" : "source/includes/fact-densify-image-explanation.rst"
+    } ],
+    "justification" : null,
+    "lock" : "wrong name from parser",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "96c46909fd98852afecf4c0591ba8ebeeff49beb",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "5da30db6b468d0ade6a2aefe795985d5b756aa16",
+      "path" : "source/reference/operator/aggregation/densify.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -1654,6 +1898,34 @@
     }
   }, {
     "corrections" : [ ],
+    "fixture" : "aggregation/stages/match/equalityMatch",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "justification" : null,
+    "lock" : "wrong name from parser",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "3139f56b4248eac375cc97846a48b772c0b2a1ca",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/match.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
     "fixture" : "aggregation/stages/match/performACount",
     "includes" : [ {
       "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
@@ -1750,6 +2022,40 @@
     }
   }, {
     "corrections" : [ ],
+    "fixture" : "aggregation/stages/project/includeSpecificFieldsInOutputDocuments",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "4e9f1877cac04f5696bea79a2079e5afdb1daa6d",
+      "path" : "source/includes/project-stage-and-array-index.rst"
+    }, {
+      "blob" : "79e5fffe681489dae9c020f08b2b73e7743a5f59",
+      "path" : "source/includes/aggregation/fact-project-stage-placement.rst"
+    } ],
+    "justification" : null,
+    "lock" : "wrong name from parser",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "6139e853557792da45aaaf91a90530d9221b5823",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/project.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
     "fixture" : "aggregation/stages/redact/evaluateAccessAtEveryDocumentLevel",
     "includes" : [ {
       "blob" : "d2d1b17bb85ebcccffbe3f650b9a33bd6a994bf9",
@@ -1788,6 +2094,165 @@
     }
   }, {
     "corrections" : [ ],
+    "fixture" : "aggregation/stages/replaceRoot/replaceRootWithAnEmbeddedDocumentField",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "wrong name from parser",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "f8c2929b446278e8fe95d37f5b21b670097511e4",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "980aef3331cd7bc17543b0180dede75b6faf8bf7",
+      "path" : "source/reference/operator/aggregation/replaceRoot.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/replaceWith/replaceWithANewlyCreatedDocument",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "parser pulled wrong expected",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "74e9aeb819a72b247549c707e224b08914c5b858",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "980aef3331cd7bc17543b0180dede75b6faf8bf7",
+      "path" : "source/reference/operator/aggregation/replaceWith.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/replaceWith/replaceWithAnEmbeddedDocumentField",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "wrong name from parser",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "74e9aeb819a72b247549c707e224b08914c5b858",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "980aef3331cd7bc17543b0180dede75b6faf8bf7",
+      "path" : "source/reference/operator/aggregation/replaceWith.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/set/usingTwoSetStages",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "justification" : null,
+    "lock" : "moved a trailing brace to a new line where it belongs",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "94fa0501865c5fcc9eea1100527e5b70851a37db",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/set.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/setWindowFields/documentsWindowExamples",
+    "includes" : [ {
+      "blob" : "746f3697da4fb3e58cf7ab15c07fc7998c9a19d8",
+      "path" : "source/includes/setWindowFields-introduction-examples.rst"
+    }, {
+      "blob" : "463129d2d4410fb58d9cfba068d0bd6761402a4f",
+      "path" : "source/includes/setWindowFields-and-transactions-snapshots.rst"
+    }, {
+      "blob" : "e9755be7ee652e5d8a6b0ec6b0668f0d1aa98d90",
+      "path" : "source/includes/setWindowFields-operators.rst"
+    }, {
+      "blob" : "f56012674985fd6d9fe5f558a661d55d6a717156",
+      "path" : "source/includes/setWindowFields-example-collection.rst"
+    }, {
+      "blob" : "13694f7d606928cb63fd6b471d29c52c8a6e7f40",
+      "path" : "source/includes/setWindowFields-partition-sort-date.rst"
+    }, {
+      "blob" : "8d83b97b2d30451c2d82469151ebf6ef233bda5b",
+      "path" : "source/includes/time-range-window-example.rst"
+    }, {
+      "blob" : "1f627588938ff10e40926a1d115ca2b466887318",
+      "path" : "source/includes/fact-timeseries-example-aggregation-book.rst"
+    } ],
+    "justification" : null,
+    "lock" : "parser grabs extraneous text\nwrong name from parser",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "4360d98bebb89e841d0b99c932b3f8cffceb5721",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "8ab245d2e59dce762882f5c683ad91c683969e7b",
+      "path" : "source/reference/operator/aggregation/setWindowFields.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/sort/ascendingDescendingSort",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "e22e38eab782b645f2bb781bcfd48d7f7c294438",
+      "path" : "source/includes/sort-limits.rst"
+    }, {
+      "blob" : "b884f9ca12ac30d63d5adeac7730626cddc85ec7",
+      "path" : "source/includes/fact-sort-consistency.rst"
+    }, {
+      "blob" : "bc1e517b4d931dddf749a147eba8a9bec8086331",
+      "path" : "source/includes/fact-sort-order.rst"
+    }, {
+      "blob" : "ad8da777c6a2df6b7d30cc3a4fa3aeaa2207ecb4",
+      "path" : "source/includes/fact-agg-sort-limit.rst"
+    }, {
+      "blob" : "e8f9db6f95e25179991eaaa8c1cd107b4234c806",
+      "path" : "source/includes/fact-optimizations-subject-to-change.rst"
+    }, {
+      "blob" : "329614c8b1b15b55a77a30a5f5171c593053025a",
+      "path" : "source/includes/fact-allowDiskUseByDefault.rst"
+    } ],
+    "justification" : null,
+    "lock" : "wrong name from parser",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "afcda13657d13e72789715e2a277d144edab7a0d",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/sort.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
     "fixture" : "aggregation/stages/sortByCount/sortByCountAggregationStage",
     "includes" : [ {
       "blob" : "7e86ea18abe6cadf6783795f59299eb473070fae",
@@ -1803,6 +2268,22 @@
     "source" : {
       "commit" : "2147ffb41ccc450346e3f1a21a3dd7905e4adc74",
       "path" : "source/reference/operator/aggregation/sortByCount.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/unionWith/report1AllSalesByYearAndStoresAndItems",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "wrong name from parser",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "270d1daee078aaaa2b826f6d5b4423d3ec3d3075",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "326f02223a9d4f695be65a4172d46968a828b14e",
+      "path" : "source/reference/operator/aggregation/unionWith.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -1828,6 +2309,62 @@
     "pageBlob" : "a48530d2f807435f11dbfb681202e04027bd0c1e",
     "retypes" : [ ],
     "rules" : [ "UNWIND_PATH" ],
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/unwind.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/unwind/preserveNullAndEmptyArraysAndIncludeArrayIndex",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "justification" : null,
+    "lock" : "parser pulled wrong expected",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "a48530d2f807435f11dbfb681202e04027bd0c1e",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/unwind.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/unwind/unwindArray",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "justification" : null,
+    "lock" : "wrong name from parser",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "a48530d2f807435f11dbfb681202e04027bd0c1e",
+    "retypes" : [ ],
+    "rules" : [ ],
     "source" : {
       "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
       "path" : "source/reference/operator/aggregation/unwind.txt",
@@ -2127,6 +2664,40 @@
     "lock" : "missing a closing brace",
     "marker" : "lock",
     "origin" : "52d461f742298f36a6ecf2ea02d8ebc332dc7168",
+    "pageBlob" : "b910c9fdc0a9e7df8a6262656cc620e5c3b96db7",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/gte.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "query/filters/gte/performAnUpdateBasedOnEmbeddedDocumentFields",
+    "includes" : [ {
+      "blob" : "df49213225c1c71c76a2dcb69864fabb4861f8b8",
+      "path" : "source/includes/fact-type-bracketing.rst"
+    }, {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "7eab2be92726fdc34dcb217ba4bcddc43a755712",
+      "path" : "source/includes/examples-create-inventory.rst"
+    } ],
+    "justification" : null,
+    "lock" : "code block had extra text in it\n",
+    "marker" : "lock",
+    "origin" : "7ddc79615aaf62f884703b31a036060df6961095",
     "pageBlob" : "b910c9fdc0a9e7df8a6262656cc620e5c3b96db7",
     "retypes" : [ ],
     "rules" : [ ],
@@ -2460,6 +3031,26 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
+    "detail" : "UNSUPPORTED_AST",
+    "fixture" : "aggregation/expressions/add/performAdditionOnADate",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "c75f82206f4ab3d6d3b9ab7273b339c38976577e",
+    "source" : {
+      "commit" : "b6010e89ac442f57e625c04b3fd242f37b8b86ea",
+      "path" : "source/reference/operator/aggregation/add.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "data.json ARRAY_LENGTH at ",
+    "fixture" : "aggregation/expressions/addToSet/useInSetWindowFieldsStage",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "4774dcba942556fdc81d25c2d94c18e3173ab505",
+    "source" : {
+      "commit" : "d84aad6501cde0bf6dcb41c1ce9bddbabc8e3acb",
+      "path" : "source/reference/operator/aggregation/addToSet.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
     "detail" : "data.json TYPE at /9/responses/0",
     "fixture" : "aggregation/expressions/allElementsTrue/allElementsTrueExpressionOperator",
     "gap" : "RESIDUAL_DIFFERENCE",
@@ -2481,6 +3072,16 @@
     }
   }, {
     "detail" : "expected.json ARRAY_LENGTH at ",
+    "fixture" : "aggregation/expressions/binarySize/findLargestBinaryData",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "58da8cd9b5a12c8fe65b248629f89f4c63cbb427",
+    "source" : {
+      "commit" : "00a744dc63b488437043031dab7af6df0399b86f",
+      "path" : "source/reference/operator/aggregation/binarySize.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "expected.json ARRAY_LENGTH at ",
     "fixture" : "aggregation/expressions/bsonSize/returnDocumentWithLargestSpecifiedField",
     "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "303e95e09abd312e0e0f1cb1aa34b2da593ce688",
@@ -2490,8 +3091,28 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
+    "detail" : "ASSIGNMENT_BINDING",
+    "fixture" : "aggregation/expressions/convert/convertExpressionOperator",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/convert.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
     "detail" : "CONSTRUCTOR_FORMAT",
     "fixture" : "aggregation/expressions/dateAdd/addAFutureDate",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "1da5a11af4af6eaa4fdf8f7580b8bd6743e1d018",
+    "source" : {
+      "commit" : "0bcc4b35ae7af10b8cddc90c1492e70538353c70",
+      "path" : "source/reference/operator/aggregation/dateAdd.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "CONSTRUCTOR_FORMAT",
+    "fixture" : "aggregation/expressions/dateAdd/adjustForDaylightSavingsTime",
     "gap" : "SOURCE_UNSUPPORTED",
     "origin" : "1da5a11af4af6eaa4fdf8f7580b8bd6743e1d018",
     "source" : {
@@ -2507,6 +3128,16 @@
     "source" : {
       "commit" : "0bcc4b35ae7af10b8cddc90c1492e70538353c70",
       "path" : "source/reference/operator/aggregation/dateAdd.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "CONSTRUCTOR_FORMAT",
+    "fixture" : "aggregation/expressions/dateDiff/resultPrecision",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "82d4c1b3d80d091b8df087511e2b375302e1e199",
+    "source" : {
+      "commit" : "6c860eaa7d438e1355c61785a5adadc1ede12b55",
+      "path" : "source/reference/operator/aggregation/dateDiff.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -2527,6 +3158,26 @@
     "source" : {
       "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
       "path" : "source/reference/operator/aggregation/dateFromParts.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "CONSTRUCTOR_FORMAT",
+    "fixture" : "aggregation/expressions/dateSubtract/adjustForDaylightSavingsTime",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "1da5a11af4af6eaa4fdf8f7580b8bd6743e1d018",
+    "source" : {
+      "commit" : "0bcc4b35ae7af10b8cddc90c1492e70538353c70",
+      "path" : "source/reference/operator/aggregation/dateSubtract.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "CONSTRUCTOR_FORMAT",
+    "fixture" : "aggregation/expressions/dateSubtract/subtractAFixedAmount",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "cfa1993aafe5aba31d8cf02ea533f8c56bd082cf",
+    "source" : {
+      "commit" : "0bcc4b35ae7af10b8cddc90c1492e70538353c70",
+      "path" : "source/reference/operator/aggregation/dateSubtract.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -2620,6 +3271,56 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
+    "detail" : "SYNTAX",
+    "fixture" : "aggregation/expressions/meta/metaTextScoreFindAndProject",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "24f35df159da5bd0da6a8f822280067e138aa632",
+    "source" : {
+      "commit" : "f5d4465bf1c9660c3d195b30eb4199a5e96462fe",
+      "path" : "source/reference/operator/aggregation/meta.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "Negative Dividend",
+    "fixture" : "aggregation/expressions/mod/negativeDividend",
+    "gap" : "NO_MATCHING_EXAMPLE",
+    "origin" : "69049bd0c5eb1bfe39ce3c8de063b58fce8ec3f7",
+    "source" : {
+      "commit" : "bc9d05d5652fe5e05041d5736228d9b36c28fa78",
+      "path" : "source/reference/operator/aggregation/mod.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
+    "fixture" : "aggregation/expressions/regexFind/applyRegexFindToStringElementsOfAnArray",
+    "gap" : "PAGE_UNSUPPORTED",
+    "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
+    "source" : {
+      "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
+      "path" : "source/reference/operator/aggregation/regexFind.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
+    "fixture" : "aggregation/expressions/regexFind/regexFindAndItsOptions",
+    "gap" : "PAGE_UNSUPPORTED",
+    "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
+    "source" : {
+      "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
+      "path" : "source/reference/operator/aggregation/regexFind.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
+    "fixture" : "aggregation/expressions/regexFind/useCapturedGroupingsToParseUserName",
+    "gap" : "PAGE_UNSUPPORTED",
+    "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
+    "source" : {
+      "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
+      "path" : "source/reference/operator/aggregation/regexFind.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
     "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
     "fixture" : "aggregation/expressions/regexFind/useRegexFindToParseEmailFromString",
     "gap" : "PAGE_UNSUPPORTED",
@@ -2627,6 +3328,26 @@
     "source" : {
       "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
       "path" : "source/reference/operator/aggregation/regexFind.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
+    "fixture" : "aggregation/expressions/regexFindAll/regexFindAllAndItsOptions",
+    "gap" : "PAGE_UNSUPPORTED",
+    "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
+    "source" : {
+      "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
+      "path" : "source/reference/operator/aggregation/regexFindAll.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
+    "fixture" : "aggregation/expressions/regexFindAll/useCapturedGroupingsToParseUserName",
+    "gap" : "PAGE_UNSUPPORTED",
+    "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
+    "source" : {
+      "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
+      "path" : "source/reference/operator/aggregation/regexFindAll.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -2660,6 +3381,56 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
+    "detail" : "SYNTAX",
+    "fixture" : "aggregation/expressions/setField/removeFieldsThatStartWithADollarSign",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "69a77e75d9e3c922bdfa45ecfa59dac3f98ac7c7",
+    "source" : {
+      "commit" : "b05704c36ffb3b3e362ad8115c163a83c442a0d0",
+      "path" : "source/reference/operator/aggregation/setField.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "expected syntax",
+    "fixture" : "aggregation/expressions/sortArray/sortOnMixedTypeFields",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "fade26d1eb91bbf587f35696f41ad98dfe706e34",
+    "source" : {
+      "commit" : "ee00283046ed2845155e52b20ffd1c5638d65d9c",
+      "path" : "source/reference/operator/aggregation/sortArray.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "expected.json ARRAY_LENGTH at ",
+    "fixture" : "aggregation/expressions/sortArray/sortOnMultipleFields",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "fade26d1eb91bbf587f35696f41ad98dfe706e34",
+    "source" : {
+      "commit" : "ee00283046ed2845155e52b20ffd1c5638d65d9c",
+      "path" : "source/reference/operator/aggregation/sortArray.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "data syntax",
+    "fixture" : "aggregation/expressions/stdDevSamp/useInGroupStage",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "4774dcba942556fdc81d25c2d94c18e3173ab505",
+    "source" : {
+      "commit" : "d84aad6501cde0bf6dcb41c1ce9bddbabc8e3acb",
+      "path" : "source/reference/operator/aggregation/stdDevSamp.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "UNSUPPORTED_AST",
+    "fixture" : "aggregation/expressions/subtract/subtractMillisecondsFromADate",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "8dfb806348def02ae0a17f5045562c453088c0e3",
+    "source" : {
+      "commit" : "774cb4844eed6dcb7cfa955b636bef4d8437e966",
+      "path" : "source/reference/operator/aggregation/subtract.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
     "detail" : "expected syntax",
     "fixture" : "aggregation/expressions/tan/tangentOfValueInDegrees",
     "gap" : "SOURCE_UNSUPPORTED",
@@ -2667,6 +3438,106 @@
     "source" : {
       "commit" : "8562c94b38de3e8c83552bcd41558548e5220eef",
       "path" : "source/reference/operator/aggregation/tan.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "ASSIGNMENT_BINDING",
+    "fixture" : "aggregation/expressions/toBool/toBoolExpressionOperator",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toBool.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "CONSTRUCTOR_FORMAT",
+    "fixture" : "aggregation/expressions/toDate/toDateExpressionOperator",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toDate.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "ASSIGNMENT_BINDING",
+    "fixture" : "aggregation/expressions/toDecimal/toDecimalExpressionOperator",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toDecimal.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "CONSTRUCTOR_FORMAT",
+    "fixture" : "aggregation/expressions/toDouble/toDoubleExpressionOperator",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toDouble.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "ASSIGNMENT_BINDING",
+    "fixture" : "aggregation/expressions/toInt/toIntExpressionOperator",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toInt.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "ASSIGNMENT_BINDING",
+    "fixture" : "aggregation/expressions/toLong/toLongExpressionOperator",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "source" : {
+      "commit" : "eeaa9d3ad8bf480d333ca978a1d7b8ff30677870",
+      "path" : "source/reference/operator/aggregation/toLong.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "ASSIGNMENT_BINDING",
+    "fixture" : "aggregation/expressions/toObjectId/toObjectIdExpressionOperator",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toObjectId.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "ASSIGNMENT_BINDING",
+    "fixture" : "aggregation/expressions/toString/toStringExpressionOperator",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toString.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "expected syntax",
+    "fixture" : "aggregation/expressions/tsIncrement/obtainTheIncrementingOrdinalFromATimestampField",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "d562cdcc2589f76539bcce1b8baf14bd402ac19a",
+    "source" : {
+      "commit" : "f5da63fabec244dde036582f5cbab8d7ea2b0881",
+      "path" : "source/reference/operator/aggregation/tsIncrement.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "expected syntax",
+    "fixture" : "aggregation/expressions/tsSecond/obtainTheNumberOfSecondsFromATimestampField",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "3f1e409bd15a70dbd2e5b065f8fe38f114bee495",
+    "source" : {
+      "commit" : "f5da63fabec244dde036582f5cbab8d7ea2b0881",
+      "path" : "source/reference/operator/aggregation/tsSecond.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -2680,6 +3551,16 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
+    "detail" : "expected.json ARRAY_LENGTH at ",
+    "fixture" : "aggregation/stages/bucket/bucketByYearAndFilterByBucketResults",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "source" : {
+      "commit" : "656745d0dadc40e2bb112266343d0756b128a3fb",
+      "path" : "source/reference/operator/aggregation/bucket.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
     "detail" : "action KEY_ORDER at /0/$densify/range",
     "fixture" : "aggregation/stages/densify/densifictionWithPartitions",
     "gap" : "RESIDUAL_DIFFERENCE",
@@ -2687,6 +3568,16 @@
     "source" : {
       "commit" : "5da30db6b468d0ade6a2aefe795985d5b756aa16",
       "path" : "source/reference/operator/aggregation/densify.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "COLLECTION_REQUIRED",
+    "fixture" : "aggregation/stages/documents/testAPipelineStage",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "86d69afc65fc10651dae4bafb47753a573f22f5d",
+    "source" : {
+      "commit" : "04b2d396537807ad3e06ae787a4302387cf4c80a",
+      "path" : "source/reference/operator/aggregation/documents.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -2721,6 +3612,16 @@
     }
   }, {
     "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/4.2-changes-geoNear-limit.rst",
+    "fixture" : "aggregation/stages/geoNear/geoNearWithBoundLetOption",
+    "gap" : "PAGE_UNSUPPORTED",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "source" : {
+      "commit" : "111836fb23076857f0cf9bcce15e694fe4a169e4",
+      "path" : "source/reference/operator/aggregation/geoNear.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/4.2-changes-geoNear-limit.rst",
     "fixture" : "aggregation/stages/geoNear/geoNearWithTheLetOption",
     "gap" : "PAGE_UNSUPPORTED",
     "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
@@ -2737,6 +3638,56 @@
     "source" : {
       "commit" : "9c258a2f304c6f08f4dfc6b9d466abd543a90888",
       "path" : "source/reference/operator/aggregation/geoNear.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "DATE_CALL",
+    "fixture" : "aggregation/stages/group/calculateCountSumAndAverage",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "source" : {
+      "commit" : "50a2fb0cc5a95528ce1853159b02828a353352ae",
+      "path" : "source/reference/operator/aggregation/group.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "data.json TYPE at /0/price",
+    "fixture" : "aggregation/stages/group/countTheNumberOfDocumentsInACollection",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "source" : {
+      "commit" : "50a2fb0cc5a95528ce1853159b02828a353352ae",
+      "path" : "source/reference/operator/aggregation/group.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "expected syntax",
+    "fixture" : "aggregation/stages/group/groupByItemHaving",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "source" : {
+      "commit" : "50a2fb0cc5a95528ce1853159b02828a353352ae",
+      "path" : "source/reference/operator/aggregation/group.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "data.json TYPE at /0/price",
+    "fixture" : "aggregation/stages/group/retrieveDistinctValues",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "source" : {
+      "commit" : "50a2fb0cc5a95528ce1853159b02828a353352ae",
+      "path" : "source/reference/operator/aggregation/group.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "find modifiers",
+    "fixture" : "aggregation/stages/indexStats/indexStatsAggregationStage",
+    "gap" : "FIXTURE_UNSUPPORTED",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "source" : {
+      "commit" : "0ac70d13f11f43a0c40f88da51aeed8f82e37ae8",
+      "path" : "source/reference/operator/aggregation/indexStats.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -2760,6 +3711,26 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
+    "detail" : "command outside the current database",
+    "fixture" : "aggregation/stages/merge/onDemandMaterializedViewInitialCreation",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/merge.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "command outside the current database",
+    "fixture" : "aggregation/stages/merge/onlyInsertNewData",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/merge.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
     "detail" : "CONSTRUCTOR_FORMAT",
     "fixture" : "aggregation/stages/merge/useThePipelineToCustomizeTheMerge",
     "gap" : "SOURCE_UNSUPPORTED",
@@ -2767,6 +3738,76 @@
     "source" : {
       "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
       "path" : "source/reference/operator/aggregation/merge.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "command outside the current database",
+    "fixture" : "aggregation/stages/out/outputToSameDatabase",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "source" : {
+      "commit" : "5262c061d4adce3e70fb362e36bfeee5e2897fb6",
+      "path" : "source/reference/operator/aggregation/out.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "expected syntax",
+    "fixture" : "aggregation/stages/planCacheStats/findCacheEntryDetailsForAQueryHash",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "source" : {
+      "commit" : "72f22b77b44416127f250bfad202491f5cc4adfc",
+      "path" : "source/reference/operator/aggregation/planCacheStats.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "expected syntax",
+    "fixture" : "aggregation/stages/planCacheStats/returnInformationForAllEntriesInTheQueryCache",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "source" : {
+      "commit" : "72f22b77b44416127f250bfad202491f5cc4adfc",
+      "path" : "source/reference/operator/aggregation/planCacheStats.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "data syntax",
+    "fixture" : "aggregation/stages/project/arrayIndexesAreUnsupported",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/project.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "data.json syntax",
+    "fixture" : "aggregation/stages/set/overwritingAnExistingField",
+    "gap" : "FIXTURE_UNSUPPORTED",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/set.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "expected.json ARRAY_LENGTH at ",
+    "fixture" : "aggregation/stages/unwind/groupByUnwoundValues",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/unwind.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "expected.json ARRAY_LENGTH at ",
+    "fixture" : "aggregation/stages/unwind/unwindEmbeddedArrays",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/unwind.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -2780,6 +3821,16 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
+    "detail" : "UNSUPPORTED_AST",
+    "fixture" : "query/filters/centerSphere/centerSphereQueryPredicateOperator",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "source" : {
+      "commit" : "e71135ca78c729888d149a0156682a40bcd60d1b",
+      "path" : "source/reference/operator/query/centerSphere.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
     "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/additional-examples-arrays.rst",
     "fixture" : "query/filters/elemMatch/elementMatch",
     "gap" : "PAGE_UNSUPPORTED",
@@ -2790,6 +3841,56 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
+    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/additional-examples-arrays.rst",
+    "fixture" : "query/filters/elemMatch/singleQueryCondition",
+    "gap" : "PAGE_UNSUPPORTED",
+    "origin" : "807645683ea6dc6400be4946e753df0426b81809",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/elemMatch.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "no data file for collection companies",
+    "fixture" : "query/filters/eq/regexMatchBehaviour",
+    "gap" : "FIXTURE_UNSUPPORTED",
+    "origin" : "726a1a6fcd0127bd53f37c9459716a7112722430",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/eq.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/4.2-changes-type-0.rst",
+    "fixture" : "query/filters/exists/existsAndNotEqualTo",
+    "gap" : "PAGE_UNSUPPORTED",
+    "origin" : "52d461f742298f36a6ecf2ea02d8ebc332dc7168",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/exists.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/4.2-changes-type-0.rst",
+    "fixture" : "query/filters/exists/nullValues",
+    "gap" : "PAGE_UNSUPPORTED",
+    "origin" : "52d461f742298f36a6ecf2ea02d8ebc332dc7168",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/exists.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "UNRESOLVED_NAME",
+    "fixture" : "query/filters/expr/compareTwoFieldsFromASingleDocument",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "52d461f742298f36a6ecf2ea02d8ebc332dc7168",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/expr.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
     "detail" : "expected.json ARRAY_LENGTH at ",
     "fixture" : "query/filters/gt/performAnUpdateBasedOnEmbeddedDocumentFields",
     "gap" : "RESIDUAL_DIFFERENCE",
@@ -2797,6 +3898,16 @@
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
       "path" : "source/reference/operator/query/gt.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/additional-examples-arrays.rst",
+    "fixture" : "query/filters/in/useTheInOperatorToMatchValuesInAnArray",
+    "gap" : "PAGE_UNSUPPORTED",
+    "origin" : "7ddc79615aaf62f884703b31a036060df6961095",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/in.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -2850,6 +3961,16 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
+    "detail" : "action TYPE at /1",
+    "fixture" : "query/filters/rand/generateRandomDataPoints",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "24f35df159da5bd0da6a8f822280067e138aa632",
+    "source" : {
+      "commit" : "65d54987f7f4008507de4346d3c4c5ca37b8ec21",
+      "path" : "source/reference/operator/query/rand.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
     "detail" : "data.json VALUE at /2/description",
     "fixture" : "query/filters/regex/ignoreWhiteSpacesInPattern",
     "gap" : "RESIDUAL_DIFFERENCE",
@@ -2863,6 +3984,16 @@
     "detail" : "data.json VALUE at /2/description",
     "fixture" : "query/filters/regex/multilineMatchForLinesStartingWithSpecifiedPattern",
     "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "f5efa7c2b14d22ec139f3ea5a0e37bca1aefa874",
+    "source" : {
+      "commit" : "dc702637685119e48f0f7980de92e0bea87afd54",
+      "path" : "source/reference/operator/query/regex.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "expected syntax",
+    "fixture" : "query/filters/regex/performALikeMatch",
+    "gap" : "SOURCE_UNSUPPORTED",
     "origin" : "f5efa7c2b14d22ec139f3ea5a0e37bca1aefa874",
     "source" : {
       "commit" : "dc702637685119e48f0f7980de92e0bea87afd54",
@@ -2910,6 +4041,66 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
+    "detail" : "UNKNOWN_CONSTRUCTOR",
+    "fixture" : "query/filters/type/queryingByMinKeyAndMaxKey",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "f5efa7c2b14d22ec139f3ea5a0e37bca1aefa874",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/type.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "expected.json has no documented source",
+    "fixture" : "query/updates/addToSet/valueAlreadyExists",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "8a18df9304d31169e1338ef9d17e7b582d276016",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/update/addToSet.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "expected syntax",
+    "fixture" : "query/updates/bit/bitwiseAnd",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "fe35bb0681ae7874ffe14c251a4d1d3b0d409b42",
+    "source" : {
+      "commit" : "01b0b55bdc9045fb463e7b72b4ab4e1571cd78b4",
+      "path" : "source/reference/operator/update/bit.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "expected syntax",
+    "fixture" : "query/updates/bit/bitwiseOr",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "fe35bb0681ae7874ffe14c251a4d1d3b0d409b42",
+    "source" : {
+      "commit" : "01b0b55bdc9045fb463e7b72b4ab4e1571cd78b4",
+      "path" : "source/reference/operator/update/bit.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "expected syntax",
+    "fixture" : "query/updates/bit/bitwiseXor",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "fe35bb0681ae7874ffe14c251a4d1d3b0d409b42",
+    "source" : {
+      "commit" : "01b0b55bdc9045fb463e7b72b4ab4e1571cd78b4",
+      "path" : "source/reference/operator/update/bit.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "Use ``$each``  with ``$push`` Operator",
+    "fixture" : "query/updates/each/useEachWithPushOperator",
+    "gap" : "NO_MATCHING_EXAMPLE",
+    "origin" : "8a18df9304d31169e1338ef9d17e7b582d276016",
+    "source" : {
+      "commit" : "537c1f1e29aa4914aae8c43c57a949b3dc3d5b44",
+      "path" : "source/reference/operator/update/each.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
     "detail" : "CONSTRUCTOR_FORMAT",
     "fixture" : "query/updates/max/useMaxToCompareDates",
     "gap" : "SOURCE_UNSUPPORTED",
@@ -2931,12 +4122,42 @@
     }
   }, {
     "detail" : "expected syntax",
+    "fixture" : "query/updates/mul/multiplyMixedNumericTypes",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "d220079dea743be8053d18f0f99325a455ccb6b6",
+    "source" : {
+      "commit" : "948002e14f1d94c10fb84b8fb833149a16531169",
+      "path" : "source/reference/operator/update/mul.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "expected syntax",
     "fixture" : "query/updates/mul/multiplyTheValueOfAField",
     "gap" : "SOURCE_UNSUPPORTED",
     "origin" : "d220079dea743be8053d18f0f99325a455ccb6b6",
     "source" : {
       "commit" : "948002e14f1d94c10fb84b8fb833149a16531169",
       "path" : "source/reference/operator/update/mul.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "SYNTAX",
+    "fixture" : "query/updates/positional/updateDocumentsInAnArray",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "8a18df9304d31169e1338ef9d17e7b582d276016",
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/update/positional.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "COMMAND_METHOD",
+    "fixture" : "query/updates/pull/removeDocumentsFromNestedArrays",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "8a18df9304d31169e1338ef9d17e7b582d276016",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/update/pull.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -2947,6 +4168,26 @@
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
       "path" : "source/reference/operator/update/push.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "expected.json has no documented source",
+    "fixture" : "query/updates/push/appendMultipleValuesToAnArray",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "8a18df9304d31169e1338ef9d17e7b582d276016",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/update/push.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "detail" : "expected.json has no documented source",
+    "fixture" : "query/updates/rename/renameAFieldThatDoesNotExist",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "8a18df9304d31169e1338ef9d17e7b582d276016",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/update/rename.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {

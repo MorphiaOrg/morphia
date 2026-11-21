@@ -564,14 +564,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/bottom/findTheBottomScore",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "5aab41e824d9ff3654ca539c7ee853fe77c4457854e7a3653b175a15b660d3db",
-      "text" : "unwrap expected data from the array"
-    } ],
+    "markers" : [ ],
     "method" : "testFindTheBottomScore",
     "options" : [ {
       "argument" : "false",
@@ -1064,14 +1060,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/dateToParts/dateToPartsExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "860687109fcabf65bd480ea7574ee8ca6a41481b0e2bac731e1dd975baa12b29",
-      "text" : "pipeline was trunc'd in the parser\n"
-    } ],
+    "markers" : [ ],
     "method" : "testDateToPartsExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestDateToParts"
@@ -2150,14 +2142,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/max/useInSetWindowFieldsStage",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "f502c0ac57ea142f49427485ee5f7f6f1aca3f3daae0ac83cae9f1bd737374c3",
-      "text" : "data is from include file"
-    } ],
+    "markers" : [ ],
     "method" : "testUseInSetWindowFieldsStage",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestMax"
@@ -2440,14 +2428,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/min/useInSetWindowFieldsStage",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "f502c0ac57ea142f49427485ee5f7f6f1aca3f3daae0ac83cae9f1bd737374c3",
-      "text" : "data is from include file"
-    } ],
+    "markers" : [ ],
     "method" : "testUseInSetWindowFieldsStage",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestMin"
@@ -2805,14 +2789,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/range/rangeExpressionOperator",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "963381108e1017f6abbfda45c01b406d2991cf50fd5947df13d1a79222864a5a",
-      "text" : "data file had extraneous text"
-    } ],
+    "markers" : [ ],
     "method" : "testRangeExpressionOperator",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestRange"
@@ -2863,14 +2843,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/reduce/arrayConcatenation",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "fac97347f2331c98ae51cacf923f7c552d4d19b24776033a86b2baca3293c583",
-      "text" : "expected has a \"results\" field that shouldn't be there"
-    } ],
+    "markers" : [ ],
     "method" : "testArrayConcatenation",
     "options" : [ {
       "argument" : "false",
@@ -2882,14 +2858,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/reduce/multiplication",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "0adc1606c7cf859dca0269ad90625b09166698a2f23848d2c5efb95dc9f5bd22",
-      "text" : "parser pulled wrong code block for expected"
-    } ],
+    "markers" : [ ],
     "method" : "testMultiplication",
     "options" : [ {
       "argument" : "false",
@@ -3412,14 +3384,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/sortArray/sortAnArrayOfIntegers",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "12a14e423e010c285ccbc0517c096d6944b0353c2a6e32f17cfb8a395a72e512",
-      "text" : "the expected results didn't have the 'result' element"
-    } ],
+    "markers" : [ ],
     "method" : "testSortAnArrayOfIntegers",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.expressions.TestSortArray"
@@ -3984,14 +3952,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/top/findTheTopScore",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "97008f9f8b3e3796932b0b3379417d0f9d42588431a1993ed4b5fc34e4853545",
-      "text" : "unwrap expected from array"
-    } ],
+    "markers" : [ ],
     "method" : "testFindTheTopScore",
     "options" : [ {
       "argument" : "false",
@@ -4003,14 +3967,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/top/findTheTopScoreAcrossMultipleGames",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "9b16f8a94c239ee481d55641b42ede011b292e22811551922391eab8a01dac51",
-      "text" : "had to unwrap the results from the array"
-    } ],
+    "markers" : [ ],
     "method" : "testFindTheTopScoreAcrossMultipleGames",
     "options" : [ {
       "argument" : "false",
@@ -4285,14 +4245,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/addFields/overwritingAnExistingField",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "2a52f6a1ccebc316102107318031f4437213adad37e7541ee66c8a1f6fd8bd60",
-      "text" : "parser pulls wrong code block for expected"
-    } ],
+    "markers" : [ ],
     "method" : "testOverwritingAnExistingField",
     "options" : [ {
       "argument" : "false",
@@ -4389,14 +4345,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/bucketAuto/singleFacetAggregation",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "94aca22c7d8d4fe590088e718ab515314a21777f16edce24999e53b9858fbf7f",
-      "text" : "wrong name from parser"
-    } ],
+    "markers" : [ ],
     "method" : "testSingleFacetAggregation",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.stages.TestBucketAuto"
@@ -4541,14 +4493,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/densify/densifyTimeSeriesData",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "94aca22c7d8d4fe590088e718ab515314a21777f16edce24999e53b9858fbf7f",
-      "text" : "wrong name from parser"
-    } ],
+    "markers" : [ ],
     "method" : "testDensifyTimeSeriesData",
     "options" : [ {
       "argument" : "true",
@@ -5104,14 +5052,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/match/equalityMatch",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "94aca22c7d8d4fe590088e718ab515314a21777f16edce24999e53b9858fbf7f",
-      "text" : "wrong name from parser"
-    } ],
+    "markers" : [ ],
     "method" : "testEqualityMatch",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.stages.TestMatch"
@@ -5445,14 +5389,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/project/includeSpecificFieldsInOutputDocuments",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "94aca22c7d8d4fe590088e718ab515314a21777f16edce24999e53b9858fbf7f",
-      "text" : "wrong name from parser"
-    } ],
+    "markers" : [ ],
     "method" : "testIncludeSpecificFieldsInOutputDocuments",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.stages.TestProject"
@@ -5533,14 +5473,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/replaceRoot/replaceRootWithAnEmbeddedDocumentField",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "94aca22c7d8d4fe590088e718ab515314a21777f16edce24999e53b9858fbf7f",
-      "text" : "wrong name from parser"
-    } ],
+    "markers" : [ ],
     "method" : "testReplaceRootWithAnEmbeddedDocumentField",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.stages.TestReplaceRoot"
@@ -5573,14 +5509,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/replaceWith/replaceWithANewlyCreatedDocument",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "06470d07a6d43010bc94302b997221cb50c454855caefa92fbc300a1a69cf14c",
-      "text" : "parser pulled wrong expected"
-    } ],
+    "markers" : [ ],
     "method" : "testReplaceWithANewlyCreatedDocument",
     "options" : [ {
       "argument" : "false",
@@ -5595,14 +5527,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/replaceWith/replaceWithAnEmbeddedDocumentField",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "94aca22c7d8d4fe590088e718ab515314a21777f16edce24999e53b9858fbf7f",
-      "text" : "wrong name from parser"
-    } ],
+    "markers" : [ ],
     "method" : "testReplaceWithAnEmbeddedDocumentField",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.stages.TestReplaceWith"
@@ -5681,14 +5609,10 @@
     "categories" : [ "SHELL_SYNTAX" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/set/usingTwoSetStages",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "6ea74d96e88739343344d2697409d1118ce764f76d2c6e09fcfb51a5c2d12126",
-      "text" : "moved a trailing brace to a new line where it belongs"
-    } ],
+    "markers" : [ ],
     "method" : "testUsingTwoSetStages",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.stages.TestSet"
@@ -5709,14 +5633,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/setWindowFields/documentsWindowExamples",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "e72e3527e891fa735d4a05c98b3608c750deb5e08b10c01779204aad6df55659",
-      "text" : "parser grabs extraneous text\nwrong name from parser"
-    } ],
+    "markers" : [ ],
     "method" : "testDocumentsWindowExamples",
     "options" : [ {
       "argument" : "false",
@@ -5767,14 +5687,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/sort/ascendingDescendingSort",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "94aca22c7d8d4fe590088e718ab515314a21777f16edce24999e53b9858fbf7f",
-      "text" : "wrong name from parser"
-    } ],
+    "markers" : [ ],
     "method" : "testAscendingDescendingSort",
     "options" : [ {
       "argument" : "true",
@@ -5844,14 +5760,10 @@
       "data3.json" : "sales_2020"
     },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/unionWith/report1AllSalesByYearAndStoresAndItems",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "94aca22c7d8d4fe590088e718ab515314a21777f16edce24999e53b9858fbf7f",
-      "text" : "wrong name from parser"
-    } ],
+    "markers" : [ ],
     "method" : "testReport1AllSalesByYearAndStoresAndItems",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.stages.TestUnionWith"
@@ -5943,14 +5855,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/unwind/preserveNullAndEmptyArraysAndIncludeArrayIndex",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "06470d07a6d43010bc94302b997221cb50c454855caefa92fbc300a1a69cf14c",
-      "text" : "parser pulled wrong expected"
-    } ],
+    "markers" : [ ],
     "method" : "testPreserveNullAndEmptyArraysAndIncludeArrayIndex",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.stages.TestUnwind"
@@ -5959,14 +5867,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/unwind/unwindArray",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "94aca22c7d8d4fe590088e718ab515314a21777f16edce24999e53b9858fbf7f",
-      "text" : "wrong name from parser"
-    } ],
+    "markers" : [ ],
     "method" : "testUnwindArray",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.stages.TestUnwind"
@@ -6558,14 +6462,10 @@
     "categories" : [ "EXTRACTION" ],
     "collections" : { },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/gte/performAnUpdateBasedOnEmbeddedDocumentFields",
     "helpers" : [ "testUpdate" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "2fbdd27cdec0677dcb8fe178bed7b616bc7c49d8e50c167ba963d23e899cc897",
-      "text" : "code block had extra text in it\n"
-    } ],
+    "markers" : [ ],
     "method" : "testPerformAnUpdateBasedOnEmbeddedDocumentFields",
     "options" : [ {
       "argument" : "true",
@@ -8169,7 +8069,7 @@
     "folder" : "aggregation/stages/shardedDataDistribution",
     "reason" : "an admin function and not generally suited for morphia"
   } ],
-  "repositoryRevision" : "f40e79729efd071532b834d21a0871ed030e2fd0",
+  "repositoryRevision" : "1166c8f816ef6d08257294b81ff25edfca14a8de",
   "schemaVersion" : 1,
   "summary" : {
     "assertion.BEHAVIOR" : 466,
@@ -8185,17 +8085,17 @@
     "category.SHELL_SYNTAX" : 25,
     "category.UNTESTABLE" : 2,
     "disposition.NOT_EXECUTED" : 2,
-    "disposition.OVERRIDDEN" : 91,
-    "disposition.PRESERVED_CURATED" : 143,
+    "disposition.OVERRIDDEN" : 116,
+    "disposition.PRESERVED_CURATED" : 118,
     "disposition.UNCORRECTED" : 320,
     "examples" : 556,
-    "examples.locked" : 145,
+    "examples.locked" : 120,
     "exclusion.DEFERRED" : 1,
     "exclusion.ENVIRONMENT_UNAVAILABLE" : 3,
     "exclusion.NON_OPERATOR" : 1,
     "exclusion.POLICY_EXCLUSION" : 11,
     "exclusion.TESTED_ELSEWHERE" : 1,
-    "markers.lock" : 144,
+    "markers.lock" : 119,
     "markers.lockd" : 1,
     "option.findOptions" : 6,
     "option.orderMatters" : 107,

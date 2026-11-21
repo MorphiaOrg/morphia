@@ -787,8 +787,9 @@ method/fixture binding manifest that replaces the ordinal coverage scan (#4529,
 of all 556 legacy cases ([backport design](operator-audits-name-backport.md)).
 Step 4 starts with the [curated repair inventory](operator-audits-curated-repairs.md) and then
 retires 46 `MORPHIA_FORM` locks through declared equivalence rules, 16 `NUMERIC_TYPE` locks
-through declared number retypes and 29 `DOCS_ERROR`/`FIXTURE_CURATION` locks through reviewed value
-corrections, each proven against the historical documentation the fixture came
+through declared number retypes, 29 `DOCS_ERROR`/`FIXTURE_CURATION` locks through reviewed value
+corrections and 25 `EXTRACTION`/`SHELL_SYNTAX` locks that the new pipeline handles natively, each
+proven against the historical documentation the fixture came
 from ([form migration](operator-audits-form-migration.md)).
 
 Track progress with explicit metrics rather than a speculative “100% automatic” target:

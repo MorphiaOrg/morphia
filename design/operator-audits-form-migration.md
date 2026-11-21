@@ -12,8 +12,11 @@ Of the 77 `MORPHIA_FORM` examples, 66 carry no other category. 46 of those locks
 20 stay, each with a recorded gap. The 11 mixed examples wait for their other families. Of the 26
 `NUMERIC_TYPE` examples, 24 carry no category besides `MORPHIA_FORM`; 16 of those are retired and
 8 stay with a gap. Of the 52 locked examples filed as `DOCS_ERROR` or `FIXTURE_CURATION` with no
-family outside these four, 29 are retired and 23 stay with a gap. In all, 91 locks are retired and
-51 are kept.
+family outside these four, 29 are retired and 23 stay with a gap. The `EXTRACTION` and
+`SHELL_SYNTAX` locks need nothing declared: 25 of their 92 fixtures equal what the current pipeline
+extracts from the pinned page (see [Handled natively](#handled-natively)). In all, 116 locks are
+retired and 118 are kept with a gap; only the two untestable change-stream fixtures are outside the
+review.
 
 ## Which documentation is the source
 
@@ -135,6 +138,21 @@ it is not where the fixture came from. Every other source is `AT_ORIGIN`.
 
 One fixture spells its lock `lockd`; the declaration records the marker's name.
 
+## Handled natively
+
+`EXTRACTION` and `SHELL_SYNTAX` locks record work-arounds for the legacy extractor and the driver's
+JSON reader: a wrong example name, the wrong code block taken as expected output, results wrapped
+in an array, truncated pipelines, text the old reader could not parse. The plan retires such a lock
+once the new pipeline handles the case natively, so these categories allow no declared change: a
+lock is retired only when the fixture equals, BSON-identically, what the strict shell normalizer
+and document reader extract from the pinned page, with only the declarations its other categories
+allow. 25 of 92 do. Ten of them were wrong example names: the curated `name` file now selects the
+example the current extractor gives that title. Several others only changed layout (unwrapping an
+array, one document per line) for the tests' line-based reader; that layout is checked, not
+assumed: every data, expected and index file must read, one document per line as
+`TemplatedTestBase.loadJson` reads it, as the same documents the comparison sees, or the fixture is
+a `FIXTURE_UNSUPPORTED` gap.
+
 ## What is compared
 
 For each fixture, the legacy extractor reads the recorded page (with tracked includes spliced in as
@@ -178,31 +196,29 @@ migration retired it with the digest the legacy corpus recorded.
 
 ## Gaps kept with their locks
 
-`audits/catalog/form-review.json` lists every kept lock with its gap; by kind:
+`audits/catalog/form-review.json` lists every kept lock with its gap. By kind:
 
-- `SOURCE_UNSUPPORTED` (20): constructors the strict shell normalizer rejects (mostly `Date` without
-  an explicit time, and typed-value constructors), JavaScript function bodies, an expression
-  example without a collection, unparseable printed results or shell text, and a data block in
-  another database.
-- `RESIDUAL_DIFFERENCE` (16): edits no declaration covers for the lock's category. The four
-  `$regex` fixtures lost the documented runs of spaces in their data;
-  `$allElementsTrue`/`$anyElementTrue` insert BSON `undefined`; `$dateTrunc` changes `startOfWeek`
-  case and `$densify` reorders `range` under form locks; `$indexOfBytes`/`$indexOfCP` (documented
-  as strings) and `$mul` (Decimal128) are numeric locks that are really other edits; and the rest are
-  data or expected files with rows the page does not document, which a correction may not replace
-  wholesale.
-- `PAGE_UNSUPPORTED` (13): a generated `/includes/extracts/` file inside the example section.
-- `FIXTURE_UNSUPPORTED` (2): a data file the legacy reader cannot parse, and an action in the legacy
-  `$near` coordinate form it cannot read.
+- `SOURCE_UNSUPPORTED` (60): constructors the strict shell normalizer rejects (16, mostly `Date`
+  without an explicit time), printed results the document reader cannot parse (14), JavaScript
+  variable bindings (7), other shell syntax or constructs, data blocks in another database, and
+  expression examples without a collection.
+- `RESIDUAL_DIFFERENCE` (28): edits no declaration covers for the lock's categories, such as the
+  four `$regex` fixtures that lost documented runs of spaces, BSON `undefined` in two data files,
+  form edits under form locks the rules do not cover, and data or expected files with rows the page
+  does not document, which a correction may not replace wholesale.
+- `PAGE_UNSUPPORTED` (23): a generated `/includes/extracts/` file inside the example section.
+- `FIXTURE_UNSUPPORTED` (5): fixture files the legacy reader cannot parse, unsupported command
+  options, and an action in the legacy `$near` coordinate form.
+- `NO_MATCHING_EXAMPLE` (2): no example on the page carries the fixture's name.
 
 ## Next
 
 Test bodies are not compared: a bound test that writes data directly (`insert`, `getDs().save`,
-driver calls) is outside this check. None of the 91 retired fixtures' tests does today; recording
+driver calls) is outside this check. None of the 116 retired fixtures' tests does today; recording
 such writes in the repair inventory is a separate rule.
 
 The remaining families follow the same pattern. `EXTRACTION` and `SHELL_SYNTAX` need the native
 extractor; `NUMERIC_TYPE` needs typed overrides; `DOCS_ERROR` and `FIXTURE_CURATION` stay as reviewed
 corrections pinned to a source digest; those corrections are now in place. The largest remaining
-gaps are source constructors the strict normalizer rejects and generated include extracts, both of
-which the native extractor (step 2) handles.
+gaps are generated include extracts, `Date` constructors, unparseable printed results and
+JavaScript variable bindings; each is a separate extension of the extraction or normalizer.
