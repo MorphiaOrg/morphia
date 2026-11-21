@@ -203,6 +203,21 @@ class ShellProgramsTest {
     }
 
     @Test
+    fun sloppyAssignmentDeclaresAMutableGlobal() {
+        val result =
+            ok("stage={${'$'}match:{a:1}}; stage={${'$'}match:{a:2}}; db.items.aggregate([stage]);")
+        val pipeline = (result.commands.single().operation as AggregateOperation).pipeline.value()
+        assertEquals(BsonDocument.parse("{v: [{${'$'}match: {a: 2}}]}").getArray("v"), pipeline)
+        assertEquals(
+            listOf(ProgramDeclaration.ASSIGNMENT, ProgramDeclaration.ASSIGNMENT),
+            result.bindings.map { it.declaration },
+        )
+        // A lexical declaration after the implicit global is still a redeclaration.
+        blocked("x=1; let x=2; db.items.find({x:x});", "DUPLICATE_BINDING")
+        blocked("db=1; db.items.find({});", "RESERVED_BINDING")
+    }
+
+    @Test
     fun aliasesTrackDatabaseCollectionAndValueDependencies() {
         val result =
             ok(

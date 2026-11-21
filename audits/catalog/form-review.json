@@ -1610,6 +1610,134 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/toBool/toBoolExpressionOperator",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "inlined js variables to pipeline",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "59fa09a0b133d3a8b3dc7ca5c6d8c291b04687af",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toBool.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/toDate/toDateExpressionOperator",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "inlined js variables to pipeline",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "42e6ac3c9fbe47779b5041740e65ca7dc431ee1e",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toDate.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/toDecimal/toDecimalExpressionOperator",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "inlined js variables to pipeline\nthe driver apparently can't parse Decimal128(...)",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "c99961a98c6d719c24b646bb93b9ed44ba50ccb9",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toDecimal.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/toDouble/toDoubleExpressionOperator",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "inlined js variables to pipeline",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "841cf871bf27156a2df51a01f374e4fc94484ff5",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toDouble.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/toInt/toIntExpressionOperator",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "inlined js variables to pipeline\nthe driver apparently can't parse Decimal128(...)",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "92e7b0bc372a5cdb13d181cd2224afe167bf4c4f",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toInt.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/toLong/toLongExpressionOperator",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "inlined js variables to pipeline\n",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "0e95704326f3ccb1c2afeec425ae8f3b0df18e21",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "eeaa9d3ad8bf480d333ca978a1d7b8ff30677870",
+      "path" : "source/reference/operator/aggregation/toLong.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/toObjectId/toObjectIdExpressionOperator",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "inlined js variables to pipeline\n",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "09cec0a9a44620357d55c8bf913799d96261f0b7",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toObjectId.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/toString/toStringExpressionOperator",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "had to rework the pipeline to not use variables",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "89b3c01ffb5a803027a5e42ea2f41e2828a823f5",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toString.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
     "corrections" : [ {
       "curated" : null,
       "documented" : "{\"v\": {\"$oid\": \"669945ab610b080391a8e2f5\"}}",
@@ -3698,9 +3826,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "ASSIGNMENT_BINDING",
+    "detail" : "printed expected VALUE at /3/totalPrice",
     "fixture" : "aggregation/expressions/convert/convertExpressionOperator",
-    "gap" : "SOURCE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "source" : {
       "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
@@ -4005,86 +4133,6 @@
     "source" : {
       "commit" : "8562c94b38de3e8c83552bcd41558548e5220eef",
       "path" : "source/reference/operator/aggregation/tan.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "ASSIGNMENT_BINDING",
-    "fixture" : "aggregation/expressions/toBool/toBoolExpressionOperator",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "source" : {
-      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
-      "path" : "source/reference/operator/aggregation/toBool.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "ASSIGNMENT_BINDING",
-    "fixture" : "aggregation/expressions/toDate/toDateExpressionOperator",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "source" : {
-      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
-      "path" : "source/reference/operator/aggregation/toDate.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "ASSIGNMENT_BINDING",
-    "fixture" : "aggregation/expressions/toDecimal/toDecimalExpressionOperator",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "source" : {
-      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
-      "path" : "source/reference/operator/aggregation/toDecimal.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "ASSIGNMENT_BINDING",
-    "fixture" : "aggregation/expressions/toDouble/toDoubleExpressionOperator",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "source" : {
-      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
-      "path" : "source/reference/operator/aggregation/toDouble.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "ASSIGNMENT_BINDING",
-    "fixture" : "aggregation/expressions/toInt/toIntExpressionOperator",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "source" : {
-      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
-      "path" : "source/reference/operator/aggregation/toInt.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "ASSIGNMENT_BINDING",
-    "fixture" : "aggregation/expressions/toLong/toLongExpressionOperator",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "source" : {
-      "commit" : "eeaa9d3ad8bf480d333ca978a1d7b8ff30677870",
-      "path" : "source/reference/operator/aggregation/toLong.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "ASSIGNMENT_BINDING",
-    "fixture" : "aggregation/expressions/toObjectId/toObjectIdExpressionOperator",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "source" : {
-      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
-      "path" : "source/reference/operator/aggregation/toObjectId.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "ASSIGNMENT_BINDING",
-    "fixture" : "aggregation/expressions/toString/toStringExpressionOperator",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "source" : {
-      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
-      "path" : "source/reference/operator/aggregation/toString.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {

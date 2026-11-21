@@ -13,9 +13,9 @@ Of the 77 `MORPHIA_FORM` examples, 66 carry no other category. 48 of those locks
 `NUMERIC_TYPE` examples, 24 carry no category besides `MORPHIA_FORM`; 17 of those are retired and
 7 stay with a gap. Of the 52 locked examples filed as `DOCS_ERROR` or `FIXTURE_CURATION` with no
 family outside these four, 35 are retired and 17 stay with a gap. The `EXTRACTION` and
-`SHELL_SYNTAX` locks need nothing declared: 30 of their 92 fixtures equal what the current pipeline
-extracts from the pinned page (see [Handled natively](#handled-natively)). In all, 130 locks are
-retired and 104 are kept with a gap; only the two untestable change-stream fixtures are outside the
+`SHELL_SYNTAX` locks need nothing declared: 38 of their 92 fixtures equal what the current pipeline
+extracts from the pinned page (see [Handled natively](#handled-natively)). In all, 138 locks are
+retired and 96 are kept with a gap; only the two untestable change-stream fixtures are outside the
 review. Seven of those retirements depend on [generated extracts](#generated-extracts), which the
 page reader now assembles from their YAML sources, and five on [shell dates](#shell-dates) whose
 omitted time or offset the shell defines.
@@ -239,6 +239,20 @@ real: `$group`'s `Decimal128` totals became numbers, `$mul` changed a `Decimal12
 declaration retypes `Decimal128`. The other blocks are not results at all: bit diagrams (3), SQL, a
 page missing a comma and a quote, and plan-cache output elided with `...` or built with `+` (2).
 
+## Implicit globals
+
+Several conversion pages build a pipeline from stages assigned to names that are never declared
+(`shippedConversionStage = { $addFields: ... }` before `db.orders.aggregate([shippedConversionStage,
+...])`). Both shells evaluate in sloppy mode, where such an assignment creates a mutable global, but
+the shell normalizer required an existing binding. It now treats a statement-level assignment to an
+unbound, unreserved name as declaring a mutable global; assigning a `const` is still rejected, and a
+later `let` or `const` of that name is still a redeclaration.
+
+Eight of the nine locks this blocked retire exactly: `$toBool`, `$toDate`, `$toDecimal`,
+`$toDouble`, `$toInt`, `$toLong`, `$toObjectId` and `$toString`, each filed as `SHELL_SYNTAX` with
+"inlined js variables to pipeline" or the like. `$convert` now shows a real printed difference:
+the page prints `Decimal128("0")` where the fixture has `0.0`.
+
 ## What is compared
 
 For each fixture, the legacy extractor reads the recorded page (with tracked includes spliced in as
@@ -289,15 +303,14 @@ migration retired it with the digest the legacy corpus recorded.
 
 `audits/catalog/form-review.json` lists every kept lock with its gap. By kind:
 
-- `SOURCE_UNSUPPORTED` (43): expected blocks that are not results (7, see
-  [Printed results](#printed-results)), JavaScript
-  variable bindings (9), constructors the strict shell normalizer rejects (4: an impossible date,
+- `SOURCE_UNSUPPORTED` (34): expected blocks that are not results (7, see
+  [Printed results](#printed-results)), constructors the strict shell normalizer rejects (4: an impossible date,
   two typed-value constructors and `Date()` as a function), other shell syntax or constructs, data
   blocks in another database, and expression examples without a collection.
-- `RESIDUAL_DIFFERENCE` (47): edits no declaration covers for the lock's categories, such as the
+- `RESIDUAL_DIFFERENCE` (48): edits no declaration covers for the lock's categories, such as the
   four `$regex` fixtures that lost documented runs of spaces, BSON `undefined` in two data files,
   form edits under form locks the rules do not cover, string results where the page prints match
-  documents, printed `Decimal128` results the fixture changed (3), a documented action of another
+  documents, printed `Decimal128` results the fixture changed (4), a documented action of another
   kind than the test runs, and data or expected files
   with rows the page does not document, which a correction may not replace wholesale.
 - `FIXTURE_UNSUPPORTED` (9): fixture files the legacy reader cannot parse, unsupported command
@@ -310,11 +323,11 @@ migration retired it with the digest the legacy corpus recorded.
 ## Next
 
 Test bodies are not compared: a bound test that writes data directly (`insert`, `getDs().save`,
-driver calls) is outside this check. None of the 130 retired fixtures' tests does today; recording
+driver calls) is outside this check. None of the 138 retired fixtures' tests does today; recording
 such writes in the repair inventory is a separate rule.
 
 The remaining families follow the same pattern. `EXTRACTION` and `SHELL_SYNTAX` need the native
 extractor; `NUMERIC_TYPE` needs typed overrides; `DOCS_ERROR` and `FIXTURE_CURATION` stay as reviewed
 corrections pinned to a source digest; those corrections are now in place. Generated include extracts are now
 assembled, shell dates read as the shell defines them and printed results compared by what they
-prove. The largest remaining source gap is JavaScript variable bindings; each is a separate extension of the extraction or normalizer.
+prove, and implicit globals bound. The remaining source gaps are scattered shell constructs; each is a separate extension of the extraction or normalizer.
