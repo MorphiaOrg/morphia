@@ -2,6 +2,7 @@ package dev.morphia.audits.repairs
 
 import dev.morphia.audits.model.Operator
 import dev.morphia.audits.model.OperatorType
+import dev.morphia.audits.published.PublishedComparison
 import dev.morphia.audits.rst.RstDocument
 import dev.morphia.audits.semantics.BsonComparison
 import dev.morphia.audits.semantics.BsonComparisonState
@@ -12,6 +13,7 @@ import dev.morphia.audits.shell.FindOperation
 import dev.morphia.audits.shell.InsertOperation
 import dev.morphia.audits.shell.LegacyDocuments
 import dev.morphia.audits.shell.ProgramBlock
+import dev.morphia.audits.shell.ProgramFormat
 import dev.morphia.audits.shell.ProgramRole
 import dev.morphia.audits.shell.ShellDialect
 import dev.morphia.audits.shell.ShellLiteralState
@@ -819,18 +821,20 @@ object FormMigration {
             }
         }
         val expected = blocks.filter { it.role == BlockRole.EXPECTED }
-        pair(
-                "expected.json",
-                expected
-                    .takeIf { it.isNotEmpty() }
-                    ?.flatMap {
-                        documents(it.text)
-                            ?: return Examined.Gap(FormGap.SOURCE_UNSUPPORTED, "expected syntax")
-                    },
-            )
-            ?.let {
+        val listed = expected.map { documents(it.text) }
+        if (listed.all { it != null }) {
+            pair(
+                    "expected.json",
+                    expected.takeIf { it.isNotEmpty() }?.flatMap { documents(it.text)!! },
+                )
+                ?.let {
+                    return it
+                }
+        } else {
+            printed(folder, documented.collection, expected, facts)?.let {
                 return it
             }
+        }
         val index = blocks.filter { it.role == BlockRole.INDEX }
         pair(
                 "index.json",
@@ -1142,6 +1146,81 @@ object FormMigration {
                 }
             }
         }
+
+    /**
+     * Compares expected.json with results printed as mongosh prints them (`Decimal128("1.5")`,
+     * `Timestamp({ t, i })`, comments), which the document reader cannot read. Printed text proves
+     * less than BSON: a printed `4` may be an Int32 or a Double, so the fixture must satisfy what
+     * the text proves ([PublishedComparison]), not equal a guessed value. Printed results take no
+     * retype or correction; any difference is a gap.
+     */
+    private fun printed(
+        folder: Path,
+        collection: String,
+        expected: List<SourceBlock>,
+        facts: FixtureFacts,
+    ): Examined.Gap? {
+        // The results are read back as the default mongosh profile reads them; a find on the
+        // action's collection certifies that profile for every action kind.
+        if (collection.any { it == '"' || it == '\\' || it.isISOControl() }) {
+            return Examined.Gap(FormGap.SOURCE_UNSUPPORTED, "collection name $collection")
+        }
+        val owner = "db.getCollection(\"$collection\").find({})"
+        val program =
+            ShellPrograms.normalize(
+                ShellProgramRequest(
+                    dialect = ShellDialect.MONGOSH,
+                    blocks =
+                        listOf(ProgramBlock("owner", owner, ProgramRole.ACTION)) +
+                            expected.mapIndexed { index, block ->
+                                ProgramBlock(
+                                    "expected$index",
+                                    block.text,
+                                    ProgramRole.EXPECTED,
+                                    ProgramFormat.SHELL_RESULTS,
+                                )
+                            },
+                )
+            )
+        if (program.state != ShellLiteralState.NORMALIZED) {
+            return Examined.Gap(FormGap.SOURCE_UNSUPPORTED, "expected syntax")
+        }
+        val published = program.expectations.flatMap { it.published.orEmpty() }
+        val path = folder.resolve("expected.json")
+        if (!path.isRegularFile()) {
+            return Examined.Gap(FormGap.RESIDUAL_DIFFERENCE, "expected.json is missing")
+        }
+        val text = Files.readString(path)
+        val curated =
+            documents(text)
+                ?: return Examined.Gap(FormGap.FIXTURE_UNSUPPORTED, "expected.json syntax")
+        if (!readsByLine(text, curated)) {
+            return Examined.Gap(
+                FormGap.FIXTURE_UNSUPPORTED,
+                "expected.json is not one document per line",
+            )
+        }
+        val result = PublishedComparison.compareResults(published, curated.map { it.asDocument() })
+        return when (result.state) {
+            // mongosh prints an integral Double as it prints an Int32, so a match cannot show
+            // the type a NUMERIC_TYPE lock changed.
+            BsonComparisonState.EQUAL ->
+                if ("NUMERIC_TYPE" in facts.categories)
+                    Examined.Gap(
+                        FormGap.SOURCE_UNSUPPORTED,
+                        "printed results cannot prove number types",
+                    )
+                else null
+            BsonComparisonState.DIFFERENT ->
+                result.difference!!.let {
+                    Examined.Gap(
+                        FormGap.RESIDUAL_DIFFERENCE,
+                        "printed expected ${it.kind} at ${it.path.pointer}",
+                    )
+                }
+            else -> Examined.Gap(FormGap.SOURCE_UNSUPPORTED, "expected ${result.problem}")
+        }
+    }
 
     /**
      * Whether `TemplatedTestBase.loadJson` reads [text] as [documents]: each line is one document,

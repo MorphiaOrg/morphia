@@ -543,6 +543,64 @@ class FormMigrationTest {
     }
 
     @Test
+    fun printedResultsAreComparedByWhatTheTextProves() {
+        // mongosh output the document reader cannot read: a Decimal128 constructor and a comment.
+        page(
+            commit,
+            documented
+                .replace(
+                    """{ "_id" : 1, "item" : "abc1", "discount" : 30 }""",
+                    """{ _id: 1, item: 'abc1', discount: Decimal128("30") } // first""",
+                )
+                .replace(
+                    """{ "_id" : 2, "item" : "abc2", "discount" : 20 }""",
+                    """{ _id: 2, item: 'abc2', discount: Decimal128("20") }""",
+                ),
+        )
+        include(commit, "/includes/sample-inventory.rst", inventory)
+        curated()
+        fun expected(text: String) = fixture("useCond", "expected.json", text.trimMargin())
+        fun draft() = FormMigration.draft(repository, pages, "mongodb/docs", candidates(), facts())
+        // A printed 2 may be an Int32 or a Double; a Decimal128 keeps its printed text.
+        expected(
+            """
+            |{ "_id" : 1, "item" : "abc1", "discount" : NumberDecimal("30") }
+            |{ "_id" : 2.0, "item" : "abc2", "discount" : NumberDecimal("20") }
+            """
+        )
+        val review = draft()
+        assertEquals(listOf(FormRule.COND_ARRAY), review.declarations.single().rules)
+        FormMigration.capture(repository, "head", pages, review, facts())
+
+        // Another Decimal128 scale is another value, and no retype or correction applies.
+        expected(
+            """
+            |{ "_id" : 1, "item" : "abc1", "discount" : NumberDecimal("30.0") }
+            |{ "_id" : 2, "item" : "abc2", "discount" : NumberDecimal("20") }
+            """
+        )
+        assertEquals(
+            FormGap.RESIDUAL_DIFFERENCE to "printed expected VALUE at /0/discount",
+            draft().unresolved.single().let { it.gap to it.detail },
+        )
+        // Printed numbers cannot show the type a NUMERIC_TYPE lock changed, so a match is a gap.
+        expected(
+            """
+            |{ "_id" : 1, "item" : "abc1", "discount" : NumberDecimal("30") }
+            |{ "_id" : 2.0, "item" : "abc2", "discount" : NumberDecimal("20") }
+            """
+        )
+        val numeric = facts(categories = listOf("NUMERIC_TYPE"))
+        assertEquals(
+            FormGap.SOURCE_UNSUPPORTED to "printed results cannot prove number types",
+            FormMigration.draft(repository, pages, "mongodb/docs", candidates(), numeric)
+                .unresolved
+                .single()
+                .let { it.gap to it.detail },
+        )
+    }
+
+    @Test
     fun anyOtherEditKeepsTheLock() {
         page(commit, documented)
         include(commit, "/includes/sample-inventory.rst", inventory)
@@ -776,7 +834,7 @@ class FormMigrationTest {
                 .map { it.fixture }
                 .toSet(),
         )
-        assertEquals(128, report.overrides.size)
-        assertEquals(106, report.unresolved.size)
+        assertEquals(130, report.overrides.size)
+        assertEquals(104, report.unresolved.size)
     }
 }

@@ -1696,6 +1696,34 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/tsSecond/obtainTheNumberOfSecondsFromATimestampField",
+    "includes" : [ {
+      "blob" : "cae80161291eadfe7c4c76d37dcb6b5ee9e40de6",
+      "path" : "source/includes/tsSecond-introduction.rst"
+    }, {
+      "blob" : "a70d0f7025666a855267cba1031cf183714121b2",
+      "path" : "source/includes/stockSales-example-collection.rst"
+    }, {
+      "blob" : "5d0412c61706673a101d1f2d14e7e224b5de7187",
+      "path" : "source/includes/stockSales-example-collection-create.rst"
+    }, {
+      "blob" : "f56012674985fd6d9fe5f558a661d55d6a717156",
+      "path" : "source/includes/cakeSales-example-collection.rst"
+    } ],
+    "justification" : null,
+    "lock" : "updated the Timestamp format",
+    "marker" : "lock",
+    "origin" : "3f1e409bd15a70dbd2e5b065f8fe38f114bee495",
+    "pageBlob" : "b6c831c1be6bdf210a7260dc64061dd3489039cb",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "f5da63fabec244dde036582f5cbab8d7ea2b0881",
+      "path" : "source/reference/operator/aggregation/tsSecond.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
     "corrections" : [ {
       "curated" : "{\"v\": \"int\"}",
       "documented" : "{\"v\": \"double\"}",
@@ -3392,6 +3420,34 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
+    "corrections" : [ ],
+    "fixture" : "query/updates/mul/multiplyMixedNumericTypes",
+    "includes" : [ {
+      "blob" : "5e6b70f902bb252f245d63ebe08566767f1553ff",
+      "path" : "source/includes/use-dot-notation.rst"
+    }, {
+      "blob" : "ac698feee23671aac82cf09e4f18bb3e3e20322e",
+      "path" : "source/includes/extracts-update-operations.yaml"
+    }, {
+      "blob" : "d16ecb02d62db5af0e83450c77a65c0b70114183",
+      "path" : "source/includes/extracts-update-operations-base.yaml"
+    }, {
+      "blob" : "3eddf446867bc82fd4404645462411a8ab8d4209",
+      "path" : "source/includes/fact-update-operator-processing-order.rst"
+    } ],
+    "justification" : null,
+    "lock" : "parser extracts incorrectly",
+    "marker" : "lock",
+    "origin" : "d220079dea743be8053d18f0f99325a455ccb6b6",
+    "pageBlob" : "366930f8850ed59f0f6996861cb296131c6655fb",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "948002e14f1d94c10fb84b8fb833149a16531169",
+      "path" : "source/reference/operator/update/mul.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
     "corrections" : [ {
       "curated" : null,
       "documented" : "{\"v\": {\"first\": \"george\", \"last\": \"washington\"}}",
@@ -3902,9 +3958,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "expected syntax",
+    "detail" : "printed expected VALUE at /0/result/3",
     "fixture" : "aggregation/expressions/sortArray/sortOnMixedTypeFields",
-    "gap" : "SOURCE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "fade26d1eb91bbf587f35696f41ad98dfe706e34",
     "source" : {
       "commit" : "ee00283046ed2845155e52b20ffd1c5638d65d9c",
@@ -4032,23 +4088,13 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "expected syntax",
+    "detail" : "data.json VALUE at /0/symbol",
     "fixture" : "aggregation/expressions/tsIncrement/obtainTheIncrementingOrdinalFromATimestampField",
-    "gap" : "SOURCE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "d562cdcc2589f76539bcce1b8baf14bd402ac19a",
     "source" : {
       "commit" : "f5da63fabec244dde036582f5cbab8d7ea2b0881",
       "path" : "source/reference/operator/aggregation/tsIncrement.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "expected syntax",
-    "fixture" : "aggregation/expressions/tsSecond/obtainTheNumberOfSecondsFromATimestampField",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "3f1e409bd15a70dbd2e5b065f8fe38f114bee495",
-    "source" : {
-      "commit" : "f5da63fabec244dde036582f5cbab8d7ea2b0881",
-      "path" : "source/reference/operator/aggregation/tsSecond.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -4092,9 +4138,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "expected syntax",
+    "detail" : "action TYPE at /0/$facet/categorizedByPrice/0/$match/price/$exists",
     "fixture" : "aggregation/stages/facet/facetAggregationStage",
-    "gap" : "SOURCE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "source" : {
       "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
@@ -4162,9 +4208,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "expected syntax",
+    "detail" : "printed expected VALUE at /0/totalSaleAmount",
     "fixture" : "aggregation/stages/group/groupByItemHaving",
-    "gap" : "SOURCE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
     "source" : {
       "commit" : "50a2fb0cc5a95528ce1853159b02828a353352ae",
@@ -4552,19 +4598,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "expected syntax",
-    "fixture" : "query/updates/mul/multiplyMixedNumericTypes",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "d220079dea743be8053d18f0f99325a455ccb6b6",
-    "source" : {
-      "commit" : "948002e14f1d94c10fb84b8fb833149a16531169",
-      "path" : "source/reference/operator/update/mul.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "expected syntax",
+    "detail" : "printed expected VALUE at /0/price",
     "fixture" : "query/updates/mul/multiplyTheValueOfAField",
-    "gap" : "SOURCE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "d220079dea743be8053d18f0f99325a455ccb6b6",
     "source" : {
       "commit" : "948002e14f1d94c10fb84b8fb833149a16531169",

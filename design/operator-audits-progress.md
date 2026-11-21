@@ -1959,3 +1959,24 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   group; the offset now needs a time (recapture unchanged). The doc's breakdown of the 11 blocked
   fixtures that did not retire was corrected.
 - Review round 2: nothing new.
+
+- PR #4538 (branch audits-date-constructors, base #4537) published.
+
+## Printed results (step 4 slice 9, 2026-11-21)
+
+- Branch audits-printed-results from #4538. Of the 14 expected blocks the document reader rejected,
+  7 are mongosh output (`Decimal128(...)`, `Timestamp({ t, i })`, `Long(...)`, comments) and 7 are
+  not results (3 bit diagrams, SQL, a malformed page, 2 elided plan-cache outputs).
+- An unreadable expected block is now read with the existing `SHELL_RESULTS` format, owned by a
+  `find` on the action's collection, and the fixture is checked with `PublishedComparison`
+  (Int32-or-Double for printed whole numbers, exact `Decimal128` text). No retype or correction
+  applies to printed results.
+- Two locks retire (`$tsSecond`, SHELL_SYNTAX; `$mul` mixed types, EXTRACTION). Three printed
+  results really differ (`Decimal128` values turned into numbers or rescaled), and two now show an
+  earlier difference in data or action.
+- Totals: 130 overrides, 104 unresolved; inventory 130 OVERRIDDEN, 104 PRESERVED_CURATED, 106
+  locked.
+- Review round 1 (independent agent): a `NUMERIC_TYPE` lock that only turned `4` into `4.0` in a
+  printed result would have passed, since printed whole numbers accept either type; fixtures filed
+  as `NUMERIC_TYPE` are now barred from the printed path (no current gap or retirement changes).
+- Review round 2: the guard applies only to a match, so a real printed difference keeps its gap; nothing new.

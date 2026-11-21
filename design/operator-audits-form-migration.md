@@ -13,9 +13,9 @@ Of the 77 `MORPHIA_FORM` examples, 66 carry no other category. 48 of those locks
 `NUMERIC_TYPE` examples, 24 carry no category besides `MORPHIA_FORM`; 17 of those are retired and
 7 stay with a gap. Of the 52 locked examples filed as `DOCS_ERROR` or `FIXTURE_CURATION` with no
 family outside these four, 35 are retired and 17 stay with a gap. The `EXTRACTION` and
-`SHELL_SYNTAX` locks need nothing declared: 28 of their 92 fixtures equal what the current pipeline
-extracts from the pinned page (see [Handled natively](#handled-natively)). In all, 128 locks are
-retired and 106 are kept with a gap; only the two untestable change-stream fixtures are outside the
+`SHELL_SYNTAX` locks need nothing declared: 30 of their 92 fixtures equal what the current pipeline
+extracts from the pinned page (see [Handled natively](#handled-natively)). In all, 130 locks are
+retired and 104 are kept with a gap; only the two untestable change-stream fixtures are outside the
 review. Seven of those retirements depend on [generated extracts](#generated-extracts), which the
 page reader now assembles from their YAML sources, and five on [shell dates](#shell-dates) whose
 omitted time or offset the shell defines.
@@ -219,6 +219,26 @@ results the page does not document (3), JavaScript variable bindings (2), the im
 `$fill` key order no rule covers, a duplicate key, an unsupported construct, a missing data file,
 and an action whose kind differs from the test's (below).
 
+## Printed results
+
+Some pages print results as mongosh prints them (`Decimal128("50")`, `Timestamp({ t: 1, i: 2 })`,
+`Long("1")`, comments), which the document reader cannot read. Such a block is now read with the
+shell normalizer's `SHELL_RESULTS` format and compared by what the printed text proves
+(`PublishedComparison`): a printed `4` is an Int32 or a Double, printed text a string, a printed
+`Decimal128` its exact text and scale. The fixture must satisfy that, not equal a guessed BSON value;
+printed results take no retype or correction, so any difference is a gap. Because a printed `4` cannot show
+whether it was an Int32 or a Double, a fixture whose lock is filed as `NUMERIC_TYPE` never retires
+this way: a match is a gap. The results are owned by a
+`find` on the action's collection, which certifies mongosh's default read profile for every action
+kind (an update's results are the collection read back).
+
+Two locks retire: `$tsSecond` ("updated the Timestamp format", only the spelling differs) and
+`$mul` on mixed numeric types ("parser extracts incorrectly", exact). Three printed results differ for
+real: `$group`'s `Decimal128` totals became numbers, `$mul` changed a `Decimal128` scale
+(`13.7375` to `13.7375000000000000`), and `$sortArray`'s `Decimal128("10.23")` became a double; no
+declaration retypes `Decimal128`. The other blocks are not results at all: bit diagrams (3), SQL, a
+page missing a comma and a quote, and plan-cache output elided with `...` or built with `+` (2).
+
 ## What is compared
 
 For each fixture, the legacy extractor reads the recorded page (with tracked includes spliced in as
@@ -269,14 +289,16 @@ migration retired it with the digest the legacy corpus recorded.
 
 `audits/catalog/form-review.json` lists every kept lock with its gap. By kind:
 
-- `SOURCE_UNSUPPORTED` (50): printed results the document reader cannot parse (14), JavaScript
+- `SOURCE_UNSUPPORTED` (43): expected blocks that are not results (7, see
+  [Printed results](#printed-results)), JavaScript
   variable bindings (9), constructors the strict shell normalizer rejects (4: an impossible date,
   two typed-value constructors and `Date()` as a function), other shell syntax or constructs, data
   blocks in another database, and expression examples without a collection.
-- `RESIDUAL_DIFFERENCE` (42): edits no declaration covers for the lock's categories, such as the
+- `RESIDUAL_DIFFERENCE` (47): edits no declaration covers for the lock's categories, such as the
   four `$regex` fixtures that lost documented runs of spaces, BSON `undefined` in two data files,
   form edits under form locks the rules do not cover, string results where the page prints match
-  documents, a documented action of another kind than the test runs, and data or expected files
+  documents, printed `Decimal128` results the fixture changed (3), a documented action of another
+  kind than the test runs, and data or expected files
   with rows the page does not document, which a correction may not replace wholesale.
 - `FIXTURE_UNSUPPORTED` (9): fixture files the legacy reader cannot parse, unsupported command
   options, extra data files, a data file the test does not load, and a test that runs no single
@@ -288,11 +310,11 @@ migration retired it with the digest the legacy corpus recorded.
 ## Next
 
 Test bodies are not compared: a bound test that writes data directly (`insert`, `getDs().save`,
-driver calls) is outside this check. None of the 128 retired fixtures' tests does today; recording
+driver calls) is outside this check. None of the 130 retired fixtures' tests does today; recording
 such writes in the repair inventory is a separate rule.
 
 The remaining families follow the same pattern. `EXTRACTION` and `SHELL_SYNTAX` need the native
 extractor; `NUMERIC_TYPE` needs typed overrides; `DOCS_ERROR` and `FIXTURE_CURATION` stay as reviewed
 corrections pinned to a source digest; those corrections are now in place. Generated include extracts are now
-assembled and shell dates read as the shell defines them. The largest remaining gaps are
-unparseable printed results and JavaScript variable bindings; each is a separate extension of the extraction or normalizer.
+assembled, shell dates read as the shell defines them and printed results compared by what they
+prove. The largest remaining source gap is JavaScript variable bindings; each is a separate extension of the extraction or normalizer.

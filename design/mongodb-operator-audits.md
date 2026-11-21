@@ -788,7 +788,7 @@ of all 556 legacy cases ([backport design](operator-audits-name-backport.md)).
 Step 4 starts with the [curated repair inventory](operator-audits-curated-repairs.md) and then
 retires 48 `MORPHIA_FORM` locks through declared equivalence rules, 17 `NUMERIC_TYPE` locks
 through declared number retypes, 35 `DOCS_ERROR`/`FIXTURE_CURATION` locks through reviewed value
-corrections and 28 `EXTRACTION`/`SHELL_SYNTAX` locks that the new pipeline handles natively
+corrections and 30 `EXTRACTION`/`SHELL_SYNTAX` locks that the new pipeline handles natively
 (generated Giza extracts included), each
 proven against the historical documentation the fixture came
 from ([form migration](operator-audits-form-migration.md)).
