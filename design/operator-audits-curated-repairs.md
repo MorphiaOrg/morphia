@@ -60,6 +60,11 @@ no test does that today.
   `skipDataCheck(true)`.
 - `CUSTOM` (2): handwritten assertions that bypass the helpers.
 
+Each test's extra collections are recorded by data file: `loadData("airports", 2)` loads
+`data2.json` into `airports` (11 tests). Only that literal form is read; a non-literal argument, a
+qualified call or a data file loaded twice fails the inventory. `data.json` always goes to the
+collection the action runs against.
+
 A `@Disabled` test executes nothing: 7 bound tests are disabled and report no paths. Another 26
 bound tests have empty bodies and also report none. They are bound, but they are not coverage.
 
@@ -70,6 +75,6 @@ where the lock describes the edit in shell or numeric terms.
 ## Next
 
 The `MORPHIA_FORM` family is migrated in [the form migration](operator-audits-form-migration.md):
-43 locks are retired as `OVERRIDDEN`, and the inventory now counts 193 locked examples. The other
+46 locks are retired as `OVERRIDDEN`, and the inventory now counts 190 locked examples. The other
 families follow one at a time, each expressed as a declared equivalence or override applied to the
 extracted scenario and proven against the preserved curated fixture before its lock is removed.

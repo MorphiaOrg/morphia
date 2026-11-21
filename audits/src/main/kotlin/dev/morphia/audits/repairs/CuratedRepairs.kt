@@ -91,6 +91,11 @@ data class CuratedExample(
     val helpers: List<String>,
     val options: List<OptionCall>,
     val assertions: List<AssertionPath>,
+    /**
+     * Extra collections the test loads, by data file: `loadData("airports", 2)` loads `data2.json`
+     * into `airports`. `data.json` always goes to the collection the action runs against.
+     */
+    val collections: Map<String, String> = emptyMap(),
 )
 
 data class CuratedRepairReport(
@@ -229,6 +234,7 @@ object CuratedRepairs {
                         helpers = body?.helpers ?: emptyList(),
                         options = options,
                         assertions = assertions,
+                        collections = body?.collections ?: emptyMap(),
                     )
                 }
             }
@@ -316,6 +322,7 @@ object CuratedRepairs {
         val empty: Boolean,
         val disabled: Boolean,
         val problems: List<String>,
+        val collections: Map<String, String>,
     )
 
     private fun parse(root: Path, types: List<String>): Map<Pair<String, String>, MethodFacts> {
@@ -383,17 +390,33 @@ object CuratedRepairs {
         val problems = mutableListOf<String>()
         val invoked = mutableListOf<String>()
         val options = mutableListOf<OptionCall>()
+        val collections = sortedMapOf<String, String>()
         object : TreeScanner<Unit, Unit>() {
                 override fun visitMethodInvocation(node: MethodInvocationTree, p: Unit?) {
                     when (val select = node.methodSelect) {
-                        is IdentifierTree ->
-                            select.name
-                                .toString()
-                                .takeIf { it in helperNames }
-                                ?.let { invoked += it }
+                        is IdentifierTree -> {
+                            val name = select.name.toString()
+                            if (name in helperNames) invoked += name
+                            if (name == "loadData") {
+                                val (collection, index) =
+                                    node.arguments
+                                        .map { (it as? LiteralTree)?.value }
+                                        .let {
+                                            (it.getOrNull(0) as? String) to
+                                                (it.getOrNull(1) as? Int)
+                                        }
+                                if (
+                                    node.arguments.size != 2 || collection == null || index == null
+                                ) {
+                                    problems += "Unsupported loadData call form: $node"
+                                } else if (collections.put("data$index.json", collection) != null) {
+                                    problems += "data$index.json is loaded more than once"
+                                }
+                            }
+                        }
                         is MemberSelectTree -> {
                             val name = select.identifier.toString()
-                            if (name in helperNames) {
+                            if (name in helperNames || name == "loadData") {
                                 // Only direct calls are understood; anything else would be misread.
                                 problems += "Unsupported helper call form: $select"
                             }
@@ -437,6 +460,7 @@ object CuratedRepairs {
             body.statements.isEmpty(),
             disabled,
             problems,
+            collections,
         )
     }
 

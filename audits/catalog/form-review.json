@@ -504,6 +504,108 @@
       "path" : "source/reference/operator/aggregation/zip.txt"
     }
   }, {
+    "fixture" : "aggregation/stages/graphLookup/acrossMultipleCollections",
+    "includes" : [ {
+      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
+      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
+    }, {
+      "blob" : "6beb75178564cf0b943050f7e6ef2d96165ce728",
+      "path" : "source/includes/fact-graphlookup-memory-restrictions.rst"
+    } ],
+    "justification" : null,
+    "lock" : "updated pipeline order\n",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "d00d3c58699ec5ad0505fdcab3026e35f522ce87",
+    "rules" : [ "NAMED_ARGUMENTS" ],
+    "source" : {
+      "commit" : "fbff8bd22e055259d67b394c854f128340571b1f",
+      "path" : "source/reference/operator/aggregation/graphLookup.txt"
+    }
+  }, {
+    "fixture" : "aggregation/stages/lookup/performAConciseCorrelatedSubqueryWithLookup",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "a6db8d865a30fa63796cb4e6d922f9f6ba8797e6",
+      "path" : "source/includes/lookup-from.rst"
+    }, {
+      "blob" : "fd70caec15ce236248000b806e1fdeb87f6cd487",
+      "path" : "source/includes/uncorrelated-subquery.rst"
+    }, {
+      "blob" : "83eabc44fb10dd9eb0adca3ecdb7ed56efb7e2b8",
+      "path" : "source/includes/fact-let-variable-access-note.rst"
+    }, {
+      "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
+      "path" : "source/includes/expr-operators-and-indexes.rst"
+    }, {
+      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
+      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
+    }, {
+      "blob" : "d71a97278c9c8c4c41a37c5c35461d5b43d59625",
+      "path" : "source/includes/fact-sbe-lookup-overview.rst"
+    } ],
+    "justification" : null,
+    "lock" : "rearrange the order",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f",
+    "rules" : [ "NAMED_ARGUMENTS" ],
+    "source" : {
+      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
+      "path" : "source/reference/operator/aggregation/lookup.txt"
+    }
+  }, {
+    "fixture" : "aggregation/stages/lookup/performMultipleJoinsAndACorrelatedSubqueryWithLookup",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "a6db8d865a30fa63796cb4e6d922f9f6ba8797e6",
+      "path" : "source/includes/lookup-from.rst"
+    }, {
+      "blob" : "fd70caec15ce236248000b806e1fdeb87f6cd487",
+      "path" : "source/includes/uncorrelated-subquery.rst"
+    }, {
+      "blob" : "83eabc44fb10dd9eb0adca3ecdb7ed56efb7e2b8",
+      "path" : "source/includes/fact-let-variable-access-note.rst"
+    }, {
+      "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
+      "path" : "source/includes/expr-operators-and-indexes.rst"
+    }, {
+      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
+      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
+    }, {
+      "blob" : "d71a97278c9c8c4c41a37c5c35461d5b43d59625",
+      "path" : "source/includes/fact-sbe-lookup-overview.rst"
+    } ],
+    "justification" : null,
+    "lock" : "reorder pipeline",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f",
+    "rules" : [ "PROJECT_ID_FIRST", "NAMED_ARGUMENTS" ],
+    "source" : {
+      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
+      "path" : "source/reference/operator/aggregation/lookup.txt"
+    }
+  }, {
     "fixture" : "aggregation/stages/match/performACount",
     "includes" : [ {
       "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
@@ -942,36 +1044,9 @@
       "path" : "source/reference/operator/aggregation/geoNear.txt"
     }
   }, {
-    "detail" : "data for several collections",
-    "fixture" : "aggregation/stages/graphLookup/acrossMultipleCollections",
-    "gap" : "FIXTURE_UNSUPPORTED",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "source" : {
-      "commit" : "fbff8bd22e055259d67b394c854f128340571b1f",
-      "path" : "source/reference/operator/aggregation/graphLookup.txt"
-    }
-  }, {
-    "detail" : "data for several collections",
-    "fixture" : "aggregation/stages/lookup/performAConciseCorrelatedSubqueryWithLookup",
-    "gap" : "FIXTURE_UNSUPPORTED",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "source" : {
-      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
-      "path" : "source/reference/operator/aggregation/lookup.txt"
-    }
-  }, {
     "detail" : "CONSTRUCTOR_FORMAT",
     "fixture" : "aggregation/stages/lookup/performAnUncorrelatedSubqueryWithLookup",
     "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "source" : {
-      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
-      "path" : "source/reference/operator/aggregation/lookup.txt"
-    }
-  }, {
-    "detail" : "data for several collections",
-    "fixture" : "aggregation/stages/lookup/performMultipleJoinsAndACorrelatedSubqueryWithLookup",
-    "gap" : "FIXTURE_UNSUPPORTED",
     "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
     "source" : {
       "commit" : "c360d9dc787de55021969f368a0860be6008f706",

@@ -31,6 +31,7 @@
   "examples" : [ {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/abs/absExpressionOperator",
@@ -42,6 +43,7 @@
   }, {
     "assertions" : [ "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/accumulator/useAccumulatorToImplementTheAvgOperator",
@@ -59,6 +61,7 @@
   }, {
     "assertions" : [ "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/accumulator/useInitArgsToVaryTheInitialStateByGroup",
@@ -80,6 +83,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/acos/inverseCosineOfValueInDegrees",
@@ -91,6 +95,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/acos/inverseCosineOfValueInRadians",
@@ -102,6 +107,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/acosh/inverseHyperbolicCosineInDegrees",
@@ -117,6 +123,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/acosh/inverseHyperbolicCosineInRadians",
@@ -128,6 +135,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/add/addNumbers",
@@ -139,6 +147,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "SHELL_SYNTAX" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/add/performAdditionOnADate",
@@ -154,6 +163,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/addToSet/useInGroupStage",
@@ -168,6 +178,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/addToSet/useInSetWindowFieldsStage",
@@ -186,6 +197,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/allElementsTrue/allElementsTrueExpressionOperator",
@@ -204,6 +216,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/and/andExpressionOperator",
@@ -215,6 +228,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/anyElementTrue/anyElementTrueExpressionOperator",
@@ -230,6 +244,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/arrayElemAt/arrayElemAtExpressionOperator",
@@ -241,6 +256,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/arrayToObject/arrayToObjectExample",
@@ -252,6 +268,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/arrayToObject/objectToArrayArrayToObjectExample",
@@ -263,6 +280,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/asin/inverseSineOfValueInDegrees",
@@ -278,6 +296,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/asin/inverseSineOfValueInRadians",
@@ -289,6 +308,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/asinh/inverseHyperbolicSineInDegrees",
@@ -300,6 +320,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/asinh/inverseHyperbolicSineInRadians",
@@ -315,6 +336,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/atan/inverseTangentOfValueInDegrees",
@@ -326,6 +348,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/atan/inverseTangentOfValueInRadians",
@@ -337,6 +360,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/atan2/inverseTangentOfValueInDegrees",
@@ -352,6 +376,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/atan2/inverseTangentOfValueInRadians",
@@ -363,6 +388,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/atanh/inverseHyperbolicTangentInDegrees",
@@ -374,6 +400,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/atanh/inverseHyperbolicTangentInRadians",
@@ -385,6 +412,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/avg/useInGroupStage",
@@ -399,6 +427,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/avg/useInProjectStage",
@@ -413,6 +442,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/avg/useInSetWindowFieldsStage",
@@ -424,6 +454,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/binarySize/binarySizeExpressionOperator",
@@ -439,6 +470,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/binarySize/findLargestBinaryData",
@@ -454,6 +486,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/bitAnd/bitwiseAndWithALongAndInteger",
@@ -468,6 +501,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/bitAnd/bitwiseAndWithTwoIntegers",
@@ -482,6 +516,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/bitNot/bitNotExpressionOperator",
@@ -496,6 +531,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : true,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/bitOr/bitwiseOrWithALongAndInteger",
@@ -516,6 +552,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/bitOr/bitwiseOrWithTwoIntegers",
@@ -530,6 +567,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/bitXor/bitXorExpressionOperator",
@@ -544,6 +582,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/bottom/findTheBottomScore",
@@ -562,6 +601,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/bottom/findingTheBottomScoreAcrossMultipleGames",
@@ -576,6 +616,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/bottomN/computingNBasedOnTheGroupKeyForGroup",
@@ -590,6 +631,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/bottomN/findTheThreeLowestScores",
@@ -604,6 +646,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/bottomN/findingTheThreeLowestScoreDocumentsAcrossMultipleGames",
@@ -618,6 +661,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/bsonSize/returnCombinedSizeOfAllDocumentsInACollection",
@@ -633,6 +677,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR", "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/bsonSize/returnDocumentWithLargestSpecifiedField",
@@ -648,6 +693,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/bsonSize/returnSizesOfDocuments",
@@ -663,6 +709,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/ceil/ceilExpressionOperator",
@@ -674,6 +721,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/cmp/cmpExpressionOperator",
@@ -685,6 +733,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/concat/concatExpressionOperator",
@@ -696,6 +745,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/concatArrays/concatArraysAccumulatorOperator",
@@ -707,6 +757,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/cond/condExpressionOperator",
@@ -718,6 +769,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "SHELL_SYNTAX" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/convert/convertExpressionOperator",
@@ -733,6 +785,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/cos/cosineOfValueInDegrees",
@@ -744,6 +797,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/cos/cosineOfValueInRadians",
@@ -755,6 +809,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/cosh/hyperbolicCosineInDegrees",
@@ -773,6 +828,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/cosh/hyperbolicCosineInRadians",
@@ -787,6 +843,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/count/useInGroupStage",
@@ -801,6 +858,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/count/useInSetWindowFieldsStage",
@@ -815,6 +873,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/covariancePop/covariancePopExpressionOperator",
@@ -826,6 +885,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/covarianceSamp/covarianceSampExpressionOperator",
@@ -837,6 +897,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "FIXTURE_CURATION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/dateAdd/addAFutureDate",
@@ -855,6 +916,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/dateAdd/adjustForDaylightSavingsTime",
@@ -870,6 +932,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "FIXTURE_CURATION", "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/dateAdd/filterOnADateRange",
@@ -885,6 +948,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/dateDiff/elapsedTime",
@@ -896,6 +960,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION", "FIXTURE_CURATION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/dateDiff/resultPrecision",
@@ -911,6 +976,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/dateDiff/weeksPerMonth",
@@ -926,6 +992,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "FIXTURE_CURATION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/dateFromParts/dateFromPartsExpressionOperator",
@@ -941,6 +1008,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/dateFromString/convertingDates",
@@ -952,6 +1020,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/dateFromString/onError",
@@ -963,6 +1032,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "FIXTURE_CURATION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/dateFromString/onNull",
@@ -978,6 +1048,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/dateSubtract/adjustForDaylightSavingsTime",
@@ -993,6 +1064,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/dateSubtract/filterByRelativeDates",
@@ -1004,6 +1076,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "FIXTURE_CURATION", "SHELL_SYNTAX" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/dateSubtract/subtractAFixedAmount",
@@ -1025,6 +1098,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/dateToParts/dateToPartsExpressionOperator",
@@ -1040,6 +1114,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/dateToString/dateToStringExpressionOperator",
@@ -1054,6 +1129,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/dateTrunc/truncateOrderDatesAndObtainQuantitySumInAGroupPipelineStage",
@@ -1068,6 +1144,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/dateTrunc/truncateOrderDatesInAProjectPipelineStage",
@@ -1083,6 +1160,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/dayOfMonth/dayOfMonthExpressionOperator",
@@ -1094,6 +1172,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/dayOfWeek/dayOfWeekExpressionOperator",
@@ -1105,6 +1184,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/dayOfYear/dayOfYearExpressionOperator",
@@ -1116,6 +1196,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/degreesToRadians/degreesToRadiansExpressionOperator",
@@ -1134,6 +1215,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/denseRank/denseRankForDuplicateNullAndMissingValues",
@@ -1152,6 +1234,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/denseRank/denseRankPartitionsByADateField",
@@ -1163,6 +1246,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/denseRank/denseRankPartitionsByAnIntegerField",
@@ -1174,6 +1258,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/derivative/derivativeWindowFunctionExpressionOperator",
@@ -1188,6 +1273,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/divide/divideExpressionOperator",
@@ -1199,6 +1285,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/documentNumber/documentNumberForDuplicateNullAndMissingValues",
@@ -1210,6 +1297,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/documentNumber/documentNumberForEachState",
@@ -1221,6 +1309,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/eq/eqExpressionOperator",
@@ -1232,6 +1321,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "NUMERIC_TYPE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/exp/expExpressionOperator",
@@ -1247,6 +1337,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/expMovingAvg/exponentialMovingAverageUsingAlpha",
@@ -1261,6 +1352,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/expMovingAvg/exponentialMovingAverageUsingN",
@@ -1275,6 +1367,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/filter/filterBasedOnRegularExpressionMatch",
@@ -1286,6 +1379,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/filter/filterBasedOnStringEqualityMatch",
@@ -1297,6 +1391,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/filter/filterExpressionOperator",
@@ -1308,6 +1403,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/filter/limitGreaterThanPossibleMatches",
@@ -1319,6 +1415,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/filter/useTheLimitField",
@@ -1330,6 +1427,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/first/missingData",
@@ -1344,6 +1442,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/first/useInGroupStage",
@@ -1358,6 +1457,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/first/useInSetWindowFieldsStage",
@@ -1369,6 +1469,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/firstN/computingNBasedOnTheGroupKeyForGroup",
@@ -1383,6 +1484,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/firstN/findTheFirstThreePlayerScoresForASingleGame",
@@ -1397,6 +1499,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/firstN/findingTheFirstThreePlayerScoresAcrossMultipleGames",
@@ -1411,6 +1514,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : true,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/firstN/usingFirstNAsAnAggregationExpression",
@@ -1422,6 +1526,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/firstN/usingSortWithFirstN",
@@ -1436,6 +1541,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/floor/floorExpressionOperator",
@@ -1447,6 +1553,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/function/alternativeToWhere",
@@ -1458,6 +1565,7 @@
   }, {
     "assertions" : [ "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/function/usageExample",
@@ -1476,6 +1584,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/getField/queryAFieldInASubDocument",
@@ -1487,6 +1596,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/getField/queryFieldsThatContainPeriods",
@@ -1498,6 +1608,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/getField/queryFieldsThatStartWithADollarSign",
@@ -1509,6 +1620,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/gt/gtExpressionOperator",
@@ -1520,6 +1632,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/gte/gteExpressionOperator",
@@ -1531,6 +1644,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/hour/hourExpressionOperator",
@@ -1546,6 +1660,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/ifNull/multipleInputExpressions",
@@ -1557,6 +1672,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/ifNull/singleInputExpression",
@@ -1568,6 +1684,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/in/inExpressionOperator",
@@ -1579,6 +1696,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/indexOfArray/indexOfArrayExpressionOperator",
@@ -1590,6 +1708,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "NUMERIC_TYPE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/indexOfBytes/indexOfBytesExpressionOperator",
@@ -1608,6 +1727,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "NUMERIC_TYPE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/indexOfCP/indexOfCpExpressionOperator",
@@ -1626,6 +1746,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/integral/integralExpressionOperator",
@@ -1640,6 +1761,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/isArray/isArrayExpressionOperator",
@@ -1651,6 +1773,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "NUMERIC_TYPE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/isNumber/conditionallyModifyFieldsUsingIsNumber",
@@ -1669,6 +1792,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR", "NUMERIC_TYPE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/isNumber/useIsNumberToCheckIfAFieldIsNumeric",
@@ -1684,6 +1808,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/isoDayOfWeek/isoDayOfWeekExpressionOperator",
@@ -1695,6 +1820,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/isoWeek/isoWeekExpressionOperator",
@@ -1706,6 +1832,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/isoWeekYear/isoWeekYearExpressionOperator",
@@ -1717,6 +1844,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/last/useInGroupStage",
@@ -1731,6 +1859,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/last/useInSetWindowFieldsStage",
@@ -1742,6 +1871,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/lastN/computingNBasedOnTheGroupKeyForGroup",
@@ -1756,6 +1886,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/lastN/findTheLastThreePlayerScoresForASingleGame",
@@ -1770,6 +1901,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/lastN/findingTheLastThreePlayerScoresAcrossMultipleGames",
@@ -1784,6 +1916,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/lastN/usingLastNAsAnAggregationExpression",
@@ -1799,6 +1932,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/lastN/usingSortWithLastN",
@@ -1813,6 +1947,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/let/letExpressionOperator",
@@ -1824,6 +1959,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "NUMERIC_TYPE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/linearFill/fillMissingValuesWithLinearInterpolation",
@@ -1845,6 +1981,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "NUMERIC_TYPE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/linearFill/useMultipleFillMethodsInASingleStage",
@@ -1866,6 +2003,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/literal/projectANewFieldWithValue1",
@@ -1877,6 +2015,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/literal/treatAsALiteral",
@@ -1888,6 +2027,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/ln/lnExpressionOperator",
@@ -1899,6 +2039,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/locf/fillMissingValuesWithTheLastObservedValue",
@@ -1916,6 +2057,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/locf/useMultipleFillMethodsInASingleStage",
@@ -1930,6 +2072,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/log/logExpressionOperator",
@@ -1941,6 +2084,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/log10/log10ExpressionOperator",
@@ -1952,6 +2096,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/lt/ltExpressionOperator",
@@ -1963,6 +2108,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/lte/lteExpressionOperator",
@@ -1974,6 +2120,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/ltrim/ltrimExpressionOperator",
@@ -1985,6 +2132,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/map/addToEachElementOfAnArray",
@@ -1999,6 +2147,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/map/convertCelsiusTemperaturesToFahrenheit",
@@ -2017,6 +2166,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/map/truncateEachArrayElement",
@@ -2031,6 +2181,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/max/useInGroupStage",
@@ -2045,6 +2196,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/max/useInProjectStage",
@@ -2056,6 +2208,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/max/useInSetWindowFieldsStage",
@@ -2071,6 +2224,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/maxN/computingNBasedOnTheGroupKeyForGroup",
@@ -2085,6 +2239,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/maxN/findTheMaximumThreeScoresForASingleGame",
@@ -2099,6 +2254,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/maxN/findingTheMaximumThreeScoresAcrossMultipleGames",
@@ -2113,6 +2269,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/median/useMedianAsAnAccumulator",
@@ -2130,6 +2287,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/median/useMedianInAProjectStage",
@@ -2144,6 +2302,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/median/useMedianInASetWindowFieldStage",
@@ -2158,6 +2317,9 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : {
+      "data2.json" : "items"
+    },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/mergeObjects/mergeObjects",
@@ -2169,6 +2331,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/mergeObjects/mergeObjectsAsAnAccumulator",
@@ -2183,6 +2346,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/meta/metaIndexKeyAggregation",
@@ -2197,6 +2361,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/meta/metaIndexKeyAggregationWithoutSupportingIndex",
@@ -2211,6 +2376,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/meta/metaIndexKeyFindAndProject",
@@ -2231,6 +2397,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/meta/metaIndexKeyFindAndProjectWithoutSupportingIndex",
@@ -2251,6 +2418,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "NUMERIC_TYPE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/meta/metaTextScoreAggregation",
@@ -2269,6 +2437,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "SHELL_SYNTAX" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/meta/metaTextScoreFindAndProject",
@@ -2290,6 +2459,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/millisecond/millisecondExpressionOperator",
@@ -2301,6 +2471,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/min/useInGroupStage",
@@ -2315,6 +2486,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/min/useInProjectStage",
@@ -2326,6 +2498,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/min/useInSetWindowFieldsStage",
@@ -2341,6 +2514,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/minN/computingNBasedOnTheGroupKeyForGroup",
@@ -2355,6 +2529,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/minN/findTheMinimumThreeScoresForASingleGame",
@@ -2369,6 +2544,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/minN/findingTheMinimumThreeDocumentsAcrossMultipleGames",
@@ -2383,6 +2559,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/minute/minuteExpressionOperator",
@@ -2394,6 +2571,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/mod/modExpressionOperator",
@@ -2405,6 +2583,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/mod/negativeDividend",
@@ -2420,6 +2599,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/month/monthExpressionOperator",
@@ -2431,6 +2611,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/multiply/multiplyExpressionOperator",
@@ -2442,6 +2623,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/ne/neExpressionOperator",
@@ -2453,6 +2635,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/not/notExpressionOperator",
@@ -2464,6 +2647,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/objectToArray/objectToArrayArrayToObjectExample",
@@ -2475,6 +2659,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/objectToArray/objectToArrayExample",
@@ -2486,6 +2671,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/objectToArray/objectToArrayToSumNestedFields",
@@ -2500,6 +2686,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/or/orExpressionOperator",
@@ -2511,6 +2698,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "NUMERIC_TYPE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/percentile/calculateASingleValueAsAnAccumulator",
@@ -2532,6 +2720,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "NUMERIC_TYPE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/percentile/calculateMultipleValuesAsAnAccumulator",
@@ -2553,6 +2742,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "NUMERIC_TYPE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/percentile/usePercentileInAProjectStage",
@@ -2574,6 +2764,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "NUMERIC_TYPE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/percentile/usePercentileInASetWindowFieldStage",
@@ -2595,6 +2786,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/pow/powExpressionOperator",
@@ -2606,6 +2798,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/push/useInGroupStage",
@@ -2620,6 +2813,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/push/useInSetWindowFieldsStage",
@@ -2631,6 +2825,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/radiansToDegrees/radiansToDegreesExpressionOperator",
@@ -2649,6 +2844,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/rand/generateRandomDataPoints",
@@ -2669,6 +2865,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/rand/selectRandomItemsFromACollection",
@@ -2686,6 +2883,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/range/rangeExpressionOperator",
@@ -2701,6 +2899,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/rank/rankPartitionsByADateField",
@@ -2712,6 +2911,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/rank/rankPartitionsByAnIntegerField",
@@ -2723,6 +2923,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/rank/rankPartitionsContainingDuplicateValuesNullsOrMissingData",
@@ -2744,6 +2945,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/reduce/arrayConcatenation",
@@ -2762,6 +2964,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/reduce/multiplication",
@@ -2780,6 +2983,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/reduce/stringConcatenation",
@@ -2791,6 +2995,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/regexFind/applyRegexFindToStringElementsOfAnArray",
@@ -2806,6 +3011,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/regexFind/regexFindAndItsOptions",
@@ -2824,6 +3030,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/regexFind/useCapturedGroupingsToParseUserName",
@@ -2839,6 +3046,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR", "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/regexFind/useRegexFindToParseEmailFromString",
@@ -2854,6 +3062,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/regexFindAll/regexFindAllAndItsOptions",
@@ -2872,6 +3081,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION", "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/regexFindAll/useCapturedGroupingsToParseUserName",
@@ -2887,6 +3097,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/regexFindAll/useRegexFindAllToParseEmailFromString",
@@ -2902,6 +3113,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/regexMatch/regexMatchAndItsOptions",
@@ -2920,6 +3132,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR", "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/regexMatch/useRegexMatchToCheckEmailAddress",
@@ -2935,6 +3148,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/replaceAll/replaceAllExpressionOperator",
@@ -2946,6 +3160,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/replaceOne/replaceOneExpressionOperator",
@@ -2957,6 +3172,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/reverseArray/reverseArrayExpressionOperator",
@@ -2968,6 +3184,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/round/roundExpressionOperator",
@@ -2983,6 +3200,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/rtrim/rtrimExpressionOperator",
@@ -2994,6 +3212,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/sampleRate/sampleRateExpressionOperator",
@@ -3008,6 +3227,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/second/secondExpressionOperator",
@@ -3019,6 +3239,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/setDifference/setDifferenceExpressionOperator",
@@ -3033,6 +3254,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/setEquals/setEqualsExpressionOperator",
@@ -3044,6 +3266,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/setField/addFieldsThatContainPeriods",
@@ -3055,6 +3278,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/setField/addFieldsThatStartWithADollarSign",
@@ -3066,6 +3290,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/setField/removeFieldsThatContainPeriods",
@@ -3077,6 +3302,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/setField/removeFieldsThatStartWithADollarSign",
@@ -3092,6 +3318,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/setField/updateFieldsThatContainPeriods",
@@ -3103,6 +3330,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/setField/updateFieldsThatStartWithADollarSign",
@@ -3114,6 +3342,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/setIntersection/elementsArrayExample",
@@ -3128,6 +3357,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/setIntersection/retrieveDocumentsForRolesGrantedToTheCurrentUser",
@@ -3139,6 +3369,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR", "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/setIsSubset/setIsSubsetExpressionOperator",
@@ -3157,6 +3388,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/setUnion/setUnionAccumulatorOperator",
@@ -3171,6 +3403,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/shift/shiftUsingANegativeInteger",
@@ -3182,6 +3415,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/shift/shiftUsingAPositiveInteger",
@@ -3193,6 +3427,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/sin/sineOfValueInDegrees",
@@ -3204,6 +3439,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/sin/sineOfValueInRadians",
@@ -3215,6 +3451,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/sinh/hyperbolicSineOfValueInDegrees",
@@ -3229,6 +3466,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/sinh/hyperbolicSineOfValueInRadians",
@@ -3240,6 +3478,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/size/sizeExpressionOperator",
@@ -3251,6 +3490,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/slice/sliceExpressionOperator",
@@ -3262,6 +3502,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/sortArray/sortAnArrayOfIntegers",
@@ -3277,6 +3518,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/sortArray/sortOnAField",
@@ -3288,6 +3530,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/sortArray/sortOnASubfield",
@@ -3299,6 +3542,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/sortArray/sortOnMixedTypeFields",
@@ -3317,6 +3561,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/sortArray/sortOnMultipleFields",
@@ -3332,6 +3577,7 @@
   }, {
     "assertions" : [ "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/split/splitExpressionOperator",
@@ -3346,6 +3592,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/sqrt/sqrtExpressionOperator",
@@ -3357,6 +3604,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/stdDevPop/useInGroupStage",
@@ -3371,6 +3619,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/stdDevPop/useInProjectStage",
@@ -3382,6 +3631,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/stdDevPop/useInSetWindowFieldsStage",
@@ -3396,6 +3646,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR", "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/stdDevSamp/useInGroupStage",
@@ -3411,6 +3662,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/stdDevSamp/useInSetWindowFieldsStage",
@@ -3422,6 +3674,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/strLenBytes/singleByteAndMultibyteCharacterSet",
@@ -3433,6 +3686,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/strLenCP/singleByteAndMultibyteCharacterSet",
@@ -3444,6 +3698,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/strcasecmp/strcasecmpExpressionOperator",
@@ -3455,6 +3710,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/substrBytes/singleByteAndMultibyteCharacterSet",
@@ -3466,6 +3722,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/substrBytes/singleByteCharacterSet",
@@ -3477,6 +3734,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/substrCP/singleByteAndMultibyteCharacterSet",
@@ -3488,6 +3746,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/substrCP/singleByteCharacterSet",
@@ -3499,6 +3758,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "SHELL_SYNTAX" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/subtract/subtractMillisecondsFromADate",
@@ -3514,6 +3774,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/subtract/subtractNumbers",
@@ -3525,6 +3786,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/subtract/subtractTwoDates",
@@ -3539,6 +3801,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/sum/useInGroupStage",
@@ -3557,6 +3820,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/sum/useInProjectStage",
@@ -3568,6 +3832,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/sum/useInSetWindowFieldsStage",
@@ -3579,6 +3844,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/switch/switchAggregationExpressionOperator",
@@ -3590,6 +3856,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/tan/tangentOfValueInDegrees",
@@ -3605,6 +3872,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/tan/tangentOfValueInRadians",
@@ -3616,6 +3884,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/tanh/hyperbolicTangentInDegrees",
@@ -3630,6 +3899,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/tanh/hyperbolicTangentInRadians",
@@ -3641,6 +3911,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "SHELL_SYNTAX" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/toBool/toBoolExpressionOperator",
@@ -3656,6 +3927,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "SHELL_SYNTAX" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/toDate/toDateExpressionOperator",
@@ -3671,6 +3943,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "SHELL_SYNTAX" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/toDecimal/toDecimalExpressionOperator",
@@ -3686,6 +3959,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "SHELL_SYNTAX" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/toDouble/toDoubleExpressionOperator",
@@ -3701,6 +3975,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "SHELL_SYNTAX" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/toInt/toIntExpressionOperator",
@@ -3716,6 +3991,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "SHELL_SYNTAX" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/toLong/toLongExpressionOperator",
@@ -3731,6 +4007,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/toLower/toLowerExpressionOperator",
@@ -3742,6 +4019,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "SHELL_SYNTAX" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/toObjectId/toObjectIdExpressionOperator",
@@ -3757,6 +4035,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "SHELL_SYNTAX" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/toString/toStringExpressionOperator",
@@ -3772,6 +4051,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "FIXTURE_CURATION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/toUUID/toUuidExpressionOperator",
@@ -3790,6 +4070,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/toUpper/toUpperExpressionOperator",
@@ -3801,6 +4082,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/top/findTheTopScore",
@@ -3819,6 +4101,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/top/findTheTopScoreAcrossMultipleGames",
@@ -3837,6 +4120,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/topN/computingNBasedOnTheGroupKeyForGroup",
@@ -3851,6 +4135,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/topN/findTheThreeHighestScores",
@@ -3865,6 +4150,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/topN/findingTheThreeHighestScoreDocumentsAcrossMultipleGames",
@@ -3879,6 +4165,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/trim/trimExpressionOperator",
@@ -3893,6 +4180,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/trunc/truncExpressionOperator",
@@ -3908,6 +4196,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "SHELL_SYNTAX" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/tsIncrement/obtainTheIncrementingOrdinalFromATimestampField",
@@ -3923,6 +4212,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ "UNTESTABLE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "NOT_EXECUTED",
     "fixture" : "aggregation/expressions/tsIncrement/useTsIncrementInAChangeStreamCursorToMonitorCollectionChanges",
@@ -3938,6 +4228,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "SHELL_SYNTAX" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/tsSecond/obtainTheNumberOfSecondsFromATimestampField",
@@ -3953,6 +4244,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ "UNTESTABLE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "NOT_EXECUTED",
     "fixture" : "aggregation/expressions/tsSecond/useTsSecondInAChangeStreamCursorToMonitorCollectionChanges",
@@ -3968,6 +4260,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/type/typeExpressionOperator",
@@ -3986,6 +4279,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/unsetField/removeASubfield",
@@ -3997,6 +4291,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/unsetField/removeFieldsThatContainPeriods",
@@ -4008,6 +4303,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/unsetField/removeFieldsThatStartWithADollarSign",
@@ -4019,6 +4315,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/week/weekExpressionOperator",
@@ -4030,6 +4327,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/expressions/year/yearExpressionOperator",
@@ -4041,6 +4339,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/expressions/zip/filteringAndPreservingIndexes",
@@ -4056,6 +4355,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/expressions/zip/matrixTransposition",
@@ -4067,6 +4367,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/addFields/addElementToAnArray",
@@ -4078,6 +4379,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/addFields/addingFieldsToAnEmbeddedDocument",
@@ -4089,6 +4391,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/addFields/overwritingAnExistingField",
@@ -4107,6 +4410,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/addFields/removeFields",
@@ -4121,6 +4425,7 @@
   }, {
     "assertions" : [ "CUSTOM" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/addFields/usingTwoAddFieldsStages",
@@ -4132,6 +4437,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/bucket/bucketByYearAndFilterByBucketResults",
@@ -4147,6 +4453,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/bucket/useBucketWithFacetToBucketByMultipleFields",
@@ -4158,6 +4465,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/bucketAuto/multiFacetedAggregation",
@@ -4172,6 +4480,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/bucketAuto/multiFacetedAggregationAsPipeline",
@@ -4186,6 +4495,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/bucketAuto/singleFacetAggregation",
@@ -4201,6 +4511,7 @@
   }, {
     "assertions" : [ "CUSTOM" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/changeStream/changeStream",
@@ -4212,6 +4523,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/count/countAggregationStage",
@@ -4223,6 +4535,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/currentOp/inactiveSessionsReplicaSet",
@@ -4237,6 +4550,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/currentOp/inactiveSessionsShardedCluster",
@@ -4251,6 +4565,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/currentOp/inactiveSessionsShardedClusterLocalOpsTrue",
@@ -4265,6 +4580,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/currentOp/sampledQueriesReplicaSet",
@@ -4279,6 +4595,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/currentOp/sampledQueriesShardedClusterMongodShardsvr",
@@ -4293,6 +4610,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/currentOp/sampledQueriesShardedClusterMongos",
@@ -4307,6 +4625,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/densify/densifictionWithPartitions",
@@ -4328,6 +4647,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/densify/densifyTimeSeriesData",
@@ -4346,6 +4666,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/documents/testAPipelineStage",
@@ -4364,6 +4685,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/documents/useADocumentsStageInALookupStage",
@@ -4378,6 +4700,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/facet/facetAggregationStage",
@@ -4396,6 +4719,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/fill/fillDataForDistinctPartitions",
@@ -4414,6 +4738,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/fill/fillMissingFieldValuesBasedOnTheLastObservedValue",
@@ -4428,6 +4753,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/fill/fillMissingFieldValuesWithAConstantValue",
@@ -4442,6 +4768,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/fill/fillMissingFieldValuesWithLinearInterpolation",
@@ -4456,6 +4783,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/fill/indicateIfAFieldWasPopulatedUsingFill",
@@ -4470,6 +4798,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "FIXTURE_CURATION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/fill/interpolateIdenticalValuesInDifferentPartitions",
@@ -4488,6 +4817,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/geoNear/geoNearWithBoundLetOption",
@@ -4512,6 +4842,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ "FIXTURE_CURATION", "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/geoNear/geoNearWithTheLetOption",
@@ -4527,6 +4858,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/geoNear/maximumDistance",
@@ -4548,6 +4880,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/geoNear/minimumDistance",
@@ -4559,6 +4892,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/geoNear/specifyWhichGeospatialIndexToUse",
@@ -4579,15 +4913,14 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : {
+      "data2.json" : "airports"
+    },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/graphLookup/acrossMultipleCollections",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "837a91236817cbc098b8d616cb3ef2e055d7ba25a14e79ec7a9e509765c910b1",
-      "text" : "updated pipeline order\n"
-    } ],
+    "markers" : [ ],
     "method" : "testAcrossMultipleCollections",
     "options" : [ {
       "argument" : "false",
@@ -4597,6 +4930,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "FIXTURE_CURATION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/graphLookup/withAQueryFilter",
@@ -4615,6 +4949,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "FIXTURE_CURATION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/graphLookup/withinASingleCollection",
@@ -4636,6 +4971,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "SHELL_SYNTAX" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/group/calculateCountSumAndAverage",
@@ -4651,6 +4987,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "SHELL_SYNTAX" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/group/countTheNumberOfDocumentsInACollection",
@@ -4666,6 +5003,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "SHELL_SYNTAX" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/group/groupByItemHaving",
@@ -4684,6 +5022,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/group/pivotData",
@@ -4702,6 +5041,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "SHELL_SYNTAX" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/group/retrieveDistinctValues",
@@ -4720,6 +5060,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/indexStats/indexStatsAggregationStage",
@@ -4738,6 +5079,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/limit/limitAggregationStage",
@@ -4752,6 +5094,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : true,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/listClusterCatalog/balancingConfiguration",
@@ -4763,6 +5106,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : true,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/listClusterCatalog/listInformationFromAllCollections",
@@ -4774,6 +5118,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/lookup/namespacesInSubpipelines",
@@ -4785,21 +5130,23 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : {
+      "data2.json" : "restaurants"
+    },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/lookup/performAConciseCorrelatedSubqueryWithLookup",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "75ee098f441675901521feb8eb890ec763ede2c396181d1b24fdbfc226285754",
-      "text" : "rearrange the order"
-    } ],
+    "markers" : [ ],
     "method" : "testPerformAConciseCorrelatedSubqueryWithLookup",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.stages.TestLookup"
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "FIXTURE_CURATION", "MORPHIA_FORM" ],
+    "collections" : {
+      "data2.json" : "inventory"
+    },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/lookup/performASingleEqualityJoinWithLookup",
@@ -4815,6 +5162,9 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : {
+      "data2.json" : "holidays"
+    },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/lookup/performAnUncorrelatedSubqueryWithLookup",
@@ -4830,21 +5180,23 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : {
+      "data2.json" : "warehouses"
+    },
     "disabled" : false,
-    "disposition" : "PRESERVED_CURATED",
+    "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/lookup/performMultipleJoinsAndACorrelatedSubqueryWithLookup",
     "helpers" : [ "testPipeline" ],
-    "markers" : [ {
-      "name" : "lock",
-      "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
-      "text" : "reorder pipeline"
-    } ],
+    "markers" : [ ],
     "method" : "testPerformMultipleJoinsAndACorrelatedSubqueryWithLookup",
     "options" : [ ],
     "type" : "dev.morphia.test.aggregation.stages.TestLookup"
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "FIXTURE_CURATION", "MORPHIA_FORM" ],
+    "collections" : {
+      "data2.json" : "members"
+    },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/lookup/useLookupWithAnArray",
@@ -4860,6 +5212,9 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "FIXTURE_CURATION", "MORPHIA_FORM" ],
+    "collections" : {
+      "data2.json" : "items"
+    },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/lookup/useLookupWithMergeObjects",
@@ -4875,6 +5230,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/match/equalityMatch",
@@ -4890,6 +5246,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/match/performACount",
@@ -4907,6 +5264,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/merge/mergeResultsFromMultipleCollections",
@@ -4921,6 +5279,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/merge/onDemandMaterializedViewInitialCreation",
@@ -4939,6 +5298,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/merge/onDemandMaterializedViewUpdateReplaceData",
@@ -4953,6 +5313,10 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ "EXTRACTION", "SHELL_SYNTAX" ],
+    "collections" : {
+      "data1.json" : "orgArchive",
+      "data2.json" : "salaries"
+    },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/merge/onlyInsertNewData",
@@ -4974,6 +5338,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/merge/useThePipelineToCustomizeTheMerge",
@@ -4992,6 +5357,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/merge/useVariablesToCustomizeTheMergeAggregateCommand",
@@ -5003,6 +5369,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/merge/useVariablesToCustomizeTheMergeMergeAndAggregate",
@@ -5014,6 +5381,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/merge/useVariablesToCustomizeTheMergeMergeStage",
@@ -5025,6 +5393,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/out/outputToADifferentDatabase",
@@ -5039,6 +5408,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/out/outputToSameDatabase",
@@ -5057,6 +5427,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/planCacheStats/findCacheEntryDetailsForAPlanCacheShapeHash",
@@ -5071,6 +5442,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ "SHELL_SYNTAX" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/planCacheStats/findCacheEntryDetailsForAQueryHash",
@@ -5089,6 +5461,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ "SHELL_SYNTAX" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/planCacheStats/returnInformationForAllEntriesInTheQueryCache",
@@ -5107,6 +5480,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/project/arrayIndexesAreUnsupported",
@@ -5122,6 +5496,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/project/arrayIndexesAreUnsupportedFromShellInsert",
@@ -5133,6 +5508,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/project/conditionallyExcludeFields",
@@ -5144,6 +5520,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/project/excludeFieldsFromOutputDocuments",
@@ -5158,6 +5535,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/project/includeComputedFields",
@@ -5169,6 +5547,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/project/includeSpecificFieldsFromEmbeddedDocuments",
@@ -5180,6 +5559,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/project/includeSpecificFieldsFromEmbeddedDocumentsAsStage",
@@ -5191,6 +5571,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/project/includeSpecificFieldsInOutputDocuments",
@@ -5206,6 +5587,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/project/suppressIdFieldInTheOutputDocuments",
@@ -5217,6 +5599,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/redact/evaluateAccessAtEveryDocumentLevel",
@@ -5228,6 +5611,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/redact/excludeAllFieldsAtAGivenLevel",
@@ -5239,6 +5623,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/replaceRoot/replaceRootWithADocumentNestedInAnArray",
@@ -5250,6 +5635,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/replaceRoot/replaceRootWithANewDocumentCreatedFromRootAndADefaultDocument",
@@ -5261,6 +5647,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/replaceRoot/replaceRootWithANewlyCreatedDocument",
@@ -5272,6 +5659,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/replaceRoot/replaceRootWithAnEmbeddedDocumentField",
@@ -5287,6 +5675,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/replaceWith/replaceWithADocumentNestedInAnArray",
@@ -5298,6 +5687,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : true,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/replaceWith/replaceWithANewDocumentCreatedFromRootAndADefaultDocument",
@@ -5309,6 +5699,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/replaceWith/replaceWithANewlyCreatedDocument",
@@ -5330,6 +5721,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/replaceWith/replaceWithAnEmbeddedDocumentField",
@@ -5345,6 +5737,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/sample/sampleAggregationStage",
@@ -5359,6 +5752,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/set/addElementToAnArray",
@@ -5370,6 +5764,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/set/addingFieldsToAnEmbeddedDocument",
@@ -5381,6 +5776,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/set/creatingANewFieldWithExistingFields",
@@ -5392,6 +5788,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/set/overwritingAnExistingField",
@@ -5410,6 +5807,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "SHELL_SYNTAX" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/set/usingTwoSetStages",
@@ -5425,6 +5823,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/setWindowFields/comparisonWithPreviousValuesExample",
@@ -5436,6 +5835,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/setWindowFields/documentsWindowExamples",
@@ -5454,6 +5854,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/setWindowFields/rangeWindowExample",
@@ -5465,6 +5866,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/setWindowFields/timeRangeWindowExamples",
@@ -5476,6 +5878,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/skip/skipAggregationStage",
@@ -5490,6 +5893,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/sort/ascendingDescendingSort",
@@ -5508,6 +5912,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/sort/textScoreMetadataSort",
@@ -5522,6 +5927,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/sortByCount/sortByCountAggregationStage",
@@ -5536,6 +5942,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/unionWith/createAUnionWithSpecifiedDocuments",
@@ -5547,6 +5954,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/unionWith/namespacesInSubpipelines",
@@ -5558,6 +5966,11 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : {
+      "data1.json" : "sales_2018",
+      "data2.json" : "sales_2019",
+      "data3.json" : "sales_2020"
+    },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/unionWith/report1AllSalesByYearAndStoresAndItems",
@@ -5573,6 +5986,11 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : {
+      "data1.json" : "sales_2018",
+      "data2.json" : "sales_2019",
+      "data3.json" : "sales_2020"
+    },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/unionWith/report2AggregatedSalesByItems",
@@ -5584,6 +6002,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/unset/removeASingleField",
@@ -5595,6 +6014,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/unset/removeEmbeddedFields",
@@ -5606,6 +6026,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "aggregation/stages/unset/removeTopLevelFields",
@@ -5617,6 +6038,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/unwind/groupByUnwoundValues",
@@ -5635,6 +6057,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "aggregation/stages/unwind/missingOrNonArrayValues",
@@ -5646,6 +6069,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/unwind/preserveNullAndEmptyArraysAndIncludeArrayIndex",
@@ -5661,6 +6085,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/unwind/unwindArray",
@@ -5676,6 +6101,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "aggregation/stages/unwind/unwindEmbeddedArrays",
@@ -5694,6 +6120,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/all/useAllToMatchValues",
@@ -5705,6 +6132,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/all/useAllWithElemMatch",
@@ -5720,6 +6148,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/and/andQueriesWithMultipleExpressionsSpecifyingTheSameField",
@@ -5734,6 +6163,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/and/andQueriesWithMultipleExpressionsSpecifyingTheSameOperator",
@@ -5748,6 +6178,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/bitsAllClear/binDataBitmask",
@@ -5759,6 +6190,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/bitsAllClear/bitPositionArray",
@@ -5770,6 +6202,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/bitsAllClear/integerBitmask",
@@ -5781,6 +6214,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/bitsAllSet/binDataBitmask",
@@ -5792,6 +6226,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/bitsAllSet/bitPositionArray",
@@ -5803,6 +6238,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/bitsAllSet/integerBitmask",
@@ -5814,6 +6250,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/bitsAnyClear/binDataBitmask",
@@ -5825,6 +6262,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/bitsAnyClear/bitPositionArray",
@@ -5836,6 +6274,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/bitsAnyClear/integerBitmask",
@@ -5847,6 +6286,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/bitsAnySet/binDataBitmask",
@@ -5858,6 +6298,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/bitsAnySet/bitPositionArray",
@@ -5869,6 +6310,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/bitsAnySet/integerBitmask",
@@ -5880,6 +6322,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ "NUMERIC_TYPE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/box/boxQueryPredicateOperator",
@@ -5898,6 +6341,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ "NUMERIC_TYPE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/center/centerQueryPredicateOperator",
@@ -5916,6 +6360,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ "NUMERIC_TYPE", "SHELL_SYNTAX" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/centerSphere/centerSphereQueryPredicateOperator",
@@ -5934,6 +6379,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/comment/attachACommentToAnAggregationExpression",
@@ -5945,6 +6391,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/comment/attachACommentToFind",
@@ -5959,6 +6406,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/elemMatch/arrayOfEmbeddedDocuments",
@@ -5970,6 +6418,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/elemMatch/elementMatch",
@@ -5985,6 +6434,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/elemMatch/singleQueryCondition",
@@ -6000,6 +6450,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/eq/arrayElementEqualsAValue",
@@ -6011,6 +6462,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/eq/equalsASpecifiedValue",
@@ -6022,6 +6474,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/eq/equalsAnArrayValue",
@@ -6033,6 +6486,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/eq/fieldInEmbeddedDocumentEqualsAValue",
@@ -6044,6 +6498,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/eq/regexMatchBehaviour",
@@ -6062,6 +6517,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/exists/existsAndNotEqualTo",
@@ -6080,6 +6536,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/exists/nullValues",
@@ -6098,6 +6555,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "SHELL_SYNTAX" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/expr/compareTwoFieldsFromASingleDocument",
@@ -6113,6 +6571,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : true,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/expr/useExprWithConditionalStatements",
@@ -6124,6 +6583,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ "NUMERIC_TYPE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/geoIntersects/intersectsABigPolygon",
@@ -6142,6 +6602,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ "NUMERIC_TYPE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/geoIntersects/intersectsAPolygon",
@@ -6160,6 +6621,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ "NUMERIC_TYPE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/geoWithin/withinABigPolygon",
@@ -6178,6 +6640,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ "NUMERIC_TYPE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/geoWithin/withinAPolygon",
@@ -6196,6 +6659,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/gt/matchDocumentFields",
@@ -6210,6 +6674,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "FIXTURE_CURATION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/gt/performAnUpdateBasedOnEmbeddedDocumentFields",
@@ -6228,6 +6693,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/gte/matchDocumentFields",
@@ -6246,6 +6712,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/gte/performAnUpdateBasedOnEmbeddedDocumentFields",
@@ -6264,6 +6731,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/in/useTheInOperatorToMatchValues",
@@ -6278,6 +6746,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/in/useTheInOperatorToMatchValuesInAnArray",
@@ -6299,6 +6768,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/in/useTheInOperatorWithARegularExpression",
@@ -6313,6 +6783,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/lt/matchDocumentFields",
@@ -6327,6 +6798,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/lt/performAnUpdateBasedOnEmbeddedDocumentFields",
@@ -6341,6 +6813,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/lte/matchDocumentFields",
@@ -6355,6 +6828,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/lte/performAnUpdateBasedOnEmbeddedDocumentFields",
@@ -6369,6 +6843,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ "MORPHIA_FORM", "NUMERIC_TYPE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/maxDistance/maxDistanceQueryPredicateOperator",
@@ -6384,6 +6859,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/minDistance/useWithNear",
@@ -6395,6 +6871,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/minDistance/useWithNearSphere",
@@ -6406,6 +6883,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "NUMERIC_TYPE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/mod/floatingPointArguments",
@@ -6421,6 +6899,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/mod/negativeDividend",
@@ -6432,6 +6911,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/mod/notEnoughElementsError",
@@ -6443,6 +6923,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/mod/tooManyElementsError",
@@ -6454,6 +6935,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/mod/useModToSelectDocuments",
@@ -6465,6 +6947,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "FIXTURE_CURATION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/ne/arrays",
@@ -6483,6 +6966,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/ne/matchDocumentFieldsThatAreNotEqual",
@@ -6497,6 +6981,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "FIXTURE_CURATION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/ne/updateBasedOnNotEqualEmbeddedDocumentFields",
@@ -6515,6 +7000,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ "NUMERIC_TYPE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/near/queryOnGeoJsonData",
@@ -6533,6 +7019,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/near/queryOnLegacyCoordinates",
@@ -6544,6 +7031,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ "NUMERIC_TYPE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/nearSphere/specifyCenterPointUsingGeoJson",
@@ -6562,6 +7050,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/nearSphere/specifyCenterPointUsingLegacyCoordinates",
@@ -6573,6 +7062,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "FIXTURE_CURATION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/nin/selectOnElementsNotInAnArray",
@@ -6591,6 +7081,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/nin/selectOnUnmatchingDocuments",
@@ -6605,6 +7096,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/nor/norAndAdditionalComparisons",
@@ -6619,6 +7111,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/nor/norAndExists",
@@ -6633,6 +7126,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/nor/norQueryWithTwoExpressions",
@@ -6647,6 +7141,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ "NUMERIC_TYPE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/polygon/polygonQueryPredicateOperator",
@@ -6665,6 +7160,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/rand/generateRandomDataPoints",
@@ -6686,6 +7182,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/rand/selectRandomItemsFromACollection",
@@ -6709,6 +7206,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/regex/extendRegexOptionsToMatchCharactersOutsideOfAscii",
@@ -6720,6 +7218,7 @@
   }, {
     "assertions" : [ "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/regex/ignoreWhiteSpacesInPattern",
@@ -6741,6 +7240,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/regex/multilineMatchForLinesStartingWithSpecifiedPattern",
@@ -6756,6 +7256,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/regex/performALikeMatch",
@@ -6771,6 +7272,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/regex/performCaseInsensitiveRegularExpressionMatch",
@@ -6782,6 +7284,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/regex/useARegularExpressionToMatchCaseInStrings",
@@ -6797,6 +7300,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/regex/useTheDotCharacterToMatchNewLine",
@@ -6812,6 +7316,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/text/caseAndDiacriticInsensitivity",
@@ -6826,6 +7331,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/text/caseSensitivity",
@@ -6837,6 +7343,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/text/diacriticSensitiveSearch",
@@ -6855,6 +7362,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/text/excludeDocumentsThatContainATerm",
@@ -6869,6 +7377,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/text/matchAnyOfTheSearchTerms",
@@ -6883,6 +7392,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/text/queryADifferentLanguage",
@@ -6897,6 +7407,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/text/relevanceScoreExamples",
@@ -6911,6 +7422,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/text/textWithASingleWord",
@@ -6922,6 +7434,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/text/textWithAnExactString",
@@ -6936,6 +7449,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/type/queryingByDataType",
@@ -6951,6 +7465,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/filters/type/queryingByMinKeyAndMaxKey",
@@ -6966,6 +7481,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "MORPHIA_FORM" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "OVERRIDDEN",
     "fixture" : "query/filters/type/queryingByMultipleDataTypes",
@@ -6977,6 +7493,7 @@
   }, {
     "assertions" : [ "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/filters/where/whereQueryPredicateOperator",
@@ -6991,6 +7508,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/addToSet/addToArray",
@@ -7002,6 +7520,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/addToSet/eachModifier",
@@ -7013,6 +7532,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/updates/addToSet/valueAlreadyExists",
@@ -7028,6 +7548,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/updates/bit/bitwiseAnd",
@@ -7043,6 +7564,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/updates/bit/bitwiseOr",
@@ -7058,6 +7580,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR", "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/updates/bit/bitwiseXor",
@@ -7073,6 +7596,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/currentDate/aggregationAlternativeToCurrentDate",
@@ -7084,6 +7608,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/currentDate/currentDateUpdateOperator",
@@ -7098,6 +7623,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/each/useEachWithAddToSetOperator",
@@ -7109,6 +7635,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/updates/each/useEachWithPushOperator",
@@ -7124,6 +7651,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/inc/incUpdateOperator",
@@ -7135,6 +7663,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/updates/max/useMaxToCompareDates",
@@ -7150,6 +7679,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/max/useMaxToCompareNumbers",
@@ -7161,6 +7691,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/min/useMinToCompareDates",
@@ -7172,6 +7703,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/min/useMinToCompareNumbers",
@@ -7183,6 +7715,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "NUMERIC_TYPE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/updates/mul/applyMulOperatorToANonExistingField",
@@ -7198,6 +7731,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/updates/mul/multiplyMixedNumericTypes",
@@ -7213,6 +7747,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "NUMERIC_TYPE" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/updates/mul/multiplyTheValueOfAField",
@@ -7228,6 +7763,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/pop/removeTheFirstItemOfAnArray",
@@ -7239,6 +7775,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/pop/removeTheLastItemOfAnArray",
@@ -7250,6 +7787,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/position/addElementsAtTheStartOfTheArray",
@@ -7261,6 +7799,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/position/addElementsToTheMiddleOfTheArray",
@@ -7272,6 +7811,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/position/useANegativeArrayIndexPositionToAddElementsToTheArray",
@@ -7283,6 +7823,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/updates/positional/updateDocumentsInAnArray",
@@ -7298,6 +7839,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/positional/updateEmbeddedDocumentsUsingMultipleFieldMatches",
@@ -7309,6 +7851,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/positional/updateNestedArraysInConjunctionWith",
@@ -7320,6 +7863,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/positional/updateValuesInAnArray",
@@ -7334,6 +7878,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/positional/updateWithMultipleArrayMatches",
@@ -7345,6 +7890,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/pull/removeAllItemsThatEqualASpecifiedValue",
@@ -7356,6 +7902,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/pull/removeAllItemsThatMatchASpecifiedPullCondition",
@@ -7367,6 +7914,7 @@
   }, {
     "assertions" : [ ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : true,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/pull/removeAllItemsThatMatchASpecifiedPullConditionWithBulkWrite",
@@ -7378,6 +7926,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/updates/pull/removeDocumentsFromNestedArrays",
@@ -7393,6 +7942,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/pull/removeItemsFromAnArrayOfDocuments",
@@ -7404,6 +7954,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/pullAll/pullAllUpdateOperator",
@@ -7415,6 +7966,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/push/appendAValueToAnArray",
@@ -7426,6 +7978,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/updates/push/appendAValueToArraysInMultipleDocuments",
@@ -7441,6 +7994,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/updates/push/appendMultipleValuesToAnArray",
@@ -7456,6 +8010,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/push/usePushOperatorWithMultipleModifiers",
@@ -7467,6 +8022,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/rename/renameAField",
@@ -7481,6 +8037,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/updates/rename/renameAFieldInAnEmbeddedDocument",
@@ -7496,6 +8053,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR", "EXTRACTION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/updates/rename/renameAFieldThatDoesNotExist",
@@ -7511,6 +8069,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR", "FIXTURE_CURATION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/updates/set/setElementsInArrays",
@@ -7526,6 +8085,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "DOCS_ERROR", "FIXTURE_CURATION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/updates/set/setFieldsInEmbeddedDocuments",
@@ -7541,6 +8101,7 @@
   }, {
     "assertions" : [ "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/set/setTopLevelFields",
@@ -7555,6 +8116,7 @@
   }, {
     "assertions" : [ "SERIALIZATION" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/setOnInsert/setOnInsertUpdateOperator",
@@ -7572,6 +8134,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/slice/sliceFromTheEndOfTheArray",
@@ -7583,6 +8146,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/slice/sliceFromTheFrontOfTheArray",
@@ -7594,6 +8158,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/slice/updateArrayUsingSliceOnly",
@@ -7605,6 +8170,7 @@
   }, {
     "assertions" : [ "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/slice/useSliceWithOtherPushModifiers",
@@ -7619,6 +8185,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/sort/sortArrayElementsThatAreNotDocuments",
@@ -7630,6 +8197,7 @@
   }, {
     "assertions" : [ "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/sort/sortArrayOfDocumentsByAFieldInTheDocuments",
@@ -7644,6 +8212,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/sort/updateArrayUsingSortOnly",
@@ -7655,6 +8224,7 @@
   }, {
     "assertions" : [ "BEHAVIOR" ],
     "categories" : [ ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "UNCORRECTED",
     "fixture" : "query/updates/sort/useSortWithOtherPushModifiers",
@@ -7669,6 +8239,7 @@
   }, {
     "assertions" : [ "SERIALIZATION", "BEHAVIOR" ],
     "categories" : [ "FIXTURE_CURATION" ],
+    "collections" : { },
     "disabled" : false,
     "disposition" : "PRESERVED_CURATED",
     "fixture" : "query/updates/unset/unsetUpdateOperator",
@@ -7778,7 +8349,7 @@
     "folder" : "aggregation/stages/shardedDataDistribution",
     "reason" : "an admin function and not generally suited for morphia"
   } ],
-  "repositoryRevision" : "cb6974cec9bba0d6a5243b5d253e26faf672a8c1",
+  "repositoryRevision" : "2d7ea55d3162d421bea8a71457675984777a7eaa",
   "schemaVersion" : 1,
   "summary" : {
     "assertion.BEHAVIOR" : 466,
@@ -7794,17 +8365,17 @@
     "category.SHELL_SYNTAX" : 25,
     "category.UNTESTABLE" : 2,
     "disposition.NOT_EXECUTED" : 2,
-    "disposition.OVERRIDDEN" : 43,
-    "disposition.PRESERVED_CURATED" : 191,
+    "disposition.OVERRIDDEN" : 46,
+    "disposition.PRESERVED_CURATED" : 188,
     "disposition.UNCORRECTED" : 320,
     "examples" : 556,
-    "examples.locked" : 193,
+    "examples.locked" : 190,
     "exclusion.DEFERRED" : 1,
     "exclusion.ENVIRONMENT_UNAVAILABLE" : 3,
     "exclusion.NON_OPERATOR" : 1,
     "exclusion.POLICY_EXCLUSION" : 11,
     "exclusion.TESTED_ELSEWHERE" : 1,
-    "markers.lock" : 192,
+    "markers.lock" : 189,
     "markers.lockd" : 1,
     "option.findOptions" : 6,
     "option.orderMatters" : 107,

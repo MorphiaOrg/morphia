@@ -94,7 +94,10 @@ class CuratedRepairsTest {
             @Test public void testReordered() {
                 testPipeline(new ActionTestOptions().orderMatters(false).serverVersion("7.0"), a -> a);
             }
-            @Test public void testPlain() { testQuery(q -> q); }
+            @Test public void testPlain() {
+                loadData("items", 2);
+                testQuery(q -> q);
+            }
             @Test public void testSerializationOnly() {
                 testUpdate(new ActionTestOptions().skipDataCheck(true), q -> q);
             }
@@ -141,7 +144,11 @@ class CuratedRepairsTest {
             assertEquals(listOf(AssertionPath.SERIALIZATION, AssertionPath.BEHAVIOR), assertions)
             assertEquals(64, markers.single().sha256.length)
         }
-        assertEquals(RepairDisposition.UNCORRECTED, examples.getValue("plain").disposition)
+        with(examples.getValue("plain")) {
+            assertEquals(RepairDisposition.UNCORRECTED, disposition)
+            assertEquals(mapOf("data2.json" to "items"), collections)
+        }
+        assertEquals(emptyMap<String, String>(), examples.getValue("reordered").collections)
         assertEquals(
             listOf(AssertionPath.SERIALIZATION),
             examples.getValue("serializationOnly").assertions,
@@ -178,8 +185,15 @@ class CuratedRepairsTest {
         resource("blank/action.json")
         source(
             """
-            @Test public void testReordered() { this.testPipeline(a -> a); }
+            @Test public void testReordered() {
+                this.testPipeline(a -> a);
+                this.loadData("items", 2);
+            }
             @Test public void testBlank() {
+                String name = "items";
+                loadData(name, 2);
+                loadData("items", 3);
+                loadData("others", 3);
                 boolean flag = true;
                 testQuery(new ActionTestOptions().skipDataCheck(flag), q -> q);
                 ActionTestOptions options = new ActionTestOptions();
@@ -213,6 +227,15 @@ class CuratedRepairsTest {
         assertTrue("Stale reviewed lock reason: gone" in message, message)
         assertTrue("$type#testReordered: Unsupported helper call form" in message, message)
         assertTrue("$type#testBlank: Non-literal skipDataCheck argument" in message, message)
+        assertTrue(
+            "$type#testBlank: Unsupported loadData call form: loadData(name, 2)" in message,
+            message,
+        )
+        assertTrue("$type#testBlank: data3.json is loaded more than once" in message, message)
+        assertTrue(
+            "$type#testReordered: Unsupported helper call form: this.loadData" in message,
+            message,
+        )
         assertTrue("$type#testBlank: skipActionCheck must be chained" in message, message)
         assertTrue("Stale reviewed exclusion: query/filters/gone" in message, message)
         assertTrue("Unknown category NOPE" in message, message)
@@ -296,8 +319,8 @@ class CuratedRepairsTest {
             )
 
         assertEquals(read("audits/catalog/curated-repairs.json"), AuditJson.write(report))
-        assertEquals(193, report.summary["examples.locked"])
-        assertEquals(43, report.summary["disposition.OVERRIDDEN"])
+        assertEquals(190, report.summary["examples.locked"])
+        assertEquals(46, report.summary["disposition.OVERRIDDEN"])
         assertEquals(17, report.exclusions.size)
         assertEquals(
             0,
