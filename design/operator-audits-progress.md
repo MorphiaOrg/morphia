@@ -1861,3 +1861,27 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   `$linearFill` and `$percentile`), 8 kept (`$indexOfBytes`/`$indexOfCP` document strings, `$mul`
   uses Decimal128, source/page/fixture gaps). Totals: 62 overrides, 28 unresolved; inventory 62
   OVERRIDDEN, 172 PRESERVED_CURATED, 174 locked.
+
+- PR #4534 (branch audits-numeric-types, base #4533) published.
+
+## Reviewed corrections (step 4 slice 5, 2026-11-20)
+
+- Branch audits-reviewed-corrections from #4534. `FormCorrection(file, pointer, documented,
+  curated)` replaces a documented value pinned in extended JSON; it is stale when the page no longer
+  documents exactly that value. Discovered after rules and retypes, one field at a time (replace,
+  remove, or add in place); never a whole file or top-level row/stage, never key order, never a
+  same-value type change; rules are never traded for corrections.
+  Only DOCS_ERROR/FIXTURE_CURATION locks may declare them.
+- `fetch.py candidates` falls back to the parent of a commit that removed the page (the manual
+  move left a month without one) and to the first commit adding a page the fixture predates
+  (`$toUUID`). The one `lockd` marker is handled; declarations record the marker name.
+- 52 locks with DOCS_ERROR or FIXTURE_CURATION and no other family besides MORPHIA_FORM and
+  NUMERIC_TYPE: 29 retired (11 need no correction, 18 corrections each read against the lock
+  reason), 23 kept. Totals: 91 overrides, 51 unresolved; inventory 91 OVERRIDDEN, 143
+  PRESERVED_CURATED, 145 locked. Recapturing the earlier 62 overrides and 28 gaps was identical.
+- Review round 1 (independent agent): corrections taken at a parent document swallowed sibling
+  edits and, on one-row files, replaced the whole file (`$degreesToRadians` hid an `_id` removal);
+  fixed with field-level remove/add corrections and a row/stage floor. The 11 exact retirements were
+  misattributed to later upstream fixes (their pinned pages predate the fixtures); corrected. The
+  `$toUUID` source after the fixture's origin is now explicit (`SourceRelation.AFTER_ORIGIN`). Type-
+  only and key-order differences are never corrections. Totals unchanged.

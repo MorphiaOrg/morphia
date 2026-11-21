@@ -293,7 +293,7 @@ class LegacyBindingsTest {
             corpus,
             ledger,
             forms.overrides.associate {
-                "core/src/test/resources/dev/morphia/test/${it.fixture}/lock" to
+                "core/src/test/resources/dev/morphia/test/${it.fixture}/${it.retiredLock.name}" to
                     it.retiredLock.sha256
             },
         )

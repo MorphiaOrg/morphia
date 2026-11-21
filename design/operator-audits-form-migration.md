@@ -5,12 +5,15 @@ The second slice of step 4 of [the operator audit plan](mongodb-operator-audits.
 category is `MORPHIA_FORM` with declared equivalences, and retires a lock only when its documented
 source, under those rules, is BSON-identical to the preserved curated fixture. A later slice
 applies the same machinery to `NUMERIC_TYPE` locks through declared number retypes (see
-[Numeric retypes](#numeric-retypes)).
+[Numeric retypes](#numeric-retypes)), and another to `DOCS_ERROR` and `FIXTURE_CURATION` locks
+through reviewed value corrections (see [Reviewed corrections](#reviewed-corrections)).
 
 Of the 77 `MORPHIA_FORM` examples, 66 carry no other category. 46 of those locks are retired here;
 20 stay, each with a recorded gap. The 11 mixed examples wait for their other families. Of the 26
 `NUMERIC_TYPE` examples, 24 carry no category besides `MORPHIA_FORM`; 16 of those are retired and
-8 stay with a gap.
+8 stay with a gap. Of the 52 locked examples filed as `DOCS_ERROR` or `FIXTURE_CURATION` with no
+family outside these four, 29 are retired and 23 stay with a gap. In all, 91 locks are retired and
+51 are kept.
 
 ## Which documentation is the source
 
@@ -20,7 +23,8 @@ pre-curation extraction either, because each fixture and its lock were committed
 source is therefore the operator page in `mongodb/docs` as of the day the fixture was written:
 
 - `first`: the last docs commit touching the page at or before the Morphia commit that created the
-  fixture;
+  fixture (its parent, when that commit removed the page as the manual moved; the commit that first
+  added the page, when the fixture predates it);
 - `last`: the same, at the latest Morphia commit that added or modified a fixture file (pure renames
   excluded), for fixtures that a later audit run regenerated from newer pages.
 
@@ -92,6 +96,45 @@ Of the 16 retired `NUMERIC_TYPE` locks, one (`$exp`) needs nothing: its page alr
 The others retype geometry and `$mod`/`$nearSphere` arguments in the action, or `$linearFill` and
 `$percentile` results in the expected output, from `int32` to `double`.
 
+## Reviewed corrections
+
+A `DOCS_ERROR` lock records that the documentation is wrong (a wrong printed result, a misspelled
+field, stale BSON sizes); a `FIXTURE_CURATION` lock records that Morphia's fixture deliberately
+differs (a collection name the test harness uses, predictable ids). Neither is an equivalence, so
+the plan keeps them as reviewed corrections pinned to their source. A `FormCorrection` names a file
+and an RFC 6901 pointer and records, as extended JSON, the documented value it replaces or removes
+and the curated value it puts there (an added field also records its key position). It applies
+only if the page still documents exactly that value (BSON-typed) and, for an added field, does not
+document the field; a changed page makes it stale instead of applying it to something else.
+
+Corrections are discovered from the comparison after rules and retypes, one field at a time: a value
+difference replaces that value, a documented field the fixture lacks is removed, and a field the
+fixture adds is added in place (a renamed field is a removal and an addition). Discovery then goes
+on, so every other difference in the same document needs its own correction. A correction never
+replaces a whole file or a top-level document (a row, or a pipeline stage), a key-order difference
+is never corrected (that is form), and neither is a type change at the same value (that is a
+retype): those stay gaps. Corrections apply in order, after retypes, and each must be necessary.
+Rules are preferred to corrections: minimizing the rules never drops one if that needs more
+corrections. Only `DOCS_ERROR` and `FIXTURE_CURATION` locks may declare corrections.
+
+Every correction was read against its lock reason. Eleven of the 29 retired locks need none at all:
+the fixture equals the pinned page. Those pages already showed the corrected values before the
+fixtures were written, so each lock's deviation was against some other, unidentified source (probably a
+version branch or a stale checkout the legacy extractor read), not against these pages. The other 18
+correct wrong documented results (`$asinh`, `$bsonSize`, `$rank`, `$denseRank`, `$type`,
+`$setIsSubset`, `$set`), a misspelled field (`$binarySize`, `$rename`), Decimal128 rounding
+(`$degreesToRadians`, `$radiansToDegrees`), a field the server does not return (`$hour`), a
+simpler `onNull` (`$dateFromString`), ids the fixture drops (`$toUUID`), and the `$graphLookup`
+collection name the harness loads data into. One correction goes beyond its lock's wording:
+`$degreesToRadians` also removes the documented `ObjectId` `_id` from its expected row, which the
+lock ("the angle_a's were different") does not mention; it is accepted as a reviewed decision.
+
+`$toUUID`'s fixture predates every page at its path, so its source is the commit that first added
+the page, recorded as `relation: AFTER_ORIGIN`. That source pins the values the correction changes;
+it is not where the fixture came from. Every other source is `AT_ORIGIN`.
+
+One fixture spells its lock `lockd`; the declaration records the marker's name.
+
 ## What is compared
 
 For each fixture, the legacy extractor reads the recorded page (with tracked includes spliced in as
@@ -107,8 +150,8 @@ Sphinx does) and selects the example by the fixture's `name`. Then:
   `SOURCE_UNSUPPORTED` gap. Each override records its bindings, and verification fails if the
   inventory's differ;
 - action, data, expected results and index are compared with the strict BSON comparator, which keeps
-  key order and BSON types. Form rules apply only to the action, and declared
-  retypes to any file; everything else must match exactly, because a lock does not say which
+  key order and BSON types. Form rules apply only to the action, and declared retypes and
+  corrections to any file; everything else must match exactly, because a lock does not say which
   files were edited;
 - the rules must be sufficient, and each must be necessary: dropping any one breaks equality. The
   declaration must list exactly that set.
@@ -135,28 +178,31 @@ migration retired it with the digest the legacy corpus recorded.
 
 ## Gaps kept with their locks
 
-- `RESIDUAL_DIFFERENCE` (11): real, undeclared edits. `$indexOfBytes` and `$indexOfCP` document
-  their results as strings (`"0"`), and `$mul` multiplies by `Decimal128("100")` where the fixture
-  uses a double; those `NUMERIC_TYPE` locks are really documentation errors or decimal changes. The four `$regex` fixtures lost the documented
-  runs of spaces in their data; `$allElementsTrue`/`$anyElementTrue` insert BSON `undefined` where
-  the documented insert does not; `$dateTrunc` changes `startOfWeek` case, which the page does not
-  call case-insensitive; `$densify` reorders the nested `range` document.
-- `SOURCE_UNSUPPORTED` (12): constructors the strict shell normalizer rejects (`Date` without an
-  explicit time, and one typed-value constructor), a JavaScript function body, an expression example
-  without a collection, unparseable printed results or shell text, and a data block in another
-  database.
+`audits/catalog/form-review.json` lists every kept lock with its gap; by kind:
+
+- `SOURCE_UNSUPPORTED` (20): constructors the strict shell normalizer rejects (mostly `Date` without
+  an explicit time, and typed-value constructors), JavaScript function bodies, an expression
+  example without a collection, unparseable printed results or shell text, and a data block in
+  another database.
+- `RESIDUAL_DIFFERENCE` (16): edits no declaration covers for the lock's category. The four
+  `$regex` fixtures lost the documented runs of spaces in their data;
+  `$allElementsTrue`/`$anyElementTrue` insert BSON `undefined`; `$dateTrunc` changes `startOfWeek`
+  case and `$densify` reorders `range` under form locks; `$indexOfBytes`/`$indexOfCP` (documented
+  as strings) and `$mul` (Decimal128) are numeric locks that are really other edits; and the rest are
+  data or expected files with rows the page does not document, which a correction may not replace
+  wholesale.
+- `PAGE_UNSUPPORTED` (13): a generated `/includes/extracts/` file inside the example section.
 - `FIXTURE_UNSUPPORTED` (2): a data file the legacy reader cannot parse, and an action in the legacy
   `$near` coordinate form it cannot read.
-- `PAGE_UNSUPPORTED` (3): a generated `/includes/extracts/` file inside the example section.
 
 ## Next
 
 Test bodies are not compared: a bound test that writes data directly (`insert`, `getDs().save`,
-driver calls) is outside this check. None of the 62 retired fixtures' tests does today; recording
+driver calls) is outside this check. None of the 91 retired fixtures' tests does today; recording
 such writes in the repair inventory is a separate rule.
 
 The remaining families follow the same pattern. `EXTRACTION` and `SHELL_SYNTAX` need the native
 extractor; `NUMERIC_TYPE` needs typed overrides; `DOCS_ERROR` and `FIXTURE_CURATION` stay as reviewed
-corrections pinned to a source digest. The three multi-collection fixtures that were kept for
-their data are now retired; the remaining `MORPHIA_FORM` gaps are source constructors the strict
-normalizer rejects and real residual edits.
+corrections pinned to a source digest; those corrections are now in place. The largest remaining
+gaps are source constructors the strict normalizer rejects and generated include extracts, both of
+which the native extractor (step 2) handles.

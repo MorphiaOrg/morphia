@@ -595,7 +595,7 @@ python3 -I audits/probes/form-sources/fetch.py pages /tmp/last.json /tmp/pages
 ```
 
 `draft` only proposes a review. Every command reads the locks' categories (form rules need `MORPHIA_FORM`, number retypes
-`NUMERIC_TYPE`) and the tests' extra collections
+`NUMERIC_TYPE`, value corrections `DOCS_ERROR` or `FIXTURE_CURATION`) and the tests' extra collections
 (`loadData("airports", 2)` → `data2.json`) from the committed `audits/catalog/curated-repairs.json`,
 so recapture that inventory first when a test's `loadData` calls change. The reviewed `audits/catalog/form-review.json` is consumed by
 `capture <root> <revision> <pages> <review> <out>`, which writes `audits/catalog/form-migration.json`,

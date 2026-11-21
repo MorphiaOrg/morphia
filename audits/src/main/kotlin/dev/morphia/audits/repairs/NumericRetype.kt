@@ -111,7 +111,7 @@ object NumericRetypes {
         resolve(BsonArray(values), pointer)?.first
 
     /** The value at [pointer] and a way to replace it. */
-    private fun resolve(root: BsonArray, pointer: String): Pair<BsonValue, (BsonValue) -> Unit>? {
+    internal fun resolve(root: BsonArray, pointer: String): Pair<BsonValue, (BsonValue) -> Unit>? {
         if (pointer.isEmpty()) return root to { _ -> error("The root cannot be replaced") }
         var parent: BsonValue = root
         val segments =
