@@ -30,6 +30,7 @@
       "sha256" : "b9e436f27be163d32c9116ed94ab0911f93b85d9845118a787be5a408fa380bc",
       "text" : "morphia generates the more succinct array version vs the document version from the docs\ndocument order differs"
     },
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY", "NAMED_ARGUMENTS" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -68,6 +69,7 @@
       "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
       "text" : "reorder pipeline"
     },
+    "retypes" : [ ],
     "rules" : [ "PROJECT_ID_FIRST" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -118,6 +120,7 @@
       "sha256" : "fd98b0ba84e5fbdeca45e858c631317602ece197b444b671a8cd4240b93cc532",
       "text" : "morphia generates the more succinct array version vs the document version from the docs"
     },
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -168,6 +171,7 @@
       "sha256" : "52314f8989d5111024d78af05163f8aff29e2d82a23b092309890cf1d614bc7d",
       "text" : "rearranged arguments to match morphia's"
     },
+    "retypes" : [ ],
     "rules" : [ "NAMED_ARGUMENTS" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -206,11 +210,51 @@
       "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
       "text" : "reorder pipeline"
     },
+    "retypes" : [ ],
     "rules" : [ "PROJECT_ID_FIRST" ],
     "shape" : "PIPELINE",
     "source" : {
       "commit" : "b89791d6434ba071253241c8b38dd683d332ba69",
       "path" : "source/reference/operator/aggregation/eq.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "545c370c2586a64ace6ccdfd6b4397d42c03619db7f0b003b49a561bde3fca12",
+      "text" : "db.accounts.aggregate( [ { $project: { effectiveRate: { $subtract: [ { $exp: \"$interestRate\"}, 1 ] } } } ] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "ee8fd09e1c7f42e700d880029e06b4527743aba06c0e8455c0010be7c6b4a1bf",
+      "text" : "db.accounts.insertMany( [\n   { _id: 1, interestRate: .08, presentValue: 10000 },\n   { _id: 2, interestRate: .0825, presentValue: 250000 },\n   { _id: 3, interestRate: .0425, presentValue: 1000 }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "6fbf756ffb33f443ed94a0f1965a1a731f8113d176240038ce04b304fb0ab0ec",
+      "text" : "{ \"_id\" : 1, \"effectiveRate\" : 0.08328706767495864 }\n{ \"_id\" : 2, \"effectiveRate\" : 0.08599867343905654 }\n{ \"_id\" : 3, \"effectiveRate\" : 0.04341605637367807 }"
+    } ],
+    "collections" : { },
+    "example" : "main",
+    "fixture" : "aggregation/expressions/exp/expExpressionOperator",
+    "fixtureFiles" : {
+      "action.json" : "0eb426ae13d247d431e5419a81d2e507e0996b24aa25dccb4598e12225465386",
+      "data.json" : "d5678bd91fbcb5b1b1ed3279f10685b9980a97aeea548c53b58e6c80a32e6f73",
+      "expected.json" : "6fbf756ffb33f443ed94a0f1965a1a731f8113d176240038ce04b304fb0ab0ec",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "734eaab3d5843ee1da0575bba8ea5f526ee7edf8",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "48c76ee2fd4eea3635729558d3eea865bcb767152e9c9fc19dec664be694ac2f",
+      "text" : "the interestRate values were not proper doubles"
+    },
+    "retypes" : [ ],
+    "rules" : [ ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "cd46d544a63101fcb3392ddab496c648841d3445",
+      "path" : "source/reference/operator/aggregation/exp.txt"
     },
     "unexpandedIncludes" : [ ]
   }, {
@@ -256,6 +300,7 @@
       "sha256" : "fc3c9842e91c9f0b0c93bb850d625d5e220332231daf5d6a2398aaf6cc9da853",
       "text" : "rearrange elements"
     },
+    "retypes" : [ ],
     "rules" : [ "NAMED_ARGUMENTS" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -306,6 +351,7 @@
       "sha256" : "fc3c9842e91c9f0b0c93bb850d625d5e220332231daf5d6a2398aaf6cc9da853",
       "text" : "rearrange elements"
     },
+    "retypes" : [ ],
     "rules" : [ "NAMED_ARGUMENTS" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -356,6 +402,7 @@
       "sha256" : "6f52ed65332f0be4ef37c5213073e94224d53e2d4634c4aaa26134a32a21bcd6",
       "text" : "the codec produces items in a different order"
     },
+    "retypes" : [ ],
     "rules" : [ "NAMED_ARGUMENTS" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -406,6 +453,7 @@
       "sha256" : "fc3c9842e91c9f0b0c93bb850d625d5e220332231daf5d6a2398aaf6cc9da853",
       "text" : "rearrange elements"
     },
+    "retypes" : [ ],
     "rules" : [ "NAMED_ARGUMENTS" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -444,6 +492,7 @@
       "sha256" : "58f4a3fd5261c9ba1ff92fa36d5cfff7b5395b3520cc0181ea457375473b7725",
       "text" : "use the shorter cond form"
     },
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -482,6 +531,7 @@
       "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
       "text" : "reorder pipeline"
     },
+    "retypes" : [ ],
     "rules" : [ "PROJECT_ID_FIRST" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -520,6 +570,7 @@
       "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
       "text" : "reorder pipeline"
     },
+    "retypes" : [ ],
     "rules" : [ "PROJECT_ID_FIRST" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -561,6 +612,7 @@
       "sha256" : "c4529109c89ee24f0a64bd08c2b0abc76d2dbb09459ad396c9afb09a6298b5ab",
       "text" : "use a different form of $isArray to match morphia's rendering\nuse shorter form of cond"
     },
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY", "SINGLE_ARGUMENT_ARRAY" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -599,6 +651,7 @@
       "sha256" : "c7a80bc42692b60a49b7798516f8c9af58c15079fcef989ecf8322671d2d933d",
       "text" : "use the shorter form of cond"
     },
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -637,11 +690,122 @@
       "sha256" : "3e05a7a89116f49a4be5ea18c694d86de961a7c2bce5958e4aaded57361f3777",
       "text" : "use the shorter form of $cond"
     },
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY" ],
     "shape" : "PIPELINE",
     "source" : {
       "commit" : "26668d05722f74657f802e17701f9c4d565f59b4",
       "path" : "source/reference/operator/aggregation/let.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "f9e9608675ba8df50cf1e96fc93fec75046f6cc3df2b930723c0f32d69939319",
+      "text" : "db.stock.aggregate( [\n   {\n      $setWindowFields:\n         {\n            sortBy: { time: 1 },\n            output:\n               {\n                  price: { $linearFill: \"$price\" }\n               }\n         }\n   }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "7a208e57afc1ed48616880d33863f2125498c5d3c914233d4e9259c050a3c4b4",
+      "text" : "db.stock.insertMany( [ \n   {\n      time: ISODate(\"2021-03-08T09:00:00.000Z\"),\n      price: 500\n   },\n   {\n      time: ISODate(\"2021-03-08T10:00:00.000Z\"),\n   },\n   { \n      time: ISODate(\"2021-03-08T11:00:00.000Z\"),\n      price: 515\n   },\n   {\n      time: ISODate(\"2021-03-08T12:00:00.000Z\")\n   },\n   {\n      time: ISODate(\"2021-03-08T13:00:00.000Z\")\n   },\n   {\n      time: ISODate(\"2021-03-08T14:00:00.000Z\"),\n      price: 485\n   }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "8b7f9f7afac98ad604ee22a44797a91681d1d5081976620dc6de205c409a489b",
+      "text" : "[\n   {\n      _id: ObjectId(\"620ad555394d47411658b5ef\"),\n      time: ISODate(\"2021-03-08T09:00:00.000Z\"),\n      price: 500\n   },\n   {\n      _id: ObjectId(\"620ad555394d47411658b5f0\"),\n      time: ISODate(\"2021-03-08T10:00:00.000Z\"),\n      price: 507.5\n   },\n   {\n      _id: ObjectId(\"620ad555394d47411658b5f1\"),\n      time: ISODate(\"2021-03-08T11:00:00.000Z\"),\n      price: 515\n   },\n   {\n      _id: ObjectId(\"620ad555394d47411658b5f2\"),\n      time: ISODate(\"2021-03-08T12:00:00.000Z\"),\n      price: 505\n   },\n   {\n      _id: ObjectId(\"620ad555394d47411658b5f3\"),\n      time: ISODate(\"2021-03-08T13:00:00.000Z\"),\n      price: 495\n   },\n   {\n      _id: ObjectId(\"620ad555394d47411658b5f4\"),\n      time: ISODate(\"2021-03-08T14:00:00.000Z\"),\n      price: 485\n   }\n]"
+    } ],
+    "collections" : { },
+    "example" : "Fill Missing Values with Linear Interpolation",
+    "fixture" : "aggregation/expressions/linearFill/fillMissingValuesWithLinearInterpolation",
+    "fixtureFiles" : {
+      "action.json" : "cce095d199805658906312ca7c0f83e3991ae38ef4800c282a4668d06b06f06e",
+      "data.json" : "6494ff7ba278d700175f3375af18a67b7a6adc597a521b6a6ad6b7fa30fa7de4",
+      "expected.json" : "8ded50d4426d643a8e3e07467666142e74f2571288c489c7243f42c8fca39170",
+      "name" : "5b4735d5a7eb99d82123410c2cbc3dcf9c81d0ec596d7599f2791f21de2dd851"
+    },
+    "includes" : [ {
+      "blob" : "5eaa730a9a6093d0faca440ed2568bdd9ef73cdb",
+      "path" : "source/includes/fact-linear-fill-description.rst"
+    }, {
+      "blob" : "8c226c41d6de20160444b523f83395577ed7bbe2",
+      "path" : "source/includes/example-multiple-fill-methods.rst"
+    } ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "af528a2d3ffbac675ba07a6e2449ef8e6d2802aa",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "d0726571f1eb324b0770311523b7398c0edbbe2ca0dda5335789a75ef0c6230c",
+      "text" : "some numbers need to be doubles (because of the fill?)"
+    },
+    "retypes" : [ {
+      "file" : "expected.json",
+      "from" : "INT32",
+      "pointer" : "/3/price",
+      "to" : "DOUBLE"
+    }, {
+      "file" : "expected.json",
+      "from" : "INT32",
+      "pointer" : "/4/price",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "095396b6319b25c0e8334317f148b79b31b2ae7a",
+      "path" : "source/reference/operator/aggregation/linearFill.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "669e02846456473eeebacc1d9c82ec653debe1bc9d77342056f4857f1957ab34",
+      "text" : "db.stock.aggregate( [\n   {\n      $setWindowFields:\n         {\n            sortBy: { time: 1 },\n            output:\n               {\n                  linearFillPrice: { $linearFill: \"$price\" },\n                  locfPrice: { $locf: \"$price\" }\n               }\n         }\n   }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "7a208e57afc1ed48616880d33863f2125498c5d3c914233d4e9259c050a3c4b4",
+      "text" : "db.stock.insertMany( [ \n   {\n      time: ISODate(\"2021-03-08T09:00:00.000Z\"),\n      price: 500\n   },\n   {\n      time: ISODate(\"2021-03-08T10:00:00.000Z\"),\n   },\n   { \n      time: ISODate(\"2021-03-08T11:00:00.000Z\"),\n      price: 515\n   },\n   {\n      time: ISODate(\"2021-03-08T12:00:00.000Z\")\n   },\n   {\n      time: ISODate(\"2021-03-08T13:00:00.000Z\")\n   },\n   {\n      time: ISODate(\"2021-03-08T14:00:00.000Z\"),\n      price: 485\n   }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "bdb5bfe6876b59ee42093ece38aa2386b53e36c6847a9ddd1425697b31ed5e1b",
+      "text" : "[\n  {\n    _id: ObjectId(\"620ad555394d47411658b5ef\"),\n    time: ISODate(\"2021-03-08T09:00:00.000Z\"),\n    price: 500,\n    linearFillPrice: 500,\n    locfPrice: 500\n  },\n  {\n    _id: ObjectId(\"620ad555394d47411658b5f0\"),\n    time: ISODate(\"2021-03-08T10:00:00.000Z\"),\n    linearFillPrice: 507.5,\n    locfPrice: 500\n  },\n  {\n    _id: ObjectId(\"620ad555394d47411658b5f1\"),\n    time: ISODate(\"2021-03-08T11:00:00.000Z\"),\n    price: 515,\n    linearFillPrice: 515,\n    locfPrice: 515\n  },\n  {\n    _id: ObjectId(\"620ad555394d47411658b5f2\"),\n    time: ISODate(\"2021-03-08T12:00:00.000Z\"),\n    linearFillPrice: 505,\n    locfPrice: 515\n  },\n  {\n    _id: ObjectId(\"620ad555394d47411658b5f3\"),\n    time: ISODate(\"2021-03-08T13:00:00.000Z\"),\n    linearFillPrice: 495,\n    locfPrice: 515\n  },\n  {\n    _id: ObjectId(\"620ad555394d47411658b5f4\"),\n    time: ISODate(\"2021-03-08T14:00:00.000Z\"),\n    price: 485,\n    linearFillPrice: 485,\n    locfPrice: 485\n  }\n]"
+    } ],
+    "collections" : { },
+    "example" : "Use Multiple Fill Methods in a Single Stage",
+    "fixture" : "aggregation/expressions/linearFill/useMultipleFillMethodsInASingleStage",
+    "fixtureFiles" : {
+      "action.json" : "82aab788d1a86a007dd5eed281dbf967a5c2e24cf3a889f5b482e58663c19909",
+      "data.json" : "6494ff7ba278d700175f3375af18a67b7a6adc597a521b6a6ad6b7fa30fa7de4",
+      "expected.json" : "ae16b6e65900068665cb21a3af4a4ea8b9a3f28b8ad31e89d9ecc63e86c91cc8",
+      "name" : "d49cace7af036199b10fb004aca45bceff7b29a4fbc068e31782f79dc10d023a"
+    },
+    "includes" : [ {
+      "blob" : "5eaa730a9a6093d0faca440ed2568bdd9ef73cdb",
+      "path" : "source/includes/fact-linear-fill-description.rst"
+    }, {
+      "blob" : "8c226c41d6de20160444b523f83395577ed7bbe2",
+      "path" : "source/includes/example-multiple-fill-methods.rst"
+    } ],
+    "origin" : "24f35df159da5bd0da6a8f822280067e138aa632",
+    "pageBlob" : "af528a2d3ffbac675ba07a6e2449ef8e6d2802aa",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "d0726571f1eb324b0770311523b7398c0edbbe2ca0dda5335789a75ef0c6230c",
+      "text" : "some numbers need to be doubles (because of the fill?)"
+    },
+    "retypes" : [ {
+      "file" : "expected.json",
+      "from" : "INT32",
+      "pointer" : "/3/linearFillPrice",
+      "to" : "DOUBLE"
+    }, {
+      "file" : "expected.json",
+      "from" : "INT32",
+      "pointer" : "/4/linearFillPrice",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "095396b6319b25c0e8334317f148b79b31b2ae7a",
+      "path" : "source/reference/operator/aggregation/linearFill.txt"
     },
     "unexpandedIncludes" : [ ]
   }, {
@@ -675,6 +839,7 @@
       "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
       "text" : "reorder pipeline"
     },
+    "retypes" : [ ],
     "rules" : [ "PROJECT_ID_FIRST" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -713,6 +878,7 @@
       "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
       "text" : "reorder pipeline"
     },
+    "retypes" : [ ],
     "rules" : [ "PROJECT_ID_FIRST" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -763,6 +929,7 @@
       "sha256" : "30c5a96566f78dbffa6dfa597668858f5da0511ff6f506f0d1943984c67dfacc",
       "text" : "reorder pipeline to match morphia's order"
     },
+    "retypes" : [ ],
     "rules" : [ "NAMED_ARGUMENTS" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -813,6 +980,7 @@
       "sha256" : "30c5a96566f78dbffa6dfa597668858f5da0511ff6f506f0d1943984c67dfacc",
       "text" : "reorder pipeline to match morphia's order"
     },
+    "retypes" : [ ],
     "rules" : [ "NAMED_ARGUMENTS" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -851,6 +1019,7 @@
       "sha256" : "887b00c165c463eee845fb5235d5aae2eb2fd9b680b62b72bacdb6f46a36cd56",
       "text" : "cond uses the shorter format"
     },
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -889,6 +1058,7 @@
       "sha256" : "293c230b0f5885f15045cfb17bf980e09412e7271b543ae012e024749975b60f",
       "text" : "update the docs version to use the short version morphia generates"
     },
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -927,11 +1097,260 @@
       "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
       "text" : "reorder pipeline"
     },
+    "retypes" : [ ],
     "rules" : [ "PROJECT_ID_FIRST" ],
     "shape" : "PIPELINE",
     "source" : {
       "commit" : "d3aedc270fc14feb019a86c8018699c98b26de28",
       "path" : "source/reference/operator/aggregation/ne.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "793424385634ccdcfe6bef0efaf526826a7e74cda1e85ded810d37145aac86a8",
+      "text" : "db.testScores.aggregate( [\n   {\n      $group: {\n         _id: null,\n         test01_percentiles: {\n            $percentile: {\n               input: \"$test01\",\n               p: [ 0.95 ],\n               method: 'approximate'\n            }\n         },\n      }\n   }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "232ca0f95d445e6692ad67dd1a2253ae3ce5484aa1acc0b394dfdc0b13dffda0",
+      "text" : "db.testScores.insertMany( [\n   { studentId: \"2345\", test01: 62, test02: 81, test03: 80 },\n   { studentId: \"2356\", test01: 60, test02: 83, test03: 79 },\n   { studentId: \"2358\", test01: 67, test02: 82, test03: 78 },\n   { studentId: \"2367\", test01: 64, test02: 72, test03: 77 },\n   { studentId: \"2369\", test01: 60, test02: 53, test03: 72 }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "3263b6e8c8c1a638b9e5e7c4d08b80cfad47138a1cae3f303cb3cafe5bdb7bae",
+      "text" : "{ _id: null, test01_percentiles: [ 67 ] }"
+    } ],
+    "collections" : { },
+    "example" : "Calculate a Single Value as an Accumulator",
+    "fixture" : "aggregation/expressions/percentile/calculateASingleValueAsAnAccumulator",
+    "fixtureFiles" : {
+      "action.json" : "4a17d209e227e9ed6ef495a5df09fbd21464fe2c8db5796dd4a6b360f48f82c7",
+      "data.json" : "b7d74c823a1345345ab5cef28fc1eaf2958ea548880dd99b088b2325b0977aa3",
+      "expected.json" : "c8176775ce4a9c1a004b6973730531fe2ab83945921c12980cbb7ef2cbbb94a3",
+      "name" : "aac59a7446b8d18a58f0e91b189379f93c96a57a4631b1edcff8dbde7d850ee3"
+    },
+    "includes" : [ {
+      "blob" : "9e2239e2f8e6aa2503273fbad7196784ef4fde89",
+      "path" : "source/includes/aggregation/fact-return-percentile.rst"
+    }, {
+      "blob" : "eeb1e5aceaf20f3d7e877dc0486e2035c482c957",
+      "path" : "source/includes/aggregation/fact-behavior-percent-median.rst"
+    }, {
+      "blob" : "561930205ae8a255ef8365d11bfedd74c9c28eba",
+      "path" : "source/includes/aggregation/fact-type-of-operation.rst"
+    }, {
+      "blob" : "587a67273fbc41a504c4228afef29809a5118522",
+      "path" : "source/includes/aggregation/fact-calc-considerations.rst"
+    }, {
+      "blob" : "88c3f2670109fd3e4b1ceb40200cf3f87daf0afc",
+      "path" : "source/includes/aggregation/fact-setwindowfield.rst"
+    }, {
+      "blob" : "de81aba2b9c44631b328ee29cce75f08453f7fea",
+      "path" : "source/includes/aggregation/example-setup-01.rst"
+    } ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "809aebea5746a5dcf41a3049d88b2d29372799c2",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "440e8ab161dc64744d03da502dc8ba4334769e999d6110a758f24501e4dcc467",
+      "text" : "numbers need to be doubles"
+    },
+    "retypes" : [ {
+      "file" : "expected.json",
+      "from" : "INT32",
+      "pointer" : "/0/test01_percentiles/0",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "3119142f7c7443c44ec9e941b3a072e35efc3540",
+      "path" : "source/reference/operator/aggregation/percentile.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "482ab750ed4ef276a96e93904a7447d5f04c0fcbc08712e9f95de3b47529ed15",
+      "text" : "db.testScores.aggregate( [\n   {\n       $group: {\n          _id: null,\n          test01_percentiles: {\n             $percentile: {\n                input: \"$test01\",\n                p: [ 0.5, 0.75, 0.9, 0.95 ],\n                method: 'approximate'\n             }\n          },\n          test02_percentiles: {\n             $percentile: {\n                input: \"$test02\",\n                p: [ 0.5, 0.75, 0.9, 0.95 ],\n                method: 'approximate'\n             }\n          },\n          test03_percentiles: {\n             $percentile: {\n                input: \"$test03\",\n                p: [ 0.5, 0.75, 0.9, 0.95 ],\n                method: 'approximate'\n             }\n          },\n          test03_percent_alt: {\n             $percentile: {\n                input: \"$test03\",\n                p: [ 0.9, 0.5, 0.75, 0.95 ],\n                method: 'approximate'\n             }\n          },\n       }\n    }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "232ca0f95d445e6692ad67dd1a2253ae3ce5484aa1acc0b394dfdc0b13dffda0",
+      "text" : "db.testScores.insertMany( [\n   { studentId: \"2345\", test01: 62, test02: 81, test03: 80 },\n   { studentId: \"2356\", test01: 60, test02: 83, test03: 79 },\n   { studentId: \"2358\", test01: 67, test02: 82, test03: 78 },\n   { studentId: \"2367\", test01: 64, test02: 72, test03: 77 },\n   { studentId: \"2369\", test01: 60, test02: 53, test03: 72 }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "a519d5c763ec337a9f93dfb2cd722f231b1f8ae965146e61c638c7c4cb077163",
+      "text" : "{\n    _id: null,\n   test01_percentiles: [ 62, 64, 67, 67 ],\n   test02_percentiles: [ 81, 82, 83, 83 ],\n   test03_percentiles: [ 78, 79, 80, 80 ],\n   test03_percent_alt: [ 80, 78, 79, 80 ]\n}"
+    } ],
+    "collections" : { },
+    "example" : "Calculate Multiple Values as an Accumulator",
+    "fixture" : "aggregation/expressions/percentile/calculateMultipleValuesAsAnAccumulator",
+    "fixtureFiles" : {
+      "action.json" : "0bcce7237872e60af2100bd501bd8ea109e0b83d034f7f391cb16c50954a2783",
+      "data.json" : "b7d74c823a1345345ab5cef28fc1eaf2958ea548880dd99b088b2325b0977aa3",
+      "expected.json" : "f56932b647afe2272c5bdf44f0819af8cb2b187946d6ab6859f2baba969cc568",
+      "name" : "51069a515dd53369a187f381fa8f45761694fa9622d472d8cf7017552c22267d"
+    },
+    "includes" : [ {
+      "blob" : "9e2239e2f8e6aa2503273fbad7196784ef4fde89",
+      "path" : "source/includes/aggregation/fact-return-percentile.rst"
+    }, {
+      "blob" : "eeb1e5aceaf20f3d7e877dc0486e2035c482c957",
+      "path" : "source/includes/aggregation/fact-behavior-percent-median.rst"
+    }, {
+      "blob" : "561930205ae8a255ef8365d11bfedd74c9c28eba",
+      "path" : "source/includes/aggregation/fact-type-of-operation.rst"
+    }, {
+      "blob" : "587a67273fbc41a504c4228afef29809a5118522",
+      "path" : "source/includes/aggregation/fact-calc-considerations.rst"
+    }, {
+      "blob" : "88c3f2670109fd3e4b1ceb40200cf3f87daf0afc",
+      "path" : "source/includes/aggregation/fact-setwindowfield.rst"
+    }, {
+      "blob" : "de81aba2b9c44631b328ee29cce75f08453f7fea",
+      "path" : "source/includes/aggregation/example-setup-01.rst"
+    } ],
+    "origin" : "aab78edb8fce70d5e880acd4c8ea7ca1af3dc43b",
+    "pageBlob" : "809aebea5746a5dcf41a3049d88b2d29372799c2",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "440e8ab161dc64744d03da502dc8ba4334769e999d6110a758f24501e4dcc467",
+      "text" : "numbers need to be doubles"
+    },
+    "retypes" : [ {
+      "file" : "expected.json",
+      "from" : "INT32",
+      "pointer" : "/0",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "3119142f7c7443c44ec9e941b3a072e35efc3540",
+      "path" : "source/reference/operator/aggregation/percentile.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "1272eaf4be492760206492e15b440d279b130a85687635efe918886d5d502d01",
+      "text" : "db.testScores.aggregate( [\n   {\n      $project: {\n         _id: 0,\n         studentId: 1,\n         testPercentiles: {\n            $percentile: {\n               input: [ \"$test01\", \"$test02\", \"$test03\" ],\n               p: [ 0.5, 0.95 ],\n               method: 'approximate'\n            }\n         }\n      }\n   }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "232ca0f95d445e6692ad67dd1a2253ae3ce5484aa1acc0b394dfdc0b13dffda0",
+      "text" : "db.testScores.insertMany( [\n   { studentId: \"2345\", test01: 62, test02: 81, test03: 80 },\n   { studentId: \"2356\", test01: 60, test02: 83, test03: 79 },\n   { studentId: \"2358\", test01: 67, test02: 82, test03: 78 },\n   { studentId: \"2367\", test01: 64, test02: 72, test03: 77 },\n   { studentId: \"2369\", test01: 60, test02: 53, test03: 72 }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "5b2be53e373d8b811325e56bbade7340896b58bd170a012f7ba9e6681518c34e",
+      "text" : "{ studentId: '2345', testPercentiles: [ 80, 81 ] },\n{ studentId: '2356', testPercentiles: [ 79, 83 ] },\n{ studentId: '2358', testPercentiles: [ 78, 82 ] },\n{ studentId: '2367', testPercentiles: [ 72, 77 ] },\n{ studentId: '2369', testPercentiles: [ 60, 72 ] }"
+    } ],
+    "collections" : { },
+    "example" : "Use |operatorName| in a ``$project`` Stage",
+    "fixture" : "aggregation/expressions/percentile/usePercentileInAProjectStage",
+    "fixtureFiles" : {
+      "action.json" : "0780126f373b349932305a90777f832e327aac9de290b9d192aad0b59b6ee80f",
+      "data.json" : "b7d74c823a1345345ab5cef28fc1eaf2958ea548880dd99b088b2325b0977aa3",
+      "expected.json" : "3997bfc464b1c4aea9ef9ca88e439ea66f392ced5685f4593740d27e8990d36f",
+      "name" : "49f331f0102f965bd02d8ded9348c43ebc55a88337aa02f9ae0a528d4862073e"
+    },
+    "includes" : [ {
+      "blob" : "9e2239e2f8e6aa2503273fbad7196784ef4fde89",
+      "path" : "source/includes/aggregation/fact-return-percentile.rst"
+    }, {
+      "blob" : "eeb1e5aceaf20f3d7e877dc0486e2035c482c957",
+      "path" : "source/includes/aggregation/fact-behavior-percent-median.rst"
+    }, {
+      "blob" : "561930205ae8a255ef8365d11bfedd74c9c28eba",
+      "path" : "source/includes/aggregation/fact-type-of-operation.rst"
+    }, {
+      "blob" : "587a67273fbc41a504c4228afef29809a5118522",
+      "path" : "source/includes/aggregation/fact-calc-considerations.rst"
+    }, {
+      "blob" : "88c3f2670109fd3e4b1ceb40200cf3f87daf0afc",
+      "path" : "source/includes/aggregation/fact-setwindowfield.rst"
+    }, {
+      "blob" : "de81aba2b9c44631b328ee29cce75f08453f7fea",
+      "path" : "source/includes/aggregation/example-setup-01.rst"
+    } ],
+    "origin" : "aab78edb8fce70d5e880acd4c8ea7ca1af3dc43b",
+    "pageBlob" : "809aebea5746a5dcf41a3049d88b2d29372799c2",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "440e8ab161dc64744d03da502dc8ba4334769e999d6110a758f24501e4dcc467",
+      "text" : "numbers need to be doubles"
+    },
+    "retypes" : [ {
+      "file" : "expected.json",
+      "from" : "INT32",
+      "pointer" : "",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "3119142f7c7443c44ec9e941b3a072e35efc3540",
+      "path" : "source/reference/operator/aggregation/percentile.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "60770ff8943ef790874216d37a2f4c3aa67197da1f2a0416df4b7a222d19cb97",
+      "text" : "db.testScores.aggregate( [\n   {\n      $setWindowFields: {\n         sortBy: { test01: 1 },\n         output: {\n            test01_95percentile: {\n               $percentile: {\n                  input: \"$test01\",\n                  p: [ 0.95 ],\n                  method: 'approximate'\n               },\n               window: {\n                  range: [ -3, 3 ]\n               }\n            }\n         }\n      }\n   },\n   {\n      $project: {\n         _id: 0,\n         studentId: 1,\n         test01_95percentile: 1\n      }\n   }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "232ca0f95d445e6692ad67dd1a2253ae3ce5484aa1acc0b394dfdc0b13dffda0",
+      "text" : "db.testScores.insertMany( [\n   { studentId: \"2345\", test01: 62, test02: 81, test03: 80 },\n   { studentId: \"2356\", test01: 60, test02: 83, test03: 79 },\n   { studentId: \"2358\", test01: 67, test02: 82, test03: 78 },\n   { studentId: \"2367\", test01: 64, test02: 72, test03: 77 },\n   { studentId: \"2369\", test01: 60, test02: 53, test03: 72 }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "fc888fd77e90da23a84fcb2a0491ba28a3b645919747e88d88b9730c5aa04207",
+      "text" : "{ studentId: '2356', test01_95percentile: [ 62 ] },\n{ studentId: '2369', test01_95percentile: [ 62 ] },\n{ studentId: '2345', test01_95percentile: [ 64 ] },\n{ studentId: '2367', test01_95percentile: [ 67 ] },\n{ studentId: '2358', test01_95percentile: [ 67 ] }"
+    } ],
+    "collections" : { },
+    "example" : "Use |operatorName| in a ``$setWindowField`` Stage",
+    "fixture" : "aggregation/expressions/percentile/usePercentileInASetWindowFieldStage",
+    "fixtureFiles" : {
+      "action.json" : "39ed011af49b580efa8962e2c0deecba5bceb51fbd7be9e70cef9a6d33a2b521",
+      "data.json" : "b7d74c823a1345345ab5cef28fc1eaf2958ea548880dd99b088b2325b0977aa3",
+      "expected.json" : "4dbf477fdfc8e6e3ae66d273d996707c1d0ba6851400f165b42220b16fdf778a",
+      "name" : "6ac9396a8ffc953fc057576814b3c5a83a72c7d834327bb1fede920193b7e526"
+    },
+    "includes" : [ {
+      "blob" : "9e2239e2f8e6aa2503273fbad7196784ef4fde89",
+      "path" : "source/includes/aggregation/fact-return-percentile.rst"
+    }, {
+      "blob" : "eeb1e5aceaf20f3d7e877dc0486e2035c482c957",
+      "path" : "source/includes/aggregation/fact-behavior-percent-median.rst"
+    }, {
+      "blob" : "561930205ae8a255ef8365d11bfedd74c9c28eba",
+      "path" : "source/includes/aggregation/fact-type-of-operation.rst"
+    }, {
+      "blob" : "587a67273fbc41a504c4228afef29809a5118522",
+      "path" : "source/includes/aggregation/fact-calc-considerations.rst"
+    }, {
+      "blob" : "88c3f2670109fd3e4b1ceb40200cf3f87daf0afc",
+      "path" : "source/includes/aggregation/fact-setwindowfield.rst"
+    }, {
+      "blob" : "de81aba2b9c44631b328ee29cce75f08453f7fea",
+      "path" : "source/includes/aggregation/example-setup-01.rst"
+    } ],
+    "origin" : "aab78edb8fce70d5e880acd4c8ea7ca1af3dc43b",
+    "pageBlob" : "809aebea5746a5dcf41a3049d88b2d29372799c2",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "440e8ab161dc64744d03da502dc8ba4334769e999d6110a758f24501e4dcc467",
+      "text" : "numbers need to be doubles"
+    },
+    "retypes" : [ {
+      "file" : "expected.json",
+      "from" : "INT32",
+      "pointer" : "",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "3119142f7c7443c44ec9e941b3a072e35efc3540",
+      "path" : "source/reference/operator/aggregation/percentile.txt"
     },
     "unexpandedIncludes" : [ ]
   }, {
@@ -965,6 +1384,7 @@
       "sha256" : "0654b84b5ca1b27df79c66f71ef658e66d2fc21b4a3b9d059d740dfcbe8da918",
       "text" : "use the short form for $cond"
     },
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -1006,6 +1426,7 @@
       "sha256" : "e18dfdc16e2c6ea874220bb8df22daa6deeee8af8f83a3b9e264115e2f694ea8",
       "text" : "rearrange suppress id"
     },
+    "retypes" : [ ],
     "rules" : [ "PROJECT_ID_FIRST" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -1071,6 +1492,7 @@
       "sha256" : "e18dfdc16e2c6ea874220bb8df22daa6deeee8af8f83a3b9e264115e2f694ea8",
       "text" : "rearrange suppress id"
     },
+    "retypes" : [ ],
     "rules" : [ "PROJECT_ID_FIRST" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -1112,6 +1534,7 @@
       "sha256" : "e17fac3fb207733c3d2910b145f4878ecdbee2a2d8c8f7d6337bb23cd582cc6b",
       "text" : "rearrange suppress id\n"
     },
+    "retypes" : [ ],
     "rules" : [ "PROJECT_ID_FIRST" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -1162,6 +1585,7 @@
       "sha256" : "aae0020d062ca8823586feb8233268a2534c4cf4b1b0a0ea0466ad0cd6699453",
       "text" : "adjust the form of $cond"
     },
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY", "SINGLE_ARGUMENT_ARRAY" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -1200,6 +1624,7 @@
       "sha256" : "2057c929ec31a45871bb1ddf92836a0a1f499a45bbea08a1255f3c99c32035cf",
       "text" : "change the form of the regex to match morphia's generated form"
     },
+    "retypes" : [ ],
     "rules" : [ "REGEX_FORM" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -1238,6 +1663,7 @@
       "sha256" : "b996f490e3f0fd383b2004f413117597fcf368482ddb5a397401dded8050e9dc",
       "text" : "update the docs version to use the short version morphia generates\nfix the ordering of the doc"
     },
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY", "NAMED_ARGUMENTS" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -1276,6 +1702,7 @@
       "sha256" : "056a22209e771acd4b5147863b602e5e5c84aac0543867d07b57238546c213b1",
       "text" : "use 0 instead of false to suppress _id"
     },
+    "retypes" : [ ],
     "rules" : [ "PROJECTION_FLAGS" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -1327,6 +1754,7 @@
       "sha256" : "837a91236817cbc098b8d616cb3ef2e055d7ba25a14e79ec7a9e509765c910b1",
       "text" : "updated pipeline order\n"
     },
+    "retypes" : [ ],
     "rules" : [ "NAMED_ARGUMENTS" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -1402,6 +1830,7 @@
       "sha256" : "75ee098f441675901521feb8eb890ec763ede2c396181d1b24fdbfc226285754",
       "text" : "rearrange the order"
     },
+    "retypes" : [ ],
     "rules" : [ "NAMED_ARGUMENTS" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -1477,6 +1906,7 @@
       "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
       "text" : "reorder pipeline"
     },
+    "retypes" : [ ],
     "rules" : [ "PROJECT_ID_FIRST", "NAMED_ARGUMENTS" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -1527,6 +1957,7 @@
       "sha256" : "f4d1df3572b7f6609a6790a2e3ed7ff9ba810af856fe0ba90952b6f62566be8f",
       "text" : "make the $or match morphia's"
     },
+    "retypes" : [ ],
     "rules" : [ "FIELD_OPERATORS_AND" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -1583,6 +2014,7 @@
       "sha256" : "765e01c51243034a826b020beab66d4f25bfb70425af29c87835a38ad6f2ff0b",
       "text" : "use the short form of $cond"
     },
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -1639,6 +2071,7 @@
       "sha256" : "765e01c51243034a826b020beab66d4f25bfb70425af29c87835a38ad6f2ff0b",
       "text" : "use the short form of $cond"
     },
+    "retypes" : [ ],
     "rules" : [ ],
     "shape" : "PIPELINE",
     "source" : {
@@ -1680,6 +2113,7 @@
       "sha256" : "3e05a7a89116f49a4be5ea18c694d86de961a7c2bce5958e4aaded57361f3777",
       "text" : "use the shorter form of $cond"
     },
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -1721,6 +2155,7 @@
       "sha256" : "3e05a7a89116f49a4be5ea18c694d86de961a7c2bce5958e4aaded57361f3777",
       "text" : "use the shorter form of $cond"
     },
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY" ],
     "shape" : "PIPELINE",
     "source" : {
@@ -1762,6 +2197,7 @@
       "sha256" : "a066206654825ef2cd16ea52ea0f9fa3d8153d208a5aa06af37456ec6185528a",
       "text" : "reformat pipeline"
     },
+    "retypes" : [ ],
     "rules" : [ ],
     "shape" : "PIPELINE",
     "source" : {
@@ -1812,11 +2248,86 @@
       "sha256" : "c5a7a789184f49548e8898f0058131a778ebbec62bfbe2fcab68d0a120a33915",
       "text" : "morphia doesn't generate this shape of $unwind"
     },
+    "retypes" : [ ],
     "rules" : [ "UNWIND_PATH" ],
     "shape" : "PIPELINE",
     "source" : {
       "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
       "path" : "source/reference/operator/aggregation/unwind.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "546f31c256c2b37282e737e572afbb574439b77656b921a56d7664889510677f",
+      "text" : "db.places.find( {\n   loc: { $geoWithin: { $box:  [ [ 0, 0 ], [ 100, 100 ] ] } }\n} )"
+    } ],
+    "collections" : { },
+    "example" : "main",
+    "fixture" : "query/filters/box/boxQueryPredicateOperator",
+    "fixtureFiles" : {
+      "action.json" : "8701a8532da8f23eeec49d42078bd9cf58ac0057f8beb1216118171d38bcbea5",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ {
+      "blob" : "231e34e5ae706bd4cce129c3601d1066b2e85d8c",
+      "path" : "source/includes/note-geospatial-index-must-exist.rst"
+    } ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "77c68dace2c26c8e6dd8909f658b8afdb242ba0e",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "2d2b93c03641322a104c171257ebda87c7ef693fc69b77bcfa288100d7895f7d",
+      "text" : "converted the point values to doubles"
+    },
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/loc/$geoWithin/$box",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "shape" : "FIND",
+    "source" : {
+      "commit" : "2b68884ad57110c9525b6dbdefcab1c0c8375f80",
+      "path" : "source/reference/operator/query/box.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "caa6845ee0667f3dbd06285e366796370b05458db77700310fd7fff5fe03ca58",
+      "text" : "db.places.find(\n   { loc: { $geoWithin: { $center: [ [-74, 40.74], 10 ] } } }\n)"
+    } ],
+    "collections" : { },
+    "example" : "main",
+    "fixture" : "query/filters/center/centerQueryPredicateOperator",
+    "fixtureFiles" : {
+      "action.json" : "0cd91baeb0505a896b263fcde046f5cc7cc7110a4a2bc1c8bb3e3147242b55a7",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ {
+      "blob" : "231e34e5ae706bd4cce129c3601d1066b2e85d8c",
+      "path" : "source/includes/note-geospatial-index-must-exist.rst"
+    } ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "fe3865f2c9c9fc0c385856bb9099be6adf5d7da0",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "2d2b93c03641322a104c171257ebda87c7ef693fc69b77bcfa288100d7895f7d",
+      "text" : "converted the point values to doubles"
+    },
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/loc/$geoWithin/$center",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "shape" : "FIND",
+    "source" : {
+      "commit" : "2b68884ad57110c9525b6dbdefcab1c0c8375f80",
+      "path" : "source/reference/operator/query/center.txt"
     },
     "unexpandedIncludes" : [ ]
   }, {
@@ -1865,6 +2376,7 @@
       "sha256" : "d44250df032b5e3b48fca9bc05f3e506db006e91faf4a853765cce135730f4da",
       "text" : "update action to use shortened version of $eq"
     },
+    "retypes" : [ ],
     "rules" : [ "EQ_SHORTHAND" ],
     "shape" : "FIND",
     "source" : {
@@ -1918,6 +2430,7 @@
       "sha256" : "d44250df032b5e3b48fca9bc05f3e506db006e91faf4a853765cce135730f4da",
       "text" : "update action to use shortened version of $eq"
     },
+    "retypes" : [ ],
     "rules" : [ "EQ_SHORTHAND" ],
     "shape" : "FIND",
     "source" : {
@@ -1971,6 +2484,7 @@
       "sha256" : "d44250df032b5e3b48fca9bc05f3e506db006e91faf4a853765cce135730f4da",
       "text" : "update action to use shortened version of $eq"
     },
+    "retypes" : [ ],
     "rules" : [ "EQ_SHORTHAND" ],
     "shape" : "FIND",
     "source" : {
@@ -2024,11 +2538,290 @@
       "sha256" : "d44250df032b5e3b48fca9bc05f3e506db006e91faf4a853765cce135730f4da",
       "text" : "update action to use shortened version of $eq"
     },
+    "retypes" : [ ],
     "rules" : [ "EQ_SHORTHAND" ],
     "shape" : "FIND",
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
       "path" : "source/reference/operator/query/eq.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "8bdbaa89353b93032e856c22bec8520c49de738b7592c1c1a14e741df9627ca3",
+      "text" : "db.places.find(\n   {\n     loc: {\n       $geoIntersects: {\n          $geometry: {\n             type : \"Polygon\",\n             coordinates: [\n               [\n                 [ -100, 60 ], [ -100, 0 ], [ -100, -60 ], [ 100, -60 ], [ 100, 60 ], [ -100, 60 ]\n               ]\n             ],\n             crs: {\n                type: \"name\",\n                properties: { name: \"urn:x-mongodb:crs:strictwinding:EPSG:4326\" }\n             }\n          }\n       }\n     }\n   }\n)"
+    } ],
+    "collections" : { },
+    "example" : "Intersects a \"Big\" Polygon",
+    "fixture" : "query/filters/geoIntersects/intersectsABigPolygon",
+    "fixtureFiles" : {
+      "action.json" : "7fce4ed9c9774010bf8459e658721eebe927e350f559788e0170fa17cebffdbc",
+      "name" : "71725f683f39052f02baa9c6cc10addac3a698284ecd880ed20b7bb012cc6a1a"
+    },
+    "includes" : [ {
+      "blob" : "d0d4847310431dc55af1857b061eae59007ec37d",
+      "path" : "source/includes/fact-geometry-hemisphere-limitation.rst"
+    } ],
+    "origin" : "7ddc79615aaf62f884703b31a036060df6961095",
+    "pageBlob" : "c9af0f19c4348b0f903226c26e95d32d780abc77",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "2d2b93c03641322a104c171257ebda87c7ef693fc69b77bcfa288100d7895f7d",
+      "text" : "converted the point values to doubles"
+    },
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/loc/$geoIntersects/$geometry/coordinates/0",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "shape" : "FIND",
+    "source" : {
+      "commit" : "d9c6dbe3b2556ee51fd0b5e6333227942b9e917d",
+      "path" : "source/reference/operator/query/geoIntersects.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "b5edc970aeb106cc75d47893daeb6cf7a477e685b30bd1a04638924968479abd",
+      "text" : "db.places.find(\n   {\n     loc: {\n       $geoIntersects: {\n          $geometry: {\n             type: \"Polygon\" ,\n             coordinates: [\n               [ [ 0, 0 ], [ 3, 6 ], [ 6, 1 ], [ 0, 0 ] ]\n             ]\n          }\n       }\n     }\n   }\n)"
+    } ],
+    "collections" : { },
+    "example" : "Intersects a Polygon",
+    "fixture" : "query/filters/geoIntersects/intersectsAPolygon",
+    "fixtureFiles" : {
+      "action.json" : "6470d93c0519d07d95e541b63d312bddad9f1621af81be74b8d772748c47fadc",
+      "name" : "10eb61f8b9e2cb8538b7ee71a65966cc62fc923b81b10fac3edb7f157a0e986a"
+    },
+    "includes" : [ {
+      "blob" : "d0d4847310431dc55af1857b061eae59007ec37d",
+      "path" : "source/includes/fact-geometry-hemisphere-limitation.rst"
+    } ],
+    "origin" : "7ddc79615aaf62f884703b31a036060df6961095",
+    "pageBlob" : "c9af0f19c4348b0f903226c26e95d32d780abc77",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "2d2b93c03641322a104c171257ebda87c7ef693fc69b77bcfa288100d7895f7d",
+      "text" : "converted the point values to doubles"
+    },
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/loc/$geoIntersects/$geometry/coordinates/0",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "shape" : "FIND",
+    "source" : {
+      "commit" : "d9c6dbe3b2556ee51fd0b5e6333227942b9e917d",
+      "path" : "source/reference/operator/query/geoIntersects.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "b27d8ee8e4bd687eebb123a8d0acb745f539356aa093e8e7dbc2212e663b7368",
+      "text" : "db.places.find(\n   {\n     loc: {\n       $geoWithin: {\n          $geometry: {\n             type : \"Polygon\" ,\n             coordinates: [\n               [\n                 [ -100, 60 ], [ -100, 0 ], [ -100, -60 ], [ 100, -60 ], [ 100, 60 ], [ -100, 60 ]\n               ]\n             ],\n             crs: {\n                type: \"name\",\n                properties: { name: \"urn:x-mongodb:crs:strictwinding:EPSG:4326\" }\n             }\n          }\n       }\n     }\n   }\n)"
+    } ],
+    "collections" : { },
+    "example" : "Within a \"Big\" Polygon",
+    "fixture" : "query/filters/geoWithin/withinABigPolygon",
+    "fixtureFiles" : {
+      "action.json" : "24d90a4402c168d3202a64b5e961467a10ab371dbd0d5c460d6ab0715f9441c9",
+      "name" : "50d6c192cd7a98915b0cf1aa6bcb30fd9763489e20fe891945ac3b29a72294ef"
+    },
+    "includes" : [ {
+      "blob" : "d0d4847310431dc55af1857b061eae59007ec37d",
+      "path" : "source/includes/fact-geometry-hemisphere-limitation.rst"
+    } ],
+    "origin" : "7ddc79615aaf62f884703b31a036060df6961095",
+    "pageBlob" : "c70a796f45bce5f20490061be29beabaf7513e9a",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "2d2b93c03641322a104c171257ebda87c7ef693fc69b77bcfa288100d7895f7d",
+      "text" : "converted the point values to doubles"
+    },
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/loc/$geoWithin/$geometry/coordinates/0",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "shape" : "FIND",
+    "source" : {
+      "commit" : "9c258a2f304c6f08f4dfc6b9d466abd543a90888",
+      "path" : "source/reference/operator/query/geoWithin.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "3555f40a77bf4b68f24befbfa2861a51dce6755dbdb87d0f5724629cdf27af99",
+      "text" : "db.places.find(\n   {\n     loc: {\n       $geoWithin: {\n          $geometry: {\n             type : \"Polygon\" ,\n             coordinates: [ [ [ 0, 0 ], [ 3, 6 ], [ 6, 1 ], [ 0, 0 ] ] ]\n          }\n       }\n     }\n   }\n)"
+    } ],
+    "collections" : { },
+    "example" : "Within a Polygon",
+    "fixture" : "query/filters/geoWithin/withinAPolygon",
+    "fixtureFiles" : {
+      "action.json" : "2fbe454cd3fd69b4eb58a28eafcc21a3f5c8a91823b23060f32d0e559b3e2bc7",
+      "name" : "6c3881cf8e6f7544a7a917b1ead21655719c941d9d904cb84fef7f9bdd2e8bf5"
+    },
+    "includes" : [ {
+      "blob" : "d0d4847310431dc55af1857b061eae59007ec37d",
+      "path" : "source/includes/fact-geometry-hemisphere-limitation.rst"
+    } ],
+    "origin" : "2e4cc72d6b0b73a45c92f4ee1c66cb63ee8e5ed4",
+    "pageBlob" : "c70a796f45bce5f20490061be29beabaf7513e9a",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "2d2b93c03641322a104c171257ebda87c7ef693fc69b77bcfa288100d7895f7d",
+      "text" : "converted the point values to doubles"
+    },
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/loc/$geoWithin/$geometry/coordinates/0",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "shape" : "FIND",
+    "source" : {
+      "commit" : "9c258a2f304c6f08f4dfc6b9d466abd543a90888",
+      "path" : "source/reference/operator/query/geoWithin.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "107c72de201c43c9b546bc4c536e620baa11ca9e057e9f2a49e910b45d8908dd",
+      "text" : "db.inventory.find( { qty: { $mod: [ 4.0, 0 ] } } )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "bea6eff7a805ee6fb0c237ce0881670ea2fc9c2a17a26d95bedb31b4e8c07c33",
+      "text" : "db.inventory.insertMany( [\n   { \"_id\" : 1, \"item\" : \"abc123\", \"qty\" : 0 },\n   { \"_id\" : 2, \"item\" : \"xyz123\", \"qty\" : 5 },\n   { \"_id\" : 3, \"item\" : \"ijk123\", \"qty\" : 12 }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "c4978ec20b1f5bacc1bcef6e1d8d6cec0bc4c22a23f4f4acd3f32fde3a54b75f",
+      "text" : "[\n  { _id: 1, item: 'abc123', qty: 0 },\n  { _id: 3, item: 'ijk123', qty: 12 }\n]"
+    } ],
+    "collections" : { },
+    "example" : "Floating Point Arguments",
+    "fixture" : "query/filters/mod/floatingPointArguments",
+    "fixtureFiles" : {
+      "action.json" : "6c9c47f3652e7e37a0e21aaaa92109348681a1d084b11e5999063971a226dd0e",
+      "data.json" : "7312197da8cdaef2640d3aef16f5fba1a5d7b44c85e4629d7be14f0104d2fd7a",
+      "expected.json" : "5590d021a2241fa69dfe7a34f935cc6e08db7fc85f9932f61fba85d101bfaf33",
+      "name" : "b1e8808a68d78b4425682c914408749fe079465f0ccb45c11db46c043adb57e3"
+    },
+    "includes" : [ {
+      "blob" : "29386fb4543b83467ddb0e4aefe4ff861bb48d07",
+      "path" : "source/includes/negative-dividend.rst"
+    } ],
+    "origin" : "52d461f742298f36a6ecf2ea02d8ebc332dc7168",
+    "pageBlob" : "dd939f3713d0da43fa8a7d0d875ed05bfc2464f8",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "9a3e1cde9242cece3452bb62f0f2be38685f417744b684a58caaf93a8c0203d8",
+      "text" : "made the 0 a floating point to work the Java's type system"
+    },
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/qty/$mod",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "shape" : "FIND",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/mod.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "5c605d98c82b18ecb083b1e93fcf832ba94458f33198babc68fcdfbb52f29ca8",
+      "text" : "db.places.find(\n   {\n     location: {\n        $nearSphere: {\n           $geometry: {\n              type : \"Point\",\n              coordinates : [ -73.9667, 40.78 ]\n           },\n           $minDistance: 1000,\n           $maxDistance: 5000\n        }\n     }\n   }\n)"
+    } ],
+    "collections" : { },
+    "example" : "Specify Center Point Using GeoJSON",
+    "fixture" : "query/filters/nearSphere/specifyCenterPointUsingGeoJson",
+    "fixtureFiles" : {
+      "action.json" : "2ce632ab7d2cd3a04c7480698c1db2f14609fe93e8cdbb6dbedcc5bbfdc39325",
+      "name" : "da258f11f6f52ef58569cb49ce2f966b7461776311a049c69692342992595f20"
+    },
+    "includes" : [ {
+      "blob" : "c06a15831b78be20b8bedbee54fea72c27abf599",
+      "path" : "source/includes/fact-geo-near-special-indexes.rst"
+    }, {
+      "blob" : "e6c41e12d74350e98f0884af8a0547f028356603",
+      "path" : "source/includes/fact-near-sharded-cluster.rst"
+    }, {
+      "blob" : "d0af3b05b45ed55a7f4ce12fbb4b891adfe167b8",
+      "path" : "source/includes/fact-geo-near-returns-sorted-results.rst"
+    }, {
+      "blob" : "86d75947d981bc77dca7e5aaf276f130d413ab64",
+      "path" : "source/includes/example-nearSphere-minDistance.rst"
+    } ],
+    "origin" : "7edf3311c9ca2d184a5a86c5190b28edfd193590",
+    "pageBlob" : "6e89aeeb937256a3a47249e9042b6a90a170d7c9",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "881863e574fae6e1e1e7e272397b0e074a2a762f546cd6440e57375f3b5be698",
+      "text" : "change distances to floating point"
+    },
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/location/$nearSphere",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "shape" : "FIND",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/nearSphere.txt"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "32059dd496c06f4acbf465dd474ba6e8a3f4ed4b490efa9be6c701460d234e63",
+      "text" : "db.places.find(\n  {\n     loc: {\n       $geoWithin: { $polygon: [ [ 0 , 0 ], [ 3 , 6 ], [ 6 , 0 ] ] }\n     }\n  }\n)"
+    } ],
+    "collections" : { },
+    "example" : "main",
+    "fixture" : "query/filters/polygon/polygonQueryPredicateOperator",
+    "fixtureFiles" : {
+      "action.json" : "572ae2ba8fbfd8b1124713c0391cda120d9a6715b10e7de2c896878d75bfda7e",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "includes" : [ {
+      "blob" : "231e34e5ae706bd4cce129c3601d1066b2e85d8c",
+      "path" : "source/includes/note-geospatial-index-must-exist.rst"
+    } ],
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "ef5243dfde003285d1a6aeb0a5db805010a072e1",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "2d2b93c03641322a104c171257ebda87c7ef693fc69b77bcfa288100d7895f7d",
+      "text" : "converted the point values to doubles"
+    },
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/loc/$geoWithin/$polygon",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "shape" : "FIND",
+    "source" : {
+      "commit" : "2b68884ad57110c9525b6dbdefcab1c0c8375f80",
+      "path" : "source/reference/operator/query/polygon.txt"
     },
     "unexpandedIncludes" : [ ]
   }, {
@@ -2080,6 +2873,7 @@
       "sha256" : "325089cbcd67f665e409dba7cc4d42b95d111fa080e25715bb1a8ef3dcdbdc3a",
       "text" : "change the form of regex used\n"
     },
+    "retypes" : [ ],
     "rules" : [ ],
     "shape" : "FIND",
     "source" : {
@@ -2133,6 +2927,7 @@
       "sha256" : "a1f0944e912ca102f402d78239f988cbf2217d038a09a9b2642a717c946bdce0",
       "text" : "the docs had two actions showing the two forms. picked the form morphia uses."
     },
+    "retypes" : [ ],
     "rules" : [ "ALTERNATIVE_COMMANDS" ],
     "shape" : "FIND",
     "source" : {
@@ -2141,7 +2936,7 @@
     },
     "unexpandedIncludes" : [ ]
   } ],
-  "repositoryRevision" : "2d7ea55d3162d421bea8a71457675984777a7eaa",
+  "repositoryRevision" : "4f179a4dc3a792d4ca1b25aa97c63717c1e5a640",
   "rules" : [ {
     "description" : "$cond: {if: a, then: b, else: c} and $cond: [a, b, c] are the same expression; the array form is canonical.",
     "rule" : "COND_ARRAY"
@@ -2176,13 +2971,14 @@
   "schemaVersion" : 1,
   "sourceRepository" : "mongodb/docs",
   "summary" : {
-    "gap.FIXTURE_UNSUPPORTED" : 1,
+    "gap.FIXTURE_UNSUPPORTED" : 2,
     "gap.NO_MATCHING_EXAMPLE" : 0,
-    "gap.PAGE_UNSUPPORTED" : 2,
-    "gap.RESIDUAL_DIFFERENCE" : 8,
-    "gap.SOURCE_UNSUPPORTED" : 9,
-    "overrides" : 46,
-    "overrides.exact" : 3,
+    "gap.PAGE_UNSUPPORTED" : 3,
+    "gap.RESIDUAL_DIFFERENCE" : 11,
+    "gap.SOURCE_UNSUPPORTED" : 12,
+    "overrides" : 62,
+    "overrides.exact" : 4,
+    "overrides.retyped" : 15,
     "rule.ALTERNATIVE_COMMANDS" : 1,
     "rule.COND_ARRAY" : 14,
     "rule.EQ_SHORTHAND" : 4,
@@ -2193,7 +2989,7 @@
     "rule.REGEX_FORM" : 1,
     "rule.SINGLE_ARGUMENT_ARRAY" : 2,
     "rule.UNWIND_PATH" : 1,
-    "unresolved" : 20
+    "unresolved" : 28
   },
   "unresolved" : [ {
     "detail" : "data.json TYPE at /9/responses/0",
@@ -2241,6 +3037,33 @@
       "path" : "source/reference/operator/aggregation/function.txt"
     }
   }, {
+    "detail" : "expected.json TYPE at /0/byteLocation",
+    "fixture" : "aggregation/expressions/indexOfBytes/indexOfBytesExpressionOperator",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "source" : {
+      "commit" : "6560e617067dff1934063555ec97e57cad362fc8",
+      "path" : "source/reference/operator/aggregation/indexOfBytes.txt"
+    }
+  }, {
+    "detail" : "expected.json TYPE at /0/cpLocation",
+    "fixture" : "aggregation/expressions/indexOfCP/indexOfCpExpressionOperator",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "source" : {
+      "commit" : "6560e617067dff1934063555ec97e57cad362fc8",
+      "path" : "source/reference/operator/aggregation/indexOfCP.txt"
+    }
+  }, {
+    "detail" : "command outside the current database",
+    "fixture" : "aggregation/expressions/isNumber/conditionallyModifyFieldsUsingIsNumber",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "586c49af93df3c7c75c1ba3ac9808f73e11c29db",
+    "source" : {
+      "commit" : "0bea408ff3bf688b3eb5d416531081b96e93d19f",
+      "path" : "source/reference/operator/aggregation/isNumber.txt"
+    }
+  }, {
     "detail" : "COLLECTION_REQUIRED",
     "fixture" : "aggregation/expressions/lastN/usingLastNAsAnAggregationExpression",
     "gap" : "SOURCE_UNSUPPORTED",
@@ -2257,6 +3080,15 @@
     "source" : {
       "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
       "path" : "source/reference/operator/aggregation/map.txt"
+    }
+  }, {
+    "detail" : "SYNTAX",
+    "fixture" : "aggregation/expressions/meta/metaTextScoreAggregation",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "24f35df159da5bd0da6a8f822280067e138aa632",
+    "source" : {
+      "commit" : "f5d4465bf1c9660c3d195b30eb4199a5e96462fe",
+      "path" : "source/reference/operator/aggregation/meta.txt"
     }
   }, {
     "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
@@ -2331,6 +3163,24 @@
       "path" : "source/reference/operator/aggregation/merge.txt"
     }
   }, {
+    "detail" : "action.json syntax",
+    "fixture" : "query/filters/maxDistance/maxDistanceQueryPredicateOperator",
+    "gap" : "FIXTURE_UNSUPPORTED",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "source" : {
+      "commit" : "2b68884ad57110c9525b6dbdefcab1c0c8375f80",
+      "path" : "source/reference/operator/query/maxDistance.txt"
+    }
+  }, {
+    "detail" : "External snippet requires a source resolver: .. include::  /includes/extracts/geospatial-long-lat-values.rst",
+    "fixture" : "query/filters/near/queryOnGeoJsonData",
+    "gap" : "PAGE_UNSUPPORTED",
+    "origin" : "52d461f742298f36a6ecf2ea02d8ebc332dc7168",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/near.txt"
+    }
+  }, {
     "detail" : "data.json VALUE at /2/description",
     "fixture" : "query/filters/regex/ignoreWhiteSpacesInPattern",
     "gap" : "RESIDUAL_DIFFERENCE",
@@ -2374,6 +3224,24 @@
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
       "path" : "source/reference/operator/query/type.txt"
+    }
+  }, {
+    "detail" : "action TYPE at /1/$mul/price",
+    "fixture" : "query/updates/mul/applyMulOperatorToANonExistingField",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "d220079dea743be8053d18f0f99325a455ccb6b6",
+    "source" : {
+      "commit" : "948002e14f1d94c10fb84b8fb833149a16531169",
+      "path" : "source/reference/operator/update/mul.txt"
+    }
+  }, {
+    "detail" : "expected syntax",
+    "fixture" : "query/updates/mul/multiplyTheValueOfAField",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "d220079dea743be8053d18f0f99325a455ccb6b6",
+    "source" : {
+      "commit" : "948002e14f1d94c10fb84b8fb833149a16531169",
+      "path" : "source/reference/operator/update/mul.txt"
     }
   } ]
 }

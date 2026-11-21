@@ -1,6 +1,7 @@
 package dev.morphia.audits.offline
 
 import dev.morphia.audits.coverage.AuditJson
+import dev.morphia.audits.repairs.FixtureFacts
 import dev.morphia.audits.repairs.FormDeclaration
 import dev.morphia.audits.repairs.FormGap
 import dev.morphia.audits.repairs.FormMigration
@@ -8,6 +9,8 @@ import dev.morphia.audits.repairs.FormMigration.Candidate
 import dev.morphia.audits.repairs.FormRule
 import dev.morphia.audits.repairs.FormSource
 import dev.morphia.audits.repairs.FormUnresolved
+import dev.morphia.audits.repairs.NumericRetype
+import dev.morphia.audits.repairs.NumericType
 import dev.morphia.audits.repairs.RepairDisposition
 import java.nio.file.Files
 import java.nio.file.Path
@@ -114,6 +117,16 @@ class FormMigrationTest {
         )
     }
 
+    /** What the repair inventory would record for the synthetic fixtures. */
+    private fun facts(
+        collections: Map<String, String> = emptyMap(),
+        categories: List<String> = listOf("MORPHIA_FORM"),
+    ) =
+        mapOf(
+            fixture to FixtureFacts(categories, collections),
+            "query/filters/type/byType" to FixtureFacts(listOf("MORPHIA_FORM")),
+        )
+
     private fun candidates(revision: String = commit) =
         listOf(listOf(Candidate(fixture, origin, FormSource(revision, page))))
 
@@ -123,13 +136,13 @@ class FormMigrationTest {
         include(commit, "/includes/sample-inventory.rst", inventory)
         curated()
 
-        val review = FormMigration.draft(repository, pages, "mongodb/docs", candidates())
+        val review = FormMigration.draft(repository, pages, "mongodb/docs", candidates(), facts())
         val declaration = review.declarations.single()
         assertEquals(listOf(FormRule.COND_ARRAY), declaration.rules)
         assertEquals(lockText, declaration.lock)
         assertEquals(review, AuditJson.formReview(AuditJson.write(review)))
 
-        val report = FormMigration.capture(repository, "head", pages, review)
+        val report = FormMigration.capture(repository, "head", pages, review, facts())
         val override = report.overrides.single()
         assertEquals("Use Cond", override.example)
         assertEquals(
@@ -142,13 +155,13 @@ class FormMigrationTest {
 
         val lock = repository.resolve("core/src/test/resources/dev/morphia/test/$fixture/lock")
         assertThrows(IllegalArgumentException::class.java) {
-            FormMigration.verify(repository, review, report)
+            FormMigration.verify(repository, review, report, facts())
         }
         FormMigration.apply(repository, report)
         assertFalse(lock.exists())
         // Verification needs only the recorded source text, not the pages.
         pages.toFile().deleteRecursively()
-        FormMigration.verify(repository, review, report)
+        FormMigration.verify(repository, review, report, facts())
     }
 
     @Test
@@ -156,7 +169,7 @@ class FormMigrationTest {
         page(commit, documented)
         include(commit, "/includes/sample-inventory.rst", inventory)
         curated()
-        val review = FormMigration.draft(repository, pages, "mongodb/docs", candidates())
+        val review = FormMigration.draft(repository, pages, "mongodb/docs", candidates(), facts())
         fun declare(rules: List<FormRule>) =
             review.copy(declarations = listOf(review.declarations.single().copy(rules = rules)))
 
@@ -170,13 +183,14 @@ class FormMigrationTest {
                         declarations =
                             listOf(review.declarations.single().copy(pageBlob = "0".repeat(40)))
                     ),
+                    facts(),
                 )
             }
         assertTrue("page or include blobs differ" in moved.message!!, moved.message)
         listOf(emptyList(), listOf(FormRule.COND_ARRAY, FormRule.NAMED_ARGUMENTS)).forEach {
             val failure =
                 assertThrows(IllegalArgumentException::class.java) {
-                    FormMigration.capture(repository, "head", pages, declare(it))
+                    FormMigration.capture(repository, "head", pages, declare(it), facts())
                 }
             assertTrue("needs rules [COND_ARRAY]" in failure.message!!, failure.message)
         }
@@ -200,32 +214,32 @@ class FormMigrationTest {
         )
         curated()
         fixture("useCond", "data2.json", """{ "_id" : 1, "price" : 5 }""")
-        val bound = mapOf(fixture to mapOf("data2.json" to "prices"))
+        val bound = facts(mapOf("data2.json" to "prices"))
 
-        fun gap(collections: Map<String, Map<String, String>>) =
+        fun gap(collections: Map<String, FixtureFacts>) =
             FormMigration.draft(repository, pages, "mongodb/docs", candidates(), collections)
                 .unresolved
                 .single()
                 .let { it.gap to it.detail }
-        assertEquals(FormGap.FIXTURE_UNSUPPORTED to "files [data2.json]", gap(emptyMap()))
+        assertEquals(FormGap.FIXTURE_UNSUPPORTED to "files [data2.json]", gap(facts()))
         assertEquals(
             FormGap.FIXTURE_UNSUPPORTED to "no data file for collection prices",
-            gap(mapOf(fixture to mapOf("data2.json" to "costs"))),
+            gap(facts(mapOf("data2.json" to "costs"))),
         )
         assertEquals(
             FormGap.FIXTURE_UNSUPPORTED to "a data file targets the action collection",
-            gap(mapOf(fixture to mapOf("data2.json" to "inventory"))),
+            gap(facts(mapOf("data2.json" to "inventory"))),
         )
 
         val review = FormMigration.draft(repository, pages, "mongodb/docs", candidates(), bound)
         assertEquals(listOf(FormRule.COND_ARRAY), review.declarations.single().rules)
         val report = FormMigration.capture(repository, "head", pages, review, bound)
-        assertEquals(bound.getValue(fixture), report.overrides.single().collections)
+        assertEquals(bound.getValue(fixture).collections, report.overrides.single().collections)
         FormMigration.apply(repository, report)
         FormMigration.verify(repository, review, report, bound)
         val changed =
             assertThrows(IllegalArgumentException::class.java) {
-                FormMigration.verify(repository, review, report)
+                FormMigration.verify(repository, review, report, facts())
             }
         assertTrue("test collections changed" in changed.message!!, changed.message)
 
@@ -241,7 +255,7 @@ class FormMigrationTest {
         curated()
         fun gap(data: String) =
             include(commit, "/includes/sample-inventory.rst", data).let {
-                FormMigration.draft(repository, pages, "mongodb/docs", candidates())
+                FormMigration.draft(repository, pages, "mongodb/docs", candidates(), facts())
                     .unresolved
                     .single()
                     .let { it.gap to it.detail }
@@ -269,6 +283,70 @@ class FormMigrationTest {
     }
 
     @Test
+    fun numberTypeChangesNeedANumericTypeLock() {
+        page(commit, documented)
+        include(commit, "/includes/sample-inventory.rst", inventory)
+        curated()
+        fixture(
+            "useCond",
+            "data.json",
+            """
+            |{ "_id" : 1, "item" : "abc1", "qty" : 300.0 }
+            |{ "_id" : 2, "item" : "abc2", "qty" : 200.0 }
+            """
+                .trimMargin(),
+        )
+        fun draft(vararg categories: String) =
+            FormMigration.draft(
+                repository,
+                pages,
+                "mongodb/docs",
+                candidates(),
+                facts(categories = categories.toList()),
+            )
+        // A form lock may not change number types, nor a numeric lock change form.
+        assertEquals("data.json TYPE at /0/qty", draft("MORPHIA_FORM").unresolved.single().detail)
+        assertEquals(
+            "action TYPE at /0/${'$'}project/discount/${'$'}cond",
+            draft("NUMERIC_TYPE").unresolved.single().detail,
+        )
+
+        val review = draft("MORPHIA_FORM", "NUMERIC_TYPE")
+        val declaration = review.declarations.single()
+        assertEquals(listOf(FormRule.COND_ARRAY), declaration.rules)
+        // The two qty values share no deeper pointer than the whole file, which would also
+        // change the integral _id values; each keeps its own retype.
+        assertEquals(
+            listOf(
+                NumericRetype("data.json", "/0/qty", NumericType.INT32, NumericType.DOUBLE),
+                NumericRetype("data.json", "/1/qty", NumericType.INT32, NumericType.DOUBLE),
+            ),
+            declaration.retypes,
+        )
+        val both = facts(categories = listOf("MORPHIA_FORM", "NUMERIC_TYPE"))
+        val failure =
+            assertThrows(IllegalArgumentException::class.java) {
+                FormMigration.capture(
+                    repository,
+                    "head",
+                    pages,
+                    review.copy(declarations = listOf(declaration.copy(retypes = emptyList()))),
+                    both,
+                )
+            }
+        assertTrue("needs retypes" in failure.message!!, failure.message)
+        val report = FormMigration.capture(repository, "head", pages, review, both)
+        assertEquals(1, report.summary["overrides.retyped"])
+        FormMigration.apply(repository, report)
+        FormMigration.verify(repository, review, report, both)
+        val rejected =
+            assertThrows(IllegalArgumentException::class.java) {
+                FormMigration.verify(repository, review, report, facts())
+            }
+        assertTrue("RESIDUAL_DIFFERENCE data.json TYPE" in rejected.message!!, rejected.message)
+    }
+
+    @Test
     fun anyOtherEditKeepsTheLock() {
         page(commit, documented)
         include(commit, "/includes/sample-inventory.rst", inventory)
@@ -276,18 +354,18 @@ class FormMigrationTest {
         // An undeclared data edit is not a form difference.
         fixture("useCond", "data.json", """{ "_id" : 1, "item" : "abc1", "qty" : 300.0 }""")
 
-        val review = FormMigration.draft(repository, pages, "mongodb/docs", candidates())
+        val review = FormMigration.draft(repository, pages, "mongodb/docs", candidates(), facts())
         assertEquals(emptyList<FormDeclaration>(), review.declarations)
         val gap = review.unresolved.single()
         assertEquals(FormGap.RESIDUAL_DIFFERENCE, gap.gap)
         assertEquals("data.json ARRAY_LENGTH at ", gap.detail)
 
-        val report = FormMigration.capture(repository, "head", pages, review)
+        val report = FormMigration.capture(repository, "head", pages, review, facts())
         FormMigration.apply(repository, report)
         assertTrue(
             repository.resolve("core/src/test/resources/dev/morphia/test/$fixture/lock").exists()
         )
-        FormMigration.verify(repository, review, report)
+        FormMigration.verify(repository, review, report, facts())
     }
 
     @Test
@@ -309,9 +387,11 @@ class FormMigrationTest {
                 pages,
                 "mongodb/docs",
                 candidates(commit) + candidates(newer),
+                facts(),
             )
         assertEquals(newer, review.declarations.single().source.commit)
-        val only = FormMigration.draft(repository, pages, "mongodb/docs", candidates(commit))
+        val only =
+            FormMigration.draft(repository, pages, "mongodb/docs", candidates(commit), facts())
         assertEquals(
             FormUnresolved(
                 fixture,
@@ -329,8 +409,8 @@ class FormMigrationTest {
         page(commit, documented)
         include(commit, "/includes/sample-inventory.rst", inventory)
         curated()
-        val review = FormMigration.draft(repository, pages, "mongodb/docs", candidates())
-        val report = FormMigration.capture(repository, "head", pages, review)
+        val review = FormMigration.draft(repository, pages, "mongodb/docs", candidates(), facts())
+        val report = FormMigration.capture(repository, "head", pages, review, facts())
         FormMigration.apply(repository, report)
         val action =
             repository.resolve("core/src/test/resources/dev/morphia/test/$fixture/action.json")
@@ -340,11 +420,11 @@ class FormMigrationTest {
             mutate()
             val failure =
                 assertThrows(IllegalArgumentException::class.java) {
-                    FormMigration.verify(repository, review, report)
+                    FormMigration.verify(repository, review, report, facts())
                 }
             assertTrue(message in failure.message!!, failure.message)
             restore()
-            FormMigration.verify(repository, review, report)
+            FormMigration.verify(repository, review, report, facts())
         }
         rejects(
             "fixture files changed since the override",
@@ -358,7 +438,7 @@ class FormMigrationTest {
             )
         val mismatch =
             assertThrows(IllegalArgumentException::class.java) {
-                FormMigration.verify(repository, redeclared, report)
+                FormMigration.verify(repository, redeclared, report, facts())
             }
         assertTrue("override differs from its declaration" in mismatch.message!!, mismatch.message)
         val tampered =
@@ -372,7 +452,7 @@ class FormMigrationTest {
             )
         val failure =
             assertThrows(IllegalArgumentException::class.java) {
-                FormMigration.verify(repository, review, tampered)
+                FormMigration.verify(repository, review, tampered, facts())
             }
         assertTrue("source text digest mismatch" in failure.message!!, failure.message)
     }
@@ -382,8 +462,8 @@ class FormMigrationTest {
         page(commit, documented)
         include(commit, "/includes/sample-inventory.rst", inventory)
         curated()
-        val review = FormMigration.draft(repository, pages, "mongodb/docs", candidates())
-        val report = FormMigration.capture(repository, "head", pages, review)
+        val review = FormMigration.draft(repository, pages, "mongodb/docs", candidates(), facts())
+        val report = FormMigration.capture(repository, "head", pages, review, facts())
         val lock = fixture("useCond", "lock", "edited after capture\n")
 
         assertThrows(IllegalArgumentException::class.java) {
@@ -432,12 +512,13 @@ class FormMigrationTest {
                         Candidate("query/filters/type/byType", origin, FormSource(commit, filters))
                     )
                 ),
+                facts(),
             )
         assertEquals(listOf(FormRule.ALTERNATIVE_COMMANDS), review.declarations.single().rules)
         // The tool cannot prove the alternatives equivalent, so a reviewer must say why.
         val failure =
             assertThrows(IllegalArgumentException::class.java) {
-                FormMigration.capture(repository, "head", pages, review)
+                FormMigration.capture(repository, "head", pages, review, facts())
             }
         assertTrue("a justification is required" in failure.message!!, failure.message)
         val justified =
@@ -445,7 +526,7 @@ class FormMigrationTest {
                 declarations =
                     listOf(review.declarations.single().copy(justification = "2 is \"string\""))
             )
-        FormMigration.capture(repository, "head", pages, justified)
+        FormMigration.capture(repository, "head", pages, justified, facts())
         val unneeded =
             assertThrows(IllegalArgumentException::class.java) {
                 FormMigration.capture(
@@ -456,6 +537,7 @@ class FormMigrationTest {
                         declarations =
                             listOf(justified.declarations.single().copy(rules = emptyList()))
                     ),
+                    facts(),
                 )
             }
         assertTrue("a justification is required" in unneeded.message!!, unneeded.message)
@@ -477,11 +559,15 @@ class FormMigrationTest {
         val report = AuditJson.formMigration(read("audits/catalog/form-migration.json"))
         assertEquals(read("audits/catalog/form-review.json"), AuditJson.write(review))
         val inventory = AuditJson.curatedRepairs(read("audits/catalog/curated-repairs.json"))
-        FormMigration.verify(root, review, report, FormMigration.collections(inventory))
+        FormMigration.verify(root, review, report, FormMigration.facts(inventory))
         // Pages are not committed (separate licence); the review pins their blob ids instead.
         report.overrides.forEach { assertEquals(40, it.pageBlob.length) }
 
-        val formOnly = inventory.examples.filter { it.categories == listOf("MORPHIA_FORM") }
+        val migrated = setOf("MORPHIA_FORM", "NUMERIC_TYPE")
+        val formOnly =
+            inventory.examples.filter {
+                it.categories.isNotEmpty() && migrated.containsAll(it.categories)
+            }
         assertEquals(
             formOnly.map { it.fixture }.toSet(),
             (review.declarations.map { it.fixture } + review.unresolved.map { it.fixture }).toSet(),
@@ -493,7 +579,7 @@ class FormMigrationTest {
                 .map { it.fixture }
                 .toSet(),
         )
-        assertEquals(46, report.overrides.size)
-        assertEquals(20, report.unresolved.size)
+        assertEquals(62, report.overrides.size)
+        assertEquals(28, report.unresolved.size)
     }
 }

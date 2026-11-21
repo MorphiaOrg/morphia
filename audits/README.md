@@ -586,6 +586,7 @@ bound test's `ActionTestOptions`, executed assertion paths and extra `loadData` 
 ```sh
 python3 -I audits/probes/form-sources/fetch.py candidates "$PWD" first /tmp/first.json
 python3 -I audits/probes/form-sources/fetch.py candidates "$PWD" last /tmp/last.json
+# Optional trailing categories widen the selection, e.g. ... first /tmp/first.json NUMERIC_TYPE MORPHIA_FORM
 python3 -I audits/probes/form-sources/fetch.py pages /tmp/first.json /tmp/pages
 python3 -I audits/probes/form-sources/fetch.py pages /tmp/last.json /tmp/pages
 ./mvnw -q -Daudits -pl audits compile exec:java \
@@ -593,7 +594,8 @@ python3 -I audits/probes/form-sources/fetch.py pages /tmp/last.json /tmp/pages
   -Dexec.args="draft $PWD /tmp/pages mongodb/docs /tmp/form-review.json /tmp/first.json /tmp/last.json"
 ```
 
-`draft` only proposes a review. Every command reads the tests' extra collections
+`draft` only proposes a review. Every command reads the locks' categories (form rules need `MORPHIA_FORM`, number retypes
+`NUMERIC_TYPE`) and the tests' extra collections
 (`loadData("airports", 2)` → `data2.json`) from the committed `audits/catalog/curated-repairs.json`,
 so recapture that inventory first when a test's `loadData` calls change. The reviewed `audits/catalog/form-review.json` is consumed by
 `capture <root> <revision> <pages> <review> <out>`, which writes `audits/catalog/form-migration.json`,

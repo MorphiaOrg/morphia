@@ -3,10 +3,14 @@
 The second slice of step 4 of [the operator audit plan](mongodb-operator-audits.md), following the
 [curated repair inventory](operator-audits-curated-repairs.md). It replaces the locks whose only
 category is `MORPHIA_FORM` with declared equivalences, and retires a lock only when its documented
-source, under those rules, is BSON-identical to the preserved curated fixture.
+source, under those rules, is BSON-identical to the preserved curated fixture. A later slice
+applies the same machinery to `NUMERIC_TYPE` locks through declared number retypes (see
+[Numeric retypes](#numeric-retypes)).
 
 Of the 77 `MORPHIA_FORM` examples, 66 carry no other category. 46 of those locks are retired here;
-20 stay, each with a recorded gap. The 11 mixed examples wait for their other families.
+20 stay, each with a recorded gap. The 11 mixed examples wait for their other families. Of the 26
+`NUMERIC_TYPE` examples, 24 carry no category besides `MORPHIA_FORM`; 16 of those are retired and
+8 stay with a gap.
 
 ## Which documentation is the source
 
@@ -60,6 +64,34 @@ No rule looks inside `$literal`, whose content is data. Predicate rules apply on
 each rule and the cases it must not touch. `EXISTS_BOOLEAN` was drafted for `$facet` and dropped:
 that example is unresolved for another reason, and an unexercised rule is not kept.
 
+## Numeric retypes
+
+A `NUMERIC_TYPE` lock records that a curated fixture spells a documented number in another BSON
+type, usually an integral double where mongosh sends or prints an integer. That is not an
+equivalence (an `int32` and a `double` are different commands and results), so it is declared as
+an override instead: a `NumericRetype` names a file, an RFC 6901 pointer, a source type and a target
+type, and turns every source-type number under that pointer into the target type at exactly the same
+value. `int32`, `int64` and `double` are supported; a value with no exact counterpart (2.5 as an
+integer, `-0.0`, 2^53+1 as a double) fails the override. `Decimal128` is not supported, since a
+decimal's scale makes "the same value" ambiguous.
+
+Retypes are discovered from the comparison: each numeric `TYPE` difference whose two values are equal
+becomes a leaf retype. Leaves of one file and type change are then merged into the deepest pointer
+that covers them, but only when the merged retype still reproduces the fixture exactly (two `qty`
+values do not merge into the whole file when that would also change integral `_id` values). Every
+retype must change at least one number and be necessary. For `action.json`, pointers address the
+canonical form under the declared rules, so retypes are re-derived for every rule set tried while
+the rules are minimized. `overrides.retyped` counts overrides with retypes; a retired lock that
+needs neither rules nor retypes counts as `overrides.exact`.
+
+The lock's categories decide what an override may declare: form rules only for a `MORPHIA_FORM` lock
+and retypes only for a `NUMERIC_TYPE` lock, so neither stands in for an edit the lock did not record.
+The categories come from the repair inventory.
+
+Of the 16 retired `NUMERIC_TYPE` locks, one (`$exp`) needs nothing: its page already shows doubles.
+The others retype geometry and `$mod`/`$nearSphere` arguments in the action, or `$linearFill` and
+`$percentile` results in the expected output, from `int32` to `double`.
+
 ## What is compared
 
 For each fixture, the legacy extractor reads the recorded page (with tracked includes spliced in as
@@ -75,8 +107,9 @@ Sphinx does) and selects the example by the fixture's `name`. Then:
   `SOURCE_UNSUPPORTED` gap. Each override records its bindings, and verification fails if the
   inventory's differ;
 - action, data, expected results and index are compared with the strict BSON comparator, which keeps
-  key order and BSON types. Only the action takes rules. Data, expected and index must match exactly,
-  because a lock does not say which files were edited;
+  key order and BSON types. Form rules apply only to the action, and declared
+  retypes to any file; everything else must match exactly, because a lock does not say which
+  files were edited;
 - the rules must be sufficient, and each must be necessary: dropping any one breaks equality. The
   declaration must list exactly that set.
 
@@ -102,20 +135,24 @@ migration retired it with the digest the legacy corpus recorded.
 
 ## Gaps kept with their locks
 
-- `RESIDUAL_DIFFERENCE` (8): real, undeclared edits. The four `$regex` fixtures lost the documented
+- `RESIDUAL_DIFFERENCE` (11): real, undeclared edits. `$indexOfBytes` and `$indexOfCP` document
+  their results as strings (`"0"`), and `$mul` multiplies by `Decimal128("100")` where the fixture
+  uses a double; those `NUMERIC_TYPE` locks are really documentation errors or decimal changes. The four `$regex` fixtures lost the documented
   runs of spaces in their data; `$allElementsTrue`/`$anyElementTrue` insert BSON `undefined` where
   the documented insert does not; `$dateTrunc` changes `startOfWeek` case, which the page does not
   call case-insensitive; `$densify` reorders the nested `range` document.
-- `SOURCE_UNSUPPORTED` (9): constructors the strict shell normalizer rejects (`Date` without an
+- `SOURCE_UNSUPPORTED` (12): constructors the strict shell normalizer rejects (`Date` without an
   explicit time, and one typed-value constructor), a JavaScript function body, an expression example
-  without a collection, and an unparseable printed result.
-- `FIXTURE_UNSUPPORTED` (1): a data file the legacy reader cannot parse.
-- `PAGE_UNSUPPORTED` (2): a generated `/includes/extracts/` file inside the example section.
+  without a collection, unparseable printed results or shell text, and a data block in another
+  database.
+- `FIXTURE_UNSUPPORTED` (2): a data file the legacy reader cannot parse, and an action in the legacy
+  `$near` coordinate form it cannot read.
+- `PAGE_UNSUPPORTED` (3): a generated `/includes/extracts/` file inside the example section.
 
 ## Next
 
 Test bodies are not compared: a bound test that writes data directly (`insert`, `getDs().save`,
-driver calls) is outside this check. None of the 46 retired fixtures' tests does today; recording
+driver calls) is outside this check. None of the 62 retired fixtures' tests does today; recording
 such writes in the repair inventory is a separate rule.
 
 The remaining families follow the same pattern. `EXTRACTION` and `SHELL_SYNTAX` need the native

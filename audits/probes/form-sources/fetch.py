@@ -3,9 +3,9 @@
 
 This is the only networked step of the form migration. It never edits the repository.
 
-  fetch.py candidates <repo-root> <first|last> <out.json>
-      For every locked example whose only repair category is MORPHIA_FORM (per
-      audits/catalog/curated-repairs.json), find a Morphia origin commit and the last
+  fetch.py candidates <repo-root> <first|last> <out.json> [category...]
+      For every locked example whose repair categories are all among the given ones (default
+      MORPHIA_FORM; per audits/catalog/curated-repairs.json) and include at least one, find a Morphia origin commit and the last
       mongodb/docs commit that touched the operator page at or before that commit's date.
       "first" uses the commit that created the fixture; "last" uses the latest commit that
       added or modified one of its files (pure renames do not count), which finds fixtures a
@@ -56,11 +56,11 @@ def origin(root, fixture, which):
     return commits[0] if which == "first" else commits[-1]
 
 
-def candidates(root, which, out):
+def candidates(root, which, out, categories=("MORPHIA_FORM",)):
     report = json.load(open(os.path.join(root, "audits/catalog/curated-repairs.json")))
     result = []
     for example in report["examples"]:
-        if example["categories"] != ["MORPHIA_FORM"] or not example["markers"]:
+        if not example["markers"] or not example["categories"] or not set(example["categories"]) <= set(categories):
             continue
         fixture = example["fixture"]
         commit, date = origin(root, fixture, which)
@@ -141,8 +141,8 @@ def pages(sources, directory):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) == 5 and sys.argv[1] == "candidates" and sys.argv[3] in ("first", "last"):
-        candidates(sys.argv[2], sys.argv[3], sys.argv[4])
+    if len(sys.argv) >= 5 and sys.argv[1] == "candidates" and sys.argv[3] in ("first", "last"):
+        candidates(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5:] or ("MORPHIA_FORM",))
     elif len(sys.argv) == 4 and sys.argv[1] == "pages":
         pages(sys.argv[2], sys.argv[3])
     else:

@@ -6,6 +6,7 @@
     "lock" : "morphia generates the more succinct array version vs the document version from the docs\ndocument order differs",
     "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
     "pageBlob" : "6c13c2ef114628ba3582ee463c1a86b8b9edb9bf",
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY", "NAMED_ARGUMENTS" ],
     "source" : {
       "commit" : "d497b13c81d4853dce0760e07390cf9d03c33c28",
@@ -18,6 +19,7 @@
     "lock" : "reorder pipeline",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "e3fa7926b676ae107cb77e843f9ce50b2289e008",
+    "retypes" : [ ],
     "rules" : [ "PROJECT_ID_FIRST" ],
     "source" : {
       "commit" : "b89791d6434ba071253241c8b38dd683d332ba69",
@@ -42,6 +44,7 @@
     "lock" : "morphia generates the more succinct array version vs the document version from the docs",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "914125372599704f56defd0ab1a9776d921d2fe5",
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY" ],
     "source" : {
       "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
@@ -66,6 +69,7 @@
     "lock" : "rearranged arguments to match morphia's",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "3c53000302392ff1f16165d9e7c932f102f719f0",
+    "retypes" : [ ],
     "rules" : [ "NAMED_ARGUMENTS" ],
     "source" : {
       "commit" : "b2d4041710ee0667261f8f5e2e40390265df85fd",
@@ -78,10 +82,24 @@
     "lock" : "reorder pipeline",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "7bf1ae5a7fdb3f2457dfa5c70f474649d3343ccd",
+    "retypes" : [ ],
     "rules" : [ "PROJECT_ID_FIRST" ],
     "source" : {
       "commit" : "b89791d6434ba071253241c8b38dd683d332ba69",
       "path" : "source/reference/operator/aggregation/eq.txt"
+    }
+  }, {
+    "fixture" : "aggregation/expressions/exp/expExpressionOperator",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "the interestRate values were not proper doubles",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "734eaab3d5843ee1da0575bba8ea5f526ee7edf8",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "cd46d544a63101fcb3392ddab496c648841d3445",
+      "path" : "source/reference/operator/aggregation/exp.txt"
     }
   }, {
     "fixture" : "aggregation/expressions/filter/filterBasedOnRegularExpressionMatch",
@@ -102,6 +120,7 @@
     "lock" : "rearrange elements",
     "origin" : "7e4567cf008b68b2e9dc6075b6217df8de3b5a90",
     "pageBlob" : "c0a5679050c445a70bb50d3d0ef7b05cb7c4903d",
+    "retypes" : [ ],
     "rules" : [ "NAMED_ARGUMENTS" ],
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
@@ -126,6 +145,7 @@
     "lock" : "rearrange elements",
     "origin" : "7e4567cf008b68b2e9dc6075b6217df8de3b5a90",
     "pageBlob" : "c0a5679050c445a70bb50d3d0ef7b05cb7c4903d",
+    "retypes" : [ ],
     "rules" : [ "NAMED_ARGUMENTS" ],
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
@@ -150,6 +170,7 @@
     "lock" : "the codec produces items in a different order",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "406bdfabb5424bbf5946971211e927ed5a49d39a",
+    "retypes" : [ ],
     "rules" : [ "NAMED_ARGUMENTS" ],
     "source" : {
       "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
@@ -174,6 +195,7 @@
     "lock" : "rearrange elements",
     "origin" : "7e4567cf008b68b2e9dc6075b6217df8de3b5a90",
     "pageBlob" : "c0a5679050c445a70bb50d3d0ef7b05cb7c4903d",
+    "retypes" : [ ],
     "rules" : [ "NAMED_ARGUMENTS" ],
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
@@ -186,6 +208,7 @@
     "lock" : "use the shorter cond form",
     "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
     "pageBlob" : "99783a2c7028cff9efa22b354f9672de17454b07",
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY" ],
     "source" : {
       "commit" : "efbc9f9fa2ee51515cf986e1f74e3b8e9f9d31fa",
@@ -198,6 +221,7 @@
     "lock" : "reorder pipeline",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "a8fd1e09b2e178cbd0a559f56eee94d7a2e90776",
+    "retypes" : [ ],
     "rules" : [ "PROJECT_ID_FIRST" ],
     "source" : {
       "commit" : "b89791d6434ba071253241c8b38dd683d332ba69",
@@ -210,6 +234,7 @@
     "lock" : "reorder pipeline",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "18230f5639cd5638df0cfab9bc416b2352c1293c",
+    "retypes" : [ ],
     "rules" : [ "PROJECT_ID_FIRST" ],
     "source" : {
       "commit" : "b89791d6434ba071253241c8b38dd683d332ba69",
@@ -225,6 +250,7 @@
     "lock" : "use a different form of $isArray to match morphia's rendering\nuse shorter form of cond",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "bc5c7095f3dd2b19238a8edaa22444ced7d9b66b",
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY", "SINGLE_ARGUMENT_ARRAY" ],
     "source" : {
       "commit" : "190e04195a5e4f9cd0651bfc71cfa65928fb8ce5",
@@ -237,6 +263,7 @@
     "lock" : "use the shorter form of cond",
     "origin" : "f9e469c9ce77fc5f8cef56e14b3e60944dc02128",
     "pageBlob" : "eb90d0dcc67be06173b80d0c88e3eb60c33ae15b",
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY" ],
     "source" : {
       "commit" : "26310c7ddaaa6b1936d57da6da95fe8b7a4f1c96",
@@ -249,10 +276,69 @@
     "lock" : "use the shorter form of $cond",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "f5cd4d9c72b930532bb6ceb2ced035cbaa020707",
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY" ],
     "source" : {
       "commit" : "26668d05722f74657f802e17701f9c4d565f59b4",
       "path" : "source/reference/operator/aggregation/let.txt"
+    }
+  }, {
+    "fixture" : "aggregation/expressions/linearFill/fillMissingValuesWithLinearInterpolation",
+    "includes" : [ {
+      "blob" : "5eaa730a9a6093d0faca440ed2568bdd9ef73cdb",
+      "path" : "source/includes/fact-linear-fill-description.rst"
+    }, {
+      "blob" : "8c226c41d6de20160444b523f83395577ed7bbe2",
+      "path" : "source/includes/example-multiple-fill-methods.rst"
+    } ],
+    "justification" : null,
+    "lock" : "some numbers need to be doubles (because of the fill?)",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "af528a2d3ffbac675ba07a6e2449ef8e6d2802aa",
+    "retypes" : [ {
+      "file" : "expected.json",
+      "from" : "INT32",
+      "pointer" : "/3/price",
+      "to" : "DOUBLE"
+    }, {
+      "file" : "expected.json",
+      "from" : "INT32",
+      "pointer" : "/4/price",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "095396b6319b25c0e8334317f148b79b31b2ae7a",
+      "path" : "source/reference/operator/aggregation/linearFill.txt"
+    }
+  }, {
+    "fixture" : "aggregation/expressions/linearFill/useMultipleFillMethodsInASingleStage",
+    "includes" : [ {
+      "blob" : "5eaa730a9a6093d0faca440ed2568bdd9ef73cdb",
+      "path" : "source/includes/fact-linear-fill-description.rst"
+    }, {
+      "blob" : "8c226c41d6de20160444b523f83395577ed7bbe2",
+      "path" : "source/includes/example-multiple-fill-methods.rst"
+    } ],
+    "justification" : null,
+    "lock" : "some numbers need to be doubles (because of the fill?)",
+    "origin" : "24f35df159da5bd0da6a8f822280067e138aa632",
+    "pageBlob" : "af528a2d3ffbac675ba07a6e2449ef8e6d2802aa",
+    "retypes" : [ {
+      "file" : "expected.json",
+      "from" : "INT32",
+      "pointer" : "/3/linearFillPrice",
+      "to" : "DOUBLE"
+    }, {
+      "file" : "expected.json",
+      "from" : "INT32",
+      "pointer" : "/4/linearFillPrice",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "095396b6319b25c0e8334317f148b79b31b2ae7a",
+      "path" : "source/reference/operator/aggregation/linearFill.txt"
     }
   }, {
     "fixture" : "aggregation/expressions/lt/ltExpressionOperator",
@@ -261,6 +347,7 @@
     "lock" : "reorder pipeline",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "a1b6c905911b75973144e2359fb714b053e3515c",
+    "retypes" : [ ],
     "rules" : [ "PROJECT_ID_FIRST" ],
     "source" : {
       "commit" : "b89791d6434ba071253241c8b38dd683d332ba69",
@@ -273,6 +360,7 @@
     "lock" : "reorder pipeline",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "c4ae0ea4521bf29bc2d79a4bb9008f6f49625012",
+    "retypes" : [ ],
     "rules" : [ "PROJECT_ID_FIRST" ],
     "source" : {
       "commit" : "b89791d6434ba071253241c8b38dd683d332ba69",
@@ -297,6 +385,7 @@
     "lock" : "reorder pipeline to match morphia's order",
     "origin" : "aac41b3aaf402fae15ff8a1ebcf9df0759d92878",
     "pageBlob" : "42cd94292518bce21ea6a17604a49007ddd649b2",
+    "retypes" : [ ],
     "rules" : [ "NAMED_ARGUMENTS" ],
     "source" : {
       "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
@@ -321,6 +410,7 @@
     "lock" : "reorder pipeline to match morphia's order",
     "origin" : "aac41b3aaf402fae15ff8a1ebcf9df0759d92878",
     "pageBlob" : "42cd94292518bce21ea6a17604a49007ddd649b2",
+    "retypes" : [ ],
     "rules" : [ "NAMED_ARGUMENTS" ],
     "source" : {
       "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
@@ -333,6 +423,7 @@
     "lock" : "cond uses the shorter format",
     "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
     "pageBlob" : "75206683857d348c555a0c512696915266e8fd83",
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY" ],
     "source" : {
       "commit" : "e473868337d01610afb03e550b561ca771245aff",
@@ -345,6 +436,7 @@
     "lock" : "update the docs version to use the short version morphia generates",
     "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
     "pageBlob" : "f998dbd7720b7f9e66137c1e9d6ff795bbaa04d5",
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY" ],
     "source" : {
       "commit" : "e473868337d01610afb03e550b561ca771245aff",
@@ -357,10 +449,155 @@
     "lock" : "reorder pipeline",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "ef66debc94e80aeed914a5889773b680688d2634",
+    "retypes" : [ ],
     "rules" : [ "PROJECT_ID_FIRST" ],
     "source" : {
       "commit" : "d3aedc270fc14feb019a86c8018699c98b26de28",
       "path" : "source/reference/operator/aggregation/ne.txt"
+    }
+  }, {
+    "fixture" : "aggregation/expressions/percentile/calculateASingleValueAsAnAccumulator",
+    "includes" : [ {
+      "blob" : "9e2239e2f8e6aa2503273fbad7196784ef4fde89",
+      "path" : "source/includes/aggregation/fact-return-percentile.rst"
+    }, {
+      "blob" : "eeb1e5aceaf20f3d7e877dc0486e2035c482c957",
+      "path" : "source/includes/aggregation/fact-behavior-percent-median.rst"
+    }, {
+      "blob" : "561930205ae8a255ef8365d11bfedd74c9c28eba",
+      "path" : "source/includes/aggregation/fact-type-of-operation.rst"
+    }, {
+      "blob" : "587a67273fbc41a504c4228afef29809a5118522",
+      "path" : "source/includes/aggregation/fact-calc-considerations.rst"
+    }, {
+      "blob" : "88c3f2670109fd3e4b1ceb40200cf3f87daf0afc",
+      "path" : "source/includes/aggregation/fact-setwindowfield.rst"
+    }, {
+      "blob" : "de81aba2b9c44631b328ee29cce75f08453f7fea",
+      "path" : "source/includes/aggregation/example-setup-01.rst"
+    } ],
+    "justification" : null,
+    "lock" : "numbers need to be doubles",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "809aebea5746a5dcf41a3049d88b2d29372799c2",
+    "retypes" : [ {
+      "file" : "expected.json",
+      "from" : "INT32",
+      "pointer" : "/0/test01_percentiles/0",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "3119142f7c7443c44ec9e941b3a072e35efc3540",
+      "path" : "source/reference/operator/aggregation/percentile.txt"
+    }
+  }, {
+    "fixture" : "aggregation/expressions/percentile/calculateMultipleValuesAsAnAccumulator",
+    "includes" : [ {
+      "blob" : "9e2239e2f8e6aa2503273fbad7196784ef4fde89",
+      "path" : "source/includes/aggregation/fact-return-percentile.rst"
+    }, {
+      "blob" : "eeb1e5aceaf20f3d7e877dc0486e2035c482c957",
+      "path" : "source/includes/aggregation/fact-behavior-percent-median.rst"
+    }, {
+      "blob" : "561930205ae8a255ef8365d11bfedd74c9c28eba",
+      "path" : "source/includes/aggregation/fact-type-of-operation.rst"
+    }, {
+      "blob" : "587a67273fbc41a504c4228afef29809a5118522",
+      "path" : "source/includes/aggregation/fact-calc-considerations.rst"
+    }, {
+      "blob" : "88c3f2670109fd3e4b1ceb40200cf3f87daf0afc",
+      "path" : "source/includes/aggregation/fact-setwindowfield.rst"
+    }, {
+      "blob" : "de81aba2b9c44631b328ee29cce75f08453f7fea",
+      "path" : "source/includes/aggregation/example-setup-01.rst"
+    } ],
+    "justification" : null,
+    "lock" : "numbers need to be doubles",
+    "origin" : "aab78edb8fce70d5e880acd4c8ea7ca1af3dc43b",
+    "pageBlob" : "809aebea5746a5dcf41a3049d88b2d29372799c2",
+    "retypes" : [ {
+      "file" : "expected.json",
+      "from" : "INT32",
+      "pointer" : "/0",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "3119142f7c7443c44ec9e941b3a072e35efc3540",
+      "path" : "source/reference/operator/aggregation/percentile.txt"
+    }
+  }, {
+    "fixture" : "aggregation/expressions/percentile/usePercentileInAProjectStage",
+    "includes" : [ {
+      "blob" : "9e2239e2f8e6aa2503273fbad7196784ef4fde89",
+      "path" : "source/includes/aggregation/fact-return-percentile.rst"
+    }, {
+      "blob" : "eeb1e5aceaf20f3d7e877dc0486e2035c482c957",
+      "path" : "source/includes/aggregation/fact-behavior-percent-median.rst"
+    }, {
+      "blob" : "561930205ae8a255ef8365d11bfedd74c9c28eba",
+      "path" : "source/includes/aggregation/fact-type-of-operation.rst"
+    }, {
+      "blob" : "587a67273fbc41a504c4228afef29809a5118522",
+      "path" : "source/includes/aggregation/fact-calc-considerations.rst"
+    }, {
+      "blob" : "88c3f2670109fd3e4b1ceb40200cf3f87daf0afc",
+      "path" : "source/includes/aggregation/fact-setwindowfield.rst"
+    }, {
+      "blob" : "de81aba2b9c44631b328ee29cce75f08453f7fea",
+      "path" : "source/includes/aggregation/example-setup-01.rst"
+    } ],
+    "justification" : null,
+    "lock" : "numbers need to be doubles",
+    "origin" : "aab78edb8fce70d5e880acd4c8ea7ca1af3dc43b",
+    "pageBlob" : "809aebea5746a5dcf41a3049d88b2d29372799c2",
+    "retypes" : [ {
+      "file" : "expected.json",
+      "from" : "INT32",
+      "pointer" : "",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "3119142f7c7443c44ec9e941b3a072e35efc3540",
+      "path" : "source/reference/operator/aggregation/percentile.txt"
+    }
+  }, {
+    "fixture" : "aggregation/expressions/percentile/usePercentileInASetWindowFieldStage",
+    "includes" : [ {
+      "blob" : "9e2239e2f8e6aa2503273fbad7196784ef4fde89",
+      "path" : "source/includes/aggregation/fact-return-percentile.rst"
+    }, {
+      "blob" : "eeb1e5aceaf20f3d7e877dc0486e2035c482c957",
+      "path" : "source/includes/aggregation/fact-behavior-percent-median.rst"
+    }, {
+      "blob" : "561930205ae8a255ef8365d11bfedd74c9c28eba",
+      "path" : "source/includes/aggregation/fact-type-of-operation.rst"
+    }, {
+      "blob" : "587a67273fbc41a504c4228afef29809a5118522",
+      "path" : "source/includes/aggregation/fact-calc-considerations.rst"
+    }, {
+      "blob" : "88c3f2670109fd3e4b1ceb40200cf3f87daf0afc",
+      "path" : "source/includes/aggregation/fact-setwindowfield.rst"
+    }, {
+      "blob" : "de81aba2b9c44631b328ee29cce75f08453f7fea",
+      "path" : "source/includes/aggregation/example-setup-01.rst"
+    } ],
+    "justification" : null,
+    "lock" : "numbers need to be doubles",
+    "origin" : "aab78edb8fce70d5e880acd4c8ea7ca1af3dc43b",
+    "pageBlob" : "809aebea5746a5dcf41a3049d88b2d29372799c2",
+    "retypes" : [ {
+      "file" : "expected.json",
+      "from" : "INT32",
+      "pointer" : "",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "3119142f7c7443c44ec9e941b3a072e35efc3540",
+      "path" : "source/reference/operator/aggregation/percentile.txt"
     }
   }, {
     "fixture" : "aggregation/expressions/reduce/stringConcatenation",
@@ -369,6 +606,7 @@
     "lock" : "use the short form for $cond",
     "origin" : "1e38798fbaaffb6945159e208bcd33318c425121",
     "pageBlob" : "6a36a6a69ad4600f7ba7656f7d4dfc7db0c891fd",
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY" ],
     "source" : {
       "commit" : "ca3e8a737ee08af6482a9eed3a1abfe708edd5c8",
@@ -384,6 +622,7 @@
     "lock" : "rearrange suppress id",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "0bd381ef5fd752e0f024a2bb47a6c1e6dbd6032f",
+    "retypes" : [ ],
     "rules" : [ "PROJECT_ID_FIRST" ],
     "source" : {
       "commit" : "e0848b6ada3e691ecada5da38e717de2d2545843",
@@ -423,6 +662,7 @@
     "lock" : "rearrange suppress id",
     "origin" : "162455b3b4312eb783f51ede4f8d944d2586286a",
     "pageBlob" : "35a7a8a1e624fa7385262e64d42fd7bf1bdd2782",
+    "retypes" : [ ],
     "rules" : [ "PROJECT_ID_FIRST" ],
     "source" : {
       "commit" : "e0848b6ada3e691ecada5da38e717de2d2545843",
@@ -438,6 +678,7 @@
     "lock" : "rearrange suppress id\n",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "5fb7cb7683edfc6e33c1129ce27a7d763725669c",
+    "retypes" : [ ],
     "rules" : [ "PROJECT_ID_FIRST" ],
     "source" : {
       "commit" : "e0848b6ada3e691ecada5da38e717de2d2545843",
@@ -462,6 +703,7 @@
     "lock" : "adjust the form of $cond",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "b0b66a16ae0f3d126ddf3c7bb10fb253fe1a9ef1",
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY", "SINGLE_ARGUMENT_ARRAY" ],
     "source" : {
       "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
@@ -474,6 +716,7 @@
     "lock" : "change the form of the regex to match morphia's generated form",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "ae02591d100b051c6b547a9a03ea8360bb284bdb",
+    "retypes" : [ ],
     "rules" : [ "REGEX_FORM" ],
     "source" : {
       "commit" : "dd8638fb493316581481d0fc9413339ee019bb3a",
@@ -486,6 +729,7 @@
     "lock" : "update the docs version to use the short version morphia generates\nfix the ordering of the doc",
     "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
     "pageBlob" : "5327b184fa5b8f1342bd6cfd26f8318c09d5709c",
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY", "NAMED_ARGUMENTS" ],
     "source" : {
       "commit" : "d497b13c81d4853dce0760e07390cf9d03c33c28",
@@ -498,6 +742,7 @@
     "lock" : "use 0 instead of false to suppress _id",
     "origin" : "9559001fffde3bca28f60aa3e405dff22baefd44",
     "pageBlob" : "88768190850e225b4aee38ddde325830c65b55a2",
+    "retypes" : [ ],
     "rules" : [ "PROJECTION_FLAGS" ],
     "source" : {
       "commit" : "08e800f56f6f44b44a625756fc1c3c64061055b9",
@@ -516,6 +761,7 @@
     "lock" : "updated pipeline order\n",
     "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
     "pageBlob" : "d00d3c58699ec5ad0505fdcab3026e35f522ce87",
+    "retypes" : [ ],
     "rules" : [ "NAMED_ARGUMENTS" ],
     "source" : {
       "commit" : "fbff8bd22e055259d67b394c854f128340571b1f",
@@ -558,6 +804,7 @@
     "lock" : "rearrange the order",
     "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
     "pageBlob" : "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f",
+    "retypes" : [ ],
     "rules" : [ "NAMED_ARGUMENTS" ],
     "source" : {
       "commit" : "c360d9dc787de55021969f368a0860be6008f706",
@@ -600,6 +847,7 @@
     "lock" : "reorder pipeline",
     "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
     "pageBlob" : "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f",
+    "retypes" : [ ],
     "rules" : [ "PROJECT_ID_FIRST", "NAMED_ARGUMENTS" ],
     "source" : {
       "commit" : "c360d9dc787de55021969f368a0860be6008f706",
@@ -624,6 +872,7 @@
     "lock" : "make the $or match morphia's",
     "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
     "pageBlob" : "3139f56b4248eac375cc97846a48b772c0b2a1ca",
+    "retypes" : [ ],
     "rules" : [ "FIELD_OPERATORS_AND" ],
     "source" : {
       "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
@@ -654,6 +903,7 @@
     "lock" : "use the short form of $cond",
     "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
     "pageBlob" : "6139e853557792da45aaaf91a90530d9221b5823",
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY" ],
     "source" : {
       "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
@@ -684,6 +934,7 @@
     "lock" : "use the short form of $cond",
     "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
     "pageBlob" : "6139e853557792da45aaaf91a90530d9221b5823",
+    "retypes" : [ ],
     "rules" : [ ],
     "source" : {
       "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
@@ -699,6 +950,7 @@
     "lock" : "use the shorter form of $cond",
     "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
     "pageBlob" : "f2e69d3c53225905352e90e34c67ac3ac18c599b",
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY" ],
     "source" : {
       "commit" : "5345ef589188df237b4db66c0eb75aa8792d1a52",
@@ -714,6 +966,7 @@
     "lock" : "use the shorter form of $cond",
     "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
     "pageBlob" : "f2e69d3c53225905352e90e34c67ac3ac18c599b",
+    "retypes" : [ ],
     "rules" : [ "COND_ARRAY" ],
     "source" : {
       "commit" : "5345ef589188df237b4db66c0eb75aa8792d1a52",
@@ -729,6 +982,7 @@
     "lock" : "reformat pipeline",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
     "pageBlob" : "7f92ddf55c937279fafe343fe4853b49f66ed742",
+    "retypes" : [ ],
     "rules" : [ ],
     "source" : {
       "commit" : "2147ffb41ccc450346e3f1a21a3dd7905e4adc74",
@@ -753,10 +1007,53 @@
     "lock" : "morphia doesn't generate this shape of $unwind",
     "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
     "pageBlob" : "a48530d2f807435f11dbfb681202e04027bd0c1e",
+    "retypes" : [ ],
     "rules" : [ "UNWIND_PATH" ],
     "source" : {
       "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
       "path" : "source/reference/operator/aggregation/unwind.txt"
+    }
+  }, {
+    "fixture" : "query/filters/box/boxQueryPredicateOperator",
+    "includes" : [ {
+      "blob" : "231e34e5ae706bd4cce129c3601d1066b2e85d8c",
+      "path" : "source/includes/note-geospatial-index-must-exist.rst"
+    } ],
+    "justification" : null,
+    "lock" : "converted the point values to doubles",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "77c68dace2c26c8e6dd8909f658b8afdb242ba0e",
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/loc/$geoWithin/$box",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "2b68884ad57110c9525b6dbdefcab1c0c8375f80",
+      "path" : "source/reference/operator/query/box.txt"
+    }
+  }, {
+    "fixture" : "query/filters/center/centerQueryPredicateOperator",
+    "includes" : [ {
+      "blob" : "231e34e5ae706bd4cce129c3601d1066b2e85d8c",
+      "path" : "source/includes/note-geospatial-index-must-exist.rst"
+    } ],
+    "justification" : null,
+    "lock" : "converted the point values to doubles",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "fe3865f2c9c9fc0c385856bb9099be6adf5d7da0",
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/loc/$geoWithin/$center",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "2b68884ad57110c9525b6dbdefcab1c0c8375f80",
+      "path" : "source/reference/operator/query/center.txt"
     }
   }, {
     "fixture" : "query/filters/eq/arrayElementEqualsAValue",
@@ -780,6 +1077,7 @@
     "lock" : "update action to use shortened version of $eq",
     "origin" : "726a1a6fcd0127bd53f37c9459716a7112722430",
     "pageBlob" : "c1245a4ad7ed4d950b37dd9b02c75890ac3e33ed",
+    "retypes" : [ ],
     "rules" : [ "EQ_SHORTHAND" ],
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
@@ -807,6 +1105,7 @@
     "lock" : "update action to use shortened version of $eq",
     "origin" : "726a1a6fcd0127bd53f37c9459716a7112722430",
     "pageBlob" : "c1245a4ad7ed4d950b37dd9b02c75890ac3e33ed",
+    "retypes" : [ ],
     "rules" : [ "EQ_SHORTHAND" ],
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
@@ -834,6 +1133,7 @@
     "lock" : "update action to use shortened version of $eq",
     "origin" : "726a1a6fcd0127bd53f37c9459716a7112722430",
     "pageBlob" : "c1245a4ad7ed4d950b37dd9b02c75890ac3e33ed",
+    "retypes" : [ ],
     "rules" : [ "EQ_SHORTHAND" ],
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
@@ -861,10 +1161,167 @@
     "lock" : "update action to use shortened version of $eq",
     "origin" : "726a1a6fcd0127bd53f37c9459716a7112722430",
     "pageBlob" : "c1245a4ad7ed4d950b37dd9b02c75890ac3e33ed",
+    "retypes" : [ ],
     "rules" : [ "EQ_SHORTHAND" ],
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
       "path" : "source/reference/operator/query/eq.txt"
+    }
+  }, {
+    "fixture" : "query/filters/geoIntersects/intersectsABigPolygon",
+    "includes" : [ {
+      "blob" : "d0d4847310431dc55af1857b061eae59007ec37d",
+      "path" : "source/includes/fact-geometry-hemisphere-limitation.rst"
+    } ],
+    "justification" : null,
+    "lock" : "converted the point values to doubles",
+    "origin" : "7ddc79615aaf62f884703b31a036060df6961095",
+    "pageBlob" : "c9af0f19c4348b0f903226c26e95d32d780abc77",
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/loc/$geoIntersects/$geometry/coordinates/0",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "d9c6dbe3b2556ee51fd0b5e6333227942b9e917d",
+      "path" : "source/reference/operator/query/geoIntersects.txt"
+    }
+  }, {
+    "fixture" : "query/filters/geoIntersects/intersectsAPolygon",
+    "includes" : [ {
+      "blob" : "d0d4847310431dc55af1857b061eae59007ec37d",
+      "path" : "source/includes/fact-geometry-hemisphere-limitation.rst"
+    } ],
+    "justification" : null,
+    "lock" : "converted the point values to doubles",
+    "origin" : "7ddc79615aaf62f884703b31a036060df6961095",
+    "pageBlob" : "c9af0f19c4348b0f903226c26e95d32d780abc77",
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/loc/$geoIntersects/$geometry/coordinates/0",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "d9c6dbe3b2556ee51fd0b5e6333227942b9e917d",
+      "path" : "source/reference/operator/query/geoIntersects.txt"
+    }
+  }, {
+    "fixture" : "query/filters/geoWithin/withinABigPolygon",
+    "includes" : [ {
+      "blob" : "d0d4847310431dc55af1857b061eae59007ec37d",
+      "path" : "source/includes/fact-geometry-hemisphere-limitation.rst"
+    } ],
+    "justification" : null,
+    "lock" : "converted the point values to doubles",
+    "origin" : "7ddc79615aaf62f884703b31a036060df6961095",
+    "pageBlob" : "c70a796f45bce5f20490061be29beabaf7513e9a",
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/loc/$geoWithin/$geometry/coordinates/0",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "9c258a2f304c6f08f4dfc6b9d466abd543a90888",
+      "path" : "source/reference/operator/query/geoWithin.txt"
+    }
+  }, {
+    "fixture" : "query/filters/geoWithin/withinAPolygon",
+    "includes" : [ {
+      "blob" : "d0d4847310431dc55af1857b061eae59007ec37d",
+      "path" : "source/includes/fact-geometry-hemisphere-limitation.rst"
+    } ],
+    "justification" : null,
+    "lock" : "converted the point values to doubles",
+    "origin" : "2e4cc72d6b0b73a45c92f4ee1c66cb63ee8e5ed4",
+    "pageBlob" : "c70a796f45bce5f20490061be29beabaf7513e9a",
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/loc/$geoWithin/$geometry/coordinates/0",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "9c258a2f304c6f08f4dfc6b9d466abd543a90888",
+      "path" : "source/reference/operator/query/geoWithin.txt"
+    }
+  }, {
+    "fixture" : "query/filters/mod/floatingPointArguments",
+    "includes" : [ {
+      "blob" : "29386fb4543b83467ddb0e4aefe4ff861bb48d07",
+      "path" : "source/includes/negative-dividend.rst"
+    } ],
+    "justification" : null,
+    "lock" : "made the 0 a floating point to work the Java's type system",
+    "origin" : "52d461f742298f36a6ecf2ea02d8ebc332dc7168",
+    "pageBlob" : "dd939f3713d0da43fa8a7d0d875ed05bfc2464f8",
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/qty/$mod",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/mod.txt"
+    }
+  }, {
+    "fixture" : "query/filters/nearSphere/specifyCenterPointUsingGeoJson",
+    "includes" : [ {
+      "blob" : "c06a15831b78be20b8bedbee54fea72c27abf599",
+      "path" : "source/includes/fact-geo-near-special-indexes.rst"
+    }, {
+      "blob" : "e6c41e12d74350e98f0884af8a0547f028356603",
+      "path" : "source/includes/fact-near-sharded-cluster.rst"
+    }, {
+      "blob" : "d0af3b05b45ed55a7f4ce12fbb4b891adfe167b8",
+      "path" : "source/includes/fact-geo-near-returns-sorted-results.rst"
+    }, {
+      "blob" : "86d75947d981bc77dca7e5aaf276f130d413ab64",
+      "path" : "source/includes/example-nearSphere-minDistance.rst"
+    } ],
+    "justification" : null,
+    "lock" : "change distances to floating point",
+    "origin" : "7edf3311c9ca2d184a5a86c5190b28edfd193590",
+    "pageBlob" : "6e89aeeb937256a3a47249e9042b6a90a170d7c9",
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/location/$nearSphere",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/nearSphere.txt"
+    }
+  }, {
+    "fixture" : "query/filters/polygon/polygonQueryPredicateOperator",
+    "includes" : [ {
+      "blob" : "231e34e5ae706bd4cce129c3601d1066b2e85d8c",
+      "path" : "source/includes/note-geospatial-index-must-exist.rst"
+    } ],
+    "justification" : null,
+    "lock" : "converted the point values to doubles",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "ef5243dfde003285d1a6aeb0a5db805010a072e1",
+    "retypes" : [ {
+      "file" : "action.json",
+      "from" : "INT32",
+      "pointer" : "/0/loc/$geoWithin/$polygon",
+      "to" : "DOUBLE"
+    } ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "2b68884ad57110c9525b6dbdefcab1c0c8375f80",
+      "path" : "source/reference/operator/query/polygon.txt"
     }
   }, {
     "fixture" : "query/filters/regex/extendRegexOptionsToMatchCharactersOutsideOfAscii",
@@ -891,6 +1348,7 @@
     "lock" : "change the form of regex used\n",
     "origin" : "f5efa7c2b14d22ec139f3ea5a0e37bca1aefa874",
     "pageBlob" : "77b0633b93d27b990ed4bf848da8629144fd5e73",
+    "retypes" : [ ],
     "rules" : [ ],
     "source" : {
       "commit" : "dc702637685119e48f0f7980de92e0bea87afd54",
@@ -918,6 +1376,7 @@
     "lock" : "the docs had two actions showing the two forms. picked the form morphia uses.",
     "origin" : "f5efa7c2b14d22ec139f3ea5a0e37bca1aefa874",
     "pageBlob" : "0902d6a741899af1732131889743c75df2d9cc6e",
+    "retypes" : [ ],
     "rules" : [ "ALTERNATIVE_COMMANDS" ],
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
@@ -972,6 +1431,33 @@
       "path" : "source/reference/operator/aggregation/function.txt"
     }
   }, {
+    "detail" : "expected.json TYPE at /0/byteLocation",
+    "fixture" : "aggregation/expressions/indexOfBytes/indexOfBytesExpressionOperator",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "source" : {
+      "commit" : "6560e617067dff1934063555ec97e57cad362fc8",
+      "path" : "source/reference/operator/aggregation/indexOfBytes.txt"
+    }
+  }, {
+    "detail" : "expected.json TYPE at /0/cpLocation",
+    "fixture" : "aggregation/expressions/indexOfCP/indexOfCpExpressionOperator",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "source" : {
+      "commit" : "6560e617067dff1934063555ec97e57cad362fc8",
+      "path" : "source/reference/operator/aggregation/indexOfCP.txt"
+    }
+  }, {
+    "detail" : "command outside the current database",
+    "fixture" : "aggregation/expressions/isNumber/conditionallyModifyFieldsUsingIsNumber",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "586c49af93df3c7c75c1ba3ac9808f73e11c29db",
+    "source" : {
+      "commit" : "0bea408ff3bf688b3eb5d416531081b96e93d19f",
+      "path" : "source/reference/operator/aggregation/isNumber.txt"
+    }
+  }, {
     "detail" : "COLLECTION_REQUIRED",
     "fixture" : "aggregation/expressions/lastN/usingLastNAsAnAggregationExpression",
     "gap" : "SOURCE_UNSUPPORTED",
@@ -988,6 +1474,15 @@
     "source" : {
       "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
       "path" : "source/reference/operator/aggregation/map.txt"
+    }
+  }, {
+    "detail" : "SYNTAX",
+    "fixture" : "aggregation/expressions/meta/metaTextScoreAggregation",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "24f35df159da5bd0da6a8f822280067e138aa632",
+    "source" : {
+      "commit" : "f5d4465bf1c9660c3d195b30eb4199a5e96462fe",
+      "path" : "source/reference/operator/aggregation/meta.txt"
     }
   }, {
     "detail" : "External snippet requires a source resolver: .. include:: /includes/extracts/agg-regex-options-one-place-only.rst",
@@ -1062,6 +1557,24 @@
       "path" : "source/reference/operator/aggregation/merge.txt"
     }
   }, {
+    "detail" : "action.json syntax",
+    "fixture" : "query/filters/maxDistance/maxDistanceQueryPredicateOperator",
+    "gap" : "FIXTURE_UNSUPPORTED",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "source" : {
+      "commit" : "2b68884ad57110c9525b6dbdefcab1c0c8375f80",
+      "path" : "source/reference/operator/query/maxDistance.txt"
+    }
+  }, {
+    "detail" : "External snippet requires a source resolver: .. include::  /includes/extracts/geospatial-long-lat-values.rst",
+    "fixture" : "query/filters/near/queryOnGeoJsonData",
+    "gap" : "PAGE_UNSUPPORTED",
+    "origin" : "52d461f742298f36a6ecf2ea02d8ebc332dc7168",
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/query/near.txt"
+    }
+  }, {
     "detail" : "data.json VALUE at /2/description",
     "fixture" : "query/filters/regex/ignoreWhiteSpacesInPattern",
     "gap" : "RESIDUAL_DIFFERENCE",
@@ -1105,6 +1618,24 @@
     "source" : {
       "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
       "path" : "source/reference/operator/query/type.txt"
+    }
+  }, {
+    "detail" : "action TYPE at /1/$mul/price",
+    "fixture" : "query/updates/mul/applyMulOperatorToANonExistingField",
+    "gap" : "RESIDUAL_DIFFERENCE",
+    "origin" : "d220079dea743be8053d18f0f99325a455ccb6b6",
+    "source" : {
+      "commit" : "948002e14f1d94c10fb84b8fb833149a16531169",
+      "path" : "source/reference/operator/update/mul.txt"
+    }
+  }, {
+    "detail" : "expected syntax",
+    "fixture" : "query/updates/mul/multiplyTheValueOfAField",
+    "gap" : "SOURCE_UNSUPPORTED",
+    "origin" : "d220079dea743be8053d18f0f99325a455ccb6b6",
+    "source" : {
+      "commit" : "948002e14f1d94c10fb84b8fb833149a16531169",
+      "path" : "source/reference/operator/update/mul.txt"
     }
   } ]
 }
