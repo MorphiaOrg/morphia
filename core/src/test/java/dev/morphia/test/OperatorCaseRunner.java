@@ -33,11 +33,12 @@ import static org.junit.jupiter.api.Assertions.fail;
  * key order);</li>
  * <li><b>behavior</b>: the documented action, sent through the driver, and the Morphia operation run against two
  * identically seeded databases and leave the same results and collections;</li>
- * <li><b>published expectation</b>: both results equal the documented results.</li>
+ * <li><b>published expectation</b>: both results equal the documented results, or satisfy what the printed results
+ * prove ({@link PrintedResults}).</li>
  * </ol>
  * Serialization is compared after the scenario's declared form rules ({@link FormRules}) are applied to both sides.
- * This runner supports aggregations with exact expected documents and no ignored fields, tolerances, datasets or
- * indexes; a scenario that needs any of them fails rather than being checked loosely.
+ * This runner supports aggregations with exact or printed expected results and no ignored fields, tolerances, datasets
+ * or indexes; a scenario that needs any of them fails rather than being checked loosely.
  */
 public class OperatorCaseRunner {
     private static final JsonWriterSettings JSON = JsonWriterSettings.builder().indent(true).build();
@@ -133,6 +134,18 @@ public class OperatorCaseRunner {
                     fail(operatorCase.resource() + ": the reference results differ from the documented results\ndocumented: "
                             + json(published) + "\nreference:  " + json(referenceResults));
                 }
+            } else if (expected.containsKey("printed")) {
+                List<BsonValue> printed = expected.getArray("printed").getValues();
+                String difference = PrintedResults.difference(printed, morphiaResults, ordered);
+                if (difference != null) {
+                    fail(operatorCase.resource() + ": results differ from the printed results at " + difference
+                            + "\nmorphia: " + json(morphiaResults));
+                }
+                difference = PrintedResults.difference(printed, referenceResults, ordered);
+                if (difference != null) {
+                    fail(operatorCase.resource() + ": the reference results differ from the printed results at "
+                            + difference + "\nreference: " + json(referenceResults));
+                }
             }
         } finally {
             reference.drop();
@@ -160,7 +173,7 @@ public class OperatorCaseRunner {
             unsupported.add("tolerance");
         }
         BsonDocument expected = scenario.getDocument("expected");
-        if (!expected.containsKey("documents") && !expected.containsKey("none")) {
+        if (expected.size() != 1 || !Set.of("documents", "printed", "none").contains(expected.getFirstKey())) {
             unsupported.add("expected " + expected.keySet());
         }
         BsonDocument requirements = scenario.getDocument("requirements");

@@ -2,6 +2,7 @@ package dev.morphia.audits.repairs
 
 import dev.morphia.audits.bindings.LegacyBindingCatalog
 import dev.morphia.audits.bindings.LegacyBindings
+import dev.morphia.audits.published.PublishedEncoding
 import java.nio.file.Files
 import java.nio.file.Path
 import java.security.MessageDigest
@@ -117,6 +118,12 @@ object FixtureMigration {
                 .append(
                     "expected",
                     documented.expected?.let { BsonDocument("documents", BsonArray(it)) }
+                        ?: documented.printed?.let { printed ->
+                            BsonDocument(
+                                "printed",
+                                BsonArray(printed.map { PublishedEncoding.encode(it) }),
+                            )
+                        }
                         ?: BsonDocument("none", BsonString("the page publishes no result")),
                 )
                 .append(

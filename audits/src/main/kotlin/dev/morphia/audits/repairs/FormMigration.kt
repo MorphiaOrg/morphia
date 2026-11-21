@@ -3,6 +3,7 @@ package dev.morphia.audits.repairs
 import dev.morphia.audits.model.Operator
 import dev.morphia.audits.model.OperatorType
 import dev.morphia.audits.published.PublishedComparison
+import dev.morphia.audits.published.PublishedDocument
 import dev.morphia.audits.rst.RstDocument
 import dev.morphia.audits.semantics.BsonComparison
 import dev.morphia.audits.semantics.BsonComparisonState
@@ -168,7 +169,10 @@ data class DocumentedScenario(
     val data: Map<String, List<BsonDocument>>,
     val shape: ActionShape,
     val action: List<BsonValue>,
+    /** The documented results, when the page prints them as documents. */
     val expected: List<BsonDocument>?,
+    /** What results printed as mongosh prints them prove, when the page prints them that way. */
+    val printed: List<PublishedDocument>? = null,
 )
 
 data class FormOverride(
@@ -669,19 +673,24 @@ object FormMigration {
         require(override.blocks.none { it.role == BlockRole.INDEX }) {
             "${override.fixture}: indexes are not supported"
         }
+        val listed = expected.map { documents(it.text) }
+        // As in the examination: results that do not read as documents are printed results.
+        val printed =
+            if (listed.all { it != null }) null
+            else
+                when (val read = published(documented.collection, expected)) {
+                    is Examined.Gap ->
+                        throw IllegalArgumentException("${override.fixture}: ${read.detail}")
+                    else -> @Suppress("UNCHECKED_CAST") (read as List<PublishedDocument>)
+                }
         return DocumentedScenario(
             documented.collection,
             documented.data.mapValues { (_, values) -> values.map { it.asDocument() } },
             action.shape,
             action.values,
-            expected
-                .takeIf { it.isNotEmpty() }
-                ?.flatMap {
-                    requireNotNull(documents(it.text)) {
-                        "${override.fixture}: expected results are not documents"
-                    }
-                }
-                ?.map { it.asDocument() },
+            if (printed != null) null
+            else listed.takeIf { it.isNotEmpty() }?.flatMap { it!! }?.map { it.asDocument() },
+            printed,
         )
     }
 
@@ -1226,32 +1235,11 @@ object FormMigration {
         expected: List<SourceBlock>,
         facts: FixtureFacts,
     ): Examined.Gap? {
-        // The results are read back as the default mongosh profile reads them; a find on the
-        // action's collection certifies that profile for every action kind.
-        if (collection.any { it == '"' || it == '\\' || it.isISOControl() }) {
-            return Examined.Gap(FormGap.SOURCE_UNSUPPORTED, "collection name $collection")
-        }
-        val owner = "db.getCollection(\"$collection\").find({})"
-        val program =
-            ShellPrograms.normalize(
-                ShellProgramRequest(
-                    dialect = ShellDialect.MONGOSH,
-                    blocks =
-                        listOf(ProgramBlock("owner", owner, ProgramRole.ACTION)) +
-                            expected.mapIndexed { index, block ->
-                                ProgramBlock(
-                                    "expected$index",
-                                    block.text,
-                                    ProgramRole.EXPECTED,
-                                    ProgramFormat.SHELL_RESULTS,
-                                )
-                            },
-                )
-            )
-        if (program.state != ShellLiteralState.NORMALIZED) {
-            return Examined.Gap(FormGap.SOURCE_UNSUPPORTED, "expected syntax")
-        }
-        val published = program.expectations.flatMap { it.published.orEmpty() }
+        val published =
+            when (val read = published(collection, expected)) {
+                is Examined.Gap -> return read
+                else -> @Suppress("UNCHECKED_CAST") (read as List<PublishedDocument>)
+            }
         val path = folder.resolve("expected.json")
         if (!path.isRegularFile()) {
             return Examined.Gap(FormGap.RESIDUAL_DIFFERENCE, "expected.json is missing")
@@ -1286,6 +1274,39 @@ object FormMigration {
                 }
             else -> Examined.Gap(FormGap.SOURCE_UNSUPPORTED, "expected ${result.problem}")
         }
+    }
+
+    /**
+     * The constraints that results printed as mongosh prints them prove, or a gap. Printed text
+     * proves less than BSON, so this is a [PublishedDocument] per result, never a guessed value.
+     */
+    private fun published(collection: String, expected: List<SourceBlock>): Any {
+        // The results are read back as the default mongosh profile reads them; a find on the
+        // action's collection certifies that profile for every action kind.
+        if (collection.any { it == '"' || it == '\\' || it.isISOControl() }) {
+            return Examined.Gap(FormGap.SOURCE_UNSUPPORTED, "collection name $collection")
+        }
+        val owner = "db.getCollection(\"$collection\").find({})"
+        val program =
+            ShellPrograms.normalize(
+                ShellProgramRequest(
+                    dialect = ShellDialect.MONGOSH,
+                    blocks =
+                        listOf(ProgramBlock("owner", owner, ProgramRole.ACTION)) +
+                            expected.mapIndexed { index, block ->
+                                ProgramBlock(
+                                    "expected$index",
+                                    block.text,
+                                    ProgramRole.EXPECTED,
+                                    ProgramFormat.SHELL_RESULTS,
+                                )
+                            },
+                )
+            )
+        if (program.state != ShellLiteralState.NORMALIZED) {
+            return Examined.Gap(FormGap.SOURCE_UNSUPPORTED, "expected syntax")
+        }
+        return program.expectations.flatMap { it.published.orEmpty() }
     }
 
     /**

@@ -133,6 +133,66 @@
     "test" : "dev.morphia.test.generated.expressions.TestRound#roundExpressionOperator"
   }, {
     "files" : {
+      "action.json" : "9223abd4ed7f4b3132e7f54a596723895d7793dacbde440a603f5bb19f0f03a4",
+      "data.json" : "e019101e7a2bf444039d383b7e8c2a89f058c64a289745d7e39de7416fd75e17",
+      "expected.json" : "1aeb9c0e4bb0a1c68046b5b14079a0567ed2d62e3d9643a3e9bf385c671e367d",
+      "lock" : "9aaed99160ef3e47fb46c2e8a020ca27a623984e6a47e7b0f16f2a8d09c51f3a",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "fixture" : "aggregation/expressions/toDecimal/toDecimalExpressionOperator",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testPipeline((aggregation) -> aggregation.pipeline(\n                addFields().field(\"convertedPrice\", toDecimal(\"$price\")).field(\"convertedQty\", toInt(\"$qty\")),\n                project().include(\"item\").include(\"totalPrice\", multiply(\"$convertedPrice\", \"$convertedQty\"))));\n    }",
+    "legacyBodySha256" : "1b37243a5e425e9f2002fbf5f7bbc728e75b0253284c6cc5db3b1cebb4d483c1",
+    "legacyMethod" : "testToDecimalExpressionOperator",
+    "legacyType" : "dev.morphia.test.aggregation.expressions.TestToDecimal",
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "376c2a6200a0d5b460cd231fd9d5ba7f6bcee81f2ddf376cf6ca77d83e0bb9cc",
+        "text" : "// Define stage to add convertedPrice and convertedQty fields with the converted price and qty values\n\npriceQtyConversionStage = { \n   $addFields: { \n      convertedPrice: { $toDecimal: \"$price\" },\n      convertedQty: { $toInt: \"$qty\" },\n   }\n};\n\n// Define stage to calculate total price by multiplying convertedPrice and convertedQty fields \n\n\ntotalPriceCalculationStage = { \n   $project: { item: 1, totalPrice: { $multiply: [ \"$convertedPrice\", \"$convertedQty\" ] } }\n};\n\ndb.orders.aggregate( [\n   priceQtyConversionStage,\n   totalPriceCalculationStage\n] )"
+      }, {
+        "role" : "DATA",
+        "sha256" : "cd2276f8190d391ed0e966b4bf9ab94f02ccc92e35ab0f1d8b914fbbb1c62926",
+        "text" : "db.orders.insertMany( [\n   { _id: 1, item: \"apple\", qty: 5, price: 10 },\n   { _id: 2, item: \"pie\", qty: 10, price: NumberDecimal(\"20.0\") },\n   { _id: 3, item: \"ice cream\", qty: 2, price: \"4.99\" },\n   { _id: 4, item: \"almonds\",  qty: 5, price: 5 }\n] )"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "4604f3e015cedfb4900adf77e56e21aae2c5e7c778e6500614cdb8bdd09da98e",
+        "text" : "{ _id: 1, item: 'apple', totalPrice: Decimal128(\"50\") },\n{ _id: 2, item: 'pie', totalPrice: Decimal128(\"200.0\") },\n{ _id: 3, item: 'ice cream', totalPrice: Decimal128(\"9.98\") },\n{ _id: 4, item: 'almonds', totalPrice: Decimal128(\"25\") }"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "main",
+      "fixture" : "aggregation/expressions/toDecimal/toDecimalExpressionOperator",
+      "fixtureFiles" : {
+        "action.json" : "9223abd4ed7f4b3132e7f54a596723895d7793dacbde440a603f5bb19f0f03a4",
+        "data.json" : "e019101e7a2bf444039d383b7e8c2a89f058c64a289745d7e39de7416fd75e17",
+        "expected.json" : "1aeb9c0e4bb0a1c68046b5b14079a0567ed2d62e3d9643a3e9bf385c671e367d",
+        "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+      },
+      "includes" : [ ],
+      "origin" : "948049a3364491f4905246224922d2dbb4197154",
+      "pageBlob" : "c99961a98c6d719c24b646bb93b9ed44ba50ccb9",
+      "retiredLock" : {
+        "name" : "lock",
+        "sha256" : "9aaed99160ef3e47fb46c2e8a020ca27a623984e6a47e7b0f16f2a8d09c51f3a",
+        "text" : "inlined js variables to pipeline\nthe driver apparently can't parse Decimal128(...)"
+      },
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "PIPELINE",
+      "source" : {
+        "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+        "path" : "source/reference/operator/aggregation/toDecimal.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/aggregation/expressions/toDecimal/toDecimalExpressionOperator/scenario.json",
+    "scenarioSha256" : "5141984460a4d0c8aa98d2d81890d52feedab3e709e91d44c81c922a39bb37d6",
+    "test" : "dev.morphia.test.aggregation.expressions.TestToDecimal#testToDecimalExpressionOperator"
+  }, {
+    "files" : {
       "action.json" : "5491eaf37c07ffb8cf5e7912e43d7881718c2dbfe2a081612221d9d546dd0b7f",
       "data.json" : "e92f409d4f4d66bf0ca619c7ed5ec8ff5e09040dfbe324229fe00a18b144d8ff",
       "expected.json" : "03ddfb9854df6e0b7a3d1558ea2771b85f555179a0a3cd3ebbf02bd39f3098f9",

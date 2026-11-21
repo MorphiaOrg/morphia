@@ -11,6 +11,11 @@
     "test" : "dev.morphia.test.generated.expressions.TestRound#roundExpressionOperator"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/toDecimal/toDecimalExpressionOperator",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/toDecimal/toDecimalExpressionOperator/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestToDecimal#testToDecimalExpressionOperator"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/expressions/trunc/truncExpressionOperator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/trunc/truncExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestTrunc#testTruncExpressionOperator"
@@ -25,6 +30,10 @@
     "sha256" : "9627b77e4649c4391067edb6f2a81ef987735807885784502949c255813279e9"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/toDecimal/toDecimalExpressionOperator/scenario.json",
+    "sha256" : "5141984460a4d0c8aa98d2d81890d52feedab3e709e91d44c81c922a39bb37d6"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/trunc/truncExpressionOperator/scenario.json",
     "sha256" : "44cc5777d8cf3bfeec8602a44a44bad26842be9599204255625cd843b13ceefa"
   }, {
@@ -35,6 +44,14 @@
     "owner" : "PROTECTED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/runner/crossDatabase/scenario.json",
     "sha256" : "cbee0e532d5860b826a27bbddda925f621fe69033d0220da7cbdb63acc2aec56"
+  }, {
+    "owner" : "PROTECTED",
+    "path" : "src/test/resources/dev/morphia/test/generated/fixtures/runner/printedMismatch/scenario.json",
+    "sha256" : "ccdec466a95e3325eecd8997cb852a14de71a815c6f6c5e4cd5b77332aab5296"
+  }, {
+    "owner" : "PROTECTED",
+    "path" : "src/test/resources/dev/morphia/test/generated/vectors/printed.json",
+    "sha256" : "5bc6d7520534154556af86805d35d1c5b4c1961f92b43b267b70b18f84f986a0"
   }, {
     "owner" : "PROTECTED",
     "path" : "src/test/resources/dev/morphia/test/generated/vectors/rules.json",

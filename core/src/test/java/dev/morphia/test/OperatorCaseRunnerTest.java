@@ -34,6 +34,16 @@ public class OperatorCaseRunnerTest extends TestBase {
     }
 
     @Test
+    public void resultsMustSatisfyThePrintedResults() {
+        // mongosh prints a Long as Long("4"), so a stored Long cannot be the printed 4.
+        AssertionFailedError failure = assertThrows(AssertionFailedError.class,
+                () -> runner.aggregate(OperatorCase.of(
+                        "/dev/morphia/test/generated/fixtures/runner/printedMismatch/scenario.json"),
+                        (aggregation) -> aggregation.pipeline(project().include("v"))));
+        assertTrue(failure.getMessage().contains("results differ from the printed results at /0/v"), failure.getMessage());
+    }
+
+    @Test
     public void aConvertedCasesOptionsMustMatchItsScenario() {
         AssertionFailedError failure = assertThrows(AssertionFailedError.class,
                 () -> runner.aggregate(ROUND, new ActionTestOptions().orderMatters(false),

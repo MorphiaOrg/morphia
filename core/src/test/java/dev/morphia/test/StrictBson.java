@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bson.BsonArray;
 import org.bson.BsonDocument;
+import org.bson.BsonDouble;
 import org.bson.BsonValue;
 
 /**
@@ -30,6 +31,10 @@ public final class StrictBson {
         }
         if (left instanceof BsonArray a && right instanceof BsonArray b) {
             return equal(a.getValues(), b.getValues(), true);
+        }
+        if (left instanceof BsonDouble a && right instanceof BsonDouble b) {
+            // Raw bits, as the audits comparator compares doubles: -0.0 is not 0.0, and NaN payloads differ.
+            return Double.doubleToRawLongBits(a.getValue()) == Double.doubleToRawLongBits(b.getValue());
         }
         return left.getBsonType() == right.getBsonType() && left.equals(right);
     }

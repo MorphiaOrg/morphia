@@ -1,0 +1,205 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/toDecimal/toDecimalExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+    "path": "source/reference/operator/aggregation/toDecimal.txt",
+    "blob": "c99961a98c6d719c24b646bb93b9ed44ba50ccb9"
+  },
+  "dataset": null,
+  "collections": {
+    "orders": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "apple",
+        "qty": {
+          "$numberInt": "5"
+        },
+        "price": {
+          "$numberInt": "10"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "pie",
+        "qty": {
+          "$numberInt": "10"
+        },
+        "price": {
+          "$numberDecimal": "20.0"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "ice cream",
+        "qty": {
+          "$numberInt": "2"
+        },
+        "price": "4.99"
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "item": "almonds",
+        "qty": {
+          "$numberInt": "5"
+        },
+        "price": {
+          "$numberInt": "5"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "orders",
+    "pipeline": [
+      {
+        "$addFields": {
+          "convertedPrice": {
+            "$toDecimal": "$price"
+          },
+          "convertedQty": {
+            "$toInt": "$qty"
+          }
+        }
+      },
+      {
+        "$project": {
+          "item": {
+            "$numberInt": "1"
+          },
+          "totalPrice": {
+            "$multiply": [
+              "$convertedPrice",
+              "$convertedQty"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "apple"
+            }
+          },
+          {
+            "name": "totalPrice",
+            "value": {
+              "decimal": "50"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "pie"
+            }
+          },
+          {
+            "name": "totalPrice",
+            "value": {
+              "decimal": "200.0"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "ice cream"
+            }
+          },
+          {
+            "name": "totalPrice",
+            "value": {
+              "decimal": "9.98"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "almonds"
+            }
+          },
+          {
+            "name": "totalPrice",
+            "value": {
+              "decimal": "25"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

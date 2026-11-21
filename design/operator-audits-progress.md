@@ -2128,3 +2128,32 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   harnesses and the generator read `#` as `$`. The string branch and option sorting are now
   covered in both ports.
 - Review round 3: nothing new.
+
+- PR #4545 (branch audits-case-rules, base #4544) published.
+
+## Step 5 slice 4b: printed constraints in core (2026-11-21)
+
+- Branch audits-printed-constraints from #4545. `PublishedEncoding` writes published constraints
+  as one-key documents naming their kind; `scenario.json` carries them as `expected.printed`.
+  `FormMigration.documented` reads results the page prints as mongosh prints them into those
+  constraints, using the same normalization as the examination (`published`, split out of
+  `printed`).
+- `PrintedResults` ports `PublishedComparison` to core over that encoding, with
+  `StrictBson` for exact scalars and a maximum matching for unordered results. Golden vectors
+  (`generated/vectors/printed.json`, 30 cases, verdicts produced by the Kotlin comparison) run
+  through both; the audits test also requires every constraint kind and every verdict to appear
+  and the encoding to round-trip. The Java port checks constraints, not the work and depth limits
+  or the actual-side BSON validation, which guard the audits against untrusted input; scenarios
+  are generated and reviewed.
+- The runner checks both results against `expected.printed`; a runner self-test
+  (`runner/printedMismatch`) shows a Long failing a printed `4`.
+- `toDecimal/toDecimalExpressionOperator` (printed `Decimal128("50")`) is converted and passes
+  under both mappers. Form report: 134 overrides.
+- Review round 1: the port reaches the Kotlin verdicts, and the printed-or-documents choice, the
+  runner wiring and the toDecimal constraints are right. Low findings applied: `StrictBson`
+  compares doubles by raw bits as the audits comparator does (NaN payloads differ; extended JSON
+  cannot spell one, so `StrictBsonTest` asserts it directly), the `PrintedResults` Javadoc states
+  what it does not validate, and the runner requires exactly one of `documents`, `printed` and
+  `none`. Rejected: the claim that Kotlin accepts a non-scalar `exact` or non-canonical `decimal`;
+  its constructors refuse both, and the vectors show INVALID on both sides.
+- Review round 2: nothing new.

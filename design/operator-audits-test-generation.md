@@ -118,6 +118,11 @@ canonical extended JSON (`$numberInt`, `$date`, …), so BSON types survive.
 
 - **`expected`:** either `documents` (exact), `printed` (the published constraints of
   [published expectations](operator-audits-published-expectations.md)), or `none` with a reason.
+  Each printed constraint is a one-key document naming its kind, so no published field name or
+  value is read as one: `{document: [{name, value}]}`, `{array: [...]}`, `{exact: v}`,
+  `{whole: n}` (an Int32 or an integral Double), `{text: s}` (a string or a symbol), `{nan: true}`
+  and `{decimal: s}` (a Decimal128 with that exact text). Printed fields are listed in ECMAScript
+  own-property order, as mongosh prints them.
   `none` covers an example that publishes no output; its case reports serialization and behavior
   only, and the coverage report shows the missing check with that reason.
 - **`comparison.rules`:** the declared form rules this case may use, reviewed per case as in the lock
