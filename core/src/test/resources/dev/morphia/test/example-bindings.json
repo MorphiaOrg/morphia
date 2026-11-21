@@ -1354,15 +1354,6 @@
     "unbound" : [ ]
   }, {
     "bindings" : [ {
-      "method" : "testRoundExpressionOperator",
-      "resource" : "roundExpressionOperator"
-    } ],
-    "manual" : [ ],
-    "resources" : "dev/morphia/test/aggregation/expressions/round",
-    "type" : "dev.morphia.test.aggregation.expressions.TestRound",
-    "unbound" : [ ]
-  }, {
-    "bindings" : [ {
       "method" : "testRtrimExpressionOperator",
       "resource" : "rtrimExpressionOperator"
     } ],

@@ -834,7 +834,7 @@ class FormMigrationTest {
                 .map { it.fixture }
                 .toSet(),
         )
-        assertEquals(138, report.overrides.size)
+        assertEquals(137, report.overrides.size)
         assertEquals(96, report.unresolved.size)
     }
 }

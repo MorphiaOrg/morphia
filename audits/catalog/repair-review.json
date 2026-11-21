@@ -147,7 +147,6 @@
     "reorder pipeline": "MORPHIA_FORM",
     "reorder pipeline to match morphia's order": "MORPHIA_FORM",
     "results in the docs don't match the results": "DOCS_ERROR",
-    "rounded values were wrong": "DOCS_ERROR",
     "some numbers need to be doubles (because of the fill?)": "NUMERIC_TYPE",
     "source text has a missing quote": "DOCS_ERROR",
     "sync the represenation of the double value with morphia's": "NUMERIC_TYPE",

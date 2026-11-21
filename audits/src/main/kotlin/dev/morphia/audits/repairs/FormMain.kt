@@ -1,5 +1,6 @@
 package dev.morphia.audits.repairs
 
+import dev.morphia.audits.bindings.LegacyBindings
 import dev.morphia.audits.coverage.AuditJson
 import java.nio.file.Files
 import java.nio.file.Path
@@ -7,7 +8,8 @@ import java.nio.file.Path
 private const val USAGE =
     """Usage: FormMainKt draft <repository-root> <pages> <source-repository> <review-out> <candidates.json>...
        FormMainKt capture <repository-root> <revision> <pages> <review.json> <out>
-       FormMainKt apply <repository-root> <report.json>"""
+       FormMainKt apply <repository-root> <report.json>
+       FormMainKt migrate <repository-root> <revision> <fixture> <test-type#method>"""
 
 /**
  * Drafts, captures and applies the MORPHIA_FORM lock migration. Pages are read from an explicit
@@ -50,6 +52,30 @@ fun main(args: Array<String>) {
         "apply" -> {
             require(args.size == 3) { USAGE }
             FormMigration.apply(Path.of(args[1]), AuditJson.formMigration(read(args[2])))
+        }
+        "migrate" -> {
+            require(args.size == 5) { USAGE }
+            val root = args[1]
+            val ledgerPath = Path.of("$root/audits/catalog/fixture-migration.json")
+            val ledger =
+                if (Files.exists(ledgerPath))
+                    AuditJson.fixtureMigration(read(ledgerPath.toString()))
+                else FixtureMigrationLedger()
+            val migrated =
+                FixtureMigration.migrate(
+                    Path.of(root),
+                    AuditJson.formMigration(read("$root/audits/catalog/form-migration.json")),
+                    AuditJson.curatedRepairs(read("$root/audits/catalog/curated-repairs.json")),
+                    LegacyBindings.capture(
+                        Path.of(root),
+                        args[2],
+                        AuditJson.bindingPolicy(read("$root/audits/catalog/binding-policy.json")),
+                    ),
+                    args[3],
+                    args[4],
+                )
+            val migrations = (ledger.migrations + migrated).sortedBy { it.fixture }
+            Files.writeString(ledgerPath, AuditJson.write(ledger.copy(migrations = migrations)))
         }
         else -> throw IllegalArgumentException(USAGE)
     }

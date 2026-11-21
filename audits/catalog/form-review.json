@@ -1368,22 +1368,6 @@
     }
   }, {
     "corrections" : [ ],
-    "fixture" : "aggregation/expressions/round/roundExpressionOperator",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "rounded values were wrong",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "23d0c80801d3c03e853330079a67d81eef9f28b7",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "c55124fab42cf754b0f77e5340e764d2b7de8552",
-      "path" : "source/reference/operator/aggregation/round.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
     "fixture" : "aggregation/expressions/setDifference/setDifferenceExpressionOperator",
     "includes" : [ {
       "blob" : "9ba8fe6005b2e4e5e7a77bbf7c6535da3355c571",
@@ -3750,6 +3734,23 @@
     "source" : {
       "commit" : "d7d022aabae13aeb5f6071c621d8023754c2b88a",
       "path" : "source/reference/operator/update/set.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  } ],
+  "migrated" : [ {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/round/roundExpressionOperator",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "rounded values were wrong",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "23d0c80801d3c03e853330079a67d81eef9f28b7",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "c55124fab42cf754b0f77e5340e764d2b7de8552",
+      "path" : "source/reference/operator/aggregation/round.txt",
       "relation" : "AT_ORIGIN"
     }
   } ],

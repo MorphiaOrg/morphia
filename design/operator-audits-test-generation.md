@@ -277,6 +277,8 @@ A candidate records:
      - `removeIds` becomes `comparison.ignore`;
      - `skipDataCheck` and `skipActionCheck` become reported missing checks with their reason;
      - `findOptions`, `updateOptions` and `serverVersion` become action options and requirements.
+   - **Evidence:** each migrated case's ledger entry keeps the legacy body text, checked against the
+     frozen catalog's body digest, so the options it mapped can be re-derived offline.
 4. **Form rules and printed constraints in core**, each ported with its golden vectors, so cases that
    need them can be checked rather than reported as gaps. Coming before cutover, they let
    cases with declared rules or printed results convert in one pass.

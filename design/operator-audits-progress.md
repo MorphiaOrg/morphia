@@ -2013,3 +2013,43 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   are manifest-owned; a migrated-fixture ledger for the audits checks that guard fixture bytes;
   harness collection-name corrections reverted; form rules and printed constraints ported before
   cutover.
+
+- PR #4541 (branch audits-test-generation-design, base #4540) published.
+
+## Step 5 slice 1: operator case runner (2026-11-21)
+
+- Branch audits-case-runner from #4541. Core: `OperatorCase` (descriptor: absolute scenario
+  resource), `OperatorCaseRunner` (composed on `TestBase`) and `StrictBson`. The runner checks
+  serialization (strict BSON against the documented pipeline), behavior (documented pipeline
+  through the driver against the Morphia operation, in two separately seeded databases, results
+  and every collection after the action) and the published documents, and fails on any scenario
+  feature it does not support yet (rules, ignored fields, tolerances, datasets, indexes, server
+  requirements).
+- `$round`'s example moved: `FormMainKt migrate` wrote its `scenario.json` from the accepted
+  override, deleted the legacy fixture and recorded the move (legacy method and body digest,
+  removed file digests including the retired lock, the override itself, scenario digest, new
+  owner) in `audits/catalog/fixture-migration.json`. Its body moved verbatim into
+  `dev.morphia.test.generated.expressions.TestRound`. The binding drift test projects the frozen
+  import through the rename ledger and then the migration ledger; the frozen-corpus check accepts
+  the removed files by digest; `FixtureMigration.verify` checks the legacy directory is gone, the
+  scenario is exactly its override's documented source and the owning test exists.
+- Golden vectors (`generated/vectors/strict.json`) run through both `StrictBson` and the audits
+  `BsonComparison`; both agree on every vector.
+- The form report and the repair review drop `$round` (its lock reason was its own); inventory
+  555 examples, 137 OVERRIDDEN, 98 locked.
+- Review round 1 (independent agent):
+  - The scenario said `UNORDERED`, but `ActionTestOptions.orderMatters` defaults to true, so the
+    legacy test compared in order; the ledger now records the legacy ordering and `verify`
+    regenerates the scenario from it (the migration was redone with the fixed tool).
+  - The source pins lived only in the ledger's copy of the override; the declaration now stays in
+    `form-review.json` under `migrated`, and the ledger's override must match it.
+  - The runner now also fails closed on a topology other than standalone, an order other than
+    `ORDERED`/`UNORDERED`, action fields beyond kind/collection/pipeline, and stages naming
+    another database (a self-test scenario under `generated/fixtures/runner/`).
+  - Checked: database names are per test class, so `<db>_reference` cannot collide across
+    concurrently running classes. Rejected: comparing the moved lambda with the legacy body text,
+    since the call around it necessarily changes and the move is a reviewed diff.
+- Review round 2: nothing to fix. Deferred to slice 3: a migrated case's `ordered` flag is anchored
+  only in the ledger (the frozen catalog pins the legacy body's hash, not its text). The adapter
+  slice reads legacy options from source and will store the hash-checked body text so the flag can
+  be re-derived offline.

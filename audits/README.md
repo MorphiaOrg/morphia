@@ -602,6 +602,15 @@ so recapture that inventory first when a test's `loadData` calls change. The rev
 and by `apply <root> <report>`, which deletes the retired locks. To reject a drafted declaration,
 move its fixture to `unresolved` with gap `REJECTED` and the reason; `capture` keeps it rejected while it
 still reproduces. Generated `/includes/extracts/` files are assembled from the `extracts*.yaml` that
-`fetch.py pages` downloads with them. An audits test rechecks the committed
+`fetch.py pages` downloads with them.
+
+`migrate <root> <revision> <fixture> <test-type#method>` moves a legacy case with an exact accepted
+override onto the operator case runner. It writes the case's `scenario.json` under
+`core/src/test/resources/dev/morphia/test/generated/fixtures/` from the override's documented source,
+deletes the legacy fixture directory and records the move in `audits/catalog/fixture-migration.json`.
+Run it before editing the legacy test, because it records the bound method's body digest; then move
+the body into the named test, move the fixture's declaration in `form-review.json` from
+`declarations` to `migrated` (it keeps pinning the source, and the ledger's copy must match it), and
+regenerate `example-bindings.json`, the repair inventory and the form report. See the [test generation design](../design/operator-audits-test-generation.md). An audits test rechecks the committed
 report against the tree without the pages. See the [migration design](../design/operator-audits-form-migration.md).
 

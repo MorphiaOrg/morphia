@@ -1,0 +1,62 @@
+{
+  "migrations" : [ {
+    "files" : {
+      "action.json" : "d021d059fcb4c579e318b3b18c4b2741f0f7ac93716ad642a485e9c71ec06fbb",
+      "data.json" : "669ec93b0aaf5f20eb39340618bbdb152ed0b1b8c411d33c8e2a57a6588f3f6d",
+      "expected.json" : "48c07c34cbda6864a4d74d02b1ce8657748182a492d496e37ceebccfe60a833a",
+      "lock" : "bf34647a9cc2f830622bb3720a11718a2c688a90946c282a32d2b14d04afde0e",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "fixture" : "aggregation/expressions/round/roundExpressionOperator",
+    "legacyBodySha256" : "a2be79028bba1ec97deb1c8ad1e58a6e01c3dde423f217999f6be42faf58bdd8",
+    "legacyMethod" : "testRoundExpressionOperator",
+    "legacyType" : "dev.morphia.test.aggregation.expressions.TestRound",
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "94901350f470f92dce353f71ea6dc647945790c4c26019acd0fcb3338d2b3326",
+        "text" : "db.samples.aggregate([\n   { $project: { roundedValue: { $round: [ \"$value\", 1 ] } } }\n])"
+      }, {
+        "role" : "DATA",
+        "sha256" : "e9c041bd613eb516c4f502de6223820ebad550708364e00c193c946925f861c5",
+        "text" : "db.samples.insertMany(\n   [\n     { _id: 1, value: 19.25 },\n     { _id: 2, value: 28.73 },\n     { _id: 3, value: 34.32 },\n     { _id: 4, value: -45.39 }\n   ]\n)"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "48c07c34cbda6864a4d74d02b1ce8657748182a492d496e37ceebccfe60a833a",
+        "text" : "{ \"_id\" : 1, \"roundedValue\" : 19.2 }\n{ \"_id\" : 2, \"roundedValue\" : 28.7 }\n{ \"_id\" : 3, \"roundedValue\" : 34.3 }\n{ \"_id\" : 4, \"roundedValue\" : -45.4 }"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "main",
+      "fixture" : "aggregation/expressions/round/roundExpressionOperator",
+      "fixtureFiles" : {
+        "action.json" : "d021d059fcb4c579e318b3b18c4b2741f0f7ac93716ad642a485e9c71ec06fbb",
+        "data.json" : "669ec93b0aaf5f20eb39340618bbdb152ed0b1b8c411d33c8e2a57a6588f3f6d",
+        "expected.json" : "48c07c34cbda6864a4d74d02b1ce8657748182a492d496e37ceebccfe60a833a",
+        "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+      },
+      "includes" : [ ],
+      "origin" : "948049a3364491f4905246224922d2dbb4197154",
+      "pageBlob" : "23d0c80801d3c03e853330079a67d81eef9f28b7",
+      "retiredLock" : {
+        "name" : "lock",
+        "sha256" : "bf34647a9cc2f830622bb3720a11718a2c688a90946c282a32d2b14d04afde0e",
+        "text" : "rounded values were wrong"
+      },
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "PIPELINE",
+      "source" : {
+        "commit" : "c55124fab42cf754b0f77e5340e764d2b7de8552",
+        "path" : "source/reference/operator/aggregation/round.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/generated/fixtures/expressions/round/roundExpressionOperator/scenario.json",
+    "scenarioSha256" : "79be7a769e0425ad801826b2525502b2dfcb62e5edbb24c1771abae2682e1140",
+    "test" : "dev.morphia.test.generated.expressions.TestRound#roundExpressionOperator"
+  } ],
+  "schemaVersion" : 1
+}

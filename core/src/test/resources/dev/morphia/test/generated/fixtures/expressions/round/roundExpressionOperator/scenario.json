@@ -1,0 +1,115 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/round/roundExpressionOperator",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "c55124fab42cf754b0f77e5340e764d2b7de8552",
+    "path": "source/reference/operator/aggregation/round.txt",
+    "blob": "23d0c80801d3c03e853330079a67d81eef9f28b7"
+  },
+  "dataset": null,
+  "collections": {
+    "samples": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "value": {
+          "$numberDouble": "19.25"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "value": {
+          "$numberDouble": "28.73"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "value": {
+          "$numberDouble": "34.32"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "value": {
+          "$numberDouble": "-45.39"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "samples",
+    "pipeline": [
+      {
+        "$project": {
+          "roundedValue": {
+            "$round": [
+              "$value",
+              {
+                "$numberInt": "1"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "documents": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "roundedValue": {
+          "$numberDouble": "19.2"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "roundedValue": {
+          "$numberDouble": "28.7"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "roundedValue": {
+          "$numberDouble": "34.3"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "roundedValue": {
+          "$numberDouble": "-45.4"
+        }
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

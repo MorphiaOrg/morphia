@@ -24,6 +24,7 @@ import dev.morphia.audits.naming.ExampleNameRegistry
 import dev.morphia.audits.naming.NameProposal
 import dev.morphia.audits.naming.NamingRequest
 import dev.morphia.audits.repairs.CuratedRepairReport
+import dev.morphia.audits.repairs.FixtureMigrationLedger
 import dev.morphia.audits.repairs.FormMigration
 import dev.morphia.audits.repairs.FormMigrationReport
 import dev.morphia.audits.repairs.FormReview
@@ -162,6 +163,9 @@ object AuditJson {
         read(json, CuratedRepairReport::class.java)
 
     fun formReview(json: String): FormReview = read(json, FormReview::class.java)
+
+    fun fixtureMigration(json: String): FixtureMigrationLedger =
+        read(json, FixtureMigrationLedger::class.java)
 
     fun formMigration(json: String): FormMigrationReport =
         read(json, FormMigrationReport::class.java)

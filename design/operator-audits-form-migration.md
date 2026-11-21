@@ -15,7 +15,9 @@ Of the 77 `MORPHIA_FORM` examples, 66 carry no other category. 48 of those locks
 family outside these four, 35 are retired and 17 stay with a gap. The `EXTRACTION` and
 `SHELL_SYNTAX` locks need nothing declared: 38 of their 92 fixtures equal what the current pipeline
 extracts from the pinned page (see [Handled natively](#handled-natively)). In all, 138 locks are
-retired and 96 are kept with a gap; only the two untestable change-stream fixtures are outside the
+retired and 96 are kept with a gap (one retired example, `$round`, has since moved onto the
+[operator case runner](operator-audits-test-generation.md); its override now lives in
+`audits/catalog/fixture-migration.json`, so the report lists 137); only the two untestable change-stream fixtures are outside the
 review. Seven of those retirements depend on [generated extracts](#generated-extracts), which the
 page reader now assembles from their YAML sources, and five on [shell dates](#shell-dates) whose
 omitted time or offset the shell defines.

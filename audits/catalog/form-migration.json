@@ -2744,47 +2744,6 @@
   }, {
     "blocks" : [ {
       "role" : "ACTION",
-      "sha256" : "94901350f470f92dce353f71ea6dc647945790c4c26019acd0fcb3338d2b3326",
-      "text" : "db.samples.aggregate([\n   { $project: { roundedValue: { $round: [ \"$value\", 1 ] } } }\n])"
-    }, {
-      "role" : "DATA",
-      "sha256" : "e9c041bd613eb516c4f502de6223820ebad550708364e00c193c946925f861c5",
-      "text" : "db.samples.insertMany(\n   [\n     { _id: 1, value: 19.25 },\n     { _id: 2, value: 28.73 },\n     { _id: 3, value: 34.32 },\n     { _id: 4, value: -45.39 }\n   ]\n)"
-    }, {
-      "role" : "EXPECTED",
-      "sha256" : "48c07c34cbda6864a4d74d02b1ce8657748182a492d496e37ceebccfe60a833a",
-      "text" : "{ \"_id\" : 1, \"roundedValue\" : 19.2 }\n{ \"_id\" : 2, \"roundedValue\" : 28.7 }\n{ \"_id\" : 3, \"roundedValue\" : 34.3 }\n{ \"_id\" : 4, \"roundedValue\" : -45.4 }"
-    } ],
-    "collections" : { },
-    "corrections" : [ ],
-    "example" : "main",
-    "fixture" : "aggregation/expressions/round/roundExpressionOperator",
-    "fixtureFiles" : {
-      "action.json" : "d021d059fcb4c579e318b3b18c4b2741f0f7ac93716ad642a485e9c71ec06fbb",
-      "data.json" : "669ec93b0aaf5f20eb39340618bbdb152ed0b1b8c411d33c8e2a57a6588f3f6d",
-      "expected.json" : "48c07c34cbda6864a4d74d02b1ce8657748182a492d496e37ceebccfe60a833a",
-      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
-    },
-    "includes" : [ ],
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "23d0c80801d3c03e853330079a67d81eef9f28b7",
-    "retiredLock" : {
-      "name" : "lock",
-      "sha256" : "bf34647a9cc2f830622bb3720a11718a2c688a90946c282a32d2b14d04afde0e",
-      "text" : "rounded values were wrong"
-    },
-    "retypes" : [ ],
-    "rules" : [ ],
-    "shape" : "PIPELINE",
-    "source" : {
-      "commit" : "c55124fab42cf754b0f77e5340e764d2b7de8552",
-      "path" : "source/reference/operator/aggregation/round.txt",
-      "relation" : "AT_ORIGIN"
-    },
-    "unexpandedIncludes" : [ ]
-  }, {
-    "blocks" : [ {
-      "role" : "ACTION",
       "sha256" : "36017863a660a38f7d761d721c9b81af3e9c8f066fd364e7cae8aee299c6e0e1",
       "text" : "db.flowers.aggregate(\n   [\n     { $project: { flowerFieldA: 1, flowerFieldB: 1, inBOnly: { $setDifference: [ \"$flowerFieldB\", \"$flowerFieldA\" ] }, _id: 0 } }\n   ]\n)"
     }, {
@@ -7171,7 +7130,7 @@
     },
     "unexpandedIncludes" : [ ]
   } ],
-  "repositoryRevision" : "abc03f42140a30ab718989d2ed91c434588d4c38",
+  "repositoryRevision" : "bc710dc12d40f453d97e9939ec11d010448ef264",
   "rules" : [ {
     "description" : "$cond: {if: a, then: b, else: c} and $cond: [a, b, c] are the same expression; the array form is canonical.",
     "rule" : "COND_ARRAY"
@@ -7212,9 +7171,9 @@
     "gap.REJECTED" : 1,
     "gap.RESIDUAL_DIFFERENCE" : 48,
     "gap.SOURCE_UNSUPPORTED" : 34,
-    "overrides" : 138,
+    "overrides" : 137,
     "overrides.corrected" : 20,
-    "overrides.exact" : 57,
+    "overrides.exact" : 56,
     "overrides.retyped" : 16,
     "rule.ALTERNATIVE_COMMANDS" : 1,
     "rule.COND_ARRAY" : 14,

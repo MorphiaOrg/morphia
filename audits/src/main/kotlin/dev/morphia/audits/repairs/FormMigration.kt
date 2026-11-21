@@ -144,6 +144,12 @@ data class FormReview(
     val repository: String,
     val declarations: List<FormDeclaration>,
     val unresolved: List<FormUnresolved>,
+    /**
+     * Declarations whose fixtures moved onto the operator case runner. They keep their reviewed
+     * pins; `FixtureMigration.verify` checks the migration ledger against them, and capture does
+     * not re-examine them, because their legacy fixtures are gone.
+     */
+    val migrated: List<FormDeclaration> = emptyList(),
 )
 
 enum class BlockRole {
@@ -155,6 +161,15 @@ enum class BlockRole {
 
 /** Source text as extracted from the page, so the claim can be rechecked without the page. */
 data class SourceBlock(val role: BlockRole, val text: String, val sha256: String)
+
+/** A documented operation in BSON: seed data by collection, the action, and its printed result. */
+data class DocumentedScenario(
+    val collection: String,
+    val data: Map<String, List<BsonDocument>>,
+    val shape: ActionShape,
+    val action: List<BsonValue>,
+    val expected: List<BsonDocument>?,
+)
 
 data class FormOverride(
     val fixture: String,
@@ -283,7 +298,10 @@ object FormMigration {
         require(review.schemaVersion == 1) { "Unsupported form review ${review.schemaVersion}" }
         val root = repository.toRealPath()
         val problems = mutableListOf<String>()
-        val fixtures = review.declarations.map { it.fixture } + review.unresolved.map { it.fixture }
+        val fixtures =
+            review.declarations.map { it.fixture } +
+                review.unresolved.map { it.fixture } +
+                review.migrated.map { it.fixture }
         fixtures
             .groupingBy { it }
             .eachCount()
@@ -617,6 +635,52 @@ object FormMigration {
                     includes = includes.distinct(),
                 )
         }
+    }
+
+    /**
+     * The documented operation an exact override (no rules, retypes, corrections or extra
+     * collections) was proven against, read from its recorded source text.
+     */
+    fun documented(override: FormOverride): DocumentedScenario {
+        require(
+            override.rules.isEmpty() &&
+                override.retypes.isEmpty() &&
+                override.corrections.isEmpty() &&
+                override.collections.isEmpty()
+        ) {
+            "${override.fixture}: only exact single-collection overrides are supported"
+        }
+        override.blocks.forEach {
+            require(sha256(it.text.toByteArray()) == it.sha256) {
+                "${override.fixture}: ${it.role} source text digest mismatch"
+            }
+        }
+        val documented =
+            when (val parsed = documented(override.blocks)) {
+                is Examined.Gap ->
+                    throw IllegalArgumentException("${override.fixture}: ${parsed.detail}")
+                else -> parsed as Documented
+            }
+        val action = documented.alternatives.single()
+        require(action.shape == override.shape) { "${override.fixture}: action is ${action.shape}" }
+        val expected = override.blocks.filter { it.role == BlockRole.EXPECTED }
+        require(override.blocks.none { it.role == BlockRole.INDEX }) {
+            "${override.fixture}: indexes are not supported"
+        }
+        return DocumentedScenario(
+            documented.collection,
+            documented.data.mapValues { (_, values) -> values.map { it.asDocument() } },
+            action.shape,
+            action.values,
+            expected
+                .takeIf { it.isNotEmpty() }
+                ?.flatMap {
+                    requireNotNull(documents(it.text)) {
+                        "${override.fixture}: expected results are not documents"
+                    }
+                }
+                ?.map { it.asDocument() },
+        )
     }
 
     private data class Action(

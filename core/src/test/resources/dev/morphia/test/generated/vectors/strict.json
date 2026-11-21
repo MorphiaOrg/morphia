@@ -1,0 +1,39 @@
+{
+  "values": [
+    { "name": "identical documents", "equal": true,
+      "left": { "a": { "$numberInt": "1" }, "b": "x" }, "right": { "a": { "$numberInt": "1" }, "b": "x" } },
+    { "name": "key order", "equal": false,
+      "left": { "a": { "$numberInt": "1" }, "b": "x" }, "right": { "b": "x", "a": { "$numberInt": "1" } } },
+    { "name": "int32 and double of one value", "equal": false,
+      "left": { "v": { "$numberInt": "1" } }, "right": { "v": { "$numberDouble": "1.0" } } },
+    { "name": "int32 and int64 of one value", "equal": false,
+      "left": { "v": { "$numberInt": "1" } }, "right": { "v": { "$numberLong": "1" } } },
+    { "name": "nested array element type", "equal": false,
+      "left": { "v": [ { "$numberInt": "1" }, [ "a" ] ] }, "right": { "v": [ { "$numberInt": "1" }, [ { "$numberInt": "1" } ] ] } },
+    { "name": "nested document key order", "equal": false,
+      "left": { "v": { "x": { "$numberInt": "1" }, "y": { "$numberInt": "2" } } },
+      "right": { "v": { "y": { "$numberInt": "2" }, "x": { "$numberInt": "1" } } } },
+    { "name": "missing field", "equal": false,
+      "left": { "a": { "$numberInt": "1" }, "b": null }, "right": { "a": { "$numberInt": "1" } } },
+    { "name": "decimal128 scale", "equal": false,
+      "left": { "v": { "$numberDecimal": "1.0" } }, "right": { "v": { "$numberDecimal": "1.00" } } },
+    { "name": "same decimal128", "equal": true,
+      "left": { "v": { "$numberDecimal": "13.7375" } }, "right": { "v": { "$numberDecimal": "13.7375" } } },
+    { "name": "dates", "equal": true,
+      "left": { "v": { "$date": { "$numberLong": "1609459200000" } } }, "right": { "v": { "$date": { "$numberLong": "1609459200000" } } } }
+  ],
+  "results": [
+    { "name": "unordered permutation", "ordered": false, "equal": true,
+      "left": [ { "_id": { "$numberInt": "1" } }, { "_id": { "$numberInt": "2" } } ],
+      "right": [ { "_id": { "$numberInt": "2" } }, { "_id": { "$numberInt": "1" } } ] },
+    { "name": "ordered permutation", "ordered": true, "equal": false,
+      "left": [ { "_id": { "$numberInt": "1" } }, { "_id": { "$numberInt": "2" } } ],
+      "right": [ { "_id": { "$numberInt": "2" } }, { "_id": { "$numberInt": "1" } } ] },
+    { "name": "unordered multiplicity", "ordered": false, "equal": false,
+      "left": [ { "_id": { "$numberInt": "1" } }, { "_id": { "$numberInt": "1" } } ],
+      "right": [ { "_id": { "$numberInt": "1" } }, { "_id": { "$numberInt": "2" } } ] },
+    { "name": "result count", "ordered": false, "equal": false,
+      "left": [ { "_id": { "$numberInt": "1" } } ],
+      "right": [ { "_id": { "$numberInt": "1" } }, { "_id": { "$numberInt": "1" } } ] }
+  ]
+}

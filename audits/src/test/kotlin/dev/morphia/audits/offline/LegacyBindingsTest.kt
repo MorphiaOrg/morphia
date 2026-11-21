@@ -7,6 +7,7 @@ import dev.morphia.audits.bindings.ManualMethod
 import dev.morphia.audits.bindings.NameBackport
 import dev.morphia.audits.bindings.UnboundResource
 import dev.morphia.audits.coverage.AuditJson
+import dev.morphia.audits.repairs.FixtureMigration
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.createDirectories
@@ -286,7 +287,16 @@ class LegacyBindingsTest {
             ledger,
             NameBackport.plan(committed, corpus, review, NameBackport.inheritedMethods(root)),
         )
-        assertEquals(NameBackport.project(committed, ledger, committed.repositoryRevision), catalog)
+        // Legacy cases moved onto the operator case runner leave the binding capture through the
+        // migration ledger, with their methods exactly as they were bound.
+        val migration = AuditJson.fixtureMigration(read("audits/catalog/fixture-migration.json"))
+        assertEquals(
+            FixtureMigration.remove(
+                NameBackport.project(committed, ledger, committed.repositoryRevision),
+                migration,
+            ),
+            catalog,
+        )
         val forms = AuditJson.formMigration(read("audits/catalog/form-migration.json"))
         NameBackport.verify(
             root,
@@ -295,7 +305,13 @@ class LegacyBindingsTest {
             forms.overrides.associate {
                 "core/src/test/resources/dev/morphia/test/${it.fixture}/${it.retiredLock.name}" to
                     it.retiredLock.sha256
-            },
+            } + FixtureMigration.retired(migration),
+        )
+        FixtureMigration.verify(
+            root,
+            migration,
+            AuditJson.curatedRepairs(read("audits/catalog/curated-repairs.json")),
+            AuditJson.formReview(read("audits/catalog/form-review.json")),
         )
         assertEquals(
             read("core/src/test/resources/dev/morphia/test/example-bindings.json"),
