@@ -3,6 +3,7 @@ package dev.morphia.audits.offline
 import dev.morphia.audits.coverage.AuditJson
 import dev.morphia.audits.repairs.CaseManifests
 import dev.morphia.audits.repairs.FixtureMigration
+import dev.morphia.audits.repairs.MIGRATED
 import java.nio.file.Files
 import java.nio.file.Path
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -55,7 +56,12 @@ class FixtureMigrationTest {
                 ledgerNames,
                 bindings.repositoryRevision,
             )
-        val moved = ledger.migrations.map { it.legacyType to it.legacyMethod }.toSet()
+        // Converted cases keep their legacy method; only migrated ones leave the capture.
+        val moved =
+            ledger.migrations
+                .filter { it.kind == MIGRATED }
+                .map { it.legacyType to it.legacyMethod }
+                .toSet()
         val removed = FixtureMigration.remove(projected, ledger)
         assertEquals(projected.methods.size - moved.size, removed.methods.size)
         val tampered =

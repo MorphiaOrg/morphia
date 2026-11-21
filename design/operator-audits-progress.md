@@ -2075,3 +2075,31 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
 - Review round 2: `getMethods()` missed package-private tests and `isTest` accepted only declared
   `@Test` methods; both now use one scan of declared methods up the hierarchy, of any JUnit kind.
   The owners check folds case with `Locale.ROOT`.
+
+- PR #4543 (branch audits-case-manifest, base #4542) published.
+
+## Step 5 slice 3: compatibility adapter (2026-11-21)
+
+- Branch audits-case-adapter from #4543. `TemplatedTestBase.testPipeline` runs a converted case
+  (its fixture directory holds only `scenario.json`) through `OperatorCaseRunner` with its
+  unchanged lambda, after checking the test's options against the scenario (order, removeIds and
+  skips, version requirements); `testQuery`/`testUpdate` refuse a converted fixture until they are
+  supported.
+- `FormMainKt convert` converts a case in place (kind `CONVERTED`): the ledger keeps the legacy
+  method, the hash-checked legacy body text (now also backfilled for `$round`, closing slice 1's
+  deferred item) and the result order re-derived from it. `trunc/truncExpressionOperator` is the
+  first converted case; it passes all three checks under both mappers.
+- The manifest lists converted cases (scenario `GENERATED` at its legacy path, test owned by the
+  binding manifest); the owners check treats the legacy binding and its converted case as one
+  owner; core's completeness walk covers `scenario.json` files in legacy fixture directories.
+  `FixtureMigration.retiredLocks` (shared by `RepairsMain` and its test) keeps a converted case's
+  retired lock classifying it in the inventory.
+- Totals: form report 136 overrides (two cases moved), inventory 555 examples, 137 OVERRIDDEN, 98
+  locked.
+- Review round 1 (independent agent): converting deleted the `name` file, so a converted case no
+  longer checked its `@DisplayName`. Scenarios now carry the documented example's `title`, and
+  `GeneratedCases` checks every case's `@DisplayName` against it offline (both scenarios were
+  regenerated through `FixtureMigration.scenario`, with their ledger digests). The ordering regex
+  only recognizes a literal `orderMatters(false)`, but fails closed: `convert` cross-checks the
+  inventory and the runner checks the real options at run time.
+- Review round 2: nothing new.

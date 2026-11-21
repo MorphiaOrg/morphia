@@ -1,6 +1,7 @@
 package dev.morphia.audits.repairs
 
 import dev.morphia.audits.bindings.LegacyBindingCatalog
+import dev.morphia.audits.bindings.LegacyBindings
 import java.nio.file.Files
 import java.nio.file.Path
 import java.security.MessageDigest
@@ -17,10 +18,13 @@ import org.bson.json.JsonMode
 import org.bson.json.JsonWriterSettings
 
 /**
- * One legacy case moved onto the operator case runner: its legacy method and fixture files are
- * gone, and its documented source, the accepted [override], is carried here so the provenance that
- * retired its lock survives. [files] holds the SHA-256 of every legacy fixture file by name,
- * including the retired lock.
+ * One legacy case moved onto the operator case runner, and the accepted [override] that retired its
+ * lock, carried so that provenance survives. [files] holds the SHA-256 of every legacy fixture file
+ * the move removed, by name, including the retired lock.
+ * - `MIGRATED`: the legacy method and fixture directory are gone; the body moved into [test], and
+ *   the scenario lives in the generated namespace.
+ * - `CONVERTED`: the legacy method stays and runs through the runner's compatibility adapter; its
+ *   fixture directory holds only the scenario.
  */
 data class MigratedFixture(
     val fixture: String,
@@ -35,6 +39,9 @@ data class MigratedFixture(
     val scenarioSha256: String,
     /** The test that now owns the example, as `<type>#<method>`. */
     val test: String,
+    val kind: String = MIGRATED,
+    /** The legacy method's body text, whose SHA-256 is [legacyBodySha256]. */
+    val legacyBody: String = "",
 )
 
 data class FixtureMigrationLedger(
@@ -42,19 +49,32 @@ data class FixtureMigrationLedger(
     val migrations: List<MigratedFixture> = emptyList(),
 )
 
+const val MIGRATED = "MIGRATED"
+const val CONVERTED = "CONVERTED"
+
 object FixtureMigration {
     private const val resources = "core/src/test/resources/dev/morphia/test/"
     private val settings =
         JsonWriterSettings.builder().outputMode(JsonMode.EXTENDED).indent(true).build()
 
-    /** Where the generated scenario of [fixture] lives, relative to the repository root. */
-    fun scenarioPath(fixture: String): String {
+    /** Where the scenario of [fixture] lives for [kind], relative to the repository root. */
+    fun scenarioPath(fixture: String, kind: String = MIGRATED): String {
         val segments = fixture.split('/')
         require(segments.size == 4 && segments.none { it.isEmpty() || it == ".." }) {
             "Not an operator fixture: $fixture"
         }
-        return "${resources}generated/fixtures/${segments.drop(1).joinToString("/")}/scenario.json"
+        return when (kind) {
+            MIGRATED ->
+                "${resources}generated/fixtures/${segments.drop(1).joinToString("/")}/scenario.json"
+            CONVERTED -> "$resources$fixture/scenario.json"
+            else -> throw IllegalArgumentException("Unknown migration kind $kind")
+        }
     }
+
+    /** Whether a legacy body compares results in order: `orderMatters` defaults to true. */
+    fun ordered(body: String): Boolean = !unordered.containsMatchIn(body)
+
+    private val unordered = Regex("""\.orderMatters\s*\(\s*false\s*\)""")
 
     /**
      * The scenario a runner executes for [override]: its documented data, action and results.
@@ -73,6 +93,8 @@ object FixtureMigration {
             BsonDocument()
                 .append("schemaVersion", BsonInt32(1))
                 .append("name", BsonString(override.fixture))
+                // The documented example's title, which the owning test's @DisplayName must equal.
+                .append("title", BsonString(override.example))
                 .append("context", BsonString(context(override.fixture)))
                 .append(
                     "source",
@@ -127,6 +149,48 @@ object FixtureMigration {
         catalog: LegacyBindingCatalog,
         fixture: String,
         test: String,
+    ): MigratedFixture = move(repository, report, inventory, catalog, fixture, test, MIGRATED)
+
+    /**
+     * Converts the legacy case of [fixture] in place: its fixture directory's files are replaced by
+     * the scenario written from the accepted override, and its unchanged method runs through the
+     * runner's compatibility adapter. Only options the adapter maps are allowed.
+     */
+    fun convert(
+        repository: Path,
+        report: FormMigrationReport,
+        inventory: CuratedRepairReport,
+        catalog: LegacyBindingCatalog,
+        fixture: String,
+    ): MigratedFixture {
+        val example =
+            inventory.examples.singleOrNull { it.fixture == fixture }
+                ?: throw IllegalArgumentException("$fixture is not in the repair inventory")
+        require(example.helpers == listOf("testPipeline")) {
+            "$fixture: only testPipeline cases can be converted"
+        }
+        require(example.options.all { it.name == "orderMatters" }) {
+            "$fixture: options ${example.options.map { it.name }} are not mapped yet"
+        }
+        return move(
+            repository,
+            report,
+            inventory,
+            catalog,
+            fixture,
+            "${example.type}#${example.method}",
+            CONVERTED,
+        )
+    }
+
+    private fun move(
+        repository: Path,
+        report: FormMigrationReport,
+        inventory: CuratedRepairReport,
+        catalog: LegacyBindingCatalog,
+        fixture: String,
+        test: String,
+        kind: String,
     ): MigratedFixture {
         val root = repository.toRealPath()
         val override =
@@ -153,19 +217,32 @@ object FixtureMigration {
             "$fixture: fixture files changed since capture"
         }
         require(override.retiredLock.name !in present) { "$fixture: its lock is not retired" }
-        // ActionTestOptions.orderMatters defaults to true.
-        val ordered = example.options.none { it.name == "orderMatters" && it.argument == "false" }
+        val body =
+            requireNotNull(LegacyBindings.bodies(root, method.source)[name]) {
+                "$type#$name has no body in ${method.source}"
+            }
+        require(sha256(body.toByteArray()) == method.bodySha256) {
+            "$type#$name changed since its binding was captured"
+        }
+        val ordered = ordered(body)
+        require(
+            ordered == example.options.none { it.name == "orderMatters" && it.argument == "false" }
+        ) {
+            "$type#$name: its body and the inventory disagree on result order"
+        }
         val text = scenario(override, ordered)
-        val target = root.resolve(scenarioPath(fixture))
+        val target = root.resolve(scenarioPath(fixture, kind))
         require(!target.exists()) { "$target already exists" }
+        present.keys.forEach { Files.delete(folder.resolve(it)) }
+        if (kind == MIGRATED) {
+            Files.delete(folder)
+            // Git keeps no empty directories, so neither does the migration.
+            Files.list(folder.parent)
+                .use { siblings -> siblings.findAny().isPresent }
+                .let { if (!it) Files.delete(folder.parent) }
+        }
         Files.createDirectories(target.parent)
         Files.writeString(target, text)
-        present.keys.forEach { Files.delete(folder.resolve(it)) }
-        Files.delete(folder)
-        // Git keeps no empty directories, so neither does the migration.
-        Files.list(folder.parent)
-            .use { siblings -> siblings.findAny().isPresent }
-            .let { if (!it) Files.delete(folder.parent) }
         return MigratedFixture(
             fixture,
             type,
@@ -174,10 +251,23 @@ object FixtureMigration {
             present + (override.retiredLock.name to override.retiredLock.sha256),
             override,
             ordered,
-            scenarioPath(fixture),
+            scenarioPath(fixture, kind),
             sha256(text.toByteArray()),
             test,
+            kind,
+            body,
         )
+    }
+
+    /**
+     * The retired lock text of every example the repair inventory still holds, by fixture: each
+     * declaration, and each converted case (it keeps its legacy test); a migrated case left the
+     * inventory with its test.
+     */
+    fun retiredLocks(review: FormReview, ledger: FixtureMigrationLedger): Map<String, String> {
+        val converted = ledger.migrations.filter { it.kind == CONVERTED }.map { it.fixture }.toSet()
+        return (review.declarations + review.migrated.filter { it.fixture in converted })
+            .associate { it.fixture to it.lock }
     }
 
     /** Every legacy fixture file the migration removed, by repository path, with its digest. */
@@ -197,7 +287,10 @@ object FixtureMigration {
         catalog: LegacyBindingCatalog,
         ledger: FixtureMigrationLedger,
     ): LegacyBindingCatalog {
-        val moved = ledger.migrations.associateBy { it.legacyType to it.legacyMethod }
+        val moved =
+            ledger.migrations
+                .filter { it.kind == MIGRATED }
+                .associateBy { it.legacyType to it.legacyMethod }
         val problems =
             moved.values.mapNotNull { migrated ->
                 val method =
@@ -263,11 +356,41 @@ object FixtureMigration {
                 problems +=
                     "${migrated.fixture}: the override belongs to ${migrated.override.fixture}"
             }
-            if (root.resolve(resources + migrated.fixture).exists()) {
-                problems += "${migrated.fixture}: legacy fixture directory is still present"
+            if (sha256(migrated.legacyBody.toByteArray()) != migrated.legacyBodySha256) {
+                problems += "${migrated.fixture}: legacy body text does not match its digest"
+            } else if (ordered(migrated.legacyBody) != migrated.ordered) {
+                problems += "${migrated.fixture}: result order differs from the legacy body"
             }
-            if (inventory.examples.any { it.fixture == migrated.fixture }) {
-                problems += "${migrated.fixture}: a legacy test still owns it"
+            val folder = root.resolve(resources + migrated.fixture)
+            val example = inventory.examples.singleOrNull { it.fixture == migrated.fixture }
+            when (migrated.kind) {
+                MIGRATED -> {
+                    if (folder.exists()) {
+                        problems += "${migrated.fixture}: legacy fixture directory is still present"
+                    }
+                    if (example != null) {
+                        problems += "${migrated.fixture}: a legacy test still owns it"
+                    }
+                }
+                CONVERTED -> {
+                    val left =
+                        if (!folder.exists()) emptySet()
+                        else
+                            Files.list(folder).use { paths ->
+                                paths.map { it.name }.toList().toSet()
+                            }
+                    if (left != setOf("scenario.json")) {
+                        problems += "${migrated.fixture}: fixture directory holds $left"
+                    }
+                    val owner = example?.let { "${it.type}#${it.method}" }
+                    if (
+                        owner != migrated.test ||
+                            migrated.test != "${migrated.legacyType}#${migrated.legacyMethod}"
+                    ) {
+                        problems += "${migrated.fixture}: converted, but owned by $owner"
+                    }
+                }
+                else -> problems += "${migrated.fixture}: unknown kind ${migrated.kind}"
             }
             val expectedFiles =
                 migrated.override.fixtureFiles +
@@ -276,7 +399,10 @@ object FixtureMigration {
                 problems += "${migrated.fixture}: removed files differ from the override"
             }
             val scenario = root.resolve(migrated.scenario)
-            if (migrated.scenario != scenarioPath(migrated.fixture) || !scenario.isRegularFile()) {
+            if (
+                migrated.scenario != scenarioPath(migrated.fixture, migrated.kind) ||
+                    !scenario.isRegularFile()
+            ) {
                 problems += "${migrated.fixture}: scenario is missing at ${migrated.scenario}"
             } else {
                 val text = Files.readString(scenario)

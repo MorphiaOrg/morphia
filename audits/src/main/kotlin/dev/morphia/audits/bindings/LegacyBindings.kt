@@ -293,6 +293,7 @@ object LegacyBindings {
         val disabled: Boolean,
         val emptyBody: Boolean,
         val bodySha256: String,
+        val body: String,
     )
 
     private class ParsedClass(
@@ -301,6 +302,17 @@ object LegacyBindings {
         val source: String,
         val methods: List<ParsedMethod>,
     )
+
+    /**
+     * The exact source text of each test method body in [source] (a path relative to [repository]),
+     * the text whose SHA-256 a catalog records as `bodySha256`.
+     */
+    fun bodies(repository: Path, source: String): Map<String, String> {
+        val root = repository.toRealPath()
+        return parse(root, listOf(root.resolve(source))).single().methods.associate {
+            it.name to it.body
+        }
+    }
 
     private fun parse(root: Path, files: List<Path>): List<ParsedClass> {
         if (files.isEmpty()) return emptyList()
@@ -390,6 +402,7 @@ object LegacyBindings {
                         MessageDigest.getInstance("SHA-256")
                             .digest(text.substring(start, end).toByteArray(UTF_8))
                     ),
+            body = text.substring(start, end),
         )
     }
 

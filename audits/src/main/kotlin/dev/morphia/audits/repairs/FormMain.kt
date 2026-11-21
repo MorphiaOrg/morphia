@@ -10,6 +10,7 @@ private const val USAGE =
        FormMainKt capture <repository-root> <revision> <pages> <review.json> <out>
        FormMainKt apply <repository-root> <report.json>
        FormMainKt migrate <repository-root> <revision> <fixture> <test-type#method>
+       FormMainKt convert <repository-root> <revision> <fixture>
        FormMainKt manifest <repository-root>"""
 
 /**
@@ -74,6 +75,29 @@ fun main(args: Array<String>) {
                     ),
                     args[3],
                     args[4],
+                )
+            val migrations = (ledger.migrations + migrated).sortedBy { it.fixture }
+            Files.writeString(ledgerPath, AuditJson.write(ledger.copy(migrations = migrations)))
+        }
+        "convert" -> {
+            require(args.size == 4) { USAGE }
+            val root = args[1]
+            val ledgerPath = Path.of("$root/audits/catalog/fixture-migration.json")
+            val ledger =
+                if (Files.exists(ledgerPath))
+                    AuditJson.fixtureMigration(read(ledgerPath.toString()))
+                else FixtureMigrationLedger()
+            val migrated =
+                FixtureMigration.convert(
+                    Path.of(root),
+                    AuditJson.formMigration(read("$root/audits/catalog/form-migration.json")),
+                    AuditJson.curatedRepairs(read("$root/audits/catalog/curated-repairs.json")),
+                    LegacyBindings.capture(
+                        Path.of(root),
+                        args[2],
+                        AuditJson.bindingPolicy(read("$root/audits/catalog/binding-policy.json")),
+                    ),
+                    args[3],
                 )
             val migrations = (ledger.migrations + migrated).sortedBy { it.fixture }
             Files.writeString(ledgerPath, AuditJson.write(ledger.copy(migrations = migrations)))

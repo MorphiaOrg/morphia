@@ -3669,47 +3669,6 @@
   }, {
     "blocks" : [ {
       "role" : "ACTION",
-      "sha256" : "2ded03ddd39154ebcfb4fc2ef2fe6ebfde81101a7feef07b016af9d3c570ede2",
-      "text" : "db.samples.aggregate([\n   { $project: { truncatedValue: { $trunc: [ \"$value\", 1 ] } } }\n])"
-    }, {
-      "role" : "DATA",
-      "sha256" : "1525aa8e53f49221925c9ebadf216c1cb9e9613dd46af32cc6a4ad4bbe329280",
-      "text" : "db.samples.insertMany(\n   [\n      { _id: 1, value: 19.25 },\n      { _id: 2, value: 28.73 },\n      { _id: 3, value: 34.32 },\n      { _id: 4, value: -45.34 }\n   ]\n)"
-    }, {
-      "role" : "EXPECTED",
-      "sha256" : "03ddfb9854df6e0b7a3d1558ea2771b85f555179a0a3cd3ebbf02bd39f3098f9",
-      "text" : "{ \"_id\" : 1, \"truncatedValue\" : 19.2 }\n{ \"_id\" : 2, \"truncatedValue\" : 28.7 }\n{ \"_id\" : 3, \"truncatedValue\" : 34.3 }\n{ \"_id\" : 4, \"truncatedValue\" : -45.3 }"
-    } ],
-    "collections" : { },
-    "corrections" : [ ],
-    "example" : "main",
-    "fixture" : "aggregation/expressions/trunc/truncExpressionOperator",
-    "fixtureFiles" : {
-      "action.json" : "5491eaf37c07ffb8cf5e7912e43d7881718c2dbfe2a081612221d9d546dd0b7f",
-      "data.json" : "e92f409d4f4d66bf0ca619c7ed5ec8ff5e09040dfbe324229fe00a18b144d8ff",
-      "expected.json" : "03ddfb9854df6e0b7a3d1558ea2771b85f555179a0a3cd3ebbf02bd39f3098f9",
-      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
-    },
-    "includes" : [ ],
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "e417831c1b8b86779f5b7ee3890984f6f6b83f0d",
-    "retiredLock" : {
-      "name" : "lock",
-      "sha256" : "20bab9bd1066dd460a747f75360c392507285431bc6dc7e9b0afcebae2d24080",
-      "text" : "the expected results truncated 2 places instead of 1"
-    },
-    "retypes" : [ ],
-    "rules" : [ ],
-    "shape" : "PIPELINE",
-    "source" : {
-      "commit" : "744735632617f491f8d65071fae36735b6da1d8b",
-      "path" : "source/reference/operator/aggregation/trunc.txt",
-      "relation" : "AT_ORIGIN"
-    },
-    "unexpandedIncludes" : [ ]
-  }, {
-    "blocks" : [ {
-      "role" : "ACTION",
       "sha256" : "e45e4c9eb0ff667d82d09c84e3078d775dd36d6124b3650cad4c29df40d7f4de",
       "text" : "db.stockSales.aggregate( [\n   {\n      $project:\n      {\n         _id: 0, saleTimestamp: 1, saleSeconds: { $tsSecond: \"$saleTimestamp\" }\n      }\n   }\n] )"
     }, {
@@ -7130,7 +7089,7 @@
     },
     "unexpandedIncludes" : [ ]
   } ],
-  "repositoryRevision" : "bc710dc12d40f453d97e9939ec11d010448ef264",
+  "repositoryRevision" : "24d39a8da7a73e1a2535cb6796911812223d904f",
   "rules" : [ {
     "description" : "$cond: {if: a, then: b, else: c} and $cond: [a, b, c] are the same expression; the array form is canonical.",
     "rule" : "COND_ARRAY"
@@ -7171,9 +7130,9 @@
     "gap.REJECTED" : 1,
     "gap.RESIDUAL_DIFFERENCE" : 48,
     "gap.SOURCE_UNSUPPORTED" : 34,
-    "overrides" : 137,
+    "overrides" : 136,
     "overrides.corrected" : 20,
-    "overrides.exact" : 56,
+    "overrides.exact" : 55,
     "overrides.retyped" : 16,
     "rule.ALTERNATIVE_COMMANDS" : 1,
     "rule.COND_ARRAY" : 14,

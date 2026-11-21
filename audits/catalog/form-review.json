@@ -1793,22 +1793,6 @@
     }
   }, {
     "corrections" : [ ],
-    "fixture" : "aggregation/expressions/trunc/truncExpressionOperator",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "the expected results truncated 2 places instead of 1",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "e417831c1b8b86779f5b7ee3890984f6f6b83f0d",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "744735632617f491f8d65071fae36735b6da1d8b",
-      "path" : "source/reference/operator/aggregation/trunc.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
     "fixture" : "aggregation/expressions/tsSecond/obtainTheNumberOfSecondsFromATimestampField",
     "includes" : [ {
       "blob" : "cae80161291eadfe7c4c76d37dcb6b5ee9e40de6",
@@ -3751,6 +3735,22 @@
     "source" : {
       "commit" : "c55124fab42cf754b0f77e5340e764d2b7de8552",
       "path" : "source/reference/operator/aggregation/round.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/trunc/truncExpressionOperator",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "the expected results truncated 2 places instead of 1",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "e417831c1b8b86779f5b7ee3890984f6f6b83f0d",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "744735632617f491f8d65071fae36735b6da1d8b",
+      "path" : "source/reference/operator/aggregation/trunc.txt",
       "relation" : "AT_ORIGIN"
     }
   } ],

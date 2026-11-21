@@ -7,6 +7,7 @@ import dev.morphia.audits.bindings.DescriptorUnbound
 import dev.morphia.audits.coverage.AuditJson
 import dev.morphia.audits.repairs.AssertionPath
 import dev.morphia.audits.repairs.CuratedRepairs
+import dev.morphia.audits.repairs.FixtureMigration
 import dev.morphia.audits.repairs.OptionCall
 import dev.morphia.audits.repairs.RepairCategory
 import dev.morphia.audits.repairs.RepairDisposition
@@ -313,9 +314,10 @@ class CuratedRepairsTest {
                     read("core/src/test/resources/dev/morphia/test/example-bindings.json")
                 ),
                 AuditJson.repairReview(read("audits/catalog/repair-review.json")),
-                AuditJson.formReview(read("audits/catalog/form-review.json"))
-                    .declarations
-                    .associate { it.fixture to it.lock },
+                FixtureMigration.retiredLocks(
+                    AuditJson.formReview(read("audits/catalog/form-review.json")),
+                    AuditJson.fixtureMigration(read("audits/catalog/fixture-migration.json")),
+                ),
             )
 
         assertEquals(read("audits/catalog/curated-repairs.json"), AuditJson.write(report))

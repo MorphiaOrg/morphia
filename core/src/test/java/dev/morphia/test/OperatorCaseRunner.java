@@ -10,6 +10,7 @@ import com.mongodb.client.MongoDatabase;
 
 import dev.morphia.aggregation.Aggregation;
 import dev.morphia.aggregation.AggregationImpl;
+import dev.morphia.test.util.ActionTestOptions;
 
 import org.bson.BsonArray;
 import org.bson.BsonDocument;
@@ -40,6 +41,30 @@ public class OperatorCaseRunner {
 
     public OperatorCaseRunner(TestBase test) {
         this.test = test;
+    }
+
+    /**
+     * Runs a converted legacy case: its unchanged test body's options must say what its scenario says, because the
+     * scenario, not the options, now drives the run.
+     */
+    public void aggregate(OperatorCase operatorCase, ActionTestOptions options,
+            Function<Aggregation<Document>, Aggregation<Document>> dsl) {
+        BsonDocument scenario = operatorCase.scenario();
+        boolean ordered = scenario.getDocument("comparison").getString("order").getValue().equals("ORDERED");
+        List<String> differences = new ArrayList<>();
+        if (options.orderMatters() != ordered) {
+            differences.add("orderMatters");
+        }
+        if (options.removeIds() || options.skipActionCheck() || options.skipDataCheck() || options.skipIndex()) {
+            differences.add("removeIds/skip options");
+        }
+        if (!options.serverVersion().equals("0.0.0") || !options.minDriver().equals("0.0.0")) {
+            differences.add("version requirements");
+        }
+        if (!differences.isEmpty()) {
+            fail(operatorCase.resource() + ": the test's options differ from its scenario: " + differences);
+        }
+        aggregate(operatorCase, dsl);
     }
 
     public void aggregate(OperatorCase operatorCase, Function<Aggregation<Document>, Aggregation<Document>> dsl) {

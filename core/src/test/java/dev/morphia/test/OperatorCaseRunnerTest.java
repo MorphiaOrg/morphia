@@ -1,5 +1,7 @@
 package dev.morphia.test;
 
+import dev.morphia.test.util.ActionTestOptions;
+
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
 
@@ -32,8 +34,18 @@ public class OperatorCaseRunnerTest extends TestBase {
     }
 
     @Test
+    public void aConvertedCasesOptionsMustMatchItsScenario() {
+        AssertionFailedError failure = assertThrows(AssertionFailedError.class,
+                () -> runner.aggregate(ROUND, new ActionTestOptions().orderMatters(false),
+                        (aggregation) -> aggregation.pipeline(project().include("roundedValue", round("$value", 1)))));
+        assertTrue(failure.getMessage().contains("options differ from its scenario: [orderMatters]"), failure.getMessage());
+    }
+
+    @Test
     public void onlyGeneratedScenarioResourcesAreAccepted() {
         assertThrows(IllegalArgumentException.class,
                 () -> OperatorCase.of("/dev/morphia/test/aggregation/expressions/abs/absoluteValue/action.json"));
+        assertThrows(IllegalArgumentException.class,
+                () -> OperatorCase.of("/dev/morphia/test/aggregation/expressions/abs/scenario.json"));
     }
 }

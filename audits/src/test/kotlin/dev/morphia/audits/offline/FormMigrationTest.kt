@@ -823,18 +823,25 @@ class FormMigrationTest {
             inventory.examples.filter {
                 it.categories.isNotEmpty() && "UNTESTABLE" !in it.categories
             }
+        // Converted cases keep their legacy test, so the inventory still holds them; migrated
+        // cases left it with theirs.
+        val known = inventory.examples.map { it.fixture }.toSet()
+        val converted = review.migrated.map { it.fixture }.filter { it in known }
         assertEquals(
             formOnly.map { it.fixture }.toSet(),
-            (review.declarations.map { it.fixture } + review.unresolved.map { it.fixture }).toSet(),
+            (review.declarations.map { it.fixture } +
+                    review.unresolved.map { it.fixture } +
+                    converted)
+                .toSet(),
         )
         assertEquals(
-            review.declarations.map { it.fixture }.toSet(),
+            (review.declarations.map { it.fixture } + converted).toSet(),
             inventory.examples
                 .filter { it.disposition == RepairDisposition.OVERRIDDEN }
                 .map { it.fixture }
                 .toSet(),
         )
-        assertEquals(137, report.overrides.size)
+        assertEquals(136, report.overrides.size)
         assertEquals(96, report.unresolved.size)
     }
 }

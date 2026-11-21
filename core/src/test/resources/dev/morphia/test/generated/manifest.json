@@ -4,6 +4,11 @@
     "name" : "aggregation/expressions/round/roundExpressionOperator",
     "scenario" : "/dev/morphia/test/generated/fixtures/expressions/round/roundExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.generated.expressions.TestRound#roundExpressionOperator"
+  }, {
+    "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/trunc/truncExpressionOperator",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/trunc/truncExpressionOperator/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestTrunc#testTruncExpressionOperator"
   } ],
   "files" : [ {
     "owner" : "PROTECTED",
@@ -11,8 +16,12 @@
     "sha256" : "6abe26be2247d04fb1865980cfd2dc8e09978492cd20b3bc26d562c02f8b6798"
   }, {
     "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/trunc/truncExpressionOperator/scenario.json",
+    "sha256" : "44cc5777d8cf3bfeec8602a44a44bad26842be9599204255625cd843b13ceefa"
+  }, {
+    "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/expressions/round/roundExpressionOperator/scenario.json",
-    "sha256" : "79be7a769e0425ad801826b2525502b2dfcb62e5edbb24c1771abae2682e1140"
+    "sha256" : "84ffd1ef7b7a093e2a1eaf135d0b4332d895eec749403f4bdf1715ecc8301514"
   }, {
     "owner" : "PROTECTED",
     "path" : "src/test/resources/dev/morphia/test/generated/fixtures/runner/crossDatabase/scenario.json",

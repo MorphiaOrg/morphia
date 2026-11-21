@@ -27,8 +27,8 @@ object CaseManifests {
     private const val resources = "core/src/test/resources"
 
     /**
-     * The manifest for the cases in [ledger]: each migrated case, its scenario (generated from the
-     * override) and its test source (a moved handwritten body, so protected).
+     * The manifest for the cases in [ledger]: each case, its scenario (generated from the override)
+     * and, for a migrated case, its test source (a moved handwritten body, so protected).
      */
     fun capture(repository: Path, ledger: FixtureMigrationLedger): CaseManifest {
         val root = repository.toRealPath()
@@ -37,7 +37,7 @@ object CaseManifests {
                 require(it.scenario.startsWith("$resources/")) {
                     "${it.fixture}: scenario outside core"
                 }
-                ManifestCase(it.fixture, "MIGRATED", it.scenario.removePrefix(resources), it.test)
+                ManifestCase(it.fixture, it.kind, it.scenario.removePrefix(resources), it.test)
             }
         val files =
             ledger.migrations
@@ -46,7 +46,9 @@ object CaseManifests {
                         "core/src/test/java/" +
                             migrated.test.substringBefore('#').replace('.', '/') +
                             ".java"
-                    listOf(migrated.scenario to "GENERATED", source to "PROTECTED")
+                    // A converted case's test stays a legacy test, owned by the binding manifest.
+                    if (migrated.kind == CONVERTED) listOf(migrated.scenario to "GENERATED")
+                    else listOf(migrated.scenario to "GENERATED", source to "PROTECTED")
                 }
                 .plus(protectedResources(root).map { it to "PROTECTED" })
                 .distinct()
@@ -85,13 +87,16 @@ object CaseManifests {
         val legacy =
             descriptor.classes.flatMap { type ->
                 type.bindings.map {
-                    "${type.resources.removePrefix("dev/morphia/test/")}/${it.resource}"
+                    "${type.resources.removePrefix("dev/morphia/test/")}/${it.resource}" to
+                        "${type.type}#${it.method}"
                 }
             }
+        // A converted case is run by its legacy test, so the two name one owner. Fixture
+        // directories that differ only by case collide on a case-insensitive file system.
         val problems =
-            // Fixture directories differ only by case on a case-insensitive file system.
-            (legacy + manifest.cases.map { it.name })
-                .groupingBy { it.lowercase(Locale.ROOT) }
+            (legacy + manifest.cases.map { it.name to it.test })
+                .distinct()
+                .groupingBy { it.first.lowercase(Locale.ROOT) }
                 .eachCount()
                 .filterValues { it > 1 }
                 .keys

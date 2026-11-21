@@ -281,10 +281,14 @@ A candidate records:
    - No generator yet.
 2. **Registry, manifest and completeness.** The one-owner registry check (legacy bindings against
    manifest cases), the manifest schema (cases, and owned files as `GENERATED` or `PROTECTED`), and
-   the two-way completeness test. `SOURCE_REMOVED` arrives with the adapter (slice 3), the
-   first step that pairs a legacy case with its documented scenario; `AMBIGUOUS` and `UNNAMED` arrive
+   the two-way completeness test. `SOURCE_REMOVED` arrives with the cutover (slice 5), the
+   first step that pairs every legacy case with its documented scenario; `AMBIGUOUS` and `UNNAMED` arrive
    with the generator, the first step that matches extracted scenarios to owners.
-3. **Compatibility adapter.**
+3. **Compatibility adapter.** Implemented for aggregation cases whose reference is an accepted,
+   exact override: `TemplatedTestBase.testPipeline` hands a converted case's unchanged lambda to the
+   runner, after checking its options against the scenario, and `FormMainKt convert` replaces its
+   legacy files with the scenario in place. References for never-locked cases, `CURATED_REFERENCE`
+   and query and update cases come with the cutover (slice 5).
    - **Descriptor:** built for a legacy case from the binding manifest and backport ledger.
    - **Scenario:** emitted from its reference (see
      [References for legacy cases](#references-for-legacy-cases)).

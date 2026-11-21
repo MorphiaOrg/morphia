@@ -20,6 +20,8 @@ import java.util.stream.Stream;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.bson.BsonDocument;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.platform.commons.annotation.Testable;
 
 /**
@@ -94,7 +96,7 @@ public final class GeneratedCases {
             if (!names.add(each.name())) {
                 problems.add("Case listed more than once: " + each.name());
             }
-            if (!Set.of("MIGRATED", "GENERATED").contains(each.kind())) {
+            if (!Set.of("MIGRATED", "CONVERTED", "GENERATED").contains(each.kind())) {
                 problems.add(each.name() + ": unknown kind " + each.kind());
             }
             tests.add(each.test());
@@ -109,9 +111,15 @@ public final class GeneratedCases {
                 problems.add(each.name() + ": missing test class " + parts[0]);
             }
             try {
-                String declared = OperatorCase.of(each.scenario()).scenario().getString("name").getValue();
+                BsonDocument scenario = OperatorCase.of(each.scenario()).scenario();
+                String declared = scenario.getString("name").getValue();
                 if (!declared.equals(each.name())) {
                     problems.add(each.name() + ": its scenario is named " + declared);
+                }
+                String title = scenario.getString("title").getValue();
+                String display = displayName(each.test());
+                if (!title.equals(display)) {
+                    problems.add(each.name() + ": @DisplayName is " + display + ", the documented title " + title);
                 }
             } catch (RuntimeException e) {
                 problems.add(each.name() + ": " + e.getMessage());
@@ -166,6 +174,19 @@ public final class GeneratedCases {
                 problems.add("Scenario is not a listed case: " + path);
             }
         });
+        // A converted legacy case's scenario lives in its legacy fixture directory.
+        for (String root : ExampleBindings.PACKAGES) {
+            walk(core, "src/test/resources/" + root.replace('.', '/'))
+                    .filter(path -> path.endsWith("/scenario.json"))
+                    .forEach(path -> {
+                        if (!owned.contains(path)) {
+                            problems.add("Unlisted converted scenario " + path);
+                        }
+                        if (!scenarios.contains(path.substring("src/test/resources".length()))) {
+                            problems.add("Scenario is not a listed case: " + path);
+                        }
+                    });
+        }
         if (!problems.isEmpty()) {
             throw new IllegalStateException(String.join("\n", problems));
         }
@@ -175,6 +196,23 @@ public final class GeneratedCases {
     private static boolean isTestable(Method method) {
         return Arrays.stream(method.getAnnotations())
                 .anyMatch(annotation -> annotation.annotationType().isAnnotationPresent(Testable.class));
+    }
+
+    private static String displayName(String test) {
+        String[] parts = test.split("#", 2);
+        try {
+            for (Class<?> current = Class.forName(parts[0]); current != null; current = current.getSuperclass()) {
+                for (Method method : current.getDeclaredMethods()) {
+                    DisplayName name = method.getAnnotation(DisplayName.class);
+                    if (method.getName().equals(parts[1]) && name != null) {
+                        return name.value();
+                    }
+                }
+            }
+        } catch (ClassNotFoundException e) {
+            return null;
+        }
+        return null;
     }
 
     private static boolean isTest(Class<?> type, String name) {

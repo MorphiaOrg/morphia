@@ -90,6 +90,12 @@ public abstract class TemplatedTestBase extends TestBase {
 
     public void testPipeline(ActionTestOptions options,
             Function<Aggregation<Document>, Aggregation<Document>> pipeline) {
+        // A converted case's fixture directory holds only its scenario: the runner checks it instead.
+        String scenario = scenarioResource(discoverResourceName());
+        if (getClass().getResource(scenario) != null) {
+            new OperatorCaseRunner(this).aggregate(OperatorCase.of(scenario), options, pipeline);
+            return;
+        }
         var resourceName = prepareDatabase(options);
 
         validateTestName(resourceName);
@@ -164,6 +170,21 @@ public abstract class TemplatedTestBase extends TestBase {
         return data;
     }
 
+    /**
+     * @return the absolute resource of a converted case's scenario for the fixture {@code resourceName}
+     */
+    protected String scenarioResource(String resourceName) {
+        return "/%s/%s/%s/scenario.json".formatted(getClass().getPackageName().replace('.', '/'), prefix(), resourceName);
+    }
+
+    /** The runner supports converted aggregations only, so a converted query or update case must not run here. */
+    private void notConverted() {
+        String scenario = scenarioResource(discoverResourceName());
+        if (getClass().getResource(scenario) != null) {
+            throw new IllegalStateException(scenario + ": converted query and update cases are not supported yet");
+        }
+    }
+
     public final String prefix() {
         String root = getClass().getSimpleName().replace("Test", "");
         return toLowerCase(root.charAt(0)) + root.substring(1);
@@ -187,6 +208,7 @@ public abstract class TemplatedTestBase extends TestBase {
 
     public void testQuery(ActionTestOptions options,
             Function<Query<Document>, Query<Document>> function) {
+        notConverted();
 
         var resourceName = prepareDatabase(options);
 
@@ -203,6 +225,7 @@ public abstract class TemplatedTestBase extends TestBase {
 
     public void testUpdate(ActionTestOptions options,
             Function<Query<Document>, Query<Document>> function, UpdateOperator... operators) {
+        notConverted();
 
         var resourceName = prepareDatabase(options);
 

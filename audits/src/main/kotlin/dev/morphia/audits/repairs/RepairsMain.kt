@@ -19,9 +19,12 @@ fun main(args: Array<String>) {
                 read(root.resolve("core/src/test/resources/dev/morphia/test/example-bindings.json"))
             ),
             AuditJson.repairReview(read(Path.of(args[2]))),
-            AuditJson.formReview(read(Path.of(args[3]))).declarations.associate {
-                it.fixture to it.lock
-            },
+            FixtureMigration.retiredLocks(
+                AuditJson.formReview(read(Path.of(args[3]))),
+                AuditJson.fixtureMigration(
+                    read(root.resolve("audits/catalog/fixture-migration.json"))
+                ),
+            ),
         )
     Files.writeString(Path.of(args[4]), AuditJson.write(report))
 }

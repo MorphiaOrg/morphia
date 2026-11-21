@@ -8,6 +8,8 @@
       "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
     },
     "fixture" : "aggregation/expressions/round/roundExpressionOperator",
+    "kind" : "MIGRATED",
+    "legacyBody" : "{\n        testPipeline((aggregation) -> aggregation.pipeline(project().include(\"roundedValue\", round(\"$value\", 1))));\n    }",
     "legacyBodySha256" : "a2be79028bba1ec97deb1c8ad1e58a6e01c3dde423f217999f6be42faf58bdd8",
     "legacyMethod" : "testRoundExpressionOperator",
     "legacyType" : "dev.morphia.test.aggregation.expressions.TestRound",
@@ -55,8 +57,68 @@
       "unexpandedIncludes" : [ ]
     },
     "scenario" : "core/src/test/resources/dev/morphia/test/generated/fixtures/expressions/round/roundExpressionOperator/scenario.json",
-    "scenarioSha256" : "79be7a769e0425ad801826b2525502b2dfcb62e5edbb24c1771abae2682e1140",
+    "scenarioSha256" : "84ffd1ef7b7a093e2a1eaf135d0b4332d895eec749403f4bdf1715ecc8301514",
     "test" : "dev.morphia.test.generated.expressions.TestRound#roundExpressionOperator"
+  }, {
+    "files" : {
+      "action.json" : "5491eaf37c07ffb8cf5e7912e43d7881718c2dbfe2a081612221d9d546dd0b7f",
+      "data.json" : "e92f409d4f4d66bf0ca619c7ed5ec8ff5e09040dfbe324229fe00a18b144d8ff",
+      "expected.json" : "03ddfb9854df6e0b7a3d1558ea2771b85f555179a0a3cd3ebbf02bd39f3098f9",
+      "lock" : "20bab9bd1066dd460a747f75360c392507285431bc6dc7e9b0afcebae2d24080",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "fixture" : "aggregation/expressions/trunc/truncExpressionOperator",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testPipeline((aggregation) -> aggregation.pipeline(project().include(\"truncatedValue\", trunc(\"$value\", 1))));\n    }",
+    "legacyBodySha256" : "9c60a8ab6983ccac4b669deb60f62e928abf9dd18814a355dae0faee389e21d5",
+    "legacyMethod" : "testTruncExpressionOperator",
+    "legacyType" : "dev.morphia.test.aggregation.expressions.TestTrunc",
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "2ded03ddd39154ebcfb4fc2ef2fe6ebfde81101a7feef07b016af9d3c570ede2",
+        "text" : "db.samples.aggregate([\n   { $project: { truncatedValue: { $trunc: [ \"$value\", 1 ] } } }\n])"
+      }, {
+        "role" : "DATA",
+        "sha256" : "1525aa8e53f49221925c9ebadf216c1cb9e9613dd46af32cc6a4ad4bbe329280",
+        "text" : "db.samples.insertMany(\n   [\n      { _id: 1, value: 19.25 },\n      { _id: 2, value: 28.73 },\n      { _id: 3, value: 34.32 },\n      { _id: 4, value: -45.34 }\n   ]\n)"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "03ddfb9854df6e0b7a3d1558ea2771b85f555179a0a3cd3ebbf02bd39f3098f9",
+        "text" : "{ \"_id\" : 1, \"truncatedValue\" : 19.2 }\n{ \"_id\" : 2, \"truncatedValue\" : 28.7 }\n{ \"_id\" : 3, \"truncatedValue\" : 34.3 }\n{ \"_id\" : 4, \"truncatedValue\" : -45.3 }"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "main",
+      "fixture" : "aggregation/expressions/trunc/truncExpressionOperator",
+      "fixtureFiles" : {
+        "action.json" : "5491eaf37c07ffb8cf5e7912e43d7881718c2dbfe2a081612221d9d546dd0b7f",
+        "data.json" : "e92f409d4f4d66bf0ca619c7ed5ec8ff5e09040dfbe324229fe00a18b144d8ff",
+        "expected.json" : "03ddfb9854df6e0b7a3d1558ea2771b85f555179a0a3cd3ebbf02bd39f3098f9",
+        "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+      },
+      "includes" : [ ],
+      "origin" : "948049a3364491f4905246224922d2dbb4197154",
+      "pageBlob" : "e417831c1b8b86779f5b7ee3890984f6f6b83f0d",
+      "retiredLock" : {
+        "name" : "lock",
+        "sha256" : "20bab9bd1066dd460a747f75360c392507285431bc6dc7e9b0afcebae2d24080",
+        "text" : "the expected results truncated 2 places instead of 1"
+      },
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "PIPELINE",
+      "source" : {
+        "commit" : "744735632617f491f8d65071fae36735b6da1d8b",
+        "path" : "source/reference/operator/aggregation/trunc.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/aggregation/expressions/trunc/truncExpressionOperator/scenario.json",
+    "scenarioSha256" : "44cc5777d8cf3bfeec8602a44a44bad26842be9599204255625cd843b13ceefa",
+    "test" : "dev.morphia.test.aggregation.expressions.TestTrunc#testTruncExpressionOperator"
   } ],
   "schemaVersion" : 1
 }
