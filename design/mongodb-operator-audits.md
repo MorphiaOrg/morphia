@@ -786,8 +786,8 @@ method/fixture binding manifest that replaces the ordinal coverage scan (#4529,
 [binding design](operator-audits-binding-manifest.md)), then the coordinated descriptive rename
 of all 556 legacy cases ([backport design](operator-audits-name-backport.md)).
 Step 4 starts with the [curated repair inventory](operator-audits-curated-repairs.md) and then
-retires 46 `MORPHIA_FORM` locks through declared equivalence rules, 17 `NUMERIC_TYPE` locks
-through declared number retypes, 32 `DOCS_ERROR`/`FIXTURE_CURATION` locks through reviewed value
+retires 48 `MORPHIA_FORM` locks through declared equivalence rules, 17 `NUMERIC_TYPE` locks
+through declared number retypes, 35 `DOCS_ERROR`/`FIXTURE_CURATION` locks through reviewed value
 corrections and 28 `EXTRACTION`/`SHELL_SYNTAX` locks that the new pipeline handles natively
 (generated Giza extracts included), each
 proven against the historical documentation the fixture came

@@ -131,7 +131,7 @@ class ShellLiteralsTest {
         unsupported("Date('2020-01-01T00:00:00Z')", "DATE_CALL")
         unsupported("new Date()", "CONSTRUCTOR_ARITY")
         unsupported("ISODate()", "CONSTRUCTOR_ARITY")
-        unsupported("ISODate('2020-01-01T00:00:00')", "CONSTRUCTOR_FORMAT")
+        unsupported("new Date('2020-01-01T00:00:00')", "CONSTRUCTOR_FORMAT")
         unsupported("ISODate('2020-01-01T00:00:00.0001Z')", "DATE_PRECISION")
         unsupported("new Date(8640000000000001)", "CONSTRUCTOR_RANGE")
     }
@@ -382,6 +382,32 @@ class ShellLiteralsTest {
             )
             assertEquals(source, result.source)
         }
+    }
+
+    @Test
+    fun shellDatesMakeTheirAssumedTimeAndOffsetExplicit() {
+        fun millis(text: String) = BsonDateTime(Instant.parse(text).toEpochMilli())
+        // The shells read an omitted ISODate time as midnight and an omitted offset as UTC.
+        same("ISODate('2020-12-31')", millis("2020-12-31T00:00:00Z"))
+        same("ISODate('2020-12-25T19:04:00')", millis("2020-12-25T19:04:00Z"))
+        same("ISODate('2020-12-25T19:04:00.5')", millis("2020-12-25T19:04:00.500Z"))
+        same("ISODate('2020-12-25T19:04:00-0500')", millis("2020-12-26T00:04:00Z"))
+        same("ISODate('2020-12-25T19:04:00+05:30')", millis("2020-12-25T13:34:00Z"))
+        // ECMAScript reads a date-only string as UTC, a date-time without offset as local time.
+        same("new Date('2018-03-20')", millis("2018-03-20T00:00:00Z"))
+        unsupported("new Date('2018-03-20T10:00:00')", "CONSTRUCTOR_FORMAT")
+        unsupported("new Date('2018-03-20T10:00:00-0500')", "CONSTRUCTOR_FORMAT")
+        // Forms the shells accept that are not reviewed here stay unsupported.
+        for (text in
+            listOf(
+                "20201231",
+                "2020-12-25T19:04",
+                "2020-12-25 19:04:00",
+                "2020-12-25T19:04:00+05",
+                "2020-12-31Z",
+                "2020-12-31+0500",
+            )) unsupported("ISODate('" + text + "')", "CONSTRUCTOR_FORMAT")
+        unsupported("ISODate('2020-02-30')", "CONSTRUCTOR_FORMAT")
     }
 
     @Test

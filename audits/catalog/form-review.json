@@ -256,6 +256,31 @@
     }
   }, {
     "corrections" : [ {
+      "curated" : "{\"v\": \"example_test\"}",
+      "documented" : "{\"v\": \"shipping\"}",
+      "file" : "action.json",
+      "index" : null,
+      "pointer" : "/1/$merge"
+    } ],
+    "fixture" : "aggregation/expressions/dateAdd/addAFutureDate",
+    "includes" : [ {
+      "blob" : "6a0d8df9a641e1e37b9f1f4bcc35eeea213c4963",
+      "path" : "source/includes/fact-olson-tz-behavior.rst"
+    } ],
+    "justification" : null,
+    "lock" : "update the name of the target collection for the merge",
+    "marker" : "lock",
+    "origin" : "1da5a11af4af6eaa4fdf8f7580b8bd6743e1d018",
+    "pageBlob" : "519060a66fe72371bda6fb78ae1cd15c8d50d63b",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "0bcc4b35ae7af10b8cddc90c1492e70538353c70",
+      "path" : "source/reference/operator/aggregation/dateAdd.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ {
       "curated" : "{\"v\": \"oops\"}",
       "documented" : "{\"v\": {\"$date\": {\"$numberLong\": \"0\"}}}",
       "file" : "expected.json",
@@ -1788,6 +1813,25 @@
     }
   }, {
     "corrections" : [ ],
+    "fixture" : "aggregation/stages/fill/fillDataForDistinctPartitions",
+    "includes" : [ {
+      "blob" : "0173af6ff3a72a2ee52cbb8862869f66cb4056ed",
+      "path" : "source/includes/fact-fill-description.rst"
+    } ],
+    "justification" : null,
+    "lock" : "reorder pipeline",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "b0ee7dd39cf46de21e670976d3f6842a77c293ef",
+    "retypes" : [ ],
+    "rules" : [ "NAMED_ARGUMENTS" ],
+    "source" : {
+      "commit" : "7861c1d4feb4d9f24c13e764f4e0e8f71fa01d5a",
+      "path" : "source/reference/operator/aggregation/fill.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
     "fixture" : "aggregation/stages/graphLookup/acrossMultipleCollections",
     "includes" : [ {
       "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
@@ -2013,6 +2057,55 @@
     }
   }, {
     "corrections" : [ ],
+    "fixture" : "aggregation/stages/lookup/performAnUncorrelatedSubqueryWithLookup",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "a6db8d865a30fa63796cb4e6d922f9f6ba8797e6",
+      "path" : "source/includes/lookup-from.rst"
+    }, {
+      "blob" : "fd70caec15ce236248000b806e1fdeb87f6cd487",
+      "path" : "source/includes/uncorrelated-subquery.rst"
+    }, {
+      "blob" : "83eabc44fb10dd9eb0adca3ecdb7ed56efb7e2b8",
+      "path" : "source/includes/fact-let-variable-access-note.rst"
+    }, {
+      "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
+      "path" : "source/includes/expr-operators-and-indexes.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
+    }, {
+      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
+      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
+    }, {
+      "blob" : "d71a97278c9c8c4c41a37c5c35461d5b43d59625",
+      "path" : "source/includes/fact-sbe-lookup-overview.rst"
+    } ],
+    "justification" : null,
+    "lock" : "reorder pipeline\n",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f",
+    "retypes" : [ ],
+    "rules" : [ "NAMED_ARGUMENTS" ],
+    "source" : {
+      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
+      "path" : "source/reference/operator/aggregation/lookup.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
     "fixture" : "aggregation/stages/lookup/performMultipleJoinsAndACorrelatedSubqueryWithLookup",
     "includes" : [ {
       "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
@@ -2055,6 +2148,55 @@
     "pageBlob" : "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f",
     "retypes" : [ ],
     "rules" : [ "PROJECT_ID_FIRST", "NAMED_ARGUMENTS" ],
+    "source" : {
+      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
+      "path" : "source/reference/operator/aggregation/lookup.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/stages/lookup/useLookupWithAnArray",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "a6db8d865a30fa63796cb4e6d922f9f6ba8797e6",
+      "path" : "source/includes/lookup-from.rst"
+    }, {
+      "blob" : "fd70caec15ce236248000b806e1fdeb87f6cd487",
+      "path" : "source/includes/uncorrelated-subquery.rst"
+    }, {
+      "blob" : "83eabc44fb10dd9eb0adca3ecdb7ed56efb7e2b8",
+      "path" : "source/includes/fact-let-variable-access-note.rst"
+    }, {
+      "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
+      "path" : "source/includes/expr-operators-and-indexes.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
+    }, {
+      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
+      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
+    }, {
+      "blob" : "d71a97278c9c8c4c41a37c5c35461d5b43d59625",
+      "path" : "source/includes/fact-sbe-lookup-overview.rst"
+    } ],
+    "justification" : null,
+    "lock" : "reorder pipeline\ntweak the data files",
+    "marker" : "lock",
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f",
+    "retypes" : [ ],
+    "rules" : [ ],
     "source" : {
       "commit" : "c360d9dc787de55021969f368a0860be6008f706",
       "path" : "source/reference/operator/aggregation/lookup.txt",
@@ -3217,6 +3359,40 @@
     }
   }, {
     "corrections" : [ {
+      "curated" : "{\"v\": \"crafts\"}",
+      "documented" : "{\"v\": \"decorative arts\"}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/0/desc"
+    } ],
+    "fixture" : "query/updates/max/useMaxToCompareDates",
+    "includes" : [ {
+      "blob" : "5e6b70f902bb252f245d63ebe08566767f1553ff",
+      "path" : "source/includes/use-dot-notation.rst"
+    }, {
+      "blob" : "3eddf446867bc82fd4404645462411a8ab8d4209",
+      "path" : "source/includes/fact-update-operator-processing-order.rst"
+    }, {
+      "blob" : "ac698feee23671aac82cf09e4f18bb3e3e20322e",
+      "path" : "source/includes/extracts-update-operations.yaml"
+    }, {
+      "blob" : "d16ecb02d62db5af0e83450c77a65c0b70114183",
+      "path" : "source/includes/extracts-update-operations-base.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "examples had a complete different doc in expected",
+    "marker" : "lock",
+    "origin" : "d220079dea743be8053d18f0f99325a455ccb6b6",
+    "pageBlob" : "cc05e8e4f8e88c6d2dc5f99ab472351c53797487",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "6d8adb40c0d987372b9ca7247811c8a43a95e08a",
+      "path" : "source/reference/operator/update/max.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ {
       "curated" : null,
       "documented" : "{\"v\": {\"first\": \"george\", \"last\": \"washington\"}}",
       "file" : "data.json",
@@ -3476,19 +3652,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
-    "fixture" : "aggregation/expressions/dateAdd/addAFutureDate",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "1da5a11af4af6eaa4fdf8f7580b8bd6743e1d018",
-    "source" : {
-      "commit" : "0bcc4b35ae7af10b8cddc90c1492e70538353c70",
-      "path" : "source/reference/operator/aggregation/dateAdd.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
+    "detail" : "expected.json has no documented source",
     "fixture" : "aggregation/expressions/dateAdd/adjustForDaylightSavingsTime",
-    "gap" : "SOURCE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "1da5a11af4af6eaa4fdf8f7580b8bd6743e1d018",
     "source" : {
       "commit" : "0bcc4b35ae7af10b8cddc90c1492e70538353c70",
@@ -3496,9 +3662,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
+    "detail" : "action is UPDATE, the test runs PIPELINE",
     "fixture" : "aggregation/expressions/dateAdd/filterOnADateRange",
-    "gap" : "SOURCE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "1da5a11af4af6eaa4fdf8f7580b8bd6743e1d018",
     "source" : {
       "commit" : "0bcc4b35ae7af10b8cddc90c1492e70538353c70",
@@ -3516,9 +3682,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
+    "detail" : "expected.json has no documented source",
     "fixture" : "aggregation/expressions/dateDiff/weeksPerMonth",
-    "gap" : "SOURCE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "82d4c1b3d80d091b8df087511e2b375302e1e199",
     "source" : {
       "commit" : "6c860eaa7d438e1355c61785a5adadc1ede12b55",
@@ -3536,9 +3702,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
+    "detail" : "expected.json has no documented source",
     "fixture" : "aggregation/expressions/dateSubtract/adjustForDaylightSavingsTime",
-    "gap" : "SOURCE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "1da5a11af4af6eaa4fdf8f7580b8bd6743e1d018",
     "source" : {
       "commit" : "0bcc4b35ae7af10b8cddc90c1492e70538353c70",
@@ -3546,7 +3712,7 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
+    "detail" : "DUPLICATE_KEY",
     "fixture" : "aggregation/expressions/dateSubtract/subtractAFixedAmount",
     "gap" : "SOURCE_UNSUPPORTED",
     "origin" : "cfa1993aafe5aba31d8cf02ea533f8c56bd082cf",
@@ -3626,7 +3792,7 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
+    "detail" : "UNSUPPORTED_AST",
     "fixture" : "aggregation/expressions/map/convertCelsiusTemperaturesToFahrenheit",
     "gap" : "SOURCE_UNSUPPORTED",
     "origin" : "aac41b3aaf402fae15ff8a1ebcf9df0759d92878",
@@ -3796,7 +3962,7 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
+    "detail" : "ASSIGNMENT_BINDING",
     "fixture" : "aggregation/expressions/toDate/toDateExpressionOperator",
     "gap" : "SOURCE_UNSUPPORTED",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
@@ -3816,7 +3982,7 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
+    "detail" : "ASSIGNMENT_BINDING",
     "fixture" : "aggregation/expressions/toDouble/toDoubleExpressionOperator",
     "gap" : "SOURCE_UNSUPPORTED",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
@@ -3936,19 +4102,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
-    "fixture" : "aggregation/stages/fill/fillDataForDistinctPartitions",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "source" : {
-      "commit" : "7861c1d4feb4d9f24c13e764f4e0e8f71fa01d5a",
-      "path" : "source/reference/operator/aggregation/fill.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
+    "detail" : "action KEY_ORDER at /0/$fill",
     "fixture" : "aggregation/stages/fill/interpolateIdenticalValuesInDifferentPartitions",
-    "gap" : "SOURCE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "1eadd328c067b852f4a8bed438f78bf30c52b183",
     "source" : {
       "commit" : "dabbeba3f7126b90d5a32ea66ca9b59c8a105a25",
@@ -4036,26 +4192,6 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
-    "fixture" : "aggregation/stages/lookup/performAnUncorrelatedSubqueryWithLookup",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "source" : {
-      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
-      "path" : "source/reference/operator/aggregation/lookup.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
-    "fixture" : "aggregation/stages/lookup/useLookupWithAnArray",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "source" : {
-      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
-      "path" : "source/reference/operator/aggregation/lookup.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
     "detail" : "command outside the current database",
     "fixture" : "aggregation/stages/merge/onDemandMaterializedViewInitialCreation",
     "gap" : "SOURCE_UNSUPPORTED",
@@ -4076,9 +4212,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
+    "detail" : "no data file for collection monthlytotals",
     "fixture" : "aggregation/stages/merge/useThePipelineToCustomizeTheMerge",
-    "gap" : "SOURCE_UNSUPPORTED",
+    "gap" : "FIXTURE_UNSUPPORTED",
     "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
     "source" : {
       "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
@@ -4226,7 +4362,7 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "action.json syntax",
+    "detail" : "not one test helper",
     "fixture" : "query/filters/maxDistance/maxDistanceQueryPredicateOperator",
     "gap" : "FIXTURE_UNSUPPORTED",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
@@ -4403,16 +4539,6 @@
     "source" : {
       "commit" : "537c1f1e29aa4914aae8c43c57a949b3dc3d5b44",
       "path" : "source/reference/operator/update/each.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
-    "fixture" : "query/updates/max/useMaxToCompareDates",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "d220079dea743be8053d18f0f99325a455ccb6b6",
-    "source" : {
-      "commit" : "6d8adb40c0d987372b9ca7247811c8a43a95e08a",
-      "path" : "source/reference/operator/update/max.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {

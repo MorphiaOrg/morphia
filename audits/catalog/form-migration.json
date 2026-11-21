@@ -557,6 +557,56 @@
   }, {
     "blocks" : [ {
       "role" : "ACTION",
+      "sha256" : "aaa4af4dcb46a92ec580d9370b2bef6b5dbd72654cba919f9234589a3931ab1f",
+      "text" : "db.shipping.aggregate(\n   [\n      {\n         $project:\n            {\n               expectedDeliveryDate:\n                  {\n                     $dateAdd:\n                        {\n                           startDate: \"$purchaseDate\",\n                           unit: \"day\",\n                           amount: 3\n                        }\n                  }\n            }\n       },\n       { \n          $merge: \"shipping\" \n       }\n    ]\n )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "c2237dd846b4303d802fe4c40b39bdb16753cb9e2abf6f9dc34f6197b5372df3",
+      "text" : "db.shipping.insertMany(\n  [\n     { custId: 456, purchaseDate: ISODate(\"2020-12-31\") },\n     { custId: 457, purchaseDate: ISODate(\"2021-02-28\") },\n     { custId: 458, purchaseDate: ISODate(\"2021-02-26\") }\n  ]\n)"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "86f87ec3302a05798ef9770f4999dcab9136799c4c28337c78459a4be80096c3",
+      "text" : "{\n   \"_id\" : ObjectId(\"603dd4b2044b995ad331c0b2\"),\n   \"custId\" : 456,\n   \"purchaseDate\" : ISODate(\"2020-12-31T00:00:00Z\"),\n   \"expectedDeliveryDate\" : ISODate(\"2021-01-03T00:00:00Z\")\n}\n{\n   \"_id\" : ObjectId(\"603dd4b2044b995ad331c0b3\"),\n   \"custId\" : 457,\n   \"purchaseDate\" : ISODate(\"2021-02-28T00:00:00Z\"),\n   \"expectedDeliveryDate\" : ISODate(\"2021-03-03T00:00:00Z\")\n}\n{\n    \"_id\" : ObjectId(\"603dd4b2044b995ad331c0b4\"),\n   \"custId\" : 458,\n   \"purchaseDate\" : ISODate(\"2021-02-26T00:00:00Z\"),\n   \"expectedDeliveryDate\" : ISODate(\"2021-03-01T00:00:00Z\")\n}"
+    } ],
+    "collections" : { },
+    "corrections" : [ {
+      "curated" : "{\"v\": \"example_test\"}",
+      "documented" : "{\"v\": \"shipping\"}",
+      "file" : "action.json",
+      "index" : null,
+      "pointer" : "/1/$merge"
+    } ],
+    "example" : "Add a Future Date",
+    "fixture" : "aggregation/expressions/dateAdd/addAFutureDate",
+    "fixtureFiles" : {
+      "action.json" : "649f1b0eabc96ad403e8b6f37863b2a7bbdf821e6ce09bb9248ab9cbe4ff063f",
+      "data.json" : "2021f0be4556afbe6b4f13343a21d8b0bc462293fca7f1ecbfa3fc8f00899abc",
+      "expected.json" : "538501eb843510ddb8c277f8cc92d1c58d7afbdde78dabef160e2ed4df9edd30",
+      "name" : "d9833f7bfbd73fa009d0502ca1c153d1140a37f69eb67ab24f1b62336a944d24"
+    },
+    "includes" : [ {
+      "blob" : "6a0d8df9a641e1e37b9f1f4bcc35eeea213c4963",
+      "path" : "source/includes/fact-olson-tz-behavior.rst"
+    } ],
+    "origin" : "1da5a11af4af6eaa4fdf8f7580b8bd6743e1d018",
+    "pageBlob" : "519060a66fe72371bda6fb78ae1cd15c8d50d63b",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "14b73c303710e64ca56e908f8b7e8486fa492b36cb6d6ef03d608bf95cc495d7",
+      "text" : "update the name of the target collection for the merge"
+    },
+    "retypes" : [ ],
+    "rules" : [ ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "0bcc4b35ae7af10b8cddc90c1492e70538353c70",
+      "path" : "source/reference/operator/aggregation/dateAdd.txt",
+      "relation" : "AT_ORIGIN"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
       "sha256" : "eb60d4bd154316f8fc424d7abfe4deacebcac6da554dc8fe3f6c30ed4aeee636",
       "text" : "db.dates.aggregate( [ {\n   $project: {\n      date: {\n         $dateFromString: {\n            dateString: '$date',\n            timezone: '$timezone',\n            onNull: new Date(0)\n         }\n      }\n   }\n} ] )"
     }, {
@@ -3614,6 +3664,50 @@
   }, {
     "blocks" : [ {
       "role" : "ACTION",
+      "sha256" : "3fd4d0d6fd33db990e3e0049920fde5f773dadb388dba858855ac4433dbfe5eb",
+      "text" : "db.restaurantReviewsMultiple.aggregate( [\n   {\n      $fill:\n         {\n            sortBy: { date: 1 },\n            partitionBy: { \"restaurant\": \"$restaurant\" },\n            output:\n               {\n                  \"score\": { method: \"locf\" }\n               }\n         }\n   }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "1fb862bb0dea7eb32123767adeba4569ebf59acc824cbdff35c6dcae3175b2d2",
+      "text" : "db.restaurantReviewsMultiple.insertMany( [ \n   {\n      date: ISODate(\"2021-03-08\"),\n      restaurant: \"Joe's Pizza\",\n      score: 90\n   },\n   {\n      date: ISODate(\"2021-03-08\"),\n      restaurant: \"Sally's Deli\",\n      score: 75\n   },\n   {\n      date: ISODate(\"2021-03-09\"),\n      restaurant: \"Joe's Pizza\",\n      score: 92\n   },\n   {\n      date: ISODate(\"2021-03-09\"),\n      restaurant: \"Sally's Deli\"\n   },\n   {\n      date: ISODate(\"2021-03-10\"),\n      restaurant: \"Joe's Pizza\"\n   },\n   { \n      date: ISODate(\"2021-03-10\"),\n      restaurant: \"Sally's Deli\",\n      score: 68\n   },\n   {\n      date: ISODate(\"2021-03-11\"),\n      restaurant: \"Joe's Pizza\",\n      score: 93\n   },\n   {\n      date: ISODate(\"2021-03-11\"),\n      restaurant: \"Sally's Deli\"\n   }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "c54300603c93986c5749c3d685f8150129df07ebb238f003525b1054d0a3933a",
+      "text" : "[\n  {\n    _id: ObjectId(\"620559f4394d47411658b58f\"),\n    date: ISODate(\"2021-03-08T00:00:00.000Z\"),\n    restaurant: \"Joe's Pizza\",\n    score: 90\n  },\n  {\n    _id: ObjectId(\"620559f4394d47411658b591\"),\n    date: ISODate(\"2021-03-09T00:00:00.000Z\"),\n    restaurant: \"Joe's Pizza\",\n    score: 92\n  },\n  {\n    _id: ObjectId(\"620559f4394d47411658b593\"),\n    date: ISODate(\"2021-03-10T00:00:00.000Z\"),\n    restaurant: \"Joe's Pizza\",\n    score: 92\n  },\n  {\n    _id: ObjectId(\"620559f4394d47411658b595\"),\n    date: ISODate(\"2021-03-11T00:00:00.000Z\"),\n    restaurant: \"Joe's Pizza\",\n    score: 93\n  },\n  {\n    _id: ObjectId(\"620559f4394d47411658b590\"),\n    date: ISODate(\"2021-03-08T00:00:00.000Z\"),\n    restaurant: \"Sally's Deli\",\n    score: 75\n  },\n  {\n    _id: ObjectId(\"620559f4394d47411658b592\"),\n    date: ISODate(\"2021-03-09T00:00:00.000Z\"),\n    restaurant: \"Sally's Deli\",\n    score: 75\n  },\n  {\n    _id: ObjectId(\"620559f4394d47411658b594\"),\n    date: ISODate(\"2021-03-10T00:00:00.000Z\"),\n    restaurant: \"Sally's Deli\",\n    score: 68\n  },\n  {\n    _id: ObjectId(\"620559f4394d47411658b596\"),\n    date: ISODate(\"2021-03-11T00:00:00.000Z\"),\n    restaurant: \"Sally's Deli\",\n    score: 68\n  }\n]"
+    } ],
+    "collections" : { },
+    "corrections" : [ ],
+    "example" : "Fill Data for Distinct Partitions",
+    "fixture" : "aggregation/stages/fill/fillDataForDistinctPartitions",
+    "fixtureFiles" : {
+      "action.json" : "ee73a850a4643122181630957b2ba73f245a9d136616c165e3a36cc701903890",
+      "data.json" : "d24e60395c66e510f55feac543096acb938384ef5d927d9720bb099b51aaed8f",
+      "expected.json" : "ac28ea2dd929c9e63cf9adbe43f17872cd1fdd67088342a18b42d4a62e5e9020",
+      "name" : "8a5be85ecdf30d55c6f9acb663f2166a858a03f27f3acff0f5eb749c38b448f8"
+    },
+    "includes" : [ {
+      "blob" : "0173af6ff3a72a2ee52cbb8862869f66cb4056ed",
+      "path" : "source/includes/fact-fill-description.rst"
+    } ],
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "b0ee7dd39cf46de21e670976d3f6842a77c293ef",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "3923f8ed2be2b71dc3d46090af57ed91fb0c7a5f0fbc420063fea7861a7e49ab",
+      "text" : "reorder pipeline"
+    },
+    "retypes" : [ ],
+    "rules" : [ "NAMED_ARGUMENTS" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "7861c1d4feb4d9f24c13e764f4e0e8f71fa01d5a",
+      "path" : "source/reference/operator/aggregation/fill.txt",
+      "relation" : "AT_ORIGIN"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
       "sha256" : "2307d7043a9abff0bcb4efcb4efe26c89801cbfab9d54f1d483d0fe04ad826cc",
       "text" : "db.travelers.aggregate( [\n   {\n      $graphLookup: {\n         from: \"airports\",\n         startWith: \"$nearestAirport\",\n         connectFromField: \"connects\",\n         connectToField: \"airport\",\n         maxDepth: 2,\n         depthField: \"numConnections\",\n         as: \"destinations\"\n      }\n   }\n] )"
     }, {
@@ -4010,6 +4104,87 @@
   }, {
     "blocks" : [ {
       "role" : "ACTION",
+      "sha256" : "be4e0ba8e0c978878282a3f876cfa3e91ff9b40cb3ba8fa4e4c14713e0c74be5",
+      "text" : "db.absences.aggregate( [\n   {\n      $lookup:\n         {\n           from: \"holidays\",\n           pipeline: [\n              { $match: { year: 2018 } },\n              { $project: { _id: 0, date: { name: \"$name\", date: \"$date\" } } },\n              { $replaceRoot: { newRoot: \"$date\" } }\n           ],\n           as: \"holidays\"\n         }\n    }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "c1c6082a84d79d3ff4b29c29ab8c4cf84956c8304876aa716fa61db600db8948",
+      "text" : "db.absences.insertMany( [\n   { \"_id\" : 1, \"student\" : \"Ann Aardvark\", sickdays: [ new Date (\"2018-05-01\"),new Date (\"2018-08-23\") ] },\n   { \"_id\" : 2, \"student\" : \"Zoe Zebra\", sickdays: [ new Date (\"2018-02-01\"),new Date (\"2018-05-23\") ] },\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "07bb65d0ccad6ae993b75d70a8f38a5ea705cc37ccbb050d00585400f1636c72",
+      "text" : "db.holidays.insertMany( [\n   { \"_id\" : 1, year: 2018, name: \"New Years\", date: new Date(\"2018-01-01\") },\n   { \"_id\" : 2, year: 2018, name: \"Pi Day\", date: new Date(\"2018-03-14\") },\n   { \"_id\" : 3, year: 2018, name: \"Ice Cream Day\", date: new Date(\"2018-07-15\") },\n   { \"_id\" : 4, year: 2017, name: \"New Years\", date: new Date(\"2017-01-01\") },\n   { \"_id\" : 5, year: 2017, name: \"Ice Cream Day\", date: new Date(\"2017-07-16\") }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "a6b61ab588932f8166248f5dea3a22a0a886833e4fe15361d5db385c8cb0a654",
+      "text" : "{\n  _id: 1,\n  student: 'Ann Aardvark',\n  sickdays: [\n    ISODate(\"2018-05-01T00:00:00.000Z\"),\n    ISODate(\"2018-08-23T00:00:00.000Z\")\n  ],\n  holidays: [\n    { name: 'New Years', date: ISODate(\"2018-01-01T00:00:00.000Z\") },\n    { name: 'Pi Day', date: ISODate(\"2018-03-14T00:00:00.000Z\") },\n    { name: 'Ice Cream Day', date: ISODate(\"2018-07-15T00:00:00.000Z\")\n    }\n  ]\n},\n{\n  _id: 2,\n  student: 'Zoe Zebra',\n  sickdays: [\n    ISODate(\"2018-02-01T00:00:00.000Z\"),\n    ISODate(\"2018-05-23T00:00:00.000Z\")\n  ],\n  holidays: [\n    { name: 'New Years', date: ISODate(\"2018-01-01T00:00:00.000Z\") },\n    { name: 'Pi Day', date: ISODate(\"2018-03-14T00:00:00.000Z\") },\n    { name: 'Ice Cream Day', date: ISODate(\"2018-07-15T00:00:00.000Z\")\n    }\n  ]\n}"
+    } ],
+    "collections" : {
+      "data2.json" : "holidays"
+    },
+    "corrections" : [ ],
+    "example" : "Perform an Uncorrelated Subquery with ``$lookup``",
+    "fixture" : "aggregation/stages/lookup/performAnUncorrelatedSubqueryWithLookup",
+    "fixtureFiles" : {
+      "action.json" : "a3ec80c20735f09ad6ebd7d9f12088717dcd3bae3fad1a2b3efcef13586f2e52",
+      "data.json" : "8f16230f7edcb5bbe9f8cf91bded56cda78db07f7e5510e68dc0ef7c67157cf9",
+      "data2.json" : "2ad12460840c5d1910a60fbdd7945ec7b5d8861f1f99ecf5c760ac23c23ece95",
+      "expected.json" : "f2775086dddbadc502b71671f784439dc6b3e04f536bb7bb90e4fa747e97d94d",
+      "name" : "55980190b0ecf15a84ec6cd0c8f8238f99d1c576ee1167ee481ac592a703143f"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "a6db8d865a30fa63796cb4e6d922f9f6ba8797e6",
+      "path" : "source/includes/lookup-from.rst"
+    }, {
+      "blob" : "fd70caec15ce236248000b806e1fdeb87f6cd487",
+      "path" : "source/includes/uncorrelated-subquery.rst"
+    }, {
+      "blob" : "83eabc44fb10dd9eb0adca3ecdb7ed56efb7e2b8",
+      "path" : "source/includes/fact-let-variable-access-note.rst"
+    }, {
+      "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
+      "path" : "source/includes/expr-operators-and-indexes.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
+    }, {
+      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
+      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
+    }, {
+      "blob" : "d71a97278c9c8c4c41a37c5c35461d5b43d59625",
+      "path" : "source/includes/fact-sbe-lookup-overview.rst"
+    } ],
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "7212bcc2284c2a4eadb774b5d3fc9467dca891e6d430a6f1c5094f87f0bc00b5",
+      "text" : "reorder pipeline\n"
+    },
+    "retypes" : [ ],
+    "rules" : [ "NAMED_ARGUMENTS" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
+      "path" : "source/reference/operator/aggregation/lookup.txt",
+      "relation" : "AT_ORIGIN"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
       "sha256" : "5645bd3e90c8c17411aaa1dae2bb5237b3b33e5945574697dbb82147ac60f8ce",
       "text" : "db.orders.aggregate( [\n   {\n      $lookup:\n         {\n           from: \"warehouses\",\n           let: { order_item: \"$item\", order_qty: \"$ordered\" },\n           pipeline: [\n              { $match: \n                 { $expr: \n                    { $and: \n                       [ \n                         { $eq: [ \"$stock_item\",  \"$$order_item\" ] }, \n                         { $gte: [ \"$instock\", \"$$order_qty\" ] }\n                       ] \n                    }\n                 }\n              },\n              { $project: { stock_item: 0, _id: 0 } }\n           ],\n           as: \"stockdata\"\n         }\n    }\n] )"
     }, {
@@ -4081,6 +4256,87 @@
     },
     "retypes" : [ ],
     "rules" : [ "PROJECT_ID_FIRST", "NAMED_ARGUMENTS" ],
+    "shape" : "PIPELINE",
+    "source" : {
+      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
+      "path" : "source/reference/operator/aggregation/lookup.txt",
+      "relation" : "AT_ORIGIN"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
+      "sha256" : "715de33872a7d9f3873bac3afb0b7b337b86904f1113f38a56ed34fcb54012e1",
+      "text" : "db.classes.aggregate( [\n   {\n      $lookup:\n         {\n            from: \"members\",\n            localField: \"enrollmentlist\",\n            foreignField: \"name\",\n            as: \"enrollee_info\"\n        }\n   }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "11dd403ae0ebca5ea44aacd67bd3ac76a168091addcb8b622f30e2bf0f27b4f8",
+      "text" : "db.classes.insertMany( [\n   { _id: 1, title: \"Reading is ...\", enrollmentlist: [ \"giraffe2\", \"pandabear\", \"artie\" ], days: [\"M\", \"W\", \"F\"] },\n   { _id: 2, title: \"But Writing ...\", enrollmentlist: [ \"giraffe1\", \"artie\" ], days: [\"T\", \"F\"] }\n] )"
+    }, {
+      "role" : "DATA",
+      "sha256" : "34916563dfee837f938635fce45f804c8314e9dfeec7edd1272ac87c2c725d8b",
+      "text" : "db.members.insertMany( [\n   { _id: 1, name: \"artie\", joined: new Date(\"2016-05-01\"), status: \"A\" }, \n   { _id: 2, name: \"giraffe\", joined: new Date(\"2017-05-01\"), status: \"D\" }, \n   { _id: 3, name: \"giraffe1\", joined: new Date(\"2017-10-01\"), status: \"A\" }, \n   { _id: 4, name: \"panda\", joined: new Date(\"2018-10-11\"), status: \"A\" },  \n   { _id: 5, name: \"pandabear\", joined: new Date(\"2018-12-01\"), status: \"A\" },\n   { _id: 6, name: \"giraffe2\", joined: new Date(\"2018-12-01\"), status: \"D\" }\n] )"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "e65a36eddade36e2c0b4b9f3c1f935c94d40dd0f002b61de36312e7cad2bbb45",
+      "text" : "{\n   \"_id\" : 1,\n   \"title\" : \"Reading is ...\",\n   \"enrollmentlist\" : [ \"giraffe2\", \"pandabear\", \"artie\" ],\n   \"days\" : [ \"M\", \"W\", \"F\" ],\n   \"enrollee_info\" : [\n      { \"_id\" : 1, \"name\" : \"artie\", \"joined\" : ISODate(\"2016-05-01T00:00:00Z\"), \"status\" : \"A\" },\n      { \"_id\" : 5, \"name\" : \"pandabear\", \"joined\" : ISODate(\"2018-12-01T00:00:00Z\"), \"status\" : \"A\" },\n      { \"_id\" : 6, \"name\" : \"giraffe2\", \"joined\" : ISODate(\"2018-12-01T00:00:00Z\"), \"status\" : \"D\" }\n   ]\n}\n{\n   \"_id\" : 2,\n   \"title\" : \"But Writing ...\",\n   \"enrollmentlist\" : [ \"giraffe1\", \"artie\" ],\n   \"days\" : [ \"T\", \"F\" ],\n   \"enrollee_info\" : [\n      { \"_id\" : 1, \"name\" : \"artie\", \"joined\" : ISODate(\"2016-05-01T00:00:00Z\"), \"status\" : \"A\" },\n      { \"_id\" : 3, \"name\" : \"giraffe1\", \"joined\" : ISODate(\"2017-10-01T00:00:00Z\"), \"status\" : \"A\" }\n   ]\n}"
+    } ],
+    "collections" : {
+      "data2.json" : "members"
+    },
+    "corrections" : [ ],
+    "example" : "Use ``$lookup`` with an Array",
+    "fixture" : "aggregation/stages/lookup/useLookupWithAnArray",
+    "fixtureFiles" : {
+      "action.json" : "a186c77576e3b19fbde8728392ee50c89f66bcd9914fd0c9afbd25c6af522fad",
+      "data.json" : "b9bfd226be0341f0749038958b84c00101b8b23619a918e0a4701525fd1a26d2",
+      "data2.json" : "eb85f34d39cc922b2f61921d22758f10f71785d319b3a48d52ca8cbde8853f85",
+      "expected.json" : "54356ba48f490600758afb166b5b8c3fb8350d6516adc067b27bfb33a23e80ad",
+      "name" : "7987605f84875c4e188dba9f3bd6f4013056afb8f7039ed2ca0ad7b736bb91b3"
+    },
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "a6db8d865a30fa63796cb4e6d922f9f6ba8797e6",
+      "path" : "source/includes/lookup-from.rst"
+    }, {
+      "blob" : "fd70caec15ce236248000b806e1fdeb87f6cd487",
+      "path" : "source/includes/uncorrelated-subquery.rst"
+    }, {
+      "blob" : "83eabc44fb10dd9eb0adca3ecdb7ed56efb7e2b8",
+      "path" : "source/includes/fact-let-variable-access-note.rst"
+    }, {
+      "blob" : "94e3e5a1ab2f9c82a8783818a54d72f87437830f",
+      "path" : "source/includes/expr-operators-and-indexes.rst"
+    }, {
+      "blob" : "621353fe8533a76f297866363e194e3e42cf03a0",
+      "path" : "source/includes/extracts-views.yaml"
+    }, {
+      "blob" : "88a019ea44d91726953d31d21e664e1333190efd",
+      "path" : "source/includes/graphLookup-sharded-coll-transaction-note.rst"
+    }, {
+      "blob" : "d71a97278c9c8c4c41a37c5c35461d5b43d59625",
+      "path" : "source/includes/fact-sbe-lookup-overview.rst"
+    } ],
+    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
+    "pageBlob" : "b5075b6dd3f230e9e22df9bdccf112600b2b8d3f",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "9473115fe0e20ae14aa010fd44e3af42d0d8e2f244a8c8bb8f028870bab9dcb7",
+      "text" : "reorder pipeline\ntweak the data files"
+    },
+    "retypes" : [ ],
+    "rules" : [ ],
     "shape" : "PIPELINE",
     "source" : {
       "commit" : "c360d9dc787de55021969f368a0860be6008f706",
@@ -6172,6 +6428,65 @@
   }, {
     "blocks" : [ {
       "role" : "ACTION",
+      "sha256" : "6a627d47a847d7e87c58a6daa169a8ec3726506243398ece7fb1dee032ad43bd",
+      "text" : "db.tags.updateOne(\n   { _id: 1 },\n   { $max: { dateExpired: new Date(\"2013-09-30\") } }\n)"
+    }, {
+      "role" : "DATA",
+      "sha256" : "16bd80b6039542988988576168080aab9554be3a0881ddb8f1bab803a7d4dc07",
+      "text" : "db.tags.insertOne(\n   {\n     _id: 1,\n     desc: \"crafts\",\n     dateEntered: ISODate(\"2013-10-01T05:00:00Z\"),\n     dateExpired: ISODate(\"2013-10-01T16:38:16.163Z\")\n   }\n)"
+    }, {
+      "role" : "EXPECTED",
+      "sha256" : "b3a6b34a2c2090b1cdffc6095b4333263efe03d0f8b561102feb257b5de7f714",
+      "text" : "{\n   _id: 1,\n   desc: \"decorative arts\",\n   dateEntered: ISODate(\"2013-10-01T05:00:00Z\"),\n   dateExpired: ISODate(\"2013-10-01T16:38:16.163Z\")\n}"
+    } ],
+    "collections" : { },
+    "corrections" : [ {
+      "curated" : "{\"v\": \"crafts\"}",
+      "documented" : "{\"v\": \"decorative arts\"}",
+      "file" : "expected.json",
+      "index" : null,
+      "pointer" : "/0/desc"
+    } ],
+    "example" : "Use ``$max`` to Compare Dates",
+    "fixture" : "query/updates/max/useMaxToCompareDates",
+    "fixtureFiles" : {
+      "action.json" : "fe6aa7f4a71a2dfccd4c6b50cf6d52cb49dcbda56b7500176eb997dc5e9d1e4a",
+      "data.json" : "90a8f9ccb51dc604ee5cfd41766594948e0b06bd535504a75fa6c93f580252b6",
+      "expected.json" : "90a8f9ccb51dc604ee5cfd41766594948e0b06bd535504a75fa6c93f580252b6",
+      "name" : "1ccc713581d78a61ef5d8403205aa375cdcc47df7508280c36fcb6158ceaf026"
+    },
+    "includes" : [ {
+      "blob" : "5e6b70f902bb252f245d63ebe08566767f1553ff",
+      "path" : "source/includes/use-dot-notation.rst"
+    }, {
+      "blob" : "3eddf446867bc82fd4404645462411a8ab8d4209",
+      "path" : "source/includes/fact-update-operator-processing-order.rst"
+    }, {
+      "blob" : "ac698feee23671aac82cf09e4f18bb3e3e20322e",
+      "path" : "source/includes/extracts-update-operations.yaml"
+    }, {
+      "blob" : "d16ecb02d62db5af0e83450c77a65c0b70114183",
+      "path" : "source/includes/extracts-update-operations-base.yaml"
+    } ],
+    "origin" : "d220079dea743be8053d18f0f99325a455ccb6b6",
+    "pageBlob" : "cc05e8e4f8e88c6d2dc5f99ab472351c53797487",
+    "retiredLock" : {
+      "name" : "lock",
+      "sha256" : "560089032bab2886d3285253a3084499e90a9a8ed9800cfea62faeed26dbb68d",
+      "text" : "examples had a complete different doc in expected"
+    },
+    "retypes" : [ ],
+    "rules" : [ ],
+    "shape" : "UPDATE",
+    "source" : {
+      "commit" : "6d8adb40c0d987372b9ca7247811c8a43a95e08a",
+      "path" : "source/reference/operator/update/max.txt",
+      "relation" : "AT_ORIGIN"
+    },
+    "unexpandedIncludes" : [ ]
+  }, {
+    "blocks" : [ {
+      "role" : "ACTION",
       "sha256" : "9c0fd63e1ea62c7936a2e2ca1123d5eeee03a3e89ecf278666709dfeafa3a31f",
       "text" : "db.students.updateOne( { _id: 1 }, { $rename: { \"name.first\": \"name.fname\" } } )"
     }, {
@@ -6422,7 +6737,7 @@
     },
     "unexpandedIncludes" : [ ]
   } ],
-  "repositoryRevision" : "0a22114689746d4002dcc54c74f64e6e200dc358",
+  "repositoryRevision" : "999780b568eeb66656b5292382e487ba129c6b9e",
   "rules" : [ {
     "description" : "$cond: {if: a, then: b, else: c} and $cond: [a, b, c] are the same expression; the array form is canonical.",
     "rule" : "COND_ARRAY"
@@ -6457,27 +6772,27 @@
   "schemaVersion" : 1,
   "sourceRepository" : "mongodb/docs",
   "summary" : {
-    "gap.FIXTURE_UNSUPPORTED" : 8,
+    "gap.FIXTURE_UNSUPPORTED" : 9,
     "gap.NO_MATCHING_EXAMPLE" : 4,
     "gap.PAGE_UNSUPPORTED" : 0,
     "gap.REJECTED" : 1,
-    "gap.RESIDUAL_DIFFERENCE" : 37,
-    "gap.SOURCE_UNSUPPORTED" : 61,
-    "overrides" : 123,
-    "overrides.corrected" : 18,
-    "overrides.exact" : 46,
+    "gap.RESIDUAL_DIFFERENCE" : 42,
+    "gap.SOURCE_UNSUPPORTED" : 50,
+    "overrides" : 128,
+    "overrides.corrected" : 20,
+    "overrides.exact" : 47,
     "overrides.retyped" : 16,
     "rule.ALTERNATIVE_COMMANDS" : 1,
     "rule.COND_ARRAY" : 14,
     "rule.EQ_SHORTHAND" : 4,
     "rule.FIELD_OPERATORS_AND" : 1,
-    "rule.NAMED_ARGUMENTS" : 12,
+    "rule.NAMED_ARGUMENTS" : 14,
     "rule.PROJECTION_FLAGS" : 1,
     "rule.PROJECT_ID_FIRST" : 12,
     "rule.REGEX_FORM" : 1,
     "rule.SINGLE_ARGUMENT_ARRAY" : 2,
     "rule.UNWIND_PATH" : 1,
-    "unresolved" : 111
+    "unresolved" : 106
   },
   "unresolved" : [ {
     "detail" : "SYNTAX",
@@ -6560,19 +6875,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
-    "fixture" : "aggregation/expressions/dateAdd/addAFutureDate",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "1da5a11af4af6eaa4fdf8f7580b8bd6743e1d018",
-    "source" : {
-      "commit" : "0bcc4b35ae7af10b8cddc90c1492e70538353c70",
-      "path" : "source/reference/operator/aggregation/dateAdd.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
+    "detail" : "expected.json has no documented source",
     "fixture" : "aggregation/expressions/dateAdd/adjustForDaylightSavingsTime",
-    "gap" : "SOURCE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "1da5a11af4af6eaa4fdf8f7580b8bd6743e1d018",
     "source" : {
       "commit" : "0bcc4b35ae7af10b8cddc90c1492e70538353c70",
@@ -6580,9 +6885,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
+    "detail" : "action is UPDATE, the test runs PIPELINE",
     "fixture" : "aggregation/expressions/dateAdd/filterOnADateRange",
-    "gap" : "SOURCE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "1da5a11af4af6eaa4fdf8f7580b8bd6743e1d018",
     "source" : {
       "commit" : "0bcc4b35ae7af10b8cddc90c1492e70538353c70",
@@ -6600,9 +6905,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
+    "detail" : "expected.json has no documented source",
     "fixture" : "aggregation/expressions/dateDiff/weeksPerMonth",
-    "gap" : "SOURCE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "82d4c1b3d80d091b8df087511e2b375302e1e199",
     "source" : {
       "commit" : "6c860eaa7d438e1355c61785a5adadc1ede12b55",
@@ -6620,9 +6925,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
+    "detail" : "expected.json has no documented source",
     "fixture" : "aggregation/expressions/dateSubtract/adjustForDaylightSavingsTime",
-    "gap" : "SOURCE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "1da5a11af4af6eaa4fdf8f7580b8bd6743e1d018",
     "source" : {
       "commit" : "0bcc4b35ae7af10b8cddc90c1492e70538353c70",
@@ -6630,7 +6935,7 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
+    "detail" : "DUPLICATE_KEY",
     "fixture" : "aggregation/expressions/dateSubtract/subtractAFixedAmount",
     "gap" : "SOURCE_UNSUPPORTED",
     "origin" : "cfa1993aafe5aba31d8cf02ea533f8c56bd082cf",
@@ -6710,7 +7015,7 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
+    "detail" : "UNSUPPORTED_AST",
     "fixture" : "aggregation/expressions/map/convertCelsiusTemperaturesToFahrenheit",
     "gap" : "SOURCE_UNSUPPORTED",
     "origin" : "aac41b3aaf402fae15ff8a1ebcf9df0759d92878",
@@ -6880,7 +7185,7 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
+    "detail" : "ASSIGNMENT_BINDING",
     "fixture" : "aggregation/expressions/toDate/toDateExpressionOperator",
     "gap" : "SOURCE_UNSUPPORTED",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
@@ -6900,7 +7205,7 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
+    "detail" : "ASSIGNMENT_BINDING",
     "fixture" : "aggregation/expressions/toDouble/toDoubleExpressionOperator",
     "gap" : "SOURCE_UNSUPPORTED",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
@@ -7020,19 +7325,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
-    "fixture" : "aggregation/stages/fill/fillDataForDistinctPartitions",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "source" : {
-      "commit" : "7861c1d4feb4d9f24c13e764f4e0e8f71fa01d5a",
-      "path" : "source/reference/operator/aggregation/fill.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
+    "detail" : "action KEY_ORDER at /0/$fill",
     "fixture" : "aggregation/stages/fill/interpolateIdenticalValuesInDifferentPartitions",
-    "gap" : "SOURCE_UNSUPPORTED",
+    "gap" : "RESIDUAL_DIFFERENCE",
     "origin" : "1eadd328c067b852f4a8bed438f78bf30c52b183",
     "source" : {
       "commit" : "dabbeba3f7126b90d5a32ea66ca9b59c8a105a25",
@@ -7120,26 +7415,6 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
-    "fixture" : "aggregation/stages/lookup/performAnUncorrelatedSubqueryWithLookup",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "source" : {
-      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
-      "path" : "source/reference/operator/aggregation/lookup.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
-    "fixture" : "aggregation/stages/lookup/useLookupWithAnArray",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
-    "source" : {
-      "commit" : "c360d9dc787de55021969f368a0860be6008f706",
-      "path" : "source/reference/operator/aggregation/lookup.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
     "detail" : "command outside the current database",
     "fixture" : "aggregation/stages/merge/onDemandMaterializedViewInitialCreation",
     "gap" : "SOURCE_UNSUPPORTED",
@@ -7160,9 +7435,9 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
+    "detail" : "no data file for collection monthlytotals",
     "fixture" : "aggregation/stages/merge/useThePipelineToCustomizeTheMerge",
-    "gap" : "SOURCE_UNSUPPORTED",
+    "gap" : "FIXTURE_UNSUPPORTED",
     "origin" : "7ad9ac5e4d31c5035284090ab13521e17467015f",
     "source" : {
       "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
@@ -7310,7 +7585,7 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "detail" : "action.json syntax",
+    "detail" : "not one test helper",
     "fixture" : "query/filters/maxDistance/maxDistanceQueryPredicateOperator",
     "gap" : "FIXTURE_UNSUPPORTED",
     "origin" : "948049a3364491f4905246224922d2dbb4197154",
@@ -7487,16 +7762,6 @@
     "source" : {
       "commit" : "537c1f1e29aa4914aae8c43c57a949b3dc3d5b44",
       "path" : "source/reference/operator/update/each.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "detail" : "CONSTRUCTOR_FORMAT",
-    "fixture" : "query/updates/max/useMaxToCompareDates",
-    "gap" : "SOURCE_UNSUPPORTED",
-    "origin" : "d220079dea743be8053d18f0f99325a455ccb6b6",
-    "source" : {
-      "commit" : "6d8adb40c0d987372b9ca7247811c8a43a95e08a",
-      "path" : "source/reference/operator/update/max.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
