@@ -350,7 +350,10 @@ A candidate records:
      status `LEGACY_ONLY` and the failing check. The coverage report does not count it as supported
      until it converts.
 6. **Candidate, integration and promotion** commands, with the attestation, stale-file and rollback
-   checks and their tests.
+   checks and their tests. Delivered as `GenerateMainKt candidate|integrate|promote`
+   (`dev.morphia.audits.generate.Candidates`): today's generator regenerates the ledger's scenarios
+   and the manifest, so a candidate of an in-sync tree changes nothing, and the commands are the
+   path every later generator change takes.
 7. **Bindings and generator.** Emit Java and `scenario.json` for unowned examples, as a candidate
    only until it is integrated and promoted through slice 6. The first family is the one with the
    most unowned, environment-independent examples at that time.

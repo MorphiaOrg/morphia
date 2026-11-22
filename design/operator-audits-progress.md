@@ -2422,3 +2422,28 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
 - `PublisherTest` (11 cases) on a fake tracker; `PublisherSandboxTest` against
   `evanchooly/morphia-audits-sandbox`, run twice: the repository still holds three issues.
 - Review: the independent reviewer is at its weekly limit (resets 2026-11-26); self-reviewed.
+
+- PR #4556 (branch audits-publisher, base #4555) published.
+
+## Step 5 slice 6: candidates, integration and promotion (2026-11-22)
+
+- Branch audits-candidates from #4556. `GenerateMainKt candidate|integrate|promote`
+  (`dev.morphia.audits.generate.Candidates`):
+  - `candidate` regenerates every ledger scenario and the manifest into its own directory (never
+    the checkout), recording the base revision, the manifest digest, the generator and schema
+    versions, and each written, deleted (generated before, no longer) or protected file's hash.
+    `CaseManifests.capture` can hash in-memory contents for that;
+  - `integrate` stages it in a temporary worktree at its base, builds core, runs the owning tests
+    under Critter then reflection, writes an attestation bound to the candidate's digest, and
+    always removes the worktree;
+  - `promote` refuses a checkout that moved on (revision, manifest digest, protected files with
+    uncommitted edits), a failed or foreign attestation, a stale file edited since, and an unowned
+    file at a written path; it applies everything together and restores the originals on failure.
+- An end-to-end run on the checkout: the candidate matched the committed tree, integration passed
+  442 tests under each mapper in the temporary worktree, and promotion applied with no change to
+  any tracked file. That run found a bug the unit tests missed: the attestation's computed
+  `passed` property was written to JSON and could not be read back; it is now a function, and the
+  test round-trips an attestation.
+- `CandidatesTest` (5 cases): determinism and agreement with the tree, promotion, every refusal,
+  rollback, and integration with a fake runner.
+- Review: the independent reviewer is at its weekly limit (resets 2026-11-26); self-reviewed.

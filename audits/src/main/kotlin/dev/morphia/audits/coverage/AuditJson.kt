@@ -20,6 +20,8 @@ import dev.morphia.audits.bindings.NameBackportReview
 import dev.morphia.audits.discovery.DiscoveryPlan
 import dev.morphia.audits.discovery.DiscoveryReport
 import dev.morphia.audits.documents.DocumentReport
+import dev.morphia.audits.generate.Attestation
+import dev.morphia.audits.generate.Candidate
 import dev.morphia.audits.naming.ExampleNameRegistry
 import dev.morphia.audits.naming.NameProposal
 import dev.morphia.audits.naming.NamingRequest
@@ -178,6 +180,10 @@ object AuditJson {
         read(json, FormMigrationReport::class.java)
 
     fun cutover(json: String): CutoverReport = read(json, CutoverReport::class.java)
+
+    fun candidate(json: String): Candidate = read(json, Candidate::class.java)
+
+    fun attestation(json: String): Attestation = read(json, Attestation::class.java)
 
     fun publicationJournal(json: String): PublicationJournal =
         read(json, PublicationJournal::class.java)

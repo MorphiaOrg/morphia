@@ -28,9 +28,15 @@ object CaseManifests {
 
     /**
      * The manifest for the cases in [ledger]: each case, its scenario (generated from the override)
-     * and, for a migrated case, its test source (a moved handwritten body, so protected).
+     * and, for a migrated case, its test source (a moved handwritten body, so protected). A file in
+     * [contents] (by repository path) is hashed from there rather than from disk, so a candidate
+     * can describe files it has not written.
      */
-    fun capture(repository: Path, ledger: FixtureMigrationLedger): CaseManifest {
+    fun capture(
+        repository: Path,
+        ledger: FixtureMigrationLedger,
+        contents: Map<String, ByteArray> = emptyMap(),
+    ): CaseManifest {
         val root = repository.toRealPath()
         val cases =
             ledger.migrations.map {
@@ -55,7 +61,7 @@ object CaseManifests {
                 .map { (path, owner) ->
                     OwnedFile(
                         path.removePrefix("core/"),
-                        sha256(Files.readAllBytes(root.resolve(path))),
+                        sha256(contents[path] ?: Files.readAllBytes(root.resolve(path))),
                         owner,
                     )
                 }
@@ -105,6 +111,6 @@ object CaseManifests {
         require(problems.isEmpty()) { problems.joinToString("\n") }
     }
 
-    private fun sha256(bytes: ByteArray): String =
+    fun sha256(bytes: ByteArray): String =
         HexFormat.of().formatHex(MessageDigest.getInstance("SHA-256").digest(bytes))
 }
