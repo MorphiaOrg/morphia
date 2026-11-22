@@ -43,56 +43,6 @@
   }, {
     "blocks" : [ {
       "role" : "ACTION",
-      "sha256" : "aaa4af4dcb46a92ec580d9370b2bef6b5dbd72654cba919f9234589a3931ab1f",
-      "text" : "db.shipping.aggregate(\n   [\n      {\n         $project:\n            {\n               expectedDeliveryDate:\n                  {\n                     $dateAdd:\n                        {\n                           startDate: \"$purchaseDate\",\n                           unit: \"day\",\n                           amount: 3\n                        }\n                  }\n            }\n       },\n       { \n          $merge: \"shipping\" \n       }\n    ]\n )"
-    }, {
-      "role" : "DATA",
-      "sha256" : "c2237dd846b4303d802fe4c40b39bdb16753cb9e2abf6f9dc34f6197b5372df3",
-      "text" : "db.shipping.insertMany(\n  [\n     { custId: 456, purchaseDate: ISODate(\"2020-12-31\") },\n     { custId: 457, purchaseDate: ISODate(\"2021-02-28\") },\n     { custId: 458, purchaseDate: ISODate(\"2021-02-26\") }\n  ]\n)"
-    }, {
-      "role" : "EXPECTED",
-      "sha256" : "86f87ec3302a05798ef9770f4999dcab9136799c4c28337c78459a4be80096c3",
-      "text" : "{\n   \"_id\" : ObjectId(\"603dd4b2044b995ad331c0b2\"),\n   \"custId\" : 456,\n   \"purchaseDate\" : ISODate(\"2020-12-31T00:00:00Z\"),\n   \"expectedDeliveryDate\" : ISODate(\"2021-01-03T00:00:00Z\")\n}\n{\n   \"_id\" : ObjectId(\"603dd4b2044b995ad331c0b3\"),\n   \"custId\" : 457,\n   \"purchaseDate\" : ISODate(\"2021-02-28T00:00:00Z\"),\n   \"expectedDeliveryDate\" : ISODate(\"2021-03-03T00:00:00Z\")\n}\n{\n    \"_id\" : ObjectId(\"603dd4b2044b995ad331c0b4\"),\n   \"custId\" : 458,\n   \"purchaseDate\" : ISODate(\"2021-02-26T00:00:00Z\"),\n   \"expectedDeliveryDate\" : ISODate(\"2021-03-01T00:00:00Z\")\n}"
-    } ],
-    "collections" : { },
-    "corrections" : [ {
-      "curated" : "{\"v\": \"example_test\"}",
-      "documented" : "{\"v\": \"shipping\"}",
-      "file" : "action.json",
-      "index" : null,
-      "pointer" : "/1/$merge"
-    } ],
-    "example" : "Add a Future Date",
-    "fixture" : "aggregation/expressions/dateAdd/addAFutureDate",
-    "fixtureFiles" : {
-      "action.json" : "649f1b0eabc96ad403e8b6f37863b2a7bbdf821e6ce09bb9248ab9cbe4ff063f",
-      "data.json" : "2021f0be4556afbe6b4f13343a21d8b0bc462293fca7f1ecbfa3fc8f00899abc",
-      "expected.json" : "538501eb843510ddb8c277f8cc92d1c58d7afbdde78dabef160e2ed4df9edd30",
-      "name" : "d9833f7bfbd73fa009d0502ca1c153d1140a37f69eb67ab24f1b62336a944d24"
-    },
-    "includes" : [ {
-      "blob" : "6a0d8df9a641e1e37b9f1f4bcc35eeea213c4963",
-      "path" : "source/includes/fact-olson-tz-behavior.rst"
-    } ],
-    "origin" : "1da5a11af4af6eaa4fdf8f7580b8bd6743e1d018",
-    "pageBlob" : "519060a66fe72371bda6fb78ae1cd15c8d50d63b",
-    "retiredLock" : {
-      "name" : "lock",
-      "sha256" : "14b73c303710e64ca56e908f8b7e8486fa492b36cb6d6ef03d608bf95cc495d7",
-      "text" : "update the name of the target collection for the merge"
-    },
-    "retypes" : [ ],
-    "rules" : [ ],
-    "shape" : "PIPELINE",
-    "source" : {
-      "commit" : "0bcc4b35ae7af10b8cddc90c1492e70538353c70",
-      "path" : "source/reference/operator/aggregation/dateAdd.txt",
-      "relation" : "AT_ORIGIN"
-    },
-    "unexpandedIncludes" : [ ]
-  }, {
-    "blocks" : [ {
-      "role" : "ACTION",
       "sha256" : "505edb1e4bde2908694f17718f020da56a9df0140f79eab66f2d9f3d76ee0318",
       "text" : "db.flowers.aggregate(\n   [\n     { $project: { flowerFieldA:1, flowerFieldB: 1, allValues: { $setUnion: [ \"$flowerFieldA\", \"$flowerFieldB\" ] }, _id: 0 } }\n   ]\n)"
     }, {
@@ -545,8 +495,8 @@
     "gap.REJECTED" : 1,
     "gap.RESIDUAL_DIFFERENCE" : 48,
     "gap.SOURCE_UNSUPPORTED" : 34,
-    "overrides" : 10,
-    "overrides.corrected" : 3,
+    "overrides" : 9,
+    "overrides.corrected" : 2,
     "overrides.exact" : 1,
     "overrides.retyped" : 0,
     "rule.ALTERNATIVE_COMMANDS" : 1,

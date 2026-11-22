@@ -201,6 +201,11 @@
     "test" : "dev.morphia.test.aggregation.expressions.TestCovarianceSamp#testCovarianceSampExpressionOperator"
   }, {
     "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/dateAdd/addAFutureDate",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/dateAdd/addAFutureDate/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestDateAdd#testAddAFutureDate"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/expressions/dateDiff/elapsedTime",
     "scenario" : "/dev/morphia/test/aggregation/expressions/dateDiff/elapsedTime/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestDateDiff#testElapsedTime"
@@ -1889,6 +1894,10 @@
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/covarianceSamp/covarianceSampExpressionOperator/scenario.json",
     "sha256" : "7c1e15414050822cdecca8929dcae98ed4bd547a36540df91c149c447a8cbe26"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/dateAdd/addAFutureDate/scenario.json",
+    "sha256" : "b8c3ea29128b125af054582b621c97c7bc5a4280c3fd6fffdf91fee379e45441"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/dateDiff/elapsedTime/scenario.json",

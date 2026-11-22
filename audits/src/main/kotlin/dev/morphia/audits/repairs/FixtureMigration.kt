@@ -133,7 +133,14 @@ object FixtureMigration {
      * Double needs nothing, since a printed whole number is an Int32 or a Double; any other retype
      * of the results is refused, and so is a stale pin.
      */
-    private fun pinned(override: FormOverride, documented: DocumentedScenario): DocumentedScenario {
+    private fun pinned(original: FormOverride, documented: DocumentedScenario): DocumentedScenario {
+        // A correction that renamed a documented collection to the legacy harness's only existed
+        // for
+        // that harness: the runner seeds the documented names, so the scenario keeps the page's
+        // name
+        // and the test body names it too.
+        val override =
+            original.copy(corrections = original.corrections.filter { !renamesToHarness(it) })
         if (override.retypes.isEmpty() && override.corrections.isEmpty()) return documented
         fun edit(file: String, values: List<BsonValue>): List<BsonValue> {
             val retypes = override.retypes.filter { it.file == file }
@@ -221,6 +228,11 @@ object FixtureMigration {
 
     /** The single collection the legacy harness loads every fixture into. */
     private const val HARNESS_COLLECTION = "example_test"
+
+    private fun renamesToHarness(correction: FormCorrection): Boolean =
+        correction.documented != null &&
+            correction.curated != null &&
+            FormCorrection.value(correction.curated) == BsonString(HARNESS_COLLECTION)
 
     /** Whether a legacy body compares results in order: `orderMatters` defaults to true. */
     fun ordered(body: String): Boolean = !unordered.containsMatchIn(body)
@@ -481,12 +493,6 @@ object FixtureMigration {
             !example.options.all { it.name == "orderMatters" || it.name in mappedOptions } ->
                 "options ${example.options.map { it.name }} are not mapped yet"
             FormRule.ALTERNATIVE_COMMANDS in override.rules -> "alternative commands"
-            // The runner seeds the documented collection names, so a correction that renamed one to
-            // the legacy harness's collection would point both runs at the same wrong collection.
-            override.corrections.any {
-                it.curated != null &&
-                    FormCorrection.value(it.curated) == BsonString(HARNESS_COLLECTION)
-            } -> "a correction renames a collection to $HARNESS_COLLECTION; it needs review"
             else -> null
         }
 

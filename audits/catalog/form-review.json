@@ -16,31 +16,6 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "corrections" : [ {
-      "curated" : "{\"v\": \"example_test\"}",
-      "documented" : "{\"v\": \"shipping\"}",
-      "file" : "action.json",
-      "index" : null,
-      "pointer" : "/1/$merge"
-    } ],
-    "fixture" : "aggregation/expressions/dateAdd/addAFutureDate",
-    "includes" : [ {
-      "blob" : "6a0d8df9a641e1e37b9f1f4bcc35eeea213c4963",
-      "path" : "source/includes/fact-olson-tz-behavior.rst"
-    } ],
-    "justification" : null,
-    "lock" : "update the name of the target collection for the merge",
-    "marker" : "lock",
-    "origin" : "1da5a11af4af6eaa4fdf8f7580b8bd6743e1d018",
-    "pageBlob" : "519060a66fe72371bda6fb78ae1cd15c8d50d63b",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "0bcc4b35ae7af10b8cddc90c1492e70538353c70",
-      "path" : "source/reference/operator/aggregation/dateAdd.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
     "corrections" : [ ],
     "fixture" : "aggregation/expressions/setUnion/setUnionAccumulatorOperator",
     "includes" : [ {
@@ -484,6 +459,31 @@
     "source" : {
       "commit" : "d89528cf7f5fc214a131ba248285bff6a503b9ec",
       "path" : "source/reference/operator/aggregation/cosh.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ {
+      "curated" : "{\"v\": \"example_test\"}",
+      "documented" : "{\"v\": \"shipping\"}",
+      "file" : "action.json",
+      "index" : null,
+      "pointer" : "/1/$merge"
+    } ],
+    "fixture" : "aggregation/expressions/dateAdd/addAFutureDate",
+    "includes" : [ {
+      "blob" : "6a0d8df9a641e1e37b9f1f4bcc35eeea213c4963",
+      "path" : "source/includes/fact-olson-tz-behavior.rst"
+    } ],
+    "justification" : null,
+    "lock" : "update the name of the target collection for the merge",
+    "marker" : "lock",
+    "origin" : "1da5a11af4af6eaa4fdf8f7580b8bd6743e1d018",
+    "pageBlob" : "519060a66fe72371bda6fb78ae1cd15c8d50d63b",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "0bcc4b35ae7af10b8cddc90c1492e70538353c70",
+      "path" : "source/reference/operator/aggregation/dateAdd.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {

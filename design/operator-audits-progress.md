@@ -2356,3 +2356,25 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   four entries carry one; the inventory was recaptured (their options lost `skipActionCheck`).
 - All four convert under both mappers. Ledger 345 cases; 29 legacy-only.
 - Review: the independent reviewer hit its weekly limit (resets 2026-11-26); self-reviewed here, and the review will be resent on the PR.
+
+- PR #4553 (branch audits-ordered-maps, base #4552) published.
+
+## Documented collection names (2026-11-22)
+
+- Branch audits-documented-collections from #4553, on the user's decision. Three overrides carry
+  a correction that renamed a documented collection to the legacy harness's `example_test`. Those
+  corrections existed only for that harness: `FixtureMigration.pinned` now drops them, so the
+  scenario keeps the page's name, and `convertible` no longer refuses such cases (a body still
+  naming `example_test` fails the strict serialization check, so this fails closed).
+- `dateAdd/addAFutureDate` merges into `shipping`, as documented; its body changed accordingly
+  (a reviewed `BodyEdit`) and it converts under both mappers.
+- The two `$graphLookup` cases pass serialization with `employees` and `people`, but fail the
+  behavior check: `$graphLookup` does not order the array it builds, and the two runs list it
+  differently. They need an unordered-array comparison, so their bodies stay as they were (the
+  legacy fixture still loads `example_test`) and they stay legacy-only with that reason.
+- Totals: form report 9 overrides; ledger 346 cases; 28 legacy-only.
+- Review: the independent reviewer is at its weekly limit (resets 2026-11-26); self-reviewed.
+- `cutover.sh` rewrote `Norm.jsh`'s target with a pattern that missed worktree names with digits,
+  so the int32 and ordered-maps runs wrote `form-review.json` into the int32 worktree. Their
+  committed files were unaffected (the ordered-maps run promoted nothing, and the stray write came
+  after the int32 commit); the stray change was discarded and the pattern fixed.

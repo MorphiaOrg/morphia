@@ -17,10 +17,6 @@
     "detail" : "results differ from the printed results at /0: key order differs",
     "fixture" : "aggregation/expressions/cos/cosineOfValueInRadians"
   }, {
-    "check" : "SOURCE",
-    "detail" : "a correction renames a collection to example_test, the legacy harness collection; it needs review",
-    "fixture" : "aggregation/expressions/dateAdd/addAFutureDate"
-  }, {
     "check" : "PUBLISHED",
     "detail" : "results differ from the printed results at /0: key order differs",
     "fixture" : "aggregation/expressions/getField/queryFieldsThatContainPeriods"
@@ -73,12 +69,12 @@
     "detail" : "the shell normalizer cannot read the documented results (expected syntax)",
     "fixture" : "aggregation/stages/graphLookup/acrossMultipleCollections"
   }, {
-    "check" : "SOURCE",
-    "detail" : "a correction renames a collection to example_test, the legacy harness collection; it needs review",
+    "check" : "BEHAVIOR",
+    "detail" : "$graphLookup does not order the array it builds, so the reference and Morphia runs list it differently; it needs an unordered-array comparison (with the documented collection name its serialization passes)",
     "fixture" : "aggregation/stages/graphLookup/withAQueryFilter"
   }, {
-    "check" : "SOURCE",
-    "detail" : "a correction renames a collection to example_test, the legacy harness collection; it needs review",
+    "check" : "BEHAVIOR",
+    "detail" : "$graphLookup does not order the array it builds, so the reference and Morphia runs list it differently; it needs an unordered-array comparison (with the documented collection name its serialization passes)",
     "fixture" : "aggregation/stages/graphLookup/withinASingleCollection"
   }, {
     "check" : "SOURCE",

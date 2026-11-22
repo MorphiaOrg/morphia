@@ -33,7 +33,7 @@ public class TestDateAdd extends TemplatedTestBase {
         testPipeline(new ActionTestOptions().removeIds(true),
                 aggregation -> aggregation.pipeline(
                         project().include("expectedDeliveryDate", dateAdd("$purchaseDate", 3, TimeUnit.DAY)),
-                        merge(EXAMPLE_TEST_COLLECTION)));
+                        merge("shipping")));
 
     }
 
