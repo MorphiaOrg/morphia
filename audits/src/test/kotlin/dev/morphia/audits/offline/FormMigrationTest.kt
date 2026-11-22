@@ -7,6 +7,7 @@ import dev.morphia.audits.repairs.FormDeclaration
 import dev.morphia.audits.repairs.FormGap
 import dev.morphia.audits.repairs.FormMigration
 import dev.morphia.audits.repairs.FormMigration.Candidate
+import dev.morphia.audits.repairs.FormOverride
 import dev.morphia.audits.repairs.FormRule
 import dev.morphia.audits.repairs.FormSource
 import dev.morphia.audits.repairs.FormUnresolved
@@ -16,6 +17,7 @@ import dev.morphia.audits.repairs.RepairDisposition
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.io.path.createDirectories
+import kotlin.io.path.deleteExisting
 import kotlin.io.path.exists
 import kotlin.io.path.writeText
 import org.bson.BsonInt32
@@ -167,6 +169,97 @@ class FormMigrationTest {
         // Verification needs only the recorded source text, not the pages.
         pages.toFile().deleteRecursively()
         FormMigration.verify(repository, review, report, facts())
+    }
+
+    @Test
+    fun aNeverLockedFixtureIsPinnedToThePageThatReproducesItExactly() {
+        page(commit, documented)
+        include(commit, "/includes/sample-inventory.rst", inventory)
+        curated(
+            """[ { ${'$'}project: { item: 1, discount: { ${'$'}cond: { if: { ${'$'}gte: [ "${'$'}qty", 250 ] }, then: 30, else: 20 } } } } ]"""
+        )
+        val lock = repository.resolve("core/src/test/resources/dev/morphia/test/$fixture/lock")
+        lock.deleteExisting()
+        val unlocked = facts(categories = emptyList())
+
+        val report =
+            FormMigration.references(
+                repository,
+                "head",
+                pages,
+                "mongodb/docs",
+                candidates(),
+                unlocked,
+            )
+        val reference = report.references.single()
+        assertNull(reference.retiredLock)
+        assertEquals(emptyList<FormRule>(), reference.rules)
+        assertEquals("Use Cond", reference.example)
+        assertEquals(40, reference.pageBlob.length)
+        assertEquals(report, AuditJson.legacyReferences(AuditJson.write(report)))
+        // The networked recheck re-derives the pin from the page; a page that differs from its pin
+        // fails it.
+        FormMigration.recheckReferences(repository, pages, report, unlocked, emptySet())
+        val pinned = page(commit, documented).toFile().readText()
+        page(commit, pinned.replace("Use Cond", "Use Cond "))
+        assertThrows(IllegalArgumentException::class.java) {
+            FormMigration.recheckReferences(repository, pages, report, unlocked, emptySet())
+        }
+        page(commit, pinned)
+        // The offline check needs only the recorded source text.
+        pages.toFile().deleteRecursively()
+        FormMigration.verifyReferences(repository, report, unlocked, emptySet())
+
+        // A later edit to the fixture breaks the reference.
+        fixture(
+            "useCond",
+            "expected.json",
+            "{ \"_id\" : 1, \"item\" : \"abc1\", \"discount\" : 30 }",
+        )
+        assertThrows(IllegalArgumentException::class.java) {
+            FormMigration.verifyReferences(repository, report, unlocked, emptySet())
+        }
+        // Unless the fixture has moved onto the runner, where the ledger checks it.
+        FormMigration.verifyReferences(repository, report, unlocked, setOf(fixture))
+    }
+
+    @Test
+    fun aNeverLockedFixtureThatNeedsARuleIsLeftForReview() {
+        page(commit, documented)
+        include(commit, "/includes/sample-inventory.rst", inventory)
+        curated()
+        repository
+            .resolve("core/src/test/resources/dev/morphia/test/$fixture/lock")
+            .deleteExisting()
+
+        val report =
+            FormMigration.references(
+                repository,
+                "head",
+                pages,
+                "mongodb/docs",
+                candidates(),
+                facts(categories = emptyList()),
+            )
+        assertEquals(emptyList<FormOverride>(), report.references)
+        assertEquals(FormGap.RESIDUAL_DIFFERENCE, report.unresolved.single().gap)
+    }
+
+    @Test
+    fun aLockedFixtureHasNoReference() {
+        page(commit, documented)
+        include(commit, "/includes/sample-inventory.rst", inventory)
+        curated()
+        assertThrows(IllegalArgumentException::class.java) {
+            FormMigration.references(
+                repository,
+                "head",
+                pages,
+                "mongodb/docs",
+                candidates(),
+                facts(categories = emptyList()),
+            )
+        }
     }
 
     @Test
@@ -843,5 +936,40 @@ class FormMigrationTest {
         )
         assertEquals(134, report.overrides.size)
         assertEquals(96, report.unresolved.size)
+    }
+
+    /**
+     * The committed references must still hold offline: each recorded source reproduces its
+     * never-locked fixture exactly, and every never-locked example is either referenced or listed
+     * with its gap.
+     */
+    @Test
+    fun committedReferencesMatchTheTree() {
+        val root =
+            generateSequence(Path.of("").toAbsolutePath()) { it.parent }
+                .first { Files.isDirectory(it.resolve("core/src/test/java/dev/morphia/test")) }
+        fun read(path: String) =
+            Files.readAllBytes(root.resolve(path)).decodeToString(throwOnInvalidSequence = true)
+        val text = read("audits/catalog/legacy-references.json")
+        val report = AuditJson.legacyReferences(text)
+        assertEquals(text, AuditJson.write(report))
+        val inventory = AuditJson.curatedRepairs(read("audits/catalog/curated-repairs.json"))
+        val ledger = AuditJson.fixtureMigration(read("audits/catalog/fixture-migration.json"))
+        FormMigration.verifyReferences(
+            root,
+            report,
+            FormMigration.facts(inventory),
+            ledger.migrations.map { it.fixture }.toSet(),
+        )
+        report.references.forEach { assertEquals(40, it.pageBlob.length) }
+        assertEquals(
+            inventory.examples
+                .filter { it.disposition == RepairDisposition.UNCORRECTED && it.markers.isEmpty() }
+                .map { it.fixture }
+                .toSet(),
+            (report.references.map { it.fixture } + report.unresolved.map { it.fixture }).toSet(),
+        )
+        assertEquals(239, report.references.size)
+        assertEquals(81, report.unresolved.size)
     }
 }

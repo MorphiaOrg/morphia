@@ -1,6 +1,11 @@
 {
   "cases" : [ {
     "kind" : "CONVERTED",
+    "name" : "aggregation/expressions/abs/absExpressionOperator",
+    "scenario" : "/dev/morphia/test/aggregation/expressions/abs/absExpressionOperator/scenario.json",
+    "test" : "dev.morphia.test.aggregation.expressions.TestAbs#testAbsExpressionOperator"
+  }, {
+    "kind" : "CONVERTED",
     "name" : "aggregation/expressions/cond/condExpressionOperator",
     "scenario" : "/dev/morphia/test/aggregation/expressions/cond/condExpressionOperator/scenario.json",
     "test" : "dev.morphia.test.aggregation.expressions.TestCond#testCondExpressionOperator"
@@ -24,6 +29,10 @@
     "owner" : "PROTECTED",
     "path" : "src/test/java/dev/morphia/test/generated/expressions/TestRound.java",
     "sha256" : "6abe26be2247d04fb1865980cfd2dc8e09978492cd20b3bc26d562c02f8b6798"
+  }, {
+    "owner" : "GENERATED",
+    "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/abs/absExpressionOperator/scenario.json",
+    "sha256" : "15e7b7d7e668fde380cf2d8c805f8e4acd4942781bdf2a8fd0d15575ca91e461"
   }, {
     "owner" : "GENERATED",
     "path" : "src/test/resources/dev/morphia/test/aggregation/expressions/cond/condExpressionOperator/scenario.json",

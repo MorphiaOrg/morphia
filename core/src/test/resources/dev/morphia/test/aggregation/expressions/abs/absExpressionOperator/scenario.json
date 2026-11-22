@@ -1,0 +1,128 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/abs/absExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "ac52ba2ddff59eaaf8f643185872641bd16b7d82",
+    "path": "source/reference/operator/aggregation/abs.txt",
+    "blob": "3c5058adcbd88510634c7e7f7f5cccc294d958b3"
+  },
+  "dataset": null,
+  "collections": {
+    "temperatureChange": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "startTemp": {
+          "$numberInt": "50"
+        },
+        "endTemp": {
+          "$numberInt": "80"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "startTemp": {
+          "$numberInt": "40"
+        },
+        "endTemp": {
+          "$numberInt": "40"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "startTemp": {
+          "$numberInt": "90"
+        },
+        "endTemp": {
+          "$numberInt": "70"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "startTemp": {
+          "$numberInt": "60"
+        },
+        "endTemp": {
+          "$numberInt": "70"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "temperatureChange",
+    "pipeline": [
+      {
+        "$project": {
+          "delta": {
+            "$abs": {
+              "$subtract": [
+                "$startTemp",
+                "$endTemp"
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "documents": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "delta": {
+          "$numberInt": "30"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "delta": {
+          "$numberInt": "0"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "delta": {
+          "$numberInt": "20"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "delta": {
+          "$numberInt": "10"
+        }
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

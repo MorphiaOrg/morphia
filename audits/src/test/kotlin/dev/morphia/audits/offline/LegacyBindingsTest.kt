@@ -303,8 +303,8 @@ class LegacyBindingsTest {
             corpus,
             ledger,
             forms.overrides.associate {
-                "core/src/test/resources/dev/morphia/test/${it.fixture}/${it.retiredLock.name}" to
-                    it.retiredLock.sha256
+                val lock = requireNotNull(it.retiredLock)
+                "core/src/test/resources/dev/morphia/test/${it.fixture}/${lock.name}" to lock.sha256
             } + FixtureMigration.retired(migration),
         )
         FixtureMigration.verify(
@@ -312,6 +312,7 @@ class LegacyBindingsTest {
             migration,
             AuditJson.curatedRepairs(read("audits/catalog/curated-repairs.json")),
             AuditJson.formReview(read("audits/catalog/form-review.json")),
+            AuditJson.legacyReferences(read("audits/catalog/legacy-references.json")),
         )
         assertEquals(
             read("core/src/test/resources/dev/morphia/test/example-bindings.json"),

@@ -13,6 +13,11 @@ This is the only networked step of the form migration. It never edits the reposi
       page (the manual moved), its parent is used; when no commit holds the page by then, the
       commit that first added it is. Writes a FormMigration.Candidates file.
 
+  fetch.py references <repo-root> <first|last> <out.json>
+      The same search for every never-locked example (disposition UNCORRECTED, no marker), whose
+      fixture was written from its page and never edited to match Morphia: the candidates for
+      its pinned reference.
+
   fetch.py pages <sources.json> <pages-dir>
       Fetch every page named by a candidates or review file, plus its absolute
       `.. include::` targets (recursively), at the exact recorded commit, into
@@ -61,10 +66,21 @@ def origin(root, fixture, which):
 
 
 def candidates(root, which, out, categories=("MORPHIA_FORM",)):
+    def locked(example):
+        return example["markers"] and example["categories"] and set(example["categories"]) <= set(categories)
+    search(root, which, out, locked)
+
+
+def references(root, which, out):
+    # Never-locked examples: the fixture was written from the page and never edited to match Morphia.
+    search(root, which, out, lambda example: example["disposition"] == "UNCORRECTED" and not example["markers"])
+
+
+def search(root, which, out, selected):
     report = json.load(open(os.path.join(root, "audits/catalog/curated-repairs.json")))
     result = []
     for example in report["examples"]:
-        if not example["markers"] or not example["categories"] or not set(example["categories"]) <= set(categories):
+        if not selected(example):
             continue
         fixture = example["fixture"]
         commit, date = origin(root, fixture, which)
@@ -285,6 +301,8 @@ def pages(sources, directory):
 if __name__ == "__main__":
     if len(sys.argv) >= 5 and sys.argv[1] == "candidates" and sys.argv[3] in ("first", "last"):
         candidates(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5:] or ("MORPHIA_FORM",))
+    elif len(sys.argv) == 5 and sys.argv[1] == "references" and sys.argv[3] in ("first", "last"):
+        references(sys.argv[2], sys.argv[3], sys.argv[4])
     elif len(sys.argv) == 4 and sys.argv[1] == "pages":
         pages(sys.argv[2], sys.argv[3])
     else:

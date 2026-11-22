@@ -618,6 +618,16 @@ supported yet) in place: its legacy fixture files are replaced by the scenario, 
 runner's compatibility adapter, and the ledger records the move (kind `CONVERTED`, with the legacy
 body text). Move its declaration to `migrated` as for `migrate`.
 
+`references <root> <revision> <pages> <source-repository> <out> <candidates.json>...` pins the
+documented reference of every never-locked fixture into `audits/catalog/legacy-references.json`.
+Candidates come from `fetch.py references <root> first|last <out>`; each fixture takes the first
+candidate whose page reproduces it exactly (or, where the page prints mongosh results, satisfies
+what they prove), with no rule, retype or correction. A fixture no candidate reproduces is listed
+with its gap and stays on the legacy path. The file is the reviewed artifact: an audits test
+rechecks its recorded source text against the tree without the pages, and
+`recheck-references <root> <pages>` re-derives every pin and gap from the fetched pages. `convert`
+reads a fixture's reference when it has no override.
+
 `manifest <root>` rewrites `core/src/test/resources/dev/morphia/test/generated/manifest.json` from
 the migration ledger: every case with its scenario and test, and every owned file with its digest.
 Core's `GeneratedCasesTest` checks the namespace against it in both directions, and an audits test

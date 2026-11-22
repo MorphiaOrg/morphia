@@ -1,6 +1,67 @@
 {
   "migrations" : [ {
     "files" : {
+      "action.json" : "eab683c7b4b5cb354920a9f565d6f0abddf9856d47cfec60fe670af8983601b4",
+      "data.json" : "a39d565831c5ef2248738bc92988d3ec768676d6692a66d93cb6a48e56abf5bc",
+      "expected.json" : "9adcd5ff4709f4f06a4c57d9faa50307c1ebf1d899f762cfb5ecfa2822c27f10",
+      "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+    },
+    "fixture" : "aggregation/expressions/abs/absExpressionOperator",
+    "kind" : "CONVERTED",
+    "legacyBody" : "{\n        testPipeline(aggregation -> aggregation\n                .pipeline(project().include(\"delta\", abs(subtract(\"$startTemp\", \"$endTemp\")))));\n\n    }",
+    "legacyBodySha256" : "8120e4f6108320edc012b1dd489f4d941691de00e53213e32f0f744f9ea4db94",
+    "legacyMethod" : "testAbsExpressionOperator",
+    "legacyType" : "dev.morphia.test.aggregation.expressions.TestAbs",
+    "ordered" : true,
+    "override" : {
+      "blocks" : [ {
+        "role" : "ACTION",
+        "sha256" : "582fa1662262c884954544443540729959fa46078686e3c4e2b532b20f928965",
+        "text" : "db.temperatureChange.aggregate([\n   {\n      $project: { delta: { $abs: { $subtract: [ \"$startTemp\", \"$endTemp\" ] } } }\n   }\n])"
+      }, {
+        "role" : "DATA",
+        "sha256" : "a206d60c96c4e2d588ce2343ee1c4c73b2fbae9b8acc1914ead33c9105f5b430",
+        "text" : "db.temperatureChange.insertMany( [\n   { _id: 1, startTemp: 50, endTemp: 80 },\n   { _id: 2, startTemp: 40, endTemp: 40 },\n   { _id: 3, startTemp: 90, endTemp: 70 },\n   { _id: 4, startTemp: 60, endTemp: 70 }\n] )"
+      }, {
+        "role" : "EXPECTED",
+        "sha256" : "9adcd5ff4709f4f06a4c57d9faa50307c1ebf1d899f762cfb5ecfa2822c27f10",
+        "text" : "{ \"_id\" : 1, \"delta\" : 30 }\n{ \"_id\" : 2, \"delta\" : 0 }\n{ \"_id\" : 3, \"delta\" : 20 }\n{ \"_id\" : 4, \"delta\" : 10 }"
+      } ],
+      "collections" : { },
+      "corrections" : [ ],
+      "example" : "main",
+      "fixture" : "aggregation/expressions/abs/absExpressionOperator",
+      "fixtureFiles" : {
+        "action.json" : "eab683c7b4b5cb354920a9f565d6f0abddf9856d47cfec60fe670af8983601b4",
+        "data.json" : "a39d565831c5ef2248738bc92988d3ec768676d6692a66d93cb6a48e56abf5bc",
+        "expected.json" : "9adcd5ff4709f4f06a4c57d9faa50307c1ebf1d899f762cfb5ecfa2822c27f10",
+        "name" : "0d6e4079e36703ebd37c00722f5891d28b0e2811dc114b129215123adcce3605"
+      },
+      "includes" : [ {
+        "blob" : "bbf5c44a10e62dc8903402b5aaf9baf1323ef458",
+        "path" : "source/includes/extracts-agg-expression-null.yaml"
+      }, {
+        "blob" : "8623cf2a56423be1b837696232e1d7f56f12569c",
+        "path" : "source/includes/extracts-agg-expression-null-base.yaml"
+      } ],
+      "origin" : "948049a3364491f4905246224922d2dbb4197154",
+      "pageBlob" : "3c5058adcbd88510634c7e7f7f5cccc294d958b3",
+      "retiredLock" : null,
+      "retypes" : [ ],
+      "rules" : [ ],
+      "shape" : "PIPELINE",
+      "source" : {
+        "commit" : "ac52ba2ddff59eaaf8f643185872641bd16b7d82",
+        "path" : "source/reference/operator/aggregation/abs.txt",
+        "relation" : "AT_ORIGIN"
+      },
+      "unexpandedIncludes" : [ ]
+    },
+    "scenario" : "core/src/test/resources/dev/morphia/test/aggregation/expressions/abs/absExpressionOperator/scenario.json",
+    "scenarioSha256" : "15e7b7d7e668fde380cf2d8c805f8e4acd4942781bdf2a8fd0d15575ca91e461",
+    "test" : "dev.morphia.test.aggregation.expressions.TestAbs#testAbsExpressionOperator"
+  }, {
+    "files" : {
       "action.json" : "5fdbbe45d012f52390c69aad293ba52ec62233c1bc68de6474ce18d98ccfc2f6",
       "data.json" : "02426b96130e602fe499e5facd289d6034d67a41bb9f51aa214cefa15907806e",
       "expected.json" : "15f55e0bd596ae038967567cc42de49868748c317582050906a2a1757b0e8f92",

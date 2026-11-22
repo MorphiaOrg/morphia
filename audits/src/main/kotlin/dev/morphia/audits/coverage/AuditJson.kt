@@ -29,6 +29,7 @@ import dev.morphia.audits.repairs.FixtureMigrationLedger
 import dev.morphia.audits.repairs.FormMigration
 import dev.morphia.audits.repairs.FormMigrationReport
 import dev.morphia.audits.repairs.FormReview
+import dev.morphia.audits.repairs.LegacyReferenceReport
 import dev.morphia.audits.repairs.RepairReview
 import dev.morphia.audits.scenarios.ScenarioExtractionPlan
 import dev.morphia.audits.shell.ShellProgramRequest
@@ -172,6 +173,9 @@ object AuditJson {
 
     fun formMigration(json: String): FormMigrationReport =
         read(json, FormMigrationReport::class.java)
+
+    fun legacyReferences(json: String): LegacyReferenceReport =
+        read(json, LegacyReferenceReport::class.java)
 
     fun formCandidates(json: String): FormMigration.Candidates =
         read(json, FormMigration.Candidates::class.java)

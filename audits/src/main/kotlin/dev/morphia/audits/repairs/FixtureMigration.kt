@@ -156,12 +156,15 @@ object FixtureMigration {
         catalog: LegacyBindingCatalog,
         fixture: String,
         test: String,
-    ): MigratedFixture = move(repository, report, inventory, catalog, fixture, test, MIGRATED)
+        references: LegacyReferenceReport? = null,
+    ): MigratedFixture =
+        move(repository, report, references, inventory, catalog, fixture, test, MIGRATED)
 
     /**
      * Converts the legacy case of [fixture] in place: its fixture directory's files are replaced by
-     * the scenario written from the accepted override, and its unchanged method runs through the
-     * runner's compatibility adapter. Only options the adapter maps are allowed.
+     * the scenario written from its accepted override, or from its pinned reference in [references]
+     * when it never had a lock, and its unchanged method runs through the runner's compatibility
+     * adapter. Only options the adapter maps are allowed.
      */
     fun convert(
         repository: Path,
@@ -169,6 +172,7 @@ object FixtureMigration {
         inventory: CuratedRepairReport,
         catalog: LegacyBindingCatalog,
         fixture: String,
+        references: LegacyReferenceReport? = null,
     ): MigratedFixture {
         val example =
             inventory.examples.singleOrNull { it.fixture == fixture }
@@ -182,6 +186,7 @@ object FixtureMigration {
         return move(
             repository,
             report,
+            references,
             inventory,
             catalog,
             fixture,
@@ -193,6 +198,7 @@ object FixtureMigration {
     private fun move(
         repository: Path,
         report: FormMigrationReport,
+        references: LegacyReferenceReport?,
         inventory: CuratedRepairReport,
         catalog: LegacyBindingCatalog,
         fixture: String,
@@ -201,8 +207,9 @@ object FixtureMigration {
     ): MigratedFixture {
         val root = repository.toRealPath()
         val override =
-            report.overrides.singleOrNull { it.fixture == fixture }
-                ?: throw IllegalArgumentException("$fixture has no accepted override")
+            (report.overrides + references?.references.orEmpty()).singleOrNull {
+                it.fixture == fixture
+            } ?: throw IllegalArgumentException("$fixture has no accepted override or reference")
         val example =
             inventory.examples.singleOrNull { it.fixture == fixture }
                 ?: throw IllegalArgumentException("$fixture is not in the repair inventory")
@@ -223,7 +230,9 @@ object FixtureMigration {
         require(present == override.fixtureFiles) {
             "$fixture: fixture files changed since capture"
         }
-        require(override.retiredLock.name !in present) { "$fixture: its lock is not retired" }
+        require(override.retiredLock == null || override.retiredLock.name !in present) {
+            "$fixture: its lock is not retired"
+        }
         val body =
             requireNotNull(LegacyBindings.bodies(root, method.source)[name]) {
                 "$type#$name has no body in ${method.source}"
@@ -255,7 +264,7 @@ object FixtureMigration {
             type,
             name,
             method.bodySha256,
-            present + (override.retiredLock.name to override.retiredLock.sha256),
+            present + listOfNotNull(override.retiredLock?.let { it.name to it.sha256 }),
             override,
             ordered,
             scenarioPath(fixture, kind),
@@ -324,6 +333,7 @@ object FixtureMigration {
         ledger: FixtureMigrationLedger,
         inventory: CuratedRepairReport,
         review: FormReview,
+        references: LegacyReferenceReport? = null,
     ) {
         require(ledger.schemaVersion == 1) {
             "Unsupported fixture migration ${ledger.schemaVersion}"
@@ -338,9 +348,24 @@ object FixtureMigration {
             .forEach { problems += "Migrated more than once: $it" }
         // The reviewed declaration keeps pinning each migrated source; the ledger's copy must
         // agree.
+        // A never-locked fixture's pinned reference stays in the references catalog instead.
         val declared = review.migrated.associateBy { it.fixture }
-        if (declared.keys != ledger.migrations.map { it.fixture }.toSet()) {
+        val (locked, referenced) = ledger.migrations.partition { it.override.retiredLock != null }
+        if (declared.keys != locked.map { it.fixture }.toSet()) {
             problems += "Migrated fixtures do not match the review's migrated declarations"
+        }
+        val pinned = references?.references.orEmpty().associateBy { it.fixture }
+        val reviewed =
+            (review.declarations + review.migrated).map { it.fixture } +
+                review.unresolved.map { it.fixture }
+        (pinned.keys intersect reviewed.toSet()).sorted().forEach {
+            problems += "$it: both a locked review entry and a never-locked reference"
+        }
+        referenced.forEach {
+            if (pinned[it.fixture] != it.override) {
+                problems +=
+                    "${it.fixture}: the ledger's reference differs from the references catalog"
+            }
         }
         ledger.migrations.forEach { migrated ->
             val declaration = declared[migrated.fixture]
@@ -349,8 +374,8 @@ object FixtureMigration {
                 declaration != null &&
                     (declaration.origin != override.origin ||
                         declaration.source != override.source ||
-                        declaration.lock != override.retiredLock.text ||
-                        declaration.marker != override.retiredLock.name ||
+                        declaration.lock != override.retiredLock?.text ||
+                        declaration.marker != override.retiredLock?.name ||
                         declaration.pageBlob != override.pageBlob ||
                         declaration.includes != override.includes ||
                         declaration.rules != override.rules ||
@@ -401,7 +426,7 @@ object FixtureMigration {
             }
             val expectedFiles =
                 migrated.override.fixtureFiles +
-                    (migrated.override.retiredLock.name to migrated.override.retiredLock.sha256)
+                    listOfNotNull(migrated.override.retiredLock?.let { it.name to it.sha256 })
             if (migrated.files != expectedFiles) {
                 problems += "${migrated.fixture}: removed files differ from the override"
             }

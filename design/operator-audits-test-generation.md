@@ -309,7 +309,16 @@ A candidate records:
    under `COND_ARRAY`), then the printed constraints. Each is ported with its golden vectors, so
    cases that need them can be checked rather than reported as gaps. Coming before cutover, they
    let cases with declared rules or printed results convert in one pass.
-5. **Legacy cutover by context.**
+5. **Legacy cutover by context**, as several PRs:
+   - **5a, references for never-locked cases:** `fetch.py references` finds each never-locked
+     fixture's page as of its first and last fixture commits. `FormMainKt references` pins the
+     first one that reproduces the fixture exactly (or satisfies its printed results) into
+     `audits/catalog/legacy-references.json`, the reviewed artifact; references are overrides
+     without a retired lock. `recheck-references` re-derives the pins from the pages, and
+     `convert` reads them. One case,
+     `abs/absExpressionOperator`, is converted.
+   - **5b and later:** the remaining legacy options, a batch `convert`, and the cutover of each
+     context, query and update cases last.
    - **Per context:** convert the bound fixtures, replacing their legacy files, and route the cases
      through the adapter. Each case then gains the behavior check and the strict comparator.
    - **Failures:** a case whose checks fail is not converted. It stays on the legacy path with the

@@ -33,11 +33,13 @@ class FixtureMigrationTest {
     fun removedFilesAreDeclaredWithTheirDigests() {
         val retired = FixtureMigration.retired(ledger)
         ledger.migrations.forEach { migrated ->
-            assertTrue(
-                retired.containsKey(
-                    "core/src/test/resources/dev/morphia/test/${migrated.fixture}/${migrated.override.retiredLock.name}"
+            migrated.override.retiredLock?.let {
+                assertTrue(
+                    retired.containsKey(
+                        "core/src/test/resources/dev/morphia/test/${migrated.fixture}/${it.name}"
+                    )
                 )
-            )
+            }
             migrated.override.fixtureFiles.forEach { (name, digest) ->
                 assertEquals(
                     digest,
@@ -80,7 +82,8 @@ class FixtureMigrationTest {
     fun theLedgersOverrideMustMatchItsReviewedDeclaration() {
         val review = AuditJson.formReview(read("audits/catalog/form-review.json"))
         val inventory = AuditJson.curatedRepairs(read("audits/catalog/curated-repairs.json"))
-        FixtureMigration.verify(root, ledger, inventory, review)
+        val references = AuditJson.legacyReferences(read("audits/catalog/legacy-references.json"))
+        FixtureMigration.verify(root, ledger, inventory, review, references)
         val repinned =
             ledger.copy(
                 migrations =
@@ -90,12 +93,12 @@ class FixtureMigrationTest {
             )
         val failure =
             assertThrows(IllegalArgumentException::class.java) {
-                FixtureMigration.verify(root, repinned, inventory, review)
+                FixtureMigration.verify(root, repinned, inventory, review, references)
             }
         assertTrue("differs from its review" in failure.message!!, failure.message)
         val unreviewed = review.copy(migrated = emptyList())
         assertThrows(IllegalArgumentException::class.java) {
-            FixtureMigration.verify(root, ledger, inventory, unreviewed)
+            FixtureMigration.verify(root, ledger, inventory, unreviewed, references)
         }
     }
 
@@ -108,18 +111,18 @@ class FixtureMigrationTest {
                 read("core/src/test/resources/dev/morphia/test/example-bindings.json")
             )
         CaseManifests.owners(descriptor, manifest)
-        val legacy = descriptor.classes.first { it.bindings.isNotEmpty() }
+        // An example the manifest does not already own; a converted case names its legacy test.
+        val owned = manifest.cases.map { it.name }.toSet()
+        val unowned =
+            descriptor.classes
+                .flatMap { type ->
+                    type.bindings.map {
+                        "${type.resources.removePrefix("dev/morphia/test/")}/${it.resource}"
+                    }
+                }
+                .first { it !in owned }
         val claimed =
-            manifest.copy(
-                cases =
-                    manifest.cases +
-                        manifest.cases
-                            .first()
-                            .copy(
-                                name =
-                                    "${legacy.resources.removePrefix("dev/morphia/test/")}/${legacy.bindings.first().resource}"
-                            )
-            )
+            manifest.copy(cases = manifest.cases + manifest.cases.first().copy(name = unowned))
         val failure =
             assertThrows(IllegalArgumentException::class.java) {
                 CaseManifests.owners(descriptor, claimed)

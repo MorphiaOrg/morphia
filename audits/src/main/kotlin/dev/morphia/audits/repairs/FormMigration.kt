@@ -189,7 +189,8 @@ data class FormOverride(
     val shape: ActionShape,
     val blocks: List<SourceBlock>,
     val rules: List<FormRule>,
-    val retiredLock: RepairMarker,
+    /** The lock this override retired; null for a never-locked fixture's pinned reference. */
+    val retiredLock: RepairMarker?,
     /** SHA-256 of every remaining fixture file, by file name. */
     val fixtureFiles: Map<String, String>,
     /** The test's extra collections by data file, as the repair inventory records them. */
@@ -208,6 +209,24 @@ data class FormMigrationReport(
     val sourceRepository: String,
     val rules: List<FormRuleDescription>,
     val overrides: List<FormOverride>,
+    val unresolved: List<FormUnresolved>,
+    val summary: Map<String, Int>,
+)
+
+/**
+ * The documented reference of each never-locked fixture: the page as of the commit that created the
+ * fixture, which reproduces the fixture exactly, or, where the page prints its results as mongosh
+ * prints them, satisfies what those printed results prove (counted as `references.printed`).
+ * [references] are [FormOverride]s without a retired lock, rules, retypes or corrections;
+ * [unresolved] holds the fixtures no candidate reproduces, with the gap of their first candidate.
+ * This file is the reviewed artifact: pages are not committed, so offline checks read its recorded
+ * source text, and `recheckReferences` re-derives every pin from the fetched pages.
+ */
+data class LegacyReferenceReport(
+    val schemaVersion: Int = 1,
+    val repositoryRevision: String,
+    val sourceRepository: String,
+    val references: List<FormOverride>,
     val unresolved: List<FormUnresolved>,
     val summary: Map<String, Int>,
 )
@@ -416,6 +435,224 @@ object FormMigration {
     }
 
     /**
+     * Pins the documented reference of each never-locked fixture in [candidates]: the first
+     * candidate (in the order given) whose page reproduces the fixture exactly. A never-locked
+     * fixture was written from its page and never edited to match Morphia, so it needs no rule; one
+     * that reproduces only under rules, retypes or corrections is left unresolved for review.
+     */
+    fun references(
+        repository: Path,
+        revision: String,
+        pages: Path,
+        sourceRepository: String,
+        candidates: List<List<Candidate>>,
+        facts: Map<String, FixtureFacts>,
+    ): LegacyReferenceReport {
+        val root = repository.toRealPath()
+        val references = mutableListOf<FormOverride>()
+        val unresolved = mutableListOf<FormUnresolved>()
+        candidates
+            .flatten()
+            .groupBy { it.fixture }
+            .toSortedMap()
+            .forEach { (fixture, choices) ->
+                val folder = folder(root, fixture)
+                require(!lock(folder).isRegularFile()) { "$fixture is locked" }
+                val known = facts(facts, fixture)
+                require(known.categories.isEmpty()) { "$fixture has repair categories" }
+                val outcomes = choices.map { it to examine(root, pages, fixture, it.source, known) }
+                val exact =
+                    outcomes.firstOrNull { (_, outcome) ->
+                        outcome is Examined.Reproduced &&
+                            outcome.rules.isEmpty() &&
+                            outcome.retypes.isEmpty() &&
+                            outcome.corrections.isEmpty()
+                    }
+                if (exact != null) {
+                    val (candidate, outcome) = exact
+                    outcome as Examined.Reproduced
+                    references +=
+                        FormOverride(
+                            fixture = fixture,
+                            origin = candidate.origin,
+                            source = candidate.source,
+                            pageBlob = outcome.pageBlob,
+                            includes = outcome.includes,
+                            unexpandedIncludes = outcome.unexpandedIncludes,
+                            example = outcome.example,
+                            shape = outcome.shape,
+                            blocks = outcome.blocks,
+                            rules = emptyList(),
+                            retiredLock = null,
+                            fixtureFiles = fixtureFiles(folder),
+                            collections = known.collections,
+                        )
+                } else {
+                    val (candidate, outcome) = outcomes.first()
+                    unresolved +=
+                        when (outcome) {
+                            is Examined.Gap ->
+                                FormUnresolved(
+                                    fixture,
+                                    candidate.origin,
+                                    candidate.source,
+                                    outcome.gap,
+                                    outcome.detail,
+                                )
+                            is Examined.Reproduced ->
+                                FormUnresolved(
+                                    fixture,
+                                    candidate.origin,
+                                    candidate.source,
+                                    FormGap.RESIDUAL_DIFFERENCE,
+                                    "reproduces only with rules ${outcome.rules}",
+                                )
+                        }
+                }
+            }
+        val summary = sortedMapOf<String, Int>()
+        summary["references"] = references.size
+        summary["references.afterOrigin"] =
+            references.count { it.source.relation == SourceRelation.AFTER_ORIGIN }
+        // Printed results prove constraints, not BSON values: a printed 4 is an Int32 or a Double.
+        summary["references.printed"] = references.count { printed(it.blocks) }
+        summary["unresolved"] = unresolved.size
+        FormGap.values().forEach { gap -> summary["gap.$gap"] = unresolved.count { it.gap == gap } }
+        return LegacyReferenceReport(
+            repositoryRevision = revision,
+            sourceRepository = sourceRepository,
+            references = references,
+            unresolved = unresolved,
+            summary = summary,
+        )
+    }
+
+    /**
+     * Rechecks committed references against the tree without the pages: each recorded source text
+     * must still reproduce its fixture exactly. Fixtures in [moved] left the legacy layout (the
+     * migration ledger checks those against their reference instead).
+     */
+    fun verifyReferences(
+        repository: Path,
+        report: LegacyReferenceReport,
+        facts: Map<String, FixtureFacts>,
+        moved: Set<String>,
+    ) {
+        val root = repository.toRealPath()
+        val problems = mutableListOf<String>()
+        (report.references.map { it.fixture } + report.unresolved.map { it.fixture })
+            .groupingBy { it }
+            .eachCount()
+            .filterValues { it > 1 }
+            .keys
+            .forEach { problems += "Fixture referenced more than once: $it" }
+        report.references.forEach { reference ->
+            if (
+                reference.retiredLock != null ||
+                    reference.rules.isNotEmpty() ||
+                    reference.retypes.isNotEmpty() ||
+                    reference.corrections.isNotEmpty()
+            ) {
+                problems += "${reference.fixture}: a reference reproduces its fixture exactly"
+            }
+            reference.blocks.forEach {
+                if (sha256(it.text.toByteArray()) != it.sha256) {
+                    problems += "${reference.fixture}: ${it.role} source text digest mismatch"
+                }
+            }
+            if (reference.fixture in moved) return@forEach
+            val folder = folder(root, reference.fixture)
+            if (lock(folder).isRegularFile()) {
+                problems += "${reference.fixture}: a referenced fixture is locked"
+            }
+            if (fixtureFiles(folder) != reference.fixtureFiles) {
+                problems += "${reference.fixture}: fixture files changed since the reference"
+            }
+            val known = facts(facts, reference.fixture)
+            if (known.collections != reference.collections) {
+                problems += "${reference.fixture}: test collections changed since the reference"
+            }
+            when (val outcome = reproduce(folder, reference.shape, reference.blocks, known)) {
+                is Examined.Gap ->
+                    problems += "${reference.fixture}: ${outcome.gap} ${outcome.detail}"
+                is Examined.Reproduced ->
+                    if (
+                        outcome.rules.isNotEmpty() ||
+                            outcome.retypes.isNotEmpty() ||
+                            outcome.corrections.isNotEmpty()
+                    ) {
+                        problems += "${reference.fixture}: no longer reproduces exactly"
+                    }
+            }
+        }
+        require(problems.isEmpty()) { problems.joinToString("\n") }
+    }
+
+    /**
+     * Re-derives [report] from the pages it pins: each reference's page must still have its blob,
+     * and, while its fixture is in the legacy layout, yield the same example, blocks and includes;
+     * each unresolved fixture must still fail with its recorded gap. This is the networked half of
+     * the check `verifyReferences` makes offline, for fixtures not in [moved].
+     */
+    fun recheckReferences(
+        repository: Path,
+        pages: Path,
+        report: LegacyReferenceReport,
+        facts: Map<String, FixtureFacts>,
+        moved: Set<String>,
+    ) {
+        val root = repository.toRealPath()
+        val problems = mutableListOf<String>()
+        report.references.forEach { reference ->
+            val page = pages.resolve(reference.source.commit).resolve(reference.source.path)
+            if (!page.isRegularFile() || gitBlob(Files.readAllBytes(page)) != reference.pageBlob) {
+                problems += "${reference.fixture}: the pinned page is missing or has another blob"
+                return@forEach
+            }
+            if (reference.fixture in moved) return@forEach
+            val known = facts(facts, reference.fixture)
+            when (val outcome = examine(root, pages, reference.fixture, reference.source, known)) {
+                is Examined.Gap ->
+                    problems += "${reference.fixture}: ${outcome.gap} ${outcome.detail}"
+                is Examined.Reproduced ->
+                    if (
+                        outcome.blocks != reference.blocks ||
+                            outcome.example != reference.example ||
+                            outcome.includes != reference.includes ||
+                            outcome.shape != reference.shape ||
+                            outcome.rules.isNotEmpty()
+                    ) {
+                        problems += "${reference.fixture}: the page no longer yields its reference"
+                    }
+            }
+        }
+        report.unresolved.forEach { unresolved ->
+            if (unresolved.fixture in moved) {
+                problems += "${unresolved.fixture}: an unresolved fixture cannot have moved"
+                return@forEach
+            }
+            val known = facts(facts, unresolved.fixture)
+            val outcome = examine(root, pages, unresolved.fixture, unresolved.source, known)
+            val gap =
+                when (outcome) {
+                    is Examined.Gap -> outcome.gap to outcome.detail
+                    is Examined.Reproduced ->
+                        FormGap.RESIDUAL_DIFFERENCE to "reproduces only with rules ${outcome.rules}"
+                }
+            if (gap != (unresolved.gap to unresolved.detail)) {
+                problems +=
+                    "${unresolved.fixture}: gap is ${gap.first} ${gap.second}, " +
+                        "recorded ${unresolved.gap} ${unresolved.detail}"
+            }
+        }
+        require(problems.isEmpty()) { problems.joinToString("\n") }
+    }
+
+    /** Whether [blocks] print their results as mongosh prints them rather than as documents. */
+    private fun printed(blocks: List<SourceBlock>): Boolean =
+        blocks.filter { it.role == BlockRole.EXPECTED }.any { documents(it.text) == null }
+
+    /**
      * Rechecks a committed report against the tree without the documentation pages: the recorded
      * source text must still reproduce each fixture under exactly its declared rules, and each
      * retired lock must be gone while each unresolved fixture keeps its lock. [facts] come from the
@@ -441,7 +678,7 @@ object FormMigration {
             if (
                 declaration.rules != override.rules ||
                     declaration.source != override.source ||
-                    declaration.lock != override.retiredLock.text ||
+                    declaration.lock != override.retiredLock?.text ||
                     declaration.pageBlob != override.pageBlob ||
                     declaration.includes != override.includes ||
                     declaration.retypes != override.retypes ||
@@ -508,12 +745,14 @@ object FormMigration {
     fun apply(repository: Path, report: FormMigrationReport) {
         val root = repository.toRealPath()
         val locks =
-            report.overrides.map { folder(root, it.fixture).resolve(it.retiredLock.name) to it }
+            report.overrides.map {
+                folder(root, it.fixture).resolve(requireNotNull(it.retiredLock).name) to it
+            }
         val problems =
             locks.mapNotNull { (lock, override) ->
                 when {
                     !lock.isRegularFile() -> null
-                    sha256(Files.readAllBytes(lock)) != override.retiredLock.sha256 ->
+                    sha256(Files.readAllBytes(lock)) != override.retiredLock?.sha256 ->
                         "${override.fixture}: lock changed since capture"
                     else -> null
                 }
@@ -610,6 +849,9 @@ object FormMigration {
             } catch (failure: RuntimeException) {
                 return Examined.Gap(FormGap.PAGE_UNSUPPORTED, failure.message ?: "$failure")
             }
+        if (!folder.resolve("name").isRegularFile()) {
+            return Examined.Gap(FormGap.FIXTURE_UNSUPPORTED, "the fixture has no name file")
+        }
         val name = Files.readAllLines(folder.resolve("name")).firstOrNull()?.trim() ?: ""
         val example =
             examples.singleOrNull { it.name == name }

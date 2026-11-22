@@ -2157,3 +2157,36 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
   `none`. Rejected: the claim that Kotlin accepts a non-scalar `exact` or non-canonical `decimal`;
   its constructors refuse both, and the vectors show INVALID on both sides.
 - Review round 2: nothing new.
+
+- PR #4546 (branch audits-printed-constraints, base #4545) published.
+
+## Step 5 slice 5a: references for never-locked cases (2026-11-21)
+
+- Branch audits-legacy-references from #4546. `fetch.py references` runs the candidate search for
+  the 320 never-locked examples (disposition UNCORRECTED, no marker), at both the first and the
+  last fixture commit; pages are fetched with blob checks into the same uncommitted cache.
+- `FormMigration.references` pins each fixture to the first candidate whose page reproduces it
+  exactly. A reference is a `FormOverride` with no retired lock (now nullable), rules, retypes or
+  corrections; a never-locked fixture needing a rule would be a silent edit, so it is left
+  unresolved. `verifyReferences` rechecks them offline, skipping fixtures the ledger moved; the
+  ledger checks a moved reference against the catalog entry instead.
+- Result: 239 references (all `AT_ORIGIN`), 81 unresolved: 27 SOURCE_UNSUPPORTED, 21
+  RESIDUAL_DIFFERENCE (12 are the `$bits*` filters, whose shared seed data types the third
+  document's `a` differently from the page), 19 FIXTURE_UNSUPPORTED (13 run more than one helper), 14
+  NO_MATCHING_EXAMPLE. Those stay legacy-only.
+- `examine` reports a fixture without a `name` file (`changeStream`) as FIXTURE_UNSUPPORTED
+  instead of failing.
+- `abs/absExpressionOperator` is converted from its reference and passes under both mappers. 156
+  references are convertible with today's adapter (testPipeline, `orderMatters` only, one
+  collection).
+- Review round 1 (two medium, two low), all applied:
+  - the catalog was its own evidence offline: `recheck-references` re-derives every reference
+    (page blob, example, blocks, includes) and every unresolved gap from the fetched pages, and
+    the README names `legacy-references.json` as the reviewed artifact;
+  - a reference whose page prints its results satisfies printed constraints rather than BSON
+    equality: the summary counts them (`references.printed`, 1; most printed-looking pages
+    still read as documents) and the wording says so;
+  - unresolved entries are rechecked by the same command, which passes against the fetched
+    pages;
+  - `FixtureMigration.verify` reports a fixture that is both in the review and referenced.
+- Review round 2: not completed; the reviewer hit its session limit. To be resent on the published PR.

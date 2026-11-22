@@ -5,13 +5,18 @@ import dev.morphia.audits.coverage.AuditJson
 import java.nio.file.Files
 import java.nio.file.Path
 
+/** The pinned references of never-locked fixtures, relative to the repository root. */
+const val REFERENCES = "audits/catalog/legacy-references.json"
+
 private const val USAGE =
     """Usage: FormMainKt draft <repository-root> <pages> <source-repository> <review-out> <candidates.json>...
        FormMainKt capture <repository-root> <revision> <pages> <review.json> <out>
        FormMainKt apply <repository-root> <report.json>
        FormMainKt migrate <repository-root> <revision> <fixture> <test-type#method>
        FormMainKt convert <repository-root> <revision> <fixture>
-       FormMainKt manifest <repository-root>"""
+       FormMainKt manifest <repository-root>
+       FormMainKt references <repository-root> <revision> <pages> <source-repository> <out> <candidates.json>...
+       FormMainKt recheck-references <repository-root> <pages>"""
 
 /**
  * Drafts, captures and applies the MORPHIA_FORM lock migration. Pages are read from an explicit
@@ -26,6 +31,10 @@ fun main(args: Array<String>) {
         FormMigration.facts(
             AuditJson.curatedRepairs(read("$root/audits/catalog/curated-repairs.json"))
         )
+    fun references(root: String) =
+        Path.of("$root/$REFERENCES")
+            .takeIf { Files.exists(it) }
+            ?.let { AuditJson.legacyReferences(read(it.toString())) }
     when (args.firstOrNull()) {
         "draft" -> {
             require(args.size >= 6) { USAGE }
@@ -38,6 +47,32 @@ fun main(args: Array<String>) {
                     facts(args[1]),
                 )
             Files.writeString(Path.of(args[4]), AuditJson.write(review))
+        }
+        "references" -> {
+            require(args.size >= 7) { USAGE }
+            val report =
+                FormMigration.references(
+                    Path.of(args[1]),
+                    args[2],
+                    Path.of(args[3]),
+                    args[4],
+                    args.drop(6).map { AuditJson.formCandidates(read(it)).candidates },
+                    facts(args[1]),
+                )
+            Files.writeString(Path.of(args[5]), AuditJson.write(report))
+        }
+        "recheck-references" -> {
+            require(args.size == 3) { USAGE }
+            val root = args[1]
+            val ledger =
+                AuditJson.fixtureMigration(read("$root/audits/catalog/fixture-migration.json"))
+            FormMigration.recheckReferences(
+                Path.of(root),
+                Path.of(args[2]),
+                requireNotNull(references(root)) { "No $REFERENCES" },
+                facts(root),
+                ledger.migrations.map { it.fixture }.toSet(),
+            )
         }
         "capture" -> {
             require(args.size == 6) { USAGE }
@@ -75,6 +110,7 @@ fun main(args: Array<String>) {
                     ),
                     args[3],
                     args[4],
+                    references(root),
                 )
             val migrations = (ledger.migrations + migrated).sortedBy { it.fixture }
             Files.writeString(ledgerPath, AuditJson.write(ledger.copy(migrations = migrations)))
@@ -98,6 +134,7 @@ fun main(args: Array<String>) {
                         AuditJson.bindingPolicy(read("$root/audits/catalog/binding-policy.json")),
                     ),
                     args[3],
+                    references(root),
                 )
             val migrations = (ledger.migrations + migrated).sortedBy { it.fixture }
             Files.writeString(ledgerPath, AuditJson.write(ledger.copy(migrations = migrations)))
