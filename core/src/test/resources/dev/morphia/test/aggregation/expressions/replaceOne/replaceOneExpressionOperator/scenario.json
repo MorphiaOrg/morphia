@@ -1,0 +1,147 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/replaceOne/replaceOneExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "a99321789cde63ab456a48d51edb40c76ab5306f",
+    "path": "source/reference/operator/aggregation/replaceOne.txt",
+    "blob": "6a3e2d1e9742e0f0fde941ba490ec4efc7bf4cda"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "blue paint"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "blue and green paint"
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "blue paint with blue paintbrush"
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "item": "blue paint with green paintbrush"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "inventory",
+    "pipeline": [
+      {
+        "$project": {
+          "item": {
+            "$replaceOne": {
+              "input": "$item",
+              "find": "blue paint",
+              "replacement": "red paint"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "red paint"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "blue and green paint"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "red paint with blue paintbrush"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "red paint with green paintbrush"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

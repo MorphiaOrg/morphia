@@ -1,0 +1,140 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/objectToArray/objectToArrayToSumNestedFields",
+  "title": "``$objectToArray`` to Sum Nested Fields",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "6560e617067dff1934063555ec97e57cad362fc8",
+    "path": "source/reference/operator/aggregation/objectToArray.txt",
+    "blob": "cab03799b579a040a4dd77c9c4064313fe70d4d4"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "ABC1",
+        "instock": {
+          "warehouse1": {
+            "$numberInt": "2500"
+          },
+          "warehouse2": {
+            "$numberInt": "500"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "ABC2",
+        "instock": {
+          "warehouse2": {
+            "$numberInt": "500"
+          },
+          "warehouse3": {
+            "$numberInt": "200"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "inventory",
+    "pipeline": [
+      {
+        "$project": {
+          "warehouses": {
+            "$objectToArray": "$instock"
+          }
+        }
+      },
+      {
+        "$unwind": "$warehouses"
+      },
+      {
+        "$group": {
+          "_id": "$warehouses.k",
+          "total": {
+            "$sum": "$warehouses.v"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "warehouse3"
+            }
+          },
+          {
+            "name": "total",
+            "value": {
+              "whole": {
+                "$numberInt": "200"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "warehouse2"
+            }
+          },
+          {
+            "name": "total",
+            "value": {
+              "whole": {
+                "$numberInt": "1000"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "warehouse1"
+            }
+          },
+          {
+            "name": "total",
+            "value": {
+              "whole": {
+                "$numberInt": "2500"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

@@ -25,7 +25,10 @@ class FixtureMigrationTest {
     @Test
     fun scenariosAreTheirOverridesDocumentedSource() {
         ledger.migrations.forEach {
-            assertEquals(FixtureMigration.scenario(it.override, it.ordered), read(it.scenario))
+            assertEquals(
+                FixtureMigration.scenario(it.override, it.ordered, it.options),
+                read(it.scenario),
+            )
         }
     }
 
@@ -99,6 +102,49 @@ class FixtureMigrationTest {
         val unreviewed = review.copy(migrated = emptyList())
         assertThrows(IllegalArgumentException::class.java) {
             FixtureMigration.verify(root, ledger, inventory, unreviewed, references)
+        }
+    }
+
+    @Test
+    fun legacyOnlyCasesKeepTheirLegacyFixtures() {
+        val text = read("audits/catalog/cutover.json")
+        val cutover = AuditJson.cutover(text)
+        assertEquals(text, AuditJson.write(cutover))
+        FixtureMigration.verifyCutover(
+            root,
+            cutover,
+            ledger,
+            AuditJson.formMigration(read("audits/catalog/form-migration.json")),
+            AuditJson.legacyReferences(read("audits/catalog/legacy-references.json")),
+            AuditJson.curatedRepairs(read("audits/catalog/curated-repairs.json")),
+        )
+        val moved =
+            cutover.copy(
+                legacyOnly =
+                    cutover.legacyOnly +
+                        cutover.legacyOnly.first().copy(fixture = ledger.migrations.first().fixture)
+            )
+        assertThrows(IllegalArgumentException::class.java) {
+            FixtureMigration.verifyCutover(
+                root,
+                moved,
+                ledger,
+                AuditJson.formMigration(read("audits/catalog/form-migration.json")),
+                AuditJson.legacyReferences(read("audits/catalog/legacy-references.json")),
+                AuditJson.curatedRepairs(read("audits/catalog/curated-repairs.json")),
+            )
+        }
+        // A convertible case the batch skipped is caught: drop one legacy-only record.
+        val skipped = cutover.copy(legacyOnly = cutover.legacyOnly.drop(1))
+        assertThrows(IllegalArgumentException::class.java) {
+            FixtureMigration.verifyCutover(
+                root,
+                skipped,
+                ledger,
+                AuditJson.formMigration(read("audits/catalog/form-migration.json")),
+                AuditJson.legacyReferences(read("audits/catalog/legacy-references.json")),
+                AuditJson.curatedRepairs(read("audits/catalog/curated-repairs.json")),
+            )
         }
     }
 

@@ -1,0 +1,233 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/ne/neExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "d3aedc270fc14feb019a86c8018699c98b26de28",
+    "path": "source/reference/operator/aggregation/ne.txt",
+    "blob": "ef66debc94e80aeed914a5889773b680688d2634"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "abc1",
+        "description": "product 1",
+        "qty": {
+          "$numberInt": "300"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "abc2",
+        "description": "product 2",
+        "qty": {
+          "$numberInt": "200"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "xyz1",
+        "description": "product 3",
+        "qty": {
+          "$numberInt": "250"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "item": "VWZ1",
+        "description": "product 4",
+        "qty": {
+          "$numberInt": "300"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "item": "VWZ2",
+        "description": "product 5",
+        "qty": {
+          "$numberInt": "180"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "inventory",
+    "pipeline": [
+      {
+        "$project": {
+          "item": {
+            "$numberInt": "1"
+          },
+          "qty": {
+            "$numberInt": "1"
+          },
+          "qtyNe250": {
+            "$ne": [
+              "$qty",
+              {
+                "$numberInt": "250"
+              }
+            ]
+          },
+          "_id": {
+            "$numberInt": "0"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "item",
+            "value": {
+              "text": "abc1"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "300"
+              }
+            }
+          },
+          {
+            "name": "qtyNe250",
+            "value": {
+              "exact": true
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "item",
+            "value": {
+              "text": "abc2"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "200"
+              }
+            }
+          },
+          {
+            "name": "qtyNe250",
+            "value": {
+              "exact": true
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "item",
+            "value": {
+              "text": "xyz1"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "250"
+              }
+            }
+          },
+          {
+            "name": "qtyNe250",
+            "value": {
+              "exact": false
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "item",
+            "value": {
+              "text": "VWZ1"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "300"
+              }
+            }
+          },
+          {
+            "name": "qtyNe250",
+            "value": {
+              "exact": true
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "item",
+            "value": {
+              "text": "VWZ2"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "180"
+              }
+            }
+          },
+          {
+            "name": "qtyNe250",
+            "value": {
+              "exact": true
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "PROJECT_ID_FIRST"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

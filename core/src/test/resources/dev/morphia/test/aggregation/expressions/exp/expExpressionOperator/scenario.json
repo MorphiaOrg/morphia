@@ -1,0 +1,147 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/exp/expExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "cd46d544a63101fcb3392ddab496c648841d3445",
+    "path": "source/reference/operator/aggregation/exp.txt",
+    "blob": "734eaab3d5843ee1da0575bba8ea5f526ee7edf8"
+  },
+  "dataset": null,
+  "collections": {
+    "accounts": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "interestRate": {
+          "$numberDouble": "0.08"
+        },
+        "presentValue": {
+          "$numberInt": "10000"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "interestRate": {
+          "$numberDouble": "0.0825"
+        },
+        "presentValue": {
+          "$numberInt": "250000"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "interestRate": {
+          "$numberDouble": "0.0425"
+        },
+        "presentValue": {
+          "$numberInt": "1000"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "accounts",
+    "pipeline": [
+      {
+        "$project": {
+          "effectiveRate": {
+            "$subtract": [
+              {
+                "$exp": "$interestRate"
+              },
+              {
+                "$numberInt": "1"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "effectiveRate",
+            "value": {
+              "exact": {
+                "$numberDouble": "0.08328706767495864"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "effectiveRate",
+            "value": {
+              "exact": {
+                "$numberDouble": "0.08599867343905654"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "effectiveRate",
+            "value": {
+              "exact": {
+                "$numberDouble": "0.04341605637367807"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

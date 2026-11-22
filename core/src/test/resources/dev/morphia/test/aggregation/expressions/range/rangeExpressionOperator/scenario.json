@@ -1,0 +1,320 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/range/rangeExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "616d57a126410ad4be0b4c8abeb00660f987f605",
+    "path": "source/reference/operator/aggregation/range.txt",
+    "blob": "049a4c1dbcea45b1efb87ce37cf240f08aacfd02"
+  },
+  "dataset": null,
+  "collections": {
+    "distances": [
+      {
+        "_id": {
+          "$numberInt": "0"
+        },
+        "city": "San Jose",
+        "distance": {
+          "$numberInt": "42"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "city": "Sacramento",
+        "distance": {
+          "$numberInt": "88"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "city": "Reno",
+        "distance": {
+          "$numberInt": "218"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "city": "Los Angeles",
+        "distance": {
+          "$numberInt": "383"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "distances",
+    "pipeline": [
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "city": {
+            "$numberInt": "1"
+          },
+          "Rest stops": {
+            "$range": [
+              {
+                "$numberInt": "0"
+              },
+              "$distance",
+              {
+                "$numberInt": "25"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "city",
+            "value": {
+              "text": "San Jose"
+            }
+          },
+          {
+            "name": "Rest stops",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "0"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "25"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "city",
+            "value": {
+              "text": "Sacramento"
+            }
+          },
+          {
+            "name": "Rest stops",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "0"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "25"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "50"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "75"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "city",
+            "value": {
+              "text": "Reno"
+            }
+          },
+          {
+            "name": "Rest stops",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "0"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "25"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "50"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "75"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "100"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "125"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "150"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "175"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "200"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "city",
+            "value": {
+              "text": "Los Angeles"
+            }
+          },
+          {
+            "name": "Rest stops",
+            "value": {
+              "array": [
+                {
+                  "whole": {
+                    "$numberInt": "0"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "25"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "50"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "75"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "100"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "125"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "150"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "175"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "200"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "225"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "250"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "275"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "300"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "325"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "350"
+                  }
+                },
+                {
+                  "whole": {
+                    "$numberInt": "375"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

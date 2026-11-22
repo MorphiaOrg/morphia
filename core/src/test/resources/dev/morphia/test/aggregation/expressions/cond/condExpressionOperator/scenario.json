@@ -76,33 +76,84 @@
     ]
   },
   "expected": {
-    "documents": [
+    "printed": [
       {
-        "_id": {
-          "$numberInt": "1"
-        },
-        "item": "abc1",
-        "discount": {
-          "$numberInt": "30"
-        }
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "abc1"
+            }
+          },
+          {
+            "name": "discount",
+            "value": {
+              "whole": {
+                "$numberInt": "30"
+              }
+            }
+          }
+        ]
       },
       {
-        "_id": {
-          "$numberInt": "2"
-        },
-        "item": "abc2",
-        "discount": {
-          "$numberInt": "20"
-        }
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "abc2"
+            }
+          },
+          {
+            "name": "discount",
+            "value": {
+              "whole": {
+                "$numberInt": "20"
+              }
+            }
+          }
+        ]
       },
       {
-        "_id": {
-          "$numberInt": "3"
-        },
-        "item": "xyz1",
-        "discount": {
-          "$numberInt": "30"
-        }
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "xyz1"
+            }
+          },
+          {
+            "name": "discount",
+            "value": {
+              "whole": {
+                "$numberInt": "30"
+              }
+            }
+          }
+        ]
       }
     ]
   },

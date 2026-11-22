@@ -1,0 +1,170 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/maxN/findTheMaximumThreeScoresForASingleGame",
+  "title": "Find the Maximum Three ``Scores`` for a Single Game",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "e473868337d01610afb03e550b561ca771245aff",
+    "path": "source/reference/operator/aggregation/maxN.txt",
+    "blob": "75206683857d348c555a0c512696915266e8fd83"
+  },
+  "dataset": null,
+  "collections": {
+    "gamescores": [
+      {
+        "playerId": "PlayerA",
+        "gameId": "G1",
+        "score": {
+          "$numberInt": "31"
+        }
+      },
+      {
+        "playerId": "PlayerB",
+        "gameId": "G1",
+        "score": {
+          "$numberInt": "33"
+        }
+      },
+      {
+        "playerId": "PlayerC",
+        "gameId": "G1",
+        "score": {
+          "$numberInt": "99"
+        }
+      },
+      {
+        "playerId": "PlayerD",
+        "gameId": "G1",
+        "score": {
+          "$numberInt": "1"
+        }
+      },
+      {
+        "playerId": "PlayerA",
+        "gameId": "G2",
+        "score": {
+          "$numberInt": "10"
+        }
+      },
+      {
+        "playerId": "PlayerB",
+        "gameId": "G2",
+        "score": {
+          "$numberInt": "14"
+        }
+      },
+      {
+        "playerId": "PlayerC",
+        "gameId": "G2",
+        "score": {
+          "$numberInt": "66"
+        }
+      },
+      {
+        "playerId": "PlayerD",
+        "gameId": "G2",
+        "score": {
+          "$numberInt": "80"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "gamescores",
+    "pipeline": [
+      {
+        "$match": {
+          "gameId": "G1"
+        }
+      },
+      {
+        "$group": {
+          "_id": "$gameId",
+          "maxThreeScores": {
+            "$maxN": {
+              "input": [
+                "$score",
+                "$playerId"
+              ],
+              "n": {
+                "$numberInt": "3"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "G1"
+            }
+          },
+          {
+            "name": "maxThreeScores",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "whole": {
+                        "$numberInt": "99"
+                      }
+                    },
+                    {
+                      "text": "PlayerC"
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "whole": {
+                        "$numberInt": "33"
+                      }
+                    },
+                    {
+                      "text": "PlayerB"
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "whole": {
+                        "$numberInt": "31"
+                      }
+                    },
+                    {
+                      "text": "PlayerA"
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

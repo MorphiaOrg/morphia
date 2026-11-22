@@ -1,0 +1,287 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/filter/filterExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "9005b68f8945b96e78e9f10adcec016616681cfb",
+    "path": "source/reference/operator/aggregation/filter.txt",
+    "blob": "406bdfabb5424bbf5946971211e927ed5a49d39a"
+  },
+  "dataset": null,
+  "collections": {
+    "sales": [
+      {
+        "_id": {
+          "$numberInt": "0"
+        },
+        "items": [
+          {
+            "item_id": {
+              "$numberInt": "43"
+            },
+            "quantity": {
+              "$numberInt": "2"
+            },
+            "price": {
+              "$numberInt": "10"
+            }
+          },
+          {
+            "item_id": {
+              "$numberInt": "2"
+            },
+            "quantity": {
+              "$numberInt": "1"
+            },
+            "price": {
+              "$numberInt": "240"
+            }
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "items": [
+          {
+            "item_id": {
+              "$numberInt": "23"
+            },
+            "quantity": {
+              "$numberInt": "3"
+            },
+            "price": {
+              "$numberInt": "110"
+            }
+          },
+          {
+            "item_id": {
+              "$numberInt": "103"
+            },
+            "quantity": {
+              "$numberInt": "4"
+            },
+            "price": {
+              "$numberInt": "5"
+            }
+          },
+          {
+            "item_id": {
+              "$numberInt": "38"
+            },
+            "quantity": {
+              "$numberInt": "1"
+            },
+            "price": {
+              "$numberInt": "300"
+            }
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "items": [
+          {
+            "item_id": {
+              "$numberInt": "4"
+            },
+            "quantity": {
+              "$numberInt": "1"
+            },
+            "price": {
+              "$numberInt": "23"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "sales",
+    "pipeline": [
+      {
+        "$project": {
+          "items": {
+            "$filter": {
+              "input": "$items",
+              "as": "item",
+              "cond": {
+                "$gte": [
+                  "$$item.price",
+                  {
+                    "$numberInt": "100"
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          },
+          {
+            "name": "items",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "item_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "2"
+                        }
+                      }
+                    },
+                    {
+                      "name": "quantity",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    },
+                    {
+                      "name": "price",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "240"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "items",
+            "value": {
+              "array": [
+                {
+                  "document": [
+                    {
+                      "name": "item_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "23"
+                        }
+                      }
+                    },
+                    {
+                      "name": "quantity",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "3"
+                        }
+                      }
+                    },
+                    {
+                      "name": "price",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "110"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "document": [
+                    {
+                      "name": "item_id",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "38"
+                        }
+                      }
+                    },
+                    {
+                      "name": "quantity",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "1"
+                        }
+                      }
+                    },
+                    {
+                      "name": "price",
+                      "value": {
+                        "whole": {
+                          "$numberInt": "300"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "items",
+            "value": {
+              "array": []
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

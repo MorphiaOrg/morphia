@@ -1,0 +1,102 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/atan2/inverseTangentOfValueInDegrees",
+  "title": "main :: Inverse Tangent of Value in Degrees",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "3c5205896b0ea712d635793889590be37fc2513c",
+    "path": "source/reference/operator/aggregation/atan2.txt",
+    "blob": "f2a780facb1d1dcba3801e618cd54fa66e45a99a"
+  },
+  "dataset": null,
+  "collections": {
+    "trigonometry": [
+      {
+        "_id": {
+          "$oid": "5c50782193f833234ba90d85"
+        },
+        "side_a": {
+          "$numberDecimal": "3"
+        },
+        "side_b": {
+          "$numberDecimal": "4"
+        },
+        "hypotenuse": {
+          "$numberDecimal": "5"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "trigonometry",
+    "pipeline": [
+      {
+        "$addFields": {
+          "angle_a": {
+            "$radiansToDegrees": {
+              "$atan2": [
+                "$side_b",
+                "$side_a"
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "5c50782193f833234ba90d85"
+              }
+            }
+          },
+          {
+            "name": "side_a",
+            "value": {
+              "decimal": "3"
+            }
+          },
+          {
+            "name": "side_b",
+            "value": {
+              "decimal": "4"
+            }
+          },
+          {
+            "name": "hypotenuse",
+            "value": {
+              "decimal": "5"
+            }
+          },
+          {
+            "name": "angle_a",
+            "value": {
+              "decimal": "53.13010235415597870314438744090658"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

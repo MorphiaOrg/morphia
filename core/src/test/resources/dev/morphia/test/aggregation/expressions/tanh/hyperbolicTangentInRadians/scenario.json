@@ -1,0 +1,79 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/tanh/hyperbolicTangentInRadians",
+  "title": "main :: Hyperbolic Tangent in Radians",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "d89528cf7f5fc214a131ba248285bff6a503b9ec",
+    "path": "source/reference/operator/aggregation/tanh.txt",
+    "blob": "c87660cdc108f58ee65a515691a38df1aca2a141"
+  },
+  "dataset": null,
+  "collections": {
+    "trigonometry": [
+      {
+        "_id": {
+          "$oid": "5c50782193f833234ba90d55"
+        },
+        "angle": {
+          "$numberDecimal": "1.6301023541559787031443874490659"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "trigonometry",
+    "pipeline": [
+      {
+        "$addFields": {
+          "tanh_output": {
+            "$tanh": "$angle"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "5c50782193f833234ba90d55"
+              }
+            }
+          },
+          {
+            "name": "angle",
+            "value": {
+              "decimal": "1.6301023541559787031443874490659"
+            }
+          },
+          {
+            "name": "tanh_output",
+            "value": {
+              "decimal": "0.9260761562750713360156803177935379"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

@@ -68,38 +68,86 @@
     ]
   },
   "expected": {
-    "documents": [
+    "printed": [
       {
-        "_id": {
-          "$numberInt": "1"
-        },
-        "roundedValue": {
-          "$numberDouble": "19.2"
-        }
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "roundedValue",
+            "value": {
+              "exact": {
+                "$numberDouble": "19.2"
+              }
+            }
+          }
+        ]
       },
       {
-        "_id": {
-          "$numberInt": "2"
-        },
-        "roundedValue": {
-          "$numberDouble": "28.7"
-        }
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "roundedValue",
+            "value": {
+              "exact": {
+                "$numberDouble": "28.7"
+              }
+            }
+          }
+        ]
       },
       {
-        "_id": {
-          "$numberInt": "3"
-        },
-        "roundedValue": {
-          "$numberDouble": "34.3"
-        }
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "roundedValue",
+            "value": {
+              "exact": {
+                "$numberDouble": "34.3"
+              }
+            }
+          }
+        ]
       },
       {
-        "_id": {
-          "$numberInt": "4"
-        },
-        "roundedValue": {
-          "$numberDouble": "-45.4"
-        }
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "roundedValue",
+            "value": {
+              "exact": {
+                "$numberDouble": "-45.4"
+              }
+            }
+          }
+        ]
       }
     ]
   },

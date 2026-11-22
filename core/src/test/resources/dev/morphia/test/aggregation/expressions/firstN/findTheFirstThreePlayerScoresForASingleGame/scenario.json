@@ -1,0 +1,170 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/firstN/findTheFirstThreePlayerScoresForASingleGame",
+  "title": "Find the First Three Player Scores for a Single Game",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "efbc9f9fa2ee51515cf986e1f74e3b8e9f9d31fa",
+    "path": "source/reference/operator/aggregation/firstN.txt",
+    "blob": "99783a2c7028cff9efa22b354f9672de17454b07"
+  },
+  "dataset": null,
+  "collections": {
+    "gamescores": [
+      {
+        "playerId": "PlayerA",
+        "gameId": "G1",
+        "score": {
+          "$numberInt": "31"
+        }
+      },
+      {
+        "playerId": "PlayerB",
+        "gameId": "G1",
+        "score": {
+          "$numberInt": "33"
+        }
+      },
+      {
+        "playerId": "PlayerC",
+        "gameId": "G1",
+        "score": {
+          "$numberInt": "99"
+        }
+      },
+      {
+        "playerId": "PlayerD",
+        "gameId": "G1",
+        "score": {
+          "$numberInt": "1"
+        }
+      },
+      {
+        "playerId": "PlayerA",
+        "gameId": "G2",
+        "score": {
+          "$numberInt": "10"
+        }
+      },
+      {
+        "playerId": "PlayerB",
+        "gameId": "G2",
+        "score": {
+          "$numberInt": "14"
+        }
+      },
+      {
+        "playerId": "PlayerC",
+        "gameId": "G2",
+        "score": {
+          "$numberInt": "66"
+        }
+      },
+      {
+        "playerId": "PlayerD",
+        "gameId": "G2",
+        "score": {
+          "$numberInt": "80"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "gamescores",
+    "pipeline": [
+      {
+        "$match": {
+          "gameId": "G1"
+        }
+      },
+      {
+        "$group": {
+          "_id": "$gameId",
+          "firstThreeScores": {
+            "$firstN": {
+              "input": [
+                "$playerId",
+                "$score"
+              ],
+              "n": {
+                "$numberInt": "3"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "G1"
+            }
+          },
+          {
+            "name": "firstThreeScores",
+            "value": {
+              "array": [
+                {
+                  "array": [
+                    {
+                      "text": "PlayerA"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "31"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "PlayerB"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "33"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "array": [
+                    {
+                      "text": "PlayerC"
+                    },
+                    {
+                      "whole": {
+                        "$numberInt": "99"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

@@ -169,10 +169,12 @@ data class DocumentedScenario(
     val data: Map<String, List<BsonDocument>>,
     val shape: ActionShape,
     val action: List<BsonValue>,
-    /** The documented results, when the page prints them as documents. */
-    val expected: List<BsonDocument>?,
-    /** What results printed as mongosh prints them prove, when the page prints them that way. */
-    val printed: List<PublishedDocument>? = null,
+    /**
+     * What the documented results prove, or null when the page shows none. A page's results are
+     * what mongosh printed, even when they read as JSON: a printed `10` is an Int32 or the same
+     * Double, so they are constraints, never guessed BSON values.
+     */
+    val printed: List<PublishedDocument>?,
 )
 
 data class FormOverride(
@@ -589,10 +591,10 @@ object FormMigration {
     }
 
     /**
-     * Re-derives [report] from the pages it pins: each reference's page must still have its blob,
-     * and, while its fixture is in the legacy layout, yield the same example, blocks and includes;
-     * each unresolved fixture must still fail with its recorded gap. This is the networked half of
-     * the check `verifyReferences` makes offline, for fixtures not in [moved].
+     * Re-derives [report] from the pages it pins: each reference's page must still have its blob
+     * and yield the same example, blocks and includes (a fixture in [moved] is gone, so its example
+     * is selected by its recorded name and not compared with the fixture); each unresolved fixture
+     * must still fail with its recorded gap. This is the networked half of `verifyReferences`.
      */
     fun recheckReferences(
         repository: Path,
@@ -609,9 +611,16 @@ object FormMigration {
                 problems += "${reference.fixture}: the pinned page is missing or has another blob"
                 return@forEach
             }
-            if (reference.fixture in moved) return@forEach
-            val known = facts(facts, reference.fixture)
-            when (val outcome = examine(root, pages, reference.fixture, reference.source, known)) {
+            // A moved reference's fixture is gone: its example is re-extracted by its recorded
+            // name, so the recorded text is still shown to come from the page.
+            val known =
+                if (reference.fixture in moved) FixtureFacts(emptyList())
+                else facts(facts, reference.fixture)
+            val recorded = reference.example.takeIf { reference.fixture in moved }
+            when (
+                val outcome =
+                    examine(root, pages, reference.fixture, reference.source, known, recorded)
+            ) {
                 is Examined.Gap ->
                     problems += "${reference.fixture}: ${outcome.gap} ${outcome.detail}"
                 is Examined.Reproduced ->
@@ -806,12 +815,18 @@ object FormMigration {
         data class Gap(val gap: FormGap, val detail: String) : Examined
     }
 
+    /**
+     * Extracts [fixture]'s example from [source] and compares it with the fixture. With [recorded]
+     * (an example name), the example is selected by that name and not compared: the fixture may be
+     * gone, and the result carries only what the page yields.
+     */
     private fun examine(
         root: Path,
         pages: Path,
         fixture: String,
         source: FormSource,
         facts: FixtureFacts,
+        recorded: String? = null,
     ): Examined {
         val folder = folder(root, fixture)
         val page = pages.resolve(source.commit).resolve(source.path)
@@ -849,10 +864,11 @@ object FormMigration {
             } catch (failure: RuntimeException) {
                 return Examined.Gap(FormGap.PAGE_UNSUPPORTED, failure.message ?: "$failure")
             }
-        if (!folder.resolve("name").isRegularFile()) {
+        if (recorded == null && !folder.resolve("name").isRegularFile()) {
             return Examined.Gap(FormGap.FIXTURE_UNSUPPORTED, "the fixture has no name file")
         }
-        val name = Files.readAllLines(folder.resolve("name")).firstOrNull()?.trim() ?: ""
+        val name =
+            recorded ?: Files.readAllLines(folder.resolve("name")).firstOrNull()?.trim() ?: ""
         val example =
             examples.singleOrNull { it.name == name }
                 ?: return Examined.Gap(FormGap.NO_MATCHING_EXAMPLE, name)
@@ -872,6 +888,16 @@ object FormMigration {
                 is Examined.Gap -> return documented
                 else -> (documented as Documented).alternatives.first().shape
             }
+        if (recorded != null) {
+            return Examined.Reproduced(
+                emptyList(),
+                shape,
+                blocks,
+                pageBlob = blob,
+                includes = includes.distinct(),
+                example = example.name,
+            )
+        }
         return when (val outcome = reproduce(folder, shape, blocks, facts)) {
             is Examined.Gap -> outcome
             is Examined.Reproduced ->
@@ -915,10 +941,8 @@ object FormMigration {
         require(override.blocks.none { it.role == BlockRole.INDEX }) {
             "${override.fixture}: indexes are not supported"
         }
-        val listed = expected.map { documents(it.text) }
-        // As in the examination: results that do not read as documents are printed results.
         val printed =
-            if (listed.all { it != null }) null
+            if (expected.isEmpty()) null
             else
                 when (val read = published(documented.collection, expected)) {
                     is Examined.Gap ->
@@ -930,8 +954,6 @@ object FormMigration {
             documented.data.mapValues { (_, values) -> values.map { it.asDocument() } },
             action.shape,
             action.values,
-            if (printed != null) null
-            else listed.takeIf { it.isNotEmpty() }?.flatMap { it!! }?.map { it.asDocument() },
             printed,
         )
     }

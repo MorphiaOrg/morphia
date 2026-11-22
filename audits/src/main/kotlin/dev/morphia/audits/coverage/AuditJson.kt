@@ -25,6 +25,7 @@ import dev.morphia.audits.naming.NameProposal
 import dev.morphia.audits.naming.NamingRequest
 import dev.morphia.audits.repairs.CaseManifest
 import dev.morphia.audits.repairs.CuratedRepairReport
+import dev.morphia.audits.repairs.CutoverReport
 import dev.morphia.audits.repairs.FixtureMigrationLedger
 import dev.morphia.audits.repairs.FormMigration
 import dev.morphia.audits.repairs.FormMigrationReport
@@ -173,6 +174,8 @@ object AuditJson {
 
     fun formMigration(json: String): FormMigrationReport =
         read(json, FormMigrationReport::class.java)
+
+    fun cutover(json: String): CutoverReport = read(json, CutoverReport::class.java)
 
     fun legacyReferences(json: String): LegacyReferenceReport =
         read(json, LegacyReferenceReport::class.java)

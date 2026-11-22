@@ -1,9 +1,0 @@
-{ 
-    $addFields : {
-      "angle_a" : {
-        $atan : {
-          $divide : [ "$side_b", "$side_a" ]
-        }
-      }
-    }
-  }

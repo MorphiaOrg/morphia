@@ -206,6 +206,29 @@ class FormMigrationTest {
             FormMigration.recheckReferences(repository, pages, report, unlocked, emptySet())
         }
         page(commit, pinned)
+        // Once the fixture has moved, its example is re-extracted by its recorded name.
+        val folder = repository.resolve("core/src/test/resources/dev/morphia/test/$fixture")
+        val saved = folder.toFile().listFiles()!!.associate { it.name to it.readText() }
+        folder.toFile().deleteRecursively()
+        FormMigration.recheckReferences(repository, pages, report, unlocked, setOf(fixture))
+        // Recorded text that the page (same blob) does not yield is caught.
+        val forged =
+            report.copy(
+                references =
+                    report.references.map { reference ->
+                        reference.copy(
+                            blocks =
+                                reference.blocks.map {
+                                    val text = it.text.replace("250", "251")
+                                    it.copy(text = text, sha256 = sha256(text))
+                                }
+                        )
+                    }
+            )
+        assertThrows(IllegalArgumentException::class.java) {
+            FormMigration.recheckReferences(repository, pages, forged, unlocked, setOf(fixture))
+        }
+        saved.forEach { (name, text) -> fixture("useCond", name, text) }
         // The offline check needs only the recorded source text.
         pages.toFile().deleteRecursively()
         FormMigration.verifyReferences(repository, report, unlocked, emptySet())
@@ -934,7 +957,7 @@ class FormMigrationTest {
                 .map { it.fixture }
                 .toSet(),
         )
-        assertEquals(134, report.overrides.size)
+        assertEquals(86, report.overrides.size)
         assertEquals(96, report.unresolved.size)
     }
 
@@ -972,4 +995,10 @@ class FormMigrationTest {
         assertEquals(239, report.references.size)
         assertEquals(81, report.unresolved.size)
     }
+
+    private fun sha256(text: String): String =
+        java.util.HexFormat.of()
+            .formatHex(
+                java.security.MessageDigest.getInstance("SHA-256").digest(text.toByteArray())
+            )
 }

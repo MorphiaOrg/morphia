@@ -1,0 +1,189 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/concatArrays/concatArraysAccumulatorOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "6560e617067dff1934063555ec97e57cad362fc8",
+    "path": "source/reference/operator/aggregation/concatArrays.txt",
+    "blob": "1bb0d0bac6fa4aef2bf5525187ed8ea5de20193b"
+  },
+  "dataset": null,
+  "collections": {
+    "warehouses": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "instock": [
+          "chocolate"
+        ],
+        "ordered": [
+          "butter",
+          "apples"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "instock": [
+          "apples",
+          "pudding",
+          "pie"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "instock": [
+          "pears",
+          "pecans"
+        ],
+        "ordered": [
+          "cherries"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "instock": [
+          "ice cream"
+        ],
+        "ordered": []
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "warehouses",
+    "pipeline": [
+      {
+        "$project": {
+          "items": {
+            "$concatArrays": [
+              "$instock",
+              "$ordered"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "items",
+            "value": {
+              "array": [
+                {
+                  "text": "chocolate"
+                },
+                {
+                  "text": "butter"
+                },
+                {
+                  "text": "apples"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "items",
+            "value": {
+              "exact": null
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "items",
+            "value": {
+              "array": [
+                {
+                  "text": "pears"
+                },
+                {
+                  "text": "pecans"
+                },
+                {
+                  "text": "cherries"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "items",
+            "value": {
+              "array": [
+                {
+                  "text": "ice cream"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

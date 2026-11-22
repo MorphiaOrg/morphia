@@ -68,38 +68,86 @@
     ]
   },
   "expected": {
-    "documents": [
+    "printed": [
       {
-        "_id": {
-          "$numberInt": "1"
-        },
-        "truncatedValue": {
-          "$numberDouble": "19.2"
-        }
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "truncatedValue",
+            "value": {
+              "exact": {
+                "$numberDouble": "19.2"
+              }
+            }
+          }
+        ]
       },
       {
-        "_id": {
-          "$numberInt": "2"
-        },
-        "truncatedValue": {
-          "$numberDouble": "28.7"
-        }
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "truncatedValue",
+            "value": {
+              "exact": {
+                "$numberDouble": "28.7"
+              }
+            }
+          }
+        ]
       },
       {
-        "_id": {
-          "$numberInt": "3"
-        },
-        "truncatedValue": {
-          "$numberDouble": "34.3"
-        }
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "truncatedValue",
+            "value": {
+              "exact": {
+                "$numberDouble": "34.3"
+              }
+            }
+          }
+        ]
       },
       {
-        "_id": {
-          "$numberInt": "4"
-        },
-        "truncatedValue": {
-          "$numberDouble": "-45.3"
-        }
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "truncatedValue",
+            "value": {
+              "exact": {
+                "$numberDouble": "-45.3"
+              }
+            }
+          }
+        ]
       }
     ]
   },

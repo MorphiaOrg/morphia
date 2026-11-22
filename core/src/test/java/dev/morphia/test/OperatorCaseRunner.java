@@ -18,10 +18,14 @@ import dev.morphia.test.util.ActionTestOptions;
 
 import org.bson.BsonArray;
 import org.bson.BsonDocument;
+import org.bson.BsonObjectId;
+import org.bson.BsonString;
 import org.bson.BsonValue;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.bson.json.JsonMode;
 import org.bson.json.JsonWriterSettings;
+import org.bson.types.ObjectId;
 
 import static dev.morphia.aggregation.AggregationOptions.aggregationOptions;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -37,11 +41,14 @@ import static org.junit.jupiter.api.Assertions.fail;
  * prove ({@link PrintedResults}).</li>
  * </ol>
  * Serialization is compared after the scenario's declared form rules ({@link FormRules}) are applied to both sides.
- * This runner supports aggregations with exact or printed expected results and no ignored fields, tolerances, datasets
- * or indexes; a scenario that needs any of them fails rather than being checked loosely.
+ * Fields named in {@code comparison.ignore} are removed from both results before the published comparison only, a
+ * {@code requirements.minimumServer} skips the case on an older server, and a check the scenario lists under
+ * {@code skipped}, with its reason, is not run. This runner supports aggregations with exact or printed expected results
+ * and no tolerances, datasets or indexes; a scenario that needs any of them fails rather than being checked loosely.
  */
 public class OperatorCaseRunner {
-    private static final JsonWriterSettings JSON = JsonWriterSettings.builder().indent(true).build();
+    // Canonical extended JSON, so a failure shows BSON types: relaxed JSON prints an Int64 like an Int32.
+    private static final JsonWriterSettings JSON = JsonWriterSettings.builder().outputMode(JsonMode.EXTENDED).indent(true).build();
 
     private final TestBase test;
 
@@ -56,16 +63,28 @@ public class OperatorCaseRunner {
     public void aggregate(OperatorCase operatorCase, ActionTestOptions options,
             Function<Aggregation<Document>, Aggregation<Document>> dsl) {
         BsonDocument scenario = operatorCase.scenario();
-        boolean ordered = scenario.getDocument("comparison").getString("order").getValue().equals("ORDERED");
+        BsonDocument comparison = scenario.getDocument("comparison");
+        BsonDocument skipped = scenario.getDocument("skipped", new BsonDocument());
+        BsonValue minimumServer = scenario.getDocument("requirements").get("minimumServer");
         List<String> differences = new ArrayList<>();
-        if (options.orderMatters() != ordered) {
+        if (options.orderMatters() != comparison.getString("order").getValue().equals("ORDERED")) {
             differences.add("orderMatters");
         }
-        if (options.removeIds() || options.skipActionCheck() || options.skipDataCheck() || options.skipIndex()) {
-            differences.add("removeIds/skip options");
+        if (options.removeIds() != comparison.getArray("ignore").contains(new BsonString("_id"))) {
+            differences.add("removeIds");
         }
-        if (!options.serverVersion().equals("0.0.0") || !options.minDriver().equals("0.0.0")) {
-            differences.add("version requirements");
+        if (options.skipActionCheck() != skipped.containsKey("serialization")) {
+            differences.add("skipActionCheck");
+        }
+        if (options.skipDataCheck() != skipped.containsKey("results")) {
+            differences.add("skipDataCheck");
+        }
+        if (!options.serverVersion().equals(minimumServer.isNull() ? "0.0.0" : minimumServer.asString().getValue())) {
+            differences.add("serverVersion");
+        }
+        // skipDataCheck(true) also sets skipIndex; only an explicit skipIndex is unmapped.
+        if (options.skipIndex() && !options.skipDataCheck() || !options.minDriver().equals("0.0.0")) {
+            differences.add("skipIndex/minDriver");
         }
         if (!differences.isEmpty()) {
             fail(operatorCase.resource() + ": the test's options differ from its scenario: " + differences);
@@ -82,13 +101,23 @@ public class OperatorCaseRunner {
         }
         String collection = action.getString("collection").getValue();
         boolean ordered = scenario.getDocument("comparison").getString("order").getValue().equals("ORDERED");
+        BsonValue minimumServer = scenario.getDocument("requirements").get("minimumServer");
+        if (!minimumServer.isNull()) {
+            test.checkMinServerVersion(minimumServer.asString().getValue());
+        }
+        BsonDocument skipped = scenario.getDocument("skipped", new BsonDocument());
+        Set<String> ignore = new TreeSet<>();
+        scenario.getDocument("comparison").getArray("ignore").forEach(field -> ignore.add(field.asString().getValue()));
 
         MongoDatabase morphia = test.getDatabase();
         MongoDatabase reference = test.getDatabase(morphia.getName() + "_reference");
         reference.drop();
         try {
-            seed(morphia, scenario.getDocument("collections"));
-            seed(reference, scenario.getDocument("collections"));
+            // Ids the documented data leaves to the server are assigned once, so both databases hold the same
+            // documents and the parity checks stay strict.
+            BsonDocument seeded = withIds(scenario.getDocument("collections"));
+            seed(morphia, seeded);
+            seed(reference, seeded);
 
             Aggregation<Document> aggregation = dsl.apply(test.getDs().aggregate(aggregationOptions().collection(collection)));
             BsonArray emitted = bson(((AggregationImpl<Document>) aggregation).pipeline());
@@ -97,10 +126,15 @@ public class OperatorCaseRunner {
             Set<Rule> rules = EnumSet.noneOf(Rule.class);
             scenario.getDocument("comparison").getArray("rules")
                     .forEach(rule -> rules.add(Rule.valueOf(rule.asString().getValue())));
-            if (!StrictBson.equal(new BsonArray(FormRules.canonical(documented.getValues(), Shape.PIPELINE, rules)),
-                    new BsonArray(FormRules.canonical(emitted.getValues(), Shape.PIPELINE, rules)))) {
+            if (!skipped.containsKey("serialization")
+                    && !StrictBson.equal(new BsonArray(FormRules.canonical(documented.getValues(), Shape.PIPELINE, rules)),
+                            new BsonArray(FormRules.canonical(emitted.getValues(), Shape.PIPELINE, rules)))) {
                 fail(operatorCase.resource() + ": serialization differs\ndocumented: " + json(documented) + "\nmorphia:    "
                         + json(emitted));
+            }
+            // The legacy test did not run the action, so neither does its case; the scenario names why.
+            if (skipped.containsKey("results")) {
+                return;
             }
 
             List<BsonValue> referenceResults = new ArrayList<>(reference.getCollection(collection, BsonDocument.class)
@@ -123,9 +157,12 @@ public class OperatorCaseRunner {
                 }
             }
 
+            // Ignored fields (ids the page shows but the run generates) leave only the published comparison.
+            referenceResults = without(ignore, referenceResults);
+            morphiaResults = without(ignore, morphiaResults);
             BsonDocument expected = scenario.getDocument("expected");
             if (expected.containsKey("documents")) {
-                List<BsonValue> published = expected.getArray("documents").getValues();
+                List<BsonValue> published = without(ignore, expected.getArray("documents").getValues());
                 if (!StrictBson.equal(published, morphiaResults, ordered)) {
                     fail(operatorCase.resource() + ": results differ from the documented results\ndocumented: "
                             + json(published) + "\nmorphia:    " + json(morphiaResults));
@@ -135,7 +172,10 @@ public class OperatorCaseRunner {
                             + json(published) + "\nreference:  " + json(referenceResults));
                 }
             } else if (expected.containsKey("printed")) {
-                List<BsonValue> printed = expected.getArray("printed").getValues();
+                List<BsonValue> printed = new ArrayList<>();
+                for (BsonValue constraint : expected.getArray("printed")) {
+                    printed.add(PrintedResults.without(ignore, constraint));
+                }
                 String difference = PrintedResults.difference(printed, morphiaResults, ordered);
                 if (difference != null) {
                     fail(operatorCase.resource() + ": results differ from the printed results at " + difference
@@ -166,8 +206,20 @@ public class OperatorCaseRunner {
                 unsupported.add("rule " + rule.asString().getValue());
             }
         }
-        if (!comparison.getArray("ignore").isEmpty()) {
-            unsupported.add("ignored fields");
+        for (BsonValue field : comparison.getArray("ignore")) {
+            if (!field.isString() || field.asString().getValue().contains(".")) {
+                unsupported.add("ignored field " + field);
+            }
+        }
+        Set<String> keys = Set.of("schemaVersion", "name", "title", "context", "source", "dataset", "collections", "indexes",
+                "action", "expected", "comparison", "requirements", "skipped");
+        if (!keys.containsAll(scenario.keySet())) {
+            unsupported.add("scenario fields " + scenario.keySet());
+        }
+        BsonDocument skipped = scenario.getDocument("skipped", new BsonDocument());
+        if (!Set.of("serialization", "results").containsAll(skipped.keySet())
+                || skipped.values().stream().anyMatch(reason -> !reason.isString() || reason.asString().getValue().isBlank())) {
+            unsupported.add("skipped " + skipped);
         }
         if (!comparison.get("tolerance").isNull()) {
             unsupported.add("tolerance");
@@ -177,8 +229,8 @@ public class OperatorCaseRunner {
             unsupported.add("expected " + expected.keySet());
         }
         BsonDocument requirements = scenario.getDocument("requirements");
-        if (!requirements.get("minimumServer").isNull()) {
-            unsupported.add("server requirements");
+        if (!requirements.get("minimumServer").isNull() && !requirements.get("minimumServer").isString()) {
+            unsupported.add("minimum server " + requirements.get("minimumServer"));
         }
         if (!requirements.getString("topology").getValue().equals("STANDALONE")) {
             unsupported.add("topology " + requirements.getString("topology").getValue());
@@ -230,6 +282,26 @@ public class OperatorCaseRunner {
         });
     }
 
+    /** {@code collections} with an {@code _id} given to each document that has none. */
+    private static BsonDocument withIds(BsonDocument collections) {
+        BsonDocument result = new BsonDocument();
+        collections.forEach((name, rows) -> {
+            BsonArray copy = new BsonArray();
+            for (BsonValue row : rows.asArray()) {
+                BsonDocument document = row.asDocument();
+                if (document.containsKey("_id")) {
+                    copy.add(document);
+                } else {
+                    BsonDocument identified = new BsonDocument("_id", new BsonObjectId(new ObjectId()));
+                    identified.putAll(document);
+                    copy.add(identified);
+                }
+            }
+            result.put(name, copy);
+        });
+        return result;
+    }
+
     private static List<BsonValue> contents(MongoDatabase database, String name) {
         return new ArrayList<>(database.getCollection(name, BsonDocument.class).find().into(new ArrayList<>()));
     }
@@ -237,6 +309,21 @@ public class OperatorCaseRunner {
     private BsonArray bson(List<Document> documents) {
         CodecRegistry registry = test.getDs().getCodecRegistry();
         return new Document("v", documents).toBsonDocument(BsonDocument.class, registry).getArray("v");
+    }
+
+    /** {@code values} with the top-level {@code fields} removed from each document. */
+    private static List<BsonValue> without(Set<String> fields, List<? extends BsonValue> values) {
+        List<BsonValue> result = new ArrayList<>();
+        for (BsonValue value : values) {
+            if (value instanceof BsonDocument document && !fields.isEmpty()) {
+                BsonDocument copy = document.clone();
+                fields.forEach(copy::remove);
+                result.add(copy);
+            } else {
+                result.add(value);
+            }
+        }
+        return result;
     }
 
     private static String json(List<? extends BsonValue> values) {

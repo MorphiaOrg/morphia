@@ -1,0 +1,109 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/isoWeek/isoWeekExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "6560e617067dff1934063555ec97e57cad362fc8",
+    "path": "source/reference/operator/aggregation/isoWeek.txt",
+    "blob": "a61a59dbaeb1dd44a8d53df03b9e8b330dac1b92"
+  },
+  "dataset": null,
+  "collections": {
+    "deliveries": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1161648000000"
+          }
+        },
+        "city": "Boston"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1313625600000"
+          }
+        },
+        "city": "Detroit"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "deliveries",
+    "pipeline": [
+      {
+        "$project": {
+          "_id": {
+            "$numberInt": "0"
+          },
+          "city": "$city",
+          "weekNumber": {
+            "$isoWeek": "$date"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "city",
+            "value": {
+              "text": "Boston"
+            }
+          },
+          {
+            "name": "weekNumber",
+            "value": {
+              "whole": {
+                "$numberInt": "43"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "city",
+            "value": {
+              "text": "Detroit"
+            }
+          },
+          {
+            "name": "weekNumber",
+            "value": {
+              "whole": {
+                "$numberInt": "33"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

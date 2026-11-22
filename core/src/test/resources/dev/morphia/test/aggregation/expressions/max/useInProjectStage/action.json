@@ -1,1 +1,0 @@
-{ $project: { quizMax: { $max: "$quizzes"}, labMax: { $max: "$labs" }, examMax: { $max: [ "$final", "$midterm" ] } } }

@@ -1,0 +1,151 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/ifNull/singleInputExpression",
+  "title": "Single Input Expression",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "9005b68f8945b96e78e9f10adcec016616681cfb",
+    "path": "source/reference/operator/aggregation/ifNull.txt",
+    "blob": "d4b10d2e25c8c66021a30740fbca6304dbbe5066"
+  },
+  "dataset": null,
+  "collections": {
+    "inventory": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "buggy",
+        "description": "toy car",
+        "quantity": {
+          "$numberInt": "300"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "bicycle",
+        "description": null,
+        "quantity": {
+          "$numberInt": "200"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "flag"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "inventory",
+    "pipeline": [
+      {
+        "$project": {
+          "item": {
+            "$numberInt": "1"
+          },
+          "description": {
+            "$ifNull": [
+              "$description",
+              "Unspecified"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "buggy"
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "toy car"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "bicycle"
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "Unspecified"
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "flag"
+            }
+          },
+          {
+            "name": "description",
+            "value": {
+              "text": "Unspecified"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

@@ -43,11 +43,41 @@ data class MigratedFixture(
     val kind: String = MIGRATED,
     /** The legacy method's body text, whose SHA-256 is [legacyBodySha256]. */
     val legacyBody: String = "",
+    /** The legacy test's options other than `orderMatters`, which the scenario maps. */
+    val options: List<OptionCall> = emptyList(),
 )
 
 data class FixtureMigrationLedger(
     val schemaVersion: Int = 1,
     val migrations: List<MigratedFixture> = emptyList(),
+)
+
+/** The check a legacy case failed when the cutover tried to move it onto the runner. */
+enum class CutoverCheck {
+    /** The documented source could not become a scenario. */
+    SOURCE,
+    /** Morphia emits a different command than the page documents. */
+    SERIALIZATION,
+    /** Morphia's operation and the documented one leave different results or collections. */
+    BEHAVIOR,
+    /** The results differ from what the page prints. */
+    PUBLISHED,
+}
+
+/**
+ * A legacy case the cutover tried and left on the legacy path (`LEGACY_ONLY`): its strict checks
+ * fail, so it is not counted as supported until it converts. [detail] is the first difference.
+ */
+data class LegacyOnly(val fixture: String, val check: CutoverCheck, val detail: String)
+
+/**
+ * The cutover's outcome: the [contexts] (fixture path prefixes) it covers and its legacy-only
+ * cases.
+ */
+data class CutoverReport(
+    val schemaVersion: Int = 1,
+    val contexts: List<String> = emptyList(),
+    val legacyOnly: List<LegacyOnly> = emptyList(),
 )
 
 const val MIGRATED = "MIGRATED"
@@ -72,6 +102,13 @@ object FixtureMigration {
         }
     }
 
+    /**
+     * Legacy options a converted case's scenario maps: `removeIds` ignores `_id` in every
+     * comparison, `serverVersion` becomes the minimum server, and `skipActionCheck` and
+     * `skipDataCheck` become skipped checks that name their reason.
+     */
+    val mappedOptions = setOf("removeIds", "serverVersion", "skipActionCheck", "skipDataCheck")
+
     /** Whether a legacy body compares results in order: `orderMatters` defaults to true. */
     fun ordered(body: String): Boolean = !unordered.containsMatchIn(body)
 
@@ -79,9 +116,27 @@ object FixtureMigration {
 
     /**
      * The scenario a runner executes for [override]: its documented data, action and results.
-     * [ordered] is whether the legacy test compared results in order.
+     * [ordered] is whether the legacy test compared results in order, and [options] are its other
+     * options, each one of [mappedOptions].
      */
-    fun scenario(override: FormOverride, ordered: Boolean): String {
+    fun scenario(
+        override: FormOverride,
+        ordered: Boolean,
+        options: List<OptionCall> = emptyList(),
+    ): String {
+        require(options.all { it.name in mappedOptions && it.name != "orderMatters" }) {
+            "${override.fixture}: options ${options.map { it.name }} are not mapped"
+        }
+        fun option(name: String) = options.singleOrNull { it.name == name }?.argument
+        val skipped = BsonDocument()
+        if (option("skipActionCheck") == "true") {
+            skipped["serialization"] =
+                BsonString("the legacy test skipped its action check (skipActionCheck)")
+        }
+        if (option("skipDataCheck") == "true") {
+            skipped["results"] =
+                BsonString("the legacy test skipped its data check (skipDataCheck)")
+        }
         val documented = FormMigration.documented(override)
         require(documented.shape == ActionShape.PIPELINE) {
             "${override.fixture}: only aggregations are supported"
@@ -117,29 +172,39 @@ object FixtureMigration {
                 )
                 .append(
                     "expected",
-                    documented.expected?.let { BsonDocument("documents", BsonArray(it)) }
-                        ?: documented.printed?.let { printed ->
-                            BsonDocument(
-                                "printed",
-                                BsonArray(printed.map { PublishedEncoding.encode(it) }),
-                            )
-                        }
-                        ?: BsonDocument("none", BsonString("the page publishes no result")),
+                    documented.printed?.let { printed ->
+                        BsonDocument(
+                            "printed",
+                            BsonArray(printed.map { PublishedEncoding.encode(it) }),
+                        )
+                    } ?: BsonDocument("none", BsonString("the page publishes no result")),
                 )
                 .append(
                     "comparison",
                     BsonDocument()
                         .append("order", BsonString(if (ordered) "ORDERED" else "UNORDERED"))
                         .append("rules", BsonArray(override.rules.map { BsonString(it.name) }))
-                        .append("ignore", BsonArray())
+                        .append(
+                            "ignore",
+                            BsonArray(
+                                listOfNotNull(
+                                    BsonString("_id").takeIf { option("removeIds") == "true" }
+                                )
+                            ),
+                        )
                         .append("tolerance", BsonNull.VALUE),
                 )
                 .append(
                     "requirements",
                     BsonDocument()
-                        .append("minimumServer", BsonNull.VALUE)
+                        .append(
+                            "minimumServer",
+                            option("serverVersion")?.let { BsonString(it) } ?: BsonNull.VALUE,
+                        )
                         .append("topology", BsonString("STANDALONE")),
                 )
+        // Only a case with a skipped check carries the key, so the reason is never empty.
+        if (!skipped.isEmpty()) scenario["skipped"] = skipped
         return scenario.toJson(settings) + "\n"
     }
 
@@ -177,12 +242,11 @@ object FixtureMigration {
         val example =
             inventory.examples.singleOrNull { it.fixture == fixture }
                 ?: throw IllegalArgumentException("$fixture is not in the repair inventory")
-        require(example.helpers == listOf("testPipeline")) {
-            "$fixture: only testPipeline cases can be converted"
-        }
-        require(example.options.all { it.name == "orderMatters" }) {
-            "$fixture: options ${example.options.map { it.name }} are not mapped yet"
-        }
+        val override =
+            (report.overrides + references?.references.orEmpty()).singleOrNull {
+                it.fixture == fixture
+            } ?: throw IllegalArgumentException("$fixture has no accepted override or reference")
+        convertible(override, example)?.let { throw IllegalArgumentException("$fixture: $it") }
         return move(
             repository,
             report,
@@ -246,7 +310,11 @@ object FixtureMigration {
         ) {
             "$type#$name: its body and the inventory disagree on result order"
         }
-        val text = scenario(override, ordered)
+        val options = example.options.filter { it.name != "orderMatters" }
+        options.forEach {
+            require(called(body, it)) { "$type#$name: its body does not call ${it.name}" }
+        }
+        val text = scenario(override, ordered, options)
         val target = root.resolve(scenarioPath(fixture, kind))
         require(!target.exists()) { "$target already exists" }
         present.keys.forEach { Files.delete(folder.resolve(it)) }
@@ -272,7 +340,102 @@ object FixtureMigration {
             test,
             kind,
             body,
+            options,
         )
+    }
+
+    /**
+     * Why the case of [override] cannot be converted yet, or null when the adapter supports it: a
+     * `testPipeline` case with mapped options and a single-collection documented source without
+     * retypes, corrections or alternative commands.
+     */
+    fun convertible(override: FormOverride, example: CuratedExample): String? =
+        when {
+            example.helpers != listOf("testPipeline") -> "only testPipeline cases can be converted"
+            !example.options.all { it.name == "orderMatters" || it.name in mappedOptions } ->
+                "options ${example.options.map { it.name }} are not mapped yet"
+            override.retypes.isNotEmpty() || override.corrections.isNotEmpty() ->
+                "retypes and corrections are not supported yet"
+            override.collections.isNotEmpty() -> "extra collections are not supported yet"
+            FormRule.ALTERNATIVE_COMMANDS in override.rules -> "alternative commands"
+            else -> null
+        }
+
+    /**
+     * Checks the cutover's legacy-only cases: each was eligible (it has an override in [report] or
+     * a reference in [references]), is listed once, did not move, and keeps its legacy fixture. In
+     * each of the cutover's contexts, every [convertible] case of [inventory] moved or is listed,
+     * so a case the batch skipped cannot go unnoticed.
+     */
+    fun verifyCutover(
+        repository: Path,
+        cutover: CutoverReport,
+        ledger: FixtureMigrationLedger,
+        report: FormMigrationReport,
+        references: LegacyReferenceReport,
+        inventory: CuratedRepairReport,
+    ) {
+        require(cutover.schemaVersion == 1) { "Unsupported cutover ${cutover.schemaVersion}" }
+        val root = repository.toRealPath()
+        val moved = ledger.migrations.map { it.fixture }.toSet()
+        val eligible =
+            (report.overrides.map { it.fixture } + references.references.map { it.fixture }).toSet()
+        val problems = mutableListOf<String>()
+        cutover.legacyOnly
+            .groupingBy { it.fixture }
+            .eachCount()
+            .filterValues { it > 1 }
+            .keys
+            .forEach { problems += "Listed more than once: $it" }
+        cutover.legacyOnly.forEach {
+            val folder = root.resolve(resources + it.fixture)
+            when {
+                it.fixture in moved -> problems += "${it.fixture}: legacy-only, but it moved"
+                it.fixture !in eligible -> problems += "${it.fixture}: has no override or reference"
+                it.detail.isBlank() -> problems += "${it.fixture}: no failing check recorded"
+                !folder.resolve("action.json").isRegularFile() ||
+                    folder.resolve("scenario.json").exists() ->
+                    problems += "${it.fixture}: its legacy fixture is not intact"
+            }
+        }
+        val listed = cutover.legacyOnly.map { it.fixture }.toSet()
+        val examples = inventory.examples.associateBy { it.fixture }
+        (report.overrides + references.references)
+            .filter { override -> cutover.contexts.any { override.fixture.startsWith("$it/") } }
+            .filter { override ->
+                examples[override.fixture]?.let { convertible(override, it) == null } ?: false
+            }
+            .map { it.fixture }
+            .filter { it !in moved && it !in listed }
+            .sorted()
+            .forEach { problems += "$it: convertible, but neither moved nor listed as legacy-only" }
+        require(problems.isEmpty()) { problems.joinToString("\n") }
+    }
+
+    /**
+     * [ledger] with every scenario rewritten from its override, after a change to the scenario
+     * format: each file is regenerated and its digest refreshed. Nothing else in an entry changes.
+     */
+    fun rewrite(repository: Path, ledger: FixtureMigrationLedger): FixtureMigrationLedger {
+        val root = repository.toRealPath()
+        return ledger.copy(
+            migrations =
+                ledger.migrations.map { migrated ->
+                    val text = scenario(migrated.override, migrated.ordered, migrated.options)
+                    Files.writeString(root.resolve(migrated.scenario), text)
+                    migrated.copy(scenarioSha256 = sha256(text.toByteArray()))
+                }
+        )
+    }
+
+    /**
+     * Whether [body] calls [option] with its recorded argument; the inventory records a string
+     * literal's value, so the argument may be quoted.
+     */
+    private fun called(body: String, option: OptionCall): Boolean {
+        val argument = Regex.escape(option.argument)
+        return Regex("\\.${option.name}\\(\\s*(?:$argument|\"$argument\")\\s*\\)")
+            .containsMatchIn(body)
     }
 
     /**
@@ -392,6 +555,8 @@ object FixtureMigration {
                 problems += "${migrated.fixture}: legacy body text does not match its digest"
             } else if (ordered(migrated.legacyBody) != migrated.ordered) {
                 problems += "${migrated.fixture}: result order differs from the legacy body"
+            } else if (migrated.options.any { !called(migrated.legacyBody, it) }) {
+                problems += "${migrated.fixture}: options differ from the legacy body"
             }
             val folder = root.resolve(resources + migrated.fixture)
             val example = inventory.examples.singleOrNull { it.fixture == migrated.fixture }
@@ -413,6 +578,12 @@ object FixtureMigration {
                             }
                     if (left != setOf("scenario.json")) {
                         problems += "${migrated.fixture}: fixture directory holds $left"
+                    }
+                    if (
+                        example != null &&
+                            example.options.filter { it.name != "orderMatters" } != migrated.options
+                    ) {
+                        problems += "${migrated.fixture}: options differ from the inventory"
                     }
                     val owner = example?.let { "${it.type}#${it.method}" }
                     if (
@@ -441,7 +612,7 @@ object FixtureMigration {
                 if (sha256(text.toByteArray()) != migrated.scenarioSha256) {
                     problems += "${migrated.fixture}: scenario changed since the migration"
                 }
-                if (text != scenario(migrated.override, migrated.ordered)) {
+                if (text != scenario(migrated.override, migrated.ordered, migrated.options)) {
                     problems +=
                         "${migrated.fixture}: scenario is not its override's documented source"
                 }

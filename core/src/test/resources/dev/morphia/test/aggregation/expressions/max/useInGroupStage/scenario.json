@@ -1,0 +1,219 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/max/useInGroupStage",
+  "title": "Use in ``$group`` Stage",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "d84aad6501cde0bf6dcb41c1ce9bddbabc8e3acb",
+    "path": "source/reference/operator/aggregation/max.txt",
+    "blob": "5d1a75ffee6c641b70fe3ec8a562b543ab2c2b20"
+  },
+  "dataset": null,
+  "collections": {
+    "sales": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "abc",
+        "price": {
+          "$numberInt": "10"
+        },
+        "quantity": {
+          "$numberInt": "2"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1388563200000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "jkl",
+        "price": {
+          "$numberInt": "20"
+        },
+        "quantity": {
+          "$numberInt": "1"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1391418000000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "xyz",
+        "price": {
+          "$numberInt": "5"
+        },
+        "quantity": {
+          "$numberInt": "5"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1391418300000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "item": "abc",
+        "price": {
+          "$numberInt": "10"
+        },
+        "quantity": {
+          "$numberInt": "10"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1392451200000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "5"
+        },
+        "item": "xyz",
+        "price": {
+          "$numberInt": "5"
+        },
+        "quantity": {
+          "$numberInt": "10"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1392455100000"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "sales",
+    "pipeline": [
+      {
+        "$group": {
+          "_id": "$item",
+          "maxTotalAmount": {
+            "$max": {
+              "$multiply": [
+                "$price",
+                "$quantity"
+              ]
+            }
+          },
+          "maxQuantity": {
+            "$max": "$quantity"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "xyz"
+            }
+          },
+          {
+            "name": "maxTotalAmount",
+            "value": {
+              "whole": {
+                "$numberInt": "50"
+              }
+            }
+          },
+          {
+            "name": "maxQuantity",
+            "value": {
+              "whole": {
+                "$numberInt": "10"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "jkl"
+            }
+          },
+          {
+            "name": "maxTotalAmount",
+            "value": {
+              "whole": {
+                "$numberInt": "20"
+              }
+            }
+          },
+          {
+            "name": "maxQuantity",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "text": "abc"
+            }
+          },
+          {
+            "name": "maxTotalAmount",
+            "value": {
+              "whole": {
+                "$numberInt": "100"
+              }
+            }
+          },
+          {
+            "name": "maxQuantity",
+            "value": {
+              "whole": {
+                "$numberInt": "10"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

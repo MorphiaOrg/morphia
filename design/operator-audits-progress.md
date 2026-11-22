@@ -2190,3 +2190,46 @@ no product-documentation changes. Legacy operator AsciiDoc tables are intentiona
     pages;
   - `FixtureMigration.verify` reports a fixture that is both in the review and referenced.
 - Review round 2: not completed; the reviewer hit its session limit. To be resent on the published PR.
+
+- PR #4547 (branch audits-legacy-references, base #4546) published.
+
+## Step 5 slice 5b: expressions cutover (2026-11-21)
+
+- Branch audits-cutover-expressions from #4547. The adapter maps `removeIds` (`comparison.ignore`,
+  applied to every result and collection comparison), `serverVersion`
+  (`requirements.minimumServer`), and `skipActionCheck`/`skipDataCheck` (a `skipped` block naming
+  `serialization`/`results` with the reason). `skipDataCheck(true)` also sets `skipIndex`, so only an
+  explicit `skipIndex` stays unmapped. The ledger records the options; `verify` re-derives them from
+  the legacy body and the inventory. `convert` takes many fixtures and reports the ones it refuses.
+- Documented results are always printed constraints now. The first pass showed why: read as
+  JSON, `ceilingValue: 10` claimed an Int32 where the server returns a Double, which mongosh prints
+  the same way. `DocumentedScenario.expected` is gone; `rescenario` rewrote the five earlier
+  scenarios.
+- Runner failures print canonical extended JSON; relaxed JSON hid the Int64 differences below.
+- 205 eligible expressions cases were tried under both mappers: 160 convert. 45 stay legacy-only
+  (`cutover.json`), the same set under both mappers:
+  - 35 SERIALIZATION: Morphia emits sort directions as Int64 where pages have Int32 (32, in
+    `$setWindowFields`, `$top`/`$bottom`/`$topN`/`$bottomN` and `$sortArray`), and `$dateTrunc`'s
+    `binSize` likewise; plus 2 `$topN`/`$bottomN` with `sortBy` before `n`;
+  - 9 PUBLISHED: pages whose field order differs from the server's (6), set-valued arrays
+    printed in another order (`$addToSet`, `$setUnion`), and `$isoWeekYear` returning a Long;
+  - 1 SOURCE: `tan/tangentOfValueInRadians`, whose results the shell normalizer cannot read.
+- The legacy comparator ignores number types and key order, which is how these passed until now.
+- Totals: form report 86 overrides; ledger 165 cases.
+- Review round 1 (also round 2 for #4547, cut off earlier):
+  - #4547 medium: a moved reference was only blob-checked by `recheck-references`. Its example is
+    now re-extracted from the page by its recorded name and must yield the recorded blocks; the
+    recheck passes for all 239, 113 of them moved. Landed here, since #4547 was published.
+  - `ignore` masked the parity checks: it now applies only to the published comparison. Ids the
+    documented data leaves to the server are assigned once before seeding, so both databases hold
+    the same documents (before, this relied on the driver writing ids into the shared instances).
+  - `verifyCutover` checked only the listed cases: `cutover.json` names its `contexts`, and every
+    case `convertible` (now shared with `convert`) in them must have moved or be listed. Retrying
+    legacy-only cases is a documented manual step (convert, test, drop the passing ones).
+  - A batch failure that is not a check failure stopped `convert` before writing the ledger: the
+    ledger is now written in a `finally`.
+  - Low, fails closed: option arguments passed as constants or variables are not recognized.
+- Review round 2: the fixes hold. Two lows, deferred: an I/O failure in the middle of `move`'s
+  file operations can still leave that one fixture half-converted (check failures cannot, and
+  earlier conversions are recorded); and cases `convertible` excludes are not listed with their
+  reason yet. The later cutover slices widen `convertible`, and the coverage report will list them.

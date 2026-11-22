@@ -1,0 +1,156 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/in/inExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "6560e617067dff1934063555ec97e57cad362fc8",
+    "path": "source/reference/operator/aggregation/in.txt",
+    "blob": "1b828a33acb70aa8891c9ed38469e7fd9bbe44c8"
+  },
+  "dataset": null,
+  "collections": {
+    "fruit": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "location": "24th Street",
+        "in_stock": [
+          "apples",
+          "oranges",
+          "bananas"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "location": "36th Street",
+        "in_stock": [
+          "bananas",
+          "pears",
+          "grapes"
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "location": "82nd Street",
+        "in_stock": [
+          "cantaloupes",
+          "watermelons",
+          "apples"
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "fruit",
+    "pipeline": [
+      {
+        "$project": {
+          "store location": "$location",
+          "has bananas": {
+            "$in": [
+              "bananas",
+              "$in_stock"
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "store location",
+            "value": {
+              "text": "24th Street"
+            }
+          },
+          {
+            "name": "has bananas",
+            "value": {
+              "exact": true
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "store location",
+            "value": {
+              "text": "36th Street"
+            }
+          },
+          {
+            "name": "has bananas",
+            "value": {
+              "exact": true
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "store location",
+            "value": {
+              "text": "82nd Street"
+            }
+          },
+          {
+            "name": "has bananas",
+            "value": {
+              "exact": false
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

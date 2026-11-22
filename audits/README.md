@@ -628,6 +628,17 @@ rechecks its recorded source text against the tree without the pages, and
 `recheck-references <root> <pages>` re-derives every pin and gap from the fetched pages. `convert`
 reads a fixture's reference when it has no override.
 
+`convert` takes several fixtures and maps the legacy options: `removeIds` ignores `_id` in every
+comparison, `serverVersion` becomes the minimum server, and `skipActionCheck`/`skipDataCheck` become
+`skipped` checks with their reason. A fixture it cannot convert is reported and left in place. A case
+that converts but fails its strict checks is reverted and recorded in `audits/catalog/cutover.json`
+(`LEGACY_ONLY`, with the failing check). An audits test keeps that list consistent with the ledger
+and requires every convertible case in the cutover's `contexts` to have moved or be listed. To retry
+legacy-only cases after a Morphia fix, convert them again, run their tests under both mappers, and
+remove from `cutover.json` the ones that now pass.
+`rescenario <root>` rewrites every ledger scenario from its override after a scenario-format
+change, refreshing the digests.
+
 `manifest <root>` rewrites `core/src/test/resources/dev/morphia/test/generated/manifest.json` from
 the migration ledger: every case with its scenario and test, and every owned file with its digest.
 Core's `GeneratedCasesTest` checks the namespace against it in both directions, and an audits test

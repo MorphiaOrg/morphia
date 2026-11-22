@@ -1,37 +1,5 @@
 {
   "declarations" : [ {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/acosh/inverseHyperbolicCosineInDegrees",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "documentation has the radians value instead of the degrees",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "287395a4d1c9ea75403d43865315f018cabcf2f8",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "d89528cf7f5fc214a131ba248285bff6a503b9ec",
-      "path" : "source/reference/operator/aggregation/acosh.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/asin/inverseSineOfValueInDegrees",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "documentation has the radians value instead of the degrees",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "bf822b1fa3e5f9eaaf466d574c9660149d82d530",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "8562c94b38de3e8c83552bcd41558548e5220eef",
-      "path" : "source/reference/operator/aggregation/asin.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
     "corrections" : [ {
       "curated" : "{\"v\": {\"$numberDecimal\": \"0.8813735870195430252326093249797923\"}}",
       "documented" : "{\"v\": {\"$numberDecimal\": \"1.818446459232066823483698963560709\"}}",
@@ -51,22 +19,6 @@
     "source" : {
       "commit" : "d89528cf7f5fc214a131ba248285bff6a503b9ec",
       "path" : "source/reference/operator/aggregation/asinh.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/atan2/inverseTangentOfValueInDegrees",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "documentation has the radians value instead of the degrees",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "f2a780facb1d1dcba3801e618cd54fa66e45a99a",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "3c5205896b0ea712d635793889590be37fc2513c",
-      "path" : "source/reference/operator/aggregation/atan2.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -189,44 +141,6 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/cmp/cmpExpressionOperator",
-    "includes" : [ {
-      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
-      "path" : "source/includes/extracts-examples-eval.yaml"
-    }, {
-      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
-      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
-    } ],
-    "justification" : null,
-    "lock" : "reorder pipeline",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "e3fa7926b676ae107cb77e843f9ce50b2289e008",
-    "retypes" : [ ],
-    "rules" : [ "PROJECT_ID_FIRST" ],
-    "source" : {
-      "commit" : "b89791d6434ba071253241c8b38dd683d332ba69",
-      "path" : "source/reference/operator/aggregation/cmp.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/cosh/hyperbolicCosineInDegrees",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "the expected angle is wrong and the cosh is wrong",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "c65f094653c41c8ad33d74beee2674c24373c8d7",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "d89528cf7f5fc214a131ba248285bff6a503b9ec",
-      "path" : "source/reference/operator/aggregation/cosh.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
     "corrections" : [ {
       "curated" : "{\"v\": \"example_test\"}",
       "documented" : "{\"v\": \"shipping\"}",
@@ -280,56 +194,6 @@
     "source" : {
       "commit" : "10a40551da600ac1b21ac6e45d7348a8c38c1a97",
       "path" : "source/reference/operator/aggregation/dateFromString.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/dateToParts/dateToPartsExpressionOperator",
-    "includes" : [ {
-      "blob" : "6a0d8df9a641e1e37b9f1f4bcc35eeea213c4963",
-      "path" : "source/includes/fact-olson-tz-behavior.rst"
-    } ],
-    "justification" : null,
-    "lock" : "pipeline was trunc'd in the parser\n",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "00f720ba7b9e0eb461559ced0fa6ae7d5d308337",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "6560e617067dff1934063555ec97e57cad362fc8",
-      "path" : "source/reference/operator/aggregation/dateToParts.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/dateToString/dateToStringExpressionOperator",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    }, {
-      "blob" : "f8cea074d104c6d7540688c4a001bb12aef64c1a",
-      "path" : "source/includes/extracts-date-format-specifiers.yaml"
-    } ],
-    "justification" : null,
-    "lock" : "rearranged arguments to match morphia's",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "3c53000302392ff1f16165d9e7c932f102f719f0",
-    "retypes" : [ ],
-    "rules" : [ "NAMED_ARGUMENTS" ],
-    "source" : {
-      "commit" : "b2d4041710ee0667261f8f5e2e40390265df85fd",
-      "path" : "source/reference/operator/aggregation/dateToString.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -404,222 +268,6 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/eq/eqExpressionOperator",
-    "includes" : [ {
-      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
-      "path" : "source/includes/extracts-examples-eval.yaml"
-    }, {
-      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
-      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
-    } ],
-    "justification" : null,
-    "lock" : "reorder pipeline",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "7bf1ae5a7fdb3f2457dfa5c70f474649d3343ccd",
-    "retypes" : [ ],
-    "rules" : [ "PROJECT_ID_FIRST" ],
-    "source" : {
-      "commit" : "b89791d6434ba071253241c8b38dd683d332ba69",
-      "path" : "source/reference/operator/aggregation/eq.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/exp/expExpressionOperator",
-    "includes" : [ {
-      "blob" : "bbf5c44a10e62dc8903402b5aaf9baf1323ef458",
-      "path" : "source/includes/extracts-agg-expression-null.yaml"
-    }, {
-      "blob" : "8623cf2a56423be1b837696232e1d7f56f12569c",
-      "path" : "source/includes/extracts-agg-expression-null-base.yaml"
-    } ],
-    "justification" : null,
-    "lock" : "the interestRate values were not proper doubles",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "734eaab3d5843ee1da0575bba8ea5f526ee7edf8",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "cd46d544a63101fcb3392ddab496c648841d3445",
-      "path" : "source/reference/operator/aggregation/exp.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/filter/filterBasedOnRegularExpressionMatch",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    } ],
-    "justification" : null,
-    "lock" : "rearrange elements",
-    "marker" : "lock",
-    "origin" : "7e4567cf008b68b2e9dc6075b6217df8de3b5a90",
-    "pageBlob" : "c0a5679050c445a70bb50d3d0ef7b05cb7c4903d",
-    "retypes" : [ ],
-    "rules" : [ "NAMED_ARGUMENTS" ],
-    "source" : {
-      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
-      "path" : "source/reference/operator/aggregation/filter.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/filter/filterBasedOnStringEqualityMatch",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    } ],
-    "justification" : null,
-    "lock" : "rearrange elements",
-    "marker" : "lock",
-    "origin" : "7e4567cf008b68b2e9dc6075b6217df8de3b5a90",
-    "pageBlob" : "c0a5679050c445a70bb50d3d0ef7b05cb7c4903d",
-    "retypes" : [ ],
-    "rules" : [ "NAMED_ARGUMENTS" ],
-    "source" : {
-      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
-      "path" : "source/reference/operator/aggregation/filter.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/filter/filterExpressionOperator",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    } ],
-    "justification" : null,
-    "lock" : "the codec produces items in a different order",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "406bdfabb5424bbf5946971211e927ed5a49d39a",
-    "retypes" : [ ],
-    "rules" : [ "NAMED_ARGUMENTS" ],
-    "source" : {
-      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
-      "path" : "source/reference/operator/aggregation/filter.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/filter/useTheLimitField",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    } ],
-    "justification" : null,
-    "lock" : "rearrange elements",
-    "marker" : "lock",
-    "origin" : "7e4567cf008b68b2e9dc6075b6217df8de3b5a90",
-    "pageBlob" : "c0a5679050c445a70bb50d3d0ef7b05cb7c4903d",
-    "retypes" : [ ],
-    "rules" : [ "NAMED_ARGUMENTS" ],
-    "source" : {
-      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
-      "path" : "source/reference/operator/aggregation/filter.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/firstN/computingNBasedOnTheGroupKeyForGroup",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "use the shorter cond form",
-    "marker" : "lock",
-    "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
-    "pageBlob" : "99783a2c7028cff9efa22b354f9672de17454b07",
-    "retypes" : [ ],
-    "rules" : [ "COND_ARRAY" ],
-    "source" : {
-      "commit" : "efbc9f9fa2ee51515cf986e1f74e3b8e9f9d31fa",
-      "path" : "source/reference/operator/aggregation/firstN.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/gt/gtExpressionOperator",
-    "includes" : [ {
-      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
-      "path" : "source/includes/extracts-examples-eval.yaml"
-    }, {
-      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
-      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
-    } ],
-    "justification" : null,
-    "lock" : "reorder pipeline",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "a8fd1e09b2e178cbd0a559f56eee94d7a2e90776",
-    "retypes" : [ ],
-    "rules" : [ "PROJECT_ID_FIRST" ],
-    "source" : {
-      "commit" : "b89791d6434ba071253241c8b38dd683d332ba69",
-      "path" : "source/reference/operator/aggregation/gt.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/gte/gteExpressionOperator",
-    "includes" : [ {
-      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
-      "path" : "source/includes/extracts-examples-eval.yaml"
-    }, {
-      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
-      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
-    } ],
-    "justification" : null,
-    "lock" : "reorder pipeline",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "18230f5639cd5638df0cfab9bc416b2352c1293c",
-    "retypes" : [ ],
-    "rules" : [ "PROJECT_ID_FIRST" ],
-    "source" : {
-      "commit" : "b89791d6434ba071253241c8b38dd683d332ba69",
-      "path" : "source/reference/operator/aggregation/gte.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
     "corrections" : [ {
       "curated" : null,
       "documented" : "{\"v\": {\"$numberInt\": \"0\"}}",
@@ -642,57 +290,6 @@
     "source" : {
       "commit" : "222a3f6ee3a1f1420596da7b0eb66582ac06ee29",
       "path" : "source/reference/operator/aggregation/hour.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/isArray/isArrayExpressionOperator",
-    "includes" : [ {
-      "blob" : "fb7443cdd8dd6104b19a12acca96cb9208824776",
-      "path" : "source/includes/aggregation/fact-arrays-in-arguments.rst"
-    } ],
-    "justification" : null,
-    "lock" : "use a different form of $isArray to match morphia's rendering\nuse shorter form of cond",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "bc5c7095f3dd2b19238a8edaa22444ced7d9b66b",
-    "retypes" : [ ],
-    "rules" : [ "COND_ARRAY", "SINGLE_ARGUMENT_ARRAY" ],
-    "source" : {
-      "commit" : "190e04195a5e4f9cd0651bfc71cfa65928fb8ce5",
-      "path" : "source/reference/operator/aggregation/isArray.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/lastN/computingNBasedOnTheGroupKeyForGroup",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "use the shorter form of cond",
-    "marker" : "lock",
-    "origin" : "f9e469c9ce77fc5f8cef56e14b3e60944dc02128",
-    "pageBlob" : "eb90d0dcc67be06173b80d0c88e3eb60c33ae15b",
-    "retypes" : [ ],
-    "rules" : [ "COND_ARRAY" ],
-    "source" : {
-      "commit" : "26310c7ddaaa6b1936d57da6da95fe8b7a4f1c96",
-      "path" : "source/reference/operator/aggregation/lastN.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/let/letExpressionOperator",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "use the shorter form of $cond",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "f5cd4d9c72b930532bb6ceb2ced035cbaa020707",
-    "retypes" : [ ],
-    "rules" : [ "COND_ARRAY" ],
-    "source" : {
-      "commit" : "26668d05722f74657f802e17701f9c4d565f59b4",
-      "path" : "source/reference/operator/aggregation/let.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -761,106 +358,6 @@
     }
   }, {
     "corrections" : [ ],
-    "fixture" : "aggregation/expressions/lt/ltExpressionOperator",
-    "includes" : [ {
-      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
-      "path" : "source/includes/extracts-examples-eval.yaml"
-    }, {
-      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
-      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
-    } ],
-    "justification" : null,
-    "lock" : "reorder pipeline",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "a1b6c905911b75973144e2359fb714b053e3515c",
-    "retypes" : [ ],
-    "rules" : [ "PROJECT_ID_FIRST" ],
-    "source" : {
-      "commit" : "b89791d6434ba071253241c8b38dd683d332ba69",
-      "path" : "source/reference/operator/aggregation/lt.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/lte/lteExpressionOperator",
-    "includes" : [ {
-      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
-      "path" : "source/includes/extracts-examples-eval.yaml"
-    }, {
-      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
-      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
-    } ],
-    "justification" : null,
-    "lock" : "reorder pipeline",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "c4ae0ea4521bf29bc2d79a4bb9008f6f49625012",
-    "retypes" : [ ],
-    "rules" : [ "PROJECT_ID_FIRST" ],
-    "source" : {
-      "commit" : "b89791d6434ba071253241c8b38dd683d332ba69",
-      "path" : "source/reference/operator/aggregation/lte.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/map/addToEachElementOfAnArray",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    } ],
-    "justification" : null,
-    "lock" : "reorder pipeline to match morphia's order",
-    "marker" : "lock",
-    "origin" : "aac41b3aaf402fae15ff8a1ebcf9df0759d92878",
-    "pageBlob" : "42cd94292518bce21ea6a17604a49007ddd649b2",
-    "retypes" : [ ],
-    "rules" : [ "NAMED_ARGUMENTS" ],
-    "source" : {
-      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
-      "path" : "source/reference/operator/aggregation/map.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/map/truncateEachArrayElement",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    } ],
-    "justification" : null,
-    "lock" : "reorder pipeline to match morphia's order",
-    "marker" : "lock",
-    "origin" : "aac41b3aaf402fae15ff8a1ebcf9df0759d92878",
-    "pageBlob" : "42cd94292518bce21ea6a17604a49007ddd649b2",
-    "retypes" : [ ],
-    "rules" : [ "NAMED_ARGUMENTS" ],
-    "source" : {
-      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
-      "path" : "source/reference/operator/aggregation/map.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
     "fixture" : "aggregation/expressions/max/useInSetWindowFieldsStage",
     "includes" : [ {
       "blob" : "48429813c7e668caccccfe27b3b2894cd4d066e7",
@@ -889,22 +386,6 @@
     }
   }, {
     "corrections" : [ ],
-    "fixture" : "aggregation/expressions/maxN/computingNBasedOnTheGroupKeyForGroup",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "cond uses the shorter format",
-    "marker" : "lock",
-    "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
-    "pageBlob" : "75206683857d348c555a0c512696915266e8fd83",
-    "retypes" : [ ],
-    "rules" : [ "COND_ARRAY" ],
-    "source" : {
-      "commit" : "e473868337d01610afb03e550b561ca771245aff",
-      "path" : "source/reference/operator/aggregation/maxN.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
     "fixture" : "aggregation/expressions/min/useInSetWindowFieldsStage",
     "includes" : [ {
       "blob" : "48429813c7e668caccccfe27b3b2894cd4d066e7",
@@ -929,44 +410,6 @@
     "source" : {
       "commit" : "d84aad6501cde0bf6dcb41c1ce9bddbabc8e3acb",
       "path" : "source/reference/operator/aggregation/min.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/minN/computingNBasedOnTheGroupKeyForGroup",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "update the docs version to use the short version morphia generates",
-    "marker" : "lock",
-    "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
-    "pageBlob" : "f998dbd7720b7f9e66137c1e9d6ff795bbaa04d5",
-    "retypes" : [ ],
-    "rules" : [ "COND_ARRAY" ],
-    "source" : {
-      "commit" : "e473868337d01610afb03e550b561ca771245aff",
-      "path" : "source/reference/operator/aggregation/minN.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/ne/neExpressionOperator",
-    "includes" : [ {
-      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
-      "path" : "source/includes/extracts-examples-eval.yaml"
-    }, {
-      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
-      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
-    } ],
-    "justification" : null,
-    "lock" : "reorder pipeline",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "ef66debc94e80aeed914a5889773b680688d2634",
-    "retypes" : [ ],
-    "rules" : [ "PROJECT_ID_FIRST" ],
-    "source" : {
-      "commit" : "d3aedc270fc14feb019a86c8018699c98b26de28",
-      "path" : "source/reference/operator/aggregation/ne.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -1154,22 +597,6 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/range/rangeExpressionOperator",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "data file had extraneous text",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "049a4c1dbcea45b1efb87ce37cf240f08aacfd02",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "616d57a126410ad4be0b4c8abeb00660f987f605",
-      "path" : "source/reference/operator/aggregation/range.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
     "corrections" : [ {
       "curated" : "{\"v\": {\"$numberInt\": \"5\"}}",
       "documented" : "{\"v\": {\"$numberInt\": \"6\"}}",
@@ -1204,212 +631,6 @@
     "source" : {
       "commit" : "bbf28d22d81f59de79cdb8d3df567988cabd2cfe",
       "path" : "source/reference/operator/aggregation/rank.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/reduce/arrayConcatenation",
-    "includes" : [ {
-      "blob" : "5eea7db82afdd4723cac7050891df1f7c7042823",
-      "path" : "source/includes/extracts-3.4-agg-expression-null.yaml"
-    }, {
-      "blob" : "ee40a9d1b0d38be8227b5f23cea8c85c217aeb5a",
-      "path" : "source/includes/extracts-3.4-agg-expression-null-base.yaml"
-    } ],
-    "justification" : null,
-    "lock" : "expected has a \"results\" field that shouldn't be there",
-    "marker" : "lock",
-    "origin" : "1e38798fbaaffb6945159e208bcd33318c425121",
-    "pageBlob" : "6a36a6a69ad4600f7ba7656f7d4dfc7db0c891fd",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "ca3e8a737ee08af6482a9eed3a1abfe708edd5c8",
-      "path" : "source/reference/operator/aggregation/reduce.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/reduce/multiplication",
-    "includes" : [ {
-      "blob" : "5eea7db82afdd4723cac7050891df1f7c7042823",
-      "path" : "source/includes/extracts-3.4-agg-expression-null.yaml"
-    }, {
-      "blob" : "ee40a9d1b0d38be8227b5f23cea8c85c217aeb5a",
-      "path" : "source/includes/extracts-3.4-agg-expression-null-base.yaml"
-    } ],
-    "justification" : null,
-    "lock" : "parser pulled wrong code block for expected",
-    "marker" : "lock",
-    "origin" : "1e38798fbaaffb6945159e208bcd33318c425121",
-    "pageBlob" : "6a36a6a69ad4600f7ba7656f7d4dfc7db0c891fd",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "ca3e8a737ee08af6482a9eed3a1abfe708edd5c8",
-      "path" : "source/reference/operator/aggregation/reduce.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/reduce/stringConcatenation",
-    "includes" : [ {
-      "blob" : "5eea7db82afdd4723cac7050891df1f7c7042823",
-      "path" : "source/includes/extracts-3.4-agg-expression-null.yaml"
-    }, {
-      "blob" : "ee40a9d1b0d38be8227b5f23cea8c85c217aeb5a",
-      "path" : "source/includes/extracts-3.4-agg-expression-null-base.yaml"
-    } ],
-    "justification" : null,
-    "lock" : "use the short form for $cond",
-    "marker" : "lock",
-    "origin" : "1e38798fbaaffb6945159e208bcd33318c425121",
-    "pageBlob" : "6a36a6a69ad4600f7ba7656f7d4dfc7db0c891fd",
-    "retypes" : [ ],
-    "rules" : [ "COND_ARRAY" ],
-    "source" : {
-      "commit" : "ca3e8a737ee08af6482a9eed3a1abfe708edd5c8",
-      "path" : "source/reference/operator/aggregation/reduce.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/regexFind/regexFindAndItsOptions",
-    "includes" : [ {
-      "blob" : "7f5fc4b51bef04e8026d2d93ba49bc5a127bf3f6",
-      "path" : "source/includes/extracts-agg-regex.yaml"
-    }, {
-      "blob" : "1c76d95ca483b2924600db416405d9e9850d96b3",
-      "path" : "source/includes/fact-6.1-pcre2.rst"
-    } ],
-    "justification" : null,
-    "lock" : "example data needs multiple spaces that the parser eliminates",
-    "marker" : "lock",
-    "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
-    "pageBlob" : "5c8d71944fa06b2a6be5c7ee8007e6c263414992",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
-      "path" : "source/reference/operator/aggregation/regexFind.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/regexFindAll/regexFindAllAndItsOptions",
-    "includes" : [ {
-      "blob" : "7f5fc4b51bef04e8026d2d93ba49bc5a127bf3f6",
-      "path" : "source/includes/extracts-agg-regex.yaml"
-    }, {
-      "blob" : "1c76d95ca483b2924600db416405d9e9850d96b3",
-      "path" : "source/includes/fact-6.1-pcre2.rst"
-    } ],
-    "justification" : null,
-    "lock" : "example data needs multiple spaces that the parser eliminates",
-    "marker" : "lock",
-    "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
-    "pageBlob" : "42d41fe7d1a5a0e70c7303fd2b435cf337017b25",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
-      "path" : "source/reference/operator/aggregation/regexFindAll.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/regexMatch/regexMatchAndItsOptions",
-    "includes" : [ {
-      "blob" : "7f5fc4b51bef04e8026d2d93ba49bc5a127bf3f6",
-      "path" : "source/includes/extracts-agg-regex.yaml"
-    }, {
-      "blob" : "1c76d95ca483b2924600db416405d9e9850d96b3",
-      "path" : "source/includes/fact-6.1-pcre2.rst"
-    } ],
-    "justification" : null,
-    "lock" : "docs had \"returns\" instead of \"result\"\n_id 2 had the wrong result",
-    "marker" : "lock",
-    "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
-    "pageBlob" : "7d7cb97c757085b76945febfc527419c58b3170a",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
-      "path" : "source/reference/operator/aggregation/regexMatch.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/setDifference/setDifferenceExpressionOperator",
-    "includes" : [ {
-      "blob" : "9ba8fe6005b2e4e5e7a77bbf7c6535da3355c571",
-      "path" : "source/includes/important-set-operator-semantics.rst"
-    }, {
-      "blob" : "3ae8bf736443eaa8cf84e56de8d30b33dd6449bc",
-      "path" : "source/includes/extracts-fact-agg-top-level-expressions.yaml"
-    }, {
-      "blob" : "5366b8d724f1705e143d55a10e620d6fe50b37de",
-      "path" : "source/includes/extracts-parent-fact-agg-top-level-expressions.yaml"
-    } ],
-    "justification" : null,
-    "lock" : "rearrange suppress id",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "0bd381ef5fd752e0f024a2bb47a6c1e6dbd6032f",
-    "retypes" : [ ],
-    "rules" : [ "PROJECT_ID_FIRST" ],
-    "source" : {
-      "commit" : "e0848b6ada3e691ecada5da38e717de2d2545843",
-      "path" : "source/reference/operator/aggregation/setDifference.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/setIntersection/elementsArrayExample",
-    "includes" : [ {
-      "blob" : "9ba8fe6005b2e4e5e7a77bbf7c6535da3355c571",
-      "path" : "source/includes/important-set-operator-semantics.rst"
-    }, {
-      "blob" : "3ae8bf736443eaa8cf84e56de8d30b33dd6449bc",
-      "path" : "source/includes/extracts-fact-agg-top-level-expressions.yaml"
-    }, {
-      "blob" : "5366b8d724f1705e143d55a10e620d6fe50b37de",
-      "path" : "source/includes/extracts-parent-fact-agg-top-level-expressions.yaml"
-    }, {
-      "blob" : "8b933e78dea0c9ba4dfdefecb2782016a3cb4f24",
-      "path" : "source/includes/user-roles-system-variable-introduction.rst"
-    }, {
-      "blob" : "711d4a43692d7d0ef7f60601b1c5d5ddbeb2a078",
-      "path" : "source/includes/user-roles-system-variable-example-login-john.rst"
-    }, {
-      "blob" : "7f403be75e2e104b24b37bdd3091313f4ab183bd",
-      "path" : "source/includes/user-roles-system-variable-example-description-start.rst"
-    }, {
-      "blob" : "d32e451912bb4540707d5b135cbde8ac2845e567",
-      "path" : "source/includes/user-roles-system-variable-example-pipeline.rst"
-    }, {
-      "blob" : "b073a76eddf629d930a40a016ff6aea5f740dd8b",
-      "path" : "source/includes/user-roles-system-variable-example-description.rst"
-    }, {
-      "blob" : "fac6ff81e05ea4ac635055b12503378699188835",
-      "path" : "source/includes/user-roles-system-variable-example-output-john.rst"
-    }, {
-      "blob" : "affd0ae6225b4f04a2e2c18637eb6d641f5d3768",
-      "path" : "source/includes/user-roles-system-variable-example-login-jane.rst"
-    }, {
-      "blob" : "cf47e33cdcee2e76826eb6e1204cb0d298627439",
-      "path" : "source/includes/user-roles-system-variable-example-output-jane.rst"
-    } ],
-    "justification" : null,
-    "lock" : "rearrange suppress id",
-    "marker" : "lock",
-    "origin" : "162455b3b4312eb783f51ede4f8d944d2586286a",
-    "pageBlob" : "35a7a8a1e624fa7385262e64d42fd7bf1bdd2782",
-    "retypes" : [ ],
-    "rules" : [ "PROJECT_ID_FIRST" ],
-    "source" : {
-      "commit" : "e0848b6ada3e691ecada5da38e717de2d2545843",
-      "path" : "source/reference/operator/aggregation/setIntersection.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -1463,218 +684,6 @@
     "source" : {
       "commit" : "e0848b6ada3e691ecada5da38e717de2d2545843",
       "path" : "source/reference/operator/aggregation/setUnion.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/size/sizeExpressionOperator",
-    "includes" : [ {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    } ],
-    "justification" : null,
-    "lock" : "adjust the form of $cond",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "b0b66a16ae0f3d126ddf3c7bb10fb253fe1a9ef1",
-    "retypes" : [ ],
-    "rules" : [ "COND_ARRAY", "SINGLE_ARGUMENT_ARRAY" ],
-    "source" : {
-      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
-      "path" : "source/reference/operator/aggregation/size.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/sortArray/sortAnArrayOfIntegers",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "the expected results didn't have the 'result' element",
-    "marker" : "lock",
-    "origin" : "fade26d1eb91bbf587f35696f41ad98dfe706e34",
-    "pageBlob" : "3d856d55893b313e1ec9816fa52a234c43025c86",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "ee00283046ed2845155e52b20ffd1c5638d65d9c",
-      "path" : "source/reference/operator/aggregation/sortArray.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/split/splitExpressionOperator",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "change the form of the regex to match morphia's generated form",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "ae02591d100b051c6b547a9a03ea8360bb284bdb",
-    "retypes" : [ ],
-    "rules" : [ "REGEX_FORM" ],
-    "source" : {
-      "commit" : "dd8638fb493316581481d0fc9413339ee019bb3a",
-      "path" : "source/reference/operator/aggregation/split.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/sum/useInGroupStage",
-    "includes" : [ {
-      "blob" : "48429813c7e668caccccfe27b3b2894cd4d066e7",
-      "path" : "source/includes/extracts-fact-aggregation-accumulator.yaml"
-    }, {
-      "blob" : "6f5d7d363aa3a93352c9cba4bd64f87570e732bf",
-      "path" : "source/includes/extracts-fact-aggregation-accumulator-base.yaml"
-    }, {
-      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
-      "path" : "source/includes/fact-compatibility.rst"
-    }, {
-      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
-      "path" : "source/includes/fact-environments.rst"
-    }, {
-      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
-      "path" : "source/includes/fact-environments-atlas-only.rst"
-    }, {
-      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
-      "path" : "source/includes/fact-environments-onprem-only.rst"
-    }, {
-      "blob" : "f56012674985fd6d9fe5f558a661d55d6a717156",
-      "path" : "source/includes/setWindowFields-example-collection.rst"
-    }, {
-      "blob" : "13694f7d606928cb63fd6b471d29c52c8a6e7f40",
-      "path" : "source/includes/setWindowFields-partition-sort-date.rst"
-    } ],
-    "justification" : null,
-    "lock" : "the totalAmount values are completely wrong",
-    "marker" : "lock",
-    "origin" : "4774dcba942556fdc81d25c2d94c18e3173ab505",
-    "pageBlob" : "1277de12edfeae3aac77c6c89ee730722b3bdc8f",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
-      "path" : "source/reference/operator/aggregation/sum.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/toBool/toBoolExpressionOperator",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "inlined js variables to pipeline",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "59fa09a0b133d3a8b3dc7ca5c6d8c291b04687af",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
-      "path" : "source/reference/operator/aggregation/toBool.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/toDate/toDateExpressionOperator",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "inlined js variables to pipeline",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "42e6ac3c9fbe47779b5041740e65ca7dc431ee1e",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
-      "path" : "source/reference/operator/aggregation/toDate.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/toDouble/toDoubleExpressionOperator",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "inlined js variables to pipeline",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "841cf871bf27156a2df51a01f374e4fc94484ff5",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
-      "path" : "source/reference/operator/aggregation/toDouble.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/toInt/toIntExpressionOperator",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "inlined js variables to pipeline\nthe driver apparently can't parse Decimal128(...)",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "92e7b0bc372a5cdb13d181cd2224afe167bf4c4f",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
-      "path" : "source/reference/operator/aggregation/toInt.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/toLong/toLongExpressionOperator",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "inlined js variables to pipeline\n",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "0e95704326f3ccb1c2afeec425ae8f3b0df18e21",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "eeaa9d3ad8bf480d333ca978a1d7b8ff30677870",
-      "path" : "source/reference/operator/aggregation/toLong.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/toObjectId/toObjectIdExpressionOperator",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "inlined js variables to pipeline\n",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "09cec0a9a44620357d55c8bf913799d96261f0b7",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
-      "path" : "source/reference/operator/aggregation/toObjectId.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/toString/toStringExpressionOperator",
-    "includes" : [ ],
-    "justification" : null,
-    "lock" : "had to rework the pipeline to not use variables",
-    "marker" : "lock",
-    "origin" : "948049a3364491f4905246224922d2dbb4197154",
-    "pageBlob" : "89b3c01ffb5a803027a5e42ea2f41e2828a823f5",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
-      "path" : "source/reference/operator/aggregation/toString.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -1748,34 +757,6 @@
       "relation" : "AT_ORIGIN"
     }
   }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/tsSecond/obtainTheNumberOfSecondsFromATimestampField",
-    "includes" : [ {
-      "blob" : "cae80161291eadfe7c4c76d37dcb6b5ee9e40de6",
-      "path" : "source/includes/tsSecond-introduction.rst"
-    }, {
-      "blob" : "a70d0f7025666a855267cba1031cf183714121b2",
-      "path" : "source/includes/stockSales-example-collection.rst"
-    }, {
-      "blob" : "5d0412c61706673a101d1f2d14e7e224b5de7187",
-      "path" : "source/includes/stockSales-example-collection-create.rst"
-    }, {
-      "blob" : "f56012674985fd6d9fe5f558a661d55d6a717156",
-      "path" : "source/includes/cakeSales-example-collection.rst"
-    } ],
-    "justification" : null,
-    "lock" : "updated the Timestamp format",
-    "marker" : "lock",
-    "origin" : "3f1e409bd15a70dbd2e5b065f8fe38f114bee495",
-    "pageBlob" : "b6c831c1be6bdf210a7260dc64061dd3489039cb",
-    "retypes" : [ ],
-    "rules" : [ ],
-    "source" : {
-      "commit" : "f5da63fabec244dde036582f5cbab8d7ea2b0881",
-      "path" : "source/reference/operator/aggregation/tsSecond.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
     "corrections" : [ {
       "curated" : "{\"v\": \"int\"}",
       "documented" : "{\"v\": \"double\"}",
@@ -1798,28 +779,6 @@
     "source" : {
       "commit" : "7c832aeac151541199c8080413a9c01fb8f77ce6",
       "path" : "source/reference/operator/aggregation/type.txt",
-      "relation" : "AT_ORIGIN"
-    }
-  }, {
-    "corrections" : [ ],
-    "fixture" : "aggregation/expressions/zip/matrixTransposition",
-    "includes" : [ {
-      "blob" : "5eea7db82afdd4723cac7050891df1f7c7042823",
-      "path" : "source/includes/extracts-3.4-agg-expression-null.yaml"
-    }, {
-      "blob" : "ee40a9d1b0d38be8227b5f23cea8c85c217aeb5a",
-      "path" : "source/includes/extracts-3.4-agg-expression-null-base.yaml"
-    } ],
-    "justification" : null,
-    "lock" : "use 0 instead of false to suppress _id",
-    "marker" : "lock",
-    "origin" : "9559001fffde3bca28f60aa3e405dff22baefd44",
-    "pageBlob" : "88768190850e225b4aee38ddde325830c65b55a2",
-    "retypes" : [ ],
-    "rules" : [ "PROJECTION_FLAGS" ],
-    "source" : {
-      "commit" : "08e800f56f6f44b44a625756fc1c3c64061055b9",
-      "path" : "source/reference/operator/aggregation/zip.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -3679,6 +2638,76 @@
   } ],
   "migrated" : [ {
     "corrections" : [ ],
+    "fixture" : "aggregation/expressions/acosh/inverseHyperbolicCosineInDegrees",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "documentation has the radians value instead of the degrees",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "287395a4d1c9ea75403d43865315f018cabcf2f8",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "d89528cf7f5fc214a131ba248285bff6a503b9ec",
+      "path" : "source/reference/operator/aggregation/acosh.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/asin/inverseSineOfValueInDegrees",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "documentation has the radians value instead of the degrees",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "bf822b1fa3e5f9eaaf466d574c9660149d82d530",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "8562c94b38de3e8c83552bcd41558548e5220eef",
+      "path" : "source/reference/operator/aggregation/asin.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/atan2/inverseTangentOfValueInDegrees",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "documentation has the radians value instead of the degrees",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "f2a780facb1d1dcba3801e618cd54fa66e45a99a",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "3c5205896b0ea712d635793889590be37fc2513c",
+      "path" : "source/reference/operator/aggregation/atan2.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/cmp/cmpExpressionOperator",
+    "includes" : [ {
+      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
+      "path" : "source/includes/extracts-examples-eval.yaml"
+    }, {
+      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
+      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "reorder pipeline",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "e3fa7926b676ae107cb77e843f9ce50b2289e008",
+    "retypes" : [ ],
+    "rules" : [ "PROJECT_ID_FIRST" ],
+    "source" : {
+      "commit" : "b89791d6434ba071253241c8b38dd683d332ba69",
+      "path" : "source/reference/operator/aggregation/cmp.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
     "fixture" : "aggregation/expressions/cond/condExpressionOperator",
     "includes" : [ {
       "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
@@ -3707,6 +2736,641 @@
     }
   }, {
     "corrections" : [ ],
+    "fixture" : "aggregation/expressions/cosh/hyperbolicCosineInDegrees",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "the expected angle is wrong and the cosh is wrong",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "c65f094653c41c8ad33d74beee2674c24373c8d7",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "d89528cf7f5fc214a131ba248285bff6a503b9ec",
+      "path" : "source/reference/operator/aggregation/cosh.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/dateToParts/dateToPartsExpressionOperator",
+    "includes" : [ {
+      "blob" : "6a0d8df9a641e1e37b9f1f4bcc35eeea213c4963",
+      "path" : "source/includes/fact-olson-tz-behavior.rst"
+    } ],
+    "justification" : null,
+    "lock" : "pipeline was trunc'd in the parser\n",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "00f720ba7b9e0eb461559ced0fa6ae7d5d308337",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "6560e617067dff1934063555ec97e57cad362fc8",
+      "path" : "source/reference/operator/aggregation/dateToParts.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/dateToString/dateToStringExpressionOperator",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "f8cea074d104c6d7540688c4a001bb12aef64c1a",
+      "path" : "source/includes/extracts-date-format-specifiers.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "rearranged arguments to match morphia's",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "3c53000302392ff1f16165d9e7c932f102f719f0",
+    "retypes" : [ ],
+    "rules" : [ "NAMED_ARGUMENTS" ],
+    "source" : {
+      "commit" : "b2d4041710ee0667261f8f5e2e40390265df85fd",
+      "path" : "source/reference/operator/aggregation/dateToString.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/eq/eqExpressionOperator",
+    "includes" : [ {
+      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
+      "path" : "source/includes/extracts-examples-eval.yaml"
+    }, {
+      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
+      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "reorder pipeline",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "7bf1ae5a7fdb3f2457dfa5c70f474649d3343ccd",
+    "retypes" : [ ],
+    "rules" : [ "PROJECT_ID_FIRST" ],
+    "source" : {
+      "commit" : "b89791d6434ba071253241c8b38dd683d332ba69",
+      "path" : "source/reference/operator/aggregation/eq.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/exp/expExpressionOperator",
+    "includes" : [ {
+      "blob" : "bbf5c44a10e62dc8903402b5aaf9baf1323ef458",
+      "path" : "source/includes/extracts-agg-expression-null.yaml"
+    }, {
+      "blob" : "8623cf2a56423be1b837696232e1d7f56f12569c",
+      "path" : "source/includes/extracts-agg-expression-null-base.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "the interestRate values were not proper doubles",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "734eaab3d5843ee1da0575bba8ea5f526ee7edf8",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "cd46d544a63101fcb3392ddab496c648841d3445",
+      "path" : "source/reference/operator/aggregation/exp.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/filter/filterBasedOnRegularExpressionMatch",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "justification" : null,
+    "lock" : "rearrange elements",
+    "marker" : "lock",
+    "origin" : "7e4567cf008b68b2e9dc6075b6217df8de3b5a90",
+    "pageBlob" : "c0a5679050c445a70bb50d3d0ef7b05cb7c4903d",
+    "retypes" : [ ],
+    "rules" : [ "NAMED_ARGUMENTS" ],
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/aggregation/filter.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/filter/filterBasedOnStringEqualityMatch",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "justification" : null,
+    "lock" : "rearrange elements",
+    "marker" : "lock",
+    "origin" : "7e4567cf008b68b2e9dc6075b6217df8de3b5a90",
+    "pageBlob" : "c0a5679050c445a70bb50d3d0ef7b05cb7c4903d",
+    "retypes" : [ ],
+    "rules" : [ "NAMED_ARGUMENTS" ],
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/aggregation/filter.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/filter/filterExpressionOperator",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "justification" : null,
+    "lock" : "the codec produces items in a different order",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "406bdfabb5424bbf5946971211e927ed5a49d39a",
+    "retypes" : [ ],
+    "rules" : [ "NAMED_ARGUMENTS" ],
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/filter.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/filter/useTheLimitField",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "justification" : null,
+    "lock" : "rearrange elements",
+    "marker" : "lock",
+    "origin" : "7e4567cf008b68b2e9dc6075b6217df8de3b5a90",
+    "pageBlob" : "c0a5679050c445a70bb50d3d0ef7b05cb7c4903d",
+    "retypes" : [ ],
+    "rules" : [ "NAMED_ARGUMENTS" ],
+    "source" : {
+      "commit" : "4431b1043d025a36ca3b64c17b3398de606ec6e8",
+      "path" : "source/reference/operator/aggregation/filter.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/firstN/computingNBasedOnTheGroupKeyForGroup",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "use the shorter cond form",
+    "marker" : "lock",
+    "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
+    "pageBlob" : "99783a2c7028cff9efa22b354f9672de17454b07",
+    "retypes" : [ ],
+    "rules" : [ "COND_ARRAY" ],
+    "source" : {
+      "commit" : "efbc9f9fa2ee51515cf986e1f74e3b8e9f9d31fa",
+      "path" : "source/reference/operator/aggregation/firstN.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/gt/gtExpressionOperator",
+    "includes" : [ {
+      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
+      "path" : "source/includes/extracts-examples-eval.yaml"
+    }, {
+      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
+      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "reorder pipeline",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "a8fd1e09b2e178cbd0a559f56eee94d7a2e90776",
+    "retypes" : [ ],
+    "rules" : [ "PROJECT_ID_FIRST" ],
+    "source" : {
+      "commit" : "b89791d6434ba071253241c8b38dd683d332ba69",
+      "path" : "source/reference/operator/aggregation/gt.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/gte/gteExpressionOperator",
+    "includes" : [ {
+      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
+      "path" : "source/includes/extracts-examples-eval.yaml"
+    }, {
+      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
+      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "reorder pipeline",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "18230f5639cd5638df0cfab9bc416b2352c1293c",
+    "retypes" : [ ],
+    "rules" : [ "PROJECT_ID_FIRST" ],
+    "source" : {
+      "commit" : "b89791d6434ba071253241c8b38dd683d332ba69",
+      "path" : "source/reference/operator/aggregation/gte.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/isArray/isArrayExpressionOperator",
+    "includes" : [ {
+      "blob" : "fb7443cdd8dd6104b19a12acca96cb9208824776",
+      "path" : "source/includes/aggregation/fact-arrays-in-arguments.rst"
+    } ],
+    "justification" : null,
+    "lock" : "use a different form of $isArray to match morphia's rendering\nuse shorter form of cond",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "bc5c7095f3dd2b19238a8edaa22444ced7d9b66b",
+    "retypes" : [ ],
+    "rules" : [ "COND_ARRAY", "SINGLE_ARGUMENT_ARRAY" ],
+    "source" : {
+      "commit" : "190e04195a5e4f9cd0651bfc71cfa65928fb8ce5",
+      "path" : "source/reference/operator/aggregation/isArray.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/lastN/computingNBasedOnTheGroupKeyForGroup",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "use the shorter form of cond",
+    "marker" : "lock",
+    "origin" : "f9e469c9ce77fc5f8cef56e14b3e60944dc02128",
+    "pageBlob" : "eb90d0dcc67be06173b80d0c88e3eb60c33ae15b",
+    "retypes" : [ ],
+    "rules" : [ "COND_ARRAY" ],
+    "source" : {
+      "commit" : "26310c7ddaaa6b1936d57da6da95fe8b7a4f1c96",
+      "path" : "source/reference/operator/aggregation/lastN.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/let/letExpressionOperator",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "use the shorter form of $cond",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "f5cd4d9c72b930532bb6ceb2ced035cbaa020707",
+    "retypes" : [ ],
+    "rules" : [ "COND_ARRAY" ],
+    "source" : {
+      "commit" : "26668d05722f74657f802e17701f9c4d565f59b4",
+      "path" : "source/reference/operator/aggregation/let.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/lt/ltExpressionOperator",
+    "includes" : [ {
+      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
+      "path" : "source/includes/extracts-examples-eval.yaml"
+    }, {
+      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
+      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "reorder pipeline",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "a1b6c905911b75973144e2359fb714b053e3515c",
+    "retypes" : [ ],
+    "rules" : [ "PROJECT_ID_FIRST" ],
+    "source" : {
+      "commit" : "b89791d6434ba071253241c8b38dd683d332ba69",
+      "path" : "source/reference/operator/aggregation/lt.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/lte/lteExpressionOperator",
+    "includes" : [ {
+      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
+      "path" : "source/includes/extracts-examples-eval.yaml"
+    }, {
+      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
+      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "reorder pipeline",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "c4ae0ea4521bf29bc2d79a4bb9008f6f49625012",
+    "retypes" : [ ],
+    "rules" : [ "PROJECT_ID_FIRST" ],
+    "source" : {
+      "commit" : "b89791d6434ba071253241c8b38dd683d332ba69",
+      "path" : "source/reference/operator/aggregation/lte.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/map/addToEachElementOfAnArray",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "justification" : null,
+    "lock" : "reorder pipeline to match morphia's order",
+    "marker" : "lock",
+    "origin" : "aac41b3aaf402fae15ff8a1ebcf9df0759d92878",
+    "pageBlob" : "42cd94292518bce21ea6a17604a49007ddd649b2",
+    "retypes" : [ ],
+    "rules" : [ "NAMED_ARGUMENTS" ],
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/map.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/map/truncateEachArrayElement",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "justification" : null,
+    "lock" : "reorder pipeline to match morphia's order",
+    "marker" : "lock",
+    "origin" : "aac41b3aaf402fae15ff8a1ebcf9df0759d92878",
+    "pageBlob" : "42cd94292518bce21ea6a17604a49007ddd649b2",
+    "retypes" : [ ],
+    "rules" : [ "NAMED_ARGUMENTS" ],
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/map.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/maxN/computingNBasedOnTheGroupKeyForGroup",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "cond uses the shorter format",
+    "marker" : "lock",
+    "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
+    "pageBlob" : "75206683857d348c555a0c512696915266e8fd83",
+    "retypes" : [ ],
+    "rules" : [ "COND_ARRAY" ],
+    "source" : {
+      "commit" : "e473868337d01610afb03e550b561ca771245aff",
+      "path" : "source/reference/operator/aggregation/maxN.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/minN/computingNBasedOnTheGroupKeyForGroup",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "update the docs version to use the short version morphia generates",
+    "marker" : "lock",
+    "origin" : "c3601b919364eaa92e9a8fc8860d3c2db82055b2",
+    "pageBlob" : "f998dbd7720b7f9e66137c1e9d6ff795bbaa04d5",
+    "retypes" : [ ],
+    "rules" : [ "COND_ARRAY" ],
+    "source" : {
+      "commit" : "e473868337d01610afb03e550b561ca771245aff",
+      "path" : "source/reference/operator/aggregation/minN.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/ne/neExpressionOperator",
+    "includes" : [ {
+      "blob" : "a65b631cdba796d7101918731b989c384d6d0b6d",
+      "path" : "source/includes/extracts-examples-eval.yaml"
+    }, {
+      "blob" : "32c1c5529385658b35c67c3674bd23475ac158f7",
+      "path" : "source/includes/extracts-parent-agg-comparison-expressions.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "reorder pipeline",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "ef66debc94e80aeed914a5889773b680688d2634",
+    "retypes" : [ ],
+    "rules" : [ "PROJECT_ID_FIRST" ],
+    "source" : {
+      "commit" : "d3aedc270fc14feb019a86c8018699c98b26de28",
+      "path" : "source/reference/operator/aggregation/ne.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/range/rangeExpressionOperator",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "data file had extraneous text",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "049a4c1dbcea45b1efb87ce37cf240f08aacfd02",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "616d57a126410ad4be0b4c8abeb00660f987f605",
+      "path" : "source/reference/operator/aggregation/range.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/reduce/arrayConcatenation",
+    "includes" : [ {
+      "blob" : "5eea7db82afdd4723cac7050891df1f7c7042823",
+      "path" : "source/includes/extracts-3.4-agg-expression-null.yaml"
+    }, {
+      "blob" : "ee40a9d1b0d38be8227b5f23cea8c85c217aeb5a",
+      "path" : "source/includes/extracts-3.4-agg-expression-null-base.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "expected has a \"results\" field that shouldn't be there",
+    "marker" : "lock",
+    "origin" : "1e38798fbaaffb6945159e208bcd33318c425121",
+    "pageBlob" : "6a36a6a69ad4600f7ba7656f7d4dfc7db0c891fd",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "ca3e8a737ee08af6482a9eed3a1abfe708edd5c8",
+      "path" : "source/reference/operator/aggregation/reduce.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/reduce/multiplication",
+    "includes" : [ {
+      "blob" : "5eea7db82afdd4723cac7050891df1f7c7042823",
+      "path" : "source/includes/extracts-3.4-agg-expression-null.yaml"
+    }, {
+      "blob" : "ee40a9d1b0d38be8227b5f23cea8c85c217aeb5a",
+      "path" : "source/includes/extracts-3.4-agg-expression-null-base.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "parser pulled wrong code block for expected",
+    "marker" : "lock",
+    "origin" : "1e38798fbaaffb6945159e208bcd33318c425121",
+    "pageBlob" : "6a36a6a69ad4600f7ba7656f7d4dfc7db0c891fd",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "ca3e8a737ee08af6482a9eed3a1abfe708edd5c8",
+      "path" : "source/reference/operator/aggregation/reduce.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/reduce/stringConcatenation",
+    "includes" : [ {
+      "blob" : "5eea7db82afdd4723cac7050891df1f7c7042823",
+      "path" : "source/includes/extracts-3.4-agg-expression-null.yaml"
+    }, {
+      "blob" : "ee40a9d1b0d38be8227b5f23cea8c85c217aeb5a",
+      "path" : "source/includes/extracts-3.4-agg-expression-null-base.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "use the short form for $cond",
+    "marker" : "lock",
+    "origin" : "1e38798fbaaffb6945159e208bcd33318c425121",
+    "pageBlob" : "6a36a6a69ad4600f7ba7656f7d4dfc7db0c891fd",
+    "retypes" : [ ],
+    "rules" : [ "COND_ARRAY" ],
+    "source" : {
+      "commit" : "ca3e8a737ee08af6482a9eed3a1abfe708edd5c8",
+      "path" : "source/reference/operator/aggregation/reduce.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/regexFind/regexFindAndItsOptions",
+    "includes" : [ {
+      "blob" : "7f5fc4b51bef04e8026d2d93ba49bc5a127bf3f6",
+      "path" : "source/includes/extracts-agg-regex.yaml"
+    }, {
+      "blob" : "1c76d95ca483b2924600db416405d9e9850d96b3",
+      "path" : "source/includes/fact-6.1-pcre2.rst"
+    } ],
+    "justification" : null,
+    "lock" : "example data needs multiple spaces that the parser eliminates",
+    "marker" : "lock",
+    "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
+    "pageBlob" : "5c8d71944fa06b2a6be5c7ee8007e6c263414992",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
+      "path" : "source/reference/operator/aggregation/regexFind.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/regexFindAll/regexFindAllAndItsOptions",
+    "includes" : [ {
+      "blob" : "7f5fc4b51bef04e8026d2d93ba49bc5a127bf3f6",
+      "path" : "source/includes/extracts-agg-regex.yaml"
+    }, {
+      "blob" : "1c76d95ca483b2924600db416405d9e9850d96b3",
+      "path" : "source/includes/fact-6.1-pcre2.rst"
+    } ],
+    "justification" : null,
+    "lock" : "example data needs multiple spaces that the parser eliminates",
+    "marker" : "lock",
+    "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
+    "pageBlob" : "42d41fe7d1a5a0e70c7303fd2b435cf337017b25",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
+      "path" : "source/reference/operator/aggregation/regexFindAll.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/regexMatch/regexMatchAndItsOptions",
+    "includes" : [ {
+      "blob" : "7f5fc4b51bef04e8026d2d93ba49bc5a127bf3f6",
+      "path" : "source/includes/extracts-agg-regex.yaml"
+    }, {
+      "blob" : "1c76d95ca483b2924600db416405d9e9850d96b3",
+      "path" : "source/includes/fact-6.1-pcre2.rst"
+    } ],
+    "justification" : null,
+    "lock" : "docs had \"returns\" instead of \"result\"\n_id 2 had the wrong result",
+    "marker" : "lock",
+    "origin" : "666f0b3d5ce3780b88280bee3a92ea211457d650",
+    "pageBlob" : "7d7cb97c757085b76945febfc527419c58b3170a",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "ab4bf2743a04d0a8ddb07108340daee1fded74a7",
+      "path" : "source/reference/operator/aggregation/regexMatch.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
     "fixture" : "aggregation/expressions/round/roundExpressionOperator",
     "includes" : [ ],
     "justification" : null,
@@ -3719,6 +3383,212 @@
     "source" : {
       "commit" : "c55124fab42cf754b0f77e5340e764d2b7de8552",
       "path" : "source/reference/operator/aggregation/round.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/setDifference/setDifferenceExpressionOperator",
+    "includes" : [ {
+      "blob" : "9ba8fe6005b2e4e5e7a77bbf7c6535da3355c571",
+      "path" : "source/includes/important-set-operator-semantics.rst"
+    }, {
+      "blob" : "3ae8bf736443eaa8cf84e56de8d30b33dd6449bc",
+      "path" : "source/includes/extracts-fact-agg-top-level-expressions.yaml"
+    }, {
+      "blob" : "5366b8d724f1705e143d55a10e620d6fe50b37de",
+      "path" : "source/includes/extracts-parent-fact-agg-top-level-expressions.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "rearrange suppress id",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "0bd381ef5fd752e0f024a2bb47a6c1e6dbd6032f",
+    "retypes" : [ ],
+    "rules" : [ "PROJECT_ID_FIRST" ],
+    "source" : {
+      "commit" : "e0848b6ada3e691ecada5da38e717de2d2545843",
+      "path" : "source/reference/operator/aggregation/setDifference.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/setIntersection/elementsArrayExample",
+    "includes" : [ {
+      "blob" : "9ba8fe6005b2e4e5e7a77bbf7c6535da3355c571",
+      "path" : "source/includes/important-set-operator-semantics.rst"
+    }, {
+      "blob" : "3ae8bf736443eaa8cf84e56de8d30b33dd6449bc",
+      "path" : "source/includes/extracts-fact-agg-top-level-expressions.yaml"
+    }, {
+      "blob" : "5366b8d724f1705e143d55a10e620d6fe50b37de",
+      "path" : "source/includes/extracts-parent-fact-agg-top-level-expressions.yaml"
+    }, {
+      "blob" : "8b933e78dea0c9ba4dfdefecb2782016a3cb4f24",
+      "path" : "source/includes/user-roles-system-variable-introduction.rst"
+    }, {
+      "blob" : "711d4a43692d7d0ef7f60601b1c5d5ddbeb2a078",
+      "path" : "source/includes/user-roles-system-variable-example-login-john.rst"
+    }, {
+      "blob" : "7f403be75e2e104b24b37bdd3091313f4ab183bd",
+      "path" : "source/includes/user-roles-system-variable-example-description-start.rst"
+    }, {
+      "blob" : "d32e451912bb4540707d5b135cbde8ac2845e567",
+      "path" : "source/includes/user-roles-system-variable-example-pipeline.rst"
+    }, {
+      "blob" : "b073a76eddf629d930a40a016ff6aea5f740dd8b",
+      "path" : "source/includes/user-roles-system-variable-example-description.rst"
+    }, {
+      "blob" : "fac6ff81e05ea4ac635055b12503378699188835",
+      "path" : "source/includes/user-roles-system-variable-example-output-john.rst"
+    }, {
+      "blob" : "affd0ae6225b4f04a2e2c18637eb6d641f5d3768",
+      "path" : "source/includes/user-roles-system-variable-example-login-jane.rst"
+    }, {
+      "blob" : "cf47e33cdcee2e76826eb6e1204cb0d298627439",
+      "path" : "source/includes/user-roles-system-variable-example-output-jane.rst"
+    } ],
+    "justification" : null,
+    "lock" : "rearrange suppress id",
+    "marker" : "lock",
+    "origin" : "162455b3b4312eb783f51ede4f8d944d2586286a",
+    "pageBlob" : "35a7a8a1e624fa7385262e64d42fd7bf1bdd2782",
+    "retypes" : [ ],
+    "rules" : [ "PROJECT_ID_FIRST" ],
+    "source" : {
+      "commit" : "e0848b6ada3e691ecada5da38e717de2d2545843",
+      "path" : "source/reference/operator/aggregation/setIntersection.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/size/sizeExpressionOperator",
+    "includes" : [ {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    } ],
+    "justification" : null,
+    "lock" : "adjust the form of $cond",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "b0b66a16ae0f3d126ddf3c7bb10fb253fe1a9ef1",
+    "retypes" : [ ],
+    "rules" : [ "COND_ARRAY", "SINGLE_ARGUMENT_ARRAY" ],
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/size.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/sortArray/sortAnArrayOfIntegers",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "the expected results didn't have the 'result' element",
+    "marker" : "lock",
+    "origin" : "fade26d1eb91bbf587f35696f41ad98dfe706e34",
+    "pageBlob" : "3d856d55893b313e1ec9816fa52a234c43025c86",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "ee00283046ed2845155e52b20ffd1c5638d65d9c",
+      "path" : "source/reference/operator/aggregation/sortArray.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/split/splitExpressionOperator",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "change the form of the regex to match morphia's generated form",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "ae02591d100b051c6b547a9a03ea8360bb284bdb",
+    "retypes" : [ ],
+    "rules" : [ "REGEX_FORM" ],
+    "source" : {
+      "commit" : "dd8638fb493316581481d0fc9413339ee019bb3a",
+      "path" : "source/reference/operator/aggregation/split.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/sum/useInGroupStage",
+    "includes" : [ {
+      "blob" : "48429813c7e668caccccfe27b3b2894cd4d066e7",
+      "path" : "source/includes/extracts-fact-aggregation-accumulator.yaml"
+    }, {
+      "blob" : "6f5d7d363aa3a93352c9cba4bd64f87570e732bf",
+      "path" : "source/includes/extracts-fact-aggregation-accumulator-base.yaml"
+    }, {
+      "blob" : "a140ad76120c4e6b1b54a9596dddb4c5d1dcb6fa",
+      "path" : "source/includes/fact-compatibility.rst"
+    }, {
+      "blob" : "af0e90475267dcf0a4b56e11aae76eeee3805ee4",
+      "path" : "source/includes/fact-environments.rst"
+    }, {
+      "blob" : "b770b45bc50f47b7b5d8cd771754c17a113b364f",
+      "path" : "source/includes/fact-environments-atlas-only.rst"
+    }, {
+      "blob" : "a7fa92b7a8083b9a17700e67517a1831f359c476",
+      "path" : "source/includes/fact-environments-onprem-only.rst"
+    }, {
+      "blob" : "f56012674985fd6d9fe5f558a661d55d6a717156",
+      "path" : "source/includes/setWindowFields-example-collection.rst"
+    }, {
+      "blob" : "13694f7d606928cb63fd6b471d29c52c8a6e7f40",
+      "path" : "source/includes/setWindowFields-partition-sort-date.rst"
+    } ],
+    "justification" : null,
+    "lock" : "the totalAmount values are completely wrong",
+    "marker" : "lock",
+    "origin" : "4774dcba942556fdc81d25c2d94c18e3173ab505",
+    "pageBlob" : "1277de12edfeae3aac77c6c89ee730722b3bdc8f",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "9005b68f8945b96e78e9f10adcec016616681cfb",
+      "path" : "source/reference/operator/aggregation/sum.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/toBool/toBoolExpressionOperator",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "inlined js variables to pipeline",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "59fa09a0b133d3a8b3dc7ca5c6d8c291b04687af",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toBool.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/toDate/toDateExpressionOperator",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "inlined js variables to pipeline",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "42e6ac3c9fbe47779b5041740e65ca7dc431ee1e",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toDate.txt",
       "relation" : "AT_ORIGIN"
     }
   }, {
@@ -3739,6 +3609,86 @@
     }
   }, {
     "corrections" : [ ],
+    "fixture" : "aggregation/expressions/toDouble/toDoubleExpressionOperator",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "inlined js variables to pipeline",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "841cf871bf27156a2df51a01f374e4fc94484ff5",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toDouble.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/toInt/toIntExpressionOperator",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "inlined js variables to pipeline\nthe driver apparently can't parse Decimal128(...)",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "92e7b0bc372a5cdb13d181cd2224afe167bf4c4f",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toInt.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/toLong/toLongExpressionOperator",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "inlined js variables to pipeline\n",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "0e95704326f3ccb1c2afeec425ae8f3b0df18e21",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "eeaa9d3ad8bf480d333ca978a1d7b8ff30677870",
+      "path" : "source/reference/operator/aggregation/toLong.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/toObjectId/toObjectIdExpressionOperator",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "inlined js variables to pipeline\n",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "09cec0a9a44620357d55c8bf913799d96261f0b7",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toObjectId.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/toString/toStringExpressionOperator",
+    "includes" : [ ],
+    "justification" : null,
+    "lock" : "had to rework the pipeline to not use variables",
+    "marker" : "lock",
+    "origin" : "948049a3364491f4905246224922d2dbb4197154",
+    "pageBlob" : "89b3c01ffb5a803027a5e42ea2f41e2828a823f5",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+      "path" : "source/reference/operator/aggregation/toString.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
     "fixture" : "aggregation/expressions/trunc/truncExpressionOperator",
     "includes" : [ ],
     "justification" : null,
@@ -3751,6 +3701,56 @@
     "source" : {
       "commit" : "744735632617f491f8d65071fae36735b6da1d8b",
       "path" : "source/reference/operator/aggregation/trunc.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/tsSecond/obtainTheNumberOfSecondsFromATimestampField",
+    "includes" : [ {
+      "blob" : "cae80161291eadfe7c4c76d37dcb6b5ee9e40de6",
+      "path" : "source/includes/tsSecond-introduction.rst"
+    }, {
+      "blob" : "a70d0f7025666a855267cba1031cf183714121b2",
+      "path" : "source/includes/stockSales-example-collection.rst"
+    }, {
+      "blob" : "5d0412c61706673a101d1f2d14e7e224b5de7187",
+      "path" : "source/includes/stockSales-example-collection-create.rst"
+    }, {
+      "blob" : "f56012674985fd6d9fe5f558a661d55d6a717156",
+      "path" : "source/includes/cakeSales-example-collection.rst"
+    } ],
+    "justification" : null,
+    "lock" : "updated the Timestamp format",
+    "marker" : "lock",
+    "origin" : "3f1e409bd15a70dbd2e5b065f8fe38f114bee495",
+    "pageBlob" : "b6c831c1be6bdf210a7260dc64061dd3489039cb",
+    "retypes" : [ ],
+    "rules" : [ ],
+    "source" : {
+      "commit" : "f5da63fabec244dde036582f5cbab8d7ea2b0881",
+      "path" : "source/reference/operator/aggregation/tsSecond.txt",
+      "relation" : "AT_ORIGIN"
+    }
+  }, {
+    "corrections" : [ ],
+    "fixture" : "aggregation/expressions/zip/matrixTransposition",
+    "includes" : [ {
+      "blob" : "5eea7db82afdd4723cac7050891df1f7c7042823",
+      "path" : "source/includes/extracts-3.4-agg-expression-null.yaml"
+    }, {
+      "blob" : "ee40a9d1b0d38be8227b5f23cea8c85c217aeb5a",
+      "path" : "source/includes/extracts-3.4-agg-expression-null-base.yaml"
+    } ],
+    "justification" : null,
+    "lock" : "use 0 instead of false to suppress _id",
+    "marker" : "lock",
+    "origin" : "9559001fffde3bca28f60aa3e405dff22baefd44",
+    "pageBlob" : "88768190850e225b4aee38ddde325830c65b55a2",
+    "retypes" : [ ],
+    "rules" : [ "PROJECTION_FLAGS" ],
+    "source" : {
+      "commit" : "08e800f56f6f44b44a625756fc1c3c64061055b9",
+      "path" : "source/reference/operator/aggregation/zip.txt",
       "relation" : "AT_ORIGIN"
     }
   } ],

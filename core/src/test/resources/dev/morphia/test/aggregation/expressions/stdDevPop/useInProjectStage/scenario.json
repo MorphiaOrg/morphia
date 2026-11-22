@@ -1,0 +1,140 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/stdDevPop/useInProjectStage",
+  "title": "Use in ``$project`` Stage",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "d84aad6501cde0bf6dcb41c1ce9bddbabc8e3acb",
+    "path": "source/reference/operator/aggregation/stdDevPop.txt",
+    "blob": "e39c2bc60e1da53cf69b1798fe881b7ee6acfbfa"
+  },
+  "dataset": null,
+  "collections": {
+    "quizzes": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "scores": [
+          {
+            "name": "dave123",
+            "score": {
+              "$numberInt": "85"
+            }
+          },
+          {
+            "name": "dave2",
+            "score": {
+              "$numberInt": "90"
+            }
+          },
+          {
+            "name": "ahn",
+            "score": {
+              "$numberInt": "71"
+            }
+          }
+        ]
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "scores": [
+          {
+            "name": "li",
+            "quiz": {
+              "$numberInt": "2"
+            },
+            "score": {
+              "$numberInt": "96"
+            }
+          },
+          {
+            "name": "annT",
+            "score": {
+              "$numberInt": "77"
+            }
+          },
+          {
+            "name": "ty",
+            "score": {
+              "$numberInt": "82"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "quizzes",
+    "pipeline": [
+      {
+        "$project": {
+          "stdDev": {
+            "$stdDevPop": "$scores.score"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "stdDev",
+            "value": {
+              "exact": {
+                "$numberDouble": "8.04155872120988"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "stdDev",
+            "value": {
+              "exact": {
+                "$numberDouble": "8.04155872120988"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

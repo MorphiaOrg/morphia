@@ -1,1 +1,0 @@
-{ $project: { quizAvg: { $avg: "$quizzes"}, labAvg: { $avg: "$labs" }, examAvg: { $avg: [ "$final", "$midterm" ] } } }

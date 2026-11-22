@@ -1,0 +1,104 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/asin/inverseSineOfValueInDegrees",
+  "title": "main :: Inverse Sine of Value in Degrees",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "8562c94b38de3e8c83552bcd41558548e5220eef",
+    "path": "source/reference/operator/aggregation/asin.txt",
+    "blob": "bf822b1fa3e5f9eaaf466d574c9660149d82d530"
+  },
+  "dataset": null,
+  "collections": {
+    "trigonometry": [
+      {
+        "_id": {
+          "$oid": "5c50782193f833234ba90d85"
+        },
+        "side_a": {
+          "$numberDecimal": "3"
+        },
+        "side_b": {
+          "$numberDecimal": "4"
+        },
+        "hypotenuse": {
+          "$numberDecimal": "5"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "trigonometry",
+    "pipeline": [
+      {
+        "$addFields": {
+          "angle_a": {
+            "$radiansToDegrees": {
+              "$asin": {
+                "$divide": [
+                  "$side_a",
+                  "$hypotenuse"
+                ]
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "exact": {
+                "$oid": "5c50782193f833234ba90d85"
+              }
+            }
+          },
+          {
+            "name": "side_a",
+            "value": {
+              "decimal": "3"
+            }
+          },
+          {
+            "name": "side_b",
+            "value": {
+              "decimal": "4"
+            }
+          },
+          {
+            "name": "hypotenuse",
+            "value": {
+              "decimal": "5"
+            }
+          },
+          {
+            "name": "angle_a",
+            "value": {
+              "decimal": "36.86989764584402129685561255909341"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

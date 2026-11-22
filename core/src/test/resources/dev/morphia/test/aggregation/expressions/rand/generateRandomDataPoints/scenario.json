@@ -1,0 +1,224 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/rand/generateRandomDataPoints",
+  "title": "Generate Random Data Points",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "b665f1ea0a4c8ed855a2b7dbc88b34df912cb51a",
+    "path": "source/reference/operator/aggregation/rand.txt",
+    "blob": "b5557eb5d14e7cddd46d7b067303b216d629ff61"
+  },
+  "dataset": null,
+  "collections": {
+    "donors": [
+      {
+        "donorId": {
+          "$numberInt": "1000"
+        },
+        "amount": {
+          "$numberInt": "0"
+        },
+        "frequency": {
+          "$numberInt": "1"
+        }
+      },
+      {
+        "donorId": {
+          "$numberInt": "1001"
+        },
+        "amount": {
+          "$numberInt": "0"
+        },
+        "frequency": {
+          "$numberInt": "2"
+        }
+      },
+      {
+        "donorId": {
+          "$numberInt": "1002"
+        },
+        "amount": {
+          "$numberInt": "0"
+        },
+        "frequency": {
+          "$numberInt": "1"
+        }
+      },
+      {
+        "donorId": {
+          "$numberInt": "1003"
+        },
+        "amount": {
+          "$numberInt": "0"
+        },
+        "frequency": {
+          "$numberInt": "2"
+        }
+      },
+      {
+        "donorId": {
+          "$numberInt": "1004"
+        },
+        "amount": {
+          "$numberInt": "0"
+        },
+        "frequency": {
+          "$numberInt": "1"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "donors",
+    "pipeline": [
+      {
+        "$set": {
+          "amount": {
+            "$multiply": [
+              {
+                "$rand": {}
+              },
+              {
+                "$numberInt": "100"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "$set": {
+          "amount": {
+            "$floor": "$amount"
+          }
+        }
+      },
+      {
+        "$merge": "donors"
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "donorId",
+            "value": {
+              "whole": {
+                "$numberInt": "1000"
+              }
+            }
+          },
+          {
+            "name": "amount",
+            "value": {
+              "whole": {
+                "$numberInt": "27"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "donorId",
+            "value": {
+              "whole": {
+                "$numberInt": "1001"
+              }
+            }
+          },
+          {
+            "name": "amount",
+            "value": {
+              "whole": {
+                "$numberInt": "10"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "donorId",
+            "value": {
+              "whole": {
+                "$numberInt": "1002"
+              }
+            }
+          },
+          {
+            "name": "amount",
+            "value": {
+              "whole": {
+                "$numberInt": "88"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "donorId",
+            "value": {
+              "whole": {
+                "$numberInt": "1003"
+              }
+            }
+          },
+          {
+            "name": "amount",
+            "value": {
+              "whole": {
+                "$numberInt": "73"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "donorId",
+            "value": {
+              "whole": {
+                "$numberInt": "1004"
+              }
+            }
+          },
+          {
+            "name": "amount",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "UNORDERED",
+    "rules": [],
+    "ignore": [
+      "_id"
+    ],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  },
+  "skipped": {
+    "results": "the legacy test skipped its data check (skipDataCheck)"
+  }
+}

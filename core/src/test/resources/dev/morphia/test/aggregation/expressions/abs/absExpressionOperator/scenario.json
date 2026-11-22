@@ -80,38 +80,86 @@
     ]
   },
   "expected": {
-    "documents": [
+    "printed": [
       {
-        "_id": {
-          "$numberInt": "1"
-        },
-        "delta": {
-          "$numberInt": "30"
-        }
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "delta",
+            "value": {
+              "whole": {
+                "$numberInt": "30"
+              }
+            }
+          }
+        ]
       },
       {
-        "_id": {
-          "$numberInt": "2"
-        },
-        "delta": {
-          "$numberInt": "0"
-        }
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "delta",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          }
+        ]
       },
       {
-        "_id": {
-          "$numberInt": "3"
-        },
-        "delta": {
-          "$numberInt": "20"
-        }
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "delta",
+            "value": {
+              "whole": {
+                "$numberInt": "20"
+              }
+            }
+          }
+        ]
       },
       {
-        "_id": {
-          "$numberInt": "4"
-        },
-        "delta": {
-          "$numberInt": "10"
-        }
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "delta",
+            "value": {
+              "whole": {
+                "$numberInt": "10"
+              }
+            }
+          }
+        ]
       }
     ]
   },

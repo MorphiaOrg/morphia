@@ -1,0 +1,138 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/log10/log10ExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "744735632617f491f8d65071fae36735b6da1d8b",
+    "path": "source/reference/operator/aggregation/log10.txt",
+    "blob": "96a656410760b9ac92e4562dd72485a61096e12a"
+  },
+  "dataset": null,
+  "collections": {
+    "samples": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "H3O": {
+          "$numberDouble": "0.0025"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "H3O": {
+          "$numberDouble": "0.001"
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "H3O": {
+          "$numberDouble": "0.02"
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "samples",
+    "pipeline": [
+      {
+        "$project": {
+          "pH": {
+            "$multiply": [
+              {
+                "$numberInt": "-1"
+              },
+              {
+                "$log10": "$H3O"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "pH",
+            "value": {
+              "exact": {
+                "$numberDouble": "2.6020599913279625"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "pH",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "pH",
+            "value": {
+              "exact": {
+                "$numberDouble": "1.6989700043360187"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

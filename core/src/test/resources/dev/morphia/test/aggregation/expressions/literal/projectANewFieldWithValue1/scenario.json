@@ -1,0 +1,118 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/literal/projectANewFieldWithValue1",
+  "title": "Project a New Field with Value ``1``",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "747de586932f8bd0e3efdaaf298424e40dc1428c",
+    "path": "source/reference/operator/aggregation/literal.txt",
+    "blob": "fcc478ceed1acee71c7999a2670d4253c1f7b5cd"
+  },
+  "dataset": null,
+  "collections": {
+    "books": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "title": "Dracula",
+        "condition": "new"
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "title": "The Little Prince",
+        "condition": "new"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "books",
+    "pipeline": [
+      {
+        "$project": {
+          "title": {
+            "$numberInt": "1"
+          },
+          "editionNumber": {
+            "$literal": {
+              "$numberInt": "1"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "Dracula"
+            }
+          },
+          {
+            "name": "editionNumber",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "title",
+            "value": {
+              "text": "The Little Prince"
+            }
+          },
+          {
+            "name": "editionNumber",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/dateToString/dateToStringExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "b2d4041710ee0667261f8f5e2e40390265df85fd",
+    "path": "source/reference/operator/aggregation/dateToString.txt",
+    "blob": "3c53000302392ff1f16165d9e7c932f102f719f0"
+  },
+  "dataset": null,
+  "collections": {
+    "sales": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "abc",
+        "price": {
+          "$numberInt": "10"
+        },
+        "quantity": {
+          "$numberInt": "2"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1388564139736"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "sales",
+    "pipeline": [
+      {
+        "$project": {
+          "yearMonthDayUTC": {
+            "$dateToString": {
+              "format": "%Y-%m-%d",
+              "date": "$date"
+            }
+          },
+          "timewithOffsetNY": {
+            "$dateToString": {
+              "format": "%H:%M:%S:%L%z",
+              "date": "$date",
+              "timezone": "America/New_York"
+            }
+          },
+          "timewithOffset430": {
+            "$dateToString": {
+              "format": "%H:%M:%S:%L%z",
+              "date": "$date",
+              "timezone": "+04:30"
+            }
+          },
+          "minutesOffsetNY": {
+            "$dateToString": {
+              "format": "%Z",
+              "date": "$date",
+              "timezone": "America/New_York"
+            }
+          },
+          "minutesOffset430": {
+            "$dateToString": {
+              "format": "%Z",
+              "date": "$date",
+              "timezone": "+04:30"
+            }
+          },
+          "abbreviated_month": {
+            "$dateToString": {
+              "format": "%b",
+              "date": "$date",
+              "timezone": "+04:30"
+            }
+          },
+          "full_month": {
+            "$dateToString": {
+              "format": "%B",
+              "date": "$date",
+              "timezone": "+04:30"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "yearMonthDayUTC",
+            "value": {
+              "text": "2014-01-01"
+            }
+          },
+          {
+            "name": "timewithOffsetNY",
+            "value": {
+              "text": "03:15:39:736-0500"
+            }
+          },
+          {
+            "name": "timewithOffset430",
+            "value": {
+              "text": "12:45:39:736+0430"
+            }
+          },
+          {
+            "name": "minutesOffsetNY",
+            "value": {
+              "text": "-300"
+            }
+          },
+          {
+            "name": "minutesOffset430",
+            "value": {
+              "text": "270"
+            }
+          },
+          {
+            "name": "abbreviated_month",
+            "value": {
+              "text": "Jan"
+            }
+          },
+          {
+            "name": "full_month",
+            "value": {
+              "text": "January"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "NAMED_ARGUMENTS"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": "7.0.0",
+    "topology": "STANDALONE"
+  }
+}

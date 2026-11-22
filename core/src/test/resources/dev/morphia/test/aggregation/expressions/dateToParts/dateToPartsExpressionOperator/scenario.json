@@ -1,0 +1,279 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/dateToParts/dateToPartsExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "6560e617067dff1934063555ec97e57cad362fc8",
+    "path": "source/reference/operator/aggregation/dateToParts.txt",
+    "blob": "00f720ba7b9e0eb461559ced0fa6ae7d5d308337"
+  },
+  "dataset": null,
+  "collections": {
+    "sales": [
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "abc",
+        "price": {
+          "$numberInt": "10"
+        },
+        "quantity": {
+          "$numberInt": "2"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1483234149123"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "sales",
+    "pipeline": [
+      {
+        "$project": {
+          "date": {
+            "$dateToParts": {
+              "date": "$date"
+            }
+          },
+          "date_iso": {
+            "$dateToParts": {
+              "date": "$date",
+              "iso8601": true
+            }
+          },
+          "date_timezone": {
+            "$dateToParts": {
+              "date": "$date",
+              "timezone": "America/New_York"
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "date",
+            "value": {
+              "document": [
+                {
+                  "name": "year",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "2017"
+                    }
+                  }
+                },
+                {
+                  "name": "month",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "1"
+                    }
+                  }
+                },
+                {
+                  "name": "day",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "1"
+                    }
+                  }
+                },
+                {
+                  "name": "hour",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "1"
+                    }
+                  }
+                },
+                {
+                  "name": "minute",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "29"
+                    }
+                  }
+                },
+                {
+                  "name": "second",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "9"
+                    }
+                  }
+                },
+                {
+                  "name": "millisecond",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "123"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "date_iso",
+            "value": {
+              "document": [
+                {
+                  "name": "isoWeekYear",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "2016"
+                    }
+                  }
+                },
+                {
+                  "name": "isoWeek",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "52"
+                    }
+                  }
+                },
+                {
+                  "name": "isoDayOfWeek",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "7"
+                    }
+                  }
+                },
+                {
+                  "name": "hour",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "1"
+                    }
+                  }
+                },
+                {
+                  "name": "minute",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "29"
+                    }
+                  }
+                },
+                {
+                  "name": "second",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "9"
+                    }
+                  }
+                },
+                {
+                  "name": "millisecond",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "123"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "date_timezone",
+            "value": {
+              "document": [
+                {
+                  "name": "year",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "2016"
+                    }
+                  }
+                },
+                {
+                  "name": "month",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "12"
+                    }
+                  }
+                },
+                {
+                  "name": "day",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "31"
+                    }
+                  }
+                },
+                {
+                  "name": "hour",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "20"
+                    }
+                  }
+                },
+                {
+                  "name": "minute",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "29"
+                    }
+                  }
+                },
+                {
+                  "name": "second",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "9"
+                    }
+                  }
+                },
+                {
+                  "name": "millisecond",
+                  "value": {
+                    "whole": {
+                      "$numberInt": "123"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

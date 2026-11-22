@@ -1,0 +1,322 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/toDate/toDateExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "0059b95ce58a3b33cfe93a5048196f9fa4dc893f",
+    "path": "source/reference/operator/aggregation/toDate.txt",
+    "blob": "42e6ac3c9fbe47779b5041740e65ca7dc431ee1e"
+  },
+  "dataset": null,
+  "collections": {
+    "orders": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "apple",
+        "qty": {
+          "$numberInt": "5"
+        },
+        "price": {
+          "$numberInt": "2"
+        },
+        "order_date": {
+          "$date": {
+            "$numberLong": "1521504000000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "item": "pie",
+        "qty": {
+          "$numberInt": "10"
+        },
+        "price": {
+          "$numberInt": "3"
+        },
+        "order_date": {
+          "$date": {
+            "$numberLong": "1521676800000"
+          }
+        }
+      },
+      {
+        "_id": {
+          "$numberInt": "3"
+        },
+        "item": "ice cream",
+        "qty": {
+          "$numberInt": "2"
+        },
+        "price": {
+          "$numberInt": "4"
+        },
+        "order_date": "2018-03-15"
+      },
+      {
+        "_id": {
+          "$numberInt": "4"
+        },
+        "item": "almonds",
+        "qty": {
+          "$numberInt": "5"
+        },
+        "price": {
+          "$numberInt": "7"
+        },
+        "order_date": "2018-03-15 +10:00"
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "orders",
+    "pipeline": [
+      {
+        "$addFields": {
+          "convertedDate": {
+            "$toDate": "$order_date"
+          }
+        }
+      },
+      {
+        "$sort": {
+          "convertedDate": {
+            "$numberInt": "1"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "almonds"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "7"
+              }
+            }
+          },
+          {
+            "name": "order_date",
+            "value": {
+              "text": "2018-03-15 +10:00"
+            }
+          },
+          {
+            "name": "convertedDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1521036000000"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "ice cream"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "order_date",
+            "value": {
+              "text": "2018-03-15"
+            }
+          },
+          {
+            "name": "convertedDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1521072000000"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "apple"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "5"
+              }
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "order_date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1521504000000"
+                }
+              }
+            }
+          },
+          {
+            "name": "convertedDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1521504000000"
+                }
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "item",
+            "value": {
+              "text": "pie"
+            }
+          },
+          {
+            "name": "qty",
+            "value": {
+              "whole": {
+                "$numberInt": "10"
+              }
+            }
+          },
+          {
+            "name": "price",
+            "value": {
+              "whole": {
+                "$numberInt": "3"
+              }
+            }
+          },
+          {
+            "name": "order_date",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1521676800000"
+                }
+              }
+            }
+          },
+          {
+            "name": "convertedDate",
+            "value": {
+              "exact": {
+                "$date": {
+                  "$numberLong": "1521676800000"
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

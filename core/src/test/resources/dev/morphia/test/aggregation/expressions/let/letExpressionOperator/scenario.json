@@ -1,0 +1,139 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/let/letExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "26668d05722f74657f802e17701f9c4d565f59b4",
+    "path": "source/reference/operator/aggregation/let.txt",
+    "blob": "f5cd4d9c72b930532bb6ceb2ced035cbaa020707"
+  },
+  "dataset": null,
+  "collections": {
+    "sales": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "price": {
+          "$numberInt": "10"
+        },
+        "tax": {
+          "$numberDouble": "0.5"
+        },
+        "applyDiscount": true
+      },
+      {
+        "_id": {
+          "$numberInt": "2"
+        },
+        "price": {
+          "$numberInt": "10"
+        },
+        "tax": {
+          "$numberDouble": "0.25"
+        },
+        "applyDiscount": false
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "sales",
+    "pipeline": [
+      {
+        "$project": {
+          "finalTotal": {
+            "$let": {
+              "vars": {
+                "total": {
+                  "$add": [
+                    "$price",
+                    "$tax"
+                  ]
+                },
+                "discounted": {
+                  "$cond": {
+                    "if": "$applyDiscount",
+                    "then": {
+                      "$numberDouble": "0.9"
+                    },
+                    "else": {
+                      "$numberInt": "1"
+                    }
+                  }
+                }
+              },
+              "in": {
+                "$multiply": [
+                  "$$total",
+                  "$$discounted"
+                ]
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "finalTotal",
+            "value": {
+              "exact": {
+                "$numberDouble": "9.450000000000001"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "2"
+              }
+            }
+          },
+          {
+            "name": "finalTotal",
+            "value": {
+              "exact": {
+                "$numberDouble": "10.25"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [
+      "COND_ARRAY"
+    ],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

@@ -71,6 +71,24 @@ public final class PrintedResults {
         return null;
     }
 
+    /**
+     * @return {@code constraint}, a printed document, without the top-level {@code fields}
+     */
+    public static BsonValue without(Set<String> fields, BsonValue constraint) {
+        BsonDocument document = constraint.asDocument();
+        if (fields.isEmpty() || !document.containsKey("document")) {
+            return constraint;
+        }
+        BsonArray kept = new BsonArray();
+        document.getArray("document")
+                .forEach(field -> {
+                    if (!fields.contains(field.asDocument().getString("name").getValue())) {
+                        kept.add(field);
+                    }
+                });
+        return new BsonDocument("document", kept);
+    }
+
     private static boolean assign(int left, boolean[][] matches, int[] owners, boolean[] visited) {
         for (int right = 0; right < owners.length; right++) {
             if (matches[left][right] && !visited[right]) {

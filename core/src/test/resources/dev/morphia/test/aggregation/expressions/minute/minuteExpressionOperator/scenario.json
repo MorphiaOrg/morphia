@@ -1,0 +1,183 @@
+{
+  "schemaVersion": {
+    "$numberInt": "1"
+  },
+  "name": "aggregation/expressions/minute/minuteExpressionOperator",
+  "title": "main",
+  "context": "EXPRESSION",
+  "source": {
+    "repository": "mongodb/docs",
+    "commit": "adbf392ffe5ac33c7adc225eb20870a6b140b1ba",
+    "path": "source/reference/operator/aggregation/minute.txt",
+    "blob": "eb549a91462929a126c5af25cc850750cd3c8226"
+  },
+  "dataset": null,
+  "collections": {
+    "sales": [
+      {
+        "_id": {
+          "$numberInt": "1"
+        },
+        "item": "abc",
+        "price": {
+          "$numberInt": "10"
+        },
+        "quantity": {
+          "$numberInt": "2"
+        },
+        "date": {
+          "$date": {
+            "$numberLong": "1388564139736"
+          }
+        }
+      }
+    ]
+  },
+  "indexes": [],
+  "action": {
+    "kind": "aggregate",
+    "collection": "sales",
+    "pipeline": [
+      {
+        "$project": {
+          "year": {
+            "$year": "$date"
+          },
+          "month": {
+            "$month": "$date"
+          },
+          "day": {
+            "$dayOfMonth": "$date"
+          },
+          "hour": {
+            "$hour": "$date"
+          },
+          "minutes": {
+            "$minute": "$date"
+          },
+          "seconds": {
+            "$second": "$date"
+          },
+          "milliseconds": {
+            "$millisecond": "$date"
+          },
+          "dayOfYear": {
+            "$dayOfYear": "$date"
+          },
+          "dayOfWeek": {
+            "$dayOfWeek": "$date"
+          },
+          "week": {
+            "$week": "$date"
+          }
+        }
+      }
+    ]
+  },
+  "expected": {
+    "printed": [
+      {
+        "document": [
+          {
+            "name": "_id",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "year",
+            "value": {
+              "whole": {
+                "$numberInt": "2014"
+              }
+            }
+          },
+          {
+            "name": "month",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "day",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "hour",
+            "value": {
+              "whole": {
+                "$numberInt": "8"
+              }
+            }
+          },
+          {
+            "name": "minutes",
+            "value": {
+              "whole": {
+                "$numberInt": "15"
+              }
+            }
+          },
+          {
+            "name": "seconds",
+            "value": {
+              "whole": {
+                "$numberInt": "39"
+              }
+            }
+          },
+          {
+            "name": "milliseconds",
+            "value": {
+              "whole": {
+                "$numberInt": "736"
+              }
+            }
+          },
+          {
+            "name": "dayOfYear",
+            "value": {
+              "whole": {
+                "$numberInt": "1"
+              }
+            }
+          },
+          {
+            "name": "dayOfWeek",
+            "value": {
+              "whole": {
+                "$numberInt": "4"
+              }
+            }
+          },
+          {
+            "name": "week",
+            "value": {
+              "whole": {
+                "$numberInt": "0"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "comparison": {
+    "order": "ORDERED",
+    "rules": [],
+    "ignore": [],
+    "tolerance": null
+  },
+  "requirements": {
+    "minimumServer": null,
+    "topology": "STANDALONE"
+  }
+}

@@ -122,14 +122,19 @@ canonical extended JSON (`$numberInt`, `$date`, …), so BSON types survive.
   value is read as one: `{document: [{name, value}]}`, `{array: [...]}`, `{exact: v}`,
   `{whole: n}` (an Int32 or an integral Double), `{text: s}` (a string or a symbol), `{nan: true}`
   and `{decimal: s}` (a Decimal128 with that exact text). Printed fields are listed in ECMAScript
-  own-property order, as mongosh prints them.
+  own-property order, as mongosh prints them. A documented example's results are always `printed`:
+  a page shows what mongosh printed, even when the text reads as JSON, and a printed `10` is an
+  Int32 or the same Double. `documents` is for exact results from another source.
   `none` covers an example that publishes no output; its case reports serialization and behavior
   only, and the coverage report shows the missing check with that reason.
 - **`comparison.rules`:** the declared form rules this case may use, reviewed per case as in the lock
   migration.
-- **`comparison.ignore`:** fields removed from both results before comparing, reviewed per case. The
-  legacy `removeIds` option becomes `["_id"]` here, for examples whose documented ids are
-  generated.
+- **`comparison.ignore`:** top-level fields removed from both sides of every result and collection
+  comparison, reviewed per case. The legacy `removeIds` option becomes `["_id"]` here, for examples
+  whose documented ids are generated (they differ between the two databases too).
+- **`skipped`:** present only for a case that does not run a check, naming each with its reason:
+  `serialization` (the legacy `skipActionCheck`) or `results` (the legacy `skipDataCheck`; the
+  action is then not run, so neither behavior nor the published expectation is checked).
 - **`comparison.tolerance`:** an invariant or tolerance policy for nondeterministic, approximate or
   time-dependent operators (`$rand`, `$sample`, `$$NOW`, floating-point trigonometry), never a
   captured result.
@@ -300,8 +305,9 @@ A candidate records:
    - **Legacy test options:** mapped, not dropped:
      - `orderMatters` becomes `comparison.order`;
      - `removeIds` becomes `comparison.ignore`;
-     - `skipDataCheck` and `skipActionCheck` become reported missing checks with their reason;
-     - `findOptions`, `updateOptions` and `serverVersion` become action options and requirements.
+     - `skipDataCheck` and `skipActionCheck` become `skipped` checks with their reason;
+     - `serverVersion` becomes `requirements.minimumServer`;
+     - `findOptions` and `updateOptions` become action options (with query and update cases).
    - **Evidence:** each migrated case's ledger entry keeps the legacy body text, checked against the
      frozen catalog's body digest, so the options it mapped can be re-derived offline.
 4. **Form rules and printed constraints in core**, as two PRs: the form rules first (`FormRules`,
@@ -317,8 +323,11 @@ A candidate records:
      without a retired lock. `recheck-references` re-derives the pins from the pages, and
      `convert` reads them. One case,
      `abs/absExpressionOperator`, is converted.
-   - **5b and later:** the remaining legacy options, a batch `convert`, and the cutover of each
-     context, query and update cases last.
+   - **5b, expressions:** the legacy options above are mapped, `convert` takes many fixtures, and
+     every eligible expressions case is tried. 160 convert; the 45 whose strict checks fail stay
+     legacy-only in `audits/catalog/cutover.json` with the failing check and its first
+     difference.
+   - **5c and later:** stages, then query and update cases.
    - **Per context:** convert the bound fixtures, replacing their legacy files, and route the cases
      through the adapter. Each case then gains the behavior check and the strict comparator.
    - **Failures:** a case whose checks fail is not converted. It stays on the legacy path with the

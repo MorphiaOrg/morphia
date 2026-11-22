@@ -31,4 +31,14 @@ public class PrintedResultsTest {
             assertEquals(vector.getString("verdict").getValue(), verdict, vector.getString("name").getValue());
         }
     }
+
+    /** An ignored field (a generated id) is dropped from a printed document before it is compared. */
+    @Test
+    public void ignoredFieldsLeaveThePrintedDocument() {
+        BsonValue printed = BsonDocument.parse("{document: [{name: '_id', value: {whole: 1}}, {name: 'a', value: {text: 'x'}}]}");
+        BsonValue without = PrintedResults.without(java.util.Set.of("_id"), printed);
+        assertEquals(BsonDocument.parse("{document: [{name: 'a', value: {text: 'x'}}]}"), without);
+        assertEquals(null, PrintedResults.difference(java.util.List.of(without),
+                java.util.List.of(BsonDocument.parse("{a: 'x'}")), true));
+    }
 }
